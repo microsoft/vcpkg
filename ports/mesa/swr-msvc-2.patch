@@ -1,0 +1,57 @@
+From 68d1addf6f0cf693fdb42db3555112e257a3d771 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>
+Date: Sun, 24 Oct 2021 21:36:09 -0400
+Subject: [PATCH] swr: fix MSVC build
+
+---
+ src/gallium/drivers/swr/swr_draw.cpp  | 6 +++---
+ src/gallium/drivers/swr/swr_state.cpp | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/gallium/drivers/swr/swr_draw.cpp b/src/gallium/drivers/swr/swr_draw.cpp
+index 4b42a8e0390..5d862adb39d 100644
+--- a/src/gallium/drivers/swr/swr_draw.cpp
++++ b/src/gallium/drivers/swr/swr_draw.cpp
+@@ -62,7 +62,7 @@ swr_draw_vbo(struct pipe_context *pipe, const struct pipe_draw_info *info,
+ 
+    if (!indirect &&
+        !info->primitive_restart &&
+-       !u_trim_pipe_prim(info->mode, (unsigned*)&draws[0].count))
++       !u_trim_pipe_prim((enum pipe_prim_type)info->mode, (unsigned*)&draws[0].count))
+       return;
+ 
+    if (!swr_check_render_cond(pipe))
+@@ -102,7 +102,7 @@ swr_draw_vbo(struct pipe_context *pipe, const struct pipe_draw_info *info,
+          STREAMOUT_COMPILE_STATE state = {0};
+          struct pipe_stream_output_info *so = &ctx->vs->pipe.stream_output;
+ 
+-         state.numVertsPerPrim = u_vertices_per_prim(info->mode);
++         state.numVertsPerPrim = u_vertices_per_prim((enum pipe_prim_type)info->mode);
+ 
+          uint32_t offsets[MAX_SO_STREAMS] = {0};
+          uint32_t num = 0;
+@@ -221,7 +221,7 @@ swr_draw_vbo(struct pipe_context *pipe, const struct pipe_draw_info *info,
+    if (ctx->gs)
+       topology = (pipe_prim_type)ctx->gs->info.base.properties[TGSI_PROPERTY_GS_OUTPUT_PRIM];
+    else
+-      topology = info->mode;
++      topology = (enum pipe_prim_type)info->mode;
+ 
+    switch (topology) {
+    case PIPE_PRIM_TRIANGLE_FAN:
+diff --git a/src/gallium/drivers/swr/swr_state.cpp b/src/gallium/drivers/swr/swr_state.cpp
+index 5f1464e6d0e..818328750bd 100644
+--- a/src/gallium/drivers/swr/swr_state.cpp
++++ b/src/gallium/drivers/swr/swr_state.cpp
+@@ -1731,7 +1731,7 @@ swr_update_derived(struct pipe_context *pipe,
+    /* Has to be before fragment shader, since it sets SWR_NEW_FS */
+    if (p_draw_info) {
+       bool new_prim_is_poly =
+-         (u_reduced_prim(p_draw_info->mode) == PIPE_PRIM_TRIANGLES) &&
++         (u_reduced_prim((enum pipe_prim_type)p_draw_info->mode) == PIPE_PRIM_TRIANGLES) &&
+          (ctx->derived.rastState.fillMode == SWR_FILLMODE_SOLID);
+       if (new_prim_is_poly != ctx->poly_stipple.prim_is_poly) {
+          ctx->dirty |= SWR_NEW_FS;
+-- 
+2.25.1
+

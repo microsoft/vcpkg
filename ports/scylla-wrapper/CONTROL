@@ -1,4 +1,0 @@
-Source: scylla-wrapper
-Version: 2018-08-26-16e6f435
-Build-Depends: distorm
-Description: This is a wrapper around Scylla.  It exports functions for IAT fixing, dumping and PE rebuilding. based on https://github.com/NtQuery/Scylla commit 0f6b7198be  (v0.9.6b).

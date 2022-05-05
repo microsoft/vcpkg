@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "opentelemetry-cpp",
+  "version-semver": "1.3.0",
+  "description": [
+    "OpenTelemetry is a collection of tools, APIs, and SDKs.",
+    "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
+  ],
+  "homepage": "https://github.com/open-telemetry/opentelemetry-cpp",
+  "license": "Apache-2.0",
+  "supports": "!(windows & !static)",
+  "dependencies": [
+    "curl",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "elasticsearch": {
+      "description": "Whether to include the Elasticsearch Client in the SDK"
+    },
+    "etw": {
+      "description": "Whether to include the ETW Exporter in the SDK"
+    },
+    "jaeger": {
+      "description": "Whether to include the Jaeger exporter",
+      "dependencies": [
+        "thrift"
+      ]
+    },
+    "otlp": {
+      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
+      "dependencies": [
+        "grpc",
+        "protobuf"
+      ]
+    },
+    "prometheus": {
+      "description": "Whether to include the Prometheus Client in the SDK",
+      "dependencies": [
+        "prometheus-cpp"
+      ]
+    },
+    "zipkin": {
+      "description": "Whether to include the Zipkin exporter in the SDK"
+    },
+    "zpages": {
+      "description": "Whether to include the Zpages Server in the SDK"
+    }
+  }
+}

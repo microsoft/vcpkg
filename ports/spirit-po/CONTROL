@@ -1,5 +1,0 @@
-Source: spirit-po
-Version: 1.1.2-1
-Homepage: https://github.com/cbeck88/spirit-po
-Description: A header-only C++ library for localization using GNU gettext po files, based on Boost.Spirit.
-Build-Depends: boost

@@ -3,7 +3,7 @@
  2 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/clang/tools/c-index-test/CMakeLists.txt b/clang/tools/c-index-test/CMakeLists.txt
-index ceef4b086..40b9e9955 100644
+index ceef4b08637c..40b9e995597f 100644
 --- a/clang/tools/c-index-test/CMakeLists.txt
 +++ b/clang/tools/c-index-test/CMakeLists.txt
 @@ -40,11 +40,7 @@ set_target_properties(c-index-test
@@ -20,10 +20,10 @@ index ceef4b086..40b9e9955 100644
  endif()
  
 diff --git a/lldb/cmake/modules/LLDBConfig.cmake b/lldb/cmake/modules/LLDBConfig.cmake
-index 2fdf1502d..beeeeb9b1 100644
+index b62cd7d24438..a8c78ee1bccd 100644
 --- a/lldb/cmake/modules/LLDBConfig.cmake
 +++ b/lldb/cmake/modules/LLDBConfig.cmake
-@@ -214,7 +214,7 @@ if (LLDB_ENABLE_LZMA)
+@@ -215,7 +215,7 @@ if (LLDB_ENABLE_LZMA)
  endif()
  
  if (LLDB_ENABLE_LIBXML2)

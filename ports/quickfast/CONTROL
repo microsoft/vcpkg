@@ -1,5 +1,0 @@
-Source: quickfast
-Version: 1.5
-Build-Depends: boost-asio, xerces-c
-Homepage: https://github.com/objectcomputing/quickfast
-Description: QuickFAST is an Open Source native C++ implementation of the FAST Protocol [SM].

@@ -1,4 +1,0 @@
-Source: rappture
-Version: 1.9
-Description: Rappture is a toolkit supporting Rapid application infrastructure, making it quick and easy to develop powerful scientific applications.
-Build-Depends: expat, zlib

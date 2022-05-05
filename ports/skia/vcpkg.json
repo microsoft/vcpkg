@@ -1,0 +1,54 @@
+{
+  "name": "skia",
+  "version-date": "2022-04-15",
+  "description": [
+    "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
+    "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
+    "Skia is sponsored and managed by Google, but is available for use by anyone under the BSD Free Software License. While engineering of the core components is done by the Skia development team, we consider contributions from any source."
+  ],
+  "homepage": "https://skia.org",
+  "license": "BSD-3-Clause",
+  "supports": "(osx | windows | linux) & !(windows & x86)",
+  "dependencies": [
+    "expat",
+    "fontconfig",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    "harfbuzz",
+    "icu",
+    "libjpeg-turbo",
+    "libpng",
+    "libwebp",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "gl"
+  ],
+  "features": {
+    "dawn": {
+      "description": "dawn support for skia"
+    },
+    "direct3d": {
+      "description": "Direct3D support for skia"
+    },
+    "gl": {
+      "description": "OpenGL support for skia"
+    },
+    "metal": {
+      "description": "Metal support for skia"
+    },
+    "vulkan": {
+      "description": "Vulkan support for skia"
+    }
+  }
+}

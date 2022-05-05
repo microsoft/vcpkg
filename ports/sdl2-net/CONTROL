@@ -1,5 +1,0 @@
-Source: sdl2-net
-Version: 2.0.1-8
-Homepage: https://www.libsdl.org/projects/SDL_net
-Description: Networking library for SDL
-Build-Depends: sdl2

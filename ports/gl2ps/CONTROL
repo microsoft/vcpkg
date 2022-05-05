@@ -1,5 +1,0 @@
-Source: gl2ps
-Version: 1.4.2
-Homepage: https://gitlab.onelab.info/gl2ps/gl2ps
-Description: OpenGL to PostScript Printing Library
-Build-Depends: freeglut, zlib, libpng

@@ -1,19 +1,16 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 350b6d7737383029573ea2cce9bd94f1b6756bbd # 5.3.0
-    SHA512 42116b41b8df179193822d25ea34d2c1d9a2af3598f7d25c6665d31aca11a3a11984cdb17b05e5d0874c94562e1b471736f6a1ae67bd3a22d018cd142676634c
+    REF 5.4.0
+    SHA512 4DD6C484032FDFB1BC0E9A95881677FADE39A5E07CB98713A6B29DF0E9A570D6D27856FCAF412A714A5D7708C9CC2ADACE03A06970B06C4C5B2987E7EB2E643D
     HEAD_REF master
     PATCHES
         OpenSSL.patch
         fix-symbol-exports.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DWAVPACK_INSTALL_DOCS=OFF
         -DWAVPACK_BUILD_PROGRAMS=OFF
@@ -23,19 +20,19 @@ vcpkg_configure_cmake(
         -DWAVPACK_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WavPack)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WavPack)
 endif()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if(WIN32 AND (NOT MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

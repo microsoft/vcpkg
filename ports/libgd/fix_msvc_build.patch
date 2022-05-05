@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 17ddf6b..7fe1e6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -118,7 +118,7 @@ else (USE_EXT_GD)
+ 	endif (ENABLE_ICONV)
+ 
+ 	IF (ENABLE_WEBP)
+-		FIND_PACKAGE(WEBP REQUIRED)
++		FIND_PACKAGE(WebP CONFIG REQUIRED)
+ 	ENDIF (ENABLE_WEBP)
+ 
+ 	IF (ENABLE_HEIF)
+diff --git a/src/config.h.cmake b/src/config.h.cmake
+index 2b46a17..af98d23 100644
+--- a/src/config.h.cmake
++++ b/src/config.h.cmake
+@@ -139,3 +139,8 @@
+ 
+ /* Version number of package */
+ #cmakedefine VERSION
++
++#ifdef _MSC_VER
++    #define ssize_t SSIZE_T
++    #define SSIZE_MAX MAXSSIZE_T
++#endif
+\ No newline at end of file
+diff --git a/src/gd_intern.h b/src/gd_intern.h
+index f8f3b5d..380f4db 100644
+--- a/src/gd_intern.h
++++ b/src/gd_intern.h
+@@ -29,6 +29,14 @@
+ # endif
+ #endif
+ 
++#ifdef _MSC_VER
++#define  ssize_t SSIZE_T
++#define MAXSIZE_T ((SIZE_T)~ ((SIZE_T)0))
++#define MAXSSIZE_T ((SSIZE_T) (MAXSIZE_T >> 1))
++#define MINSSIZE_T ((SSIZE_T)~MAXSSIZE_T)
++#define SSIZE_MAX MAXSSIZE_T
++#endif
++
+ #include "gd.h"
+ 
+ #define MIN(a,b) ((a)<(b)?(a):(b))
+diff --git a/src/getopt.c b/src/getopt.c
+index 8651b87..00bccde 100644
+--- a/src/getopt.c
++++ b/src/getopt.c
+@@ -33,7 +33,10 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++
++#ifndef _WIN32
+ #include <unistd.h>
++#endif
+ 
+ int	opterr = 1,		/* if error message should be printed */
+ 	optind = 1,		/* index into parent argv vector */

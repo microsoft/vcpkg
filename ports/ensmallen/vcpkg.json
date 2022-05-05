@@ -1,6 +1,6 @@
 {
   "name": "ensmallen",
-  "version-semver": "2.17.0",
+  "version-semver": "2.18.1",
   "description": "A header-only C++ library for mathematical optimization",
   "homepage": "https://github.com/mlpack/ensmallen",
   "dependencies": [

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/metaparse
-    REF boost-1.76.0
-    SHA512 27a9cc14b97f815960682da087137e656479069a0a5d57b26f9fbd43467217ba34b0d2f2336318e2394190c5d34d95d4fa71c6b3a2f95ccdae5a6010299e5783
+    REF boost-1.79.0
+    SHA512 851b34afc5badece71dbc2bd017e72dc6871ffc246fdedcc3f699b7afdda8b7140016f1f9f44af891aa25bf61aab990ac11e8541ae53a4cae1c25b05131f0a74
     HEAD_REF master
 )
 

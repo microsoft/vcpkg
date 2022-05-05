@@ -1,13 +1,15 @@
 {
   "name": "boost-lambda",
-  "version": "1.76.0",
+  "version": "1.79.0",
   "description": "Boost lambda module",
   "homepage": "https://github.com/boostorg/lambda",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-bind",
     "boost-config",
     "boost-core",
     "boost-detail",
+    "boost-iterator",
     "boost-mpl",
     "boost-preprocessor",
     "boost-tuple",

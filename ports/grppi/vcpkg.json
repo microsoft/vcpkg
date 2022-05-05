@@ -1,0 +1,7 @@
+{
+  "name": "grppi",
+  "version-string": "0.4.0",
+  "port-version": 1,
+  "description": "GrPPI is an open source generic and reusable parallel pattern programming interface developed at University Carlos III of Madrid.",
+  "homepage": "https://github.com/arcosuc3m/grppi"
+}

@@ -1,8 +1,9 @@
 {
   "name": "boost-test",
-  "version": "1.76.0",
+  "version": "1.79.0",
   "description": "Boost test module",
   "homepage": "https://github.com/boostorg/test",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-algorithm",
@@ -31,6 +32,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -11,16 +11,14 @@ endif()
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(lapack_ver 3.9.0)
+set(lapack_ver 3.10.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${lapack_ver}"
-    SHA512 424956ad941a60a4b71e0d451ad48db12a692f8a71a90f3ca7f71d6ecc1922f392746ea84df1c47a46577ed2db32e9e47ec44ad248207c5ac7da179becb712ef
+    SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
     HEAD_REF master
-    PATCHES 4c09cda6943f3c893fb20ed6a490e1ba485148dd.patch
-            intel.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -62,18 +60,18 @@ if(VCPKG_USE_INTERNAL_Fortran)
 else()
     set(USE_OPTIMIZED_BLAS ON)
 endif()
-vcpkg_configure_cmake(
-        PREFER_NINJA
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
-            "-DBLA_VENDOR=OpenBLAS"
-            "-DCBLAS=${CBLAS}"
-            ${FORTRAN_CMAKE}
-        )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DCBLAS=${CBLAS}"
+        ${FORTRAN_CMAKE}
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${lapack_ver} CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
@@ -87,7 +85,7 @@ if(EXISTS "${pcfile}")
     set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
     file(WRITE "${pcfile}" "${_contents}")
 endif()
-if(NOT USE_OPTIMIZED_BLAS)
+if(NOT USE_OPTIMIZED_BLAS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)

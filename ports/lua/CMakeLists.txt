@@ -53,9 +53,6 @@ ENDIF ()
 #DLL
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
 SET_PROPERTY (TARGET lua PROPERTY POSITION_INDEPENDENT_CODE ON)
-IF (COMPILE_AS_CPP)
-    SET_TARGET_PROPERTIES(lua PROPERTIES OUTPUT_NAME "lua-c++")
-ENDIF()
 
 IF (BUILD_SHARED_LIBS AND WIN32)
     TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_BUILD_AS_DLL )
@@ -74,10 +71,41 @@ IF (UNIX)
 ENDIF ()
 
 INSTALL ( TARGETS lua
+    EXPORT unofficial-lua-config
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 )
+
+install(EXPORT unofficial-lua-config DESTINATION share/unofficial-lua)
+
+IF (COMPILE_AS_CPP)
+    ADD_LIBRARY ( lua-cpp ${SRC_LIBLUA} )
+    SET_TARGET_PROPERTIES(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
+    IF (BUILD_SHARED_LIBS AND WIN32)
+        TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_BUILD_AS_DLL )
+    ENDIF ()
+    IF (UNIX)
+        IF (APPLE)
+            TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_USE_DLOPEN)
+        ELSE ()
+            FIND_LIBRARY (LIB_DLOPEN NAMES dl)
+            IF (LIB_DLOPEN)
+                TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_USE_DLOPEN)
+                TARGET_LINK_LIBRARIES (lua-cpp ${LIB_DLOPEN})
+            ENDIF ()
+        ENDIF ()
+    ENDIF ()
+
+    INSTALL ( TARGETS lua-cpp
+        EXPORT unofficial-lua-cpp-config
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    )
+    
+    install(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
+ENDIF()
 
 IF (INSTALL_TOOLS)
     ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
@@ -102,7 +130,7 @@ IF (INSTALL_TOOLS)
     INSTALL ( TARGETS luai luac RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/lua )
 ENDIF ()
 
-IF (NOT DEFINED SKIP_INSTALL_HEADERS)
+IF (NOT SKIP_INSTALL_HEADERS)
     INSTALL(
         FILES
             src/lualib.h

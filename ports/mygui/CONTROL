@@ -1,9 +1,0 @@
-Source: mygui
-Version: 2020-06-17
-Build-Depends: freetype, sdl2-image
-Homepage: http://mygui.info
-Description: Fast, flexible and simple GUI
-
-Feature: opengl
-Description: Use OpenGL render system.
-Build-Depends: opengl

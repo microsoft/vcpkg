@@ -15,6 +15,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_dependency.patch
+        testlib.patch
 )
 
 set(USE_WIN_WCHAR_T OFF)
@@ -22,9 +23,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(USE_WIN_WCHAR_T ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DVXL_BUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
@@ -45,12 +45,17 @@ vcpkg_configure_cmake(
         -DVXL_USE_WIN_WCHAR_T=${USE_WIN_WCHAR_T}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/vxl/cmake)
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+# Remove tests which assume that the source dir still exists
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/vxl/vcl/vcl_where_root_dir.h")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/vxl/core/testlib")
 
-file(INSTALL ${SOURCE_PATH}/core/vxl_copyright.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vxl/cmake/VXLConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "") # only used in comment
+
+file(INSTALL "${SOURCE_PATH}/core/vxl_copyright.h" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

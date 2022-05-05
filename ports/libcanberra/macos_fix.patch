@@ -1,0 +1,14 @@
+diff --git a/configure.ac b/configure.ac
+index f68602d..1451747 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -115,8 +115,7 @@ CC_CHECK_FLAGS_APPEND([with_cflags], [CFLAGS], [\
+ AC_SUBST([WARNINGFLAGS], $with_cflags)
+ 
+ CC_CHECK_FLAGS_APPEND([with_ldflags], [LDFLAGS], [\
+-        -Wl,--as-needed \
+-        -Wl,--gc-sections])
++])
+ AC_SUBST([GCLDFLAGS], $with_ldflags)
+ 
+ #### libtool stuff ####

@@ -1,0 +1,7 @@
+{
+  "name": "camport3",
+  "version": "1.6.2",
+  "description": "percipio.xyz cameras SDK",
+  "homepage": "https://github.com/percipioxyz/camport3",
+  "supports": "((windows & !uwp & !arm & !arm64 & !static) | linux) & !wasm32"
+}

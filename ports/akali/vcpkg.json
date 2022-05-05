@@ -1,0 +1,8 @@
+{
+  "name": "akali",
+  "version-string": "1.42",
+  "port-version": 3,
+  "description": "C++ Common Library.",
+  "homepage": "https://github.com/winsoft666/akali",
+  "supports": "!(arm | arm64 | uwp)"
+}

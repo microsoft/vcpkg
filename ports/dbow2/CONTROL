@@ -1,5 +1,0 @@
-Source: dbow2
-Version: 2019-08-05
-Homepage: https://github.com/dorian3d/DBoW2
-Description: DBoW2 is an improved version of the DBow library, an open source C++ library for indexing and converting images into a bag-of-word representation. 
-Build-Depends: opencv

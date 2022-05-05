@@ -1,5 +1,0 @@
-Source: zkpp
-Version: 0.2.3
-Homepage: https://github.com/tgockel/zookeeper-cpp
-Description: A ZooKeeper client for C++.
-Build-Depends: zookeeper

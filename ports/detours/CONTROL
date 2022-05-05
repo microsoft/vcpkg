@@ -1,5 +1,0 @@
-Source: detours
-Version: 4.0.1
-Port-Version: 2
-Homepage: https://github.com/microsoft/Detours
-Description: Detours is a software package for monitoring and instrumenting API calls on Windows.

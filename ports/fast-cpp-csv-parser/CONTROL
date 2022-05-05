@@ -1,4 +1,0 @@
-Source: fast-cpp-csv-parser
-Version: 2021-01-03
-Description: A small, easy-to-use and fast header-only library for reading comma separated value (CSV) files
-Homepage: https://github.com/ben-strasser/fast-cpp-csv-parser

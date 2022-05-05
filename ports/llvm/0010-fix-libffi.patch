@@ -2,10 +2,10 @@
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/cmake/config-ix.cmake b/llvm/cmake/config-ix.cmake
-index 818fafbce148..66fc9f509ac7 100644
+index dd0aaadb47c7..279435b5b27d 100644
 --- a/llvm/cmake/config-ix.cmake
 +++ b/llvm/cmake/config-ix.cmake
-@@ -335,7 +335,7 @@ if( LLVM_ENABLE_FFI )
+@@ -343,7 +343,7 @@ if( LLVM_ENABLE_FFI )
      message(FATAL_ERROR "libffi includes are not found.")
    endif()
  

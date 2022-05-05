@@ -24,19 +24,19 @@ if(NOT VCPKG_TARGET_IS_OSX)
 endif()
 
 find_library(WEBP_RELEASE NAMES webp PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBP_DEBUG NAMES webpd webp PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(WEBP_DEBUG NAMES webp PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(WEBPDEMUX_RELEASE NAMES webpdemux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPDEMUX_DEBUG NAMES webpdemuxd webpdemux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(WEBPMUX_RELEASE NAMES webpmux libwebpmux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPMUX_DEBUG NAMES webpmuxd webpmux libwebpmuxd libwebpmux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(WEBPDECODER_RELEASE NAMES webpdecoder libwebpdecoder PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPDECODER_DEBUG NAMES webpdecoder libwebpdecoder webpdecoderd libwebpdecoderd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(WEBPDEMUX_DEBUG NAMES webpdemux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(WEBPMUX_RELEASE NAMES webpmux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(WEBPMUX_DEBUG NAMES webpmux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(WEBPDECODER_RELEASE NAMES webpdecoder PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(WEBPDECODER_DEBUG NAMES webpdecoder PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 # Depends on opengl in default build but might depend on giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), sdl1 (windows) 
 # which would require extra libraries to be linked e.g. giflib freeglut sdl1 other ones are already linked
 
 #Dependent libraries
 find_library(LZMA_RELEASE lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(LZMA_DEBUG lzmad lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(LZMA_DEBUG lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     string(APPEND WEBP_RELEASE " -pthread")

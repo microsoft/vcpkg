@@ -1,11 +1,15 @@
 {
   "name": "boost-detail",
-  "version": "1.76.0",
+  "version": "1.79.0",
   "description": "Boost detail module",
   "homepage": "https://github.com/boostorg/detail",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
+    "boost-core",
     "boost-preprocessor",
+    "boost-static-assert",
+    "boost-type-traits",
     "boost-vcpkg-helpers"
   ]
 }

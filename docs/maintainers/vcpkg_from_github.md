@@ -4,6 +4,8 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Download and extract a project from GitHub. Enables support for `install --head`.
 
+This also works with Gitea by specifying the Gitea server with the `GITHUB_HOST` option.
+
 ## Usage:
 ```cmake
 vcpkg_from_github(

@@ -16,7 +16,7 @@ index e2b69fe..aff5917 100644
  endif ()
 +else()
 +    find_package(LibComms CONFIG REQUIRED)
-+    set(cc_compile_file ${LibComms_DIR}/CC_Compile.cmake)
++    set(cc_compile_file "${LibComms_DIR}/CC_Compile.cmake")
 +endif()
  
  if (EXISTS ${cc_compile_file})

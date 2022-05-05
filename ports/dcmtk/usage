@@ -1,0 +1,18 @@
+The package dcmtk provides CMake targets:
+
+    find_package(DCMTK CONFIG REQUIRED)
+    # Note: 23 target(s) were omitted.
+    target_link_libraries(main PRIVATE cmr i2d ijg8 dcmfg)
+
+Add the following cmake code to your CMakeLists.txt to create definitions for DCMTK
+    if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
+        message(WARNING "No vcpkg install dir found, DCMTK definitions are not set")
+    else()
+        target_compile_definitions(main
+            PUBLIC
+                "DCMTK_PREFIX=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+                "DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk/private.dic"
+                "DEFAULT_CONFIGURATION_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/etc/dcmtk/"
+                "DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk/"
+        )
+    endif()

@@ -3,12 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Hpp
-    REF v1.2.184
-    SHA512 564bb5fd3b89fc8078e3c4d99c719f4d62166d78891bc529d6d07add1843137ec8f62a92dbdcfa9ffa8a9677fba41da1b591a033c61b27c43c70c25be32c3205
+    REF 3de6ccafd688df4be0c7830c23167535c511594d #v1.2.203
+    SHA512 a3d3058afd88d9313a676acf49d908f0b00010b34de1e4b1263c3e20079f1ba829c050e5c26c835963b8f117bc9b118e4dea2ad295867da7b657a0890f46fecc
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/vulkan/vulkan.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/vulkan)
+file(COPY "${SOURCE_PATH}/vulkan/vulkan.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vulkan")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

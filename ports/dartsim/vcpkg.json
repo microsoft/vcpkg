@@ -1,7 +1,7 @@
 {
   "name": "dartsim",
-  "version": "6.9.4",
-  "port-version": 1,
+  "version": "6.11.0",
+  "port-version": 3,
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
   "dependencies": [
@@ -21,6 +21,14 @@
     "octomap",
     "ode",
     "tinyxml2",
-    "urdfdom"
+    "urdfdom",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

@@ -1,4 +1,0 @@
-Source: libqglviewer
-Version: 2.7.2-3
-Description: libQGLViewer is an open source C++ library based on Qt that eases the creation of OpenGL 3D viewers.
-Build-Depends: qt5-base[core]

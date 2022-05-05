@@ -1,33 +1,30 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF QuantLib-v1.22
-    SHA512 279c2e9273dd0fbc03d19ac19814e8a3b5544545cc1441982232f89bd313fe76b6e252dbcae8a3d146ecc4f1d1e64632ac412096b89da882ba879a66776fdb91
+    REF QuantLib-v1.26
+    SHA512 597dcb4aa3e2701bea758c7b0c62ca0b303a16eda5f324b349ba4e8cc011f6a256fb26d5c42f2bb432da06df1c7b5ec208195e1104e620b69d2a7e8265fd6470
     HEAD_REF master
-    PATCHES
-        disable-examples-tests.patch
-        fix-mac-build.patch # fixed in next release
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" USE_BOOST_DYNAMIC_LIBRARIES)
+if (VCPKG_TARGET_IS_WINDOWS)
+    # This can (and should) be removed if QuantLib ever supports dynamically linking on Windows
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
-set(QL_MSVC_RUNTIME ${VCPKG_LIBRARY_LINKAGE})
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DUSE_BOOST_DYNAMIC_LIBRARIES=${USE_BOOST_DYNAMIC_LIBRARIES}
-        -DMSVC_RUNTIME=${QL_MSVC_RUNTIME}
+        -DQL_BUILD_BENCHMARK=OFF
+        -DQL_BUILD_EXAMPLES=OFF
+        -DQL_BUILD_TEST_SUITE=OFF
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME QuantLib CONFIG_PATH lib/cmake/QuantLib)
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+# Install custom usage
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE.TXT" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

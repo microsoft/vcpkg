@@ -19,13 +19,6 @@ else ()
   set (LIB_TYPE "STATIC")
 endif ()
 
-if (tools IN_LIST FEATURES)
-  vcpkg_fail_port_install (
-    MESSAGE "Cannot build GeographicLib tools for UWP"
-    ON_TARGET uwp
-  )
-endif ()
-
 vcpkg_configure_cmake (
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -52,3 +45,5 @@ file (INSTALL ${SOURCE_PATH}/LICENSE.txt
 # Install usage
 configure_file (${CMAKE_CURRENT_LIST_DIR}/usage
   ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+
+vcpkg_fixup_pkgconfig()

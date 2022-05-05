@@ -1,9 +1,10 @@
 {
   "name": "openimageio",
-  "version": "2.2.10.0",
-  "port-version": 1,
+  "version": "2.3.10.1",
+  "port-version": 3,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "boost-algorithm",
     "boost-asio",
@@ -22,9 +23,18 @@
     "libheif",
     "libjpeg-turbo",
     "libpng",
+    "libsquish",
     "openexr",
     "robin-map",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
@@ -37,12 +47,6 @@
             "avresample"
           ]
         }
-      ]
-    },
-    "field3d": {
-      "description": "Enable field3D support for openimageio",
-      "dependencies": [
-        "field3d"
       ]
     },
     "freetype": {

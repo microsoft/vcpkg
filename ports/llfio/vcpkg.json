@@ -1,0 +1,57 @@
+{
+  "name": "llfio",
+  "version-string": "2.0-20220112",
+  "description": "P1031 low level file i/o and filesystem library for the C++ standard",
+  "homepage": "https://github.com/ned14/llfio",
+  "supports": "!uwp",
+  "dependencies": [
+    "outcome",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cxx17": {
+      "description": "Do not polyfill C++17 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "cxx17"
+          ]
+        }
+      ]
+    },
+    "cxx20": {
+      "description": "Do not polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "llfio",
+          "default-features": false,
+          "features": [
+            "cxx17"
+          ]
+        },
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "cxx20"
+          ]
+        }
+      ]
+    },
+    "run-tests": {
+      "description": "Build and run the dependency validation tests"
+    },
+    "status-code": {
+      "description": "Have LLFIO use SG14 `status_code` (proposed `std::error`) instead of `std::error_code`."
+    }
+  }
+}

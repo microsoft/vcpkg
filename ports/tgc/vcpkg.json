@@ -1,0 +1,7 @@
+{
+  "name": "tgc",
+  "version-string": "2019-08-11",
+  "port-version": 2,
+  "description": "A tiny garbage collector for C",
+  "homepage": "https://github.com/orangeduck/tgc"
+}

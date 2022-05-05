@@ -37,3 +37,5 @@ vcpkg_copy_pdbs()
 
 # Put the licence file where vcpkg expects it
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/LICENSE ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/copyright)
+
+vcpkg_fixup_pkgconfig()

@@ -1,0 +1,7 @@
+{
+  "name": "tclap",
+  "version-string": "1.2.2",
+  "port-version": 4,
+  "description": "Templatized command-line argument parser for C++",
+  "homepage": "https://sourceforge.net/projects/tclap/"
+}

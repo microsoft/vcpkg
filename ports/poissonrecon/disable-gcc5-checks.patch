@@ -1,52 +1,21 @@
-diff --git a/Src/FEMTree.System.inl b/Src/FEMTree.System.inl
-index ae554d4..87f0423 100644
---- a/Src/FEMTree.System.inl
-+++ b/Src/FEMTree.System.inl
-@@ -792,7 +792,7 @@ void FEMTree< Dim , Real >::_solveRegularMG( UIntPack< FEMSigs ... > , typename
- 	}
- }
- 
--#if defined( __GNUC__ ) && __GNUC__ < 5
-+#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- #warning "you've got me gcc version<5"
- template< unsigned int Dim , class Real >
- template< unsigned int ... FEMSigs >
-@@ -1679,7 +1679,7 @@ SparseMatrix< Real , matrix_index_type > FEMTree< Dim , Real >::systemMatrix( UI
- 			typename FEMTreeNode::template ConstNeighbors< OverlapSizes > neighbors;
- 			neighborKey.getNeighbors( OverlapRadii() , OverlapRadii() , _sNodes.treeNodes[i] , neighbors );
- 
--#if defined( __GNUC__ ) && __GNUC__ < 5
-+#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- 			#warning "you've got me gcc version<5"
- 				matrix.setRowSize( ii , _getMatrixRowSize( UIntPack< FEMSigs ... >() , neighbors ) );
- #else // !__GNUC__ || __GNUC__ >=5
 diff --git a/Src/FEMTree.WeightedSamples.inl b/Src/FEMTree.WeightedSamples.inl
-index b263dda..282387e 100644
+index 7b0d6b4..bb3ad0f 100644
 --- a/Src/FEMTree.WeightedSamples.inl
 +++ b/Src/FEMTree.WeightedSamples.inl
-@@ -225,7 +225,7 @@ Real FEMTree< Dim , Real >::_splatPointData( Allocator< FEMTreeNode > *nodeAlloc
- 
- 	width = 1.0 / ( 1<<_localDepth( temp ) );
- 	_v = v * weight / Real( pow( width , dim ) ) * Real( dx );
+@@ -362,7 +362,7 @@ Real FEMTree< Dim , Real >::_splatPointData( Allocator< FEMTreeNode > *nodeAlloc
+ 		//		pow( width , -dim ): So that each sample is splatted with a unit volume
+ 		V _v = v * weight / Real( pow( width , dim ) ) * dx;
+ //		V _v = v / Length(v) * dx;
 -#if defined( __GNUC__ ) && __GNUC__ < 5
 +#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
+ #ifdef SHOW_WARNINGS
  #warning "you've got me gcc version<5"
- 	_splatPointData< CreateNodes , ThreadSafe , V >( nodeAllocator , temp , position , _v , dataInfo , dataKey );
- #else // !__GNUC__ || __GNUC__ >=5
-@@ -238,7 +238,7 @@ Real FEMTree< Dim , Real >::_splatPointData( Allocator< FEMTreeNode > *nodeAlloc
- 		width = 1.0 / ( 1<<_localDepth( temp ) );
- 
- 		_v = v * weight / Real( pow( width , dim ) ) * Real( dx );
--#if defined( __GNUC__ ) && __GNUC__ < 5
-+#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- #warning "you've got me gcc version<5"
- 		_splatPointData< CreateNodes , ThreadSafe , V >( nodeAllocator , temp , position , _v , dataInfo , dataKey );
- #else // !__GNUC__ || __GNUC__ >=5
+ #endif // SHOW_WARNINGS
 diff --git a/Src/FEMTree.h b/Src/FEMTree.h
-index 8aa3b41..0be77a1 100644
+index 8f00045..2faa0f4 100644
 --- a/Src/FEMTree.h
 +++ b/Src/FEMTree.h
-@@ -219,6 +219,7 @@ template< class Data , typename Pack > struct _SparseOrDenseNodeData{};
+@@ -231,6 +231,7 @@ template< class Data , typename Pack > struct _SparseOrDenseNodeData{};
  template< class Data , unsigned int ... FEMSigs >
  struct _SparseOrDenseNodeData< Data , UIntPack< FEMSigs ... > >
  {
@@ -54,34 +23,25 @@ index 8aa3b41..0be77a1 100644
  	static const unsigned int Dim = sizeof ... ( FEMSigs );
  	typedef UIntPack< FEMSigs ... > FEMSignatures;
  	typedef Data data_type;
-@@ -1841,7 +1842,7 @@ protected:
- 
- 	template< unsigned int ... FEMSigs >
- 	int _getProlongedMatrixRowSize( const FEMTreeNode* node , const typename FEMTreeNode::template ConstNeighbors< UIntPack< BSplineOverlapSizes< FEMSignature< FEMSigs >::Degree >::OverlapSize ... > >& pNeighbors ) const;
--#if defined( __GNUC__ ) && __GNUC__ < 5
-+#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- 	#warning "you've got me gcc version<5"
- 		template< unsigned int ... FEMSigs >
- 	int _getMatrixRowSize( UIntPack< FEMSigs ... > , const typename FEMTreeNode::template ConstNeighbors< UIntPack< BSplineOverlapSizes< FEMSignature< FEMSigs >::Degree >::OverlapSize ... > >& neighbors ) const;
 diff --git a/Src/FEMTree.inl b/Src/FEMTree.inl
-index e4c2310..f88316b 100644
+index 814f1ae..405e996 100644
 --- a/Src/FEMTree.inl
 +++ b/Src/FEMTree.inl
-@@ -374,7 +374,7 @@ SparseNodeData< OutData , UIntPack< DataSigs ... > > FEMTree< Dim , Real >::setD
+@@ -425,7 +425,7 @@ SparseNodeData< OutData , UIntPack< DataSigs ... > > FEMTree< Dim , Real >::setI
  				AddAtomic( weightSum , sample.weight );
  				out *= sample.weight;
  				Allocator< FEMTreeNode > *nodeAllocator = nodeAllocators.size() ? nodeAllocators[ thread ] : NULL;
 -#if defined( __GNUC__ ) && __GNUC__ < 5
 +#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- 				#warning "you've got me gcc version<5"
- 					if( density ) AddAtomic( _pointWeightSum , _splatPointData< true , true , DensityDegree , OutData >( nodeAllocator , *density , p , out , dataField , densityKey , oneKey ? *( (DataKey*)&densityKey ) : dataKey , 0 , maxDepth , Dim , depthBias ) * sample.weight );
- #else // !__GNUC__ || __GNUC__ >=5
-@@ -383,7 +383,7 @@
+ #ifdef SHOW_WARNINGS
+ #warning "you've got me gcc version<5"
+ #endif // SHOW_WARNINGS
+@@ -436,7 +436,7 @@ SparseNodeData< OutData , UIntPack< DataSigs ... > > FEMTree< Dim , Real >::setI
  				else
  				{
  					Real width = (Real)( 1.0 / ( 1<<maxDepth ) );
 -#if defined( __GNUC__ ) && __GNUC__ < 5
 +#if defined( __GNUC__ ) && __GNUC__ < 5 && 0
- 					#warning "you've got me gcc version<5"
- 						_splatPointData< true , true , OutData >( nodeAllocator , _leaf< true >( nodeAllocator , p , maxDepth ) , p , out / (Real)pow( width , Dim ) , dataField , oneKey ? *( (DataKey*)&densityKey ) : dataKey );
- #else // !__GNUC__ || __GNUC__ >=5
+ #ifdef SHOW_WARNINGS
+ #warning "you've got me gcc version<5"
+ #endif // SHOW_WARNINGS

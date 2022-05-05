@@ -1,0 +1,7 @@
+{
+  "name": "speexdsp",
+  "version": "1.2.0",
+  "port-version": 7,
+  "description": "A patent-free, Open Source/Free Software DSP library.",
+  "homepage": "https://speex.org/"
+}

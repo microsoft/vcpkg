@@ -14,6 +14,7 @@ have created, please read [this documentation](../users/registries.md).
       - [Adding a New Version](#adding-a-new-version)
     - [Filesystem Registries](#filesystem-registries)
       - [Adding a New Version](#adding-a-new-version-1)
+    - [Builtin Registries](#builtin-registries)
 
 ## Overview
 
@@ -121,6 +122,13 @@ all previous versions should also be accessible. Since your user will set their
 baseline to a commit ID, that commit ID must always exist, and be accessible
 from your HEAD commit, which is what is actually fetched. This means that your
 HEAD commit should be a child of all previous HEAD commits.
+
+### Builtin Registries
+
+Builtin registries are treated as special Git registries. Instead of fetching
+from a remote url, builtin registries consult the `$VCPKG_ROOT/.git` directory
+of the vcpkg clone. They use the currently checked out `$VCPKG_ROOT/versions`
+directory as the source for versioning information.
 
 #### Adding a New Version
 

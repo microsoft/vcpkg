@@ -1,6 +1,0 @@
-Source: libodb-sqlite
-Version: 2.4.0
-Port-Version: 8
-Homepage: https://www.codesynthesis.com/products/odb/
-Description: Sqlite support for the ODB ORM library
-Build-Depends: libodb, sqlite3

@@ -5,6 +5,14 @@
 set(PATCHES
     # Fix swrAVX512 build
     swravx512-post-static-link.patch
+    # Fix swr build with MSVC
+    swr-msvc-2.patch
+    # Fix swr build with LLVM 13
+    swr-llvm13.patch
+    # Fix radv MSVC build with LLVM 13
+    radv-msvc-llvm13-2.patch
+    # Fix d3d10sw MSVC build
+    d3d10sw.patch
 )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
@@ -16,70 +24,15 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.1.2 
-    SHA512 746ef292dd93ddd23ab34e18e87196db63302defd99357f31ac24876003c75b32cfa8ed38d0292271cd9142a056f6a6549ffcd0f086d0c69c4ff83ac7195188c
+    REF mesa-21.2.5
+    SHA512 a9ead27f08e862738938cf728928b7937ff37e4c26967f2e46e40a3c8419159397f75b2f4ce43f9b453b35bb3716df581087fb7ba8434fafdfab9488c3db6f92
+    FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
-vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
-set(ENV{PYTHON} "${PYTHON3}")
 
-function(vcpkg_get_python_package PYTHON_DIR )
-    cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
-    
-    if(NOT _vgpp_PYTHON_EXECUTABLE)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
-    endif()
-    if(NOT _vgpp_PACKAGES)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
-    endif()
-    if(NOT _vgpp_PYTHON_DIR)
-        get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
-    endif()
 
-    if (WIN32)
-        set(PYTHON_OPTION "")
-    else()
-        set(PYTHON_OPTION "--user")
-    endif()
-
-    if("${_vgpp_PYTHON_DIR}" MATCHES "${DOWNLOADS}") # inside vcpkg
-        if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-            if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-                vcpkg_from_github(
-                    OUT_SOURCE_PATH PYFILE_PATH
-                    REPO pypa/get-pip
-                    REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-                    SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
-                    HEAD_REF master
-                )
-                execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
-            endif()
-            foreach(_package IN LISTS _vgpp_PACKAGES)
-                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
-            endforeach()
-        else()
-            foreach(_package IN LISTS _vgpp_PACKAGES)
-                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
-            endforeach()
-        endif()
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            execute_process(COMMAND pip3 install ${_vgpp_PACKAGES})
-        endif()
-    else() # outside vcpkg
-        foreach(_package IN LISTS _vgpp_PACKAGES)
-            execute_process(COMMAND ${_vgpp_PYTHON_EXECUTABLE} -c "import ${_package}" RESULT_VARIABLE HAS_ERROR)
-            if(HAS_ERROR)
-                message(FATAL_ERROR "Python package '${_package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${_vgpp_PACKAGES}")
-            endif()
-        endforeach()
-    endif()
-endfunction()
-
-vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES setuptools mako)
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
@@ -161,6 +114,10 @@ list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when bu
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
     list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
+        set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
+    endif()
 endif()
 
 vcpkg_configure_meson(
@@ -174,14 +131,14 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 #installed by egl-registry
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/egl.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
 #installed by opengl-registry
 set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
     include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
@@ -190,8 +147,8 @@ set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h
 list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
 file(REMOVE ${_double_files})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES2)
-# # Handle copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
+# Handle copyright
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

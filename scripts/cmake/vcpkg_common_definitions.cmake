@@ -4,11 +4,13 @@
 This file defines the following variables which are commonly needed or used in portfiles:
 
 ```cmake
-VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
-VCPKG_HOST_IS_<target>                   with <host> being one of the following: WINDOWS, LINUX, OSX, FREEBSD, OPENBSD. only defined if <host>
+VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, MINGW, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
+VCPKG_HOST_IS_<host>                     with <host> being one of the following: WINDOWS, LINUX, OSX, FREEBSD, OPENBSD. only defined if <host>
 VCPKG_HOST_PATH_SEPARATOR                Host specific path separator (USAGE: "<something>${VCPKG_HOST_PATH_SEPARATOR}<something>"; only use and pass variables with VCPKG_HOST_PATH_SEPARATOR within "")
 VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
 VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
+VCPKG_HOST_BUNDLE_SUFFIX                 bundle suffix of the host
+VCPKG_TARGET_BUNDLE_SUFFIX               bundle suffix of the target
 VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
 VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
 VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
@@ -86,6 +88,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_EXECUTABLE_SUFFIX ".exe")
 else()
     set(VCPKG_TARGET_EXECUTABLE_SUFFIX "")
+endif()
+
+#Helper variables to identify bundles on host/target
+if(VCPKG_HOST_IS_OSX)
+    set(VCPKG_HOST_BUNDLE_SUFFIX ".app")
+else()
+    set(VCPKG_HOST_BUNDLE_SUFFIX "")
+endif()
+
+if(VCPKG_TARGET_IS_OSX)
+    set(VCPKG_TARGET_BUNDLE_SUFFIX ".app")
+else()
+    set(VCPKG_TARGET_BUNDLE_SUFFIX "")
 endif()
 
 #Helper variables for libraries

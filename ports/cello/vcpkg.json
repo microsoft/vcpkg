@@ -1,0 +1,7 @@
+{
+  "name": "cello",
+  "version-date": "2019-07-23",
+  "port-version": 2,
+  "description": "Higher level programming in C",
+  "homepage": "https://libcello.org/"
+}

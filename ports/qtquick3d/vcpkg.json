@@ -1,12 +1,16 @@
 {
   "name": "qtquick3d",
-  "version-semver": "6.1.2",
+  "version": "6.3.0",
   "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
     },
     "qtdeclarative",
     {
@@ -14,6 +18,7 @@
       "host": true,
       "default-features": false
     },
+    "qtquicktimeline",
     "qtshadertools"
   ],
   "default-features": [
@@ -21,6 +26,7 @@
   ],
   "features": {
     "assimp": {
+      "$comment": "feature assimp requires a newer version of assimp than available within vcpkg. Install assimp with e.g. --head or use an overlay",
       "description": "assimp",
       "dependencies": [
         "assimp"

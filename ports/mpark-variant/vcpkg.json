@@ -1,0 +1,6 @@
+{
+  "name": "mpark-variant",
+  "version-string": "1.4.0",
+  "port-version": 1,
+  "description": "an implementation of C++17 std::variant for C++11/14/17."
+}

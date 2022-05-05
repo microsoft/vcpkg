@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(vamp-cmake)
 
-set(CMAKE_DEBUG_POSTFIX d)
-
 find_package(SndFile REQUIRED)
 
 set(VAMP_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/vamp/vamp.h)
@@ -65,6 +63,14 @@ set_target_properties(vamp-sdk PROPERTIES PUBLIC_HEADER "${SDK_HEADERS}")
 set_target_properties(vamp-hostsdk PROPERTIES PUBLIC_HEADER
                                               "${HOST_SDK_HEADERS}")
 
+# The Visual Studio project files upstream intentionally output different
+# library file names than autotools.
+# https://github.com/tenacityteam/tenacity/pull/577#discussion_r702328284
+if(WIN32)
+    set_target_properties(vamp-sdk PROPERTIES OUTPUT_NAME VampPluginSDK)
+    set_target_properties(vamp-hostsdk PROPERTIES OUTPUT_NAME VampHostSDK)
+endif()
+
 set_property(TARGET vamp-sdk PROPERTY CXX_STANDARD 11)
 set_property(TARGET vamp-hostsdk PROPERTY CXX_STANDARD 11)
 
@@ -74,6 +80,12 @@ add_definitions(-D_LIB -D_USE_MATH_DEFINES)
 target_link_libraries(vamp-hostsdk PUBLIC SndFile::sndfile)
 
 target_link_libraries(vamp-sdk PUBLIC SndFile::sndfile)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pkgconfig/vamp.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vamp.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pkgconfig/vamp-hostsdk.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vamp-hostsdk.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pkgconfig/vamp-sdk.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vamp-sdk.pc" @ONLY)
+file(GLOB PKGCONFIG_FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/*.pc")
+install(FILES ${PKGCONFIG_FILES} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 install(
   TARGETS vamp-hostsdk vamp-sdk
@@ -85,21 +97,21 @@ install(
 if(NOT DISABLE_INSTALL_HEADERS)
   install(
     DIRECTORY vamp-hostsdk/
-    DESTINATION include/vamp-sdk/vamp-hostsdk
+    DESTINATION include/vamp-hostsdk
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE
     PATTERN "config.h" EXCLUDE)
   install(
     DIRECTORY vamp-sdk/
-    DESTINATION include/vamp-sdk/vamp-sdk
+    DESTINATION include/vamp-sdk
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE
     PATTERN "config.h" EXCLUDE)
   install(
     DIRECTORY vamp/
-    DESTINATION include/vamp-sdk/vamp
+    DESTINATION include/vamp
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE

@@ -1,0 +1,21 @@
+{
+  "name": "libgxps",
+  "version": "0.3.2",
+  "port-version": 1,
+  "description": "libgxps is a GObject based library for handling and rendering XPS documents.",
+  "homepage": "https://wiki.gnome.org/Projects/libgxps",
+  "dependencies": [
+    "cairo",
+    "glib",
+    "lcms",
+    "libarchive",
+    "libjpeg-turbo",
+    "libpng",
+    "libxslt",
+    "tiff",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

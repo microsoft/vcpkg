@@ -1,5 +1,0 @@
-Source: mpc
-Version: 1.2.0
-Homepage: http://www.multiprecision.org/mpc/
-Description: GNU MPC is a C library for the arithmetic of complex numbers with arbitrarily high precision and correct rounding of the result.
-Build-Depends: gmp, mpfr

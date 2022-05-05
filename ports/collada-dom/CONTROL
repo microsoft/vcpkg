@@ -1,6 +1,0 @@
-Source: collada-dom
-Version: 2.5.0
-Port-Version: 4
-Homepage: https://github.com/rdiankov/collada-dom
-Description: The COLLADA Document Object Model (DOM) is an application programming interface (API) that provides a C++ object representation of a COLLADA XML instance document.
-Build-Depends: zlib, libxml2, minizip, pcre, uriparser, boost-filesystem, boost-system

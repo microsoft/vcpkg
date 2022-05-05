@@ -1,15 +1,17 @@
+set(ZLIB_FULL_VERSION 2.0.6)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/zlib-ng
-    REF 2.0.3
-    SHA512 e1afe91e1a8b4c54a004b672f539ae68f7dc1f1b08ba93514c0de674230354c944d496753f00ad272f16ef322705f275b5b72dac6c2a757ec741ef3f1ea1d59a
+    REF "${ZLIB_FULL_VERSION}"
+    SHA512 4888f17160d0a87a9b349704047ae0d0dc57237a10e11adae09ace957afa9743cce5191db67cb082991421fc961ce68011199621034d2369c0e7724fad58b4c5
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DZLIB_FULL_VERSION=2.0.3
+        "-DZLIB_FULL_VERSION=${ZLIB_FULL_VERSION}"
         -DZLIB_ENABLE_TESTS=OFF
         -DWITH_NEW_STRATEGIES=ON
     OPTIONS_RELEASE
@@ -19,9 +21,9 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/debug/include
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/debug/include"
 )
-file(INSTALL ${SOURCE_PATH}/LICENSE.md
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE.md"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
 )

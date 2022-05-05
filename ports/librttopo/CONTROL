@@ -1,5 +1,0 @@
-Source: librttopo
-Version: 1.1.0-3
-Homepage: https://git.osgeo.org/gitea/rttopo/librttopo
-Description: The RT Topology Library exposes an API to create and manage standard (ISO 13249 aka SQL/MM) topologies using user-provided [data stores] (doc/DATASTORES.md) and released under the GNU GPL license (version 2 or later).
-Build-Depends: geos

@@ -8,6 +8,7 @@ vcpkg_from_github(
         OsgMacroUtils.patch
         fix-static-install.patch
         CMakeLists.patch
+        use-lib.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -21,19 +22,16 @@ else()
     set(OPTIONS -DDYNAMIC_OPENSCENEGRAPH=OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${OPTIONS}
-            -DBUILD_OSG_EXAMPLES=OFF
-            -DOSG_BUILD_APPLICATION_BUNDLES=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+        -DBUILD_OSG_EXAMPLES=OFF
+        -DOSG_BUILD_APPLICATION_BUNDLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
-#Debug
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Handle License
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

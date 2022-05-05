@@ -1,0 +1,24 @@
+From 2dfb893c130a9f9195805fcc81d7e5e242bc558d Mon Sep 17 00:00:00 2001
+From: Nicolas Fella <nicolas.fella@gmx.de>
+Date: Wed, 11 Aug 2021 17:03:06 +0200
+Subject: [PATCH] Add missing limits include
+
+---
+ src/qmldebug/qqmlprofilerevent_p.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/qmldebug/qqmlprofilerevent_p.h b/src/qmldebug/qqmlprofilerevent_p.h
+index a7e37d1964..01b2f58f16 100644
+--- a/src/qmldebug/qqmlprofilerevent_p.h
++++ b/src/qmldebug/qqmlprofilerevent_p.h
+@@ -48,6 +48,7 @@
+ #include <QtCore/qmetatype.h>
+ 
+ #include <initializer_list>
++#include <limits>
+ #include <type_traits>
+ 
+ //
+-- 
+2.32.0
+

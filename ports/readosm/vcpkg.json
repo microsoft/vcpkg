@@ -1,0 +1,15 @@
+{
+  "name": "readosm",
+  "version-string": "1.1.0a",
+  "port-version": 2,
+  "description": "ReadOSM is an open source library to extract valid data from within an Open Street Map input file (.osm or .osm.pbf)",
+  "homepage": "https://www.gaia-gis.it/gaia-sins/readosm-sources",
+  "dependencies": [
+    "expat",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
+    "zlib"
+  ]
+}

@@ -1,4 +1,0 @@
-Source: fastcgi
-Version: 2020-09-11
-Homepage: https://fastcgi-archives.github.io/
-Description: The FastCGI interface combines the best aspects of CGI and vendor APIs. Like CGI, FastCGI applications run in separate, isolated processes.

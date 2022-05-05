@@ -1,34 +1,34 @@
 #!/bin/sh
 
-# Find .vcpkg-root, which indicates the root of this repo
+# Find .vcpkg-root.
 vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
 while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
     vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
-# Argument parsing
+# Parse arguments.
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
-vcpkgAllowAppleClang=false
-vcpkgBuildTests="OFF"
+vcpkgUseMuslC="OFF"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
         vcpkgDisableMetrics="ON"
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
-        vcpkgUseSystem=true
+        echo "Warning: -useSystemBinaries no longer has any effect; ignored. Note that the VCPKG_USE_SYSTEM_BINARIES environment variable behavior is not changed."
     elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
-        vcpkgAllowAppleClang=true
+        echo "Warning: -allowAppleClang no longer has any effect; ignored."
     elif [ "$var" = "-buildTests" ]; then
-        vcpkgBuildTests="ON"
+        echo "Warning: -buildTests no longer has any effect; ignored."
+    elif [ "$var" = "-musl" ]; then
+        vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
         echo "Options:"
         echo "    -help                Display usage help"
-        echo "    -disableMetrics      Do not build metrics reporting into the executable"
-        echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
-        echo "    -allowAppleClang     Set VCPKG_ALLOW_APPLE_CLANG to build vcpkg in apple with clang anyway"
+        echo "    -disableMetrics      Mark this vcpkg root to disable metrics."
+        echo "    -musl                Use the musl binary rather than the glibc binary on Linux."
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -50,6 +50,7 @@ if [ "$unixName" = "MINGW_NT" ]; then
     exit 0
 fi
 
+# Determine the downloads directory.
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
     downloadsDir="$vcpkgRootDir/downloads"
 else
@@ -61,34 +62,90 @@ else
 
 fi
 
-extractStringBetweenDelimiters()
-{
-    input=$1;leftDelim=$2;rightDelim=$3
-    output="${input##*$leftDelim}"
-    output="${output%%$rightDelim*}"
-    echo "$output"
-}
-
+# Check for minimal prerequisites.
 vcpkgCheckRepoTool()
 {
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl zip unzip tar"
+        echo "On Debian and Ubuntu derivatives:"
+        echo "  sudo apt-get install curl zip unzip tar"
+        echo "On recent Red Hat and Fedora derivatives:"
+        echo "  sudo dnf install curl zip unzip tar"
+        echo "On older Red Hat and Fedora derivatives:"
+        echo "  sudo yum install curl zip unzip tar"
+        echo "On SUSE Linux and derivatives:"
+        echo "  sudo zypper install curl zip unzip tar"
+        echo "On Arch Linux and derivatives:"
+        echo "  sudo pacman -S curl zip unzip tar cmake ninja"
+        echo "On Alpine:"
+        echo "  apk add build-base cmake ninja zip unzip curl git"
+        echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
         exit 1
     fi
 }
 
-vcpkgCheckBuildTool()
-{
-    __tool=$1
-    if ! command -v "$__tool" >/dev/null 2>&1 ; then
-	echo "Could not find $__tool. Please install it (and other dependencies) with:"
-	echo "sudo apt-get install cmake ninja-build"
-	exit 1
-    fi
-}
+vcpkgCheckRepoTool curl
+vcpkgCheckRepoTool zip
+vcpkgCheckRepoTool unzip
+vcpkgCheckRepoTool tar
 
+UNAME="$(uname)"
+ARCH="$(uname -m)"
+
+if [ -e /etc/alpine-release ]; then
+    vcpkgUseSystem="ON"
+    vcpkgUseMuslC="ON"
+fi
+
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem="ON"
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
+fi
+
+if [ "$vcpkgUseSystem" = "ON" ]; then
+    vcpkgCheckRepoTool cmake
+    vcpkgCheckRepoTool ninja
+    vcpkgCheckRepoTool git
+    vcpkgCheckRepoTool gcc
+fi
+
+# Determine what we are going to do to bootstrap:
+# MacOS -> Download vcpkg-macos
+# Linux
+#   useMuslC -> download vcpkg-muslc
+#   amd64 -> download vcpkg-glibc
+# Otherwise
+#   Download and build from source
+
+# Choose the vcpkg binary to download
+vcpkgDownloadTool="ON"
+vcpkgToolReleaseTag="2022-03-30"
+if [ "$UNAME" = "Darwin" ]; then
+    echo "Downloading vcpkg-macos..."
+    vcpkgToolReleaseSha="8bf65bc52b48c0c048c465036dfab60c0d6b84d2c61bf36c948b58d2da0a6f9f21b00dbc888fe5b163c275e901a0014482e50895ee607408cf533057b66a4e73"
+    vcpkgToolName="vcpkg-macos"
+elif [ "$vcpkgUseMuslC" = "ON" ]; then
+    echo "Downloading vcpkg-muslc..."
+    vcpkgToolReleaseSha="d5a0a67ef966b1db5ded37986ccabd8a6dc2531209e07945c32679faab45c0f001b95eef342e41f8937234e8efa6b038847b78f77c19d949a7d2aa7857b6a019"
+    vcpkgToolName="vcpkg-muslc"
+elif [ "$ARCH" = "x86_64" ]; then
+    echo "Downloading vcpkg-glibc..."
+    vcpkgToolReleaseSha="14dae353ce576e688cd93f0607f4eb7d724fb34f4c78c62d90db0c0fc4806e21c0da2b4fbe0b2a776ac3e8c669685e8d26990b5828be252645ac9289c7d015f9"
+    vcpkgToolName="vcpkg-glibc"
+else
+    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
+    vcpkgDownloadTool="OFF"
+    vcpkgToolReleaseSha="d1fba2655e04dbf599129e688b40be6b61cc23c41943b5d0d4ac23a7cb5df195fadfe252a8c9ea619d4730352eb40e424ef50919ecfad6e52a76b2b4627dbb16"
+fi
+
+# Do the download or build.
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
@@ -117,107 +174,26 @@ vcpkgCheckEqualFileHash()
 vcpkgDownloadFile()
 {
     url=$1; downloadPath=$2 sha512=$3
-    vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
     curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" --silent --show-error --fail || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
+    chmod +x "$downloadPath.part"
     mv "$downloadPath.part" "$downloadPath"
 }
 
-vcpkgExtractArchive()
+vcpkgExtractTar()
 {
     archive=$1; toPath=$2
     rm -rf "$toPath" "$toPath.partial"
     mkdir -p "$toPath.partial"
-
-    archiveType="${archive##*.}"
-    if [ "$archiveType" = "zip" ]; then
-        vcpkgCheckRepoTool "unzip"
-        $(cd "$toPath.partial" && unzip -qqo "$archive")
-    else
-        vcpkgCheckRepoTool "tar"
-        $(cd "$toPath.partial" && tar xzf "$archive")
-    fi
+    $(cd "$toPath.partial" && tar xzf "$archive")
     mv "$toPath.partial" "$toPath"
 }
 
-fetchTool()
-{
-    tool=$1; UNAME=$2; __output=$3
-
-    if [ "$tool" = "" ]; then
-        echo "No tool name provided"
-        return 1
-    fi
-
-    if [ "$UNAME" = "Linux" ]; then
-        os="linux"
-    elif [ "$UNAME" = "Darwin" ]; then
-        os="osx"
-    elif [ "$UNAME" = "FreeBSD" ]; then
-        os="freebsd"
-    else
-        echo "Unknown uname: $UNAME"
-        return 1
-    fi
-
-    xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
-    toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
-    toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ]; then
-        echo "Unknown tool: $tool"
-        return 1
-    fi
-
-    version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
-
-    toolPath="$downloadsDir/tools/$tool-$version-$os"
-
-    exeRelativePath="$(extractStringBetweenDelimiters "$toolData" "<exeRelativePath>" "</exeRelativePath>")"
-    exePath="$toolPath/$exeRelativePath"
-
-    if [ -e "$exePath" ]; then
-        eval $__output="'$exePath'"
-        return 0
-    fi
-
-    isArchive=true
-    if [ $isArchive = true ]; then
-        archiveName="$(extractStringBetweenDelimiters "$toolData" "<archiveName>" "</archiveName>")"
-        downloadPath="$downloadsDir/$archiveName"
-    else
-        echo "Non-archives not supported yet"
-        return 1
-    fi
-
-    url="$(extractStringBetweenDelimiters "$toolData" "<url>" "</url>")"
-    sha512="$(extractStringBetweenDelimiters "$toolData" "<sha512>" "</sha512>")"
-    if ! [ -e "$downloadPath" ]; then
-        echo "Downloading $tool..."
-        vcpkgDownloadFile $url "$downloadPath" $sha512
-        echo "Downloading $tool... done."
-    else
-        vcpkgCheckEqualFileHash $url "$downloadPath" $sha512
-    fi
-
-    if [ $isArchive = true ]; then
-        echo "Extracting $tool..."
-        vcpkgExtractArchive "$downloadPath" "$toolPath"
-        echo "Extracting $tool... done."
-    fi
-
-    if ! [ -e "$exePath" ]; then
-        echo "Could not detect or download $tool"
-        return 1
-    fi
-
-    eval $__output="'$exePath'"
-    return 0
-}
-
-selectCXX()
-{
+if [ "$vcpkgDownloadTool" = "ON" ]; then
+    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$vcpkgToolReleaseTag/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+else
     if [ "x$CXX" = "x" ]; then
         if which g++-11 >/dev/null 2>&1; then
             CXX=g++-11
@@ -236,81 +212,40 @@ selectCXX()
         fi
         # If we can't find g++, allow CMake to do the look-up
     fi
-}
 
-# Preparation
-UNAME="$(uname)"
-ARCH="$(uname -m)"
+    vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+    baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+    buildDir="$baseBuildDir/build"
+    tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+    srcBaseDir="$baseBuildDir/src"
+    srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
 
-# Force using system utilities for building vcpkg if host arch is arm, arm64, s390x, or ppc64le.
-if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" -o "$ARCH" = "ppc64le" ]; then
-    vcpkgUseSystem=true
-fi
-
-if [ "$UNAME" = "OpenBSD" ]; then
-    vcpkgUseSystem=true
-
-    if [ -z "$CXX" ]; then
-        CXX=/usr/bin/clang++
-    fi
-    if [ -z "$CC" ]; then
-        CC=/usr/bin/clang
-    fi
-fi
-
-if $vcpkgUseSystem; then
-    cmakeExe="cmake"
-    ninjaExe="ninja"
-    vcpkgCheckBuildTool "$cmakeExe"
-    vcpkgCheckBuildTool "$ninjaExe"
-else
-    fetchTool "cmake" "$UNAME" cmakeExe || exit 1
-    fetchTool "ninja" "$UNAME" ninjaExe || exit 1
-fi
-if [ "$os" = "osx" ]; then
-    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
-        CXX=clang++
+    if [ -e "$tarballPath" ]; then
+        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
     else
-        selectCXX
+        echo "Downloading vcpkg tool sources"
+        vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
     fi
-else
-    selectCXX
+
+    echo "Building vcpkg-tool..."
+    rm -rf "$baseBuildDir"
+    mkdir -p "$buildDir"
+    vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+    cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
+
+    if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
+        cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+    fi
+
+    (cd "$buildDir" && CXX="$CXX" eval cmake "$srcDir" $cmakeConfigOptions) || exit 1
+    (cd "$buildDir" && cmake --build .) || exit 1
+
+    rm -rf "$vcpkgRootDir/vcpkg"
+    cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 fi
 
-# Do the build
-vcpkgToolReleaseTag="2021-08-03"
-vcpkgToolReleaseSha="d4c25be83a7685bc268254909796b9ef8e1549454a45b1154ab1d64f9846c91ce48c8a1cf00a864afb9a6dd878d82ceaea5981d53e57968196a9b6e90934fdef"
-vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
-vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
-baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
-buildDir="$baseBuildDir/build"
-tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
-srcBaseDir="$baseBuildDir/src"
-srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
-
-if [ -e "$tarballPath" ]; then
-    vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
-else
-    echo "Downloading vcpkg tool sources"
-    vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
-fi
-
-echo "Building vcpkg-tool..."
-rm -rf "$baseBuildDir"
-mkdir -p "$buildDir"
-vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
-cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe'"
-
-if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
-    cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
-fi
-
-(cd "$buildDir" && CXX="$CXX" eval "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
-(cd "$buildDir" && "$cmakeExe" --build .) || exit 1
-
-rm -rf "$vcpkgRootDir/vcpkg"
-cp "$buildDir/vcpkg" "$vcpkgRootDir/"
-
+# Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then
     touch "$vcpkgRootDir/vcpkg.disable-metrics"
 elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then

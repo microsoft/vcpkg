@@ -4,22 +4,20 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   return()
 endif()
 
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
-set(LIBRESSL_VERSION 3.3.3)
-set(LIBRESSL_HASH 2d0b5f4cfe37d573bc64d5967abb77f536dbe581fbad9637d925332bcdfd185fe6810335b2af80a89f92d7e6edaa8ea3ba2492c60a117e47ea1b2d6aacf01f0f)
+set(LIBRESSL_VERSION 3.4.2)
+set(LIBRESSL_HASH ae91a840b29330681dc2a4f55a9bd760e6fe1bdfb3399017aae3a16bd21b413e97cbb8ba504400f0a1f42757f6128b3fa763d06bae4fc9f2b9dbeea867a57ad2)
 
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
-    URLS https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz
-    FILENAME ${PORT}-${LIBRESSL_VERSION}.tar.gz
-    SHA512 ${LIBRESSL_HASH}
+    URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz" "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz"
+    FILENAME "${PORT}-${LIBRESSL_VERSION}.tar.gz"
+    SHA512 "${LIBRESSL_HASH}"
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
-    REF ${LIBRESSL_VERSION}
+    REF "${LIBRESSL_VERSION}"
     PATCHES
         0001-enable-ocspcheck-on-msvc.patch
         0002-suppress-msvc-warnings.patch
@@ -30,9 +28,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools" LIBRESSL_APPS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBRESSL_TESTS=OFF
@@ -40,16 +37,10 @@ vcpkg_configure_cmake(
         -DLIBRESSL_APPS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-        set(EXECUTABLE_SUFFIX .exe)
-    endif()
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl${EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ocspcheck${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/ocspcheck${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+    vcpkg_copy_tools(TOOL_NAMES ocspcheck openssl DESTINATION "${CURRENT_PACKAGES_DIR}/tools/openssl" AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -74,6 +65,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")
-        execute_process(COMMAND "${CMAKE_COMMAND}" -E create_symlink "${LIB}" "${LINK}")
+        file(CREATE_LINK "${LIB}" "${LINK}")
     endforeach()
 endif()

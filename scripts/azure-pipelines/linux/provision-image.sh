@@ -3,8 +3,10 @@
 # SPDX-License-Identifier: MIT
 #
 
-sudo apt -y update
-sudo apt -y dist-upgrade
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get -y update
+apt-get -y dist-upgrade
 # Install common build dependencies
 APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
@@ -34,10 +36,7 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
 # Additionally required by some packages to install additional python packages
-APT_PACKAGES="$APT_PACKAGES python3-pip"
-
-# Additionally required by rtaudio
-APT_PACKAGES="$APT_PACKAGES libasound2-dev"
+APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
 
 # Additionally required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
@@ -48,10 +47,16 @@ APT_PACKAGES="$APT_PACKAGES libwayland-dev"
 # Additionally required by all GN projects
 APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
 
+# Additionally required by libctl
+APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
+
+# Additionally required by gtk
+APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
-sudo apt -y install $APT_PACKAGES
+apt-get -y install $APT_PACKAGES
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
@@ -60,38 +65,24 @@ curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
 tar -xf nasm-2.15.05.tar.gz
 cd nasm-2.15.05/
 ./configure --prefix=/usr && make -j
-sudo make install
+make install
 cd ~
 
 # Install the latest Haskell stack
-curl -sSL https://get.haskellstack.org/ | sudo sh
+curl -sSL https://get.haskellstack.org/ | sh
 
 # Install CUDA
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-sudo apt -y update
-sudo apt install -y --no-install-recommends cuda-compiler-11-3 cuda-libraries-dev-11-3 cuda-driver-dev-11-3 \
-  cuda-cudart-dev-11-3 libcublas-11-3 libcurand-dev-11-3 libcudnn8-dev libnccl2 libnccl-dev
+mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+apt-get -y update
+apt-get install -y --no-install-recommends cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
+  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt update
-sudo add-apt-repository universe
-sudo apt install -y powershell
-
-# Write script to provision disks used by cloud-init
-echo "if [ ! -d \"/mnt/vcpkg-ci\" ]; then" > /etc/provision-disks.sh
-echo "sudo parted /dev/sdb mklabel gpt" >> /etc/provision-disks.sh
-echo "sudo parted /dev/sdb mkpart cidisk ext4 0% 100%" >> /etc/provision-disks.sh
-echo "sudo mkfs -t ext4 /dev/sdb1" >> /etc/provision-disks.sh
-echo "sudo mkdir /mnt/vcpkg-ci -m=777" >> /etc/provision-disks.sh
-echo "echo \"/dev/sdb1 /mnt/vcpkg-ci ext4 barrier=0 0 0\" | sudo tee -a /etc/fstab" >> /etc/provision-disks.sh
-echo "sudo mount -a" >> /etc/provision-disks.sh
-echo "sudo chmod 777 /mnt/vcpkg-ci" >> /etc/provision-disks.sh
-echo "fi" >> /etc/provision-disks.sh
-sudo chmod 700 /etc/provision-disks.sh
-
-# provision-image.ps1 will append installation of the SAS token here
+dpkg -i packages-microsoft-prod.deb
+apt-get update
+add-apt-repository universe
+apt-get install -y powershell

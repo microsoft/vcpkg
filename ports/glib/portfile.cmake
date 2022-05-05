@@ -1,18 +1,15 @@
-# Glib uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 # Glib relies on DllMain on Windows
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
     #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
 endif()
 
-set(GLIB_MAJOR_MINOR 2.66)
-set(GLIB_PATCH 4)
+set(GLIB_MAJOR_MINOR 2.70)
+set(GLIB_PATCH 5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 b3bc3e6e5cca793139848940e5c0894f1c7e3bd3a770b213a1ea548ac54a2432aebb140ed54518712fb8af36382b3b13d5f7ffd3d87ff63cba9e2f55434f7260)
+    URLS "https://gitlab.gnome.org/GNOME/glib/-/archive/${GLIB_MAJOR_MINOR}.${GLIB_PATCH}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
+    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
+    SHA512 69c032358e0a0d88414a97e0bc898b5ce2797839a432b95790d03f108e55a79eee2d51bab5e281cc9469e2a57accc0d2c9bbaa80f9369050534387d1a215dd98)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,7 +17,7 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         use-libiconv-on-windows.patch
-        fix-libintl-detection.patch
+        libintl.patch
 )
 
 
@@ -33,24 +30,25 @@ else()
     list(APPEND OPTIONS -Dselinux=disabled)
 endif()
 
+if (libmount IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dlibmount=enabled)
+else()
+    list(APPEND OPTIONS -Dlibmount=disabled)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Diconv=external)
-else()
-    #list(APPEND OPTIONS -Diconv=libc) ?
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dbuild_tests=false
         -Dinstalled_tests=false
         ${OPTIONS}
-        -Dinternal_pcre=false
+        -Dtests=false
+        -Dxattr=false
+        -Dlibelf=disabled
 )
-#-Dnls=true
-#-Dlibelf=false
-#-Dlibmount=false
-#-Dxattr=true?
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
@@ -93,7 +91,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-    
+
 IF(VCPKG_TARGET_IS_WINDOWS)
     set(SYSTEM_LIBRARIES dnsapi iphlpapi winmm lshlwapi)
 else()
@@ -124,3 +122,8 @@ string(REPLACE "path = os.path.join(filedir, '..')" "path = os.path.join(filedir
 string(REPLACE "path = os.path.join('${CURRENT_PACKAGES_DIR}/share', 'glib-2.0')" "path = os.path.join('unuseable/share', 'glib-2.0')" _contents "${_contents}")
 
 file(WRITE "${_file}" "${_contents}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gdb")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/glib/glib-gettextize")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/glib/glib-gettextize" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+endif()

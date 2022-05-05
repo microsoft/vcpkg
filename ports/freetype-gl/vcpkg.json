@@ -1,0 +1,10 @@
+{
+  "name": "freetype-gl",
+  "version-date": "2022-01-17",
+  "description": "OpenGL text using one vertex buffer, one texture and FreeType",
+  "homepage": "https://github.com/rougier/freetype-gl",
+  "dependencies": [
+    "freetype",
+    "glew"
+  ]
+}

@@ -1,13 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF jun2021
-    SHA512 ed61e14bb217bdff803ad95bfffe31aac7ff0a3f78b963aac183c61233374def4c0b052d1bf9b0d03900fc5be052e1d8fe8de00e81f01349eff1a564d55be610
-    HEAD_REF master
+    REF mar2022
+    SHA512 ec5cfcbba0f361a2a7d572284c77a88464fcf38a10b113f12b1e51a1c0c42a651abd6f8bbf257a3470b35c62c8d25af9a79925f2e0c79eb33a8b1c9ca6a9191b
+    HEAD_REF main
 )
 
 vcpkg_check_features(
@@ -26,21 +24,20 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jun2021/meshconvert.exe"
-    FILENAME "meshconvert-jun2021.exe"
-    SHA512 2a5e1eb69f24fd321d372dcd790970a15957757eacd0a861001299409ff56372bc890c2d8baba32368c81eeb63cdd7aef514c57bca1e7e4e3f7bdf494c3453a0
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/mar2022/meshconvert.exe"
+    FILENAME "meshconvert-mar2022.exe"
+    SHA512 43b4305b73994eccc086bf1812147a5156359f5d927475b915bbf8edde70189cc419b96703aeb736f76d9d52037657f10ba0c104f9713c1f0defb28ce7a46ac1
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
@@ -49,7 +46,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-jun2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-mar2022.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

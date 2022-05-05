@@ -1,0 +1,16 @@
+{
+  "name": "string-theory",
+  "version": "3.5",
+  "description": "Flexible modern C++ string library with type-safe formatting.",
+  "homepage": "https://github.com/zrax/string_theory",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

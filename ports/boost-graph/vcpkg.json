@@ -1,8 +1,9 @@
 {
   "name": "boost-graph",
-  "version": "1.76.0",
+  "version": "1.79.0",
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-any",
@@ -45,10 +46,6 @@
     "boost-smart-ptr",
     "boost-spirit",
     "boost-static-assert",
-    {
-      "name": "boost-test",
-      "platform": "!uwp"
-    },
     "boost-throw-exception",
     "boost-tti",
     "boost-tuple",
@@ -57,6 +54,10 @@
     "boost-unordered",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-xpressive"
+    "boost-xpressive",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

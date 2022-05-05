@@ -1,6 +1,0 @@
-Source: brpc
-Version: 0.9.7
-Homepage: https://github.com/apache/incubator-brpc
-Description: Industrial-grade RPC framework used throughout Baidu, with 1,000,000+ instances and thousands kinds of services, called "baidu-rpc" inside Baidu.
-Build-Depends: leveldb, gflags, glog, protobuf[zlib], openssl, thrift
-Supports: !windows

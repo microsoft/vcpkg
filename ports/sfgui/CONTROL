@@ -1,5 +1,0 @@
-Source: sfgui
-Version: 0.4.0-3
-Homepage: https://github.com/TankOs/SFGUI
-Description: simple and fast graphical user interface library
-Build-Depends: sfml

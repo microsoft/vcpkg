@@ -2,8 +2,8 @@ set(OTL_VERSION 40463)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_${OTL_VERSION}.zip"
-    FILENAME "otlv4_${OTL_VERSION}-9485a0fe15a7.zip"
-    SHA512 9485a0fe15a737d55b0746a7e289b1a20e9435ed5c69bda7010705f8cde0a456163d83221d0103236a723837596613b578edc6d3d0007ce80a6cc76b4ed83888
+    FILENAME "otlv4_${OTL_VERSION}-9485a0fe15a7-1.zip"
+    SHA512 46a50234009ca8e8dba3b0b781f4b496759f4c5697f045d816c7e4eddda61da63d03acf29b4d1f71ee035aba4c6daa72c9a546085a6d7b3c192353b854526392
 )
 
 vcpkg_extract_source_archive_ex(
@@ -16,6 +16,16 @@ file(INSTALL "${SOURCE_PATH}/otlv${OTL_VERSION}.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}" 
     RENAME otlv4.h)
 
-file(INSTALL "${SOURCE_PATH}/otlv${OTL_VERSION}.h" 
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 
-    RENAME copyright)
+file(READ "${SOURCE_PATH}/otlv${OTL_VERSION}.h" copyright_contents)
+string(FIND "${copyright_contents}" "#ifndef OTL_H" start_of_source)
+if(start_of_source EQUAL "-1")
+    message(FATAL_ERROR "Could not find start of source; the header file has changed in a way that we cannot get the license text.")
+endif()
+string(SUBSTRING "${copyright_contents}" 0 "${start_of_source}" copyright_contents)
+string(REGEX REPLACE "// ?" "" copyright_contents "${copyright_contents}")
+string(REGEX REPLACE "=+\n" "" copyright_contents "${copyright_contents}")
+
+file(WRITE
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+    "${copyright_contents}"
+)

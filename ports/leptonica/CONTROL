@@ -1,6 +1,0 @@
-Source: leptonica
-Version: 1.80.0
-Port-Version: 2
-Homepage: https://github.com/DanBloomberg/leptonica
-Description: An open source library containing software that is broadly useful for image processing and image analysis applications
-Build-Depends: libjpeg-turbo, zlib, libpng, tiff, giflib, libwebp, openjpeg

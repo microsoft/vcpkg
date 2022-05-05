@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 44c40ac23023b7b3dd82744372c06817cc203898  # v1.37.0
-    SHA512 dacd85b3a94cb759a086239aa2661f1b93728a1554ebc0f10c42aeb49c0d6309963832324773c3a153c3d2fcf807cb55b0e197b128e0a4e199c9e19a3976abd6
+    REF 591d56e1300b6d11948e1b821efac785a295989c # v1.44.0
+    SHA512 b24f82768eed95b017a499ffb539af1f59d6916ab2da5ffb1de344ea7b0b7df536d1bb29a9bcb273bd84bc1f11b62383dc6c7df62e50d57621228f5aeeca6d5d
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -14,6 +14,7 @@ vcpkg_from_github(
         00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
+        00006-fix-uwp-error.patch
         00009-use-system-upb.patch
         00010-add-feature-absl-sync.patch
         00011-fix-csharp_plugin.patch
@@ -43,9 +44,8 @@ vcpkg_check_features(
         codegen gRPC_BUILD_CODEGEN
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
@@ -59,20 +59,20 @@ vcpkg_configure_cmake(
         -DgRPC_RE2_PROVIDER=package
         -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
-        -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
-        -DgRPC_INSTALL_CSHARP_EXT=OFF
         -DgRPC_INSTALL_BINDIR:STRING=bin
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
-        -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
-        -DPROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
+        -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        -DPROTOBUF_PROTOC_EXECUTABLE="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    MAYBE_UNUSED_VARIABLES
+        gRPC_MSVC_STATIC_RUNTIME
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
@@ -87,14 +87,14 @@ if (gRPC_BUILD_CODEGEN)
             grpc_ruby_plugin
     )
 else()
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets-vcpkg-tools.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-vcpkg-tools.cmake @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/gRPCTargets-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-vcpkg-tools.cmake" @ONLY)
 endif()
 
 # Ignore the C# extension DLL in bin/
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

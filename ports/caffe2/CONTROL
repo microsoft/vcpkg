@@ -1,6 +1,0 @@
-Source: caffe2
-Version: 0.8.1-3
-Build-Depends: lmdb, gflags, glog, eigen3, protobuf
-Homepage: https://github.com/caffe2/caffe2
-Description: Caffe2 is a lightweight, modular, and scalable deep learning framework.
-Supports: !x86

@@ -1,0 +1,14 @@
+{
+  "name": "dbow3",
+  "version-string": "1.0.0",
+  "port-version": 1,
+  "description": "DBoW3 is an improved version of the DBow2 library, an open source C++ library for indexing and converting images into a bag-of-word representation.",
+  "dependencies": [
+    {
+      "name": "opencv3",
+      "features": [
+        "contrib"
+      ]
+    }
+  ]
+}

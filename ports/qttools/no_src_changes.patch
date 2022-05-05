@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20bd474..7b69743 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -187,13 +187,13 @@ endif()
+ if(WIN32)
+     file(TO_NATIVE_PATH ${XXD_COMMAND} XXD_COMMAND)
+     file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/master.css MASTER_FILE)
+-    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc
+-        COMMAND type ${MASTER_FILE} | "${XXD_COMMAND}" -i > ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc)
++    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc
++        COMMAND type ${MASTER_FILE} | "${XXD_COMMAND}" -i > ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc)
+ else()
+-    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc
+-        COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/include/master.css | xxd -i > ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc)
++    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc
++        COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/include/master.css | xxd -i > ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc)
+ endif()
+-set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc PROPERTIES GENERATED TRUE)
++set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc PROPERTIES GENERATED TRUE)
+ 
+ # Tests
+ 
+@@ -218,7 +218,7 @@ if (BUILD_TESTING)
+     add_executable(
+         ${TEST_NAME}
+         ${TEST_LITEHTML}
+-        ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc
++        ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc
+     )
+ 
+     set_target_properties(${TEST_NAME} PROPERTIES
+@@ -243,7 +243,7 @@ if (BUILD_TESTING)
+ endif()
+ 
+ #     set(TEST_NAME ${PROJECT_NAME}_tests)
+-#     add_executable(${TEST_NAME} ${TEST_LITEHTML} ${CMAKE_CURRENT_SOURCE_DIR}/src/master.css.inc)
++#     add_executable(${TEST_NAME} ${TEST_LITEHTML} ${CMAKE_CURRENT_BINARY_DIR}/src/master.css.inc)
+ #     set_target_properties(${TEST_NAME} PROPERTIES
+ #         CXX_STANDARD 11
+ #         C_STANDARD 99

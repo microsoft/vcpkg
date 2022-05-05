@@ -1,5 +1,5 @@
 diff --git a/src/gd_interpolation.c b/src/gd_interpolation.c
-index b9a206551..f75469329 100644
+index ce27220..8895072 100644
 --- a/src/gd_interpolation.c
 +++ b/src/gd_interpolation.c
 @@ -75,7 +75,7 @@ TODO:
@@ -10,4 +10,4 @@ index b9a206551..f75469329 100644
 +# include <intrin.h>
  #endif
  
- static gdImagePtr gdImageScaleBilinear(gdImagePtr im, 
+ static gdImagePtr gdImageScaleBilinear(gdImagePtr im,

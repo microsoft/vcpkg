@@ -1,0 +1,8 @@
+{
+  "name": "turbobase64",
+  "version-date": "2020-01-12",
+  "port-version": 2,
+  "description": "Fastest Base64 SIMD/Neon library",
+  "homepage": "https://github.com/powturbo/Turbo-Base64",
+  "supports": "!windows"
+}

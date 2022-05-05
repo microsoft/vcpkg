@@ -27,6 +27,11 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### FETCH_REF
+The git branch to fetch in non-HEAD mode. After this is fetched,
+then `REF` is checked out. This is useful in cases where the git server
+does not allow checking out non-advertised objects.
+
 ### HEAD_REF
 The git branch to use when the package is requested to be built from the latest sources.
 
