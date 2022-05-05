@@ -11,11 +11,11 @@ vcpkg_from_github(
         0002-Remove-duplicate-installs.patch
         0003-Add-exports.patch
         0004-Change-install-dir-for-pkgconfig.patch
+        0005-add-version.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dfreetype-gl_BUILD_APIDOC=OFF
         -Dfreetype-gl_BUILD_DEMOS=OFF
@@ -23,12 +23,15 @@ vcpkg_configure_cmake(
         -Dfreetype-gl_BUILD_MAKEFONT=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetype-gl RENAME copyright)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/freetype-gl" RENAME copyright)
+
