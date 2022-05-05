@@ -1801,15 +1801,15 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "1.29.7",
+      "baseline": "2.46.0",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "2.10.2",
+      "baseline": "2.14.0",
       "port-version": 0
     },
     "daw-utf-range": {
-      "baseline": "2.2.0",
+      "baseline": "2.2.2",
       "port-version": 0
     },
     "dbg-macro": {
