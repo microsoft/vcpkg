@@ -20,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      "cgnstools"    CGNS_BUILD_CGNSTOOLS
 )
 
+set(CGNS_BUILD_OPTS "")
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "64")
     list(APPEND CGNS_BUILD_OPTS "-DCGNS_ENABLE_64BIT=ON")
 endif()
@@ -32,7 +33,7 @@ endif()
 
 # By default, when possible, vcpkg_cmake_configure uses ninja-build as its build system
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CGNS_BUILD_OPTS}
@@ -98,9 +99,8 @@ if("cgnstools" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
         # Copy tools from "bin" to "tools/cgns"
         set(CGNSTOOLS "cgconfig.bat" "cgnscalc.bat" "unitconv.bat" "cgnsview.bat" "cgnsplot.bat" "cgnsnodes.bat")
-        foreach(CGNSTOOL ${CGNSTOOLS})
-            file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}")
+        foreach(CGNSTOOL IN LISTS CGNSTOOLS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${CGNSTOOL}")
         endforeach()
 
         # Adjust paths in batch file
@@ -108,9 +108,8 @@ if("cgnstools" IN_LIST FEATURES)
     elseif(VCPKG_TARGET_IS_LINUX)
         # Copy tools from "bin" to "tools/cgns"
         set(CGNSTOOLS "cgconfig" "cgnscalc.sh" "unitconv.sh" "cgnsview.sh" "cgnsplot.sh" "cgnsnodes.sh")
-        foreach(CGNSTOOL ${CGNSTOOLS})
-            file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}")
+        foreach(CGNSTOOL IN LIOSTS CGNSTOOLS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${CGNSTOOL}")
         endforeach()
 
         # adjust paths in batch files
@@ -119,16 +118,16 @@ if("cgnstools" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-# Cleanup /debug/share
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+endif()
 
-# Cleanup /debug/include and /include
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h)
-file(INSTALL ${CURRENT_PORT_DIR}/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include) # the include is all that is needed
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs" "${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h")
+file(INSTALL "${CURRENT_PORT_DIR}/cgnsconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # the include is all that is needed
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
