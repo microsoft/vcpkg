@@ -1,0 +1,14 @@
+diff --git a/include/internal/e_os.h b/include/internal/e_os.h
+index 514de967a9..624256c2fc 100644
+--- a/include/internal/e_os.h
++++ b/include/internal/e_os.h
+@@ -402,7 +402,8 @@ inline int nssgetpid();
+         && ( (defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L)      \
+              || defined(__sun) || defined(__hpux) || defined(__sgi)      \
+              || defined(__osf__) )) \
+-      || defined(_WIN32)
++      || (defined(_WIN32) \
++        && (!defined(WINAPI_FAMILY_PARTITION) || !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)))
+       /* secure memory is implemented */
+ #   else
+ #     define OPENSSL_NO_SECURE_MEMORY

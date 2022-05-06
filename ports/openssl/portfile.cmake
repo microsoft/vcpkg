@@ -18,6 +18,8 @@ vcpkg_download_distfile(
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
     SHA512 f986850d5be908b4d6b5fd7091bc4652d7378c9bccebfbc5becd7753843c04c1eb61a1749c432139d263dfac33df0b1f6c773664b485cad47542266823a4eb03
+    PATCHES
+        disable-secure-memory-on-uwp.patch
 )
 
 vcpkg_find_acquire_program(PERL)
