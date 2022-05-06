@@ -1,5 +1,0 @@
-Source: vcpkg-ci-ffmpeg
-Version: 1
-Homepage: https://github.com/microsoft/vcpkg
-Description: Port to force features of certain ports within CI
-Build-Depends: ffmpeg[all-nonfree]

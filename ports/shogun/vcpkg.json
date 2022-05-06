@@ -1,7 +1,7 @@
 {
   "name": "shogun",
   "version-string": "6.1.4",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [

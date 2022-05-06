@@ -1,4 +1,4 @@
-message(WARNING ".Net framework 4.0 is required, please install it before installing easyhook.")
+message(WARNING ".Net framework 4.7.2 is required, please install it before installing easyhook.")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -34,6 +34,40 @@ foreach(VCXPROJ IN ITEMS
     vcpkg_replace_string(
         "${VCXPROJ}"
         "<MinimalRebuild>true</MinimalRebuild>"
+        ""
+    )
+endforeach()
+
+# Use modern .NET Framework
+foreach(CSPROJ IN ITEMS
+    "${SOURCE_PATH}/EasyHook/EasyHook.csproj"
+    "${SOURCE_PATH}/EasyHookSvc/EasyHookSvc.csproj"
+    "${SOURCE_PATH}/EasyLoad/EasyLoad.csproj"
+    "${SOURCE_PATH}/Examples/FileMon/FileMon.csproj"
+    "${SOURCE_PATH}/Examples/FileMonInject/FileMonInject.csproj"
+    "${SOURCE_PATH}/Examples/FileMonitorController/FileMonitorController.csproj"
+    "${SOURCE_PATH}/Examples/FileMonitorInterceptor/FileMonitorInterceptor.csproj"
+    "${SOURCE_PATH}/Examples/FileMonitorInterface/FileMonitorInterface.csproj"
+    "${SOURCE_PATH}/Examples/ProcessMonitor/ProcessMonitor.csproj"
+    "${SOURCE_PATH}/Examples/ProcMonInject/ProcMonInject.csproj"
+    "${SOURCE_PATH}/Test/ComplexParameterInject/ComplexParameterInject.csproj"
+    "${SOURCE_PATH}/Test/ComplexParameterTest/ComplexParameterTest.csproj"
+    "${SOURCE_PATH}/Test/EasyHook.Tests/EasyHook.Tests.csproj"
+    "${SOURCE_PATH}/Test/ManagedTarget/ManagedTarget.csproj"
+    "${SOURCE_PATH}/Test/ManagedTest/ManagedTest.csproj"
+    "${SOURCE_PATH}/Test/MultipleHooks/MultipleHooks/MultipleHooks.csproj"
+    "${SOURCE_PATH}/Test/MultipleHooks/SimpleHook1/SimpleHook1.csproj"
+    "${SOURCE_PATH}/Test/MultipleHooks/SimpleHook2/SimpleHook2.csproj"
+    "${SOURCE_PATH}/Test/TestFuncHooks/TestFuncHooks.csproj")
+
+    vcpkg_replace_string(
+        "${CSPROJ}"
+        "<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>"
+        "<TargetFrameworkVersion>4.7.2</TargetFrameworkVersion>"
+    )
+    vcpkg_replace_string(
+        "${CSPROJ}"
+        "<TargetFrameworkProfile>Client</TargetFrameworkProfile>"
         ""
     )
 endforeach()

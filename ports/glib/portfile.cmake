@@ -5,11 +5,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(GLIB_MAJOR_MINOR 2.70)
-set(GLIB_PATCH 1)
+set(GLIB_PATCH 5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 639317c98ab72ad853608ab4d395484daff135c0222556c51ca93fd8533c5759db14478beda964e4feb02bb2737a46a4eda25063f98a9c6ba6ae4bc5d74bf5e1)
+    URLS "https://gitlab.gnome.org/GNOME/glib/-/archive/${GLIB_MAJOR_MINOR}.${GLIB_PATCH}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
+    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
+    SHA512 69c032358e0a0d88414a97e0bc898b5ce2797839a432b95790d03f108e55a79eee2d51bab5e281cc9469e2a57accc0d2c9bbaa80f9369050534387d1a215dd98)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH

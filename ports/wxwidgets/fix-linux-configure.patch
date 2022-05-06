@@ -1,0 +1,15 @@
+diff --git a/build/cmake/modules/cotire.cmake b/build/cmake/modules/cotire.cmake
+index bb69643..09b52a6 100644
+--- a/build/cmake/modules/cotire.cmake
++++ b/build/cmake/modules/cotire.cmake
+@@ -2316,6 +2316,10 @@ function (cotire_generate_target_script _language _configurations _target _targe
+ 			"${_config}" "${_language}" "${_target}" COTIRE_TARGET_COMPILE_DEFINITIONS_${_upperConfig})
+ 		cotire_get_target_compiler_flags(
+ 			"${_config}" "${_language}" "${_target}" COTIRE_TARGET_COMPILE_FLAGS_${_upperConfig})
++		string(REPLACE
++			"<COMPILE_LANG_AND_ID:CUDA,NVIDIA>" "<COMPILE_LANGUAGE:CUDA>"
++			COTIRE_TARGET_COMPILE_FLAGS_${_upperConfig} "${COTIRE_TARGET_COMPILE_FLAGS_${_upperConfig}}"
++		)
+ 		cotire_get_source_files_compile_definitions(
+ 			"${_config}" "${_language}" COTIRE_TARGET_SOURCES_COMPILE_DEFINITIONS_${_upperConfig} ${_targetSources})
+ 	endforeach()

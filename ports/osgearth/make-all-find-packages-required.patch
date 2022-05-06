@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7541c8d07..cc14d2160 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -122,40 +122,54 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
+@@ -122,40 +122,53 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
  
  # Mobile/GLES:
  IF (OSGEARTH_USE_GLES)
@@ -45,9 +45,8 @@ index 7541c8d07..cc14d2160 100755
 +find_package(protobuf CONFIG REQUIRED)
 +set(Protobuf_LIBRARIES protobuf::libprotoc protobuf::libprotobuf)
 +set(Protobuf_FOUND 1)
-+find_package(WebP CONFIG REQUIRED)
++find_package(WEBP NAMES WebP CONFIG REQUIRED)
 +set(WEBP_LIBRARY WebP::webp)
-+set(WEBP_FOUND 1)
 +find_package(Blend2D CONFIG REQUIRED)
  
  if(OSGEARTH_ENABLE_PROFILING)

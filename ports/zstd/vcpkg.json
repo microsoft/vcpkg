@@ -1,8 +1,10 @@
 {
   "name": "zstd",
   "version": "1.5.2",
+  "port-version": 1,
   "description": "Zstandard - Fast real-time compression algorithm",
   "homepage": "https://facebook.github.io/zstd/",
+  "license": "BSD-3-Clause OR GPL-2.0-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

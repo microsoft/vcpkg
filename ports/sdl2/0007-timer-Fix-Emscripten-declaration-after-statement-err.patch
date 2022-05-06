@@ -1,0 +1,45 @@
+From 99af3281ee11ff947a82c561c2a275627ccea90c Mon Sep 17 00:00:00 2001
+From: Charlie Birks <charlie@daft.games>
+Date: Sat, 22 Jan 2022 12:27:43 +0000
+Subject: [PATCH] timer: Fix Emscripten declaration-after-statement error
+
+---
+ src/timer/unix/SDL_systimer.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/src/timer/unix/SDL_systimer.c b/src/timer/unix/SDL_systimer.c
+index 57fdab09c..2cf26764c 100644
+--- a/src/timer/unix/SDL_systimer.c
++++ b/src/timer/unix/SDL_systimer.c
+@@ -187,13 +187,6 @@ SDL_GetPerformanceFrequency(void)
+ void
+ SDL_Delay(Uint32 ms)
+ {
+-#ifdef __EMSCRIPTEN__
+-    if (emscripten_has_asyncify() && SDL_GetHintBoolean(SDL_HINT_EMSCRIPTEN_ASYNCIFY, SDL_TRUE)) {
+-        /* pseudo-synchronous pause, used directly or through e.g. SDL_WaitEvent */
+-        emscripten_sleep(ms);
+-        return;
+-    }
+-#endif
+     int was_error;
+ 
+ #if HAVE_NANOSLEEP
+@@ -203,6 +196,14 @@ SDL_Delay(Uint32 ms)
+     Uint64 then, now, elapsed;
+ #endif
+ 
++#ifdef __EMSCRIPTEN__
++    if (emscripten_has_asyncify() && SDL_GetHintBoolean(SDL_HINT_EMSCRIPTEN_ASYNCIFY, SDL_TRUE)) {
++        /* pseudo-synchronous pause, used directly or through e.g. SDL_WaitEvent */
++        emscripten_sleep(ms);
++        return;
++    }
++#endif
++
+     /* Set the timeout interval */
+ #if HAVE_NANOSLEEP
+     elapsed.tv_sec = ms / 1000;
+-- 
+2.35.1
+

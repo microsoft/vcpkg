@@ -1,16 +1,15 @@
-set(GTK_VERSION 4.4.0)
+set(GTK_VERSION 4.6.2)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  f1f197e3b94a55d5cbfaae2498f991a0ae733b32 #v4.4.0
-    SHA512 80ffc2c2a2baae4a4097470a41d0b10d5df9086e60daa520aad845fe571e03486c4f87e295ae4f05aa0069df80fe40ad7655de4f9aecc21c2482bbe0b2b6e2fb
+    REF  aec7ca82007dbe07faee6be084d20758ebac2b91 #v4.6.2
+    SHA512 05ebba53e71a997b4dc04bc018f420f62d569cb66a2f3e713bd2b48abd7c0051f67939e42c812388bd0565d12a3f82b45731a086d3ab0e75d16eee200a3be95f
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
         0002-windows-build.patch
-        0003-vs2022-rc.patch # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4063
         0004-macos-build.patch
 )
 
@@ -110,7 +109,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg

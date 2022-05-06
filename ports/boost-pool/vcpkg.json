@@ -1,8 +1,9 @@
 {
   "name": "boost-pool",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost pool module",
   "homepage": "https://github.com/boostorg/pool",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

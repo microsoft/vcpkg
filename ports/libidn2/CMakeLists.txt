@@ -37,7 +37,7 @@ set(LIB_SRC lib/bidi.c
 set(UNISTR_SRC unistring/c-ctype.c
                unistring/c-strcasecmp.c
                unistring/c-strncasecmp.c
-               unistring/malloca.c
+               unistring/free.c
                unistring/striconveh.c
                unistring/striconveha.c
                unistring/uniconv/u8-conv-from-enc.c
@@ -45,6 +45,7 @@ set(UNISTR_SRC unistring/c-ctype.c
                unistring/uniconv/u8-strconv-from-locale.c
                unistring/uniconv/u8-strconv-to-enc.c
                unistring/uniconv/u8-strconv-to-locale.c
+               unistring/unistr/u32-cmp.c
                unistring/unistr/u32-cpy.c
                unistring/unistr/u32-cpy-alloc.c
                unistring/unistr/u32-mbtouc-unsafe.c
@@ -86,6 +87,7 @@ set(GL_SRC gl/rawmemchr.c
            gl/strverscmp.c
            gl/msvc-inval.c
            gl/msvc-nothrow.c
+           gl/malloca.c
 )
 
 add_library(libidn2 ${LIB_SRC} ${UNISTR_SRC} ${GL_SRC})

@@ -41,10 +41,12 @@ endif()
 set(OPTIONS_DEBUG
     "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
     --with-debug
+    --without-normal
 )
 set(OPTIONS_RELEASE
     "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     --without-debug
+    --with-normal
 )
 
 vcpkg_configure_make(

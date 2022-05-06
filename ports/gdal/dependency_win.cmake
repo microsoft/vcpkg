@@ -135,6 +135,15 @@ macro(find_dependency_win)
         list(APPEND NMAKE_OPTIONS_DBG "NETCDF_LIB=${NETCDF_LIBS_DEBUG}")
     endif()
 
+    if("poppler" IN_LIST FEATURES)
+        list(APPEND NMAKE_OPTIONS "POPPLER_ENABLED=YES")
+        list(APPEND NMAKE_OPTIONS "POPPLER_MAJOR_VERSION=22" "POPPLER_MINOR_VERSION=1") # Bump as needed
+        list(APPEND NMAKE_OPTIONS "POPPLER_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include -I${CURRENT_INSTALLED_DIR}/include/poppler /std:c++17")
+        x_vcpkg_pkgconfig_get_modules(PREFIX POPPLER MODULES --msvc-syntax poppler LIBS)
+        list(APPEND NMAKE_OPTIONS_REL "POPPLER_LIBS=${POPPLER_LIBS_RELEASE}")
+        list(APPEND NMAKE_OPTIONS_DBG "POPPLER_LIBS=${POPPLER_LIBS_DEBUG}")
+    endif()
+
     if("postgresql" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "PG_INC_DIR=${CURRENT_INSTALLED_DIR}/include")
         x_vcpkg_pkgconfig_get_modules(PREFIX OPENSSL MODULES --msvc-syntax openssl LIBS)

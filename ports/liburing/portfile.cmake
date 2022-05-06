@@ -13,7 +13,6 @@ vcpkg_from_github(
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
-    NO_DEBUG
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()

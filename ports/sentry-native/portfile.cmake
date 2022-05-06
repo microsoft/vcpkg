@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.13/sentry-native.zip"
-    FILENAME "sentry-native-0.4.13.zip"
-    SHA512 d3b1022886533057a08a6e36e9f36fb709882bc6ba1356a2c4004062ad7805d2e85fd06bda36a89a9d336a54c8668c79c7eaf89aa7954488729c052f3dc88f37
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.17/sentry-native.zip"
+    FILENAME "sentry-native-0.4.17.zip"
+    SHA512 03ee36f5420b0f3a21b1e4b58fe88b67a883abda27c0c644e3a9916674e1847a91ee2a3815908747738a77e8984b46f92fc776405ee443c71c69e352eeecebe6
 )
 
 vcpkg_extract_source_archive_ex(
@@ -38,6 +38,8 @@ vcpkg_cmake_configure(
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
         -DCRASHPAD_ZLIB_SYSTEM=ON
+    MAYBE_UNUSED_VARIABLES
+        CRASHPAD_ZLIB_SYSTEM
 )
 
 vcpkg_cmake_install()
@@ -46,7 +48,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sentry)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(

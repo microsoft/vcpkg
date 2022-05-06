@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/faiss
-    REF cff072b78ef019998990c6ba02df83dd7d3c8d38 # v1.7.1
-    SHA512 08d4acf30b6a2a0f326cb71035b58e65f05e70817edbf9dda7d5f8b53d4fb722909c2412d42dca4d88d0576a3da528c2db869fb4fd6fb2343b7acad80066051d
+    REF v1.7.2
+    SHA512 dddf55af3cc73a15fbbd104ab75942194a4d5d088611bd98b11e459e034ba5df1d9247eb8c8b9f4631cc64c6ed284b2cf407041be7b6095f9395f9ac29d78df4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
