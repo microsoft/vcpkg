@@ -317,7 +317,7 @@
       "port-version": 3
     },
     "azure-core-cpp": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -1897,7 +1897,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-04-17",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "discount": {
@@ -2342,7 +2342,7 @@
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
-      "port-version": 0
+      "port-version": 1
     },
     "freexl": {
       "baseline": "1.0.6",
@@ -2805,8 +2805,8 @@
       "port-version": 0
     },
     "hyperscan": {
-      "baseline": "5.3.0",
-      "port-version": 3
+      "baseline": "5.4.0",
+      "port-version": 0
     },
     "hypodermic": {
       "baseline": "2.5.3",
@@ -4114,7 +4114,7 @@
     },
     "libunibreak": {
       "baseline": "5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libunifex": {
       "baseline": "2021-12-07",
@@ -4310,7 +4310,7 @@
     },
     "luajit": {
       "baseline": "2.0.5",
-      "port-version": 5
+      "port-version": 6
     },
     "luasec": {
       "baseline": "1.0.1",
@@ -4865,7 +4865,7 @@
       "port-version": 1
     },
     "nng": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "nngpp": {
@@ -4922,7 +4922,7 @@
     },
     "nuspell": {
       "baseline": "5.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nvtt": {
       "baseline": "2.1.2",
@@ -5057,8 +5057,8 @@
       "port-version": 5
     },
     "openblas": {
-      "baseline": "0.3.19",
-      "port-version": 1
+      "baseline": "0.3.20",
+      "port-version": 0
     },
     "opencascade": {
       "baseline": "7.6.0",
@@ -5098,11 +5098,11 @@
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 7
+      "port-version": 8
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 3
+      "port-version": 4
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5658,7 +5658,7 @@
     },
     "qpid-proton": {
       "baseline": "0.37.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -5862,7 +5862,7 @@
     },
     "qtbase": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.3.0",
@@ -5978,7 +5978,7 @@
     },
     "qttools": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.3.0",
