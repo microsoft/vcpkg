@@ -1,34 +1,39 @@
 vcpkg_from_sourceforge (
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO geographiclib
-    REF distrib
-    FILENAME "GeographicLib-1.52.tar.gz"
-    SHA512 98a4d33764db4a4755851a7db639fd9e055dcf4f1f949258e112fce2e198076b5896fcae2c1ea36b37fe1000d28eec326636a730e70f25bc19a1610423ba6859
-    PATCHES cxx-library-only.patch
-)
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO geographiclib
+  REF distrib-C++
+  FILENAME "GeographicLib-2.0.tar.gz"
+  SHA512 7cf67174a64082372cdd249a64460e9f61c582aaf3d2a31e4e69d811f265e078ba62f945e9f1f44be6c58de4c20d0359dd46e0fd262ffac229df0ba2c6adc848
+  )
 
 vcpkg_check_features (
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "tools" SKIP_TOOLS
+  FEATURES "tools" TOOLS
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set (LIB_TYPE "SHARED")
+set (COMMON_OPTIONS
+  "-DBUILD_DOCUMENTATION=OFF"
+  "-DCMAKEDIR=share/${PORT}"
+  "-DPKGDIR="
+  "-DDOCDIR="
+  "-DEXAMPLEDIR="
+  "-DMANDIR="
+  "-DSBINDIR=")
+
+if (TOOLS)
+  set (TOOL_OPTION "-DBINDIR=tools/${PORT}")
 else ()
-  set (LIB_TYPE "STATIC")
+  set (TOOL_OPTION "-DBINDIR=")
 endif ()
 
 vcpkg_configure_cmake (
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        "-DGEOGRAPHICLIB_LIB_TYPE=${LIB_TYPE}"
-        ${FEATURE_OPTIONS}
+    OPTIONS ${LIB_OPTION} ${COMMON_OPTIONS} ${TOOL_OPTION}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
 )
 
 vcpkg_install_cmake ()
-vcpkg_fixup_cmake_targets (CONFIG_PATH share/geographiclib)
+vcpkg_fixup_cmake_targets ()
 vcpkg_copy_pdbs ()
 
 if (tools IN_LIST FEATURES)
@@ -45,5 +50,3 @@ file (INSTALL ${SOURCE_PATH}/LICENSE.txt
 # Install usage
 configure_file (${CMAKE_CURRENT_LIST_DIR}/usage
   ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-vcpkg_fixup_pkgconfig()

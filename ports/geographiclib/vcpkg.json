@@ -1,13 +1,11 @@
 {
   "name": "geographiclib",
-  "version": "1.52",
-  "port-version": 2,
+  "version": "2.0",
   "description": "GeographicLib, a C++ library for performing geographic conversions",
   "homepage": "https://geographiclib.sourceforge.io",
   "features": {
     "tools": {
-      "description": "The GeographicLib tools",
-      "supports": "!uwp"
+      "description": "The GeographicLib tools"
     }
   }
 }
