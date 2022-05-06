@@ -77,9 +77,10 @@ An easy way to set the version for the entirety of boost is to use the `"builtin
 As of right now, it is only possible to go back to Boost version `1.75.0` using a baseline, since that was the contemporary Boost version when the versioning feature was merged. **But, it is possible to modify the baseline to whatever you like and use that instead.**
 
 ### Step 1: Create a new branch
-As described in the versioning documentation. The value that goes in `"builtin-baseline"` is a git commit in the Microsoft/vcpkg repository's history. If you want to customize the baseline and have control over the vcpkg instance, you can create a new commit with said custom baseline.
+As described in the versioning documentation. The value that goes in `"builtin-baseline"` is a git commit in the microsoft/vcpkg repository's history. If you want to customize the baseline and have control over the vcpkg instance, you can create a new commit with said custom baseline.
 
 Let's start by creating a new branch to hold our modified baseline.
+
 In the directory containing your clone of the vcpkg Git repository run:
 
 ```
