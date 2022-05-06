@@ -55,8 +55,6 @@ function(vcpkg_configure_qmake)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     endif()
 
-    vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
 
@@ -90,7 +88,6 @@ function(vcpkg_configure_qmake)
         endif()
 
         z_vcpkg_restore_pkgconfig_path()
-        vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")

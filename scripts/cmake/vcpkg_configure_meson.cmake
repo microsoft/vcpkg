@@ -491,7 +491,6 @@ function(vcpkg_configure_meson)
         if(NOT arg_NO_PKG_CONFIG)
             z_vcpkg_restore_pkgconfig_path()
         endif()
-        vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
     endforeach()
 
     vcpkg_restore_env_variables(VARS INCLUDE)

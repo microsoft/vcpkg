@@ -1,22 +1,21 @@
 #[===[
 # z_vcpkg_setup_pkgconfig_path
 
-Setup the generated pkgconfig file path to PKG_CONFIG_PATH environment variable or restore PKG_CONFIG_PATH environment variable.
+`z_vcpkg_setup_pkgconfig_path` sets up environment variables to use `pkgconfig`, such as `PKG_CONFIG` and `PKG_CONFIG_PATH`.
+The original values are restored with `z_vcpkg_restore_pkgconfig_path`. `BASE_DIRS` indicates the base directories to find `.pc` files; typically `${CURRENT_INSTALLED_DIR}`, or `${CURRENT_INSTALLED_DIR}/debug`.
 
 ```cmake
 z_vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
+# Build process that may transitively invoke pkgconfig
 z_vcpkg_restore_pkgconfig_path()
 ```
-
-`z_vcpkg_setup_pkgconfig_path` prepends `lib/pkgconfig` and `share/pkgconfig` directories for the given `BASE_DIRS` to the `PKG_CONFIG_PATH` environment variable. It creates or updates a backup of the previous value.
-`z_vcpkg_restore_pkgconfig_path` shall be called when leaving the scope which called `z_vcpkg_setup_pkgconfig_path` in order to restore the original value from the backup.
 
 #]===]
 function(z_vcpkg_setup_pkgconfig_path)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
 
     if(NOT DEFINED arg_BASE_DIRS OR "${arg_BASE_DIRS}" STREQUAL "")
-        message(FATAL_ERROR "BASE_DIR must be passed in")
+        message(FATAL_ERROR "BASE_DIRS is required.")
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
