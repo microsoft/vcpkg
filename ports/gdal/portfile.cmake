@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.4.3RC2
-    SHA512 ca6aa9e21970bfe51579c27f161c8f2805ab3981a08d1deed44af425ea495732233fc7693bc48aae44c50f98bd0785ab2c944eb1e8c7928ace9cabbee73e13d5
+    REF v3.4.3
+    SHA512 702bcb220abc7cf978e8f70a1b2835a20ce5abe405014b9690cab311c00837e57555bb371ff5e2655f9eed63cfd461d6cec5e654001b276dd79a6d2ec0c21f0b
     HEAD_REF master
     PATCHES
         0001-Fix-debug-crt-flags.patch
