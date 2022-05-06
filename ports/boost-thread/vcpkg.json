@@ -1,8 +1,9 @@
 {
   "name": "boost-thread",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost thread module",
   "homepage": "https://github.com/boostorg/thread",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-assert",

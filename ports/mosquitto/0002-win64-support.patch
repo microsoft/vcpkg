@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 07eff849..3edc7efa 100644
+index 2775a3da..ddd81b04 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -67,12 +67,7 @@ option(WITH_THREADING "Include client library threading support?" ON)

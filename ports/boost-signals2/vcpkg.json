@@ -1,8 +1,9 @@
 {
   "name": "boost-signals2",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost signals2 module",
   "homepage": "https://github.com/boostorg/signals2",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",

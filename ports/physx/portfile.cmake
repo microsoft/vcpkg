@@ -40,6 +40,7 @@ set(OPTIONS_DEBUG
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=uwp")
+    set(configure_options WINDOWS_USE_MSBUILD)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=windows")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -76,6 +77,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
+    ${configure_options}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
@@ -136,4 +138,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/source"
     "${CURRENT_PACKAGES_DIR}/source"
 )
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

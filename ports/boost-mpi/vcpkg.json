@@ -1,8 +1,9 @@
 {
   "name": "boost-mpi",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
