@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.39.0",
-  "port-version": 1,
+  "version": "1.40.1",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -486,6 +485,18 @@
         }
       ]
     },
+    "logging": {
+      "description": "Google Cloud Logging C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "managedidentities": {
       "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
       "dependencies": [
@@ -776,6 +787,18 @@
     },
     "spanner": {
       "description": "The Google Cloud Spanner C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "speech": {
+      "description": "The Google Cloud Speech-to-Text C++ client library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

@@ -147,6 +147,11 @@ foreach(flag CXX C SHARED_LINKER EXE_LINKER STATIC_LINKER RC)
         # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
         # This is imperfect because it fails on directories with trailing spaces, but those are exceedingly rare
         string(REGEX REPLACE "(^| )/" "\\1-" ${flag}_FLAGS "${${flag}_FLAGS}")
+        if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            if("${flag}" STREQUAL "CXX")
+                string(APPEND ${flag}_FLAGS " -ZW:nostdlib")
+            endif()
+        endif()
     endif()
     string(REPLACE "\\" "\\\\" ${flag}_FLAGS "${${flag}_FLAGS}")
     string(REPLACE "\"" "\\\"" ${flag}_FLAGS "${${flag}_FLAGS}")
