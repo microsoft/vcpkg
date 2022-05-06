@@ -174,7 +174,7 @@
     },
     "ashes": {
       "baseline": "2022-04-03",
-      "port-version": 0
+      "port-version": 1
     },
     "asio": {
       "baseline": "1.22.1",
@@ -7317,7 +7317,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-04-21",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
