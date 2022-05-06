@@ -16,7 +16,7 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools MSDFGEN_BUILD_MSDFGEN_STANDALONE
+        tools MSDFGEN_BUILD_STANDALONE
         openmp MSDFGEN_USE_OPENMP
 )
 
