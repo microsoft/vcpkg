@@ -15,12 +15,16 @@ else()
 	set (LJIT_STATIC "static")
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    set(ENV{MACOSX_DEPLOYMENT_TARGET} "10.14")
+endif()
+
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
-    if (VCPKG_TARGET_IS_WINDOWS)
+    if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_execute_required_process_repeat(
             COUNT 1
             COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${VCPKG_CRT_LINKAGE} debug ${LJIT_STATIC}
@@ -54,13 +58,12 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     endif()
 endif()
 
-
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
-    if (VCPKG_TARGET_IS_WINDOWS)
+    if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_execute_required_process_repeat(
             COUNT 1
             COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${VCPKG_CRT_LINKAGE} ${LJIT_STATIC}
@@ -95,12 +98,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/src/lua.h 			    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/src/luajit.h 	    	DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/src/luaconf.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/src/lualib.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/src/lauxlib.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/src/lua.hpp 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/lua.h      DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/luajit.h   DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/luaconf.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/lualib.h   DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/lauxlib.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/src/lua.hpp    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
