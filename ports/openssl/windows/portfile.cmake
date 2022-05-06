@@ -183,5 +183,3 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-
