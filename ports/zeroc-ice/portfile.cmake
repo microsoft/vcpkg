@@ -4,16 +4,16 @@ vcpkg_from_github(
     REPO zeroc-ice/ice
     REF v3.7.7
     SHA512 73c3a2bb14c9e145383e4026206edd3e03b29c60a33af628611bfdab71d69a3aed108ce4e6cbfd67eb852560110e3495b4bd238c8cdf0de9d1f8e2f1088513ee
-    PATCHES md5i_fix.patch slice2swift.patch
+    PATCHES md5i_fix.patch slice2swift.patch mcppd_fix.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
+set(UNIX_BUILD_DIR "${SOURCE_PATH}")
 set(WIN_DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
 set(WIN_RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
-set(UNIX_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/src/${SOURCE_PATH_SUFFIX})
 
 # install_includes
 function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
@@ -132,6 +132,20 @@ if("icediscovery" IN_LIST FEATURES)
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
+    # Clean up for the first round (important for install --editable)
+    vcpkg_execute_build_process(
+        COMMAND make distclean
+        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+        LOGNAME make-clean-${TARGET_TRIPLET}
+    )
+
+    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
+        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
+    endif()
+    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
+    endif()
+    file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
 
     # Setting these as environment variables, as .d files aren't generated
     # the first time passing them as arguments to make.
@@ -243,17 +257,21 @@ else() # VCPKG_TARGET_IS_WINDOWS
     include("${CURRENT_PORT_DIR}/prepare_for_build.cmake")
     prepare_for_build("${SOURCE_PATH}")
 
+    vcpkg_list(SET MSBUILD_OPTIONS
+        "/p:UseVcpkg=yes"
+        "/p:IceBuildingSrc=yes"
+        ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+    )
+
     # Build Ice
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
         SKIP_CLEAN
-	      TARGET "C++11\\ice++11"
+        TARGET "C++11\\ice++11"
         USE_VCPKG_INTEGRATION
         OPTIONS
-            /p:UseVcpkg=yes
-            /p:IceBuildingSrc=yes
-	          ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+            ${MSBUILD_OPTIONS}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

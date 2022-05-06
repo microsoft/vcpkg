@@ -1,0 +1,17 @@
+--- a/Vc/avx/const.h
++++ b/Vc/avx/const.h
+@@ -131,13 +131,13 @@
+ #endif
+     }
+     template <> Vc_ALWAYS_INLINE Vc_CONST Vector<double> Const<double>::highMask(int bits)
+     {
+ #ifdef Vc_IMPL_AVX2
+ #if defined Vc_ICC || defined Vc_MSVC
+-        __m256i allone;
++        auto allone = __m256i();
+         allone = _mm256_cmpeq_epi8(allone, allone);
+ #else
+         auto allone = ~__m256i();
+ #endif
+         return _mm256_castsi256_pd(_mm256_slli_epi64(allone, bits));
+ #else
