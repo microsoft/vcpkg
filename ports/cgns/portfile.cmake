@@ -108,7 +108,7 @@ if("cgnstools" IN_LIST FEATURES)
     elseif(VCPKG_TARGET_IS_LINUX)
         # Copy tools from "bin" to "tools/cgns"
         set(CGNSTOOLS "cgconfig" "cgnscalc.sh" "unitconv.sh" "cgnsview.sh" "cgnsplot.sh" "cgnsnodes.sh")
-        foreach(CGNSTOOL IN LIOSTS CGNSTOOLS)
+        foreach(CGNSTOOL IN LISTS CGNSTOOLS)
             file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${CGNSTOOL}")
         endforeach()
 
