@@ -4,5 +4,6 @@
   "port-version": 7,
   "description": "LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.",
   "homepage": "https://github.com/LuaJIT/LuaJIT",
+  "license": "MIT",
   "supports": "!uwp"
 }
