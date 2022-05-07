@@ -10,7 +10,7 @@
 PROJECT ( lua )
 
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 
 SET (HDR_LIBLUA
 src/lapi.h src/lauxlib.h src/lcode.h src/lctype.h src/ldebug.h src/ldo.h src/lfunc.h
@@ -31,6 +31,10 @@ src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
 
+FILE(COPY ${SRC_LIBLUA} DESTINATION "${CMAKE_BINARY_DIR}/luac-only")
+FILE(GLOB SRC_LIBLUA "${CMAKE_BINARY_DIR}/luac-only/*.c")
+SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} PROPERTIES LANGUAGE C)
+
 IF (WIN32)
     # remove warnings
     ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS )
@@ -44,7 +48,7 @@ IF (UNIX)
     ENDIF ()
 ENDIF ()
 
-#DLL
+# C library
 SET (CMAKE_C_STANDARD 99)
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
 TARGET_INCLUDE_DIRECTORIES(lua PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> PUBLIC $<INSTALL_INTERFACE:include>)
@@ -75,9 +79,10 @@ INSTALL ( TARGETS lua
 
 install(EXPORT unofficial-lua-config DESTINATION share/unofficial-lua)
 
+# CXX library
 IF (COMPILE_AS_CPP)
-    file(COPY ${SRC_LIBLUA} DESTINATION ${CMAKE_BINARY_DIR}/luacpp)
-    file(GLOB SRC_LIBLUA_CXX ${CMAKE_BINARY_DIR}/luacpp/*.c)
+    FILE(COPY ${SRC_LIBLUA} DESTINATION "${CMAKE_BINARY_DIR}/luacpp")
+    FILE(GLOB SRC_LIBLUA_CXX "${CMAKE_BINARY_DIR}/luacpp/*.c")
     SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA_CXX} PROPERTIES LANGUAGE CXX)
     ADD_LIBRARY ( lua-cpp ${SRC_LIBLUA_CXX} )
     SET_TARGET_PROPERTIES(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
@@ -104,13 +109,14 @@ IF (COMPILE_AS_CPP)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     )
     
-    install(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
+    INSTALL(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
 ENDIF()
 
 IF (INSTALL_TOOLS)
     ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
     ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
 
+    TARGET_INCLUDE_DIRECTORIES(luac PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
     TARGET_LINK_LIBRARIES ( luai PRIVATE lua )
     SET_TARGET_PROPERTIES ( luai PROPERTIES OUTPUT_NAME lua PDB_NAME luai )
     IF (UNIX)
