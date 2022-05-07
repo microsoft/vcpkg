@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-tool-llvm",
+  "version": "13.0.1",
+  "description": "The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Note: the repository does not accept github pull requests at this moment. Please submit your patches at http://reviews.llvm.org. ",
+  "homepage": "https://github.com/llvm/llvm-project",
+  "license": null,
+  "supports": "windows & (x64 | x86)",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-7zip",
+      "host": true
+    }
+  ]
+}
