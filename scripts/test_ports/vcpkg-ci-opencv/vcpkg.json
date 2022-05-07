@@ -19,7 +19,8 @@
         "png",
         "quirc",
         "tiff",
-        "webp"
+        "webp",
+        "dc1394"
       ]
     },
     {
