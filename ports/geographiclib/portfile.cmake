@@ -26,14 +26,14 @@ else ()
   set (TOOL_OPTION "-DBINDIR=")
 endif ()
 
-vcpkg_configure_cmake (
+vcpkg_cmake_configure (
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${LIB_OPTION} ${COMMON_OPTIONS} ${TOOL_OPTION}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
 )
 
-vcpkg_install_cmake ()
-vcpkg_fixup_cmake_targets ()
+vcpkg_cmake_install ()
+vcpkg_cmake_config_fixup ()
 vcpkg_copy_pdbs ()
 
 if (tools IN_LIST FEATURES)
@@ -50,3 +50,5 @@ file (INSTALL ${SOURCE_PATH}/LICENSE.txt
 # Install usage
 configure_file (${CMAKE_CURRENT_LIST_DIR}/usage
   ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+
+vcpkg_fixup_pkgconfig ()
