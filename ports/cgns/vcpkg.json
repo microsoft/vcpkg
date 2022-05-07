@@ -8,9 +8,6 @@
     "lfsselector"
   ],
   "features": {
-    "cgnstools": {
-      "description": "Build cgnstools"
-    },
     "fortran": {
       "description": "Enable fortran support (not yet implemented)"
     },
@@ -67,6 +64,9 @@
     },
     "tests": {
       "description": "Build tests"
+    },
+    "tools": {
+      "description": "No effects, preserved for upgrade compatibility"
     }
   }
 }

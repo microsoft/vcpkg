@@ -17,7 +17,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      "hdf5"         CGNS_ENABLE_HDF5
      "lfs"          CGNS_ENABLE_LFS
      "legacy"       CGNS_ENABLE_LEGACY
-     "cgnstools"    CGNS_BUILD_CGNSTOOLS
 )
 
 set(CGNS_BUILD_OPTS "")
@@ -67,55 +66,6 @@ foreach(TOOL ${TOOLS})
     file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
 endforeach()
-
-if("cgnstools" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES
-            calcwish
-            plotwish
-            cgiowish
-            aflr3_to_cgns
-            cgns_info
-            cgns_to_aflr3
-            cgns_to_fast
-            cgns_to_plot3d
-            cgns_to_tecplot
-            cgns_to_vtk
-            convert_dataclass
-            convert_location
-            convert_variables
-            extract_subset
-            fast_to_cgns
-            interpolate_cgns
-            patran_to_cgns
-            plot3d_to_cgns
-            tecplot_to_cgns
-            tetgen_to_cgns
-            update_ngon
-            vgrid_to_cgns
-        AUTO_CLEAN
-    )
-
-    if(VCPKG_TARGET_IS_WINDOWS)
-        # Copy tools from "bin" to "tools/cgns"
-        set(CGNSTOOLS "cgconfig.bat" "cgnscalc.bat" "unitconv.bat" "cgnsview.bat" "cgnsplot.bat" "cgnsnodes.bat")
-        foreach(CGNSTOOL IN LISTS CGNSTOOLS)
-            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${CGNSTOOL}")
-        endforeach()
-
-        # Adjust paths in batch file
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/cgconfig.bat" "${CURRENT_PACKAGES_DIR}\\bin" "${CURRENT_PACKAGES_DIR}\\tools\\cgns")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        # Copy tools from "bin" to "tools/cgns"
-        set(CGNSTOOLS "cgconfig" "cgnscalc.sh" "unitconv.sh" "cgnsview.sh" "cgnsplot.sh" "cgnsnodes.sh")
-        foreach(CGNSTOOL IN LISTS CGNSTOOLS)
-            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${CGNSTOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${CGNSTOOL}")
-        endforeach()
-
-        # adjust paths in batch files
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/cgconfig" "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/cgns")
-    endif()
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
