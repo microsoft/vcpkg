@@ -1,0 +1,66 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 000055e73..28a738269 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -292,7 +292,7 @@ endif()
+ # Add appropriate flags for GCC
+ if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing -pedantic -Wno-long-long -Wall -W -Wno-unused-parameter -Wwrite-strings")
+-  option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" ON)
++  option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" OFF)
+ elseif (MSVC)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14 -Woverloaded-virtual -Wno-long-long -Wno-unused-parameter -Wwrite-strings")
+   option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" OFF)
+@@ -350,6 +350,7 @@ include_directories(BEFORE
+ set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
+ 
+ # Install Fortran module files
++if( FLANG_BUILD_RUNTIME )
+ install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/
+   DESTINATION include
+   )
+@@ -360,6 +361,7 @@ get_filename_component(OMP_LIB_H_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/omp_li
+ install(FILES ${OMP_LIB_H_PATH}
+   DESTINATION include
+   )
++endif()
+ 
+ add_definitions( -D_GNU_SOURCE )
+ 
+@@ -389,7 +391,9 @@ set(FLANG_RTE_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/lib)
+ add_definitions( -DPGFLANG )
+ 
+-add_subdirectory(lib)
++if( FLANG_BUILD_RUNTIME )
+ add_subdirectory(runtime)
++endif()
+ if( FLANG_BUILD_TOOLS )
++add_subdirectory(lib)
+ add_subdirectory(utils)
+ add_subdirectory(tools)
+diff --git a/tools/flang1/flang1exe/CMakeLists.txt b/tools/flang1/flang1exe/CMakeLists.txt
+index a33678700..b6967227b 100644
+--- a/tools/flang1/flang1exe/CMakeLists.txt
++++ b/tools/flang1/flang1exe/CMakeLists.txt
+@@ -166,7 +166,7 @@ endif()
+ 
+ # Install flang1 executable
+ install(TARGETS flang1
+-  RUNTIME DESTINATION bin)
++  RUNTIME DESTINATION bin/${ARCH})
+ 
+ # Local Variables:
+ # mode: cmake
+diff --git a/tools/flang2/flang2exe/CMakeLists.txt b/tools/flang2/flang2exe/CMakeLists.txt
+index 5aeeb0480..105143325 100644
+--- a/tools/flang2/flang2exe/CMakeLists.txt
++++ b/tools/flang2/flang2exe/CMakeLists.txt
+@@ -160,7 +160,7 @@ target_include_directories(flang2
+ 
+ # Install flang2 executable
+ install(TARGETS flang2
+-        RUNTIME DESTINATION bin)
++        RUNTIME DESTINATION bin/${ARCH})
+ 
+ # Local Variables:
+ # mode: cmake

@@ -1,0 +1,17 @@
+diff --git a/tools/flang2/flang2exe/llassem.cpp b/tools/flang2/flang2exe/llassem.cpp
+index 7c15e7338cb..6c6a953fc79 100644
+--- a/tools/flang2/flang2exe/llassem.cpp
++++ b/tools/flang2/flang2exe/llassem.cpp
+@@ -1170,7 +1170,12 @@ assemble_end(void)
+         fprintf(ASMFIL, "%%struct%s = type < { %s } > \n", name, typed);
++#if defined (_WIN64)
++      fprintf(ASMFIL, "@%s = %s global %%struct%s ", name,
++              AG_ISMOD(gblsym) ? "external dllimport" : "common", name);
++#else
+         fprintf(ASMFIL, "@%s = %s global %%struct%s ", name,
+                 AG_ISMOD(gblsym) ? "external" : "common", name);
++#endif
+         fprintf(ASMFIL, "%s, align %d",
+                 AG_ISMOD(gblsym) ? "" : " zeroinitializer", align_value);
+       }
+       for (llObjtodbgFirst(listp, &i); !llObjtodbgAtEnd(&i);

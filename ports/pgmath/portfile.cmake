@@ -26,8 +26,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     include("${cmake_vars_file}")
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         vcpkg_list(SET OPTIONS 
-                    "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
-                    "-DCMAKE_CXX_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
+                    "-DCMAKE_C_COMPILER=${CLANG_CL}"
+                    "-DCMAKE_CXX_COMPILER=${CLANG_CL}"
                     "-DCMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
                     "-DCMAKE_LINKER=${VCPKG_DETECTED_CMAKE_LINKER}"
                     "-DCMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
@@ -42,8 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         vcpkg_list(APPEND OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        vcpkg_list(APPEND OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
-        message(STATUS "OPTIONS:${OPTIONS}" )
+        vcpkg_list(APPEND OPTIONS -DCMAKE_CROSSCOMPILING=ON)
     else()
         vcpkg_list(APPEND OPTIONS -DCMAKE_SYSTEM_PROCESSOR=generic 
                                   -DLIBPGMATH_WITH_GENERIC=ON)

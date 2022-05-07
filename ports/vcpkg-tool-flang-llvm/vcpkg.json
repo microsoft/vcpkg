@@ -1,0 +1,20 @@
+{
+  "name": "vcpkg-tool-flang-llvm",
+  "version-date": "2022-04-23",
+  "description": "The LLVM Compiler Infrastructure.",
+  "homepage": "https://llvm.org",
+  "license": "Apache-2.0",
+  "supports": "windows & native",
+  "dependencies": [
+    "libxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
