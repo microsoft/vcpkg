@@ -1,0 +1,5 @@
+set(BLA_VENDOR @BLA_VENDOR@)
+set(BLA_STATIC @BLA_STATIC@)
+_find_package(${ARGS})
+unset(BLA_VENDOR)
+unset(BLA_STATIC)
