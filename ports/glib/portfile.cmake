@@ -6,20 +6,16 @@ endif()
 
 set(GLIB_MAJOR_MINOR 2.70)
 set(GLIB_PATCH 5)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://gitlab.gnome.org/GNOME/glib/-/archive/${GLIB_MAJOR_MINOR}.${GLIB_PATCH}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
-    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.gz"
-    SHA512 69c032358e0a0d88414a97e0bc898b5ce2797839a432b95790d03f108e55a79eee2d51bab5e281cc9469e2a57accc0d2c9bbaa80f9369050534387d1a215dd98)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GLIB_VERSION}
+    REPO GNOME/glib
+    REF "${GLIB_MAJOR_MINOR}.${GLIB_PATCH}"
+    SHA512 69c032358e0a0d88414a97e0bc898b5ce2797839a432b95790d03f108e55a79eee2d51bab5e281cc9469e2a57accc0d2c9bbaa80f9369050534387d1a215dd98
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
 )
-
 
 if (selinux IN_LIST FEATURES)
     if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
@@ -41,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dinstalled_tests=false
         ${OPTIONS}
@@ -54,15 +50,15 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-set(GLIB_TOOLS  gdbus
-                gio
-                gio-querymodules
-                glib-compile-resources
-                glib-compile-schemas
-                gobject-query
-                gresource
-                gsettings
-                )
+set(GLIB_TOOLS gdbus
+               gio
+               gio-querymodules
+               glib-compile-resources
+               glib-compile-schemas
+               gobject-query
+               gresource
+               gsettings
+               )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(NOT VCPKG_TARGET_IS_OSX)
@@ -111,7 +107,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc")
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${SYSTEM_LIBRARIES})
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Fix python scripts
 set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")
