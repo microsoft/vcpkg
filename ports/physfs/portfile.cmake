@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${PHYSFS_VERSION}
     PATCHES
         "001-fix-lzmasdk-arm64-windows.patch"
@@ -20,8 +20,13 @@ vcpkg_extract_source_archive_ex(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED)
 
+if(VCPKG_TARGET_IS_UWP)
+    set(configure_opts WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    ${configure_opts}
     OPTIONS
         -DPHYSFS_BUILD_STATIC=${PHYSFS_STATIC}
         -DPHYSFS_BUILD_SHARED=${PHYSFS_SHARED}

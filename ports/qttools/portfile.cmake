@@ -37,6 +37,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "assistant" FEATURE_assistant
     "designer" FEATURE_designer
     "linguist" FEATURE_linguist
+    "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
+    #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
+    "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+    "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6QuickWidgets
     INVERTED_FEATURES
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_Clang
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
@@ -130,12 +134,14 @@ if(VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6ToolsTools/Qt6ToolsToolsTargets-debug.cmake")
-if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-    file(READ "${configfile}" _contents)
-    string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
-    file(WRITE "${configfile}" "${_contents}")
+if(NOT QT_IS_LATEST)
+    set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
+    if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        file(READ "${configfile}" _contents)
+        string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
+        file(WRITE "${configfile}" "${_contents}")
+    endif()
 endif()
 
 file(GLOB_RECURSE debug_dir "${CURRENT_PACKAGES_DIR}/debug/*")

@@ -1,0 +1,29 @@
+diff --git a/cmake/GlfwImport.cmake b/cmake/GlfwImport.cmake
+index 1b94cdf..4cc8f8f 100644
+--- a/cmake/GlfwImport.cmake
++++ b/cmake/GlfwImport.cmake
+@@ -5,7 +5,7 @@ elseif(USE_EXTERNAL_GLFW STREQUAL "IF_POSSIBLE")
+     find_package(glfw3 3.3.3 QUIET)
+ endif()
+ if (glfw3_FOUND)
+-    set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw)
++    set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw3)
+ endif()
+
+ # Explicitly check against "ON", because USE_EXTERNAL_GLFW is a tristate option
+@@ -32,3 +32,4 @@ else()
+     MESSAGE(STATUS "Using external GLFW")
+     set(GLFW_PKG_DEPS glfw3)
+ endif()
++set(GLFW_PKG_DEPS glfw3)
+diff --git a/cmake/LibraryConfigurations.cmake b/cmake/LibraryConfigurations.cmake
+index c156d6b..55c5bca 100644
+--- a/cmake/LibraryConfigurations.cmake
++++ b/cmake/LibraryConfigurations.cmake
+@@ -104,5 +104,5 @@ endif ()
+ set(LIBS_PRIVATE ${LIBS_PRIVATE} ${OPENAL_LIBRARY})
+
+ if (${PLATFORM} MATCHES "Desktop")
+-    set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw)
++    set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw3)
+ endif ()

@@ -1,8 +1,9 @@
 {
   "name": "boost-chrono",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost chrono module",
   "homepage": "https://github.com/boostorg/chrono",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     {
