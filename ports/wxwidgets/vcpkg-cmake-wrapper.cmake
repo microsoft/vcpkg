@@ -25,6 +25,7 @@ if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
     _find_package(${ARGS})
     # Reset for regular lookup
     unset(wxWidgets_CONFIGURATION CACHE)
+    unset(wxWidgets_USE_REL_AND_DBG CACHE)
     set(WX_CONFIGURATION_LIST "")
     set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/lib" CACHE INTERNAL "")
 else()

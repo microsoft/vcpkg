@@ -1,24 +1,19 @@
-set(GDAL_PATCHES
-    0001-Fix-debug-crt-flags.patch
-    0002-Fix-build.patch
-    0004-Fix-cfitsio.patch
-    0005-Fix-configure.patch
-    0007-Control-tools.patch
-    0008-Fix-absl-string_view.patch
-    0009-atlbase.patch
-    0010-symprefix.patch
-)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.4.2
-    SHA512 4dadfaefb4924e17395b2d8b695e185e91e9ad28b4b8666b64f11f40164411974f8ade747592060b515907ee73bf335610698c5e53e56a8937a89ddfffc3d66b
+    REF v3.4.3
+    SHA512 702bcb220abc7cf978e8f70a1b2835a20ce5abe405014b9690cab311c00837e57555bb371ff5e2655f9eed63cfd461d6cec5e654001b276dd79a6d2ec0c21f0b
     HEAD_REF master
-    PATCHES ${GDAL_PATCHES}
+    PATCHES
+        0001-Fix-debug-crt-flags.patch
+        0002-Fix-build.patch
+        0004-Fix-cfitsio.patch
+        0005-Fix-configure.patch
+        0006-Fix-mingw-dllexport.patch
+        0007-Control-tools.patch
+        0008-Fix-absl-string_view.patch
+        0009-atlbase.patch
+        0010-symprefix.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -54,7 +49,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND NMAKE_OPTIONS "SYM_PREFIX=" "EXTRA_LINKER_FLAGS=/APPCONTAINER WindowsApp.lib")
     endif()
 
-    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    if(NOT "aws-ec2-windows" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "HAVE_ATLBASE_H=NO")
     endif()
 
