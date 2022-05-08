@@ -51,6 +51,9 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
+        "-DCMAKE_POLICY_DEFAULT_CMP0065=NEW"
+        "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
+        "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
         ${Fortran_opts}
     OPTIONS_DEBUG ${Fortran_opts_rel}
     OPTIONS_RELEASE ${Fortran_opts_dbg}
