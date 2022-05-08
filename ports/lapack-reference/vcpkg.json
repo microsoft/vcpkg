@@ -14,10 +14,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "vcpkg-gfortran",
-      "platform": "windows"
-    }
+    "vcpkg-fortran"
   ],
   "default-features": [
     "blas-select"
