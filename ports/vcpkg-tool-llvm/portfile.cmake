@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
 file(READ "${CURRENT_PORT_DIR}/vcpkg.json" manifest_contents)
 string(JSON version GET "${manifest_contents}" version)
