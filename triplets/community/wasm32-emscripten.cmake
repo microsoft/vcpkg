@@ -1,8 +1,9 @@
 set(VCPKG_ENV_PASSTHROUGH_UNTRACKED EMSCRIPTEN_ROOT EMSDK PATH)
 
-set(ENV{CFLAGS} "-mbulk-memory -matomics")
-set(ENV{CXXFLAGS} "-mbulk-memory -matomics")
-set(osg_OPENGL_PROFILE GL2)
+# Linking some ports requires atomics + bulk memory support
+# Uncomment to enable
+# set(ENV{CFLAGS} "-mbulk-memory -matomics")
+# set(ENV{CXXFLAGS} "-mbulk-memory -matomics")
 
 if(NOT DEFINED ENV{EMSCRIPTEN_ROOT})
    find_path(EMSCRIPTEN_ROOT "emcc")
