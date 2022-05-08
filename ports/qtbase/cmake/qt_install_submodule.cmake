@@ -86,9 +86,14 @@ function(qt_cmake_configure)
         endif()
     endif()
 
-    # Disable warning for CMAKE_DISABLE_FIND_PACKAGE_<packagename>
+    # Disable warning for CMAKE_(REQUIRE|DISABLE)_FIND_PACKAGE_<packagename>
     string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^:=]+" disabled_find_package "${_qarg_OPTIONS}")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
+
+    string(REGEX MATCHALL "CMAKE_REQUIRE_FIND_PACKAGE_[^:=]+(:BOOL)?=OFF" require_find_package "${_qarg_OPTIONS}")
+    list(TRANSFORM require_find_package REPLACE "(:BOOL)?=OFF" "")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${require_find_package})
+    
     # Disable unused warnings for disabled features. Qt might decide to not emit the feature variables if other features are deactivated. 
     string(REGEX MATCHALL "(QT_)?FEATURE_[^:=]+(:BOOL)?=OFF" disabled_features "${_qarg_OPTIONS}")
     list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")

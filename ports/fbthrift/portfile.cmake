@@ -4,11 +4,9 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF v2022.01.31.00
-    SHA512 159457398fdc0c89c34364b8a89068127c3519ce35af349776016e0ae37ae9508689853e0e371c2065fd715451f466e37c7e3799e054eca02cbc4717809150ab
+    REF v2022.03.21.00
+    SHA512 8d2d9430dc3a4ecc23042cd9bcf4eee888824449d05d98baec408aef806b934d643e578d3876169f69966c846aeddbe0aa84416c4e020cba028a49d2fccfe7ab
     HEAD_REF master
-    PATCHES
-        add-missing-algorithm-include.patch # https://github.com/facebook/fbthrift/commit/f2151fa730058a1baf23ed3dc082c91df6351da1
 )
 
 vcpkg_cmake_configure(
@@ -41,6 +39,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/benchmark"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation"
@@ -48,6 +47,18 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
 vcpkg_copy_pdbs()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+        "${PACKAGE_PREFIX_DIR}/lib/cmake/fbthrift" "${PACKAGE_PREFIX_DIR}/share/fbthrift")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+        "${PACKAGE_PREFIX_DIR}/bin/thrift1.exe" "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1.exe")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+        "${PACKAGE_PREFIX_DIR}/bin/thrift1" "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1")
+endif()
+
+# Only used internally and removed in master
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

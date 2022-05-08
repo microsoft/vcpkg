@@ -105,17 +105,28 @@ function(boost_modular_build)
         list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
 
+    vcpkg_cmake_get_vars(cmake_vars_file)
+
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS feature_options
+        FEATURES
+            python2 WITH_PYTHON2
+            python3 WITH_PYTHON3
+    )
+
     vcpkg_cmake_configure(
         SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
         GENERATOR Ninja
         OPTIONS
             "-DPORT=${PORT}"
             "-DFEATURES=${FEATURES}"
+            ${feature_options}
             "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
             "-DB2_EXE=${B2_EXE}"
             "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+            "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES

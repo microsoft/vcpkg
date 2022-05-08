@@ -1,9 +1,9 @@
 {
   "name": "qpid-proton",
-  "version": "0.32.0",
-  "port-version": 3,
+  "version": "0.37.0",
   "description": "Qpid Proton is a high-performance, lightweight messaging library.",
   "homepage": "https://github.com/apache/qpid-proton",
+  "license": "Apache-2.0",
   "dependencies": [
     "jsoncpp",
     {

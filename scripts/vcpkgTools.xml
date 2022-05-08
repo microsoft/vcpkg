@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.1</version>
+        <version>3.10.2</version>
         <exeRelativePath>python.exe</exeRelativePath>
         <url>https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-win32.zip</url>
         <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
@@ -104,6 +104,24 @@
         <exeRelativePath>nuget.exe</exeRelativePath>
         <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
         <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
+    </tool>
+    <tool name="coscli" os="windows">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-windows.exe</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-windows.exe</url>
+        <sha512>41cb397e0633df58663761ff2afa25324d8cf603fb798fc08f7dc933aeb6f6048c1c0d6d0356aaebcfc901c57cc1b4996f10d6d83cd68f8dd66b50944b1ee2a3</sha512>
+    </tool>
+    <tool name="coscli" os="linux">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-linux</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-linux</url>
+        <sha512>c990c0d1cc77e220ed449b603753a9e4ae91ade9db6d443c31f4e4dfdddcd86fba6543e2354a0834c1776da210ae092dc712bcf1802871146645e8d838820efa</sha512>
+    </tool>
+    <tool name="coscli" os="osx">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-mac</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-mac</url>
+        <sha512>9556335bfc8bc14bace6dfced45fa77fb07c80f08aa975e047a54efda1d19852aae0ea68a5bc7f04fbd88e3edce5a73512a61216b1c5ff4cade224de4a9ab8db</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
