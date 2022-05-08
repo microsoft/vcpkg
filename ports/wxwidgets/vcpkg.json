@@ -1,7 +1,6 @@
 {
   "name": "wxwidgets",
-  "version-semver": "3.1.5",
-  "port-version": 10,
+  "version": "3.1.6",
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -19,6 +18,8 @@
     "expat",
     "libjpeg-turbo",
     "libpng",
+    "nanosvg",
+    "pcre2",
     "tiff",
     {
       "name": "vcpkg-cmake",
@@ -30,9 +31,22 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "sound"
+  ],
   "features": {
     "example": {
       "description": "Example source code and CMake project"
+    },
+    "sound": {
+      "description": "Build wxSound support",
+      "dependencies": [
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "platform": "!windows & !osx"
+        }
+      ]
     }
   }
 }

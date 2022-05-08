@@ -22,7 +22,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 8
+      "port-version": 9
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -174,7 +174,7 @@
     },
     "ashes": {
       "baseline": "2022-04-03",
-      "port-version": 0
+      "port-version": 1
     },
     "asio": {
       "baseline": "1.22.1",
@@ -205,8 +205,8 @@
       "port-version": 1
     },
     "atk": {
-      "baseline": "2.36.0",
-      "port-version": 2
+      "baseline": "2.38.0",
+      "port-version": 1
     },
     "atkmm": {
       "baseline": "2.36.1",
@@ -222,7 +222,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 7
+      "port-version": 8
     },
     "audiofile": {
       "baseline": "1.1.0",
@@ -317,7 +317,7 @@
       "port-version": 3
     },
     "azure-core-cpp": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -497,7 +497,7 @@
       "port-version": 2
     },
     "blend2d": {
-      "baseline": "2022-02-19",
+      "baseline": "2022-05-02",
       "port-version": 0
     },
     "blitz": {
@@ -1157,7 +1157,7 @@
       "port-version": 7
     },
     "brunocodutra-metal": {
-      "baseline": "2.1.3",
+      "baseline": "2.1.4",
       "port-version": 0
     },
     "brynet": {
@@ -1226,7 +1226,7 @@
     },
     "cairo": {
       "baseline": "1.17.6",
-      "port-version": 1
+      "port-version": 2
     },
     "cairomm": {
       "baseline": "1.16.1",
@@ -1269,8 +1269,8 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "2.13.8",
-      "port-version": 1
+      "baseline": "2.13.9",
+      "port-version": 0
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1557,7 +1557,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.7",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -1653,7 +1653,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.8.1",
+      "baseline": "1.8.3",
       "port-version": 0
     },
     "cpu-features": {
@@ -1741,7 +1741,7 @@
       "port-version": 7
     },
     "curl": {
-      "baseline": "7.82.0",
+      "baseline": "7.83.0",
       "port-version": 0
     },
     "curlpp": {
@@ -1801,15 +1801,15 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "1.29.7",
+      "baseline": "2.46.0",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "2.10.2",
+      "baseline": "2.14.0",
       "port-version": 0
     },
     "daw-utf-range": {
-      "baseline": "2.2.0",
+      "baseline": "2.2.2",
       "port-version": 0
     },
     "dbg-macro": {
@@ -1857,8 +1857,8 @@
       "port-version": 3
     },
     "directx-headers": {
-      "baseline": "1.4.9",
-      "port-version": 1
+      "baseline": "1.602.0",
+      "port-version": 0
     },
     "directxmath": {
       "baseline": "2022-01-18",
@@ -1897,7 +1897,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-04-17",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "discount": {
@@ -2081,7 +2081,7 @@
       "port-version": 3
     },
     "entt": {
-      "baseline": "3.10.0",
+      "baseline": "3.10.1",
       "port-version": 0
     },
     "epsilon": {
@@ -2234,11 +2234,11 @@
     },
     "flashlight-cpu": {
       "baseline": "0.3",
-      "port-version": 2
+      "port-version": 3
     },
     "flashlight-cuda": {
       "baseline": "0.3",
-      "port-version": 2
+      "port-version": 4
     },
     "flatbuffers": {
       "baseline": "2.0.6",
@@ -2341,7 +2341,7 @@
       "port-version": 1
     },
     "freetype-gl": {
-      "baseline": "2020-09-14",
+      "baseline": "2022-01-17",
       "port-version": 1
     },
     "freexl": {
@@ -2410,7 +2410,7 @@
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
-      "port-version": 3
+      "port-version": 4
     },
     "gasol": {
       "baseline": "2018-01-04",
@@ -2429,7 +2429,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.4.2",
+      "baseline": "3.4.3",
       "port-version": 0
     },
     "gdcm": {
@@ -2442,7 +2442,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.8",
-      "port-version": 0
+      "port-version": 2
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2538,7 +2538,7 @@
     },
     "glib": {
       "baseline": "2.70.5",
-      "port-version": 0
+      "port-version": 2
     },
     "glibmm": {
       "baseline": "2.70.0",
@@ -2589,8 +2589,8 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "1.39.0",
-      "port-version": 1
+      "baseline": "1.40.1",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2697,7 +2697,7 @@
       "port-version": 2
     },
     "guilite": {
-      "baseline": "2021-07-31",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "gumbo": {
@@ -2805,8 +2805,8 @@
       "port-version": 0
     },
     "hyperscan": {
-      "baseline": "5.3.0",
-      "port-version": 3
+      "baseline": "5.4.0",
+      "port-version": 0
     },
     "hypodermic": {
       "baseline": "2.5.3",
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "70.1",
+      "baseline": "71.1",
       "port-version": 0
     },
     "ideviceinstaller": {
@@ -3005,7 +3005,7 @@
       "port-version": 8
     },
     "ixwebsocket": {
-      "baseline": "11.3.3",
+      "baseline": "11.4.2",
       "port-version": 0
     },
     "jack2": {
@@ -4114,7 +4114,7 @@
     },
     "libunibreak": {
       "baseline": "5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libunifex": {
       "baseline": "2021-12-07",
@@ -4249,7 +4249,7 @@
       "port-version": 0
     },
     "live555": {
-      "baseline": "2021-12-18",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "llfio": {
@@ -4310,7 +4310,7 @@
     },
     "luajit": {
       "baseline": "2.0.5",
-      "port-version": 5
+      "port-version": 6
     },
     "luasec": {
       "baseline": "1.0.1",
@@ -4441,7 +4441,7 @@
       "port-version": 3
     },
     "mdns": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "mdnsresponder": {
@@ -4776,6 +4776,10 @@
       "baseline": "2019-08-20",
       "port-version": 2
     },
+    "nanosvg": {
+      "baseline": "2022-04-29",
+      "port-version": 0
+    },
     "nanovg": {
       "baseline": "2019-08-30",
       "port-version": 5
@@ -4865,7 +4869,7 @@
       "port-version": 1
     },
     "nng": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "nngpp": {
@@ -4890,7 +4894,7 @@
     },
     "nspr": {
       "baseline": "4.33",
-      "port-version": 0
+      "port-version": 1
     },
     "nss": {
       "baseline": "3.77",
@@ -4921,8 +4925,8 @@
       "port-version": 0
     },
     "nuspell": {
-      "baseline": "5.0.0",
-      "port-version": 0
+      "baseline": "5.1.0",
+      "port-version": 1
     },
     "nvtt": {
       "baseline": "2.1.2",
@@ -5054,11 +5058,11 @@
     },
     "openal-soft": {
       "baseline": "1.21.1",
-      "port-version": 4
+      "port-version": 5
     },
     "openblas": {
-      "baseline": "0.3.19",
-      "port-version": 1
+      "baseline": "0.3.20",
+      "port-version": 0
     },
     "opencascade": {
       "baseline": "7.6.0",
@@ -5098,11 +5102,11 @@
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 7
+      "port-version": 8
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 3
+      "port-version": 4
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5341,11 +5345,11 @@
       "port-version": 2
     },
     "pcre2": {
-      "baseline": "10.39",
-      "port-version": 2
+      "baseline": "10.40",
+      "port-version": 0
     },
     "pdal": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "pdal-c": {
@@ -5506,7 +5510,7 @@
     },
     "polymorphic-value": {
       "baseline": "1.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "ponder": {
       "baseline": "3.0.0",
@@ -5658,7 +5662,7 @@
     },
     "qpid-proton": {
       "baseline": "0.37.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -5862,7 +5866,7 @@
     },
     "qtbase": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.3.0",
@@ -5978,7 +5982,7 @@
     },
     "qttools": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.3.0",
@@ -5998,7 +6002,7 @@
     },
     "qtwebengine": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.3.0",
@@ -6245,8 +6249,8 @@
       "port-version": 0
     },
     "rsm-binary-io": {
-      "baseline": "2.0.4",
-      "port-version": 1
+      "baseline": "2.0.5",
+      "port-version": 0
     },
     "rsm-bsa": {
       "baseline": "4.0.3",
@@ -6494,7 +6498,7 @@
     },
     "simage": {
       "baseline": "1.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "simbody": {
       "baseline": "2022-01-04",
@@ -6673,7 +6677,7 @@
       "port-version": 0
     },
     "spectra": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "speex": {
@@ -6780,6 +6784,10 @@
       "baseline": "2020-09-14",
       "port-version": 2
     },
+    "stftpitchshift": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "stlab": {
       "baseline": "1.6.2",
       "port-version": 1
@@ -6817,7 +6825,7 @@
       "port-version": 1
     },
     "sundials": {
-      "baseline": "5.8.0",
+      "baseline": "6.2.0",
       "port-version": 0
     },
     "superlu": {
@@ -7294,7 +7302,7 @@
     },
     "vamp-sdk": {
       "baseline": "2.10",
-      "port-version": 2
+      "port-version": 3
     },
     "variant-lite": {
       "baseline": "2.0.0",
@@ -7309,7 +7317,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-04-21",
+      "baseline": "2022-05-06",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7529,8 +7537,8 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.1.5",
-      "port-version": 10
+      "baseline": "3.1.6",
+      "port-version": 0
     },
     "x-plane": {
       "baseline": "3.0.3",
@@ -7577,7 +7585,7 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.2.33",
+      "baseline": "1.2.34",
       "port-version": 0
     },
     "xnnpack": {
@@ -7697,7 +7705,7 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.0.5",
+      "baseline": "2.0.6",
       "port-version": 0
     },
     "zookeeper": {
