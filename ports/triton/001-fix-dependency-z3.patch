@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c8da1610..106fdb8b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -103,9 +103,9 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
+ # Find Z3
+ if(Z3_INTERFACE)
+     message(STATUS "Compiling with Z3 SMT solver")
+-    find_package(Z3 REQUIRED)
+-    include_directories(${Z3_INCLUDE_DIRS})
++    find_package(Z3 CONFIG REQUIRED)
+     set(TRITON_Z3_INTERFACE ON)
++    set(Z3_LIBRARIES z3::libz3)
+ endif()
+ 
+ # Find bitwuzla
+diff --git a/src/libtriton/Config.cmake.in b/src/libtriton/Config.cmake.in
+index 90cf6bfe..33f27d23 100644
+--- a/src/libtriton/Config.cmake.in
++++ b/src/libtriton/Config.cmake.in
+@@ -47,8 +47,7 @@ endif()
+ 
+ # Z3 include directories
+ if (TRITON_Z3_INTERFACE)
+-    include_directories("@Z3_INCLUDE_DIRS@")
+-    link_directories(BEFORE "@Z3_LIB_DIR@")
++    find_dependency(Z3 CONFIG)
+ endif()
+ 
+ # Bitwuzla include directories

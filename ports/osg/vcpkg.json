@@ -1,7 +1,7 @@
 {
   "name": "osg",
-  "version-string": "3.6.5",
-  "port-version": 11,
+  "version": "3.6.5",
+  "port-version": 12,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
   "dependencies": [
@@ -13,6 +13,7 @@
       "name": "fontconfig",
       "platform": "!windows"
     },
+    "opengl-registry",
     {
       "name": "openimageio",
       "platform": "osx"

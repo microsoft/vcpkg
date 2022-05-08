@@ -1,8 +1,9 @@
 {
   "name": "openvdb",
-  "version": "8.2.0",
+  "version": "9.0.0",
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
+  "license": "MPL-2.0",
   "dependencies": [
     "blosc",
     "boost-any",

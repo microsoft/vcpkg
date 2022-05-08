@@ -1,0 +1,839 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 61e5f6c..889df87 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -501,6 +501,7 @@ set (GLOG_PUBLIC_H
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/stl_logging.h
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/vlog_is_on.h
+   src/glog/log_severity.h
++  src/glog/platform.h
+ )
+ 
+ set (GLOG_SRCS
+diff --git a/src/demangle.cc b/src/demangle.cc
+index f3e6ad7..8c0bdc7 100644
+--- a/src/demangle.cc
++++ b/src/demangle.cc
+@@ -38,14 +38,14 @@
+ #include "utilities.h"
+ #include "demangle.h"
+ 
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+ #include <dbghelp.h>
+ #pragma comment(lib, "dbghelp")
+ #endif
+ 
+ _START_GOOGLE_NAMESPACE_
+ 
+-#if !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_WINDOWS)
+ typedef struct {
+   const char *abbrev;
+   const char *real_name;
+@@ -1324,7 +1324,7 @@ static bool ParseTopLevelMangledName(State *state) {
+ 
+ // The demangler entry point.
+ bool Demangle(const char *mangled, char *out, int out_size) {
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+   // When built with incremental linking, the Windows debugger
+   // library provides a more complicated `Symbol->Name` with the
+   // Incremental Linking Table offset, which looks like
+diff --git a/src/demangle_unittest.cc b/src/demangle_unittest.cc
+index be48341..c65adc4 100644
+--- a/src/demangle_unittest.cc
++++ b/src/demangle_unittest.cc
+@@ -62,7 +62,7 @@ static const char *DemangleIt(const char * const mangled) {
+   }
+ }
+ 
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+ 
+ TEST(Demangle, Windows) {
+   EXPECT_STREQ(
+diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
+index 421f1e0..3ecacfb 100644
+--- a/src/glog/logging.h.in
++++ b/src/glog/logging.h.in
+@@ -35,7 +35,6 @@
+ //
+ #ifndef _LOGGING_H_
+ #define _LOGGING_H_
+-
+ #include <cerrno>
+ #include <cstddef>
+ #include <cstring>
+@@ -58,6 +57,8 @@
+ #define GLOG_MSVC_POP_WARNING()
+ #endif
+ 
++#include <glog/platform.h>
++
+ #if @ac_cv_have_glog_export@
+ #include "glog/export.h"
+ #endif
+@@ -101,7 +102,7 @@
+ 
+ #ifdef HAVE_CXX11_ATOMIC
+ #include <atomic>
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+ #include <Windows.h>
+ #endif
+ 
+@@ -1057,7 +1058,7 @@ namespace google {
+         __FILE__, __LINE__, @ac_google_namespace@::GLOG_ ## severity, LOG_OCCURRENCES, \
+         &what_to_do).stream()
+ 
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+ 
+ #define SOME_KIND_OF_LOG_EVERY_N(severity, n, what_to_do) \
+   static int LOG_OCCURRENCES = 0, LOG_OCCURRENCES_MOD_N = 0; \
+diff --git a/src/glog/platform.h b/src/glog/platform.h
+new file mode 100644
+index 0000000..e614411
+--- /dev/null
++++ b/src/glog/platform.h
+@@ -0,0 +1,58 @@
++// Copyright (c) 2008, Google Inc.
++// All rights reserved.
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++// notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++// copyright notice, this list of conditions and the following disclaimer
++// in the documentation and/or other materials provided with the
++// distribution.
++//     * Neither the name of Google Inc. nor the names of its
++// contributors may be used to endorse or promote products derived from
++// this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++//
++// Author: Shinichiro Hamaji
++//
++// Detect supported platforms.
++
++#ifndef GLOG_PLATFORM_H
++#define GLOG_PLATFORM_H
++
++#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
++#define GLOG_OS_WINDOWS
++#elif defined(__CYGWIN__) || defined(__CYGWIN32__)
++#define GLOG_OS_CYGWIN
++#elif defined(linux) || defined(__linux) || defined(__linux__)
++#ifndef GLOG_OS_LINUX
++#define GLOG_OS_LINUX
++#endif
++#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
++#define GLOG_OS_MACOSX
++#elif defined(__FreeBSD__)
++#define GLOG_OS_FREEBSD
++#elif defined(__NetBSD__)
++#define GLOG_OS_NETBSD
++#elif defined(__OpenBSD__)
++#define GLOG_OS_OPENBSD
++#else
++// TODO(hamaji): Add other platforms.
++#error Platform not supported by glog. Please consider to contribute platform information by submitting a pull request on Github.
++#endif
++
++#endif // GLOG_PLATFORM_H
+diff --git a/src/googletest.h b/src/googletest.h
+index 7230606..a7ce3c2 100644
+--- a/src/googletest.h
++++ b/src/googletest.h
+@@ -72,7 +72,7 @@ _END_GOOGLE_NAMESPACE_
+ #define GOOGLE_GLOG_DLL_DECL
+ 
+ static inline string GetTempDir() {
+-#ifndef OS_WINDOWS
++#ifndef GLOG_OS_WINDOWS
+   return "/tmp";
+ #else
+   char tmp[MAX_PATH];
+@@ -81,7 +81,7 @@ static inline string GetTempDir() {
+ #endif
+ }
+ 
+-#if defined(OS_WINDOWS) && defined(_MSC_VER) && !defined(TEST_SRC_DIR)
++#if defined(GLOG_OS_WINDOWS) && defined(_MSC_VER) && !defined(TEST_SRC_DIR)
+ // The test will run in glog/vsproject/<project name>
+ // (e.g., glog/vsproject/logging_unittest).
+ static const char TEST_SRC_DIR[] = "../..";
+@@ -207,7 +207,7 @@ static inline void CalledAbort() {
+   longjmp(g_jmp_buf, 1);
+ }
+ 
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+ // TODO(hamaji): Death test somehow doesn't work in Windows.
+ #define ASSERT_DEATH(fn, msg)
+ #else
+@@ -490,7 +490,7 @@ static inline bool MungeAndDiffTestStderr(const string& golden_filename) {
+     WriteToFile(golden, munged_golden);
+     string munged_captured = cap->filename() + ".munged";
+     WriteToFile(captured, munged_captured);
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+     string diffcmd("fc " + munged_golden + " " + munged_captured);
+ #else
+     string diffcmd("diff -u " + munged_golden + " " + munged_captured);
+@@ -532,7 +532,7 @@ class Thread {
+   virtual ~Thread() {}
+ 
+   void SetJoinable(bool) {}
+-#if defined(OS_WINDOWS) && !defined(OS_CYGWIN)
++#if defined(GLOG_OS_WINDOWS) && !defined(GLOG_OS_CYGWIN)
+   void Start() {
+     handle_ = CreateThread(NULL,
+                            0,
+@@ -565,7 +565,7 @@ class Thread {
+     return NULL;
+   }
+ 
+-#if defined(OS_WINDOWS) && !defined(OS_CYGWIN)
++#if defined(GLOG_OS_WINDOWS) && !defined(GLOG_OS_CYGWIN)
+   HANDLE handle_;
+   DWORD th_;
+ #else
+@@ -574,7 +574,7 @@ class Thread {
+ };
+ 
+ static inline void SleepForMilliseconds(int t) {
+-#ifndef OS_WINDOWS
++#ifndef GLOG_OS_WINDOWS
+ # if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 199309L
+   const struct timespec req = {0, t * 1000 * 1000};
+   nanosleep(&req, NULL);
+diff --git a/src/logging.cc b/src/logging.cc
+index 71de91d..f251d67 100644
+--- a/src/logging.cc
++++ b/src/logging.cc
+@@ -59,7 +59,7 @@
+ #include <vector>
+ #include <cerrno>                   // for errno
+ #include <sstream>
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+ #include "windows/dirent.h"
+ #else
+ #include <dirent.h> // for automatic removal of old logs
+@@ -122,7 +122,7 @@ GLOG_DEFINE_bool(alsologtostderr, BoolFromEnv("GOOGLE_ALSOLOGTOSTDERR", false),
+                  "log messages go to stderr in addition to logfiles");
+ GLOG_DEFINE_bool(colorlogtostderr, false,
+                  "color messages logged to stderr (if supported by terminal)");
+-#ifdef OS_LINUX
++#ifdef GLOG_OS_LINUX
+ GLOG_DEFINE_bool(drop_log_memory, true, "Drop in-memory buffers of log contents. "
+                  "Logs can grow very quickly and they are rarely read before they "
+                  "need to be evicted from memory. Instead, drop them from memory "
+@@ -198,7 +198,7 @@ GLOG_DEFINE_bool(log_utc_time, false,
+ #define PATH_SEPARATOR '/'
+ 
+ #ifndef HAVE_PREAD
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+ #include <basetsd.h>
+ #define ssize_t SSIZE_T
+ #endif
+@@ -241,7 +241,7 @@ static void GetHostName(string* hostname) {
+     *buf.nodename = '\0';
+   }
+   *hostname = buf.nodename;
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   char buf[MAX_COMPUTERNAME_LENGTH + 1];
+   DWORD len = MAX_COMPUTERNAME_LENGTH + 1;
+   if (GetComputerNameA(buf, &len)) {
+@@ -258,7 +258,7 @@ static void GetHostName(string* hostname) {
+ // Returns true iff terminal supports using colors in output.
+ static bool TerminalSupportsColor() {
+   bool term_supports_color = false;
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   // on Windows TERM variable is usually not set, but the console does
+   // support colors.
+   term_supports_color = true;
+@@ -312,7 +312,7 @@ static GLogColor SeverityToColor(LogSeverity severity) {
+   return color;
+ }
+ 
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+ 
+ // Returns the character attribute for the given color.
+ static WORD GetColorAttribute(GLogColor color) {
+@@ -337,7 +337,7 @@ static const char* GetAnsiColorCode(GLogColor color) {
+   return NULL; // stop warning about return type.
+ }
+ 
+-#endif  // OS_WINDOWS
++#endif  // GLOG_OS_WINDOWS
+ 
+ // Safely get max_log_size, overriding to 1 if it somehow gets defined as 0
+ static int32 MaxLogSize() {
+@@ -753,7 +753,7 @@ static void ColoredWriteToStderr(LogSeverity severity,
+     fwrite(message, len, 1, stderr);
+     return;
+   }
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   const HANDLE stderr_handle = GetStdHandle(STD_ERROR_HANDLE);
+ 
+   // Gets the current text color.
+@@ -775,7 +775,7 @@ static void ColoredWriteToStderr(LogSeverity severity,
+   fprintf(stderr, "\033[0;3%sm", GetAnsiColorCode(color));
+   fwrite(message, len, 1, stderr);
+   fprintf(stderr, "\033[m");  // Resets the terminal to default.
+-#endif  // OS_WINDOWS
++#endif  // GLOG_OS_WINDOWS
+ }
+ 
+ static void WriteToStderr(const char* message, size_t len) {
+@@ -788,7 +788,7 @@ inline void LogDestination::MaybeLogToStderr(LogSeverity severity,
+ 					     const char* message, size_t message_len, size_t prefix_len) {
+   if ((severity >= FLAGS_stderrthreshold) || FLAGS_alsologtostderr) {
+     ColoredWriteToStderr(severity, message, message_len);
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+     // On Windows, also output to the debugger
+     ::OutputDebugStringA(message);
+ #elif defined(__ANDROID__)
+@@ -1056,7 +1056,7 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
+     }
+     return false;
+   }
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   // https://github.com/golang/go/issues/27638 - make sure we seek to the end to append
+   // empirically replicated with wine over mingw build
+   if (!FLAGS_timestamp_in_logfile_name) {
+@@ -1080,7 +1080,7 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
+     linkpath += linkname;
+     unlink(linkpath.c_str());                    // delete old one if it exists
+ 
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+     // TODO(hamaji): Create lnk file on Windows?
+ #elif defined(HAVE_UNISTD_H)
+     // We must have unistd.h.
+@@ -1270,7 +1270,7 @@ void LogFileObject::Write(bool force_flush,
+        (bytes_since_flush_ >= 1000000) ||
+        (CycleClock_Now() >= next_flush_time_) ) {
+     FlushUnlocked();
+-#ifdef OS_LINUX
++#ifdef GLOG_OS_LINUX
+     // Only consider files >= 3MiB
+     if (FLAGS_drop_log_memory && file_length_ >= (3 << 20)) {
+       // Don't evict the most recent 1-2MiB so as not to impact a tailer
+@@ -1305,7 +1305,7 @@ void LogFileObject::Write(bool force_flush,
+ 
+ 
+ LogCleaner::LogCleaner() : enabled_(false), overdue_days_(7), dir_delim_('/') {
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   dir_delim_ = '\\';
+ #endif
+ }
+@@ -1898,7 +1898,7 @@ void LogMessage::RecordCrashReason(
+ # define ATTRIBUTE_NORETURN
+ #endif
+ 
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+ __declspec(noreturn)
+ #endif
+ static void logging_fail() ATTRIBUTE_NORETURN;
+@@ -2223,7 +2223,7 @@ bool SendEmail(const char*dest, const char *subject, const char*body){
+ 
+ static void GetTempDirectories(vector<string>* list) {
+   list->clear();
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   // On windows we'll try to find a directory in this order:
+   //   C:/Documents & Settings/whomever/TEMP (or whatever GetTempPath() is)
+   //   C:/TMP/
+@@ -2282,7 +2282,7 @@ const vector<string>& GetLoggingDirectories() {
+       logging_directories_list->push_back(FLAGS_log_dir.c_str());
+     } else {
+       GetTempDirectories(logging_directories_list);
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+       char tmp[MAX_PATH];
+       if (GetWindowsDirectoryA(tmp, MAX_PATH))
+         logging_directories_list->push_back(tmp);
+@@ -2325,7 +2325,7 @@ void TruncateLogFile(const char *path, int64 limit, int64 keep) {
+   // Don't follow symlinks unless they're our own fd symlinks in /proc
+   int flags = O_RDWR;
+   // TODO(hamaji): Support other environments.
+-#ifdef OS_LINUX
++#ifdef GLOG_OS_LINUX
+   const char *procfd_prefix = "/proc/self/fd/";
+   if (strncmp(procfd_prefix, path, strlen(procfd_prefix))) flags |= O_NOFOLLOW;
+ #endif
+@@ -2464,7 +2464,7 @@ int posix_strerror_r(int err, char *buf, size_t len) {
+       return 0;
+     } else {
+       buf[0] = '\000';
+-#if defined(OS_MACOSX) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
++#if defined(GLOG_OS_MACOSX) || defined(GLOG_OS_FREEBSD) || defined(GLOG_OS_OPENBSD)
+       if (reinterpret_cast<intptr_t>(rc) < sys_nerr) {
+         // This means an error on MacOSX or FreeBSD.
+         return -1;
+diff --git a/src/logging_custom_prefix_unittest.cc b/src/logging_custom_prefix_unittest.cc
+index c9fb5b8..8740fad 100644
+--- a/src/logging_custom_prefix_unittest.cc
++++ b/src/logging_custom_prefix_unittest.cc
+@@ -588,7 +588,7 @@ void TestCHECK() {
+ 
+   // Tests using CHECK*() on anonymous enums.
+   // Apple's GCC doesn't like this.
+-#if !defined(OS_MACOSX)
++#if !defined(GLOG_OS_MACOSX)
+   CHECK_EQ(CASE_A, CASE_A);
+   CHECK_NE(CASE_A, CASE_B);
+   CHECK_GE(CASE_A, CASE_A);
+@@ -670,7 +670,7 @@ static void GetFiles(const string& pattern, vector<string>* files) {
+     files->push_back(string(g.gl_pathv[i]));
+   }
+   globfree(&g);
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   WIN32_FIND_DATAA data;
+   HANDLE handle = FindFirstFileA(pattern.c_str(), &data);
+   size_t index = pattern.rfind('\\');
+@@ -799,7 +799,7 @@ static void TestTwoProcessesWrite() {
+ }
+ 
+ static void TestSymlink() {
+-#ifndef OS_WINDOWS
++#ifndef GLOG_OS_WINDOWS
+   fprintf(stderr, "==== Test setting log file symlink\n");
+   string dest = FLAGS_test_tmpdir + "/logging_test_symlink";
+   string sym = FLAGS_test_tmpdir + "/symlinkbase";
+@@ -942,7 +942,7 @@ static void TestTruncate() {
+   // MacOSX 10.4 doesn't fail in this case.
+   // Windows doesn't have symlink.
+   // Let's just ignore this test for these cases.
+-#if !defined(OS_MACOSX) && !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_MACOSX) && !defined(GLOG_OS_WINDOWS)
+   // Through a symlink should fail to truncate
+   string linkname = path + ".link";
+   unlink(linkname.c_str());
+@@ -951,7 +951,7 @@ static void TestTruncate() {
+ #endif
+ 
+   // The /proc/self path makes sense only for linux.
+-#if defined(OS_LINUX)
++#if defined(GLOG_OS_LINUX)
+   // Through an open fd symlink should work
+   int fd;
+   CHECK_ERR(fd = open(path.c_str(), O_APPEND | O_WRONLY));
+@@ -1205,7 +1205,7 @@ TEST(Strerror, logging) {
+   CHECK_EQ(posix_strerror_r(errcode, buf, 0), -1);
+   CHECK_EQ(buf[0], 'A');
+   CHECK_EQ(posix_strerror_r(errcode, NULL, buf_size), -1);
+-#if defined(OS_MACOSX) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
++#if defined(GLOG_OS_MACOSX) || defined(GLOG_OS_FREEBSD) || defined(GLOG_OS_OPENBSD)
+   // MacOSX or FreeBSD considers this case is an error since there is
+   // no enough space.
+   CHECK_EQ(posix_strerror_r(errcode, buf, 1), -1);
+diff --git a/src/logging_unittest.cc b/src/logging_unittest.cc
+index edc7d35..ce3c483 100644
+--- a/src/logging_unittest.cc
++++ b/src/logging_unittest.cc
+@@ -561,7 +561,7 @@ void TestCHECK() {
+ 
+   // Tests using CHECK*() on anonymous enums.
+   // Apple's GCC doesn't like this.
+-#if !defined(OS_MACOSX)
++#if !defined(GLOG_OS_MACOSX)
+   CHECK_EQ(CASE_A, CASE_A);
+   CHECK_NE(CASE_A, CASE_B);
+   CHECK_GE(CASE_A, CASE_A);
+@@ -643,7 +643,7 @@ static void GetFiles(const string& pattern, vector<string>* files) {
+     files->push_back(string(g.gl_pathv[i]));
+   }
+   globfree(&g);
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   WIN32_FIND_DATAA data;
+   HANDLE handle = FindFirstFileA(pattern.c_str(), &data);
+   size_t index = pattern.rfind('\\');
+@@ -772,7 +772,7 @@ static void TestTwoProcessesWrite() {
+ }
+ 
+ static void TestSymlink() {
+-#ifndef OS_WINDOWS
++#ifndef GLOG_OS_WINDOWS
+   fprintf(stderr, "==== Test setting log file symlink\n");
+   string dest = FLAGS_test_tmpdir + "/logging_test_symlink";
+   string sym = FLAGS_test_tmpdir + "/symlinkbase";
+@@ -915,7 +915,7 @@ static void TestTruncate() {
+   // MacOSX 10.4 doesn't fail in this case.
+   // Windows doesn't have symlink.
+   // Let's just ignore this test for these cases.
+-#if !defined(OS_MACOSX) && !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_MACOSX) && !defined(GLOG_OS_WINDOWS)
+   // Through a symlink should fail to truncate
+   string linkname = path + ".link";
+   unlink(linkname.c_str());
+@@ -924,7 +924,7 @@ static void TestTruncate() {
+ #endif
+ 
+   // The /proc/self path makes sense only for linux.
+-#if defined(OS_LINUX)
++#if defined(GLOG_OS_LINUX)
+   // Through an open fd symlink should work
+   int fd;
+   CHECK_ERR(fd = open(path.c_str(), O_APPEND | O_WRONLY));
+@@ -1178,7 +1178,7 @@ TEST(Strerror, logging) {
+   CHECK_EQ(posix_strerror_r(errcode, buf, 0), -1);
+   CHECK_EQ(buf[0], 'A');
+   CHECK_EQ(posix_strerror_r(errcode, NULL, buf_size), -1);
+-#if defined(OS_MACOSX) || defined(OS_FREEBSD) || defined(OS_OPENBSD)
++#if defined(GLOG_OS_MACOSX) || defined(GLOG_OS_FREEBSD) || defined(GLOG_OS_OPENBSD)
+   // MacOSX or FreeBSD considers this case is an error since there is
+   // no enough space.
+   CHECK_EQ(posix_strerror_r(errcode, buf, 1), -1);
+diff --git a/src/signalhandler.cc b/src/signalhandler.cc
+index b6d6e25..ababf86 100644
+--- a/src/signalhandler.cc
++++ b/src/signalhandler.cc
+@@ -63,7 +63,7 @@ const struct {
+   { SIGILL, "SIGILL" },
+   { SIGFPE, "SIGFPE" },
+   { SIGABRT, "SIGABRT" },
+-#if !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_WINDOWS)
+   { SIGBUS, "SIGBUS" },
+ #endif
+   { SIGTERM, "SIGTERM" },
+@@ -208,7 +208,7 @@ void DumpSignalInfo(int signal_number, siginfo_t *siginfo) {
+   formatter.AppendUint64((uintptr_t)pthread_self(), 16);
+   formatter.AppendString(") ");
+   // Only linux has the PID of the signal sender in si_pid.
+-#ifdef OS_LINUX
++#ifdef GLOG_OS_LINUX
+   formatter.AppendString("from PID ");
+   formatter.AppendUint64(siginfo->si_pid, 10);
+   formatter.AppendString("; ");
+@@ -253,7 +253,7 @@ void InvokeDefaultSignalHandler(int signal_number) {
+   sig_action.sa_handler = SIG_DFL;
+   sigaction(signal_number, &sig_action, NULL);
+   kill(getpid(), signal_number);
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   signal(signal_number, SIG_DFL);
+   raise(signal_number);
+ #endif
+@@ -267,7 +267,7 @@ static pthread_t* g_entered_thread_id_pointer = NULL;
+ 
+ // Dumps signal and stack frame information, and invokes the default
+ // signal handler once our job is done.
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+ void FailureSignalHandler(int signal_number)
+ #else
+ void FailureSignalHandler(int signal_number,
+@@ -314,7 +314,7 @@ void FailureSignalHandler(int signal_number,
+   // First dump time info.
+   DumpTimeInfo();
+ 
+-#if !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_WINDOWS)
+   // Get the program counter from ucontext.
+   void *pc = GetPC(ucontext);
+   DumpStackFrameInfo("PC: ", pc);
+@@ -364,7 +364,7 @@ bool IsFailureSignalHandlerInstalled() {
+   sigaction(SIGABRT, NULL, &sig_action);
+   if (sig_action.sa_sigaction == &FailureSignalHandler)
+     return true;
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   return kFailureSignalHandlerInstalled;
+ #endif  // HAVE_SIGACTION
+   return false;
+@@ -385,7 +385,7 @@ void InstallFailureSignalHandler() {
+     CHECK_ERR(sigaction(kFailureSignals[i].number, &sig_action, NULL));
+   }
+   kFailureSignalHandlerInstalled = true;
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+   for (size_t i = 0; i < ARRAYSIZE(kFailureSignals); ++i) {
+     CHECK_NE(signal(kFailureSignals[i].number, &FailureSignalHandler),
+              SIG_ERR);
+@@ -395,7 +395,7 @@ void InstallFailureSignalHandler() {
+ }
+ 
+ void InstallFailureWriter(void (*writer)(const char* data, int size)) {
+-#if defined(HAVE_SIGACTION) || defined(OS_WINDOWS)
++#if defined(HAVE_SIGACTION) || defined(GLOG_OS_WINDOWS)
+   g_failure_writer = writer;
+ #endif  // HAVE_SIGACTION
+ }
+diff --git a/src/stacktrace_x86-inl.h b/src/stacktrace_x86-inl.h
+index af2783d..99c5de7 100644
+--- a/src/stacktrace_x86-inl.h
++++ b/src/stacktrace_x86-inl.h
+@@ -31,9 +31,9 @@
+ 
+ #include <stdint.h>   // for uintptr_t
+ 
+-#include "utilities.h"   // for OS_* macros
++#include "utilities.h"   // for GLOG_OS_* macros
+ 
+-#if !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_WINDOWS)
+ #include <unistd.h>
+ #include <sys/mman.h>
+ #endif
+@@ -74,7 +74,7 @@ static void **NextStackFrame(void **old_sp) {
+   // last two pages in the address space
+   if ((uintptr_t)new_sp >= 0xffffe000) return NULL;
+ #endif
+-#if !defined(OS_WINDOWS)
++#if !defined(GLOG_OS_WINDOWS)
+   if (!STRICT_UNWINDING) {
+     // Lax sanity checks cause a crash in 32-bit tcmalloc/crash_reason_test
+     // on AMD-based machines with VDSO-enabled kernels.
+diff --git a/src/symbolize.cc b/src/symbolize.cc
+index f7fbc53..8688ca2 100644
+--- a/src/symbolize.cc
++++ b/src/symbolize.cc
+@@ -46,7 +46,7 @@
+ // and memmove().  We assume they are async-signal-safe.
+ //
+ // Additional header can be specified by the GLOG_BUILD_CONFIG_INCLUDE
+-// macro to add platform specific defines (e.g. OS_OPENBSD).
++// macro to add platform specific defines (e.g. GLOG_OS_OPENBSD).
+ 
+ #ifdef GLOG_BUILD_CONFIG_INCLUDE
+ #include GLOG_BUILD_CONFIG_INCLUDE
+@@ -113,7 +113,7 @@ _END_GOOGLE_NAMESPACE_
+ #if defined(HAVE_DLFCN_H)
+ #include <dlfcn.h>
+ #endif
+-#if defined(OS_OPENBSD)
++#if defined(GLOG_OS_OPENBSD)
+ #include <sys/exec_elf.h>
+ #else
+ #include <elf.h>
+@@ -846,7 +846,7 @@ static ATTRIBUTE_NOINLINE bool SymbolizeAndDemangle(void *pc, char *out,
+ 
+ _END_GOOGLE_NAMESPACE_
+ 
+-#elif defined(OS_MACOSX) && defined(HAVE_DLADDR)
++#elif defined(GLOG_OS_MACOSX) && defined(HAVE_DLADDR)
+ 
+ #include <dlfcn.h>
+ #include <cstring>
+@@ -871,7 +871,7 @@ static ATTRIBUTE_NOINLINE bool SymbolizeAndDemangle(void *pc, char *out,
+ 
+ _END_GOOGLE_NAMESPACE_
+ 
+-#elif defined(OS_WINDOWS) || defined(OS_CYGWIN)
++#elif defined(GLOG_OS_WINDOWS) || defined(GLOG_OS_CYGWIN)
+ 
+ #include <windows.h>
+ #include <dbghelp.h>
+diff --git a/src/symbolize_unittest.cc b/src/symbolize_unittest.cc
+index 0b53230..7e8f6d4 100644
+--- a/src/symbolize_unittest.cc
++++ b/src/symbolize_unittest.cc
+@@ -359,7 +359,7 @@ static void ATTRIBUTE_NOINLINE TestWithReturnAddress() {
+ #endif
+ }
+ 
+-# elif defined(OS_WINDOWS) || defined(OS_CYGWIN)
++# elif defined(GLOG_OS_WINDOWS) || defined(GLOG_OS_CYGWIN)
+ 
+ #ifdef _MSC_VER
+ #include <intrin.h>
+@@ -411,10 +411,10 @@ int main(int argc, char **argv) {
+   TestWithPCInsideNonInlineFunction();
+   TestWithReturnAddress();
+   return RUN_ALL_TESTS();
+-# elif defined(OS_WINDOWS) || defined(OS_CYGWIN)
++# elif defined(GLOG_OS_WINDOWS) || defined(GLOG_OS_CYGWIN)
+   TestWithReturnAddress();
+   return RUN_ALL_TESTS();
+-# else  // OS_WINDOWS
++# else  // GLOG_OS_WINDOWS
+   printf("PASS (no symbolize_unittest support)\n");
+   return 0;
+ # endif  // __ELF__
+diff --git a/src/utilities.cc b/src/utilities.cc
+index 6b9a69e..ecda730 100644
+--- a/src/utilities.cc
++++ b/src/utilities.cc
+@@ -151,7 +151,7 @@ static void DumpStackTraceAndExit() {
+     sigemptyset(&sig_action.sa_mask);
+     sig_action.sa_handler = SIG_DFL;
+     sigaction(SIGABRT, &sig_action, NULL);
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+     signal(SIGABRT, SIG_DFL);
+ #endif  // HAVE_SIGACTION
+   }
+@@ -180,7 +180,7 @@ bool IsGoogleLoggingInitialized() {
+   return g_program_invocation_short_name != NULL;
+ }
+ 
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+ struct timeval {
+   long tv_sec, tv_usec;
+ };
+@@ -236,9 +236,9 @@ bool PidHasChanged() {
+ 
+ pid_t GetTID() {
+   // On Linux and MacOSX, we try to use gettid().
+-#if defined OS_LINUX || defined OS_MACOSX
++#if defined GLOG_OS_LINUX || defined GLOG_OS_MACOSX
+ #ifndef __NR_gettid
+-#ifdef OS_MACOSX
++#ifdef GLOG_OS_MACOSX
+ #define __NR_gettid SYS_gettid
+ #elif ! defined __i386__
+ #error "Must define __NR_gettid for non-x86 platforms"
+@@ -258,12 +258,12 @@ pid_t GetTID() {
+     // the value change to "true".
+     lacks_gettid = true;
+   }
+-#endif  // OS_LINUX || OS_MACOSX
++#endif  // GLOG_OS_LINUX || GLOG_OS_MACOSX
+ 
+   // If gettid() could not be used, we use one of the following.
+-#if defined OS_LINUX
++#if defined GLOG_OS_LINUX
+   return getpid();  // Linux:  getpid returns thread ID when gettid is absent
+-#elif defined OS_WINDOWS && !defined OS_CYGWIN
++#elif defined GLOG_OS_WINDOWS && !defined GLOG_OS_CYGWIN
+   return GetCurrentThreadId();
+ #elif defined(HAVE_PTHREAD)
+   // If none of the techniques above worked, we use pthread_self().
+@@ -275,7 +275,7 @@ pid_t GetTID() {
+ 
+ const char* const_basename(const char* filepath) {
+   const char* base = strrchr(filepath, '/');
+-#ifdef OS_WINDOWS  // Look for either path separator in Windows
++#ifdef GLOG_OS_WINDOWS  // Look for either path separator in Windows
+   if (!base)
+     base = strrchr(filepath, '\\');
+ #endif
+@@ -288,7 +288,7 @@ const string& MyUserName() {
+ }
+ static void MyUserNameInitializer() {
+   // TODO(hamaji): Probably this is not portable.
+-#if defined(OS_WINDOWS)
++#if defined(GLOG_OS_WINDOWS)
+   const char* user = getenv("USERNAME");
+ #else
+   const char* user = getenv("USER");
+@@ -337,7 +337,7 @@ void InitGoogleLoggingUtilities(const char* argv0) {
+   CHECK(!IsGoogleLoggingInitialized())
+       << "You called InitGoogleLogging() twice!";
+   const char* slash = strrchr(argv0, '/');
+-#ifdef OS_WINDOWS
++#ifdef GLOG_OS_WINDOWS
+   if (!slash)  slash = strrchr(argv0, '\\');
+ #endif
+   g_program_invocation_short_name = slash ? slash + 1 : argv0;
+diff --git a/src/utilities.h b/src/utilities.h
+index e4115ad..86bc296 100644
+--- a/src/utilities.h
++++ b/src/utilities.h
+@@ -34,25 +34,6 @@
+ #ifndef UTILITIES_H__
+ #define UTILITIES_H__
+ 
+-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+-# define OS_WINDOWS
+-#elif defined(__CYGWIN__) || defined(__CYGWIN32__)
+-# define OS_CYGWIN
+-#elif defined(linux) || defined(__linux) || defined(__linux__)
+-# ifndef OS_LINUX
+-#  define OS_LINUX
+-# endif
+-#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+-# define OS_MACOSX
+-#elif defined(__FreeBSD__)
+-# define OS_FREEBSD
+-#elif defined(__NetBSD__)
+-# define OS_NETBSD
+-#elif defined(__OpenBSD__)
+-# define OS_OPENBSD
+-#else
+-// TODO(hamaji): Add other platforms.
+-#endif
+ 
+ // printf macros for size_t, in the style of inttypes.h
+ #ifdef _LP64
+@@ -76,12 +57,12 @@
+ 
+ #include <string>
+ 
+-#if defined(OS_WINDOWS)
++#include "glog/logging.h"
++#if defined(GLOG_OS_WINDOWS)
+ # include "port.h"
+ #endif
+ 
+ #include "config.h"
+-#include "glog/logging.h"
+ 
+ // There are three different ways we can try to get the stack trace:
+ //
+@@ -114,7 +95,7 @@
+ #  define STACKTRACE_H "stacktrace_x86_64-inl.h"
+ # elif (defined(__ppc__) || defined(__PPC__)) && __GNUC__ >= 2
+ #  define STACKTRACE_H "stacktrace_powerpc-inl.h"
+-# elif defined(OS_WINDOWS)
++# elif defined(GLOG_OS_WINDOWS)
+ #  define STACKTRACE_H "stacktrace_windows-inl.h"
+ # endif
+ #endif
+@@ -130,12 +111,12 @@
+ #ifndef GLOG_NO_SYMBOLIZE_DETECTION
+ #ifndef HAVE_SYMBOLIZE
+ // defined by gcc
+-#if defined(__ELF__) && defined(OS_LINUX)
++#if defined(__ELF__) && defined(GLOG_OS_LINUX)
+ # define HAVE_SYMBOLIZE
+-#elif defined(OS_MACOSX) && defined(HAVE_DLADDR)
++#elif defined(GLOG_OS_MACOSX) && defined(HAVE_DLADDR)
+ // Use dladdr to symbolize.
+ # define HAVE_SYMBOLIZE
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+ // Use DbgHelp to symbolize
+ # define HAVE_SYMBOLIZE
+ #endif
+@@ -154,7 +135,7 @@ namespace glog_internal_namespace_ {
+ #ifdef HAVE___ATTRIBUTE__
+ # define ATTRIBUTE_NOINLINE __attribute__ ((noinline))
+ # define HAVE_ATTRIBUTE_NOINLINE
+-#elif defined(OS_WINDOWS)
++#elif defined(GLOG_OS_WINDOWS)
+ # define ATTRIBUTE_NOINLINE __declspec(noinline)
+ # define HAVE_ATTRIBUTE_NOINLINE
+ #else
