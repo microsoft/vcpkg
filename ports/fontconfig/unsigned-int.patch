@@ -1,0 +1,30 @@
+diff --git a/meson.build b/meson.build
+index f6166008..f31ea732 100644
+--- a/meson.build
++++ b/meson.build
+@@ -261,9 +261,9 @@ sh = find_program('sh', required : false)
+ if not sh.found() # host_machine.system() == 'windows' or not sh.found()
+   # TODO: This is not always correct
+   if cc.get_id() == 'msvc'
+-    gperf_len_type = 'size_t'
++    gperf_len_type = 'unsigned int'
+   else
+-    gperf_len_type = 'unsigned'
++    gperf_len_type = 'unsigned int'
+   endif
+ else
+   gperf_test_format = '''
+@@ -276,11 +276,11 @@ else
+   gperf_test = gperf_test_format.format('size_t', gperf_snippet.stdout())
+ 
+   if cc.compiles(gperf_test)
+-    gperf_len_type = 'size_t'
++    gperf_len_type = 'unsigned int'
+   else
+     gperf_test = gperf_test_format.format('unsigned', gperf_snippet.stdout())
+     if cc.compiles(gperf_test)
+-      gperf_len_type = 'unsigned'
++      gperf_len_type = 'unsigned int'
+     else
+       error('unable to determine gperf len type')
+     endif

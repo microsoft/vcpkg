@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fcd9024..a717b87 100644
+index 24d76443..69dff913 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -225,6 +225,7 @@ if(NOT BROTLI_BUNDLED_MODE)
+@@ -227,6 +227,7 @@ if(NOT BROTLI_BUNDLED_MODE)
    install(
      TARGETS brotli
      RUNTIME DESTINATION tools/brotli

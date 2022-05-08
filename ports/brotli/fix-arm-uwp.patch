@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e6c6054..2c4b757 100644
+index 983e8395..bcd75cc5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -124,6 +124,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+@@ -152,6 +152,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
    add_definitions(-DOS_FREEBSD)
  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    add_definitions(-DOS_MACOSX)

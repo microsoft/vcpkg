@@ -18,7 +18,11 @@
       "name": "openimageio",
       "platform": "osx"
     },
-    "zlib"
+    "zlib",
+    {
+      "name": "sdl2",
+      "features": ["x11"]
+    }
   ],
   "features": {
     "collada": {

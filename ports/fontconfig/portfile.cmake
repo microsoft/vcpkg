@@ -1,5 +1,11 @@
 set(FONTCONFIG_VERSION 2.14.0)
 
+set(FONTCONFIG_PATCHES no-etc-symlinks.patch)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    list(APPEND FONTCONFIG_PATCHES preprocess.patch)
+    list(APPEND FONTCONFIG_PATCHES unsigned-int.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,8 +13,7 @@ vcpkg_from_gitlab(
     REF ${FONTCONFIG_VERSION}
     SHA512 0f36fa503c0277750ff253534f9305c9b4c86fd0d88a470e3b666080951714c51f13a69eecab382d0a7883a07494fc71730213e6086194a92aa5dfc075789e85
     HEAD_REF master
-    PATCHES
-        no-etc-symlinks.patch
+    PATCHES ${FONTCONFIG_PATCHES}
 )
 
 vcpkg_find_acquire_program(GPERF)
@@ -74,7 +79,9 @@ if(NOT VCPKG_TARGET_IS_LINUX)
 endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-vcpkg_copy_tools(
-    TOOL_NAMES fc-match fc-cat fc-list fc-pattern fc-query fc-scan fc-cache fc-validate fc-conflist
-    AUTO_CLEAN
-)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    vcpkg_copy_tools(
+        TOOL_NAMES fc-match fc-cat fc-list fc-pattern fc-query fc-scan fc-cache fc-validate fc-conflist
+        AUTO_CLEAN
+    )
+endif()
