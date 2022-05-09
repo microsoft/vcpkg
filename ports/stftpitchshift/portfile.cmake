@@ -21,7 +21,7 @@ vcpkg_cmake_config_fixup(
 
 file(
   INSTALL "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/stftpitchshift"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   RENAME copyright
 )
 
