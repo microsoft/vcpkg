@@ -11,30 +11,21 @@ vcpkg_check_features(
     FEATURES "tools" TOOLS
 )
 
-set(COMMON_OPTIONS
-    "-DBUILD_DOCUMENTATION=OFF"
-    "-DCMAKEDIR=share/${PORT}"
-    "-DPKGDIR="
-    "-DDOCDIR="
-    "-DEXAMPLEDIR="
-    "-DMANDIR="
-    "-DSBINDIR=")
-
 if(TOOLS)
     set(TOOL_OPTION "-DBINDIR=tools/${PORT}")
 else()
-    set(TOOL_OPTION "-DBINDIR=")
+    set(TOOL_OPTION -DBINDIR=)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${LIB_OPTION} ${TOOL_OPTION}
     "-DCMAKEDIR=share/${PORT}"
-    "-DPKGDIR="
-    "-DDOCDIR="
-    "-DEXAMPLEDIR="
-    "-DMANDIR="
-    "-DSBINDIR="
+    -DPKGDIR=
+    -DDOCDIR=
+    -DEXAMPLEDIR=
+    -DMANDIR=
+    -DSBINDIR=
 )
 
 vcpkg_cmake_install()
