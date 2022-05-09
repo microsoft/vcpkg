@@ -1,3 +1,6 @@
+# On first run CMake includes toolchain file twice, stop subsequent includes early on.
+include_guard()
+
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
