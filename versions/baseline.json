@@ -7368,6 +7368,10 @@
       "baseline": "3.3",
       "port-version": 0
     },
+    "vcpkg-tool-ninja": {
+      "baseline": "2022-03-31",
+      "port-version": 0
+    },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
       "port-version": 0
