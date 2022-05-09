@@ -2,12 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e90fcdd..17c79e8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,9 +26,15 @@ add_library(LercLib ${SOURCES})
+@@ -26,9 +26,16 @@ add_library(LercLib ${SOURCES})
  endif()
  
  install(
--    TARGETS Lerc
-+    TARGETS Lerc EXPORT LercTargets
+     TARGETS Lerc
++    EXPORT LercTargets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -15,7 +15,7 @@ index e90fcdd..17c79e8 100644
  )
 +
 +install(EXPORT LercTargets
-+  FILE lercConfig.cmake
-+  NAMESPACE Esri::
-+  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/lerc"
++  FILE unofficial-lerc-config.cmake
++  NAMESPACE unofficial::Lerc::
++  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
 +)
