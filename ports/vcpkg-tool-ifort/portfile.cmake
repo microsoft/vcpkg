@@ -1,4 +1,4 @@
-set(VCPKG_POLIC_EMPTY_PACKAGE enabled)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(archive_path
     URLS "https://registrationcenter-download.intel.com/akdlm/irc_nas/18578/w_HPCKit_p_2022.1.3.145_offline.exe"
@@ -7,7 +7,6 @@ vcpkg_download_distfile(archive_path
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-set(7Z "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-7zip/7z.exe")
 vcpkg_execute_in_download_mode(
                         COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/intel-extract" "-y" "-bso0" "-bsp0"
                         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
