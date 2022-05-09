@@ -8,11 +8,7 @@ vcpkg_from_github(
         001-fix-MaterialXCore-generated-header.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(OPTION_BUILD_SHARED_LIB ON)
-else()
-    set(OPTION_BUILD_SHARED_LIB OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPTION_BUILD_SHARED_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
