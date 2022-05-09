@@ -1,0 +1,2 @@
+include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_load_environment_from_batch.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/@FUNCTION_NAME@.cmake")
