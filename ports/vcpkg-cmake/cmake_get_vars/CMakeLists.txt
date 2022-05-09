@@ -76,7 +76,17 @@ else()
 endif()
 
 
-project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+project(get_cmake_vars NONE)
+
+include(CheckLanguage)
+foreach(lang IN LISTS VCPKG_LANGUAGES)
+    check_language(${lang})
+    if(CMAKE_${lang}_COMPILER)
+      enable_language(${lang})
+    else()
+      message(STATUS "No ${lang} support!")
+    endif()
+endforeach()
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")

@@ -40,7 +40,7 @@ message(STATUS "detected CXX flags: ${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
 set(Z_VCPKG_CMAKE_GET_VARS_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 function(vcpkg_cmake_get_vars out_file)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "")
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "OPTIONS")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -51,6 +51,7 @@ function(vcpkg_cmake_get_vars out_file)
             CACHE PATH "The file to include to access the CMake variables from a generated project.")
         vcpkg_cmake_configure(
             SOURCE_PATH "${Z_VCPKG_CMAKE_GET_VARS_CURRENT_LIST_DIR}/cmake_get_vars"
+            OPTIONS ${arg_OPTIONS}
             OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-get-vars-${TARGET_TRIPLET}-dbg.cmake.log"
             OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-get-vars-${TARGET_TRIPLET}-rel.cmake.log"
             LOGFILE_BASE cmake-get-vars-${TARGET_TRIPLET}
