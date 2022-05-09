@@ -9,7 +9,7 @@ vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
-set(OPENSSL_SHARED no-shared no-module)
+set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENSSL_SHARED shared)
 endif()
