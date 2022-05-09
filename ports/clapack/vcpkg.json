@@ -4,6 +4,7 @@
   "port-version": 21,
   "description": "CLAPACK (f2c'ed version of LAPACK)",
   "homepage": "https://www.netlib.org/clapack",
+  "license": null,
   "dependencies": [
     "blas",
     {
