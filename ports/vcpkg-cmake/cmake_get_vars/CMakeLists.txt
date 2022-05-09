@@ -76,7 +76,8 @@ else()
 endif()
 
 
-project(get_cmake_vars NONE)
+project(get_cmake_vars C CXX) 
+# C;CXX as default since NONE does not work with the approach below and uwp.
 
 include(CheckLanguage)
 foreach(lang IN LISTS VCPKG_LANGUAGES)

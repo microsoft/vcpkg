@@ -60,7 +60,9 @@ set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:i
 #/ZW:nostdlib -> ZW is added by CMake # VS also normally adds /sdl but not cmake MSBUILD
 set(_vcpkg_winmd_flag "")
 file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
-set(ENV{_CL_} "/FU\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\" $ENV{_CL_}")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # clang-cl does not know how to deal with /FU
+    set(ENV{_CL_} "/FU\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\" $ENV{_CL_}")
+endif()
 # CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
 #set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
 
