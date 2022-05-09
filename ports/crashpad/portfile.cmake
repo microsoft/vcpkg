@@ -1,5 +1,4 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
 
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -98,6 +97,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Setting GN options for Android")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
