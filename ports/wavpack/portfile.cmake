@@ -9,9 +9,8 @@ vcpkg_from_github(
         fix-symbol-exports.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DWAVPACK_INSTALL_DOCS=OFF
         -DWAVPACK_BUILD_PROGRAMS=OFF
@@ -21,12 +20,12 @@ vcpkg_configure_cmake(
         -DWAVPACK_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WavPack)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WavPack)
 endif()
 
 vcpkg_copy_pdbs()

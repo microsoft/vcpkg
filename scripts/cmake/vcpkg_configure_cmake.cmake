@@ -219,9 +219,6 @@ function(vcpkg_configure_cmake)
             # Prebuilt ninja binaries are only provided for x64 hosts
             set(ninja_can_be_used OFF)
             set(ninja_host OFF)
-        elseif(VCPKG_TARGET_IS_UWP)
-            # Ninja and MSBuild have many differences when targeting UWP, so use MSBuild to maximize existing compatibility
-            set(ninja_can_be_used OFF)
         endif()
     endif()
 
@@ -243,8 +240,8 @@ function(vcpkg_configure_cmake)
     # If we use Ninja, make sure it's on PATH
     if("${generator}" STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+        vcpkg_add_to_path("${ninja_path}")
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -331,23 +328,39 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+    endif()
+
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Release
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
+        "-DCMAKE_BUILD_TYPE=Release"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Debug
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug")
+        "-DCMAKE_BUILD_TYPE=Debug"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        if(NOT DEFINED ninja_path)
+            # if ninja_path was defined above, we've already done this
+            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+            vcpkg_add_to_path("${ninja_path}")
+        endif()
 
         #parallelize the configure step
         set(ninja_configure_contents
@@ -368,7 +381,7 @@ function(vcpkg_configure_cmake)
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND ninja -v
+            COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
         )
