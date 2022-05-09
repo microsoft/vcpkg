@@ -6885,8 +6885,8 @@
       "port-version": 4
     },
     "teemo": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "2.7",
+      "port-version": 0
     },
     "telnetpp": {
       "baseline": "2.1.2",
