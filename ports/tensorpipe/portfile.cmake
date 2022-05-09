@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_download_distfile(INSTALL_PACKAGE_CONFIG_PATCH
     URLS "https://patch-diff.githubusercontent.com/raw/pytorch/tensorpipe/pull/435.diff"
     FILENAME tensorpipe-pr-435.patch
-    SHA512 149539467ddd39feb6e715bf483d67954338998cbbcfef65de5a85831af902165f9347cd097fa8e82b10b2b8dbc388fcfe42664eeaf5de1954ae885f129583ed
+    SHA512 7bcf604a967da36b8af936f8b8ab87b442834024b0b2cb886811c15e80893be842fbee2667bbbc39886814ec9b2f4ed0c2527de51fdb7dc293b25cce515f5e4b
 )
 
 vcpkg_from_github(
