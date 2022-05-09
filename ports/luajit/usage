@@ -1,7 +1,0 @@
-The package luajit does not provide CMake integration with find_package:
-
-    find_path(LUAJIT_INCLUDE luajit.h PATH_SUFFIXES luajit)
-    find_library(LUAJIT_LIB luajit-5.1)
-
-    target_include_directories(<my_target> PRIVATE ${LUAJIT_INCLUDE})
-    target_link_libraries(<my_target> PRIVATE ${LUAJIT_LIB})
