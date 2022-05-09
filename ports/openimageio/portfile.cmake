@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-config-cmake.patch
         fix-openjpeg-linkage.patch
+        fix-ffmpeg-tool.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
