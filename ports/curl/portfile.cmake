@@ -38,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
+        wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
         mbedtls     CURL_USE_MBEDTLS
         ssh         CURL_USE_LIBSSH2
@@ -74,6 +75,13 @@ if(VCPKG_TARGET_IS_UWP)
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+endif()
+
+# for windows and wolfssl, NTLM must be disabled to avoid conflict with win32crypto
+if(TARGET_TRIPLET MATCHES "-windows" AND wolfssl IN_LIST FEATURES)
+    list(APPEND OPTIONS
+        -DCURL_DISABLE_NTLM=ON
+        )
 endif()
 
 vcpkg_cmake_configure(
