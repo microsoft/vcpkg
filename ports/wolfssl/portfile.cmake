@@ -9,6 +9,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+      -DWOLFSSL_BUILD_OUT_OF_TREE=yes
       -DWOLFSSL_EXAMPLES=no
       -DWOLFSSL_CRYPT_TESTS=no
       -DWOLFSSL_OPENSSLEXTRA=yes
@@ -18,6 +19,7 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING=yes
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
+      -DWOLFSSL_DES3=yes
       -DCMAKE_C_FLAGS='-DWOLFSSL_ALT_CERT_CHAINS'
     OPTIONS_DEBUG
       -DWOLFSSL_DEBUG=yes)
