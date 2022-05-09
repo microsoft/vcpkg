@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_81_0
-    SHA512 2aa2200c50bc0f6f70e402078ab0d2e8248f261f1f584ab619388c4a537593321765dcd20706ba420ebc7d1558f7170aa6b6edc8c13f2315770c5e2919b6f3d9
+    REF curl-7_83_0
+    SHA512 7acb6f524b1045afa045a6f21d72e1410becadf6c3c1228378451f9436b7bac9c15aad4472193d36e9d075937aee641d186c5d0e9ba5f3e4d3af623ec78ad0e9
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -13,7 +13,6 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        curl-7.81.0-ssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)

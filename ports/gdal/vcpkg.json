@@ -4,7 +4,6 @@
   "description": "[Experimental CMake build] The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
-  "supports": "!uwp",
   "dependencies": [
     "json-c",
     "libgeotiff",
@@ -30,6 +29,12 @@
     "supported-default-features"
   ],
   "features": {
+    "aws-ec2-windows": {
+      "description": "Optimized detection of AWS EC2 Windows hosts",
+      "dependencies": [
+        "atlmfc"
+      ]
+    },
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [

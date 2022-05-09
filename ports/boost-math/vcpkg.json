@@ -1,8 +1,9 @@
 {
   "name": "boost-math",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost math module",
   "homepage": "https://github.com/boostorg/math",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     {

@@ -1,11 +1,24 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 51e8478..64347c4 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -182,7 +182,7 @@ else (protobuf_BUILD_SHARED_LIBS)
+   # making programmatic control difficult.  Prefer the functionality in newer
+   # CMake versions when available.
+   if(CMAKE_VERSION VERSION_GREATER 3.15 OR CMAKE_VERSION VERSION_EQUAL 3.15)
+-    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
++    
+   else()
+     # In case we are building static libraries, link also the runtime library statically
+     # so that MSVCR*.DLL is not required at runtime.
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index ef5bb13..e2d4acb 100644
+index 4e1c5de..d3aa865 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -33,7 +33,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
-     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
-     COMPONENT protoc)
+@@ -32,7 +32,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+   install(TARGETS protoc EXPORT protobuf-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
+     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
 -  if (UNIX AND NOT APPLE)
 +  if (UNIX AND NOT APPLE AND NOT protobuf_MSVC_STATIC_RUNTIME)
      set_property(TARGET protoc

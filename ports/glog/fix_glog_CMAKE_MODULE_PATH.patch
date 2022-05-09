@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 28e2688..cf87798 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -843,36 +843,6 @@ write_basic_package_version_file (
+ export (TARGETS glog NAMESPACE glog:: FILE glog-targets.cmake)
+ export (PACKAGE glog)
+ 
+-get_filename_component (_PREFIX "${CMAKE_INSTALL_PREFIX}" ABSOLUTE)
+-
+-# Directory containing the find modules relative to the config install
+-# directory.
+-file (RELATIVE_PATH glog_REL_CMake_MODULES
+-  ${_PREFIX}/${_glog_CMake_INSTALLDIR}
+-  ${_PREFIX}/${_glog_CMake_DATADIR}/glog-modules.cmake)
+-
+-get_filename_component (glog_REL_CMake_DATADIR ${glog_REL_CMake_MODULES}
+-  DIRECTORY)
+-
+-set (glog_FULL_CMake_DATADIR
+-  ${CMAKE_CURRENT_BINARY_DIR}/${_glog_CMake_DATADIR})
+-
+-configure_file (glog-modules.cmake.in
+-  ${CMAKE_CURRENT_BINARY_DIR}/glog-modules.cmake @ONLY)
+-
+-install (CODE
+-"
+-set (glog_FULL_CMake_DATADIR \"\\\${CMAKE_CURRENT_LIST_DIR}/${glog_REL_CMake_DATADIR}\")
+-configure_file (\"${CMAKE_CURRENT_SOURCE_DIR}/glog-modules.cmake.in\"
+-  \"${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/glog-modules.cmake\" @ONLY)
+-file (INSTALL
+-  \"${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/glog-modules.cmake\"
+-  DESTINATION
+-  \"\${CMAKE_INSTALL_PREFIX}/${_glog_CMake_INSTALLDIR}\")
+-"
+-  COMPONENT Development
+-)
+-
+ install (FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config-version.cmake
+diff --git a/glog-config.cmake.in b/glog-config.cmake.in
+index 5c5c9c0..31fac52 100644
+--- a/glog-config.cmake.in
++++ b/glog-config.cmake.in
+@@ -5,7 +5,6 @@ endif (CMAKE_VERSION VERSION_LESS @glog_CMake_VERSION@)
+ @PACKAGE_INIT@
+ 
+ include (CMakeFindDependencyMacro)
+-include (${CMAKE_CURRENT_LIST_DIR}/glog-modules.cmake)
+ 
+ @gflags_DEPENDENCY@
+ @Unwind_DEPENDENCY@
+diff --git a/glog-modules.cmake.in b/glog-modules.cmake.in
+deleted file mode 100644
+index 71c5160..0000000
+--- a/glog-modules.cmake.in
++++ /dev/null
+@@ -1,18 +0,0 @@
+-cmake_policy (PUSH)
+-cmake_policy (SET CMP0057 NEW)
+-
+-if (CMAKE_VERSION VERSION_LESS 3.3)
+-  message (FATAL_ERROR "glog-modules.cmake requires the consumer "
+-    "to use CMake 3.3 (or newer)")
+-endif (CMAKE_VERSION VERSION_LESS 3.3)
+-
+-set (glog_MODULE_PATH "@glog_FULL_CMake_DATADIR@")
+-list (APPEND CMAKE_MODULE_PATH ${glog_MODULE_PATH})
+-
+-if (NOT glog_MODULE_PATH IN_LIST CMAKE_MODULE_PATH)
+-  message (FATAL_ERROR "Cannot add '${glog_MODULE_PATH}' to "
+-    "CMAKE_MODULE_PATH. This will cause glog-config.cmake to fail at "
+-    "locating required find modules. Make sure CMAKE_MODULE_PATH is not a cache variable.")
+-endif (NOT glog_MODULE_PATH IN_LIST CMAKE_MODULE_PATH)
+-
+-cmake_policy (POP)

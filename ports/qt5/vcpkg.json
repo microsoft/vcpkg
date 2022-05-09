@@ -1,6 +1,7 @@
 {
   "name": "qt5",
   "version": "5.15.3",
+  "port-version": 1,
   "description": "Qt5 Application Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -162,6 +163,9 @@
         },
         {
           "name": "qt5-winextras",
+          "features": [
+            "declarative"
+          ],
           "platform": "windows"
         },
         {

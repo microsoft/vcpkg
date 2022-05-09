@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
