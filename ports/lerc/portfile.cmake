@@ -1,12 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Esri/lerc
-    REF  v2.2
-    SHA512 5ddf1e8f0c123d3c1329e980021e25e6ff9b79c96588115e5b48ba7637f0b2bf3ebb2ab6ebf94cfbde45ea1521f14405f669e23f0b74d9ae8f9b2cf80a908215
+    REF  v3.0
+    SHA512 8e04d890c4d46528641b354ec3f47f2b0563e1740927ac894925a30f7de2b235cb3517ce7e477886bd3eb50ebd6c6e78f22d73d5500877e552d9e684e626293b
     HEAD_REF master
     PATCHES
-        "install_lib_to_archive_path.patch"
-        "enable_static_build.patch"
         "create_package.patch"
 )
 
