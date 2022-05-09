@@ -83,7 +83,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                     "-DCMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
                     "-DCMAKE_LINKER=${VCPKG_DETECTED_CMAKE_LINKER}"
                     "-DCMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
-                    "-DCMAKE_RC=${VCPKG_DETECTED_CMAKE_RC}"
                     )
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
