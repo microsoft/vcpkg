@@ -4317,8 +4317,8 @@
       "port-version": 1
     },
     "luasocket": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "lunasvg": {
       "baseline": "2.3.1",
