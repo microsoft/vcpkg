@@ -28,5 +28,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                             )
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/$PLUGINSDIR")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+        file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright") # binary distribution does not contain a license
     endif()
 endif()
