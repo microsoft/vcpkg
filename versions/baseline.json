@@ -4521,8 +4521,8 @@
       "port-version": 2
     },
     "minimp3": {
-      "baseline": "2020-12-25",
-      "port-version": 1
+      "baseline": "2021-11-30",
+      "port-version": 0
     },
     "minio-cpp": {
       "baseline": "2022-01-03",
