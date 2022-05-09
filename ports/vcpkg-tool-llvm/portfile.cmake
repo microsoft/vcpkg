@@ -21,14 +21,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             FILENAME "${name}" 
             SHA512 "${hash}"
         )
-
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-        set(7Z "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-7zip/7z.exe")
         vcpkg_execute_in_download_mode(
                                 COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}" "-y" "-bso0" "-bsp0"
                                 WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
                             )
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/$PLUGINSDIR")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+        file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright") # binary distribution does not contain a license
     endif()
 endif()
