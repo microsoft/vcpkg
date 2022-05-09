@@ -6432,6 +6432,10 @@
       "baseline": "0.4.17",
       "port-version": 0
     },
+    "septag-dmon": {
+      "baseline": "2022-02-08",
+      "port-version": 0
+    },
     "septag-sx": {
       "baseline": "2019-05-07",
       "port-version": 3
