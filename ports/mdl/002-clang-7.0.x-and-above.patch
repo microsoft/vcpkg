@@ -1,0 +1,16 @@
+diff --git a/cmake/tools/add_clang.cmake b/cmake/tools/add_clang.cmake
+index 23f8f6f..7b01d2c 100644
+--- a/cmake/tools/add_clang.cmake
++++ b/cmake/tools/add_clang.cmake
+@@ -55,7 +55,7 @@ if(NOT _CLANG_VERSION_STRING)
+ else()
+     # parse version number
+     STRING(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" _CLANG_VERSION_STRING ${_CLANG_VERSION_STRING})
+-    if(${_CLANG_VERSION_STRING} VERSION_GREATER_EQUAL "7.1.0" OR ${_CLANG_VERSION_STRING} VERSION_LESS "7.0.0")
+-        message(FATAL_ERROR "Clang 7.0 is required but Clang ${_CLANG_VERSION_STRING} was found instead. Please set the CMake option 'clang_PATH' that needs to point to a clang 7.0.x compiler.")
++    if(${_CLANG_VERSION_STRING} VERSION_LESS "7.0.0")
++        message(FATAL_ERROR "Clang 7.0+ is required but Clang ${_CLANG_VERSION_STRING} was found instead. Please set the CMake option 'clang_PATH' that needs to point to a clang 7.0.x+ compiler.")
+     endif()
+-endif()
+\ No newline at end of file
++endif()

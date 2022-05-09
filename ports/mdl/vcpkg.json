@@ -1,0 +1,29 @@
+{
+  "name": "mdl",
+  "version-semver": "2021.0.1",
+  "description": "NVIDIA Material Definition Language SDK",
+  "homepage": "https://github.com/NVIDIA/MDL-SDK",
+  "supports": "!(static | x86)",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-any",
+    "boost-bind",
+    "boost-core",
+    "boost-function",
+    "boost-functional",
+    "boost-smart-ptr",
+    "boost-tokenizer",
+    "boost-unordered",
+    "boost-uuid",
+    "freeimage",
+    "opengl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
