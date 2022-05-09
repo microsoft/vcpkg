@@ -43,47 +43,36 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         freexl          GDAL_USE_FREEXL
         geos            GDAL_USE_GEOS
         core            GDAL_USE_GEOTIFF
-         NEVER           GDAL_USE_GEOTIFF_INTERNAL
         gif             GDAL_USE_GIF
-         NEVER           GDAL_USE_GIF_INTERNAL
         hdf4            GDAL_USE_HDF4
         hdf4            GDAL_ENABLE_DRIVER_HDF4
         hdf5            GDAL_USE_HDF5
         core            GDAL_USE_ICONV # Always used if found.
         jpeg            GDAL_USE_JPEG
-         NEVER           GDAL_USE_JPEG_INTERNAL
         core            GDAL_USE_JSONC #!
-         NEVER           GDAL_USE_JSONC_INTERNAL #?
         libcsf          GDAL_USE_LIBCSF
          libcsf          GDAL_USE_LIBCSF_INTERNAL
         lerc            GDAL_USE_LERC
-         NEVER           GDAL_USE_LERC_INTERNAL # affects capabilities of mrf raster driver
         liblzma         GDAL_USE_LIBLZMA
         libxml2         GDAL_USE_LIBXML2
         mysql-libmariadb  GDAL_USE_MYSQL 
         netcdf          GDAL_USE_NETCDF
         odbc            GDAL_USE_ODBC
         opencad         GDAL_USE_OPENCAD
-         opencad         GDAL_USE_OPENCAD_INTERNAL
         openjpeg        GDAL_USE_OPENJPEG #?
         pcre2           GDAL_USE_PCRE2
         png             GDAL_USE_PNG
-         NEVER           GDAL_USE_PNG_INTERNAL
         postgresql      GDAL_USE_POSTGRESQL
         core            GDAL_USE_QHULL
-         NEVER           GDAL_USE_QHULL_INTERNAL
         rasterlite      GDAL_USE_RASTERLITE2
 #         rasterlite      GDAL_ENABLE_DRIVER_RASTERLITE # HAVE_RASTERLITE
         shapelib        GDAL_USE_SHAPELIB
-         NEVER           GDAL_USE_SHAPELIB_INTERNAL
         libspatialite   GDAL_USE_SPATIALITE
         sqlite3         GDAL_USE_SQLITE3
         core            GDAL_USE_TIFF
-         NEVER           GDAL_USE_TIFF_INTERNAL
         webp            GDAL_USE_WEBP
         xerces-c        GDAL_USE_XERCESC
         core            GDAL_USE_ZLIB
-         NEVER           GDAL_USE_ZLIB_INTERNAL
         zstd            GDAL_USE_ZSTD
 )
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -105,6 +94,7 @@ vcpkg_cmake_configure(
         -DBUILD_CSHARP_BINDINGS=OFF
         -DBUILD_JAVA_BINDINGS=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
+        -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
