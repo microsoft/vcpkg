@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF 673993b9f3c96c67c10453c232cfc6968e9ccbff # 2022-03-26
-    SHA512 1aca2e21cc1cf86e62b86e79c74716acd5111a8c402fb60ef155ff194ef722a2cdd916906f9179410776238eacc1ebc80198aa91310bc47f48ea86826a57d6de
+    REF v3.5.0RC1
+    SHA512 2f0aec61e9695895baedf85ef396cd2a58b6c2953b765fef4843676b4c450ea681dd64eddb631d3e8a513fb9a1838fd0d5fec27eb31f673676f8d0decd79de76
     HEAD_REF master
 )
 # `vcpkg clean` stumbles over one subdir

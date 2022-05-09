@@ -125,7 +125,12 @@
         "libxml2",
         "openjpeg",
         "pcre2",
-        "sqlite3",
+        {
+          "name": "sqlite3",
+          "features": [
+            "rtree"
+          ]
+        },
         "zstd"
       ]
     },
