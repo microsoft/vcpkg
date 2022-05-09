@@ -2286,7 +2286,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
