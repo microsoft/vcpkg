@@ -71,6 +71,14 @@
         }
       ]
     },
+    "lerc": {
+      "description": "Enable LERC support",
+      "dependencies": [
+        {
+          "name": "lerc"
+        }
+      ]
+    },
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
