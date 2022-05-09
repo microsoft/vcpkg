@@ -2,15 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 61e5f6c..889df87 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -65,7 +65,7 @@ include (GenerateExportHeader)
- include (GetCacheVariables)
- include (GNUInstallDirs)
- 
--#set (CMAKE_DEBUG_POSTFIX d)
-+#set (CMAKE_DEBUG_POSTFIX d)
- set (CMAKE_THREAD_PREFER_PTHREAD 1)
- 
- find_package (GTest)
 @@ -501,6 +501,7 @@ set (GLOG_PUBLIC_H
    ${CMAKE_CURRENT_BINARY_DIR}/glog/stl_logging.h
    ${CMAKE_CURRENT_BINARY_DIR}/glog/vlog_is_on.h

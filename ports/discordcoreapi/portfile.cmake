@@ -1,12 +1,12 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING "Discordcoreapi only supports g++ 11 on linux.")
+    message(WARNING "DiscordCoreAPI only supports g++ 11 on linux.")
 endif()
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF c5e7efee991f4dcff428ca21c2e157949e784a78
-	SHA512 5f42864f8375c87542550ff1f05e761d75a02de5810a4ca1f1b4893894d9be11a21915ff16771e3233103c4fce3ce8734359baacd5f5051d719e387a225343dd
+	REF e80a0209c3192252ac7f7cd6a4d16afaf42f7902
+	SHA512 6f318e12613b5a5103ffdd093ab7e281ffcc1320de2f7612a55d5402d2dc85d24356acd8a27c0734b1eec2bc0dc6f8a6e1fa97ea200a18c2d05225ab472ecffc
 	HEAD_REF main
 )
 
@@ -17,10 +17,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
-
-vcpkg_fixup_pkgconfig()
-
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

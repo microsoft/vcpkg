@@ -7,7 +7,7 @@ index 98805cf..a6a1846 100644
  
  #ifndef CPL_DLL
 -#if defined(_MSC_VER) && !defined(CPL_DISABLE_DLL)
-+#if defined(WIN32) && !defined(CPL_DISABLE_DLL)
++#if defined(WIN32) && (!defined(CPL_DISABLE_DLL) || defined(DLL_EXPORT))
  #  ifdef GDAL_COMPILATION
  #    define CPL_DLL __declspec(dllexport)
  #  else
