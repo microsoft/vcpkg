@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
 file(READ "${CURRENT_PORT_DIR}/vcpkg.json" manifest_contents)
 string(JSON version GET "${manifest_contents}" "version-string")
@@ -39,9 +39,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Extracting ${name_msg} ... finished!")
     file(RENAME "${output_path}/${name_folder}/SourceDir/Files/7-Zip" "${output_path}/${PORT}/")
     file(REMOVE_RECURSE "${output_path}/${name_folder}")
-    set(details "set(program_version \"${program_version}\")\n")
-    string(APPEND details "set(paths_to_search \"\${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}\")\n")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/details.cmake" "${details}")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/manual-tools/vcpkg-tool-7zip/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
 
 
