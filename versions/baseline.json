@@ -7357,7 +7357,7 @@
       "port-version": 0
     },
     "vcpkg-tool-llvm": {
-      "baseline": "13.0.1",
+      "baseline": "14.0.3",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
