@@ -1,0 +1,159 @@
+[1mdiff --git a/ports/ktx/0001-Use-vcpkg-zstd.patch b/ports/ktx/0001-Use-vcpkg-zstd.patch[m
+[1mindex 8dff4a59a..47a798eab 100644[m
+[1m--- a/ports/ktx/0001-Use-vcpkg-zstd.patch[m
+[1m+++ b/ports/ktx/0001-Use-vcpkg-zstd.patch[m
+[36m@@ -1,8 +1,8 @@[m
+ diff --git a/CMakeLists.txt b/CMakeLists.txt[m
+[31m-index 0bdb708..356c160 100644[m
+[32m+[m[32mindex 8ca40f8..84fcb18 100644[m
+ --- a/CMakeLists.txt[m
+ +++ b/CMakeLists.txt[m
+[31m-@@ -121,7 +121,6 @@ set(KTX_MAIN_SRC[m
+[32m+[m[32m@@ -174,7 +174,6 @@ set(KTX_MAIN_SRC[m
+      lib/basisu/transcoder/basisu_transcoder.cpp[m
+      lib/basisu/transcoder/basisu_transcoder.h[m
+      lib/basisu/transcoder/basisu.h[m
+[36m@@ -10,31 +10,31 @@[m [mindex 0bdb708..356c160 100644[m
+      lib/checkheader.c[m
+      lib/dfdutils/createdfd.c[m
+      lib/dfdutils/colourspaces.c[m
+[31m-@@ -227,7 +226,6 @@ macro(commom_lib_settings lib write)[m
+[32m+[m[32m@@ -284,7 +283,6 @@ macro(commom_lib_settings lib write)[m
+          $<INSTALL_INTERFACE:lib/basisu/transcoder>[m
+  [m
+[31m-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/transcoder>[m
+[32m+[m[32m         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/zstd>[m
+ -        $<INSTALL_INTERFACE:lib/basisu/zstd>[m
+  [m
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>[m
+          $<INSTALL_INTERFACE:other_include>[m
+[31m-@@ -309,6 +307,11 @@ macro(commom_lib_settings lib write)[m
+[32m+[m[32m@@ -361,6 +359,11 @@ macro(commom_lib_settings lib write)[m
+      endif()[m
+  [m
+      if(WIN32)[m
+ +        find_package(zstd CONFIG REQUIRED)[m
+ +        target_link_libraries([m
+[31m-+            ${lib}[m
+[32m+[m[32m+            ${lib} PRIVATE[m
+ +            $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>[m
+[31m-+        )        [m
+[31m-         # By wrapping in generator expression we force multi configuration generators (like Visual Studio)[m
+[31m-         # to take the exact path and not change it.[m
+[31m-         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${KTX_BUILD_DIR}/$<CONFIG>>)[m
+[32m+[m[32m+        )[m
+[32m+[m[32m         # By wrapping in generator expression we force multi configuration[m
+[32m+[m[32m         # generators (like Visual Studio) to take the exact path and not[m
+[32m+[m[32m         # change it.[m
+ diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt[m
+[31m-index 78dd110..e155896 100644[m
+[32m+[m[32mindex 492233a..8786d16 100644[m
+ --- a/lib/basisu/CMakeLists.txt[m
+ +++ b/lib/basisu/CMakeLists.txt[m
+[31m-@@ -118,7 +118,7 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}[m
+[32m+[m[32m@@ -146,7 +146,7 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}[m
+  	)[m
+  [m
+  if (ZSTD)[m
+[36m@@ -43,7 +43,7 @@[m [mindex 78dd110..e155896 100644[m
+  endif()[m
+  [m
+  if (APPLE)[m
+[31m-@@ -137,6 +137,10 @@ else()[m
+[32m+[m[32m@@ -165,6 +165,10 @@ else()[m
+  	target_compile_definitions(basisu PRIVATE BASISD_SUPPORT_KTX2_ZSTD=0)[m
+  endif()[m
+  [m
+[36m@@ -52,13 +52,13 @@[m [mindex 78dd110..e155896 100644[m
+ +endif()[m
+ +[m
+  if (NOT MSVC)[m
+[31m-    target_link_libraries(basisu m pthread)[m
+[31m- endif()[m
+[32m+[m[41m [m	[32m# For Non-Windows builds, let cmake try and find the system OpenCL headers/libs for us.[m
+[32m+[m[41m [m	[32mif (OPENCL_FOUND)[m
+ diff --git a/lib/basisu/webgl/encoder/CMakeLists.txt b/lib/basisu/webgl/encoder/CMakeLists.txt[m
+[31m-index e365e1b..6e6a7a5 100644[m
+[32m+[m[32mindex 588d91b..0b38012 100644[m
+ --- a/lib/basisu/webgl/encoder/CMakeLists.txt[m
+ +++ b/lib/basisu/webgl/encoder/CMakeLists.txt[m
+[31m-@@ -36,9 +36,7 @@ if (EMSCRIPTEN)[m
+[32m+[m[32m@@ -34,9 +34,7 @@ if (EMSCRIPTEN)[m
+    )[m
+  [m
+    if (KTX2_ZSTANDARD)[m
+[36m@@ -69,19 +69,19 @@[m [mindex e365e1b..6e6a7a5 100644[m
+  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)[m
+    else()[m
+    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)[m
+[31m-@@ -58,6 +56,10 @@ if (EMSCRIPTEN)[m
+[32m+[m[32m@@ -56,6 +54,10 @@ if (EMSCRIPTEN)[m
+    [m
+    target_include_directories(basis_encoder.js PRIVATE ../../transcoder)[m
+  [m
+ +  if(ZSTD_LIBRARIES)[m
+ +      target_link_libraries(basis_encoder.js ${ZSTD_LIBRARIES})[m
+ +  endif()[m
+[31m-+  [m
+[32m+[m[32m+[m
+    set_target_properties(basis_encoder.js PROPERTIES[m
+        OUTPUT_NAME "basis_encoder"[m
+        SUFFIX ".js"[m
+ diff --git a/lib/basisu/webgl/transcoder/CMakeLists.txt b/lib/basisu/webgl/transcoder/CMakeLists.txt[m
+[31m-index 372653d..2e19ece 100644[m
+[32m+[m[32mindex 372653d..f75e3a3 100644[m
+ --- a/lib/basisu/webgl/transcoder/CMakeLists.txt[m
+ +++ b/lib/basisu/webgl/transcoder/CMakeLists.txt[m
+ @@ -28,9 +28,7 @@ if (EMSCRIPTEN)[m
+[36m@@ -95,14 +95,14 @@[m [mindex 372653d..2e19ece 100644[m
+  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)[m
+    else()[m
+    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)[m
+[31m-@@ -44,7 +42,9 @@ if (EMSCRIPTEN)[m
+[31m-   target_compile_definitions(basis_transcoder.js PRIVATE NDEBUG BASISD_SUPPORT_UASTC=1 BASISD_SUPPORT_BC7=1 BASISD_SUPPORT_ATC=0 BASISD_SUPPORT_ASTC_HIGHER_OPAQUE_QUALITY=0 BASISD_SUPPORT_PVRTC2=0 BASISD_SUPPORT_FXT1=0 BASISD_SUPPORT_ETC2_EAC_RG11=0 BASISU_SUPPORT_ENCODING=0 ${KTX2_DEFINITION} ${ZSTD_DEFINITION} )[m
+[32m+[m[32m@@ -45,6 +43,10 @@ if (EMSCRIPTEN)[m
+    target_compile_options(basis_transcoder.js PRIVATE -O3 -fno-strict-aliasing)[m
+    target_include_directories(basis_transcoder.js PRIVATE ../../transcoder)[m
+[31m--[m
+[32m+[m[41m [m
+ +  if(ZSTD_LIBRARIES)[m
+ +      target_link_libraries(basis_transcoder.js ${ZSTD_LIBRARIES})[m
+ +  endif()[m
+[32m+[m[32m+[m
+    set_target_properties(basis_transcoder.js PROPERTIES[m
+        OUTPUT_NAME "basis_transcoder"[m
+        SUFFIX ".js"[m
+[1mdiff --git a/ports/ktx/portfile.cmake b/ports/ktx/portfile.cmake[m
+[1mindex ab105302a..92db9f258 100644[m
+[1m--- a/ports/ktx/portfile.cmake[m
+[1m+++ b/ports/ktx/portfile.cmake[m
+[36m@@ -1,10 +1,10 @@[m
+[31m-set(PORT_VERSION 4.0.0)[m
+[32m+[m[32mset(PORT_VERSION 4.1.0-rc1)[m[41m[m
+ [m
+ vcpkg_from_github([m
+     OUT_SOURCE_PATH SOURCE_PATH[m
+     REPO KhronosGroup/KTX-Software[m
+[31m-    REF v${PORT_VERSION}[m
+[31m-    SHA512 49787cf0230939ae0c737f6080ef483dd27ebd653c16525b469b078511ab72e85aecba9bffe71ed45ce1692e8448b845e60545c39f9333e6d216b20f56595faa[m
+[32m+[m[32m    REF af6df0267b07bf5d4278837e5350f97bcbdcc870 #v${PORT_VERSION}[m[41m[m
+[32m+[m[32m    SHA512 00e5c37ec1922bae7903e3b51ac61e44d815bd606e12104c87b3c8d89e04b5d81f8d502712d8d6c9420aa21289c93c6ef01d0a4091062d03aae07b7fbfce5f74[m[41m[m
+     HEAD_REF master[m
+     FILE_DISAMBIGUATOR 1[m
+     PATCHES[m
+[1mdiff --git a/ports/ktx/vcpkg.json b/ports/ktx/vcpkg.json[m
+[1mindex c2d458df2..e5d548805 100644[m
+[1m--- a/ports/ktx/vcpkg.json[m
+[1m+++ b/ports/ktx/vcpkg.json[m
+[36m@@ -1,9 +1,9 @@[m
+ {[m
+   "name": "ktx",[m
+[31m-  "version": "4.0.0",[m
+[31m-  "port-version": 2,[m
+[32m+[m[32m  "version-string": "4.1.0-rc1",[m
+   "description": "A small library of functions for writing and reading KTX files, and instantiating OpenGL®, OpenGL ES™️ and Vulkan® textures from them",[m
+   "homepage": "https://github.com/KhronosGroup/KTX-Software",[m
+[32m+[m[32m  "license": "Apache-2.0",[m
+   "supports": "!(uwp | x86 | arm64)",[m
+   "dependencies": [[m
+     {[m
