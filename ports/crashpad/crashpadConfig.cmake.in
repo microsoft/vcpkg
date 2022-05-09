@@ -39,17 +39,23 @@ set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}
 target_link_libraries(crashpad INTERFACE crashpad_common crashpad_client crashpad_util crashpad_base)
 
 if(APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-  target_link_libraries(crashpad INTERFACE pthread)
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
+  find_package(Threads REQUIRED)
+  target_link_libraries(crashpad INTERFACE Threads::Threads)
 endif()
 
 if(APPLE)
-  foreach(LIB_NAME ApplicationServices CoreFoundation Foundation IOKit Security bsm)
-    find_library(_LIB ${LIB_NAME} REQUIRED)
-    target_link_libraries(crashpad INTERFACE ${_LIB})
-    unset(_LIB CACHE)
-  endforeach()
+  target_link_libraries(crashpad INTERFACE 
+    "-framework ApplicationServices"
+    "-framework CoreFoundation"
+    "-framework Foundation"
+    "-framework IOKit"
+    "-framework Security"
+  )
 
+  find_library(bsm REQUIRED)
   add_library(crashpad_mig_output STATIC IMPORTED)
   set_property(TARGET crashpad_mig_output PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libmig_output.a")
-  target_link_libraries(crashpad INTERFACE crashpad_mig_output)
+  target_link_libraries(crashpad INTERFACE bsm crashpad_mig_output)
+  unset(bsm CACHE)
 endif()
