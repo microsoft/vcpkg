@@ -17,6 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
+        fix-jinja2.patch
 )
 
 vcpkg_from_github(
@@ -68,9 +69,9 @@ foreach(HEADER ${HEADER_LIST})
 endforeach()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH lib/cmake/openxr)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

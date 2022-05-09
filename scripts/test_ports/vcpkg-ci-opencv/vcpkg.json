@@ -17,7 +17,6 @@
         "jpeg",
         "nonfree",
         "png",
-        "python",
         "quirc",
         "tiff",
         "webp"
@@ -48,6 +47,7 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "freetype",
         "gdcm",
         "ipp",
         "jasper",
@@ -60,6 +60,14 @@
         "vtk"
       ],
       "platform": "!uwp & !(windows & (arm | arm64))"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "python"
+      ],
+      "platform": "!uwp"
     }
   ]
 }

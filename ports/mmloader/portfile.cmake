@@ -1,12 +1,3 @@
-# fail early for unsupported triplets
-vcpkg_fail_port_install(
-    MESSAGE "mmLoader supports only x86/x64-windows-static triplets"
-    ON_TARGET "UWP" "LINUX" "OSX" "ANDROID" "FREEBSD"
-    ON_ARCH "arm" "arm64"
-    ON_CRT_LINKAGE "dynamic"
-    ON_LIBRARY_LINKAGE "dynamic"
-)
-
 # source
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

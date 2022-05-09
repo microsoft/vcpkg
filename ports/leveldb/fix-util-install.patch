@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98b87dc..947eded 100644
+index 76d2e9b..78f07a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -431,7 +431,39 @@ if(LEVELDB_INSTALL)
+@@ -437,6 +437,38 @@ if(LEVELDB_INSTALL)
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/write_batch.h"
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb
    )
@@ -26,7 +26,7 @@ index 98b87dc..947eded 100644
 +      "${PROJECT_SOURCE_DIR}/util/windows_logger.h"
 +    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/util
 +  )
- 
++
 +  install(
 +    FILES
 +      "${PROJECT_SOURCE_DIR}/table/block.h"
@@ -37,8 +37,7 @@ index 98b87dc..947eded 100644
 +      "${PROJECT_SOURCE_DIR}/table/merger.h"
 +      "${PROJECT_SOURCE_DIR}/table/two_level_iterator.h"
 +    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/table
-+  )
-+  
++  ) 
+ 
    include(CMakePackageConfigHelpers)
    write_basic_package_version_file(
-       "${PROJECT_BINARY_DIR}/leveldbConfigVersion.cmake"

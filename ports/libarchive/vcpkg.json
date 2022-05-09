@@ -1,9 +1,10 @@
 {
   "name": "libarchive",
   "version-semver": "3.5.2",
-  "port-version": 2,
+  "port-version": 5,
   "description": "Library for reading and writing streaming archives",
   "homepage": "https://github.com/libarchive/libarchive",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {

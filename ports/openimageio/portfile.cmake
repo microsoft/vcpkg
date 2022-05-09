@@ -1,10 +1,3 @@
-if("field3d" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        ON_TARGET WINDOWS UWP
-        MESSAGE "The field3d feature is not supported on Windows"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
@@ -14,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-config-cmake.patch
+        fix-openjpeg-linkage.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -31,7 +25,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libraw      USE_LIBRAW
         opencolorio USE_OPENCOLORIO
         ffmpeg      USE_FFMPEG
-        field3d     USE_FIELD3D
         freetype    USE_FREETYPE
         gif         USE_GIF
         opencv      USE_OPENCV

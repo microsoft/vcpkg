@@ -26,6 +26,7 @@ vcpkg_check_features(
         tools LLVM_INCLUDE_TOOLS
         utils LLVM_BUILD_UTILS
         utils LLVM_INCLUDE_UTILS
+        utils LLVM_INSTALL_UTILS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
@@ -75,13 +76,16 @@ elseif("disable-assertions" IN_LIST FEATURES)
 endif()
 
 # LLVM_ABI_BREAKING_CHECKS can be WITH_ASSERTS (default), FORCE_ON or FORCE_OFF.
-# By default abi-breaking checks are enabled if assertions are enabled.
+# By default in LLVM, abi-breaking checks are enabled if assertions are enabled.
+# however, this breaks linking with the debug versions, since the option is
+# baked into the header files; thus, we always turn off LLVM_ABI_BREAKING_CHECKS
+# unless the user asks for it
 if("enable-abi-breaking-checks" IN_LIST FEATURES)
     # Force enable abi-breaking checks.
     list(APPEND FEATURE_OPTIONS
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_ON
     )
-elseif("disable-abi-breaking-checks" IN_LIST FEATURES)
+else()
     # Force disable abi-breaking checks.
     list(APPEND FEATURE_OPTIONS
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF

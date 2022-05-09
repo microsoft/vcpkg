@@ -1,6 +1,3 @@
-#https://github.com/Exiv2/exiv2/issues/1063
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2

@@ -23,12 +23,12 @@ index f4b94d2..33b2c26 100644
  # set output path for tests
  set(TEST_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test)
  
-+option(BUILD_DYNAMIC "Build shared version of libs" ON)
-+option(BUILD_STATIC "Build static version of libs" ON)
++option(BUILD_SHARED_LIBS "Build shared version of libs" ON)
++option(WITH_HDF5 "Build hdf5 library" OFF)
  option(BUILD_C_BINDINGS "Build C bindings" ON)
  option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
  option(BUILD_MATLAB_BINDINGS "Build Matlab bindings" ON)
-@@ -146,8 +148,8 @@ if (BUILD_CUDA_LIB)
+@@ -146,8 +148,9 @@ if (BUILD_CUDA_LIB)
      endif(CUDA_FOUND)
  endif(BUILD_CUDA_LIB)
  
@@ -36,6 +36,7 @@ index f4b94d2..33b2c26 100644
 -pkg_check_modules(LZ4 REQUIRED liblz4)
 +find_package(PkgConfig)
 +find_package(lz4 CONFIG REQUIRED)
++set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} liblz4")
  
  #set the C/C++ include path to the "include" directory
  include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)
@@ -43,13 +44,14 @@ diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index 6b95a71..e8bb3f7 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
-@@ -1,5 +1,10 @@
+@@ -1,5 +1,11 @@
  @PACKAGE_INIT@
  
 +# Get definition of 'find_dependency' macro
 +include(CMakeFindDependencyMacro)
 +# Find lz4. This will create 'lz4::lz4' target
 +find_dependency(lz4)
++@CMAKE_EXTERNAL_DEPS@
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
  check_required_components("flann")
@@ -85,7 +87,7 @@ index b421abb..474cd7e 100644
 -    add_library(flann_cpp SHARED "")
 -    set_target_properties(flann_cpp PROPERTIES LINKER_LANGUAGE CXX)
 -    target_link_libraries(flann_cpp -Wl,-whole-archive flann_cpp_s -Wl,-no-whole-archive)
-+if(BUILD_STATIC)
++if(NOT BUILD_SHARED_LIBS)
 +  add_library(flann_cpp_s STATIC ${CPP_SOURCES})
 +  target_link_libraries(flann_cpp_s PUBLIC lz4::lz4)
 +  set_property(TARGET flann_cpp_s PROPERTY OUTPUT_NAME flann_cpp)
@@ -103,7 +105,7 @@ index b421abb..474cd7e 100644
  
 -    if (BUILD_CUDA_LIB)
 -	    cuda_add_library(flann_cuda SHARED "")
-+if(BUILD_DYNAMIC)
++if(BUILD_SHARED_LIBS)
 +  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
 +      add_library(flann_cpp SHARED ${CPP_SOURCES})
 +      set_target_properties(flann_cpp PROPERTIES LINKER_LANGUAGE CXX)
@@ -170,7 +172,7 @@ index b421abb..474cd7e 100644
  if (USE_MPI AND HDF5_IS_PARALLEL)
 -    add_executable(flann_mpi_server flann/mpi/flann_mpi_server.cpp)
 -    target_link_libraries(flann_mpi_server flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
-+  if(BUILD_DYNAMIC)
++  if(BUILD_SHARED_LIBS)
 +      add_executable(flann_mpi_server flann/mpi/flann_mpi_server.cpp)
 +      target_link_libraries(flann_mpi_server flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
  
@@ -188,7 +190,7 @@ index b421abb..474cd7e 100644
  
 -
  if (BUILD_C_BINDINGS)
-+  if(BUILD_STATIC)
++  if(NOT BUILD_SHARED_LIBS)
      add_library(flann_s STATIC ${C_SOURCES})
 -    target_link_libraries(flann_s -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
 +    target_link_libraries(flann_s PUBLIC lz4::lz4)
@@ -200,7 +202,7 @@ index b421abb..474cd7e 100644
 -
 +  endif()
 +  
-+  if(BUILD_DYNAMIC)
++  if(BUILD_SHARED_LIBS)
      if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
 -        add_library(flann SHARED "")
 +        add_library(flann SHARED ${C_SOURCES})
@@ -236,12 +238,12 @@ index b421abb..474cd7e 100644
 +  endif()
  endif(WIN32)
  
-+if(BUILD_STATIC)
++if(NOT BUILD_SHARED_LIBS)
 +  list(APPEND FLANN_TARGETS_CPP "flann_cpp_s")
 +  list(APPEND FLANN_TARGETS_C "flann_s")
 +  list(APPEND FLANN_TARGETS_CUDA "flann_cuda_s")
 +endif()
-+if(BUILD_DYNAMIC)
++if(BUILD_SHARED_LIBS)
 +  list(APPEND FLANN_TARGETS_CPP "flann_cpp")
 +  list(APPEND FLANN_TARGETS_C "flann")
 +  list(APPEND FLANN_TARGETS_CUDA "flann_cuda")

@@ -1,4 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "windows")
+vcpkg_download_distfile(patch1679
+    URLS "https://patch-diff.githubusercontent.com/raw/apache/incubator-brpc/pull/1679.diff"
+    FILENAME "apache-incubator-brpc-1679.diff"
+    SHA512 4b1e5717b44aa6a741ddd49b1408e3e556f6d845d5e8a5cfccf2f2d7ebe39aed19c3dad703db7a9ebd0446ac1f225e7dbdd2ff1f23f34fd60c3ef59aaa07b789
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,26 +13,25 @@ vcpkg_from_github(
     PATCHES
         fix_boost_ptr.patch
         fix_thrift.patch
-        fix-protobuf-deprecated.patch
+        ${patch1679}
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWITH_THRIFT=ON
         -DWITH_MESALINK=OFF
         -DWITH_GLOG=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/butil/third_party/superfasthash")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()

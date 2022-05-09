@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86" "arm64")
-
 set(PORT_VERSION 4.0.0)
 
 vcpkg_from_github(
@@ -23,8 +21,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "https://repo.msys2.org/msys/x86_64/util-linux-2.35.2-1-x86_64.pkg.tar.zst"
             ff951c2cd96d0fda87bacb505c93e4aa1f9aeb35f829c52b5a7862d05e167f69605a4927a0e7197b5ee2b2fa5cb56619ad7a6ba293ede4765fdcacedf2ed35da
         )
-    vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
-    
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+
     file(REMOVE
         "${SOURCE_PATH}/other_include/zstd.h"
         "${SOURCE_PATH}/other_include/zstd_errors.h")
@@ -38,19 +36,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vulkan KTX_FEATURE_VULKAN
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DKTX_VERSION_FULL=v${PORT_VERSION}
         -DKTX_FEATURE_TESTS=OFF
         -DKTX_FEATURE_LOADTEST_APPS=OFF
         -DKTX_FEATURE_STATIC_LIBRARY=${ENABLE_STATIC}
         ${FEATURE_OPTIONS}
+    DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(tools IN_LIST FEATURES)
@@ -66,11 +63,14 @@ if(tools IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ktx)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
