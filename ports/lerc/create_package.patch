@@ -13,7 +13,7 @@ index e90fcdd..17c79e8 100644
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
-+
++target_include_directories(Lerc PUBLIC "$<INSTALL_INTERFACE:include>")
 +install(EXPORT LercTargets
 +  FILE unofficial-lerc-config.cmake
 +  NAMESPACE unofficial::Lerc::
