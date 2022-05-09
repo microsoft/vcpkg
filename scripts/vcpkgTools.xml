@@ -109,13 +109,13 @@
         <version>0.11.0</version>
         <exeRelativePath>coscli-windows.exe</exeRelativePath>
         <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-windows.exe</url>
-        <sha512>41cb397e0633df58663761ff2afa25324d8cf603fb798fc08f7dc933aeb6f6048c1c0d6d0356aaebcfc901c57cc1b4996f10d6d83cd68f8dd66b50944b1ee2a3</sha512>
+        <sha512>38a521ec80cdb6944124f4233d7e71eed8cc9f9be2c0c736269915d21c3718ea8131e4516bb6eeada6df331f5fa8f47a299907e50ee9edbe0114444520974d06</sha512>
     </tool>
     <tool name="coscli" os="linux">
         <version>0.11.0</version>
         <exeRelativePath>coscli-linux</exeRelativePath>
         <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-linux</url>
-        <sha512>c990c0d1cc77e220ed449b603753a9e4ae91ade9db6d443c31f4e4dfdddcd86fba6543e2354a0834c1776da210ae092dc712bcf1802871146645e8d838820efa</sha512>
+        <sha512>9c930a1d308e9581a0e2fdfe3751ea7fe13d6068df90ca6465740ec3eda034202ef71ec54c99e90015ff81aa68aa1489567db5e411e222eb7258704bdac7e924</sha512>
     </tool>
     <tool name="coscli" os="osx">
         <version>0.11.0</version>
