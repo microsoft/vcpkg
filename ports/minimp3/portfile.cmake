@@ -6,8 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/minimp3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(COPY ${SOURCE_PATH}/minimp3_ex.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(COPY "${SOURCE_PATH}/minimp3.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(COPY "${SOURCE_PATH}/minimp3_ex.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
