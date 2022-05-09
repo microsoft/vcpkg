@@ -3378,11 +3378,7 @@
     },
     "leveldb": {
       "baseline": "1.22",
-<<<<<<< HEAD
-      "port-version": 3
-=======
       "port-version": 5
->>>>>>> a5d6d145164e82e67fbf91a4a30f98699d30de63
     },
     "levmar": {
       "baseline": "2.6",
