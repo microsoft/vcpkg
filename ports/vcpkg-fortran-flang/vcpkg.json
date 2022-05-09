@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-fortran-flang",
+  "version-date": "2022-02-22",
+  "description": "Metaport to use the flang fortran compiler",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+    "flang-fortran-runtime",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-flang",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}
