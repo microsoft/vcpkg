@@ -34,6 +34,9 @@ vcpkg_check_features(
         enable-bindings LLVM_ENABLE_BINDINGS
 )
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
@@ -117,7 +120,7 @@ if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         message(FATAL_ERROR "Building Flang with MSVC is not supported on x86. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
@@ -152,7 +155,7 @@ if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
 endif()
 if("pstl" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         message(FATAL_ERROR "Building pstl with MSVC is not supported. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "pstl")
@@ -160,13 +163,13 @@ endif()
 
 set(LLVM_ENABLE_RUNTIMES)
 if("libcxx" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         message(FATAL_ERROR "Building libcxx with MSVC is not supported, as cl doesn't support the #include_next extension.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
 endif()
 if("libcxxabi" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         message(FATAL_ERROR "Building libcxxabi with MSVC is not supported. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
