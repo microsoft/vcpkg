@@ -34,9 +34,9 @@ file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/etc"
      "${CURRENT_PACKAGES_DIR}/etc"
      "${CURRENT_PACKAGES_DIR}/share/man"
-     "${CURRENT_PACKAGES_DIR/share/${PORT}/man1"
-     "${CURRENT_PACKAGES_DIR/share/${PORT}/man5"
-     "${CURRENT_PACKAGES_DIR/share/${PORT}/man7"
+     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1"
+     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man5"
+     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7"
 )
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define BIN_PREFIX \"${CURRENT_INSTALLED_DIR}/tools/unixodbc/bin\"" "")
