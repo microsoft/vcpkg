@@ -67,33 +67,6 @@ diff --git a/cmake/utilities.cmake b/cmake/utilities.cmake
 index c4dbaab..ecdb672 100644
 --- a/cmake/utilities.cmake
 +++ b/cmake/utilities.cmake
-@@ -672,7 +672,7 @@ function(CREATE_FROM_BASE_PRESET)
-     endif()
- 
-     # create target and alias
--    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "STATIC" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED")
-+    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "STATIC" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "MODULE")
-         add_library(${CREATE_FROM_BASE_PRESET_TARGET} ${CREATE_FROM_BASE_PRESET_TYPE} ${CREATE_FROM_BASE_PRESET_SOURCES})
-         add_library(${CREATE_FROM_BASE_PRESET_NAMESPACE}::${CREATE_FROM_BASE_PRESET_TARGET} ALIAS ${CREATE_FROM_BASE_PRESET_TARGET})
-     elseif(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "EXECUTABLE" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "WIN_EXECUTABLE")
-@@ -720,7 +720,7 @@ function(CREATE_FROM_BASE_PRESET)
-         )
- 
-     # add system dependencies
--    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "EXECUTABLE" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "WIN_EXECUTABLE")
-+    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "MODULE" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "EXECUTABLE" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "WIN_EXECUTABLE")
-         target_add_dependencies(TARGET ${CREATE_FROM_BASE_PRESET_TARGET}
-             DEPENDS
-                 system
-@@ -728,7 +728,7 @@ function(CREATE_FROM_BASE_PRESET)
-     endif()
- 
-     # includes used .rc in case of MDL SDK libraries
--    if(CREATE_FROM_BASE_PRESET_EMBED_RC AND WINDOWS AND CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED")
-+    if(CREATE_FROM_BASE_PRESET_EMBED_RC AND WINDOWS AND CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "MODULE")
-         if(MDL_LOG_FILE_DEPENDENCIES)
-             message(STATUS "- embedding:      ${CREATE_FROM_BASE_PRESET_EMBED_RC}")
-         endif()
 @@ -1142,6 +1142,15 @@ endfunction()
  # -------------------------------------------------------------------------------------------------
  # basic install logic to copy the entire output folder
@@ -232,15 +205,6 @@ diff --git a/src/shaders/plugin/dds/CMakeLists.txt b/src/shaders/plugin/dds/CMak
 index 04254db..f013a66 100644
 --- a/src/shaders/plugin/dds/CMakeLists.txt
 +++ b/src/shaders/plugin/dds/CMakeLists.txt
-@@ -57,7 +57,7 @@ set(PROJECT_SOURCES
- # create target from template
- create_from_base_preset(
-     TARGET ${PROJECT_NAME}
--    TYPE SHARED
-+    TYPE MODULE
-     SOURCES ${PROJECT_SOURCES}
-     EMBED_RC "dds.rc"
- )
 @@ -65,6 +65,7 @@ create_from_base_preset(
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
@@ -253,15 +217,6 @@ diff --git a/src/shaders/plugin/freeimage/CMakeLists.txt b/src/shaders/plugin/fr
 index ec225a9..1295803 100644
 --- a/src/shaders/plugin/freeimage/CMakeLists.txt
 +++ b/src/shaders/plugin/freeimage/CMakeLists.txt
-@@ -48,7 +48,7 @@ set(PROJECT_SOURCES
- # create target from template
- create_from_base_preset(
-     TARGET ${PROJECT_NAME}
--    TYPE SHARED
-+    TYPE MODULE
-     SOURCES ${PROJECT_SOURCES}
-     EMBED_RC "freeimage.rc"
- )
 @@ -56,6 +56,7 @@ create_from_base_preset(
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

@@ -17,8 +17,9 @@ vcpkg_from_github(
         005-missing-std-includes.patch
         006-missing-link-windows-crypt-libraries.patch
         007-guard-nonexisting-targets.patch
-        008-disable-plugins.patch
+        008-plugin-options.patch
         009-build-static-llvm.patch
+        010-avoid-runtime-copy.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
@@ -27,6 +28,11 @@ vcpkg_find_acquire_program(PYTHON3)
 set(PATH_PYTHON ${PYTHON3})
 
 vcpkg_find_acquire_program(CLANG)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dds MDL_BUILD_DDS_PLUGIN
+        freeimage MDL_BUILD_FREEIMAGE_PLUGIN)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -44,10 +50,10 @@ vcpkg_cmake_configure(
         -DMDL_BUILD_CORE_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_ARNOLD_PLUGIN:BOOL=OFF
         
-        -DMDL_INSTALL_PLUGINS:BOOL=OFF
-
         -Dclang_PATH:PATH=${CLANG}
         -Dpython_PATH:PATH=${PATH_PYTHON}
+
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DMDL_INSTALL_HEADERS:BOOL=OFF
 )
