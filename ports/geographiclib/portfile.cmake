@@ -38,7 +38,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-# vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig()
 
 if(tools IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
