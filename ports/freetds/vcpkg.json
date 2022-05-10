@@ -8,12 +8,12 @@
   "dependencies": [
     "libmysql",
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
       "name": "unixodbc",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "default-features": [
