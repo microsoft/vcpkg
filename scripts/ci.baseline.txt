@@ -281,6 +281,9 @@ freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
+# Upstream issue: https://github.com/FreeTDS/freetds/issues/462
+freetds:x64-linux=fail
+freetds:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
 ftgl:x64-uwp=fail

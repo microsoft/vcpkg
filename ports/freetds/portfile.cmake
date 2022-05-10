@@ -33,10 +33,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
     set(_WCHAR_SUPPORT OFF)
 endif()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "freetds requires unixodbc. It can be installed on Ubuntu systems via apt-get install unixodbc unixodbc-dev.")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE

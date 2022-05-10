@@ -7,6 +7,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "libmysql",
+      "platform": "windows"
+    },
+    {
       "name": "unixodbc",
       "platform": "!windows"
     },
