@@ -1,11 +1,11 @@
 {
+  "$comment": "UWP support requires libomp which isn't available",
   "name": "flang-classic-fortran-runtime",
   "version-date": "2022-04-23",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
   "supports": "!uwp",
-  "$comment": "UWP support requires libomp which isn't available",
   "dependencies": [
     "pgmath",
     {
