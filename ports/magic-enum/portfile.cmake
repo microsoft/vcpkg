@@ -9,7 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+
     OPTIONS
         -DMAGIC_ENUM_OPT_ENABLE_NONASCII=OFF
         -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
