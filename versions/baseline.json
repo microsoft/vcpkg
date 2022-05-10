@@ -6885,8 +6885,8 @@
       "port-version": 5
     },
     "tclap": {
-      "baseline": "1.2.2",
-      "port-version": 4
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "teemo": {
       "baseline": "2.6",
