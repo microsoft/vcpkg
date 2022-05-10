@@ -7,7 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     "c89stringutils",
-    "cauthflow",
     "libcurl-simple-https",
     "parson",
     {
