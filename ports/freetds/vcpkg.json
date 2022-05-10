@@ -6,7 +6,6 @@
   "license": "GPL-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "libmysql",
     {
       "name": "unixodbc",
       "platform": "!windows"
