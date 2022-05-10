@@ -438,13 +438,6 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND arg_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
     
-    if(NOT arg_NO_PKG_CONFIG)
-        vcpkg_find_acquire_program(PKGCONFIG)
-        get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
-        vcpkg_add_to_path("${PKGCONFIG_PATH}")
-        set(pkgconfig_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
-    endif()
-    
     set(buildtypes)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(buildname "DEBUG")
@@ -466,11 +459,12 @@ function(vcpkg_configure_meson)
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}")
         #setting up PKGCONFIG
-        vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
         if(NOT arg_NO_PKG_CONFIG)
-            set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
-            set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}/${path_suffix_${buildtype}}lib/pkgconfig/")
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_share_dir}" "$ENV{PKG_CONFIG_PATH}")
+            if ("${buildtype}" STREQUAL "DEBUG")
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
+            else()
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
+            endif()
         endif()
 
         vcpkg_execute_required_process(
@@ -494,7 +488,9 @@ function(vcpkg_configure_meson)
         endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}} done")
 
-        vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+        if(NOT arg_NO_PKG_CONFIG)
+            z_vcpkg_restore_pkgconfig_path()
+        endif()
     endforeach()
 
     vcpkg_restore_env_variables(VARS INCLUDE)
