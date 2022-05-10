@@ -4310,7 +4310,7 @@
     },
     "luajit": {
       "baseline": "2.0.5",
-      "port-version": 6
+      "port-version": 7
     },
     "luasec": {
       "baseline": "1.1.0",
