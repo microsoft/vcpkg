@@ -3481,7 +3481,7 @@
       "port-version": 1
     },
     "libcurl-simple-https": {
-      "baseline": "2022-03-28",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "libdatachannel": {
