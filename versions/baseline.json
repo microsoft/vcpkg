@@ -4345,7 +4345,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.7.3",
+      "baseline": "0.8.0",
       "port-version": 1
     },
     "magic-get": {
