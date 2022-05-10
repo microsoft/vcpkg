@@ -1,5 +1,5 @@
 {
-  "name": "vcpkg-tool-flang-llvm",
+  "name": "vcpkg-tool-flang-classic-llvm",
   "version-date": "2022-04-23",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",

@@ -1,9 +1,11 @@
-x_vcpkg_find_fortran(FORTRAN_CMAKE)
-message(STATUS "VCPKG_USE_INTERNAL_Fortran:${VCPKG_USE_INTERNAL_Fortran}")
+x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
+                     OUT_OPTIONS_RELEASE Fortran_opts_rel 
+                     OUT_OPTIONS_DEBUG Fortran_opts_dbg)
+message(STATUS "Z_VCPKG_IS_INTERNAL_Fortran_INTEL:${Z_VCPKG_IS_INTERNAL_Fortran_INTEL}")
 if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL)
     set(BASE_PATH "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-ifort/Intel/Compiler/12.0/compiler/2022.0.3")
     set(IFORT_COMPILER_ROOT "${BASE_PATH}/windows")
- )
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(subpath "ia32_win")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

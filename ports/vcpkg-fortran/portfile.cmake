@@ -10,9 +10,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #    message(FATAL_ERROR "${PORT} is a host-only port; please mark it as a host port in your dependencies.")
     #endif()
 
-    #file(COPY
-    #    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
+    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+        file(COPY "${CMAKE_CURRENT_LIST_DIR}/${FUNCTION_NAME}.cmake"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    endif()
     configure_file("${VCPKG_ROOT_DIR}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/coypright" COPYONLY)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 endif()

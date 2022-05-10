@@ -42,7 +42,7 @@ function(x_vcpkg_find_fortran)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
                 set(ARCH ARM)
             endif()
-            vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/${ARCH}")
+            vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang-classic/bin/${ARCH}")
 
             find_library(PGMATH NAMES libpgmath pgmath PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATHS)
             cmake_path(GET PGMATH FILENAME pgmathlibname)
@@ -79,7 +79,7 @@ function(x_vcpkg_find_fortran)
                 "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
                 "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
                 "-DCMAKE_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER}" # Need to pass C compiler if only Fortran is enabled.
-                "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
+                "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang-classic/bin/flang.exe"
                 "-DCMAKE_EXE_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
                 "-DCMAKE_EXE_LINKER_FLAGS_RELEASE_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
                 "-DCMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"

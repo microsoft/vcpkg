@@ -5,11 +5,15 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "vcpkg-fortran-flang",
+      "name": "vcpkg-fortran-flang-classic",
       "platform": "(windows & !mingw) & (x64 | arm64)"
     },
     {
       "name": "vcpkg-fortran-ifort",
+      "platform": "(windows & !mingw) & x86"
+    },
+    {
+      "name": "vcpkg-ifort-libs",
       "platform": "(windows & !mingw) & x86"
     }
   ]

@@ -37,7 +37,7 @@ vcpkg_add_to_path("${PERL_DIR}")
 
 set(VCPKG_BUILD_TYPE release) # Only need release tools
 set(CURRENT_PACKAGES_DIR_BAK "${CURRENT_PACKAGES_DIR}")
-set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang")
+set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -195,9 +195,9 @@ llvm_cmake_package_config_fixup("llvm")
 set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR_BAK}")
 
 # Don't let LLVM take control over vcpkg here!
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/lib/cmake/llvm/ChooseMSVCCRT.cmake" "choose_msvc_crt(MSVC_CRT)" "#choose_msvc_crt(MSVC_CRT)") 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/lib/cmake/llvm/ChooseMSVCCRT.cmake" "choose_msvc_crt(MSVC_CRT)" "#choose_msvc_crt(MSVC_CRT)") 
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/bin")
 
 # LLVM still generates a few DLLs in the static build:
 # * libclang.dll
@@ -207,13 +207,13 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-configure_file("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin/clang.exe" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin/flang.exe" COPYONLY)
+configure_file("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/bin/clang.exe" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/bin/flang.exe" COPYONLY)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Config" 
-                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/CodeGen/CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/Dialect/CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/Transforms/CMakeFiles")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/Config" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/Optimizer/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/Optimizer/CodeGen/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/Optimizer/Dialect/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic/include/flang/Optimizer/Transforms/CMakeFiles")
 
 file(INSTALL "${SOURCE_PATH}/llvm/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
