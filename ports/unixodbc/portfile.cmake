@@ -39,14 +39,14 @@ file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7"
 )
 
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define BIN_PREFIX \"${CURRENT_INSTALLED_DIR}/tools/unixodbc/bin\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define DEFLIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define EXEC_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define INCLUDE_PREFIX \"${CURRENT_INSTALLED_DIR}/include\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define LIB_PREFIX \"${CURRENT_INSTALLED_DIR}/lib\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define SYSTEM_FILE_PATH \"${CURRENT_INSTALLED_DIR}/etc\"" "")
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixodbc_conf.h" "#define SYSTEM_LIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define BIN_PREFIX \"${CURRENT_INSTALLED_DIR}/tools/unixodbc/bin\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define DEFLIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define EXEC_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define INCLUDE_PREFIX \"${CURRENT_INSTALLED_DIR}/include\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define LIB_PREFIX \"${CURRENT_INSTALLED_DIR}/lib\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define SYSTEM_FILE_PATH \"${CURRENT_INSTALLED_DIR}/etc\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define SYSTEM_LIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
