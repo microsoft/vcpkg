@@ -2,10 +2,10 @@
   "name": "vcpkg-cmake-get-vars",
   "version-date": "2022-05-10",
   "license": "MIT",
-  "dependencies" : [
-  {
+  "dependencies": [
+    {
       "name": "vcpkg-cmake",
       "host": true
-  }
+    }
   ]
 }
