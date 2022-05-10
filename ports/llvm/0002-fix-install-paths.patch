@@ -6,8 +6,9 @@
  llvm/cmake/modules/CMakeLists.txt               | 2 +-
  mlir/cmake/modules/CMakeLists.txt               | 4 ++--
  mlir/test/CMakeLists.txt                        | 2 +-
+ openmp/tools/Modules/CMakeLists.txt             | 2 +-
  polly/cmake/CMakeLists.txt                      | 4 ++--
- 9 files changed, 14 insertions(+), 14 deletions(-)
+ 10 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/clang/cmake/modules/CMakeLists.txt b/clang/cmake/modules/CMakeLists.txt
 index c6f6ce9fe5d6..fc886b23a1a8 100644
@@ -133,6 +134,16 @@ index 8e44a9c37cf1..f6edc7d77ffd 100644
  
  # Passed to lit.site.cfg.py.in to set up the path where to find the libraries
  # for linalg integration tests.
+diff --git a/openmp/tools/Modules/CMakeLists.txt b/openmp/tools/Modules/CMakeLists.txt
+index 22d818eea72d..75aacc4468d4 100644
+--- a/openmp/tools/Modules/CMakeLists.txt
++++ b/openmp/tools/Modules/CMakeLists.txt
+@@ -12,4 +12,4 @@
+ 
+ 
+ install(FILES "FindOpenMPTarget.cmake"
+-              DESTINATION "${OPENMP_INSTALL_LIBDIR}/cmake/openmp")
++              DESTINATION "share/openmp")
 diff --git a/polly/cmake/CMakeLists.txt b/polly/cmake/CMakeLists.txt
 index 7a0190b69df6..cdd3b4f126bb 100644
 --- a/polly/cmake/CMakeLists.txt
