@@ -56,6 +56,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
+        -DBUILD_SAMPLE=OFF
         -DBC_USE_OPENMP=ON
         -DBUILD_DX11=ON
 )
