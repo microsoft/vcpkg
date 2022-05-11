@@ -3,7 +3,7 @@
   "version-date": "2022-02-22",
   "description": "Metaport to install ifort dll dependencies from Intel oneAPI",
   "license": "MIT",
-  "supports": "(windows & !arm) & !uwp",
+  "supports": "windows & !arm & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-fortran-ifort",

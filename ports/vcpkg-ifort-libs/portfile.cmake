@@ -1,7 +1,7 @@
 x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
                      OUT_OPTIONS_RELEASE Fortran_opts_rel 
                      OUT_OPTIONS_DEBUG Fortran_opts_dbg)
-message(STATUS "Z_VCPKG_IS_INTERNAL_Fortran_INTEL:${Z_VCPKG_IS_INTERNAL_Fortran_INTEL}")
+
 if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL)
     set(BASE_PATH "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-ifort/Intel/Compiler/12.0/compiler/2022.0.3")
     set(IFORT_COMPILER_ROOT "${BASE_PATH}/windows")
@@ -44,7 +44,7 @@ if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL)
         file(COPY ${IFORT_DLLS} ${IFORT_DLLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         file(COPY ${IFORT_DLLS} ${IFORT_DLLS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
-    file(COPY "${BASE_PATH}/licensing/fortran/third-party-programs.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    file(INSTALL "${BASE_PATH}/licensing/fortran/third-party-programs.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # libs are at share/ifort and reflect how they are installed by the compiler instead of splitting them. 
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 else()

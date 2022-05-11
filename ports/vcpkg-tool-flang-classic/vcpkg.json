@@ -7,7 +7,6 @@
   "supports": "native",
   "dependencies": [
     "libxml2",
-    "pgmath",
     {
       "name": "pkgconf",
       "host": true
