@@ -426,7 +426,7 @@ if ($UpdatedDocumentation) {
 
 $(-join ($UpdatedDocumentation | Sort-Object -Property 'Path' | ForEach-Object {
     $PathWithoutDocs =  ([string]$_.Path).Remove(0, 5) # 'docs/'
-    "- [{0}](https://github.com/microsoft/vcpkg/tree/master/{0}){1}`n" -f $PathWithoutDocs, ($(if ($_.New) { ' ***[NEW]***' } else { '' }))
+    "- [{0}](https://github.com/microsoft/vcpkg/blob/master/docs/{0}){1}`n" -f $PathWithoutDocs, ($(if ($_.New) { ' ***[NEW]***' } else { '' }))
 
     $_.Pulls | ForEach-Object {
         "    - {0} (by @{1}, in #{2})`n" -f $_.title, $_.user.login, $_.number
