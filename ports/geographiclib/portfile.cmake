@@ -12,10 +12,14 @@ vcpkg_check_features(
         "tools" TOOLS
 )
 
+# GeographicLib's CMakeLists.txt allows the installation directories for
+# all the components to be set independently.  A "false" value, e.g., an
+# empty string or OFF (-DBINDIR=OFF), indicates that the corresponding
+# component should not be installed.
 if(TOOLS)
     set(TOOL_OPTION "-DBINDIR=tools/${PORT}")
 else()
-    set(TOOL_OPTION -DBINDIR=)
+    set(TOOL_OPTION -DBINDIR=OFF)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -28,10 +32,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${LIB_OPTION} ${TOOL_OPTION}
     "-DCMAKEDIR=share/${PORT}"
-    -DDOCDIR=
-    -DEXAMPLEDIR=
-    -DMANDIR=
-    -DSBINDIR=
+    -DDOCDIR=OFF
+    -DEXAMPLEDIR=OFF
+    -DMANDIR=OFF
+    -DSBINDIR=OFF
 )
 
 vcpkg_cmake_install()
