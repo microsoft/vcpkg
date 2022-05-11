@@ -1,7 +1,7 @@
 {
   "name": "ignition-common3",
   "version-string": "3.9.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
   "dependencies": [
@@ -17,7 +17,7 @@
     "ignition-modularscripts",
     {
       "name": "libuuid",
-      "platform": "!windows & !uwp"
+      "platform": "!windows & !uwp & !osx"
     },
     "tinyxml2"
   ]

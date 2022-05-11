@@ -1,11 +1,12 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
     REF v4.3.4
     SHA512 ad828b1ab5a87983285a6b44b08240816ed1c4e2c73306ab1a851bf80df1892b5e2f92064a49fbadc1f4c75043625ace77dd25b64d5d1c2a7d1d61cc916fba0b
-    PATCHES fix-arm.patch
+    PATCHES 
+        fix-arm.patch
+        zeromq-libzmq-4310-64e6d37ab8.diff # https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4310.diff
+        zeromq-libzmq-4311-2b04e0ce47.diff # https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4311.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -14,8 +15,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sodium WITH_LIBSODIUM
-        draft ENABLE_DRAFTS
+        sodium          WITH_LIBSODIUM
+        draft           ENABLE_DRAFTS
         websockets-sha1 ENABLE_WS
 )
 
@@ -25,7 +26,7 @@ if(VCPKG_TARGET_IS_MINGW)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DZMQ_BUILD_TESTS=OFF
         -DBUILD_STATIC=${BUILD_STATIC}

@@ -1,7 +1,13 @@
 {
   "name": "yasm-tool",
-  "version": "1.3.0",
-  "description": "A modular assembler.",
-  "homepage": "http://yasm.tortall.net/",
-  "supports": "native & !uwp"
+  "version-date": "2021-12-14",
+  "description": "Legacy port. Use port yasm instead.",
+  "dependencies": [
+    {
+      "name": "yasm",
+      "features": [
+        "tools"
+      ]
+    }
+  ]
 }

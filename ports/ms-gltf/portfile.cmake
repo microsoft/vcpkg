@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "ms-gltf currently only supports Windows and Mac platforms" ON_TARGET "linux" "ios")
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()

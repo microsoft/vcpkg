@@ -1,5 +1,4 @@
 #header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/comms_champion
@@ -16,11 +15,6 @@ vcpkg_check_features(
         tools   CC_BUILD_TOOLS
         tools   CC_INSTALL_TOOLS
 )
-
-# check before configure
-if("tools" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static" MESSAGE "Feature 'Tools' can't be built statically") 
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -42,7 +36,8 @@ if("tools" IN_LIST FEATURES)
         TOOL_NAMES cc_dump cc_view
         AUTO_CLEAN
     )
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" 
+
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin"
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/plugin")
     vcpkg_cmake_config_fixup(PACKAGE_NAME "CommsChampion" CONFIG_PATH "lib/CommsChampion/cmake")
 

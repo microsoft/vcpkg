@@ -33,7 +33,7 @@
 - [vcpkg\_execute\_required\_process\_repeat](vcpkg_execute_required_process_repeat.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
-- [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md)
+- [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md) (deprecated)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
 - [vcpkg\_find\_fortran](vcpkg_find_fortran.md)
 - [vcpkg\_fixup\_cmake\_targets](vcpkg_fixup_cmake_targets.md) (deprecated, use [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md))
@@ -64,6 +64,7 @@
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
 - [z\_vcpkg\_get\_cmake\_vars](internal/z_vcpkg_get_cmake_vars.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
+- [z\_vcpkg\_setup\_pkgconfig\_path](internal/z_vcpkg_setup_pkgconfig_path.md)
 
 ## Scripts from Ports
 

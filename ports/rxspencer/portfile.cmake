@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO garyhouston/rxspencer
@@ -12,7 +10,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         -DCMAKE_CONFIG_DEST=share/rxspencer
         -Drxshared=${BUILD_SHARED}
 )

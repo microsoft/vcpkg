@@ -1,0 +1,32 @@
+diff --git a//CMakeLists.txt b/CMakeLists.txt
+index 4d03fee..42bb13c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,14 @@ if (APPLE AND NOT DEFINED CMAKE_CXX_STANDARD)
+     set(CMAKE_CXX_STANDARD 11)
+ endif ()
+ 
++find_package(absl CONFIG REQUIRED)
++
++# Use CMAKE_CXX_STANDARD=17 if ABSL_USE_CXX17 is set
++if (ABSL_USE_CXX17)
++    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
++    set(CMAKE_CXX_STANDARD 17)
++endif ()
++
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
+         message(
+diff --git a/google/cloud/internal/port_platform.h b/google/cloud/internal/port_platform.h
+index f02cb7a..0ea8c9c 100644
+--- a/google/cloud/internal/port_platform.h
++++ b/google/cloud/internal/port_platform.h
+@@ -49,6 +49,8 @@
+ // Abort compilation if the compiler does not support C++11.
+ #if GOOGLE_CLOUD_CPP_CPP_VERSION < 201103L
+ #  error "C++11 or newer is required"
++#elif defined(ABSL_USE_CXX17) && GOOGLE_CLOUD_CPP_CPP_VERSION < 201703L
++#  error "Compiled to use Abseil with C++17 support, but using with C++ < C++17"
+ #endif  // GOOGLE_CLOUD_CPP_CPP_VERSION < 201103L
+ 
+ // Abort the build if the version of the compiler is too old. With CMake we

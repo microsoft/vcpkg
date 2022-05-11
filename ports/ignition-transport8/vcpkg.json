@@ -1,7 +1,7 @@
 {
   "name": "ignition-transport8",
   "version-string": "8.1.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Transport middleware for robotics",
   "dependencies": [
     "cppzmq",
@@ -9,7 +9,7 @@
     "ignition-msgs5",
     {
       "name": "libuuid",
-      "platform": "!windows & !uwp"
+      "platform": "!windows & !uwp & !osx"
     },
     "protobuf",
     "sqlite3",

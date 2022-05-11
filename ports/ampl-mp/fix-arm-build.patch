@@ -2,6 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 92089a3..d4c6762 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -240,4 +240,4 @@
+ set(MP_EXPR_INFO_FILE ${MP_SOURCE_DIR}/src/expr-info.cc)
+-add_executable(gen-expr-info EXCLUDE_FROM_ALL
++add_executable(gen-expr-info
+   src/gen-expr-info.cc $<TARGET_OBJECTS:format>)
+ if (MINGW)
 @@ -257,9 +257,15 @@ if (CMAKE_CROSSCOMPILING)
      COMMAND ${CMAKE_COMMAND} -E echo
        "warning: cannot re-generate ${MP_EXPR_INFO_FILE}")

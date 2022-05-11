@@ -1,10 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Cisco-Talos/clamav-devel
-  REF clamav-0.103.0 
+  REF clamav-0.103.0
   SHA512 e7ff4d98e0615a9fec0752bbfa2b882ae95034a8e01d0f7cc635ee520ff917c3be2a2d3273caa2fc1598e7d5ec4fd60d59b517cb439c5454d32447f8c8d7ba5a
   FILE_DISAMBIGUATOR 1
   HEAD_REF master

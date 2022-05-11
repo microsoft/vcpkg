@@ -29,14 +29,19 @@ if (VCPKG_TARGET_IS_WINDOWS)
         "${NMAKE_OPTIONS_DBG}"
   )
 
-  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME ${PORT})
-  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME ${PORT})
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
+      file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    endif()
   endif()
-
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
+      file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+  endif()
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   # Check build system first
   if(VCPKG_TARGET_IS_OSX)
@@ -44,7 +49,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   else()
       message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n    libtool-bin\n\nIt can be installed with apt-get install gettext automake libtool libtool-bin")
   endif()
-
 
   vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -62,7 +66,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
   vcpkg_fixup_pkgconfig()
 else() # Other build system
-  vcpkg_fail_port_install(ALWAYS)
+  message(FATAL_ERROR "fastcgi only supports Windows, Linux, and MacOS.")
 endif()
 
 # Handle copyright
