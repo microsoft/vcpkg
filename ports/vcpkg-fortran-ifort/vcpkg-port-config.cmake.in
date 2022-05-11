@@ -1,3 +1,3 @@
-include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
+include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/share/vcpkg-cmake/vcpkg-port-config.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_load_environment_from_batch.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/@FUNCTION_NAME@.cmake")
