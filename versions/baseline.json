@@ -337,7 +337,7 @@
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
-      "baseline": "1.0.0-beta.1",
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
