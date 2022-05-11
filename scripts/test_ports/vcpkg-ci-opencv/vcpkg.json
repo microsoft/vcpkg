@@ -19,15 +19,15 @@
         "png",
         "quirc",
         "tiff",
-        "webp",
-        "dc1394"
+        "webp"
       ]
     },
     {
       "name": "opencv",
       "default-features": false,
       "features": [
-        "gtk"
+        "gtk",
+        "dc1394"
       ],
       "platform": "linux"
     },
