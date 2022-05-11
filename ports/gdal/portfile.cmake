@@ -17,7 +17,6 @@ if("primary-features" IN_LIST FEATURES)
         #iconv
         jpeg
         #libcsf
-        lerc
         liblzma
         png
         libxml2
