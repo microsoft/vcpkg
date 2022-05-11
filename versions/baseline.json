@@ -82,7 +82,7 @@
     },
     "angelscript": {
       "baseline": "2.35.1",
-      "port-version": 0
+      "port-version": 1
     },
     "angle": {
       "baseline": "chromium_4472",
@@ -170,7 +170,7 @@
     },
     "arrow": {
       "baseline": "7.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "ashes": {
       "baseline": "2022-04-03",
@@ -425,8 +425,8 @@
       "port-version": 0
     },
     "bento4": {
-      "baseline": "1.5.1",
-      "port-version": 629
+      "baseline": "1.6.0-639",
+      "port-version": 1
     },
     "berkeleydb": {
       "baseline": "4.8.30",
@@ -1186,7 +1186,7 @@
     },
     "bustache": {
       "baseline": "1.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "butteraugli": {
       "baseline": "2019-05-08",
@@ -1609,7 +1609,7 @@
       "port-version": 1
     },
     "cppgraphqlgen": {
-      "baseline": "4.2.0",
+      "baseline": "4.3.1",
       "port-version": 0
     },
     "cppitertools": {
@@ -2137,7 +2137,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "fann": {
@@ -2286,7 +2286,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2590,7 +2590,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.40.1",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3297,8 +3297,8 @@
       "port-version": 1
     },
     "ktx": {
-      "baseline": "4.0.0",
-      "port-version": 2
+      "baseline": "4.1.0-rc1",
+      "port-version": 0
     },
     "kubazip": {
       "baseline": "0.1.19",
@@ -3369,8 +3369,8 @@
       "port-version": 0
     },
     "lerc": {
-      "baseline": "2.2",
-      "port-version": 2
+      "baseline": "3.0",
+      "port-version": 0
     },
     "lest": {
       "baseline": "1.35.1",
@@ -4310,15 +4310,15 @@
     },
     "luajit": {
       "baseline": "2.0.5",
-      "port-version": 6
+      "port-version": 7
     },
     "luasec": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "luasocket": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "lunasvg": {
       "baseline": "2.3.1",
@@ -4521,8 +4521,8 @@
       "port-version": 2
     },
     "minimp3": {
-      "baseline": "2020-12-25",
-      "port-version": 1
+      "baseline": "2021-11-30",
+      "port-version": 0
     },
     "minio-cpp": {
       "baseline": "2022-01-03",
@@ -4677,7 +4677,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.9.1",
+      "baseline": "1.9.2",
       "port-version": 0
     },
     "msgpack": {
@@ -5066,7 +5066,7 @@
     },
     "opencascade": {
       "baseline": "7.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -5169,8 +5169,8 @@
       "port-version": 1
     },
     "openssl": {
-      "baseline": "3.0.2",
-      "port-version": 3
+      "baseline": "3.0.3",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -6432,6 +6432,10 @@
       "baseline": "0.4.17",
       "port-version": 0
     },
+    "septag-dmon": {
+      "baseline": "2022-02-08",
+      "port-version": 0
+    },
     "septag-sx": {
       "baseline": "2019-05-07",
       "port-version": 3
@@ -6601,8 +6605,8 @@
       "port-version": 1
     },
     "soil2": {
-      "baseline": "2021-05-01",
-      "port-version": 1
+      "baseline": "1.3.0",
+      "port-version": 0
     },
     "sokol": {
       "baseline": "2019-09-09",
@@ -6785,7 +6789,7 @@
       "port-version": 2
     },
     "stftpitchshift": {
-      "baseline": "1.3.2",
+      "baseline": "1.4.1",
       "port-version": 0
     },
     "stlab": {
@@ -6885,8 +6889,8 @@
       "port-version": 4
     },
     "teemo": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "2.7",
+      "port-version": 0
     },
     "telnetpp": {
       "baseline": "2.1.2",
@@ -7364,6 +7368,10 @@
       "baseline": "3.3",
       "port-version": 0
     },
+    "vcpkg-tool-ninja": {
+      "baseline": "2022-03-31",
+      "port-version": 0
+    },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
       "port-version": 0
@@ -7702,7 +7710,7 @@
     },
     "zlib": {
       "baseline": "1.2.12",
-      "port-version": 0
+      "port-version": 1
     },
     "zlib-ng": {
       "baseline": "2.0.6",
