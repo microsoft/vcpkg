@@ -157,7 +157,7 @@ if ("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 endif()
-vcpkg_cmake_config_fixup(PACKAGE_NAME GDAL CONFIG_PATH lib/cmake/gdal)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
