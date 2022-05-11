@@ -19,7 +19,7 @@ if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL)
         set(IFORT_BASEPATH_DLLS "${IFORT_COMPILER_ROOT}/redist/${subpath}/compiler/")
         set(IFORT_DLLS 
             cilkrts20.dll
-            libdlg100.dll
+            ifdlg100.dll
             libchkp.dll
             libicaf.dll
             libifportmd.dll
