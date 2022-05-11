@@ -6,18 +6,12 @@ if(buildtrees_path_length GREATER warning_length AND CMAKE_HOST_WIN32)
     )
 endif()
 
-set(GTK_MAJOR_MINOR 3.24)
-set(GTK_PATCH 30)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/gtk+/${GTK_MAJOR_MINOR}/gtk+-${GTK_MAJOR_MINOR}.${GTK_PATCH}.tar.xz"
-    FILENAME "gtk+-${GTK_MAJOR_MINOR}.${GTK_PATCH}.tar.xz"
-    SHA512 4164559f3e14501b9f9330a76535ebf5e26961d436f65e65ea609998cb120fcbcc5d9591453a64e1d414248499857288e5758274d03a7f75e9ae76cbf8c68ff9
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+    GITLAB_URL https://gitlab.gnome.org
+    REPO GNOME/gtk
+    REF 3.24.33
+    SHA512 634c3684e670e662340e780a0f561ddc191790625d6b7f28ec7fbb1fcaec86856091e94124565f138d3adaa08a9e063ead2ff441354763b21b4e887c2a54e8d0
     PATCHES
         0001-build.patch
 )
