@@ -3,6 +3,7 @@
   "version": "1.43",
   "description": "C++ Common Library.",
   "homepage": "https://github.com/winsoft666/akali",
+  "license": "MIT",
   "supports": "!(arm | arm64 | uwp)",
   "dependencies": [
     {
