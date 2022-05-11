@@ -5,8 +5,6 @@
   "license": "MIT",
   "supports": "windows & !arm & !uwp",
   "dependencies": [
-    {
-      "name": "vcpkg-fortran-ifort"
-    }
+    "vcpkg-fortran-ifort"
   ]
 }
