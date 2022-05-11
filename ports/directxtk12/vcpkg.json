@@ -18,7 +18,9 @@
       "host": true
     }
   ],
-  "default-features": [ "xaudio2-9" ],
+  "default-features": [
+    "xaudio2-9"
+  ],
   "features": {
     "xaudio2-9": {
       "description": "Build with XAudio 2.9 support for Windows 10/11"
