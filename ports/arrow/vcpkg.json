@@ -43,7 +43,6 @@
     },
     "cuda": {
       "description": "cuda support",
-      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "cuda"
       ]
