@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         no-etc-symlinks.patch
+        libgetopt.patch
 )
 
 vcpkg_find_acquire_program(GPERF)
