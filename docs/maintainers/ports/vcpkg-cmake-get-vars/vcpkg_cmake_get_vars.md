@@ -1,6 +1,6 @@
 # vcpkg_cmake_get_vars
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake/vcpkg_cmake_get_vars.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake-get-vars/vcpkg_cmake_get_vars.md).
 
 Runs a cmake configure with a dummy project to extract certain cmake variables
 
@@ -38,4 +38,4 @@ message(STATUS "detected CXX flags: ${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
 ```
 
 ## Source
-[ports/vcpkg-cmake/vcpkg\_cmake\_get\_vars.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_get_vars.cmake)
+[ports/vcpkg-cmake-get-vars/vcpkg\_cmake\_get\_vars.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake-get-vars/vcpkg_cmake_get_vars.cmake)
