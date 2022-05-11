@@ -6,12 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(NOT DEFINED nlohmann-json_IMPLICIT_CONVERSIONS)
+    set(nlohmann-json_IMPLICIT_CONVERSIONS ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DJSON_Install=ON
         -DJSON_MultipleHeaders=ON
         -DJSON_BuildTests=OFF
+        -DJSON_ImplicitConversions=${nlohmann-json_IMPLICIT_CONVERSIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "nlohmann_json" CONFIG_PATH "lib/cmake/nlohmann_json")
@@ -35,3 +40,6 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/nlohmann_json.natvis")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# Handle usage
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

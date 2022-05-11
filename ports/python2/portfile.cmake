@@ -35,6 +35,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND _PYTHON_PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/007-fix-build-path.patch
     )
+else()
+    list(APPEND _PYTHON_PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/008-bz2d.patch
+    )
 endif()
 
 

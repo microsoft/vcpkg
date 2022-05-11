@@ -12,7 +12,6 @@ vcpkg_from_github(
         openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        python_gpu_wrapping.patch
         opencl.patch
         use-the-lrintf-intrinsic.patch
 )
@@ -27,6 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tbb"          Module_ITKTBB
         "rtk"          Module_RTK
         "tools"        RTK_BUILD_APPLICATIONS
+        "opencv"       Module_ITKVideoBridgeOpenCV
         # There are a lot of more (remote) modules and options in ITK
         # feel free to add those as a feature
 )
@@ -108,6 +108,12 @@ if("python" IN_LIST FEATURES)
         "-DSWIG_DIR=${SWIG_DIR}"
         )
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
+endif()
+if("opencv" IN_LIST FEATURES)
+    message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+        )
 endif()
 
 set(USE_64BITS_IDS OFF)
