@@ -4,6 +4,7 @@
   "description": "TPM library used with wolfSSL libraray for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
