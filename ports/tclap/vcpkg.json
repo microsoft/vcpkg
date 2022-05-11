@@ -2,5 +2,6 @@
   "name": "tclap",
   "version": "1.2.5",
   "description": "Templatized command-line argument parser for C++",
-  "homepage": "https://sourceforge.net/projects/tclap/"
+  "homepage": "https://sourceforge.net/projects/tclap/",
+  "license": "MIT"
 }
