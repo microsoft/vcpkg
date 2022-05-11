@@ -21,9 +21,6 @@ vcpkg_configure_cmake(...
 ```
 #]===]
 
-include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_load_environment_from_batch.cmake")
-include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/share/vcpkg-cmake/vcpkg_cmake_get_vars.cmake")
-
 function(x_vcpkg_find_fortran)
      cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "OUT_OPTIONS;OUT_OPTIONS_RELEASE;OUT_OPTIONS_DEBUG" "")
 
