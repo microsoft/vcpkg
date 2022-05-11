@@ -1,6 +1,6 @@
 include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/share/vcpkg-cmake/vcpkg-port-config.cmake")
 if("@VCPKG_TARGET_IS_WINDOWS@" AND NOT "@VCPKG_TARGET_IS_MINGW@")
-    include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/@PORT_IMPL@/@FUNCTION_NAME@.cmake")
+    include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/@PORT_IMPL@/vcpkg-port-config.cmake")
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/@FUNCTION_NAME@.cmake")
 endif()
