@@ -1,6 +1,6 @@
 {
   "name": "mdl",
-  "version-semver": "2021.0.1",
+  "version-semver": "2021.1.2",
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "supports": "!(static | x86)",
@@ -32,7 +32,6 @@
     },
     "freeimage": {
       "description": "Build image plugin for various image formats using Freeimage",
-      "supports": "!(windows & x86)",
       "dependencies": [
         "freeimage"
       ]

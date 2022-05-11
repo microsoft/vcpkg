@@ -6,8 +6,8 @@ vcpkg_check_linkage(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
-    REF d51e97f0019642f0cb1dfb7b67a4edaac2058f92
-    SHA512 585a58cd2f1dcf9c8e72dcfef57db8808b9ca4427e6914df3fee6f295d977b7f771531c3c275d54be3ec6c64fc1acfe7c7a4f6608bcf0831e11df6d9d5632ca3
+    REF d6c9a6560265025a30d16fcd9d664f830ab63109
+    SHA512 d6161a317ca0fd3cf8c782f058fc43765d611b5f6a8e82da736f5164a0e1829a46f75e376715fcb7cb9521406365aa88880ed44235b2bf63899affcc5bd54091
     HEAD_REF master
     PATCHES
         001-freeimage-from-vcpkg.patch
