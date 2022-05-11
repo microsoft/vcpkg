@@ -119,8 +119,7 @@ IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
 다음과 같이 툴체인 파일을 사용할 수 있습니다.
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCH
-AIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -163,7 +162,7 @@ $ ./vcpkg/vcpkg search [search term]
 CMake와 함께 vcpkg를 사용하려면 툴체인 파일을 이용해 보세요.
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -231,7 +230,7 @@ CMake 설정 편집기를 열고 `CMake toolchain file`에서
 vcpkg 툴체인 파일에 경로를 추가합니다.
 
 ```
-[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 ### Vcpkg와 CLion
@@ -242,7 +241,7 @@ Toolchains settings을 엽니다.
 마지막으로 `CMake options`에서 다음 줄을 추가합니다.
 
 ```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 각 프로필에 이것을 추가해야합니다.
@@ -254,7 +253,7 @@ cmake 실행 시 `CMAKE_TOOLCHAIN_FILE`을 전달하는 대신,
 첫 번째 `project()` 호출 전에 CMakeLists.txt에 다음을 추가하는 방법도 있습니다.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 

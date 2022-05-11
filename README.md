@@ -120,7 +120,7 @@ In order to use vcpkg with CMake outside of an IDE,
 you can use the toolchain file:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -163,7 +163,7 @@ $ ./vcpkg/vcpkg search [search term]
 In order to use vcpkg with CMake, you can use the toolchain file:
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -233,7 +233,7 @@ Open the CMake Settings Editor, and under `CMake toolchain file`,
 add the path to the vcpkg toolchain file:
 
 ```
-[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 ### Vcpkg with CLion
@@ -244,7 +244,7 @@ and go to the CMake settings (Build, Execution, Deployment > CMake).
 Finally, in `CMake options`, add the following line:
 
 ```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 Unfortunately, you'll have to add this to each profile.
@@ -256,7 +256,7 @@ you can add the following to your CMakeLists.txt before the first `project()` ca
 instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 

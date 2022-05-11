@@ -109,7 +109,7 @@ vcpkg团队和贡献者可以看到它的地方，
 为了在IDE以外在cmake中使用vcpkg，您需要使用以下工具链文件:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -150,7 +150,7 @@ $ ./vcpkg/vcpkg search [search term]
 为了在cmake中使用vcpkg，您需要使用以下工具链文件:
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -215,7 +215,7 @@ $ xcode-select --install
 打开CMake设置选项，将 vcpkg toolchain 文件路径在 `CMake toolchain file` 中：
 
 ```
-[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 ### CLion 中使用 vcpkg
@@ -226,7 +226,7 @@ $ xcode-select --install
 最后在 `CMake options` 中添加以下行:
 
 ```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 遗憾的是，您必须手动将此选项加入每个项目配置文件中。
@@ -238,7 +238,7 @@ $ xcode-select --install
 而无需将 `CMAKE_TOOLCHAIN_FILE` 传递给cmake调用。
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 

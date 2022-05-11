@@ -92,7 +92,7 @@ Si vous utilisez CMake avec Visual Studio continuez [ici](#vcpkg-avec-cmake-et-v
 Afin d'utiliser vcpkg en dehors d'un IDE, vous pouvez utiliser le fichier de toolchain :
 
 ```cmd
-> cmake -B [dossier de build] -S . -DCMAKE_TOOLCHAIN_FILE=[chemin vers vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [dossier de build] -S . "-DCMAKE_TOOLCHAIN_FILE=[chemin vers vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [dossier de build]
 ```
 
@@ -138,7 +138,7 @@ $ ./vcpkg/vcpkg search [terme de recherche]
 Pour utiliser vcpkg en dehors d'un IDE, vous pouvez utiliser le fichier de toolchain :
 
 ```cmd
-> cmake -B [dossier de build] -S . -DCMAKE_TOOLCHAIN_FILE=[chemin vers vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [dossier de build] -S . "-DCMAKE_TOOLCHAIN_FILE=[chemin vers vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [dossier de build]
 ```
 
@@ -218,7 +218,7 @@ Si vous utilisez vcpkg avec CMake, la suite pourrait vous aider !
 Ouvrez les paramètres CMake, et ajoutez le chemin ci-dessous à `CMake toolchain file` :
 
 ```
-[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 ### Vcpkg avec CLion
@@ -227,7 +227,7 @@ Ouvrez les paramètres de Toolchains (File > Settings sur Windows et Linux, CLio
 Finalement, dans `CMake options`, ajoutez la ligne suivante :
 
 ```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
 ```
 
 Malheureusement, vous devrez le refaire pour chaque projet.
@@ -238,7 +238,7 @@ Malheureusement, vous devrez le refaire pour chaque projet.
 Quand vous utilisez vcpkg comme un sous-module de votre projet, vous pouvez l'ajouter à votre CMakeLists.txt avant le premier appel de `project()`, au lieu d'utiliser `CMAKE_TOOLCHAIN_FILE` dans les paramètres d'appel de cmake.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
