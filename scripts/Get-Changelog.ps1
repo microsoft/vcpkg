@@ -449,7 +449,7 @@ $(-join ($NewPorts | Sort-Object -Property 'Port' | ForEach-Object {
     if ($_.Pulls.Length -gt 1 ) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
-            "#{0}" -f $_.number
+            " #{0}" -f $_.number
         }
         '</sup>'
     }
