@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/MaterialX
-    REF ef98d9e8b4705b855f97afd23ee1fe5fb66cd736 # 1.38.4
-    SHA512 06222973a253aa2ce0b6c1cfca97941c0896cf8e0639551b7f23331e5ae7cf623a785e544fedda24fa7fcdd2bf86f6e83152a5199d1545f0e50b4836e7cbd769
+    REF b1ba83b312576fc58f02a6a7db40b18ddbe4f87f # 1.38.4
+    SHA512 3988c42d487e391f9f0f3ab5f34eaa26c7f450079695d96954b871e078eecfe692daa9917279560ba3f10bf771685df3da6e26273d575a23a11c3d17fb897c62
     HEAD_REF main
-    PATCHES
-        001-fix-MaterialXCore-generated-header.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPTION_BUILD_SHARED_LIB)
