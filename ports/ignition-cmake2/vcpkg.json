@@ -6,6 +6,9 @@
   "homepage": "https://ignitionrobotics.org/libs/cmake",
   "license": null,
   "dependencies": [
-    "ignition-modularscripts"
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
   ]
 }

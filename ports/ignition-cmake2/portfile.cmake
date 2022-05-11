@@ -1,5 +1,3 @@
-include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
-
 set(PACKAGE_VERSION "2.5.0")
 
 ignition_modular_library(NAME cmake
