@@ -54,6 +54,8 @@ vcpkg_cmake_configure(
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
         -DVERBOSE=ON
+        -DBUILD_DOCS=OFF
+        -DINSTALL_DOCS=OFF
 )
 
 vcpkg_cmake_install()
