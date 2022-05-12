@@ -209,6 +209,7 @@ discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
 # requires g++11
 discordcoreapi:x64-linux=fail
+dlib:arm64-windows=fail
 dlib:arm-uwp=fail
 dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
@@ -1079,6 +1080,7 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
+simbody:arm64-windows=fail
 skia:arm-uwp=fail
 skia:x64-uwp=fail
 sleef:x86-windows=fail

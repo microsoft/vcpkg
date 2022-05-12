@@ -3,6 +3,7 @@
   "version-date": "2022-02-22",
   "description": "Metaport for fortran compiler helpers. Only used for Windows",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-fortran-flang-classic",
