@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b4632c3..234e221 100644
+index b4632c3..2141902 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -259,27 +259,35 @@ SET(install_targets)
@@ -40,7 +40,7 @@ index b4632c3..234e221 100644
  
  IF(APR_BUILD_TESTAPR)
    ENABLE_TESTING()
-@@ -385,12 +393,22 @@ ENDIF (APR_BUILD_TESTAPR)
+@@ -385,12 +393,25 @@ ENDIF (APR_BUILD_TESTAPR)
  
  # Installation
  
@@ -56,10 +56,13 @@ index b4632c3..234e221 100644
 +    DESTINATION share/unofficial-apr
 +)
 +
-+FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake.in"
-+[[include("${CMAKE_CURRENT_LIST_DIR}/unofficial-aprTargets.cmake")]])
-+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake" @ONLY)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake DESTINATION share/unofficial-apr)
++INSTALL(TARGETS ${install_targets} EXPORT unofficial-apr-config)
++
++INSTALL(EXPORT unofficial-apr-config
++    NAMESPACE unofficial::apr::
++    DESTINATION share/unofficial-apr
++    FILE unofficial-apr-config.cmake
++)
 +
  IF(INSTALL_PDB)
    INSTALL(FILES ${install_bin_pdb}
