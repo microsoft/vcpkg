@@ -6,13 +6,13 @@
   "license": null,
   "dependencies": [
     {
-      "name": "openblas",
-      "platform": "!(osx | (windows & arm))"
+      "$comment": "Will use internal generic BLAS of lapack-reference",
+      "name": "lapack-reference",
+      "platform": "arm64 & windows"
     },
     {
-      "name": "lapack-reference",
-      "platform": "(arm64 & windows)",
-      "$comment" : "Will use internal generic BLAS of lapack-reference"
+      "name": "openblas",
+      "platform": "!(osx | (windows & arm))"
     },
     {
       "name": "vcpkg-cmake",

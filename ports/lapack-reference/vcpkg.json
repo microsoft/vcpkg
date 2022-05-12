@@ -38,10 +38,10 @@
     },
     "noblas": {
       "description": "Use external optimized BLAS",
+      "supports": "!(windows & arm64)",
       "dependencies": [
         "blas"
-      ],
-      "supports": "!(windows & arm64)"
+      ]
     }
   }
 }
