@@ -78,7 +78,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 # for windows and wolfssl, NTLM must be disabled to avoid conflict with win32crypto
-if(TARGET_TRIPLET MATCHES "-windows" AND wolfssl IN_LIST FEATURES)
+if(VCPKG_TARGET_IS_WINDOWS AND wolfssl IN_LIST FEATURES)
     list(APPEND OPTIONS
         -DCURL_DISABLE_NTLM=ON
         )
