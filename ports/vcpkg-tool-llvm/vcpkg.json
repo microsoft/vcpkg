@@ -7,7 +7,7 @@
   "supports": "windows & (x64 | x86) & native",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     {

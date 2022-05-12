@@ -2,26 +2,33 @@
 # x_vcpkg_find_fortran
 
 Checks if a Fortran compiler can be found.
-Windows(x86/x64) Only: If not it will search and enable Intel
-                       ifort compiler if available. 
+Windows only: If not it will try to use one internal to vcpkg
 
 ## Usage
 ```cmake
-x_vcpkg_find_fortran(<out_var>)
+x_vcpkg_find_fortran(OUT_OPTIONS <var>
+                     OUT_OPTIONS_RELEASE <var_rel>
+                     OUT_OPTIONS_DEBUG <var_dbg>
+                    )
 ```
 
 ## Example
 ```cmake
-x_vcpkg_find_fortran(fortran_args)
+x_vcpkg_find_fortran(OUT_OPTIONS fortran_args
+                     OUT_OPTIONS_RELEASE fortran_args_rel
+                     OUT_OPTIONS_DEBUG fortran_args_dbg
+                    )
 # ...
 vcpkg_configure_cmake(...
     OPTIONS
         ${fortran_args}
+    OPTIONS_RELEASE
+        ${fortran_args_rel}
+    OPTIONS_DEBUG
+        ${fortran_args_dbg}
 )
 ```
 #]===]
-include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/share/vcpkg-cmake/vcpkg_cmake_get_vars.cmake")
-
 function(x_vcpkg_find_fortran)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "OUT_OPTIONS;OUT_OPTIONS_RELEASE;OUT_OPTIONS_DEBUG" "")
 

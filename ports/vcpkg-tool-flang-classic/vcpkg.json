@@ -20,6 +20,10 @@
       "host": true
     },
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-flang-classic-llvm",
       "host": true
     },
