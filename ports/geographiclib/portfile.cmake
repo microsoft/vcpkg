@@ -22,15 +22,9 @@ else()
     set(TOOL_OPTION -DBINDIR=OFF)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIB_OPTION -DBUILD_SHARED_LIBS=ON)
-else()
-    set(LIB_OPTION -DBUILD_SHARED_LIBS=OFF)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${LIB_OPTION} ${TOOL_OPTION}
+    OPTIONS ${TOOL_OPTION}
     "-DCMAKEDIR=share/${PORT}"
     -DDOCDIR=OFF
     -DEXAMPLEDIR=OFF
