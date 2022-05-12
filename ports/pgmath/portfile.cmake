@@ -54,6 +54,7 @@ vcpkg_list(APPEND OPTIONS "-DPGMATH_SHARED=${PGMATH_SHARED}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/runtime/libpgmath"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
             "-DWITH_WERROR=OFF"
     MAYBE_UNUSED_VARIABLES
