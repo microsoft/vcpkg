@@ -2398,7 +2398,7 @@
     },
     "g2o": {
       "baseline": "2020-02-07",
-      "port-version": 2
+      "port-version": 3
     },
     "g3log": {
       "baseline": "1.3.4",
@@ -2462,7 +2462,7 @@
     },
     "geogram": {
       "baseline": "1.7.6",
-      "port-version": 2
+      "port-version": 3
     },
     "geographiclib": {
       "baseline": "1.52",
