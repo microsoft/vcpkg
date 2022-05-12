@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists-cpp.txt" "${SOURCE_PATH}/cpp/CMakeLists.txt" COPYONLY)
 
 # Used in cmake wrapper
 set(ENABLE_LUA_CPP 0)
