@@ -25,7 +25,13 @@ if ("buildtools" IN_LIST FEATURES)
     vcpkg_add_to_path(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
-set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sndfile     enable-libsndfile
+)
+
+set(feature_list dbus jack libinstpatch midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
 vcpkg_list(SET FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
