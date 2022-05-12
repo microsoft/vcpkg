@@ -51,5 +51,5 @@ file(INSTALL "${SOURCE_PATH}/LICENSE.txt"
     RENAME copyright)
 
 # Install usage
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
