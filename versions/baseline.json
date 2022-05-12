@@ -37,8 +37,8 @@
       "port-version": 1
     },
     "akali": {
-      "baseline": "1.42",
-      "port-version": 3
+      "baseline": "1.43",
+      "port-version": 0
     },
     "alac": {
       "baseline": "2017-11-03-c38887c5",
@@ -337,7 +337,7 @@
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
-      "baseline": "1.0.0-beta.1",
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
@@ -489,8 +489,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "default",
-      "port-version": 0
+      "baseline": "1",
+      "port-version": 1
     },
     "blaze": {
       "baseline": "3.8",
@@ -826,7 +826,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.79.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-move": {
       "baseline": "1.79.0",
@@ -1216,6 +1216,10 @@
       "baseline": "0.0.1",
       "port-version": 0
     },
+    "c9y": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "caf": {
       "baseline": "0.18.6",
       "port-version": 1
@@ -1329,7 +1333,7 @@
       "port-version": 0
     },
     "cgns": {
-      "baseline": "4.2.0",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "chaiscript": {
@@ -1390,7 +1394,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 21
+      "port-version": 20
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1865,7 +1869,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2022-03-24",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "directxsdk": {
@@ -1873,15 +1877,15 @@
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2022-03-24",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-03-24",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-03-24",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "dirent": {
@@ -2202,7 +2206,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 12
+      "port-version": 13
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2223,10 +2227,6 @@
     "fizz": {
       "baseline": "2022.03.21.00",
       "port-version": 1
-    },
-    "flang-classic-fortran-runtime": {
-      "baseline": "2022-04-23",
-      "port-version": 0
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -2262,7 +2262,7 @@
     },
     "fluidsynth": {
       "baseline": "2.2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
@@ -3329,12 +3329,12 @@
       "port-version": 0
     },
     "lapack": {
-      "baseline": "default",
+      "baseline": "2022-02-22",
       "port-version": 0
     },
     "lapack-reference": {
       "baseline": "3.10.0",
-      "port-version": 2
+      "port-version": 0
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -3610,7 +3610,7 @@
     },
     "libgpiod": {
       "baseline": "1.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -4129,8 +4129,8 @@
       "port-version": 3
     },
     "liburing": {
-      "baseline": "2.0",
-      "port-version": 3
+      "baseline": "2.1",
+      "port-version": 0
     },
     "libusb": {
       "baseline": "1.0.26",
@@ -4349,8 +4349,8 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.7.3",
-      "port-version": 1
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "magic-get": {
       "baseline": "2019-09-02",
@@ -4410,6 +4410,10 @@
     },
     "marl": {
       "baseline": "2022-03-02",
+      "port-version": 0
+    },
+    "materialx": {
+      "baseline": "1.38.4",
       "port-version": 0
     },
     "mathc": {
@@ -5392,10 +5396,6 @@
       "baseline": "2019-05-14",
       "port-version": 1
     },
-    "pgmath": {
-      "baseline": "2022-04-23",
-      "port-version": 0
-    },
     "phnt": {
       "baseline": "2020-12-21",
       "port-version": 0
@@ -6302,7 +6302,7 @@
     },
     "rxspencer": {
       "baseline": "3.9.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ryml": {
       "baseline": "2021-07-24",
@@ -6893,8 +6893,8 @@
       "port-version": 5
     },
     "tclap": {
-      "baseline": "1.2.2",
-      "port-version": 4
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "teemo": {
       "baseline": "2.7",
@@ -7285,7 +7285,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-03-24",
+      "baseline": "2022-05-09",
       "port-version": 0
     },
     "uvw": {
@@ -7329,23 +7329,15 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-05-10",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
       "baseline": "2022-02-06",
       "port-version": 0
     },
-    "vcpkg-fortran": {
-      "baseline": "2022-02-22",
-      "port-version": 0
-    },
-    "vcpkg-fortran-flang-classic": {
-      "baseline": "2022-02-22",
-      "port-version": 0
-    },
-    "vcpkg-fortran-ifort": {
-      "baseline": "2022-02-22",
+    "vcpkg-cmake-get-vars": {
+      "baseline": "2022-05-10",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
@@ -7360,32 +7352,12 @@
       "baseline": "2021-11-16",
       "port-version": 1
     },
-    "vcpkg-ifort": {
-      "baseline": "2022-02-22",
-      "port-version": 0
-    },
-    "vcpkg-ifort-libs": {
-      "baseline": "2022-02-22",
-      "port-version": 0
-    },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
       "port-version": 0
     },
     "vcpkg-qmake": {
-      "baseline": "2022-02-14",
-      "port-version": 0
-    },
-    "vcpkg-tool-7zip": {
-      "baseline": "21.07",
-      "port-version": 0
-    },
-    "vcpkg-tool-flang-classic": {
-      "baseline": "2022-04-23",
-      "port-version": 0
-    },
-    "vcpkg-tool-flang-classic-llvm": {
-      "baseline": "2022-04-23",
+      "baseline": "2022-05-10",
       "port-version": 0
     },
     "vcpkg-tool-gn": {
@@ -7396,16 +7368,8 @@
       "baseline": "2022-03-04",
       "port-version": 0
     },
-    "vcpkg-tool-ifort": {
-      "baseline": "2022-05-08",
-      "port-version": 0
-    },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
-      "port-version": 0
-    },
-    "vcpkg-tool-llvm": {
-      "baseline": "14.0.3",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
