@@ -5100,6 +5100,10 @@
       "baseline": "1.4.2",
       "port-version": 2
     },
+    "openctm": {
+      "baseline": "1.0.3",
+      "port-version": 0
+    },
     "opencv": {
       "baseline": "4.5.5",
       "port-version": 0
