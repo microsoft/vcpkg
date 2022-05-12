@@ -14,7 +14,8 @@
     },
     {
       "name": "vcpkg-cmake-config",
-      "host": true
+      "host": true,
+      "platform": "windows"
     }
   ],
   "features": {
