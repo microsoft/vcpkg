@@ -8,9 +8,7 @@
   "dependencies": [
     "json-c",
     "libgeotiff",
-    "libiconv",
     "proj",
-    "qhull",
     "tiff",
     {
       "name": "vcpkg-cmake",
@@ -27,7 +25,7 @@
     "zlib"
   ],
   "default-features": [
-    "supported-default-features"
+    "default-features"
   ],
   "features": {
     "aws-ec2-windows": {
@@ -49,6 +47,51 @@
           "name": "curl",
           "default-features": false
         }
+      ]
+    },
+    "default-features": {
+      "description": "Default set of features, including recommended features",
+      "dependencies": [
+        "expat",
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "curl",
+            "geos",
+            "libspatialite",
+            "recommended-features"
+          ]
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "postgresql"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5",
+            "netcdf"
+          ],
+          "platform": "!uwp & !(windows & arm64)"
+        },
+        "giflib",
+        "libiconv",
+        "libjpeg-turbo",
+        "liblzma",
+        "libpng",
+        "libwebp",
+        "libxml2",
+        "openjpeg",
+        "openssl",
+        "pcre2",
+        "qhull",
+        "zstd"
       ]
     },
     "freexl": {
@@ -75,9 +118,7 @@
     "lerc": {
       "description": "Enable LERC support",
       "dependencies": [
-        {
-          "name": "lerc"
-        }
+        "lerc"
       ]
     },
     "libspatialite": {
@@ -102,7 +143,7 @@
       ]
     },
     "poppler": {
-      "description": "Enable poppler support",
+      "description": "Enable PDF reading support via poppler",
       "dependencies": [
         {
           "name": "poppler",
@@ -119,61 +160,26 @@
         "libpq"
       ]
     },
-    "primary-features": {
-      "description": "Core dependencies and features for which this port doesn't offer individual control at the moment",
+    "recommended-features": {
+      "description": "Features that are explicity marked as recommended by GDAL.",
       "dependencies": [
         "expat",
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "curl",
-            "geos"
-          ]
-        },
-        "giflib",
-        "libjpeg-turbo",
-        "liblzma",
-        "libpng",
-        "libwebp",
-        "libxml2",
-        "openjpeg",
-        "pcre2",
         {
           "name": "sqlite3",
           "features": [
             "rtree"
           ]
-        },
-        "zstd"
+        }
       ]
     },
     "supported-default-features": {
-      "description": "Default set of features, dependent on platform",
+      "description": "This feature is an alias for default-features. It is retained for compatibility.",
       "dependencies": [
         {
           "name": "gdal",
-          "default-features": false,
           "features": [
-            "primary-features"
+            "default-features"
           ]
-        },
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "postgresql"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "hdf5",
-            "netcdf"
-          ],
-          "platform": "!uwp & !(windows & arm64)"
         }
       ]
     },

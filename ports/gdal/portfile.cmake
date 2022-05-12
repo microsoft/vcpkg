@@ -8,91 +8,67 @@ vcpkg_from_github(
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
-if("primary-features" IN_LIST FEATURES)
-    # Features which are not made explicit yet.
-    list(APPEND FEATURES
-        expat
-        gif
-        #hdf4
-        #iconv
-        jpeg
-        #libcsf
-        liblzma
-        png
-        libxml2
-        #odbc
-        #opencad
-        openjpeg
-        pcre2
-        png
-        #rasterlite
-        #shapelib
-        sqlite3
-        webp
-        #xerces-c
-        zstd
-    )
-endif()
-
+# Cf. cmake/helpers/CheckDependentLibraries.cmake
+# The default for all `GDAL_USE_<PKG>` dependencies is `OFF`.
+# Here, we explicitly control dependencies provided via vpcpkg.
+# "core" is used for a dependency which must be enabled to avoid vendored lib.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        cfitsio         GDAL_USE_CFITSIO
-        curl            GDAL_USE_CURL
-        expat           GDAL_USE_EXPAT
-        freexl          GDAL_USE_FREEXL
-        geos            GDAL_USE_GEOS
-        core            GDAL_USE_GEOTIFF
-        gif             GDAL_USE_GIF
-        hdf4            GDAL_USE_HDF4
-        hdf4            GDAL_ENABLE_DRIVER_HDF4
-        hdf5            GDAL_USE_HDF5
-        core            GDAL_USE_ICONV # Always used if found.
-        jpeg            GDAL_USE_JPEG
-        core            GDAL_USE_JSONC #!
-        libcsf          GDAL_USE_LIBCSF
-         libcsf          GDAL_USE_LIBCSF_INTERNAL
-        lerc            GDAL_USE_LERC
-        liblzma         GDAL_USE_LIBLZMA
-        libxml2         GDAL_USE_LIBXML2
-        mysql-libmariadb  GDAL_USE_MYSQL 
-        netcdf          GDAL_USE_NETCDF
-        odbc            GDAL_USE_ODBC
-        opencad         GDAL_USE_OPENCAD
-        openjpeg        GDAL_USE_OPENJPEG #?
-        pcre2           GDAL_USE_PCRE2
-        png             GDAL_USE_PNG
-        postgresql      GDAL_USE_POSTGRESQL
-        core            GDAL_USE_QHULL
-        rasterlite      GDAL_USE_RASTERLITE2
-#         rasterlite      GDAL_ENABLE_DRIVER_RASTERLITE # HAVE_RASTERLITE
-        shapelib        GDAL_USE_SHAPELIB
-        libspatialite   GDAL_USE_SPATIALITE
-        sqlite3         GDAL_USE_SQLITE3
-        core            GDAL_USE_TIFF
-        webp            GDAL_USE_WEBP
-        xerces-c        GDAL_USE_XERCESC
-        core            GDAL_USE_ZLIB
-        zstd            GDAL_USE_ZSTD
+        cfitsio          GDAL_USE_CFITSIO
+        curl             GDAL_USE_CURL
+        recommended-features GDAL_USE_EXPAT
+        freexl           GDAL_USE_FREEXL
+        geos             GDAL_USE_GEOS
+        core             GDAL_USE_GEOTIFF
+        default-features GDAL_USE_GIF
+        hdf5             GDAL_USE_HDF5
+        default-features GDAL_USE_ICONV
+        default-features GDAL_USE_JPEG
+        core             GDAL_USE_JSONC
+        lerc             GDAL_USE_LERC
+        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        default-features GDAL_USE_LIBLZMA
+        default-features GDAL_USE_LIBXML2
+        mysql-libmariadb GDAL_USE_MYSQL 
+        netcdf           GDAL_USE_NETCDF
+        odbc             GDAL_USE_ODBC
+        default-features GDAL_USE_OPENJPEG
+        default-features GDAL_USE_OPENSSL
+        default-features GDAL_USE_PCRE2
+        default-features GDAL_USE_PNG
+        poppler          GDAL_USE_POPPLER
+        postgresql       GDAL_USE_POSTGRESQL
+        default-features GDAL_USE_QHULL
+        #core             GDAL_USE_SHAPELIB  # https://github.com/OSGeo/gdal/issues/5711, https://github.com/microsoft/vcpkg/issues/16041
+        core             GDAL_USE_SHAPELIB_INTERNAL
+        libspatialite    GDAL_USE_SPATIALITE
+        recommended-features GDAL_USE_SQLITE3
+        core             GDAL_USE_TIFF
+        default-features GDAL_USE_WEBP
+        core             GDAL_USE_ZLIB
+        default-features GDAL_USE_ZSTD
 )
-if(VCPKG_TARGET_IS_WINDOWS)
+if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
 endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
     FEATURES
         tools           BUILD_APPS
-        tools           BUILD_TESTING
-    INVERTED_FEATURES
-        tools           CMAKE_DISABLE_FIND_PACKAGE_Python
 )
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
         -DBUILD_DOCS=OFF
-        -DBUILD_CSHARP_BINDINGS=OFF
-        -DBUILD_JAVA_BINDINGS=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
+        -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
@@ -102,27 +78,14 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         ${FEATURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG
-        -DBUILD_TESTING=OFF
         -DBUILD_APPS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
-    MAYBE_UNUSED_VARIABLES
-        BUILD_CSHARP_BINDINGS # BUILD_SHARED_LIBS
-        BUILD_JAVA_BINDINGS   # BUILD_SHARED_LIBS
-        BUILD_PYTHON_BINDINGS # BUILD_SHARED_LIBS
-        GDAL_USE_CRNLIB     # GDAL_ENABLE_DRIVER_DDS
-        GDAL_USE_ECW        # GDAL_ENABLE_DRIVER_ECW
-        GDAL_USE_FME        # GDAL_ENABLE_DRIVER_FME
-        GDAL_USE_IDB        # GDAL_ENABLE_DRIVER_IDB
-        GDAL_USE_MRSID      # GDAL_ENABLE_DRIVER_MRSID
-        GDAL_USE_OGDI       # GDAL_ENABLE_DRIVER_OGDI
-        GDAL_USE_OPENMP     # This option is "unused for now" in gdal's build system.
-        GDAL_USE_ORACLE     # GDAL_ENABLE_DRIVER_GEOR, GDAL_ENABLE_DRIVER_OCI
-        GDAL_USE_PCRE       # unused when GDAL_USE_PCRE2 is enabled
-        GDAL_USE_RASDAMAN   # GDAL_ENABLE_DRIVER_RASDAMAN
- )
+)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-if ("tools" IN_LIST FEATURES)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
+vcpkg_fixup_pkgconfig()
+
+if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
             gdalinfo
@@ -156,8 +119,6 @@ if ("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 endif()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
-vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
