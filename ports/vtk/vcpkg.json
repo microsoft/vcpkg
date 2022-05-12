@@ -1,7 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.0.3-pv5.9.1",
-  "port-version": 11,
+  "version-semver": "9.1.0",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -9,6 +8,8 @@
     "double-conversion",
     "eigen3",
     "expat",
+    "exprtk",
+    "fmt",
     "freetype",
     "glew",
     {
@@ -45,8 +46,12 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
+        "cgns",
         "ffmpeg",
+        "liblas",
         "libmysql",
+        "openvdb",
+        "pdal",
         {
           "name": "vtk",
           "default-features": false,
@@ -55,7 +60,8 @@
             "geojson",
             "mpi",
             "python",
-            "qt"
+            "qt",
+            "qtquick"
           ]
         },
         {
@@ -139,6 +145,7 @@
     "paraview": {
       "description": "Build vtk modules required by paraview",
       "dependencies": [
+        "cli11",
         {
           "name": "vtk",
           "default-features": false,
@@ -172,6 +179,19 @@
           "platform": "linux"
         },
         "qt5-xmlpatterns"
+      ]
+    },
+    "qtquick": {
+      "description": "QtQuick functionality for VTK",
+      "dependencies": [
+        "qt5-declarative",
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "qt"
+          ]
+        }
       ]
     },
     "utf8": {

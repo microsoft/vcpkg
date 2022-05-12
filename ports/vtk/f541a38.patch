@@ -1,0 +1,22 @@
+diff --git a/Wrapping/Tools/CMakeLists.txt b/Wrapping/Tools/CMakeLists.txt
+index d8e1d10cdfa..6461f4e5e7a 100644
+--- a/Wrapping/Tools/CMakeLists.txt
++++ b/Wrapping/Tools/CMakeLists.txt
+@@ -22,6 +22,7 @@ set(sources
+ 
+ set(headers
+   vtkParse.h
++  vtkParseAttributes.h
+   vtkParseData.h
+   vtkParseExtras.h
+   vtkParseHierarchy.h
+@@ -32,7 +33,8 @@ set(headers
+   vtkParseString.h
+   vtkParseSystem.h
+   vtkParseType.h
+-  vtkWrap.h)
++  vtkWrap.h
++  vtkWrapText.h)
+ 
+ set_property(SOURCE vtkParseMain.c
+   PROPERTY

@@ -2,14 +2,14 @@ diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.c
 index bcb2044..c87bb9c 100644
 --- a/CMake/vtkInstallCMakePackage.cmake
 +++ b/CMake/vtkInstallCMakePackage.cmake
-@@ -113,7 +113,6 @@ set(vtk_cmake_patch_files
-   patches/3.18/FindPython/Support.cmake
-   patches/3.18/FindPython2.cmake
-   patches/3.18/FindPython3.cmake
--  patches/99/FindGDAL.cmake
-   patches/99/FindHDF5.cmake
-   patches/99/FindJPEG.cmake
-   patches/99/FindLibArchive.cmake
+@@ -130,7 +130,6 @@ patches/3.19/FindJPEG.cmake
+   patches/3.19/FindLibArchive.cmake
+   patches/3.19/FindSQLite3.cmake
+   patches/3.19/FindX11.cmake
+-  patches/3.20/FindGDAL.cmake
+   patches/3.22/FindMPI/fortranparam_mpi.f90.in
+   patches/3.22/FindMPI/libver_mpi.c
+   patches/3.22/FindMPI/libver_mpi.f90.in
 diff --git a/Geovis/GDAL/CMakeLists.txt b/Geovis/GDAL/CMakeLists.txt
 index dfd58f0..f46177f 100644
 --- a/Geovis/GDAL/CMakeLists.txt
