@@ -17,11 +17,11 @@
       "host": true
     },
     {
-      "name": "vcpkg-cmake-get-vars",
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     {
