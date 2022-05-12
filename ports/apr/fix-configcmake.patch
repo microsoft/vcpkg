@@ -1,30 +1,66 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b4632c3..77be8cc 100644
+index b4632c3..234e221 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -386,6 +386,7 @@ ENDIF (APR_BUILD_TESTAPR)
+@@ -259,27 +259,35 @@ SET(install_targets)
+ SET(install_bin_pdb)
+ 
+ # libapr-1 is shared, apr-1 is static
++IF(BUILD_SHARED_LIBS)
+ ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+ SET(install_targets ${install_targets} libapr-1)
+ SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+ TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+ SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
+ ADD_DEPENDENCIES(libapr-1 test_char_header)
+-
++TARGET_INCLUDE_DIRECTORIES(libapr-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ELSE()
+ ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} apr-1)
+ TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+ SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
+ ADD_DEPENDENCIES(apr-1 test_char_header)
++TARGET_INCLUDE_DIRECTORIES(apr-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ENDIF()
+ 
+ # libaprapp-1 and aprapp-1 are static
++IF(BUILD_SHARED_LIBS)
+ ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} libaprapp-1)
+ SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
+-
++TARGET_INCLUDE_DIRECTORIES(libaprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ELSE()
+ ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} aprapp-1)
+ SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
++TARGET_INCLUDE_DIRECTORIES(aprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ENDIF()
+ 
+ IF(APR_BUILD_TESTAPR)
+   ENABLE_TESTING()
+@@ -385,12 +393,22 @@ ENDIF (APR_BUILD_TESTAPR)
+ 
  # Installation
  
- INSTALL(TARGETS ${install_targets}
-+        EXPORT unofficial-apr-1Targets
+-INSTALL(TARGETS ${install_targets}
++INSTALL(TARGETS ${install_targets} EXPORT unofficial-aprTargets
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION lib
          ARCHIVE DESTINATION lib
-@@ -397,6 +398,17 @@ IF(INSTALL_PDB)
-           CONFIGURATIONS RelWithDebInfo Debug)
- ENDIF()
+        )
  
-+install(EXPORT unofficial-apr-1Targets
-+    NAMESPACE unofficial::apr-1::
-+    DESTINATION share/unofficial-apr-1
++INSTALL(EXPORT unofficial-aprTargets
++    NAMESPACE unofficial::apr::
++    DESTINATION share/unofficial-apr
 +)
 +
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake.in"
-+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-1Targets.cmake"))
++FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake.in"
++[[include("${CMAKE_CURRENT_LIST_DIR}/unofficial-aprTargets.cmake")]])
++configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake" @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-config.cmake DESTINATION share/unofficial-apr)
 +
-+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake" @ONLY)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake DESTINATION share/unofficial-apr-1)
-+
- INSTALL(FILES ${APR_PUBLIC_HEADERS_STATIC} ${APR_PUBLIC_HEADERS_GENERATED} DESTINATION include)
- IF(APR_INSTALL_PRIVATE_H)
-   # Kludges for unexpected dependencies of httpd 2.x, not installed by default
+ IF(INSTALL_PDB)
+   INSTALL(FILES ${install_bin_pdb}
+           DESTINATION bin
