@@ -28,7 +28,8 @@
           "default-features": false,
           "features": [
             "noblas"
-          ]
+          ],
+          "platform": "!(windows & arm)"
         }
       ]
     },
@@ -39,7 +40,8 @@
       "description": "Use external optimized BLAS",
       "dependencies": [
         "blas"
-      ]
+      ],
+      "supports": "!(windows & arm64)"
     }
   }
 }

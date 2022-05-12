@@ -7,7 +7,12 @@
   "dependencies": [
     {
       "name": "openblas",
-      "platform": "!osx | (static & windows)"
+      "platform": "!(osx | (windows & arm))"
+    },
+    {
+      "name": "lapack-reference",
+      "platform": "(arm64 & windows)",
+      "$comment" : "Will use internal generic BLAS of lapack-reference"
     },
     {
       "name": "vcpkg-cmake",
