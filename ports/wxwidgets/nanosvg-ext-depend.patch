@@ -1,0 +1,35 @@
+diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
+index 8c9275974f..3758261299 100644
+--- a/build/cmake/init.cmake
++++ b/build/cmake/init.cmake
+@@ -615,3 +615,6 @@ if(wxBUILD_PRECOMP)
+         wx_option_force_value(wxBUILD_PRECOMP OFF)
+     endif()
+ endif(wxBUILD_PRECOMP)
++
++find_package(unofficial-nanosvg CONFIG REQUIRED)
++list(APPEND wxTOOLKIT_LIBRARIES unofficial::nanosvg::nanosvg)
+diff --git a/src/generic/bmpsvg.cpp b/src/generic/bmpsvg.cpp
+index 76f20dce4c..7a7c24b4dd 100644
+--- a/src/generic/bmpsvg.cpp
++++ b/src/generic/bmpsvg.cpp
+@@ -26,7 +26,7 @@
+ // your source tree doesn't contain 3rdparty/nanosvg and you should initialize
+ // and update the corresponding submodule.
+ #ifdef __has_include
+-    #if ! __has_include("../../3rdparty/nanosvg/src/nanosvg.h")
++    #if 0
+         #error You need to run "git submodule update --init 3rdparty/nanosvg".
+         #undef wxHAS_SVG
+     #endif
+@@ -60,8 +60,8 @@
+ #define NANOSVG_IMPLEMENTATION
+ #define NANOSVGRAST_IMPLEMENTATION
+ #define NANOSVG_ALL_COLOR_KEYWORDS
+-#include "../../3rdparty/nanosvg/src/nanosvg.h"
+-#include "../../3rdparty/nanosvg/src/nanosvgrast.h"
++#include <nanosvg.h>
++#include <nanosvgrast.h>
+ 
+ #ifdef __VISUALC__
+     #pragma warning(pop)
