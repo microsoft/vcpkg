@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b4632c3..2141902 100644
+index b4632c3..0b86d12 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -259,27 +259,35 @@ SET(install_targets)
@@ -40,24 +40,17 @@ index b4632c3..2141902 100644
  
  IF(APR_BUILD_TESTAPR)
    ENABLE_TESTING()
-@@ -385,12 +393,25 @@ ENDIF (APR_BUILD_TESTAPR)
+@@ -385,12 +393,18 @@ ENDIF (APR_BUILD_TESTAPR)
  
  # Installation
  
 -INSTALL(TARGETS ${install_targets}
-+INSTALL(TARGETS ${install_targets} EXPORT unofficial-aprTargets
++INSTALL(TARGETS ${install_targets} EXPORT unofficial-apr-config
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION lib
          ARCHIVE DESTINATION lib
         )
  
-+INSTALL(EXPORT unofficial-aprTargets
-+    NAMESPACE unofficial::apr::
-+    DESTINATION share/unofficial-apr
-+)
-+
-+INSTALL(TARGETS ${install_targets} EXPORT unofficial-apr-config)
-+
 +INSTALL(EXPORT unofficial-apr-config
 +    NAMESPACE unofficial::apr::
 +    DESTINATION share/unofficial-apr
