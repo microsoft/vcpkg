@@ -489,8 +489,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "1",
-      "port-version": 1
+      "baseline": "default",
+      "port-version": 0
     },
     "blaze": {
       "baseline": "3.8",
@@ -1394,7 +1394,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 20
+      "port-version": 21
     },
     "clara": {
       "baseline": "1.1.5",
@@ -2227,6 +2227,10 @@
     "fizz": {
       "baseline": "2022.03.21.00",
       "port-version": 1
+    },
+    "flang-classic-fortran-runtime": {
+      "baseline": "2022-04-23",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -3329,12 +3333,12 @@
       "port-version": 0
     },
     "lapack": {
-      "baseline": "2022-02-22",
+      "baseline": "default",
       "port-version": 0
     },
     "lapack-reference": {
       "baseline": "3.10.0",
-      "port-version": 0
+      "port-version": 2
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -5396,6 +5400,10 @@
       "baseline": "2019-05-14",
       "port-version": 1
     },
+    "pgmath": {
+      "baseline": "2022-04-23",
+      "port-version": 0
+    },
     "phnt": {
       "baseline": "2020-12-21",
       "port-version": 0
@@ -7340,6 +7348,18 @@
       "baseline": "2022-05-10",
       "port-version": 0
     },
+    "vcpkg-fortran": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
+    "vcpkg-fortran-flang-classic": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
+    "vcpkg-fortran-ifort": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
     "vcpkg-get-python-packages": {
       "baseline": "2022-04-11",
       "port-version": 0
@@ -7352,12 +7372,28 @@
       "baseline": "2021-11-16",
       "port-version": 1
     },
+    "vcpkg-ifort-libs": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
       "port-version": 0
     },
     "vcpkg-qmake": {
       "baseline": "2022-05-10",
+      "port-version": 0
+    },
+    "vcpkg-tool-7zip": {
+      "baseline": "21.07",
+      "port-version": 0
+    },
+    "vcpkg-tool-flang-classic": {
+      "baseline": "2022-04-23",
+      "port-version": 0
+    },
+    "vcpkg-tool-flang-classic-llvm": {
+      "baseline": "2022-04-23",
       "port-version": 0
     },
     "vcpkg-tool-gn": {
@@ -7368,8 +7404,16 @@
       "baseline": "2022-03-04",
       "port-version": 0
     },
+    "vcpkg-tool-ifort": {
+      "baseline": "2022-05-08",
+      "port-version": 0
+    },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
+      "port-version": 0
+    },
+    "vcpkg-tool-llvm": {
+      "baseline": "14.0.3",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
