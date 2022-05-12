@@ -1269,9 +1269,7 @@ clapack:x64-windows-static=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-lapack-reference:arm64-windows=skip
-lapack-reference:arm-uwp=skip
-lapack-reference:x64-uwp=skip
+clapack:arm64-windows=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
