@@ -40,7 +40,7 @@
   ],
   "features": {
     "latest": {
-      "description": "Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)"
+      "description": "(deprecated)"
     },
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",
