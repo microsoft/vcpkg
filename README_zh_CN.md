@@ -215,7 +215,7 @@ $ xcode-select --install
 打开CMake设置选项，将 vcpkg toolchain 文件路径在 `CMake toolchain file` 中：
 
 ```
-"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 ### CLion 中使用 vcpkg
@@ -226,7 +226,7 @@ $ xcode-select --install
 最后在 `CMake options` 中添加以下行:
 
 ```
-"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 遗憾的是，您必须手动将此选项加入每个项目配置文件中。

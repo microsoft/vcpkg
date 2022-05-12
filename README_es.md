@@ -238,7 +238,7 @@ Abra el editor de Ajustes de CMake, bajo la sección `CMake toolchain file`,
 posteriormente agregue al path el archivo de cadena de herramientas de Vcpkg:
 
 ```sh
-"[raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake"
+[raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake
 ```
 
 #### Vcpkg con CLion
@@ -249,7 +249,7 @@ y entre en la sección de ajustes de CMake (Build, Execution, Deployment > CMake
 Finalmente, en `CMake options`, agregue la línea siguiente:
 
 ```sh
-"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Desafortunadamente, tendrá que hacerlo para cada perfil.

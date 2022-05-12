@@ -218,7 +218,7 @@ Si vous utilisez vcpkg avec CMake, la suite pourrait vous aider !
 Ouvrez les paramètres CMake, et ajoutez le chemin ci-dessous à `CMake toolchain file` :
 
 ```
-"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 ### Vcpkg avec CLion
@@ -227,7 +227,7 @@ Ouvrez les paramètres de Toolchains (File > Settings sur Windows et Linux, CLio
 Finalement, dans `CMake options`, ajoutez la ligne suivante :
 
 ```
-"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Malheureusement, vous devrez le refaire pour chaque projet.

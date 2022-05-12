@@ -230,7 +230,7 @@ CMake 설정 편집기를 열고 `CMake toolchain file`에서
 vcpkg 툴체인 파일에 경로를 추가합니다.
 
 ```
-"[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 ### Vcpkg와 CLion
@@ -241,7 +241,7 @@ Toolchains settings을 엽니다.
 마지막으로 `CMake options`에서 다음 줄을 추가합니다.
 
 ```
-"-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 각 프로필에 이것을 추가해야합니다.
