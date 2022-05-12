@@ -3,6 +3,7 @@
   "version": "8.1.0",
   "port-version": 3,
   "description": "Transport middleware for robotics",
+  "license": null,
   "dependencies": [
     "cppzmq",
     "ignition-cmake2",

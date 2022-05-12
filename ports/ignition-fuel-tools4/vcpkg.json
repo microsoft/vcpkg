@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Tools for using fuel API to download robot models",
   "homepage": "https://ignitionrobotics.org/libs/fuel_tools",
+  "license": null,
   "dependencies": [
     "curl",
     "ignition-cmake2",
