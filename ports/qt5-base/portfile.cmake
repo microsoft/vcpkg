@@ -21,21 +21,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-if("latest" IN_LIST FEATURES) # latest = core currently
-    set(QT_BUILD_LATEST ON)
-    set(PATCHES
-        patches/Qt5BasicConfig.patch
-        patches/Qt5PluginTarget.patch
-        patches/create_cmake.patch
-        )
-else()
-    set(PATCHES
-        patches/Qt5BasicConfig.patch
-        patches/Qt5PluginTarget.patch
-        patches/create_cmake.patch
-    )
-endif()
-
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
     set(WITH_PGSQL_PLUGIN ON)
@@ -84,9 +69,11 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
-                            #CMake fixes
-                            ${PATCHES}
-                            patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
+                            # CMake fixes
+                            patches/Qt5BasicConfig.patch
+                            patches/Qt5PluginTarget.patch
+                            patches/create_cmake.patch
+                            patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
                             patches/limits_include.patch       # Add missing includes to build with gcc 11
                     )
 
@@ -492,14 +479,6 @@ if(VCPKG_TARGET_IS_LINUX)
     file(READ "${_file}" _contents)
     string(REGEX REPLACE "_qt5gui_find_extra_libs\\\(EGL[^\\\n]+" "_qt5gui_find_extra_libs(EGL \"EGL\" \"\" \"\${_qt5Gui_install_prefix}/include\")\n" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
-endif()
-
-if(QT_BUILD_LATEST)
-    file(COPY
-        ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/share/qt5
-    )
 endif()
 
 vcpkg_fixup_pkgconfig()
