@@ -16,7 +16,6 @@ vcpkg_from_github(
         007-guard-nonexisting-targets.patch
         008-plugin-options.patch
         009-build-static-llvm.patch
-        010-avoid-runtime-copy.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
