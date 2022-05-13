@@ -886,7 +886,10 @@ pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
+# Some WError build failure
 pgmath:x64-osx=fail
+# For some reason sometimes flaky in CI. (Not required on UWP any way)
+pgmath:x64-uwp=skip
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail

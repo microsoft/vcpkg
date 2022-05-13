@@ -100,6 +100,17 @@ if("cblas" IN_LIST FEATURES)
 endif()
 vcpkg_fixup_pkgconfig()
 
+set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/lapack.pc") 
+if(EXISTS "${pcfile}")
+    # This means some other port is supplying lapack
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
+endif()
+set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/blas.pc") 
+if(EXISTS "${pcfile}")
+    # This means some other port is supplying blas
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
+endif()
+
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
