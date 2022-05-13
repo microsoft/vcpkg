@@ -222,7 +222,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 8
+      "port-version": 9
     },
     "audiofile": {
       "baseline": "1.1.0",
@@ -466,7 +466,7 @@
     },
     "bitserializer": {
       "baseline": "0.44",
-      "port-version": 0
+      "port-version": 1
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -1689,8 +1689,8 @@
       "port-version": 0
     },
     "crfsuite": {
-      "baseline": "2019-07-21",
-      "port-version": 3
+      "baseline": "2020-08-27",
+      "port-version": 0
     },
     "croncpp": {
       "baseline": "2020-09-04",
@@ -2318,7 +2318,7 @@
     },
     "freealut": {
       "baseline": "1.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "freeglut": {
       "baseline": "3.2.2",
@@ -3522,7 +3522,7 @@
     },
     "libe57": {
       "baseline": "1.1.332",
-      "port-version": 1
+      "port-version": 2
     },
     "libe57format": {
       "baseline": "2.2.0",
