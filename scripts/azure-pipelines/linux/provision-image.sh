@@ -58,7 +58,7 @@ APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
 apt-get -y install $APT_PACKAGES
 
-# Install the latest Haskell stack
+# Install the latest Haskell stack for bond
 curl -sSL https://get.haskellstack.org/ | sh
 
 # Install CUDA
