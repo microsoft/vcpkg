@@ -14,7 +14,7 @@ APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
-  pkg-config meson"
+  pkg-config meson nasm"
 
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
@@ -57,16 +57,6 @@ APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
 apt-get -y install $APT_PACKAGES
-
-# Install newer version of nasm than the apt package, required by intel-ipsec
-mkdir /tmp/nasm
-cd /tmp/nasm
-curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
-tar -xf nasm-2.15.05.tar.gz
-cd nasm-2.15.05/
-./configure --prefix=/usr && make -j
-make install
-cd ~
 
 # Install the latest Haskell stack
 curl -sSL https://get.haskellstack.org/ | sh
