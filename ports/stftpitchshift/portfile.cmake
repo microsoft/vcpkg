@@ -2,8 +2,8 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO jurihock/stftPitchShift
   HEAD_REF main
-  REF e25def2f6aad9db865aded9f0550fd1c7925188f
-  SHA512 a7e9343ede83eb7d37a231e3db80659f8fa7c61c70811618c75a817fcc94902f5fa4582f81e4473a0e137f12c2eaf17025a057a7ef7c4b348451454e39b3fa2f
+  REF v1.4.1
+  SHA512 69e68af5baeb1bbeae440d2b2dc7a510a72b8b49cd9b23e0934eb8070d31c9a2e98759ea6d609f81caa3c57e1615cc50028dd13a9d04e82725a41da79175a868
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +14,16 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/stftpitchshift" RENAME copyright)
+vcpkg_cmake_config_fixup(
+  CONFIG_PATH "lib/cmake/${PORT}"
+)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(
+  INSTALL "${SOURCE_PATH}/LICENSE"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+  RENAME copyright
+)
+
+file(
+  REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+)

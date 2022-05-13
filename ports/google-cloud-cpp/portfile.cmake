@@ -47,7 +47,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils)
+foreach(suffix common googleapis grpc_utils rest_internal)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
