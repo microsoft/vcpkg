@@ -1,27 +1,4 @@
-SET (HDR_LIBLUACPP
-${CMAKE_SOURCE_DIR}/src/lapi.h ${CMAKE_SOURCE_DIR}/src/lauxlib.h ${CMAKE_SOURCE_DIR}/src/lcode.h
-${CMAKE_SOURCE_DIR}/src/lctype.h ${CMAKE_SOURCE_DIR}/src/ldebug.h ${CMAKE_SOURCE_DIR}/src/ldo.h
-${CMAKE_SOURCE_DIR}/src/lfunc.h ${CMAKE_SOURCE_DIR}/src/lgc.h ${CMAKE_SOURCE_DIR}/src/llex.h
-${CMAKE_SOURCE_DIR}/src/llimits.h ${CMAKE_SOURCE_DIR}/src/lmem.h ${CMAKE_SOURCE_DIR}/src/lobject.h
-${CMAKE_SOURCE_DIR}/src/lopcodes.h ${CMAKE_SOURCE_DIR}/src/lparser.h ${CMAKE_SOURCE_DIR}/src/lstate.h
-${CMAKE_SOURCE_DIR}/src/lstring.h ${CMAKE_SOURCE_DIR}/src/ltable.h ${CMAKE_SOURCE_DIR}/src/ltm.h
-${CMAKE_SOURCE_DIR}/src/lua.h ${CMAKE_SOURCE_DIR}/src/luaconf.h ${CMAKE_SOURCE_DIR}/src/lualib.h
-${CMAKE_SOURCE_DIR}/src/lundump.h ${CMAKE_SOURCE_DIR}/src/lvm.h ${CMAKE_SOURCE_DIR}/src/lzio.h
-)
-SET (SRC_LIBLUACPP
-${CMAKE_SOURCE_DIR}/src/lapi.c ${CMAKE_SOURCE_DIR}/src/lauxlib.c ${CMAKE_SOURCE_DIR}/src/lbaselib.c
-${CMAKE_SOURCE_DIR}/src/lcode.c ${CMAKE_SOURCE_DIR}/src/lcorolib.c ${CMAKE_SOURCE_DIR}/src/lctype.c
-${CMAKE_SOURCE_DIR}/src/ldblib.c ${CMAKE_SOURCE_DIR}/src/ldebug.c ${CMAKE_SOURCE_DIR}/src/ldo.c
-${CMAKE_SOURCE_DIR}/src/ldump.c ${CMAKE_SOURCE_DIR}/src/lfunc.c ${CMAKE_SOURCE_DIR}/src/lgc.c
-${CMAKE_SOURCE_DIR}/src/linit.c ${CMAKE_SOURCE_DIR}/src/liolib.c ${CMAKE_SOURCE_DIR}/src/llex.c
-${CMAKE_SOURCE_DIR}/src/lmathlib.c ${CMAKE_SOURCE_DIR}/src/lmem.c ${CMAKE_SOURCE_DIR}/src/loadlib.c
-${CMAKE_SOURCE_DIR}/src/lobject.c ${CMAKE_SOURCE_DIR}/src/lopcodes.c ${CMAKE_SOURCE_DIR}/src/loslib.c
-${CMAKE_SOURCE_DIR}/src/lparser.c ${CMAKE_SOURCE_DIR}/src/lstate.c ${CMAKE_SOURCE_DIR}/src/lstring.c
-${CMAKE_SOURCE_DIR}/src/lstrlib.c ${CMAKE_SOURCE_DIR}/src/ltable.c ${CMAKE_SOURCE_DIR}/src/ltablib.c
-${CMAKE_SOURCE_DIR}/src/ltm.c ${CMAKE_SOURCE_DIR}/src/lundump.c ${CMAKE_SOURCE_DIR}/src/lutf8lib.c
-${CMAKE_SOURCE_DIR}/src/lvm.c ${CMAKE_SOURCE_DIR}/src/lzio.c
-)
-
+SET(SRC_LIBLUACPP ${SRC_LIBLUA})
 ADD_LIBRARY ( lua-cpp ${SRC_LIBLUACPP} ${HDR_LIBLUACPP} )
 SET_TARGET_PROPERTIES(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
 SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUACPP} PROPERTIES LANGUAGE CXX)
@@ -43,9 +20,9 @@ ENDIF ()
 
 INSTALL ( TARGETS lua-cpp
     EXPORT unofficial-lua-cpp-config
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
 )
 
 INSTALL(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
