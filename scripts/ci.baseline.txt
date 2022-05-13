@@ -1025,6 +1025,12 @@ rtlsdr:arm-uwp=fail
 rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 
+# rttr's build fails in CI with
+# D:\buildtrees\rttr\src\v0.9.6-9229bdee1f.clean\src\rttr\detail\library\library_win.cpp(236): error C3861: 'LoadLibraryW': identifier not found
+# .... but it succeeds when I try building it locally.
+rttr:arm-uwp=fail
+rttr:x64-uwp=fail
+
 # ryu does not support VS2022 yet
 ryu:x64-windows=fail
 ryu:x64-windows-static=fail
