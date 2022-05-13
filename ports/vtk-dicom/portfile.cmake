@@ -8,11 +8,10 @@ vcpkg_from_github(
 )
 
 if ("gdcm" IN_LIST FEATURES)
-    set(USE_GDCM                      ON )
+    set(USE_GDCM                      ON)
 else()
-    set(USE_GDCM                      OFF )
+    set(USE_GDCM                      OFF)
 endif()
-
 
 if(USE_GDCM)
     list(APPEND ADDITIONAL_OPTIONS
@@ -20,10 +19,11 @@ if(USE_GDCM)
         -DUSE_DCMTK=OFF
     )
 endif()
+
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -31,9 +31,9 @@ vcpkg_configure_cmake(
         ${ADDITIONAL_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

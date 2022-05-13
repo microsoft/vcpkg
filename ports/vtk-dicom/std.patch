@@ -2,7 +2,12 @@ diff --git a/Source/vtkScancoCTReader.cxx b/Source/vtkScancoCTReader.cxx
 index a71f2e46e..afe202ffc 100644
 --- a/Source/vtkScancoCTReader.cxx	
 +++ b/Source/vtkScancoCTReader.cxx
-@@ -176,7 +176,7 @@ int vtkScancoCTReader::CheckVersion(const char header[16])
+@@ -33,3 +33,4 @@
+ #include <ctype.h>
++#include <cmath>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -176,7 +177,7 @@ int vtkScancoCTReader::CheckVersion(const char header[16])
  //----------------------------------------------------------------------------
  int vtkScancoCTReader::CanReadFile(const char *filename)
  {
@@ -11,7 +16,7 @@ index a71f2e46e..afe202ffc 100644
  
    bool canRead = false;
    if (infile.good())
-@@ -409,7 +409,7 @@ void vtkScancoCTReader::StripString(char *dest, const char *cp, size_t l)
+@@ -409,7 +410,7 @@ void vtkScancoCTReader::StripString(char *dest, const char *cp, size_t l)
  }
  
  //----------------------------------------------------------------------------
@@ -20,7 +25,21 @@ index a71f2e46e..afe202ffc 100644
  {
    if (bytesRead < 512)
    {
-@@ -620,7 +620,7 @@ int vtkScancoCTReader::ReadISQHeader(ifstream *file, unsigned long bytesRead)
+@@ -485,11 +486,11 @@ if (physdim[2] != 0)
+   {
+     double computedSpacing = physdim[2]*1e-3/pixdim[2];
+-    if (fabs(computedSpacing - this->SliceThickness) < 1.1e-3)
++    if (std::fabs(computedSpacing - this->SliceThickness) < 1.1e-3)
+     {
+       this->SliceThickness = computedSpacing;
+     }
+-    if (fabs(computedSpacing - this->SliceIncrement) < 1.1e-3)
++    if (std::fabs(computedSpacing - this->SliceIncrement) < 1.1e-3)
+     {
+       this->SliceIncrement = computedSpacing;
+     }
+   }
+@@ -620,7 +621,7 @@ int vtkScancoCTReader::ReadISQHeader(ifstream *file, unsigned long bytesRead)
  }
  
  //----------------------------------------------------------------------------
@@ -29,7 +48,7 @@ index a71f2e46e..afe202ffc 100644
  {
    if (bytesRead < 160)
    {
-@@ -987,7 +987,7 @@ int vtkScancoCTReader::RequestInformation(
+@@ -987,7 +988,7 @@ int vtkScancoCTReader::RequestInformation(
    const char *ufilename = filename;
  #endif
  
@@ -38,7 +57,7 @@ index a71f2e46e..afe202ffc 100644
    if (!infile.good())
    {
      vtkErrorMacro("Cannot open file " << filename);
-@@ -1115,7 +1115,7 @@ int vtkScancoCTReader::RequestData(
+@@ -1115,7 +1116,7 @@ int vtkScancoCTReader::RequestData(
      static_cast<unsigned char *>(data->GetScalarPointer());
  
    // open the file
