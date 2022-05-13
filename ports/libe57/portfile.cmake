@@ -29,3 +29,5 @@ vcpkg_copy_tools(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/CHANGES.TXT")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/README.TXT")
