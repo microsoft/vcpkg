@@ -1,0 +1,12 @@
+diff --git a/Remoting/Misc/vtkPVEnsembleDataReaderInformation.cxx b/Remoting/Misc/vtkPVEnsembleDataReaderInformation.cxx
+index e7d82d681bb..615fe585df0 100644
+--- a/Remoting/Misc/vtkPVEnsembleDataReaderInformation.cxx
++++ b/Remoting/Misc/vtkPVEnsembleDataReaderInformation.cxx
+@@ -19,6 +19,7 @@
+ #include "vtkObjectFactory.h"
+ 
+ #include <cassert>
++#include <vector>
+ 
+ class vtkPVEnsembleDataReaderInformation::vtkInternal
+ {

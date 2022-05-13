@@ -1,0 +1,406 @@
+diff --git a/VTKExtensions/Core/vtkPVStringFormatter.h b/VTKExtensions/Core/vtkPVStringFormatter.h
+index c9d21dd3345..4b6421fadb3 100644
+--- a/VTKExtensions/Core/vtkPVStringFormatter.h
++++ b/VTKExtensions/Core/vtkPVStringFormatter.h
+@@ -28,6 +28,7 @@
+ #include "vtkLogger.h"
+ #include "vtkObject.h"
+ #include "vtkPVVTKExtensionsCoreModule.h" // needed for export macro
++
+ #include <algorithm>
+ #include <memory>
+ #include <sstream>
+@@ -137,22 +138,230 @@
+   vtkPVStringFormatter(const vtkPVStringFormatter&) = delete;
+   void operator=(const vtkPVStringFormatter&) = delete;
+ 
++  using char_type = fmt::format_context::char_type;
++
++  /**
++   * Implements a named argument
++   */
++  struct vtkNamedArgument
++  {
++    enum class ValueType
++    {
++      // single values
++      NONE,
++      INT,
++      UNSIGNED,
++      LONG_LONG,
++      UNSIGNED_LONG_LONG,
++      BOOL,
++      CHAR,
++      FLOAT,
++      DOUBLE,
++      LONG_DOUBLE,
++      STRING,
++      TIME_POINT,
++      // vector values
++      DOUBLE_VECTOR
++    };
++    struct Value
++    {
++      ValueType Type;
++      union {
++        // single values
++        int Int;
++        unsigned Unsigned;
++        long long LongLong;
++        unsigned long long UnsignedLongLong;
++        bool Bool;
++        char_type Char;
++        float Float;
++        double Double;
++        long double LongDouble;
++        std::basic_string<char_type> String;
++        std::chrono::time_point<std::chrono::system_clock> TimePoint;
++
++        // vector values
++        std::vector<double> DoubleVector;
++      };
++
++      Value()
++        : Type(ValueType::NONE)
++      {
++      }
++
++      Value(int value)
++        : Type(ValueType::INT)
++        , Int(value)
++      {
++      }
++
++      Value(unsigned value)
++        : Type(ValueType::UNSIGNED)
++        , Unsigned(value)
++      {
++      }
++
++      Value(long long value)
++        : Type(ValueType::LONG_LONG)
++        , LongLong(value)
++      {
++      }
++
++      Value(unsigned long long value)
++        : Type(ValueType::UNSIGNED_LONG_LONG)
++        , UnsignedLongLong(value)
++      {
++      }
++
++      Value(bool value)
++        : Type(ValueType::BOOL)
++        , Bool(value)
++      {
++      }
++
++      Value(char_type value)
++        : Type(ValueType::CHAR)
++        , Char(value)
++      {
++      }
++
++      Value(float value)
++        : Type(ValueType::FLOAT)
++        , Float(value)
++      {
++      }
++
++      Value(double value)
++        : Type(ValueType::DOUBLE)
++        , Double(value)
++      {
++      }
++
++      Value(long double value)
++        : Type(ValueType::LONG_DOUBLE)
++        , LongDouble(value)
++      {
++      }
++
++      Value(const char_type* value)
++        : Type(ValueType::STRING)
++        , String(value)
++      {
++      }
++
++      Value(const std::basic_string<char_type>& value)
++        : Type(ValueType::STRING)
++        , String(value)
++      {
++      }
++
++      Value(const std::chrono::time_point<std::chrono::system_clock>& value)
++        : Type(ValueType::TIME_POINT)
++        , TimePoint(value)
++      {
++      }
++
++      Value(const std::vector<double>& values)
++        : Type(ValueType::DOUBLE_VECTOR)
++        , DoubleVector(values)
++      {
++      }
++
++      Value(const Value& value)
++      {
++        this->Type = value.Type;
++        switch (value.Type)
++        {
++          case ValueType::INT:
++            this->Int = value.Int;
++            break;
++          case ValueType::UNSIGNED:
++            this->Unsigned = value.Unsigned;
++            break;
++          case ValueType::LONG_LONG:
++            this->LongLong = value.LongLong;
++            break;
++          case ValueType::UNSIGNED_LONG_LONG:
++            this->UnsignedLongLong = value.UnsignedLongLong;
++            break;
++          case ValueType::BOOL:
++            this->Bool = value.Bool;
++            break;
++          case ValueType::CHAR:
++            this->Char = value.Char;
++            break;
++          case ValueType::FLOAT:
++            this->Float = value.Float;
++            break;
++          case ValueType::DOUBLE:
++            this->Double = value.Double;
++            break;
++          case ValueType::LONG_DOUBLE:
++            this->LongDouble = value.LongDouble;
++            break;
++          case ValueType::STRING:
++            new (&this->String) std::basic_string<char_type>(value.String);
++            break;
++          case ValueType::TIME_POINT:
++            this->TimePoint = value.TimePoint;
++            break;
++          case ValueType::DOUBLE_VECTOR:
++            new (&this->DoubleVector) std::vector<double>(value.DoubleVector);
++            break;
++          default:
++            break;
++        }
++      }
++
++      ~Value()
++      {
++        switch (this->Type)
++        {
++          case ValueType::STRING:
++            this->String.~basic_string();
++            break;
++          case ValueType::DOUBLE_VECTOR:
++            this->DoubleVector.~vector();
++            break;
++          default:
++            break;
++        }
++      }
++    };
++
++    std::basic_string<char_type> Name;
++    Value Value;
++
++    vtkNamedArgument() = default;
++
++    template <typename DataType>
++    vtkNamedArgument(const std::basic_string<char_type>& name, const DataType& value)
++      : Name(name)
++      , Value(value)
++    {
++    }
++
++    ~vtkNamedArgument() = default;
++  };
++
+   /**
+    * Implements a scope of arguments
+    */
+   class vtkArgumentScope
+   {
+   private:
+-    fmt::dynamic_format_arg_store<fmt::format_context> Args;
+-    std::vector<std::string> ArgNames;
++    std::vector<vtkNamedArgument> Arguments;
+ 
+   public:
+     vtkArgumentScope() = default;
+ 
+-    vtkArgumentScope(const vtkArgumentScope& args)
+-      : Args(args.Args)
+-      , ArgNames(args.ArgNames)
++    vtkArgumentScope(const vtkArgumentScope& other)
+     {
++      this->Arguments.reserve(other.Arguments.size());
++      for (const auto& arg : other.Arguments)
++      {
++        this->Arguments.emplace_back(arg);
++      }
+     }
+ 
+     /**
+@@ -160,49 +369,138 @@
+      * If argument already exists, it's ignored.
+      */
+     template <typename T>
+-    void AddArg(const T& namedArg)
++    void AddArg(const fmt::detail::named_arg<char_type, T>& fmtArg)
+     {
+-      std::string argName = namedArg.name;
+-      bool argNotFound =
+-        std::find(this->ArgNames.begin(), this->ArgNames.end(), argName) == this->ArgNames.end();
++      bool argNotFound = std::find_if(this->Arguments.begin(), this->Arguments.end(),
++                           [&fmtArg](const vtkNamedArgument& arg) {
++                             return arg.Name == fmtArg.name;
++                           }) == this->Arguments.end();
+       // if argument was not found
+       if (argNotFound)
+       {
+-        this->Args.push_back(namedArg);
+-        this->ArgNames.push_back(argName);
++        vtkNamedArgument newArg(fmtArg.name, fmtArg.value);
++        this->Arguments.push_back(newArg);
+       }
+       else // else print warning
+       {
+-        vtkLogF(WARNING, "Argument %s already exists. Try to add another one.", argName.c_str());
++        vtkLogF(WARNING, "Argument %s already exists. Try to add another one.", fmtArg.name);
+       }
+     }
+ 
+     /**
+-     * Gets arguments' names.
++     * Gets arguments' info (name and type).
+      */
+-    std::string GetArgInfo() const
++    std::basic_string<char_type> GetArgInfo() const
+     {
+-      std::stringstream argInfo;
+-      for (size_t i = 0; i < this->ArgNames.size(); ++i)
++      std::basic_stringstream<char_type> argInfo;
++      for (const auto& arg : this->Arguments)
+       {
+-        argInfo << "\tName: " << this->ArgNames[i] << "\n";
++        argInfo << "\tName: " << arg.Name;
++        argInfo << "\tType: ";
++        switch (arg.Value.Type)
++        {
++          case vtkNamedArgument::ValueType::INT:
++            argInfo << "int";
++            break;
++          case vtkNamedArgument::ValueType::UNSIGNED:
++            argInfo << "unsigned";
++            break;
++          case vtkNamedArgument::ValueType::LONG_LONG:
++            argInfo << "long long";
++            break;
++          case vtkNamedArgument::ValueType::UNSIGNED_LONG_LONG:
++            argInfo << "unsigned long long";
++            break;
++          case vtkNamedArgument::ValueType::BOOL:
++            argInfo << "bool";
++            break;
++          case vtkNamedArgument::ValueType::CHAR:
++            argInfo << "char";
++            break;
++          case vtkNamedArgument::ValueType::FLOAT:
++            argInfo << "float";
++            break;
++          case vtkNamedArgument::ValueType::DOUBLE:
++            argInfo << "double";
++            break;
++          case vtkNamedArgument::ValueType::LONG_DOUBLE:
++            argInfo << "long double";
++            break;
++          case vtkNamedArgument::ValueType::STRING:
++            argInfo << "std::string";
++            break;
++          case vtkNamedArgument::ValueType::TIME_POINT:
++            argInfo << "std::chrono::time_point<std::chrono::system_clock>";
++            break;
++          case vtkNamedArgument::ValueType::DOUBLE_VECTOR:
++            argInfo << "std::vector<double>";
++            break;
++          default:
++            argInfo << "unknown";
++            break;
++        }
++        argInfo << "\n";
+       }
+       return argInfo.str();
+     }
+ 
+     /**
+-     * Gets arguments
++     * Builds ang Gets dynamic_format_arg_store from arguments.
+      */
+-    const fmt::dynamic_format_arg_store<fmt::format_context>& GetArgs() const { return this->Args; }
++    fmt::dynamic_format_arg_store<fmt::format_context> GetArgs() const
++    {
++      fmt::dynamic_format_arg_store<fmt::format_context> args;
++      for (const auto& arg : this->Arguments)
++      {
++        switch (arg.Value.Type)
++        {
++          case vtkNamedArgument::ValueType::INT:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Int));
++            break;
++          case vtkNamedArgument::ValueType::UNSIGNED:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Unsigned));
++            break;
++          case vtkNamedArgument::ValueType::LONG_LONG:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.LongLong));
++            break;
++          case vtkNamedArgument::ValueType::UNSIGNED_LONG_LONG:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.UnsignedLongLong));
++            break;
++          case vtkNamedArgument::ValueType::BOOL:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Bool));
++            break;
++          case vtkNamedArgument::ValueType::CHAR:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Char));
++            break;
++          case vtkNamedArgument::ValueType::FLOAT:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Float));
++            break;
++          case vtkNamedArgument::ValueType::DOUBLE:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.Double));
++            break;
++          case vtkNamedArgument::ValueType::LONG_DOUBLE:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.LongDouble));
++            break;
++          case vtkNamedArgument::ValueType::STRING:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.String));
++            break;
++          case vtkNamedArgument::ValueType::TIME_POINT:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.TimePoint));
++            break;
++          case vtkNamedArgument::ValueType::DOUBLE_VECTOR:
++            args.push_back(fmt::arg(arg.Name.c_str(), arg.Value.DoubleVector));
++            break;
++          default:
++            break;
++        }
++      }
++      return args;
++    }
+ 
+     /**
+      * Erases all arguments.
+      */
+-    void clear()
+-    {
+-      this->Args.clear();
+-      this->ArgNames.clear();
+-    }
++    void clear() { this->Arguments.clear(); }
+   };
+ 
+   /**
