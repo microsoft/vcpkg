@@ -4,6 +4,7 @@
   "port-version": 4,
   "description": "an easy and intuitive way to use reflection in C++",
   "homepage": "https://github.com/rttrorg/rttr",
+  "license": "MIT",
   "supports": "((static & staticcrt) | (!static & staticcrt) | (!static & !staticcrt)) & (windows | osx | linux)",
   "dependencies": [
     "rapidjson",
