@@ -17,10 +17,12 @@
   ],
   "features": {
     "cpp": {
-      "description": "Builds Lua for C++ linkage"
+      "description": "Builds Lua for C++ linkage",
+      "supports": "!uwp"
     },
     "tools": {
-      "description": "Builds Lua compiler and interpreter"
+      "description": "Builds Lua compiler and interpreter",
+      "supports": "!ios"
     }
   }
 }
