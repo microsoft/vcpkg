@@ -12,6 +12,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_I18n=ON
+        -DWITH_KF5=OFF
 )
 
 vcpkg_cmake_install()
