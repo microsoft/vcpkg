@@ -218,6 +218,8 @@ function(vcpkg_extract_source_archive)
         cmake_path(SET temp_source_path "${temp_dir}")
     else()
         file(GLOB archive_directory "${temp_dir}/*")
+        # Exclude .DS_Store entries created by the finder on macOS
+        list(FILTER archive_directory EXCLUDE REGEX ".*/.DS_Store$")
         # make sure `archive_directory` is only a single file
         if(NOT archive_directory MATCHES ";" AND IS_DIRECTORY "${archive_directory}")
             cmake_path(SET temp_source_path "${archive_directory}")
