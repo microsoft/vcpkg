@@ -31,4 +31,5 @@ vcpkg_configure_cmake(...
 #]===]
 function(x_vcpkg_find_fortran)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "OUT_OPTIONS;OUT_OPTIONS_RELEASE;OUT_OPTIONS_DEBUG" "")
+    set(${arg_OUT_OPTIONS} "-DVCPKG_SETUP_CMAKE_PROGRAM_PATH:BOOL=OFF" PARENT_SCOPE) #  to avoid flang from llvm to be picked up
 endfunction()
