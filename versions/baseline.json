@@ -4018,7 +4018,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 6
+      "port-version": 7
     },
     "libsoundio": {
       "baseline": "2.0.0",
@@ -4258,7 +4258,7 @@
     },
     "llfio": {
       "baseline": "2.0-20220112",
-      "port-version": 0
+      "port-version": 1
     },
     "llgl": {
       "baseline": "2019-08-15",
