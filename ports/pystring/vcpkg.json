@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Pystring is a collection of C++ functions which match the interface and behavior of python's string class methods using std::string",
   "homepage": "https://github.com/imageworks/pystring",
+  "license": "LGPL-2.1",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
