@@ -100,15 +100,16 @@ if("cblas" IN_LIST FEATURES)
 endif()
 vcpkg_fixup_pkgconfig()
 
-set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/lapack.pc") 
-if(EXISTS "${pcfile}")
-    # This means some other port is supplying lapack
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc")
 endif()
-set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/blas.pc") 
-if(EXISTS "${pcfile}")
-    # This means some other port is supplying blas
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
+
+if(NOT "noblas" IN_LIST FEATURES)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
+    endif()
 endif()
 
 # Handle copyright

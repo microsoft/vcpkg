@@ -1,8 +1,8 @@
 prefix=${pcfiledir}/../..
 libdir=${prefix}/lib
 
-Name: LAPACK
-Description: Implementation of LAPACK
+Name: vcpkg-fortran
+Description: Fortran helper pc file
 Version: 
 Requires: @requires@
 Libs: @libs@

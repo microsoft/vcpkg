@@ -1,0 +1,8 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+
+Name: vcpkg-fortran-flang-classic
+Description: Helper for adding required flags for flang-classic. 
+Version: 
+Libs: -L"${libdir}" @libs@
+Cflags: @cflags@
