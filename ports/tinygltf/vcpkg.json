@@ -1,8 +1,10 @@
 {
   "name": "tinygltf",
   "version": "2.5.0",
+  "port-version": 1,
   "description": "A header only C++11 glTF 2.0 library.",
   "homepage": "https://github.com/syoyo/tinygltf",
+  "license": "MIT AND Zlib",
   "dependencies": [
     "nlohmann-json",
     "stb"
