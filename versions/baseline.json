@@ -7026,7 +7026,7 @@
     },
     "tinygltf": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinynpy": {
       "baseline": "1.0.0",
