@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "TagLib Audio Meta-Data Library",
   "homepage": "https://taglib.org/",
-  "license": "LGPL-2.1-or-later OR MPL-1.1",
+  "license": "LGPL-2.1-only OR MPL-1.1",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
