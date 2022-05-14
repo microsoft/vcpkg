@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-7.0.0
-    SHA512 4df480e03dcd85c1c04f93ca55968cf64eb96b4bdb586d9ad3bd1d5ba6d9ec7cca34fefef43d84b921ba74ceaeb48f8ac9d1d1355f2408ebffd2b2a00a3da2bd
+    REF apache-arrow-8.0.0
+    SHA512 08b6ab4a3c5e0dd9c46402da8e7b9ef9f918eea177413cb31695192dfdb5a472ebbfef255b8343fe775d81e8b5eb268c3428a699fac48b36bf808f5b81e83a64
     HEAD_REF master
     PATCHES
         all.patch
