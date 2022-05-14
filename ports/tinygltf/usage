@@ -1,0 +1,12 @@
+tinygltf is header-only and can be used from CMake via:
+
+    find_path(TINYGLTF_INCLUDE_DIR "tiny_gltf.h")
+    target_include_directories(main PRIVATE "${TINYGLTF_INCLUDE_DIR}")
+
+To use RapidJSON instead of the default nlohmann-json, add:
+
+    target_compile_definitions(main PRIVATE TINYGLTF_USE_RAPIDJSON)
+
+To use tinygltf without stb, add:
+
+    target_compile_definitions(main PRIVATE TINYGLTF_NO_STB_IMAGE TINYGLTF_NO_STB_IMAGE_WRITE)

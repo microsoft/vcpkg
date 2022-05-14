@@ -1,0 +1,28 @@
+diff --git a/tiny_gltf.h b/tiny_gltf.h
+index dea6fa3..3b183b2 100644
+--- a/tiny_gltf.h
++++ b/tiny_gltf.h
+@@ -52,6 +52,23 @@
+ #ifndef TINY_GLTF_H_
+ #define TINY_GLTF_H_
+ 
++#cmakedefine VCPKG_TINYGLTF_WITH_DEFAULT_JSON
++#if !defined(TINYGLTF_USE_RAPIDJSON) && !defined(VCPKG_TINYGLTF_WITH_DEFAULT_JSON)
++#  error This configuration requires TINYGLTF_USE_RAPIDJSON.
++#endif
++#cmakedefine VCPKG_TINYGLTF_WITH_RAPIDJSON
++#if defined(TINYGLTF_USE_RAPIDJSON) && !defined(VCPKG_TINYGLTF_WITH_RAPIDJSON)
++#  error TINYGLTF_USE_RAPIDJSON cannot be used for this configuration.
++#endif
++#cmakedefine VCPKG_TINYGLTF_WITH_STB
++#if (!defined(TINYGLTF_NO_STB_IMAGE) || !defined(TINYGLTF_NO_STB_IMAGE_WRITE)) && !defined(VCPKG_TINYGLTF_WITH_STB)
++#  error This configuration requires TINYGLTF_NO_STB_IMAGE and TINYGLTF_NO_STB_IMAGE_WRITE.
++#endif
++#cmakedefine VCPKG_TINYGLTF_WITH_DRACO
++#if defined(TINYGLTF_ENABLE_DRACO) && !defined(VCPKG_TINYGLTF_WITH_DRACO)
++#  error TINYGLTF_ENABLE_DRACO cannot be used for this configuration.
++#endif
++
+ #include <array>
+ #include <cassert>
+ #include <cmath>  // std::fabs

@@ -5,8 +5,34 @@
   "description": "A header only C++11 glTF 2.0 library.",
   "homepage": "https://github.com/syoyo/tinygltf",
   "license": "MIT AND Zlib",
-  "dependencies": [
-    "nlohmann-json",
+  "default-features": [
+    "default-json",
     "stb"
-  ]
+  ],
+  "features": {
+    "default-json": {
+      "description": "The default JSON support, using nlohmann-json.",
+      "dependencies": [
+        "nlohmann-json"
+      ]
+    },
+    "draco": {
+      "description": "Draco support.",
+      "dependencies": [
+        "draco"
+      ]
+    },
+    "rapidjson": {
+      "description": "RapidJSON support.",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "stb": {
+      "description": "The default image support, using stb.",
+      "dependencies": [
+        "stb"
+      ]
+    }
+  }
 }
