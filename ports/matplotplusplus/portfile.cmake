@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
-    REF 8dbea7d359f7b4f456bca7a6015c32b61ad728f4 # 2022-05-04
-    SHA512 b09592e7ff6dc4eddf01df549166b6246992257c253f709ce5bece4cf1e09a6e2ab562c1da77925ce270e6c9beb16a1498d8a0e52af1fb951596ade5cb13c057
+    REF 36d8dc6c3b94b7a71c4f129763f2c6ad8fc0b54a
+    SHA512 ac8902e953a2a9f6bd62e14e2eb0bd42e407bae6c0b2921ad16ce547e4921ba2c8d8a9cc68e75831676dce3cd89cdf8294862710e838510b68e20f8a6cdf806f
     HEAD_REF master
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
