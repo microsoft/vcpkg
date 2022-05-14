@@ -150,6 +150,8 @@ if("openmp" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
+    # Skip post-build check
+    set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
