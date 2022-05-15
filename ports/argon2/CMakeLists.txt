@@ -4,6 +4,7 @@ project(argon2)
 enable_testing()
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+option(OPTIMIZATIONS "Build with optimizations" OFF)
 
 find_package(Threads REQUIRED)
 link_libraries(Threads::Threads)
@@ -18,16 +19,22 @@ set (ARGON2_SRC
     "src/encoding.c"
     )
 
-set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+if (OPTIMIZATIONS)
+    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-message(STATUS "Checking support for hardware optimization:")
-try_compile(WITH_OPTIMIZATIONS
-    ${CMAKE_CURRENT_BINARY_DIR}/optimization
-    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/opt.c
-    CMAKE_FLAGS -DINCLUDE_DIRECTORIES=${CMAKE_CURRENT_SOURCE_DIR}/include
-    OUTPUT_VARIABLE OUTPUT_TEST_SUPPORT_OPTIMIZATION)
+    message(STATUS "Checking support for hardware optimization:")
+    try_compile(WITH_OPTIMIZATIONS
+        ${CMAKE_CURRENT_BINARY_DIR}/optimization
+        SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/opt.c
+        CMAKE_FLAGS -DINCLUDE_DIRECTORIES=${CMAKE_CURRENT_SOURCE_DIR}/include
+        OUTPUT_VARIABLE OUTPUT_TEST_SUPPORT_OPTIMIZATION)
 
-message(STATUS "Build with hardware optimization? ${WITH_OPTIMIZATIONS}")
+    message(STATUS "Build with hardware optimization? ${WITH_OPTIMIZATIONS}")
+
+else (OPTIMIZATIONS)
+    set(WITH_OPTIMIZATIONS FALSE)
+endif()
+
 if (WITH_OPTIMIZATIONS)
     list(APPEND ARGON2_SRC "src/opt.c")
 else()
