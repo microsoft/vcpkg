@@ -1,6 +1,6 @@
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -91,7 +91,7
+@@ -91,7 +91,7 @@
      message("Will be vendored: stb")
      target_include_directories(${PROJECT_NAME} PRIVATE "vendor/")
  elseif(LIBTCOD_STB STREQUAL "vcpkg")
