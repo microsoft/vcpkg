@@ -1,7 +1,5 @@
 # Random123 - Header-only library
 
-include(vcpkg_common_functions)
-
 set(VERSION 1.14.0)
 
 vcpkg_download_distfile( 
