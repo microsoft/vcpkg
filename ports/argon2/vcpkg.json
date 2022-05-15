@@ -3,5 +3,10 @@
   "version": "20210625",
   "port-version": 0,
   "description": "Password-hashing library.",
-  "homepage": "https://github.com/P-H-C/phc-winner-argon2"
+  "homepage": "https://github.com/P-H-C/phc-winner-argon2",
+  "features": {
+    "hwopt": {
+      "description": "Enable SSE2/AVX2/AVX512 optimizations if supported on architecture"
+    }
+  }
 }
