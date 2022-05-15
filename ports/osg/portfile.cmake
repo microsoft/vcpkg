@@ -43,9 +43,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
+        collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
-    INVERTED_FEATURES
-        collada     CMAKE_DISABLE_FIND_PACKAGE_COLLADA
 )
 
 set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE ON)
