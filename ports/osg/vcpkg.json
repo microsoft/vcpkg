@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 12,
+  "port-version": 13,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
   "dependencies": [
@@ -17,6 +17,10 @@
     {
       "name": "openimageio",
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     },
     "zlib"
   ],
