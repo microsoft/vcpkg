@@ -15,7 +15,7 @@ vcpkg_from_github(
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
-        fix-nvtt.patch
+        fix-nvtt-squish.patch
         use-boost-asio.patch
         fix-dependency-coin.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
@@ -34,13 +34,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_TEXT_USE_FONTCONFIG=OFF)
 endif()
 
-# Due to nvtt CRT linkage error, we can only enable static builds here
-set(ENABLE_NVTT ON)
-if (VCPKG_TARGET_IS_WINDOWS AND OSG_DYNAMIC)
-    set(ENABLE_NVTT OFF)
-endif()
-list(APPEND OPTIONS -DENABLE_NVTT=${ENABLE_NVTT})
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       BUILD_OSG_APPLICATIONS
@@ -50,6 +43,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
+        nvtt        BUILD_OSG_PLUGIN_NVTT
     INVERTED_FEATURES
         collada     CMAKE_DISABLE_FIND_PACKAGE_COLLADA
 )

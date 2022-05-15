@@ -25,6 +25,7 @@
     "zlib"
   ],
   "default-features": [
+    "default-features",
     "plugins"
   ],
   "features": {
@@ -32,6 +33,19 @@
       "description": "Support for Collada (.dae) files",
       "dependencies": [
         "collada-dom"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "nvtt"
+          ],
+          "platform": "!x86 & !(windows & arm64) & !uwp"
+        }
       ]
     },
     "docs": {
@@ -47,6 +61,12 @@
         },
         "sdl1",
         "sdl2"
+      ]
+    },
+    "nvtt": {
+      "description": "Build texture processing tools plugin",
+      "dependencies": [
+        "nvtt"
       ]
     },
     "packages": {
@@ -104,10 +124,6 @@
         {
           "name": "libxml2",
           "platform": "windows"
-        },
-        {
-          "name": "nvtt",
-          "platform": "!x86"
         },
         "openexr",
         "sdl1",
