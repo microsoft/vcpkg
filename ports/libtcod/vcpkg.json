@@ -6,6 +6,7 @@
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
   "documentation": "https://libtcod.readthedocs.io/en/latest/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "glad",
     "lodepng-c",
