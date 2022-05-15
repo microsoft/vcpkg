@@ -6793,8 +6793,8 @@
       "port-version": 1
     },
     "stb": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "2021-09-10",
+      "port-version": 0
     },
     "stftpitchshift": {
       "baseline": "1.4.1",
