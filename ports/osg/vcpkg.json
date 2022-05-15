@@ -24,6 +24,9 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "plugins"
+  ],
   "features": {
     "collada": {
       "description": "Support for Collada (.dae) files",

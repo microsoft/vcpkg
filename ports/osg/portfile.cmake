@@ -45,7 +45,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       BUILD_OSG_APPLICATIONS
         examples    BUILD_OSG_EXAMPLES
-        plugins     BUILD_OSG_PLUGINS
+        plugins     BUILD_OSG_PLUGINS_BY_DEFAULT
         packages    BUILD_OSG_PACKAGES
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
