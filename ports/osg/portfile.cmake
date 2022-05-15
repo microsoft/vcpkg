@@ -47,12 +47,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         freetype    BUILD_OSG_PLUGIN_FREETYPE
         collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
+        rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
 )
-
-set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE ON)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE OFF)
-endif()
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
 # Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3, and GLES2+GLES3
@@ -76,7 +72,6 @@ vcpkg_cmake_configure(
         -DBUILD_OSG_PLUGIN_VNC=OFF
         -DBUILD_OSG_PLUGIN_LUA=OFF
         -DOPENGL_PROFILE=${osg_OPENGL_PROFILE}
-        -DBUILD_OSG_PLUGIN_RESTHTTPDEVICE=${BUILD_OSG_PLUGIN_RESTHTTPDEVICE}
         -DBUILD_OSG_PLUGIN_ZEROCONFDEVICE=OFF
         -DBUILD_DASHBOARD_REPORTS=OFF
         -DCMAKE_CXX_STANDARD=11

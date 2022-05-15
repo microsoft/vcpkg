@@ -39,6 +39,14 @@
           "name": "osg",
           "default-features": false,
           "features": [
+            "rest-http-device"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
             "fontconfig"
           ],
           "platform": "!android & !ios & !uwp"
@@ -108,34 +116,6 @@
     "plugins": {
       "description": "Build OSG Plugins - Disable for compile testing examples on a time limit",
       "dependencies": [
-        {
-          "name": "boost-asio",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-bind",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-core",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-lexical-cast",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-logic",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-smart-ptr",
-          "platform": "!windows"
-        },
-        {
-          "name": "boost-tuple",
-          "platform": "!windows"
-        },
         "coin",
         "curl",
         "gdal",
@@ -160,6 +140,20 @@
         "openexr",
         "sdl1",
         "tiff"
+      ]
+    },
+    "rest-http-device": {
+      "description": "Build RestHttpDevice plugin",
+      "supports": "!windows",
+      "dependencies": [
+        "boost-array",
+        "boost-asio",
+        "boost-bind",
+        "boost-core",
+        "boost-lexical-cast",
+        "boost-logic",
+        "boost-smart-ptr",
+        "boost-tuple"
       ]
     },
     "tools": {
