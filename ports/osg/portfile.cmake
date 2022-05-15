@@ -9,9 +9,7 @@ vcpkg_from_github(
     PATCHES
         link-libraries.patch
         collada.patch
-        static.patch
         fix-sdl.patch
-        fix-curl.patch
         fix-nvtt-squish.patch
         plugin-pdb-install.patch
         use-boost-asio.patch
