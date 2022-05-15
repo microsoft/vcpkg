@@ -9,10 +9,6 @@
       "name": "expat",
       "platform": "windows"
     },
-    {
-      "name": "fontconfig",
-      "platform": "!windows"
-    },
     "opengl-registry",
     {
       "name": "openimageio",
@@ -42,6 +38,14 @@
           "name": "osg",
           "default-features": false,
           "features": [
+            "fontconfig"
+          ],
+          "platform": "!android & !ios & !uwp"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
             "nvtt"
           ],
           "platform": "!x86 & !(windows & arm64) & !uwp"
@@ -61,6 +65,12 @@
         },
         "sdl1",
         "sdl2"
+      ]
+    },
+    "fontconfig": {
+      "description": "Enable Fontconfig support for osgText",
+      "dependencies": [
+        "fontconfig"
       ]
     },
     "nvtt": {

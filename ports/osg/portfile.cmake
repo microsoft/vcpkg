@@ -22,6 +22,7 @@ vcpkg_from_github(
 )
 
 file(REMOVE
+    "${SOURCE_PATH}/CMakeModules/FindFontconfig.cmake"
     "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake"
 )
 
@@ -30,8 +31,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OSG_DYNAMIC)
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
-    list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_FONTCONFIG=ON)
-    list(APPEND OPTIONS -DOSG_TEXT_USE_FONTCONFIG=OFF)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -43,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
+        fontconfig  OSG_TEXT_USE_FONTCONFIG
         collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
 )
