@@ -78,7 +78,6 @@
             "freetype"
           ]
         },
-        "sdl1",
         "sdl2"
       ]
     },
@@ -136,7 +135,6 @@
           "platform": "windows"
         },
         "openexr",
-        "sdl1",
         "tiff"
       ]
     },
@@ -152,6 +150,12 @@
         "boost-logic",
         "boost-smart-ptr",
         "boost-tuple"
+      ]
+    },
+    "sdl1": {
+      "description": "Build SDL 1 plugin, and enable SDL 1 app features",
+      "dependencies": [
+        "sdl1"
       ]
     },
     "tools": {
@@ -170,8 +174,7 @@
           "features": [
             "freetype"
           ]
-        },
-        "sdl1"
+        }
       ]
     }
   }

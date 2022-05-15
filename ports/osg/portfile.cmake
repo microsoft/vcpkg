@@ -46,6 +46,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
+        sdl         BUILD_OSG_PLUGIN_SDL
+    INVERTED_FEATURES
+        sdl         CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
@@ -79,7 +82,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         BUILD_REF_DOCS_SEARCHENGINE
