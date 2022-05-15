@@ -14,6 +14,7 @@ vcpkg_from_github(
         plugin-pdb-install.patch
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
+        unofficial-export.patch
 )
 
 file(REMOVE
@@ -91,6 +92,8 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-osg-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/unofficial-osg-config.cmake" @ONLY)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
 
 # handle osg tools and plugins
 set(OSG_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
