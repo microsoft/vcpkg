@@ -10,7 +10,7 @@ endif()
 
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(lapack_ver 3.10.0)
+set(lapack_ver 3.10.1)
 
 x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
                      OUT_OPTIONS_RELEASE Fortran_opts_rel 
@@ -24,7 +24,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${lapack_ver}"
-    SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
+    SHA512 0500bbbb48483208c0a35b74972ff0059c389da6032824a2079637266a99fa980882eedf7f1fc490219ee4ff27812ac8c6afe118e25f40a9c2387e7b997762fb
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -46,6 +46,11 @@ if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)
 endif()
 
+# Python3 for testing summary. 
+#vcpkg_find_acquire_program(PYTHON3)
+#get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+#vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -55,6 +60,8 @@ vcpkg_cmake_configure(
         "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
         ${Fortran_opts}
+        #"-DBUILD_TESTING:BOOL=ON"
+        #"-DPYTHON_EXECUTABLE=${PYTHON3}"
     OPTIONS_DEBUG ${Fortran_opts_rel}
     OPTIONS_RELEASE ${Fortran_opts_dbg}
 )
