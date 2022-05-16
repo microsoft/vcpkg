@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(argon2)
 enable_testing()
 
-set(ARGON2_VERSION 20210625)
+set(ARGON2_VERSION 20190702)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(OPTIMIZATIONS "Build with optimizations" OFF)
