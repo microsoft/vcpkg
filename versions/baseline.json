@@ -2721,7 +2721,7 @@
       "port-version": 1
     },
     "halide": {
-      "baseline": "13.0.2",
+      "baseline": "14.0.0",
       "port-version": 0
     },
     "happly": {
@@ -4265,8 +4265,8 @@
       "port-version": 2
     },
     "llvm": {
-      "baseline": "13.0.0",
-      "port-version": 5
+      "baseline": "14.0.3",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -4469,8 +4469,8 @@
       "port-version": 2
     },
     "mesa": {
-      "baseline": "21.2.5",
-      "port-version": 4
+      "baseline": "22.0.2",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
