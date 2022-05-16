@@ -52,6 +52,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation BOTAN_AMALGAMATION
+        zlib BOTAN_WITH_ZLIB
 )
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
@@ -93,6 +94,11 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
         list(APPEND configure_arguments --amalgamation)
+    endif()
+    if("-DBOTAN_WITH_ZLIB=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --with-zlib)
+        list(APPEND configure_arguments --with-external-includedir="${CURRENT_INSTALLED_DIR}/include")
+        list(APPEND configure_arguments --with-external-libdir="${CURRENT_INSTALLED_DIR}/lib")
     endif()
 
     vcpkg_execute_required_process(
@@ -146,6 +152,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         [[${prefix}/include]]
     )
 endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc")

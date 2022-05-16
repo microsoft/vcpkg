@@ -2,12 +2,13 @@ diff --git a/CMake/FindLZMA.cmake b/CMake/FindLZMA.cmake
 index 0c8c794..796558c 100644
 --- a/CMake/FindLZMA.cmake
 +++ b/CMake/FindLZMA.cmake
-@@ -1,3 +1,10 @@
+@@ -1,3 +1,11 @@
 +find_package(LibLZMA)
 +set(LZMA_INCLUDE_DIR "${LIBLZMA_INCLUDE_DIR}" CACHE INTERNAL "")
 +set(LZMA_LIBRARY "${LIBLZMA_LIBRARIES}" CACHE INTERNAL "")
 +if(NOT TARGET LZMA::LZMA)
-+  add_library(LZMA::LZMA ALIAS LibLZMA::LibLZMA)
++  add_library(LZMA::LZMA INTERFACE IMPORTED)
++  target_link_libraries(LZMA::LZMA INTERFACE LibLZMA::LibLZMA)
 +endif()
 +
  find_path(LZMA_INCLUDE_DIR

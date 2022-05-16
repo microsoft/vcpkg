@@ -35,6 +35,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND _PYTHON_PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/007-fix-build-path.patch
     )
+else()
+    list(APPEND _PYTHON_PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/008-bz2d.patch
+    )
 endif()
 
 
@@ -87,8 +91,60 @@ else()
     )
     
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(lib_suffix IN ITEMS "" "/debug")
+        set(python_config_file "${CURRENT_PACKAGES_DIR}${lib_suffix}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata.py")
+        if(NOT EXISTS "${python_config_file}")
+            continue()
+        endif()
+        
+        file(READ "${python_config_file}" contents)
+
+        string(PREPEND contents "import os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
+        # make contents a list of lines
+        string(REPLACE ";" "\\;" old_contents "${contents}")
+        string(REGEX REPLACE "\r?\n" ";" old_contents "${contents}")
+
+        set(new_contents "")
+        foreach(line IN LISTS old_contents)
+            if(line MATCHES "\"")
+                string(REGEX REPLACE
+                    "${CURRENT_PACKAGES_DIR}|${CURRENT_INSTALLED_DIR}"
+                    "\" + _base + \""
+                    line
+                    "${line}"
+                )
+                string(REGEX REPLACE
+                    "\"[^\"]*${CURRENT_BUILDTREES_DIR}[^\"]*\""
+                    "''"
+                    line
+                    "${line}"
+                )
+            else()
+                string(REGEX REPLACE
+                    "${CURRENT_PACKAGES_DIR}|${CURRENT_INSTALLED_DIR}"
+                    "' + _base + '"
+                    line
+                    "${line}"
+                )
+                string(REGEX REPLACE
+                    "'[^']*${CURRENT_BUILDTREES_DIR}[^']*'"
+                    "''"
+                    line
+                    "${line}"
+                )
+            endif()
+            list(APPEND new_contents "${line}")
+        endforeach()
+
+        list(JOIN new_contents "\n" contents)
+        file(WRITE "${python_config_file}" "${contents}")
+    endforeach()
 endif()
 
 # Handle copyright

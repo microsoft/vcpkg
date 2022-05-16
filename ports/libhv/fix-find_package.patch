@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd9d1c3..e707884 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,7 +112,10 @@ endif()
+ 
+ if(WITH_OPENSSL)
+     add_definitions(-DWITH_OPENSSL)
+-    set(LIBS ${LIBS} ssl crypto)
++    find_package(OpenSSL REQUIRED)
++    if(OpenSSL_FOUND)    
++        set(LIBS ${LIBS} OpenSSL::SSL OpenSSL::Crypto)
++    endif()
+ endif()
+ 
+ if(WITH_GNUTLS)
+@@ -197,6 +200,7 @@ if(BUILD_STATIC)
+     add_library(hv_static STATIC ${LIBHV_SRCS})
+     target_compile_definitions(hv_static PRIVATE HV_STATICLIB)
+     target_include_directories(hv_static PRIVATE ${LIBHV_SRCDIRS})
++    target_link_libraries(hv_static ${LIBS})
+     install(TARGETS hv_static DESTINATION lib)
+     add_custom_target(libhv_static DEPENDS hv_static)
+ endif()
