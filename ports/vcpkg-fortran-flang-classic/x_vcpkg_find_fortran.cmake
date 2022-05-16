@@ -105,14 +105,14 @@ function(x_vcpkg_find_fortran)
                 "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname} ${flang_link_default_lib}"
                 "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
                 "-DCMAKE_STATIC_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${arch_flag} -Mreentrant -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${extra_uwp_flags}"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${arch_flag} -Mrecursive -nomp -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${extra_uwp_flags}"
                 #"-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
                 )
             vcpkg_list(APPEND additional_cmake_args_dbg
                 "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flangmainlibname} ${flang_link_default_lib}"
                 "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
                 "-DCMAKE_STATIC_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${arch_flag} -Mreentrant -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${extra_uwp_flags}"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${arch_flag} -Mrecursive -nomp -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${extra_uwp_flags}"
                 #"-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
                 )
             set(Z_VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")
