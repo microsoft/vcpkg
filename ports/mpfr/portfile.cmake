@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES 
-        gmpd.patch
         dll.patch
         src-only.patch
 )
@@ -27,10 +26,6 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 vcpkg_copy_pdbs()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mpfr.pc" AND VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mpfr.pc" " -lgmp" " -lgmpd")
-endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
