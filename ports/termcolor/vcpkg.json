@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "description": "Termcolor is a header-only C++ library for printing colored messages to the terminal.",
   "homepage": "https://github.com/ikalnytskyi/termcolor",
-  "license": null,
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
