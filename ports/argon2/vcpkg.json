@@ -1,7 +1,6 @@
 {
   "name": "argon2",
-  "version": "20210625",
-  "port-version": 0,
+  "version": "20190702",
   "description": "Password-hashing library.",
   "homepage": "https://github.com/P-H-C/phc-winner-argon2",
   "features": {
