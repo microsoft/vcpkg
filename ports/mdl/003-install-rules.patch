@@ -123,10 +123,18 @@ index 246303d..28934b4 100644
 +    TYPE      INCLUDE
 +)
 diff --git a/src/prod/lib/mdl_core/CMakeLists.txt b/src/prod/lib/mdl_core/CMakeLists.txt
-index b60a1fc..9d904a2 100644
+index b60a1fc..3c3d2f4 100644
 --- a/src/prod/lib/mdl_core/CMakeLists.txt
 +++ b/src/prod/lib/mdl_core/CMakeLists.txt
-@@ -45,6 +45,7 @@ create_from_base_preset(
+@@ -42,9 +42,15 @@ create_from_base_preset(
+     EMBED_RC "mdl_core.rc"
+     )
+ 
++target_include_directories(${PROJECT_NAME}
++    PUBLIC
++        $<INSTALL_INTERFACE:include>
++)
++
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
  set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_core")
@@ -135,10 +143,18 @@ index b60a1fc..9d904a2 100644
  if(MACOSX)
      set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".so") # corresponding to the binary release
 diff --git a/src/prod/lib/mdl_sdk/CMakeLists.txt b/src/prod/lib/mdl_sdk/CMakeLists.txt
-index 6ddfc24..656d8d4 100644
+index 6ddfc24..51c84e7 100644
 --- a/src/prod/lib/mdl_sdk/CMakeLists.txt
 +++ b/src/prod/lib/mdl_sdk/CMakeLists.txt
-@@ -47,6 +47,7 @@ create_from_base_preset(
+@@ -44,9 +44,15 @@ create_from_base_preset(
+     EMBED_RC "mdl_sdk.rc"
+     )
+ 
++target_include_directories(${PROJECT_NAME}
++    PUBLIC
++        $<INSTALL_INTERFACE:include>
++)
++
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
  set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_sdk")
