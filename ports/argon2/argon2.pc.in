@@ -7,5 +7,6 @@ Name: argon2
 Description: The password hash Argon2, winner of PHC
 Version: @ARGON2_VERSION@
 
-Libs: -L${libdir} -largon2 @CMAKE_THREAD_LIBS_INIT@
+Libs: -L${libdir} -largon2
+Libs.private: @CMAKE_THREAD_LIBS_INIT@
 Cflags: -I${includedir}
