@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF f57e61e19229e23c4445b85494dbf7c07de721cb
     SHA512 5a964b31613141424c65eef57f9e26ac5279b72d9c2f2b8cba9bb1fbf484e177183e7fe66700f10dc290e6f55f0a5dfff40235a9714d8d84d807cf5fa07cf7d4
     HEAD_REF master
+    PATCHES
+        visibility.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION  "${SOURCE_PATH}")
