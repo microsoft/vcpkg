@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-sdl.patch
         fix-curl.patch
         fix-nvtt-squish.patch
+        plugin-pdb-install.patch
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
 )
