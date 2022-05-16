@@ -5145,7 +5145,7 @@
       "port-version": 4
     },
     "openjpeg": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "openmama": {
