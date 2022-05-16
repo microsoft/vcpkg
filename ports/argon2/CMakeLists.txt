@@ -42,6 +42,7 @@ else()
 endif()
 
 add_library(argon2 ${ARGON2_SRC})
+target_compile_definitions(argon2 PUBLIC "A2_VISCTL")
 
 set(ARGON2_HEADERS
     include/argon2.h
