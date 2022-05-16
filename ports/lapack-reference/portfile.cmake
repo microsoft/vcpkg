@@ -27,6 +27,7 @@ vcpkg_from_github(
     SHA512 0500bbbb48483208c0a35b74972ff0059c389da6032824a2079637266a99fa980882eedf7f1fc490219ee4ff27812ac8c6afe118e25f40a9c2387e7b997762fb
     HEAD_REF master
     PATCHES ${PATCHES}
+            lapacke.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
