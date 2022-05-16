@@ -1,8 +1,9 @@
 {
   "name": "boost-beast",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost beast module",
   "homepage": "https://github.com/boostorg/beast",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-asio",
