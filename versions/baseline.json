@@ -6290,7 +6290,7 @@
     },
     "rttr": {
       "baseline": "0.9.6",
-      "port-version": 3
+      "port-version": 4
     },
     "rxcpp": {
       "baseline": "4.1.0",
