@@ -7,15 +7,15 @@
   "dependencies": [
     {
       "name": "vcpkg-fortran-flang-classic",
-      "platform": "(windows & !mingw) & (arm64)"
+      "platform": "(windows & !mingw) & arm64"
     },
     {
       "name": "vcpkg-fortran-ifort",
-      "platform": "(windows & !mingw) & (x86|x64)"
+      "platform": "(windows & !mingw) & (x86 | x64)"
     },
     {
       "name": "vcpkg-ifort-libs",
-      "platform": "(windows & !mingw) & (x86|x64)"
+      "platform": "(windows & !mingw) & (x86 | x64)"
     }
   ]
 }
