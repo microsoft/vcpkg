@@ -6,6 +6,11 @@ enable_testing()
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(OPTIMIZATIONS "Build with optimizations" OFF)
 
+if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+endif()
+
 find_package(Threads REQUIRED)
 link_libraries(Threads::Threads)
 
