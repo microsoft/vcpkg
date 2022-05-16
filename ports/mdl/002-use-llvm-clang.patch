@@ -1,0 +1,132 @@
+diff --git a/cmake/tools/add_clang.cmake b/cmake/tools/add_clang.cmake
+index 019a7d7..460903f 100644
+--- a/cmake/tools/add_clang.cmake
++++ b/cmake/tools/add_clang.cmake
+@@ -32,6 +32,12 @@
+     # - TARGET_ADD_TOOL_DEPENDENCY_TOOL
+ # -------------------------------------------------------------------------------------------------
+ 
++if(NOT TARGET clang)
++    MESSAGE(FATAL_ERROR "The tool dependency \"${TARGET_ADD_TOOL_DEPENDENCY_TOOL}\" for target \"${TARGET_ADD_TOOL_DEPENDENCY_TARGET}\" could not be resolved: CMake target `clang` does not exists.")
++endif()
++
++return()
++
+ # use a default fallback
+ find_program(clang_PATH clang)
+ if(NOT clang_PATH)
+diff --git a/examples/mdl_sdk/optix7/CMakeLists.txt b/examples/mdl_sdk/optix7/CMakeLists.txt
+index cc82f3b..64580a4 100644
+--- a/examples/mdl_sdk/optix7/CMakeLists.txt
++++ b/examples/mdl_sdk/optix7/CMakeLists.txt
+@@ -103,7 +103,7 @@ add_custom_command(
+         optix7_mdl_closest_hit_radiance.d
+         optix7_mdl_closest_hit_radiance.bc
+     COMMAND ${CMAKE_COMMAND} -E echo "Compile optix7_mdl_closest_hit_radiance bytecode using clang..."
+-    COMMAND ${clang_PATH}
++    COMMAND $<TARGET_FILE:clang>
+         -I ${OPTIX7_DIR}/include -I ${MDL_INCLUDE_FOLDER}
+         -I ${CMAKE_CURRENT_SOURCE_DIR}/../shared
+         ${_CLANG_FLAGS}
+diff --git a/src/mdl/jit/libbsdf/CMakeLists.txt b/src/mdl/jit/libbsdf/CMakeLists.txt
+index 4e2d703..053f472 100644
+--- a/src/mdl/jit/libbsdf/CMakeLists.txt
++++ b/src/mdl/jit/libbsdf/CMakeLists.txt
+@@ -103,12 +103,12 @@ foreach(HS ${DF_HANDLE_SLOT_MODES})
+             ${_GENERATED_DIR}/libbsdf_${HS}.ll
+         COMMAND ${CMAKE_COMMAND} -E echo "Compile libbsdf_${HS} bytecode using clang ..."
+         COMMAND ${CMAKE_COMMAND} -E make_directory ${_GENERATED_DIR}
+-        COMMAND ${clang_PATH} 
++        COMMAND $<TARGET_FILE:clang> 
+             -emit-llvm -c -O3 -ffast-math -fno-vectorize -Wuninitialized -Wconditional-uninitialized -target nvptx-pc-cuda-gnu ${CLANG_FLAGS_EX} ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
+             -o ${_GENERATED_DIR}/libbsdf_${HS}.bc -MD -MT ${_GENERATED_DIR}/libbsdf_${HS}.bc -MP -MF ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp
+         COMMAND ${CMAKE_COMMAND} -E copy ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp ${_GENERATED_DIR}/libbsdf_${HS}.d
+         COMMAND ${CMAKE_COMMAND} -E remove ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp
+-        COMMAND ${clang_PATH} 
++        COMMAND $<TARGET_FILE:clang> 
+             -emit-llvm -S -O3 -ffast-math -fno-vectorize -Wuninitialized -Wconditional-uninitialized -target nvptx-pc-cuda-gnu ${CLANG_FLAGS_EX} ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
+             -o ${_GENERATED_DIR}/libbsdf_${HS}.ll
+         DEPENDS
+diff --git a/src/mdl/jit/libmdlrt/CMakeLists.txt b/src/mdl/jit/libmdlrt/CMakeLists.txt
+index 5e46f56..fa8b69b 100644
+--- a/src/mdl/jit/libmdlrt/CMakeLists.txt
++++ b/src/mdl/jit/libmdlrt/CMakeLists.txt
+@@ -88,12 +88,12 @@ add_custom_command(
+         ${_GENERATED_DIR}/libmdlrt.ll
+     COMMAND ${CMAKE_COMMAND} -E echo "Compile libmdlrt bytecode using clang ..."
+     COMMAND ${CMAKE_COMMAND} -E make_directory ${_GENERATED_DIR}
+-    COMMAND ${clang_PATH} 
++    COMMAND $<TARGET_FILE:clang> 
+         -emit-llvm -c -O3 -ffast-math -fno-vectorize -target nvptx-pc-cuda-gnu ${CMAKE_CURRENT_SOURCE_DIR}/libmdlrt.cpp
+         -o ${_GENERATED_DIR}/libmdlrt.bc -MD -MT ${_GENERATED_DIR}/libmdlrt.bc -MP -MF ${_GENERATED_DIR}/libmdlrt.d.tmp
+     COMMAND ${CMAKE_COMMAND} -E copy ${_GENERATED_DIR}/libmdlrt.d.tmp ${_GENERATED_DIR}/libmdlrt.d
+     COMMAND ${CMAKE_COMMAND} -E remove ${_GENERATED_DIR}/libmdlrt.d.tmp
+-    COMMAND ${clang_PATH} 
++    COMMAND $<TARGET_FILE:clang> 
+         -emit-llvm -S -O3 -ffast-math -fno-vectorize -target nvptx-pc-cuda-gnu ${CMAKE_CURRENT_SOURCE_DIR}/libmdlrt.cpp
+         -o ${_GENERATED_DIR}/libmdlrt.ll
+     DEPENDS     
+diff --git a/src/mdl/jit/llvm/CMakeLists.txt b/src/mdl/jit/llvm/CMakeLists.txt
+index a1a38d5..119ce55 100644
+--- a/src/mdl/jit/llvm/CMakeLists.txt
++++ b/src/mdl/jit/llvm/CMakeLists.txt
+@@ -121,8 +121,10 @@ option(LLVM_INCLUDE_TESTS "Generate build targets for the LLVM unit tests." OFF)
+ option(LLVM_INCLUDE_GO_TESTS "Include the Go bindings tests in test build targets." OFF)
+ option(LLVM_INCLUDE_EXAMPLES "Generate build targets for the LLVM examples" OFF)
+ option(LLVM_INCLUDE_DOCS "Generate build targets for llvm documentation." OFF)
+-option(LLVM_INCLUDE_TOOLS "Generate build targets for the LLVM tools." OFF)
++option(LLVM_INCLUDE_TOOLS "Generate build targets for the LLVM tools." ON)
+ option(LLVM_BUILD_TOOLS "Build the LLVM tools. If OFF, just generate build targets." OFF)
++option(LLVM_TOOL_CLANG_BUILD "Whether to build clang as part of LLVM" ON)
++option(CLANG_TOOL_DRIVER_BUILD "Whether to build driver as part of CLANG" ON)
+ option(LLVM_BUILD_UTILS "Build the LLVM tools. If OFF, just generate build targets." OFF)
+ option(LLVM_ENABLE_BINDINGS "Build bindings." OFF)
+ option(LLVM_ENABLE_LIBEDIT "Use libedit if available." OFF)
+@@ -394,6 +396,7 @@ add_custom_command(
+         ${CMAKE_CURRENT_BINARY_DIR}/llvm.d
+     DEPENDS 
+         ${_LLVM_LIB_NAMES}
++        clang
+ 
+     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/dist/NATIVE/Release/bin
+     COMMAND ${CMAKE_COMMAND} -E touch          ${CMAKE_CURRENT_BINARY_DIR}/dist/NATIVE/Release/bin/llvm-tblgen
+diff --git a/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake b/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
+index ce2057f..eafa0f5 100644
+--- a/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
++++ b/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
+@@ -978,10 +978,11 @@ macro(add_llvm_subdirectory project type name)
+     set(add_llvm_external_dir ${name})
+   endif()
+   canonicalize_tool_name(${name} nameUPPER)
++  string(COMPARE NOTEQUAL "${type}" "TOOL" build_by_default)
+   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${add_llvm_external_dir}/CMakeLists.txt)
+     # Treat it as in-tree subproject.
+     option(${project}_${type}_${nameUPPER}_BUILD
+-           "Whether to build ${name} as part of ${project}" On)
++           "Whether to build ${name} as part of ${project}" ${build_by_default})
+     mark_as_advanced(${project}_${type}_${name}_BUILD)
+     if(${project}_${type}_${nameUPPER}_BUILD)
+       add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/${add_llvm_external_dir} ${add_llvm_external_dir})
+@@ -992,7 +993,7 @@ macro(add_llvm_subdirectory project type name)
+     set(LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR
+       "${LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR}"
+       CACHE PATH "Path to ${name} source directory")
+-    set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT ON)
++    set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT ${build_by_default})
+     if(NOT LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR OR NOT EXISTS ${LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR})
+       set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT OFF)
+     endif()
+@@ -1039,11 +1040,12 @@ endfunction()
+ 
+ function(create_subdirectory_options project type)
+   file(GLOB sub-dirs "${CMAKE_CURRENT_SOURCE_DIR}/*")
++  string(COMPARE NOTEQUAL "${type}" "TOOL" build_by_default)
+   foreach(dir ${sub-dirs})
+     if(IS_DIRECTORY "${dir}" AND EXISTS "${dir}/CMakeLists.txt")
+       canonicalize_tool_name(${dir} name)
+       option(${project}_${type}_${name}_BUILD
+-           "Whether to build ${name} as part of ${project}" On)
++           "Whether to build ${name} as part of ${project}" ${build_by_default})
+       mark_as_advanced(${project}_${type}_${name}_BUILD)
+     endif()
+   endforeach()

@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-freeimage-from-vcpkg.patch
-        002-clang-7.0.x-and-above.patch
+        002-use-llvm-clang.patch
         003-install-rules.patch
         004-freeimage-disable-faxg3.patch
         005-missing-std-includes.patch
@@ -18,12 +18,45 @@ vcpkg_from_github(
         009-build-static-llvm.patch
 )
 
+if(NOT EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
+    vcpkg_download_distfile(CLANG_ARCHIVE
+        URLS "http://releases.llvm.org/7.0.0/cfe-7.0.0.src.tar.xz"
+        FILENAME "cfe-7.0.0.src.tar.xz"
+        SHA512 17a658032a0160c57d4dc23cb45a1516a897e0e2ba4ebff29472e471feca04c5b68cff351cdf231b42aab0cff587b84fe11b921d1ca7194a90e6485913d62cb7
+    )
+    vcpkg_extract_source_archive(CLANG_SOURCE_PATH
+        ARCHIVE "${CLANG_ARCHIVE}"
+        PATCHES
+            001-clang-skip-symlink.patch
+            002-clang-build-static-clang.patch
+        SOURCE_BASE clang
+        WORKING_DIRECTORY "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools")
+
+    file(SHA512 "${CLANG_ARCHIVE}" patchset_hash)
+    file(SHA512 "${CMAKE_CURRENT_LIST_DIR}/001-clang-skip-symlink.patch" patch_001_hash)
+    string(APPEND patchset_hash "${patch_001_hash}")
+    file(SHA512 "${CMAKE_CURRENT_LIST_DIR}/002-clang-build-static-clang.patch" patch_002_hash)
+    string(APPEND patchset_hash "${patch_002_hash}")
+    string(SHA512 patchset_hash "${patchset_hash}")
+    string(SUBSTRING "${patchset_hash}" 0 10 patchset_hash)
+
+    if(EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}.clean")
+        file(RENAME
+            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}.clean"
+            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
+    elseif(EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}")
+        file(RENAME
+            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}"
+            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
+    else()
+        message(FATAL_ERROR "Could not place downloaded clang repository at the right place")
+    endif()
+endif()
+
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
 
 vcpkg_find_acquire_program(PYTHON3)
 set(PATH_PYTHON ${PYTHON3})
-
-vcpkg_find_acquire_program(CLANG)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -50,7 +83,6 @@ vcpkg_cmake_configure(
         -DMDL_BUILD_CORE_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_ARNOLD_PLUGIN:BOOL=OFF
         
-        -Dclang_PATH:PATH=${CLANG}
         -Dpython_PATH:PATH=${PATH_PYTHON}
 
         ${FEATURE_OPTIONS}
