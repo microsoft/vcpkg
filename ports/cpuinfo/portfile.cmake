@@ -9,6 +9,7 @@ vcpkg_from_github(
     REF b40bae27785787b6dd70788986fd96434cf90ae2
     SHA512 dbbe4f3e1d5ae74ffc8ba2cba0ab745a23f4993788f4947825ef5125dd1cbed3e13e0c98e020e6fcfa9879f54f06d7cba4de73ec29f77649b6a27b4ab82c8f1c
     HEAD_REF master
+    PATCHES Fix-set-target-processor.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,7 +36,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # see https://github.com/pytorch/cpuinfo/pull/82 for updates
     # NOTE: arm-windows is unsupported
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=x86")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=i386")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=AMD64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
