@@ -78,7 +78,7 @@ apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repo
 add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
 apt-get -y update
 apt-get install -y --no-install-recommends cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
-  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 libcudnn8-dev libnccl2 libnccl-dev
+  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 cuda-nvml-dev-11-6 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
