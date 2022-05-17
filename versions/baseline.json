@@ -6830,7 +6830,7 @@
     },
     "stxxl": {
       "baseline": "2018-11-15",
-      "port-version": 4
+      "port-version": 5
     },
     "suitesparse": {
       "baseline": "5.8.0",
