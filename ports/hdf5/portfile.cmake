@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
-    REF hdf5-1_12_1
-    SHA512 8a736b6a66bf4ec904a0e0dd9e8e0e791d8a04c996c5ea6b73b7d6f8145c4bfa4ed5c6e4f11740ceb1d1226a333c8242968e604dbdac2b7b561a1bd265423434
+    REF hdf5-1_12_2
+    SHA512 8f110e035a9bd5b07687b30fb944ed72e5b6a6e0ea74ee650250f40f0d4ff81e304366a76129a50a2d37c7f4c59a57356d0d9eed18db6cb90e924c62273d17a4
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
@@ -91,12 +91,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKA
     endforeach()
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
+file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
                [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
                contents ${contents}
 )
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5-config.cmake" ${contents})
 
 if(FEATURES MATCHES "tools")
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
