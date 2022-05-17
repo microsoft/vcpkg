@@ -17,16 +17,26 @@ vcpkg_from_github(
         fix-intrinsic-function.patch
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cuda    CMAKE_REQUIRE_FIND_PACKAGE_CUDA
+    INVERTED_FEATURES
+        cuda    CMAKE_DISABLE_FIND_PACKAGE_CUDA
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DNVTT_SHARED=0
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=_d # required by OSG
 )
 
 vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
