@@ -1,8 +1,9 @@
 {
   "name": "harfbuzz",
-  "version-semver": "3.2.0",
+  "version": "4.2.0",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
+  "license": "MIT-Modern-Variant",
   "dependencies": [
     {
       "name": "freetype",

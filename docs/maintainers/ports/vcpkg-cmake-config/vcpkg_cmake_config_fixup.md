@@ -36,11 +36,13 @@ and applies a rather simply correction which in some cases will yield the wrong 
 ## How it Works
 
 1. Moves `/debug/<CONFIG_PATH>/*targets-debug.cmake` to `/share/${PACKAGE_NAME}`.
-2. Removes `/debug/<CONFIG_PATH>/*config.cmake`.
-3. Transform all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
-4. Transform all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
-5. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
-6. Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
+2. Transforms all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+3. Transforms all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
+4. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
+5. Replaces `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs.
+6. Merges INTERFACE_LINK_LIBRARIES of release and debug configurations.
+7. Replaces `${CURRENT_INSTALLED_DIR}` with `${VCPKG_IMPORT_PREFIX}` in targets.
+8. Removes `/debug/<CONFIG_PATH>/*config.cmake`.
 
 ## Examples
 

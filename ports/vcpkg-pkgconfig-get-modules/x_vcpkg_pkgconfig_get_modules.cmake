@@ -9,6 +9,7 @@ Retrieve required module information from pkgconfig modules
 x_vcpkg_pkgconfig_get_modules(
     PREFIX <prefix>
     MODULES <pkgconfig_modules>...
+    [CFLAGS]
     [LIBS]
     [LIBRARIES]
     [LIBRARIES_DIRS]
@@ -45,7 +46,7 @@ endif()
 set(Z_VCPKG_PKGCONFIG_GET_MODULES_GUARD ON CACHE INTERNAL "guard variable")
 
 function(x_vcpkg_pkgconfig_get_modules)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS" "PREFIX" "MODULES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
@@ -95,6 +96,14 @@ function(x_vcpkg_pkgconfig_get_modules)
             )
             list(APPEND var_suffixes INCLUDE_DIRS_RELEASE)
         endif()
+        if(arg_CFLAGS)
+            execute_process(
+                COMMAND "${PKGCONFIG}" --cflags ${arg_MODULES}
+                OUTPUT_VARIABLE ${arg_PREFIX}_CFLAGS_RELEASE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            list(APPEND var_suffixes CFLAGS_RELEASE)
+        endif()
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
@@ -129,6 +138,14 @@ function(x_vcpkg_pkgconfig_get_modules)
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
             list(APPEND var_suffixes INCLUDE_DIRS_DEBUG)
+        endif()
+        if(arg_CFLAGS)
+            execute_process(
+                COMMAND "${PKGCONFIG}" --cflags ${arg_MODULES}
+                OUTPUT_VARIABLE ${arg_PREFIX}_CFLAGS_DEBUG
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            list(APPEND var_suffixes CFLAGS_DEBUG)
         endif()
     endif()
     set(ENV{PKG_CONFIG_PATH} "${backup_PKG_CONFIG_PATH}")

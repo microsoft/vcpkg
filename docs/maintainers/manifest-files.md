@@ -433,6 +433,7 @@ These predefined identifier expressions are computed from standard triplet setti
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
 - `wasm32` - `VCPKG_TARGET_ARCHITECTURE` == `"wasm32"`
 - `emscripten` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Emscripten"`
+- `staticcrt` - `VCPKG_CRT_LINKAGE` == `"static"`
 
 These predefined identifier expressions can be overridden in the triplet file,
 via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option,

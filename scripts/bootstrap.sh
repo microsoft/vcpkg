@@ -76,6 +76,8 @@ vcpkgCheckRepoTool()
         echo "  sudo yum install curl zip unzip tar"
         echo "On SUSE Linux and derivatives:"
         echo "  sudo zypper install curl zip unzip tar"
+        echo "On Arch Linux and derivatives:"
+        echo "  sudo pacman -S curl zip unzip tar cmake ninja"
         echo "On Alpine:"
         echo "  apk add build-base cmake ninja zip unzip curl git"
         echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
@@ -124,23 +126,23 @@ fi
 
 # Choose the vcpkg binary to download
 vcpkgDownloadTool="ON"
-vcpkgToolReleaseTag="2022-02-03"
+vcpkgToolReleaseTag="2022-05-05"
 if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
-    vcpkgToolReleaseSha="49d5ffcc96c03172826b5b6e3b1acab40fadae994a23c60188b6a7a9316f77a5761e49524dd29f2db8037e48c91b86fd67da03db5f8d8345a71b63f94ae4e472"
+    vcpkgToolReleaseSha="d1bc1de6185892b90641256ac509aac88b6c23d5f4875038d071b4518f33d852d7519346a78d79913748991203a9474632d59645c788b1fe56f74938327bb90f"
     vcpkgToolName="vcpkg-macos"
 elif [ "$vcpkgUseMuslC" = "ON" ]; then
     echo "Downloading vcpkg-muslc..."
-    vcpkgToolReleaseSha="8c28e617ba8b69fc3ba7e8dcfdeae15448b97b8f3ff4698a3f50140fc9e37c7e501484a4eeb2ecd3cd4cb6884ef523f73882988b2020df9621441947485f7c5f"
+    vcpkgToolReleaseSha="d698b5c37438eb03846d3908a67a7b955242d4e73c069ac4668de3be5fee8c21bf7ff0d291f5b85c6415fae70ca8d3ff926a757eb5aeda8b5d112d24c6874133"
     vcpkgToolName="vcpkg-muslc"
 elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha="1fae4c7c5b9f4a6b3e0c9e84f65385cebea47ef7af9c1acf4568a2b03270189608c67af7c42ca66706f7c90d0080881bff55848bb4e126282aad6f6ae11589b9"
+    vcpkgToolReleaseSha="bd1c24f113acee53c458b204b2443bb3a2e129f0df7f2772c83876e97e7788e9151d0ab92248ed5ee7cecf1152569ccb1050f174e70a7a21d7da8a580c73c132"
     vcpkgToolName="vcpkg-glibc"
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha="005a6da80c3b6c6c9d8d7aa1671bf787b8c3fce783cab4a6fbd6064a8af525f5e87863c57521e90f07b7fdfa6f909c0ea99773e4591b325b32be854c60285ced"
+    vcpkgToolReleaseSha="9968b2420c19ac88fd912aa0d3d230a4712d51c411a7f5023c4a5d96c5fcc963ce8fbb286594220b5dfc63e23bdbcf3439326b90262dd89ea5b63afa143ca699"
 fi
 
 # Do the download or build.

@@ -5,17 +5,19 @@ vcpkg_from_github(
     SHA512 ddb70cae9ced25de77a2df1854dac15e58a77347042ba3ee9c691f85f49edbc6539c84929a7477d429fb9161ba24c57d24d767793b8b1180216d5ddfc5d3ed6a
     HEAD_REF dev-1.2
     PATCHES
-        "${CURRENT_PORT_DIR}/fix-warningC4643.patch"
+        fix-warningC4643.patch
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    SET(SHARED_FLAG ON)
-else()
-    SET(SHARED_FLAG OFF)
+set(SHARED_FLAG OFF)
+set(USE_MSBUILD "")
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+    set(SHARED_FLAG ON)
+    set(USE_MSBUILD WINDOWS_USE_MSBUILD) # MS Build only required for dynamic builds
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    ${USE_MSBUILD}
     OPTIONS
         -DWITH_LIBRARY_ARGPARSER=ON
         -DWITH_LIBRARY_COMPRESSION=ON
@@ -26,13 +28,11 @@ vcpkg_configure_cmake(
         -DCLOCKUTILS_BUILD_SHARED=${SHARED_FLAG}
 )
 
-vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/clockUtils)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/clockUtils/LICENSE ${CURRENT_PACKAGES_DIR}/share/clockUtils/copyright)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

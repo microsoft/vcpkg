@@ -79,30 +79,38 @@ function(vcpkg_from_git)
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
     vcpkg_list(SET extract_working_directory_param)
+    vcpkg_list(SET skip_patch_check_param)
     set(git_working_directory "${DOWNLOADS}/git-tmp")
-    if(VCPKG_USE_HEAD_VERSION)
-        if(DEFINED arg_HEAD_REF)
-            vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
-            vcpkg_list(SET git_fetch_shallow_param --depth 1)
-            set(ref_to_use "${arg_HEAD_REF}")
-            set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
-        else()
-            message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
+    set(do_download OFF)
+
+    if(VCPKG_USE_HEAD_VERSION AND DEFINED arg_HEAD_REF)
+        vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+        vcpkg_list(SET git_fetch_shallow_param --depth 1)
+        vcpkg_list(SET skip_patch_check_param SKIP_PATCH_CHECK)
+        set(ref_to_fetch "${arg_HEAD_REF}")
+        set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
+        string(REPLACE "/" "_-" sanitized_ref "${arg_HEAD_REF}")
+
+        if(NOT _VCPKG_NO_DOWNLOADS)
+            set(do_download ON)
         endif()
     else()
         if(NOT DEFINED arg_REF)
             message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
         endif()
+        if(VCPKG_USE_HEAD_VERSION)
+            message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
+        endif()
 
         if(DEFINED arg_FETCH_REF)
-            set(ref_to_use "${arg_FETCH_REF}")
+            set(ref_to_fetch "${arg_FETCH_REF}")
             vcpkg_list(SET git_fetch_shallow_param)
         else()
-            set(ref_to_use "${arg_REF}")
+            set(ref_to_fetch "${arg_REF}")
         endif()
+        string(REPLACE "/" "_-" sanitized_ref "${arg_REF}")
     endif()
 
-    string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
     set(temp_archive "${DOWNLOADS}/temp/${PORT}-${sanitized_ref}.tar.gz")
     set(archive "${DOWNLOADS}/${PORT}-${sanitized_ref}.tar.gz")
 
@@ -110,7 +118,11 @@ function(vcpkg_from_git)
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${archive}' does not exist.")
         endif()
-        message(STATUS "Fetching ${arg_URL} ${ref_to_use}...")
+        set(do_download ON)
+    endif()
+
+    if(do_download)
+        message(STATUS "Fetching ${arg_URL} ${ref_to_fetch}...")
         find_program(GIT NAMES git git.cmd)
         file(MAKE_DIRECTORY "${DOWNLOADS}")
         # Note: git init is safe to run multiple times
@@ -122,7 +134,7 @@ function(vcpkg_from_git)
         )
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${git_fetch_shallow_param} -n
+            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_fetch}" ${git_fetch_shallow_param} -n
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
@@ -179,6 +191,7 @@ function(vcpkg_from_git)
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
         ${extract_working_directory_param}
+        ${skip_patch_check_param}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

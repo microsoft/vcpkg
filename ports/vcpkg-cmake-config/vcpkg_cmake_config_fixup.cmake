@@ -35,11 +35,13 @@ and applies a rather simply correction which in some cases will yield the wrong 
 ## How it Works
 
 1. Moves `/debug/<CONFIG_PATH>/*targets-debug.cmake` to `/share/${PACKAGE_NAME}`.
-2. Removes `/debug/<CONFIG_PATH>/*config.cmake`.
-3. Transform all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
-4. Transform all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
-5. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
-6. Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
+2. Transforms all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+3. Transforms all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
+4. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
+5. Replaces `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs.
+6. Merges INTERFACE_LINK_LIBRARIES of release and debug configurations.
+7. Replaces `${CURRENT_INSTALLED_DIR}` with `${VCPKG_IMPORT_PREFIX}` in targets.
+8. Removes `/debug/<CONFIG_PATH>/*config.cmake`.
 
 ## Examples
 
@@ -134,16 +136,6 @@ function(vcpkg_cmake_config_fixup)
         endif()
     endif()
 
-    file(GLOB_RECURSE unused_files
-        "${debug_share}/*[Tt]argets.cmake"
-        "${debug_share}/*[Cc]onfig.cmake"
-        "${debug_share}/*[Cc]onfigVersion.cmake"
-        "${debug_share}/*[Cc]onfig-version.cmake"
-    )
-    foreach(unused_file IN LISTS unused_files)
-        file(REMOVE "${unused_file}")
-    endforeach()
-
     file(GLOB_RECURSE release_targets
         "${release_share}/*-release.cmake"
     )
@@ -173,8 +165,16 @@ function(vcpkg_cmake_config_fixup)
     endif()
 
     #Fix ${_IMPORT_PREFIX} and absolute paths in cmake generated targets and configs;
-    #Since those can be renamed we have to check in every *.cmake
+    #Since those can be renamed we have to check in every *.cmake, but only once.
     file(GLOB_RECURSE main_cmakes "${release_share}/*.cmake")
+    if(NOT DEFINED Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP)
+        vcpkg_list(SET Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP)
+    endif()
+    foreach(already_fixed_up IN LISTS Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP)
+        vcpkg_list(REMOVE_ITEM main_cmakes "${already_fixed_up}")
+    endforeach()
+    vcpkg_list(APPEND Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP ${main_cmakes})
+    set(Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP "${Z_VCPKG_CMAKE_CONFIG_ALREADY_FIXED_UP}" CACHE INTERNAL "")
 
     foreach(main_cmake IN LISTS main_cmakes)
         file(READ "${main_cmake}" contents)
@@ -205,6 +205,38 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
+        # Merge release and debug configurations of target property INTERFACE_LINK_LIBRARIES.
+        string(REPLACE "${release_share}/" "${debug_share}/" debug_cmake "${main_cmake}")
+        if(DEFINED VCPKG_BUILD_TYPE)
+            # Skip. Warning: A release-only port in a dual-config installation
+            # may pull release dependencies into the debug configuration.
+        elseif(NOT contents MATCHES "INTERFACE_LINK_LIBRARIES")
+            # Skip. No relevant properties.
+        elseif(NOT contents MATCHES "# Generated CMake target import file\\.")
+            # Skip. No safe assumptions about a matching debug import file.
+        elseif(NOT EXISTS "${debug_cmake}")
+            message(SEND_ERROR "Did not find a debug import file matching '${main_cmake}'")
+        else()
+            file(READ "${debug_cmake}" debug_contents)
+            while(contents MATCHES "set_target_properties\\(([^ \$]*) PROPERTIES[^)]*\\)")
+                set(matched_command "${CMAKE_MATCH_0}")
+                string(REPLACE "+" "\\+" target "${CMAKE_MATCH_1}")
+                if(NOT debug_contents MATCHES "set_target_properties\\(${target} PROPERTIES[^)]*\\)")
+                    message(SEND_ERROR "Did not find a debug configuration for target '${target}'.")
+                endif()
+                set(debug_command "${CMAKE_MATCH_0}")
+                string(REGEX MATCH "  INTERFACE_LINK_LIBRARIES \"([^\"]*)\"" release_line "${matched_command}")
+                set(release_libs "${CMAKE_MATCH_1}")
+                string(REGEX MATCH "  INTERFACE_LINK_LIBRARIES \"([^\"]*)\"" debug_line "${debug_command}")
+                set(debug_libs "${CMAKE_MATCH_1}")
+                z_vcpkg_cmake_config_fixup_merge(merged_libs release_libs debug_libs)
+                string(REPLACE "${release_line}" "  INTERFACE_LINK_LIBRARIES \"${merged_libs}\"" updated_command "${matched_command}")
+                string(REPLACE "set_target_properties" "set_target_properties::done" updated_command "${updated_command}") # Prevend 2nd match
+                string(REPLACE "${matched_command}" "${updated_command}" contents "${contents}")
+            endwhile()
+            string(REPLACE "set_target_properties::done" "set_target_properties" contents "${contents}") # Restore original command
+        endif()
+
         #Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
         #an imported target.
@@ -223,6 +255,16 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
 
+    file(GLOB_RECURSE unused_files
+        "${debug_share}/*[Tt]argets.cmake"
+        "${debug_share}/*[Cc]onfig.cmake"
+        "${debug_share}/*[Cc]onfigVersion.cmake"
+        "${debug_share}/*[Cc]onfig-version.cmake"
+    )
+    foreach(unused_file IN LISTS unused_files)
+        file(REMOVE "${unused_file}")
+    endforeach()
+
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE remaining_files "${debug_share}/*")
     if(remaining_files STREQUAL "")
@@ -234,4 +276,37 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
     if(remaining_files STREQUAL "")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
+endfunction()
+
+# Merges link interface library lists for release and debug
+# into a single expression which use generator expression as necessary.
+function(z_vcpkg_cmake_config_fixup_merge out_var release_var debug_var)
+    set(release_libs "VCPKG;${${release_var}}")
+    string(REGEX REPLACE ";optimized;([^;]*)" ";\\1" release_libs "${release_libs}")
+    string(REGEX REPLACE ";debug;([^;]*)" ";" release_libs "${release_libs}")
+    list(REMOVE_AT release_libs 0)
+    list(FILTER release_libs EXCLUDE REGEX [[^\\[$]<\\[$]<CONFIG:DEBUG>:]])
+    list(TRANSFORM release_libs REPLACE [[^\\[$]<\\[$]<NOT:\\[$]<CONFIG:DEBUG>>:(.*)>$]] "\\1")
+
+    set(debug_libs "VCPKG;${${debug_var}}")
+    string(REGEX REPLACE ";optimized;([^;]*)" ";" debug_libs "${debug_libs}")
+    string(REGEX REPLACE ";debug;([^;]*)" ";\\1" debug_libs "${debug_libs}")
+    list(REMOVE_AT debug_libs 0)
+    list(FILTER debug_libs EXCLUDE REGEX [[^\\[$]<\\[$]<NOT:\\[$]<CONFIG:DEBUG>>:]])
+    list(TRANSFORM debug_libs REPLACE [[^\\[$]<\\[$]<CONFIG:DEBUG>:(.*)>$]] "\\1")
+
+    set(merged_libs "")
+    foreach(release_lib debug_lib IN ZIP_LISTS release_libs debug_libs)
+        if(release_lib STREQUAL debug_lib)
+            list(APPEND merged_libs "${release_lib}")
+        else()
+            if(release_lib)
+                list(APPEND merged_libs "\\\$<\\\$<NOT:\\\$<CONFIG:DEBUG>>:${release_lib}>")
+            endif()
+            if(debug_lib)
+                list(APPEND merged_libs "\\\$<\\\$<CONFIG:DEBUG>:${debug_lib}>")
+            endif()
+        endif()
+    endforeach()
+    set("${out_var}" "${merged_libs}" PARENT_SCOPE)
 endfunction()

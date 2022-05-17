@@ -228,14 +228,19 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
+
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -465,6 +470,21 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
+    # Linux - cross-compiling support
+    if(VCPKG_TARGET_IS_LINUX)
+        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
+            # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc 
+            # set in the common toolchains/linux.cmake
+            # This is used via --host as a prefix for all other bin tools as well. 
+            # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to: 
+            # https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
+            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+                set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
+        endif()
+    endif()
+    
     # Cleanup previous build dirs
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
@@ -540,12 +560,15 @@ function(vcpkg_configure_make)
             # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
-            string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
+            file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
+            set(_replacement -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
             # Can somebody please check if CMake's compiler flags for UWP are correct?
-            set(ENV{_CL_} "$ENV{_CL_} /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
-            string(APPEND VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE " -ZW:nostdlib")
-            string(APPEND VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG " -ZW:nostdlib")
-            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES} /MANIFEST /DYNAMICBASE /WINMD:NO /APPCONTAINER") 
+            set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         endif()
     endif()
 
@@ -588,10 +611,6 @@ function(vcpkg_configure_make)
         endif()
     endif()
     debug_message("ENV{LIBS}:$ENV{LIBS}")
-    vcpkg_find_acquire_program(PKGCONFIG)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
-        set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
-    endif()
 
     # Run autoconf if necessary
     if (arg_AUTOCONFIG OR requires_autoconfig)
@@ -704,7 +723,7 @@ function(vcpkg_configure_make)
                 set(LINK_ENV_${var_suffix} "${LINKER_FLAGS_${var_suffix}}")
             endif()
         else()
-            set(link_required_dirs)
+            set(link_required_dirs "")
             if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
                 set(link_required_dirs "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
             endif()
@@ -744,13 +763,10 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup PKG_CONFIG_PATH
-        set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/pkgconfig")
-        set(pkgconfig_installed_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-        if(ENV{PKG_CONFIG_PATH})
-            set(backup_env_pkg_config_path_${current_buildtype} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        if ("${current_buildtype}" STREQUAL "DEBUG")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
         endif()
 
         # Setup environment
@@ -771,15 +787,14 @@ function(vcpkg_configure_make)
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
         endif()
-        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-        vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+        vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
         foreach(lib_env_var IN LISTS lib_env_vars)
             if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib")
                 vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib")
             endif()
             if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/manual-link")
-                vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}" "${path_suffix_${current_buildtype}}/lib/manual-link")
+                vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/manual-link")
             endif()
         endforeach()
         unset(lib_env_vars)
@@ -811,13 +826,7 @@ function(vcpkg_configure_make)
                 file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
-
-        if(backup_env_pkg_config_path_${current_buildtype})
-            set(ENV{PKG_CONFIG_PATH} "${backup_env_pkg_config_path_${current_buildtype}}")
-        else()
-            unset(ENV{PKG_CONFIG_PATH})
-        endif()
-        unset(backup_env_pkg_config_path_${current_buildtype})
+        z_vcpkg_restore_pkgconfig_path()
         
         if(link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
@@ -851,4 +860,5 @@ function(vcpkg_configure_make)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
+    set(_VCPKG_MAKE_NO_DEBUG ${arg_NO_DEBUG} PARENT_SCOPE)
 endfunction()

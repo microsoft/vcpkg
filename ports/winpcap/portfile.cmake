@@ -10,12 +10,6 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
 )
 
-vcpkg_download_distfile(COPYRIGHT
-    URLS "https://www.winpcap.org/misc/copyright.htm"
-    FILENAME "Wpcap_license.htm"
-    SHA512 bb2519e8f3d02c408fa3f2ef339adda1cc31338d05d2fa4ce25d5369427243fd3e2abc4b21aa654b2be5791f53c2281847a4a15778ffcb90576fd166140c7d2e
-)
-
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 
@@ -174,4 +168,5 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
-configure_file(${COPYRIGHT} "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.
+")

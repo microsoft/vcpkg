@@ -1,8 +1,10 @@
 {
   "name": "sqlite3",
-  "version": "3.37.1",
+  "version": "3.37.2",
+  "port-version": 1,
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
-  "homepage": "https://sqlite.org/",
+  "homepage": "https://github.com/sqlite/sqlite",
+  "license": "blessing",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,14 +16,50 @@
     }
   ],
   "features": {
+    "fts3": {
+      "description": "Enable the FTS3 extension"
+    },
+    "fts4": {
+      "description": "Enable the FTS4 extension"
+    },
+    "fts5": {
+      "description": "Enable the FTS5 extension"
+    },
     "geopoly": {
-      "description": "enable geopoly functionality for sqlite3"
+      "description": "Enable geopoly functionality for sqlite3"
     },
     "json1": {
-      "description": "enable JSON functionality for sqlite3"
+      "description": "Enable JSON functionality for sqlite3"
+    },
+    "limit": {
+      "description": "Enable the UPDATE/DELETE LIMIT clause"
+    },
+    "math": {
+      "description": "Enable math functions"
+    },
+    "memsys3": {
+      "description": "Enable MEMSYS3"
+    },
+    "memsys5": {
+      "description": "Enable MEMSYS5"
+    },
+    "omit-load-extension": {
+      "description": "Enable loading of external extensions"
+    },
+    "rtree": {
+      "description": "Enable the RTREE extension"
+    },
+    "session": {
+      "description": "Enable the SESSION extension"
     },
     "tool": {
-      "description": "sqlite3 executable"
+      "description": "Build sqlite3 executable"
+    },
+    "zlib": {
+      "description": "Build sqlite3 with zlib support",
+      "dependencies": [
+        "zlib"
+      ]
     }
   }
 }

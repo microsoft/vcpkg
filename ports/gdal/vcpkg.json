@@ -1,10 +1,9 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.1",
-  "port-version": 1,
+  "version-semver": "3.4.3",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!uwp",
+  "license": null,
   "dependencies": [
     "curl",
     "expat",
@@ -28,7 +27,7 @@
     "libwebp",
     "libxml2",
     "openjpeg",
-    "proj4",
+    "proj",
     "sqlite3",
     "tiff",
     {
@@ -42,6 +41,12 @@
     "supported-default-features"
   ],
   "features": {
+    "aws-ec2-windows": {
+      "description": "Optimized detection of AWS EC2 Windows hosts",
+      "dependencies": [
+        "atlmfc"
+      ]
+    },
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [
@@ -70,6 +75,18 @@
       "description": "Enable NetCDF support",
       "dependencies": [
         "netcdf-c"
+      ]
+    },
+    "poppler": {
+      "description": "Enable poppler support",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "private-api"
+          ]
+        }
       ]
     },
     "postgresql": {

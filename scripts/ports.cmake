@@ -61,6 +61,7 @@ include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_setup_pkgconfig_path.cmake")
 
 function(debug_message)
     if(PORT_DEBUG)

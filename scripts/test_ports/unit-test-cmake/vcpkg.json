@@ -18,6 +18,15 @@
     "list": {
       "description": "Test the vcpkg_list function"
     },
+    "merge-libs": {
+      "description": "Test the z_vcpkg_cmake_config_fixup_merge_lists function",
+      "dependencies": [
+        {
+          "name": "vcpkg-cmake-config",
+          "host": true
+        }
+      ]
+    },
     "minimum-required": {
       "description": "Test the vcpkg_minimum_required function"
     }
