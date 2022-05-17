@@ -15,8 +15,9 @@ Underneath this root, in a subfolder named after the triplet:
 * Debug `.lib`, `.a`, and `.so` files: `debug/lib/` or `debug/lib/manual-link/`
 * Debug `.dll` files: `debug/bin/`
 * Debug `.pc` files: `debug/lib/pkgconfig/`
+* Tools: `tools/[portname]/`
 
-For example, `zlib.h` for `zlib:x64-windows` in classic mode is be located at `[vcpkg root]/installed/x64-windows/include/zlib.h`.
+For example, `zlib.h` for `zlib:x64-windows` in classic mode is located at `[vcpkg root]/installed/x64-windows/include/zlib.h`.
 
 See your build system specific documentation for how to use prebuilt binaries. For example, `Makefile` projects often accept environment variables:
 
