@@ -36,7 +36,9 @@
   "features": {
     "absl-sync": {
       "description": "Use abseil synchronization module",
-      "dependencies": [ "abseil" ]
+      "dependencies": [
+        "abseil"
+      ]
     },
     "codegen": {
       "description": "Build code generator machinery"
