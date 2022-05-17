@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1f1902c..9a771de 100644
+index 1f1902c..305f390 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -53,6 +53,9 @@ option(MDL_LOG_FILE_DEPENDENCIES "Prints the list of files that is copied after
@@ -12,7 +12,7 @@ index 1f1902c..9a771de 100644
  # set the default installation path
  if(NOT DEFINED CMAKE_INSTALL_PREFIX OR CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "..." FORCE)
-@@ -235,3 +238,40 @@ foreach(_TEST_POST ${MDL_TEST_LIST_POST})
+@@ -235,3 +238,35 @@ foreach(_TEST_POST ${MDL_TEST_LIST_POST})
      add_subdirectory(${_TEST_POST})
  endforeach()
  
@@ -37,7 +37,7 @@ index 1f1902c..9a771de 100644
 +#--------------------------------------------------------------------------------------------------
 +
 +install(
-+    EXPORT       mdl-targets
++    EXPORT       unofficial-mdl-targets
 +    NAMESPACE    "mdl::"
 +    DESTINATION  "${CMAKE_INSTALL_DATADIR}/mdl"
 +)
@@ -48,13 +48,8 @@ index 1f1902c..9a771de 100644
 +        ${CMAKE_CURRENT_BINARY_DIR}/mdl-config-version.cmake
 +    DESTINATION  "${CMAKE_INSTALL_DATADIR}/mdl"
 +)
-+
-+export(
-+    EXPORT    mdl-targets
-+    NAMESPACE "mdl::"
-+)
 diff --git a/cmake/utilities.cmake b/cmake/utilities.cmake
-index 5e9774f..889d481 100644
+index 5e9774f..51dc65c 100644
 --- a/cmake/utilities.cmake
 +++ b/cmake/utilities.cmake
 @@ -705,6 +705,7 @@ function(CREATE_FROM_BASE_PRESET)
@@ -95,7 +90,7 @@ index 5e9774f..889d481 100644
 +    if(${ADD_TARGET_INSTALL_TARGET} IN_LIST _MDL_PROD_TARGETS)
 +        install(
 +            TARGETS ${ADD_TARGET_INSTALL_TARGET}
-+            EXPORT  mdl-targets
++            EXPORT  unofficial-mdl-targets
 +        )
 +    else()
 +        install(DIRECTORY $<TARGET_FILE_DIR:${ADD_TARGET_INSTALL_TARGET}>/
