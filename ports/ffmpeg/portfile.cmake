@@ -506,9 +506,6 @@ set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 get_filename_component(CC_path "${VCPKG_DETECTED_CMAKE_C_COMPILER}" DIRECTORY)
 get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
 set(ENV{CC} "${CC_filename}")
-if(CC_path)
-    vcpkg_add_to_path(PREPEND "${CC_path}")
-endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 

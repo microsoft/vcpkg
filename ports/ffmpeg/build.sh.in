@@ -2,8 +2,6 @@
 
 set -e
 
-export PATH="/usr/bin:$PATH"
-
 command -v cygpath >/dev/null && have_cygpath=1
 
 cygpath() {
@@ -13,6 +11,21 @@ cygpath() {
         eval _p='$'$#
         printf '%s\n' "$_p"
     fi
+}
+
+get_command_from_path() {
+    OLD_PATH="$1"
+    NEW_PATH="$(cygpath -up "$OLD_PATH")"
+    NEW_PATH="$(echo "$NEW_PATH" | sed 's/ /\\ /g')"
+    NEW_PATH="$(echo "$NEW_PATH" | sed 's/(/\\(/g')"
+    NEW_PATH="$(echo "$NEW_PATH" | sed 's/)/\\)/g')"
+    printf '%s\n' "$NEW_PATH"
+}
+
+init_env() {
+	cd "$PATH_TO_BUILD_DIR"
+	CC_ABSOLUTE_PARENT_DIR="$(cygpath -up "@CC_path@")"
+	export PATH="${CC_ABSOLUTE_PARENT_DIR}:/usr/bin:${PATH}"
 }
 
 move_binary() {
@@ -70,6 +83,7 @@ merge_binaries() {
     done
 }
 
+
 export PKG_CONFIG_PATH="$(cygpath -p "${PKG_CONFIG_PATH}")"
 
 # Export HTTP(S)_PROXY as http(s)_proxy:
@@ -85,13 +99,16 @@ JOBS=@VCPKG_CONCURRENCY@
 OSX_ARCHS="@OSX_ARCHS@"
 OSX_ARCH_COUNT=0@OSX_ARCH_COUNT@
 
+# set PATH=...
+init_env
+
 # Default to hardware concurrency if unset.
 : ${JOBS:=$(nproc)}
 
 build_ffmpeg() {
     echo "=== CONFIGURING ==="
 
-    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" "--cc=@CC_path@/@CC_filename@" @CONFIGURE_OPTIONS@ $@
+    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" "--cc=$CC" @CONFIGURE_OPTIONS@ $@
 
     echo "=== BUILDING ==="
 
@@ -102,7 +119,7 @@ build_ffmpeg() {
     make install
 }
 
-cd "$PATH_TO_BUILD_DIR"
+
 
 if [ $OSX_ARCH_COUNT -gt 1 ]; then
     for ARCH in $OSX_ARCHS; do
