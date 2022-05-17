@@ -94,12 +94,16 @@ field should not be used.
 
 See [versioning](versioning.md#version-schemes) for more details.
 
+<a id="description"></a>
+
 ### `"description"`
 
 This is where you describe your project. Give it a good description to help in searching for it!
 This can be a single string, or it can be an array of strings;
 in the latter case, the first string is treated as a summary,
 while the remaining strings are treated as the full description.
+
+<a id="builtin-baseline"></a>
 
 ### `"builtin-baseline"`
 
@@ -112,6 +116,8 @@ registry in
 [`vcpkg-configuration.json`](registries.md#configuration-default-registry).
 
 See [versioning](versioning.md#builtin-baseline) for more semantic details.
+
+<a id="dependencies"></a>
 
 ### `"dependencies"`
 
@@ -141,9 +147,14 @@ if they were to use you). It's an array of strings and objects:
 ]
 ```
 
+<a id="dependencies-name"></a>
+
 #### `"name"` Field
 
 The name of the dependency. This follows the same restrictions as the [`"name"`](#name) property for a project.
+
+<a id="dependencies-default-features"></a>
+<a id="dependencies-features"></a>
 
 #### `"features"` and `"default-features"` Fields
 
@@ -163,6 +174,8 @@ Then, you might just ask for:
   "features": [ "mp3lame" ]
 }
 ```
+
+<a id="platform"></a>
 
 #### `"platform"` Field
 
@@ -189,6 +202,8 @@ The common identifiers are:
 
 although one can define their own.
 
+<a id="version-gt"></a>
+
 #### `"version>="` Field
 
 A minimum version constraint on the dependency.
@@ -197,6 +212,8 @@ This field specifies the minimum version of the dependency, optionally using a
 `#N` suffix to denote port-version if non-zero.
 
 See also [versioning](versioning.md#version-1) for more semantic details.
+
+<a id="overrides"></a>
 
 ### `"overrides"`
 
@@ -216,6 +233,8 @@ See also [versioning](versioning.md#overrides) for more semantic details.
   ]
 ```
 
+<a id="supports"></a>
+
 ### `"supports"`
 
 If your project doesn't support common platforms, you can tell your users this with the `"supports"` field.
@@ -223,6 +242,8 @@ It uses the same platform expressions as [`"platform"`](#platform), from depende
 `"supports"` field of features.
 For example, if your library doesn't support linux, you might write `{ "supports": "!linux" }`.
 
+<a id="default-features"></a>
+<a id="features"></a>
 
 ### `"features"` and `"default-features"`
 
@@ -279,44 +300,6 @@ and that's the `"default-features"` field, which is an array of feature names.
   }
 }
 ```
-
-## Command Line Interface
-
-When invoked from any subdirectory of the directory containing `vcpkg.json`, `vcpkg install` with no package arguments
-will install all manifest dependencies into `<directory containing vcpkg.json>/vcpkg_installed/`. Most of `vcpkg
-install`'s classic mode parameters function the same in manifest mode.
-
-### `--x-install-root=<path>`
-
-**Experimental and may change or be removed at any time**
-
-Specifies an alternate install location than `<directory containing vcpkg.json>/vcpkg_installed/`.
-
-### `--triplet=<triplet>`
-
-Specify the triplet to be used for installation.
-
-Defaults to the same default triplet as in classic mode.
-
-### `--x-feature=<feature>`
-
-**Experimental and may change or be removed at any time**
-
-Specify an additional feature from the `vcpkg.json` to install dependencies from.
-
-### `--x-no-default-features`
-
-**Experimental and may change or be removed at any time**
-
-Disables automatic activation of all default features listed in the `vcpkg.json`.
-
-### `--x-manifest-root=<path>`
-
-**Experimental and may change or be removed at any time**
-
-Specifies the directory containing `vcpkg.json`.
-
-Defaults to searching upwards from the current working directory.
 
 ## CMake Integration
 
