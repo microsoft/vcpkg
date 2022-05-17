@@ -4654,7 +4654,7 @@
     },
     "mpi": {
       "baseline": "1",
-      "port-version": 2
+      "port-version": 3
     },
     "mpir": {
       "baseline": "2022-03-02",
