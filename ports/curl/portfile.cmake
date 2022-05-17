@@ -13,6 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
+        wolfssl-ntlm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -38,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
+        wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
         mbedtls     CURL_USE_MBEDTLS
         ssh         CURL_USE_LIBSSH2
