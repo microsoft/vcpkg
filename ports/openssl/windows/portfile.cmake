@@ -9,9 +9,10 @@ vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
-set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENSSL_SHARED shared)
+else()
+    set(OPENSSL_SHARED no-shared no-module)
 endif()
 
 set(CONFIGURE_OPTIONS
@@ -125,8 +126,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
         message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
+        endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
@@ -139,10 +142,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(NOT VCPKG_BUILD_TYPE)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+    endif()
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
 endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
