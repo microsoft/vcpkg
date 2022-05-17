@@ -6,13 +6,26 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         arm.patch
+        no-wx.patch
+        fix-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(feature_tools "tools" BUILD_JPIP_SERVER) # Requires pthread
+    if("tools" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "-DFCGI_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/fastcgi")
+    endif()
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "jpip"          BUILD_JPIP
+        ${feature_tools}
+        "tools"         BUILD_VIEWER
+        "tools"         BUILD_CODEC
+        "tools"         BUILD_LUTS_GENERATOR
 )
 
 vcpkg_cmake_configure(
@@ -26,9 +39,6 @@ vcpkg_cmake_configure(
         -DBUILD_PKGCONFIG_FILES=ON
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
-        # -DBUILD_JPIP_SERVER=ON # Requires curl
-        # -DBUILD_VIEWER=ON 
-        # -DBUILD_CODEC=ON # requires ZLIB; Tiff; LCMS2; wxWidgets?
 )
 
 vcpkg_cmake_install()
@@ -51,8 +61,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 set(TOOL_NAMES)
-if("jpip" IN_LIST FEATURES) # Now behind BUILD_VIEWER / BUILD_CODEC / BUILD_JPIP_SERVER
-    #list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_dec_server opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
+if("tools" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_dec_server opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)

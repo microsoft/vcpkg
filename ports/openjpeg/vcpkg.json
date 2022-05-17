@@ -26,6 +26,22 @@
     },
     "mj2": {
       "description": "(deprecated)"
+    },
+    "tools": {
+      "description": "(deprecated)",
+      "dependencies": [
+        {
+          "name": "curl",
+          "platform": "!windows"
+        },
+        {
+          "name": "fastcgi",
+          "platform": "!windows"
+        },
+        "lcms",
+        "tiff",
+        "zlib"
+      ]
     }
   }
 }
