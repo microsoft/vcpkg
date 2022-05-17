@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1f1902c..305f390 100644
+index 1f1902c..623bec8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -53,6 +53,9 @@ option(MDL_LOG_FILE_DEPENDENCIES "Prints the list of files that is copied after
@@ -19,16 +19,16 @@ index 1f1902c..305f390 100644
 +# Config
 +#--------------------------------------------------------------------------------------------------
 +
-+set(PATH_EXPORT_TARGETS "${CMAKE_INSTALL_DATADIR}/mdl/mdl-targets.cmake")
++set(PATH_EXPORT_TARGETS "${CMAKE_INSTALL_DATADIR}/unofficial-mdl/unofficial-mdl-targets.cmake")
 +configure_package_config_file(
-+    "${CMAKE_CURRENT_SOURCE_DIR}/mdl-config.cmake.in"
-+    "${CMAKE_CURRENT_BINARY_DIR}/mdl-config.cmake"
++    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-mdl-config.cmake.in"
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mdl-config.cmake"
 +    PATH_VARS
 +        PATH_EXPORT_TARGETS
-+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/mdl
++    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-mdl
 +)
 +
-+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/mdl-config-version.cmake"
++write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-mdl-config-version.cmake"
 +    VERSION     2021.0.1
 +  COMPATIBILITY SameMajorVersion
 +)
@@ -38,15 +38,15 @@ index 1f1902c..305f390 100644
 +
 +install(
 +    EXPORT       unofficial-mdl-targets
-+    NAMESPACE    "mdl::"
-+    DESTINATION  "${CMAKE_INSTALL_DATADIR}/mdl"
++    NAMESPACE    "unofficial::mdl::"
++    DESTINATION  "${CMAKE_INSTALL_DATADIR}/unofficial-mdl"
 +)
 +
 +install(
 +    FILES
-+        ${CMAKE_CURRENT_BINARY_DIR}/mdl-config.cmake
-+        ${CMAKE_CURRENT_BINARY_DIR}/mdl-config-version.cmake
-+    DESTINATION  "${CMAKE_INSTALL_DATADIR}/mdl"
++        ${CMAKE_CURRENT_BINARY_DIR}/unofficial-mdl-config.cmake
++        ${CMAKE_CURRENT_BINARY_DIR}/unofficial-mdl-config-version.cmake
++    DESTINATION  "${CMAKE_INSTALL_DATADIR}/unofficial-mdl"
 +)
 diff --git a/cmake/utilities.cmake b/cmake/utilities.cmake
 index 5e9774f..51dc65c 100644

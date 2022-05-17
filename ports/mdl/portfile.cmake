@@ -63,7 +63,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds MDL_BUILD_DDS_PLUGIN
         freeimage MDL_BUILD_FREEIMAGE_PLUGIN)
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/mdl-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-mdl-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -91,7 +91,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-mdl)
 vcpkg_copy_tools(
     TOOL_NAMES i18n mdlc mdlm
     AUTO_CLEAN
