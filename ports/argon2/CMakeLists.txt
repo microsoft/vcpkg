@@ -18,13 +18,17 @@ link_libraries(Threads::Threads)
 
 include_directories(include src)
 
+set(ARGON2_HEADERS
+    include/argon2.h
+)
+
 set (ARGON2_SRC
     "src/argon2.c"
     "src/core.c"
     "src/blake2/blake2b.c"
     "src/thread.c"
     "src/encoding.c"
-    )
+)
 
 if (OPTIMIZATIONS)
     set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
@@ -48,15 +52,15 @@ else()
     list(APPEND ARGON2_SRC "src/ref.c")
 endif()
 
-add_library(argon2 ${ARGON2_SRC})
-target_compile_definitions(argon2 PUBLIC "A2_VISCTL")
+add_library(argon2_lib ${ARGON2_SRC})
+target_compile_definitions(argon2_lib PUBLIC "A2_VISCTL")
+set_target_properties(argon2_lib PROPERTIES OUTPUT_NAME argon2)
 
-set(ARGON2_HEADERS
-    include/argon2.h
-)
+add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
+set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
 
 add_executable(argon2_test src/test.c)
-target_link_libraries(argon2_test argon2)
+target_link_libraries(argon2_test argon2_lib)
 add_test(NAME argon2_test COMMAND argon2_test)
 
 if (NOT ARGON2_SKIP_HEADERS)
@@ -66,7 +70,7 @@ endif ()
 configure_file ("${CMAKE_SOURCE_DIR}/argon2.pc.in" "${PROJECT_BINARY_DIR}/libargon2.pc" @ONLY)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libargon2.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 
-install(TARGETS argon2
+install(TARGETS argon2_lib argon2_tool
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib

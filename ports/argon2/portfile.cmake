@@ -30,3 +30,5 @@ vcpkg_install_cmake()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_copy_tools(TOOL_NAMES argon2 AUTO_CLEAN)
