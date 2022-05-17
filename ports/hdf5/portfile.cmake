@@ -100,7 +100,7 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5-config.cmake" ${contents})
 
 if(FEATURES MATCHES "tools")
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
+        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import h5perf_serial
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
