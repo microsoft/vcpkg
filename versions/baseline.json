@@ -222,7 +222,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 8
+      "port-version": 9
     },
     "audiofile": {
       "baseline": "1.1.0",
@@ -466,7 +466,7 @@
     },
     "bitserializer": {
       "baseline": "0.44",
-      "port-version": 0
+      "port-version": 1
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -1689,8 +1689,8 @@
       "port-version": 0
     },
     "crfsuite": {
-      "baseline": "2019-07-21",
-      "port-version": 3
+      "baseline": "2020-08-27",
+      "port-version": 0
     },
     "croncpp": {
       "baseline": "2020-09-04",
@@ -2318,7 +2318,7 @@
     },
     "freealut": {
       "baseline": "1.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "freeglut": {
       "baseline": "3.2.2",
@@ -3522,7 +3522,7 @@
     },
     "libe57": {
       "baseline": "1.1.332",
-      "port-version": 1
+      "port-version": 2
     },
     "libe57format": {
       "baseline": "2.2.0",
@@ -3554,7 +3554,7 @@
     },
     "libffi": {
       "baseline": "3.4.2",
-      "port-version": 4
+      "port-version": 5
     },
     "libfido2": {
       "baseline": "1.10.0",
@@ -3782,7 +3782,7 @@
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
-      "port-version": 9
+      "port-version": 10
     },
     "libmorton": {
       "baseline": "0.2.8",
@@ -4018,7 +4018,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 6
+      "port-version": 7
     },
     "libsoundio": {
       "baseline": "2.0.0",
@@ -4046,7 +4046,7 @@
     },
     "libsrtp": {
       "baseline": "2.4.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libssh": {
       "baseline": "0.9.6",
@@ -4258,7 +4258,7 @@
     },
     "llfio": {
       "baseline": "2.0-20220112",
-      "port-version": 0
+      "port-version": 1
     },
     "llgl": {
       "baseline": "2019-08-15",
@@ -4425,8 +4425,8 @@
       "port-version": 0
     },
     "matio": {
-      "baseline": "1.5.19",
-      "port-version": 1
+      "baseline": "1.5.23",
+      "port-version": 0
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -4434,7 +4434,7 @@
     },
     "matplotplusplus": {
       "baseline": "2021-04-11",
-      "port-version": 5
+      "port-version": 6
     },
     "matroska": {
       "baseline": "1.6.3",
@@ -4814,7 +4814,7 @@
     },
     "ned14-internal-quickcpplib": {
       "baseline": "0.0.0-cad832c8",
-      "port-version": 0
+      "port-version": 1
     },
     "neon2sse": {
       "baseline": "2021-09-16",
@@ -5426,7 +5426,7 @@
     },
     "pixel": {
       "baseline": "2022-03-15",
-      "port-version": 0
+      "port-version": 1
     },
     "pixman": {
       "baseline": "0.40.0",
@@ -5638,7 +5638,7 @@
     },
     "pystring": {
       "baseline": "1.1.3",
-      "port-version": 4
+      "port-version": 5
     },
     "python2": {
       "baseline": "2.7.18",
@@ -6114,7 +6114,7 @@
     },
     "rbdl": {
       "baseline": "2.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "rbdl-orb": {
       "baseline": "3.1.2",
@@ -6154,7 +6154,7 @@
     },
     "recast": {
       "baseline": "1.5.1",
-      "port-version": 4
+      "port-version": 5
     },
     "redis-plus-plus": {
       "baseline": "1.3.2",
@@ -6162,7 +6162,7 @@
     },
     "refl-cpp": {
       "baseline": "0.12.3",
-      "port-version": 0
+      "port-version": 1
     },
     "refprop-headers": {
       "baseline": "2019-04-14",
@@ -6198,7 +6198,7 @@
     },
     "restinio": {
       "baseline": "0.6.14",
-      "port-version": 0
+      "port-version": 1
     },
     "rexo": {
       "baseline": "0.2.2",
@@ -6602,7 +6602,7 @@
     },
     "sockpp": {
       "baseline": "0.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "soem": {
       "baseline": "1.4.0",
@@ -6854,7 +6854,7 @@
     },
     "szip": {
       "baseline": "2.1.1",
-      "port-version": 7
+      "port-version": 8
     },
     "tabulate": {
       "baseline": "2019-01-06",
@@ -6866,7 +6866,7 @@
     },
     "taglib": {
       "baseline": "1.12.0",
-      "port-version": 2
+      "port-version": 3
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
@@ -6954,7 +6954,7 @@
     },
     "thor": {
       "baseline": "2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "threadpool": {
       "baseline": "0.2.5",
@@ -7542,7 +7542,7 @@
     },
     "workflow": {
       "baseline": "0.9.7",
-      "port-version": 0
+      "port-version": 1
     },
     "wpilib": {
       "baseline": "2020.3.2",
