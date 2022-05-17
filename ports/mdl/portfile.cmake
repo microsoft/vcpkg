@@ -30,6 +30,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds MDL_BUILD_DDS_PLUGIN
         freeimage MDL_BUILD_FREEIMAGE_PLUGIN)
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/mdl-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -50,8 +52,6 @@ vcpkg_cmake_configure(
         -Dpython_PATH:PATH=${PATH_PYTHON}
 
         ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG
-        -DMDL_INSTALL_HEADERS:BOOL=OFF
 )
 
 vcpkg_cmake_install()
@@ -61,6 +61,10 @@ vcpkg_cmake_config_fixup()
 vcpkg_copy_tools(
     TOOL_NAMES i18n mdlc mdlm
     AUTO_CLEAN
+)
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

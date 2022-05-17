@@ -1,12 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c60ee0..c7b173e 100644
+index 1f1902c..9a771de 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -50,9 +50,13 @@ option(MDL_BUILD_ARNOLD_PLUGIN "Enable the build of the MDL Arnold plugin." OFF)
- option(MDL_LOG_PLATFORM_INFOS "Prints some infos about the current build system (relevant for error reports)." ON)
- option(MDL_LOG_DEPENDENCIES "Prints the list of dependencies during the generation step." OFF)
- option(MDL_LOG_FILE_DEPENDENCIES "Prints the list of files that is copied after a successful build." OFF)
-+option(MDL_INSTALL_HEADERS "Install headers." ON)
+@@ -53,6 +53,9 @@ option(MDL_LOG_FILE_DEPENDENCIES "Prints the list of files that is copied after
  set(MDL_ADDITIONAL_COMPILER_DEFINES "MDL_SOURCE_RELEASE" CACHE STRING "Additional compile defines that are passed to each of the projects")
  set(MDL_ADDITIONAL_COMPILER_OPTIONS "" CACHE STRING "Additional compile options that are passed to each of the projects")
  
@@ -16,21 +12,16 @@ index 9c60ee0..c7b173e 100644
  # set the default installation path
  if(NOT DEFINED CMAKE_INSTALL_PREFIX OR CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "..." FORCE)
-@@ -235,3 +239,45 @@ foreach(_TEST_POST ${MDL_TEST_LIST_POST})
+@@ -235,3 +238,40 @@ foreach(_TEST_POST ${MDL_TEST_LIST_POST})
      add_subdirectory(${_TEST_POST})
  endforeach()
  
 +# Config
 +#--------------------------------------------------------------------------------------------------
 +
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/mdl-config.cmake.in" [=[
-+    @PACKAGE_INIT@
-+    include("@PACKAGE_PATH_EXPORT_TARGETS@")
-+]=])
-+
 +set(PATH_EXPORT_TARGETS "${CMAKE_INSTALL_DATADIR}/mdl/mdl-targets.cmake")
 +configure_package_config_file(
-+    "${CMAKE_CURRENT_BINARY_DIR}/mdl-config.cmake.in"
++    "${CMAKE_CURRENT_SOURCE_DIR}/mdl-config.cmake.in"
 +    "${CMAKE_CURRENT_BINARY_DIR}/mdl-config.cmake"
 +    PATH_VARS
 +        PATH_EXPORT_TARGETS
@@ -62,12 +53,19 @@ index 9c60ee0..c7b173e 100644
 +    EXPORT    mdl-targets
 +    NAMESPACE "mdl::"
 +)
-\ No newline at end of file
 diff --git a/cmake/utilities.cmake b/cmake/utilities.cmake
-index c4dbaab..ecdb672 100644
+index 5e9774f..889d481 100644
 --- a/cmake/utilities.cmake
 +++ b/cmake/utilities.cmake
-@@ -1142,6 +1142,15 @@ endfunction()
+@@ -705,6 +705,7 @@ function(CREATE_FROM_BASE_PRESET)
+     # adjust output file name if requested
+     if(CREATE_FROM_BASE_PRESET_OUTPUT_NAME)
+         set_target_properties(${CREATE_FROM_BASE_PRESET_TARGET} PROPERTIES OUTPUT_NAME ${CREATE_FROM_BASE_PRESET_OUTPUT_NAME})
++        set_target_properties(${CREATE_FROM_BASE_PRESET_TARGET} PROPERTIES EXPORT_NAME ${CREATE_FROM_BASE_PRESET_OUTPUT_NAME})
+     endif()
+ 
+     # log message
+@@ -1143,6 +1144,15 @@ endfunction()
  # -------------------------------------------------------------------------------------------------
  # basic install logic to copy the entire output folder
  
@@ -83,7 +81,7 @@ index c4dbaab..ecdb672 100644
  function(ADD_TARGET_INSTALL)
      set(options)
      set(oneValueArgs TARGET DESTINATION)
-@@ -1151,13 +1160,24 @@ function(ADD_TARGET_INSTALL)
+@@ -1152,13 +1162,20 @@ function(ADD_TARGET_INSTALL)
      # - ADD_TARGET_INSTALL_TARGET
      # - ADD_TARGET_INSTALL_DESTINATION
  
@@ -97,11 +95,7 @@ index c4dbaab..ecdb672 100644
 +    if(${ADD_TARGET_INSTALL_TARGET} IN_LIST _MDL_PROD_TARGETS)
 +        install(
 +            TARGETS ${ADD_TARGET_INSTALL_TARGET}
-+            EXPORT   mdl-targets
-+            ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+            LIBRARY  DESTINATION modules # ${CMAKE_INSTALL_LIBDIR}
-+            RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
-+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++            EXPORT  mdl-targets
 +        )
 +    else()
 +        install(DIRECTORY $<TARGET_FILE_DIR:${ADD_TARGET_INSTALL_TARGET}>/
@@ -116,93 +110,44 @@ index c4dbaab..ecdb672 100644
  endfunction()
  
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 7ff8d60..04bf27b 100644
+index 246303d..28934b4 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
-@@ -239,3 +239,17 @@ source_group("base" FILES ${PROJECT_HEADERS_BASE})
+@@ -229,3 +229,8 @@ source_group("base" FILES ${PROJECT_HEADERS_BASE})
  source_group("math" FILES ${PROJECT_HEADERS_MATH})
  source_group("mdl" FILES ${PROJECT_HEADERS_MDL})
  source_group("neuraylib" FILES ${PROJECT_HEADERS_NEURAYLIB})
 +
-+if(MDL_INSTALL_HEADERS)
-+    install(
-+        DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/mi"
-+        TYPE      INCLUDE
-+    )
-+endif()
-+
-+add_library(headers INTERFACE)
-+target_include_directories(headers
-+    INTERFACE
-+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-+        $<INSTALL_INTERFACE:include>
++install(
++    DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/mi"
++    TYPE      INCLUDE
 +)
-\ No newline at end of file
-diff --git a/src/prod/bin/i18n/CMakeLists.txt b/src/prod/bin/i18n/CMakeLists.txt
-index 72b609a..e48980c 100644
---- a/src/prod/bin/i18n/CMakeLists.txt
-+++ b/src/prod/bin/i18n/CMakeLists.txt
-@@ -67,6 +67,8 @@ create_from_base_preset(
-     SOURCES ${PROJECT_SOURCES}
- )
- 
-+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "i18n")
-+
- # add mdl and other dependencies
- target_add_dependencies(TARGET ${PROJECT_NAME} 
-     DEPENDS 
-diff --git a/src/prod/bin/mdlc/CMakeLists.txt b/src/prod/bin/mdlc/CMakeLists.txt
-index 47f02b2..8bd912a 100644
---- a/src/prod/bin/mdlc/CMakeLists.txt
-+++ b/src/prod/bin/mdlc/CMakeLists.txt
-@@ -52,6 +52,8 @@ create_from_base_preset(
-     SOURCES ${PROJECT_SOURCES}
- )
- 
-+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "mdlc")
-+
- # add mdl and other dependencies
- target_add_dependencies(TARGET ${PROJECT_NAME} 
-     DEPENDS 
-diff --git a/src/prod/bin/mdlm/CMakeLists.txt b/src/prod/bin/mdlm/CMakeLists.txt
-index b8ab645..c27bc3b 100644
---- a/src/prod/bin/mdlm/CMakeLists.txt
-+++ b/src/prod/bin/mdlm/CMakeLists.txt
-@@ -66,6 +66,8 @@ create_from_base_preset(
-     SOURCES ${PROJECT_SOURCES}
- )
- 
-+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "mdlm")
-+
- # add dependencies
- target_add_dependencies(TARGET ${PROJECT_NAME}
-     DEPENDS
 diff --git a/src/prod/lib/mdl_core/CMakeLists.txt b/src/prod/lib/mdl_core/CMakeLists.txt
-index f54d500..a172f10 100644
+index b60a1fc..9d904a2 100644
 --- a/src/prod/lib/mdl_core/CMakeLists.txt
 +++ b/src/prod/lib/mdl_core/CMakeLists.txt
 @@ -45,6 +45,7 @@ create_from_base_preset(
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
  set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_core")
-+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "core")
++set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "mdl_core")
  
  if(MACOSX)
      set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".so") # corresponding to the binary release
 diff --git a/src/prod/lib/mdl_sdk/CMakeLists.txt b/src/prod/lib/mdl_sdk/CMakeLists.txt
-index 6e27778..fdf4d0a 100644
+index 6ddfc24..656d8d4 100644
 --- a/src/prod/lib/mdl_sdk/CMakeLists.txt
 +++ b/src/prod/lib/mdl_sdk/CMakeLists.txt
 @@ -47,6 +47,7 @@ create_from_base_preset(
  # customize name
  set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
  set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_sdk")
-+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "sdk")
++set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME "mdl_sdk")
  
  if(MACOSX)
      set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".so") # corresponding to the binary release
 diff --git a/src/shaders/plugin/dds/CMakeLists.txt b/src/shaders/plugin/dds/CMakeLists.txt
-index 04254db..f013a66 100644
+index 81558b0..179e1df 100644
 --- a/src/shaders/plugin/dds/CMakeLists.txt
 +++ b/src/shaders/plugin/dds/CMakeLists.txt
 @@ -65,6 +65,7 @@ create_from_base_preset(
@@ -214,7 +159,7 @@ index 04254db..f013a66 100644
  if(MACOSX)
      set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".so") # corresponding to the binary release
 diff --git a/src/shaders/plugin/freeimage/CMakeLists.txt b/src/shaders/plugin/freeimage/CMakeLists.txt
-index ec225a9..1295803 100644
+index b3ae039..a28b50e 100644
 --- a/src/shaders/plugin/freeimage/CMakeLists.txt
 +++ b/src/shaders/plugin/freeimage/CMakeLists.txt
 @@ -56,6 +56,7 @@ create_from_base_preset(
