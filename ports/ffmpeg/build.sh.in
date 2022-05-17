@@ -2,7 +2,7 @@
 
 set -e
 
-export PATH="/usr/bin:$PATH"
+export PATH="${PATH}:/usr/bin"
 
 command -v cygpath >/dev/null && have_cygpath=1
 
