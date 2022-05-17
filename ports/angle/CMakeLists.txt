@@ -76,6 +76,12 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/*.h"
     "src/common/*.inc"
     "src/common/*.cpp"
+    "src/common/apple/*.h"
+    "src/common/apple/*.cpp"
+    "src/common/apple/*.mm"
+    "src/common/gl/cgl/*.h"
+    "src/common/gl/cgl/*.cpp"
+    "src/common/gl/cgl/*.mm"
     "src/common/third_party/base/anglebase/*.h"
     "src/common/third_party/base/anglebase/*.cc"
     "src/common/third_party/base/anglebase/containers/*.h"
@@ -341,6 +347,9 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
             "src/libANGLE/renderer/gl/cgl/*.mm"
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.h"
+            "src/libANGLE/renderer/gl/apple/*.mm"
+            "src/libANGLE/renderer/gl/apple/*.cpp"
+            "src/libANGLE/renderer/gl/apple/*.h"
             "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
