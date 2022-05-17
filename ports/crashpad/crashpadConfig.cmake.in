@@ -11,17 +11,11 @@ add_library(crashpad::crashpad ALIAS crashpad)
 
 # Crashpad Headers
 target_include_directories(crashpad INTERFACE 
-        ${_IMPORT_PREFIX}/include/crashpad 
-        ${_IMPORT_PREFIX}/include/crashpad/third_party/mini_chromium/mini_chromium
+        "${_IMPORT_PREFIX}/include/crashpad"
+        "${_IMPORT_PREFIX}/include/crashpad/third_party/mini_chromium/mini_chromium"
 )
 
 # Crashpad Libraries
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(_IMPORT_LIB_DIR "${_IMPORT_PREFIX}/debug/lib")
-else()
-  set(_IMPORT_LIB_DIR "${_IMPORT_PREFIX}/lib")
-endif()
-
 add_library(crashpad_common STATIC IMPORTED)
 add_library(crashpad_client STATIC IMPORTED)
 add_library(crashpad_util STATIC IMPORTED)
@@ -31,11 +25,22 @@ if(WIN32)
   target_compile_definitions(crashpad INTERFACE NOMINMAX)
 endif()
 
-set_property(TARGET crashpad_common PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}common${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set_property(TARGET crashpad_client PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}client${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set_property(TARGET crashpad_util PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}util${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}base${CMAKE_STATIC_LIBRARY_SUFFIX}")
-
+set_target_properties(crashpad_common PROPERTIES 
+  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}common${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}common${CMAKE_STATIC_LIBRARY_SUFFIX}"
+)
+set_target_properties(crashpad_client PROPERTIES 
+  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}client${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}client${CMAKE_STATIC_LIBRARY_SUFFIX}"
+)
+set_target_properties(crashpad_util PROPERTIES 
+  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}util${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}util${CMAKE_STATIC_LIBRARY_SUFFIX}"
+)
+set_target_properties(crashpad_base PROPERTIES 
+  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}base${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}base${CMAKE_STATIC_LIBRARY_SUFFIX}"
+)
 target_link_libraries(crashpad INTERFACE crashpad_common crashpad_client crashpad_util crashpad_base)
 
 if(APPLE OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
@@ -53,9 +58,15 @@ if(APPLE)
     "-framework Security"
   )
 
-  find_library(bsm REQUIRED)
+  find_library(_BSM bsm REQUIRED)
   add_library(crashpad_mig_output STATIC IMPORTED)
-  set_property(TARGET crashpad_mig_output PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libmig_output.a")
+  set_target_properties(crashpad_mig_output PROPERTIES 
+    IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libmig_output.a"
+    IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libmig_output.a"
+  )
   target_link_libraries(crashpad INTERFACE bsm crashpad_mig_output)
-  unset(bsm CACHE)
+  unset(_BSM CACHE)
 endif()
+
+find_package(ZLIB REQUIRED)
+target_link_libraries(crashpad INTERFACE ZLIB::ZLIB)

@@ -113,7 +113,7 @@ index e32e40d..654bffc 100644
    tool("stamp") {
 -    command = "touch {{output}}"
 +    if (host_os == "win") {
-+      command = "cmd /c type nul > {{output}}"
++      command = "cmd /c type nul >> {{output}}"
 +    } else {
 +      command = "touch {{output}}"
 +    }

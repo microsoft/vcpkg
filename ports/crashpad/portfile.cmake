@@ -41,30 +41,38 @@ checkout_into_path(
     REF "e1e7b0ad8ee99a875b272c8e33e308472e897660"
 )
 
-#zlib
-checkout_into_path(
-    DEST "${SOURCE_PATH}/third_party/zlib/zlib"
-    URL "https://chromium.googlesource.com/chromium/src/third_party/zlib"
-    REF "13dc246a58e4b72104d35f9b1809af95221ebda7"
+function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
+    unset(_LIBRARY_DEB CACHE)
+    find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
+        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
+        NO_DEFAULT_PATH)
+
+    if(_LIBRARY_DEB MATCHES "-NOTFOUND")
+        message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
+    endif()
+
+    unset(_LIBRARY_REL CACHE)
+    find_library(_LIBRARY_REL NAMES ${LIBRARY_NAMES}
+        PATHS "${CURRENT_INSTALLED_DIR}/lib"
+        NO_DEFAULT_PATH)
+
+    if(_LIBRARY_REL MATCHES "-NOTFOUND")
+        message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
+    endif()
+
+    set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
+
+    file(REMOVE "${OUTPUT_FILE}")
+    configure_file("${INPUT_FILE}" "${OUTPUT_FILE}" @ONLY)
+endfunction()
+
+replace_gn_dependency(
+    "${CMAKE_CURRENT_LIST_DIR}/zlib.gn"
+    "${SOURCE_PATH}/third_party/zlib/BUILD.gn"
+    "z;zlib;zlibd"
 )
 
 set(GN_OPTIONS "")
-function(set_compiler_options OPTIONS)
-    foreach(_VAR OPTIONS)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-
-    set(OPTIONS_DBG "is_debug=true \
-            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\""
-        PARENT_SCOPE
-    )
-    set(OPTIONS_REL " \
-            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\""
-        PARENT_SCOPE
-    )
-endfunction()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Setting GN options for Windows")
@@ -73,26 +81,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    list(APPEND OPTIONS 
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-    )
-    set_compiler_options(OPTIONS)
-
     set(DISABLE_WHOLE_PROGRAM_OPTIMIZATION "\
         extra_cflags=\"/GL-\" \
         extra_ldflags=\"/LTCG:OFF\" \
         extra_arflags=\"/LTCG:OFF\""
     )
+    set(OPTIONS_DBG "${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
+    set(OPTIONS_REL "${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 
-    set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-    set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(DISABLE_UNKNOWN_PRAGMA_WARNING "extra_cflags=\"/wd4068\"")
-        set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_UNKNOWN_PRAGMA_WARNING}")
-        set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_UNKNOWN_PRAGMA_WARNING}")
-    endif()
     set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Setting GN options for Android")
@@ -102,17 +98,12 @@ elseif(VCPKG_TARGET_IS_ANDROID)
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    list(APPEND OPTIONS 
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_SHARED_LINKER_FLAGS
-    )
-    set_compiler_options(OPTIONS)
     if (VCPKG_CRT_LINKAGE STREQUAL "static")
         string(APPEND CMAKE_SHARED_LINKER_FLAGS " -static-libstdc++ ")
     endif()
-    set(OPTIONS_DBG "${OPTIONS_DBG} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-    set(OPTIONS_REL "${OPTIONS_REL} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+    set(OPTIONS_DBG "extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+    set(OPTIONS_REL "extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+
     set(GN_OPTIONS 
         "target_os=\"android\" \
         target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" \
@@ -126,11 +117,6 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    list(APPEND OPTIONS 
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-    )
-    set_compiler_options(OPTIONS)
     set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 elseif(VCPKG_TARGET_IS_OSX)
     message(STATUS "Setting GN options for OSX")
@@ -139,20 +125,39 @@ elseif(VCPKG_TARGET_IS_OSX)
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    list(APPEND OPTIONS 
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-    )
-    set_compiler_options(OPTIONS)
     set(LINKER_FLAGS "extra_ldflags=\" \
         -framework IOKit -framework ApplicationServices \
         -framework Foundation -framework Security\""
     )
-    set(OPTIONS_DBG "${OPTIONS_DBG} ${LINKER_FLAGS}")
-    set(OPTIONS_REL "${OPTIONS_REL} ${LINKER_FLAGS}")
+    set(OPTIONS_DBG "${LINKER_FLAGS}")
+    set(OPTIONS_REL "${LINKER_FLAGS}")
     list(APPEND TARGETS util:mig_output)
+
     set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 endif()
+
+list(APPEND OPTIONS 
+    CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+    CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+)
+function(append_compiler_options OPTIONS)
+    foreach(_VAR OPTIONS)
+        string(STRIP "${${_VAR}}" ${_VAR})
+    endforeach()
+
+    set(OPTIONS_DBG "${OPTIONS_DBG} is_debug=true \
+            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
+            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\""
+        PARENT_SCOPE
+    )
+    set(OPTIONS_REL "${OPTIONS_REL} \
+            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
+            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\""
+        PARENT_SCOPE
+    )
+endfunction()
+
+append_compiler_options(OPTIONS)
 
 message(STATUS "Configuring GN")
 vcpkg_configure_gn(
@@ -234,4 +239,4 @@ file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
