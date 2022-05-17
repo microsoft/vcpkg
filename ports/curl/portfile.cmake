@@ -13,6 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
+        wolfssl-ntlm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -75,13 +76,6 @@ if(VCPKG_TARGET_IS_UWP)
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
-endif()
-
-# for windows and wolfssl, NTLM must be disabled to avoid conflict with win32crypto
-if(VCPKG_TARGET_IS_WINDOWS AND wolfssl IN_LIST FEATURES)
-    list(APPEND OPTIONS
-        -DCURL_DISABLE_NTLM=ON
-        )
 endif()
 
 vcpkg_cmake_configure(
