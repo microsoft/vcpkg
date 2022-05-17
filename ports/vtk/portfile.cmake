@@ -30,6 +30,7 @@ vcpkg_from_github(
         fix-gdal.patch
         missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
         UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
+        fix-hdf5-parallel.patch
 )
 
 # =============================================================================
@@ -141,6 +142,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "cuda"         VTK_USE_CUDA
         "mpi"          VTK_USE_MPI
+        "mpi"          ENABLE_HDF5_PARALLEL
         "all"          VTK_BUILD_ALL_MODULES
 )
 # =============================================================================
@@ -168,6 +170,8 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
+    MAYBE_UNUSED_VARIABLES
+        VTK_MODULE_ENABLE_VTK_PythonContext2D
 )
 
 vcpkg_cmake_install()
