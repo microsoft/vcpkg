@@ -35,26 +35,26 @@ set_target_properties(openctm PROPERTIES C_VISIBILITY_PRESET hidden
 include(GNUInstallDirs)
 install(
   TARGETS openctm
-  EXPORT openctmConfig
+  EXPORT unofficial-openctmConfig
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" COMPONENT dev)
 
 include(CMakePackageConfigHelpers)
-set(VERSION_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/openctmConfigVersion.cmake")
+set(VERSION_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openctmConfigVersion.cmake")
 write_basic_package_version_file(
-  ${VERSION_FILE_PATH}
+  "${VERSION_FILE_PATH}"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion)
-install(FILES ${VERSION_FILE_PATH} DESTINATION share/openctm)
+install(FILES "${VERSION_FILE_PATH}" DESTINATION share/unofficial-openctm)
 
 install(FILES ${PUBLIC_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(
-  EXPORT openctmConfig
-  FILE openctmConfig.cmake
-  NAMESPACE openctm::
-  DESTINATION share/openctm)
+  EXPORT unofficial-openctmConfig
+  FILE unofficial-openctmConfig.cmake
+  NAMESPACE unofficial::openctm::
+  DESTINATION share/unofficial-openctm)
 
 export(PACKAGE openctm)
