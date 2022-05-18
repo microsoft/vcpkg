@@ -32,7 +32,7 @@ diff -ur a/lib/curl_ntlm_core.h b/lib/curl_ntlm_core.h
  #  include <wolfssl/options.h>
 -#endif
 +#  include <wolfssl/openssl/ssl.h>
-+#else
++#elif defined(USE_OPENSSL)
  #  include <openssl/ssl.h>
  #endif
  
