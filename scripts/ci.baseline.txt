@@ -172,12 +172,6 @@ cpp-netlib:x64-uwp=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
-# VS 2022 17.2 miscompiles this:
-cppgraphqlgen:arm64-windows=fail
-cppgraphqlgen:x64-windows=fail
-cppgraphqlgen:x64-windows-static=fail
-cppgraphqlgen:x64-windows-static-md=fail
-cppgraphqlgen:x86-windows=fail
 # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
