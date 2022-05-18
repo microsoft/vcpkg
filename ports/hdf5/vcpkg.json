@@ -2,6 +2,7 @@
   "name": "hdf5",
   "version": "1.12.2",
   "description": "HDF5 is a data model, library, and file format for storing and managing data",
+  "license": null,
   "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
   "supports": "!uwp",
   "dependencies": [
