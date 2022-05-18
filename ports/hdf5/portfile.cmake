@@ -65,7 +65,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
-        -DHDF5_INSTALL_CMAKE_DIR=share
+        -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
         -DSZIP_USE_EXTERNAL=ON
@@ -91,16 +91,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKA
     endforeach()
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5-config.cmake" contents)
+file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
                [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
                contents ${contents}
 )
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5-config.cmake" ${contents})
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 if(FEATURES MATCHES "tools")
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import h5perf_serial
+        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -114,6 +114,8 @@ if(FEATURES MATCHES "tools")
             list(REMOVE_ITEM HDF5_TOOLS "${HDF5_TOOL}")
         endif()
     endforeach()
+
+    list(APPEND HDF5_TOOLS h5perf_serial)
 
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
