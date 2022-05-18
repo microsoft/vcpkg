@@ -2369,8 +2369,8 @@
       "port-version": 1
     },
     "ftgl": {
-      "baseline": "2.4.0",
-      "port-version": 4
+      "baseline": "2022-05-18",
+      "port-version": 0
     },
     "ftxui": {
       "baseline": "2.0.0",
