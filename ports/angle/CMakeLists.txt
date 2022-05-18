@@ -72,16 +72,24 @@ elseif(APPLE)
         set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win|_mac")
     endif()
 endif()
+
+if(APPLE)
+    set(ANGLE_COMMON_PLATFORM_SOURCES
+        "src/common/apple/*.h"
+        "src/common/apple/*.cpp"
+        "src/common/apple/*.mm"
+        "src/common/gl/cgl/*.h"
+        "src/common/gl/cgl/*.cpp"
+        "src/common/gl/cgl/*.mm")
+else()
+    set(ANGLE_COMMON_PLATFORM_SOURCES )
+endif()
+
 file(GLOB ANGLE_COMMON_SOURCES 
+    ${ANGLE_COMMON_PLATFORM_SOURCES}
     "src/common/*.h"
     "src/common/*.inc"
     "src/common/*.cpp"
-    "src/common/apple/*.h"
-    "src/common/apple/*.cpp"
-    "src/common/apple/*.mm"
-    "src/common/gl/cgl/*.h"
-    "src/common/gl/cgl/*.cpp"
-    "src/common/gl/cgl/*.mm"
     "src/common/third_party/base/anglebase/*.h"
     "src/common/third_party/base/anglebase/*.cc"
     "src/common/third_party/base/anglebase/containers/*.h"
