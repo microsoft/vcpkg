@@ -159,6 +159,7 @@ Then, you might just ask for:
 }
 ```
 
+<a id="platform"></a>
 #### `"platform"` Field
 
 The `"platform"` field defines the platforms where the dependency should be installed - for example,

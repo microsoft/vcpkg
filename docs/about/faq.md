@@ -6,7 +6,7 @@ If you want to contribute but don't have a particular library in mind then take 
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
-Yes! See [the `export` command](../users/buildsystems/integration.md#export-command).
+Yes! See the [`export` command](../users/buildsystems/export-command.md).
 
 ## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
@@ -88,7 +88,7 @@ Vcpkg uses CMake internally as a build scripting language. This is because CMake
 ## Will Vcpkg support downloading compiled binaries from a public or private server?
 We would like to eventually support downloading precompiled binaries, similar to other system package managers.
 
-In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export`](../users/buildsystems/integration.md#export) command.
+In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export` command](../users/buildsystems/export-command.md).
 
 ## What Visual C++ toolsets are supported?
 We support Visual Studio 2015 Update 3 and above.

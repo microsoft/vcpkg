@@ -15,7 +15,6 @@ See our guide to [getting started with versioning](../examples/versioning.gettin
   * [`version-date`](#version-date)
   * [`version-string`](#version-string)
 * [Version constraints](#version-constraints)
-* [Version files](#version-files)
 
 ## Version schemes
 Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
