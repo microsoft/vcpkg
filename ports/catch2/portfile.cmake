@@ -22,8 +22,24 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# We remove these folders because they are empty and cause warnings on the library installation
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/benchmark/internal")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal")
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/Catch2Main.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/Catch2Main.lib")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/Catch2Maind.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/Catch2Maind.lib")
+endif()
+
+file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/catch2/*.cmake")
+foreach(SHARE_FILE ${SHARE_FILES})
+    vcpkg_replace_string("${SHARE_FILE}" "lib/Catch2Main" "lib/manual-link/Catch2Main")
+endforeach()
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
