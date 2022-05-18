@@ -141,6 +141,7 @@ function(ignition_modular_library)
         SHA512 ${IML_SHA512}
         HEAD_REF ${IML_HEAD_REF}
         PATCHES ${IML_PATCHES}
+        FILE_DISAMBIGUATOR 1
     )
 
     # Build library

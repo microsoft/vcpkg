@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version": "13.0.0",
-  "port-version": 5,
+  "version": "14.0.3",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -14,6 +13,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ],
   "default-features": [
@@ -24,6 +27,18 @@
     "tools"
   ],
   "features": {
+    "bolt": {
+      "description": "BOLT is a post-link optimizer developed to speed up large applications.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
     "clang": {
       "description": "Include C Language Family Front-end.",
       "dependencies": [
@@ -50,7 +65,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "disable-abi-breaking-checks",
             "disable-assertions",
             "disable-clang-static-analyzer",
             "enable-bindings",
@@ -97,9 +111,6 @@
           "platform": "!x86 & !x64 & !arm & !arm64"
         }
       ]
-    },
-    "disable-abi-breaking-checks": {
-      "description": "Deprecated; this is the default"
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."
@@ -238,9 +249,6 @@
         }
       ]
     },
-    "parallel-libs": {
-      "description": "Include parallel-libs project."
-    },
     "polly": {
       "description": "Include Polly (Polyhedral optimizations for LLVM) project.",
       "dependencies": [
@@ -281,6 +289,7 @@
             "target-riscv",
             "target-sparc",
             "target-systemz",
+            "target-ve",
             "target-webassembly",
             "target-x86",
             "target-xcore"
@@ -326,6 +335,9 @@
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
+    },
+    "target-ve": {
+      "description": "Build with VE backend."
     },
     "target-webassembly": {
       "description": "Build with WebAssembly backend."
