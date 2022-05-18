@@ -7293,8 +7293,8 @@
       "port-version": 0
     },
     "uvw": {
-      "baseline": "2.7.0",
-      "port-version": 1
+      "baseline": "2.12.1",
+      "port-version": 0
     },
     "uwebsockets": {
       "baseline": "20.11.0",
