@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCATCH_INSTALL_DOCS=OFF
-        -DCATCH_INSTALL_EXTRAS=OFF
 )
 
 vcpkg_cmake_install()
