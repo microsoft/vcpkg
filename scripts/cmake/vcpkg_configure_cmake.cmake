@@ -381,7 +381,7 @@ function(vcpkg_configure_cmake)
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND "${NINJA}" -v
+            COMMAND "${NINJA}" --version
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
         )
