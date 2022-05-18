@@ -28,29 +28,8 @@ if(NOT EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
         ARCHIVE "${CLANG_ARCHIVE}"
         PATCHES
             001-clang-skip-symlink.patch
-            002-clang-build-static-clang.patch
-        SOURCE_BASE clang
-        WORKING_DIRECTORY "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools")
-
-    file(SHA512 "${CLANG_ARCHIVE}" patchset_hash)
-    file(SHA512 "${CMAKE_CURRENT_LIST_DIR}/001-clang-skip-symlink.patch" patch_001_hash)
-    string(APPEND patchset_hash "${patch_001_hash}")
-    file(SHA512 "${CMAKE_CURRENT_LIST_DIR}/002-clang-build-static-clang.patch" patch_002_hash)
-    string(APPEND patchset_hash "${patch_002_hash}")
-    string(SHA512 patchset_hash "${patchset_hash}")
-    string(SUBSTRING "${patchset_hash}" 0 10 patchset_hash)
-
-    if(EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}.clean")
-        file(RENAME
-            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}.clean"
-            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
-    elseif(EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}")
-        file(RENAME
-            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang-${patchset_hash}"
-            "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
-    else()
-        message(FATAL_ERROR "Could not place downloaded clang repository at the right place")
-    endif()
+            002-clang-build-static-clang.patch)
+    file(RENAME "${CLANG_SOURCE_PATH}" "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
 endif()
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
