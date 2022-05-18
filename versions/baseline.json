@@ -4193,7 +4193,7 @@
       "port-version": 0
     },
     "libxml2": {
-      "baseline": "2.9.13",
+      "baseline": "2.9.14",
       "port-version": 0
     },
     "libxmlmm": {
