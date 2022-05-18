@@ -29,6 +29,12 @@
 #
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
+# Also consider vcpkg_from_* functions if you can; the generated code here is for any web accessable
+# source archive.
+#  vcpkg_from_github
+#  vcpkg_from_gitlab
+#  vcpkg_from_bitbucket
+#  vcpkg_from_sourceforge
 vcpkg_download_distfile(ARCHIVE
     URLS "@URL@"
     FILENAME "@FILENAME@"
@@ -74,5 +80,5 @@ vcpkg_cmake_install()
 #}
 # vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
 
-# # Handle copyright
-# file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/@PORT@" RENAME copyright)
+# Uncomment the line below if necessary to install the license file for the port to share/${PORT}/copyright
+# file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
