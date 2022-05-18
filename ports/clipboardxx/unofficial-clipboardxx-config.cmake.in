@@ -1,0 +1,19 @@
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+  set(_IMPORT_PREFIX "")
+endif()
+
+add_library(unofficial::ClipboardXX INTERFACE IMPORTED)
+set_target_properties(unofficial::ClipboardXX PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+if("@VCPKG_TARGET_IS_LINUX@")
+  set_target_properties(unofficial::ClipboardXX PROPERTIES
+    INTERFACE_LINK_LIBRARIES "xcb;pthread"
+  )
+endif()
+
+unset(_IMPORT_PREFIX)

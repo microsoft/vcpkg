@@ -1,9 +1,10 @@
 {
   "name": "atk",
-  "version": "2.36.0",
-  "port-version": 2,
+  "version": "2.38.0",
+  "port-version": 1,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
+  "license": "GPL-2.0-only",
   "supports": "!arm",
   "dependencies": [
     "gettext",

@@ -28,6 +28,7 @@ class CMakeDocumentation {
 [String[]]$cmakeScriptsPorts = @(
     'vcpkg-cmake'
     'vcpkg-cmake-config'
+    'vcpkg-cmake-get-vars'
     'vcpkg-pkgconfig-get-modules'
 )
 

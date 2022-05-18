@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.1</version>
+        <version>3.10.2</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.1/python-3.10.1-embed-win32.zip</url>
-        <sha512>47bf00e4de74f33fe3d0c4f97773b221cf78c29f02257f43368f0414c88be1bdffc914e4e6516870c23cba84f4618edb8fe5a3ee43e41f492d812a90d93c1ea8</sha512>
-        <archiveName>python-3.10.1-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-win32.zip</url>
+        <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
+        <archiveName>python-3.10.2-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.22.2</version>
@@ -36,7 +36,7 @@
         <archiveName>cmake-3.20.4.txz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.35.1.2</version>
+        <version>2.7.4</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
         <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
         <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
@@ -105,6 +105,24 @@
         <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
         <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
     </tool>
+    <tool name="coscli" os="windows">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-windows.exe</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-windows.exe</url>
+        <sha512>38a521ec80cdb6944124f4233d7e71eed8cc9f9be2c0c736269915d21c3718ea8131e4516bb6eeada6df331f5fa8f47a299907e50ee9edbe0114444520974d06</sha512>
+    </tool>
+    <tool name="coscli" os="linux">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-linux</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-linux</url>
+        <sha512>9c930a1d308e9581a0e2fdfe3751ea7fe13d6068df90ca6465740ec3eda034202ef71ec54c99e90015ff81aa68aa1489567db5e411e222eb7258704bdac7e924</sha512>
+    </tool>
+    <tool name="coscli" os="osx">
+        <version>0.11.0</version>
+        <exeRelativePath>coscli-mac</exeRelativePath>
+        <url>https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-mac</url>
+        <sha512>9556335bfc8bc14bace6dfced45fa77fb07c80f08aa975e047a54efda1d19852aae0ea68a5bc7f04fbd88e3edce5a73512a61216b1c5ff4cade224de4a9ab8db</sha512>
+    </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
         <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
@@ -112,13 +130,20 @@
         <sha512>1f3e593270d7c2a4e271fdb49c637a2de462351310ef66bba298d30f6ca23365ec6aecf2e57799a00c873267cd3f92060ecac03eb291d42903d0e0869cd17c73</sha512>
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
-    <tool name="7zip" os="windows">
-        <version>19.00</version>
+    <tool name="7zip_msi" os="windows">
+        <version>21.07</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z1900-x64.msi</url>
-        <sha512>7837a8677a01eed9c3309923f7084bc864063ba214ee169882c5b04a7a8b198ed052c15e981860d9d7952c98f459a4fab87a72fd78e7d0303004dcb86f4324c8</sha512>
-        <archiveName>7z1900-x64.msi</archiveName>
+        <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
+        <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
+        <archiveName>7z2107-x64.msi</archiveName>
     </tool>
+    <tool name="7zip" os="windows">
+        <version>21.07</version>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z2107-extra.7z</url>
+        <sha512>648d894940bcc29951752d7a8fd18c770ee8d4fd944e17f1a52588e51ca8f58375ba48514538f2e1387786fd812bb86f75fd6bdd0892685cdcafb2989942c848</sha512>
+        <archiveName>7z2107-extra.7z</archiveName>
+     </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>
         <exeRelativePath>aria2-1.35.0-win-32bit-build1\aria2c.exe</exeRelativePath>
@@ -162,11 +187,11 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.1</version>
+        <version>7.2.3</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.1/PowerShell-7.2.1-win-x86.zip</url>
-        <sha512>f7a1d7de59c9400ee7d4f988a35daf6f52aef3206a9de9948e5f8d81b7e838301e07491b9cab417fc58f9fd2eb28773175e86a06158ae868c7ef076cc4be7882</sha512>
-        <archiveName>PowerShell-7.2.1-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.3/PowerShell-7.2.3-win-x86.zip</url>
+        <sha512>4b275fd1dc6430e0d7b77d4c34ec54ad47502602592ebc1ec99c88610ec24d3adca27a41896dc4767ac820ad7e000f9c2b1d678b05e9dd76086ff52a11976f80</sha512>
+        <archiveName>PowerShell-7.2.3-win-x86.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.12.0</version>

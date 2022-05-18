@@ -9,7 +9,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS "https://www.advsofteng.net/chartdir_cpp_win.zip"
         FILENAME "chartdir_cpp_win-7.0.0.zip"
-        SHA512 38d9dae641c0341ccee4709138afd37ad4718c34def70a0dc569956bf9c3488d0d66072f604dca4663dc80bd09446a2ba27ef3806fc3b87dda6aaa5453a7316f
+        SHA512 e5b5d387cff693a7f5ee98c2d2df75f421129b006e4324ae30ace0cbaac58867f048868ddfacdb3224c7165c8f27219c4273f3c778be3330d39ef95260d4186b
     )
 
     vcpkg_extract_source_archive_ex(
