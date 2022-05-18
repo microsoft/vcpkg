@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF e8b7eb6908a847ffbe6ab2eec7428e43a0aa53a2  #v1.44.1
     SHA512 c8918fe3cdfcfec7c7da4af8286b5fd28805f41a40a283a22ff578631835539d9f52b46310f1ac0a464a570f9664d6793bb6c63541f01a4f379b3ad2f7c56aea
     HEAD_REF v1.x
+    PATCHES
+        fix-ci-error.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

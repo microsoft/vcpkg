@@ -1,0 +1,12 @@
+diff --git a/src/unix/core.c b/src/unix/core.c
+index def5b8f..c1bd47a 100644
+--- a/src/unix/core.c
++++ b/src/unix/core.c
+@@ -21,6 +21,7 @@
+ #include "uv.h"
+ #include "internal.h"
+ 
++#define _GNU_SOURCE
+ #include <stddef.h> /* NULL */
+ #include <stdio.h> /* printf */
+ #include <stdlib.h>
