@@ -44,4 +44,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(READ "${SOURCE_PATH}/README" README_DATA)
+string(REGEX MATCHALL "Copyright notice:.*" COPYRIGHT_INFO ${README_DATA})
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" ${COPYRIGHT_INFO})
