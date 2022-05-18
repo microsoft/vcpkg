@@ -10,3 +10,28 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
          CACHE PATH "Path where catch2.pc is installed"
      )
      configure_file(
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -335,12 +335,20 @@
+     install(
+       TARGETS
+         Catch2
+-        Catch2WithMain
+       EXPORT
+         Catch2Targets
+       DESTINATION
+         ${CMAKE_INSTALL_LIBDIR}
+     )
++
++     install(
++      TARGETS
++        Catch2WithMain
++      EXPORT
++        Catch2Targets
++      DESTINATION
++        ${CMAKE_INSTALL_LIBDIR}/manual-link
++    )
+ 
+ 
+     install(
