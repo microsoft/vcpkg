@@ -210,11 +210,11 @@ endmacro()
 
 # Setup include environment (since these are buildtype independent restoring them is unnecessary)
 macro(z_prepend_include_path var)
-    unset(ENV{${var}})
-    if(NOT DEFINED z_vcpkg_env_backup_${var} OR "${z_vcpkg_env_backup_${var}}" STREQUAL "")
-        vcpkg_host_path_list(APPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
+    if(NOT DEFINED ENV{${var}} OR "$ENV{${var}}" STREQUAL "")
+        set(ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
     else()
-        set(ENV{${var}} "${z_vcpkg_env_backup_${var}}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/include")
+        # Do not use `vcpkg_host_path_list` since `ENV{${var}}` may contains `:` as delimiter on non-Windows
+        set(ENV{${var}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}$ENV{${var}}")
     endif()
 endmacro()
 
