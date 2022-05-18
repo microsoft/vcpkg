@@ -1,6 +1,7 @@
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/flags.patch"
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -10,16 +11,29 @@ vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 vcpkg_find_acquire_program(JOM)
 
 set(OPENSSL_SHARED no-shared)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENSSL_SHARED shared)
 endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+set(ENV{AR} "${VCPKG_DETECTED_CMAKE_AR}")
+set(ENV{LD} "${VCPKG_DETECTED_CMAKE_LINKER}")
+
+# OpenSSL's buildsystem hardcodes certain PDB manipulations, so we cannot use Z7
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_RELEASE "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_RELEASE "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_DEBUG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
 
 set(CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
     no-ssl2
     no-tests
-    -utf-8
     ${OPENSSL_SHARED}
 )
 
@@ -51,7 +65,6 @@ file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-
     # Copy openssl sources.
     message(STATUS "Copying openssl release source files...")
     file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
@@ -62,6 +75,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+
+    set(ENV{CFLAGS} "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+    set(ENV{CXXFLAGS} "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}")
 
     message(STATUS "Configure ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
@@ -101,6 +119,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
     set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+
+    set(ENV{CFLAGS} "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    set(ENV{CXXFLAGS} "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}")
 
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
