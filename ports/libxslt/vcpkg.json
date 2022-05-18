@@ -22,7 +22,7 @@
   ],
   "features": {
     "crypto": {
-      "description": "Build with crypto support (--with-crypto)",
+      "description": "Build with crypto support",
       "supports": "mingw | !windows",
       "dependencies": [
         {
@@ -45,11 +45,11 @@
       ]
     },
     "plugins": {
-      "description": "Build with plugins (--with-plugins)",
+      "description": "(deprecated)",
       "supports": "!static"
     },
     "python": {
-      "description": "Builds with python support (--with-python)",
+      "description": "Builds with python support",
       "supports": "mingw | !windows"
     }
   }
