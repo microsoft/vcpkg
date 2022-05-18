@@ -2478,11 +2478,11 @@
     },
     "getopt": {
       "baseline": "0",
-      "port-version": 1
+      "port-version": 2
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gettext": {
       "baseline": "0.21",
@@ -4934,7 +4934,7 @@
     },
     "nuspell": {
       "baseline": "5.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "nvtt": {
       "baseline": "2.1.2",
