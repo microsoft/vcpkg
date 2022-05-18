@@ -1,13 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF jun2021b
-    SHA512 d08bacacba324ddf60b003c5cbd5ad715bdbc1cf352a0dc9de58c40fd8f4bcbb562b8285ff1a443453399167a96e5b1af51d32ffc5e1e8f65391ef124c0706d4
-    HEAD_REF master
+    REF may2022
+    SHA512 132c7570acd14e69f9a9888ce62aaa58f78d7d7e933bd3648af7208689693906fe6d8e17f4f41ba46a5151e09a0012874b0d11b96f30246337208c4f6f5ef8db
+    HEAD_REF main
 )
 
 if (VCPKG_HOST_IS_LINUX)
@@ -26,21 +24,20 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas/cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jun2021/uvatlastool.exe"
-    FILENAME "uvatlastool-jun2021.exe"
-    SHA512 af2e57a2d6aa41b53784c78ea8b5e181bb6ea6f66b23bfb3710ae3d7aebf3184c1739d02822a1eab438ebaac5fccb053bfac29b77d5ce81ae1f9c8e0bd396b49
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/may2022/uvatlastool.exe"
+    FILENAME "uvatlastool-may2022.exe"
+    SHA512 8a58e54881b16dc2e2489cfb605c02d5368bbfe02182c4d64ee1e903496d2ebcfc9cfaca63d602572c2241109c4ee4591aa7bb4f8da65daeead99b8144049b84
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -49,7 +46,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-jun2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-may2022.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

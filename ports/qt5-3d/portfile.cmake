@@ -3,7 +3,7 @@ include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 set(OPTIONS -system-assimp)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCVER vc140 vc141 vc142 )
+    set(VCVER vc140 vc141 vc142 vc143 )
     set(CRT mt md)
     set(DBG_NAMES)
     set(REL_NAMES)

@@ -62,7 +62,7 @@ function(vcpkg_fixup_cmake_targets)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake-config; using both vcpkg-cmake-config and vcpkg_fixup_cmake_targets in the same port is unsupported.")
     endif()
 
-    cmake_parse_arguments(PARSE_ARGV 0 arg "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH;NO_PREFIX_CORRECTION;TOOLS_PATH" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "CONFIG_PATH;TARGET_PATH;TOOLS_PATH" "")
 
     if(arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")

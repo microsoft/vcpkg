@@ -6,10 +6,10 @@ Download or find a well-known tool.
 
 ## Usage
 ```cmake
-vcpkg_find_acquire_program(<VAR>)
+vcpkg_find_acquire_program(<program>)
 ```
 ## Parameters
-### VAR
+### program
 This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
 
 ## Notes

@@ -1,16 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
-if(NOT VCPKG_USE_HEAD_VERSION)
-    # Live555 only makes the latest releases available for download on their site
-    message(FATAL_ERROR "Live555 does not have persistent releases. Please re-run the installation with --head.")
-endif()
-
-set(LIVE_VERSION latest)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live555-${LIVE_VERSION}.tar.gz"
-    FILENAME "live555-${LIVE_VERSION}.tar.gz"
-    SKIP_SHA512
+    URLS "http://www.live555.com/liveMedia/public/live.2022.04.26.tar.gz"
+    FILENAME "live.2022.04.26.tar.gz"
+    SHA512 0226a451129df1d47d10bc96ef2a9ab8ffb0116fd0daac8b16a1dd57b319b9058b587955a01bc4a939c3f64659915815fe182c8c7b02cb286313ff132dcbe144
 )
 
 vcpkg_extract_source_archive_ex(
@@ -20,14 +13,13 @@ vcpkg_extract_source_archive_ex(
         fix-RTSPClient.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(GLOB HEADERS
     "${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
@@ -36,7 +28,7 @@ file(GLOB HEADERS
     "${SOURCE_PATH}/UsageEnvironment/include/*.h*"
 )
 
-file(COPY ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -1,0 +1,18 @@
+{
+  "name": "qtdeviceutilities",
+  "version": "6.3.0",
+  "description": "Utils for Boot2Qt",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    }
+  ]
+}

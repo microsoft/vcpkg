@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-qmake",
+  "version-date": "2022-05-10",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    "pkgconf",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}

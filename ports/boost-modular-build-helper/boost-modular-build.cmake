@@ -1,5 +1,17 @@
+include_guard(GLOBAL)
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-get-vars/vcpkg-port-config.cmake")
+
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
+
+set(BOOST_VERSION 1.79.0)
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
+if("${CMAKE_MATCH_3}" GREATER 0)
+    set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
+else()
+    set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}")
+endif()
 
 function(boost_modular_build)
     cmake_parse_arguments(_bm "" "SOURCE_PATH;BOOST_CMAKE_FRAGMENT" "" ${ARGN})
@@ -8,9 +20,10 @@ function(boost_modular_build)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
     endif()
 
-    # Next CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
-    set(B2_REQUIREMENTS) # this variable is used in the Jamroot.jam
+    # The following variables are used in the Jamroot.jam
+    set(B2_REQUIREMENTS)
 
+    # Some CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
     if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
         message(STATUS "Including ${_bm_BOOST_CMAKE_FRAGMENT}")
         include(${_bm_BOOST_CMAKE_FRAGMENT})
@@ -28,13 +41,16 @@ function(boost_modular_build)
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
-	if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
-	    set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-	    set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
-	elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-	    set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
-	    set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
-	endif()
+        if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
+            set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+        elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
+        else()
+            set(BOOST_LIB_RELEASE_SUFFIX .lib)
+            set(BOOST_LIB_DEBUG_SUFFIX d.lib)
+        endif()
     else()
         set(BOOST_LIB_PREFIX lib)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -70,12 +86,34 @@ function(boost_modular_build)
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    if("python2" IN_LIST FEATURES)
+        # Find Python2 in the current installed directory
+        file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python2_version}")
+    endif()
+    if("python3" IN_LIST FEATURES)
+        # Find Python3 in the current installed directory
+        file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
+    endif()
+
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     set(configure_options)
     if(_bm_BOOST_CMAKE_FRAGMENT)
         list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
+
+    vcpkg_cmake_get_vars(cmake_vars_file)
+
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS feature_options
+        FEATURES
+            python2 WITH_PYTHON2
+            python3 WITH_PYTHON3
+    )
 
     vcpkg_cmake_configure(
         SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
@@ -83,11 +121,13 @@ function(boost_modular_build)
         OPTIONS
             "-DPORT=${PORT}"
             "-DFEATURES=${FEATURES}"
+            ${feature_options}
             "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
             "-DB2_EXE=${B2_EXE}"
             "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+            "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES
@@ -95,9 +135,15 @@ function(boost_modular_build)
 
     vcpkg_cmake_install()
 
-    vcpkg_copy_pdbs()
+    vcpkg_copy_pdbs(
+        BUILD_PATHS
+            "${CURRENT_PACKAGES_DIR}/bin/*.dll"
+            "${CURRENT_PACKAGES_DIR}/bin/*.pyd"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd"
+    )
 
-    file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     foreach(LIB IN LISTS INSTALLED_LIBS)
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
@@ -112,13 +158,27 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_77" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-${BOOST_VERSION_ABI_TAG}" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
-        elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-            file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
+        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
         else()
-            file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+        endif()
+    endforeach()
+    # Similar for mingw
+    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*-mgw*-*.a" "${CURRENT_PACKAGES_DIR}/lib/*-mgw*-*.a")
+    foreach(LIB IN LISTS INSTALLED_LIBS)
+        get_filename_component(OLD_FILENAME "${LIB}" NAME)
+        get_filename_component(DIRECTORY_OF_LIB_FILE "${LIB}" DIRECTORY)
+        string(REGEX REPLACE "-mgw[0-9]+-.*[0-9](\\.dll\\.a|\\.a)$" "\\1" NEW_FILENAME "${OLD_FILENAME}")
+        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+            # nothing to do
+        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+        else()
+            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
         endif()
     endforeach()
 
@@ -130,7 +190,7 @@ function(boost_modular_build)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
     endif()
 
-    if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/lib")
         message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
     endif()
 

@@ -1,0 +1,22 @@
+{
+  "name": "libopensp",
+  "version": "1.5.2",
+  "description": "SGML parser algorithm",
+  "homepage": "http://openjade.sourceforge.net",
+  "dependencies": [
+    {
+      "name": "gettext",
+      "platform": "!(windows | uwp)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

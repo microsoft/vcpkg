@@ -1,18 +1,16 @@
 {
   "name": "boost",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-accumulators",
     "boost-algorithm",
     "boost-align",
     "boost-any",
     "boost-array",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-assign",
     "boost-atomic",
@@ -73,10 +71,6 @@
     "boost-geometry",
     "boost-gil",
     "boost-graph",
-    {
-      "name": "boost-graph-parallel",
-      "platform": "!uwp"
-    },
     "boost-hana",
     "boost-heap",
     "boost-histogram",
@@ -112,10 +106,6 @@
     "boost-metaparse",
     "boost-move",
     "boost-mp11",
-    {
-      "name": "boost-mpi",
-      "platform": "!uwp"
-    },
     "boost-mpl",
     "boost-msm",
     "boost-multi-array",
@@ -144,13 +134,12 @@
     },
     "boost-program-options",
     "boost-property-map",
-    "boost-property-map-parallel",
     "boost-property-tree",
     "boost-proto",
     "boost-ptr-container",
     {
       "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten"
+      "platform": "!uwp & !emscripten & !ios & !android"
     },
     "boost-qvm",
     "boost-random",
@@ -209,7 +198,8 @@
       "description": "Build with MPI support",
       "dependencies": [
         "boost-graph-parallel",
-        "boost-mpi"
+        "boost-mpi",
+        "boost-property-map-parallel"
       ]
     }
   }

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(OpenMPI_FULL_VERSION "4.1.0")
@@ -14,7 +12,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES 
+    PATCHES
         keep_isystem.patch
 )
 
@@ -34,6 +32,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make(DISABLE_PARALLEL)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

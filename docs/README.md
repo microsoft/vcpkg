@@ -14,9 +14,10 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### User Help
 
-- [Buildsystem Integration](users/integration.md)
+- [Buildsystem Integration](users/buildsystems/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
+- [Authentication](users/authentication.md)
 - [Manifest Mode](users/manifests.md)
 - [Binary Caching](users/binarycaching.md)
 - [Asset Caching](users/assetcaching.md)
@@ -28,10 +29,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Maintainer Help
 
-- [Manifest files - vcpkg.json](maintainers/manifest-files.md)
-- [Control files](maintainers/control-files.md)
-- [Portfile functions](maintainers/portfile-functions.md)
-- [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
+- [Manifest Files - vcpkg.json](maintainers/manifest-files.md)
+- [Control Files](maintainers/control-files.md)
+- [Portfile Functions](maintainers/portfile-functions.md)
+- [Authoring Script Ports](maintainers/authoring-script-ports.md)
+- [Common CMake Definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 - [Creating Registries](maintainers/registries.md)
 - [CMake Guidelines](maintainers/cmake-guidelines.md)

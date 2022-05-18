@@ -1,0 +1,6 @@
+{
+  "name": "skcrypter",
+  "version-date": "2021-12-03",
+  "description": "Compile-time, Usermode + Kernelmode, safe and lightweight string crypter library for C++11",
+  "homepage": "https://github.com/skadro-official/skCrypter"
+}

@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.7.1
-    SHA512 8a7cb8aa87cc48b130a5b47558b3c9e2a0af13cd8b76681e42d14a366dac75c88e389f2e2fe03b4f0f1e0e31971a47eee2bf5df8fcb4b79f8ed00d2a592315b6
+    REF v1.7.5
+    SHA512 8be77961026d13b55dbfcc2e43972b4fb8f1cd9a6bfb8098d5bdfc8b60ff67c2d3ede4bdb5815614a8233dc184cbf3aa363a9d33eed96b9f748544e20b15f2c7
     HEAD_REF master
     PATCHES
         vcpkg.patch
-        resolv.patch
         drogon_config.patch
         static-brotli.patch
+        use-libmariadb.patch
 )
 
 vcpkg_check_features(
@@ -23,38 +23,41 @@ vcpkg_check_features(
         sqlite3  BUILD_SQLITE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DROGON_SHARED)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DBUILD_DROGON_SHARED=${BUILD_DROGON_SHARED}
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 # Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Drogon)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Drogon)
 
 vcpkg_fixup_pkgconfig()
 
 # Copy drogon_ctl
 if("ctl" IN_LIST FEATURES)
-    message("copying tools")
-    vcpkg_copy_tools(TOOL_NAMES drogon_ctl
-                     AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES drogon_ctl AUTO_CLEAN)
 endif()
 
-# # Remove includes in debug
+# Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Copy pdb files
 vcpkg_copy_pdbs()

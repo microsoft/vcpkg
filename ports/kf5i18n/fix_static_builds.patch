@@ -7,11 +7,11 @@ index 364cc43..af7cd3b 100644
  include("${CMAKE_CURRENT_LIST_DIR}/KF5I18nMacros.cmake")
  
 +find_dependency(Iconv)
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+diff --git a/src/i18n/CMakeLists.txt b/src/i18n/CMakeLists.txt
 index c6b510c..0a25eca 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -38,12 +38,16 @@ ecm_generate_export_header(KF5I18n
+--- a/src/i18n/CMakeLists.txt
++++ b/src/i18n/CMakeLists.txt
+@@ -40,12 +40,16 @@ ecm_generate_export_header(KF5I18n
      EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
  )
  

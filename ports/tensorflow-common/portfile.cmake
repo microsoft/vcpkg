@@ -6,7 +6,6 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_macos.py"
     "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_windows.py"
     "${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_linux.py"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_macos.py"
@@ -19,7 +18,6 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-static.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-dll.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-lib.cmake.in"
-    "${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
     )
 
 file(COPY ${TENSORFLOW_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

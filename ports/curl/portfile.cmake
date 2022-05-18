@@ -1,19 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF c7aef0a945f9b6fb6d3f91716a21dfe2f4ea635f #curl-7_79_1
-    SHA512 105e945e0acb47950d756382c7e45abbf0d0b12526eb0170af23e68653c1b7e3be27d547d537c4f36d099ebcb04870e8cd571d2baec996373b2032f8451b63e0
+    REF curl-7_83_1
+    SHA512 f4ede3c829aaa1142358d956cba4b33f06d3f0319c9f1cd65b63413de60a8690165e10fcb876fc413a20fcfa53bba2a064bb4b8c3070dbf474c2f2288eeab019
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
-        0006_fix_tool_depends.patch
-        0007_disable_tool_export_curl_target.patch
-        0011_fix_static_build.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
+        mbedtls-ws2_32.patch
+        export-components.patch
+        wolfssl-ntlm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -39,15 +39,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
-        openssl     CMAKE_USE_OPENSSL
-        mbedtls     CMAKE_USE_MBEDTLS
-        ssh         CMAKE_USE_LIBSSH2
+        wolfssl     CURL_USE_WOLFSSL
+        openssl     CURL_USE_OPENSSL
+        mbedtls     CURL_USE_MBEDTLS
+        ssh         CURL_USE_LIBSSH2
         tool        BUILD_CURL_EXE
         c-ares      ENABLE_ARES
         sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
-        schannel    CMAKE_USE_SCHANNEL
-        sectransp   CMAKE_USE_SECTRANSP
+        schannel    CURL_USE_SCHANNEL
+        sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
@@ -56,23 +57,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
+set(OPTIONS "")
 set(OPTIONS_RELEASE "")
 set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
-    x_vcpkg_pkgconfig_get_modules(PREFIX libidn2 MODULES libidn2 LIBS)
-    list(APPEND OPTIONS_RELEASE "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_RELEASE}")
-    list(APPEND OPTIONS_DEBUG   "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_DEBUG}")
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
-set(SECTRANSP_OPTIONS "")
 if("sectransp" IN_LIST FEATURES)
-    set(SECTRANSP_OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none)
 endif()
 
 # UWP targets
-set(UWP_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
-    set(UWP_OPTIONS
+    list(APPEND OPTIONS
         -DCURL_DISABLE_TELNET=ON
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
@@ -82,9 +81,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
-        ${UWP_OPTIONS}
-        ${SECTRANSP_OPTIONS}
+        ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
@@ -105,7 +104,15 @@ endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CURL)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_fixup_pkgconfig()
+set(namespec "curl")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(namespec "libcurl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libcurl.pc" " -lcurl" " -l${namespec}")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -l${namespec}-d")
+endif()
 
 #Fix install path
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
@@ -117,12 +124,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\${prefix}/debug" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-lcurl-d")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-l${namespec}-d")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/curl-config")
 endif()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -133,11 +142,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "#ifdef CURL_STATICLIB"
         "#if 1"
     )
-endif()
-
-vcpkg_fixup_pkgconfig()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -lcurl-d")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -62,3 +62,5 @@ endif()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+vcpkg_fixup_pkgconfig()

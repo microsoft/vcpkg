@@ -11,16 +11,16 @@ vcpkg_from_github(
         fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACML.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACMLMP.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindARPACK.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindBLAS.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindCBLAS.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindCLAPACK.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindLAPACK.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindMKL.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/FindArmadillo.cmake)
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindACML.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindACMLMP.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindARPACK.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindBLAS.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindCBLAS.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindCLAPACK.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindLAPACK.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindMKL.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindArmadillo.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -28,9 +28,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openmp  USE_OPENMP
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_STB_IMAGE=OFF
@@ -39,11 +39,13 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mlpack)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mlpack)
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
@@ -99,6 +101,6 @@ if("tools" IN_LIST FEATURES)
     )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

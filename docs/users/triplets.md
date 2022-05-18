@@ -6,9 +6,9 @@ Triplet is a standard term used in cross compiling as a way to completely captur
 
 In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
-We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use overlay triplets (such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake Manifest Mode](manifests.md#vcpkg_overlay_triplets), or [MSBuild Manifest Mode](manifests.md#vcpkgadditionalinstalloptions-additional-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
+We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use `--overlay-triplets=` (or equivalent such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake `VCPKG_OVERLAY_TRIPLETS`](buildsystems/cmake-integration.md#vcpkg_overlay_triplets), or [MSBuild Additional Options](buildsystems/msbuild-integration.md#vcpkg-additional-install-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project away from the default, see our [Integration Document](integration.md#triplet-selection).
+To change the triplet used by your project away from the default, see our [Integration Document](buildsystems/integration.md#triplet-selection).
 
 ## Community triplets
 
@@ -42,6 +42,9 @@ Valid options are `dynamic` and `static`.
 Specifies the preferred library linkage.
 
 Valid options are `dynamic` and `static`. Note that libraries can ignore this setting if they do not support the preferred linkage type.
+
+### VCPKG_BUILD_TYPE
+You can set this value to `release` to only build release versions of the ports. By default this value is empty and release and debug versions of a port are built.
 
 ### VCPKG_CMAKE_SYSTEM_NAME
 Specifies the target platform.
@@ -124,6 +127,7 @@ When this option is set to (true|1|on), the compiler is ignored in the abi track
 
 ## Windows Variables
 
+<a name="VCPKG_ENV_PASSTHROUGH"></a>
 ### VCPKG_ENV_PASSTHROUGH
 Instructs vcpkg to allow additional environment variables into the build process.
 
@@ -167,6 +171,13 @@ Valid settings:
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
+
+### VCPKG_PLATFORM_TOOLSET_VERSION
+Specifies the detailed MSVC C/C++ compiler toolchain to use.
+
+By default, [`VCPKG_PLATFORM_TOOLSET`] always chooses the latest installed minor version of the selected toolset.
+If you need more granularity, you can use this variable.
+Valid values are, for example, `14.25` or `14.27.29110`.
 
 ### VCPKG_LOAD_VCVARS_ENV
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.

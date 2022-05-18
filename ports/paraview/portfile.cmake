@@ -113,6 +113,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-${VERSION})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# see https://gitlab.kitware.com/paraview/paraview/-/issues/21328
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/paraview-${VERSION}/vtkCPConfig.h")
+
 set(TOOLVER pv${VERSION})
 set(TOOLS   paraview
             pvbatch

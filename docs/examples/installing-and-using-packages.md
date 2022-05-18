@@ -4,7 +4,7 @@
   - [Step 2: Use](#use)
     - [VS/MSBuild Project (User-wide integration)](#msbuild)
     - [CMake (Toolchain file)](#cmake)
-    - [Other integration options](../users/integration.md)
+    - [Other integration options](../users/buildsystems/integration.md)
 
 ---
 <a name="install"></a>

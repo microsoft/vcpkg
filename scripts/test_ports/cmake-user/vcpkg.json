@@ -1,0 +1,96 @@
+{
+  "name": "cmake-user",
+  "version-date": "2022-04-18",
+  "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "license": "MIT",
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "The CI set of features to test",
+      "dependencies": [
+        {
+          "name": "cmake-user",
+          "default-features": false,
+          "features": [
+            "cmake-current",
+            "find-package"
+          ]
+        },
+        {
+          "name": "cmake-user",
+          "default-features": false,
+          "features": [
+            "cmake-3-7"
+          ],
+          "platform": "x64 & (windows | linux | osx) & !uwp"
+        }
+      ]
+    },
+    "cmake-3-7": {
+      "description": "Run the tests with CMake 3.7"
+    },
+    "cmake-current": {
+      "description": "Run the tests with vcpkg's current version of CMake"
+    },
+    "find-package": {
+      "description": "Ports to be tested via find_package($package)",
+      "dependencies": [
+        {
+          "$package": "BZip2",
+          "name": "bzip2"
+        },
+        {
+          "$package": "CURL",
+          "name": "curl"
+        },
+        {
+          "$package": "EXPAT",
+          "name": "expat"
+        },
+        {
+          "$package": "Freetype",
+          "name": "freetype"
+        },
+        {
+          "$package": "Intl",
+          "name": "gettext"
+        },
+        {
+          "$package": "GIF",
+          "name": "giflib"
+        },
+        {
+          "$package": "ICU",
+          "name": "icu"
+        },
+        {
+          "$package": "JPEG",
+          "name": "libjpeg-turbo"
+        },
+        {
+          "$package": "LibLZMA",
+          "name": "liblzma"
+        },
+        {
+          "$package": "PNG",
+          "name": "libpng"
+        },
+        {
+          "$package": "TIFF",
+          "name": "tiff"
+        },
+        {
+          "$package": "wxWidgets",
+          "name": "wxwidgets",
+          "platform": "!linux"
+        },
+        {
+          "$package": "ZLIB",
+          "name": "zlib"
+        }
+      ]
+    }
+  }
+}

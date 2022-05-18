@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea22eab..6bf0f17 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,7 +74,7 @@ if (BUILD_QUIC)
+ else()
+  find_package(Fizz REQUIRED)
+ endif()
+-find_package(Zstd REQUIRED)
++find_package(zstd CONFIG REQUIRED)
+ find_package(ZLIB REQUIRED)
+ find_package(OpenSSL REQUIRED)
+ find_package(Threads)
+diff --git a/proxygen/lib/CMakeLists.txt b/proxygen/lib/CMakeLists.txt
+index b3fa2d1..5c50ee1 100644
+--- a/proxygen/lib/CMakeLists.txt
++++ b/proxygen/lib/CMakeLists.txt
+@@ -235,10 +235,10 @@ target_link_libraries(
+     Folly::folly
+     fizz::fizz
+     wangle::wangle
+-    zstd
++    $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+     Boost::boost
+     Boost::iostreams
+-    -lz
++    ZLIB::ZLIB
+     ${HTTP3_DEPEND_LIBS}
+ )
+ 

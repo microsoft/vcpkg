@@ -1,22 +1,22 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 740da06..1a326f7 100644
+index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
 @@ -11,6 +11,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
                      HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
      find_dependency(OpenEXR @OpenEXR_VERSION@
                      HINTS @OpenEXR_DIR@)
-+    find_dependency(libpng CONFIG)
-+    find_dependency(libheif CONFIG)
-+    find_dependency(Libsquish)
++    find_dependency(libpng CONFIG REQUIRED)
++    find_dependency(libheif CONFIG REQUIRED)
++    find_dependency(unofficial-libsquish CONFIG REQUIRED)
      find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
      find_dependency(Threads)  # Because OpenEXR doesn't do it
  endif ()
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 21e18b5..badee4b 100644
+index 631035a..9f4d096 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -151,7 +151,7 @@ find_python()
+@@ -148,7 +148,7 @@ find_python()
  # Dependencies for optional formats and features. If these are not found,
  # we will continue building, but the related functionality will be disabled.
  
@@ -25,8 +25,8 @@ index 21e18b5..badee4b 100644
  
  checked_find_package (BZip2)   # Used by ffmpeg and freetype
  if (NOT BZIP2_FOUND)
-@@ -185,7 +185,8 @@ checked_find_package (GIF
-                       RECOMMEND_MIN_REASON "for stability and thread safety")
+@@ -200,7 +200,8 @@ if (ENABLE_FIELD3D)
+ endif ()
  
  # For HEIF/HEIC/AVIF formats
 -checked_find_package (Libheif VERSION_MIN 1.3
@@ -35,29 +35,23 @@ index 21e18b5..badee4b 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-diff --git a/src/heif.imageio/CMakeLists.txt b/src/heif.imageio/CMakeLists.txt
-index fed8001..15e87ae 100644
---- a/src/heif.imageio/CMakeLists.txt
-+++ b/src/heif.imageio/CMakeLists.txt
-@@ -2,9 +2,9 @@
- # SPDX-License-Identifier: BSD-3-Clause
- # https://github.com/OpenImageIO/oiio/blob/master/LICENSE.md
+@@ -307,7 +308,8 @@ endmacro()
+ option (USE_EMBEDDED_LIBSQUISH
+         "Force use of embedded Libsquish, even if external is found" OFF)
+ if (NOT USE_EMBEDDED_LIBSQUISH)
+-    checked_find_package (Libsquish)
++    checked_find_package (unofficial-libsquish PREFER_CONFIG)
++    set(libsquish_FOUND 1)
+ endif ()
  
--if (Libheif_FOUND)
-+if (libheif_FOUND)
-     add_oiio_plugin (heifinput.cpp heifoutput.cpp
--                     LINK_LIBRARIES Libheif::Libheif
-+                     LINK_LIBRARIES heif
-                      DEFINITIONS "-DUSE_HEIF=1")
- else ()
-     message (WARNING "heif plugin will not be built")
+ 
 diff --git a/src/ico.imageio/CMakeLists.txt b/src/ico.imageio/CMakeLists.txt
-index 9ba76ac..13db4ac 100644
+index d290625..cff954c 100644
 --- a/src/ico.imageio/CMakeLists.txt
 +++ b/src/ico.imageio/CMakeLists.txt
 @@ -2,9 +2,15 @@
  # SPDX-License-Identifier: BSD-3-Clause
- # https://github.com/OpenImageIO/oiio/blob/master/LICENSE.md
+ # https://github.com/OpenImageIO/oiio
  
 -if (TARGET PNG::PNG)
 +if (libpng_FOUND)

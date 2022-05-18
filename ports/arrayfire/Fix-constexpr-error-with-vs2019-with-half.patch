@@ -1,0 +1,22 @@
+diff --git a/src/backend/common/half.hpp b/src/backend/common/half.hpp
+index ce06eed..fb25d03 100644
+--- a/src/backend/common/half.hpp
++++ b/src/backend/common/half.hpp
+@@ -879,15 +879,9 @@ class alignas(2) half {
+         return *this;
+     }
+ 
+-#if defined(NVCC) || defined(__CUDACC_RTC__)
+-    AF_CONSTEXPR __DH__ explicit half(__half value) noexcept
+ #ifdef __CUDA_ARCH__
+-        : data_(value) {
+-    }
+-#else
+-        : data_(*reinterpret_cast<native_half_t*>(&value)) {
+-    }
+-#endif
++    AF_CONSTEXPR __DH__ explicit half(__half value) noexcept : data_(value) {}
++
+     AF_CONSTEXPR __DH__ half& operator=(__half value) noexcept {
+         // NOTE Assignment to ushort from __half only works with device code.
+         // using memcpy instead

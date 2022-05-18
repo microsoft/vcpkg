@@ -1,18 +1,25 @@
 {
   "name": "magnum-plugins",
   "version-string": "2020.06",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "dependencies": [
     {
       "name": "magnum",
       "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "default-features": [
+    "cgltfimporter",
     "ddsimporter",
     "icoimporter",
+    "ktximageconverter",
+    "ktximporter",
     "miniexrimageconverter",
     "opengeximporter",
     "stanfordimporter",
@@ -51,12 +58,33 @@
           "features": [
             "trade"
           ]
-        }
+        },
+        "zstd"
       ]
     },
     "basisimporter": {
       "description": "BasisImporter plugin",
       "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        },
+        "zstd"
+      ]
+    },
+    "cgltfimporter": {
+      "description": "CgltfImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "anyimageimporter"
+          ]
+        },
         {
           "name": "magnum",
           "default-features": false,
@@ -204,6 +232,30 @@
         }
       ]
     },
+    "ktximageconverter": {
+      "description": "KtxImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "ktximporter": {
+      "description": "KtxImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
     "meshoptimizersceneconverter": {
       "description": "MeshOptimizerSceneConverter plugin",
       "dependencies": [
@@ -231,6 +283,32 @@
     },
     "openddl": {
       "description": "OpenDdl library"
+    },
+    "openexrimageconverter": {
+      "description": "OpenExrImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        },
+        "openexr"
+      ]
+    },
+    "openexrimporter": {
+      "description": "OpenExrImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        },
+        "openexr"
+      ]
     },
     "opengeximporter": {
       "description": "OpenGexImporter plugin",
@@ -321,6 +399,18 @@
         }
       ]
     },
+    "stbdxtimageconverter": {
+      "description": "StbDxtImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
     "stbimageconverter": {
       "description": "StbImageConverter plugin",
       "dependencies": [
@@ -396,13 +486,6 @@
           "default-features": false,
           "features": [
             "trade"
-          ]
-        },
-        {
-          "name": "magnum-plugins",
-          "default-features": false,
-          "features": [
-            "stbimageimporter"
           ]
         }
       ]

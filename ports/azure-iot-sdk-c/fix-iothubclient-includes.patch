@@ -1,0 +1,13 @@
+diff --git a/iothub_client/CMakeLists.txt b/iothub_client/CMakeLists.txt
+index 07ab3b7..9769a08 100644
+--- a/iothub_client/CMakeLists.txt
++++ b/iothub_client/CMakeLists.txt
+@@ -441,7 +441,7 @@ add_library(iothub_client
+ target_include_directories(iothub_client
+     PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/azureiot/include>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/azureiot>
+ )
+ applyXcodeBuildFlagsIfNeeded(iothub_client)
+ target_link_libraries(iothub_client ${iothub_client_libs})

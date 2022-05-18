@@ -1,19 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fastfloat/fast_float
-    REF v0.8.0
-    SHA512 d3f39457859ff0132f773222db3684f9b1d4a8ed549dfceb7cfb12d8f5871f5282dfa9eb01d39646cf93ed42dd640cb6487831ec15079b4b154f5002ac74edd7
+    REF v3.2.0
+    SHA512 8c0819501f854688942bf2676a9592c537b14b472a942695d589a75499f43bef57a8cb98b41b285dcfc0122f804c85e477d5aee82750a69308bdbf16c98ce2a7
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/FastFloat TARGET_PATH share/FastFloat)
+vcpkg_cmake_config_fixup(PACKAGE_NAME FastFloat CONFIG_PATH share/FastFloat)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(INSTALL "${SOURCE_PATH}/LICENSE-MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

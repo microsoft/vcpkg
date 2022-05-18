@@ -10,6 +10,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${SDL2_MIXER_VERSION}
+    PATCHES
+        fix-featurempg123.patch
 )
 
 if ("dynamic-load" IN_LIST FEATURES)
@@ -51,6 +53,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

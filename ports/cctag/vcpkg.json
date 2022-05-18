@@ -1,6 +1,6 @@
 {
   "name": "cctag",
-  "version-semver": "1.0.0",
+  "version-semver": "1.0.1",
   "maintainers": "alicevision-team@googlegroups.com",
   "description": "Computer vision library for detecting CCTag markers made up of concentric circles",
   "homepage": "https://github.com/alicevision/CCTag",
@@ -32,7 +32,15 @@
     "boost-unordered",
     "eigen3",
     "opencv3",
-    "tbb"
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "apps": {

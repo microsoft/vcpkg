@@ -1,7 +1,5 @@
-include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
-
 set(PACKAGE_VERSION "1.1.0")
 ignition_modular_library(NAME plugin
                          VERSION ${PACKAGE_VERSION}
                          REF "ignition-plugin_${PACKAGE_VERSION}"
-                         SHA512 0657c5816e67d02329a79364050b8a56957180e5b7481b01696c7369b063cbfedfc93793a8ad92d87d242d24e476283dc7847bd810a3de98d3ec5ae7d640568c)
+                         SHA512 e932dd7e7b042e9fb4c0569cb8b4028e54c394228aadf6523fa60ab1b9f7f9a17d14c79886a76365e2c47423c221aaef9ca77df638d87e2b6edb82eea10c0a3d)

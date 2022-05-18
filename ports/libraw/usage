@@ -1,0 +1,11 @@
+The package libraw is compatible with built-in CMake targets:
+
+    find_package(LibRaw REQUIRED)
+    # For non-thread-safe version
+    target_compile_definitions(main PRIVATE ${LibRaw_DEFINITIONS})
+    target_include_directories(main PRIVATE ${LibRaw_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${LibRaw_LIBRARIES})
+    # For thread-safe version
+    target_compile_definitions(main PRIVATE ${LibRaw_r_DEFINITIONS})
+    target_include_directories(main PRIVATE ${LibRaw_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${LibRaw_r_LIBRARIES})

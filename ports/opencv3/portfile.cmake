@@ -6,13 +6,16 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.15")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
+string(JSON OPENCV_VERSION GET "${_contents}" version)
+
+set(USE_QT_VERSION "5")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 775149e56f0aa94d53eb024404866380d97ce423ef1c8343ee8f12c1377e454ae182b2528e86949b5f7250e551d464bd1a5de2e2d9f0d0e1dd3dc188a1db790d
+    SHA512 2fa9243625309a1c12c916737c94f0e2f9566f0828469b148cc1683dd1b8db8d1d58f90a36cfcaa72052964a718929451f04cda5361d8b546a63da69217d040a
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -24,7 +27,8 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-fix-caffe-io.patch
+      0011-remove-python2.patch
+      0012-fix-zlib.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -43,33 +47,32 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
- "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUBLAS
- "cuda"     WITH_CUDA
- "dnn"      BUILD_opencv_dnn
- "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
- "flann"    BUILD_opencv_flann
- "gdcm"     WITH_GDCM
- "halide"   WITH_HALIDE
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "lapack"   WITH_LAPACK
- "nonfree"  OPENCV_ENABLE_NONFREE
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "quirc"    WITH_QUIRC
- "sfm"      BUILD_opencv_sfm
- "tiff"     WITH_TIFF
- "vtk"      WITH_VTK
- "webp"     WITH_WEBP
- "world"    BUILD_opencv_world
+ "contrib"   WITH_CONTRIB
+ "cuda"      WITH_CUBLAS
+ "cuda"      WITH_CUDA
+ "dnn"       BUILD_opencv_dnn
+ "eigen"     WITH_EIGEN
+ "ffmpeg"    WITH_FFMPEG
+ "flann"     BUILD_opencv_flann
+ "gdcm"      WITH_GDCM
+ "gstreamer" WITH_GSTREAMER
+ "halide"    WITH_HALIDE
+ "jasper"    WITH_JASPER
+ "jpeg"      WITH_JPEG
+ "lapack"    WITH_LAPACK
+ "nonfree"   OPENCV_ENABLE_NONFREE
+ "openexr"   WITH_OPENEXR
+ "opengl"    WITH_OPENGL
+ "png"       WITH_PNG
+ "quirc"     WITH_QUIRC
+ "sfm"       BUILD_opencv_sfm
+ "tiff"      WITH_TIFF
+ "vtk"       WITH_VTK
+ "webp"      WITH_WEBP
+ "world"     BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb"
-# As the respective value of their variables can be unset conditionally.
+# Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", ovis", "python", "qt", "tbb"
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
   if(NOT VCPKG_TARGET_IS_ANDROID)
@@ -77,6 +80,20 @@ if("dnn" IN_LIST FEATURES)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
   endif()
+endif()
+
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
+  endif()
+endif()
+
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_QT ${USE_QT_VERSION})
 endif()
 
 set(WITH_IPP OFF)
@@ -92,6 +109,13 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_PYTHON OFF)
+if("python" IN_LIST FEATURES)
+  x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
+  set(ENV{PYTHON} "${PYTHON3}")
+  set(WITH_PYTHON ON)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -118,7 +142,7 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 639f5f869d68014fcc5041f5fe890c98635610d8b26c9964721e2fbe74ce8a12aef8f305364ff024fe0086bf2e7252c4fdd00a5de08854fdcd285c0f4916125a
+      SHA512 31bd55617d3a54fa020d4255e463c90caf41e10136c82a05c24ee19890f0cdc4fc049136874841dc84037dedb0562471ea0345ab1dcd5ad8a5b0218f24ae9a35
       HEAD_REF master
       PATCHES
         0007-fix-hdf5.patch
@@ -328,15 +352,18 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_GTK=OFF
+        -DWITH_GTK=${WITH_GTK}
+        -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=OFF
         -DWITH_PROTOBUF=${BUILD_opencv_flann}
+        -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
+        -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
@@ -350,11 +377,19 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME opencv CONFIG_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  # Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake"
+      "\${_IMPORT_PREFIX}/sdk"
+      "\${_IMPORT_PREFIX}/debug/sdk"
+  )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-find_dependency(Protobuf CONFIG)
-if(protobuf_FOUND)
+if(${BUILD_opencv_flann})
+  find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
@@ -415,7 +450,11 @@ find_dependency(Tesseract)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(Qt5 COMPONENTS OpenGL Concurrent Test)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+    if("opengl" IN_LIST FEATURES)
+      string(APPEND DEPS_STRING "
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
+    endif()
   endif()
   if("ade" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(ade)")
@@ -454,5 +493,7 @@ if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.android")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

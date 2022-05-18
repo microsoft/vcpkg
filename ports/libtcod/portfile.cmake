@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF 1.18.0
-    SHA512 4191353c422e96987977ffc2a2f816381aa5c2e82cc0ccf80a902a0ff32023ec7a824e9845eb7c220d9e2a2fdb90be3aff1c3e05893f45a7326a89292aa11a4d
+    REF 1.20.1
+    SHA512 bef3751dd1b190769163ff7c188479fe100d425fa98d3f0f97a3a81045fe0f0c24690b64bcde29f7af1eb7fd34915371223146598b1f0cab173e69a78c1dfc76
     HEAD_REF develop
+    PATCHES
+        stb-headers.patch
 )
 
 vcpkg_cmake_configure(
