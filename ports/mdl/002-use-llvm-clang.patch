@@ -1,15 +1,11 @@
 diff --git a/cmake/tools/add_clang.cmake b/cmake/tools/add_clang.cmake
-index 019a7d7..460903f 100644
+index 019a7d7..87697bb 100644
 --- a/cmake/tools/add_clang.cmake
 +++ b/cmake/tools/add_clang.cmake
-@@ -32,6 +32,12 @@
+@@ -32,6 +32,8 @@
      # - TARGET_ADD_TOOL_DEPENDENCY_TOOL
  # -------------------------------------------------------------------------------------------------
  
-+if(NOT TARGET clang)
-+    MESSAGE(FATAL_ERROR "The tool dependency \"${TARGET_ADD_TOOL_DEPENDENCY_TOOL}\" for target \"${TARGET_ADD_TOOL_DEPENDENCY_TARGET}\" could not be resolved: CMake target `clang` does not exists.")
-+endif()
-+
 +return()
 +
  # use a default fallback
@@ -29,7 +25,7 @@ index cc82f3b..64580a4 100644
          -I ${CMAKE_CURRENT_SOURCE_DIR}/../shared
          ${_CLANG_FLAGS}
 diff --git a/src/mdl/jit/libbsdf/CMakeLists.txt b/src/mdl/jit/libbsdf/CMakeLists.txt
-index 4e2d703..053f472 100644
+index 4e2d703..ec5e807 100644
 --- a/src/mdl/jit/libbsdf/CMakeLists.txt
 +++ b/src/mdl/jit/libbsdf/CMakeLists.txt
 @@ -103,12 +103,12 @@ foreach(HS ${DF_HANDLE_SLOT_MODES})
@@ -37,18 +33,18 @@ index 4e2d703..053f472 100644
          COMMAND ${CMAKE_COMMAND} -E echo "Compile libbsdf_${HS} bytecode using clang ..."
          COMMAND ${CMAKE_COMMAND} -E make_directory ${_GENERATED_DIR}
 -        COMMAND ${clang_PATH} 
-+        COMMAND $<TARGET_FILE:clang> 
++        COMMAND $<TARGET_FILE:clang>
              -emit-llvm -c -O3 -ffast-math -fno-vectorize -Wuninitialized -Wconditional-uninitialized -target nvptx-pc-cuda-gnu ${CLANG_FLAGS_EX} ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
              -o ${_GENERATED_DIR}/libbsdf_${HS}.bc -MD -MT ${_GENERATED_DIR}/libbsdf_${HS}.bc -MP -MF ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp
          COMMAND ${CMAKE_COMMAND} -E copy ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp ${_GENERATED_DIR}/libbsdf_${HS}.d
          COMMAND ${CMAKE_COMMAND} -E remove ${_GENERATED_DIR}/libbsdf_${HS}.d.tmp
 -        COMMAND ${clang_PATH} 
-+        COMMAND $<TARGET_FILE:clang> 
++        COMMAND $<TARGET_FILE:clang>
              -emit-llvm -S -O3 -ffast-math -fno-vectorize -Wuninitialized -Wconditional-uninitialized -target nvptx-pc-cuda-gnu ${CLANG_FLAGS_EX} ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
              -o ${_GENERATED_DIR}/libbsdf_${HS}.ll
          DEPENDS
 diff --git a/src/mdl/jit/libmdlrt/CMakeLists.txt b/src/mdl/jit/libmdlrt/CMakeLists.txt
-index 5e46f56..fa8b69b 100644
+index 5e46f56..0d259e0 100644
 --- a/src/mdl/jit/libmdlrt/CMakeLists.txt
 +++ b/src/mdl/jit/libmdlrt/CMakeLists.txt
 @@ -88,12 +88,12 @@ add_custom_command(
@@ -56,13 +52,13 @@ index 5e46f56..fa8b69b 100644
      COMMAND ${CMAKE_COMMAND} -E echo "Compile libmdlrt bytecode using clang ..."
      COMMAND ${CMAKE_COMMAND} -E make_directory ${_GENERATED_DIR}
 -    COMMAND ${clang_PATH} 
-+    COMMAND $<TARGET_FILE:clang> 
++    COMMAND $<TARGET_FILE:clang>
          -emit-llvm -c -O3 -ffast-math -fno-vectorize -target nvptx-pc-cuda-gnu ${CMAKE_CURRENT_SOURCE_DIR}/libmdlrt.cpp
          -o ${_GENERATED_DIR}/libmdlrt.bc -MD -MT ${_GENERATED_DIR}/libmdlrt.bc -MP -MF ${_GENERATED_DIR}/libmdlrt.d.tmp
      COMMAND ${CMAKE_COMMAND} -E copy ${_GENERATED_DIR}/libmdlrt.d.tmp ${_GENERATED_DIR}/libmdlrt.d
      COMMAND ${CMAKE_COMMAND} -E remove ${_GENERATED_DIR}/libmdlrt.d.tmp
 -    COMMAND ${clang_PATH} 
-+    COMMAND $<TARGET_FILE:clang> 
++    COMMAND $<TARGET_FILE:clang>
          -emit-llvm -S -O3 -ffast-math -fno-vectorize -target nvptx-pc-cuda-gnu ${CMAKE_CURRENT_SOURCE_DIR}/libmdlrt.cpp
          -o ${_GENERATED_DIR}/libmdlrt.ll
      DEPENDS     
