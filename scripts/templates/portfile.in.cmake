@@ -78,7 +78,7 @@ vcpkg_cmake_install()
 #    "name": "vcpkg-cmake-config",
 #    "host": true
 #}
-# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH "share/@PORT@")
+# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
 
 # Uncomment the line below if necessary to install the license file for the port to share/${PORT}/copyright
 # file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
