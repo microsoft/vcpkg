@@ -2,7 +2,7 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/mingw.md).**
 
-*MinGW is community-supported and not tested as part of vcpkg repository's CI process.*
+*MinGW is not tested as part of vcpkg repository's CI process, so regressions can occur as part of library updates. PRs improving support are welcome!*
 
 ## Table of Contents
 
