@@ -2,7 +2,7 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/commands/common-options.md).**
 
-All vcpkg commands accept a group of common options that control cross-cutting aspects of the tool.
+Most vcpkg commands accept a group of common options that control cross-cutting aspects of the tool. Not all options have an affect on every command. For example, a command that does not download any files will be unaffected by changing the downloads directory.
 
 <a name="triplet"></a>
 
@@ -10,7 +10,9 @@ All vcpkg commands accept a group of common options that control cross-cutting a
 
 Specify the target [architecture triplet][triplets].
 
-If unset, defaults to the `VCPKG_DEFAULT_TRIPLET` environment variable. If that is unset, it is deduced based on the host architecture and operating system.
+Defaults to the `VCPKG_DEFAULT_TRIPLET` environment variable. If that is unset, deduced based on the host architecture and operating system.
+
+Note that on Windows operating systems, the architecture is always deduced as x86 for legacy reasons.
 
 <a name="host-triplet"></a>
 
@@ -18,13 +20,13 @@ If unset, defaults to the `VCPKG_DEFAULT_TRIPLET` environment variable. If that 
 
 Specify the host [architecture triplet][triplets].
 
-If unset, defaults to the `VCPKG_DEFAULT_HOST_TRIPLET` environment variable. If that is unset, it is deduced based on the host architecture and operating system.
+Defaults to the `VCPKG_DEFAULT_HOST_TRIPLET` environment variable. If that is unset, deduced based on the host architecture and operating system.
 
 <a name="overlay-ports"></a>
 
 ## `--overlay-ports=<path>`
 
-Specify a directory to be considered for [overlay ports](../specifications/ports-overlay.md).
+Specifies a directory containing [overlay ports](../specifications/ports-overlay.md).
 
 This option can be specified multiple times; ports will resolve to the first match.
 
@@ -32,7 +34,7 @@ This option can be specified multiple times; ports will resolve to the first mat
 
 ## `--overlay-triplets=<path>`
 
-Specify a directory to be considered for [overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
+Specifies a directory containing [overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
 
 This option can be specified multiple times; [triplets][] will resolve to the first match.
 
@@ -50,21 +52,25 @@ This option can be specified multiple times; see the Binary Caching documentatio
 
 **Experimental: will change or be removed at any time**
 
-Add a source for [Asset Caching](../users/assetcaching.md).
+Specify the cache configuration for [Asset Caching](../users/assetcaching.md).
 
-This option can be specified multiple times; see the Asset Caching documentation for how multiple binary sources interact.
+<a name="downloads-root"></a>
 
 ## `--downloads-root=<path>`
 
 Specify where downloaded tools and source code archives should be kept.
 
-If unset, defaults to the `VCPKG_DOWNLOADS` environment variable. If that is unset, defaults to `downloads/` under the vcpkg root folder.
+Defaults to the `VCPKG_DOWNLOADS` environment variable. If that is unset, defaults to `downloads/` under the vcpkg root folder.
+
+<a name="vcpkg-root"></a>
 
 ## `--vcpkg-root=<path>`
 
 Specifies the vcpkg root folder.
 
-This folder should be a valid vcpkg instance, such as a `git clone` of `https://github.com/microsoft/vcpkg`.
+Defaults to the directory containing the vcpkg program. The directory must be a valid vcpkg instance, such as a `git clone` of `https://github.com/microsoft/vcpkg`. This option can be used to run a custom-built copy of the tool directly from the build folder.
+
+<a name="x-manifest-root"></a>
 
 ### `--x-manifest-root=<path>`
 
@@ -72,7 +78,9 @@ This folder should be a valid vcpkg instance, such as a `git clone` of `https://
 
 Specifies the directory containing [`vcpkg.json`](../users/manifests.md).
 
-Defaults to searching upwards from the current working directory.
+Defaults to searching upwards from the current working directory for the nearest `vcpkg.json`.
+
+<a name="x-buildtrees-root"></a>
 
 ## `--x-buildtrees-root=<path>`
 
@@ -80,7 +88,9 @@ Defaults to searching upwards from the current working directory.
 
 Specifies the temporary path to store intermediate build files, such as objects or unpacked source code.
 
-If unset, defaults to `buildtrees/` under the vcpkg root folder.
+Defaults to `buildtrees/` under the vcpkg root folder.
+
+<a name="x-install-root"></a>
 
 ## `--x-install-root=<path>`
 
@@ -88,7 +98,11 @@ If unset, defaults to `buildtrees/` under the vcpkg root folder.
 
 Specifies the path to lay out installed packages.
 
-If unset in classic mode, defaults to `installed/` under the vcpkg root folder. If unset in manifest mode, defaults to `vcpkg_installed/` under the manifest folder.
+In Classic Mode, defaults to `installed/` under the vcpkg root folder.
+
+In [Manifest Mode][../users/manifests.md], defaults to `vcpkg_installed/` under the manifest folder.
+
+<a name="x-packages-root"></a>
 
 ## `--x-packages-root=<path>`
 
@@ -96,15 +110,7 @@ If unset in classic mode, defaults to `installed/` under the vcpkg root folder. 
 
 Specifies the temporary path to stage intermediate package files before final install.
 
-If unset, defaults to `packages/` under the vcpkg root folder.
-
-## `--x-json`
-
-**Experimental: will change or be removed at any time**
-
-Requests structured JSON output from the command instead of human-readable output.
-
-*Note: most commands do not currently respect this option.*
+Defaults to `packages/` under the vcpkg root folder.
 
 ## Response Files (`@<file>`)
 

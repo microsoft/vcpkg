@@ -6,7 +6,7 @@
 
 **Classic Mode**
 ```no-highlight
-vcpkg install [options] [<package>...]
+vcpkg install [options] <package>...
 ```
 
 **Manifest Mode**
@@ -41,7 +41,7 @@ All vcpkg commands support a set of [common options](common-options.md).
 
 Instead of erroring on an unsupported port, continue with a warning.
 
-By default, vcpkg will refuse to execute an install plan that contains a port installation for an unsupported triplet. This flag allows the plan to be executed ignoring the [`"supports"`][] field, although the build is likely to fail.
+By default, vcpkg refuses to execute an install plan containing a port installation for a triplet outside its [`"supports"`][] clause. This flag instructs vcpkg to ignore the [`"supports"`][] field.
 
 ### `--clean-after-build`
 
@@ -73,9 +73,11 @@ Only print the install plan, do not remove or install any packages.
 
 Perform editable builds for all directly referenced packages on the command line.
 
-When vcpkg builds packages, it purges and re-extracts the source code each time to ensure it can accurately track what inputs were used. This is necessary for [Manifest Mode][] as well as [Binary Caching][].
+When vcpkg builds ports, it purges and re-extracts the source code each time to ensure inputs are accurately. This is necessary for [Manifest Mode][] to accurately update what is installed and [Binary Caching][] to ensure cached content is correct.
 
-However, while developing a package it can be useful to edit the sources in-place and quickly request a new package build using the edited sources. Editable builds will not clean out the sources each time, enabling them to be modified with a text editor in the `buildtrees/` folder and quickly rebuilt.
+Passing the `--editable` flag disables this behavior, preserving edits to the extracted sources in the `buildtrees/` folder. This helps develop patches quickly by avoiding the need to write a file on each change.
+
+Sources extracted during an editable build do not have a `.clean/` suffix on the directory name and will not be cleared by subsequent non-editable builds.
 
 ### `--enforce-port-checks`
 
@@ -95,11 +97,9 @@ Specify an additional feature from the `vcpkg.json` to install dependencies for.
 
 **Classic Mode Only**
 
-Request that all packages explicitly referenced on the command line fetch the latest sources available when building.
+Request all packages explicitly referenced on the command line to fetch the latest sources available when building.
 
-This flag is only intended for temporary testing and is not intended for production or long-term use.
-
-This disables Binary Caching for all referenced packages and any packages that depend upon them, since vcpkg cannot accurately track all inputs.
+This flag is only intended for temporary testing and is not intended for production or long-term use. This disables [Binary Caching][] for all explicitly referenced packages and any packages built on them because vcpkg cannot accurately track all inputs.
 
 ### `--keep-going`
 
@@ -119,15 +119,15 @@ When using `install` in Manifest Mode, by default all dependencies of the featur
 
 ### `--no-downloads`
 
-When building a package, prevent recipes from downloading new assets during the build.
+When building a package, prevent ports from downloading new assets during the build.
 
-By default, recipes will acquire source code and tools on demand from the internet (subject to [Asset Caching][]). This parameter blocks downloads and restricts recipes to only the assets that were previously downloaded and cached on the machine.
+By default, ports will acquire source code and tools on demand from the internet (subject to [Asset Caching][]). This parameter blocks downloads and restricts ports to only the assets that were previously downloaded and cached on the machine.
 
 ### `--only-downloads`
 
 Attempt to download all assets required for an install plan without performing any builds.
 
-When passed this option, vcpkg will run every recipe in the plan until they make their first non-downloading external process call. Most recipes perform all required downloads before this call (which is usually to their buildsystem), so this procedure will successfully run all download steps without executing the underlying build.
+When passed this option, vcpkg will run every recipe in the plan until they make their first non-downloading external process call. Most ports perform all required downloads before this call (which is usually to their buildsystem), so this procedure will successfully run all download steps without executing the underlying build.
 
 ### `--only-binarycaching`
 
@@ -148,6 +148,8 @@ In order to modify the set of features of an installed package, vcpkg must remov
 **Experimental and may change or be removed at any time**
 
 Use aria2 to perform download tasks.
+
+<a id="x-write-nuget-packages-config"></a>
 
 ### `--x-write-nuget-packages-config`
 
