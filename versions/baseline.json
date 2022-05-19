@@ -6049,7 +6049,7 @@
       "port-version": 7
     },
     "quill": {
-      "baseline": "1.7.2",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "quirc": {
