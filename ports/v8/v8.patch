@@ -1,20 +1,46 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index d2bfb6129d..c5ab18ee44 100644
+index 7b19ee86d8..a78be89180 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -5366,6 +5366,7 @@ if (is_component_build) {
- 
+@@ -6091,6 +6091,7 @@ if (is_component_build) {
+
      public_deps = [
        ":v8_base",
 +      ":v8_initializers",
        ":v8_snapshot",
      ]
- 
+
+diff --git a/include/v8-cppgc.h b/include/v8-cppgc.h
+index 201773f59d..f2b16463cd 100644
+--- a/include/v8-cppgc.h
++++ b/include/v8-cppgc.h
+@@ -77,6 +77,8 @@ struct WrapperDescriptor final {
+ };
+
+ struct V8_EXPORT CppHeapCreateParams {
++  CppHeapCreateParams(const CppHeapCreateParams&) = delete;
++  CppHeapCreateParams& operator=(const CppHeapCreateParams&) = delete;
+   std::vector<std::unique_ptr<cppgc::CustomSpaceBase>> custom_spaces;
+   WrapperDescriptor wrapper_descriptor;
+ };
+diff --git a/include/v8-fast-api-calls.h b/include/v8-fast-api-calls.h
+index 3403de93ec..1c5ff23f7a 100644
+--- a/include/v8-fast-api-calls.h
++++ b/include/v8-fast-api-calls.h
+@@ -731,7 +731,7 @@ struct TypeInfoHelper<FastApiCallbackOptions&> {
+ }  // namespace internal
+
+ template <typename T, CTypeInfo::Flags... Flags>
+-class V8_EXPORT CTypeInfoBuilder {
++class CTypeInfoBuilder {
+  public:
+   using BaseType = T;
+
 diff --git a/src/codegen/code-stub-assembler.h b/src/codegen/code-stub-assembler.h
-index 72b8fbc8a8..3ebfc23f1f 100644
+index 55485d004a..79f3be2921 100644
 --- a/src/codegen/code-stub-assembler.h
 +++ b/src/codegen/code-stub-assembler.h
-@@ -303,7 +303,7 @@ enum class PrimitiveType { kBoolean, kNumber, kString, kSymbol };
+@@ -313,7 +313,7 @@ enum class PrimitiveType { kBoolean, kNumber, kString, kSymbol };
  // it's possible to add JavaScript-specific useful CodeAssembler "macros"
  // without modifying files in the compiler directory (and requiring a review
  // from a compiler directory OWNER).
@@ -24,10 +50,10 @@ index 72b8fbc8a8..3ebfc23f1f 100644
        public TorqueGeneratedExportedMacrosAssembler {
   public:
 diff --git a/src/common/globals.h b/src/common/globals.h
-index f51c3210f8..5291285337 100644
+index f26b0a06e2..7e11c28525 100644
 --- a/src/common/globals.h
 +++ b/src/common/globals.h
-@@ -1364,7 +1364,7 @@ class BinaryOperationFeedback {
+@@ -1476,7 +1476,7 @@ class BinaryOperationFeedback {
  // This is distinct from BinaryOperationFeedback on purpose, because the
  // feedback that matters differs greatly as well as the way it is consumed.
  class CompareOperationFeedback {
@@ -36,14 +62,14 @@ index f51c3210f8..5291285337 100644
      kSignedSmallFlag = 1 << 0,
      kOtherNumberFlag = 1 << 1,
      kBooleanFlag = 1 << 2,
-@@ -1378,7 +1378,7 @@ class CompareOperationFeedback {
+@@ -1490,7 +1490,7 @@ class CompareOperationFeedback {
    };
- 
+
   public:
 -  enum Type {
 +  enum Type : uint32_t {
      kNone = 0,
- 
+
      kBoolean = kBooleanFlag,
 diff --git a/src/compiler/node-cache.h b/src/compiler/node-cache.h
 index 8e1d3d4eae..c55d8329de 100644
@@ -59,93 +85,129 @@ index 8e1d3d4eae..c55d8329de 100644
    explicit NodeCache(Zone* zone) : map_(zone) {}
    ~NodeCache() = default;
 diff --git a/src/heap/paged-spaces-inl.h b/src/heap/paged-spaces-inl.h
-index e135e30efc..0c055247bc 100644
+index fbade0ea3d..ad401a1361 100644
 --- a/src/heap/paged-spaces-inl.h
 +++ b/src/heap/paged-spaces-inl.h
-@@ -19,7 +19,7 @@ namespace internal {
+@@ -18,7 +18,7 @@ namespace internal {
  // -----------------------------------------------------------------------------
  // PagedSpaceObjectIterator
- 
+
 -HeapObject PagedSpaceObjectIterator::Next() {
 +inline HeapObject PagedSpaceObjectIterator::Next() {
    do {
      HeapObject next_obj = FromCurrentPage();
      if (!next_obj.is_null()) return next_obj;
 diff --git a/src/heap/paged-spaces.h b/src/heap/paged-spaces.h
-index 621d92aa89..a8592a5b4d 100644
+index 2df7083a84..54d46ae192 100644
 --- a/src/heap/paged-spaces.h
 +++ b/src/heap/paged-spaces.h
-@@ -45,7 +45,7 @@ class V8_EXPORT_PRIVATE PagedSpaceObjectIterator : public ObjectIterator {
+@@ -47,7 +47,7 @@ class V8_EXPORT_PRIVATE PagedSpaceObjectIterator : public ObjectIterator {
    // Advance to the next object, skipping free spaces and other fillers and
    // skipping the special garbage section of which there is one per space.
    // Returns nullptr when the iteration has ended.
 -  inline HeapObject Next() override;
 +  HeapObject Next() override;
- 
-  private:
-   // Fast (inlined) path of next().
+
+   // The pointer compression cage base value used for decompression of all
+   // tagged values except references to Code objects.
 diff --git a/src/objects/feedback-vector.cc b/src/objects/feedback-vector.cc
-index a77ea5d265..0cddb92a02 100644
+index f4f517f73b..875d3fc4c7 100644
 --- a/src/objects/feedback-vector.cc
 +++ b/src/objects/feedback-vector.cc
-@@ -114,9 +114,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
+@@ -117,9 +117,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(IsolateT* isolate,
    return metadata;
  }
- 
+
 -template Handle<FeedbackMetadata> FeedbackMetadata::New(
 +template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
      Isolate* isolate, const FeedbackVectorSpec* spec);
 -template Handle<FeedbackMetadata> FeedbackMetadata::New(
 +template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
      LocalIsolate* isolate, const FeedbackVectorSpec* spec);
- 
+
  bool FeedbackMetadata::SpecDiffersFrom(
 diff --git a/src/objects/fixed-array-inl.h b/src/objects/fixed-array-inl.h
-index cca6d40070..d6d36ff59f 100644
+index 5dea891511..5ae1c7903c 100644
 --- a/src/objects/fixed-array-inl.h
 +++ b/src/objects/fixed-array-inl.h
-@@ -88,7 +88,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
+@@ -83,7 +83,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
    return get(isolate, index).IsTheHole(isolate);
  }
- 
+
 -void FixedArray::set(int index, Smi value) {
 +inline V8_EXPORT_PRIVATE void FixedArray::set(int index, Smi value) {
    DCHECK_NE(map(), GetReadOnlyRoots().fixed_cow_array_map());
    DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
    DCHECK(Object(value).IsSmi());
 diff --git a/src/objects/fixed-array.h b/src/objects/fixed-array.h
-index 98c5d8d5b5..bd5303e44c 100644
+index f0c3bfc097..bdc21d8bff 100644
 --- a/src/objects/fixed-array.h
 +++ b/src/objects/fixed-array.h
-@@ -132,7 +132,7 @@ class FixedArray
+@@ -134,7 +134,7 @@ class FixedArray
    inline bool is_the_hole(Isolate* isolate, int index);
- 
+
    // Setter that doesn't need write barrier.
 -  inline void set(int index, Smi value);
 +  inline V8_EXPORT_PRIVATE void set(int index, Smi value);
    // Setter with explicit barrier mode.
    inline void set(int index, Object value, WriteBarrierMode mode);
- 
+
+diff --git a/src/objects/intl-objects.cc b/src/objects/intl-objects.cc
+index 3ac016aaa8..3ed7ce3567 100644
+--- a/src/objects/intl-objects.cc
++++ b/src/objects/intl-objects.cc
+@@ -958,9 +958,11 @@ Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
+ }
+
+ // Instantiations.
+-template Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
++template
++V8_EXPORT_PRIVATE Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
+     Isolate*, Handle<Object>, Handle<Object>);
+-template Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
++template
++V8_EXPORT_PRIVATE Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
+     LocalIsolate*, Handle<Object>, Handle<Object>);
+
+ base::Optional<int> Intl::StringLocaleCompare(
+@@ -2092,10 +2094,14 @@ class ResourceAvailableCurrencies {
+     UErrorCode status = U_ZERO_ERROR;
+     int32_t len = 0;
+     const UChar* result =
+-        ucurr_getName(code.getTerminatedBuffer(), "en", UCURR_LONG_NAME,
+-                      nullptr, &len, &status);
++        ucurr_getName(
++		reinterpret_cast<const UChar*>(code.getTerminatedBuffer()),
++	       	"en", UCURR_LONG_NAME,
++                nullptr, &len, &status);
+     if (U_SUCCESS(status) &&
+-        u_strcmp(result, code.getTerminatedBuffer()) != 0) {
++        u_strcmp(
++	  result,
++	  reinterpret_cast<const UChar*>(code.getTerminatedBuffer())) != 0) {
+       list_.push_back(currency);
+     }
+   }
 diff --git a/src/snapshot/snapshot-utils.cc b/src/snapshot/snapshot-utils.cc
-index eb2372372c..7defadb4b1 100644
+index 6db6698d7e..b56d31085f 100644
 --- a/src/snapshot/snapshot-utils.cc
 +++ b/src/snapshot/snapshot-utils.cc
 @@ -5,7 +5,7 @@
  #include "src/snapshot/snapshot-utils.h"
- 
- #include "src/sanitizer/msan.h"
+
+ #include "src/base/sanitizer/msan.h"
 -#include "third_party/zlib/zlib.h"
 +#include "zlib.h"
- 
+
  namespace v8 {
  namespace internal {
 diff --git a/src/wasm/function-body-decoder-impl.h b/src/wasm/function-body-decoder-impl.h
-index d37f718681..3a409e1d76 100644
+index 5b7201abb6..ced9830cd6 100644
 --- a/src/wasm/function-body-decoder-impl.h
 +++ b/src/wasm/function-body-decoder-impl.h
-@@ -2013,7 +2013,7 @@ class WasmDecoder : public Decoder {
+@@ -1930,7 +1930,7 @@ class WasmDecoder : public Decoder {
    }
- 
+
    // TODO(clemensb): This is only used by the interpreter; move there.
 -  V8_EXPORT_PRIVATE std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
 +  std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
@@ -153,20 +215,20 @@ index d37f718681..3a409e1d76 100644
      // Handle "simple" opcodes with a fixed signature first.
      const FunctionSig* sig = WasmOpcodes::Signature(opcode);
 diff --git a/test/cctest/BUILD.gn b/test/cctest/BUILD.gn
-index ffa4e3a136..a279faee9b 100644
+index d5d20fdfe9..e66fe366b8 100644
 --- a/test/cctest/BUILD.gn
 +++ b/test/cctest/BUILD.gn
-@@ -493,6 +493,10 @@ v8_source_set("cctest_sources") {
+@@ -501,6 +501,10 @@ v8_source_set("cctest_sources") {
      # C4309: 'static_cast': truncation of constant value
      cflags += [ "/wd4309" ]
- 
+
 +    if(!is_clang) {
 +      cflags += [ "/wd4789" ]
 +    }
 +
      # MSVS wants this for gay-{precision,shortest}.cc.
      cflags += [ "/bigobj" ]
- 
+
 diff --git a/tools/debug_helper/BUILD.gn b/tools/debug_helper/BUILD.gn
 index 2256df1f55..29e27c6af9 100644
 --- a/tools/debug_helper/BUILD.gn
@@ -177,24 +239,24 @@ index 2256df1f55..29e27c6af9 100644
      "../..:v8_tracing",
 +    "../..:v8",
    ]
- 
+
    configs = [ ":internal_config" ]
    if (v8_enable_i18n_support) {
 +    public_deps = [ "//third_party/icu" ]
      configs += [ "//third_party/icu:icu_config" ]
    }
- 
+
 diff --git a/tools/v8windbg/BUILD.gn b/tools/v8windbg/BUILD.gn
-index 5618d2d945..71568f1670 100644
+index 5516a6109f..a1c53fceac 100644
 --- a/tools/v8windbg/BUILD.gn
 +++ b/tools/v8windbg/BUILD.gn
 @@ -6,7 +6,7 @@ import("../../gni/v8.gni")
- 
+
  config("v8windbg_config") {
    # Required for successful compilation of SDK header file DbgModel.h.
 -  cflags_cc = [ "/Zc:twoPhase-" ]
 +  cflags_cc = [ "/Zc:twoPhase-", "/std:c++latest" ]
- 
+
    include_dirs = [ "../.." ]
  }
 diff --git a/tools/v8windbg/base/dbgext.h b/tools/v8windbg/base/dbgext.h
@@ -204,7 +266,7 @@ index 8b36a8f361..f8d9f0d64e 100644
 @@ -9,6 +9,7 @@
  #error Unicode not defined
  #endif
- 
+
 +#include <new>
  #include <DbgEng.h>
  #include <DbgModel.h>
@@ -216,13 +278,13 @@ index f7d78c5dd3..1c70e54e7a 100644
 @@ -5,10 +5,11 @@
  #ifndef V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
  #define V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
- 
+
 -#include <wrl/client.h>
 -
 +#include <new>
 +#include <DbgEng.h>
  #include <DbgModel.h>
- 
+
 +#include <wrl/client.h>
  #include <cstdint>
  #include <map>
@@ -234,7 +296,7 @@ index 8855d6ffbc..ed2b0f62e9 100644
 @@ -9,6 +9,7 @@
  #error Unicode not defined
  #endif
- 
+
 +#include <new>
  #include <DbgEng.h>
  #include <DbgModel.h>

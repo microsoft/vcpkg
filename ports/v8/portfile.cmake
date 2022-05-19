@@ -1,20 +1,33 @@
 
-set(pkgver "9.1.269.39")
+set(pkgver "10.1.124.12")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
 get_filename_component(GIT_PATH ${GIT} DIRECTORY)
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_PATH ${PYTHON2} DIRECTORY)
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 vcpkg_find_acquire_program(GN)
 get_filename_component(GN_PATH ${GN} DIRECTORY)
 vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
 
+if(WIN32)
+  # The Windows embeddable pachage for Python3
+  # does not contain a python3.exe file or symlink,
+  # so we need to create one.
+  file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/bin")
+  vcpkg_execute_required_process(
+    COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON3} python3.exe
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/bin"
+    LOGNAME build-${TARGET_TRIPLET}
+  )
+endif()
+
+vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/bin")
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 vcpkg_add_to_path(PREPEND "${GIT_PATH}")
-vcpkg_add_to_path(PREPEND "${PYTHON2_PATH}")
+vcpkg_add_to_path(PREPEND "${PYTHON3_PATH}")
 vcpkg_add_to_path(PREPEND "${GN_PATH}")
 vcpkg_add_to_path(PREPEND "${NINJA_PATH}")
 if(WIN32)
@@ -71,7 +84,7 @@ endfunction()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 7d3d62c91f69a702e5aa54c6b4dbbaa883683717
+    REF e5f13e0cd10e245d822f856d17b347c77ccc7593
     PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
@@ -79,7 +92,7 @@ message(STATUS "Fetching submodules")
 v8_fetch(
         DESTINATION build
         URL https://chromium.googlesource.com/chromium/src/build.git
-        REF fd86d60f33cbc794537c4da2ef7e298d7f81138e 
+        REF f7d8d1eb990dab66c85e0f160c8f7300ac8f4fc2
         SOURCE ${SOURCE_PATH}
         PATCHES ${CURRENT_PORT_DIR}/build.patch)
 v8_fetch(
@@ -100,7 +113,7 @@ v8_fetch(
 v8_fetch(
         DESTINATION third_party/jinja2
         URL https://chromium.googlesource.com/chromium/src/third_party/jinja2.git
-        REF b41863e42637544c2941b574c7877d3e1f663e25
+        REF ee69aa00ee8536f61db6a451f3858745cf587de6
         SOURCE ${SOURCE_PATH})
 v8_fetch(
         DESTINATION third_party/markupsafe
@@ -109,7 +122,7 @@ v8_fetch(
         SOURCE ${SOURCE_PATH})
 
 vcpkg_execute_required_process(
-        COMMAND ${PYTHON2} build/util/lastchange.py -o build/util/LASTCHANGE
+        COMMAND ${PYTHON3} build/util/lastchange.py -o build/util/LASTCHANGE
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}
 )

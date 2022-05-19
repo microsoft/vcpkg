@@ -7305,8 +7305,8 @@
       "port-version": 3
     },
     "v8": {
-      "baseline": "9.1.269.39",
-      "port-version": 4
+      "baseline": "10.1.124.12",
+      "port-version": 1
     },
     "valijson": {
       "baseline": "0.6",
