@@ -1,0 +1,14 @@
+{
+  "name": "metal-cpp",
+  "version-date": "2022-05-19",
+  "description": "low overhead C++ interface for Metal.",
+  "homepage": "https://developer.apple.com/metal/cpp/",
+  "license": "Apache-2.0",
+  "supports": "osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

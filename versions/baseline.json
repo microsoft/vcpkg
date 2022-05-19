@@ -4520,6 +4520,10 @@
       "baseline": "0.16",
       "port-version": 0
     },
+    "metal-cpp": {
+      "baseline": "2022-05-19",
+      "port-version": 0
+    },
     "metis": {
       "baseline": "5.1.0",
       "port-version": 8
