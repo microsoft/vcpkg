@@ -3,7 +3,7 @@
   "version-semver": "2021.1.2",
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
-  "supports": "!x86",
+  "supports": "!x86 & !(osx & arm64)",
   "dependencies": [
     "boost-algorithm",
     "boost-any",
