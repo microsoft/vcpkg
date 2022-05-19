@@ -6965,8 +6965,8 @@
       "port-version": 2
     },
     "thrift": {
-      "baseline": "0.13.0",
-      "port-version": 2
+      "baseline": "0.16.0",
+      "port-version": 0
     },
     "tidy-html5": {
       "baseline": "5.7.28",
