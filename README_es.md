@@ -319,7 +319,7 @@ puede usar un simple `vcpkg install --feature-flags=manifests`
 Para más información, revise la especificación de [manifiesto][getting-started:manifest-spec]
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux

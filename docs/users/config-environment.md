@@ -14,9 +14,7 @@ This environment variable can be set to an existing directory to use for storing
 This environment variable can be set to a comma-separated list of off-by-default features in vcpkg. These features are
 subject to change without notice and should be considered highly unstable.
 
-Non-exhaustive list of off-by-default features:
-
-- `manifest`
+There are no off-by-default feature flags at this time.
 
 #### EDITOR
 
