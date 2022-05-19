@@ -2166,7 +2166,7 @@
     },
     "fastcgi": {
       "baseline": "2020-09-11",
-      "port-version": 4
+      "port-version": 5
     },
     "fastfeat": {
       "baseline": "391d5e9",
@@ -5149,7 +5149,7 @@
       "port-version": 4
     },
     "openjpeg": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "openmama": {
