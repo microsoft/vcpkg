@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-c",
-  "version-date": "2022-05-17",
+  "version-date": "2022-05-19",
   "description": "Google Cloud Client library in C",
   "homepage": "https://github.com/offscale/google-cloud-c",
   "license": "Apache-2.0 OR MIT",
