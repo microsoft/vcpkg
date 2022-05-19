@@ -38,12 +38,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Modules)
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
           "${CMAKE_CURRENT_LIST_DIR}/usage"
           DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(REMOVE_RECURSE "${LIBPROXY_TOOLS}" "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
