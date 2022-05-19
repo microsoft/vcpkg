@@ -24,7 +24,7 @@ if("python" IN_LIST FEATURES)
 endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBXSLT_WITH_TESTS:BOOL=OFF
         -DLIBXSLT_WITH_THREADS:BOOL=ON
