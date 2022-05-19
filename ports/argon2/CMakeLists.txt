@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(argon2)
-enable_testing()
 
 set(ARGON2_VERSION 20190702)
 
@@ -57,11 +56,8 @@ target_compile_definitions(argon2_lib PUBLIC "A2_VISCTL")
 set_target_properties(argon2_lib PROPERTIES OUTPUT_NAME argon2)
 
 add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
+target_compile_definitions(argon2_tool PUBLIC "A2_VISCTL")
 set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
-
-add_executable(argon2_test src/test.c)
-target_link_libraries(argon2_test argon2_lib)
-add_test(NAME argon2_test COMMAND argon2_test)
 
 if (NOT ARGON2_SKIP_HEADERS)
     install(FILES ${ARGON2_HEADERS} DESTINATION include)
