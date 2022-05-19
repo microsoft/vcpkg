@@ -33,7 +33,7 @@ To set the user-wide vcpkg instance, vcpkg creates a few short files containing 
 - `%LOCALAPPDATA%\vcpkg` or `%APPDATA%\Local\vcpkg` on Windows
 - `$HOME/.vcpkg` or `/var/.vcpkg` on non-Windows
 
-Finally, the full path to the [CMake toolchain](../users/integration.md#cmake-integration) is displayed.
+Displays the full path to the [CMake toolchain](../users/integration.md#cmake-integration). Running this command is not required to use the toolchain file.
 
 ### `vcpkg integrate remove`
 
@@ -45,7 +45,7 @@ This command deletes the linking files from the user-wide configuration location
 
 Creates a linked NuGet package for MSBuild integration.
 
-See [MSBuild Per-Project Integration](../users/integration.md#per-project-integration) for more infromation.
+See [MSBuild Per-Project Integration](../users/integration.md#per-project-integration) for more information.
 
 ### `vcpkg integrate powershell`
 
