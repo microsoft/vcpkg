@@ -7,7 +7,6 @@
     "function-arguments",
     "host-path-list",
     "list",
-    "merge-libs",
     "minimum-required"
   ],
   "features": {
