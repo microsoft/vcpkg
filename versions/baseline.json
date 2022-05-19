@@ -86,7 +86,7 @@
     },
     "angle": {
       "baseline": "chromium_4472",
-      "port-version": 2
+      "port-version": 3
     },
     "antlr4": {
       "baseline": "4.9.3",
@@ -1273,7 +1273,7 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "2.13.9",
+      "baseline": "3.0.1",
       "port-version": 1
     },
     "cccapstone": {
@@ -1746,7 +1746,7 @@
     },
     "curl": {
       "baseline": "7.83.1",
-      "port-version": 1
+      "port-version": 2
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -1865,7 +1865,7 @@
       "port-version": 0
     },
     "directxmath": {
-      "baseline": "2022-01-18",
+      "baseline": "2022-05-18",
       "port-version": 0
     },
     "directxmesh": {
@@ -2369,8 +2369,8 @@
       "port-version": 1
     },
     "ftgl": {
-      "baseline": "2.4.0",
-      "port-version": 4
+      "baseline": "2022-05-18",
+      "port-version": 0
     },
     "ftxui": {
       "baseline": "2.0.0",
@@ -2478,11 +2478,11 @@
     },
     "getopt": {
       "baseline": "0",
-      "port-version": 1
+      "port-version": 2
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gettext": {
       "baseline": "0.21",
@@ -3405,8 +3405,8 @@
       "port-version": 4
     },
     "libarchive": {
-      "baseline": "3.5.2",
-      "port-version": 5
+      "baseline": "3.6.1",
+      "port-version": 0
     },
     "libass": {
       "baseline": "0.15.2",
@@ -4934,7 +4934,7 @@
     },
     "nuspell": {
       "baseline": "5.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "nvtt": {
       "baseline": "2.1.2",
@@ -5099,6 +5099,10 @@
     "opencsg": {
       "baseline": "1.4.2",
       "port-version": 2
+    },
+    "openctm": {
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "opencv": {
       "baseline": "4.5.5",
@@ -6917,8 +6921,8 @@
       "port-version": 2
     },
     "tensorpipe": {
-      "baseline": "2021-04-26",
-      "port-version": 1
+      "baseline": "2022-03-16",
+      "port-version": 0
     },
     "termcolor": {
       "baseline": "2.1.0",
@@ -7289,8 +7293,8 @@
       "port-version": 0
     },
     "uvw": {
-      "baseline": "2.7.0",
-      "port-version": 1
+      "baseline": "2.12.1",
+      "port-version": 0
     },
     "uwebsockets": {
       "baseline": "20.11.0",
