@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-freeimage-from-vcpkg.patch
-        002-use-llvm-clang.patch
         003-install-rules.patch
         004-freeimage-disable-faxg3.patch
         005-missing-std-includes.patch
@@ -18,24 +17,10 @@ vcpkg_from_github(
         009-build-static-llvm.patch
 )
 
-if(NOT EXISTS "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
-    vcpkg_download_distfile(CLANG_ARCHIVE
-        URLS "http://releases.llvm.org/7.0.0/cfe-7.0.0.src.tar.xz"
-        FILENAME "cfe-7.0.0.src.tar.xz"
-        SHA512 17a658032a0160c57d4dc23cb45a1516a897e0e2ba4ebff29472e471feca04c5b68cff351cdf231b42aab0cff587b84fe11b921d1ca7194a90e6485913d62cb7
-    )
-    vcpkg_extract_source_archive(CLANG_SOURCE_PATH
-        ARCHIVE "${CLANG_ARCHIVE}"
-        PATCHES
-            001-clang-skip-symlink.patch
-            002-clang-build-static-clang.patch)
-    file(RENAME "${CLANG_SOURCE_PATH}" "${SOURCE_PATH}/src/mdl/jit/llvm/dist/tools/clang")
-endif()
-
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
 
 vcpkg_find_acquire_program(PYTHON3)
-set(PATH_PYTHON ${PYTHON3})
+vcpkg_find_acquire_program(CLANG7)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -62,7 +47,8 @@ vcpkg_cmake_configure(
         -DMDL_BUILD_CORE_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_ARNOLD_PLUGIN:BOOL=OFF
         
-        -Dpython_PATH:PATH=${PATH_PYTHON}
+        -Dpython_PATH:PATH=${PYTHON3}
+        -Dclang_PATH:PATH=${CLANG7}
 
         ${FEATURE_OPTIONS}
 )
