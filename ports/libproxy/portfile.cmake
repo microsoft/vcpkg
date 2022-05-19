@@ -33,6 +33,12 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
+    MAYBE_UNUSED_VARIABLES
+        WITH_DOTNET
+        WITH_PERL
+        WITH_PYTHON2
+        WITH_PYTHON3
+        WITH_VALA
 )
 
 vcpkg_cmake_install()
