@@ -34,9 +34,6 @@ jobs:
       pwsh: true
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
-  - script: |
-      if exist ${{ variables.VCPKG_DOWNLOADS }} rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
-    displayName: 'Clean downloads'
   # Note that we run docs checks before PR checks because they are likely to invalidate a whole run anyway
   - task: Powershell@2
     displayName: 'Generate Documentation'
