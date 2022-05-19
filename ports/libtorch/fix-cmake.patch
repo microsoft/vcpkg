@@ -52,7 +52,7 @@ index 3901f73..4954c3e 100644
  target_link_libraries(pytorch_qnnpack PRIVATE fp16)
 +endif()
 +target_link_libraries(pytorch_qnnpack PRIVATE
-+  unofficial::cpuinfo::clog unofficial::cpuinfo::cpuinfo
++  cpuinfo::clog cpuinfo::cpuinfo
 +  unofficial::pthreadpool
 +)
 +target_include_directories(pytorch_qnnpack PRIVATE
