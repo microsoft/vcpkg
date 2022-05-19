@@ -1,6 +1,6 @@
 {
   "name": "unit-test-cmake",
-  "version-string": "0",
+  "version-string": "1",
   "description": "Ensures that the CMake scripts are unit tested.",
   "supports": "x64",
   "default-features": [
