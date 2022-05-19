@@ -72,92 +72,70 @@ replace_gn_dependency(
     "z;zlib;zlibd"
 )
 
-set(GN_OPTIONS "")
+# Include toolchains
+vcpkg_cmake_get_vars(cmake_vars_file) 
+include("${cmake_vars_file}")
 
+# Clean flags
+foreach(_VAR 
+    VCPKG_COMBINED_C_FLAGS_DEBUG VCPKG_COMBINED_C_FLAGS_RELEASE 
+    VCPKG_COMBINED_CXX_FLAGS_DEBUG VCPKG_COMBINED_CXX_FLAGS_RELEASE
+    VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE)
+    string(STRIP "${${_VAR}}" ${_VAR})
+    string(REPLACE "\"" "\\\"" ${_VAR} "${${_VAR}}") # escape double quotes
+endforeach()
+
+# Set compiler options
+set(OPTIONS_DBG "is_debug=true \
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_DEBUG}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_DEBUG}\""
+)
+set(OPTIONS_REL "\
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_RELEASE}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_RELEASE}\""
+)
+
+set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+
+# Set OS-specific options
 if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Setting GN options for Windows")
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
     set(DISABLE_WHOLE_PROGRAM_OPTIMIZATION "\
         extra_cflags=\"/GL-\" \
         extra_ldflags=\"/LTCG:OFF\" \
         extra_arflags=\"/LTCG:OFF\""
     )
-    set(OPTIONS_DBG "${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-    set(OPTIONS_REL "${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-
-    set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+    set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
+    set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 elseif(VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Setting GN options for Android")
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
     if (VCPKG_CRT_LINKAGE STREQUAL "static")
-        string(APPEND CMAKE_SHARED_LINKER_FLAGS " -static-libstdc++ ")
+        string(APPEND VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG " -static-libstdc++ ")
+        string(APPEND VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE " -static-libstdc++ ")
     endif()
-    set(OPTIONS_DBG "extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-    set(OPTIONS_REL "extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+    set(OPTIONS_DBG "${OPTIONS_DBG} extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}\"")
+    set(OPTIONS_REL "${OPTIONS_REL} extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}\"")
 
-    set(GN_OPTIONS 
-        "target_os=\"android\" \
-        target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" \
+    string(APPEND GN_OPTIONS "\
+        target_os=\"android\" \
         android_ndk_root=\"$ENV{ANDROID_NDK_HOME}\""
     )
 elseif(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "Setting GN options for Linux")
+    message(STATUS "Looking for Clang on Linux")
     vcpkg_find_acquire_program(CLANG)
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
-    set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 elseif(VCPKG_TARGET_IS_OSX)
     message(STATUS "Setting GN options for OSX")
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
     set(LINKER_FLAGS "extra_ldflags=\" \
         -framework IOKit -framework ApplicationServices \
         -framework Foundation -framework Security\""
     )
-    set(OPTIONS_DBG "${LINKER_FLAGS}")
-    set(OPTIONS_REL "${LINKER_FLAGS}")
+    set(OPTIONS_DBG "${OPTIONS_DBG} ${LINKER_FLAGS}")
+    set(OPTIONS_REL "${OPTIONS_REL} ${LINKER_FLAGS}")
     list(APPEND TARGETS util:mig_output)
-
-    set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 endif()
-
-list(APPEND OPTIONS 
-    CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
-    CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-)
-function(append_compiler_options OPTIONS)
-    foreach(_VAR OPTIONS)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-
-    set(OPTIONS_DBG "${OPTIONS_DBG} is_debug=true \
-            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\""
-        PARENT_SCOPE
-    )
-    set(OPTIONS_REL "${OPTIONS_REL} \
-            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\""
-        PARENT_SCOPE
-    )
-endfunction()
-
-append_compiler_options(OPTIONS)
 
 message(STATUS "Configuring GN")
 vcpkg_configure_gn(
