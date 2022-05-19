@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            "SamuelMarks/${PORT}"
-    REF             1a95fb5354d96dcdda56303f4ce131dd161375ac
-    SHA512          c16e3d4f43557e4fa40c042f799575a9da3cc0ab0e1f919885d1df18b7f4b8541cb06ac9a02d092177665adc2764b8544551b4329d3ac91e851cd3630297cba0
+    REF             a67fcad08d644588aaf2312fa9f6e69db2020f4e
+    SHA512          9876946b9e8e6b6c7db6ee098148d7fc06d4de30994d62ee958d0ebfca0d809f5d198d031d4ebe2c17bf583e9606d0cf28764322b023557746d54a4b060aea4e
     HEAD_REF        cmake
 )
 
