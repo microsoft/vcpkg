@@ -1,11 +1,7 @@
 {
   "versions": [
     {
-<<<<<<< HEAD
-      "git-tree": "1f3bc35d62fb3b38a92d0af91308a519fbe13b02",
-=======
       "git-tree": "d4ef005b096c5fed908061b43a59798e6f616295",
->>>>>>> tree-sitter-json
       "version": "0.20.0",
       "port-version": 0
     }
