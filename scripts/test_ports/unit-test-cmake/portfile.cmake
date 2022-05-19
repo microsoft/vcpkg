@@ -84,7 +84,7 @@ function(unit_test_check_variable_equal utcve_test utcve_variable utcve_value)
         return()
     endif()
 
-    if(NOT DEFINED "${utcve_variable}")
+    if(NOT DEFINED "${utcve_variable}" AND NOT "${utcve_variable}" MATCHES "^ENV\\{")
         message(STATUS "${utcve_test} failed to set ${utcve_variable};
     expected: \"${utcve_value}\"")
         set_has_error()
