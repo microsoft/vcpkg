@@ -4706,7 +4706,7 @@
     },
     "msmpi": {
       "baseline": "10.1.12498",
-      "port-version": 3
+      "port-version": 4
     },
     "mstch": {
       "baseline": "1.0.2",
