@@ -266,7 +266,9 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
 $cmakeScriptsPorts | ForEach-Object {
     $portName = $_
 
-    Copy-Item "$VcpkgRoot/ports/$portName/README.md" "$PSScriptRoot/maintainers/ports/$portName.md"
+    if (Test-Path "$VcpkgRoot/ports/$portName/README.md") {
+        Copy-Item "$VcpkgRoot/ports/$portName/README.md" "$PSScriptRoot/maintainers/ports/$portName.md"
+    }
     New-Item -Path "$PSScriptRoot/maintainers/ports/$portName" -Force -ItemType 'Directory' | Out-Null
 
     $portTableOfContents[$portName] = @()
