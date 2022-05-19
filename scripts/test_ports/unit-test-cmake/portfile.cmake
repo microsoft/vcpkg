@@ -93,7 +93,6 @@ function(unit_test_check_variable_equal utcve_test utcve_variable utcve_value)
 
     unit_test_match(utcve "${utcve_variable}" [[^(ENV|CACHE)\{(.*)\}$]])
     if(utcve_MATCHED)
-        message(STATUS "utcve_variable: ${utcve_CMAKE_MATCH_2}")
         if("${utcve_CMAKE_MATCH_1}" STREQUAL "ENV")
             set(utcve_actual_value "$ENV{${utcve_CMAKE_MATCH_2}}")
         elseif("${utcve_CMAKE_MATCH_1}" STREQUAL "CACHE")
