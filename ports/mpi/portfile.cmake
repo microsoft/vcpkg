@@ -1,3 +1,5 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/MPI")
+if (VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/share/MPI/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/MPI")
+endif()
