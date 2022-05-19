@@ -3409,7 +3409,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.15.2",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "libassuan": {
