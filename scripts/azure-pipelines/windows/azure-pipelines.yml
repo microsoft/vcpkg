@@ -81,7 +81,7 @@ jobs:
     displayName: 'Validate version files'
     condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
     inputs:
-      filePath: 'scripts/azure-pipelines/validate-version-files.ps1'
+      filePath: 'scripts/azure-pipelines/windows/validate-version-files.ps1'
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
