@@ -35,7 +35,7 @@ jobs:
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
       exit 0
     displayName: 'Create ${{ variables.VCPKG_DOWNLOADS }}'
-  - bash: bootstrap-vcpkg.sh
+  - bash: ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
   - bash: |

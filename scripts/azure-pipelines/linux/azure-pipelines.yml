@@ -38,10 +38,8 @@ jobs:
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
     displayName: 'Create working directories'
-  - task: Bash@3
+  - bash: ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
-    inputs:
-      filePath: bootstrap-vcpkg.sh
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
   - task: Bash@3
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
