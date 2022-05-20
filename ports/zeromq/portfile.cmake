@@ -9,6 +9,9 @@ vcpkg_from_github(
         zeromq-libzmq-4311-2b04e0ce47.diff # https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4311.diff
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -17,18 +20,12 @@ vcpkg_check_features(
         websockets-sha1 ENABLE_WS
 )
 
-set(PLATFORM_OPTIONS)
+set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-set(LINKAGE_OPTIONS
-    -DWITH_LIBSODIUM_STATIC=${BUILD_STATIC}
-    -DBUILD_STATIC=${BUILD_STATIC}
-    -DBUILD_SHARED=${BUILD_SHARED}
-)
+set(LINKAGE_OPTIONS "")
 if(BUILD_SHARED)
     # The USE_PERF_TOOLS option flag is used if -DBUILD_SHARED=ON:
     # - <https://github.com/zeromq/libzmq/blob/master/CMakeLists.txt#L1621>
@@ -38,12 +35,15 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTS=OFF
+        -DBUILD_STATIC=${BUILD_STATIC}
+        -DBUILD_SHARED=${BUILD_SHARED}
+        -DWITH_DOCS=OFF
+        -DWITH_NSS=OFF
+        -DWITH_LIBSODIUM_STATIC=${BUILD_STATIC}
         ${FEATURE_OPTIONS}
         ${PLATFORM_OPTIONS}
         ${LINKAGE_OPTIONS}
-        -DBUILD_TESTS=OFF
-        -DWITH_DOCS=OFF
-        -DWITH_NSS=OFF
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
 )
