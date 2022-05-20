@@ -41,7 +41,6 @@ jobs:
   - bash: ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - task: Bash@3
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
