@@ -54,11 +54,6 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
 - [vcpkg index](https://vcpkg.dev/) - Package index + search
 
-### Specifications
-
-- [Export](specifications/export-command.md)
-- [Feature Packages](specifications/feature-packages.md)
-
 ### Blog posts
 
 - [Vcpkg Host Dependencies for Cross-Compilation](https://devblogs.microsoft.com/cppblog/vcpkg-host-dependencies/)

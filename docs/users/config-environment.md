@@ -75,19 +75,19 @@ This environment variables limits the amount of concurrency requested by underly
 
 #### VCPKG_DEFAULT_BINARY_CACHE
 
-This environment variable redirects the default location to store binary packages. See [Binary Caching](binarycaching.md#Configuration) for more details.
+This environment variable redirects the default location to store binary packages. See [Binary Caching](binarycaching.md#configuration) for more details.
 
 #### VCPKG_BINARY_SOURCES
 
-This environment variable adds or removes binary sources. See [Binary Caching](binarycaching.md#Configuration) for more details.
+This environment variable adds or removes binary sources. See [Binary Caching](binarycaching.md#configuration) for more details.
 
 #### VCPKG_NUGET_REPOSITORY
 
-This environment variable changes the metadata of produced NuGet packages. See [Binary Caching](binarycaching.md#Configuration) for more details.
+This environment variable changes the metadata of produced NuGet packages. See [Binary Caching](binarycaching.md#configuration) for more details.
 
 #### VCPKG_USE_NUGET_CACHE
 
-This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#nuget-provider-configuration) for more details.
 
 #### X_VCPKG_ASSET_SOURCES
 
