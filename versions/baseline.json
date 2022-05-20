@@ -3918,7 +3918,7 @@
     },
     "libproxy": {
       "baseline": "0.4.17",
-      "port-version": 2
+      "port-version": 3
     },
     "libqcow": {
       "baseline": "20210419",
@@ -4902,7 +4902,7 @@
     },
     "nspr": {
       "baseline": "4.33",
-      "port-version": 1
+      "port-version": 2
     },
     "nss": {
       "baseline": "3.77",
