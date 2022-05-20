@@ -43,7 +43,7 @@ jobs:
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - script: .\scripts\azure-pipelines\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
+  - script: .\scripts\azure-pipelines\windows\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   # Note that we run docs checks before PR checks because they are likely to invalidate a whole run anyway
