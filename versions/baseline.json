@@ -2370,7 +2370,7 @@
     },
     "ftgl": {
       "baseline": "2022-05-18",
-      "port-version": 0
+      "port-version": 1
     },
     "ftxui": {
       "baseline": "2.0.0",
