@@ -1577,8 +1577,8 @@
       "port-version": 6
     },
     "cpp-peglib": {
-      "baseline": "0.1.0",
-      "port-version": 1
+      "baseline": "1.3.10",
+      "port-version": 0
     },
     "cpp-redis": {
       "baseline": "4.3.1",
