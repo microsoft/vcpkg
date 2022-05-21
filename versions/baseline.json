@@ -6941,16 +6941,16 @@
       "port-version": 1
     },
     "tensorflow": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorflow-cc": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorflow-common": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
@@ -7426,6 +7426,10 @@
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
+      "port-version": 0
+    },
+    "vcpkg-tool-bazel": {
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "vectorclass": {
