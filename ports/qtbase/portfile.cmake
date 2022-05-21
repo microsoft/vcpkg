@@ -359,6 +359,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt-cmake${script_suffix}")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt-cmake-private${script_suffix}")
 
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
