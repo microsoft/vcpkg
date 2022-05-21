@@ -5170,7 +5170,7 @@
     },
     "openmvs": {
       "baseline": "1.1.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openni2": {
       "baseline": "2.2.0.33",
