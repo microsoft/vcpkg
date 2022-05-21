@@ -2426,7 +2426,7 @@
     },
     "gazebo": {
       "baseline": "2022-01-20",
-      "port-version": 0
+      "port-version": 1
     },
     "gcem": {
       "baseline": "1.14.1",
@@ -2898,7 +2898,7 @@
     },
     "ignition-transport8": {
       "baseline": "8.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "ignition-transport9": {
       "baseline": "9.0.0",
