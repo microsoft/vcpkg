@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.89.0
-    SHA512 1c3f6ad5dbe1485d1602e297989d6cd53e7646aa99dc28ac1159d0aa22134c97efd74b2c01923e74732f59c861ce05486adb7cff7de050237a35b0980e92cbcf
+    REF b6c8b20c1047006f148a9376046e45e8f036b3bd
+    SHA512 f42e16a6712c4aee87ac806f2dcec1b51d5195512740a14dce233da5beffaa97d6dc4e6f3b70dd58bc54d9cc54cf519e0d9d1a85376cc55ad83d4f272f2332c3
     HEAD_REF master
-    PATCHES
-        fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
-        fix_libmount.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/200
-        fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
 )
 
 vcpkg_cmake_configure(
