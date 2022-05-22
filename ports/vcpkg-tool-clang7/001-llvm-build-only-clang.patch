@@ -1,0 +1,38 @@
+--- a/cmake/modules/AddLLVM.cmake
++++ b/cmake/modules/AddLLVM.cmake
+@@ -978,10 +978,11 @@ macro(add_llvm_subdirectory project type name)
+     set(add_llvm_external_dir ${name})
+   endif()
+   canonicalize_tool_name(${name} nameUPPER)
++  string(COMPARE EQUAL "${project}" "CLANG" build_by_default)
+   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${add_llvm_external_dir}/CMakeLists.txt)
+     # Treat it as in-tree subproject.
+     option(${project}_${type}_${nameUPPER}_BUILD
+-           "Whether to build ${name} as part of ${project}" On)
++           "Whether to build ${name} as part of ${project}" ${build_by_default})
+     mark_as_advanced(${project}_${type}_${name}_BUILD)
+     if(${project}_${type}_${nameUPPER}_BUILD)
+       add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/${add_llvm_external_dir} ${add_llvm_external_dir})
+@@ -992,7 +993,7 @@ macro(add_llvm_subdirectory project type name)
+     set(LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR
+       "${LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR}"
+       CACHE PATH "Path to ${name} source directory")
+-    set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT ON)
++    set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT ${build_by_default})
+     if(NOT LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR OR NOT EXISTS ${LLVM_EXTERNAL_${nameUPPER}_SOURCE_DIR})
+       set(${project}_${type}_${nameUPPER}_BUILD_DEFAULT OFF)
+     endif()
+@@ -1039,11 +1040,12 @@ endfunction()
+ 
+ function(create_subdirectory_options project type)
+   file(GLOB sub-dirs "${CMAKE_CURRENT_SOURCE_DIR}/*")
++  string(COMPARE EQUAL "${project}" "CLANG" build_by_default)
+   foreach(dir ${sub-dirs})
+     if(IS_DIRECTORY "${dir}" AND EXISTS "${dir}/CMakeLists.txt")
+       canonicalize_tool_name(${dir} name)
+       option(${project}_${type}_${name}_BUILD
+-           "Whether to build ${name} as part of ${project}" On)
++           "Whether to build ${name} as part of ${project}" ${build_by_default})
+       mark_as_advanced(${project}_${type}_${name}_BUILD)
+     endif()
+   endforeach()

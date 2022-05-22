@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-tool-clang7",
+  "version": "7.0.0-3",
+  "description": "Clang Compiler Frontend from LLVM Compiler Infrastructure",
+  "homepage": "https://clang.llvm.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

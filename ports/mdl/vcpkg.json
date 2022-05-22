@@ -25,6 +25,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-tool-clang7",
+      "host": true
     }
   ],
   "features": {

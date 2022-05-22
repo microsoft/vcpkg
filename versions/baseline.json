@@ -7672,6 +7672,10 @@
       "baseline": "2022-05-10",
       "port-version": 1
     },
+    "vcpkg-tool-clang7": {
+      "baseline": "7.0.0-3",
+      "port-version": 0
+    },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
       "port-version": 0
