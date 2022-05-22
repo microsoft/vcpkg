@@ -9,8 +9,8 @@ index 6dd4aaf..e734e97 100644
 -ocv_check_modules(FREETYPE freetype2)
 -ocv_check_modules(HARFBUZZ harfbuzz)
 +if(WITH_FREETYPE)
-+find_package(freetype CONFIG REQUIRED)
-+find_package(harfbuzz CONFIG REQUIRED)
++find_package(Freetype REQUIRED)
++find_package(HARFBUZZ CONFIG REQUIRED)
 +endif()
 
  if(OPENCV_INITIAL_PASS)
