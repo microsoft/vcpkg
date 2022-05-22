@@ -1,14 +1,22 @@
 {
   "name": "libtins",
-  "version-string": "4.3",
-  "port-version": 2,
+  "version": "4.3",
+  "port-version": 6,
   "description": "High-level, multiplatform C++ network packet sniffing and crafting library",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp",
   "dependencies": [
     "boost-any",
     "boost-icl",
+    "libpcap",
+    "openssl",
     {
-      "name": "winpcap",
-      "platform": "windows"
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }

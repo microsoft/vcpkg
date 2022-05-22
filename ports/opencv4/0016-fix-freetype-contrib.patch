@@ -1,0 +1,17 @@
+diff --git a/modules/freetype/CMakeLists.txt b/modules/freetype/CMakeLists.txt
+index 6dd4aaf..e734e97 100644
+--- a/modules/freetype/CMakeLists.txt
++++ b/modules/freetype/CMakeLists.txt
+@@ -3,8 +5,10 @@ if(APPLE_FRAMEWORK)
+   ocv_module_disable(freetype)
+ endif()
+ 
+-ocv_check_modules(FREETYPE freetype2)
+-ocv_check_modules(HARFBUZZ harfbuzz)
++if(WITH_FREETYPE)
++find_package(freetype CONFIG REQUIRED)
++find_package(harfbuzz CONFIG REQUIRED)
++endif()
+
+ if(OPENCV_INITIAL_PASS)
+   if(NOT FREETYPE_FOUND)

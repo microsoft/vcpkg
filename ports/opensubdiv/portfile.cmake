@@ -2,8 +2,6 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenSubdiv
@@ -122,7 +120,7 @@ endif()
 
 # The header files are read only and can't remove when remove this port
 file(GLOB_RECURSE OSD_HDRS "${CURRENT_PACKAGES_DIR}/include/*.h")
-file(CHMOD_RECURSE ${OSD_HDRS} 
+file(CHMOD_RECURSE ${OSD_HDRS}
         PERMISSIONS
             OWNER_READ OWNER_WRITE
             GROUP_READ GROUP_WRITE

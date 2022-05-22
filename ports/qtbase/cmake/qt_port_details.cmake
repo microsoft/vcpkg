@@ -1,11 +1,19 @@
-set(QT_VERSION 6.2.1)
+set(QT_VERSION 6.2.4)
 
 if(PORT MATCHES "qtquickcontrols2")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     message(STATUS "qtquickcontrols2 is integrated in qtdeclarative since Qt 6.2. Please remove your dependency on it!")
     return()
 endif()
-set(QT_GIT_TAG v${QT_VERSION})
+
+### Setting up the git tag.
+set(QT_FETCH_REF "")
+set(QT_GIT_TAG "v${QT_VERSION}")
+if(PORT MATCHES "qtdeviceutilities|qtlocation|qtinterfaceframework|qtapplicationmanager")
+    # So much for consistency ....
+    set(QT_FETCH_REF FETCH_REF "${QT_VERSION}")
+    set(QT_GIT_TAG "${QT_VERSION}")
+endif()
 
 #set(QT_UPDATE_VERSION TRUE)
 if(QT_UPDATE_VERSION)
@@ -34,13 +42,14 @@ set(QT_PORTS qt
              ## New in 6.1
              qtactiveqt
              qtdatavis3d
-             #qtdeviceutils
+             qtdeviceutilities
              qtlottie
              qtscxml
              qtvirtualkeyboard
              qtcharts
              ## New in 6.2
              qtconnectivity
+             qtpositioning
              qtlocation
              qtmultimedia
              qtremoteobjects
@@ -51,48 +60,60 @@ set(QT_PORTS qt
              qtwebengine
              qtwebsockets
              qtwebview
+             ## New in 6.2.2
+             qtinterfaceframework
+             qtapplicationmanager
     )
 
 foreach(_port IN LISTS QT_PORTS)
     set(${_port}_TAG ${QT_GIT_TAG})
 endforeach()
-set(qtbase_REF              fbdf50b6c6f69ab88d7a53dfb3ab35e2b49a9664)
-set(qtshadertools_REF       73deb667b27451340cafc20ead3aeb4ea84a5246)
-set(qtdeclarative_REF       3419dd06c5928e292e0c25692427632e124eefea)
-set(qt5compat_REF           3f69f4b1e7d07756b9de7629ec22e1c68265c88a)
-set(qttools_REF             8e1f1f6e906095a8f2d5ebbf85443e2407d4e07c) # Additional refs in portfile due to submodule
-set(qtcoap_REF              1c0bb10d86b43c4b3860cd4526087e644d3f4b07)
-set(qtdoc_REF               040ef9a76b5f79d3cf5e42849d5f49a51522dc0f)
-set(qtimageformats_REF      bd8b167280addfb9b2ee0d493d6cf7b31c03e574)
-set(qtmqtt_REF              610543f328127c68ab39960ded51649ad41d3bd4)
-set(qtnetworkauth_REF       1987896634a2c4ac23842b366b4704f0b1396de7)
-set(qtopcua_REF             ae441a8fff3603e7d21957a09a0b3014669bbb0b)
-set(qtquicktimeline_REF     6ba89379c0859622d71f75486b8d872cc4a709ca)
-set(qtquick3d_REF           7e30ae5f8b6f3c28a2ee2df3788846fc67ec3c1c)
-set(qtsvg_REF               30ad9d119079f486817e60025eceffdc0745ffcf)
-set(qttranslations_REF      6d297398a2f9b0f7cf67de63369ca7b75ed60034)
-set(qtwayland_REF           bea7e0ee35211873c90987c905e3fd68d41df4da)
-# set(qtquickcontrols2_REF   0) # Moved into qtdeclarative since Qt 6.2
+set(qtbase_REF                  597359f7d0736917123842dee63a7ae45522eb8e )
+set(qtshadertools_REF           d954aeb073375ee1edda4d6b2956c3c79b26b386 )
+set(qtdeclarative_REF           614d85d460fa46e947eeb4281609ce5453a29e5c )
+set(qt5compat_REF               c5dab10ba77dd2701dbd2d7b69998fbee90557f2 )
+set(qttools_REF                 a60e0e5dfb2af83ffb1adda28028b24e21fe9131 ) # Additional refs below
+set(qtcoap_REF                  29df645fc165087e74b603e7ad20033381006fb5 )
+set(qtdoc_REF                   5c70158a15f23224a76b6919ab06eefee6ed187e )
+set(qtimageformats_REF          356fb7846b5bc002b2d34e23253fda1dffed7932 )
+set(qtmqtt_REF                  9ad6c48474c2b94c62a518dc3dc7e65d30a6309e )
+set(qtnetworkauth_REF           d5ffb7549dd1e6139b746021c4d40053d0f15950 )
+set(qtopcua_REF                 4a0dd4334d98bea48acda1e203ab2c31f207bad3 )
+set(qtquicktimeline_REF         6a06bdbaa55d1c165e992732f2e3dc923846b921 )
+set(qtquick3d_REF               d126dea81f48386ef24e8b30e1328c40e72c4861 )
+set(qtsvg_REF                   77ea18adfb91c591f249f442e0ffc0079023e431 )
+set(qttranslations_REF          87f95df09b1fc388ea15ce208a349d6b1deac2a4 )
+set(qtwayland_REF               6bdaed8301336750dda95823ed0dfac4828ebab6 )
 ### New in 6.1
-set(qtactiveqt_REF          1b710fa0b5e054189b62e2e7fe32fcf1bec0b081)
-set(qtcharts_REF            78a74a1fcdc4329c054691021a65ff00dcd09ebb)
-set(qtdatavis3d_REF         bec62cdb6f800087fd92085984fde389e9091e13)
-#set(qtdeviceutils_REF      0) #missing tag
-set(qtlottie_REF            9c72963a986d921e5c1cbdca6638fa17c9f8fa45)
-set(qtscxml_REF             069fb385a21e2f844adeb74fbb06849ef5422c7d)
-set(qtvirtualkeyboard_REF   b6fe68874ed8ff86202320435a743521a245c515)
+set(qtactiveqt_REF              5dd7acd1395627e6bd0d87beb148957059c1a3c6 )
+set(qtcharts_REF                7184ea521d04ec13587562c3275ae698fa9a722e )
+set(qtdatavis3d_REF             74c469d4926f59264c5cbc47fe301fe4713aa358 )
+set(qtdeviceutilities_REF       f7333510b4dcfe32eb9065a63c434704750d4fb6 )
+set(qtlottie_REF                fd61d8e92cfacbd3d10f31b176a7cde911525632 )
+set(qtscxml_REF                 63455c888e012fdc682c32fd3d0de96127721bd4 )
+set(qtvirtualkeyboard_REF       ffe9bba23ae45662d25ac3d90167d794e0d6c828 )
 ### New in 6.2
-set(qtconnectivity_REF      e910b93cc161930748260626b414b7f4241e6d58)
-set(qtlocation_REF          70c3948264d5e6e3bc9be4f0e5d8fdae8b821a08)
-set(qtmultimedia_REF        64bc1b00b2979866d577eb57fd118ae497cf6391)
-set(qtremoteobjects_REF     8876b4e07174b7fe3124de74002730684b1d0d82)
-set(qtsensors_REF           8a949e9314682e6940f1b38f30f5d5f3fd1d6260)
-set(qtserialbus_REF         709110461a843a9a0236f3cde27414157a088235)
-set(qtserialport_REF        d8b40852053623d44e8a07f4c208ace27dcde925)
-set(qtwebchannel_REF        c93ddec0eb35707fafd209bee8472fd6ee4a3cb6)
-set(qtwebengine_REF         b879b3ed6b4bb7d6951cf430d5e9b49898fe6c9a) # Additional refs in portfile due to submodule
-set(qtwebsockets_REF        68a4c96964935ada5ae1ca323713b4e3862f010f)
-set(qtwebview_REF           7ef6e31dd2ead012f941ddcaf30e5d4c2abf693b)
+set(qtconnectivity_REF          f0ac95d1685f4f0f2e72fb42800b17d7738ccefb )
+set(qtmultimedia_REF            3423c7172f948f27ff0512d1d2db4ea97fc0e9c0 )
+set(qtremoteobjects_REF         2d0f27e736211e2a6b9d08345f65c736a17a67eb )
+set(qtserialport_REF            c7dc6737a2e98af81900f55f814cf79a6d579779 )
+set(qtsensors_REF               32dda47f507e74ef7ed33290545b762a0c20e532 )
+set(qtserialbus_REF             1ebbf87cbc90c22817785bffc563d4bb86525abc )
+set(qtlocation_REF              0 ) # Currently empty port
+set(qtwebchannel_REF            e1014dcf9a924d3b8fd3450a3360381a0a8fc6ab )
+set(qtwebengine_REF             cc7181c12d1d1605ecab6c448df4a684278d01d8 ) # Additional refs below
+set(qtwebsockets_REF            fd509016da201ed63122c5ec79355930f2489ee8 )
+set(qtwebview_REF               aade84c30fbbc85fe5a8c5e49172a02a7522623d )
+set(qtpositioning_REF           3a68165bc88f9ddd165567d30887147d2d71915b )
+### New in Qt 6.2.2
+set(qtapplicationmanager_REF    2626ae6e9ce84aebd88a163153719c07d7f65b7d )
+set(qtinterfaceframework_REF    71512be8758c75b4b6b0130d6b623f564c6bf227 )
+
+#Submodule stuff:
+set(qttools_qlitehtml_REF       4931b7aa30f256c20573d283561aa432fecf8f38)
+set(qttools_litehtml_REF        6236113734bb0a28467e5999e86fdd2834be8e01)
+set(qttools_litehtml_HASH       38effe92aaebd7113ad3bf3b70c1b3564d6226a766aa968c80ab35fa90ae78d601486226f97d16fa5bd3abf314db19f9f0c90e31de91e87bda82cde27f0a57dc)
+set(qtwebengine_chromium_REF    b33b4266df8c333d3d273ae4665d6b322eee33c6)
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")
@@ -102,7 +123,7 @@ if(QT_UPDATE_VERSION)
         foreach(_current_qt_port IN LISTS QT_PORTS)
             set(_current_control "${VCPKG_ROOT_DIR}/ports/${_current_qt_port}/vcpkg.json")
             file(READ "${_current_control}" _control_contents)
-            string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
+            string(REGEX REPLACE "\"version(-(string|semver))?\": [^\n]+\n" "\"version\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
             string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
             file(WRITE "${_current_control}" "${_control_contents}")
             #need to run a vcpkg format-manifest --all after update once 

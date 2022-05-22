@@ -1,8 +1,9 @@
 import re
 import sys
 
-version = sys.argv[2]
-lib_suffix = "" if len(sys.argv) < 4 else sys.argv[3]
+params_path = sys.argv[2]
+version = sys.argv[3]
+lib_suffix = "" if len(sys.argv) < 5 else sys.argv[4]
 
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:

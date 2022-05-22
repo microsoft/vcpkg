@@ -1,0 +1,13 @@
+diff --git a/lib/crypt.cpp b/lib/crypt.cpp
+index 01249cfc340..9b1f69160b8 100644
+--- a/lib/crypt.cpp
++++ b/lib/crypt.cpp
+@@ -672,7 +672,7 @@ int check_validity_of_cert(
+         }
+ #ifdef HAVE_OPAQUE_RSA_DSA_DH
+         RSA *rsa;
+-        rsa = EVP_PKEY_get0_RSA(pubKey);
++        rsa = (rsa_st*)EVP_PKEY_get0_RSA(pubKey);
+         if (!RSA_blinding_on(rsa, c)) {
+ #else
+         if (!RSA_blinding_on(pubKey->pkey.rsa, c)) {

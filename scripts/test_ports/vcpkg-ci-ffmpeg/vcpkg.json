@@ -1,0 +1,145 @@
+{
+  "name": "vcpkg-ci-ffmpeg",
+  "version-string": "1",
+  "port-version": 1,
+  "description": "Port to force features of certain ports within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "dependencies": [
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "avcodec",
+        "avdevice",
+        "avfilter",
+        "avformat",
+        "avresample",
+        "bzip2",
+        "fdk-aac",
+        "freetype",
+        "gpl",
+        "iconv",
+        "lzma",
+        "mp3lame",
+        "nonfree",
+        "openjpeg",
+        "openssl",
+        "opus",
+        "postproc",
+        "snappy",
+        "soxr",
+        "speex",
+        "swresample",
+        "swscale",
+        "theora",
+        "vorbis",
+        "vpx",
+        "webp",
+        "xml2",
+        "zlib"
+      ]
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "alsa"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "sdl2"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "ass",
+        "fontconfig",
+        "fribidi",
+        "modplug",
+        "opencl",
+        "openh264"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "ilbc"
+      ],
+      "platform": "!(arm & uwp)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "ssh",
+        "x265"
+      ],
+      "platform": "!(uwp | arm)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "x264"
+      ],
+      "platform": "!(arm & windows)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "aom"
+      ],
+      "platform": "!(windows & arm & !uwp)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "dav1d"
+      ],
+      "platform": "!(uwp | arm | x86 | osx)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "opengl"
+      ],
+      "platform": "!uwp & !(arm64 & windows)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "avisynthplus"
+      ],
+      "platform": "windows & !arm & !uwp & !static"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "tesseract"
+      ],
+      "platform": "!(windows & arm) & !static & !uwp"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "nvcodec"
+      ],
+      "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
+    }
+  ]
+}

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(FATAL_ERROR "Can't build BoringSSL if OpenSSL is installed. Please remove OpenSSL, and try to install BoringSSL again if you need it. Build will continue since BoringSSL is a drop-in replacement for OpenSSL")
 endif()
@@ -24,7 +22,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/boringssl
-  REF 479adf98d54a21c1d154aac59b2ce120e1d1a6d6 
+  REF 479adf98d54a21c1d154aac59b2ce120e1d1a6d6
   SHA512 74b5d001c0f5c1846b8818e9e668fa35de5171fc21a8f713d241f57b3e8abe42426fdc66b085cca1853b904def6f4bea573dfed40b8b1422894cca85b0b1a44a
   HEAD_REF master
   PATCHES

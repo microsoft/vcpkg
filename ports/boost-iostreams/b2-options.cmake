@@ -27,12 +27,6 @@ if("lzma" IN_LIST FEATURES)
     list(APPEND B2_OPTIONS
         -sLZMA_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
     )
-    # Overwride debug library name
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        list(APPEND B2_OPTIONS
-            -sLZMA_NAME=lzmad
-        )
-    endif()
     list(APPEND B2_OPTIONS
         -sLZMA_LIBRARY_PATH="${CURRENT_INSTALLED_DIR}/${lib_path_suffix}"
     )
@@ -70,12 +64,6 @@ if("zstd" IN_LIST FEATURES)
     list(APPEND B2_OPTIONS
         -sZSTD_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
     )
-    # Overwride debug library name
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        list(APPEND B2_OPTIONS
-            -sZSTD_NAME=zstdd
-        )
-    endif()
     list(APPEND B2_OPTIONS
         -sZSTD_LIBRARY_PATH="${CURRENT_INSTALLED_DIR}/${lib_path_suffix}"
     )

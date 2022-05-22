@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF v0.7.0
-    SHA512 fd3198bc4a05ca2b9b8a58039cc21af65b44457f295362a1a9b8dbf9c6e3df5186c0c84b289bc9fe85d9efd5ac1a683f6b7ba9a661fb6d913d6ceefb14ee2348
+    REF 7b1880824c2cce98787ae29a317682ba6c294484 #v0.9.0
+    SHA512 745b2616b88032ff047a28e46b703bc1912d109524f8aa411a5b7a650a6d89d3f16dc92812381e95b13bc5cf61218d2ff3db9d3809443264340eae180968cbcf
     HEAD_REF master
-    PATCHES
-        fix-build.patch
 )
 
 vcpkg_check_features(
@@ -35,8 +33,7 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DINTEGER_CLASS=${INTEGER_CLASS}
         -DBUILD_BENCHMARKS=no
@@ -61,5 +58,11 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/symengine/symengine_config_cling.h")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "") # not used, inside if (False)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cmake"
+    [[${SYMENGINE_CMAKE_DIR}/../../../include]]
+    [[${SYMENGINE_CMAKE_DIR}/../../include]]
+)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

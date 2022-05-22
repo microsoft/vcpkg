@@ -1,0 +1,35 @@
+diff --git a/include/llfio/v2.0/map_handle.hpp b/include/llfio/v2.0/map_handle.hpp
+index 55cefa8f..3962be16 100644
+--- a/include/llfio/v2.0/map_handle.hpp
++++ b/include/llfio/v2.0/map_handle.hpp
+@@ -294,8 +294,8 @@ support this operation). You may find the `is_nvram()` observer of particular us
+ */
+ inline io_handle::const_buffer_type nvram_barrier(io_handle::const_buffer_type req, bool evict = false) noexcept
+ {
+-  auto *tp = (io_handle::const_buffer_type::pointer)(((uintptr_t) req.data()) & ~63);
+-  io_handle::const_buffer_type ret{tp, (size_t)(req.data() + 63 + req.size() - tp) & ~63};
++  auto *tp = (io_handle::const_buffer_type::pointer) (((uintptr_t) req.data()) & ~63);
++  io_handle::const_buffer_type ret{tp, (size_t) (req.data() + 63 + req.size() - tp) & ~63};
+   if(memory_flush_none == mem_flush_stores(ret.data(), ret.size(), evict ? memory_flush_evict : memory_flush_retain))
+   {
+     ret = {tp, 0};
+@@ -954,7 +954,8 @@ namespace detail
+   {
+     try
+     {
+-      auto make_shared = [](map_handle h) {
++      auto make_shared = [](map_handle h) -> io_handle::registered_buffer_type
++      {
+         struct registered_buffer_type_indirect : io_multiplexer::_registered_buffer_type
+         {
+           map_handle h;
+@@ -964,8 +965,7 @@ namespace detail
+           {
+           }
+         };
+-        auto ptr = std::make_shared<registered_buffer_type_indirect>(std::move(h));
+-        return ptr;
++        return io_handle::registered_buffer_type(std::make_shared<registered_buffer_type_indirect>(std::move(h)));
+       };
+       const auto &page_sizes = utils::page_sizes(true);
+       size_t idx = 0;

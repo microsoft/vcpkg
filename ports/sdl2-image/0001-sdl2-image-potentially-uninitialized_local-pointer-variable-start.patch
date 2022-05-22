@@ -1,0 +1,12 @@
+--- a/nanosvg.h
++++ b/nanosvg.h
+@@ -2778,7 +2778,7 @@ static void nsvg__content(void* ud, const char* s)
+        if (p->styleFlag) {
+
+                int state = 0;
+-               const char* start;	
++               const char* start = 0;
+                while (*s) {
+                        char c = *s;
+                        if (nsvg__isspace(c) || c == '{') {
+

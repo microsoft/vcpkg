@@ -1,6 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
-set(ICU_VERSION_MAJOR 69)
+set(ICU_VERSION_MAJOR 71)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
 set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
@@ -10,8 +8,9 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7
+    SHA512 1fd2a20aef48369d1f06e2bb74584877b8ad0eb529320b976264ec2db87420bae242715795f372dbc513ea80047bc49077a064e78205cd5e8b33d746fd2a2912
 )
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -22,10 +21,16 @@ vcpkg_extract_source_archive_ex(
         fix-extra.patch
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
+        fix-win-build.patch
+        check-autoconf-archive.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
+endif()
 
 list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
 
@@ -47,7 +52,9 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
     PROJECT_SUBPATH source
+    ADDITIONAL_MSYS_PACKAGES autoconf-archive
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
@@ -191,6 +198,5 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

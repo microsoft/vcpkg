@@ -1,6 +1,7 @@
 {
   "name": "ginkgo",
   "version-semver": "1.4.0",
+  "port-version": 1,
   "description": "Ginkgo is a high-performance linear algebra library for manycore systems, with a focus on sparse solution of linear systems. Note that the OpenMP feature is not available on Windows.",
   "dependencies": [
     {

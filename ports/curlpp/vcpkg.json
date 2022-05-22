@@ -1,9 +1,17 @@
 {
   "name": "curlpp",
-  "version-string": "2018-06-15",
-  "port-version": 5,
+  "version-date": "2018-06-15",
+  "port-version": 7,
   "description": "C++ wrapper around libcURL",
   "dependencies": [
-    "curl"
+    "curl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

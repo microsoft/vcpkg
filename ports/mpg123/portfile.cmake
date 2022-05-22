@@ -7,14 +7,19 @@ vcpkg_from_sourceforge(
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-    PATCHES no-executables.patch
+    PATCHES
+        no-executables.patch
+        fix-modulejack.patch
+        fix-m1-build.patch
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
-yasm_tool_helper(APPEND_TO_PATH)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
+    yasm_tool_helper(APPEND_TO_PATH)
+endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/ports/cmake
+    SOURCE_PATH "${SOURCE_PATH}/ports/cmake"
     OPTIONS -DUSE_MODULES=OFF
 )
 vcpkg_cmake_install()
@@ -24,4 +29,9 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(VCPKG_TARGET_IS_OSX)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

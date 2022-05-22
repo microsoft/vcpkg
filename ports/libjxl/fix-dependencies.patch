@@ -1,11 +1,13 @@
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
-@@ -3,6 +3,16 @@
+@@ -3,6 +3,18 @@
  # Use of this source code is governed by a BSD-style
  # license that can be found in the LICENSE file.
- 
+
++if(JPEGXL_ENABLE_TOOLS) 
 +find_package(lodepng CONFIG REQUIRED)
++endif()
 +find_package(unofficial-brotli CONFIG REQUIRED)
 +find_package(lcms2 CONFIG REQUIRED)
 +
@@ -46,7 +48,7 @@ diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
      set_property(TARGET hwy PROPERTY INTERFACE_COMPILE_OPTIONS ${HWY_CFLAGS_OTHER})
    else()
      target_include_directories(hwy INTERFACE ${HWY_INCLUDE_DIRS})
-@@ -114,82 +112,10 @@ else()
+@@ -114,82 +112,12 @@ else()
  endif()
  
  # lodepng
@@ -57,7 +59,9 @@ diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
 -include(lodepng.cmake)
 -configure_file("${CMAKE_CURRENT_SOURCE_DIR}/lodepng/LICENSE"
 -               ${PROJECT_BINARY_DIR}/LICENSE.lodepng COPYONLY)
++if(JPEGXL_ENABLE_TOOLS)
 +find_package(lodepng CONFIG REQUIRED)
++endif()
  
  # brotli
 -if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR

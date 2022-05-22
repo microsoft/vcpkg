@@ -37,6 +37,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "assistant" FEATURE_assistant
     "designer" FEATURE_designer
     "linguist" FEATURE_linguist
+    "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
+    #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
+    "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+    "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6QuickWidgets
     INVERTED_FEATURES
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_Clang
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
@@ -77,7 +81,7 @@ endif()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
     URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
-    REF 6af5648d1208ed5760d74bd060c74ffa2bcfef6b
+    REF "${${PORT}_qlitehtml_REF}"
     FETCH_REF master
     HEAD_REF master
 )
@@ -85,9 +89,10 @@ vcpkg_from_git(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
     REPO litehtml/litehtml
-    REF db7f59d5886fd50f84d48720c79dc2e6152efa83
-    SHA512 6beed53f8b779359eb2d08495547f9b4e3d02b70d68e035e6c188f009a283e630b3961caa472ce045799a9ef82e1cd6b3c63d8534e6e8127441944f4837a0352
+    REF "${${PORT}_litehtml_REF}" 
+    SHA512 "${${PORT}_litehtml_HASH}"
     HEAD_REF master
+    PATCHES no_src_changes.patch
 )
 
 ##### qt_install_submodule
@@ -111,7 +116,7 @@ qt_cmake_configure(${_opt}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
@@ -129,12 +134,14 @@ if(VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6ToolsTools/Qt6ToolsToolsTargets-debug.cmake")
-if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-    file(READ "${configfile}" _contents)
-    string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
-    file(WRITE "${configfile}" "${_contents}")
+if(NOT QT_IS_LATEST)
+    set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
+    if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        file(READ "${configfile}" _contents)
+        string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
+        file(WRITE "${configfile}" "${_contents}")
+    endif()
 endif()
 
 file(GLOB_RECURSE debug_dir "${CURRENT_PACKAGES_DIR}/debug/*")

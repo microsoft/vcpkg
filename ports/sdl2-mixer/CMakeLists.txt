@@ -137,6 +137,25 @@ install(EXPORT SDL2_mixer
     NAMESPACE SDL2::
 )
 
+set(prefix "")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+set(PACKAGE "SDL2_mixer")
+file(READ "SDL_mixer.h" header_contents)
+#    #define SDL_MIXER_MAJOR_VERSION 2
+#    #define SDL_MIXER_MINOR_VERSION 0
+#    #define SDL_MIXER_PATCHLEVEL    5
+string(REGEX MATCH "define *SDL_MIXER_MAJOR_VERSION *([0-9]+)" _ "${header_contents}")
+set(VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "define *SDL_MIXER_MINOR_VERSION *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+string(REGEX MATCH "define *SDL_MIXER_PATCHLEVEL *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+set(SDL_VERSION 0.0)
+configure_file(SDL2_mixer.pc.in "${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc" @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc DESTINATION lib/pkgconfig)
+
 if(NOT SDL_MIXER_SKIP_HEADERS)
     install(FILES SDL_mixer.h DESTINATION include/SDL2)
 endif()

@@ -1,10 +1,6 @@
 set(LIBUNISTRING_VERSION 0.9.10)
 set(LIBUNISTRING_FILENAME libunistring-${LIBUNISTRING_VERSION}.tar.gz)
 
-if(NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
     URLS
         "https://ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
@@ -17,16 +13,17 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${LIBUNISTRING_VERSION}
-    PATCHES fix-for-automake-1.16.4.patch # automake 1.16.4 uses m4_ifset instead of m4_ifdef
+    PATCHES libunistring-msys-msvc-build.patch
 )
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
     COPY_SOURCE
+    USE_WRAPPERS
     OPTIONS
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
 )
+
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

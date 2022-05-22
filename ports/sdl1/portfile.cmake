@@ -80,4 +80,11 @@ else()
     
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/sdl1/bin/sdl-config")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/sdl1/bin/sdl-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/sdl1/debug/bin/sdl-config")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/sdl1/debug/bin/sdl-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    endif()
 endif()

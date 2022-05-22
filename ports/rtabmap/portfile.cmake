@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-qt.patch
+        0001-add-bigobj-for-msvc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,8 +24,11 @@ vcpkg_cmake_configure(
         -DBUILD_APP=OFF
         -DBUILD_EXAMPLES=OFF
         -DWITH_QT=OFF
-        -DWITH_SUPERPOINT_TORCH=OFF
-        -DWITH_PYMATCHER=OFF
+        -DWITH_ORB_OCTREE=OFF
+        -DWITH_TORCH=OFF
+        -DWITH_PYTHON=OFF
+        -DWITH_PYTHON_THREADING=OFF
+        -DWITH_PDAL=OFF
         -DWITH_FREENECT=OFF
         -DWITH_FREENECT2=OFF
         -DWITH_K4W2=OFF
@@ -37,13 +41,16 @@ vcpkg_cmake_configure(
         -DWITH_VERTIGO=OFF
         -DWITH_CVSBA=OFF
         -DWITH_POINTMATCHER=OFF
+        -DWITH_CCCORELIB=OFF
         -DWITH_LOAM=OFF
         -DWITH_FLYCAPTURE2=OFF
         -DWITH_ZED=OFF
+        -DWITH_ZEDOC=OFF
         -DWITH_REALSENSE=OFF
         -DWITH_REALSENSE_SLAM=OFF
         -DWITH_REALSENSE2=OFF
         -DWITH_MYNTEYE=OFF
+        -DWITH_DEPTHAI=OFF
         -DWITH_OCTOMAP=OFF
         -DWITH_CPUTSDF=OFF
         -DWITH_OPENCHISEL=OFF
@@ -51,10 +58,11 @@ vcpkg_cmake_configure(
         -DWITH_FOVIS=OFF
         -DWITH_VISO2=OFF
         -DWITH_DVO=OFF
-        -DWITH_ORB_SLAM2=OFF
         -DWITH_OKVIS=OFF
         -DWITH_MSCKF_VIO=OFF
         -DWITH_VINS=OFF
+        -DWITH_OPENVINS=OFF
+        -DWITH_MADGWICK=OFF
         -DWITH_FASTCV=OFF
 )
 

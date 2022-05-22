@@ -6,14 +6,8 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-if (VCPKG_TARGET_IS_UWP)
-  # - opengl feature is broken on UWP
-  # - jasper and openexr are not available on UWP due to missing dependencies
-  # - opencv2 code itself fails even if previous conditions are avoided
-  message(FATAL_ERROR "${PORT} doesn't support UWP")
-endif()
-
-set(OPENCV_VERSION "2.4.13.7")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
+string(JSON OPENCV_VERSION GET "${_contents}" version)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -52,11 +46,27 @@ if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
 endif()
 
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
+  endif()
+endif()
+
 if("ffmpeg" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
     set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
   endif()
+endif()
+
+set(WITH_PYTHON OFF)
+if("python" IN_LIST FEATURES)
+  x_vcpkg_get_python_packages(PYTHON_VERSION "2" PACKAGES numpy OUT_PYTHON_VAR "PYTHON2")
+  set(ENV{PYTHON} "${PYTHON2}")
+  set(WITH_PYTHON ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -92,7 +102,9 @@ vcpkg_cmake_configure(
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
+        -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_ZLIB=ON
+        -WITH_GTK=${WITH_GTK}
         -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
 )
 
@@ -102,17 +114,35 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(CUDA QUIET)
-find_package(Threads QUIET)
-find_package(PNG QUIET)
-find_package(OpenEXR QUIET)
+
+  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+find_dependency(Threads)")
+  if("tiff" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+  endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if("png" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(PNG)")
+  endif()
+  if("qt" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
-find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_dependency(Qt5 COMPONENTS Core Gui Widgets Test Concurrent)")
+    if("opengl" IN_LIST FEATURES)
+      string(APPEND DEPS_STRING "
+find_dependency(Qt5 COMPONENTS OpenGL)")
+    endif()
+  endif()
+
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
@@ -123,5 +153,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

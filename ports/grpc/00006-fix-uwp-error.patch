@@ -1,0 +1,13 @@
+diff --git a/src/core/ext/transport/chttp2/transport/hpack_parser.cc b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
+index 18abbda..9789983 100644
+--- a/src/core/ext/transport/chttp2/transport/hpack_parser.cc
++++ b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
+@@ -1052,7 +1052,7 @@ class HPackParser::Parser {
+ 
+  private:
+   void GPR_ATTRIBUTE_NOINLINE LogHeader(const HPackTable::Memento& memento) {
+-    const char* type;
++    const char* type = nullptr;
+     switch (log_info_.type) {
+       case LogInfo::kHeaders:
+         type = "HDR";

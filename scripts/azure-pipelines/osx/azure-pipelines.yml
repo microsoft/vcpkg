@@ -5,23 +5,14 @@
 parameters:
 - name: poolName
   type: string
-- name: mode
-  type: string
-  values:
-    - 'AllPorts'
-    - 'NonTensorflow'
-    - 'OnlyTensorflow'
-- name: jobName
-  type: string
-  default: x64_osx
 
 jobs:
-- job: "${{ parameters.jobName }}"
+- job: x64_osx
   pool:
     name: ${{ parameters.poolName }}
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: /Users/vagrant/Data
@@ -29,22 +20,10 @@ jobs:
     value: /Users/vagrant/Data/downloads
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-bin-url),$(sas-bin)"
+    value: "x-azblob,$(root-bin-url),$(sas-bin)" # not in eastasia due to physical location
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url),$(sas),readwrite"
-  - name: PowershellExtraArguments
-    ${{ if eq(parameters.mode, 'AllPorts') }}:
-      value: ''
-    ${{ if eq(parameters.mode, 'NonTensorflow') }}:
-      value: "-AdditionalSkips @('tensorflow', 'tensorflow-cc')"
-    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
-      value: "-OnlyTest @('tensorflow', 'tensorflow-cc')"
-  - name: Postfix
-    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
-      value: '-tensorflow'
-    ${{ if ne(parameters.mode, 'OnlyTensorflow') }}:
-      value: ''
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
 
   steps:
   - bash: df -h
@@ -56,11 +35,11 @@ jobs:
       exit 0
     displayName: 'Create ${{ variables.VCPKG_DOWNLOADS }}'
   - task: Bash@3
-    displayName: 'Build vcpkg'
+    displayName: 'Bootstrap vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports for x64-osx'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
@@ -70,7 +49,6 @@ jobs:
         -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
         -ArtifactStagingDirectory "$(Build.ArtifactStagingDirectory)"
-        ${{ variables.PowershellExtraArguments }}
       pwsh: true
   - bash: |
       df -h

@@ -13,9 +13,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxExports.cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxTargets.cmake")
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tmx)
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/tmx/tmxTargets.cmake" "${CURRENT_PACKAGES_DIR}/share/tmx/tmxExports.cmake")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
