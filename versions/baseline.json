@@ -2021,7 +2021,7 @@
       "port-version": 1
     },
     "ecm": {
-      "baseline": "5.89.0",
+      "baseline": "5.94.0",
       "port-version": 0
     },
     "ecos": {
