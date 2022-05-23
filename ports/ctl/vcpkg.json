@@ -1,0 +1,13 @@
+{
+  "name": "ctl",
+  "version": "1.0.0",
+  "description": "C template library",
+  "homepage": "https://github.com/inie0722/CTL",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
