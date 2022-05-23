@@ -5,17 +5,17 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program MESON)
-set(program_version 0.62.0)
+set(program_version 0.62.1)
 set(program_name meson)
 set(search_names meson meson.py)
 set(interpreter PYTHON3)
 set(apt_package_name "meson")
 set(brew_package_name "meson")
-set(ref fb67adf3e6b57d44dad6c943a6081277860350c5)
+set(ref bb91cea0d66d8d036063dedec1f194d663399cdf)
 set(paths_to_search "${CURRENT_PACKAGES_DIR}/tools/meson")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 386f99ce39382909c9b55e5bacf2a1aacd804bb7a4e9b7890dd6403e7377d87e840c5d478a6cde8b225aa69a0415134078b661bc712bd1391a7b4044447a163d)
+set(download_sha512 e5888eb35dd4ab5fc0a16143cfbb5a7849f6d705e211a80baf0a8b753e2cf877a4587860a79cad129ec5f3474c12a73558ffe66439b1633d80b8044eceaff2da)
 set(supported_on_unix ON)
 set(version_command --version)
 set(extra_search_args EXACT_VERSION_MATCH)
@@ -50,6 +50,7 @@ if(NOT "${program}")
     #            fix_linker_detection.patch
     )
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 endif()
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
