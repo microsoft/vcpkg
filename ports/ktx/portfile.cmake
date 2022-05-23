@@ -1,4 +1,4 @@
-set(PORT_VERSION 4.1.0-rc1)
+set(PORT_VERSION 4.1.0-rc2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
