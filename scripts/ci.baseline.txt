@@ -648,7 +648,6 @@ mecab:x64-windows-static-md=skip
 mecab:x86-windows        = skip
 # Due to static crt.
 mesa:x64-windows-static=fail
-mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
@@ -933,9 +932,8 @@ qt5-webengine:x64-osx=fail
 # Succesful built requires protobuf to be installed after qt5-webengine not before. Otherwise the build picks up the wrong headers from inside vcpkg.
 qt5-webengine:x64-windows=skip
 qt5-webengine:x86-windows=skip
-# Static builds of qt5-webengine are not supported by the port itself
-qt5-webengine:x64-windows-static=skip
-qt5-webengine:x64-windows-static-md=skip
+# VS2022 17.2 ICE https://developercommunity.visualstudio.com/t/Visual-Studio-2022-v1720-reports-fata/10039296
+qtwebengine:x64-windows=fail
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 # Missing libraries
@@ -1019,11 +1017,19 @@ rsasynccpp:x64-osx=fail
 rsm-binary-io:x64-linux=fail
 # Requires g++10 but CI compiler only has g++9
 rsm-bsa:x64-linux=fail
+# VS2022 17.2 ICE https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1490389
+rsocket:x64-windows=fail
+rsocket:x64-windows-static=fail
+rsocket:x64-windows-static-md=fail
 rtlsdr:x64-uwp=fail
 rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
 rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
+
+# rttr's build fails in CI with
+# D:\buildtrees\rttr\src\v0.9.6-9229bdee1f.clean\src\rttr\detail\library\library_win.cpp(236): error C3861: 'LoadLibraryW': identifier not found
+# .... but it succeeds when I try building it locally.
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
 
@@ -1243,18 +1249,6 @@ yara:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
 
-# Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
-# Skip CI to avoid random failures
-ctp:arm64-windows=skip
-ctp:arm-uwp=skip
-ctp:x64-linux=skip
-ctp:x64-osx=skip
-ctp:x64-uwp=skip
-ctp:x64-windows=skip
-ctp:x64-windows-static=skip
-ctp:x64-windows-static-md=skip
-ctp:x86-windows=skip
-
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
 clapack:x64-linux=skip
 clapack:x64-osx=skip
@@ -1268,7 +1262,6 @@ lapack-reference:x64-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
-fastcgi:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail

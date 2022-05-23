@@ -3,7 +3,7 @@ set(VERSION 3.4.2)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 d399319efcca375fe901b05722e25eca31d11a4261c6a5d5079480bbc552d4e4b42de2026912689d3b2f886ebb3c8bebbea47102e38a2f6acbc526b8d5bba388
     HEAD_REF master
 )
@@ -13,9 +13,8 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in" DESTINATION "${SOURC
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
-        -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
+        "-DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h"
     OPTIONS_DEBUG
         -DFFI_SKIP_HEADERS=ON
 )

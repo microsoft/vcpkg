@@ -16,10 +16,10 @@ jobs:
     value: /mnt/vcpkg-ci/downloads
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url),$(sas),readwrite"
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-bin-url),$(sas-bin)"
+    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
 
   steps:
   - bash: df -h
