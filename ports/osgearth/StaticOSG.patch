@@ -1,18 +1,8 @@
-From 4e719ceacdc8df729f3296f62c9f50075c862967 Mon Sep 17 00:00:00 2001
-From: Ankur Verma <ankur.verma@outlook.com>
-Date: Sun, 27 Dec 2020 22:26:32 -0800
-Subject: [PATCH] StaticOSG
-
----
- CMakeLists.txt              |  9 ++++++
- CMakeModules/FindGEOS.cmake | 29 +++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 049e37e..d75a3b9 100644
+index 82c514a81..2a0ec7274 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -266,6 +266,15 @@ ELSE()
+@@ -302,6 +302,15 @@ ELSE()
      SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
  ENDIF()
  
@@ -25,11 +15,11 @@ index 049e37e..d75a3b9 100644
 +    ADD_DEFINITIONS(-DOSG_LIBRARY_STATIC)
 +    LINK_LIBRARIES(${CMAKE_DL_LIBS})
 +ENDIF(OSG_IS_STATIC)
- 
+ 	
  # OE Libraries
  ADD_SUBDIRECTORY(src)
 diff --git a/CMakeModules/FindGEOS.cmake b/CMakeModules/FindGEOS.cmake
-index e85f922..b1bbfed 100644
+index e85f9222a..55d02b804 100644
 --- a/CMakeModules/FindGEOS.cmake
 +++ b/CMakeModules/FindGEOS.cmake
 @@ -65,7 +65,7 @@ FIND_LIBRARY(GEOS_LIBRARY
@@ -41,16 +31,7 @@ index e85f922..b1bbfed 100644
    PATHS
      ${GEOS_DIR}/lib
      $ENV{GEOS_DIR}
-@@ -74,7 +74,7 @@ FIND_LIBRARY(GEOS_LIBRARY_DEBUG
- )
- 
- FIND_LIBRARY(GEOS_LIBRARY_DEBUG
--  NAMES geos_cd geos_i_d geosd
-+  NAMES geos_cd geos_i_d
-   PATHS
-     ~/Library/Frameworks
-     /Library/Frameworks
-@@ -92,3 +92,28 @@ SET(GEOS_FOUND "NO")
+@@ -92,3 +92,29 @@ SET(GEOS_FOUND "NO")
  IF(GEOS_LIBRARY AND GEOS_INCLUDE_DIR)
    SET(GEOS_FOUND "YES")
  ENDIF(GEOS_LIBRARY AND GEOS_INCLUDE_DIR)
@@ -78,7 +59,5 @@ index e85f922..b1bbfed 100644
 +  set(GEOS_LIBRARY "${GEOS_LIBRARY};${GEOS_CXX_LIBRARY}" CACHE STRING "Geos Libraries" FORCE )
 +  set(GEOS_LIBRARY_DEBUG "${GEOS_LIBRARY_DEBUG};${GEOS_CXX_LIBRARY_DEBUG}" CACHE STRING "Geos Debug Libraries" FORCE )
 +
-+ENDIF(GEOS_IS_STATIC)
--- 
-2.29.2
-
+++ENDIF(GEOS_IS_STATIC)
++

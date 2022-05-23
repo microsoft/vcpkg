@@ -1,7 +1,7 @@
 {
   "name": "osgearth",
-  "version": "3.2",
-  "port-version": 5,
+  "version": "3.3",
+  "port-version": 6,
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "supports": "!(x86 | wasm32)",
@@ -28,7 +28,11 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }	
   ],
   "default-features": [
     "tools"
