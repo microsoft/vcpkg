@@ -4594,7 +4594,7 @@
     },
     "mongo-cxx-driver": {
       "baseline": "3.6.5",
-      "port-version": 3
+      "port-version": 4
     },
     "mongoose": {
       "baseline": "7.6",
