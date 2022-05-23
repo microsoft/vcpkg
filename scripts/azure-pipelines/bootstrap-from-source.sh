@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 git clone https://github.com/microsoft/vcpkg-tool vcpkg-tool
 git -C vcpkg-tool switch -d $1
