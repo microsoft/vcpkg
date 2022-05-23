@@ -23,7 +23,20 @@ manifest mode.
 
 - [Simple Example Manifest](#simple-example-manifest)
 - [Manifest Syntax Reference](#manifest-syntax-reference)
-- [Command Line Interface](#command-line-interface)
+  - [`"name"`](#name)
+  - [Version Fields](#version-fields)
+  - [`"description"`](#description)
+  - [`"builtin-baseline"`](#builtin-baseline)
+  - [`"dependencies"`](#dependencies)
+    - [`"name"`](#dependencies-name)
+    - [`"default-features"`](#dependencies-default-features)
+    - [`"features"`](#dependencies-features)
+    - [`"platform"`](#platform)
+    - [`"version>="`](#version-gt)
+  - [`"overrides"`](#overrides)
+  - [`"supports"`](#supports)
+  - [`"features"`](#features)
+  - [`"default-features"`](#default-features)
 
 See also [the original specification](../specifications/manifests.md) for more low-level details.
 
@@ -59,6 +72,8 @@ These comment fields are not allowed in any objects which permit user-defined ke
 Each manifest contains a top level object with the fields documented below; the most important ones are
 [`"name"`](#name), the [version fields](#version-fields), and [`"dependencies"`](#dependencies):
 
+<a id="name"></a>
+
 ### `"name"`
 
 This is the name of your project! It must be formatted in a way that vcpkg understands - in other words,
@@ -67,7 +82,7 @@ For example, `Boost.Asio` might be given the name `boost-asio`.
 
 This is a required field.
 
-### Version fields
+### Version Fields
 
 There are four version field options, depending on how the port orders its
 releases.
