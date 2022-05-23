@@ -1,0 +1,23 @@
+diff --git a/build/cmake/modules/FindPCRE2.cmake b/build/cmake/modules/FindPCRE2.cmake
+index a27693a..372244d 100644
+--- a/build/cmake/modules/FindPCRE2.cmake
++++ b/build/cmake/modules/FindPCRE2.cmake
+@@ -31,13 +31,12 @@ find_path(PCRE2_INCLUDE_DIRS
+           ${PC_PCRE2_INCLUDE_DIRS}
+ )
+ 
+-find_library(PCRE2_LIBRARIES
+-    NAMES pcre2-${PCRE2_CODE_UNIT_WIDTH}
+-    HINTS ${PC_PCRE2_LIBDIR}
+-          ${PC_PCRE2_LIBRARY_DIRS}
+-)
+-
+ include(FindPackageHandleStandardArgs)
++include(SelectLibraryConfigurations)
++find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-${PCRE2_CODE_UNIT_WIDTH}d PATH_SUFFIXES lib REQUIRED)
++find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-${PCRE2_CODE_UNIT_WIDTH} PATH_SUFFIXES debug/lib REQUIRED)
++select_library_configurations(PCRE2)
++
+ FIND_PACKAGE_HANDLE_STANDARD_ARGS(PCRE2 REQUIRED_VARS PCRE2_LIBRARIES PCRE2_INCLUDE_DIRS VERSION_VAR PC_PCRE2_VERSION)
+ 
+ mark_as_advanced(PCRE2_LIBRARIES PCRE2_INCLUDE_DIRS)

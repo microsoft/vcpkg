@@ -9,6 +9,7 @@ vcpkg_from_github(
         relocatable-wx-config.patch
         nanosvg-ext-depend.patch
         fix-libs-export.patch
+        fix-pcre2.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
