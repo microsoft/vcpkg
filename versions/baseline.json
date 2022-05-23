@@ -1722,7 +1722,7 @@
     },
     "ctp": {
       "baseline": "6.6.1_P1_20210406_se",
-      "port-version": 2
+      "port-version": 3
     },
     "ctre": {
       "baseline": "3.6.0",
