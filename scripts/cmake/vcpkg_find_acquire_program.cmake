@@ -181,11 +181,11 @@ function(vcpkg_find_acquire_program program)
         set(brew_package_name "nasm")
         set(apt_package_name "nasm")
         set(download_urls
-            "https://www.nasm.us/pub/nasm/releasebuilds/${program_version}/win32/nasm-${program_version}-win32.zip"
-            "https://fossies.org/windows/misc/nasm-${program_version}-win32.zip"
+            "https://www.nasm.us/pub/nasm/releasebuilds/${program_version}/win64/nasm-${program_version}-win64.zip"
+            "https://fossies.org/windows/misc/nasm-${program_version}-win64.zip"
         )
-        set(download_filename "nasm-${program_version}-win32.zip")
-        set(download_sha512 9412b8caa07e15eac8f500f6f8fab9f038d95dc25e0124b08a80645607cf5761225f98546b52eac7b894420d64f26c3cbf22c19cd286bbe583f7c964256c97ed)
+        set(download_filename "nasm-${program_version}-win64.zip")
+        set(download_sha512 0d0469f3d475f3d192b9b5b7ee74662cbcb9e02efa0d51839c12cbf6f5de5cd58b32e1d12c9ee4381a63e99a4956e03df7decaf1369e598e0edff19a12629073)
     elseif(program STREQUAL "YASM")
         set(program_name yasm)
         set(program_version 1.3.0.6.g1962)
