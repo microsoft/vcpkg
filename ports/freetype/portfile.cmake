@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
+        bzip2.patch
         fix-exports.patch
 )
 
@@ -52,7 +53,7 @@ string(REPLACE "\${_IMPORT_PREFIX}/lib/brotlidec.lib" [[\$<\$<NOT:\$<CONFIG:DEBU
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-targets.cmake "${CONFIG_MODULE}")
 
 find_library(FREETYPE_DEBUG NAMES freetyped PATHS "${CURRENT_PACKAGES_DIR}/debug/lib/" NO_DEFAULT_PATH)
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
+if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" _contents)
     if(FREETYPE_DEBUG)
         string(REPLACE "-lfreetype" "-lfreetyped" _contents "${_contents}")
@@ -60,11 +61,11 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
     string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" "${_contents}")
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc")
-    file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" _contents)
-    string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" "${_contents}")
-endif()
+
+file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" _contents)
+string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" "${_contents}")
+
 
 vcpkg_fixup_pkgconfig()
 
