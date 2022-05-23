@@ -64,6 +64,7 @@
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
 - [z\_vcpkg\_get\_cmake\_vars](internal/z_vcpkg_get_cmake_vars.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
+- [z\_vcpkg\_setup\_pkgconfig\_path](internal/z_vcpkg_setup_pkgconfig_path.md)
 
 ## Scripts from Ports
 
@@ -71,12 +72,20 @@
 
 - [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
 - [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
-- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake/vcpkg_cmake_get_vars.md)
 - [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
+
+### [vcpkg-gn](ports/vcpkg-gn.md)
+
+- [vcpkg\_gn\_configure](ports/vcpkg-gn/vcpkg_gn_configure.md)
+- [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md)
 
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
+
+### [vcpkg-cmake-get-vars](ports/vcpkg-cmake-get-vars.md)
+
+- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake-get-vars/vcpkg_cmake_get_vars.md)
 
 ### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
 

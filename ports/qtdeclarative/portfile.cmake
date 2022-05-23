@@ -16,6 +16,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
         qmltime
         qmltyperegistrar
         qmldom
+        qmltc
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

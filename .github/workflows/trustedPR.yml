@@ -55,4 +55,4 @@ jobs:
             if (body !== "") {
               req.body = body;
             }
-            await github.pulls.createReview(req);
+            await github.rest.pulls.createReview(req);
