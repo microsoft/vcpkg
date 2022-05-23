@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
-    REF v1.6.3
-    SHA512 e75aca827fe0833422da0d38df482cbc39db0e43dcc3cb791f3e2649f7022dcc448831a5ede85daf6feada60a2d5eaf312a3411abbba92fb9d76466336a7244d
+    REF v1.7.2
+    SHA512 ea9671cab8a4cf641c413933bd7fb4f3b1f823ca1b17260b3217b13aff22513b4939ff722d74beada1730d47dca70858835733418593ed2df8abf5c1dea0b202
     HEAD_REF master
-	PATCHES
-	    fix-c4189-warning.patch
 )
 
 vcpkg_cmake_configure(

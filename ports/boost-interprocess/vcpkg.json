@@ -1,8 +1,9 @@
 {
   "name": "boost-interprocess",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost interprocess module",
   "homepage": "https://github.com/boostorg/interprocess",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

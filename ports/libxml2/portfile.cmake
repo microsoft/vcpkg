@@ -2,10 +2,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF b48e77cf4f6fa0792c5f4b639707a2b0675e461b
-    SHA512 2d20867961b8d8a0cb0411192146882b976c1276d2e8ecd9a7ee3f1eb287f64e59282736f58c641b66abf63ba45c9421f27e13ec09a0b10814cd56987b18cb5b
+    REF a075d256fd9ff15590b86d981b75a50ead124fca
+    SHA512 bcf437b43357400f89e8766a23e841c090c48dfc1bdbb200971013e6c9ed082fb03759248547dfbd5dabf4b6887f69fed6ad790174ec206e20d47dfde2c875ab
     HEAD_REF master
     PATCHES 
+        disable-docs.patch
         fix_cmakelist.patch
         fix-uwp.patch
 )
@@ -19,10 +20,10 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "tools"         LIBXML2_WITH_PROGRAMS
+        "tools"     LIBXML2_WITH_PROGRAMS
 )
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBXML2_WITH_TESTS=OFF
@@ -85,10 +86,10 @@ endif()
 
 file(COPY "${CURRENT_PACKAGES_DIR}/include/libxml2/" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # TODO: Fix usage in all dependent ports hardcoding the wrong include path. 
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 #Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xml2Conf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xml2Conf.sh")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
