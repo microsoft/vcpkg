@@ -1,16 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 3.0.0
-    SHA512 69999ad86bde56ef689392a521143b6ad14b6719860772c3d4c343358997049a48c79e8f302fe0a7f3b0d930b476ddf440def874a1269b50ae79d020bcd073b5
+    REF 4.2.0
+    SHA512 2aff1e6a41d6186b71f2915296c46c0b2ffc67371e1f05c13a62c237ff7a84d7d78d414d7a395e1616a2861c83c4792ef5936a492713780564b994d18e2d3e38
     HEAD_REF master
-    PATCHES
-        # This patch is a workaround that is needed until the following issues are resolved upstream:
-        # - https://github.com/mesonbuild/meson/issues/8375
-        # - https://github.com/harfbuzz/harfbuzz/issues/2870
-        # Details: https://github.com/microsoft/vcpkg/issues/16262
-        0001-circumvent-samefile-error.patch
-        0002-fix-uwp-build.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -62,6 +55,21 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+	file(GLOB PC_FILES 
+		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+	
+	foreach(PC_FILE IN LISTS PC_FILES)
+		file(READ "${PC_FILE}" PC_FILE_CONTENT)
+		string(REGEX REPLACE 
+			"\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+			"-l\\1" PC_FILE_CONTENT 
+			"${PC_FILE_CONTENT}")
+		file(WRITE "${PC_FILE}" ${PC_FILE_CONTENT})
+	endforeach()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")

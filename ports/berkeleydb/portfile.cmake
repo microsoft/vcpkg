@@ -1,5 +1,3 @@
-vcpkg_fail_port_install( ON_TARGET "uwp" "linux" "osx")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.oracle.com/berkeley-db/db-4.8.30.NC.zip"
     FILENAME "db-4.8.30.NC.zip"

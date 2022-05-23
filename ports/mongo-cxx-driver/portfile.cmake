@@ -2,6 +2,7 @@ set(VERSION_MAJOR 3)
 set(VERSION_MINOR 6)
 set(VERSION_PATCH 5)
 set(VERSION_FULL ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(BSONCXX_STANDARD 11)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -17,8 +18,6 @@ vcpkg_from_github(
         fix-dependencies.patch
 )
 
-set(EXTRA_OPTIONS)
-
 if ("mnmlstc" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature mnmlstc only supports UNIX")
@@ -31,9 +30,10 @@ elseif ("boost" IN_LIST FEATURES)
     set(BSONCXX_POLY BOOST)
 elseif("std-experimental" IN_LIST FEATURES)
     set(BSONCXX_POLY STD_EXPERIMENTAL)
+    set(BSONCXX_STANDARD 17)
 elseif("cxx17" IN_LIST FEATURES)
     set(BSONCXX_POLY STD)
-    list(APPEND EXTRA_OPTIONS -DCMAKE_CXX_STANDARD=17)
+    set(BSONCXX_STANDARD 17)
 else()
   if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BSONCXX_POLY BOOST)
@@ -48,8 +48,8 @@ vcpkg_cmake_configure(
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_POLY_USE_${BSONCXX_POLY}=1
+        -DCMAKE_CXX_STANDARD=${BSONCXX_STANDARD}
         -DBUILD_VERSION=${VERSION_FULL}
-        ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()

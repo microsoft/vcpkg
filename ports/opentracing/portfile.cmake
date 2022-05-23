@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET uwp)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LOCAL_OPTIONS
         -DBUILD_STATIC_LIBS=OFF
@@ -18,16 +16,16 @@ vcpkg_from_github(
         repair_mojibake.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DENABLE_LINTING=OFF
+        -DBUILD_TESTING=OFF
         ${LOCAL_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenTracing)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenTracing)
 
 vcpkg_copy_pdbs()
 

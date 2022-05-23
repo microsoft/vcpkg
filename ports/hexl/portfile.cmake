@@ -1,6 +1,3 @@
-# This library only supports "x64" architecture
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/hexl

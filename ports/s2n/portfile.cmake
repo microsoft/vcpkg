@@ -1,20 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/s2n-tls
-    REF ab9a3be5a8abcbc5bd7bdba662497a717737c838 # v1.3.0
-    SHA512 0150cba56f7940253ffa5af0c27fdc8db08961d4c8a80377d25f588fa8a56249eb02723304969d0fdebe570388545527ee826a3070c21e50e63c4f021d425728
+    REF 36c3dc72ab1359cf721294e1258dfdc2962f3ffc # v1.3.5
+    SHA512 2c9eed12e90e5fc987758635fec4a7418c20d25c724cfa391090b06bfcc4eb5925b4011d51a99e7c7ab80f535684ee3934ba4734b7966edd323bf88bc5953d7c
     PATCHES
         fix-cmake-target-path.patch
         use-openssl-crypto.patch
+        remove-trycompile.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tests   BUILD_TESTING
 )
+
+set(EXTRA_ARGS)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(EXTRA_ARGS "-DS2N_NO_PQ=TRUE")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${EXTRA_ARGS}
         ${FEATURE_OPTIONS}
         -DUNSAFE_TREAT_WARNINGS_AS_ERRORS=OFF
 )

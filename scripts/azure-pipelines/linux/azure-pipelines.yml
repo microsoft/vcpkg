@@ -16,10 +16,10 @@ jobs:
     value: /mnt/vcpkg-ci/downloads
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url),$(sas),readwrite"
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-bin-url),$(sas-bin)"
+    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
 
   steps:
   - bash: df -h
@@ -41,7 +41,7 @@ jobs:
     inputs:
       filePath: bootstrap-vcpkg.sh
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports for x64-linux'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'

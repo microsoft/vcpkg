@@ -1,9 +1,9 @@
 {
   "name": "mimalloc",
-  "version": "2.0.3",
-  "port-version": 1,
+  "version": "2.0.6",
   "description": "Compact general purpose allocator with excellent performance",
   "homepage": "https://github.com/microsoft/mimalloc",
+  "license": "MIT",
   "supports": "!(arm | uwp)",
   "dependencies": [
     {

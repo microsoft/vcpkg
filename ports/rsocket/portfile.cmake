@@ -13,6 +13,7 @@ vcpkg_from_github(
     fix-cmake-config.patch
     fix-find-dependencies.patch
     use-cpp-17.patch
+    fix-folly.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,6 +1,3 @@
-# UWP is not supported
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://dev-www.libreoffice.org/src/cppunit-1.15.1.tar.gz"
     FILENAME "cppunit-1.15.1.tar.gz"
