@@ -16,22 +16,24 @@ vcpkg install [options]
 
 ## Description
 
-Build and install packages.
+Build and install port packages.
 
 ### Classic Mode
 
-In Classic Mode, this verb adds packages to the existing set in the installed directory. This may require rebuilding existing packages with new features.
+In Classic Mode, this verb adds port packages to the existing set in the [installed directory][] (defaults to `installed/` under the vcpkg root). This can require removing and rebuilding existing packages, which can fail.
 
 **Package Syntax**
 ```
-name[feature1,feature2]:triplet
+portname[feature1,feature2]:triplet
 ```
 
 Package references without a triplet are automatically qualified by the [default target triplet](common-options.md#triplet). Package references that do not explicitly list `core` are considered to imply all default features.
 
 ### Manifest Mode
 
-In [Manifest Mode][], this verb sets the installed directory to the state specified by the manifest file, adding, removing, or rebuilding packages as needed.
+In [Manifest Mode][], this verb sets the [installed directory][] to the state specified by the `vcpkg.json` manifest file, adding, removing, or rebuilding packages as needed.
+
+[installed directory]: common-options.md#install-root
 
 ## Options
 
@@ -39,33 +41,45 @@ All vcpkg commands support a set of [common options](common-options.md).
 
 ### `--allow-unsupported`
 
-Instead of erroring on an unsupported port, continue with a warning.
+Instead of stopping on an unsupported port, continue with a warning.
 
-By default, vcpkg refuses to execute an install plan containing a port installation for a triplet outside its [`"supports"`][] clause. This flag instructs vcpkg to ignore the [`"supports"`][] field.
+By default, vcpkg refuses to execute an install plan containing a port installation for a triplet outside its [`"supports"`][] clause. The [`"supports"`][] clause of a package describes the full set of platforms a package is expected to be buildable on. This flag instructs vcpkg to warn that the build is expected to fail instead of stopping.
 
 ### `--clean-after-build`
 
 Clean buildtrees, packages, and downloads after building each package.
 
+This option has the same effect as passing [`--clean-buildtrees-after-build`](#clean-buildtrees-after-build), [`--clean-downloads-after-build`](#clean-downloads-after-build), and [`--clean-packages-after-build`](#clean-packages-after-build).
+
+<a id="clean-buildtrees-after-build"></a>
+
 ### `--clean-buildtrees-after-build`
 
 Clean all subdirectories from the buildtrees temporary subfolder after building each package.
 
-All top-level files in the buildtrees subfolder (e.g. `buildtrees/zlib/config-x64-windows-out.log`) will be kept.
+All top-level files in the buildtrees subfolder (e.g. `buildtrees/zlib/config-x64-windows-out.log`) will be kept. All subdirectories will be deleted.
+
+<a id="clean-downloads-after-build"></a>
 
 ### `--clean-downloads-after-build`
 
 Clean all unextracted assets from the `downloads/` folder after building each package.
 
-Extracted tools will be kept even with this flag.
+All top level files in the `downloads/` folder will be deleted. Extracted tools will be kept.
+
+<a id="clean-packages-after-build"></a>
 
 ### `--clean-packages-after-build`
 
 Clean the packages temporary subfolder after building each package.
 
+The packages subfolder for the built package (for example, `packages/zlib_x64-windows`) will be deleted after installation.
+
 ### `--dry-run`
 
-Only print the install plan, do not remove or install any packages.
+Print the install plan, but do not remove or install any packages.
+
+The install plan lists all packages and features that will be installed, as well as any other packages that need to be removed and rebuilt.
 
 ### `--editable`
 
@@ -91,7 +105,9 @@ By default, vcpkg will run several checks on built packages and emit warnings if
 
 **[Manifest Mode][] Only**
 
-Specify an additional feature from the `vcpkg.json` to install dependencies for.
+Specify an additional [feature](../users/manifests.md#features) from the `vcpkg.json` to install dependencies for.
+
+By default, only [`"dependencies"`](../users/manifests.md#dependencies) and the dependencies of the [`"default-features"`](../users/manifests.md#default-features) will be installed.
 
 ### `--head`
 
@@ -99,13 +115,13 @@ Specify an additional feature from the `vcpkg.json` to install dependencies for.
 
 Request all packages explicitly referenced on the command line to fetch the latest sources available when building.
 
-This flag is only intended for temporary testing and is not intended for production or long-term use. This disables [Binary Caching][] for all explicitly referenced packages and any packages built on them because vcpkg cannot accurately track all inputs.
+This flag is only intended for temporary testing and is not intended for production or long-term use. This disables [Binary Caching][] for all explicitly referenced packages and their dependents because vcpkg cannot accurately track all inputs.
 
 ### `--keep-going`
 
 Continue the install plan after the first failure.
 
-Without this flag, vcpkg will stop at the first package build failure. With this flag, vcpkg will continue to build and install other parts of the install plan that don't depend on the failed package.
+By default, vcpkg will stop at the first package build failure. This flag instructs vcpkg to continue building and installing other parts of the install plan that don't depend upon the failed package.
 
 ### `--x-no-default-features`
 
@@ -127,7 +143,7 @@ By default, ports will acquire source code and tools on demand from the internet
 
 Attempt to download all assets required for an install plan without performing any builds.
 
-When passed this option, vcpkg will run every recipe in the plan until they make their first non-downloading external process call. Most ports perform all required downloads before this call (which is usually to their buildsystem), so this procedure will successfully run all download steps without executing the underlying build.
+When passed this option, vcpkg will run each build in the plan until it makes its first non-downloading external process call. Most ports perform all downloads before the first external process call (usually to their buildsystem), so this procedure will download all required assets. Ports that do not follow this procedure will not have their assets predownloaded.
 
 ### `--only-binarycaching`
 
@@ -149,7 +165,7 @@ In order to modify the set of features of an installed package, vcpkg must remov
 
 Use aria2 to perform download tasks.
 
-<a id="x-write-nuget-packages-config"></a>
+<a id="write-nuget-packages-config"></a>
 
 ### `--x-write-nuget-packages-config`
 

@@ -4,7 +4,7 @@
 
 Most vcpkg commands accept a group of common options that control cross-cutting aspects of the tool. Not all options affect every command. For example, a command that does not download any files will be unaffected by changing the downloads directory.
 
-<a name="x-asset-sources"></a>
+<a name="asset-sources"></a>
 
 ## `--x-asset-sources=<config>`
 
@@ -20,7 +20,7 @@ Add a source for [Binary Caching](../users/binarycaching.md).
 
 This option can be specified multiple times; see the Binary Caching documentation for how multiple binary sources interact.
 
-<a name="x-buildtrees-root"></a>
+<a name="buildtrees-root"></a>
 
 ## `--x-buildtrees-root=<path>`
 
@@ -46,7 +46,7 @@ Specify the host [architecture triplet][triplets].
 
 Defaults to the `VCPKG_DEFAULT_HOST_TRIPLET` environment variable. If that is unset, deduced based on the host architecture and operating system.
 
-<a name="x-install-root"></a>
+<a name="install-root"></a>
 
 ## `--x-install-root=<path>`
 
@@ -58,7 +58,7 @@ In Classic Mode, defaults to `installed/` under the vcpkg root folder.
 
 In [Manifest Mode][../users/manifests.md], defaults to `vcpkg_installed/` under the manifest folder.
 
-<a name="x-manifest-root"></a>
+<a name="manifest-root"></a>
 
 ### `--x-manifest-root=<path>`
 
@@ -84,7 +84,7 @@ Specifies a directory containing [overlay triplets](../examples/overlay-triplets
 
 This option can be specified multiple times; [triplets][] will resolve to the first match.
 
-<a name="x-packages-root"></a>
+<a name="packages-root"></a>
 
 ## `--x-packages-root=<path>`
 
