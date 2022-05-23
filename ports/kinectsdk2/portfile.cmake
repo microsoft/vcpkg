@@ -1,9 +1,5 @@
 vcpkg_buildpath_length_warning(37)
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
 set(KINECTSDK20_VERSION "v2.0_1409")
 vcpkg_download_distfile(KINECTSDK20_INSTALLER
     URLS "https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-${KINECTSDK20_VERSION}-Setup.exe"
@@ -38,23 +34,24 @@ file(
     INSTALL
         "${KINECTSDK20_DIR}/inc/"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+        "${CURRENT_PACKAGES_DIR}/include"
 )
 
 file(
     INSTALL
         "${KINECTSDK20_DIR}/Lib/${VCPKG_TARGET_ARCHITECTURE}/Kinect20.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
+        "${CURRENT_PACKAGES_DIR}/lib"
 )
 
 file(
     INSTALL
         "${KINECTSDK20_DIR}/Lib/${VCPKG_TARGET_ARCHITECTURE}/Kinect20.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
 )
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)
 
 # Handle copyright
-file(COPY "${KINECTSDK20_DIR}/SDKEula.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/kinectsdk2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/kinectsdk2/SDKEula.rtf ${CURRENT_PACKAGES_DIR}/share/kinectsdk2/copyright)
+file(INSTALL "${KINECTSDK20_DIR}/SDKEula.rtf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

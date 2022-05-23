@@ -35,7 +35,7 @@ file(
         "${KINECTSDK10_DIR}/inc/NuiSensor.h"
         "${KINECTSDK10_DIR}/inc/NuiSkeleton.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+        "${CURRENT_PACKAGES_DIR}/include"
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -50,15 +50,17 @@ file(
     INSTALL
         "${KINECTSDK10_DIR}/lib/${ARCHITECTURE}/Kinect10.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
+        "${CURRENT_PACKAGES_DIR}/lib"
 )
 
 file(
     INSTALL
         "${KINECTSDK10_DIR}/lib/${ARCHITECTURE}/Kinect10.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
 )
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)
+
 # Handle copyright
-file(INSTALL ${KINECTSDK10_DIR}/SDKEula.rtf DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${KINECTSDK10_DIR}/SDKEula.rtf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
