@@ -1,6 +1,7 @@
 {
   "name": "libhydrogen",
   "version-date": "2021-12-02",
+  "port-version": 1,
   "description": "A lightweight, secure, easy-to-use crypto library suitable for constrained environments",
   "homepage": "https://github.com/jedisct1/libhydrogen",
   "dependencies": [

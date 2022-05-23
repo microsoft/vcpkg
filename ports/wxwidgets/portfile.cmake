@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF 9c0a8be1dc32063d91ed1901fd5fcd54f4f955a1 #v3.1.5
-    SHA512 33817f766b36d24e5e6f4eb7666f2e4c1ec305063cb26190001e0fc82ce73decc18697e8005da990a1c99dc1ccdac9b45bb2bbe5ba73e6e2aa860c768583314c
+    REF 35a6d7b15fedfdb5198bb6c28b31cda33b2c2a76 #v3.1.6-final
+    SHA512 f42b97a695e037130da9935e3abf117c0720325f194fcdabace95fa16a5ca06d49e35db9616bb0ef16600044397739459551a6276f3c239bd4fc160ecb6cdc16
     HEAD_REF master
     PATCHES
         install-layout.patch
-        mingw-output-name.patch
-        fix-build.patch
-        fix-linux-configure.patch # Remove this patch in the next update
-        fix-libs-export.patch
         relocatable-wx-config.patch
+        nanosvg-ext-depend.patch
+        fix-libs-export.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -30,6 +28,12 @@ These development packages can be installed on Ubuntu systems via
         endif()
     endforeach()
 endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sound   wxUSE_SOUND
+)
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
@@ -75,7 +79,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DwxUSE_REGEX=builtin
+        ${FEATURE_OPTIONS}
+        -DwxUSE_REGEX=sys
         -DwxUSE_ZLIB=sys
         -DwxUSE_EXPAT=sys
         -DwxUSE_LIBJPEG=sys

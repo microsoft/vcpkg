@@ -15,6 +15,7 @@ vcpkg_configure_make(
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
+    [DISABLE_VERBOSE_FLAGS]
     [NO_DEBUG]
     [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -58,8 +59,8 @@ Script that needs to be called before configuration (do not use for batch files 
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
 
-## DISABLE_VERBOSE_FLAGS
-do not pass '--disable-silent-rules --verbose' to configure
+### DISABLE_VERBOSE_FLAGS
+Do not pass '--disable-silent-rules --verbose' to configure.
 
 ### OPTIONS
 Additional options passed to configure during the configuration.
@@ -205,19 +206,6 @@ macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
         string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
     else()
         string(APPEND ${inoutstring} " ${var}='${defaultval}'")
-    endif()
-endmacro()
-
-# Setup include environment (since these are buildtype independent restoring them is unnecessary)
-macro(z_prepend_include_path var)
-    unset(ENV{${var}})
-    if(NOT DEFINED z_vcpkg_env_backup_${var} OR "${z_vcpkg_env_backup_${var}}" STREQUAL "")
-        vcpkg_host_path_list(APPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
-    else()
-        foreach (one_bk IN ITEMS ${z_vcpkg_env_backup_${var}})
-            vcpkg_host_path_list(PREPEND ENV{${var}} "${one_bk}")
-        endforeach()
-        vcpkg_host_path_list(PREPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
     endif()
 endmacro()
 
@@ -544,10 +532,10 @@ function(vcpkg_configure_make)
     endif()
 
     # Used by CL 
-    z_prepend_include_path(INCLUDE)
+    vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
-    z_prepend_include_path(C_INCLUDE_PATH)
-    z_prepend_include_path(CPLUS_INCLUDE_PATH)
+    vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
 
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -611,10 +599,6 @@ function(vcpkg_configure_make)
         endif()
     endif()
     debug_message("ENV{LIBS}:$ENV{LIBS}")
-    vcpkg_find_acquire_program(PKGCONFIG)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
-        set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
-    endif()
 
     # Run autoconf if necessary
     if (arg_AUTOCONFIG OR requires_autoconfig)
@@ -767,13 +751,10 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup PKG_CONFIG_PATH
-        set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/pkgconfig")
-        set(pkgconfig_installed_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-        if(ENV{PKG_CONFIG_PATH})
-            set(backup_env_pkg_config_path_${current_buildtype} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        if ("${current_buildtype}" STREQUAL "DEBUG")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
         endif()
 
         # Setup environment
@@ -794,7 +775,6 @@ function(vcpkg_configure_make)
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
         endif()
-        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
         vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
         foreach(lib_env_var IN LISTS lib_env_vars)
@@ -834,13 +814,7 @@ function(vcpkg_configure_make)
                 file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
-
-        if(backup_env_pkg_config_path_${current_buildtype})
-            set(ENV{PKG_CONFIG_PATH} "${backup_env_pkg_config_path_${current_buildtype}}")
-        else()
-            unset(ENV{PKG_CONFIG_PATH})
-        endif()
-        unset(backup_env_pkg_config_path_${current_buildtype})
+        z_vcpkg_restore_pkgconfig_path()
         
         if(link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
