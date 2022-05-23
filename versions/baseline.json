@@ -5262,7 +5262,7 @@
     },
     "osgearth": {
       "baseline": "3.3",
-      "port-version": 5
+      "port-version": 6
     },
     "osi": {
       "baseline": "0.108.6",
