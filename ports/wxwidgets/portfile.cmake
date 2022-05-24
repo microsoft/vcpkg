@@ -93,7 +93,7 @@ vcpkg_cmake_configure(
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         ${OPTIONS}
-        -DPKG_CONFIG_EXECUTABLE="${PKGCONFIG}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         # The minimum cmake version requirement for Cotire is 2.8.12.
         # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
