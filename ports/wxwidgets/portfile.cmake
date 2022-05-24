@@ -36,6 +36,8 @@ vcpkg_check_features(
         sound   wxUSE_SOUND
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
@@ -91,6 +93,10 @@ vcpkg_cmake_configure(
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         ${OPTIONS}
+        -DPKG_CONFIG_EXECUTABLE="${PKGCONFIG}"
+        # The minimum cmake version requirement for Cotire is 2.8.12.
+        # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 
 vcpkg_cmake_install()
