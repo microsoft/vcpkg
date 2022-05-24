@@ -18,6 +18,12 @@
     }
   ],
   "features": {
+    "cgal": {
+      "description": "Build with cgal",
+      "dependencies": [
+        "cgal"
+      ]
+    },
     "embree": {
       "description": "Build with embree",
       "dependencies": [
@@ -35,12 +41,6 @@
             "opengl"
           ]
         }
-      ]
-    },
-    "cgal": {
-      "description": "Build with cgal",
-      "dependencies": [
-        "cgal"
       ]
     },
     "imgui": {
