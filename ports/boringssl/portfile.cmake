@@ -28,6 +28,7 @@ vcpkg_from_github(
   PATCHES
     0001-vcpkg.patch
     0002-disable-waring-4065.patch
+    0003-Disable-C4191-warning-to-fix-VS2022-build.patch
 )
 
 vcpkg_configure_cmake(
