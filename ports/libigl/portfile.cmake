@@ -19,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         #png LIBIGL_WITH_PNG # Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
         xml    LIBIGL_WITH_XML
         #python LIBIGL_WITH_PYTHON # Python binding are in the process of being redone.
+        cgal   LIBIGL_WITH_CGAL
 )
 
 vcpkg_cmake_configure(
