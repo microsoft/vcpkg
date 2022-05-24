@@ -5322,7 +5322,7 @@
     },
     "paraview": {
       "baseline": "5.9.1",
-      "port-version": 1
+      "port-version": 2
     },
     "parmetis": {
       "baseline": "4.0.3",
