@@ -1,8 +1,10 @@
 {
   "name": "bitserializer",
   "version": "0.44",
+  "port-version": 1,
   "description": "C++ 17 library for serialization to JSON, XML, YAML",
   "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         parquet     PARQUET_REQUIRE_ENCRYPTION
         plasma      ARROW_PLASMA
         s3          ARROW_S3
+        cuda        ARROW_CUDA
 )
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
