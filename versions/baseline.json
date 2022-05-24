@@ -2437,8 +2437,8 @@
       "port-version": 0
     },
     "gdcm": {
-      "baseline": "3.0.7",
-      "port-version": 4
+      "baseline": "3.0.12",
+      "port-version": 0
     },
     "gdcm2": {
       "baseline": "deprecated",
