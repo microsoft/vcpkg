@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "boost-algorithm",
     "boost-core",
