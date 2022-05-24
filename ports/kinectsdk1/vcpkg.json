@@ -4,5 +4,5 @@
   "port-version": 5,
   "description": "Kinect for Windows SDK for Kinect v1 sensor.",
   "license": null,
-  "supports": "!arm"
+  "supports": "!arm & windows"
 }
