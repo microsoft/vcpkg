@@ -24,7 +24,7 @@ index f1d37cf7..9cf43c75 100644
  
 +    # Use vcpkg zstd
 +    find_package(zstd CONFIG REQUIRED)
-+    target_link_libraries(${lib} PUBLIC $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
++    target_link_libraries(${lib} PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
 +
      if(WIN32)
          # By wrapping in generator expression we force multi configuration
