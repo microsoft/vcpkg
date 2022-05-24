@@ -115,7 +115,10 @@ if(FEATURES MATCHES "tools")
         endif()
     endforeach()
 
-    list(APPEND HDF5_TOOLS h5perf_serial)
+    if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(APPEND HDF5_TOOLS h5perf_serial)
+    endif()
 
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
