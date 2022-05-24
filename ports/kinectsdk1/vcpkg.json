@@ -4,5 +4,11 @@
   "port-version": 5,
   "description": "Kinect for Windows SDK for Kinect v1 sensor.",
   "license": null,
-  "supports": "!arm & windows"
+  "supports": "!arm & windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true
+    }
+  ]
 }
