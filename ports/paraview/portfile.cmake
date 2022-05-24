@@ -1,5 +1,5 @@
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _vcpkg_json)
-string(JSON _ver_string GET "${_vcpkg_json}" "version-semver")
+string(JSON _ver_string GET "${_vcpkg_json}" "version")
 string(REGEX MATCH "^[0-9]+\.[0-9]+" VERSION "${_ver_string}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
