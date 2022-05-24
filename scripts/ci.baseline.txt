@@ -351,6 +351,7 @@ gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 gts:x64-osx=fail
 halide:x64-windows-static=fail
+hareflow:x86-windows=skip
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
 hdf5:x64-uwp=fail
