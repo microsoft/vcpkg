@@ -15,6 +15,7 @@ vcpkg_from_github(
         add-compile-options-for-osx.patch
         skip-building-libsquish.patch
         fix-intrinsic-function.patch
+        fix-release-flags.patch
 )
 
 vcpkg_check_features(
