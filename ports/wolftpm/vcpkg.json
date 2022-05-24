@@ -1,0 +1,19 @@
+{
+  "name": "wolftpm",
+  "version": "2.4.0",
+  "description": "TPM library used with wolfSSL libraray for many platforms",
+  "homepage": "https://wolfssl.com",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "wolfssl"
+  ]
+}

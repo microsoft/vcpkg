@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF de61f0049175a941cc83c2615c3bdc5e947b89f9 # poco-1.11.1-release
-    SHA512 0290eeeca8a85286efe8f583224062ea97668c2730f8f7db4e075ce75e997b0a0c969159d4034c27fbb2e8d4b9c6504888d8ffa001193f7eb0e450bca2d5d7a2
+    REF 9d1c428c861f2e5ccf09149bbe8d2149720c5896 # poco-1.11.2-release
+    SHA512 b812bb194783c94e2a048daf6659e0f0fa5e9040ebd49342a5d39636cee600754d0465f8b28725d76dcb2681d1b64dfd8b08ac9c85b95b4ac8edf9b53d68feb1
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
