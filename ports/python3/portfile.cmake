@@ -30,21 +30,11 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" PYTHON_ALLOW_EXTENSIONS)
-    if(PYTHON_ALLOW_EXTENSIONS AND (NOT VCPKG_CROSSCOMPILING OR TARGET_TRIPLET MATCHES "^${HOST_TRIPLET}-"))
-        set(PYTHON_ENSUREPIP TRUE)
-    else()
-        set(PYTHON_ENSUREPIP FALSE)
-    endif()
-
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PYTHON_ALLOW_EXTENSIONS)
     # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
-    endif()
-
-    if(PYTHON_ENSUREPIP)
-        list(APPEND PATCHES "0010-ensurepip.patch")
     endif()
 endif()
 
@@ -181,17 +171,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    # The generated python executable must match the host arch
-    if(PYTHON_ENSUREPIP)
-        message(STATUS "Bootstrapping pip")
-        set(sys_executable "'${CURRENT_INSTALLED_DIR}/tools/${PORT}/python.exe'")
-        configure_file("${SOURCE_PATH}/Lib/ensurepip/__init__.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/ensurepip/__init__.py" @ONLY)
-        vcpkg_execute_required_process(COMMAND python -m ensurepip
-            WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-            LOGNAME "ensurepip-${TARGET_TRIPLET}"
-        )
-    endif()
-
     # pkg-config files
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         make_python_pkgconfig(FILE python.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
@@ -227,7 +206,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
-        "--with-ensurepip"
+        "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
         "--without-readline"
@@ -267,7 +246,17 @@ else()
     vcpkg_fixup_pkgconfig()
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(PYTHON_ALLOW_EXTENSIONS)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.win" usage_extra)
+    else()
+        set(usage_extra "")
+    endif()
+else()
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.unix" usage_extra)
+endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
     cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
