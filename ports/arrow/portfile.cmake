@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 08b6ab4a3c5e0dd9c46402da8e7b9ef9f918eea177413cb31695192dfdb5a472ebbfef255b8343fe775d81e8b5eb268c3428a699fac48b36bf808f5b81e83a64
     HEAD_REF master
     PATCHES
+        vs-2022-fixes.patch
         all.patch
         fix-dependencies.patch
 )
