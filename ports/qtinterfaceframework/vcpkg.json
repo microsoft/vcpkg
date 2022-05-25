@@ -1,10 +1,14 @@
 {
   "name": "qtinterfaceframework",
-  "version": "6.2.3",
+  "version": "6.3.0",
   "description": "Qt Interface Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     {
       "name": "qtdeclarative",
       "default-features": false
@@ -26,6 +30,11 @@
       "name": "qttools",
       "default-features": false
     },
-    "taglib"
+    "taglib",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true,
+      "default-features": false
+    }
   ]
 }

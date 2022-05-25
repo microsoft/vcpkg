@@ -78,7 +78,7 @@ function(vcpkg_host_path_list)
             # do nothing
         elseif("${list}" STREQUAL "")
             set(list "${arguments}")
-        elseif(arg_PREPEND)
+        elseif("${operation}" STREQUAL "PREPEND")
             set(list "${arguments}${VCPKG_HOST_PATH_SEPARATOR}${list}")
         else()
             set(list "${list}${VCPKG_HOST_PATH_SEPARATOR}${arguments}")

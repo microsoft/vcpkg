@@ -1,8 +1,10 @@
 {
   "name": "llfio",
-  "version-string": "2.0-20220112",
+  "version": "2.0-20220112",
+  "port-version": 1,
   "description": "P1031 low level file i/o and filesystem library for the C++ standard",
   "homepage": "https://github.com/ned14/llfio",
+  "license": "Apache-2.0 OR BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "outcome",

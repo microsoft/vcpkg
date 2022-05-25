@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.3.0
-    SHA512 842a648a67ff23ba9e6bf14b706ba9081164866e14000ebf3858442b7046925f05e1dbf00a7d740dc4bf32280e260730e23a9492e817094aa90736ae335ee76e
-    HEAD_REF master
+    REF v1.4.2
+    SHA512 144bec7f8e66d97b20335d87d1eb68d522f5e59064b0c557505c088d3c486d45704f023d701f51de572efa8e2eb111e3136eb5d23c035e29d16698206b5ec277
+    HEAD_REF maint/v1.4
     PATCHES
         fix-configcmake.patch
 )
@@ -67,7 +67,7 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_CLAR=OFF
+        -DBUILD_TESTS=OFF
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}

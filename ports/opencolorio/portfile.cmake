@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependency.patch
+        fix-buildTools.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findexpat.cmake")

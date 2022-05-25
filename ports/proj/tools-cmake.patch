@@ -1,0 +1,15 @@
+diff --git a/src/apps/CMakeLists.txt b/src/apps/CMakeLists.txt
+index 534bc311b..f9fb0f1bb 100644
+--- a/src/apps/CMakeLists.txt
++++ b/src/apps/CMakeLists.txt
+@@ -83,10 +83,3 @@ if(BUILD_PROJSYNC)
+ 
+ # global configurations for all apps
+ 
+-if(MSVC OR CMAKE_CONFIGURATION_TYPES)
+-  if(BIN_TARGETS)
+-    # Add _d suffix for debug versions of the apps
+-    set_target_properties(${BIN_TARGETS} PROPERTIES
+-      DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+-  endif()
+-endif()

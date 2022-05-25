@@ -1,8 +1,9 @@
 {
   "name": "boost-type-erasure",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost type_erasure module",
   "homepage": "https://github.com/boostorg/type_erasure",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     {

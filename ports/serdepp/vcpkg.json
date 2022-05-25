@@ -1,0 +1,19 @@
+{
+  "name": "serdepp",
+  "version": "0.1.4",
+  "description": "c++ 17 universal serialize deserialize library like rust serde, support libraries: [nlohmann_json, fmt, yaml-cpp, toml11, rapidjson]",
+  "homepage": "https://github.com/injae/serdepp",
+  "license": "MIT",
+  "dependencies": [
+    "magic-enum",
+    "nameof",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
