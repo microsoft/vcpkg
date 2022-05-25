@@ -1,24 +1,19 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  inie0722/CTL
     REF v1.0.0
-    SHA512 cff28777af9a4c84ebc8fd26f66e7d4ec3b368a8d68450e42b7f86f6aec084e159981aff84d7938654fcdf6a64cb3b2accd479729a3b55796df7c2141eb0dee5 
+    SHA512 facd0afdb20437c0ffa5b097a68e2028faa314be6052e0db1e2c727ce5a0305bca8e575c946b0e10a6343dfaddc38770c1e5a56ae201e1aa906883df6d662398
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set("${DBUILD_SHARED_LIBS}" ON)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set("${DBUILD_SHARED_LIBS}" OFF)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_SHARED_LIBS=${DBUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright).
