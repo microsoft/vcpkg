@@ -48,6 +48,7 @@ vcpkg_cmake_configure(
         -DOSGEARTH_BUILD_TRITON_NODEKIT=OFF
         -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
         -DWITH_EXTERNAL_TINYXML=ON
+        -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
 )
 
 vcpkg_cmake_install()
