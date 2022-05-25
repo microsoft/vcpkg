@@ -17,6 +17,7 @@
     "opengl",
     {
       "name": "osg",
+      "default-features": false,
       "features": [
         "plugins"
       ]

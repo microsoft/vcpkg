@@ -1,5 +1,5 @@
 # Only dynamic build need dlls
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB OSG_PLUGINS_SUBDIR "${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*")
     list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
     if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
@@ -24,19 +24,22 @@ vcpkg_from_github(
         blend2d-fix.patch
 )
 
-# Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002
-file(REMOVE "${SOURCE_PATH}/src/osgEarth/tinyxml.h")
+file(REMOVE
+    "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools OSGEARTH_BUILD_TOOLS
+    FEATURES
+        tools OSGEARTH_BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DNRL_STATIC_LIBRARIES=${BUILD_STATIC}
         -DOSG_IS_STATIC=${BUILD_STATIC}
