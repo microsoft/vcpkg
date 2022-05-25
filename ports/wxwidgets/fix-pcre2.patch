@@ -1,14 +1,12 @@
 diff --git a/build/cmake/modules/FindPCRE2.cmake b/build/cmake/modules/FindPCRE2.cmake
-index a27693a..1cf7249 100644
+index a27693a..455675a 100644
 --- a/build/cmake/modules/FindPCRE2.cmake
 +++ b/build/cmake/modules/FindPCRE2.cmake
-@@ -23,8 +23,11 @@ set(PCRE2_CODE_UNIT_WIDTH_USED "${PCRE2_CODE_UNIT_WIDTH}" CACHE INTERNAL "")
- 
+@@ -24,7 +24,10 @@ set(PCRE2_CODE_UNIT_WIDTH_USED "${PCRE2_CODE_UNIT_WIDTH}" CACHE INTERNAL "")
  
  find_package(PkgConfig QUIET)
--pkg_check_modules(PC_PCRE2 QUIET libpcre2-${PCRE2_CODE_UNIT_WIDTH})
-+pkg_check_modules(PC_PCRE2 QUIET libpcre2-${PCRE2_CODE_UNIT_WIDTH} IMPORTED_TARGET)
-+set(PCRE2_LIBRARIES PkgConfig::PC_PCRE2)
+ pkg_check_modules(PC_PCRE2 QUIET libpcre2-${PCRE2_CODE_UNIT_WIDTH})
++set(PCRE2_LIBRARIES ${PC_PCRE2_LINK_LIBRARIES})
 +set(PCRE2_INCLUDE_DIRS ${PC_PCRE2_INCLUDE_DIRS})
  
 +if (0)
