@@ -89,6 +89,7 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
+        -DwxUSE_SECRETSTORE=FALSE
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
