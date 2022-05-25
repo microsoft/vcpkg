@@ -1,27 +1,3 @@
-diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index 750d8ce83..dd54fd10f 100644
---- a/cpp/cmake_modules/FindThrift.cmake
-+++ b/cpp/cmake_modules/FindThrift.cmake
-@@ -46,9 +46,17 @@ endfunction(EXTRACT_THRIFT_VERSION)
- if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
-   if(NOT ARROW_THRIFT_USE_SHARED)
-     if(ARROW_USE_STATIC_CRT)
--      set(THRIFT_MSVC_LIB_SUFFIX "mt")
-+      if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-+        set(THRIFT_MSVC_LIB_SUFFIX "mtd")
-+      else()
-+        set(THRIFT_MSVC_LIB_SUFFIX "mt")
-+      endif()
-     else()
--      set(THRIFT_MSVC_LIB_SUFFIX "md")
-+      if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-+        set(THRIFT_MSVC_LIB_SUFFIX "mdd")
-+      else()
-+        set(THRIFT_MSVC_LIB_SUFFIX "md")
-+      endif()
-     endif()
-   endif()
- endif()
 diff --git a/cpp/src/arrow/compute/light_array_test.cc b/cpp/src/arrow/compute/light_array_test.cc
 index 3f6d47803..dcc7841a0 100644
 --- a/cpp/src/arrow/compute/light_array_test.cc

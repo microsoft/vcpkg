@@ -7,9 +7,8 @@ vcpkg_from_github(
     PATCHES
         vs-2022-fixes.patch
         all.patch
-        fix-dependencies.patch
+        fix-ThirdPartyToolchain.patch
 )
-
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake"
@@ -76,7 +75,7 @@ vcpkg_cmake_configure(
         -DARROW_DEPENDENCY_USE_SHARED=${ARROW_DEPENDENCY_USE_SHARED}
         -DARROW_THRIFT_USE_SHARED=${THRIFT_USE_SHARED} 
         -DBUILD_WARNING_LEVEL=PRODUCTION
-        -DARROW_WITH_BROTLI=ON                 
+        -DARROW_WITH_BROTLI=ON
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
