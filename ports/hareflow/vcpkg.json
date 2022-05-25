@@ -3,6 +3,7 @@
   "version-semver": "0.1.0",
   "description": "Hareflow: A RabbitMQ C++ stream client.",
   "homepage": "https://github.com/coveooss/hareflow",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "fmt",
