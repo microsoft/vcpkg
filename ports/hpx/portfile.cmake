@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF stable
     PATCHES
         fix-dependency-hwloc.patch
-        #fix-cmakecache-paths.patch
 )
 
 set(HPX_WITH_MALLOC system)
