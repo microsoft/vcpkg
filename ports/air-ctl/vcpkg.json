@@ -1,9 +1,9 @@
 {
-  "name": "ctl",
+  "name": "air-ctl",
   "version": "1.0.0",
-  "description": "C template library",
+  "description": "C template container library",
   "homepage": "https://github.com/inie0722/CTL",
-  "supports": "linux",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
