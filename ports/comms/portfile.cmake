@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCC_COMMS_BUILD_UNIT_TESTS=OFF
+        -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibComms CONFIG_PATH lib/LibComms/cmake)
