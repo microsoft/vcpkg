@@ -23,7 +23,8 @@
   ],
   "features": {
     "bonjour": {
-      "description": "Build with Bonjour support (--with-bonjour)"
+      "description": "Build with Bonjour support (--with-bonjour)",
+      "supports": "osx"
     },
     "client": {
       "description": "Build all client tools and libraries (dynamic only?)"

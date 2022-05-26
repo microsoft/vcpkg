@@ -20,14 +20,11 @@ endmacro()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
     # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(bonjour)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         feature_not_implemented_yet(client python tcl)
     endif()
-elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(python tcl)
 else()
-    feature_not_implemented_yet(bonjour python tcl)
+    feature_not_implemented_yet(python tcl)
 endif()
 
 ## Download and extract sources
