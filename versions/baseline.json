@@ -1509,7 +1509,7 @@
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "0.20.2",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "commsdsl": {
