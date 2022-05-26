@@ -86,6 +86,7 @@
     },
     "readline": {
       "description": "Use readline (else --without-readline)",
+      "supports": "!windows, mingw",
       "dependencies": [
         "readline"
       ]
