@@ -24,3 +24,5 @@ index 4fded1eb7..0d44af310 100644
    PATHS ${PC_PThreadW32_LIBRARY_DIRS}
  )
  
+ Fixed
+ 
