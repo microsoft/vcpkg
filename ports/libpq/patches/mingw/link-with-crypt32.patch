@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index 18a1852..a81d9bc 100644
+index 18a1852..b84b279 100644
 --- a/configure
 +++ b/configure
-@@ -12164,6 +12164,62 @@ fi
+@@ -12164,6 +12164,63 @@ fi
  
  fi
  
@@ -62,18 +62,18 @@ index 18a1852..a81d9bc 100644
 +
 +fi
 +
++
  if test "$with_readline" = yes; then
  
  
 diff --git a/configure.ac b/configure.ac
-index 286213f..badf3c3 100644
+index 286213f..dc53ee1 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1173,7 +1173,7 @@ AC_SEARCH_LIBS(clock_gettime, [rt posix4])
- # Solaris:
+@@ -1174,6 +1174,7 @@ AC_SEARCH_LIBS(clock_gettime, [rt posix4])
  AC_SEARCH_LIBS(fdatasync, [rt posix4])
  # Cygwin:
--AC_SEARCH_LIBS(shmget, cygipc)
+ AC_SEARCH_LIBS(shmget, cygipc)
 +AC_SEARCH_LIBS(CertOpenStore, crypt32)
  # *BSD:
  AC_SEARCH_LIBS(backtrace_symbols, execinfo)
