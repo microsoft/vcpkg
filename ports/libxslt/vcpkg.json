@@ -30,17 +30,7 @@
       ]
     },
     "default-features": {
-      "description": "default features for the current platform",
-      "dependencies": [
-        {
-          "name": "libxslt",
-          "default-features": false,
-          "features": [
-            "crypto"
-          ],
-          "platform": "!windows"
-        }
-      ]
+      "description": "default features for the current platform"
     },
     "plugins": {
       "description": "(deprecated)",
