@@ -16,7 +16,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_RELEASE -DCMAKE_INSTALL_BINDIR=tools
+    OPTIONS_RELEASE -DCMAKE_INSTALL_BINDIR=tools/gperf
 )
 
 vcpkg_install_cmake()

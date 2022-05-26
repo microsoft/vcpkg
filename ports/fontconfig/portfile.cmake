@@ -12,7 +12,7 @@ vcpkg_from_gitlab(
         libgetopt.patch
 )
 
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/")
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
