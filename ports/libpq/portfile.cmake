@@ -17,7 +17,7 @@ macro(feature_not_implemented_yet)
     endforeach()
 endmacro()
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
     # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
     feature_unsupported(readline bonjour libedit systemd llvm)
