@@ -51,12 +51,6 @@ set(PATCHES
         patches/fix-configure.patch        
         )
 
-if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
-endif()
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES patches/linux/configure.patch)
-endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
