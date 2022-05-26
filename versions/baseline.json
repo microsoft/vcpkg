@@ -4210,7 +4210,7 @@
     },
     "libxslt": {
       "baseline": "1.1.35",
-      "port-version": 0
+      "port-version": 1
     },
     "libyaml": {
       "baseline": "0.2.5",
