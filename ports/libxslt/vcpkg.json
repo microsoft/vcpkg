@@ -7,7 +7,6 @@
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "liblzma",
     "libxml2",
     {
       "name": "vcpkg-cmake",
