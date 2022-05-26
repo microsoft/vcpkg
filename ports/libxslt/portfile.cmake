@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         cmake.patch
         fix-gcrypt-deps.patch
+        skip-install-docs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
