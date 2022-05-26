@@ -27,6 +27,7 @@ vcpkg_cmake_configure(
         -DHPX_WITH_EXAMPLES=OFF
         -DHPX_WITH_TOOLS=OFF
         -DHPX_WITH_RUNTIME=OFF
+        -DHPX_USE_CMAKE_CXX_STANDARD=ON
         "-DHPX_WITH_MALLOC=${HPX_WITH_MALLOC}"
 )
 
