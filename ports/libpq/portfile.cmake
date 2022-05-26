@@ -1,32 +1,6 @@
 set(PORT_VERSION 14.1)
 # NOTE: the python patches must be regenerated on version update
 
-macro(feature_unsupported)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} not supported by configure script on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-macro(feature_not_implemented_yet)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} is not yet implement on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        feature_not_implemented_yet(client python tcl)
-    endif()
-else()
-    feature_not_implemented_yet(python tcl)
-endif()
-
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"

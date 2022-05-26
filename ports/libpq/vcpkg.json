@@ -27,7 +27,8 @@
       "supports": "osx"
     },
     "client": {
-      "description": "Build all client tools and libraries (dynamic only?)"
+      "description": "Build all client tools and libraries (dynamic only?)",
+      "supports": "!(windows & !mingw & static)"
     },
     "icu": {
       "description": "Build with support for the ICU library (--with-icu)",
@@ -62,6 +63,7 @@
     },
     "python": {
       "description": "build the PL/Python server programming language (dynamic only?) (--with-python)",
+      "supports": "!(windows & (static | mingw))",
       "dependencies": [
         {
           "name": "libpq",
@@ -82,6 +84,7 @@
     },
     "tcl": {
       "description": "build the PL/Tcl procedural language(dynamic only?) (--with-tcl)",
+      "supports": "!(windows & (static | mingw))",
       "dependencies": [
         {
           "name": "libpq",
