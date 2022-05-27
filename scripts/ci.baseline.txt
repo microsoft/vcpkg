@@ -302,7 +302,6 @@ geotrans:x64-windows         = skip
 geotrans:x86-windows         = skip
 getopt:arm-uwp=fail
 getopt:x64-uwp=fail
-getopt-win32:arm64-windows=fail
 getopt-win32:arm-uwp=fail
 getopt-win32:x64-linux=fail
 getopt-win32:x64-osx=fail
