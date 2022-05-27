@@ -25,6 +25,10 @@
       "platform": "!windows"
     },
     {
+      "name": "gperf",
+      "host": true
+    },
+    {
       "name": "harfbuzz",
       "platform": "!windows"
     },
