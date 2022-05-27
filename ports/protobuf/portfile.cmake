@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.19.4
-    SHA512 2653b9852e5ac69f1de9b6ac02887c366aa0a9efd2b29e53135f61a9a10f5a1b5853a8c4cbb3658f519dfdbde9f32c547c39751ab417f123162b08be9e76c9e1
+    REF 7062d0a2d0075d5e7d5c294fd3984df67a976da3    #v21.0
+    SHA512 765f21e95cf8b1843c2e0a54fa6646c4008985200ee5145feacafd01721327736289f5de4100c57f89a5c0319ba3cd547ac5d60a8d540bea57038d4589789c93
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -83,10 +83,6 @@ else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
-    "if(protobuf_MODULE_COMPATIBLE)"
-    "if(ON)"
-)
 if(NOT protobuf_BUILD_LIBPROTOC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"
         "_protobuf_find_libraries(Protobuf_PROTOC protoc)"
