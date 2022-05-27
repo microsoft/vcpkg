@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 568ead4..925a00d 100644
+index 6dc6501..d36a049 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -428,10 +428,12 @@ if(LIBXSLT_WITH_PYTHON)
+@@ -432,10 +434,12 @@ if(LIBXSLT_WITH_PYTHON)
  	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxslt.py DESTINATION ${LIBXSLT_PYTHON_INSTALL_DIR} COMPONENT runtime)
  endif()
  
@@ -14,4 +14,4 @@ index 568ead4..925a00d 100644
 +endif()
  
  if(LIBXSLT_WITH_CRYPTO)
- endif()
+ 	install(FILES FindGcrypt.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxslt-${PROJECT_VERSION} COMPONENT development)

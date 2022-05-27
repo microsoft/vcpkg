@@ -8,7 +8,9 @@ vcpkg_from_github(
     SHA512 1ab264a8d3996d74a89a22e4062950ef968b9252736e0b5f975e6f45d63a6484993fe383b85831cef0e4b9c9c90f9b2b3d5432c15ee9381dbaeb2fa681ab9b46
     HEAD_REF master
     PATCHES
-        cmake.patch
+        python3.patch
+        msvc-no-suffix.patch
+        libexslt-pkgconfig.patch
         fix-gcrypt-deps.patch
         skip-install-docs.patch
 )
