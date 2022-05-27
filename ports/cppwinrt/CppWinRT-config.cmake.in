@@ -1,0 +1,23 @@
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+
+get_filename_component(_cppwinrt_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_cppwinrt_root "${_cppwinrt_root}" PATH)
+get_filename_component(_cppwinrt_root "${_cppwinrt_root}" PATH)
+
+set(_cppwinrt_root_lib "${_cppwinrt_root}/lib/cppwinrt_fast_forwarder.lib")
+if (EXISTS "${_cppwinrt_root_lib}")
+
+   set_target_properties(Microsoft::CppWinRT PROPERTIES
+      INTERFACE_LINK_LIBRARIES "${_cppwinrt_root_lib}")
+
+endif()
+
+set_target_properties(Microsoft::CppWinRT PROPERTIES
+   INTERFACE_COMPILE_FEATURES cxx_std_17)
+
+unset(_cppwinrt_root_lib)
+unset(_cppwinrt_root)
+
+check_required_components("@PROJECT_NAME@")
