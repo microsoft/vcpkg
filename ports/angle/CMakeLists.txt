@@ -13,12 +13,12 @@ else()
     set(LINUX 0)
 endif()
 
+# wstring_view needs CXX 17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if(MSVC)
     add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive /bigobj)
-else()
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 if (APPLE)
