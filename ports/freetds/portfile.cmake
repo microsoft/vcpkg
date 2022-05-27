@@ -18,7 +18,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 set(_WCHAR_SUPPORT ON)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
