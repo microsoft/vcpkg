@@ -29,6 +29,8 @@ foreach(HEADER IN LISTS HEADERS)
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/openvpn3/openvpn3-config.cmake" @ONLY)
+
 file(INSTALL
     "${SOURCE_PATH}/COPYRIGHT.AGPLV3"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
