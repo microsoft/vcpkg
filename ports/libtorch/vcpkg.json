@@ -84,10 +84,10 @@
         "nnpack"
       ]
     },
-    "opencv3": {
+    "opencv": {
       "description": "Build with OpenCV 3.x",
       "dependencies": [
-        "opencv3"
+        "opencv"
       ]
     },
     "qnnpack": {

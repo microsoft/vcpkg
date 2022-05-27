@@ -46,7 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     fftw3   USE_FFTW
     fftw3   AT_FFTW_ENABLED
     fbgemm  USE_FBGEMM
-    opencv3 USE_OPENCV
+    opencv  USE_OPENCV
     tbb     USE_TBB
     leveldb USE_LEVELDB
     opencl  USE_OPENCL

@@ -158,7 +158,7 @@ endif()
 if(USE_CUDA)
   find_package(CUDA  10.1 REQUIRED) # https://cmake.org/cmake/help/latest/module/FindCUDA.html
   find_package(CUDNN 8.0  REQUIRED) # CuDNN::CuDNN
-  cuda_select_nvcc_arch_flags(ARCH_FLAGS 7.5 7.5PTX)
+  cuda_select_nvcc_arch_flags(ARCH_FLAGS 7.5)
   set(CUDA_NVCC_FLAGS ${ARCH_FLAGS})
   list(APPEND CUDA_NVCC_FLAGS    # check TORCH_NVCC_FLAGS in this project
     -D__CUDA_NO_HALF_OPERATORS__ # see https://github.com/torch/cutorch/issues/797
@@ -181,11 +181,12 @@ endif()
 
 if(USE_VULKAN)
   find_package(Vulkan REQUIRED)
+  list(APPEND Caffe2_DEPENDENCY_LIBS Vulkan::Vulkan)
 endif()
 
 if(USE_TENSORPIPE)
   find_package(unofficial-libuv CONFIG REQUIRED) # unofficial::libuv::libuv
-  find_package(tensorpipe CONFIG REQUIRED) # tensorpipe
+  find_package(Tensorpipe CONFIG REQUIRED) # tensorpipe
   list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::libuv::libuv tensorpipe)
 endif()
 
@@ -211,10 +212,7 @@ if(USE_MPI)
 endif()
 
 if(USE_OPENCV)
-  find_package(OpenCV 4 COMPONENTS core highgui imgproc imgcodecs optflow videoio video)
-  if(NOT OpenCV_FOUND)
-    find_package(OpenCV 3 REQUIRED COMPONENTS core highgui imgproc imgcodecs videoio video)
-  endif()
+  find_package(OpenCV CONFIG REQUIRED COMPONENTS core highgui imgproc imgcodecs videoio video)
   include_directories(SYSTEM ${OpenCV_INCLUDE_DIRS})
   list(APPEND Caffe2_DEPENDENCY_LIBS ${OpenCV_LIBS})
   if(MSVC AND USE_CUDA)
@@ -226,5 +224,5 @@ if(USE_OPENCL)
   find_package(OpenCL REQUIRED)
   include_directories(SYSTEM ${OpenCL_INCLUDE_DIRS})
   include_directories(${CMAKE_CURRENT_LIST_DIR}/../caffe2/contrib/opencl)
-  list(APPEND Caffe2_DEPENDENCY_LIBS ${OpenCL_LIBRARIES})
+  list(APPEND Caffe2_DEPENDENCY_LIBS OpenCL::OpenCL)
 endif()
