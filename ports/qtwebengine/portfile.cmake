@@ -71,7 +71,7 @@ else()
 endif()
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
-set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
