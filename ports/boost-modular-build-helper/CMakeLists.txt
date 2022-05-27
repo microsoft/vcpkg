@@ -231,6 +231,14 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
 
+message(STATUS "USE_OLD_ABI: $ENV{USE_OLD_ABI}")
+if(DEFINED ENV{USE_OLD_ABI})
+    set(_GLIBCXX_USE_CXX11_ABI 0)
+else()
+    set(_GLIBCXX_USE_CXX11_ABI 1)
+endif()
+message(STATUS "_GLIBCXX_USE_CXX11_ABI: ${_GLIBCXX_USE_CXX11_ABI}")
+
 add_custom_target(boost ALL
     COMMAND "${B2_EXE}"
         toolset=${USER_CONFIG_TOOLSET}
@@ -254,6 +262,7 @@ add_custom_target(boost ALL
         --ignore-site-config
         --hash
         -q
+        define=_GLIBCXX_USE_CXX11_ABI=${_GLIBCXX_USE_CXX11_ABI}
         debug-symbols=on
         # Enable debugging level 2.
         -d +2
