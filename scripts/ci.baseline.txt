@@ -288,7 +288,6 @@ ftgl:x64-uwp=fail
 functions-framework-cpp:x64-uwp=fail
 fuzzylite:x64-osx=fail
 
-gazebo:x64-linux=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
