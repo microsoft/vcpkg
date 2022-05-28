@@ -56,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda    USE_SYSTEM_NCCL
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
+    cuda    AT_CUDNN_ENABLED
     vulkan  USE_VULKAN
     vulkan  USE_VULKAN_WRAPPER
     vulkan  USE_VULKAN_SHADERC_RUNTIME

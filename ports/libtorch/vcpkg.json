@@ -34,20 +34,6 @@
     "xnnpack"
   ],
   "features": {
-    "cuda": {
-      "description": "Build with NVIDIA CUDA GPU backend",
-      "dependencies": [
-        "cuda",
-        "cudnn",
-        {
-          "name": "tensorpipe",
-          "features": [
-            "cuda"
-          ],
-          "platform": "linux | osx"
-        }
-      ]
-    },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
       "dependencies": [

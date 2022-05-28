@@ -156,16 +156,28 @@ if(USE_SYSTEM_ONNX)
 endif()
 
 if(USE_CUDA)
+  set(CMAKE_CUDA_STANDARD 14)
   find_package(CUDA  10.1 REQUIRED) # https://cmake.org/cmake/help/latest/module/FindCUDA.html
   find_package(CUDNN 8.0  REQUIRED) # CuDNN::CuDNN
-  cuda_select_nvcc_arch_flags(ARCH_FLAGS 7.5)
-  set(CUDA_NVCC_FLAGS ${ARCH_FLAGS})
-  list(APPEND CUDA_NVCC_FLAGS    # check TORCH_NVCC_FLAGS in this project
+  cuda_select_nvcc_arch_flags(ARCH_FLAGS 6.0 6.2 7.5)
+  list(APPEND CUDA_NVCC_FLAGS
+    ${ARCH_FLAGS}                # check TORCH_NVCC_FLAGS in this project
     -D__CUDA_NO_HALF_OPERATORS__ # see https://github.com/torch/cutorch/issues/797
   )
+  set(CAFFE2_USE_CUDA 1)
   set(CAFFE2_USE_CUDNN 1)
+  set(CAFFE2_USE_NVRTC 0)
+  set(CAFFE2_USE_TENSORRT 0)
   include(cmake/public/cuda.cmake)
-  list(APPEND Caffe2_DEPENDENCY_LIBS CuDNN::CuDNN)
+  list(APPEND Caffe2_DEPENDENCY_LIBS
+    CuDNN::CuDNN
+  )
+  list(APPEND Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS
+    caffe2::cufft caffe2::curand caffe2::cublas
+    caffe2::cudnn-public
+    # caffe2::cuda caffe2::nvrtc # for CAFFE2_USE_NVRTC
+    # caffe2::tensorrt # for CAFFE2_USE_TENSORRT
+  )
 endif()
 
 if(USE_NUMA) # Linux package 'libnuma-dev'
