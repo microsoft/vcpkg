@@ -73,9 +73,9 @@ FEATURES
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
     "concurrent"          FEATURE_future
-    "concurrent"          FEATURE_thread
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
+    "thread"              FEATURE_thread
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets

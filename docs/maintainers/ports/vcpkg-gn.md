@@ -1,4 +1,4 @@
-# vcpkg-cmake
+# vcpkg-gn
 
 This port contains cmake functions for dealing with a GN buildsystem.
 

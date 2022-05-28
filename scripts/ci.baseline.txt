@@ -288,6 +288,7 @@ ftgl:x64-uwp=fail
 functions-framework-cpp:x64-uwp=fail
 fuzzylite:x64-osx=fail
 
+gazebo:x64-linux=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
@@ -416,14 +417,6 @@ jinja2cpplight:x64-uwp=fail
 kfr:arm64-windows=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
-kinectsdk1:arm64-windows=fail
-kinectsdk1:arm-uwp=fail
-kinectsdk1:x64-linux=fail
-kinectsdk1:x64-osx=fail
-kinectsdk2:arm64-windows=fail
-kinectsdk2:arm-uwp=fail
-kinectsdk2:x64-linux=fail
-kinectsdk2:x64-osx=fail
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 laszip:arm-uwp=fail
@@ -532,8 +525,6 @@ libpng-apng:x64-windows        = skip
 libpng-apng:x64-windows-static = skip
 libpng-apng:x64-windows-static-md=skip
 libpng-apng:x86-windows        = skip
-libpq:arm-uwp=fail
-libpq:x64-uwp=fail
 # The developer of libqcow does not offer stable release archives
 libqcow:arm-uwp=skip
 libqcow:x64-uwp=skip
@@ -1017,10 +1008,6 @@ rsasynccpp:x64-osx=fail
 rsm-binary-io:x64-linux=fail
 # Requires g++10 but CI compiler only has g++9
 rsm-bsa:x64-linux=fail
-# VS2022 17.2 ICE https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1490389
-rsocket:x64-windows=fail
-rsocket:x64-windows-static=fail
-rsocket:x64-windows-static-md=fail
 rtlsdr:x64-uwp=fail
 rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
@@ -1055,7 +1042,6 @@ sdformat6:arm64-windows=fail
 sdformat6:x64-uwp=fail
 sdformat6:x64-windows-static-md=fail
 sdformat9:arm-uwp=fail
-sdformat9:x64-linux=fail
 sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
 sdl2-mixer:arm-uwp=fail
