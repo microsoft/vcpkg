@@ -525,8 +525,6 @@ libpng-apng:x64-windows        = skip
 libpng-apng:x64-windows-static = skip
 libpng-apng:x64-windows-static-md=skip
 libpng-apng:x86-windows        = skip
-libpq:arm-uwp=fail
-libpq:x64-uwp=fail
 # The developer of libqcow does not offer stable release archives
 libqcow:arm-uwp=skip
 libqcow:x64-uwp=skip
