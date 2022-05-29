@@ -54,8 +54,12 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+vcpkg_list(SET tools clang)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND tools clang-7)
+endif()
 vcpkg_copy_tools(
-    TOOL_NAMES clang
+    TOOL_NAMES ${tools}
     AUTO_CLEAN
 )
 
