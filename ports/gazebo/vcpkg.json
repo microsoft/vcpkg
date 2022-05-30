@@ -19,6 +19,7 @@
     "boost-thread",
     "boost-uuid",
     "ccd",
+    "freeimage",
     {
       "name": "hdf5",
       "features": [
