@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/1.0.0"
-    FILENAME "directstorage.1.0.0.zip"
-    SHA512 34f24842d509ccddf2c8a06e94a2f67c0746ed8acb6d90ab89453ed4ec9b123970cf1e802375af27e6d5be3c82211813009f8f4b83f233ce419a1467b8c10846
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/1.0.2"
+    FILENAME "directstorage.1.0.2.zip"
+    SHA512 42a8d21a1be9981d5fcaaa2aa90d1e4bfe20969ee7959803f6acb76b0846d91d49ad89cebac069463729d013532508c6fbe41af3a1e99187ac13e849d747dd7e
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,13 +12,13 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-file(INSTALL "${PACKAGE_PATH}/Include/DirectStorage/dstorage.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(INSTALL "${PACKAGE_PATH}/Include/DirectStorage/dstorageerr.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${PACKAGE_PATH}/native/include/dstorage.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${PACKAGE_PATH}/native/include/dstorageerr.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(INSTALL "${PACKAGE_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/dstorage.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${PACKAGE_PATH}/native/lib/${VCPKG_TARGET_ARCHITECTURE}/dstorage.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-file(COPY "${PACKAGE_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/dstorage.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(COPY "${PACKAGE_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/dstoragecore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+file(COPY "${PACKAGE_PATH}/native/bin/${VCPKG_TARGET_ARCHITECTURE}/dstorage.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+file(COPY "${PACKAGE_PATH}/native/bin/${VCPKG_TARGET_ARCHITECTURE}/dstoragecore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
 file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
