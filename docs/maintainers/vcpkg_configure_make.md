@@ -9,7 +9,7 @@ Configure configure for Debug and Release builds of a project.
 vcpkg_configure_make(
     SOURCE_PATH <${SOURCE_PATH}>
     [AUTOCONFIG]
-    [USE_WRAPPERS]
+    [USE_WRAPPERS] [NO_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
@@ -41,6 +41,9 @@ Skip configure process
 
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+
+### NO_WRAPPERS
+Deactivate the use of autotools ar-lib and compile wrappers (only applies to windows cl and lib)
 
 ### BUILD_TRIPLET
 Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
