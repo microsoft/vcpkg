@@ -1,5 +1,25 @@
+diff --git a/cmake/FindFreeimage.cmake b/cmake/FindFreeimage.cmake
+index a989ec7..2ec8fcc 100644
+--- a/cmake/FindFreeimage.cmake
++++ b/cmake/FindFreeimage.cmake
+@@ -33,6 +33,9 @@ if (NOT freeimage_FOUND)
+     endif (NOT FREEIMAGE_RUNS)
+   endif (NOT freeimage_INCLUDE_DIRS)
+ 
++  find_package(freeimage CONFIG REQUIRED)
++  set(freeimage_LIBRARIES freeimage::FreeImage)
++  if (0)
+   if (WIN32)
+     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+       find_library(freeimage_LIBRARIES FreeImaged)
+@@ -49,4 +52,5 @@ if (NOT freeimage_FOUND)
+     message (STATUS "  Looking for libfreeimage - found")
+     include_directories(${freeimage_INCLUDE_DIRS})
+   endif (NOT freeimage_LIBRARIES)
++  endif()
+ endif (NOT freeimage_FOUND)
 diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
-index 9777a46..6f665f4 100644
+index 9777a46..11864ff 100644
 --- a/cmake/SearchForStuff.cmake
 +++ b/cmake/SearchForStuff.cmake
 @@ -179,7 +179,7 @@ if (PKG_CONFIG_FOUND)
@@ -24,7 +44,7 @@ index 9777a46..6f665f4 100644
    #################################################
    # Find OGRE
  
-+  if (0)
++  if (false)
    pkg_check_modules(OGRE-RTShaderSystem
                      OGRE-RTShaderSystem>=${MIN_OGRE_VERSION})
  
@@ -35,7 +55,7 @@ index 9777a46..6f665f4 100644
 -
 -  if (NOT OGRE_FOUND)
 +  endif()
-+  if (1)
++  if (true)
      # Workaround for CMake bug https://gitlab.kitware.com/cmake/cmake/issues/17135,
      # that prevents to successfully run a find_package(<package>) call if before there
      # was a failed call to pkg_check_modules(<package> <package>)
