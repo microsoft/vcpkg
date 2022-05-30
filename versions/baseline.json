@@ -4108,6 +4108,10 @@
       "baseline": "3.25",
       "port-version": 0
     },
+    "libtar": {
+      "baseline": "1.2.20",
+      "port-version": 0
+    },
     "libtasn1": {
       "baseline": "4.17.0",
       "port-version": 3
