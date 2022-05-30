@@ -145,12 +145,9 @@ function(vcpkg_configure_make)
 
     set(requires_autogen OFF) # use autogen.sh
     set(requires_autoconfig OFF) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac") # remove configure; rerun autoconf
-        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
-            set(requires_autoconfig ON)
-            file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
-            set(arg_AUTOCONFIG ON)
-        endif()
+    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
+        set(requires_autoconfig ON)
+        file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
     elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
@@ -536,7 +533,7 @@ function(vcpkg_configure_make)
     debug_message("ENV{LIBS}:$ENV{LIBS}")
 
     # Run autoconf if necessary
-    if (arg_AUTOCONFIG OR requires_autoconfig)
+    if (arg_AUTOCONFIG OR requires_autoconfig AND NOT arg_NO_AUTOCONFIG)
         find_program(AUTORECONF autoreconf)
         if(NOT AUTORECONF)
             message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
