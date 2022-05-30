@@ -2,34 +2,30 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO jemalloc/jemalloc-cmake
-    REF jemalloc-cmake.4.3.1
-    SHA512 e94b62ec3a53acc0ab5acb247d7646bc172108e80f592bb41c2dd50d181cbbeb33d623adf28415ffc0a0e2de3818af2dfe4c04af75ac891ef5042bc5bb186886
+    REPO jemalloc/jemalloc
+    REF 54eaed1d8b56b1aa528be3bdd1877e59c56fa90c
+    SHA512 527bfbf5db9a5c2b7b04df4785b6ae9d445cff8cb17298bf3e550c88890d2bd7953642d8efaa417580610508279b527d3a3b9e227d17394fd2013c88cb7ae75a
     HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
-        fix-utilities.patch
-        fix-static-build.patch
+        fix-configure-ac.patch
 )
-
-if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(BUILD_STATIC_LIBRARY OFF)
-else()
-    set(BUILD_STATIC_LIBRARY ON)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(opts "ac_cv_search_log=none required")
 endif()
-vcpkg_configure_cmake(
-    DISABLE_PARALLEL_CONFIGURE
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DGIT_FOUND=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON -Dwithout-export=${BUILD_STATIC_LIBRARY}
+
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    NO_WRAPPERS
+    OPTIONS ${opts}
 )
 
-vcpkg_install_cmake()
+vcpkg_install_make()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/jemalloc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jemalloc/COPYING ${CURRENT_PACKAGES_DIR}/share/jemalloc/copyright)
+file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jemalloc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/jemalloc/COPYING" "${CURRENT_PACKAGES_DIR}/share/jemalloc/copyright")
