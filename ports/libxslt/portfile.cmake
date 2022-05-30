@@ -12,6 +12,7 @@ vcpkg_from_github(
         msvc-no-suffix.patch
         libexslt-pkgconfig.patch
         fix-gcrypt-deps.patch
+        fix-libxml2-deps.patch
         skip-install-docs.patch
 )
 
