@@ -30,13 +30,20 @@ vcpkg_from_github(
         fix-gdal.patch
         missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
         UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
-        fix-hdf5-parallel.patch
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
+
+# To use hdf5[parallel] in vtk requires feature mpi, see https://gitlab.kitware.com/vtk/vtk/-/issues/18552
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/hdf5/hdf5-config.cmake" AND NOT "mpi" IN_LIST FEATURES)
+    file(READ "${CURRENT_INSTALLED_DIR}/share/hdf5/hdf5-config.cmake" HDF5_CONFIG)
+    if ("${HDF5_CONFIG}" MATCHES "ENABLE_PARALLEL ON")
+        message(FATAL_ERROR "hdf5[parallel] requires feature 'mpi'")
+    endif()
+endif()
 
 # =============================================================================
 # Options:
@@ -142,7 +149,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "cuda"         VTK_USE_CUDA
         "mpi"          VTK_USE_MPI
-        "mpi"          ENABLE_HDF5_PARALLEL
         "all"          VTK_BUILD_ALL_MODULES
 )
 # =============================================================================
