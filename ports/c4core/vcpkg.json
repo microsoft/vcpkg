@@ -4,6 +4,7 @@
   "description": "Library of low-level C++ utilities",
   "homepage": "https://github.com/biojppm/c4core",
   "license": "MIT",
+  "supports": "!(uwp | arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
