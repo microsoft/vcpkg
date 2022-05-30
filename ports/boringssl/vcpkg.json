@@ -5,6 +5,12 @@
   "description": "BoringSSl is a fork of OpenSSL developed by Google",
   "homepage": "https://boringssl.googlesource.com/boringssl",
   "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "tools": {
       "description": "Build bssl executable"
