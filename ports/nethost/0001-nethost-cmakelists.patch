@@ -1,58 +1,64 @@
-diff --git a/src/installer/corehost/cli/common.cmake b/src/installer/corehost/cli/common.cmake
-index 63e7306..639c90e 100644
---- a/src/installer/corehost/cli/common.cmake
-+++ b/src/installer/corehost/cli/common.cmake
-@@ -5,9 +5,6 @@
- project(${DOTNET_PROJECT_NAME})
- 
- if(WIN32)
--    add_compile_options($<$<CONFIG:RelWithDebInfo>:/MT>)
--    add_compile_options($<$<CONFIG:Release>:/MT>)
--    add_compile_options($<$<CONFIG:Debug>:/MTd>)
- else()
-     add_compile_options(-fvisibility=hidden)
- endif()
-diff --git a/src/installer/corehost/cli/nethost/CMakeLists.txt b/src/installer/corehost/cli/nethost/CMakeLists.txt
-index 7473958..49c664f 100644
---- a/src/installer/corehost/cli/nethost/CMakeLists.txt
-+++ b/src/installer/corehost/cli/nethost/CMakeLists.txt
-@@ -2,12 +2,14 @@
+diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
+index a9f44e720..9dc0a43b2 100644
+--- a/src/native/corehost/nethost/CMakeLists.txt
++++ b/src/native/corehost/nethost/CMakeLists.txt
+@@ -1,11 +1,14 @@
+ # Licensed to the .NET Foundation under one or more agreements.
  # The .NET Foundation licenses this file to you under the MIT license.
- # See the LICENSE file in the project root for more information.
  
--cmake_minimum_required (VERSION 2.6)
-+cmake_minimum_required (VERSION 3.14)
++cmake_minimum_required (VERSION 3.14.5)
  project(nethost)
  
  set(DOTNET_PROJECT_NAME "nethost")
  
  # Include directories
-+include(../../../settings.cmake)
-+include(../../../functions.cmake)
++include(../../../../eng/native/configurepaths.cmake)
++include(${CLR_ENG_NATIVE_DIR}/configurecompiler.cmake)
  include_directories(../fxr)
  
  # CMake does not recommend using globbing since it messes with the freshness checks
-@@ -22,13 +24,18 @@ if(WIN32)
-         Exports.def)
+@@ -20,7 +23,9 @@ if(CLR_CMAKE_TARGET_WIN32)
  endif()
  
-+if(BUILD_SHARED_LIBS)
  include(../lib.cmake)
-+else()
++
  include(../lib_static.cmake)
-+endif()
++target_compile_definitions(libnethost PUBLIC NETHOST_USE_AS_STATIC)
  
  add_definitions(-DFEATURE_LIBHOST=1)
  add_definitions(-DNETHOST_EXPORT)
+@@ -33,14 +38,23 @@ if (WIN32)
+     )
+ endif(WIN32)
  
+-install(FILES ../coreclr_delegates.h DESTINATION corehost)
+-install(FILES ../hostfxr.h DESTINATION corehost)
 -install(FILES nethost.h DESTINATION corehost)
--install(TARGETS nethost DESTINATION corehost)
--install(TARGETS libnethost DESTINATION corehost)
--install_symbols(nethost corehost)
+-install_with_stripped_symbols(nethost TARGETS corehost)
+-
+-# Only Windows creates a symbols file for static libs.
+-if (WIN32)
+-    install_with_stripped_symbols(libnethost TARGETS corehost)
++set(NETHOST_HEADERS nethost.h ../coreclr_delegates.h ../hostfxr.h)
++install(FILES ${NETHOST_HEADERS} DESTINATION include)
++if (BUILD_SHARED_LIBS)
++    set(NETHOST_ACTIVE_TARGET nethost)
+ else()
+-    install(TARGETS libnethost DESTINATION corehost)
+-endif(WIN32)
 \ No newline at end of file
-+install(FILES nethost.h ../coreclr_delegates.h ../hostfxr.h DESTINATION include)
-+if(BUILD_SHARED_LIBS)
-+install(TARGETS nethost)
-+else()
-+install(TARGETS libnethost)
++    set(NETHOST_ACTIVE_TARGET libnethost)
 +endif()
++
++target_include_directories(${NETHOST_ACTIVE_TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
++install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT nethost-targets
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    RUNTIME DESTINATION bin
++)
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(nethost-config.cmake.in nethost-config.cmake INSTALL_DESTINATION share/nethost)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nethost-config.cmake DESTINATION share/nethost)
++
++install(EXPORT nethost-targets DESTINATION share/nethost FILE nethost-targets.cmake)
