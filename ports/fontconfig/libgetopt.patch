@@ -117,10 +117,10 @@ index f616600..6d82a16 100644
    conf.set('HAVE_SOLARIS_ATOMIC_OPS', 1)
  endif
  
-+if (host_machine.system() == 'windows') and (cc.get_id() != 'gcc')
++if (host_machine.system() == 'windows')
 +  conf.set('HAVE_GETOPT', 1)
 +  conf.set('HAVE_GETOPT_LONG', 1)
-+  getopt_dep = cc.find_library('getopt', required: true)
++  getopt_dep = cc.find_library('getopt', required: false)
 +else
 +  getopt_dep = dependency('', required: false)
 +endif
