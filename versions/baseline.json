@@ -1213,8 +1213,8 @@
       "port-version": 0
     },
     "c4core": {
-      "baseline": "2021-07-18",
-      "port-version": 1
+      "baseline": "0.1.9",
+      "port-version": 0
     },
     "c89stringutils": {
       "baseline": "0.0.1",
