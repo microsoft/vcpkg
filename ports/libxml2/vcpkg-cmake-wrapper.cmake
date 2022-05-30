@@ -1,7 +1,9 @@
 cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0079 NEW)
+if(POLICY CMP0079)
+    cmake_policy(SET CMP0079 NEW)
+endif()
 list(FIND ARGS "CONFIG" VCPKG_LIBXML2_CONFIG)
 
 set(LIBXML2_INCLUDE_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE PATH "" FORCE)
