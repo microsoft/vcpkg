@@ -6313,8 +6313,8 @@
       "port-version": 2
     },
     "ryml": {
-      "baseline": "2021-07-24",
-      "port-version": 1
+      "baseline": "0.4.1",
+      "port-version": 0
     },
     "ryu": {
       "baseline": "2.0",
