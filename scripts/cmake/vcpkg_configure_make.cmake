@@ -618,9 +618,12 @@ function(vcpkg_configure_make)
             if(link_required_dirs)
                 string(PREPEND LDFLAGS_${var_suffix} "${link_required_dirs} ")
                 string(PREPEND ARFLAGS_${var_suffix} "${link_required_dirs} ")
-                string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
-                string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
             endif()
+            if(ARFLAGS_${var_suffix})
+                string(PREPEND ARFLAGS_${var_suffix} "cr ")
+            endif()
+            string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
+            string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
         endif()
     endmacro()
 
@@ -682,8 +685,9 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${current_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${current_buildtype}}")
-        set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
-
+        if(ARFLAGS_${current_buildtype})
+            set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
+        endif()
         # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
         # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
