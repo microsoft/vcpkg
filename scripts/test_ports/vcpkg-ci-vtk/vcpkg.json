@@ -25,7 +25,7 @@
       "name": "vtk",
       "default-features": false,
       "features": [
-        "atlmfc",
+        "atlmfc"
       ],
       "platform": "windows"
     }
