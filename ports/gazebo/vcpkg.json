@@ -30,6 +30,10 @@
     "ignition-math6",
     "ignition-msgs5",
     "ignition-transport8",
+    {
+      "name": "libtar",
+      "platform": "!windows"
+    },
     "ogre",
     {
       "name": "pkgconf",
