@@ -145,7 +145,7 @@ function(vcpkg_configure_make)
 
     set(requires_autogen OFF) # use autogen.sh
     set(requires_autoconfig OFF) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac") # remove configure; rerun autoconf
+    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac") # remove configure; rerun autoconf
         if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
             set(requires_autoconfig ON)
             file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
@@ -181,7 +181,7 @@ function(vcpkg_configure_make)
 
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS})
 
@@ -338,6 +338,30 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
+    else()
+        macro(make_set_env envvar cmakevar)
+            if(VCPKG_DETECTED_CMAKE_${cmakevar})
+                set(ENV{${envvar}} "${VCPKG_DETECTED_CMAKE_${cmakevar}}")
+            else()
+                if(NOT DEFINED ENV{${envvar}})
+                    set(ENV{${envvar}} "false") #/usr/bin/false is a binary returning 0 for any input
+                endif()
+            endif()
+        endmacro()
+        make_set_env(CC C_COMPILER)
+        make_set_env(CC_FOR_BUILD C_COMPILER)
+        make_set_env(CXX CXX_COMPILER)
+        make_set_env(NM NM)
+        make_set_env(RC RC)
+        make_set_env(WINDRES RC)
+        make_set_env(CCAS C_COMPILER)
+        make_set_env(AS C_COMPILER)
+        make_set_env(DLLTOOL DLLTOOL)
+        make_set_env(STRIP STRIP)
+        make_set_env(OBJDUMP OBJDUMP)
+        make_set_env(RANLIB RANLIB)
+        make_set_env(AR AR)
+        make_set_env(LD LINKER)
     endif()
 
     # Some PATH handling for dealing with spaces....some tools will still fail with that!
