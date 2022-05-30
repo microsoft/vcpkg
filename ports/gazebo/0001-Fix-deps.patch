@@ -1,5 +1,5 @@
-﻿diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
-index 4085b5aaeb..f89ac88333 100644
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 9777a46..6f665f4 100644
 --- a/cmake/SearchForStuff.cmake
 +++ b/cmake/SearchForStuff.cmake
 @@ -179,7 +179,7 @@ if (PKG_CONFIG_FOUND)
@@ -20,7 +20,26 @@ index 4085b5aaeb..f89ac88333 100644
      message (STATUS "Using system tinyxml2.")
      set (USE_EXTERNAL_TINYXML2 True)
    elseif(WIN32)
-@@ -513,7 +513,7 @@ if (PKG_CONFIG_FOUND)
+@@ -329,6 +329,7 @@ if (PKG_CONFIG_FOUND)
+   #################################################
+   # Find OGRE
+ 
++  if (0)
+   pkg_check_modules(OGRE-RTShaderSystem
+                     OGRE-RTShaderSystem>=${MIN_OGRE_VERSION})
+ 
+@@ -375,8 +376,8 @@ if (PKG_CONFIG_FOUND)
+       set (OGRE_PLUGINDIR ${_pkgconfig_invoke_result})
+     endif()
+   endif()
+-
+-  if (NOT OGRE_FOUND)
++  endif()
++  if (1)
+     # Workaround for CMake bug https://gitlab.kitware.com/cmake/cmake/issues/17135,
+     # that prevents to successfully run a find_package(<package>) call if before there
+     # was a failed call to pkg_check_modules(<package> <package>)
+@@ -513,7 +514,7 @@ if (PKG_CONFIG_FOUND)
    endif ()
  
    if (libavutil_FOUND AND libavformat_FOUND AND libavcodec_FOUND AND
@@ -29,7 +48,7 @@ index 4085b5aaeb..f89ac88333 100644
      set (HAVE_FFMPEG TRUE)
    else ()
      set (HAVE_FFMPEG FALSE)
-@@ -538,7 +538,7 @@ if (PKG_CONFIG_FOUND)
+@@ -538,7 +539,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find GNU Triangulation Surface Library
    pkg_check_modules(gts gts)
@@ -38,7 +57,7 @@ index 4085b5aaeb..f89ac88333 100644
      message (STATUS "Looking for GTS - found")
      set (HAVE_GTS TRUE)
    else ()
-@@ -551,13 +551,14 @@ if (PKG_CONFIG_FOUND)
+@@ -551,13 +552,14 @@ if (PKG_CONFIG_FOUND)
    # First and preferred option is to look for bullet standard pkgconfig,
    # so check it first. if it is not present, check for the OSRF
    # custom bullet2.82.pc file
@@ -54,7 +73,7 @@ index 4085b5aaeb..f89ac88333 100644
      add_definitions( -DLIBBULLET_VERSION=${BULLET_VERSION} )
    else()
      set (HAVE_BULLET FALSE)
-@@ -572,7 +573,7 @@ if (PKG_CONFIG_FOUND)
+@@ -572,7 +574,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find libusb
    pkg_check_modules(libusb-1.0 libusb-1.0)
@@ -63,7 +82,7 @@ index 4085b5aaeb..f89ac88333 100644
      BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
      set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
    else()
-@@ -648,7 +649,7 @@ endif ()
+@@ -648,7 +650,7 @@ endif ()
  ########################################
  # Find gdal
  include (FindGDAL)
@@ -72,7 +91,7 @@ index 4085b5aaeb..f89ac88333 100644
    message (STATUS "Looking for libgdal - not found")
    BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
    set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
-@@ -718,7 +719,7 @@ endif()
+@@ -732,7 +734,7 @@ endif()
  ########################################
  # Find graphviz
  include (${gazebo_cmake_dir}/FindGraphviz.cmake)
@@ -82,7 +101,7 @@ index 4085b5aaeb..f89ac88333 100644
    BUILD_WARNING ("Graphviz not found, Model editor's schematic view will be disabled.")
    set (HAVE_GRAPHVIZ OFF CACHE BOOL "HAVE GRAPHVIZ" FORCE)
 diff --git a/cmake/gazebo-config.cmake.in b/cmake/gazebo-config.cmake.in
-index b57a90dd76..63ce97095e 100644
+index b57a90d..63ce970 100644
 --- a/cmake/gazebo-config.cmake.in
 +++ b/cmake/gazebo-config.cmake.in
 @@ -99,12 +99,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
