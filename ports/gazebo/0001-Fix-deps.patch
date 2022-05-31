@@ -1,10 +1,29 @@
 diff --git a/cmake/FindFreeimage.cmake b/cmake/FindFreeimage.cmake
-index a989ec7..2ec8fcc 100644
+index a989ec7..7cc6f44 100644
 --- a/cmake/FindFreeimage.cmake
 +++ b/cmake/FindFreeimage.cmake
-@@ -33,6 +33,9 @@ if (NOT freeimage_FOUND)
+@@ -3,7 +3,7 @@ include (${gazebo_cmake_dir}/GazeboUtils.cmake)
+ 
+ ########################################
+ # Find packages
+-if (PKG_CONFIG_FOUND)
++if (false)
+   pkg_check_modules(freeimage freeimage>=${MIN_FREEIMAGE_VERSION})
+   if (NOT freeimage_FOUND)
+     message (STATUS "  freeimage.pc not found, trying freeimage_include_dir and freeimage_library_dir flags.")
+@@ -11,6 +11,7 @@ if (PKG_CONFIG_FOUND)
+ endif (PKG_CONFIG_FOUND)
+ 
+ if (NOT freeimage_FOUND)
++  if (false)
+   find_path(freeimage_INCLUDE_DIRS FreeImage.h)
+   if (NOT freeimage_INCLUDE_DIRS)
+     message (STATUS "  Looking for FreeImage.h - not found")
+@@ -32,7 +33,11 @@ if (NOT freeimage_FOUND)
+        message (STATUS "  Looking for FreeImage.h - found")
      endif (NOT FREEIMAGE_RUNS)
    endif (NOT freeimage_INCLUDE_DIRS)
++  endif()
  
 +  find_package(freeimage CONFIG REQUIRED)
 +  set(freeimage_LIBRARIES freeimage::FreeImage)
@@ -12,7 +31,7 @@ index a989ec7..2ec8fcc 100644
    if (WIN32)
      if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
        find_library(freeimage_LIBRARIES FreeImaged)
-@@ -49,4 +52,5 @@ if (NOT freeimage_FOUND)
+@@ -49,4 +54,5 @@ if (NOT freeimage_FOUND)
      message (STATUS "  Looking for libfreeimage - found")
      include_directories(${freeimage_INCLUDE_DIRS})
    endif (NOT freeimage_LIBRARIES)
