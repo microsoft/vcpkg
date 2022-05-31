@@ -43,9 +43,8 @@ set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 set(NETHOST_SOURCE_PATH ${SOURCE_PATH}/src/native/corehost/nethost/)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-nethost-config.cmake.in DESTINATION ${NETHOST_SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${NETHOST_SOURCE_PATH}
-    PREFER_NINJA
     # vcpkg's /utf-8 is incompatible with dotnet's own /source-charset:utf-8
     NO_CHARSET_FLAG
     OPTIONS
@@ -60,7 +59,7 @@ vcpkg_configure_cmake(
         "-DCLR_CMAKE_HOST_ARCH=${RID_ARCH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
