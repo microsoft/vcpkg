@@ -107,23 +107,6 @@ rename to MvgMvsPipeline.py.in
 index f4914bf..23d03e6 100644
 --- a/MvgMvsPipeline.py
 +++ b/MvgMvsPipeline.py.in
-@@ -91,12 +91,12 @@ def find(afile):
- 
- 
- # Try to find openMVG and openMVS binaries in PATH
--OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
--OPENMVS_BIN = whereis("ReconstructMesh")
-+OPENMVG_BIN = "@OPENMVG_TOOLS_PATH@"
-+OPENMVS_BIN = "@OPENMVS_TOOLS_PATH@"
- 
- # Try to find openMVG camera sensor database
--CAMERA_SENSOR_DB_FILE = "sensor_width_camera_database.txt"
--CAMERA_SENSOR_DB_DIRECTORY = find(CAMERA_SENSOR_DB_FILE)
-+CAMERA_SENSOR_DB_FILE = "@SENSOR_WIDTH_CAMERA_DATABASE_TXT_PATH@"
-+CAMERA_SENSOR_DB_DIRECTORY = "@OPENMVG_TOOLS_PATH@"
- 
- # Ask user for openMVG and openMVS directories if not found
- if not OPENMVG_BIN:
 @@ -175,10 +175,10 @@ class StepsStore:
               ["-i", "%input_dir%", "-o", "%matches_dir%", "-d", "%camera_file_params%"]],
              ["Compute features",             # 1
