@@ -5,6 +5,7 @@
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
+  "supports": "!(windows & arm)",
   "dependencies": [
     "cairo",
     "getopt",
