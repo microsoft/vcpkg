@@ -1,6 +1,6 @@
 {
   "name": "nethost",
-  "version-date": "2022-05-30",
+  "version": "6.0.5",
   "description": "Provides a set of APIs that can be used to host .NET Core (dotnet)",
   "homepage": "https://github.com/dotnet/runtime/tree/master/src/installer/corehost/cli/nethost",
   "supports": "!uwp",
