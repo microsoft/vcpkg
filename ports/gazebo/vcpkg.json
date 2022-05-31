@@ -43,6 +43,10 @@
     "protobuf",
     "qwt",
     "sdformat9",
+    {
+      "name": "simbody",
+      "platform": "!windows"
+    },
     "tbb",
     "tiny-process-library",
     {
