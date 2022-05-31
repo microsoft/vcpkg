@@ -42,8 +42,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-
-
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
@@ -53,5 +51,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
 
 # Handle copyright
-file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jemalloc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/jemalloc/COPYING" "${CURRENT_PACKAGES_DIR}/share/jemalloc/copyright")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

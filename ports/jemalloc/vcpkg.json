@@ -2,6 +2,6 @@
   "name": "jemalloc",
   "version": "5.3.0",
   "description": "jemalloc is a general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support",
-  "homepage": "http://jemalloc.net/",
+  "homepage": "https://jemalloc.net/",
   "license": "BSD-2-Clause"
 }
