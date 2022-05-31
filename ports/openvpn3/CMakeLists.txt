@@ -31,7 +31,7 @@ install(
 )
 
 INSTALL(EXPORT unofficial-openvpnConfig
-    NAMESPACE unofficial::
+    NAMESPACE unofficial::openvpn3::
     DESTINATION share/unofficial-openvpn
 )
 
