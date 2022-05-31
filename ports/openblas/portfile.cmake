@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-redefinition-function.patch
         fix-uwp-build.patch
         install-tools.patch
+        arm64-win-generic.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -53,6 +54,11 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
                 -DNOFORTRAN=ON
                 -DBU=_  #required for all blas functions to append extra _ using NAME
     )
+endif()
+
+
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
 endif()
 
 vcpkg_cmake_configure(
