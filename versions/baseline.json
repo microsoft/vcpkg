@@ -6298,7 +6298,7 @@
     },
     "rtmidi": {
       "baseline": "5.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rttr": {
       "baseline": "0.9.6",
