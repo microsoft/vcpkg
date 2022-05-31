@@ -628,8 +628,16 @@ function(vcpkg_configure_make)
             string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
             string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
             if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
-                separate_arguments(LDFLAGS_LIST NATIVE_COMMAND "-Wl,${LDFLAGS_${var_suffix}}")
-                list(JOIN LDFLAGS_LIST " -Wl," LDFLAGS_${var_suffix})
+                # Do not touch autotools quirks incoming!
+                # -Xlinker is repeated three times because:
+                # - libtool script eats -Xlinker
+                # - the compile wrapper eats -Xlinker
+                # - passing through both tools requires 3 -Xlinker; two being eaten in the first script.
+                # passing only through one script will keep one -Xlinker (done in configure)
+                # but cl will just ignore those with a warning. (Just like -Xcompiler)
+                separate_arguments(LDFLAGS_LIST NATIVE_COMMAND "${LDFLAGS_${var_suffix}}")
+                list(JOIN LDFLAGS_LIST " -Xlinker -Xlinker -Xlinker " LDFLAGS_${var_suffix})
+                string(PREPEND LDFLAGS_${var_suffix} "-Xlinker -Xlinker -Xlinker ")
             endif()
         endif()
     endmacro()
