@@ -5222,7 +5222,7 @@
     },
     "openvpn3": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvr": {
       "baseline": "1.16.8",
