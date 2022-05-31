@@ -41,7 +41,7 @@ endif()
 set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 
 set(NETHOST_SOURCE_PATH ${SOURCE_PATH}/src/native/corehost/nethost/)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/nethost-config.cmake.in DESTINATION ${NETHOST_SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-nethost-config.cmake.in DESTINATION ${NETHOST_SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${NETHOST_SOURCE_PATH}
@@ -64,7 +64,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-nethost)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

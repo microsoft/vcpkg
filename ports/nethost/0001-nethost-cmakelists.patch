@@ -1,5 +1,5 @@
 diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
-index a9f44e720..9dc0a43b2 100644
+index a9f44e720..7d678c562 100644
 --- a/src/native/corehost/nethost/CMakeLists.txt
 +++ b/src/native/corehost/nethost/CMakeLists.txt
 @@ -1,11 +1,14 @@
@@ -27,7 +27,7 @@ index a9f44e720..9dc0a43b2 100644
  
  add_definitions(-DFEATURE_LIBHOST=1)
  add_definitions(-DNETHOST_EXPORT)
-@@ -33,14 +38,23 @@ if (WIN32)
+@@ -33,14 +38,37 @@ if (WIN32)
      )
  endif(WIN32)
  
@@ -41,6 +41,12 @@ index a9f44e720..9dc0a43b2 100644
 -    install_with_stripped_symbols(libnethost TARGETS corehost)
 +set(NETHOST_HEADERS nethost.h ../coreclr_delegates.h ../hostfxr.h)
 +install(FILES ${NETHOST_HEADERS} DESTINATION include)
++# Original src/native/corehost/nethost/CMakeLists.txt uses install_with_stripped_symbols() to install
++# targets with symbols. However, on Windows symbols will be put into PDB
++# folder which doesn't seem to be recognizable by vcpkg functions.
++# Furthermore, install_with_stripped_symbols() may install files instead of
++# targets.
++# For these reason, they are replaced with a plain install().
 +if (BUILD_SHARED_LIBS)
 +    set(NETHOST_ACTIVE_TARGET nethost)
  else()
@@ -48,17 +54,25 @@ index a9f44e720..9dc0a43b2 100644
 -endif(WIN32)
 \ No newline at end of file
 +    set(NETHOST_ACTIVE_TARGET libnethost)
-+endif()
++endif(BUILD_SHARED_LIBS)
 +
 +target_include_directories(${NETHOST_ACTIVE_TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
-+install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT nethost-targets
++install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT unofficial-nethost-targets
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib
 +    RUNTIME DESTINATION bin
 +)
 +
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(nethost-config.cmake.in nethost-config.cmake INSTALL_DESTINATION share/nethost)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nethost-config.cmake DESTINATION share/nethost)
++configure_package_config_file(unofficial-nethost-config.cmake.in unofficial-nethost-config.cmake
++    INSTALL_DESTINATION share/unofficial-nethost
++)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-nethost-config.cmake
++    DESTINATION share/unofficial-nethost
++)
 +
-+install(EXPORT nethost-targets DESTINATION share/nethost FILE nethost-targets.cmake)
++install(EXPORT unofficial-nethost-targets
++    DESTINATION share/unofficial-nethost
++    FILE unofficial-nethost-targets.cmake
++    NAMESPACE unofficial::nethost::
++)

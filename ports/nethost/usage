@@ -1,5 +1,5 @@
 The package nethost can be used via CMake:
 
-    find_package(nethost CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE nethost) # DLL
-    target_link_libraries(main PRIVATE libnethost) # Static
+    find_package(unofficial-nethost CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::nethost::nethost) # DLL
+    target_link_libraries(main PRIVATE unofficial::nethost::libnethost) # Static
