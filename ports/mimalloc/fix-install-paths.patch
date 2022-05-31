@@ -1,0 +1,29 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -315,11 +315,15 @@ target_link_libraries(mimalloc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.lib)
+     add_custom_command(TARGET mimalloc POST_BUILD
+       COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll" $<TARGET_FILE_DIR:mimalloc>
+       COMMENT "Copy mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll to output directory")
+-    install(FILES "$<TARGET_FILE_DIR:mimalloc>/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll" DESTINATION ${mi_install_libdir})
++    install(FILES "$<TARGET_FILE_DIR:mimalloc>/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll" DESTINATION ${CMAKE_INSTALL_BINDIR})
+   endif()
+ 
+-  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_libdir} LIBRARY)  
++  if (MI_OVERRIDE)
++    install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir}/manual-link RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir}/manual-link NAMELINK_SKIP)
++  else()
++    install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir} NAMELINK_SKIP)
++  endif()
+   install(EXPORT mimalloc DESTINATION ${mi_install_cmakedir})
+ endif()
+ 
+ # static library
+@@ -376,7 +376,7 @@
+   # the FILES expression can also be: $<TARGET_OBJECTS:mimalloc-obj>
+   # but that fails cmake versions less than 3.10 so we leave it as is for now
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/mimalloc-obj.dir/src/static.c${CMAKE_C_OUTPUT_EXTENSION}
+-          DESTINATION ${mi_install_objdir}
++          DESTINATION ${mi_install_objdir}/manual-link
+           RENAME ${mi_basename}${CMAKE_C_OUTPUT_EXTENSION} )
+ endif()
+ 
