@@ -2854,7 +2854,7 @@
     },
     "ignition-cmake2": {
       "baseline": "2.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "ignition-common1": {
       "baseline": "1.1.1",
@@ -2862,7 +2862,7 @@
     },
     "ignition-common3": {
       "baseline": "3.9.0",
-      "port-version": 3
+      "port-version": 4
     },
     "ignition-fuel-tools1": {
       "baseline": "1.2.0",
@@ -2882,7 +2882,7 @@
     },
     "ignition-modularscripts": {
       "baseline": "2022-05-11",
-      "port-version": 0
+      "port-version": 1
     },
     "ignition-msgs1": {
       "baseline": "1.0.0",
