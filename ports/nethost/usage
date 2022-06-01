@@ -1,6 +1,4 @@
 The package nethost can be used via CMake:
 
     find_package(unofficial-nethost CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:unofficial::nethost::nethost>,unofficial::nethost::nethost,unofficial::nethost::libnethost>)
-    # unofficial::nethost::nethost is the shared library target
-    # unofficial::nethost::libnethost is the static libray target availaible in static triplets
+    target_link_libraries(main PRIVATE unofficial::nethost::nethost)

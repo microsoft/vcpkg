@@ -17,17 +17,25 @@ index a9f44e720..7149ea6c6 100644
  include_directories(../fxr)
  
  # CMake does not recommend using globbing since it messes with the freshness checks
-@@ -20,7 +23,9 @@ if(CLR_CMAKE_TARGET_WIN32)
+@@ -19,8 +22,17 @@ if(CLR_CMAKE_TARGET_WIN32)
+         Exports.def)
  endif()
  
++if(BUILD_SHARED_LIBS)
  include(../lib.cmake)
-+
++set(targets nethost)
++else()
  include(../lib_static.cmake)
-+target_compile_definitions(libnethost PUBLIC NETHOST_USE_AS_STATIC)
++add_library(nethost INTERFACE)
++target_link_libraries(nethost INTERFACE libnethost)
++set(targets libnethost nethost)
++target_include_directories(libnethost INTERFACE $<INSTALL_INTERFACE:include>)
++endif()
++target_include_directories(nethost INTERFACE $<INSTALL_INTERFACE:include>)
  
  add_definitions(-DFEATURE_LIBHOST=1)
  add_definitions(-DNETHOST_EXPORT)
-@@ -33,14 +38,29 @@ if (WIN32)
+@@ -33,14 +45,16 @@ if (WIN32)
      )
  endif(WIN32)
  
@@ -39,25 +47,13 @@ index a9f44e720..7149ea6c6 100644
 -# Only Windows creates a symbols file for static libs.
 -if (WIN32)
 -    install_with_stripped_symbols(libnethost TARGETS corehost)
-+set(NETHOST_HEADERS nethost.h ../coreclr_delegates.h ../hostfxr.h)
-+install(FILES ${NETHOST_HEADERS} DESTINATION include)
-+# Original src/native/corehost/nethost/CMakeLists.txt uses install_with_stripped_symbols() to install
-+# targets with symbols. However, on Windows symbols will be put into PDB
-+# folder which doesn't seem to be recognizable by vcpkg functions.
-+# Furthermore, install_with_stripped_symbols() may install files instead of
-+# targets.
-+# For these reason, they are replaced with a plain install().
-+if (BUILD_SHARED_LIBS)
-+    set(NETHOST_ACTIVE_TARGET nethost)
- else()
+-else()
 -    install(TARGETS libnethost DESTINATION corehost)
 -endif(WIN32)
 \ No newline at end of file
-+    set(NETHOST_ACTIVE_TARGET libnethost)
-+endif(BUILD_SHARED_LIBS)
-+
-+target_include_directories(${NETHOST_ACTIVE_TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
-+install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT unofficial-nethost-config
++set(NETHOST_HEADERS nethost.h ../coreclr_delegates.h ../hostfxr.h)
++install(FILES ${NETHOST_HEADERS} DESTINATION include)
++install(TARGETS ${targets} EXPORT unofficial-nethost-config
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib
 +    RUNTIME DESTINATION bin
