@@ -27,7 +27,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-vcpkg.patch
-    0002-disable-waring.patch
+    0002-remove-WX-Werror.patch
 )
 
 vcpkg_cmake_configure(
