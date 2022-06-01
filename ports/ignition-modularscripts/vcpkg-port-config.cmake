@@ -146,4 +146,6 @@ function(ignition_modular_library)
 
     # Build library
     ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME} ${IML_DISABLE_PKGCONFIG_INSTALL})
+    
+    set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
