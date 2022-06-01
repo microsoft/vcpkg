@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DCOMMSDSL_BUILD_UNIT_TESTS=OFF
         -DCOMMSDSL_WARN_AS_ERR=OFF
         -DCOMMSDSL_WIN_ALLOW_LIBXML_BUILD=OFF
+        -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 
