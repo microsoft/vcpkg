@@ -40,11 +40,10 @@ endif()
 
 set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 
-set(NETHOST_SOURCE_PATH ${SOURCE_PATH}/src/native/corehost/nethost/)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-nethost-config.cmake.in DESTINATION ${NETHOST_SOURCE_PATH})
+set(NETHOST_SOURCE_PATH "${SOURCE_PATH}/src/native/corehost/nethost/")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${NETHOST_SOURCE_PATH}
+    SOURCE_PATH "${NETHOST_SOURCE_PATH}"
     # vcpkg's /utf-8 is incompatible with dotnet's own /source-charset:utf-8
     NO_CHARSET_FLAG
     OPTIONS
@@ -65,7 +64,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-nethost)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

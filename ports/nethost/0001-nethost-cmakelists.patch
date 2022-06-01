@@ -1,5 +1,5 @@
 diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
-index a9f44e720..7d678c562 100644
+index a9f44e720..7149ea6c6 100644
 --- a/src/native/corehost/nethost/CMakeLists.txt
 +++ b/src/native/corehost/nethost/CMakeLists.txt
 @@ -1,11 +1,14 @@
@@ -13,7 +13,7 @@ index a9f44e720..7d678c562 100644
  
  # Include directories
 +include(../../../../eng/native/configurepaths.cmake)
-+include(${CLR_ENG_NATIVE_DIR}/configurecompiler.cmake)
++include("${CLR_ENG_NATIVE_DIR}/configurecompiler.cmake")
  include_directories(../fxr)
  
  # CMake does not recommend using globbing since it messes with the freshness checks
@@ -27,7 +27,7 @@ index a9f44e720..7d678c562 100644
  
  add_definitions(-DFEATURE_LIBHOST=1)
  add_definitions(-DNETHOST_EXPORT)
-@@ -33,14 +38,37 @@ if (WIN32)
+@@ -33,14 +38,29 @@ if (WIN32)
      )
  endif(WIN32)
  
@@ -57,22 +57,14 @@ index a9f44e720..7d678c562 100644
 +endif(BUILD_SHARED_LIBS)
 +
 +target_include_directories(${NETHOST_ACTIVE_TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
-+install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT unofficial-nethost-targets
++install(TARGETS ${NETHOST_ACTIVE_TARGET} EXPORT unofficial-nethost-config
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib
 +    RUNTIME DESTINATION bin
 +)
 +
-+include(CMakePackageConfigHelpers)
-+configure_package_config_file(unofficial-nethost-config.cmake.in unofficial-nethost-config.cmake
-+    INSTALL_DESTINATION share/unofficial-nethost
-+)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-nethost-config.cmake
++install(EXPORT unofficial-nethost-config
 +    DESTINATION share/unofficial-nethost
-+)
-+
-+install(EXPORT unofficial-nethost-targets
-+    DESTINATION share/unofficial-nethost
-+    FILE unofficial-nethost-targets.cmake
++    FILE unofficial-nethost-config.cmake
 +    NAMESPACE unofficial::nethost::
 +)
