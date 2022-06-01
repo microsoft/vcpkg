@@ -6,8 +6,23 @@
   "license": "Apache-2.0",
   "dependencies": [
     {
+      "name": "boost-asio",
+      "features": [
+        "ssl"
+      ],
+      "version>=": "1.78.0"
+    },
+    {
+      "name": "boost-endian",
+      "version>=": "1.78.0"
+    },
+    {
       "name": "fmt",
       "version>=": "8.0.1"
+    },
+    {
+      "name": "openssl",
+      "version>=": "3.0.2#3"
     },
     {
       "name": "qpid-proton",
@@ -23,22 +38,5 @@
       "host": true,
       "version>=": "2021-02-26"
     }
-  ],
-  "default-features": [
-    "boost"
-  ],
-  "features": {
-    "boost": {
-      "description": "Use boost from vcpkg",
-      "dependencies": [
-        {
-          "name": "boost-asio",
-          "features": [
-            "ssl"
-          ]
-        },
-        "boost-endian"
-      ]
-    }
-  }
+  ]
 }
