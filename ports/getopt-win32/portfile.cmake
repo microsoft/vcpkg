@@ -10,6 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES getopt.h.patch 
 		arm64.patch
+```suggestion
+    PATCHES 
+        getopt.h.patch 
+        arm64.patch
+
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
