@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
 if ("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
