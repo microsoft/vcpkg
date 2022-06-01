@@ -33,6 +33,7 @@ vcpkg_configure_cmake(
         -DENABLE_OSCAP_UTIL_VM=OFF
         -DENABLE_OSCAP_UTIL_PODMAN=OFF
         -DENABLE_OSCAP_UTIL_CHROOT=OFF
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 
 vcpkg_install_cmake()
