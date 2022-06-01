@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 31c3a1f..914cdf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,6 +66,8 @@ else()
+   set(_gRPC_INSTALL_SUPPORTED_FROM_MODULE ON)
+ endif()
+ 
++add_library(grpc_definitions INTERFACE)
++
+ # Providers for third-party dependencies (gRPC_*_PROVIDER properties):
+ # "module": build the dependency using sources from git submodule (under third_party)
+ # "package": use cmake's find_package functionality to locate a pre-installed dependency
+@@ -255,7 +257,7 @@ endif()
+ 
+ if(MSVC)
+   include(cmake/msvc_static_runtime.cmake)
+-  add_definitions(-D_WIN32_WINNT=0x600 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
++  target_compile_definitions(grpc_definitions INTERFACE -D_WIN32_WINNT=0x600 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
+   # Set /MP option
+   if (gRPC_BUILD_MSVC_MP_COUNT GREATER 0)
+     set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /MP${gRPC_BUILD_MSVC_MP_COUNT}")
+@@ -271,26 +273,26 @@ if(MSVC)
+   # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
+   if(_gRPC_PLATFORM_UWP)
+-    add_definitions(-DGRPC_ARES=0)
++    target_compile_definitions(grpc_definitions INTERFACE -DGRPC_ARES=0)
+   endif()
+   # Silences thousands of trucation warnings
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
+ endif()
+ if (MINGW)
+-  add_definitions(-D_WIN32_WINNT=0x600)
++  target_compile_definitions(grpc_definitions INTERFACE -D_WIN32_WINNT=0x600)
+ endif()
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_gRPC_C_CXX_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_gRPC_C_CXX_FLAGS}")
+ 
+ if(gRPC_USE_PROTO_LITE)
+   set(_gRPC_PROTOBUF_LIBRARY_NAME "libprotobuf-lite")
+-  add_definitions("-DGRPC_USE_PROTO_LITE")
++  target_compile_definitions(grpc_definitions INTERFACE -DGRPC_USE_PROTO_LITE)
+ else()
+   set(_gRPC_PROTOBUF_LIBRARY_NAME "libprotobuf")
+ endif()
+ 
+ if(gRPC_BACKWARDS_COMPATIBILITY_MODE)
+-  add_definitions(-DGPR_BACKWARDS_COMPATIBILITY_MODE)
++  target_compile_definitions(grpc_definitions INTERFACE -DGPR_BACKWARDS_COMPATIBILITY_MODE)
+   if(_gRPC_PLATFORM_MAC)
+     # some C++11 constructs not supported before OS X 10.10
+     set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
+@@ -306,14 +308,14 @@ endif()
+ if (gRPC_XDS_USER_AGENT_IS_CSHARP)
+   # The value of the defines needs to contain quotes.
+   # See https://github.com/grpc/grpc/blob/fbf32836a418cc84f58786700273b65cb9174e1d/src/core/ext/xds/xds_api.cc#L854
+-  add_definitions("-DGRPC_XDS_USER_AGENT_NAME_SUFFIX=\"csharp\"" "-DGRPC_XDS_USER_AGENT_VERSION_SUFFIX=\"2.44.0\"")
++  target_compile_definitions(grpc_definitions INTERFACE "-DGRPC_XDS_USER_AGENT_NAME_SUFFIX=\"csharp\"" "-DGRPC_XDS_USER_AGENT_VERSION_SUFFIX=\"2.44.0\"")
+ endif()
+ 
+ if(UNIX)
+   # -pthread does more than -lpthread
+   set(THREADS_PREFER_PTHREAD_FLAG ON)
+   find_package(Threads)
+-  set(_gRPC_ALLTARGETS_LIBRARIES ${CMAKE_DL_LIBS} m Threads::Threads)
++  set(_gRPC_ALLTARGETS_LIBRARIES ${CMAKE_DL_LIBS} m Threads::Threads grpc_definitions)
+   if(_gRPC_PLATFORM_LINUX OR _gRPC_PLATFORM_POSIX)
+     set(_gRPC_ALLTARGETS_LIBRARIES ${_gRPC_ALLTARGETS_LIBRARIES} rt)
+   endif()
+@@ -1112,7 +1114,7 @@ target_link_libraries(address_sorting
+ 
+ 
+ if(gRPC_INSTALL)
+-  install(TARGETS address_sorting EXPORT gRPCTargets
++  install(TARGETS address_sorting grpc_definitions EXPORT gRPCTargets
+     RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+diff --git a/cmake/abseil-cpp.cmake b/cmake/abseil-cpp.cmake
+index 5a02e2d..8ba9e82 100644
+--- a/cmake/abseil-cpp.cmake
++++ b/cmake/abseil-cpp.cmake
+@@ -36,5 +36,5 @@ elseif(gRPC_ABSL_PROVIDER STREQUAL "package")
+ endif()
+ set(_gRPC_FIND_ABSL "if(NOT TARGET absl::strings)\n  find_package(absl CONFIG)\nendif()")
+   if (gRPC_ABSL_SYNC_ENABLE)
+-    add_definitions(-DGPR_ABSEIL_SYNC=1)
++    target_compile_definitions(grpc_definitions INTERFACE -DGPR_ABSEIL_SYNC=1)
+   endif()
