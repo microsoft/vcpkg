@@ -38,6 +38,7 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+        -DSDL_HIDAPI_JOYSTICK=ON
 )
 
 vcpkg_cmake_install()
