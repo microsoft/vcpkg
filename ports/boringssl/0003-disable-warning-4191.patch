@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 893bca7..361fae3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,6 +184,7 @@ elseif(MSVC)
+               # Disable this because it flags even when there is a default.
+       "C4100" # 'exarg' : unreferenced formal parameter
+       "C4127" # conditional expression is constant
++      "C4191" # unsafe conversion from 'type of expression' to 'type required'
+       "C4200" # nonstandard extension used : zero-sized array in
+               # struct/union.
+       "C4204" # nonstandard extension used: non-constant aggregate initializer

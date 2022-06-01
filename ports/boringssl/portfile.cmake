@@ -28,6 +28,7 @@ vcpkg_from_github(
   PATCHES
     0001-vcpkg.patch
     0002-disable-warning-4065.patch
+    0003-disable-warning-4191.patch
 )
 
 vcpkg_configure_cmake(
