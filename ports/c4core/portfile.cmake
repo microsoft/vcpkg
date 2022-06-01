@@ -20,13 +20,13 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    CMAKE_ARCHIVE
+    SOURCE_PATH_CMAKE
     ARCHIVE ${CMAKE_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
-file(RENAME ${CMAKE_ARCHIVE} "${SOURCE_PATH}/cmake")
+file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/cmake")
 
 set(DB_COMMIT_HASH 78e525c6e74df6d62d782864a52c0d279dcee24f)
 
@@ -38,13 +38,13 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    DEBUGBREAK_ARCHIVE 
+    SOURCE_PATH_DEBUGBREAK  
     ARCHIVE ${DEBUGBREAK_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
-file(RENAME ${DEBUGBREAK_ARCHIVE} "${SOURCE_PATH}/src/c4/ext/debugbreak")
+file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
 set(FF_COMMIT_HASH 8159e8bcf63c1b92f5a51fb550f966e56624b209)
 
@@ -56,13 +56,13 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    FAST_FLOAT_ARCHIVE
+    SOURCE_PATH_FAST_FLOAT 
     ARCHIVE ${FAST_FLOAT_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/fast_float")
-file(RENAME ${FAST_FLOAT_ARCHIVE} "${SOURCE_PATH}/src/c4/ext/fast_float")
+file(RENAME "${SOURCE_PATH_FAST_FLOAT}" "${SOURCE_PATH}/src/c4/ext/fast_float")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

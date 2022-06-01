@@ -21,13 +21,13 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    CMAKE_ARCHIVE
+    SOURCE_PATH_CMAKE
     ARCHIVE ${CMAKE_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext/c4core/cmake")
-file(RENAME ${CMAKE_ARCHIVE} "${SOURCE_PATH}/ext/c4core/cmake")
+file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/ext/c4core/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
