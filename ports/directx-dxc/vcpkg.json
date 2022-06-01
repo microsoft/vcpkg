@@ -5,5 +5,5 @@
   "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
   "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",
   "license": null,
-  "supports": "windows & x64 & native"
+  "supports": "windows & x64 & !uwp"
 }
