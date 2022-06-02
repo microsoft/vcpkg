@@ -34,9 +34,9 @@ file(COPY "${PACKAGE_PATH}/bin/x64/dxil.dll" DESTINATION "${CURRENT_PACKAGES_DIR
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
 file(INSTALL
-  ${PACKAGE_PATH}/bin/x64/dxc.exe
-  ${PACKAGE_PATH}/bin/x64/dxcompiler.dll
-  ${PACKAGE_PATH}/bin/x64/dxil.dll
+  "${PACKAGE_PATH}/bin/x64/dxc.exe"
+  "${PACKAGE_PATH}/bin/x64/dxcompiler.dll"
+  "${PACKAGE_PATH}/bin/x64/dxil.dll"
   DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
