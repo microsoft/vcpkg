@@ -1,0 +1,13 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO fawdlstty/libfv
+    REF v0.0.5
+    SHA512 2601e0fb8e65c4b8b12349a6086e762fe52a7ae166f7c9491abb0143ea21420184705299f812f510a7b576e0d210b3264f8618cea69a0035c3adcefec9755a4f
+    HEAD_REF master
+)
+
+#vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+#vcpkg_cmake_install()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
