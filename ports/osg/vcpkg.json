@@ -131,7 +131,6 @@
           "platform": "windows"
         },
         "libjpeg-turbo",
-        "liblas",
         "libpng",
         {
           "name": "libxml2",

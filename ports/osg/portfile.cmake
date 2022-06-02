@@ -14,7 +14,6 @@ vcpkg_from_github(
         disable-present3d-staticview-in-linux.patch #Due to some link error we cannot solve yet, disable them in linux.
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
-        fix-liblas.patch
         fix-nvtt-squish.patch
         use-boost-asio.patch
         fix-dependency-coin.patch
@@ -67,6 +66,7 @@ vcpkg_cmake_configure(
         -DBUILD_OSG_PLUGIN_INVENTOR=OFF
         -DBUILD_OSG_PLUGIN_FBX=OFF
         -DBUILD_OSG_PLUGIN_DIRECTSHOW=OFF
+        -DBUILD_OSG_PLUGIN_LAS=OFF
         -DBUILD_OSG_PLUGIN_QTKIT=OFF
         -DBUILD_OSG_PLUGIN_SVG=OFF
         -DBUILD_OSG_PLUGIN_VNC=OFF
@@ -80,7 +80,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_LIBLAS=ON
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         BUILD_REF_DOCS_SEARCHENGINE
