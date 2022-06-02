@@ -18,9 +18,7 @@ message(STATUS "Targeting ${CPPWINRT_ARCH}")
 
 include(GNUInstallDirs)
 
-find_program(CPPWINRT_TOOL "cppwinrt.exe"
-  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/bin
-  REQUIRED NO_DEFAULT_PATH)
+set(CPPWINRT_TOOL "${CMAKE_CURRENT_SOURCE_DIR}/bin/cppwinrt.exe")
 
 find_library(CPPWINRT_LIB "cppwinrt_fast_forwarder.lib"
   PATHS "${CMAKE_CURRENT_SOURCE_DIR}/build/native/lib/${CPPWINRT_ARCH}"
