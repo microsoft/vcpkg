@@ -5926,11 +5926,11 @@
     },
     "qtkeychain": {
       "baseline": "0.13.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qtkeychain-qt6": {
       "baseline": "0.13.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtlocation": {
       "baseline": "6.3.0",
