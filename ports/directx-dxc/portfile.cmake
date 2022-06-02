@@ -19,8 +19,8 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-file(INSTALL ${PACKAGE_PATH}/inc/d3d12shader.h DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(INSTALL ${PACKAGE_PATH}/inc/dxcapi.h DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL "${PACKAGE_PATH}/inc/d3d12shader.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL "${PACKAGE_PATH}/inc/dxcapi.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 file(INSTALL "${PACKAGE_PATH}/lib/x64/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(INSTALL "${PACKAGE_PATH}/lib/x64/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
