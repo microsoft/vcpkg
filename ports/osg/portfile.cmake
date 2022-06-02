@@ -10,7 +10,6 @@ vcpkg_from_github(
         collada.patch
         static.patch
         fix-sdl.patch
-        fix-example-application.patch
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-nvtt-squish.patch
