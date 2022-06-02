@@ -7,6 +7,7 @@ vcpkg_from_github(
 	SHA512 7002fa30a3bcf6551d2e1050b4ca75a3736013fd190e4f50953717406864da1952deb09f530bc8c5ddf6e4b90204baec7dbc283f497829846d46d561f66feb4b
 	HEAD_REF master
     PATCHES
+        link-libraries.patch
         collada.patch
         static.patch
         fix-sdl.patch
