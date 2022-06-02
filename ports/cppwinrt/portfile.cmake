@@ -1,7 +1,3 @@
-if (NOT VCPKG_HOST_IS_WINDOWS)
-    message(FATAL_ERROR "The cppwinrt.exe tool published on NuGet requires a Windows 32-bit compatible host")
-endif()
-
 set(CPPWINRT_VERSION 2.0.220418.1)
 
 vcpkg_download_distfile(ARCHIVE
