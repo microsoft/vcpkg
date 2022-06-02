@@ -20,9 +20,7 @@ include(GNUInstallDirs)
 
 set(CPPWINRT_TOOL "${CMAKE_CURRENT_SOURCE_DIR}/bin/cppwinrt.exe")
 
-find_library(CPPWINRT_LIB "cppwinrt_fast_forwarder.lib"
-  PATHS "${CMAKE_CURRENT_SOURCE_DIR}/build/native/lib/${CPPWINRT_ARCH}"
-  REQUIRED NO_DEFAULT_PATH)
+set(CPPWINRT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/build/native/lib/${CPPWINRT_ARCH}/cppwinrt_fast_forwarder.lib")
 
 #--- Find Windows SDK Version
 set(WINDOWS_SDK_VERSIONS
