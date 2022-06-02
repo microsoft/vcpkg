@@ -22,7 +22,7 @@ index 781113d..a78fa84 100644
 +cmake_policy(SET CMP0012 NEW)
 +cmake_policy(SET CMP0057 NEW)
 +find_package(PkgConfig)
-+if(REQUIRED IN_LIST ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
++if("REQUIRED" IN_LIST ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
 +	pkg_check_modules(libxslt_gcrypt REQUIRED IMPORTED_TARGET libgcrypt)
 +else()
 +	pkg_check_modules(libxslt_gcrypt IMPORTED_TARGET libgcrypt)
