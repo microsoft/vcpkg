@@ -12,8 +12,11 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH}/CMakeLists.txt" @ONLY)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CppWinRT-config.cmake.in" DESTINATION ${SOURCE_PATH})
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/CppWinRT-config.cmake.in"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    DESTINATION "${SOURCE_PATH}"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
