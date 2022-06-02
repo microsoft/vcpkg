@@ -11,6 +11,7 @@ vcpkg_from_github(
         szip.patch
         pkgconfig-requires.patch
         pkgconfig-link-order.patch
+        fix-parallel.patch # Remove this patch in the next update
 )
 
 set(ALLOW_UNSUPPORTED OFF)
