@@ -11,7 +11,7 @@ vcpkg_from_github(
         szip.patch
         pkgconfig-requires.patch
         pkgconfig-link-order.patch
-        fix-parallel.patch # Remove this patch in the next update
+        fix-parallel.patch # Remove this patch in the next update, see https://github.com/HDFGroup/hdf5/pull/860
 )
 
 set(ALLOW_UNSUPPORTED OFF)
