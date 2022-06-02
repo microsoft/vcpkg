@@ -55,6 +55,17 @@ if(NOT DEFINED osg_OPENGL_PROFILE)
     set(osg_OPENGL_PROFILE "GL3")
 endif()
 
+# Plugin control variables are used only if prerequisites are satisfied.
+set(plugin_vars "")
+file(STRINGS "${SOURCE_PATH}/src/osgPlugins/CMakeLists.txt" plugin_lines REGEX "ADD_PLUGIN_DIRECTORY")
+foreach(line IN LISTS plugin_lines)
+    if(NOT line MATCHES "ADD_PLUGIN_DIRECTORY\\(([^)]*)" OR NOT EXISTS "${SOURCE_PATH}/src/osgPlugins/${CMAKE_MATCH_1}/CMakeLists.txt")
+        continue()
+    endif()
+    string(TOUPPER "${CMAKE_MATCH_1}" plugin_upper)
+    list(APPEND plugin_vars "BUILD_OSG_PLUGIN_${plugin_upper}")
+endforeach()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -93,6 +104,7 @@ vcpkg_cmake_configure(
         BUILD_REF_DOCS_TAGFILE
         OSG_DETERMINE_WIN_VERSION
         USE_3RDPARTY_BIN
+        ${plugin_vars}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
