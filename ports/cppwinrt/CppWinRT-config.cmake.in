@@ -20,4 +20,4 @@ set_target_properties(Microsoft::CppWinRT PROPERTIES
 unset(_cppwinrt_root_lib)
 unset(_cppwinrt_root)
 
-check_required_components("@PROJECT_NAME@")
+check_required_components(cppwinrt)
