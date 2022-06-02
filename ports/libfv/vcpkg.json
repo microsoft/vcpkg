@@ -5,7 +5,11 @@
   "homepage": "https://github.com/fawdlstty/libfv",
   "license": "MIT",
   "dependencies": [
-    "asio", "fmt", "gzip-hpp", "nlohmann-json", "openssl", "zlib",
+    "asio",
+    "fmt",
+    "gzip-hpp",
+    "nlohmann-json",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,6 +17,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
