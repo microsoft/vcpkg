@@ -5093,8 +5093,8 @@
       "port-version": 0
     },
     "opencl": {
-      "baseline": "2.2",
-      "port-version": 8
+      "baseline": "3.0.10",
+      "port-version": 0
     },
     "opencolorio": {
       "baseline": "2.1.1",
