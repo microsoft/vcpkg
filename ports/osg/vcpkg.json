@@ -116,7 +116,6 @@
     "plugins": {
       "description": "Build OSG Plugins - Disable for compile testing examples on a time limit",
       "dependencies": [
-        "coin",
         "curl",
         "gdal",
         {

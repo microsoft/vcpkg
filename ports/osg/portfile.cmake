@@ -16,7 +16,6 @@ vcpkg_from_github(
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-nvtt-squish.patch
         use-boost-asio.patch
-        fix-dependency-coin.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
 )
 
@@ -79,6 +78,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_DCMTK=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
