@@ -111,6 +111,10 @@ vcpkg_copy_pdbs()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-osg-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/unofficial-osg-config.cmake" @ONLY)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
+endif()
+
 # handle osg tools and plugins
 set(OSG_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(GLOB OSG_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
