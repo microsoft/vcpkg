@@ -115,8 +115,9 @@ if(FEATURES MATCHES "tools")
         endif()
     endforeach()
 
-    if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/h5perf_serial${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-        AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/h5perf_serial${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(FEATURES MATCHES "parallel")
+        list(APPEND HDF5_TOOLS h5perf)
+    else()
         list(APPEND HDF5_TOOLS h5perf_serial)
     endif()
 
