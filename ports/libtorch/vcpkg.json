@@ -51,12 +51,6 @@
         }
       ]
     },
-    "fbgemm": {
-      "description": "Build with FBGEMM (quantized 8-bit server operators)",
-      "dependencies": [
-        "fbgemm"
-      ]
-    },
     "leveldb": {
       "description": "Build with LevelDB",
       "dependencies": [
