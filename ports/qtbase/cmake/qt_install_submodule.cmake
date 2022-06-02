@@ -27,18 +27,31 @@ function(qt_download_submodule)
 
     if(QT_UPDATE_VERSION)
         set(VCPKG_USE_HEAD_VERSION ON)
-        set(UPDATE_PORT_GIT_OPTIONS
-                HEAD_REF "${QT_GIT_TAG}")
     endif()
 
-    vcpkg_from_git(
-        OUT_SOURCE_PATH SOURCE_PATH
-        URL "https://code.qt.io/qt/${PORT}.git"
-        REF "${${PORT}_REF}"
-        ${UPDATE_PORT_GIT_OPTIONS}
-        ${QT_FETCH_REF}
-        PATCHES ${_qarg_PATCHES}
-    )
+    if(NOT DEFINED "${PORT}_HASH")
+        set(${PORT}_HASH 0)
+    endif()
+
+    if(PORT STREQUAL "qtinterfaceframework")
+        # qtinterfaceframework is not available on GitHub, so we must fall back to a `git clone`.
+        vcpkg_from_git(
+            OUT_SOURCE_PATH SOURCE_PATH
+            URL "https://code.qt.io/cgit/qt/qtinterfaceframework.git"
+            REF "${${PORT}_REF}"
+            HEAD_REF "${QT_GIT_TAG}"
+            PATCHES ${_qarg_PATCHES}
+        )
+    else()
+        vcpkg_from_github(
+            OUT_SOURCE_PATH SOURCE_PATH
+            REPO "qt/${PORT}"
+            REF "${${PORT}_REF}"
+            SHA512 "${${PORT}_HASH}"
+            HEAD_REF "${QT_GIT_TAG}"
+            PATCHES ${_qarg_PATCHES}
+        )
+    endif()
 
     if(QT_UPDATE_VERSION)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
