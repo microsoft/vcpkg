@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-Headers
-    REF 0d5f18c6e7196863bc1557a693f1509adfcee056
-    SHA512 7e8fa6c8e73c660d8e9e31ddea3bfef887ed827fc21a1da559bde9dd4af6c52a91f609401bb718528b5c96d21e4c01aee7b8027bdf3dec4b0aa326270788a4b0
+    REF 59ac4dc2f282286d8db83143686cfe37ec658b84 #v3.0.10
+    SHA512 894731c0d9b43a11c25fd199a1345d24e52972e03260920f0554d0dbaa6c12984d64d52e60e5a20a9e3500109e54bad57f630e3a6c10ae07b0a451d8cc2b2bb6
     HEAD_REF master
 )
 
@@ -12,53 +12,34 @@ file(INSTALL "${SOURCE_PATH}/CL" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-CLHPP
-    REF d62a02090625655e5b2d791d6a58618b043c989c
-    SHA512 837bbe914931d2f18a468f21634dbd4d088eda0a2f22eea23304c0323b9ee064c3ee76db7ebf28ba67fbe07c44129241f8dca62512d89bc7a6b35c2b4b316ed7
+    REF 1df82b9749739f2681081092ae163bb0f0d40f66 #v3.0.10
+    SHA512 2a185156e05be3c9393748509ddb5394d4e7938218fe520529e746a06043da8541c0345b47168534a4b391479945e7b7f5a1a4c769c079417679c1c9b435df05
     HEAD_REF master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/gen_cl_hpp.py"
-        -i ${SOURCE_PATH}/input_cl.hpp
-        -o ${CURRENT_PACKAGES_DIR}/include/CL/cl.hpp
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_clhpp-${TARGET_TRIPLET}
-)
-
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/gen_cl_hpp.py"
-        -i ${SOURCE_PATH}/input_cl2.hpp
-        -o ${CURRENT_PACKAGES_DIR}/include/CL/cl2.hpp
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_cl2hpp-${TARGET_TRIPLET}
-)
 message(STATUS "Generating OpenCL C++ headers done")
 
 # OpenCL ICD loader
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-ICD-Loader
-    REF e6e30ab9c7a61c171cf68d2e7f5c0ce28e2a4eae
-    SHA512 f3563c0a4c094d3795d8386ec0db41189d350ab8136d80ae5de611ee3db87fbb0ab851bad2b33e111eddf135add5dbfef77d96979473ca5a23c036608d443378
+    REF 169f05d026e65948b30cfe2200595fda92198cf7 #v3.0.10
+    SHA512 9faea7b06ff8f2495ea93b39f72ee075ec4ea102ef389b48af0e5641a9eefbeabf721ab6d40c299702da0d4bfdbac7cced64be9af2d21f03f4cd50c7f8495cc6
     HEAD_REF master
-    PATCHES
-        0001-include-unistd-for-gete-ug-id.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} dynamic USE_DYNAMIC_VCXX_RUNTIME)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
-        -DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF
         -DUSE_DYNAMIC_VCXX_RUNTIME=${USE_DYNAMIC_VCXX_RUNTIME}
 )
 
-vcpkg_build_cmake(TARGET OpenCL)
+vcpkg_cmake_build(TARGET OpenCL)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -100,6 +81,6 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
