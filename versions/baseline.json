@@ -2737,17 +2737,12 @@
       "port-version": 0
     },
     "harfbuzz": {
-<<<<<<< HEAD
-      "baseline": "3.2.0",
-      "port-version": 2
-=======
       "baseline": "4.2.0",
       "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
       "port-version": 1
->>>>>>> a2d8a7cbb15cac91d6c59cd967ef9d85105832c3
     },
     "hayai": {
       "baseline": "2019-08-10",
