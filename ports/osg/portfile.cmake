@@ -63,6 +63,7 @@ vcpkg_cmake_configure(
         -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
         -DOSG_MSVC_VERSIONED_DLL=OFF
         -DOSG_DETERMINE_WIN_VERSION=OFF
+        -DUSE_3RDPARTY_BIN=OFF
         -DBUILD_OSG_PLUGIN_DICOM=OFF
         -DBUILD_OSG_PLUGIN_OPENCASCADE=OFF
         -DBUILD_OSG_PLUGIN_INVENTOR=OFF
@@ -91,6 +92,7 @@ vcpkg_cmake_configure(
         BUILD_REF_DOCS_SEARCHENGINE
         BUILD_REF_DOCS_TAGFILE
         OSG_DETERMINE_WIN_VERSION
+        USE_3RDPARTY_BIN
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
