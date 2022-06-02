@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-find_package.patch
+        fix-export_cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -29,6 +30,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-hv CONFIG_PATH share/unofficial-hv)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
