@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.20)
 
-set(CPPWINRT_VERSION @CPPWINRT_VERSION@)
+if(NOT DEFINED CPPWINRT_VERSION)
+  message(FATAL_ERROR "Requires CPPWINRT_VERSION value")
+endif()
 
 project(CppWinRT
   VERSION ${CPPWINRT_VERSION}
@@ -23,18 +25,6 @@ set(CPPWINRT_TOOL "${CMAKE_CURRENT_SOURCE_DIR}/bin/cppwinrt.exe")
 set(CPPWINRT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/build/native/lib/${CPPWINRT_ARCH}/cppwinrt_fast_forwarder.lib")
 
 #--- Find Windows SDK Version
-set(WINDOWS_SDK_VERSIONS
-	10.0.22000.0 # Windows SDK for Windows 11
-	10.0.20348.0 # Windows SDK, version 2104
-	10.0.19041.0 # Windows 10 "20H1" SDK
-	10.0.18362.0 # Windows 10 May 2019 Update SDK
-	10.0.17763.0 # Windows 10 October 2018 Update SDK
-	10.0.17134.0 # Windows 10 April 2018 Update SDK
-	10.0.16299.0 # Windows 10 Fall Creators Update SDK
-	10.0.15063.0 # Windows 10 Creators Update SDK
-	10.0.14393.0 # Windows 10 Anniversary Update SDK
-)
-
 if(NOT DEFINED WindowsSDKDir)
     if(EXISTS "$ENV{WindowsSDKDir}" AND (NOT "$ENV{WindowsSDKDir}" STREQUAL ""))
         get_filename_component(WindowsSDKDir "$ENV{WindowsSDKDir}" ABSOLUTE)
@@ -66,19 +56,10 @@ if(NOT DEFINED WindowsSDKVersion)
 endif()
 
 if (NOT (EXISTS "${WindowsSDKDir}/References/${WindowsSDKVersion}/Windows.Foundation.FoundationContract"))
-    set(WindowsSDKVersion "")
-    foreach(sdkver IN LISTS WINDOWS_SDK_VERSIONS)
-        if (EXISTS "${WindowsSDKDir}/References/${sdkver}/Windows.Foundation.FoundationContract")
-            cmake_path(CONVERT "${WindowsSDKDir}/References/${sdkver}" TO_CMAKE_PATH_LIST WinMDRoot NORMALIZE)
-            set(WindowsSDKVersion ${sdkver})
-            break()
-        endif()
-    endforeach()
-
-    if ("${WindowsSDKVersion}" STREQUAL "")
-        message(FATAL_ERROR "ERROR: Cannot locate the Windows SDK (14393) or later.")
-    endif()
+    message(FATAL_ERROR "ERROR: Cannot locate the Windows SDK.")
 endif()
+
+message(STATUS "Using .winmd files from ${WindowsSDKVersion} in ${WindowsSDKDir}")
 
 #--- Generate headers
 add_custom_command(

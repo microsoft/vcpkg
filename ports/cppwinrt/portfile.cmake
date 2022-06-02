@@ -20,6 +20,7 @@ file(COPY
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS -DCPPWINRT_VERSION=${CPPWINRT_VERSION}
 )
 
 vcpkg_cmake_install()
