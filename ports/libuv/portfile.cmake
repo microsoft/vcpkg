@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DUV_SKIP_HEADERS=ON
+        -D_GNU_SOURCE=ON
 )
 
 vcpkg_cmake_install()
