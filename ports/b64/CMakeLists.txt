@@ -27,13 +27,14 @@ set_property(TARGET b64
             PROPERTY PUBLIC_HEADER ${HEADER_FILES})
 
 install(TARGETS b64
-	EXPORT b64-config
+	EXPORT unofficial-b64-config
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include/b64
 )
 
-install(EXPORT b64-config
-	FILE b64-config.cmake
-	DESTINATION share/b64
+install(EXPORT unofficial-b64-config
+    FILE unofficial-b64-config.cmake
+    NAMESPACE unofficial::b64::
+    DESTINATION share/unofficial-b64
 )
 
