@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 049e37e..d75a3b9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -266,6 +266,15 @@ ELSE()
+@@ -266,6 +266,14 @@ ELSE()
      SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
  ENDIF()
  
@@ -13,7 +13,6 @@ index 049e37e..d75a3b9 100644
 +OPTION(OSG_IS_STATIC "Set to ON to build OSG for static linking.  Use OFF for dynamic." OFF)
 +IF (OSG_IS_STATIC)
 +    ADD_DEFINITIONS(-DOSG_LIBRARY_STATIC)
-+    LINK_LIBRARIES(${CMAKE_DL_LIBS})
 +ENDIF(OSG_IS_STATIC)
  
  # OE Libraries

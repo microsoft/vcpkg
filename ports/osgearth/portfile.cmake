@@ -17,15 +17,15 @@ vcpkg_from_github(
     PATCHES
         StaticOSG.patch # Fix port compilation in static-md module
         link-libraries.patch
+        use-unofficial-osg-config.patch
         make-all-find-packages-required.patch
-        fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
-        fix-imgui.patch
         fix-gcc11-compilation.patch
         blend2d-fix.patch
 )
 
 file(REMOVE
+    "${SOURCE_PATH}/CMakeModule/FindOSG.cmake"
     "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
