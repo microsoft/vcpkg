@@ -2490,7 +2490,7 @@
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "gettext": {
       "baseline": "0.21",
@@ -2650,7 +2650,7 @@
     },
     "graphviz": {
       "baseline": "2.49.1",
-      "port-version": 3
+      "port-version": 4
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -2834,7 +2834,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 2
+      "port-version": 3
     },
     "idevicerestore": {
       "baseline": "1.0.12",
@@ -3698,7 +3698,7 @@
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 3
+      "port-version": 4
     },
     "libjpeg-turbo": {
       "baseline": "2.1.3",
