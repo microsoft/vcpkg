@@ -5,7 +5,7 @@ index fb23ed7..547432a 100644
 @@ -685,6 +685,58 @@ int ff_amf_receive_packet(AVCodecContext *avctx, AVPacket *avpkt)
              frame_ref_storage_buffer->pVtbl->Release(frame_ref_storage_buffer);
          }
-
++
 +        // Override Picture Type for Frame
 +        if (avctx->codec->id == AV_CODEC_ID_H264) {
 +          switch (frame->pict_type) {
