@@ -30,6 +30,10 @@
     },
     "hwloc",
     {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
       "name": "tcmalloc",
       "platform": "linux"
     },
