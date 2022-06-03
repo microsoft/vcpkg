@@ -16,6 +16,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         StaticOSG.patch # Fix port compilation in static-md module
+        link-libraries.patch
         make-all-find-packages-required.patch
         fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
@@ -28,7 +29,6 @@ file(REMOVE
     "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -41,9 +41,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
-        -DNRL_STATIC_LIBRARIES=${BUILD_STATIC}
-        -DOSG_IS_STATIC=${BUILD_STATIC}
-        -DCURL_IS_STATIC=${BUILD_STATIC}
         -DOSGEARTH_BUILD_EXAMPLES=OFF
         -DOSGEARTH_BUILD_TESTS=OFF
         -DOSGEARTH_BUILD_DOCS=OFF

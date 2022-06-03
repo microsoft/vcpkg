@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7541c8d07..cc14d2160 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -122,40 +122,53 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
+@@ -122,40 +122,52 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
  
  # Mobile/GLES:
  IF (OSGEARTH_USE_GLES)
@@ -15,12 +15,9 @@ index 7541c8d07..cc14d2160 100755
  
  # required
  find_package(OSG REQUIRED)
--find_package(CURL REQUIRED)
-+find_package(CURL CONFIG REQUIRED)
-+set(CURL_LIBRARY CURL::libcurl)
+ find_package(CURL REQUIRED)
  find_package(GDAL REQUIRED)
--
-+set(GDAL_LIBRARY ${GDAL_LIBRARIES})
+ 
 +set(GDAL_FOUND 1)
  # optional
 -find_package(GEOS)
