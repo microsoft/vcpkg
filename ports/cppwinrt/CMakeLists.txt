@@ -102,11 +102,6 @@ include(CMakePackageConfigHelpers)
 
 string(TOLOWER ${PROJECT_NAME} PACKAGE_NAME)
 
-write_basic_package_version_file(
-  ${PACKAGE_NAME}-config-version.cmake
-  VERSION ${CPPWINRT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
-
 install(TARGETS ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}-targets)
 
@@ -127,5 +122,4 @@ install(FILES ${CPPWINRT_LIB}
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}-config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}-config-version.cmake
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PACKAGE_NAME})
