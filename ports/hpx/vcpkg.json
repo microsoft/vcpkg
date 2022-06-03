@@ -29,7 +29,6 @@
       "platform": "linux"
     },
     "hwloc",
-    "mpi",
     {
       "name": "tcmalloc",
       "platform": "linux"
