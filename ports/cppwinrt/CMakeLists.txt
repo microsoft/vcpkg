@@ -55,8 +55,31 @@ if(NOT DEFINED WindowsSDKVersion)
     endif()
 endif()
 
+set(WINDOWS_SDK_VERSIONS
+	10.0.22000.0 # Windows SDK for Windows 11
+	10.0.20348.0 # Windows SDK, version 2104
+	10.0.19041.0 # Windows 10 "20H1" SDK
+	10.0.18362.0 # Windows 10 May 2019 Update SDK
+	10.0.17763.0 # Windows 10 October 2018 Update SDK
+	10.0.17134.0 # Windows 10 April 2018 Update SDK
+	10.0.16299.0 # Windows 10 Fall Creators Update SDK
+	10.0.15063.0 # Windows 10 Creators Update SDK
+	10.0.14393.0 # Windows 10 Anniversary Update SDK
+)
+
 if (NOT (EXISTS "${WindowsSDKDir}/References/${WindowsSDKVersion}/Windows.Foundation.FoundationContract"))
-    message(FATAL_ERROR "ERROR: Cannot locate the Windows SDK.")
+    set(WindowsSDKVersion "")
+    foreach(sdkver IN LISTS WINDOWS_SDK_VERSIONS)
+        if (EXISTS "${WindowsSDKDir}/References/${sdkver}/Windows.Foundation.FoundationContract")
+            cmake_path(CONVERT "${WindowsSDKDir}/References/${sdkver}" TO_CMAKE_PATH_LIST WinMDRoot NORMALIZE)
+            set(WindowsSDKVersion ${sdkver})
+            break()
+        endif()
+    endforeach()
+
+    if ("${WindowsSDKVersion}" STREQUAL "")
+        message(FATAL_ERROR "ERROR: Cannot locate the Windows SDK (14393) or later.")
+    endif()
 endif()
 
 message(STATUS "Using .winmd files from ${WindowsSDKVersion} in ${WindowsSDKDir}")
