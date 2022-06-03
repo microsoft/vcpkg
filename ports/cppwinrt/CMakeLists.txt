@@ -72,7 +72,7 @@ add_library(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/winrt/base.h"
 
 target_include_directories(${PROJECT_NAME} INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Inc>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>)
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/cppwinrt>)
 
 #--- Package
 include(CMakePackageConfigHelpers)
