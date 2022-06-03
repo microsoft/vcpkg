@@ -16,7 +16,6 @@ vcpkg_from_github(
         fix-debug.patch
 )
 
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -64,7 +63,6 @@ vcpkg_cmake_install()
 # post build cleanup
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/HPX)
 
-#
 file(GLOB_RECURSE CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/hpx/*.cmake")
 foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
     file(READ ${CMAKE_FILE} _contents)
