@@ -60,7 +60,6 @@ index fb23ed7..547432a 100644
 +
          surface->pVtbl->SetPts(surface, frame->pts);
          AMF_ASSIGN_PROPERTY_INT64(res, surface, PTS_PROP, frame->pts);
-
 diff --git a/libavcodec/amfenc_h264.c b/libavcodec/amfenc_h264.c
 index fe30d7f..eadebe2 100644
 --- a/libavcodec/amfenc_h264.c
