@@ -47,7 +47,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(REMOVE "${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake")#Outdated; does not find debug szip
 
-if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
+if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
@@ -98,7 +98,7 @@ string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
 )
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
-if(FEATURES MATCHES "tools")
+if("tools" IN_LIST FEATURES)
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
         h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
     )
@@ -115,7 +115,7 @@ if(FEATURES MATCHES "tools")
         endif()
     endforeach()
 
-    if(FEATURES MATCHES "parallel")
+    if("parallel" IN_LIST FEATURES)
         list(APPEND HDF5_TOOLS h5perf)
     else()
         list(APPEND HDF5_TOOLS h5perf_serial)
