@@ -31,8 +31,8 @@
     "hwloc",
     "mpi",
     {
-      "name": "onetbb",
-      "platform": "windows"
+      "name": "tcmalloc",
+      "platform": "linux"
     },
     {
       "name": "vcpkg-cmake",
