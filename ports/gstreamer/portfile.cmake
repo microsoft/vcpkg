@@ -14,18 +14,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES gstreamer-disable-no-unused.patch
 )
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch)
-    list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
-    list(APPEND PLUGIN_UGLY_PATCHES plugins-ugly-disable-doc.patch)
-endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_BASE_SOURCE_PATH
     REPO gstreamer/gst-plugins-base
     REF 1.19.2
     SHA512 d2005e6a3bda5f08395b131347e8f4054c2469e04e65d1acc1a1572bf10d81d4dad4e43d6a8600346b6175a2310f81157a0cd27398ef69b5363b16346febfb39
     HEAD_REF master
-    PATCHES ${PLUGIN_BASE_PATCHES}
+    PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_GOOD_SOURCE_PATH
@@ -33,7 +28,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 71e9f36d407db3b75d9a68f6447093aa011b2b586b06e0a1bb79c7db37c9114de505699e99a4dad06d8d9c742e91f48dd35457283babe440f88a9e40d3da465b
     HEAD_REF master
-    PATCHES ${PLUGIN_GOOD_PATCHES}
+    PATCHES plugins-good-use-zlib.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_BAD_SOURCE_PATH
@@ -48,7 +43,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 70dcd4a36d3bd35f680eaa3c980842fbb57f55f17d1453c6a95640709b1b33a263689bf54caa367154267d281e5474686fedaa980de24094de91886a57b6547a
     HEAD_REF master
-    PATCHES ${PLUGIN_UGLY_PATCHES}
+    PATCHES plugins-ugly-disable-doc.patch
 )
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -301,6 +296,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
+
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
+if(NOT VCPKG_BUILD_TYPE)
+    file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+endif()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-full-1.0.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-full-1.0.pc"
+)
 
 vcpkg_fixup_pkgconfig()
 

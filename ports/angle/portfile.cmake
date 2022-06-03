@@ -65,6 +65,54 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/unofficial-angle)
 
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/egl.pc" "
+prefix=\${pcfiledir}/../..
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: egl
+Version: 1.0.0
+Description: EGL library provided by ANGLE
+Libs: -L\"\${libdir}\" -lEGL
+Cflags: -I\"\${includedir}\"
+Requires: glesv2, angle
+")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glesv2.pc" "
+prefix=\${pcfiledir}/../..
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: glesv2
+Version: 1.0.0
+Description: GLESv2 library provided by ANGLE
+Libs: -L\"\${libdir}\" -lGLESv2
+Cflags: -I\"\${includedir}\"
+Requires: angle
+")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/angle.pc" "
+prefix=\${pcfiledir}/../..
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: angle
+Version: 1.0.0
+Description: ANGLE implementation library
+Libs: -L\"\${libdir}\" -langle
+Cflags: -I\"\${includedir}\"
+")
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(COPY
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/egl.pc"
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glesv2.pc"
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/angle.pc"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
+
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

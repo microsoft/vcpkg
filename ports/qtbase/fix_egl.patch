@@ -2,11 +2,17 @@ diff --git a/cmake/3rdparty/extra-cmake-modules/find-modules/FindEGL.cmake b/cma
 index eafbc1ff9..dd4068838 100644
 --- a/cmake/3rdparty/extra-cmake-modules/find-modules/FindEGL.cmake
 +++ b/cmake/3rdparty/extra-cmake-modules/find-modules/FindEGL.cmake	
-@@ -82,6 +82,7 @@ find_path(EGL_INCLUDE_DIR
- find_library(EGL_LIBRARY
-     NAMES
-         EGL
-+        libEGL # required to find angle on windows within vcpkg. 
-     HINTS
-         ${PKG_EGL_LIBRARY_DIRS}
- )
+@@ -60,6 +60,13 @@
+ # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #=============================================================================
+ 
++find_package(unofficial-angle CONFIG)
++set(EGL_FOUND "${unofficial-angle_FOUND}")
++if(EGL_FOUND AND NOT TARGET EGL::EGL)
++  add_library(EGL::EGL INTERFACE IMPORTED)
++  target_link_libraries(EGL::EGL INTERFACE unofficial::angle::libEGL)
++endif()
++return()
+ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+ include(CheckCXXSourceCompiles)
+ include(CMakePushCheckState)

@@ -6,10 +6,6 @@
   "license": null,
   "dependencies": [
     {
-      "name": "alsa",
-      "platform": "linux"
-    },
-    {
       "name": "qtbase",
       "default-features": false,
       "features": [
@@ -21,6 +17,14 @@
       "name": "qtshadertools",
       "host": true,
       "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "gstreamer"
+      ],
+      "platform": "linux"
     }
   ],
   "default-features": [
@@ -30,8 +34,14 @@
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
-        "angle",
-        "gstreamer"
+        {
+          "name": "angle",
+          "default-features": false
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false
+        }
       ]
     },
     "qml": {

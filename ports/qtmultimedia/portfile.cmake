@@ -3,6 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
                     remove_unistd.patch
+                    promote-glib2.patch
                     )
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
@@ -38,12 +39,9 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON")
-     list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_ALSA=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
-endif()
+# ALSA is not supported on any platforms
+# https://bugreports.qt.io/browse/QTBUG-97091
+list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON" "-DFEATURE_alsa=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
