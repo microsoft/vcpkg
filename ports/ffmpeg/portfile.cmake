@@ -8,6 +8,7 @@ vcpkg_from_github(
     SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
     HEAD_REF master
     PATCHES
+        fix-idr-on-amf.patch
         0001-create-lib-libraries.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
@@ -23,8 +24,7 @@ vcpkg_from_github(
         0016-configure-dnn-needs-avformat.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
-        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
-        0020-fix-idr-on-amf.patch
+        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch 
 )
 
 if (SOURCE_PATH MATCHES " ")
