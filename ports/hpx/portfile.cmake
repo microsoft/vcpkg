@@ -31,7 +31,8 @@ vcpkg_check_features(
 if("jemalloc" IN_LIST FEATURES)
     # jemalloc is preferred to tcmalloc according to the tutorial materials
     # and it supports more architectures. Building without this feature will
-    # default to system for windows and tcmalloc for unix
+    # default to system for windows and tcmalloc for unix according to the defaults
+    # in the CMakeLists.txt
     list(APPEND FEATURE_OPTIONS "-DHPX_WITH_MALLOC:STRING=jemalloc")
 endif()
 
