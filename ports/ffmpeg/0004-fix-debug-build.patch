@@ -31,7 +31,7 @@ index bd2de34..fba948a 100755
                                 require libsmbclient libsmbclient.h smbc_init -lsmbclient; }
 -enabled libsnappy         && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
 +if enabled debug_configure; then
-+    enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappyd -lstdc++
++    enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
 +else
 +    enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
 +fi
