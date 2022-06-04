@@ -18,14 +18,18 @@ vcpkg_from_github(
         osgearth-library-static.patch
         link-libraries.patch
         use-unofficial-osg-config.patch
-        make-all-find-packages-required.patch
+        find-package.patch
         remove-tool-debug-suffix.patch
         fix-gcc11-compilation.patch
         blend2d-fix.patch
 )
 
 file(REMOVE
+    "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
+    "${SOURCE_PATH}/CMakeModule/FindLibZip.cmake"
     "${SOURCE_PATH}/CMakeModule/FindOSG.cmake"
+    "${SOURCE_PATH}/CMakeModule/FindSqlite3.cmake"
+    "${SOURCE_PATH}/CMakeModule/FindWEBP.cmake"
     "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
