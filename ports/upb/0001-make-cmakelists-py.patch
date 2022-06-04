@@ -1,0 +1,151 @@
+diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
+index d64c14f..083eff4 100755
+--- a/cmake/make_cmakelists.py
++++ b/cmake/make_cmakelists.py
+@@ -259,15 +259,7 @@ class Converter(object):
+   template = textwrap.dedent("""\
+     # This file was generated from BUILD using tools/make_cmakelists.py.
+ 
+-    cmake_minimum_required(VERSION 3.1)
+-
+-    if(${CMAKE_VERSION} VERSION_LESS 3.12)
+-        cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+-    else()
+-        cmake_policy(VERSION 3.12)
+-    endif()
+-
+-    cmake_minimum_required (VERSION 3.0)
++    cmake_minimum_required (VERSION 3.15)
+     cmake_policy(SET CMP0048 NEW)
+ 
+     %(prelude)s
+@@ -316,10 +308,129 @@ class Converter(object):
+       set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
+     endif()
+ 
++    if (MSVC)
++      add_compile_options(/wd4146 /wd4703 -D_CRT_SECURE_NO_WARNINGS)
++    endif()
++
+     enable_testing()
+ 
++    find_package(absl CONFIG REQUIRED)
++    find_package(protobuf CONFIG REQUIRED)
++
++    if (ABSL_USE_CXX17)
++        message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
++        set(CMAKE_CXX_STANDARD 17)
++    endif()
++
++    get_target_property(PROTOBUF_INC_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
++    add_library(descriptor_upb_proto
++      "${PROTOBUF_INC_DIR}/google/protobuf/descriptor.proto"
++    )
++
++    add_library(utf8_range
++      ../third_party/utf8_range/naive.c
++      ../third_party/utf8_range/range2-neon.c
++      ../third_party/utf8_range/range2-sse.c
++      ../third_party/utf8_range/utf8_range.h
++    )
++
+     %(toplevel)s
+ 
++    add_executable(protoc-gen-upb
++      ../upbc/common.h
++      ../upbc/common.cc
++      ../upbc/protoc-gen-upb.cc
++    )
++    target_link_libraries(protoc-gen-upb PRIVATE
++      mini_table
++      port
++      upb
++      absl::flat_hash_map
++      absl::flat_hash_set
++      absl::strings
++      protobuf::libprotobuf
++      protobuf::libprotoc
++    )
++    if(TARGET absl::abseil_dll)
++      set(COPY_ABSL_DLL_COMMAND COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:absl::abseil_dll>" "$<TARGET_FILE_DIR:protoc-gen-upb>")
++    endif()
++    add_custom_command(
++      TARGET protoc-gen-upb
++      POST_BUILD
++      COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotobuf>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
++      COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotoc>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
++      ${COPY_ABSL_DLL_COMMAND}
++    )
++
++    protobuf_generate(
++      TARGET
++      descriptor_upb_proto
++      IMPORT_DIRS
++      "${PROTOBUF_INC_DIR}"
++      LANGUAGE
++      upb
++      GENERATE_EXTENSIONS
++      .upb.h
++      .upb.c
++      PLUGIN
++      "protoc-gen-upb=\$<TARGET_FILE:protoc-gen-upb>"
++    )
++
++    add_library(all_libs INTERFACE)
++    target_link_libraries(all_libs
++      INTERFACE
++      upb
++      fastdecode
++      utf8_range
++      json
++      port
++      table
++      descriptor_upb_proto
++      reflection
++      textformat
++      collections
++      mini_table_internal
++      mini_table
++      mini_table_accessors
++    )
++    set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
++    set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
++    set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
++    set_target_properties(json PROPERTIES OUTPUT_NAME upb_json)
++    set_target_properties(utf8_range PROPERTIES OUTPUT_NAME upb_utf8_range)
++    set_target_properties(collections PROPERTIES OUTPUT_NAME upb_collections)
++    set_target_properties(mini_table PROPERTIES OUTPUT_NAME upb_mini_table)
++    set_target_properties(mini_table_accessors PROPERTIES OUTPUT_NAME upb_mini_table_accessors)
++
++    install(
++      DIRECTORY ../upb
++      DESTINATION include
++      FILES_MATCHING
++      PATTERN "*.h"
++      PATTERN "*.hpp"
++      PATTERN "*.inc"
++      PATTERN "*.int.h"
++    )
++    target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
++    install(TARGETS
++      upb
++      utf8_range
++      fastdecode
++      json
++      port
++      table
++      descriptor_upb_proto
++      reflection
++      textformat
++      all_libs
++      collections
++      mini_table_internal
++      mini_table
++      mini_table_accessors
++      EXPORT upb-config
++    )
++    install(EXPORT upb-config NAMESPACE upb:: DESTINATION share/upb)
++
+   """)
+ 
+ data = {}
