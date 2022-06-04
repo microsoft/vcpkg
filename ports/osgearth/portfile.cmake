@@ -15,7 +15,7 @@ vcpkg_from_github(
     SHA512 f922e8bbb041a498e948587f03e8dc8a07b92e641f38d50a8eafb8b3ce1e0c92bb1ee01360d57e794429912734b60cf05ba143445a442bc95af39e3dd9fc3670
     HEAD_REF master
     PATCHES
-        StaticOSG.patch # Fix port compilation in static-md module
+        osgearth-library-static.patch
         link-libraries.patch
         use-unofficial-osg-config.patch
         make-all-find-packages-required.patch
@@ -53,6 +53,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
+endif()
 
 if (WIN32 AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
     #Release
