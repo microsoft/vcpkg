@@ -57,6 +57,7 @@ vcpkg_cmake_configure(
         -DHPX_WITH_THREAD_TARGET_ADDRESS=ON
         -DHPX_WITH_CHECK_MODULE_DEPENDENCIES=ON
         -DHPX_WITH_THREAD_IDLE_RATES=ON
+        -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
 )
 vcpkg_cmake_install()
 
