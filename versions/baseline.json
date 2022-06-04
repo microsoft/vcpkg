@@ -1864,6 +1864,10 @@
       "baseline": "5.0.2",
       "port-version": 3
     },
+    "directx-dxc": {
+      "baseline": "2021-12-08",
+      "port-version": 0
+    },
     "directx-headers": {
       "baseline": "1.602.0",
       "port-version": 0
