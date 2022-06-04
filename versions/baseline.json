@@ -2385,8 +2385,8 @@
       "port-version": 1
     },
     "ftxui": {
-      "baseline": "2.0.0",
-      "port-version": 1
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "function2": {
       "baseline": "4.2.0",
