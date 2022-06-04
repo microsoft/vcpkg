@@ -23,6 +23,7 @@ vcpkg_from_github(
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindFontconfig.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindFreetype.cmake"
     "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake"
 )
 
@@ -43,6 +44,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
         fontconfig  OSG_TEXT_USE_FONTCONFIG
+        freetype    BUILD_OSG_PLUGIN_FREETYPE
         collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
 )

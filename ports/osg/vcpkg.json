@@ -22,6 +22,7 @@
   ],
   "default-features": [
     "default-features",
+    "freetype",
     "plugins"
   ],
   "features": {
@@ -58,10 +59,16 @@
     "examples": {
       "description": "Enable to build OSG Examples",
       "dependencies": [
-        "freetype",
         {
           "name": "libiconv",
           "platform": "windows"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
         },
         "sdl1",
         "sdl2"
@@ -70,7 +77,23 @@
     "fontconfig": {
       "description": "Enable Fontconfig support for osgText",
       "dependencies": [
-        "fontconfig"
+        "fontconfig",
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "Enable Freetype support",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
       ]
     },
     "nvtt": {
@@ -115,7 +138,6 @@
         },
         "coin",
         "curl",
-        "freetype",
         "gdal",
         {
           "name": "giflib",
@@ -144,13 +166,19 @@
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
       "dependencies": [
         "curl",
-        "freetype",
         {
           "name": "libiconv",
           "platform": "windows"
         },
         "libjpeg-turbo",
         "libpng",
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
         "sdl1"
       ]
     }
