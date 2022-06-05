@@ -1,11 +1,11 @@
 {
   "name": "cudnn",
   "version": "7.6.5",
-  "port-version": 6,
+  "port-version": 7,
   "description": "NVIDIA's cuDNN deep neural network acceleration library.",
   "homepage": "https://developer.nvidia.com/cudnn",
-  "license": null,
-  "supports": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)",
+  "license": "NVIDIA",
+  "supports": "(windows & x64 & !uwp & !static) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     "cuda"
   ]
