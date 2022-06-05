@@ -1,5 +1,5 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..083eff4 100755
+index d64c14f..e1e9ca7 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
 @@ -259,15 +259,7 @@ class Converter(object):
@@ -19,7 +19,7 @@ index d64c14f..083eff4 100755
      cmake_policy(SET CMP0048 NEW)
  
      %(prelude)s
-@@ -316,10 +308,129 @@ class Converter(object):
+@@ -316,10 +308,130 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -76,6 +76,7 @@ index d64c14f..083eff4 100755
 +      COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotoc>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
 +      ${COPY_ABSL_DLL_COMMAND}
 +    )
++    add_dependencies(descriptor_upb_proto protoc-gen-upb)
 +
 +    protobuf_generate(
 +      TARGET
