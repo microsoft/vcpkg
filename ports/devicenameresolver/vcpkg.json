@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "a little library that resolves a path from a (virtual) device name.",
   "license": null,
-  "supports": "windows & !uwp & !staticcrt",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
