@@ -5,7 +5,7 @@
   "description": "EPSILON is an Open Source wavelet image compressor, that is aimed on parallel and robust image processing.",
   "homepage": "https://sourceforge.net/projects/epsilon-project/",
   "license": "GPL-2.0-only OR LGPL-2.0-only",
-  "supports": "windows & !staticcrt",
+  "supports": "windows",
   "dependencies": [
     "libpopt"
   ]

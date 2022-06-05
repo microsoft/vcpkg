@@ -1,5 +1,3 @@
-#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epsilon-project/epsilon
@@ -47,5 +45,9 @@ vcpkg_copy_tools(TOOL_NAMES epsilon SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
