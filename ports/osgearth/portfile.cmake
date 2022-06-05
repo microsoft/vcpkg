@@ -44,6 +44,8 @@ vcpkg_cmake_configure(
         -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
         -DWITH_EXTERNAL_TINYXML=ON
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
+    OPTIONS_DEBUG
+        -DOSGEARTH_BUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
