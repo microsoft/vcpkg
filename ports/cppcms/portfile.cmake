@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DPYTHON=${PYTHON2} # Switch to python3 on the next update
         -DUSE_WINDOWS6_API=ON
-        -DDISABLE_DYNAMIC=${DISABLE_DYNAMIC}
+        -DDISABLE_SHARED=${DISABLE_DYNAMIC}
 )
 
 vcpkg_cmake_install()
