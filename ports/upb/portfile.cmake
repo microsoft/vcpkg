@@ -11,6 +11,10 @@ vcpkg_from_github(
         0002-fix-uwp.patch
 )
 
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/upb")
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_execute_required_process(
@@ -20,14 +24,38 @@ vcpkg_execute_required_process(
 
 vcpkg_replace_string("${SOURCE_PATH}/cmake/CMakeLists.txt" "/third_party/utf8_range)" "utf8_range)")
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        codegen VCPKG_UPB_BUILD_CODEGEN
+)
+
+if(NOT VCPKG_UPB_BUILD_CODEGEN)
+    set(VCPKG_UPB_HOST_INSTALLED_DIR_ARG "-DVCPKG_UPB_HOST_INSTALLED_DIR=${CURRENT_HOST_INSTALLED_DIR}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
+    OPTIONS ${FEATURE_OPTIONS}
+        "${VCPKG_UPB_HOST_INSTALLED_DIR_ARG}"
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
+
+if (VCPKG_UPB_BUILD_CODEGEN)
+    vcpkg_copy_tools(
+        AUTO_CLEAN
+        TOOL_NAMES
+            protoc-gen-upbdefs
+            protoc-gen-upb
+    )
+else()
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/upb-config-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/upb/upb-config-vcpkg-tools.cmake" @ONLY)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/upb/fuzz" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

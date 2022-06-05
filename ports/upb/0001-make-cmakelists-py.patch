@@ -1,5 +1,5 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..e1e9ca7 100755
+index d64c14f..ef150a8 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
 @@ -259,15 +259,7 @@ class Converter(object):
@@ -19,7 +19,7 @@ index d64c14f..e1e9ca7 100755
      cmake_policy(SET CMP0048 NEW)
  
      %(prelude)s
-@@ -316,10 +308,130 @@ class Converter(object):
+@@ -316,10 +308,162 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -29,18 +29,27 @@ index d64c14f..e1e9ca7 100755
 +
      enable_testing()
  
-+    find_package(absl CONFIG REQUIRED)
-+    find_package(protobuf CONFIG REQUIRED)
++    if (VCPKG_UPB_BUILD_CODEGEN)
++      find_package(absl CONFIG REQUIRED)
++      find_package(protobuf CONFIG REQUIRED)
 +
-+    if (ABSL_USE_CXX17)
-+        message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
-+        set(CMAKE_CXX_STANDARD 17)
++      if (ABSL_USE_CXX17)
++          message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
++          set(CMAKE_CXX_STANDARD 17)
++      endif()
++
++      get_target_property(PROTOBUF_INC_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
++      add_library(descriptor_upb_proto
++        "${PROTOBUF_INC_DIR}/google/protobuf/descriptor.proto"
++      )
++    else()
++      set(UPB_DESCRIPTOR_SOURCES_DIR "${VCPKG_UPB_HOST_INSTALLED_DIR}/include/upb/generated")
++      add_library(descriptor_upb_proto
++        "${UPB_DESCRIPTOR_SOURCES_DIR}/google/protobuf/descriptor.upb.h"
++        "${UPB_DESCRIPTOR_SOURCES_DIR}/google/protobuf/descriptor.upb.c"
++      )
++      target_include_directories(descriptor_upb_proto PUBLIC "$<BUILD_INTERFACE:${UPB_DESCRIPTOR_SOURCES_DIR}>")
 +    endif()
-+
-+    get_target_property(PROTOBUF_INC_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
-+    add_library(descriptor_upb_proto
-+      "${PROTOBUF_INC_DIR}/google/protobuf/descriptor.proto"
-+    )
 +
 +    add_library(utf8_range
 +      ../third_party/utf8_range/naive.c
@@ -51,46 +60,68 @@ index d64c14f..e1e9ca7 100755
 +
      %(toplevel)s
  
-+    add_executable(protoc-gen-upb
-+      ../upbc/common.h
-+      ../upbc/common.cc
-+      ../upbc/protoc-gen-upb.cc
-+    )
-+    target_link_libraries(protoc-gen-upb PRIVATE
-+      mini_table
-+      port
-+      upb
-+      absl::flat_hash_map
-+      absl::flat_hash_set
-+      absl::strings
-+      protobuf::libprotobuf
-+      protobuf::libprotoc
-+    )
-+    if(TARGET absl::abseil_dll)
-+      set(COPY_ABSL_DLL_COMMAND COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:absl::abseil_dll>" "$<TARGET_FILE_DIR:protoc-gen-upb>")
-+    endif()
-+    add_custom_command(
-+      TARGET protoc-gen-upb
-+      POST_BUILD
-+      COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotobuf>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
-+      COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotoc>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
-+      ${COPY_ABSL_DLL_COMMAND}
-+    )
-+    add_dependencies(descriptor_upb_proto protoc-gen-upb)
++    if (VCPKG_UPB_BUILD_CODEGEN)
++      set(UPB_CODEGEN_TARGETS protoc-gen-upb protoc-gen-upbdefs)
 +
-+    protobuf_generate(
-+      TARGET
-+      descriptor_upb_proto
-+      IMPORT_DIRS
-+      "${PROTOBUF_INC_DIR}"
-+      LANGUAGE
-+      upb
-+      GENERATE_EXTENSIONS
-+      .upb.h
-+      .upb.c
-+      PLUGIN
-+      "protoc-gen-upb=\$<TARGET_FILE:protoc-gen-upb>"
-+    )
++      add_executable(protoc-gen-upbdefs
++        ../upbc/common.h
++        ../upbc/common.cc
++        ../upbc/protoc-gen-upbdefs.cc
++      )
++      target_link_libraries(protoc-gen-upbdefs PRIVATE
++        absl::flat_hash_map
++        absl::strings
++        protobuf::libprotobuf
++        protobuf::libprotoc
++      )
++
++      add_executable(protoc-gen-upb
++        ../upbc/common.h
++        ../upbc/common.cc
++        ../upbc/protoc-gen-upb.cc
++      )
++      target_link_libraries(protoc-gen-upb PRIVATE
++        mini_table
++        port
++        upb
++        absl::flat_hash_map
++        absl::flat_hash_set
++        absl::strings
++        protobuf::libprotobuf
++        protobuf::libprotoc
++      )
++      if(TARGET absl::abseil_dll)
++        set(COPY_ABSL_DLL_COMMAND COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:absl::abseil_dll>" "$<TARGET_FILE_DIR:protoc-gen-upb>")
++      endif()
++      add_custom_command(
++        TARGET protoc-gen-upb
++        POST_BUILD
++        COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotobuf>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
++        COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:protobuf::libprotoc>" "$<TARGET_FILE_DIR:protoc-gen-upb>"
++        ${COPY_ABSL_DLL_COMMAND}
++      )
++
++      protobuf_generate(
++        TARGET
++        descriptor_upb_proto
++        OUT_VAR
++        UPB_DESCRIPTOR_SOURCES
++        IMPORT_DIRS
++        "${PROTOBUF_INC_DIR}"
++        LANGUAGE
++        upb
++        GENERATE_EXTENSIONS
++        .upb.h
++        .upb.c
++        PLUGIN
++        "protoc-gen-upb=\$<TARGET_FILE:protoc-gen-upb>"
++      )
++      install(FILES
++        ${UPB_DESCRIPTOR_SOURCES}
++        DESTINATION include/upb/generated/google/protobuf
++      )
++    endif()
++
 +
 +    add_library(all_libs INTERFACE)
 +    target_link_libraries(all_libs
@@ -143,6 +174,7 @@ index d64c14f..e1e9ca7 100755
 +      mini_table_internal
 +      mini_table
 +      mini_table_accessors
++      ${UPB_CODEGEN_TARGETS}
 +      EXPORT upb-config
 +    )
 +    install(EXPORT upb-config NAMESPACE upb:: DESTINATION share/upb)
