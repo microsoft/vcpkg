@@ -43,6 +43,14 @@
           "name": "osg",
           "default-features": false,
           "features": [
+            "openexr"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "osg",
+          "default-features": false,
+          "features": [
             "rest-http-device"
           ],
           "platform": "!windows"
@@ -113,11 +121,18 @@
         "nvtt"
       ]
     },
+    "openexr": {
+      "description": "Build the exr plugin",
+      "dependencies": [
+        "ilmbase",
+        "openexr"
+      ]
+    },
     "packages": {
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build OSG Plugins - Disable for compile testing examples on a time limit",
+      "description": "Build most OSG Plugins",
       "dependencies": [
         "curl",
         "gdal",
@@ -125,7 +140,6 @@
           "name": "giflib",
           "platform": "windows"
         },
-        "ilmbase",
         "jasper",
         "libgta",
         {
@@ -138,7 +152,6 @@
           "name": "libxml2",
           "platform": "windows"
         },
-        "openexr",
         "tiff"
       ]
     },

@@ -43,6 +43,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         freetype    BUILD_OSG_PLUGIN_FREETYPE
         collada     BUILD_OSG_PLUGIN_DAE
         nvtt        BUILD_OSG_PLUGIN_NVTT
+        openexr     BUILD_OSG_PLUGIN_EXR
+        openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl         BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
