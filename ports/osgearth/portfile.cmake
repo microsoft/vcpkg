@@ -1,13 +1,3 @@
-# Only dynamic build need dlls
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB OSG_PLUGINS_SUBDIR "${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*")
-    list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
-    if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
-        message(FATAL_ERROR "Could not determine osg version")
-    endif()
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OSG_PLUGINS_SUBDIR}")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
@@ -62,31 +52,39 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
 endif()
 
-if (WIN32 AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
-    #Release
-    set(OSGEARTH_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    set(OSGEARTH_TOOL_PLUGIN_PATH "${OSGEARTH_TOOL_PATH}/${OSG_PLUGINS_SUBDIR}")
-
-    file(MAKE_DIRECTORY "${OSGEARTH_TOOL_PLUGIN_PATH}")
-    file(GLOB OSGDB_PLUGINS "${CURRENT_PACKAGES_DIR}/bin/${OSG_PLUGINS_SUBDIR}/osgdb*.dll")
-
-    file(COPY ${OSGDB_PLUGINS} DESTINATION "${OSGEARTH_TOOL_PLUGIN_PATH}")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/${OSG_PLUGINS_SUBDIR}")
-
-    #Debug
-    set(OSGEARTH_DEBUG_TOOL_PATH "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-    set(OSGEARTH_DEBUG_TOOL_PLUGIN_PATH "${OSGEARTH_DEBUG_TOOL_PATH}/${OSG_PLUGINS_SUBDIR}")
-
-    file(MAKE_DIRECTORY "${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH}")
-
-    file(GLOB OSGDB_DEBUG_PLUGINS "${CURRENT_PACKAGES_DIR}/debug/bin/${OSG_PLUGINS_SUBDIR}/osgdb*.dll")
-
-    file(COPY ${OSGDB_DEBUG_PLUGINS} DESTINATION "${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH}")
-
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/${OSG_PLUGINS_SUBDIR}")
+# Merge osgearth plugins into [/debug]/plugins/osgPlugins-${OSG_VER},
+# as a staging area for later deployment.
+if(WIN32)
+    set(osg_plugin_pattern "osgdb*.dll")
+elseif(APPLE)
+    set(osg_plugin_pattern "libosgdb*.dylib")
+else()
+    set(osg_plugin_pattern "libosgdb*.so")
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB osg_plugins_subdir RELATIVE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-*")
+    list(LENGTH osg_plugins_subdir osg_plugins_subdir_LENGTH)
+    if(NOT osg_plugins_subdir_LENGTH EQUAL 1)
+        message(FATAL_ERROR "Could not determine osg plugins directory.")
+    endif()
+    file(GLOB osgearth_plugins "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}/${osg_plugin_pattern}")
+    file(INSTALL ${osgearth_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(GLOB osgearth_plugins "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}/${osg_plugin_pattern}")
+        file(INSTALL ${osgearth_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}")
+    endif()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}")
 endif()
 
-if ("tools" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+        file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${osg_plugins_subdir}")
+        if(NOT VCPKG_BUILD_TYPE)
+            file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+            file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
+        endif()
+    endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
         osgearth_conv osgearth_imgui osgearth_overlayviewer osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
         AUTO_CLEAN
