@@ -9,20 +9,19 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON2)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPYTHON=${PYTHON2} # Switch to python3 on the next update
         -DUSE_WINDOWS6_API=ON
 )
 
-vcpkg_install_cmake()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_install()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(GLOB EXE_DEBUG_FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(GLOB EXE_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
 file(REMOVE ${EXE_DEBUG_FILES})
-file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(GLOB EXE_FILES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(REMOVE ${EXE_FILES})
 
-file(INSTALL ${SOURCE_PATH}/MIT.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/MIT.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
