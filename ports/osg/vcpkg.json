@@ -140,7 +140,10 @@
           "name": "giflib",
           "platform": "windows"
         },
-        "jasper",
+        {
+          "name": "jasper",
+          "default-features": false
+        },
         "libgta",
         {
           "name": "libiconv",
