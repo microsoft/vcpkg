@@ -9,11 +9,14 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON2)
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DISABLE_DYNAMIC)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPYTHON=${PYTHON2} # Switch to python3 on the next update
         -DUSE_WINDOWS6_API=ON
+        -DDISABLE_DYNAMIC=${DISABLE_DYNAMIC}
 )
 
 vcpkg_cmake_install()

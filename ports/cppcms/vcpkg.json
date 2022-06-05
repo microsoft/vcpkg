@@ -5,7 +5,7 @@
   "description": "CppCMS is a Free High Performance Web Development Framework (not a CMS) aimed at Rapid Web Application Development",
   "homepage": "https://github.com/artyom-beilis/cppcms",
   "license": "MIT",
-  "supports": "!(linux | osx | (windows & staticcrt))",
+  "supports": "!(linux | osx)",
   "dependencies": [
     "icu",
     "openssl",
