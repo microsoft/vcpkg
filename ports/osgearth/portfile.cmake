@@ -27,7 +27,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools OSGEARTH_BUILD_TOOLS
+        tools       OSGEARTH_BUILD_TOOLS
+        blend2d     CMAKE_REQUIRE_FIND_PACKAGE_BLEND2D
 )
 
 vcpkg_cmake_configure(

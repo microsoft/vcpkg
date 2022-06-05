@@ -7,7 +7,6 @@
   "supports": "!(x86 | wasm32)",
   "dependencies": [
     "basisu",
-    "blend2d",
     "cfitsio",
     "draco",
     "geos",
@@ -32,9 +31,29 @@
     }
   ],
   "default-features": [
+    "default-features",
     "tools"
   ],
   "features": {
+    "blend2d": {
+      "description": "Enable Blend2D support",
+      "dependencies": [
+        "blend2d"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "osgearth",
+          "default-features": false,
+          "features": [
+            "blend2d"
+          ],
+          "platform": "!arm & !uwp & !wasm32"
+        }
+      ]
+    },
     "tools": {
       "description": "Build tools"
     }
