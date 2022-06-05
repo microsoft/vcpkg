@@ -115,38 +115,44 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
-# handle osg tools and plugins
-set(OSG_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(GLOB OSG_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-if (OSG_TOOLS)
-    file(INSTALL ${OSG_TOOLS} DESTINATION "${OSG_TOOL_PATH}" USE_SOURCE_PERMISSIONS)
-    file(REMOVE_RECURSE ${OSG_TOOLS})
-endif()
-file(GLOB OSG_TOOLS "${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-if (OSG_TOOLS)
-    file(INSTALL ${OSG_TOOLS} DESTINATION "${OSG_TOOL_PATH}" USE_SOURCE_PERMISSIONS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph")
-endif()
-
-file(GLOB OSG_PLUGINS_DBG "${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*")
-if (OSG_PLUGINS_DBG)
-    file(INSTALL ${OSG_PLUGINS_DBG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-${OSG_VER}")
+# Move all osg plugins to [/debug]/plugins/osgPlugins-${OSG_VER},
+# as a staging area for later deployment.
+set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}")
+    endif()
 endif()
 
-file(GLOB OSG_PLUGINS_REL "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/*")
-if (OSG_PLUGINS_REL)
-    file(INSTALL ${OSG_PLUGINS_REL} DESTINATION "${OSG_TOOL_PATH}/osgPlugins-${OSG_VER}")
+if("tools" IN_LIST FEATURES)
+    if(WIN32)
+        set(osg_plugin_pattern "osgdb*.dll")
+    elseif(APPLE)
+        set(osg_plugin_pattern "libosgdb*.dylib")
+    else()
+        set(osg_plugin_pattern "libosgdb*.so")
+    endif()
+    file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+    file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${osg_plugins_subdir}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+        file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
+    endif()
+
+    set(tools osgversion present3D)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        list(APPEND tools osgviewer osgarchive osgconv osgfilecache)
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openscenegraph.pc" "\\\n" " ")
 if(NOT VCPKG_BUILD_TYPE)
