@@ -1,5 +1,3 @@
-#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 set(MINIMUM_CUDNN_VERSION "7.6.5")
 
 include("${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake")
