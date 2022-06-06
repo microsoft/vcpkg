@@ -34,10 +34,6 @@
       "host": true
     },
     {
-      "name": "tcmalloc",
-      "platform": "linux"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
