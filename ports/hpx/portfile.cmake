@@ -14,6 +14,7 @@ vcpkg_from_github(
         format.patch
         fix-export.patch
         fix-debug.patch
+        fix_output_name_clash.patch
 )
 
 vcpkg_check_features(
