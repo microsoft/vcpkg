@@ -57,13 +57,7 @@ endif()
 
 # Merge osgearth plugins into [/debug]/plugins/osgPlugins-${OSG_VER},
 # as a staging area for later deployment.
-if(WIN32)
-    set(osg_plugin_pattern "osgdb*.dll")
-elseif(APPLE)
-    set(osg_plugin_pattern "libosgdb*.dylib")
-else()
-    set(osg_plugin_pattern "libosgdb*.so")
-endif()
+set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB osg_plugins_subdir RELATIVE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-*")
     list(LENGTH osg_plugins_subdir osg_plugins_subdir_LENGTH)
