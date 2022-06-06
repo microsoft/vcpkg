@@ -53,6 +53,8 @@ foreach(package ${FIND_PACKAGES})
         message(SEND_ERROR "find_package(${package}) check: failed")
         continue()
     endif()
+    # REQUIRED changes the behaviour find_package_handle_standard_args.
+    find_package("${package}" REQUIRED)
     message(STATUS "find_package(${package}) check: success")
 
     set(libraries_var "")
