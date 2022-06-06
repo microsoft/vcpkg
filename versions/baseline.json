@@ -7573,8 +7573,8 @@
       "port-version": 0
     },
     "wtl": {
-      "baseline": "10.0.10320",
-      "port-version": 2
+      "baseline": "10.0.10320.0",
+      "port-version": 3
     },
     "wxchartdir": {
       "baseline": "2.0.0",
