@@ -1,0 +1,34 @@
+From 2c2e7e6cc7cb55eff502889421fe7a207cec932d Mon Sep 17 00:00:00 2001
+From: Stig Hornang <shornang@gmail.com>
+Date: Sun, 1 May 2022 22:01:00 +0200
+Subject: [PATCH 3/4] Add exports
+
+---
+ CMakeLists.txt | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09163ec..fd40e68 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -217,7 +217,7 @@ if(freetype-gl_BUILD_MAKEFONT)
+     endif()
+ endif()
+ 
+-install(TARGETS freetype-gl
++install(TARGETS freetype-gl EXPORT freetype-glConfig
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib)
+@@ -249,3 +249,8 @@ if ("${LIB64}" STREQUAL "TRUE")
+ else()
+     set(LIBSUFFIX "")
+ endif()
++
++install(
++    EXPORT freetype-glConfig
++    DESTINATION share/freetype-gl
++)
+-- 
+2.27.0
+

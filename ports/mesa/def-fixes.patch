@@ -1,0 +1,3571 @@
+diff --git a/bin/gen_vs_module_defs.py b/bin/gen_vs_module_defs.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..dff8ab36f92ffbc18dbb2779563c25df567bb7b0
+--- /dev/null
++++ b/bin/gen_vs_module_defs.py
+@@ -0,0 +1,98 @@
++#!/usr/bin/env python3
++# Copyright © 2021-2021 Yonggang Luo
++
++# Permission is hereby granted, free of charge, to any person obtaining a copy
++# of this software and associated documentation files (the "Software"), to deal
++# in the Software without restriction, including without limitation the rights
++# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++# copies of the Software, and to permit persons to whom the Software is
++# furnished to do so, subject to the following conditions:
++
++# The above copyright notice and this permission notice shall be included in
++# all copies or substantial portions of the Software.
++
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++# SOFTWARE.
++
++gen_help = """Generates visual studio module definition file."""
++
++import argparse
++
++"""
++For input template definition file
++For gcc/x64,gcc/arm64,visual studio
++`wglMakeCurrent@8                     @357` => `wglMakeCurrent @357`
++`DrvCopyContext@12` => `DrvCopyContext`
++`stw_get_device` => `stw_get_device`
++For gcc/x86,gcc/arm
++`wglMakeCurrent@8                     @357` => `wglMakeCurrent@8 @357 == wglMakeCurrent`
++`DrvCopyContext@12` => `DrvCopyContext@12 == DrvCopyContext`
++`stw_get_device` => `stw_get_device`
++
++"""
++def gen_vs_module_def(in_file: str, out_file: str, compiler_id: str, cpu_family: str) -> None:
++    out_file_lines = ['EXPORTS']
++    with open(in_file, 'r', encoding='utf-8') as f:
++        lines = f.readlines()
++        for line in lines:
++            line = line.strip()
++            tokens = line.split(';')
++            if not tokens:
++                continue
++            def_infos = [x for x in tokens[0].split(' ') if len(x) > 0]
++            if not def_infos:
++                if line:
++                    out_file_lines.append('\t' + line)
++                else:
++                    out_file_lines.append('')
++                continue
++            name_infos = def_infos[0].split('@')
++            if not name_infos:
++                out_file_lines.append('\t;' + line)
++                continue
++            order_info = '' if len(def_infos) <= 1 else def_infos[1]
++            if def_infos[0] != name_infos[0] and \
++                (compiler_id == 'gcc') and (cpu_family not in {'x86_64', 'aarch64'}):
++                if order_info:
++                    out_file_lines.append('\t' + def_infos[0] + ' ' + order_info + ' == ' + name_infos[0])
++                else:
++                    out_file_lines.append('\t' + def_infos[0] + ' == ' + name_infos[0])
++            else:
++                if order_info:
++                    out_file_lines.append('\t' + name_infos[0] + ' ' + order_info)
++                else:
++                    out_file_lines.append('\t' + name_infos[0])
++    with open(out_file, 'wb') as f:
++        out_file_content = '\n'.join(out_file_lines) + '\n'
++        f.write(out_file_content.encode('utf-8'))
++'''
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/libgl-gdi/opengl32.def.in --out_file src/gallium/targets/libgl-gdi/opengl32.def --compiler_id gcc --cpu_family x86_64
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/libgl-gdi/opengl32.def.in --out_file src/gallium/targets/libgl-gdi/opengl32.mingw.def --compiler_id gcc --cpu_family x86
++
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/osmesa/osmesa.def.in --out_file src/gallium/targets/osmesa/osmesa.def --compiler_id gcc --cpu_family x86_64
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/osmesa/osmesa.def.in --out_file src/gallium/targets/osmesa/osmesa.mingw.def --compiler_id gcc --cpu_family x86
++
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/wgl/gallium_wgl.def.in --out_file src/gallium/targets/wgl/gallium_wgl.def --compiler_id gcc --cpu_family x86_64
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/wgl/gallium_wgl.def.in --out_file src/gallium/targets/wgl/gallium_wgl.mingw.def --compiler_id gcc --cpu_family x86
++
++python ./bin/gen_vs_module_defs.py --in_file src/egl/main/egl.def.in --out_file src/egl/main/egl.def --compiler_id gcc --cpu_family x86_64
++python ./bin/gen_vs_module_defs.py --in_file src/egl/main/egl.def.in --out_file src/egl/main/egl.mingw.def --compiler_id gcc --cpu_family x86
++
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/lavapipe/vulkan_lvp.def.in --out_file src/gallium/targets/lavapipe/vulkan_lvp.def --compiler_id gcc --cpu_family x86_64
++python ./bin/gen_vs_module_defs.py --in_file src/gallium/targets/lavapipe/vulkan_lvp.def.in --out_file src/gallium/targets/lavapipe/vulkan_lvp.mingw.def --compiler_id gcc --cpu_family x86
++
++'''
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=gen_help)
++    parser.add_argument('--in_file', help='input template moudle definition file')
++    parser.add_argument('--out_file', help='output moudle definition file')
++    parser.add_argument('--compiler_id', help='compiler id')
++    parser.add_argument('--cpu_family', help='cpu family')
++    args = parser.parse_args()
++    # print(args)
++    gen_vs_module_def(args.in_file, args.out_file, args.compiler_id, args.cpu_family)
+diff --git a/bin/meson.build b/bin/meson.build
+index 000abef770966c4baecd0b47922f42c532a8c2cf..1b7301585f9e4b0f0556ce2ae11b03b128ab4677 100644
+--- a/bin/meson.build
++++ b/bin/meson.build
+@@ -19,5 +19,6 @@
+ # SOFTWARE.
+ 
+ git_sha1_gen_py = files('git_sha1_gen.py')
++gen_vs_module_defs_py = files('gen_vs_module_defs.py')
+ symbols_check = find_program('symbols-check.py')
+ install_megadrivers_py = find_program('install_megadrivers.py')
+diff --git a/src/amd/vulkan/meson.build b/src/amd/vulkan/meson.build
+index 523782f281f650d0558af64a0c0a2bf77c217e1e..b6ecd999e71ab3ecb780af4fa2146c617e3c8e41 100644
+--- a/src/amd/vulkan/meson.build
++++ b/src/amd/vulkan/meson.build
+@@ -149,12 +149,10 @@ if with_ld_version_script
+   libvulkan_radeon_link_depends += files('vulkan.sym')
+ endif
+ 
+-vulkan_radv_def = 'vulkan_radv.def'
+-
+ libvulkan_radeon = shared_library(
+   'vulkan_radeon',
+   [libradv_files, radv_entrypoints, sha1_h],
+-  vs_module_defs : vulkan_radv_def,
++  vs_module_defs : vulkan_api_def,
+   include_directories : [
+     inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_gallium_aux, inc_amd, inc_amd_common, inc_amd_common_llvm, inc_compiler, inc_util,
+   ],
+diff --git a/src/amd/vulkan/vulkan_radv.def b/src/amd/vulkan/vulkan_radv.def
+deleted file mode 100644
+index 64a9caae59398a4768f663f18f8598476991f85c..0000000000000000000000000000000000000000
+--- a/src/amd/vulkan/vulkan_radv.def
++++ /dev/null
+@@ -1,4 +0,0 @@
+-EXPORTS
+-vk_icdNegotiateLoaderICDInterfaceVersion
+-vk_icdGetInstanceProcAddr
+-vk_icdGetPhysicalDeviceProcAddr
+diff --git a/src/egl/main/egl.def b/src/egl/main/egl.def
+deleted file mode 100644
+index 54ae76b330929db865dc4ef0fd1723a88dc47979..0000000000000000000000000000000000000000
+--- a/src/egl/main/egl.def
++++ /dev/null
+@@ -1,47 +0,0 @@
+-EXPORTS
+-   eglBindAPI
+-   eglBindTexImage
+-   eglChooseConfig
+-   eglClientWaitSync
+-   eglCopyBuffers
+-   eglCreateContext
+-   eglCreateImage
+-   eglCreatePbufferFromClientBuffer
+-   eglCreatePbufferSurface
+-   eglCreatePixmapSurface
+-   eglCreatePlatformPixmapSurface
+-   eglCreatePlatformWindowSurface
+-   eglCreateSync
+-   eglCreateWindowSurface
+-   eglDestroyContext
+-   eglDestroyImage
+-   eglDestroySurface
+-   eglDestroySync
+-   eglGetConfigAttrib
+-   eglGetConfigs
+-   eglGetCurrentContext
+-   eglGetCurrentDisplay
+-   eglGetCurrentSurface
+-   eglGetDisplay
+-   eglGetError
+-   eglGetPlatformDisplay
+-   eglGetProcAddress
+-   eglGetSyncAttrib
+-   eglInitialize
+-   eglMakeCurrent
+-   eglQueryAPI
+-   eglQueryContext
+-   eglQueryString
+-   eglQuerySurface
+-   eglReleaseTexImage
+-   eglReleaseThread
+-   eglSurfaceAttrib
+-   eglSwapBuffers
+-   eglSwapInterval
+-   eglTerminate
+-   eglWaitClient
+-   eglWaitGL
+-   eglWaitNative
+-   eglWaitSync
+-   MesaGLInteropEGLQueryDeviceInfo
+-   MesaGLInteropEGLExportObject
+diff --git a/src/egl/main/egl.def.in b/src/egl/main/egl.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..b2439d9a2caaef26b48e737c8f6cd8314398ddeb
+--- /dev/null
++++ b/src/egl/main/egl.def.in
+@@ -0,0 +1,49 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++eglBindAPI@4
++eglBindTexImage@12
++eglChooseConfig@20
++eglClientWaitSync@20
++eglCopyBuffers@12
++eglCreateContext@16
++eglCreateImage@20
++eglCreatePbufferFromClientBuffer@20
++eglCreatePbufferSurface@12
++eglCreatePixmapSurface@16
++eglCreatePlatformPixmapSurface@16
++eglCreatePlatformWindowSurface@16
++eglCreateSync@12
++eglCreateWindowSurface@16
++eglDestroyContext@8
++eglDestroyImage@8
++eglDestroySurface@8
++eglDestroySync@8
++eglGetConfigAttrib@16
++eglGetConfigs@16
++eglGetCurrentContext@0
++eglGetCurrentDisplay@0
++eglGetCurrentSurface@4
++eglGetDisplay@4
++eglGetError@0
++eglGetPlatformDisplay@12
++eglGetProcAddress@4
++eglGetSyncAttrib@16
++eglInitialize@12
++eglMakeCurrent@16
++eglQueryAPI@0
++eglQueryContext@16
++eglQueryString@8
++eglQuerySurface@16
++eglReleaseTexImage@12
++eglReleaseThread@0
++eglSurfaceAttrib@16
++eglSwapBuffers@8
++eglSwapInterval@8
++eglTerminate@4
++eglWaitClient@0
++eglWaitGL@0
++eglWaitNative@4
++eglWaitSync@12
++
++; __cdecl calling convention have no @number suffix
++MesaGLInteropEGLQueryDeviceInfo
++MesaGLInteropEGLExportObject
+diff --git a/src/egl/meson.build b/src/egl/meson.build
+index 315a95013f39b76a47067073f106eda518dc6b71..53044297322ad6ea3137bd1fe48b778a61608f5e 100644
+--- a/src/egl/meson.build
++++ b/src/egl/meson.build
+@@ -177,6 +177,15 @@ else
+   )
+ endif
+ 
++egl_def = custom_target(
++  'egl.def',
++  input: 'main/egl.def.in',
++  output : 'egl.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
++
+ libegl = shared_library(
+   egl_lib_name,
+   files_egl,
+@@ -194,7 +203,7 @@ libegl = shared_library(
+   version : egl_lib_version,
+   soversion : egl_lib_soversion,
+   name_prefix : 'lib', # even on windows
+-  vs_module_defs : 'main/egl.def'
++  vs_module_defs : egl_def
+ )
+ 
+ if not with_glvnd
+diff --git a/src/gallium/frontends/d3d10umd/d3d10_sw.def b/src/gallium/frontends/d3d10umd/d3d10_sw.def
+deleted file mode 100644
+index 5b76bfccefaabc9c09e000ffab579d1487a3a31c..0000000000000000000000000000000000000000
+--- a/src/gallium/frontends/d3d10umd/d3d10_sw.def
++++ /dev/null
+@@ -1,53 +0,0 @@
+-EXPORTS
+-	OpenAdapter10
+-	OpenAdapter10_2
+-	D3DKMTAcquireKeyedMutex
+-	D3DKMTCloseAdapter
+-	D3DKMTConfigureSharedResource
+-	D3DKMTCreateAllocation
+-	D3DKMTCreateAllocation2
+-	D3DKMTCreateContext
+-	D3DKMTCreateDevice
+-	D3DKMTCreateKeyedMutex
+-	D3DKMTCreateSynchronizationObject
+-	D3DKMTCreateSynchronizationObject2
+-	D3DKMTDestroyAllocation
+-	D3DKMTDestroyContext
+-	D3DKMTDestroyDevice
+-	D3DKMTDestroyKeyedMutex
+-	D3DKMTDestroySynchronizationObject
+-	D3DKMTEscape
+-	D3DKMTGetContextSchedulingPriority
+-	;D3DKMTGetDeviceSchedulingPriority
+-	D3DKMTGetDeviceState
+-	D3DKMTGetDisplayModeList
+-	D3DKMTGetMultisampleMethodList
+-	D3DKMTGetRuntimeData
+-	D3DKMTGetSharedPrimaryHandle
+-	D3DKMTLock
+-	D3DKMTOpenAdapterFromDeviceName
+-	D3DKMTOpenAdapterFromGdiDisplayName
+-	D3DKMTOpenKeyedMutex
+-	D3DKMTOpenResource
+-	D3DKMTOpenResource2
+-	D3DKMTOpenSynchronizationObject
+-	D3DKMTPresent
+-	D3DKMTQueryAdapterInfo
+-	D3DKMTQueryAllocationResidency
+-	D3DKMTQueryResourceInfo
+-	D3DKMTReleaseKeyedMutex
+-	D3DKMTRender
+-	D3DKMTSetAllocationPriority
+-	D3DKMTSetContextSchedulingPriority
+-	;D3DKMTSetDeviceSchedulingPriority
+-	D3DKMTSetDisplayMode
+-	D3DKMTSetDisplayPrivateDriverFormat
+-	D3DKMTSetGammaRamp
+-	D3DKMTSetVidPnSourceOwner
+-	D3DKMTSetVidPnSourceOwner1
+-	D3DKMTSignalSynchronizationObject
+-	D3DKMTSignalSynchronizationObject2
+-	D3DKMTUnlock
+-	D3DKMTWaitForSynchronizationObject
+-	D3DKMTWaitForSynchronizationObject2
+-	D3DKMTWaitForVerticalBlankEvent
+diff --git a/src/gallium/frontends/osmesa/meson.build b/src/gallium/frontends/osmesa/meson.build
+index e5848fd9934afc22119a14122e6c2d095ab8f350..fe78a4daa31bb01bf8535ff4498172241e554610 100644
+--- a/src/gallium/frontends/osmesa/meson.build
++++ b/src/gallium/frontends/osmesa/meson.build
+@@ -20,7 +20,7 @@
+ 
+ osmesa_st_c_args = []
+ if with_platform_windows
+-  osmesa_st_c_args += ['-DBUILD_GL32', '-DWIN32_LEAN_AND_MEAN']
++  osmesa_st_c_args += ['-DWIN32_LEAN_AND_MEAN']
+   if not with_shared_glapi
+     osmesa_st_c_args += ['-D_GLAPI_NO_EXPORTS']
+   endif
+diff --git a/src/gallium/targets/d3d10sw/d3d10_sw.def.in b/src/gallium/targets/d3d10sw/d3d10_sw.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..a81de54c4d285c67b1dd9a6da855a65446239831
+--- /dev/null
++++ b/src/gallium/targets/d3d10sw/d3d10_sw.def.in
+@@ -0,0 +1,76 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++OpenAdapter10@4
++OpenAdapter10_2@4
++D3DKMTAcquireKeyedMutex@4
++;D3DKMTCheckExclusiveOwnership@0
++;D3DKMTCheckMonitorPowerState@4
++;D3DKMTCheckOcclusion@4
++;D3DKMTCheckSharedResourceAccess@4
++;D3DKMTCheckVidPnExclusiveOwnership@4
++D3DKMTCloseAdapter@4
++D3DKMTConfigureSharedResource@4
++D3DKMTCreateAllocation2@4
++D3DKMTCreateAllocation@4
++D3DKMTCreateContext@4
++;D3DKMTCreateDCFromMemory@4
++D3DKMTCreateDevice@4
++D3DKMTCreateKeyedMutex@4
++;D3DKMTCreateOverlay@4
++D3DKMTCreateSynchronizationObject2@4
++D3DKMTCreateSynchronizationObject@4
++D3DKMTDestroyAllocation@4
++D3DKMTDestroyContext@4
++;D3DKMTDestroyDCFromMemory@4
++D3DKMTDestroyDevice@4
++D3DKMTDestroyKeyedMutex@4
++;D3DKMTDestroyOverlay@4
++D3DKMTDestroySynchronizationObject@4
++D3DKMTEscape@4
++;D3DKMTFlipOverlay@4
++D3DKMTGetContextSchedulingPriority@4
++D3DKMTGetDeviceState@4
++D3DKMTGetDisplayModeList@4
++D3DKMTGetMultisampleMethodList@4
++;D3DKMTGetOverlayState@4
++;D3DKMTGetPresentHistory@4
++;D3DKMTGetPresentQueueEvent@8
++;D3DKMTGetProcessSchedulingPriorityClass@8
++D3DKMTGetRuntimeData@4
++;D3DKMTGetScanLine@4
++D3DKMTGetSharedPrimaryHandle@4
++;D3DKMTInvalidateActiveVidPn@4
++D3DKMTLock@4
++D3DKMTOpenAdapterFromDeviceName@4
++D3DKMTOpenAdapterFromGdiDisplayName@4
++;D3DKMTOpenAdapterFromHdc@4
++D3DKMTOpenKeyedMutex@4
++D3DKMTOpenResource2@4
++D3DKMTOpenResource@4
++D3DKMTOpenSynchronizationObject@4
++;D3DKMTPollDisplayChildren@4
++D3DKMTPresent@4
++D3DKMTQueryAdapterInfo@4
++D3DKMTQueryAllocationResidency@4
++D3DKMTQueryResourceInfo@4
++;D3DKMTQueryStatistics@4
++D3DKMTReleaseKeyedMutex@4
++;D3DKMTReleaseProcessVidPnSourceOwners@4
++D3DKMTRender@4
++D3DKMTSetAllocationPriority@4
++D3DKMTSetContextSchedulingPriority@4
++D3DKMTSetDisplayMode@4
++D3DKMTSetDisplayPrivateDriverFormat@4
++D3DKMTSetGammaRamp@4
++;D3DKMTSetProcessSchedulingPriorityClass@8
++;D3DKMTSetQueuedLimit@4
++D3DKMTSetVidPnSourceOwner@4
++;D3DKMTSharedPrimaryLockNotification@4
++;D3DKMTSharedPrimaryUnLockNotification@4
++D3DKMTSignalSynchronizationObject2@4
++D3DKMTSignalSynchronizationObject@4
++D3DKMTUnlock@4
++;D3DKMTUpdateOverlay@4
++;D3DKMTWaitForIdle@4
++D3DKMTWaitForSynchronizationObject2@4
++D3DKMTWaitForSynchronizationObject@4
++D3DKMTWaitForVerticalBlankEvent@4
+diff --git a/src/gallium/targets/d3d10sw/meson.build b/src/gallium/targets/d3d10sw/meson.build
+index fe8632d3c7ff3f1a61a20f6bd88f25e697316e10..8b90c561152f96be787f838467d0e3407a1bd134 100644
+--- a/src/gallium/targets/d3d10sw/meson.build
++++ b/src/gallium/targets/d3d10sw/meson.build
+@@ -19,20 +19,22 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ # SOFTWARE.
+ 
+-d3d10sw_def = files('../../frontends/d3d10umd/d3d10_sw.def')[0]
+-_link_args_d3d10sw = []
+-if cc.get_id() == 'gcc'
+-  _link_args_d3d10sw += '-Wl,--enable-stdcall-fixup'
+-endif
++d3d10_sw_def = custom_target(
++  'd3d10_sw.def',
++  input: 'd3d10_sw.def.in',
++  output : 'd3d10_sw.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
+ 
+ libd3d10sw = shared_library(
+   'd3d10sw',
+   ['d3d10_gdi.c'],
+-  vs_module_defs : d3d10sw_def,
++  vs_module_defs : d3d10_sw_def,
+   include_directories : [
+     inc_include, inc_src, inc_gallium, inc_gallium_aux, inc_d3d10umd, inc_gallium_winsys, inc_gallium_winsys_sw, inc_gallium_drivers,
+   ],
+-  link_args : _link_args_d3d10sw,
+   link_whole : [libd3d10umd],
+   link_with : [
+     libgallium, libwsgdi
+diff --git a/src/gallium/targets/lavapipe/meson.build b/src/gallium/targets/lavapipe/meson.build
+index f2b363099ae154b71efd7c217598e0eb48ff3a0c..bda4fbc574d7f5d7ca2b903ff928c72951022132 100644
+--- a/src/gallium/targets/lavapipe/meson.build
++++ b/src/gallium/targets/lavapipe/meson.build
+@@ -1,14 +1,9 @@
+ 
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  vulkan_lvp_def = 'vulkan_lvp.mingw.def'
+-else
+-  vulkan_lvp_def = 'vulkan_lvp.def'
+-endif
+ 
+ libvulkan_lvp = shared_library(
+   'vulkan_lvp',
+   [ 'target.c' ],
+-  vs_module_defs : vulkan_lvp_def,
++  vs_module_defs : vulkan_api_def,
+   include_directories : [ inc_src, inc_util, inc_include, inc_gallium, inc_gallium_aux, inc_gallium_winsys, inc_gallium_drivers ],
+   link_whole : [ liblavapipe_st ],
+   link_with : [libpipe_loader_static, libgallium, libwsw, libswdri, libws_null, libswkmsdri ],
+diff --git a/src/gallium/targets/lavapipe/vulkan_lvp.def b/src/gallium/targets/lavapipe/vulkan_lvp.def
+deleted file mode 100644
+index 64a9caae59398a4768f663f18f8598476991f85c..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/lavapipe/vulkan_lvp.def
++++ /dev/null
+@@ -1,4 +0,0 @@
+-EXPORTS
+-vk_icdNegotiateLoaderICDInterfaceVersion
+-vk_icdGetInstanceProcAddr
+-vk_icdGetPhysicalDeviceProcAddr
+diff --git a/src/gallium/targets/lavapipe/vulkan_lvp.mingw.def b/src/gallium/targets/lavapipe/vulkan_lvp.mingw.def
+deleted file mode 100644
+index c9638323ab044f072ad30f5089074909f769b8d4..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/lavapipe/vulkan_lvp.mingw.def
++++ /dev/null
+@@ -1,4 +0,0 @@
+-EXPORTS
+-vk_icdNegotiateLoaderICDInterfaceVersion@4
+-vk_icdGetInstanceProcAddr = vk_icdGetInstanceProcAddr@8
+-vk_icdGetPhysicalDeviceProcAddr = vk_icdGetPhysicalDeviceProcAddr@8
+diff --git a/src/gallium/targets/libgl-gdi/meson.build b/src/gallium/targets/libgl-gdi/meson.build
+index 25300000221d44c7d669ec49df1fb88396f5c968..b333eae0f34227b0dfd1abc08006680ea5359224 100644
+--- a/src/gallium/targets/libgl-gdi/meson.build
++++ b/src/gallium/targets/libgl-gdi/meson.build
+@@ -20,20 +20,20 @@
+ 
+ 
+ opengl32_link_args = []
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  opengl32_link_args += ['-Wl,--enable-stdcall-fixup']
+-endif
+ 
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  ogl_def = 'opengl32.mingw.def'
+-else
+-  ogl_def = 'opengl32.def'
+-endif
++opengl32_def = custom_target(
++  'opengl32.def',
++  input: 'opengl32.def.in',
++  output : 'opengl32.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
+ 
+ libopengl32 = shared_library(
+   'opengl32',
+   ['stw_wgl.c'],
+-  vs_module_defs : ogl_def,
++  vs_module_defs : opengl32_def,
+   include_directories : [
+     inc_include, inc_wgl, inc_src,
+   ],
+diff --git a/src/gallium/targets/libgl-gdi/opengl32.def b/src/gallium/targets/libgl-gdi/opengl32.def
+deleted file mode 100644
+index d89f0bdb52ab65dc8c1ebb8b9ff79eaf5da41fd8..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/libgl-gdi/opengl32.def
++++ /dev/null
+@@ -1,388 +0,0 @@
+-EXPORTS
+-;	GlmfBeginGlsBlock                @1
+-;	GlmfCloseMetaFile                @2
+-;	GlmfEndGlsBlock                  @3
+-;	GlmfEndPlayback                  @4
+-;	GlmfInitPlayback                 @5
+-;	GlmfPlayGlsRecord                @6
+-	glAccum                          @7
+-	glAlphaFunc                      @8
+-	glAreTexturesResident            @9
+-	glArrayElement                   @10
+-	glBegin                          @11
+-	glBindTexture                    @12
+-	glBitmap                         @13
+-	glBlendFunc                      @14
+-	glCallList                       @15
+-	glCallLists                      @16
+-	glClear                          @17
+-	glClearAccum                     @18
+-	glClearColor                     @19
+-	glClearDepth                     @20
+-	glClearIndex                     @21
+-	glClearStencil                   @22
+-	glClipPlane                      @23
+-	glColor3b                        @24
+-	glColor3bv                       @25
+-	glColor3d                        @26
+-	glColor3dv                       @27
+-	glColor3f                        @28
+-	glColor3fv                       @29
+-	glColor3i                        @30
+-	glColor3iv                       @31
+-	glColor3s                        @32
+-	glColor3sv                       @33
+-	glColor3ub                       @34
+-	glColor3ubv                      @35
+-	glColor3ui                       @36
+-	glColor3uiv                      @37
+-	glColor3us                       @38
+-	glColor3usv                      @39
+-	glColor4b                        @40
+-	glColor4bv                       @41
+-	glColor4d                        @42
+-	glColor4dv                       @43
+-	glColor4f                        @44
+-	glColor4fv                       @45
+-	glColor4i                        @46
+-	glColor4iv                       @47
+-	glColor4s                        @48
+-	glColor4sv                       @49
+-	glColor4ub                       @50
+-	glColor4ubv                      @51
+-	glColor4ui                       @52
+-	glColor4uiv                      @53
+-	glColor4us                       @54
+-	glColor4usv                      @55
+-	glColorMask                      @56
+-	glColorMaterial                  @57
+-	glColorPointer                   @58
+-	glCopyPixels                     @59
+-	glCopyTexImage1D                 @60
+-	glCopyTexImage2D                 @61
+-	glCopyTexSubImage1D              @62
+-	glCopyTexSubImage2D              @63
+-	glCullFace                       @64
+-;	glDebugEntry                     @65
+-	glDeleteLists                    @66
+-	glDeleteTextures                 @67
+-	glDepthFunc                      @68
+-	glDepthMask                      @69
+-	glDepthRange                     @70
+-	glDisable                        @71
+-	glDisableClientState             @72
+-	glDrawArrays                     @73
+-	glDrawBuffer                     @74
+-	glDrawElements                   @75
+-	glDrawPixels                     @76
+-	glEdgeFlag                       @77
+-	glEdgeFlagPointer                @78
+-	glEdgeFlagv                      @79
+-	glEnable                         @80
+-	glEnableClientState              @81
+-	glEnd                            @82
+-	glEndList                        @83
+-	glEvalCoord1d                    @84
+-	glEvalCoord1dv                   @85
+-	glEvalCoord1f                    @86
+-	glEvalCoord1fv                   @87
+-	glEvalCoord2d                    @88
+-	glEvalCoord2dv                   @89
+-	glEvalCoord2f                    @90
+-	glEvalCoord2fv                   @91
+-	glEvalMesh1                      @92
+-	glEvalMesh2                      @93
+-	glEvalPoint1                     @94
+-	glEvalPoint2                     @95
+-	glFeedbackBuffer                 @96
+-	glFinish                         @97
+-	glFlush                          @98
+-	glFogf                           @99
+-	glFogfv                          @100
+-	glFogi                           @101
+-	glFogiv                          @102
+-	glFrontFace                      @103
+-	glFrustum                        @104
+-	glGenLists                       @105
+-	glGenTextures                    @106
+-	glGetBooleanv                    @107
+-	glGetClipPlane                   @108
+-	glGetDoublev                     @109
+-	glGetError                       @110
+-	glGetFloatv                      @111
+-	glGetIntegerv                    @112
+-	glGetLightfv                     @113
+-	glGetLightiv                     @114
+-	glGetMapdv                       @115
+-	glGetMapfv                       @116
+-	glGetMapiv                       @117
+-	glGetMaterialfv                  @118
+-	glGetMaterialiv                  @119
+-	glGetPixelMapfv                  @120
+-	glGetPixelMapuiv                 @121
+-	glGetPixelMapusv                 @122
+-	glGetPointerv                    @123
+-	glGetPolygonStipple              @124
+-	glGetString                      @125
+-	glGetTexEnvfv                    @126
+-	glGetTexEnviv                    @127
+-	glGetTexGendv                    @128
+-	glGetTexGenfv                    @129
+-	glGetTexGeniv                    @130
+-	glGetTexImage                    @131
+-	glGetTexLevelParameterfv         @132
+-	glGetTexLevelParameteriv         @133
+-	glGetTexParameterfv              @134
+-	glGetTexParameteriv              @135
+-	glHint                           @136
+-	glIndexMask                      @137
+-	glIndexPointer                   @138
+-	glIndexd                         @139
+-	glIndexdv                        @140
+-	glIndexf                         @141
+-	glIndexfv                        @142
+-	glIndexi                         @143
+-	glIndexiv                        @144
+-	glIndexs                         @145
+-	glIndexsv                        @146
+-	glIndexub                        @147
+-	glIndexubv                       @148
+-	glInitNames                      @149
+-	glInterleavedArrays              @150
+-	glIsEnabled                      @151
+-	glIsList                         @152
+-	glIsTexture                      @153
+-	glLightModelf                    @154
+-	glLightModelfv                   @155
+-	glLightModeli                    @156
+-	glLightModeliv                   @157
+-	glLightf                         @158
+-	glLightfv                        @159
+-	glLighti                         @160
+-	glLightiv                        @161
+-	glLineStipple                    @162
+-	glLineWidth                      @163
+-	glListBase                       @164
+-	glLoadIdentity                   @165
+-	glLoadMatrixd                    @166
+-	glLoadMatrixf                    @167
+-	glLoadName                       @168
+-	glLogicOp                        @169
+-	glMap1d                          @170
+-	glMap1f                          @171
+-	glMap2d                          @172
+-	glMap2f                          @173
+-	glMapGrid1d                      @174
+-	glMapGrid1f                      @175
+-	glMapGrid2d                      @176
+-	glMapGrid2f                      @177
+-	glMaterialf                      @178
+-	glMaterialfv                     @179
+-	glMateriali                      @180
+-	glMaterialiv                     @181
+-	glMatrixMode                     @182
+-	glMultMatrixd                    @183
+-	glMultMatrixf                    @184
+-	glNewList                        @185
+-	glNormal3b                       @186
+-	glNormal3bv                      @187
+-	glNormal3d                       @188
+-	glNormal3dv                      @189
+-	glNormal3f                       @190
+-	glNormal3fv                      @191
+-	glNormal3i                       @192
+-	glNormal3iv                      @193
+-	glNormal3s                       @194
+-	glNormal3sv                      @195
+-	glNormalPointer                  @196
+-	glOrtho                          @197
+-	glPassThrough                    @198
+-	glPixelMapfv                     @199
+-	glPixelMapuiv                    @200
+-	glPixelMapusv                    @201
+-	glPixelStoref                    @202
+-	glPixelStorei                    @203
+-	glPixelTransferf                 @204
+-	glPixelTransferi                 @205
+-	glPixelZoom                      @206
+-	glPointSize                      @207
+-	glPolygonMode                    @208
+-	glPolygonOffset                  @209
+-	glPolygonStipple                 @210
+-	glPopAttrib                      @211
+-	glPopClientAttrib                @212
+-	glPopMatrix                      @213
+-	glPopName                        @214
+-	glPrioritizeTextures             @215
+-	glPushAttrib                     @216
+-	glPushClientAttrib               @217
+-	glPushMatrix                     @218
+-	glPushName                       @219
+-	glRasterPos2d                    @220
+-	glRasterPos2dv                   @221
+-	glRasterPos2f                    @222
+-	glRasterPos2fv                   @223
+-	glRasterPos2i                    @224
+-	glRasterPos2iv                   @225
+-	glRasterPos2s                    @226
+-	glRasterPos2sv                   @227
+-	glRasterPos3d                    @228
+-	glRasterPos3dv                   @229
+-	glRasterPos3f                    @230
+-	glRasterPos3fv                   @231
+-	glRasterPos3i                    @232
+-	glRasterPos3iv                   @233
+-	glRasterPos3s                    @234
+-	glRasterPos3sv                   @235
+-	glRasterPos4d                    @236
+-	glRasterPos4dv                   @237
+-	glRasterPos4f                    @238
+-	glRasterPos4fv                   @239
+-	glRasterPos4i                    @240
+-	glRasterPos4iv                   @241
+-	glRasterPos4s                    @242
+-	glRasterPos4sv                   @243
+-	glReadBuffer                     @244
+-	glReadPixels                     @245
+-	glRectd                          @246
+-	glRectdv                         @247
+-	glRectf                          @248
+-	glRectfv                         @249
+-	glRecti                          @250
+-	glRectiv                         @251
+-	glRects                          @252
+-	glRectsv                         @253
+-	glRenderMode                     @254
+-	glRotated                        @255
+-	glRotatef                        @256
+-	glScaled                         @257
+-	glScalef                         @258
+-	glScissor                        @259
+-	glSelectBuffer                   @260
+-	glShadeModel                     @261
+-	glStencilFunc                    @262
+-	glStencilMask                    @263
+-	glStencilOp                      @264
+-	glTexCoord1d                     @265
+-	glTexCoord1dv                    @266
+-	glTexCoord1f                     @267
+-	glTexCoord1fv                    @268
+-	glTexCoord1i                     @269
+-	glTexCoord1iv                    @270
+-	glTexCoord1s                     @271
+-	glTexCoord1sv                    @272
+-	glTexCoord2d                     @273
+-	glTexCoord2dv                    @274
+-	glTexCoord2f                     @275
+-	glTexCoord2fv                    @276
+-	glTexCoord2i                     @277
+-	glTexCoord2iv                    @278
+-	glTexCoord2s                     @279
+-	glTexCoord2sv                    @280
+-	glTexCoord3d                     @281
+-	glTexCoord3dv                    @282
+-	glTexCoord3f                     @283
+-	glTexCoord3fv                    @284
+-	glTexCoord3i                     @285
+-	glTexCoord3iv                    @286
+-	glTexCoord3s                     @287
+-	glTexCoord3sv                    @288
+-	glTexCoord4d                     @289
+-	glTexCoord4dv                    @290
+-	glTexCoord4f                     @291
+-	glTexCoord4fv                    @292
+-	glTexCoord4i                     @293
+-	glTexCoord4iv                    @294
+-	glTexCoord4s                     @295
+-	glTexCoord4sv                    @296
+-	glTexCoordPointer                @297
+-	glTexEnvf                        @298
+-	glTexEnvfv                       @299
+-	glTexEnvi                        @300
+-	glTexEnviv                       @301
+-	glTexGend                        @302
+-	glTexGendv                       @303
+-	glTexGenf                        @304
+-	glTexGenfv                       @305
+-	glTexGeni                        @306
+-	glTexGeniv                       @307
+-	glTexImage1D                     @308
+-	glTexImage2D                     @309
+-	glTexParameterf                  @310
+-	glTexParameterfv                 @311
+-	glTexParameteri                  @312
+-	glTexParameteriv                 @313
+-	glTexSubImage1D                  @314
+-	glTexSubImage2D                  @315
+-	glTranslated                     @316
+-	glTranslatef                     @317
+-	glVertex2d                       @318
+-	glVertex2dv                      @319
+-	glVertex2f                       @320
+-	glVertex2fv                      @321
+-	glVertex2i                       @322
+-	glVertex2iv                      @323
+-	glVertex2s                       @324
+-	glVertex2sv                      @325
+-	glVertex3d                       @326
+-	glVertex3dv                      @327
+-	glVertex3f                       @328
+-	glVertex3fv                      @329
+-	glVertex3i                       @330
+-	glVertex3iv                      @331
+-	glVertex3s                       @332
+-	glVertex3sv                      @333
+-	glVertex4d                       @334
+-	glVertex4dv                      @335
+-	glVertex4f                       @336
+-	glVertex4fv                      @337
+-	glVertex4i                       @338
+-	glVertex4iv                      @339
+-	glVertex4s                       @340
+-	glVertex4sv                      @341
+-	glVertexPointer                  @342
+-	glViewport                       @343
+-	wglChoosePixelFormat             @344
+-	wglCopyContext                   @345
+-	wglCreateContext                 @346
+-	wglCreateLayerContext            @347
+-	wglDeleteContext                 @348
+-	wglDescribeLayerPlane            @349
+-	wglDescribePixelFormat           @350
+-	wglGetCurrentContext             @351
+-	wglGetCurrentDC                  @352
+-;	wglGetDefaultProcAddress         @353
+-	wglGetLayerPaletteEntries        @354
+-	wglGetPixelFormat                @355
+-	wglGetProcAddress                @356
+-	wglMakeCurrent                   @357
+-	wglRealizeLayerPalette           @358
+-	wglSetLayerPaletteEntries        @359
+-	wglSetPixelFormat                @360
+-	wglShareLists                    @361
+-	wglSwapBuffers                   @362
+-	wglSwapLayerBuffers              @363
+-	wglSwapMultipleBuffers           @364
+-	wglUseFontBitmapsA               @365
+-	wglUseFontBitmapsW               @366
+-	wglUseFontOutlinesA              @367
+-	wglUseFontOutlinesW              @368
+-	DrvCopyContext
+-	DrvCreateContext
+-	DrvCreateLayerContext
+-	DrvDeleteContext
+-	DrvDescribeLayerPlane
+-	DrvDescribePixelFormat
+-	DrvGetLayerPaletteEntries
+-	DrvGetProcAddress
+-	DrvPresentBuffers
+-	DrvRealizeLayerPalette
+-	DrvReleaseContext
+-	DrvSetCallbackProcs
+-	DrvSetContext
+-	DrvSetLayerPaletteEntries
+-	DrvSetPixelFormat
+-	DrvShareLists
+-	DrvSwapBuffers
+-	DrvSwapLayerBuffers
+-	DrvValidateVersion
+diff --git a/src/gallium/targets/libgl-gdi/opengl32.def.in b/src/gallium/targets/libgl-gdi/opengl32.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..ceffdf09936f95506090d79a99ef95ef89cc7ddc
+--- /dev/null
++++ b/src/gallium/targets/libgl-gdi/opengl32.def.in
+@@ -0,0 +1,389 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++;GlmfBeginGlsBlock@4                 @1
++;GlmfCloseMetaFile@4                 @2
++;GlmfEndGlsBlock@4                   @3
++;GlmfEndPlayback@4                   @4
++;GlmfInitPlayback@12                 @5
++;GlmfPlayGlsRecord@16                @6
++glAccum@8                            @7
++glAlphaFunc@8                        @8
++glAreTexturesResident@12             @9
++glArrayElement@4                     @10
++glBegin@4                            @11
++glBindTexture@8                      @12
++glBitmap@28                          @13
++glBlendFunc@8                        @14
++glCallList@4                         @15
++glCallLists@12                       @16
++glClear@4                            @17
++glClearAccum@16                      @18
++glClearColor@16                      @19
++glClearDepth@8                       @20
++glClearIndex@4                       @21
++glClearStencil@4                     @22
++glClipPlane@8                        @23
++glColor3b@12                         @24
++glColor3bv@4                         @25
++glColor3d@24                         @26
++glColor3dv@4                         @27
++glColor3f@12                         @28
++glColor3fv@4                         @29
++glColor3i@12                         @30
++glColor3iv@4                         @31
++glColor3s@12                         @32
++glColor3sv@4                         @33
++glColor3ub@12                        @34
++glColor3ubv@4                        @35
++glColor3ui@12                        @36
++glColor3uiv@4                        @37
++glColor3us@12                        @38
++glColor3usv@4                        @39
++glColor4b@16                         @40
++glColor4bv@4                         @41
++glColor4d@32                         @42
++glColor4dv@4                         @43
++glColor4f@16                         @44
++glColor4fv@4                         @45
++glColor4i@16                         @46
++glColor4iv@4                         @47
++glColor4s@16                         @48
++glColor4sv@4                         @49
++glColor4ub@16                        @50
++glColor4ubv@4                        @51
++glColor4ui@16                        @52
++glColor4uiv@4                        @53
++glColor4us@16                        @54
++glColor4usv@4                        @55
++glColorMask@16                       @56
++glColorMaterial@8                    @57
++glColorPointer@16                    @58
++glCopyPixels@20                      @59
++glCopyTexImage1D@28                  @60
++glCopyTexImage2D@32                  @61
++glCopyTexSubImage1D@24               @62
++glCopyTexSubImage2D@32               @63
++glCullFace@4                         @64
++;glDebugEntry@8                       @65
++glDeleteLists@8                      @66
++glDeleteTextures@8                   @67
++glDepthFunc@4                        @68
++glDepthMask@4                        @69
++glDepthRange@16                      @70
++glDisable@4                          @71
++glDisableClientState@4               @72
++glDrawArrays@12                      @73
++glDrawBuffer@4                       @74
++glDrawElements@16                    @75
++glDrawPixels@20                      @76
++glEdgeFlag@4                         @77
++glEdgeFlagPointer@8                  @78
++glEdgeFlagv@4                        @79
++glEnable@4                           @80
++glEnableClientState@4                @81
++glEnd@0                              @82
++glEndList@0                          @83
++glEvalCoord1d@8                      @84
++glEvalCoord1dv@4                     @85
++glEvalCoord1f@4                      @86
++glEvalCoord1fv@4                     @87
++glEvalCoord2d@16                     @88
++glEvalCoord2dv@4                     @89
++glEvalCoord2f@8                      @90
++glEvalCoord2fv@4                     @91
++glEvalMesh1@12                       @92
++glEvalMesh2@20                       @93
++glEvalPoint1@4                       @94
++glEvalPoint2@8                       @95
++glFeedbackBuffer@12                  @96
++glFinish@0                           @97
++glFlush@0                            @98
++glFogf@8                             @99
++glFogfv@8                            @100
++glFogi@8                             @101
++glFogiv@8                            @102
++glFrontFace@4                        @103
++glFrustum@48                         @104
++glGenLists@4                         @105
++glGenTextures@8                      @106
++glGetBooleanv@8                      @107
++glGetClipPlane@8                     @108
++glGetDoublev@8                       @109
++glGetError@0                         @110
++glGetFloatv@8                        @111
++glGetIntegerv@8                      @112
++glGetLightfv@12                      @113
++glGetLightiv@12                      @114
++glGetMapdv@12                        @115
++glGetMapfv@12                        @116
++glGetMapiv@12                        @117
++glGetMaterialfv@12                   @118
++glGetMaterialiv@12                   @119
++glGetPixelMapfv@8                    @120
++glGetPixelMapuiv@8                   @121
++glGetPixelMapusv@8                   @122
++glGetPointerv@8                      @123
++glGetPolygonStipple@4                @124
++glGetString@4                        @125
++glGetTexEnvfv@12                     @126
++glGetTexEnviv@12                     @127
++glGetTexGendv@12                     @128
++glGetTexGenfv@12                     @129
++glGetTexGeniv@12                     @130
++glGetTexImage@20                     @131
++glGetTexLevelParameterfv@16          @132
++glGetTexLevelParameteriv@16          @133
++glGetTexParameterfv@12               @134
++glGetTexParameteriv@12               @135
++glHint@8                             @136
++glIndexMask@4                        @137
++glIndexPointer@12                    @138
++glIndexd@8                           @139
++glIndexdv@4                          @140
++glIndexf@4                           @141
++glIndexfv@4                          @142
++glIndexi@4                           @143
++glIndexiv@4                          @144
++glIndexs@4                           @145
++glIndexsv@4                          @146
++glIndexub@4                          @147
++glIndexubv@4                         @148
++glInitNames@0                        @149
++glInterleavedArrays@12               @150
++glIsEnabled@4                        @151
++glIsList@4                           @152
++glIsTexture@4                        @153
++glLightModelf@8                      @154
++glLightModelfv@8                     @155
++glLightModeli@8                      @156
++glLightModeliv@8                     @157
++glLightf@12                          @158
++glLightfv@12                         @159
++glLighti@12                          @160
++glLightiv@12                         @161
++glLineStipple@8                      @162
++glLineWidth@4                        @163
++glListBase@4                         @164
++glLoadIdentity@0                     @165
++glLoadMatrixd@4                      @166
++glLoadMatrixf@4                      @167
++glLoadName@4                         @168
++glLogicOp@4                          @169
++glMap1d@32                           @170
++glMap1f@24                           @171
++glMap2d@56                           @172
++glMap2f@40                           @173
++glMapGrid1d@20                       @174
++glMapGrid1f@12                       @175
++glMapGrid2d@40                       @176
++glMapGrid2f@24                       @177
++glMaterialf@12                       @178
++glMaterialfv@12                      @179
++glMateriali@12                       @180
++glMaterialiv@12                      @181
++glMatrixMode@4                       @182
++glMultMatrixd@4                      @183
++glMultMatrixf@4                      @184
++glNewList@8                          @185
++glNormal3b@12                        @186
++glNormal3bv@4                        @187
++glNormal3d@24                        @188
++glNormal3dv@4                        @189
++glNormal3f@12                        @190
++glNormal3fv@4                        @191
++glNormal3i@12                        @192
++glNormal3iv@4                        @193
++glNormal3s@12                        @194
++glNormal3sv@4                        @195
++glNormalPointer@12                   @196
++glOrtho@48                           @197
++glPassThrough@4                      @198
++glPixelMapfv@12                      @199
++glPixelMapuiv@12                     @200
++glPixelMapusv@12                     @201
++glPixelStoref@8                      @202
++glPixelStorei@8                      @203
++glPixelTransferf@8                   @204
++glPixelTransferi@8                   @205
++glPixelZoom@8                        @206
++glPointSize@4                        @207
++glPolygonMode@8                      @208
++glPolygonOffset@8                    @209
++glPolygonStipple@4                   @210
++glPopAttrib@0                        @211
++glPopClientAttrib@0                  @212
++glPopMatrix@0                        @213
++glPopName@0                          @214
++glPrioritizeTextures@12              @215
++glPushAttrib@4                       @216
++glPushClientAttrib@4                 @217
++glPushMatrix@0                       @218
++glPushName@4                         @219
++glRasterPos2d@16                     @220
++glRasterPos2dv@4                     @221
++glRasterPos2f@8                      @222
++glRasterPos2fv@4                     @223
++glRasterPos2i@8                      @224
++glRasterPos2iv@4                     @225
++glRasterPos2s@8                      @226
++glRasterPos2sv@4                     @227
++glRasterPos3d@24                     @228
++glRasterPos3dv@4                     @229
++glRasterPos3f@12                     @230
++glRasterPos3fv@4                     @231
++glRasterPos3i@12                     @232
++glRasterPos3iv@4                     @233
++glRasterPos3s@12                     @234
++glRasterPos3sv@4                     @235
++glRasterPos4d@32                     @236
++glRasterPos4dv@4                     @237
++glRasterPos4f@16                     @238
++glRasterPos4fv@4                     @239
++glRasterPos4i@16                     @240
++glRasterPos4iv@4                     @241
++glRasterPos4s@16                     @242
++glRasterPos4sv@4                     @243
++glReadBuffer@4                       @244
++glReadPixels@28                      @245
++glRectd@32                           @246
++glRectdv@8                           @247
++glRectf@16                           @248
++glRectfv@8                           @249
++glRecti@16                           @250
++glRectiv@8                           @251
++glRects@16                           @252
++glRectsv@8                           @253
++glRenderMode@4                       @254
++glRotated@32                         @255
++glRotatef@16                         @256
++glScaled@24                          @257
++glScalef@12                          @258
++glScissor@16                         @259
++glSelectBuffer@8                     @260
++glShadeModel@4                       @261
++glStencilFunc@12                     @262
++glStencilMask@4                      @263
++glStencilOp@12                       @264
++glTexCoord1d@8                       @265
++glTexCoord1dv@4                      @266
++glTexCoord1f@4                       @267
++glTexCoord1fv@4                      @268
++glTexCoord1i@4                       @269
++glTexCoord1iv@4                      @270
++glTexCoord1s@4                       @271
++glTexCoord1sv@4                      @272
++glTexCoord2d@16                      @273
++glTexCoord2dv@4                      @274
++glTexCoord2f@8                       @275
++glTexCoord2fv@4                      @276
++glTexCoord2i@8                       @277
++glTexCoord2iv@4                      @278
++glTexCoord2s@8                       @279
++glTexCoord2sv@4                      @280
++glTexCoord3d@24                      @281
++glTexCoord3dv@4                      @282
++glTexCoord3f@12                      @283
++glTexCoord3fv@4                      @284
++glTexCoord3i@12                      @285
++glTexCoord3iv@4                      @286
++glTexCoord3s@12                      @287
++glTexCoord3sv@4                      @288
++glTexCoord4d@32                      @289
++glTexCoord4dv@4                      @290
++glTexCoord4f@16                      @291
++glTexCoord4fv@4                      @292
++glTexCoord4i@16                      @293
++glTexCoord4iv@4                      @294
++glTexCoord4s@16                      @295
++glTexCoord4sv@4                      @296
++glTexCoordPointer@16                 @297
++glTexEnvf@12                         @298
++glTexEnvfv@12                        @299
++glTexEnvi@12                         @300
++glTexEnviv@12                        @301
++glTexGend@16                         @302
++glTexGendv@12                        @303
++glTexGenf@12                         @304
++glTexGenfv@12                        @305
++glTexGeni@12                         @306
++glTexGeniv@12                        @307
++glTexImage1D@32                      @308
++glTexImage2D@36                      @309
++glTexParameterf@12                   @310
++glTexParameterfv@12                  @311
++glTexParameteri@12                   @312
++glTexParameteriv@12                  @313
++glTexSubImage1D@28                   @314
++glTexSubImage2D@36                   @315
++glTranslated@24                      @316
++glTranslatef@12                      @317
++glVertex2d@16                        @318
++glVertex2dv@4                        @319
++glVertex2f@8                         @320
++glVertex2fv@4                        @321
++glVertex2i@8                         @322
++glVertex2iv@4                        @323
++glVertex2s@8                         @324
++glVertex2sv@4                        @325
++glVertex3d@24                        @326
++glVertex3dv@4                        @327
++glVertex3f@12                        @328
++glVertex3fv@4                        @329
++glVertex3i@12                        @330
++glVertex3iv@4                        @331
++glVertex3s@12                        @332
++glVertex3sv@4                        @333
++glVertex4d@32                        @334
++glVertex4dv@4                        @335
++glVertex4f@16                        @336
++glVertex4fv@4                        @337
++glVertex4i@16                        @338
++glVertex4iv@4                        @339
++glVertex4s@16                        @340
++glVertex4sv@4                        @341
++glVertexPointer@16                   @342
++glViewport@16                        @343
++wglChoosePixelFormat@8               @344
++wglCopyContext@12                    @345
++wglCreateContext@4                   @346
++wglCreateLayerContext@8              @347
++wglDeleteContext@4                   @348
++wglDescribeLayerPlane@20             @349
++wglDescribePixelFormat@16            @350
++wglGetCurrentContext@0               @351
++wglGetCurrentDC@0                    @352
++;wglGetDefaultProcAddress@4          @353
++wglGetLayerPaletteEntries@20         @354
++wglGetPixelFormat@4                  @355
++wglGetProcAddress@4                  @356
++wglMakeCurrent@8                     @357
++wglRealizeLayerPalette@12            @358
++wglSetLayerPaletteEntries@20         @359
++wglSetPixelFormat@12                 @360
++wglShareLists@8                      @361
++wglSwapBuffers@4                     @362
++wglSwapLayerBuffers@8                @363
++wglSwapMultipleBuffers@8             @364
++wglUseFontBitmapsA@16                @365
++wglUseFontBitmapsW@16                @366
++wglUseFontOutlinesA@32               @367
++wglUseFontOutlinesW@32               @368
++
++DrvCopyContext@12
++DrvCreateContext@4
++DrvCreateLayerContext@8
++DrvDeleteContext@4
++DrvDescribeLayerPlane@20
++DrvDescribePixelFormat@16
++DrvGetLayerPaletteEntries@20
++DrvGetProcAddress@4
++DrvPresentBuffers@8
++DrvRealizeLayerPalette@12
++DrvReleaseContext@4
++DrvSetCallbackProcs@8
++DrvSetContext@12
++DrvSetLayerPaletteEntries@20
++DrvSetPixelFormat@8
++DrvShareLists@8
++DrvSwapBuffers@4
++DrvSwapLayerBuffers@8
++DrvValidateVersion@4
+diff --git a/src/gallium/targets/libgl-gdi/opengl32.mingw.def b/src/gallium/targets/libgl-gdi/opengl32.mingw.def
+deleted file mode 100644
+index 485c9d44a877e59827d48cb967f30710f6f5749d..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/libgl-gdi/opengl32.mingw.def
++++ /dev/null
+@@ -1,357 +0,0 @@
+-EXPORTS
+-	glAccum = glAccum@8
+-	glAlphaFunc = glAlphaFunc@8
+-	glAreTexturesResident = glAreTexturesResident@12
+-	glArrayElement = glArrayElement@4
+-	glBegin = glBegin@4
+-	glBindTexture = glBindTexture@8
+-	glBitmap = glBitmap@28
+-	glBlendFunc = glBlendFunc@8
+-	glCallList = glCallList@4
+-	glCallLists = glCallLists@12
+-	glClear = glClear@4
+-	glClearAccum = glClearAccum@16
+-	glClearColor = glClearColor@16
+-	glClearDepth = glClearDepth@8
+-	glClearIndex = glClearIndex@4
+-	glClearStencil = glClearStencil@4
+-	glClipPlane = glClipPlane@8
+-	glColor3b = glColor3b@12
+-	glColor3bv = glColor3bv@4
+-	glColor3d = glColor3d@24
+-	glColor3dv = glColor3dv@4
+-	glColor3f = glColor3f@12
+-	glColor3fv = glColor3fv@4
+-	glColor3i = glColor3i@12
+-	glColor3iv = glColor3iv@4
+-	glColor3s = glColor3s@12
+-	glColor3sv = glColor3sv@4
+-	glColor3ub = glColor3ub@12
+-	glColor3ubv = glColor3ubv@4
+-	glColor3ui = glColor3ui@12
+-	glColor3uiv = glColor3uiv@4
+-	glColor3us = glColor3us@12
+-	glColor3usv = glColor3usv@4
+-	glColor4b = glColor4b@16
+-	glColor4bv = glColor4bv@4
+-	glColor4d = glColor4d@32
+-	glColor4dv = glColor4dv@4
+-	glColor4f = glColor4f@16
+-	glColor4fv = glColor4fv@4
+-	glColor4i = glColor4i@16
+-	glColor4iv = glColor4iv@4
+-	glColor4s = glColor4s@16
+-	glColor4sv = glColor4sv@4
+-	glColor4ub = glColor4ub@16
+-	glColor4ubv = glColor4ubv@4
+-	glColor4ui = glColor4ui@16
+-	glColor4uiv = glColor4uiv@4
+-	glColor4us = glColor4us@16
+-	glColor4usv = glColor4usv@4
+-	glColorMask = glColorMask@16
+-	glColorMaterial = glColorMaterial@8
+-	glColorPointer = glColorPointer@16
+-	glCopyPixels = glCopyPixels@20
+-	glCopyTexImage1D = glCopyTexImage1D@28
+-	glCopyTexImage2D = glCopyTexImage2D@32
+-	glCopyTexSubImage1D = glCopyTexSubImage1D@24
+-	glCopyTexSubImage2D = glCopyTexSubImage2D@32
+-	glCullFace = glCullFace@4
+-;	glDebugEntry = glDebugEntry@8
+-	glDeleteLists = glDeleteLists@8
+-	glDeleteTextures = glDeleteTextures@8
+-	glDepthFunc = glDepthFunc@4
+-	glDepthMask = glDepthMask@4
+-	glDepthRange = glDepthRange@16
+-	glDisable = glDisable@4
+-	glDisableClientState = glDisableClientState@4
+-	glDrawArrays = glDrawArrays@12
+-	glDrawBuffer = glDrawBuffer@4
+-	glDrawElements = glDrawElements@16
+-	glDrawPixels = glDrawPixels@20
+-	glEdgeFlag = glEdgeFlag@4
+-	glEdgeFlagPointer = glEdgeFlagPointer@8
+-	glEdgeFlagv = glEdgeFlagv@4
+-	glEnable = glEnable@4
+-	glEnableClientState = glEnableClientState@4
+-	glEnd = glEnd@0
+-	glEndList = glEndList@0
+-	glEvalCoord1d = glEvalCoord1d@8
+-	glEvalCoord1dv = glEvalCoord1dv@4
+-	glEvalCoord1f = glEvalCoord1f@4
+-	glEvalCoord1fv = glEvalCoord1fv@4
+-	glEvalCoord2d = glEvalCoord2d@16
+-	glEvalCoord2dv = glEvalCoord2dv@4
+-	glEvalCoord2f = glEvalCoord2f@8
+-	glEvalCoord2fv = glEvalCoord2fv@4
+-	glEvalMesh1 = glEvalMesh1@12
+-	glEvalMesh2 = glEvalMesh2@20
+-	glEvalPoint1 = glEvalPoint1@4
+-	glEvalPoint2 = glEvalPoint2@8
+-	glFeedbackBuffer = glFeedbackBuffer@12
+-	glFinish = glFinish@0
+-	glFlush = glFlush@0
+-	glFogf = glFogf@8
+-	glFogfv = glFogfv@8
+-	glFogi = glFogi@8
+-	glFogiv = glFogiv@8
+-	glFrontFace = glFrontFace@4
+-	glFrustum = glFrustum@48
+-	glGenLists = glGenLists@4
+-	glGenTextures = glGenTextures@8
+-	glGetBooleanv = glGetBooleanv@8
+-	glGetClipPlane = glGetClipPlane@8
+-	glGetDoublev = glGetDoublev@8
+-	glGetError = glGetError@0
+-	glGetFloatv = glGetFloatv@8
+-	glGetIntegerv = glGetIntegerv@8
+-	glGetLightfv = glGetLightfv@12
+-	glGetLightiv = glGetLightiv@12
+-	glGetMapdv = glGetMapdv@12
+-	glGetMapfv = glGetMapfv@12
+-	glGetMapiv = glGetMapiv@12
+-	glGetMaterialfv = glGetMaterialfv@12
+-	glGetMaterialiv = glGetMaterialiv@12
+-	glGetPixelMapfv = glGetPixelMapfv@8
+-	glGetPixelMapuiv = glGetPixelMapuiv@8
+-	glGetPixelMapusv = glGetPixelMapusv@8
+-	glGetPointerv = glGetPointerv@8
+-	glGetPolygonStipple = glGetPolygonStipple@4
+-	glGetString = glGetString@4
+-	glGetTexEnvfv = glGetTexEnvfv@12
+-	glGetTexEnviv = glGetTexEnviv@12
+-	glGetTexGendv = glGetTexGendv@12
+-	glGetTexGenfv = glGetTexGenfv@12
+-	glGetTexGeniv = glGetTexGeniv@12
+-	glGetTexImage = glGetTexImage@20
+-	glGetTexLevelParameterfv = glGetTexLevelParameterfv@16
+-	glGetTexLevelParameteriv = glGetTexLevelParameteriv@16
+-	glGetTexParameterfv = glGetTexParameterfv@12
+-	glGetTexParameteriv = glGetTexParameteriv@12
+-	glHint = glHint@8
+-	glIndexMask = glIndexMask@4
+-	glIndexPointer = glIndexPointer@12
+-	glIndexd = glIndexd@8
+-	glIndexdv = glIndexdv@4
+-	glIndexf = glIndexf@4
+-	glIndexfv = glIndexfv@4
+-	glIndexi = glIndexi@4
+-	glIndexiv = glIndexiv@4
+-	glIndexs = glIndexs@4
+-	glIndexsv = glIndexsv@4
+-	glIndexub = glIndexub@4
+-	glIndexubv = glIndexubv@4
+-	glInitNames = glInitNames@0
+-	glInterleavedArrays = glInterleavedArrays@12
+-	glIsEnabled = glIsEnabled@4
+-	glIsList = glIsList@4
+-	glIsTexture = glIsTexture@4
+-	glLightModelf = glLightModelf@8
+-	glLightModelfv = glLightModelfv@8
+-	glLightModeli = glLightModeli@8
+-	glLightModeliv = glLightModeliv@8
+-	glLightf = glLightf@12
+-	glLightfv = glLightfv@12
+-	glLighti = glLighti@12
+-	glLightiv = glLightiv@12
+-	glLineStipple = glLineStipple@8
+-	glLineWidth = glLineWidth@4
+-	glListBase = glListBase@4
+-	glLoadIdentity = glLoadIdentity@0
+-	glLoadMatrixd = glLoadMatrixd@4
+-	glLoadMatrixf = glLoadMatrixf@4
+-	glLoadName = glLoadName@4
+-	glLogicOp = glLogicOp@4
+-	glMap1d = glMap1d@32
+-	glMap1f = glMap1f@24
+-	glMap2d = glMap2d@56
+-	glMap2f = glMap2f@40
+-	glMapGrid1d = glMapGrid1d@20
+-	glMapGrid1f = glMapGrid1f@12
+-	glMapGrid2d = glMapGrid2d@40
+-	glMapGrid2f = glMapGrid2f@24
+-	glMaterialf = glMaterialf@12
+-	glMaterialfv = glMaterialfv@12
+-	glMateriali = glMateriali@12
+-	glMaterialiv = glMaterialiv@12
+-	glMatrixMode = glMatrixMode@4
+-	glMultMatrixd = glMultMatrixd@4
+-	glMultMatrixf = glMultMatrixf@4
+-	glNewList = glNewList@8
+-	glNormal3b = glNormal3b@12
+-	glNormal3bv = glNormal3bv@4
+-	glNormal3d = glNormal3d@24
+-	glNormal3dv = glNormal3dv@4
+-	glNormal3f = glNormal3f@12
+-	glNormal3fv = glNormal3fv@4
+-	glNormal3i = glNormal3i@12
+-	glNormal3iv = glNormal3iv@4
+-	glNormal3s = glNormal3s@12
+-	glNormal3sv = glNormal3sv@4
+-	glNormalPointer = glNormalPointer@12
+-	glOrtho = glOrtho@48
+-	glPassThrough = glPassThrough@4
+-	glPixelMapfv = glPixelMapfv@12
+-	glPixelMapuiv = glPixelMapuiv@12
+-	glPixelMapusv = glPixelMapusv@12
+-	glPixelStoref = glPixelStoref@8
+-	glPixelStorei = glPixelStorei@8
+-	glPixelTransferf = glPixelTransferf@8
+-	glPixelTransferi = glPixelTransferi@8
+-	glPixelZoom = glPixelZoom@8
+-	glPointSize = glPointSize@4
+-	glPolygonMode = glPolygonMode@8
+-	glPolygonOffset = glPolygonOffset@8
+-	glPolygonStipple = glPolygonStipple@4
+-	glPopAttrib = glPopAttrib@0
+-	glPopClientAttrib = glPopClientAttrib@0
+-	glPopMatrix = glPopMatrix@0
+-	glPopName = glPopName@0
+-	glPrioritizeTextures = glPrioritizeTextures@12
+-	glPushAttrib = glPushAttrib@4
+-	glPushClientAttrib = glPushClientAttrib@4
+-	glPushMatrix = glPushMatrix@0
+-	glPushName = glPushName@4
+-	glRasterPos2d = glRasterPos2d@16
+-	glRasterPos2dv = glRasterPos2dv@4
+-	glRasterPos2f = glRasterPos2f@8
+-	glRasterPos2fv = glRasterPos2fv@4
+-	glRasterPos2i = glRasterPos2i@8
+-	glRasterPos2iv = glRasterPos2iv@4
+-	glRasterPos2s = glRasterPos2s@8
+-	glRasterPos2sv = glRasterPos2sv@4
+-	glRasterPos3d = glRasterPos3d@24
+-	glRasterPos3dv = glRasterPos3dv@4
+-	glRasterPos3f = glRasterPos3f@12
+-	glRasterPos3fv = glRasterPos3fv@4
+-	glRasterPos3i = glRasterPos3i@12
+-	glRasterPos3iv = glRasterPos3iv@4
+-	glRasterPos3s = glRasterPos3s@12
+-	glRasterPos3sv = glRasterPos3sv@4
+-	glRasterPos4d = glRasterPos4d@32
+-	glRasterPos4dv = glRasterPos4dv@4
+-	glRasterPos4f = glRasterPos4f@16
+-	glRasterPos4fv = glRasterPos4fv@4
+-	glRasterPos4i = glRasterPos4i@16
+-	glRasterPos4iv = glRasterPos4iv@4
+-	glRasterPos4s = glRasterPos4s@16
+-	glRasterPos4sv = glRasterPos4sv@4
+-	glReadBuffer = glReadBuffer@4
+-	glReadPixels = glReadPixels@28
+-	glRectd = glRectd@32
+-	glRectdv = glRectdv@8
+-	glRectf = glRectf@16
+-	glRectfv = glRectfv@8
+-	glRecti = glRecti@16
+-	glRectiv = glRectiv@8
+-	glRects = glRects@16
+-	glRectsv = glRectsv@8
+-	glRenderMode = glRenderMode@4
+-	glRotated = glRotated@32
+-	glRotatef = glRotatef@16
+-	glScaled = glScaled@24
+-	glScalef = glScalef@12
+-	glScissor = glScissor@16
+-	glSelectBuffer = glSelectBuffer@8
+-	glShadeModel = glShadeModel@4
+-	glStencilFunc = glStencilFunc@12
+-	glStencilMask = glStencilMask@4
+-	glStencilOp = glStencilOp@12
+-	glTexCoord1d = glTexCoord1d@8
+-	glTexCoord1dv = glTexCoord1dv@4
+-	glTexCoord1f = glTexCoord1f@4
+-	glTexCoord1fv = glTexCoord1fv@4
+-	glTexCoord1i = glTexCoord1i@4
+-	glTexCoord1iv = glTexCoord1iv@4
+-	glTexCoord1s = glTexCoord1s@4
+-	glTexCoord1sv = glTexCoord1sv@4
+-	glTexCoord2d = glTexCoord2d@16
+-	glTexCoord2dv = glTexCoord2dv@4
+-	glTexCoord2f = glTexCoord2f@8
+-	glTexCoord2fv = glTexCoord2fv@4
+-	glTexCoord2i = glTexCoord2i@8
+-	glTexCoord2iv = glTexCoord2iv@4
+-	glTexCoord2s = glTexCoord2s@8
+-	glTexCoord2sv = glTexCoord2sv@4
+-	glTexCoord3d = glTexCoord3d@24
+-	glTexCoord3dv = glTexCoord3dv@4
+-	glTexCoord3f = glTexCoord3f@12
+-	glTexCoord3fv = glTexCoord3fv@4
+-	glTexCoord3i = glTexCoord3i@12
+-	glTexCoord3iv = glTexCoord3iv@4
+-	glTexCoord3s = glTexCoord3s@12
+-	glTexCoord3sv = glTexCoord3sv@4
+-	glTexCoord4d = glTexCoord4d@32
+-	glTexCoord4dv = glTexCoord4dv@4
+-	glTexCoord4f = glTexCoord4f@16
+-	glTexCoord4fv = glTexCoord4fv@4
+-	glTexCoord4i = glTexCoord4i@16
+-	glTexCoord4iv = glTexCoord4iv@4
+-	glTexCoord4s = glTexCoord4s@16
+-	glTexCoord4sv = glTexCoord4sv@4
+-	glTexCoordPointer = glTexCoordPointer@16
+-	glTexEnvf = glTexEnvf@12
+-	glTexEnvfv = glTexEnvfv@12
+-	glTexEnvi = glTexEnvi@12
+-	glTexEnviv = glTexEnviv@12
+-	glTexGend = glTexGend@16
+-	glTexGendv = glTexGendv@12
+-	glTexGenf = glTexGenf@12
+-	glTexGenfv = glTexGenfv@12
+-	glTexGeni = glTexGeni@12
+-	glTexGeniv = glTexGeniv@12
+-	glTexImage1D = glTexImage1D@32
+-	glTexImage2D = glTexImage2D@36
+-	glTexParameterf = glTexParameterf@12
+-	glTexParameterfv = glTexParameterfv@12
+-	glTexParameteri = glTexParameteri@12
+-	glTexParameteriv = glTexParameteriv@12
+-	glTexSubImage1D = glTexSubImage1D@28
+-	glTexSubImage2D = glTexSubImage2D@36
+-	glTranslated = glTranslated@24
+-	glTranslatef = glTranslatef@12
+-	glVertex2d = glVertex2d@16
+-	glVertex2dv = glVertex2dv@4
+-	glVertex2f = glVertex2f@8
+-	glVertex2fv = glVertex2fv@4
+-	glVertex2i = glVertex2i@8
+-	glVertex2iv = glVertex2iv@4
+-	glVertex2s = glVertex2s@8
+-	glVertex2sv = glVertex2sv@4
+-	glVertex3d = glVertex3d@24
+-	glVertex3dv = glVertex3dv@4
+-	glVertex3f = glVertex3f@12
+-	glVertex3fv = glVertex3fv@4
+-	glVertex3i = glVertex3i@12
+-	glVertex3iv = glVertex3iv@4
+-	glVertex3s = glVertex3s@12
+-	glVertex3sv = glVertex3sv@4
+-	glVertex4d = glVertex4d@32
+-	glVertex4dv = glVertex4dv@4
+-	glVertex4f = glVertex4f@16
+-	glVertex4fv = glVertex4fv@4
+-	glVertex4i = glVertex4i@16
+-	glVertex4iv = glVertex4iv@4
+-	glVertex4s = glVertex4s@16
+-	glVertex4sv = glVertex4sv@4
+-	glVertexPointer = glVertexPointer@16
+-	glViewport = glViewport@16
+-	DrvCopyContext
+-	DrvCreateContext
+-	DrvCreateLayerContext
+-	DrvDeleteContext
+-	DrvDescribeLayerPlane
+-	DrvDescribePixelFormat
+-	DrvGetLayerPaletteEntries
+-	DrvGetProcAddress
+-	DrvPresentBuffers
+-	DrvRealizeLayerPalette
+-	DrvReleaseContext
+-	DrvSetCallbackProcs
+-	DrvSetContext
+-	DrvSetLayerPaletteEntries
+-	DrvSetPixelFormat
+-	DrvShareLists
+-	DrvSwapBuffers
+-	DrvSwapLayerBuffers
+-	DrvValidateVersion
+diff --git a/src/gallium/targets/osmesa/meson.build b/src/gallium/targets/osmesa/meson.build
+index 38fcaca13b9513d7d69122f3f3734330697695f4..97a9fd954ac61fb6945217e193eb9f1eaab5c590 100644
+--- a/src/gallium/targets/osmesa/meson.build
++++ b/src/gallium/targets/osmesa/meson.build
+@@ -32,11 +32,14 @@ if with_ld_version_script
+   osmesa_link_deps += files('osmesa.sym')
+ endif
+ 
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  osmesa_def = 'osmesa.mingw.def'
+-else
+-  osmesa_def = 'osmesa.def'
+-endif
++osmesa_def = custom_target(
++  'osmesa.def',
++  input: 'osmesa.def.in',
++  output : 'osmesa.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
+ 
+ libosmesa = shared_library(
+   osmesa_lib_name,
+diff --git a/src/gallium/targets/osmesa/osmesa.def b/src/gallium/targets/osmesa/osmesa.def
+deleted file mode 100644
+index f6d09b81ef8c42463f8b3a67ac0ced2525b0599a..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/osmesa/osmesa.def
++++ /dev/null
+@@ -1,354 +0,0 @@
+-;DESCRIPTION 'Mesa OSMesa lib for Win32'
+-VERSION 4.1
+-
+-EXPORTS
+-	OSMesaCreateContext
+-	OSMesaCreateContextAttribs
+-	OSMesaCreateContextExt
+-	OSMesaDestroyContext
+-	OSMesaMakeCurrent
+-	OSMesaGetCurrentContext
+-	OSMesaPixelStore
+-	OSMesaGetIntegerv
+-	OSMesaGetDepthBuffer
+-	OSMesaGetColorBuffer
+-	OSMesaGetProcAddress
+-	OSMesaColorClamp
+-	OSMesaPostprocess
+-	glAccum
+-	glAlphaFunc
+-	glAreTexturesResident
+-	glArrayElement
+-	glBegin
+-	glBindTexture
+-	glBitmap
+-	glBlendFunc
+-	glCallList
+-	glCallLists
+-	glClear
+-	glClearAccum
+-	glClearColor
+-	glClearDepth
+-	glClearIndex
+-	glClearStencil
+-	glClipPlane
+-	glColor3b
+-	glColor3bv
+-	glColor3d
+-	glColor3dv
+-	glColor3f
+-	glColor3fv
+-	glColor3i
+-	glColor3iv
+-	glColor3s
+-	glColor3sv
+-	glColor3ub
+-	glColor3ubv
+-	glColor3ui
+-	glColor3uiv
+-	glColor3us
+-	glColor3usv
+-	glColor4b
+-	glColor4bv
+-	glColor4d
+-	glColor4dv
+-	glColor4f
+-	glColor4fv
+-	glColor4i
+-	glColor4iv
+-	glColor4s
+-	glColor4sv
+-	glColor4ub
+-	glColor4ubv
+-	glColor4ui
+-	glColor4uiv
+-	glColor4us
+-	glColor4usv
+-	glColorMask
+-	glColorMaterial
+-	glColorPointer
+-	glCopyPixels
+-	glCopyTexImage1D
+-	glCopyTexImage2D
+-	glCopyTexSubImage1D
+-	glCopyTexSubImage2D
+-	glCullFace
+-;	glDebugEntry
+-	glDeleteLists
+-	glDeleteTextures
+-	glDepthFunc
+-	glDepthMask
+-	glDepthRange
+-	glDisable
+-	glDisableClientState
+-	glDrawArrays
+-	glDrawBuffer
+-	glDrawElements
+-	glDrawPixels
+-	glEdgeFlag
+-	glEdgeFlagPointer
+-	glEdgeFlagv
+-	glEnable
+-	glEnableClientState
+-	glEnd
+-	glEndList
+-	glEvalCoord1d
+-	glEvalCoord1dv
+-	glEvalCoord1f
+-	glEvalCoord1fv
+-	glEvalCoord2d
+-	glEvalCoord2dv
+-	glEvalCoord2f
+-	glEvalCoord2fv
+-	glEvalMesh1
+-	glEvalMesh2
+-	glEvalPoint1
+-	glEvalPoint2
+-	glFeedbackBuffer
+-	glFinish
+-	glFlush
+-	glFogf
+-	glFogfv
+-	glFogi
+-	glFogiv
+-	glFrontFace
+-	glFrustum
+-	glGenLists
+-	glGenTextures
+-	glGetBooleanv
+-	glGetClipPlane
+-	glGetDoublev
+-	glGetError
+-	glGetFloatv
+-	glGetIntegerv
+-	glGetLightfv
+-	glGetLightiv
+-	glGetMapdv
+-	glGetMapfv
+-	glGetMapiv
+-	glGetMaterialfv
+-	glGetMaterialiv
+-	glGetPixelMapfv
+-	glGetPixelMapuiv
+-	glGetPixelMapusv
+-	glGetPointerv
+-	glGetPolygonStipple
+-	glGetString
+-	glGetTexEnvfv
+-	glGetTexEnviv
+-	glGetTexGendv
+-	glGetTexGenfv
+-	glGetTexGeniv
+-	glGetTexImage
+-	glGetTexLevelParameterfv
+-	glGetTexLevelParameteriv
+-	glGetTexParameterfv
+-	glGetTexParameteriv
+-	glHint
+-	glIndexMask
+-	glIndexPointer
+-	glIndexd
+-	glIndexdv
+-	glIndexf
+-	glIndexfv
+-	glIndexi
+-	glIndexiv
+-	glIndexs
+-	glIndexsv
+-	glIndexub
+-	glIndexubv
+-	glInitNames
+-	glInterleavedArrays
+-	glIsEnabled
+-	glIsList
+-	glIsTexture
+-	glLightModelf
+-	glLightModelfv
+-	glLightModeli
+-	glLightModeliv
+-	glLightf
+-	glLightfv
+-	glLighti
+-	glLightiv
+-	glLineStipple
+-	glLineWidth
+-	glListBase
+-	glLoadIdentity
+-	glLoadMatrixd
+-	glLoadMatrixf
+-	glLoadName
+-	glLogicOp
+-	glMap1d
+-	glMap1f
+-	glMap2d
+-	glMap2f
+-	glMapGrid1d
+-	glMapGrid1f
+-	glMapGrid2d
+-	glMapGrid2f
+-	glMaterialf
+-	glMaterialfv
+-	glMateriali
+-	glMaterialiv
+-	glMatrixMode
+-	glMultMatrixd
+-	glMultMatrixf
+-	glNewList
+-	glNormal3b
+-	glNormal3bv
+-	glNormal3d
+-	glNormal3dv
+-	glNormal3f
+-	glNormal3fv
+-	glNormal3i
+-	glNormal3iv
+-	glNormal3s
+-	glNormal3sv
+-	glNormalPointer
+-	glOrtho
+-	glPassThrough
+-	glPixelMapfv
+-	glPixelMapuiv
+-	glPixelMapusv
+-	glPixelStoref
+-	glPixelStorei
+-	glPixelTransferf
+-	glPixelTransferi
+-	glPixelZoom
+-	glPointSize
+-	glPolygonMode
+-	glPolygonOffset
+-	glPolygonStipple
+-	glPopAttrib
+-	glPopClientAttrib
+-	glPopMatrix
+-	glPopName
+-	glPrioritizeTextures
+-	glPushAttrib
+-	glPushClientAttrib
+-	glPushMatrix
+-	glPushName
+-	glRasterPos2d
+-	glRasterPos2dv
+-	glRasterPos2f
+-	glRasterPos2fv
+-	glRasterPos2i
+-	glRasterPos2iv
+-	glRasterPos2s
+-	glRasterPos2sv
+-	glRasterPos3d
+-	glRasterPos3dv
+-	glRasterPos3f
+-	glRasterPos3fv
+-	glRasterPos3i
+-	glRasterPos3iv
+-	glRasterPos3s
+-	glRasterPos3sv
+-	glRasterPos4d
+-	glRasterPos4dv
+-	glRasterPos4f
+-	glRasterPos4fv
+-	glRasterPos4i
+-	glRasterPos4iv
+-	glRasterPos4s
+-	glRasterPos4sv
+-	glReadBuffer
+-	glReadPixels
+-	glRectd
+-	glRectdv
+-	glRectf
+-	glRectfv
+-	glRecti
+-	glRectiv
+-	glRects
+-	glRectsv
+-	glRenderMode
+-	glRotated
+-	glRotatef
+-	glScaled
+-	glScalef
+-	glScissor
+-	glSelectBuffer
+-	glShadeModel
+-	glStencilFunc
+-	glStencilMask
+-	glStencilOp
+-	glTexCoord1d
+-	glTexCoord1dv
+-	glTexCoord1f
+-	glTexCoord1fv
+-	glTexCoord1i
+-	glTexCoord1iv
+-	glTexCoord1s
+-	glTexCoord1sv
+-	glTexCoord2d
+-	glTexCoord2dv
+-	glTexCoord2f
+-	glTexCoord2fv
+-	glTexCoord2i
+-	glTexCoord2iv
+-	glTexCoord2s
+-	glTexCoord2sv
+-	glTexCoord3d
+-	glTexCoord3dv
+-	glTexCoord3f
+-	glTexCoord3fv
+-	glTexCoord3i
+-	glTexCoord3iv
+-	glTexCoord3s
+-	glTexCoord3sv
+-	glTexCoord4d
+-	glTexCoord4dv
+-	glTexCoord4f
+-	glTexCoord4fv
+-	glTexCoord4i
+-	glTexCoord4iv
+-	glTexCoord4s
+-	glTexCoord4sv
+-	glTexCoordPointer
+-	glTexEnvf
+-	glTexEnvfv
+-	glTexEnvi
+-	glTexEnviv
+-	glTexGend
+-	glTexGendv
+-	glTexGenf
+-	glTexGenfv
+-	glTexGeni
+-	glTexGeniv
+-	glTexImage1D
+-	glTexImage2D
+-	glTexParameterf
+-	glTexParameterfv
+-	glTexParameteri
+-	glTexParameteriv
+-	glTexSubImage1D
+-	glTexSubImage2D
+-	glTranslated
+-	glTranslatef
+-	glVertex2d
+-	glVertex2dv
+-	glVertex2f
+-	glVertex2fv
+-	glVertex2i
+-	glVertex2iv
+-	glVertex2s
+-	glVertex2sv
+-	glVertex3d
+-	glVertex3dv
+-	glVertex3f
+-	glVertex3fv
+-	glVertex3i
+-	glVertex3iv
+-	glVertex3s
+-	glVertex3sv
+-	glVertex4d
+-	glVertex4dv
+-	glVertex4f
+-	glVertex4fv
+-	glVertex4i
+-	glVertex4iv
+-	glVertex4s
+-	glVertex4sv
+-	glVertexPointer
+-	glViewport
+diff --git a/src/gallium/targets/osmesa/osmesa.def.in b/src/gallium/targets/osmesa/osmesa.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..d60457797963451ff3fd4f13690d1bab971bc5b3
+--- /dev/null
++++ b/src/gallium/targets/osmesa/osmesa.def.in
+@@ -0,0 +1,353 @@
++; Mesa OSMesa lib for Win32
++
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++OSMesaCreateContext@8
++OSMesaCreateContextAttribs@8
++OSMesaCreateContextExt@20
++OSMesaDestroyContext@4
++OSMesaMakeCurrent@20
++OSMesaGetCurrentContext@0
++OSMesaPixelStore@8
++OSMesaGetIntegerv@8
++OSMesaGetDepthBuffer@20
++OSMesaGetColorBuffer@20
++OSMesaGetProcAddress@4
++OSMesaColorClamp@4
++OSMesaPostprocess@12
++glAccum@8
++glAlphaFunc@8
++glAreTexturesResident@12
++glArrayElement@4
++glBegin@4
++glBindTexture@8
++glBitmap@28
++glBlendFunc@8
++glCallList@4
++glCallLists@12
++glClear@4
++glClearAccum@16
++glClearColor@16
++glClearDepth@8
++glClearIndex@4
++glClearStencil@4
++glClipPlane@8
++glColor3b@12
++glColor3bv@4
++glColor3d@24
++glColor3dv@4
++glColor3f@12
++glColor3fv@4
++glColor3i@12
++glColor3iv@4
++glColor3s@12
++glColor3sv@4
++glColor3ub@12
++glColor3ubv@4
++glColor3ui@12
++glColor3uiv@4
++glColor3us@12
++glColor3usv@4
++glColor4b@16
++glColor4bv@4
++glColor4d@32
++glColor4dv@4
++glColor4f@16
++glColor4fv@4
++glColor4i@16
++glColor4iv@4
++glColor4s@16
++glColor4sv@4
++glColor4ub@16
++glColor4ubv@4
++glColor4ui@16
++glColor4uiv@4
++glColor4us@16
++glColor4usv@4
++glColorMask@16
++glColorMaterial@8
++glColorPointer@16
++glCopyPixels@20
++glCopyTexImage1D@28
++glCopyTexImage2D@32
++glCopyTexSubImage1D@24
++glCopyTexSubImage2D@32
++glCullFace@4
++;glDebugEntry@8
++glDeleteLists@8
++glDeleteTextures@8
++glDepthFunc@4
++glDepthMask@4
++glDepthRange@16
++glDisable@4
++glDisableClientState@4
++glDrawArrays@12
++glDrawBuffer@4
++glDrawElements@16
++glDrawPixels@20
++glEdgeFlag@4
++glEdgeFlagPointer@8
++glEdgeFlagv@4
++glEnable@4
++glEnableClientState@4
++glEnd@0
++glEndList@0
++glEvalCoord1d@8
++glEvalCoord1dv@4
++glEvalCoord1f@4
++glEvalCoord1fv@4
++glEvalCoord2d@16
++glEvalCoord2dv@4
++glEvalCoord2f@8
++glEvalCoord2fv@4
++glEvalMesh1@12
++glEvalMesh2@20
++glEvalPoint1@4
++glEvalPoint2@8
++glFeedbackBuffer@12
++glFinish@0
++glFlush@0
++glFogf@8
++glFogfv@8
++glFogi@8
++glFogiv@8
++glFrontFace@4
++glFrustum@48
++glGenLists@4
++glGenTextures@8
++glGetBooleanv@8
++glGetClipPlane@8
++glGetDoublev@8
++glGetError@0
++glGetFloatv@8
++glGetIntegerv@8
++glGetLightfv@12
++glGetLightiv@12
++glGetMapdv@12
++glGetMapfv@12
++glGetMapiv@12
++glGetMaterialfv@12
++glGetMaterialiv@12
++glGetPixelMapfv@8
++glGetPixelMapuiv@8
++glGetPixelMapusv@8
++glGetPointerv@8
++glGetPolygonStipple@4
++glGetString@4
++glGetTexEnvfv@12
++glGetTexEnviv@12
++glGetTexGendv@12
++glGetTexGenfv@12
++glGetTexGeniv@12
++glGetTexImage@20
++glGetTexLevelParameterfv@16
++glGetTexLevelParameteriv@16
++glGetTexParameterfv@12
++glGetTexParameteriv@12
++glHint@8
++glIndexMask@4
++glIndexPointer@12
++glIndexd@8
++glIndexdv@4
++glIndexf@4
++glIndexfv@4
++glIndexi@4
++glIndexiv@4
++glIndexs@4
++glIndexsv@4
++glIndexub@4
++glIndexubv@4
++glInitNames@0
++glInterleavedArrays@12
++glIsEnabled@4
++glIsList@4
++glIsTexture@4
++glLightModelf@8
++glLightModelfv@8
++glLightModeli@8
++glLightModeliv@8
++glLightf@12
++glLightfv@12
++glLighti@12
++glLightiv@12
++glLineStipple@8
++glLineWidth@4
++glListBase@4
++glLoadIdentity@0
++glLoadMatrixd@4
++glLoadMatrixf@4
++glLoadName@4
++glLogicOp@4
++glMap1d@32
++glMap1f@24
++glMap2d@56
++glMap2f@40
++glMapGrid1d@20
++glMapGrid1f@12
++glMapGrid2d@40
++glMapGrid2f@24
++glMaterialf@12
++glMaterialfv@12
++glMateriali@12
++glMaterialiv@12
++glMatrixMode@4
++glMultMatrixd@4
++glMultMatrixf@4
++glNewList@8
++glNormal3b@12
++glNormal3bv@4
++glNormal3d@24
++glNormal3dv@4
++glNormal3f@12
++glNormal3fv@4
++glNormal3i@12
++glNormal3iv@4
++glNormal3s@12
++glNormal3sv@4
++glNormalPointer@12
++glOrtho@48
++glPassThrough@4
++glPixelMapfv@12
++glPixelMapuiv@12
++glPixelMapusv@12
++glPixelStoref@8
++glPixelStorei@8
++glPixelTransferf@8
++glPixelTransferi@8
++glPixelZoom@8
++glPointSize@4
++glPolygonMode@8
++glPolygonOffset@8
++glPolygonStipple@4
++glPopAttrib@0
++glPopClientAttrib@0
++glPopMatrix@0
++glPopName@0
++glPrioritizeTextures@12
++glPushAttrib@4
++glPushClientAttrib@4
++glPushMatrix@0
++glPushName@4
++glRasterPos2d@16
++glRasterPos2dv@4
++glRasterPos2f@8
++glRasterPos2fv@4
++glRasterPos2i@8
++glRasterPos2iv@4
++glRasterPos2s@8
++glRasterPos2sv@4
++glRasterPos3d@24
++glRasterPos3dv@4
++glRasterPos3f@12
++glRasterPos3fv@4
++glRasterPos3i@12
++glRasterPos3iv@4
++glRasterPos3s@12
++glRasterPos3sv@4
++glRasterPos4d@32
++glRasterPos4dv@4
++glRasterPos4f@16
++glRasterPos4fv@4
++glRasterPos4i@16
++glRasterPos4iv@4
++glRasterPos4s@16
++glRasterPos4sv@4
++glReadBuffer@4
++glReadPixels@28
++glRectd@32
++glRectdv@8
++glRectf@16
++glRectfv@8
++glRecti@16
++glRectiv@8
++glRects@16
++glRectsv@8
++glRenderMode@4
++glRotated@32
++glRotatef@16
++glScaled@24
++glScalef@12
++glScissor@16
++glSelectBuffer@8
++glShadeModel@4
++glStencilFunc@12
++glStencilMask@4
++glStencilOp@12
++glTexCoord1d@8
++glTexCoord1dv@4
++glTexCoord1f@4
++glTexCoord1fv@4
++glTexCoord1i@4
++glTexCoord1iv@4
++glTexCoord1s@4
++glTexCoord1sv@4
++glTexCoord2d@16
++glTexCoord2dv@4
++glTexCoord2f@8
++glTexCoord2fv@4
++glTexCoord2i@8
++glTexCoord2iv@4
++glTexCoord2s@8
++glTexCoord2sv@4
++glTexCoord3d@24
++glTexCoord3dv@4
++glTexCoord3f@12
++glTexCoord3fv@4
++glTexCoord3i@12
++glTexCoord3iv@4
++glTexCoord3s@12
++glTexCoord3sv@4
++glTexCoord4d@32
++glTexCoord4dv@4
++glTexCoord4f@16
++glTexCoord4fv@4
++glTexCoord4i@16
++glTexCoord4iv@4
++glTexCoord4s@16
++glTexCoord4sv@4
++glTexCoordPointer@16
++glTexEnvf@12
++glTexEnvfv@12
++glTexEnvi@12
++glTexEnviv@12
++glTexGend@16
++glTexGendv@12
++glTexGenf@12
++glTexGenfv@12
++glTexGeni@12
++glTexGeniv@12
++glTexImage1D@32
++glTexImage2D@36
++glTexParameterf@12
++glTexParameterfv@12
++glTexParameteri@12
++glTexParameteriv@12
++glTexSubImage1D@28
++glTexSubImage2D@36
++glTranslated@24
++glTranslatef@12
++glVertex2d@16
++glVertex2dv@4
++glVertex2f@8
++glVertex2fv@4
++glVertex2i@8
++glVertex2iv@4
++glVertex2s@8
++glVertex2sv@4
++glVertex3d@24
++glVertex3dv@4
++glVertex3f@12
++glVertex3fv@4
++glVertex3i@12
++glVertex3iv@4
++glVertex3s@12
++glVertex3sv@4
++glVertex4d@32
++glVertex4dv@4
++glVertex4f@16
++glVertex4fv@4
++glVertex4i@16
++glVertex4iv@4
++glVertex4s@16
++glVertex4sv@4
++glVertexPointer@16
++glViewport@16
+diff --git a/src/gallium/targets/osmesa/osmesa.mingw.def b/src/gallium/targets/osmesa/osmesa.mingw.def
+deleted file mode 100644
+index b77af60a93f2fcf9c73262993d6d204563e3eeae..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/osmesa/osmesa.mingw.def
++++ /dev/null
+@@ -1,351 +0,0 @@
+-EXPORTS
+-	OSMesaCreateContext = OSMesaCreateContext@8
+-	OSMesaCreateContextAttribs = OSMesaCreateContextAttribs@8
+-	OSMesaCreateContextExt = OSMesaCreateContextExt@20
+-	OSMesaDestroyContext = OSMesaDestroyContext@4
+-	OSMesaMakeCurrent = OSMesaMakeCurrent@20
+-	OSMesaGetCurrentContext = OSMesaGetCurrentContext@0
+-	OSMesaPixelStore = OSMesaPixelStore@8
+-	OSMesaGetIntegerv = OSMesaGetIntegerv@8
+-	OSMesaGetDepthBuffer = OSMesaGetDepthBuffer@20
+-	OSMesaGetColorBuffer = OSMesaGetColorBuffer@20
+-	OSMesaGetProcAddress = OSMesaGetProcAddress@4
+-	OSMesaColorClamp = OSMesaColorClamp@4
+-	OSMesaPostprocess = OSMesaPostprocess@12
+-	glAccum = glAccum@8
+-	glAlphaFunc = glAlphaFunc@8
+-	glAreTexturesResident = glAreTexturesResident@12
+-	glArrayElement = glArrayElement@4
+-	glBegin = glBegin@4
+-	glBindTexture = glBindTexture@8
+-	glBitmap = glBitmap@28
+-	glBlendFunc = glBlendFunc@8
+-	glCallList = glCallList@4
+-	glCallLists = glCallLists@12
+-	glClear = glClear@4
+-	glClearAccum = glClearAccum@16
+-	glClearColor = glClearColor@16
+-	glClearDepth = glClearDepth@8
+-	glClearIndex = glClearIndex@4
+-	glClearStencil = glClearStencil@4
+-	glClipPlane = glClipPlane@8
+-	glColor3b = glColor3b@12
+-	glColor3bv = glColor3bv@4
+-	glColor3d = glColor3d@24
+-	glColor3dv = glColor3dv@4
+-	glColor3f = glColor3f@12
+-	glColor3fv = glColor3fv@4
+-	glColor3i = glColor3i@12
+-	glColor3iv = glColor3iv@4
+-	glColor3s = glColor3s@12
+-	glColor3sv = glColor3sv@4
+-	glColor3ub = glColor3ub@12
+-	glColor3ubv = glColor3ubv@4
+-	glColor3ui = glColor3ui@12
+-	glColor3uiv = glColor3uiv@4
+-	glColor3us = glColor3us@12
+-	glColor3usv = glColor3usv@4
+-	glColor4b = glColor4b@16
+-	glColor4bv = glColor4bv@4
+-	glColor4d = glColor4d@32
+-	glColor4dv = glColor4dv@4
+-	glColor4f = glColor4f@16
+-	glColor4fv = glColor4fv@4
+-	glColor4i = glColor4i@16
+-	glColor4iv = glColor4iv@4
+-	glColor4s = glColor4s@16
+-	glColor4sv = glColor4sv@4
+-	glColor4ub = glColor4ub@16
+-	glColor4ubv = glColor4ubv@4
+-	glColor4ui = glColor4ui@16
+-	glColor4uiv = glColor4uiv@4
+-	glColor4us = glColor4us@16
+-	glColor4usv = glColor4usv@4
+-	glColorMask = glColorMask@16
+-	glColorMaterial = glColorMaterial@8
+-	glColorPointer = glColorPointer@16
+-	glCopyPixels = glCopyPixels@20
+-	glCopyTexImage1D = glCopyTexImage1D@28
+-	glCopyTexImage2D = glCopyTexImage2D@32
+-	glCopyTexSubImage1D = glCopyTexSubImage1D@24
+-	glCopyTexSubImage2D = glCopyTexSubImage2D@32
+-	glCullFace = glCullFace@4
+-;	glDebugEntry = glDebugEntry@8
+-	glDeleteLists = glDeleteLists@8
+-	glDeleteTextures = glDeleteTextures@8
+-	glDepthFunc = glDepthFunc@4
+-	glDepthMask = glDepthMask@4
+-	glDepthRange = glDepthRange@16
+-	glDisable = glDisable@4
+-	glDisableClientState = glDisableClientState@4
+-	glDrawArrays = glDrawArrays@12
+-	glDrawBuffer = glDrawBuffer@4
+-	glDrawElements = glDrawElements@16
+-	glDrawPixels = glDrawPixels@20
+-	glEdgeFlag = glEdgeFlag@4
+-	glEdgeFlagPointer = glEdgeFlagPointer@8
+-	glEdgeFlagv = glEdgeFlagv@4
+-	glEnable = glEnable@4
+-	glEnableClientState = glEnableClientState@4
+-	glEnd = glEnd@0
+-	glEndList = glEndList@0
+-	glEvalCoord1d = glEvalCoord1d@8
+-	glEvalCoord1dv = glEvalCoord1dv@4
+-	glEvalCoord1f = glEvalCoord1f@4
+-	glEvalCoord1fv = glEvalCoord1fv@4
+-	glEvalCoord2d = glEvalCoord2d@16
+-	glEvalCoord2dv = glEvalCoord2dv@4
+-	glEvalCoord2f = glEvalCoord2f@8
+-	glEvalCoord2fv = glEvalCoord2fv@4
+-	glEvalMesh1 = glEvalMesh1@12
+-	glEvalMesh2 = glEvalMesh2@20
+-	glEvalPoint1 = glEvalPoint1@4
+-	glEvalPoint2 = glEvalPoint2@8
+-	glFeedbackBuffer = glFeedbackBuffer@12
+-	glFinish = glFinish@0
+-	glFlush = glFlush@0
+-	glFogf = glFogf@8
+-	glFogfv = glFogfv@8
+-	glFogi = glFogi@8
+-	glFogiv = glFogiv@8
+-	glFrontFace = glFrontFace@4
+-	glFrustum = glFrustum@48
+-	glGenLists = glGenLists@4
+-	glGenTextures = glGenTextures@8
+-	glGetBooleanv = glGetBooleanv@8
+-	glGetClipPlane = glGetClipPlane@8
+-	glGetDoublev = glGetDoublev@8
+-	glGetError = glGetError@0
+-	glGetFloatv = glGetFloatv@8
+-	glGetIntegerv = glGetIntegerv@8
+-	glGetLightfv = glGetLightfv@12
+-	glGetLightiv = glGetLightiv@12
+-	glGetMapdv = glGetMapdv@12
+-	glGetMapfv = glGetMapfv@12
+-	glGetMapiv = glGetMapiv@12
+-	glGetMaterialfv = glGetMaterialfv@12
+-	glGetMaterialiv = glGetMaterialiv@12
+-	glGetPixelMapfv = glGetPixelMapfv@8
+-	glGetPixelMapuiv = glGetPixelMapuiv@8
+-	glGetPixelMapusv = glGetPixelMapusv@8
+-	glGetPointerv = glGetPointerv@8
+-	glGetPolygonStipple = glGetPolygonStipple@4
+-	glGetString = glGetString@4
+-	glGetTexEnvfv = glGetTexEnvfv@12
+-	glGetTexEnviv = glGetTexEnviv@12
+-	glGetTexGendv = glGetTexGendv@12
+-	glGetTexGenfv = glGetTexGenfv@12
+-	glGetTexGeniv = glGetTexGeniv@12
+-	glGetTexImage = glGetTexImage@20
+-	glGetTexLevelParameterfv = glGetTexLevelParameterfv@16
+-	glGetTexLevelParameteriv = glGetTexLevelParameteriv@16
+-	glGetTexParameterfv = glGetTexParameterfv@12
+-	glGetTexParameteriv = glGetTexParameteriv@12
+-	glHint = glHint@8
+-	glIndexMask = glIndexMask@4
+-	glIndexPointer = glIndexPointer@12
+-	glIndexd = glIndexd@8
+-	glIndexdv = glIndexdv@4
+-	glIndexf = glIndexf@4
+-	glIndexfv = glIndexfv@4
+-	glIndexi = glIndexi@4
+-	glIndexiv = glIndexiv@4
+-	glIndexs = glIndexs@4
+-	glIndexsv = glIndexsv@4
+-	glIndexub = glIndexub@4
+-	glIndexubv = glIndexubv@4
+-	glInitNames = glInitNames@0
+-	glInterleavedArrays = glInterleavedArrays@12
+-	glIsEnabled = glIsEnabled@4
+-	glIsList = glIsList@4
+-	glIsTexture = glIsTexture@4
+-	glLightModelf = glLightModelf@8
+-	glLightModelfv = glLightModelfv@8
+-	glLightModeli = glLightModeli@8
+-	glLightModeliv = glLightModeliv@8
+-	glLightf = glLightf@12
+-	glLightfv = glLightfv@12
+-	glLighti = glLighti@12
+-	glLightiv = glLightiv@12
+-	glLineStipple = glLineStipple@8
+-	glLineWidth = glLineWidth@4
+-	glListBase = glListBase@4
+-	glLoadIdentity = glLoadIdentity@0
+-	glLoadMatrixd = glLoadMatrixd@4
+-	glLoadMatrixf = glLoadMatrixf@4
+-	glLoadName = glLoadName@4
+-	glLogicOp = glLogicOp@4
+-	glMap1d = glMap1d@32
+-	glMap1f = glMap1f@24
+-	glMap2d = glMap2d@56
+-	glMap2f = glMap2f@40
+-	glMapGrid1d = glMapGrid1d@20
+-	glMapGrid1f = glMapGrid1f@12
+-	glMapGrid2d = glMapGrid2d@40
+-	glMapGrid2f = glMapGrid2f@24
+-	glMaterialf = glMaterialf@12
+-	glMaterialfv = glMaterialfv@12
+-	glMateriali = glMateriali@12
+-	glMaterialiv = glMaterialiv@12
+-	glMatrixMode = glMatrixMode@4
+-	glMultMatrixd = glMultMatrixd@4
+-	glMultMatrixf = glMultMatrixf@4
+-	glNewList = glNewList@8
+-	glNormal3b = glNormal3b@12
+-	glNormal3bv = glNormal3bv@4
+-	glNormal3d = glNormal3d@24
+-	glNormal3dv = glNormal3dv@4
+-	glNormal3f = glNormal3f@12
+-	glNormal3fv = glNormal3fv@4
+-	glNormal3i = glNormal3i@12
+-	glNormal3iv = glNormal3iv@4
+-	glNormal3s = glNormal3s@12
+-	glNormal3sv = glNormal3sv@4
+-	glNormalPointer = glNormalPointer@12
+-	glOrtho = glOrtho@48
+-	glPassThrough = glPassThrough@4
+-	glPixelMapfv = glPixelMapfv@12
+-	glPixelMapuiv = glPixelMapuiv@12
+-	glPixelMapusv = glPixelMapusv@12
+-	glPixelStoref = glPixelStoref@8
+-	glPixelStorei = glPixelStorei@8
+-	glPixelTransferf = glPixelTransferf@8
+-	glPixelTransferi = glPixelTransferi@8
+-	glPixelZoom = glPixelZoom@8
+-	glPointSize = glPointSize@4
+-	glPolygonMode = glPolygonMode@8
+-	glPolygonOffset = glPolygonOffset@8
+-	glPolygonStipple = glPolygonStipple@4
+-	glPopAttrib = glPopAttrib@0
+-	glPopClientAttrib = glPopClientAttrib@0
+-	glPopMatrix = glPopMatrix@0
+-	glPopName = glPopName@0
+-	glPrioritizeTextures = glPrioritizeTextures@12
+-	glPushAttrib = glPushAttrib@4
+-	glPushClientAttrib = glPushClientAttrib@4
+-	glPushMatrix = glPushMatrix@0
+-	glPushName = glPushName@4
+-	glRasterPos2d = glRasterPos2d@16
+-	glRasterPos2dv = glRasterPos2dv@4
+-	glRasterPos2f = glRasterPos2f@8
+-	glRasterPos2fv = glRasterPos2fv@4
+-	glRasterPos2i = glRasterPos2i@8
+-	glRasterPos2iv = glRasterPos2iv@4
+-	glRasterPos2s = glRasterPos2s@8
+-	glRasterPos2sv = glRasterPos2sv@4
+-	glRasterPos3d = glRasterPos3d@24
+-	glRasterPos3dv = glRasterPos3dv@4
+-	glRasterPos3f = glRasterPos3f@12
+-	glRasterPos3fv = glRasterPos3fv@4
+-	glRasterPos3i = glRasterPos3i@12
+-	glRasterPos3iv = glRasterPos3iv@4
+-	glRasterPos3s = glRasterPos3s@12
+-	glRasterPos3sv = glRasterPos3sv@4
+-	glRasterPos4d = glRasterPos4d@32
+-	glRasterPos4dv = glRasterPos4dv@4
+-	glRasterPos4f = glRasterPos4f@16
+-	glRasterPos4fv = glRasterPos4fv@4
+-	glRasterPos4i = glRasterPos4i@16
+-	glRasterPos4iv = glRasterPos4iv@4
+-	glRasterPos4s = glRasterPos4s@16
+-	glRasterPos4sv = glRasterPos4sv@4
+-	glReadBuffer = glReadBuffer@4
+-	glReadPixels = glReadPixels@28
+-	glRectd = glRectd@32
+-	glRectdv = glRectdv@8
+-	glRectf = glRectf@16
+-	glRectfv = glRectfv@8
+-	glRecti = glRecti@16
+-	glRectiv = glRectiv@8
+-	glRects = glRects@16
+-	glRectsv = glRectsv@8
+-	glRenderMode = glRenderMode@4
+-	glRotated = glRotated@32
+-	glRotatef = glRotatef@16
+-	glScaled = glScaled@24
+-	glScalef = glScalef@12
+-	glScissor = glScissor@16
+-	glSelectBuffer = glSelectBuffer@8
+-	glShadeModel = glShadeModel@4
+-	glStencilFunc = glStencilFunc@12
+-	glStencilMask = glStencilMask@4
+-	glStencilOp = glStencilOp@12
+-	glTexCoord1d = glTexCoord1d@8
+-	glTexCoord1dv = glTexCoord1dv@4
+-	glTexCoord1f = glTexCoord1f@4
+-	glTexCoord1fv = glTexCoord1fv@4
+-	glTexCoord1i = glTexCoord1i@4
+-	glTexCoord1iv = glTexCoord1iv@4
+-	glTexCoord1s = glTexCoord1s@4
+-	glTexCoord1sv = glTexCoord1sv@4
+-	glTexCoord2d = glTexCoord2d@16
+-	glTexCoord2dv = glTexCoord2dv@4
+-	glTexCoord2f = glTexCoord2f@8
+-	glTexCoord2fv = glTexCoord2fv@4
+-	glTexCoord2i = glTexCoord2i@8
+-	glTexCoord2iv = glTexCoord2iv@4
+-	glTexCoord2s = glTexCoord2s@8
+-	glTexCoord2sv = glTexCoord2sv@4
+-	glTexCoord3d = glTexCoord3d@24
+-	glTexCoord3dv = glTexCoord3dv@4
+-	glTexCoord3f = glTexCoord3f@12
+-	glTexCoord3fv = glTexCoord3fv@4
+-	glTexCoord3i = glTexCoord3i@12
+-	glTexCoord3iv = glTexCoord3iv@4
+-	glTexCoord3s = glTexCoord3s@12
+-	glTexCoord3sv = glTexCoord3sv@4
+-	glTexCoord4d = glTexCoord4d@32
+-	glTexCoord4dv = glTexCoord4dv@4
+-	glTexCoord4f = glTexCoord4f@16
+-	glTexCoord4fv = glTexCoord4fv@4
+-	glTexCoord4i = glTexCoord4i@16
+-	glTexCoord4iv = glTexCoord4iv@4
+-	glTexCoord4s = glTexCoord4s@16
+-	glTexCoord4sv = glTexCoord4sv@4
+-	glTexCoordPointer = glTexCoordPointer@16
+-	glTexEnvf = glTexEnvf@12
+-	glTexEnvfv = glTexEnvfv@12
+-	glTexEnvi = glTexEnvi@12
+-	glTexEnviv = glTexEnviv@12
+-	glTexGend = glTexGend@16
+-	glTexGendv = glTexGendv@12
+-	glTexGenf = glTexGenf@12
+-	glTexGenfv = glTexGenfv@12
+-	glTexGeni = glTexGeni@12
+-	glTexGeniv = glTexGeniv@12
+-	glTexImage1D = glTexImage1D@32
+-	glTexImage2D = glTexImage2D@36
+-	glTexParameterf = glTexParameterf@12
+-	glTexParameterfv = glTexParameterfv@12
+-	glTexParameteri = glTexParameteri@12
+-	glTexParameteriv = glTexParameteriv@12
+-	glTexSubImage1D = glTexSubImage1D@28
+-	glTexSubImage2D = glTexSubImage2D@36
+-	glTranslated = glTranslated@24
+-	glTranslatef = glTranslatef@12
+-	glVertex2d = glVertex2d@16
+-	glVertex2dv = glVertex2dv@4
+-	glVertex2f = glVertex2f@8
+-	glVertex2fv = glVertex2fv@4
+-	glVertex2i = glVertex2i@8
+-	glVertex2iv = glVertex2iv@4
+-	glVertex2s = glVertex2s@8
+-	glVertex2sv = glVertex2sv@4
+-	glVertex3d = glVertex3d@24
+-	glVertex3dv = glVertex3dv@4
+-	glVertex3f = glVertex3f@12
+-	glVertex3fv = glVertex3fv@4
+-	glVertex3i = glVertex3i@12
+-	glVertex3iv = glVertex3iv@4
+-	glVertex3s = glVertex3s@12
+-	glVertex3sv = glVertex3sv@4
+-	glVertex4d = glVertex4d@32
+-	glVertex4dv = glVertex4dv@4
+-	glVertex4f = glVertex4f@16
+-	glVertex4fv = glVertex4fv@4
+-	glVertex4i = glVertex4i@16
+-	glVertex4iv = glVertex4iv@4
+-	glVertex4s = glVertex4s@16
+-	glVertex4sv = glVertex4sv@4
+-	glVertexPointer = glVertexPointer@16
+-	glViewport = glViewport@16
+diff --git a/src/gallium/targets/wgl/gallium_wgl.def b/src/gallium/targets/wgl/gallium_wgl.def
+deleted file mode 100644
+index 6d39d2eadc9bb2e941f3399efcc54f4b1c2c79da..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/wgl/gallium_wgl.def
++++ /dev/null
+@@ -1,38 +0,0 @@
+-EXPORTS
+-	DrvCopyContext
+-	DrvCreateContext
+-	DrvCreateLayerContext
+-	DrvDeleteContext
+-	DrvDescribeLayerPlane
+-	DrvDescribePixelFormat
+-	DrvGetLayerPaletteEntries
+-	DrvGetProcAddress
+-	DrvPresentBuffers
+-	DrvRealizeLayerPalette
+-	DrvReleaseContext
+-	DrvSetCallbackProcs
+-	DrvSetContext
+-	DrvSetLayerPaletteEntries
+-	DrvSetPixelFormat
+-	DrvShareLists
+-	DrvSwapBuffers
+-	DrvSwapLayerBuffers
+-	DrvValidateVersion
+-
+-	stw_get_device
+-	stw_init_screen
+-	stw_get_current_context
+-	stw_get_current_dc
+-	stw_pixelformat_choose
+-	stw_pixelformat_get
+-	stw_pixelformat_get_info
+-	stw_override_opengl32_entry_points
+-	stw_create_context_attribs
+-	stw_destroy_context
+-	stw_unbind_context
+-	stw_current_context
+-	stw_make_current
+-	stw_framebuffer_create
+-	stw_framebuffer_release_locked
+-	stw_framebuffer_unlock
+-	stw_framebuffer_swap_locked
+diff --git a/src/gallium/targets/wgl/gallium_wgl.def.in b/src/gallium/targets/wgl/gallium_wgl.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..860389d48cc44bd61c4a3df6d1405c2ccf06f099
+--- /dev/null
++++ b/src/gallium/targets/wgl/gallium_wgl.def.in
+@@ -0,0 +1,39 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++DrvCopyContext@12
++DrvCreateContext@4
++DrvCreateLayerContext@8
++DrvDeleteContext@4
++DrvDescribeLayerPlane@20
++DrvDescribePixelFormat@16
++DrvGetLayerPaletteEntries@20
++DrvGetProcAddress@4
++DrvPresentBuffers@8
++DrvRealizeLayerPalette@12
++DrvReleaseContext@4
++DrvSetCallbackProcs@8
++DrvSetContext@12
++DrvSetLayerPaletteEntries@20
++DrvSetPixelFormat@8
++DrvShareLists@8
++DrvSwapBuffers@4
++DrvSwapLayerBuffers@8
++DrvValidateVersion@4
++
++; __cdecl calling convention have no @number suffix
++stw_get_device
++stw_init_screen
++stw_get_current_context
++stw_get_current_dc
++stw_pixelformat_choose
++stw_pixelformat_get
++stw_pixelformat_get_info
++stw_override_opengl32_entry_points
++stw_create_context_attribs
++stw_destroy_context
++stw_unbind_context
++stw_current_context
++stw_make_current
++stw_framebuffer_create
++stw_framebuffer_release_locked
++stw_framebuffer_unlock
++stw_framebuffer_swap_locked
+diff --git a/src/gallium/targets/wgl/gallium_wgl.mingw.def b/src/gallium/targets/wgl/gallium_wgl.mingw.def
+deleted file mode 100644
+index ee23392d95ec26ca1d774f57b5979a153eab76a0..0000000000000000000000000000000000000000
+--- a/src/gallium/targets/wgl/gallium_wgl.mingw.def
++++ /dev/null
+@@ -1,26 +0,0 @@
+-EXPORTS
+-	DrvCopyContext = DrvCopyContext@12
+-	DrvCreateContext = DrvCreateContext@4
+-	DrvCreateLayerContext = DrvCreateLayerContext@8
+-	DrvDeleteContext = DrvDeleteContext@4
+-	DrvDescribeLayerPlane = DrvDescribeLayerPlane@20
+-	DrvDescribePixelFormat = DrvDescribePixelFormat@16
+-	DrvGetLayerPaletteEntries = DrvGetLayerPaletteEntries@20
+-	DrvGetProcAddress = DrvGetProcAddress@4
+-	DrvPresentBuffers = DrvPresentBuffers@8
+-	DrvRealizeLayerPalette = DrvRealizeLayerPalette@12
+-	DrvReleaseContext = DrvReleaseContext@4
+-	DrvSetCallbackProcs = DrvSetCallbackProcs@8
+-	DrvSetContext = DrvSetContext@12
+-	DrvSetLayerPaletteEntries = DrvSetLayerPaletteEntries@20
+-	DrvSetPixelFormat = DrvSetPixelFormat@8
+-	DrvShareLists = DrvShareLists@8
+-	DrvSwapBuffers = DrvSwapBuffers@4
+-	DrvSwapLayerBuffers = DrvSwapLayerBuffers@8
+-	DrvValidateVersion = DrvValidateVersion@4
+-
+-	stw_get_current_context = stw_get_current_context@0
+-	stw_get_current_dc = stw_get_current_dc@0
+-	stw_pixelformat_choose = stw_pixelformat_choose@8
+-	stw_pixelformat_get = stw_pixelformat_get@4
+-	stw_override_opengl32_entry_points = stw_override_opengl32_entry_points@8
+diff --git a/src/gallium/targets/wgl/meson.build b/src/gallium/targets/wgl/meson.build
+index 92571a7c8f7bcf6847360bcd725732bd144f35c9..ace7c33eb9499a8058598570890d3e408918e7ff 100644
+--- a/src/gallium/targets/wgl/meson.build
++++ b/src/gallium/targets/wgl/meson.build
+@@ -20,15 +20,15 @@
+ 
+ 
+ gallium_wgl_link_args = []
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  gallium_wgl_link_args += ['-Wl,--enable-stdcall-fixup']
+-endif
+ 
+-if cc.get_id() == 'gcc' and host_machine.cpu_family() != 'x86_64'
+-  wgl_def = 'gallium_wgl.mingw.def'
+-else
+-  wgl_def = 'gallium_wgl.def'
+-endif
++wgl_def = custom_target(
++  'gallium_wgl.def',
++  input: 'gallium_wgl.def.in',
++  output : 'gallium_wgl.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
+ 
+ libgallium_wgl = shared_library(
+   'gallium_wgl',
+diff --git a/src/mapi/es1api/gles1.def.in b/src/mapi/es1api/gles1.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..b09aff6a8739e1ce197f8abe481f4b79a94d3adb
+--- /dev/null
++++ b/src/mapi/es1api/gles1.def.in
+@@ -0,0 +1,146 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++glActiveTexture@4
++glAlphaFunc@8
++glAlphaFuncx@8
++glBindBuffer@8
++glBindTexture@8
++glBlendFunc@8
++glBufferData@16
++glBufferSubData@16
++glClear@4
++glClearColor@16
++glClearColorx@16
++glClearDepthf@4
++glClearDepthx@4
++glClearStencil@4
++glClientActiveTexture@4
++glClipPlanef@8
++glClipPlanex@8
++glColor4f@16
++glColor4ub@16
++glColor4x@16
++glColorMask@16
++glColorPointer@16
++glCompressedTexImage2D@32
++glCompressedTexSubImage2D@36
++glCopyTexImage2D@32
++glCopyTexSubImage2D@32
++glCullFace@4
++glDeleteBuffers@8
++glDeleteTextures@8
++glDepthFunc@4
++glDepthMask@4
++glDepthRangef@8
++glDepthRangex@8
++glDisable@4
++glDisableClientState@4
++glDrawArrays@12
++glDrawElements@16
++glEnable@4
++glEnableClientState@4
++glFinish@0
++glFlush@0
++glFogf@8
++glFogfv@8
++glFogx@8
++glFogxv@8
++glFrontFace@4
++glFrustumf@24
++glFrustumx@24
++glGenBuffers@8
++glGenTextures@8
++glGetBooleanv@8
++glGetBufferParameteriv@12
++glGetClipPlanef@8
++glGetClipPlanex@8
++glGetError@0
++glGetFixedv@8
++glGetFloatv@8
++glGetIntegerv@8
++glGetLightfv@12
++glGetLightxv@12
++glGetMaterialfv@12
++glGetMaterialxv@12
++glGetPointerv@8
++glGetString@4
++glGetTexEnvfv@12
++glGetTexEnviv@12
++glGetTexEnvxv@12
++glGetTexParameterfv@12
++glGetTexParameteriv@12
++glGetTexParameterxv@12
++glHint@8
++glIsBuffer@4
++glIsEnabled@4
++glIsTexture@4
++glLightModelf@8
++glLightModelfv@8
++glLightModelx@8
++glLightModelxv@8
++glLightf@12
++glLightfv@12
++glLightx@12
++glLightxv@12
++glLineWidth@4
++glLineWidthx@4
++glLoadIdentity@0
++glLoadMatrixf@4
++glLoadMatrixx@4
++glLogicOp@4
++glMaterialf@12
++glMaterialfv@12
++glMaterialx@12
++glMaterialxv@12
++glMatrixMode@4
++glMultMatrixf@4
++glMultMatrixx@4
++glMultiTexCoord4f@20
++glMultiTexCoord4x@20
++glNormal3f@12
++glNormal3x@12
++glNormalPointer@12
++glOrthof@24
++glOrthox@24
++glPixelStorei@8
++glPointParameterf@8
++glPointParameterfv@8
++glPointParameterx@8
++glPointParameterxv@8
++glPointSize@4
++glPointSizePointerOES@12
++glPointSizex@4
++glPolygonOffset@8
++glPolygonOffsetx@8
++glPopMatrix@0
++glPushMatrix@0
++glReadPixels@28
++glRotatef@16
++glRotatex@16
++glSampleCoverage@8
++glSampleCoveragex@8
++glScalef@12
++glScalex@12
++glScissor@16
++glShadeModel@4
++glStencilFunc@12
++glStencilMask@4
++glStencilOp@12
++glTexCoordPointer@16
++glTexEnvf@12
++glTexEnvfv@12
++glTexEnvi@12
++glTexEnviv@12
++glTexEnvx@12
++glTexEnvxv@12
++glTexImage2D@36
++glTexParameterf@12
++glTexParameterfv@12
++glTexParameteri@12
++glTexParameteriv@12
++glTexParameterx@12
++glTexParameterxv@12
++glTexSubImage2D@36
++glTranslatef@12
++glTranslatex@12
++glVertexPointer@16
++glViewport@16
+diff --git a/src/mapi/es1api/meson.build b/src/mapi/es1api/meson.build
+index 8b749b1a3324be96f0d69816e638f1131ec8c307..4bca37b5e32f77d55655c49ca0580b75707edc6b 100644
+--- a/src/mapi/es1api/meson.build
++++ b/src/mapi/es1api/meson.build
+@@ -29,12 +29,22 @@ es1_glapi_mapi_tmp_h = custom_target(
+ 
+ _es1_c_args = []
+ if with_platform_windows
+-  _es1_c_args += ['-D_GDI32_', '-DBUILD_GL32']
++  _es1_c_args += ['-D_GDI32_']
+ endif
+ 
++gles1_def = custom_target(
++  'gles1.def',
++  input: 'gles1.def.in',
++  output : 'gles1.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
++
+ libglesv1_cm = shared_library(
+   'GLESv1_CM' + get_option('gles-lib-suffix'),
+   ['../entry.c', es1_glapi_mapi_tmp_h],
++  vs_module_defs : gles1_def,
+   c_args : [
+     c_msvc_compat_args,
+     _es1_c_args,
+diff --git a/src/mapi/es2api/gles2.def.in b/src/mapi/es2api/gles2.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..4517ea8b739e72d950930ee94b51dc71829dea8e
+--- /dev/null
++++ b/src/mapi/es2api/gles2.def.in
+@@ -0,0 +1,359 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++glActiveShaderProgram@8
++glActiveTexture@4
++glAttachShader@8
++glBeginQuery@8
++glBeginTransformFeedback@4
++glBindAttribLocation@12
++glBindBuffer@8
++glBindBufferBase@12
++glBindBufferRange@20
++glBindFramebuffer@8
++glBindImageTexture@28
++glBindProgramPipeline@4
++glBindRenderbuffer@8
++glBindSampler@8
++glBindTexture@8
++glBindTransformFeedback@8
++glBindVertexArray@4
++glBindVertexBuffer@16
++glBlendBarrier@0
++glBlendColor@16
++glBlendEquation@4
++glBlendEquationSeparate@8
++glBlendEquationSeparatei@12
++glBlendEquationi@8
++glBlendFunc@8
++glBlendFuncSeparate@16
++glBlendFuncSeparatei@20
++glBlendFunci@12
++glBlitFramebuffer@40
++glBufferData@16
++glBufferSubData@16
++glCheckFramebufferStatus@4
++glClear@4
++glClearBufferfi@16
++glClearBufferfv@12
++glClearBufferiv@12
++glClearBufferuiv@12
++glClearColor@16
++glClearDepthf@4
++glClearStencil@4
++glClientWaitSync@16
++glColorMask@16
++glColorMaski@20
++glCompileShader@4
++glCompressedTexImage2D@32
++glCompressedTexImage3D@36
++glCompressedTexSubImage2D@36
++glCompressedTexSubImage3D@44
++glCopyBufferSubData@20
++glCopyImageSubData@60
++glCopyTexImage2D@32
++glCopyTexSubImage2D@32
++glCopyTexSubImage3D@36
++glCreateProgram@0
++glCreateShader@4
++glCreateShaderProgramv@12
++glCullFace@4
++glDebugMessageCallback@8
++glDebugMessageControl@24
++glDebugMessageInsert@24
++glDeleteBuffers@8
++glDeleteFramebuffers@8
++glDeleteProgram@4
++glDeleteProgramPipelines@8
++glDeleteQueries@8
++glDeleteRenderbuffers@8
++glDeleteSamplers@8
++glDeleteShader@4
++glDeleteSync@4
++glDeleteTextures@8
++glDeleteTransformFeedbacks@8
++glDeleteVertexArrays@8
++glDepthFunc@4
++glDepthMask@4
++glDepthRangef@8
++glDetachShader@8
++glDisable@4
++glDisableVertexAttribArray@4
++glDisablei@8
++glDispatchCompute@12
++glDispatchComputeIndirect@4
++glDrawArrays@12
++glDrawArraysIndirect@8
++glDrawArraysInstanced@16
++glDrawBuffers@8
++glDrawElements@16
++glDrawElementsBaseVertex@20
++glDrawElementsIndirect@12
++glDrawElementsInstanced@20
++glDrawElementsInstancedBaseVertex@24
++glDrawRangeElements@24
++glDrawRangeElementsBaseVertex@28
++glEnable@4
++glEnableVertexAttribArray@4
++glEnablei@8
++glEndQuery@4
++glEndTransformFeedback@0
++glFenceSync@8
++glFinish@0
++glFlush@0
++glFlushMappedBufferRange@12
++glFramebufferParameteri@12
++glFramebufferRenderbuffer@16
++glFramebufferTexture2D@20
++glFramebufferTexture@16
++glFramebufferTextureLayer@20
++glFrontFace@4
++glGenBuffers@8
++glGenFramebuffers@8
++glGenProgramPipelines@8
++glGenQueries@8
++glGenRenderbuffers@8
++glGenSamplers@8
++glGenTextures@8
++glGenTransformFeedbacks@8
++glGenVertexArrays@8
++glGenerateMipmap@4
++glGetActiveAttrib@28
++glGetActiveUniform@28
++glGetActiveUniformBlockName@20
++glGetActiveUniformBlockiv@16
++glGetActiveUniformsiv@20
++glGetAttachedShaders@16
++glGetAttribLocation@8
++glGetBooleani_v@12
++glGetBooleanv@8
++glGetBufferParameteri64v@12
++glGetBufferParameteriv@12
++glGetBufferPointerv@12
++glGetDebugMessageLog@32
++glGetError@0
++glGetFloatv@8
++glGetFragDataLocation@8
++glGetFramebufferAttachmentParameteriv@16
++glGetFramebufferParameteriv@12
++glGetGraphicsResetStatus@0
++glGetInteger64i_v@12
++glGetInteger64v@8
++glGetIntegeri_v@12
++glGetIntegerv@8
++glGetInternalformativ@20
++glGetMultisamplefv@12
++glGetObjectLabel@20
++glGetObjectPtrLabel@16
++glGetPointerv@8
++glGetProgramBinary@20
++glGetProgramInfoLog@16
++glGetProgramInterfaceiv@16
++glGetProgramPipelineInfoLog@16
++glGetProgramPipelineiv@12
++glGetProgramResourceIndex@12
++glGetProgramResourceLocation@12
++glGetProgramResourceName@24
++glGetProgramResourceiv@32
++glGetProgramiv@12
++glGetQueryObjectuiv@12
++glGetQueryiv@12
++glGetRenderbufferParameteriv@12
++glGetSamplerParameterIiv@12
++glGetSamplerParameterIuiv@12
++glGetSamplerParameterfv@12
++glGetSamplerParameteriv@12
++glGetShaderInfoLog@16
++glGetShaderPrecisionFormat@16
++glGetShaderSource@16
++glGetShaderiv@12
++glGetString@4
++glGetStringi@8
++glGetSynciv@20
++glGetTexLevelParameterfv@16
++glGetTexLevelParameteriv@16
++glGetTexParameterIiv@12
++glGetTexParameterIuiv@12
++glGetTexParameterfv@12
++glGetTexParameteriv@12
++glGetTransformFeedbackVarying@28
++glGetUniformBlockIndex@8
++glGetUniformIndices@16
++glGetUniformLocation@8
++glGetUniformfv@12
++glGetUniformiv@12
++glGetUniformuiv@12
++glGetVertexAttribIiv@12
++glGetVertexAttribIuiv@12
++glGetVertexAttribPointerv@12
++glGetVertexAttribfv@12
++glGetVertexAttribiv@12
++glGetnUniformfv@16
++glGetnUniformiv@16
++glGetnUniformuiv@16
++glHint@8
++glInvalidateFramebuffer@12
++glInvalidateSubFramebuffer@28
++glIsBuffer@4
++glIsEnabled@4
++glIsEnabledi@8
++glIsFramebuffer@4
++glIsProgram@4
++glIsProgramPipeline@4
++glIsQuery@4
++glIsRenderbuffer@4
++glIsSampler@4
++glIsShader@4
++glIsSync@4
++glIsTexture@4
++glIsTransformFeedback@4
++glIsVertexArray@4
++glLineWidth@4
++glLinkProgram@4
++glMapBufferRange@16
++glMemoryBarrier@4
++glMemoryBarrierByRegion@4
++glMinSampleShading@4
++glObjectLabel@16
++glObjectPtrLabel@12
++glPatchParameteri@8
++glPauseTransformFeedback@0
++glPixelStorei@8
++glPolygonOffset@8
++glPopDebugGroup@0
++glPrimitiveBoundingBox@32
++glProgramBinary@16
++glProgramParameteri@12
++glProgramUniform1f@12
++glProgramUniform1fv@16
++glProgramUniform1i@12
++glProgramUniform1iv@16
++glProgramUniform1ui@12
++glProgramUniform1uiv@16
++glProgramUniform2f@16
++glProgramUniform2fv@16
++glProgramUniform2i@16
++glProgramUniform2iv@16
++glProgramUniform2ui@16
++glProgramUniform2uiv@16
++glProgramUniform3f@20
++glProgramUniform3fv@16
++glProgramUniform3i@20
++glProgramUniform3iv@16
++glProgramUniform3ui@20
++glProgramUniform3uiv@16
++glProgramUniform4f@24
++glProgramUniform4fv@16
++glProgramUniform4i@24
++glProgramUniform4iv@16
++glProgramUniform4ui@24
++glProgramUniform4uiv@16
++glProgramUniformMatrix2fv@20
++glProgramUniformMatrix2x3fv@20
++glProgramUniformMatrix2x4fv@20
++glProgramUniformMatrix3fv@20
++glProgramUniformMatrix3x2fv@20
++glProgramUniformMatrix3x4fv@20
++glProgramUniformMatrix4fv@20
++glProgramUniformMatrix4x2fv@20
++glProgramUniformMatrix4x3fv@20
++glPushDebugGroup@16
++glReadBuffer@4
++glReadPixels@28
++glReadnPixels@32
++glReleaseShaderCompiler@0
++glRenderbufferStorage@16
++glRenderbufferStorageMultisample@20
++glResumeTransformFeedback@0
++glSampleCoverage@8
++glSampleMaski@8
++glSamplerParameterIiv@12
++glSamplerParameterIuiv@12
++glSamplerParameterf@12
++glSamplerParameterfv@12
++glSamplerParameteri@12
++glSamplerParameteriv@12
++glScissor@16
++glShaderBinary@20
++glShaderSource@16
++glStencilFunc@12
++glStencilFuncSeparate@16
++glStencilMask@4
++glStencilMaskSeparate@8
++glStencilOp@12
++glStencilOpSeparate@16
++glTexBuffer@12
++glTexBufferRange@20
++glTexImage2D@36
++glTexImage3D@40
++glTexParameterIiv@12
++glTexParameterIuiv@12
++glTexParameterf@12
++glTexParameterfv@12
++glTexParameteri@12
++glTexParameteriv@12
++glTexStorage2D@20
++glTexStorage2DMultisample@24
++glTexStorage3D@24
++glTexStorage3DMultisample@28
++glTexSubImage2D@36
++glTexSubImage3D@44
++glTransformFeedbackVaryings@16
++glUniform1f@8
++glUniform1fv@12
++glUniform1i@8
++glUniform1iv@12
++glUniform1ui@8
++glUniform1uiv@12
++glUniform2f@12
++glUniform2fv@12
++glUniform2i@12
++glUniform2iv@12
++glUniform2ui@12
++glUniform2uiv@12
++glUniform3f@16
++glUniform3fv@12
++glUniform3i@16
++glUniform3iv@12
++glUniform3ui@16
++glUniform3uiv@12
++glUniform4f@20
++glUniform4fv@12
++glUniform4i@20
++glUniform4iv@12
++glUniform4ui@20
++glUniform4uiv@12
++glUniformBlockBinding@12
++glUniformMatrix2fv@16
++glUniformMatrix2x3fv@16
++glUniformMatrix2x4fv@16
++glUniformMatrix3fv@16
++glUniformMatrix3x2fv@16
++glUniformMatrix3x4fv@16
++glUniformMatrix4fv@16
++glUniformMatrix4x2fv@16
++glUniformMatrix4x3fv@16
++glUnmapBuffer@4
++glUseProgram@4
++glUseProgramStages@12
++glValidateProgram@4
++glValidateProgramPipeline@4
++glVertexAttrib1f@8
++glVertexAttrib1fv@8
++glVertexAttrib2f@12
++glVertexAttrib2fv@8
++glVertexAttrib3f@16
++glVertexAttrib3fv@8
++glVertexAttrib4f@20
++glVertexAttrib4fv@8
++glVertexAttribBinding@8
++glVertexAttribDivisor@8
++glVertexAttribFormat@20
++glVertexAttribI4i@20
++glVertexAttribI4iv@8
++glVertexAttribI4ui@20
++glVertexAttribI4uiv@8
++glVertexAttribIFormat@16
++glVertexAttribIPointer@20
++glVertexAttribPointer@24
++glVertexBindingDivisor@8
++glViewport@16
++glWaitSync@16
+diff --git a/src/mapi/es2api/meson.build b/src/mapi/es2api/meson.build
+index 356c5760c495e5b8a52abc2c841741f9b2b47222..8b133daa131276025072b4a85318e423206981cc 100644
+--- a/src/mapi/es2api/meson.build
++++ b/src/mapi/es2api/meson.build
+@@ -29,12 +29,22 @@ es2_glapi_mapi_tmp_h = custom_target(
+ 
+ _es2_c_args = []
+ if with_platform_windows
+-  _es2_c_args += ['-D_GDI32_', '-DBUILD_GL32']
++  _es2_c_args += ['-D_GDI32_']
+ endif
+ 
++gles2_def = custom_target(
++  'gles2.def',
++  input: 'gles2.def.in',
++  output : 'gles2.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
++
+ libgles2 = shared_library(
+   'GLESv2' + get_option('gles-lib-suffix'),
+   ['../entry.c', es2_glapi_mapi_tmp_h],
++  vs_module_defs : gles2_def,
+   c_args : [
+     c_msvc_compat_args,
+     _es2_c_args,
+diff --git a/src/mapi/glapi/meson.build b/src/mapi/glapi/meson.build
+index 270b9870b400803d5cc8c484242c65b96ba99b9d..9f06207fe0a24e123b542ddf886ce2b325b0e105 100644
+--- a/src/mapi/glapi/meson.build
++++ b/src/mapi/glapi/meson.build
+@@ -52,7 +52,7 @@ if with_shared_glapi
+ else
+   static_glapi_args += '-DMAPI_MODE_UTIL'
+   if with_platform_windows
+-    static_glapi_args += ['-D_GDI32_', '-DBUILD_GL32', '-DKHRONOS_DLL_EXPORTS', '-D_GLAPI_NO_EXPORTS']
++    static_glapi_args += ['-D_GDI32_', '-DKHRONOS_DLL_EXPORTS', '-D_GLAPI_NO_EXPORTS']
+   endif
+   static_glapi_files += files(
+     'glapi_dispatch.c',
+diff --git a/src/mesa/meson.build b/src/mesa/meson.build
+index bc7963413ff46781ae4a58a7762a58a73e67a23a..08b0cac497490fa40230861bd24bdba6e83016ad 100644
+--- a/src/mesa/meson.build
++++ b/src/mesa/meson.build
+@@ -489,7 +489,6 @@ _mesa_windows_args = []
+ if with_platform_windows
+   _mesa_windows_args += [
+     '-D_GDI32_',    # prevent gl* being declared __declspec(dllimport) in MS headers
+-    '-DBUILD_GL32'  # declare gl* as __declspec(dllexport) in Mesa headers
+   ]
+   if not with_shared_glapi
+     # prevent _glapi_* from being declared __declspec(dllimport)
+diff --git a/src/vulkan/meson.build b/src/vulkan/meson.build
+index 6384af782976e3f8300cf5e69d11e98fa6ac5e83..8c2f0dd08632116eebbd982516e1004e9db01e09 100644
+--- a/src/vulkan/meson.build
++++ b/src/vulkan/meson.build
+@@ -27,6 +27,15 @@ vulkan_wsi_args = []
+ vulkan_wsi_deps = []
+ vulkan_wsi_list = []
+ 
++vulkan_api_def = custom_target(
++  'vulkan_api.def',
++  input: 'vulkan_api.def.in',
++  output : 'vulkan_api.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
++
+ if with_platform_x11
+   vulkan_wsi_deps += [
+     dep_xcb,
+diff --git a/src/vulkan/vulkan_api.def.in b/src/vulkan/vulkan_api.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..678e4d99278b96d0ef1ee15c51e5febf8fcea58e
+--- /dev/null
++++ b/src/vulkan/vulkan_api.def.in
+@@ -0,0 +1,4 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++vk_icdNegotiateLoaderICDInterfaceVersion@4
++vk_icdGetInstanceProcAddr@8
++vk_icdGetPhysicalDeviceProcAddr@8
