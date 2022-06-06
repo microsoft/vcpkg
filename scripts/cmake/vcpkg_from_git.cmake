@@ -175,7 +175,7 @@ function(vcpkg_from_git)
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
+            COMMAND "${GIT}" -c core.autocrlf=false archive "${rev_parse_ref}" -o "${temp_archive}"
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME git-archive
         )

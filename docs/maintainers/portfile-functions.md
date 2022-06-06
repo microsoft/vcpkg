@@ -74,6 +74,11 @@
 - [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
 - [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
 
+### [vcpkg-gn](ports/vcpkg-gn.md)
+
+- [vcpkg\_gn\_configure](ports/vcpkg-gn/vcpkg_gn_configure.md)
+- [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md)
+
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)

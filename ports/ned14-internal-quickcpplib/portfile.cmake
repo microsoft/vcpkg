@@ -8,7 +8,7 @@
 # known to be compatible with QuickCppLib. It has occurred in the
 # past that newer versions were severely broken with QuickCppLib.
 
-include(${CURRENT_PORT_DIR}/sha_manifest.cmake)
+include("${CURRENT_PORT_DIR}/sha_manifest.cmake")
 
 if (NOT "cxx20" IN_LIST FEATURES)
     message(WARNING [=[
@@ -66,7 +66,6 @@ vcpkg_check_features(
 # Use QuickCppLib's own build process, skipping examples and tests.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
