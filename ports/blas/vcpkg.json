@@ -8,11 +8,11 @@
     {
       "$comment": "Will use internal generic BLAS of lapack-reference",
       "name": "lapack-reference",
-      "platform": "!((static |arm) & windows)"
+      "platform": "static & windows"
     },
     {
       "name": "openblas",
-      "platform": "!osx | !((static |arm) & windows)"
+      "platform": "!osx | !(static & windows)"
     },
     {
       "name": "vcpkg-cmake",
