@@ -8,6 +8,7 @@ vcpkg_from_sourceforge(
 	PATCHES
 		appwizard_setup.js-vs2022.patch
 		atlmisc.h-bug329.patch
+		atlribbon-24933.patch
 )
 
 file(INSTALL ${SOURCE_PATH}/Include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.h")
