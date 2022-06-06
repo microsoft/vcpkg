@@ -11,7 +11,7 @@ vcpkg_from_github(
 
 configure_file("${SOURCE_PATH}/include/SDL_config.h.default" "${SOURCE_PATH}/include/SDL_config.h" COPYONLY)
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln" DESTINATION "${SOURCE_PATH}/VisualC/")
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -57,7 +57,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/SDLmain.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDLmaind.lib")
     endif()
 else()
-    message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
+    if(VCPKG_TARGET_IS_LINUX)
+        message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
+    endif()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -66,14 +68,6 @@ else()
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     
-    file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
-    foreach(SDL1_TOOL "${SDL1_TOOLS}")
-        file(COPY "${SDL1_TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
-        file(REMOVE "${SDL1_TOOL}")
-    endforeach()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    
-    file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/sdl1/bin/sdl-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
