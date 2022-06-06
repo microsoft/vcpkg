@@ -7281,7 +7281,7 @@
       "port-version": 0
     },
     "utf8proc": {
-      "baseline": "2.6.1",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "utfcpp": {
