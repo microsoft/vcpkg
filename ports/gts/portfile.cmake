@@ -5,7 +5,7 @@ else()
 endif()
 
 vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH src
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO gts/gts
     REF 0.7.6
     FILENAME gts-0.7.6.tar.gz
@@ -13,22 +13,22 @@ vcpkg_from_sourceforge(
     PATCHES ${patches}
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${src}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/predicates_init.h" DESTINATION "${src}/src")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/predicates_init.h" DESTINATION "${SOURCE_PATH}/src")
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
-    SOURCE_PATH ${src}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-file(INSTALL ${src}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
