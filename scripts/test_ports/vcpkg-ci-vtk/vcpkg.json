@@ -3,6 +3,7 @@
   "version-date": "2022-05-30",
   "description": "Port to force features of certain ports within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vtk",
