@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         export-symbols-only-in-shared-build.patch
         fix-linux-build.patch
+        sdl-config.patch
 )
 
 configure_file("${SOURCE_PATH}/include/SDL_config.h.default" "${SOURCE_PATH}/include/SDL_config.h" COPYONLY)
@@ -80,10 +81,5 @@ else()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/sdl1/bin/sdl-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/sdl1/debug/bin/sdl-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-    endif()
-    
     file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
