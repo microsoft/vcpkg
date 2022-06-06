@@ -1,7 +1,8 @@
 prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
 
-Name: BLAS
-Description: Implementation of BLAS
+Name: LAPACK
+Description: Implementation of LAPACK
 Version: 
 Requires: @requires@
 Libs: @libs@

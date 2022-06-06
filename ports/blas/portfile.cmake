@@ -10,24 +10,19 @@ if(ver_str STREQUAL "default")
         set(requires "")
         set(libs "-framework Accelerate")
         set(cflags "-framework Accelerate")
+    elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(BLA_VENDOR Generic)
+        set(requires "blas-reference")
     else()
         set(BLA_VENDOR OpenBLAS)
         set(requires openblas)
     endif()
 
-    if(NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
-        if(NOT VCPKG_BUILD_TYPE)
-            configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" @ONLY)
-        endif()
-    else()
-        set(BLA_VENDOR Generic)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
+    if(NOT VCPKG_BUILD_TYPE)
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" @ONLY)
     endif()
-
     # For possible overlays:
-
-    #NETLIB reference implementation (contained in lapack-reference)
-    #set(BLA_VENDOR Generic)
 
     # Intel MKL
     #if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
