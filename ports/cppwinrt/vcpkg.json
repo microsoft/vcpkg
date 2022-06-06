@@ -5,11 +5,5 @@
   "homepage": "https://github.com/microsoft/cppwinrt",
   "documentation": "https://docs.microsoft.com/windows/uwp/cpp-and-winrt-apis/",
   "license": "MIT",
-  "supports": "windows",
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "supports": "windows"
 }
