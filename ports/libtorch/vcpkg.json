@@ -13,6 +13,10 @@
     "gflags",
     "glog",
     "lmdb",
+    {
+      "name": "mpi",
+      "platform": "linux"
+    },
     "onnx",
     "onnx-optimizer",
     "protobuf",

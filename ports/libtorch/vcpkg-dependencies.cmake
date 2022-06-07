@@ -203,7 +203,7 @@ if(USE_TENSORPIPE)
 endif()
 
 if(USE_MPI)
-  find_package(MPI REQUIRED) # API package: libopenmpi-dev
+  find_package(MPI REQUIRED) # APT package: libopenmpi-dev
   if(NOT MPI_CXX_FOUND)
     message(FATAL_ERROR "Failed to find MPI_CXX")
   endif()
