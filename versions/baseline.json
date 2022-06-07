@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
@@ -7578,7 +7578,7 @@
     },
     "wtl": {
       "baseline": "10.0.10320",
-      "port-version": 2
+      "port-version": 3
     },
     "wxchartdir": {
       "baseline": "2.0.0",
