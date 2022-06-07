@@ -3,12 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
-    REF 1415b5936a2ac2f084850b09057e05fb5798b2f1    #v1.5.0
-    SHA512 222b31b16744af64f0a874ec956568adcecb553e43f8d4a2d16c00d55b31015d917a4dc7bb30d5430a894459b1be5e05b292e2d0918bf6f5609046a60539f80f
+    REF a85a9827792bb91642e0e4511e8083677f0c1b1e    #v2.1.0
+    SHA512 ecdf8af8fa49c2ebaae7d4a345c8df1a5ab86a9f39b3a4c4e27ef962807d5b62cb0aec57ae246fdc1a47e02f4224c7c4c999fafb53a5208e8008b0e2e4349cb5
     HEAD_REF master
-    PATCHES 
-        fix-error-c2668.patch
-        fix-error-C4996.patch  #fix x64-uwp error:std::uncaught_exception() is deprecated in C++17
 )
 
 vcpkg_cmake_configure(
