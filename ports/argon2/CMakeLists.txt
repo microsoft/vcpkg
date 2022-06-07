@@ -64,7 +64,13 @@ if (NOT ARGON2_SKIP_HEADERS)
     install(FILES ${ARGON2_HEADERS} DESTINATION include)
 endif ()
 
-configure_file ("${CMAKE_SOURCE_DIR}/argon2.pc.in" "${PROJECT_BINARY_DIR}/libargon2.pc" @ONLY)
+set(PREFIX ${CMAKE_INSTALL_PREFIX})
+set(UPSTREAM_VER 20190702)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(EXTRA_LIBS "-lrt -ldl")
+endif ()
+
+configure_file ("${CMAKE_SOURCE_DIR}/libargon2.pc.in" "${PROJECT_BINARY_DIR}/libargon2.pc" @ONLY)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libargon2.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 
 install(TARGETS argon2_lib argon2_tool
