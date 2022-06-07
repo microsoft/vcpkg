@@ -361,7 +361,7 @@
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.2.3",
+      "baseline": "12.2.4",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
