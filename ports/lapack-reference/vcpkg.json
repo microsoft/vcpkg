@@ -32,7 +32,7 @@
           "features": [
             "noblas"
           ],
-          "platform": "!(windows & static)"
+          "platform": "!windows | !static"
         }
       ]
     },
@@ -44,7 +44,7 @@
       "dependencies": [
         "blas"
       ],
-      "supports": "!(windows & static)"
+      "supports": "!windows | !static"
     }
   }
 }
