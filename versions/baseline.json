@@ -353,7 +353,7 @@
       "port-version": 0
     },
     "azure-security-keyvault-secrets-cpp": {
-      "baseline": "4.0.0-beta.2",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
