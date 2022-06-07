@@ -38,11 +38,9 @@ else()
   vcpkg_clean_executables_in_bin(FILE_NAMES "${RUBBERBAND_PROGRAM_NAME}")
 endif()
 
-# lv2 feature is not supported on Windows yet because vcpkg can't isntall to 
+# lv2 feature is not supported yet because vcpkg can't isntall to 
 # %APPDATA%\LV2 or %COMMONPROGRAMFILES%\LV2 but also complains about dlls in "${CURRENT_PACKAGES_DIR}/lib/lv2"
-if(NOT "lv2" IN_LIST FEATURES)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/lv2" "${CURRENT_PACKAGES_DIR}/debug/lib/lv2")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/lv2" "${CURRENT_PACKAGES_DIR}/debug/lib/lv2")
 
 file(
   INSTALL "${SOURCE_PATH}/COPYING"

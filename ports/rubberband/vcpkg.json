@@ -29,13 +29,6 @@
           ]
         }
       ]
-    },
-    "lv2": {
-      "description": "Build the LV2 plugin",
-      "supports": "!windows",
-      "dependencies": [
-        "lv2"
-      ]
     }
   }
 }
