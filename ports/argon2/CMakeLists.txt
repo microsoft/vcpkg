@@ -50,19 +50,17 @@ else()
     list(APPEND ARGON2_SRC "src/ref.c")
 endif()
 
-add_library(argon2_lib ${ARGON2_SRC})
-target_link_libraries(argon2_lib Threads::Threads)
-target_compile_definitions(argon2_lib PUBLIC "A2_VISCTL")
-set_target_properties(argon2_lib PROPERTIES OUTPUT_NAME argon2)
+add_library(argon2 ${ARGON2_SRC})
+target_link_libraries(argon2 Threads::Threads)
+target_compile_definitions(argon2 PUBLIC "A2_VISCTL")
+set_target_properties(argon2 PROPERTIES OUTPUT_NAME argon2)
 
 add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
 target_compile_definitions(argon2_tool PUBLIC "A2_VISCTL")
 target_link_libraries(argon2_tool Threads::Threads)
 set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
 
-if (NOT ARGON2_SKIP_HEADERS)
-    install(FILES ${ARGON2_HEADERS} DESTINATION include)
-endif ()
+install(FILES ${ARGON2_HEADERS} DESTINATION include)
 
 set(PREFIX ${CMAKE_INSTALL_PREFIX})
 set(UPSTREAM_VER 20190702)
@@ -73,8 +71,14 @@ endif ()
 configure_file ("${CMAKE_SOURCE_DIR}/libargon2.pc.in" "${PROJECT_BINARY_DIR}/libargon2.pc" @ONLY)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libargon2.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 
-install(TARGETS argon2_lib argon2_tool
+install(TARGETS argon2 argon2_tool
+    EXPORT argon2
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+install(EXPORT argon2
+  NAMESPACE unofficial::argon2::
+  DESTINATION "share/argon2"
 )
