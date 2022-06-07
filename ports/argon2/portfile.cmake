@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES argon2 AUTO_CLEAN)
