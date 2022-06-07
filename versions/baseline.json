@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
@@ -3454,6 +3454,10 @@
     },
     "libbson": {
       "baseline": "1.17.6",
+      "port-version": 1
+    },
+    "libcaer": {
+      "baseline": "3.3.14",
       "port-version": 1
     },
     "libcanberra": {
