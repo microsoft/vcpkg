@@ -41,10 +41,10 @@
     },
     "noblas": {
       "description": "Use external optimized BLAS",
+      "supports": "!windows | !static",
       "dependencies": [
         "blas"
-      ],
-      "supports": "!windows | !static"
+      ]
     }
   }
 }
