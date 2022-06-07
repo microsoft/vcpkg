@@ -189,7 +189,7 @@ index b3c2226..dbc5ab9 100644
 +endforeach()
 +
 +if (WIN32)
-+    string(REGEX REPLACE [[-l([^.]+).lib]] "-l\\1" _PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE}")
++    string(REGEX REPLACE [[ -l([^ ]+)\.lib ]] " -l\\1 " _PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
 +endif()
  
  configure_file (
