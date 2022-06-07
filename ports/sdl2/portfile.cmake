@@ -2,17 +2,14 @@ set(SDL2_VERSION 2.0.20)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF release-2.0.20
-    SHA512 f8558057a06d4507190b369b2067aee55c22ab796b90bb663fbc36218e66ec14e2feb0ecd55f9b798bfd24fc94e2b4cb93eddc52a59f0709d6cb0ebdb6d9309b
+    REF 53dea9830964eee8b5c2a7ee0a65d6e268dc78a1 #vrelease-2.0.22
+    SHA512 809ac18aeb739cfc6558dc11a7b3abbdad62a8e651ae2bfc157f26947b0df063a34c117ea8bd003428b5618fa6ce21a655fda073f1ef15aa34bc4a442a578523
     HEAD_REF master
     PATCHES
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-disable-sdlmain-target-search-on-uwp.patch
         0004-Define-crt-macros.patch
-        0005-Fix-uwp-joystick.patch
-        0006-Update-SDL_sysurl.cpp.patch
-        0007-timer-Fix-Emscripten-declaration-after-statement-err.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -29,13 +26,19 @@ if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
 endif()
 
+if(VCPKG_TARGET_IS_UWP)
+    set(configure_opts WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    ${configure_opts}
     OPTIONS ${FEATURE_OPTIONS}
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+        -DSDL_HIDAPI_JOYSTICK=ON
 )
 
 vcpkg_cmake_install()

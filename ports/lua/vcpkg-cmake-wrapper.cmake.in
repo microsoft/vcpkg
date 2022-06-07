@@ -7,7 +7,7 @@ endforeach()
 
 _find_package(unofficial-lua CONFIG ${REQUIRES})
 
-if (@ENABLE_LUA_CPP@)
+if (@COMPILE_AS_CPP@)
     _find_package(unofficial-lua-cpp CONFIG ${REQUIRES})
 endif()
 

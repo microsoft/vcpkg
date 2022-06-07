@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7b54c54..7c6f3a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,10 @@ find_package(ICU 60 REQUIRED COMPONENTS uc data)
+ get_directory_property(subproject PARENT_DIRECTORY)
+ 
+ add_subdirectory(src/nuspell)
++option(BUILD_TOOLS "Build the tools." OFF)
++if (BUILD_TOOLS)
+ add_subdirectory(src/tools)
++endif()
+ 
+ if (subproject)
+     # if added as subproject just build Nuspell
+diff --git a/src/tools/CMakeLists.txt b/src/tools/CMakeLists.txt
+index 3e63610..7597a6d 100644
+--- a/src/tools/CMakeLists.txt
++++ b/src/tools/CMakeLists.txt
+@@ -3,6 +3,10 @@ set_target_properties(nuspell-exe PROPERTIES RUNTIME_OUTPUT_NAME nuspell)
+ target_compile_definitions(nuspell-exe PRIVATE
+     PROJECT_VERSION=\"${PROJECT_VERSION}\")
+ target_link_libraries(nuspell-exe Nuspell::nuspell)
++if (WIN32 AND NOT MINGW)
++    find_library(GETOPT_WIN32_LIBRARY getopt)
++    target_link_libraries(nuspell-exe ${GETOPT_WIN32_LIBRARY})
++endif()
+ if (BUILD_SHARED_LIBS AND WIN32)
+     # This should be PRE_LINK (or PRE_BUILD), so Vcpkg's POST_BUILD
+     # step (see VCPKG_APPLOCAL_DEPS) that copies dll can pick up nuspell.dll

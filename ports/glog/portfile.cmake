@@ -8,14 +8,20 @@ vcpkg_from_github(
        glog_disable_debug_postfix.patch
        fix_glog_CMAKE_MODULE_PATH.patch
        fix_log_every_n.patch
-       nogdi-nominmax.patch
+       fix-windows-CXX11_ATOMIC.patch
+       fix_crosscompile_symbolize.patch
 
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    unwind     WITH_UNWIND
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

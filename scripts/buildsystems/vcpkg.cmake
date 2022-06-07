@@ -245,21 +245,21 @@ elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]$")
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$")
     set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
 else()
-    if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 Win64$")
+    if(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 Win64$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 17 2022$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
     else()
         find_program(Z_VCPKG_CL cl)
@@ -343,6 +343,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
+endif()
+
+if(EMSCRIPTEN)
+    set(Z_VCPKG_TARGET_TRIPLET_ARCH wasm32)
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT emscripten)
 endif()
 
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
@@ -584,14 +589,16 @@ function(add_executable)
                         -targetBinary "$<TARGET_FILE:${target_name}>"
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    VERBATIM
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
-                        "$<TARGET_FILE:${target_name}>"
-                        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                            "$<TARGET_FILE:${target_name}>"
+                            "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        VERBATIM
                     )
                 endif()
             endif()
@@ -618,6 +625,7 @@ function(add_library)
                     -targetBinary "$<TARGET_FILE:${target_name}>"
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    VERBATIM
             )
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
