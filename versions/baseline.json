@@ -7350,19 +7350,19 @@
     },
     "vcpkg-cmake": {
       "baseline": "2022-05-10",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-cmake-config": {
       "baseline": "2022-02-06",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
       "baseline": "2022-05-10",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-get-python-packages": {
       "baseline": "2022-04-11",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-gfortran": {
       "baseline": "3",
@@ -7370,15 +7370,15 @@
     },
     "vcpkg-gn": {
       "baseline": "2021-11-16",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-qmake": {
       "baseline": "2022-05-10",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
