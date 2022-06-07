@@ -13,7 +13,6 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(Threads REQUIRED)
-link_libraries(Threads::Threads)
 
 include_directories(include src)
 
@@ -52,11 +51,13 @@ else()
 endif()
 
 add_library(argon2_lib ${ARGON2_SRC})
+target_link_libraries(argon2_lib Threads::Threads)
 target_compile_definitions(argon2_lib PUBLIC "A2_VISCTL")
 set_target_properties(argon2_lib PROPERTIES OUTPUT_NAME argon2)
 
 add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
 target_compile_definitions(argon2_tool PUBLIC "A2_VISCTL")
+target_link_libraries(argon2_tool Threads::Threads)
 set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
 
 if (NOT ARGON2_SKIP_HEADERS)
