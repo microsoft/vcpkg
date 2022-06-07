@@ -14,4 +14,6 @@ file(INSTALL ${SOURCE_PATH}/Include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include
 file(COPY ${SOURCE_PATH}/Samples DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY ${SOURCE_PATH}/AppWizard DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wtl/atlribbon.h" "#include <atl" "#include <wtl/atl")
+
 file(INSTALL ${SOURCE_PATH}/MS-PL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
