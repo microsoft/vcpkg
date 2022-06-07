@@ -1425,7 +1425,7 @@
       "port-version": 0
     },
     "clickhouse-cpp": {
-      "baseline": "1.5.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "clipboardxx": {
@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
