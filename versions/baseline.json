@@ -493,8 +493,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "1",
-      "port-version": 1
+      "baseline": "default",
+      "port-version": 0
     },
     "blaze": {
       "baseline": "3.8",
@@ -1398,7 +1398,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 20
+      "port-version": 21
     },
     "clara": {
       "baseline": "1.1.5",
@@ -3341,12 +3341,12 @@
       "port-version": 0
     },
     "lapack": {
-      "baseline": "2022-02-22",
+      "baseline": "default",
       "port-version": 0
     },
     "lapack-reference": {
       "baseline": "3.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "lastools": {
       "baseline": "2020-05-09",
