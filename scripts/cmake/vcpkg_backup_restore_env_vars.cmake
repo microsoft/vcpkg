@@ -8,11 +8,13 @@ function(vcpkg_backup_env_variables)
     endif()
 
     foreach(envvar IN LISTS arg_VARS)
-        if(DEFINED ENV{${envvar}})
-            set("z_vcpkg_env_backup_${envvar}" "$ENV{${envvar}}" PARENT_SCOPE)
-        else()
-            unset("z_vcpkg_env_backup_${envvar}" PARENT_SCOPE)
-        endif()
+        list(LENGTH z_vcpkg_env_backup_${envvar} NUM_LEVEL)
+        # creates/modifies th list in current scope
+        list(APPEND z_vcpkg_env_backup_${envvar} z_vcpkg_env_backup_${envvar}_${NUM_LEVEL})
+        # cache the list variable
+        set(z_vcpkg_env_backup_${envvar} ${z_vcpkg_env_backup_${envvar}}  CACHE INTERNAL "" FORCE)
+        # set current value of envvvar, if envvar is not exists it will be an empty list
+        set(z_vcpkg_env_backup_${envvar}_${NUM_LEVEL} $ENV{${envvar}} CACHE INTERNAL "")
     endforeach()
 endfunction()
 
@@ -26,10 +28,23 @@ function(vcpkg_restore_env_variables)
     endif()
 
     foreach(envvar IN LISTS arg_VARS)
-        if(DEFINED z_vcpkg_env_backup_${envvar})
-            set("ENV{${envvar}}" "${z_vcpkg_env_backup_${envvar}}")
+        if(z_vcpkg_env_backup_${envvar})
+            list(POP_BACK z_vcpkg_env_backup_${envvar} VARIABLE_TO_BACKUP)
+            # make list available globally
+            set(z_vcpkg_env_backup_${envvar} ${z_vcpkg_env_backup_${envvar}}  CACHE INTERNAL "" FORCE)
+            # if environment variable to backup was not empty, restore it
+            if (${VARIABLE_TO_BACKUP})
+                set("ENV{${envvar}}" "${${VARIABLE_TO_BACKUP}}")
+            else()
+                unset("ENV{${envvar}}")
+            endif()
+            unset(${VARIABLE_TO_BACKUP} CACHE)
+            # if list is empty unset it
+            if (NOT z_vcpkg_env_backup_${envvar})
+                unset(z_vcpkg_env_backup_${envvar} CACHE)
+            endif()
         else()
-            unset("ENV{${envvar}}")
+            message(FATAL_ERROR "Unmached vcpkg_restore_env_variables call")
         endif()
     endforeach()
 endfunction()
