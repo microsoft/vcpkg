@@ -42,7 +42,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenMVSTargets-release.cmake TARGETS_CMAKE)
 string(REPLACE "bin/InterfaceCOLMAP" "tools/${PORT}/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/InterfaceMetashape" "tools/${PORT}/InterfaceMetashape" TARGETS_CMAKE "${TARGETS_CMAKE}")

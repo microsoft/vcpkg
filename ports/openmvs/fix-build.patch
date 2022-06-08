@@ -167,3 +167,17 @@ index bcac65c..9abeefb 100644
  #include "AutoPtr.h"
  #include "List.h"
  #include "Thread.h"
+
+diff --git a/apps/InterfaceMetashape/InterfaceMetashape.cpp b/apps/InterfaceMetashape/InterfaceMetashape.cpp
+index 1157bf29..73563b3c 100644
+--- a/apps/InterfaceMetashape/InterfaceMetashape.cpp
++++ b/apps/InterfaceMetashape/InterfaceMetashape.cpp
+@@ -246,7 +246,7 @@ bool ParseImageListXML(Scene& scene, PlatformDistCoeffs& pltDistCoeffs, size_t&
+ 	tinyxml2::XMLElement* elem;
+ 	const size_t nLen(pStream->getSize());
+ 	String strCameras; strCameras.resize(nLen);
+-	pStream->read(&strCameras[0], nLen);
++	pStream->read(strCameras.data(), nLen);
+ 	tinyxml2::XMLDocument doc;
+ 	doc.Parse(strCameras.c_str(), nLen);
+ 	if (doc.ErrorID() != tinyxml2::XML_SUCCESS)
