@@ -177,6 +177,7 @@ cppcoro:x64-uwp=fail
 cppgraphqlgen:x64-linux=fail
 crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
+crashpad:x64-linux=fail
 crashpad:x86-windows=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
