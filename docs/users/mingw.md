@@ -2,14 +2,14 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/mingw.md).**
 
-*MinGW is community-supported and not tested as part of vcpkg repository's CI process.*
+*MinGW is not tested as part of vcpkg repository's CI process, so regressions can occur as part of library updates. PRs improving support are welcome!*
 
 ## Table of Contents
 
- - [Mingw-w64 community triplets](#Mingw-w64-community-triplets)
- - [Using Mingw-w64 natively on Windows](#Using-Mingw-w64-natively-on-Windows)
-   - [How to avoid mixing different installations](#How-to-avoid-mixing-different-installations)
- - [Using Mingw-w64 to build Windows programs on other systems](#Using-Mingw-w64-to-build-Windows-programs-on-other-systems)
+ - [Mingw-w64 community triplets](#mingw-w64-community-triplets)
+ - [Using Mingw-w64 natively on Windows](#mingw-native)
+   - [How to avoid mixing different installations](#how-to-avoid-mixing-different-installations)
+ - [Using Mingw-w64 to build Windows programs on other systems](#mingw-cross)
 
 ## Mingw-w64 community triplets
 
@@ -36,6 +36,7 @@ Because of this, community involvement is paramount!
 - [Open issues](https://github.com/microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+mingw)
 - [Open pull requests](https://github.com/microsoft/vcpkg/pulls?q=is%3Apr+is%3Aopen+mingw)
 
+<a id="mingw-native"></a>
 ## Using Mingw-w64 natively on Windows
 
 With [MSYS2](https://www.msys2.org/), it is possible to easily create
@@ -123,6 +124,7 @@ which create a mix of MSYS2 programs from different installations. You may
 want to set the desired `PATH` manually, or remove directories which contain
 `sh.exe`, `bash.exe`, `msys-2.0.dll` or `cygwin1.dll`.
 
+<a id="mingw-cross"></a>
 ## Using Mingw-w64 to build Windows programs on other systems
 
 You can use the vcpkg mingw community triplets with toolchains on
