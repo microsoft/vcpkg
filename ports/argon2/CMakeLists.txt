@@ -71,7 +71,7 @@ endif ()
 configure_file ("${CMAKE_SOURCE_DIR}/libargon2.pc.in" "${PROJECT_BINARY_DIR}/libargon2.pc" @ONLY)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libargon2.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 
-install(TARGETS libargon2 argon2_tool
+install(TARGETS libargon2
     EXPORT unofficial-libargon2
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
@@ -81,4 +81,10 @@ install(TARGETS libargon2 argon2_tool
 install(EXPORT unofficial-libargon2
   NAMESPACE unofficial::argon2::
   DESTINATION "share/unofficial-libargon2"
+)
+
+install(TARGETS argon2_tool
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
 )
