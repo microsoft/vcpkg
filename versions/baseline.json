@@ -5613,8 +5613,8 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "2.1.0",
-      "port-version": 1
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "protozero": {
       "baseline": "1.7.1",
