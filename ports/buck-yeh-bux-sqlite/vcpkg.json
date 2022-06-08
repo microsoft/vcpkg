@@ -4,7 +4,7 @@
   "description": "Modern C++ wrapper classes and utilities of the original sqlite3 API",
   "homepage": "https://github.com/buck-yeh/bux-sqlite",
   "license": "MIT",
-  "supports": "!(arm | uwp | osx)",
+  "supports": "!(arm | uwp | osx | linux)",
   "dependencies": [
     "buck-yeh-bux",
     "fmt",
