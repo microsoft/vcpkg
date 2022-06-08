@@ -1,8 +1,8 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF 8e7769ddf4b008b0c7de3140126fcfb30607879e
+    REF 7c222308694a302df161767d09fd889459ebfcd9
     HEAD_REF development
-    SHA512 4213f58b6a273a2d704c11951335b632f6352f2593d7f33a1b8a18dc34c35b5045097a85358143c59fe42afa676ef514d2b299f6278b6007e9f7721885f26e76
+    SHA512 4745598af6b1b531d792cf143f0335fad2b7a324a282ab57351763d206e016e35366df6e3886e80248a83e02ffadb91be06968134b99647be74f48288e678beb
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DSDW_UNITY_BUILD=ON
 )
 
+vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/shaderwriter)
 
