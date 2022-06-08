@@ -7617,8 +7617,8 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "6.00",
-      "port-version": 1
+      "baseline": "6.60",
+      "port-version": 0
     },
     "xerces-c": {
       "baseline": "3.2.3",
