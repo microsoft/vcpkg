@@ -2188,6 +2188,10 @@
       "baseline": "2.4.0",
       "port-version": 0
     },
+    "fawdlstty-libfv": {
+      "baseline": "0.0.6",
+      "port-version": 0
+    },
     "fbgemm": {
       "baseline": "2021-03-18",
       "port-version": 4

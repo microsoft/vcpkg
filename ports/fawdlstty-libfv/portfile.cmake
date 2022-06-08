@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-#vcpkg_cmake_install()
-
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fawdlstty-libfv/fawdlstty-libfv-config.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL)
