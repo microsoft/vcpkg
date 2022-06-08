@@ -14,8 +14,6 @@ endif()
 
 find_package(Threads REQUIRED)
 
-include_directories(include src)
-
 set(ARGON2_HEADERS
     include/argon2.h
 )
@@ -51,11 +49,13 @@ else()
 endif()
 
 add_library(libargon2 ${ARGON2_SRC})
+target_include_directories(libargon2 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include> PRIVATE src)
 target_link_libraries(libargon2 Threads::Threads)
 target_compile_definitions(libargon2 PUBLIC "A2_VISCTL")
 set_target_properties(libargon2 PROPERTIES OUTPUT_NAME argon2)
 
 add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
+target_include_directories(argon2_tool PRIVATE include src)
 target_compile_definitions(argon2_tool PUBLIC "A2_VISCTL")
 target_link_libraries(argon2_tool Threads::Threads)
 set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
