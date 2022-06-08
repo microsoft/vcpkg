@@ -1,63 +1,54 @@
+include_guard(GLOBAL)
+
 include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake/vcpkg-port-config.cmake")
 include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-config/vcpkg-port-config.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
-
-if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
-    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details-latest.cmake")
-else()
-    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
-endif()
-#set(PORT_DEBUG ON)
 
 if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
-macro(qt_stop_on_update)
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        return()
-    endif()
-endmacro()
+function(qt_download_submodule_impl)
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
 
-function(qt_download_submodule)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" ""
-                      ""
-                      "PATCHES")
-
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_USE_HEAD_VERSION ON)
-    endif()
-
-    if(NOT DEFINED "${PORT}_HASH")
-        set(${PORT}_HASH 0)
-    endif()
-
-    if(PORT STREQUAL "qtinterfaceframework")
-        # qtinterfaceframework is not available on GitHub, so we must fall back to a `git clone`.
+    if("${_qarg_SUBMODULE}" IN_LIST QT_GIT_SUBMODULES)
+        # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
-            URL "https://code.qt.io/cgit/qt/qtinterfaceframework.git"
-            REF "${${PORT}_REF}"
-            HEAD_REF "${QT_GIT_TAG}"
+            URL "https://code.qt.io/cgit/qt/${_qarg_SUBMODULE}.git"
+            REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
     else()
-        vcpkg_from_github(
-            OUT_SOURCE_PATH SOURCE_PATH
-            REPO "qt/${PORT}"
-            REF "${${PORT}_REF}"
-            SHA512 "${${PORT}_HASH}"
-            HEAD_REF "${QT_GIT_TAG}"
+        if(VCPKG_USE_HEAD_VERSION)
+            set(sha512 SKIP_SHA512)
+        elseif(NOT DEFINED "${_qarg_SUBMODULE}_HASH")
+            message(FATAL_ERROR "No information for ${_qarg_SUBMODULE} -- add it to QT_PORTS and run qtbase in QT_UPDATE_VERSION mode first")
+        else()
+            set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
+        endif()
+
+        string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
+
+        vcpkg_download_distfile(archive
+            URLS "${${_qarg_SUBMODULE}_URL}"
+            FILENAME "${${_qarg_SUBMODULE}_FILENAME}"
+            ${sha512}
+        )
+        vcpkg_extract_source_archive(
+            SOURCE_PATH
+            ARCHIVE "${archive}"
             PATCHES ${_qarg_PATCHES}
         )
     endif()
+    set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
+endfunction()
 
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        message(STATUS "VCPKG_HEAD_VERSION:${VCPKG_HEAD_VERSION}")
-        file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${VCPKG_HEAD_VERSION})\n")
-    endif()
+function(qt_download_submodule)
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "" "PATCHES")
+
+    qt_download_submodule_impl(SUBMODULE "${PORT}" PATCHES ${_qarg_PATCHES})
+
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
 
@@ -301,9 +292,6 @@ function(qt_install_submodule)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
     qt_download_submodule(PATCHES ${_qis_PATCHES})
-    if(QT_UPDATE_VERSION)
-        return()
-    endif()
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
@@ -322,3 +310,5 @@ function(qt_install_submodule)
     qt_install_copyright("${SOURCE_PATH}")
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
+
+include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")

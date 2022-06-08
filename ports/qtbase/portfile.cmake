@@ -283,26 +283,11 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
 
 # Install CMake helper scripts
-if(QT_IS_LATEST)
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake")
-else()
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake")
-endif()
-file(INSTALL
-    "${port_details}"
-    DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME
-        "qt_port_details.cmake"
-    )
 file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/"
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
-
-qt_stop_on_update()
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
 if(CMAKE_HOST_WIN32)
