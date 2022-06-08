@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ce0d53..2da4f95 100644
+index 5ce0d53..5b432c8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -685,9 +685,10 @@ if(NOT DISABLE_SHARED)
@@ -23,7 +23,7 @@ index 5ce0d53..2da4f95 100644
  set(ALL_TESTS 
  	form_test
  	proto_test
-@@ -775,7 +776,7 @@ set(ALL_TESTS ${ALL_TESTS} external_session_test)
+@@ -775,14 +776,14 @@ set(ALL_TESTS ${ALL_TESTS} external_session_test)
  if(NOT DISABLE_GZIP)
  	target_link_libraries(response_test ${ZLIB})
  endif()
@@ -32,6 +32,14 @@ index 5ce0d53..2da4f95 100644
  #####################################
  # End of tests
  #####################################
+ 
+ # These are use export
+ if(IS_WINDOWS AND NOT DISABLE_SHARED)
+-	set_target_properties(${ALL_TESTS} hello_world cppcms PROPERTIES
++	set_target_properties(${ALL_TESTS} cppcms PROPERTIES
+ 				COMPILE_DEFINITIONS DLL_EXPORT)
+ endif()
+ 
 @@ -830,7 +831,7 @@ install(DIRECTORY cppcms DESTINATION include
  #############
  		
