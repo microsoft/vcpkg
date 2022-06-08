@@ -45,11 +45,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     
     #Take all the fils into include/SDL to sovle conflict with SDL2 port
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/doxyfile")
-    file(GLOB files "${CURRENT_PACKAGES_DIR}/include/*")
-    foreach(file ${files})
-            file(COPY "${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/SDL")
-            file(REMOVE "${file}")
-    endforeach()
+    file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include.tmp")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/include.tmp" "${CURRENT_PACKAGES_DIR}/include/SDL")
     
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDLmain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDLmain.lib")
@@ -65,6 +63,7 @@ else()
     find_program(WHICH_COMMAND NAMES which)
     if(NOT WHICH_COMMAND)
         set(polyfill_scripts "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-bin")
+        file(REMOVE_RECURSE "${polyfill_scripts}")
         file(MAKE_DIRECTORY "${polyfill_scripts}")
         vcpkg_host_path_list(APPEND ENV{PATH} "${polyfill_scripts}")
         # sdl's autoreconf.sh needs `which`, but our msys root doesn't have it.
