@@ -85,6 +85,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
+
+        "geoviscore"     VTK_MODULE_ENABLE_VTK_GeovisCore
+        "iocgnsreader"   VTK_MODULE_ENABLE_VTK_IOCGNSReader
+        "ioexportgl2ps"  VTK_MODULE_ENABLE_VTK_IOExportGL2PS
+
+        ## Modules not yet implemented
+        "ioioss"         VTK_MODULE_ENABLE_VTK_IOIOSS # - seacasioss not packaged
 )
 
 # Replace common value to vtk value
@@ -100,7 +107,6 @@ endif()
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
@@ -154,6 +160,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "cuda"         VTK_USE_CUDA
         "mpi"          VTK_USE_MPI
         "all"          VTK_BUILD_ALL_MODULES
+        "python"       VTK_WRAP_PYTHON
 )
 
 # =============================================================================
@@ -176,12 +183,13 @@ vcpkg_cmake_configure(
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
-        -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
-        -DVTK_MODULE_USE_EXTERNAL_VTK_ioss:BOOL=OFF # Not yet in VCPKG
         -DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=DONT_WANT # ospray is not yet in VCPKG
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
+    MAYBE_UNUSED_VARIABLES
+        VTK_MODULE_ENABLE_VTK_PythonContext2D
+        VTK_MODULE_ENABLE_VTK_GUISupportMFC
 )
 
 vcpkg_cmake_install()
