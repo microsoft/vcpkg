@@ -4,7 +4,7 @@
   "description": "Vulkan render graph implementation.",
   "homepage": "https://github.com/DragonJoker/RenderGraph",
   "license": "MIT",
-  "supports": "!x86 & !uwp & !arm",
+  "supports": "!x86 & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
