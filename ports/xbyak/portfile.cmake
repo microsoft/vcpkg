@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xbyak")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
