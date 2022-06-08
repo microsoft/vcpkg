@@ -1,0 +1,15 @@
+diff --git a/doc/api.rst b/doc/api.rst
+index 93fb3fa..a01ebda 100644
+--- a/doc/api.rst
++++ b/doc/api.rst
+@@ -225,8 +225,8 @@ template and implement ``parse`` and ``format`` methods::
+     auto format(const point& p, FormatContext& ctx) -> decltype(ctx.out()) {
+       // ctx.out() is an output iterator to write to.
+       return presentation == 'f'
+-                ? format_to(ctx.out(), "({:.1f}, {:.1f})", p.x, p.y)
+-                : format_to(ctx.out(), "({:.1e}, {:.1e})", p.x, p.y);
++                ? fmt::format_to(ctx.out(), "({:.1f}, {:.1f})", p.x, p.y)
++                : fmt::format_to(ctx.out(), "({:.1e}, {:.1e})", p.x, p.y);
+     }
+   };
+ 
