@@ -1764,6 +1764,10 @@
       "baseline": "2.12.0",
       "port-version": 2
     },
+    "cvtt": {
+      "baseline": "2022-06-08",
+      "port-version": 0
+    },
     "cwalk": {
       "baseline": "1.2.6",
       "port-version": 0
