@@ -7345,8 +7345,8 @@
       "port-version": 0
     },
     "vcglib": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "2022.02",
+      "port-version": 0
     },
     "vcpkg-cmake": {
       "baseline": "2022-05-10",
