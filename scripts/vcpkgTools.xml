@@ -7,6 +7,13 @@
         <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
         <archiveName>python-3.10.2-embed-win32.zip</archiveName>
     </tool>
+    <tool name="python3_with_venv" os="windows">
+        <version>3.10.2</version>
+        <exeRelativePath>tools\python.exe</exeRelativePath>
+        <url>https://www.nuget.org/api/v2/package/python/3.10.2</url>
+        <sha512>eb94c254e669eb22aad276c6cc6eec7ae6c19dacfa7d29b0b980953717f4c73a52e0f37807dfe925ecefd1b04b1f78bf0095b03e578a4b6405e52c640e4ab4c5</sha512>
+        <archiveName>python-3.10.2.nupkg.zip</archiveName>
+    </tool>
     <tool name="cmake" os="windows">
         <version>3.22.2</version>
         <exeRelativePath>cmake-3.22.2-windows-i386\bin\cmake.exe</exeRelativePath>
