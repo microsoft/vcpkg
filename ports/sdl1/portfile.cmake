@@ -78,7 +78,10 @@ else()
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/share"
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3"
+    )
 
     file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
