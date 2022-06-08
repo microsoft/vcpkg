@@ -1,5 +1,5 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index 9e2de15..3eb1ff2 100644
+index 141ab44..66b7efa 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
 @@ -74,6 +74,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
@@ -161,10 +161,10 @@ index 7678de8..2d398cc 100644
  configure_file (
      ${HDF_CONFIG_DIR}/libhdf5.pc.in
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index b3c2226..dbc5ab9 100644
+index b3c2226..ea80d60 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1321,14 +1321,27 @@ foreach (libs ${LINK_LIBS} ${LINK_COMP_LIBS})
+@@ -1321,14 +1321,23 @@ foreach (libs ${LINK_LIBS} ${LINK_COMP_LIBS})
  endforeach ()
  
  if (NOT ONLY_SHARED_LIBS)
@@ -187,10 +187,6 @@ index b3c2226..dbc5ab9 100644
 +        string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " ${_module}")
 +    endif()
 +endforeach()
-+
-+if (WIN32)
-+    string(REGEX REPLACE [[ -l([^ ]+)\.lib ]] " -l\\1 " _PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
-+endif()
  
  configure_file (
      ${HDF_CONFIG_DIR}/libhdf5.pc.in
