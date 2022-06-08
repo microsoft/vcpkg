@@ -7125,7 +7125,7 @@
       "port-version": 0
     },
     "tomlplusplus": {
-      "baseline": "3.0.1",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "tool-meson": {
