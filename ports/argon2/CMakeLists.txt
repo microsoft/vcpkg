@@ -58,7 +58,7 @@ add_executable(argon2_tool ${ARGON2_SRC} src/run.c)
 target_include_directories(argon2_tool PRIVATE include src)
 target_compile_definitions(argon2_tool PUBLIC "A2_VISCTL")
 target_link_libraries(argon2_tool Threads::Threads)
-set_target_properties(argon2_tool PROPERTIES OUTPUT_NAME argon2)
+set_target_properties(argon2_tool PROPERTIES RUNTIME_OUTPUT_NAME argon2)
 
 install(FILES ${ARGON2_HEADERS} DESTINATION include)
 
