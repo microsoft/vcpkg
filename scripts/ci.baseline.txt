@@ -61,6 +61,7 @@ botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 buck-yeh-bux:x64-linux=fail
 buck-yeh-bux-mariadb-client:x64-linux=fail
+buck-yeh-bux-sqlite:x64-linux=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
