@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version": "14.0.3",
-  "port-version": 1,
+  "version": "14.0.4",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -86,6 +85,14 @@
             "target-aarch64"
           ],
           "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-spirv"
+          ],
+          "platform": "spirv"
         },
         {
           "name": "llvm",
@@ -289,6 +296,7 @@
             "target-powerpc",
             "target-riscv",
             "target-sparc",
+            "target-spirv",
             "target-systemz",
             "target-ve",
             "target-webassembly",
@@ -333,6 +341,9 @@
     },
     "target-sparc": {
       "description": "Build with Sparc backend."
+    },
+    "target-spirv": {
+      "description": "Build with Spriv backend."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
