@@ -177,8 +177,8 @@
       "port-version": 0
     },
     "ashes": {
-      "baseline": "2022-04-03",
-      "port-version": 1
+      "baseline": "2022-06-08",
+      "port-version": 0
     },
     "asio": {
       "baseline": "1.22.1",
