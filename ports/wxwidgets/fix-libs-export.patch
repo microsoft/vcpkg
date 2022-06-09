@@ -1,0 +1,21 @@
+diff --git a/build/cmake/config.cmake b/build/cmake/config.cmake
+index 52ae69d3f6..f261d5d262 100644
+--- a/build/cmake/config.cmake
++++ b/build/cmake/config.cmake
+@@ -39,8 +39,14 @@ macro(wx_get_dependencies var lib)
+             else()
+                 # For the value like $<$<CONFIG:DEBUG>:LIB_PATH>
+                 # Or $<$<NOT:$<CONFIG:DEBUG>>:LIB_PATH>
+-                string(REGEX REPLACE "^.+>:(.+)>$" "\\1" dep_name ${dep})
+-                if (NOT dep_name)
++                if(dep MATCHES "^(.+>):(.+)>$")
++                    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_MATCH_1 STREQUAL [[$<$<NOT:$<CONFIG:DEBUG>>]])
++                        continue()
++                    elseif(CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MATCH_1 STREQUAL [[$<$<CONFIG:DEBUG>]])
++                        continue()
++                    endif()
++                    set(dep_name "${CMAKE_MATCH_2}")
++                else()
+                     set(dep_name ${dep})
+                 endif()
+             endif()

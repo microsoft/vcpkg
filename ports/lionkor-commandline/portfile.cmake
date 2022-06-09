@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lionkor/commandline
-    REF 4a8000d6b767263a79c589fcc74099a4454e07a9
-    SHA512 81ee2716b7048e51d26f75033be7a6d3a1aec9bfef833ad067112b26144023dfad8f5f8d145b4162dba2de3ad09de223dbe9143cf9e2f5f5102374d3412aebf7
+    REF 01434c11aaf82d37a126dc70f5aa02cc523dbbb4
+    SHA512 fb9554c07d13aa4c5d84f8288ad39e67ab302da4b286172e0f8fbc22b351234a83fb60f1c085a238d10477a379fded32302338cbddbe7ee0fdda54c6c4a75593
     HEAD_REF master
     PATCHES
         add-install.patch

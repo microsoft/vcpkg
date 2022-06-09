@@ -1,0 +1,17 @@
+diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
+index 3ecacfb..2d48a0e 100644
+--- a/src/glog/logging.h.in
++++ b/src/glog/logging.h.in
+@@ -100,6 +100,12 @@
+ #include <gflags/gflags.h>
+ #endif
+ 
++#ifdef GLOG_OS_WINDOWS
++#ifndef HAVE_CXX11_ATOMIC
++#define HAVE_CXX11_ATOMIC
++#endif
++#endif
++
+ #ifdef HAVE_CXX11_ATOMIC
+ #include <atomic>
+ #elif defined(GLOG_OS_WINDOWS)
