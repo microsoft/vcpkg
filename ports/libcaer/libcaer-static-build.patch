@@ -20,6 +20,19 @@ index 3b1937a..a75db2b 100644
  	SET(export_destination ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
  ELSE()
  	SET(export_destination ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+diff --git a/cmakemod/inivation-setup.cmake b/cmakemod/inivation-setup.cmake
+index aab416a..02ae696 100644
+--- a/cmakemod/inivation-setup.cmake
++++ b/cmakemod/inivation-setup.cmake
+@@ -166,7 +166,7 @@ IF(OS_UNIX)
+ 	ADD_DEFINITIONS(-D_DEFAULT_SOURCE=1)
+ 
+ 	IF(OS_MACOS)
+-		ADD_DEFINITIONS(-D_DARWIN_C_SOURCE=1)
++		ADD_DEFINITIONS(-D_POSIX_C_SOURCE=1)
+ 	ENDIF()
+ ENDIF()
+ 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 377a556..bf5701e 100644
 --- a/src/CMakeLists.txt
