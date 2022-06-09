@@ -16,20 +16,12 @@ vcpkg_cmake_configure(
     OPTIONS
     -DMQTT_BUILD_EXAMPLES=off
     -DMQTT_BUILD_TESTS=off
-    -DMQTT_USE_STATIC_BOOST=on
-    -DMQTT_USE_STR_CHECK=off
-    -DMQTT_USE_LOG=on
-    -DMQTT_STD_VARIANT=on
-    -DMQTT_STD_OPTIONAL=on
-    -DMQTT_STD_STRING_VIEW=on
-    -DMQTT_STD_ANY=on
-    -DMQTT_STD_SHARED_PTR_ARRAY=on
-    -DMQTT_USE_TLS=on)
+    -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+    )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME mqtt_cpp_iface CONFIG_PATH lib/cmake/mqtt_cpp_iface)
-vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

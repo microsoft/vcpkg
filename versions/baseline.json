@@ -4685,7 +4685,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "12.0.0",
+      "baseline": "13.0.0",
       "port-version": 0
     },
     "ms-angle": {
