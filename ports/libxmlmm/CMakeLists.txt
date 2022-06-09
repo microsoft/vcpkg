@@ -49,10 +49,14 @@ target_include_directories(libxmlmm PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libxmlmm>
     $<INSTALL_INTERFACE:include/libxmlmm>)
 
-install(TARGETS ${PROJECT_NAME}
-    EXPORT litehtmlTargets
+install(TARGETS libxmlmm
+    EXPORT unofficial-libxmlmm-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include/libxmlmm
+)
+install(EXPORT unofficial-libxmlmm-targets
+    NAMESPACE unofficial::libxmlmm::
+    DESTINATION share/unofficial-libxmlmm
 )
