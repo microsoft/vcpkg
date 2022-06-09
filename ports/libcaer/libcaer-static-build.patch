@@ -42,3 +42,15 @@ index 377a556..bf5701e 100644
  		INSTALL(
  			TARGETS caerStatic
  			EXPORT libcaer-exports
+diff --git a/src/log.c b/src/log.c
+index a21bcbe..24fd109 100644
+--- a/src/log.c
++++ b/src/log.c
+@@ -9,6 +9,7 @@
+ #	define thread_local __declspec(thread)
+ #else
+ #	define thread_local _Thread_local
++#	include <unistd.h>
+ #endif
+ 
+ static atomic_uint_fast8_t caerLogLevel    = ATOMIC_VAR_INIT(CAER_LOG_ERROR);
