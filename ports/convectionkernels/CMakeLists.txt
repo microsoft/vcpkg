@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.3.0)
 
-project( cvtt )
+project( convectionkernels )
 
 file(GLOB SRC_FILES *.cpp)
 file(GLOB HDR_FILES *.h)
@@ -17,14 +17,14 @@ target_include_directories( ${PROJECT_NAME}
     INTERFACE $<INSTALL_INTERFACE:include>
 )
 install( TARGETS ${PROJECT_NAME}
-    EXPORT unofficial-cvtt-config
+    EXPORT unofficial-convectionkernels-config
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
-    PUBLIC_HEADER DESTINATION include/cvtt
+    PUBLIC_HEADER DESTINATION include/convectionkernels
 )
-install( EXPORT unofficial-cvtt-config
-    FILE unofficial-cvtt-config.cmake
-    NAMESPACE unofficial::cvtt::
-    DESTINATION share/unofficial-cvtt
+install( EXPORT unofficial-convectionkernels-config
+    FILE unofficial-convectionkernels-config.cmake
+    NAMESPACE unofficial::convectionkernels::
+    DESTINATION share/unofficial-convectionkernels
 )
