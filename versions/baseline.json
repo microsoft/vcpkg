@@ -5452,6 +5452,10 @@
       "baseline": "2019-07-11",
       "port-version": 2
     },
+    "pipewire": {
+      "baseline": "0.3.52",
+      "port-version": 0
+    },
     "pistache": {
       "baseline": "2021-03-31",
       "port-version": 3
