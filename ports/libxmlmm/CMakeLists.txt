@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(libxmlmm CXX)
 
-set(CMAKE_SHARED_LIBRARY_PREFIX)
-set(CMAKE_STATIC_LIBRARY_PREFIX)
-
 find_package(LibXml2 REQUIRED)
 
 set(HEADERS_LIBXMLMM
@@ -43,6 +40,7 @@ target_link_libraries (libxmlmm PUBLIC LibXml2::LibXml2)
 set_target_properties(libxmlmm PROPERTIES
     CXX_STANDARD 17
     PUBLIC_HEADER "${HEADERS_LIBXMLMM}"
+    PREFIX ""
 )
 
 target_include_directories(libxmlmm PUBLIC
