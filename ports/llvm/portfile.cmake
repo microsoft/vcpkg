@@ -211,12 +211,12 @@ foreach(llvm_target IN LISTS known_llvm_targets)
 endforeach()
 
 # this is for experimental targets
-set(known_llvm_experamental_targets
+set(known_llvm_experimental_targets
     SPRIV
 )
 
 set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "")
-foreach(llvm_target IN LISTS known_llvm_experamental_targets)
+foreach(llvm_target IN LISTS known_llvm_experimental_targets)
     string(TOLOWER "target-${llvm_target}" feature_name)
     if(feature_name IN_LIST FEATURES)
         list(APPEND LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "${llvm_target}")
@@ -229,6 +229,7 @@ vcpkg_add_to_path(${PYTHON3_DIR})
 
 cmake_host_system_information(RESULT MEMORY QUERY AVAILABLE_VIRTUAL_MEMORY)
 set(LLVM_LINK_JOBS 1)
+
 
 #this is calculated in mib to gb
 if("6675.72" GREATER_EQUAL MEMORY)
