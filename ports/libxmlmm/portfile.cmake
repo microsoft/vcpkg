@@ -18,5 +18,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/README.md" readme)
+string(REGEX REPLACE "^.*## Copying\n" "" copyright "${readme}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${copyright}")
