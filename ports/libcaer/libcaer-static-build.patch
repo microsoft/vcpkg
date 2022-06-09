@@ -1,76 +1,39 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3b1937a..599a6ed 100644
+index 3b1937a..a75db2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -20,6 +20,14 @@ OPTION(ENABLE_SERIALDEV "Enable support for serial port devices using libserialp
+@@ -20,6 +20,8 @@ OPTION(ENABLE_SERIALDEV "Enable support for serial port devices using libserialp
  OPTION(ENABLE_OPENCV "Enable support for frame enhancements using OpenCV" OFF)
  OPTION(UDEV_INSTALL "Install udev rules on Linux" ON)
  OPTION(EXAMPLES_INSTALL "Build and install examples" OFF)
 +OPTION(ENABLE_BINDIR_INSTALLATION "Split archive and binary installation targets [required for vcpkg installation]" OFF)
 +OPTION(BUILD_SHARED_LIBS "Build libcaer as a shared library" ON)
-+
-+IF(NOT BUILD_SHARED_LIBS AND NOT ENABLE_STATIC)
-+    MESSAGE(WARNING "Both options 'BUILD_SHARED_LIBS' and 'ENABLE_STATIC' are set to OFF, this configuration will \
-+    result in static build.")
-+	SET(ENABLE_STATIC ON FORCE)
-+ENDIF()
  
  # Cross-compile support
  IF(NOT USER_LOCAL_PREFIX)
+@@ -98,7 +100,7 @@ INCLUDE(CMakePackageConfigHelpers)
+ WRITE_BASIC_CONFIG_VERSION_FILE(${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake VERSION ${PROJECT_VERSION}
+ 								COMPATIBILITY SameMajorVersion)
+ SET(include_dirs ${CMAKE_INSTALL_INCLUDEDIR})
+-IF(CC_MSVC)
++IF(ENABLE_BINDIR_INSTALLATION)
+ 	SET(export_destination ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
+ ELSE()
+ 	SET(export_destination ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 377a556..0619a8f 100644
+index 377a556..bf5701e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -63,26 +63,28 @@ ENDIF()
+@@ -63,7 +63,7 @@ ENDIF()
  # Set full RPATH
  SET(CMAKE_INSTALL_RPATH ${USER_LOCAL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
  
 -ADD_LIBRARY(caer SHARED ${LIBCAER_SOURCES})
--IF(CC_MSVC)
--	# This flag needs to be propagated down to depending targets to avoid compilation errors
--	TARGET_COMPILE_OPTIONS(caer INTERFACE -DWIN32_LEAN_AND_MEAN=ON)
--ENDIF()
--TARGET_COMPILE_OPTIONS(caer PRIVATE ${LIBCAER_COMPILE_OPTIONS})
--TARGET_LINK_LIBRARIES(caer PRIVATE ${LIBCAER_LINK_LIBRARIES_PRIVATE})
--TARGET_LINK_LIBRARIES(caer PUBLIC ${LIBCAER_LINK_LIBRARIES_PUBLIC})
--TARGET_INCLUDE_DIRECTORIES(caer INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
--
--SET_TARGET_PROPERTIES(caer PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION})
--
--IF(OS_WINDOWS)
--	INSTALL(
--		TARGETS caer
--		EXPORT libcaer-exports
--		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
--		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
--ELSE()
--	INSTALL(TARGETS caer EXPORT libcaer-exports DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+IF(BUILD_SHARED_LIBS)
-+	ADD_LIBRARY(caer SHARED ${LIBCAER_SOURCES})
-+	IF(CC_MSVC)
-+		# This flag needs to be propagated down to depending targets to avoid compilation errors
-+		TARGET_COMPILE_OPTIONS(caer INTERFACE -DWIN32_LEAN_AND_MEAN=ON)
-+	ENDIF()
-+	TARGET_COMPILE_OPTIONS(caer PRIVATE ${LIBCAER_COMPILE_OPTIONS})
-+	TARGET_LINK_LIBRARIES(caer PRIVATE ${LIBCAER_LINK_LIBRARIES_PRIVATE})
-+	TARGET_LINK_LIBRARIES(caer PUBLIC ${LIBCAER_LINK_LIBRARIES_PUBLIC})
-+	TARGET_INCLUDE_DIRECTORIES(caer INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-+
-+	SET_TARGET_PROPERTIES(caer PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION})
-+
-+	IF(ENABLE_BINDIR_INSTALLATION)
-+		INSTALL(
-+			TARGETS caer
-+			EXPORT libcaer-exports
-+			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+			ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+	ELSE()
-+		INSTALL(TARGETS caer EXPORT libcaer-exports DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+	ENDIF()
- ENDIF()
- 
- IF(ENABLE_STATIC)
-@@ -94,7 +96,7 @@ IF(ENABLE_STATIC)
++ADD_LIBRARY(caer ${LIBCAER_SOURCES})
+ IF(CC_MSVC)
+ 	# This flag needs to be propagated down to depending targets to avoid compilation errors
+ 	TARGET_COMPILE_OPTIONS(caer INTERFACE -DWIN32_LEAN_AND_MEAN=ON)
+@@ -94,7 +94,7 @@ IF(ENABLE_STATIC)
  
  	SET_TARGET_PROPERTIES(caerStatic PROPERTIES OUTPUT_NAME caer)
  
