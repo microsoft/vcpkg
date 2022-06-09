@@ -1,25 +1,8 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..350a754 100755
+index d64c14f..2bfa22a 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
-@@ -259,15 +259,7 @@ class Converter(object):
-   template = textwrap.dedent("""\
-     # This file was generated from BUILD using tools/make_cmakelists.py.
- 
--    cmake_minimum_required(VERSION 3.1)
--
--    if(${CMAKE_VERSION} VERSION_LESS 3.12)
--        cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
--    else()
--        cmake_policy(VERSION 3.12)
--    endif()
--
--    cmake_minimum_required (VERSION 3.0)
-+    cmake_minimum_required (VERSION 3.15)
-     cmake_policy(SET CMP0048 NEW)
- 
-     %(prelude)s
-@@ -316,10 +308,145 @@ class Converter(object):
+@@ -316,10 +316,148 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -84,33 +67,36 @@ index d64c14f..350a754 100755
 +        protobuf::libprotoc
 +      )
 +
-+      protobuf_generate(
-+        TARGET descriptor_upb_proto
-+        OUT_VAR UPB_DESCRIPTOR_SOURCES
-+        IMPORT_DIRS "${VCPKG_UPB_HOST_INCLUDE_DIR}"
-+        PROTOS "${UPB_DESCRIPTOR_PROTO}"
-+        LANGUAGE upb
-+        GENERATE_EXTENSIONS .upb.h .upb.c
-+        PLUGIN "protoc-gen-upb=\$<TARGET_FILE:protoc-gen-upb>"
-+      )
++      set(PROTOC_PROGRAM "\$<TARGET_FILE:protobuf::protoc>")
++      set(PROTOC_GEN_UPB_PROGRAM "\$<TARGET_FILE:protoc-gen-upb>")
++      set(PROTOC_GEN_UPBDEFS_PROGRAM "\$<TARGET_FILE:protoc-gen-upbdefs>")
 +    else()
-+      set(UPB_DESCRIPTOR_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.h" "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.c")
-+
++      find_program(PROTOC_PROGRAM protoc)
 +      find_program(PROTOC_GEN_UPB_PROGRAM protoc-gen-upb)
-+      add_custom_command(
-+        OUTPUT ${UPB_DESCRIPTOR_SOURCES}
-+        DEPENDS "${UPB_DESCRIPTOR_PROTO}"
-+        COMMAND 
-+          protoc${CMAKE_EXECUTABLE_SUFFIX}
-+          "-I${VCPKG_UPB_HOST_INCLUDE_DIR}"
-+          "--plugin=protoc-gen-upb=${PROTOC_GEN_UPB_PROGRAM}"
-+          "--upb_out=${CMAKE_CURRENT_BINARY_DIR}"
-+          "${UPB_DESCRIPTOR_PROTO}"
-+      )
-+      
-+      target_sources(descriptor_upb_proto PRIVATE ${UPB_DESCRIPTOR_SOURCES})
++      find_program(PROTOC_GEN_UPBDEFS_PROGRAM protoc-gen-upbdefs)
 +    endif()
 +
++    set(UPB_DESCRIPTOR_SOURCES 
++      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.h" 
++      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.c"
++      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upbdefs.h"
++      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upbdefs.c"
++    )
++
++    add_custom_command(
++      OUTPUT ${UPB_DESCRIPTOR_SOURCES}
++      DEPENDS "${UPB_DESCRIPTOR_PROTO}"
++      COMMAND 
++        "${PROTOC_PROGRAM}"
++        "-I${VCPKG_UPB_HOST_INCLUDE_DIR}"
++        "--plugin=protoc-gen-upb=${PROTOC_GEN_UPB_PROGRAM}"
++        "--plugin=protoc-gen-upbdefs=${PROTOC_GEN_UPBDEFS_PROGRAM}"
++        "--upb_out=${CMAKE_CURRENT_BINARY_DIR}"
++        "--upbdefs_out=${CMAKE_CURRENT_BINARY_DIR}"
++        "${UPB_DESCRIPTOR_PROTO}"
++    )
++    
++    target_sources(descriptor_upb_proto PRIVATE ${UPB_DESCRIPTOR_SOURCES})
 +
 +    add_library(all_libs INTERFACE)
 +    target_link_libraries(all_libs

@@ -50,10 +50,10 @@ index 3623f4aa5e..df6ced560e 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index f2a0e508c3..46ca0bf7bc 100644
+index f2a0e508c3..161e210985 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
-@@ -12,9 +12,34 @@
+@@ -12,9 +12,19 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  
@@ -67,25 +67,9 @@ index f2a0e508c3..46ca0bf7bc 100644
  
  set(_gRPC_UPB_LIBRARIES upb)
 +
-+
 +elseif(gRPC_UPB_PROVIDER STREQUAL "package")
 +    find_package(upb CONFIG REQUIRED)
-+    set(_gRPC_UPB_LIBRARIES upb)
++    set(_gRPC_UPB_LIBRARIES upb::all_libs)
 +    set(_gRPC_UPB_INCLUDE_DIR)
-+    add_library(upb STATIC
-+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated/google/protobuf/descriptor.upbdefs.c
-+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated/google/protobuf/descriptor.upb.c
-+    )
-+    set_target_properties(upb PROPERTIES OUTPUT_NAME grpc_upbdefs)
-+    target_include_directories(upb PRIVATE ${_gRPC_UPB_GRPC_GENERATED_DIR})
-+    target_link_libraries(upb PUBLIC upb::all_libs)
-+    if(gRPC_INSTALL)
-+        install(TARGETS upb EXPORT gRPCTargets
-+            RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
-+            LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
-+            ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
-+        )
-+    endif()
 +    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
 +endif()
-\ No newline at end of file
