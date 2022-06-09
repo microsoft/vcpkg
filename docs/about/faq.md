@@ -6,7 +6,7 @@ If you want to contribute but don't have a particular library in mind then take 
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
-Yes! See [the `export` command](../users/integration.md#export-command).
+Yes! See the [`export` command](../users/buildsystems/export-command.md).
 
 ## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
@@ -36,7 +36,7 @@ Execute `git pull` to get the latest sources, then run `bootstrap-vcpkg.bat` (Wi
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.
 
-To use different versions of a library for different projects, we recommend making separate instances of Vcpkg and using the [per-project integration mechanisms](../users/integration.md). The versions of each library are specified by the files in `ports\`, so they are easily manipulated using standard `git` commands. This makes it very easy to roll back the entire set of libraries to a consistent set of older versions which all work with each other. If you need to then pin a specific library forward, that is as easy as checking out the appropriate version of `ports\<package>\`.
+To use different versions of a library for different projects, we recommend making separate instances of Vcpkg and using the [per-project integration mechanisms](../users/buildsystems/integration.md). The versions of each library are specified by the files in `ports\`, so they are easily manipulated using standard `git` commands. This makes it very easy to roll back the entire set of libraries to a consistent set of older versions which all work with each other. If you need to then pin a specific library forward, that is as easy as checking out the appropriate version of `ports\<package>\`.
 
 If your application is very sensitive to the versions of libraries, we recommend checking in the specific set of portfiles you need into your source control along with your project sources and using the `--vcpkg-root` option to redirect the working directory of `vcpkg.exe`.
 
@@ -88,7 +88,7 @@ Vcpkg uses CMake internally as a build scripting language. This is because CMake
 ## Will Vcpkg support downloading compiled binaries from a public or private server?
 We would like to eventually support downloading precompiled binaries, similar to other system package managers.
 
-In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export`](../users/integration.md#export) command.
+In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export` command](../users/buildsystems/export-command.md).
 
 ## What Visual C++ toolsets are supported?
 We support Visual Studio 2015 Update 3 and above.

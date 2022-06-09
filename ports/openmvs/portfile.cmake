@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-build-boost-1_77_0.patch
+        no-absolute-paths.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
