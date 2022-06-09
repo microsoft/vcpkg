@@ -7428,6 +7428,10 @@
       "baseline": "0.5",
       "port-version": 0
     },
+    "vkfft": {
+      "baseline": "1.2.17",
+      "port-version": 0
+    },
     "vlfeat": {
       "baseline": "2020-07-10",
       "port-version": 1
