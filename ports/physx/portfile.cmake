@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-compiler-flag.patch
         remove-werror.patch
+        fix-mac-arm.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)
