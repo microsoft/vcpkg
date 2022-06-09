@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3.0)
 
 project( cvtt )
 
-set( ${PROJECT_NAME}_SRC_FILES
+set( SRC_FILES
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_API.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_BC6H_IO.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_BC7_PrioData.cpp
@@ -13,7 +13,7 @@ set( ${PROJECT_NAME}_SRC_FILES
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_S3TC.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_Util.cpp
 )
-set( ${PROJECT_NAME}_HDR_FILES
+set( HDR_FILES
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels.h
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_AggregatedError.h
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_BC6H_IO.h
@@ -37,46 +37,27 @@ set( ${PROJECT_NAME}_HDR_FILES
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_UnfinishedEndpoints.h
     ${CMAKE_CURRENT_LIST_DIR}/ConvectionKernels_Util.h
 )
-source_group( "Header Files" FILES ${${PROJECT_NAME}_HDR_FILES} )
-source_group( "Source Files" FILES ${${PROJECT_NAME}_SRC_FILES} )
-add_library(
-    ${PROJECT_NAME}
+add_library( ${PROJECT_NAME}
     STATIC
-    ${${PROJECT_NAME}_HDR_FILES}
-    ${${PROJECT_NAME}_SRC_FILES}
+    ${HDR_FILES}
+    ${SRC_FILES}
 )
-add_library( cvtt::${PROJECT_NAME}
-    ALIAS
-    ${PROJECT_NAME}
+set_property( TARGET ${PROJECT_NAME}
+    PROPERTY PUBLIC_HEADER ${HDR_FILES}
 )
 target_include_directories( ${PROJECT_NAME}
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+    PRIVATE ${CMAKE_CURRENT_LIST_DIR}
+    INTERFACE $<INSTALL_INTERFACE:include>
 )
-install(
-    TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION "bin"
-    LIBRARY DESTINATION "lib"
-    ARCHIVE DESTINATION "lib"
-)
-if (NOT DEFINED SKIP_HEADERS)
-    install(
-        FILES ${${PROJECT_NAME}_HDR_FILES}
-        DESTINATION include/cvtt
-    )
-endif()
-
-install(
-    TARGETS cvtt
-    COMPONENT cvtt
-    EXPORT cvtt
+install( TARGETS ${PROJECT_NAME}
+    EXPORT unofficial-cvtt-config
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION include/cvtt
 )
-install( EXPORT cvtt
-    FILE cvttConfig.cmake
-    COMPONENT cvtt
-    NAMESPACE cvtt::
-    DESTINATION lib/cmake/cvtt
+install( EXPORT unofficial-cvtt-config
+    FILE unofficial-cvtt-config.cmake
+    NAMESPACE unofficial::cvtt::
+    DESTINATION share/unofficial-cvtt
 )
