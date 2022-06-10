@@ -1,5 +1,5 @@
 diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
-index 3ecacfb..033230d 100644
+index 3ecacfb..2698dea 100644
 --- a/src/glog/logging.h.in
 +++ b/src/glog/logging.h.in
 @@ -100,10 +100,18 @@
@@ -22,6 +22,15 @@ index 3ecacfb..033230d 100644
  #endif
  
  @ac_google_start_namespace@
+@@ -1014,7 +1022,7 @@ extern "C" void AnnotateBenignRaceSized(
+ namespace google {
+ #endif
+ 
+-#ifdef HAVE_CXX11_ATOMIC
++#if @ac_cv_cxx11_atomic@
+ #define SOME_KIND_OF_LOG_EVERY_N(severity, n, what_to_do) \
+   static std::atomic<int> LOG_OCCURRENCES(0), LOG_OCCURRENCES_MOD_N(0); \
+   _GLOG_IFDEF_THREAD_SANITIZER(AnnotateBenignRaceSized(__FILE__, __LINE__, &LOG_OCCURRENCES, sizeof(int), "")); \
 @@ -1061,7 +1069,7 @@ namespace google {
  #elif defined(GLOG_OS_WINDOWS)
  

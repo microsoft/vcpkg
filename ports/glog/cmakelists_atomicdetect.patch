@@ -1,16 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 13c474b..34ffc06 100644
+index 13c474b..7858c8f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -398,6 +398,14 @@ if (HAVE_EXECINFO_H)
+@@ -398,6 +398,12 @@ if (HAVE_EXECINFO_H)
    set (HAVE_STACKTRACE 1)
  endif (HAVE_EXECINFO_H)
  
 +if (HAVE_CXX11_ATOMIC)
-+  message(STATUS "have atomic")
 +  set (ac_cv_cxx11_atomic 1)
 +else ()
-+  message(STATUS "not have atomic")
 +  set (ac_cv_cxx11_atomic 0)
 +endif ()
 +
