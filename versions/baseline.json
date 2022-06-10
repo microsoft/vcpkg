@@ -4762,7 +4762,7 @@
     },
     "nanogui": {
       "baseline": "2019-09-23",
-      "port-version": 3
+      "port-version": 4
     },
     "nanomsg": {
       "baseline": "1.1.5",
