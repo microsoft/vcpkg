@@ -3,7 +3,7 @@
 ## 2. Set QT_UPDATE_VERSION to 1
 ## 3. Add any new Qt modules to QT_PORTS
 ## 4. Run a build of `qtbase`
-## 5. Fix any intermediate failures by adding the module into QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, or QT_GIT_SUBMODULES as appropriate
+## 5. Fix any intermediate failures by adding the module into QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, or QT_FROM_QT_GIT as appropriate
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
@@ -34,8 +34,10 @@ set(QT_PORTS qt
              qtopcua
              qtimageformats
              qtmqtt
-             qtnetworkauth
+             qtnetworkauth)
              # qtquickcontrols2 -> moved into qtdeclarative
+if(QT_VERSION VERSION_GREATER_EQUAL 6.1)
+    list(APPEND QT_PORTS
              ## New in 6.1
              qtactiveqt
              qtdatavis3d
@@ -43,7 +45,10 @@ set(QT_PORTS qt
              qtlottie
              qtscxml
              qtvirtualkeyboard
-             qtcharts
+             qtcharts)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
+    list(APPEND QT_PORTS
              ## New in 6.2
              qtconnectivity
              qtpositioning
@@ -56,11 +61,14 @@ set(QT_PORTS qt
              qtwebchannel
              qtwebengine
              qtwebsockets
-             qtwebview
+             qtwebview)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.2.2)
+    list(APPEND QT_PORTS
              ## New in 6.2.2
              qtinterfaceframework
-             qtapplicationmanager
-)
+             qtapplicationmanager)
+endif()
 
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
@@ -68,7 +76,23 @@ set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
 # 3. These modules are mirrored to github and have branches matching the release
 set(QT_FROM_GITHUB_BRANCH qtdeviceutilities qtlocation)
 # 4. These modules are not mirrored to github and not part of the release
-set(QT_GIT_SUBMODULES qtinterfaceframework)
+set(QT_FROM_QT_GIT qtinterfaceframework)
+
+function(qt_get_url_filename qt_port out_url out_filename)
+    if("${qt_port}" IN_LIST QT_FROM_GITHUB)
+        set(url "https://github.com/qt/${qt_port}/archive/v${QT_VERSION}.tar.gz")
+        set(filename "qt-${qt_port}-v${QT_VERSION}.tar.gz")
+    elseif("${qt_port}" IN_LIST QT_FROM_GITHUB_BRANCH)
+        set(url "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
+        set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
+    else()
+        string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
+        set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+    endif()
+    set(${out_url} "${url}" PARENT_SCOPE)
+    set(${out_filename} "${filename}" PARENT_SCOPE)
+endfunction()
 
 if(QT_UPDATE_VERSION)
     if(NOT PORT STREQUAL "qtbase")
@@ -77,44 +101,32 @@ if(QT_UPDATE_VERSION)
     set(VCPKG_USE_HEAD_VERSION 1)
     set(msg "" CACHE INTERNAL "")
     foreach(qt_port IN LISTS QT_PORTS)
-        if(NOT qt_port STREQUAL "qt")
-            if("${qt_port}" IN_LIST QT_GIT_SUBMODULES)
-                execute_process(
-                    COMMAND git ls-remote -t https://code.qt.io/cgit/qt/${qt_port}.git "v${QT_VERSION}"
-                    OUTPUT_VARIABLE out
-                )
-                string(SUBSTRING "${out}" 0 40 tag_sha)
-                string(APPEND msg "set(${qt_port}_REF ${tag_sha})\n")
-            else()
-                if("${qt_port}" IN_LIST QT_FROM_GITHUB)
-                    set(url "https://github.com/qt/${qt_port}/archive/v${QT_VERSION}.tar.gz")
-                    set(filename "qt-${qt_port}-v${QT_VERSION}.tar.gz")
-                elseif("${qt_port}" IN_LIST QT_FROM_GITHUB_BRANCH)
-                    set(url "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
-                    set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
-                else()
-                    string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
-                    set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
-                    set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
-                endif()
-                vcpkg_download_distfile(archive
-                    URLS "${url}"
-                    FILENAME "${filename}"
-                    SKIP_SHA512
-                )
-                file(SHA512 "${archive}" hash)
-                string(APPEND msg "set(${qt_port}_URL \"${url}\")\n")
-                string(APPEND msg "set(${qt_port}_FILENAME \"${filename}\")\n")
-                string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
-            endif()
-        endif()
-
         set(port_json "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/vcpkg.json")
         if(EXISTS "${port_json}")
             file(READ "${port_json}" _control_contents)
             string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
             string(REGEX REPLACE "[^\n]+\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
             file(WRITE "${port_json}" "${_control_contents}")
+        endif()
+        if(qt_port STREQUAL "qt")
+            continue()
+        endif()
+        if("${qt_port}" IN_LIST QT_FROM_QT_GIT)
+            execute_process(
+                COMMAND git ls-remote -t https://code.qt.io/cgit/qt/${qt_port}.git "v${QT_VERSION}"
+                OUTPUT_VARIABLE out
+            )
+            string(SUBSTRING "${out}" 0 40 tag_sha)
+            string(APPEND msg "set(${qt_port}_REF ${tag_sha})\n")
+        else()
+            qt_get_url_filename("${qt_port}" url filename)
+            vcpkg_download_distfile(archive
+                URLS "${url}"
+                FILENAME "${filename}"
+                SKIP_SHA512
+            )
+            file(SHA512 "${archive}" hash)
+            string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
         endif()
     endforeach()
     message("${msg}")

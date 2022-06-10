@@ -28,11 +28,10 @@ function(qt_download_submodule_impl)
             set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
         endif()
 
-        string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
-
+        qt_get_url_filename("${_qarg_SUBMODULE}" url filename)
         vcpkg_download_distfile(archive
-            URLS "${${_qarg_SUBMODULE}_URL}"
-            FILENAME "${${_qarg_SUBMODULE}_FILENAME}"
+            URLS "${url}"
+            FILENAME "${filename}"
             ${sha512}
         )
         vcpkg_extract_source_archive(
