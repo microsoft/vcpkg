@@ -23,11 +23,11 @@
         "benchmark"
       ]
     },
-    "wchar": {
-      "description": "Build with wchar_t (Windows only)"
-    },
     "stdformat": {
       "description": "Use std::format instead of fmt library."
+    },
+    "wchar": {
+      "description": "Build with wchar_t (Windows only)"
     }
   }
 }
