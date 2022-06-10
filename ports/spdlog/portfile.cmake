@@ -15,6 +15,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         stdformat       SPDLOG_FMT_EXTERNAL
 )
 
+if(NOT DEFINED SPDLOG_FMT_EXTERNAL)
+    set(SPDLOG_FMT_EXTERNAL ON)
+endif()
+
 # SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
 if(NOT DEFINED SPDLOG_WCHAR_FILENAMES)
     set(SPDLOG_WCHAR_FILENAMES OFF)
@@ -39,6 +43,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DSPDLOG_FMT_EXTERNAL=${SPDLOG_FMT_EXTERNAL}
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
