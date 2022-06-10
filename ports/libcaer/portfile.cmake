@@ -9,15 +9,14 @@ vcpkg_from_gitlab(
 		libcaer-static-build.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
 	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
 	OPTIONS
 		-DENABLE_OPENCV=ON
 		-DEXAMPLES_INSTALL=OFF
 		-DENABLE_BINDIR_INSTALLATION=ON
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "libcaer" CONFIG_PATH "share/libcaer")
 
