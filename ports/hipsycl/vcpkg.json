@@ -1,0 +1,31 @@
+{
+  "name": "hipsycl",
+  "version-semver": "0.9.2",
+  "port-version": 1,
+  "description": "hipSYCL - a SYCL implementation for CPUs and GPUs",
+  "homepage": "https://github.com/illuhad/hipSYCL",
+  "supports": "x64 & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "cuda"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build with CUDA backend",
+      "dependencies": [
+         {
+           "name": "cuda"
+         }
+      ]
+    }
+  }
+}

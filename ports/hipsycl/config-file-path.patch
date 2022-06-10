@@ -1,0 +1,22 @@
+diff --git a/bin/syclcc-clang b/bin/syclcc-clang
+index 665be23..ad473a4 100755
+--- a/bin/syclcc-clang
++++ b/bin/syclcc-clang
+@@ -115,7 +115,7 @@ class syclcc_config:
+   def __init__(self, args):
+     config_file_path = os.path.abspath(
+       os.path.join(self.hipsycl_installation_path,
+-                  "etc/hipSYCL/syclcc.json"))
++                  "share/hipsycl/syclcc.json"))
+     
+     self._config_file = None
+     # First check silently if we can open the default config file.
+@@ -564,7 +564,7 @@ class syclcc_config:
+   @property
+   def hipsycl_installation_path(self):
+     syclcc_path = os.path.dirname(os.path.realpath(__file__))
+-    return os.path.join(syclcc_path, "..")
++    return os.path.join(syclcc_path, "../..")
+ 
+   @property
+   def hipsycl_plugin_path(self):
