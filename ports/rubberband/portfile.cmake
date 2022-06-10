@@ -21,10 +21,9 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
-if(VCPKG_DETECTED_MSVC)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/rubberband-program${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+  # Rubberband uses a different executable name when compiled with msvc 
+  # Just looking for that file is faster than detecting msvc builds
   set(RUBBERBAND_PROGRAM_NAME rubberband-program)
 else()
   set(RUBBERBAND_PROGRAM_NAME rubberband)

@@ -9,10 +9,6 @@
     "fftw3",
     "libsamplerate",
     {
-      "name": "vcpkg-cmake-get-vars",
-      "host": true
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
