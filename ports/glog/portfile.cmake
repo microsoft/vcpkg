@@ -10,7 +10,7 @@ vcpkg_from_github(
        fix_log_every_n.patch
        noerror-nominmax.patch
        fix_crosscompile_symbolize.patch
-
+       cmakelists_atomicdetect.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
