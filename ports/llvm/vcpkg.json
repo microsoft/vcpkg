@@ -82,16 +82,16 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "target-aarch64"
-          ],
-          "platform": "arm64"
+            "target-spirv"
+          ]
         },
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "target-spirv"
-          ]
+            "target-aarch64"
+          ],
+          "platform": "arm64"
         },
         {
           "name": "llvm",
