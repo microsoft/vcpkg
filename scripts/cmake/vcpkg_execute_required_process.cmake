@@ -80,7 +80,7 @@ Halting portfile execution.
         endforeach()
 
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
-        message(FATAL_ERROR
+        message(WARNING
             "  Command failed: ${pretty_command}\n"
             "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
             "  Error code: ${error_code}\n"
