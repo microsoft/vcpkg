@@ -1178,10 +1178,14 @@
     },
     "buck-yeh-bux": {
       "baseline": "1.6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "buck-yeh-bux-mariadb-client": {
       "baseline": "1.0.3",
+      "port-version": 1
+    },
+    "buck-yeh-bux-sqlite": {
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "bullet3": {
