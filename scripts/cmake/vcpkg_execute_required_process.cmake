@@ -1,3 +1,52 @@
+#[===[.md:
+# vcpkg_execute_required_process
+
+Execute a process with logging and fail the build if the command fails.
+
+## Usage
+```cmake
+vcpkg_execute_required_process(
+    COMMAND <${PERL}> [<arguments>...]
+    WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
+    LOGNAME <build-${TARGET_TRIPLET}-dbg>
+    [TIMEOUT <seconds>]
+    [OUTPUT_VARIABLE <var>]
+    [ERROR_VARIABLE <var>]
+)
+```
+## Parameters
+### ALLOW_IN_DOWNLOAD_MODE
+Allows the command to execute in Download Mode.
+[See execute_process() override](../../scripts/cmake/execute_process.cmake).
+
+### COMMAND
+The command to be executed, along with its arguments.
+
+### WORKING_DIRECTORY
+The directory to execute the command in.
+
+### LOGNAME
+The prefix to use for the log files.
+
+### TIMEOUT
+Optional timeout after which to terminate the command.
+
+### OUTPUT_VARIABLE
+Optional variable to receive stdout of the command.
+
+### ERROR_VARIABLE
+Optional variable to receive stderr of the command.
+
+This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
+
+## Examples
+
+* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
+* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+* [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
+* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#]===]
+
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE"
@@ -62,6 +111,10 @@ Halting portfile execution.
         ${error_variable_param}
     )
     if(NOT error_code EQUAL 0)
+        file(READ "${log_out}" out_contents)
+        file(READ "${log_err}" err_contents)
+        set(all_contents "${out_contents}${err_contents}")
+        
         set(stringified_logs "")
         foreach(log IN ITEMS "${log_out}" "${log_err}")
             if(NOT EXISTS "${log}")
@@ -74,6 +127,19 @@ Halting portfile execution.
                 file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
+        
+        if (all_contents MATCHES "is not able to compile a simple test program.")
+            if (all_contents MATCHES "cannot open file 'ucrtd.lib'")
+                message(FATAL_ERROR "Check compile environment failed, please install Windows SDK first.")
+            elseif (all_contents MATCHES "The system cannot find the file specified")
+                message(FATAL_ERROR "Check compile environment failed, please ensure you've installed the compiler core features.")
+            else()
+                message(FATAL_ERROR
+                    "Check compile environment failed, please submit a new issue at https://github.com/microsoft/vcpkg/issues/new/choose with the following logs:"
+                    "${stringified_logs}"
+                )
+            endif()
+        endif()
 
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
         message(FATAL_ERROR
