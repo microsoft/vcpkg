@@ -1,7 +1,7 @@
 {
   "name": "spdlog",
   "version-semver": "1.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Very fast, header only, C++ logging library",
   "homepage": "https://github.com/gabime/spdlog",
   "license": "MIT",
@@ -25,6 +25,9 @@
     },
     "wchar": {
       "description": "Build with wchar_t (Windows only)"
+    },
+    "stdformat": {
+      "description": "Use std::format instead of fmt library."
     }
   }
 }

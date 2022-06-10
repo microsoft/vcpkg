@@ -1,0 +1,13 @@
+diff --git a/include/spdlog/tweakme.h b/include/spdlog/tweakme.h
+index 8fa60e4..e127483 100644
+--- a/include/spdlog/tweakme.h
++++ b/include/spdlog/tweakme.h
+@@ -78,7 +78,7 @@
+ // Uncomment to use C++20 std::format instead of fmt. This removes compile
+ // time checking of format strings, but doesn't depend on the fmt library.
+ //
+-// #define SPDLOG_USE_STD_FORMAT
++ #define SPDLOG_USE_STD_FORMAT
+ ///////////////////////////////////////////////////////////////////////////////
+ 
+ ///////////////////////////////////////////////////////////////////////////////

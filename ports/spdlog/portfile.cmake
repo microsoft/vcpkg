@@ -1,9 +1,19 @@
+if("stdformat" IN_LIST FEATURES)
+    set(SPDLOG_FMT_EXTERNAL OFF)
+    set(SPDLOG_USE_STD_FORMAT ON)
+    list(APPEND PATCHES fix-open-stdformat.patch)
+else()
+    set(SPDLOG_FMT_EXTERNAL ON)
+    set(SPDLOG_USE_STD_FORMAT OFF)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF v1.10.0
     SHA512 e82ec0a0c813ed2f1c8a31a0f21dbb733d0a7bd8d05284feae3bd66040bc53ad47a93b26c3e389c7e5623cfdeba1854d690992c842748e072aab3e6e6ecc5666
     HEAD_REF v1.x
+    PATCHES ${PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,10 +37,10 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSPDLOG_FMT_EXTERNAL=ON
+        -DSPDLOG_FMT_EXTERNAL=${SPDLOG_FMT_EXTERNAL}
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
@@ -43,7 +53,9 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
+if(SPDLOG_FMT_EXTERNAL)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled")
+endif()
 
 # add support for integration other than cmake
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
@@ -63,8 +75,8 @@ if(SPDLOG_WCHAR_FILENAMES)
     )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
