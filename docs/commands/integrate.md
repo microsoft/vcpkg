@@ -24,7 +24,7 @@ Integrate vcpkg with shells and buildsystems.
 
 ### `vcpkg integrate install`
 
-Integrates with [Visual Studio](../users/integration.md#msbuild-integration-visual-studio) (Windows-only), sets the user-wide vcpkg instance, and displays CMake integration help.
+Integrates with [Visual Studio](../users/buildsystems/msbuild-integration.md#user-wide-integration) (Windows-only), sets the user-wide vcpkg instance, and displays CMake integration help.
 
 On Windows with Visual Studio 2015, this subcommand will add redirecting logic into the MSBuild installation which will automatically pick up each user's user-wide vcpkg instance. Visual Studio 2017 and newer have this logic in the box.
 
@@ -33,7 +33,7 @@ To set the user-wide vcpkg instance, vcpkg creates a few short files containing 
 - `%LOCALAPPDATA%\vcpkg` or `%APPDATA%\Local\vcpkg` on Windows
 - `$HOME/.vcpkg` or `/var/.vcpkg` on non-Windows
 
-Displays the full path to the [CMake toolchain](../users/integration.md#cmake-integration). Running this command is not required to use the toolchain file.
+Displays the full path to the [CMake toolchain file](../users/buildsystems/cmake-integration.md). Running this command is not required to use the toolchain file.
 
 ### `vcpkg integrate remove`
 
@@ -45,7 +45,7 @@ This command deletes the linking files from the user-wide configuration location
 
 Creates a linked NuGet package for MSBuild integration.
 
-See [MSBuild Per-Project Integration](../users/integration.md#per-project-integration) for more information.
+See [MSBuild Per-Project Integration](../users/buildsystems/msbuild-integration.md#linked-nuget-package) for more information.
 
 ### `vcpkg integrate powershell`
 
