@@ -1,16 +1,3 @@
-#[===[
-# z_vcpkg_setup_pkgconfig_path
-
-`z_vcpkg_setup_pkgconfig_path` sets up environment variables to use `pkgconfig`, such as `PKG_CONFIG` and `PKG_CONFIG_PATH`.
-The original values are restored with `z_vcpkg_restore_pkgconfig_path`. `BASE_DIRS` indicates the base directories to find `.pc` files; typically `${CURRENT_INSTALLED_DIR}`, or `${CURRENT_INSTALLED_DIR}/debug`.
-
-```cmake
-z_vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
-# Build process that may transitively invoke pkgconfig
-z_vcpkg_restore_pkgconfig_path()
-```
-
-#]===]
 function(z_vcpkg_setup_pkgconfig_path)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
 

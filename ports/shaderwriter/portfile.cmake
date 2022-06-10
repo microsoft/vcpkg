@@ -1,15 +1,15 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF 8b1b0614f49c27ab08ff16ce632fcac44f24d6d5
+    REF e962d383c9c418767b96d2c3e864b3800e98826f
     HEAD_REF development
-    SHA512 697ecfee5dc9cbfe3cc724b7acd90107ea40bba58448536b1726eb3755f8c96e77b9a31317b567d77ed9e9b5c6decede73c4c7f1a760f11eff0cba2711b3c548
+    SHA512 7ef1d4622bb1a38f201e9325ffca0de675816e9dc6f644d2e4a900409a5045f603dda5c86a3099a99f3be70175ca7bf6aed1c4c1e25aa9b5172967e30498536d
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
     REPO DragonJoker/CMakeUtils
-    REF acbce0a4966d0689148975aaa3c581af2b4e33a7
+    REF 9fbaae40ccdc92f86989dc6875f362e7943b6a94
     HEAD_REF master
-    SHA512 f2f45520554b576b3896ef9068549878e05a57a8bd0a3a4ab8c218bba9dee49febfe8cb7edb85b8ff51bdd86dee576cace6b8506a6226484d2b640408a3246ba
+    SHA512 dada8ac1f9676c60f1ff5a09a9f788eb8d85eaca450407e4bf0100fbec87228f99cf66cb23de9c9358dda72c426655814cbd1ea90360ca0c63e7660c15aff22b
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake")
@@ -29,7 +29,8 @@ vcpkg_cmake_configure(
         -DSDW_UNITY_BUILD=ON
 )
 
+vcpkg_copy_pdbs()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/shaderwriter)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ShaderWriter CONFIG_PATH lib/cmake/shaderwriter)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

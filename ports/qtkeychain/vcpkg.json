@@ -1,7 +1,7 @@
 {
   "name": "qtkeychain",
   "version": "0.13.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "(Unaffiliated with Qt) Platform-independent Qt5 API for storing passwords securely",
   "homepage": "https://github.com/frankosterfeld/qtkeychain",
   "license": "BSD-3-Clause",
