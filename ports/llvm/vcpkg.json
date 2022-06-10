@@ -91,8 +91,7 @@
           "default-features": false,
           "features": [
             "target-spirv"
-          ],
-          "platform": "spirv"
+          ]
         },
         {
           "name": "llvm",

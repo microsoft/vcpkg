@@ -227,21 +227,21 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
-cmake_host_system_information(RESULT MEMORY QUERY AVAILABLE_VIRTUAL_MEMORY)
+cmake_host_system_information(RESULT MEMORY QUERY AVAILABLE_PHYSICAL_MEMORY)
 set(LLVM_LINK_JOBS 1)
 
 
 #this is calculated in mib to gb
-if("6675.72" GREATER_EQUAL MEMORY)
+if(MEMORY GREATER_EQUAL "6675.72")
     set(LLVM_LINK_JOBS 2)
 endif()
-if("14305.11" GREATER_EQUAL MEMORY)
+if(MEMORY GREATER_EQUAL "14305.11")
     set(LLVM_LINK_JOBS 3)
 endif()
-if("29563.9" GREATER_EQUAL MEMORY)
+if(MEMORY GREATER_EQUAL "29563.9")
     set(LLVM_LINK_JOBS 4)
 endif()
-if("60081.48" GREATER_EQUAL MEMORY)
+if(MEMORY GREATER_EQUAL "60081.48")
     set(LLVM_LINK_JOBS 5)
 endif()
 
