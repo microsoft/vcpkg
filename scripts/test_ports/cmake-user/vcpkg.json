@@ -91,6 +91,12 @@
           "name": "libpng"
         },
         {
+          "$package": "PostgreSQL",
+          "name": "libpq",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
           "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXml2",
           "$since": "3.11",
@@ -102,14 +108,8 @@
           "$package": "LibXslt",
           "$since": "3.11",
           "name": "libxslt",
-          "platform": "!uwp & !mingw",
-          "default-features": false
-        },
-        {
-          "$package": "PostgreSQL",
-          "name": "libpq",
-          "platform": "!uwp & !mingw",
-          "default-features": false
+          "default-features": false,
+          "platform": "!uwp & !mingw"
         },
         {
           "$package": "TIFF",
@@ -119,8 +119,8 @@
         {
           "$package": "wxWidgets",
           "name": "wxwidgets",
-          "platform": "!linux & !mingw",
-          "default-features": false
+          "default-features": false,
+          "platform": "!linux & !mingw"
         },
         {
           "$package": "ZLIB",
