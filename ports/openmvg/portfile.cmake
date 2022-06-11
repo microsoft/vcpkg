@@ -16,6 +16,7 @@ vcpkg_from_github(
         build_fixes.patch
         0001-eigen_3.4.0.patch
         0002-eigen-3.4.patch
+        no-absolute-paths.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
