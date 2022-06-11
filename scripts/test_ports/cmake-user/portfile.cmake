@@ -55,17 +55,16 @@ if("find-package" IN_LIST FEATURES)
     if(packages_count GREATER 0)
         math(EXPR last "${packages_count} - 1")
         foreach(i RANGE 0 ${last})
-            string(JSON package GET "${packages_json}" ${i} "$package")
+            # Some ports may be excluded via platform expressions,
+            # because they don't support particular platforms.
+            # Using the installed vcpkg_abi_info.txt as an indicator.
+            string(JSON port GET "${packages_json}" "${i}" "name")
+            if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
+                continue()
+            endif()
+            string(JSON package GET "${packages_json}" "${i}" "$package")
             list(APPEND packages "${package}")
         endforeach()
-    endif()
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        list(REMOVE_ITEM packages "Curses")
-    endif()
-    if(VCPKG_TARGET_IS_LINUX)
-        # Port wxwidgets requires linux system libraries which conflict with vcpkg ports.
-        # This line complements the "platform" restriction from vcpkg.json.
-        list(REMOVE_ITEM packages "wxWidgets")
     endif()
 endif()
 
