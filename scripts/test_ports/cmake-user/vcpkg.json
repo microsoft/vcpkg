@@ -78,10 +78,6 @@
           "name": "libpng"
         },
         {
-          "$package": "LibXml2",
-          "name": "libxml2"
-        },
-        {
           "$package": "TIFF",
           "name": "tiff"
         },
