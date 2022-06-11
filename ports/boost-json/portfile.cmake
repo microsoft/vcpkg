@@ -3,18 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.78.0
-    SHA512 245eb006392cea71fc4da0100a804cff0f4f0a63baf5e4d95ea3b8234a8b2a72344090ccf827a6334fe1819dc207d84a2c1709c62f71361a8e8824d84a51edab
+    REF boost-1.79.0
+    SHA512 1243e4bdf5f2570c1f92e12dbe9cdef55d72d73d0e6abc6253eae928280ba913bfbc3a4d92d09a9c9b98e06ef95345c2c99dd0983d8dd2a7f1d8f0826530e1dd
     HEAD_REF master
+    PATCHES 0001-json-array-erase-relocate.patch
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile" "${_contents}")
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

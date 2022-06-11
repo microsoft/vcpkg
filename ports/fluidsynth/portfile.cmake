@@ -25,11 +25,34 @@ if ("buildtools" IN_LIST FEATURES)
     vcpkg_add_to_path(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
-set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sndfile     enable-libsndfile
+)
+
+set(feature_list dbus jack libinstpatch midishare opensles oboe oss sdl2 pulseaudio readline lash systemd dart)
 vcpkg_list(SET FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()
+
+# enable platform-specific features, and force the build to fail if the
+# required libraries are not found
+list(APPEND FEATURE_OPTIONS -Denable-dsound=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -Denable-wasapi=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -Denable-waveout=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -Denable-winmidi=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -DHAVE_MMSYSTEM_H=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -DHAVE_DSOUND_H=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -DHAVE_WASAPI_HEADERS=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -DHAVE_OBJBASE_H=${VCPKG_TARGET_IS_WINDOWS})
+list(APPEND FEATURE_OPTIONS -Denable-coreaudio=${VCPKG_TARGET_IS_OSX})
+list(APPEND FEATURE_OPTIONS -Denable-coremidi=${VCPKG_TARGET_IS_OSX})
+list(APPEND FEATURE_OPTIONS -DCOREAUDIO_FOUND=${VCPKG_TARGET_IS_OSX})
+list(APPEND FEATURE_OPTIONS -DCOREMIDI_FOUND=${VCPKG_TARGET_IS_OSX})
+list(APPEND FEATURE_OPTIONS -Denable-alsa=${VCPKG_TARGET_IS_LINUX})
+list(APPEND FEATURE_OPTIONS -DALSA_FOUND=${VCPKG_TARGET_IS_LINUX})
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 

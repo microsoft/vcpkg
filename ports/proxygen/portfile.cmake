@@ -6,22 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-register.patch
+        fix-zstd-zlib-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(GPERF)
-    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
-    vcpkg_add_to_path(${GPERF_PATH})
-else()
-    # gperf only have windows package in vcpkg now.
-    if (NOT EXISTS /usr/bin/gperf)
-        message(FATAL_ERROR "proxygen requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
-    endif()
-endif()
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

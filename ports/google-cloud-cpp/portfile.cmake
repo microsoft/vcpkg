@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.38.0
-    SHA512 8d13450d5d669c8f736a6b8cb57291e7de997ab8dcd3dbce8dabd6d71ff81096ef92f02cf64711d40a1465b47f8fd5ce21a355c9526c5900adc076e25b062fa7
+    REF v1.41.0
+    SHA512 41bee9fce6d7bbb0cdd201f9902b1bb0b3c94e4e42719332021fdd7ba1e1b1d503cd7e480c6318da658595100d63223f8f11c3d7f5e4965c1c815ab703a9c224
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -47,7 +47,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils)
+foreach(suffix common googleapis grpc_utils rest_internal)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
