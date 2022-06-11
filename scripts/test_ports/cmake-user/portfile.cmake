@@ -53,6 +53,10 @@ else()
     vcpkg_find_acquire_program(NINJA)
 endif()
 
+if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+    z_vcpkg_select_default_vcpkg_chainload_toolchain()
+endif()
+
 function(get_packages out_packages cmake_version)
     set(packages "")
     if("find-package" IN_LIST FEATURES)
@@ -109,9 +113,13 @@ function(test_cmake_project)
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
+        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
+        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
-        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_MANIFEST_MODE=OFF"
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
     )
