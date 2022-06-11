@@ -2742,7 +2742,7 @@
     },
     "hareflow": {
       "baseline": "0.1.0",
-      "port-version": 0      
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "4.2.0",
@@ -4287,6 +4287,10 @@
     "lmdb": {
       "baseline": "0.9.29",
       "port-version": 2
+    },
+    "lockpp": {
+      "baseline": "1.0.2",
+      "port-version": 0
     },
     "lodepng": {
       "baseline": "2021-12-04",
@@ -6360,14 +6364,8 @@
       "baseline": "3.6.2",
       "port-version": 0
     },
-    "saucer":
-    {
+    "saucer": {
       "baseline": "0.1.0",
-      "port-version": 0
-    },    
-    "lockpp":
-    {
-      "baseline": "1.0.1",
       "port-version": 0
     },
     "sbp": {
