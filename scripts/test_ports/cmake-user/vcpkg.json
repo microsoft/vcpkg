@@ -91,12 +91,16 @@
           "name": "libpng"
         },
         {
+          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXml2",
+          "$since": "3.11",
           "name": "libxml2",
           "default-features": false
         },
         {
+          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXslt",
+          "$since": "3.11",
           "name": "libxslt",
           "platform": "!uwp & !mingw",
           "default-features": false
