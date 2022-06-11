@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-04-18",
+  "version-date": "2022-06-11",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -43,15 +43,23 @@
         },
         {
           "$package": "CURL",
-          "name": "curl"
+          "name": "curl",
+          "default-features": false
         },
         {
           "$package": "EXPAT",
           "name": "expat"
         },
         {
+          "$package": "Fontconfig",
+          "$since": "3.14",
+          "name": "fontconfig",
+          "platform": "!mingw"
+        },
+        {
           "$package": "Freetype",
-          "name": "freetype"
+          "name": "freetype",
+          "default-features": false
         },
         {
           "$package": "Intl",
@@ -66,6 +74,11 @@
           "name": "icu"
         },
         {
+          "$package": "Iconv",
+          "$since": "3.11",
+          "name": "libiconv"
+        },
+        {
           "$package": "JPEG",
           "name": "libjpeg-turbo"
         },
@@ -78,13 +91,32 @@
           "name": "libpng"
         },
         {
+          "$package": "LibXml2",
+          "name": "libxml2",
+          "default-features": false
+        },
+        {
+          "$package": "LibXslt",
+          "name": "libxslt",
+          "platform": "!uwp & !mingw",
+          "default-features": false
+        },
+        {
+          "$package": "PostgreSQL",
+          "name": "libpq",
+          "platform": "!uwp & !mingw",
+          "default-features": false
+        },
+        {
           "$package": "TIFF",
-          "name": "tiff"
+          "name": "tiff",
+          "default-features": false
         },
         {
           "$package": "wxWidgets",
           "name": "wxwidgets",
-          "platform": "!linux"
+          "platform": "!linux & !mingw",
+          "default-features": false
         },
         {
           "$package": "ZLIB",
