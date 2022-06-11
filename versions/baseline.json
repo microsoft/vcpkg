@@ -4198,7 +4198,7 @@
     },
     "libxmlmm": {
       "baseline": "0.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libxmlpp": {
       "baseline": "5.0.0",
