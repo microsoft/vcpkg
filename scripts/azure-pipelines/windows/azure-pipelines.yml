@@ -97,7 +97,7 @@ jobs:
       PathtoPublish: scripts/list_files
       ArtifactName: 'file lists for ${{ parameters.triplet }}'
   - task: PublishTestResults@2
-    displayName: 'Publish Test Results for ${{ parameters.triplet }}'
+    displayName: 'Publish Test Results'
     condition: ne(variables['XML_RESULTS_FILE'], '')
     inputs:
       testRunTitle: ${{ parameters.triplet }}
