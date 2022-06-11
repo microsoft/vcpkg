@@ -54,7 +54,7 @@
           "$package": "Fontconfig",
           "$since": "3.14",
           "name": "fontconfig",
-          "platform": "!mingw"
+          "platform": "!mingw & !uwp"
         },
         {
           "$package": "Freetype",
@@ -71,7 +71,8 @@
         },
         {
           "$package": "ICU",
-          "name": "icu"
+          "name": "icu",
+          "platform": "!uwp"
         },
         {
           "$package": "Iconv",
@@ -120,7 +121,7 @@
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!linux & !mingw"
+          "platform": "!linux & !mingw & !uwp"
         },
         {
           "$package": "ZLIB",
