@@ -37,6 +37,13 @@ function(vcpkg_execute_build_process)
     set(log_err "${log_prefix}-err.log")
     set(all_logs "${log_out}" "${log_err}")
 
+    if(X_PORT_PROFILE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        if(DEFINED arg_NO_PARALLEL_COMMAND)
+            vcpkg_list(PREPEND arg_NO_PARALLEL_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        endif()
+    endif()
+
     execute_process(
         COMMAND ${arg_COMMAND}
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
