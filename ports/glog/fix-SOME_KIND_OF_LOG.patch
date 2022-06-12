@@ -1,8 +1,8 @@
 diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
-index 3ecacfb..2698dea 100644
+index 3ecacfb..ef10284 100644
 --- a/src/glog/logging.h.in
 +++ b/src/glog/logging.h.in
-@@ -100,10 +100,18 @@
+@@ -100,7 +100,7 @@
  #include <gflags/gflags.h>
  #endif
  
@@ -10,19 +10,8 @@ index 3ecacfb..2698dea 100644
 +#if @ac_cv_cxx11_atomic@
  #include <atomic>
  #elif defined(GLOG_OS_WINDOWS)
-+// To avoid macro definition of ERROR.
-+// To avoid macro definition of min/max.
-+# ifndef NOMINMAX
-+#  define NOMINMAX
-+# endif
  #include <Windows.h>
-+# ifdef ERROR
-+#  undef ERROR
-+# endif
- #endif
- 
- @ac_google_start_namespace@
-@@ -1014,7 +1022,7 @@ extern "C" void AnnotateBenignRaceSized(
+@@ -1014,7 +1014,7 @@ extern "C" void AnnotateBenignRaceSized(
  namespace google {
  #endif
  
@@ -31,7 +20,7 @@ index 3ecacfb..2698dea 100644
  #define SOME_KIND_OF_LOG_EVERY_N(severity, n, what_to_do) \
    static std::atomic<int> LOG_OCCURRENCES(0), LOG_OCCURRENCES_MOD_N(0); \
    _GLOG_IFDEF_THREAD_SANITIZER(AnnotateBenignRaceSized(__FILE__, __LINE__, &LOG_OCCURRENCES, sizeof(int), "")); \
-@@ -1061,7 +1069,7 @@ namespace google {
+@@ -1061,7 +1061,7 @@ namespace google {
  #elif defined(GLOG_OS_WINDOWS)
  
  #define SOME_KIND_OF_LOG_EVERY_N(severity, n, what_to_do) \
@@ -40,7 +29,7 @@ index 3ecacfb..2698dea 100644
    InterlockedIncrement(&LOG_OCCURRENCES); \
    if (InterlockedIncrement(&LOG_OCCURRENCES_MOD_N) > n) \
      InterlockedExchangeSubtract(&LOG_OCCURRENCES_MOD_N, n); \
-@@ -1071,7 +1079,7 @@ namespace google {
+@@ -1071,7 +1071,7 @@ namespace google {
          &what_to_do).stream()
  
  #define SOME_KIND_OF_LOG_IF_EVERY_N(severity, condition, n, what_to_do) \
@@ -49,7 +38,7 @@ index 3ecacfb..2698dea 100644
    InterlockedIncrement(&LOG_OCCURRENCES); \
    if (condition && \
        (InterlockedIncrement(&LOG_OCCURRENCES_MOD_N) || true) && \
-@@ -1082,7 +1090,7 @@ namespace google {
+@@ -1082,7 +1082,7 @@ namespace google {
                   &what_to_do).stream()
  
  #define SOME_KIND_OF_PLOG_EVERY_N(severity, n, what_to_do) \
@@ -58,7 +47,7 @@ index 3ecacfb..2698dea 100644
    InterlockedIncrement(&LOG_OCCURRENCES); \
    if (InterlockedIncrement(&LOG_OCCURRENCES_MOD_N) > n) \
      InterlockedExchangeSubtract(&LOG_OCCURRENCES_MOD_N, n); \
-@@ -1092,7 +1100,7 @@ namespace google {
+@@ -1092,7 +1092,7 @@ namespace google {
          &what_to_do).stream()
  
  #define SOME_KIND_OF_LOG_FIRST_N(severity, n, what_to_do) \

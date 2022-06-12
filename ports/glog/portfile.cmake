@@ -8,7 +8,7 @@ vcpkg_from_github(
        glog_disable_debug_postfix.patch
        fix_glog_CMAKE_MODULE_PATH.patch
        fix_log_every_n.patch
-       noerror-nominmax.patch
+       fix-SOME_KIND_OF_LOG.patch
        fix_crosscompile_symbolize.patch
        cmakelists_atomicdetect.patch
 )
