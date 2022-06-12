@@ -1,0 +1,12 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 2a50d7f..e9c1276 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -308,6 +308,7 @@ func_enable_tag ()
+ # release of libtool.
+ func_check_version_match ()
+ {
++    if test "2.4.6,$package_revision" = "$macro_revision,2.4.7"; then return; fi # assume compatibility
+     if test "$package_revision" != "$macro_revision"; then
+       if test "$VERSION" != "$macro_version"; then
+         if test -z "$macro_version"; then

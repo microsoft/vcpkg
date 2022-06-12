@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        0100-ltmain-compatibility.patch
         0101-simplify-deplib-check.patch # inspired by MSYS2's 0005-Fix-seems-to-be-moved.patch
         0102-win32-libid-type.patch      # inspired by MSYS2's 0008-tests.patch
         # Originally from MSYS2 mingw-w64-libtool 2.4.6-20, refreshed.
