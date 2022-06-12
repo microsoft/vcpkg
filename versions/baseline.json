@@ -3690,7 +3690,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 13
+      "port-version": 14
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3762,6 +3762,10 @@
     },
     "liblsl": {
       "baseline": "1.16.0",
+      "port-version": 0
+    },
+    "libltdl": {
+      "baseline": "2.4.7",
       "port-version": 0
     },
     "liblzma": {
@@ -4125,7 +4129,7 @@
       "port-version": 2
     },
     "libtool": {
-      "baseline": "2021-11-22",
+      "baseline": "2.4.7",
       "port-version": 0
     },
     "libtorrent": {
