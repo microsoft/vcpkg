@@ -1,8 +1,8 @@
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index a3bc337..c783da0 100644
+index 79a2451..69cd577 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -7531,7 +7531,7 @@ if AC_TRY_EVAL(ac_compile); then
+@@ -7554,7 +7554,7 @@ if AC_TRY_EVAL(ac_compile); then
    for p in `eval "$output_verbose_link_cmd"`; do
      case $prev$p in
  

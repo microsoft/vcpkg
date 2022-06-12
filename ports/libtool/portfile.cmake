@@ -1,41 +1,29 @@
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(LIBTOOL_VERSION_STR "2.4.6")
+set(LIBTOOL_VERSION_STR "2.4.7")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/libtool/libtool-${LIBTOOL_VERSION_STR}.tar.xz"
     FILENAME "gnu-libtool-${LIBTOOL_VERSION_STR}.tar.xz"
-    SHA512 a6eef35f3cbccf2c9e2667f44a476ebc80ab888725eb768e91a3a6c33b8c931afc46eb23efaee76c8696d3e4eed74ab1c71157bcb924f38ee912c8a90a6521a4
+    SHA512 47f4c6de40927254ff9ba452612c0702aea6f4edc7e797f0966c8c6bf0340d533598976cdba17f0bdc64545572e71cd319bbb587aa5f47cd2e7c1d96f873a3da
 )
-
-set(PATCHES
-    0100-mitigate-sed-quote-subst-slowdown.patch # From upstream 32f0df983
-)
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHES
-        0101-support-macos-11.patch # From upstream 9e8c8825
-    )
-endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PATCHES
-        # From MSYS2 mingw-w64-libtool 2.4.6-20, refreshed
-        0002-cygwin-mingw-Create-UAC-manifest-files.mingw.patch
-        0003-Pass-various-runtime-library-flags-to-GCC.mingw.patch
-        0005-Fix-seems-to-be-moved.patch
-        0006-Fix-strict-ansi-vs-posix.patch
-        0007-fix-cr-for-awk-in-configure.all.patch
-        0008-tests.patch
-        0011-Pick-up-clang_rt-static-archives-compiler-internal-l.patch
-        0012-Prefer-response-files-over-linker-scripts-for-mingw-.patch
-        0013-Allow-statically-linking-compiler-support-libraries-.patch
-        0014-Support-llvm-objdump-f-output.patch
-    )
-endif()
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES ${PATCHES}
+    PATCHES
+        0101-simplify-deplib-check.patch # inspired by MSYS2's 0005-Fix-seems-to-be-moved.patch
+        0102-win32-libid-type.patch      # inspired by MSYS2's 0008-tests.patch
+        # Originally from MSYS2 mingw-w64-libtool 2.4.6-20, refreshed.
+        # (Now in MSYS2 libtool and mingw-w64-libltdl.)
+        0002-cygwin-mingw-Create-UAC-manifest-files.mingw.patch
+        0003-Pass-various-runtime-library-flags-to-GCC.mingw.patch
+        0006-Fix-strict-ansi-vs-posix.patch
+        0007-fix-cr-for-awk-in-configure.all.patch
+        0011-Pick-up-clang_rt-static-archives-compiler-internal-l.patch
+        0012-Prefer-response-files-over-linker-scripts-for-mingw-.patch
+        0013-Allow-statically-linking-compiler-support-libraries-.patch
+        0014-Support-llvm-objdump-f-output.patch
 )
 
 set(OPTIONS "")

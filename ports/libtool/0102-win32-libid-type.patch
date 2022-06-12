@@ -1,0 +1,12 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 61533a0..c41e4bc 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -3073,6 +3073,7 @@ func_win32_libid ()
+     ;;
+   *executable*) # but shell scripts are "executable" too...
+     case $win32_fileres in
++    *PE32*Intel\ 80386,\ for\ MS\ Windows*| \
+     *MS\ Windows\ PE\ Intel*)
+       win32_libid_type="x86 DLL"
+       ;;

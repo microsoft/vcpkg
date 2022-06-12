@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index 5b29276..3fd2f7d 100755
+index faba8d7..77c7807 100755
 --- a/configure
 +++ b/configure
-@@ -30727,7 +30727,7 @@ if test "x$ac_cr" = x; then
+@@ -31156,7 +31156,7 @@ if test "x$ac_cr" = x; then
  fi
  ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
  if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then
@@ -12,10 +12,10 @@ index 5b29276..3fd2f7d 100755
    ac_cs_awk_cr=$ac_cr
  fi
 diff --git a/libltdl/configure b/libltdl/configure
-index 4d0e892..331eb70 100755
+index 625c6a3..badb239 100755
 --- a/libltdl/configure
 +++ b/libltdl/configure
-@@ -14302,7 +14302,7 @@ if test "x$ac_cr" = x; then
+@@ -14434,7 +14434,7 @@ if test "x$ac_cr" = x; then
  fi
  ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
  if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then

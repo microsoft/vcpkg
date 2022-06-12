@@ -1,8 +1,8 @@
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index d5cf07a..54cd172 100644
+index 016df50..4b3479b 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -4544,6 +4544,41 @@ EOF
+@@ -4564,6 +4564,41 @@ EOF
  }
  # end: func_emit_cwrapperexe_src
  
@@ -44,7 +44,7 @@ index d5cf07a..54cd172 100644
  # func_win32_import_lib_p ARG
  # True if ARG is an import lib, as indicated by $file_magic_cmd
  func_win32_import_lib_p ()
-@@ -8622,7 +8657,7 @@ EOF
+@@ -8672,7 +8707,7 @@ EOF
  	    cwrappersource=$output_path/$objdir/lt-$output_name.c
  	    cwrapper=$output_path/$output_name.exe
  	    $RM $cwrappersource $cwrapper
@@ -53,7 +53,7 @@ index d5cf07a..54cd172 100644
  
  	    func_emit_cwrapperexe_src > $cwrappersource
  
-@@ -8642,6 +8677,16 @@ EOF
+@@ -8692,6 +8727,16 @@ EOF
  	    $opt_dry_run || {
  	      # note: this script will not be executed, so do not chmod.
  	      if test "x$build" = "x$host"; then
@@ -70,7 +70,7 @@ index d5cf07a..54cd172 100644
  		$cwrapper --lt-dump-script > $func_ltwrapper_scriptname_result
  	      else
  		func_emit_wrapper no > $func_ltwrapper_scriptname_result
-@@ -9166,8 +9211,9 @@ func_mode_uninstall ()
+@@ -9218,8 +9263,9 @@ func_mode_uninstall ()
  	    # note $name still contains .exe if it was in $file originally
  	    # as does the version of $file that was added into $rmfiles
  	    func_append rmfiles " $odir/$name $odir/${name}S.$objext"

@@ -1,8 +1,8 @@
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index 80c5ae5..1887dfb 100644
+index ebea2a6..c9f52ff 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -3019,7 +3019,7 @@ func_win32_libid ()
+@@ -3038,7 +3038,7 @@ func_win32_libid ()
    *ar\ archive*) # could be an import, or static
      # Keep the egrep pattern in sync with the one in _LT_CHECK_MAGIC_METHOD.
      if eval $OBJDUMP -f $1 | $SED -e '10q' 2>/dev/null |
@@ -12,10 +12,10 @@ index 80c5ae5..1887dfb 100644
        "MS dumpbin")
  	if func_cygming_ms_implib_p "$1" ||
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index 21a7d60..b29b612 100644
+index c82e977..25278ad 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -3473,7 +3473,7 @@ mingw* | pw32*)
+@@ -3493,7 +3493,7 @@ mingw* | pw32*)
      lt_cv_file_magic_cmd='func_win32_libid'
    else
      # Keep this pattern in sync with the one in func_win32_libid.

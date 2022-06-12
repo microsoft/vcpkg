@@ -1,0 +1,17 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 1a72210..c750093 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6695,11 +6695,8 @@ func_mode_link ()
+ 		  ;;
+ 		esac
+ 		else
+-		  eval libdir=`$SED -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+-		  test -z "$libdir" && \
++		  test "$libdir" = "libdir=" && \
+ 		    func_fatal_error "'$deplib' is not a valid libtool archive"
+-		  test "$absdir" != "$libdir" && \
+-		    func_warning "'$deplib' seems to be moved"
+ 
+ 		  path=-L$absdir
+ 		fi

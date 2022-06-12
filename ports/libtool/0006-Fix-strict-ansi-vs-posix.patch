@@ -1,15 +1,8 @@
-[PATCH 6/6] Fix STRICT_ANSI vs POSIX
-* build-aux/ltmain.in (func_mode_link): Also check for _POSIX
-as well as __STRICT_ANSI__ to avoid re-definitions.
----
- build-aux/ltmain.in |    4 +++-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index af46cb8..244bb5b 100644
+index c750093..61533a0 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -3382,7 +3382,7 @@
+@@ -3662,7 +3662,7 @@ EOF
  
  /* declarations of non-ANSI functions */
  #if defined __MINGW32__
@@ -18,5 +11,3 @@ index af46cb8..244bb5b 100644
  int _putenv (const char *);
  # endif
  #elif defined __CYGWIN__
--- 
-1.7.0.2.msysgit.0
