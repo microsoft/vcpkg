@@ -7,7 +7,7 @@ include(CMakeFindDependencyMacro)
 if("@OSG_TEXT_USE_FONTCONFIG@")
     find_dependency(Fontconfig) # CMake 3.14
 endif()
-if(${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS AND "plugins" IN_LIST ${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS)
+if("plugins" IN_LIST ${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS)
     include("${CMAKE_CURRENT_LIST_DIR}/osg-plugins.cmake")
     if(TARGET unofficial::osg::osgdb_curl)
         find_dependency(CURL)
