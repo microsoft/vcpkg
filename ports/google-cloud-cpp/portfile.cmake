@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.35.0
-    SHA512 99eabb37ff32ddaf8f646415b50f3843e89fb119646428c16f03060c2787c8d86fa1ac0919ee60c4f6c7a3b71a14eb828ae26a7fc26d928543d72c7ba3268bff
+    REF v1.41.0
+    SHA512 41bee9fce6d7bbb0cdd201f9902b1bb0b3c94e4e42719332021fdd7ba1e1b1d503cd7e480c6318da658595100d63223f8f11c3d7f5e4965c1c815ab703a9c224
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -14,6 +14,8 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+# This feature does not exist, but allows us to simplify the vcpkg.json file.
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 
 vcpkg_cmake_configure(
@@ -45,7 +47,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils)
+foreach(suffix common googleapis grpc_utils rest_internal)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()

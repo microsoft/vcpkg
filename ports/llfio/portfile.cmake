@@ -59,7 +59,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib

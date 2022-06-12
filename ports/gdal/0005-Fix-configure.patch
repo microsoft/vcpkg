@@ -11,6 +11,25 @@ index 30cd613..43f1daf 100644
  dnl Enable as much warnings as possible
  AC_LANG_PUSH([C])
  AX_COMPILER_VENDOR
+@@ -1111,6 +1111,8 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(libz,[  --with-libz[=ARG]       Include libz support (ARG=internal or libz directory)],,)
+ 
+ if test "$with_libz" = "external" -o "$with_libz" = "" -o "$with_libz" = "yes" ; then
++  PKG_CHECK_MODULES([ZLIB], [zlib], [LIBZ_SETTING=external], [LIBZ_SETTING=internal])
++elif false ; then
+ 
+   AC_CHECK_LIB(z,deflateInit_,LIBZ_SETTING=external,LIBZ_SETTING=internal,)
+ 
+@@ -1144,7 +1146,8 @@ elif test "$with_libz" != "no" -a "$with_libz" != "internal" ; then
+ fi
+ 
+ if test "$LIBZ_SETTING" = "external" ; then
+-  LIBS="-lz $LIBS"
++  LIBS="${ZLIB_LIBS} $LIBS"
++  EXTRA_INCLUDES="${ZLIB_CFLAGS} $EXTRA_INCLUDES"
+   if test "$with_libz" != "" -a "$with_libz" != "yes" -a "$with_libz" != "external" ; then
+     EXTRA_INCLUDES="-I$with_libz -I$with_libz/include $EXTRA_INCLUDES"
+   fi
 @@ -1336,12 +1338,15 @@ AC_MSG_CHECKING([for libtiff])
  
  if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then

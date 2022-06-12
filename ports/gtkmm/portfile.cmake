@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/4.4/gtkmm-4.4.0.tar.xz"
-    FILENAME "gtkmm-4.4.0.tar.xz"
-    SHA512 d6f20213e9ea7a13e2b9822f220a5cdeaef9a9406abee813e0eebdb540839f25f4c19cc7669c24184bef471f5529a7897cd16ee679266148f3181dd2cfa39eb4
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/4.6/gtkmm-4.6.0.tar.xz"
+    FILENAME "gtkmm-4.6.0.tar.xz"
+    SHA512 d1040be44d133cfa016efc581b79c5303806d0d441b57dcc22bd84a05c3e7934f9b7b894e71d7f4a0be332daba3dd58ef558f58070b83bf8a9de7d1027d92199
 )
 
 vcpkg_extract_source_archive_ex(

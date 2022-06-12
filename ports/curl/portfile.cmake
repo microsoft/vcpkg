@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_81_0
-    SHA512 2aa2200c50bc0f6f70e402078ab0d2e8248f261f1f584ab619388c4a537593321765dcd20706ba420ebc7d1558f7170aa6b6edc8c13f2315770c5e2919b6f3d9
+    REF curl-7_83_1
+    SHA512 f4ede3c829aaa1142358d956cba4b33f06d3f0319c9f1cd65b63413de60a8690165e10fcb876fc413a20fcfa53bba2a064bb4b8c3070dbf474c2f2288eeab019
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -13,7 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        curl-7.81.0-ssl.patch
+        wolfssl-ntlm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -39,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
+        wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
         mbedtls     CURL_USE_MBEDTLS
         ssh         CURL_USE_LIBSSH2

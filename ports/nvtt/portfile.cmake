@@ -14,27 +14,38 @@ vcpkg_from_github(
         fix-build-error.patch
         add-compile-options-for-osx.patch
         skip-building-libsquish.patch
+        fix-intrinsic-function.patch
+        fix-release-flags.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cuda    CMAKE_REQUIRE_FIND_PACKAGE_CUDA
+    INVERTED_FEATURES
+        cuda    CMAKE_DISABLE_FIND_PACKAGE_CUDA
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DNVTT_SHARED=0
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=_d # required by OSG
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(REMOVE ${CURRENT_PACKAGES_DIR}/share/doc/nvtt/LICENSE)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/doc/nvtt/LICENSE")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

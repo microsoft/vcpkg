@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 647a48dfa7b19ef6bbfa68a69b5d87717541ef21 #2.4.0
-    SHA512 c72072df6f2b3ebc1b632f2e3b40bdcc732e25e7c4ef97b93bc5c5351566b553f682b615e6383ac7c5a1b5ecf8ed0fa9a305ea8c904031d4c78d7c3179323032
+    REF 2.5.0
+    SHA512 7720306c8d0915578f6758f46ba0e0b8a81bbdcd1c80e08711576605142467f6735f644099e79a05113959fb30cd1070ca138a523537a41a7102880daf89c04c
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
@@ -29,7 +29,7 @@ endif()
 get_filename_component(SOURCE_VERSION "${SOURCE_PATH}" NAME)
 file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
+file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake") # Remove outdated Module
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

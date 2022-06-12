@@ -6,6 +6,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         use-system-freetype.patch
         stb_include.patch
+        arm64.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/extlibs")

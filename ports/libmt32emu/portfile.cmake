@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munt/munt
-    REF libmt32emu_2_5_3
-    SHA512 c801e22e861898281316109533ca6264f5a9cf778d4f0bb14b49bb6d04d53b7e60cd8320d5b29a63534f6c470b4feb67c881e86c49b7860a98639ce01b99debf
+    REF 004800c20b1edaab921e08f69133fc2a4bd3b8e8  #vlibmt32emu_2_6_2
+    SHA512 3a47c269d285f3930eefda4cae6f1c7e157fc4e88d7d64ad029542586b6592b32d5f9bf0e22344e27a21869aea2191051505f3727e52dff268cf2be4d52f15c3
     HEAD_REF master
 )
 
@@ -15,6 +15,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME MT32Emu CONFIG_PATH lib/cmake/MT32Emu)
+
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -23,5 +28,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 
 file(INSTALL "${SOURCE_PATH}/mt32emu/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
