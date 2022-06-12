@@ -22,6 +22,7 @@ vcpkg_extract_source_archive_ex(
         0004-ModuleFileName.patch
 )
 x_vcpkg_update_libtool(SOURCE_PATH "${SOURCE_PATH}")
+x_vcpkg_update_libtool(SOURCE_PATH "${SOURCE_PATH}/libcharset")
 
 if (NOT VCPKG_TARGET_IS_ANDROID)
     list(APPEND OPTIONS --enable-relocatable)
