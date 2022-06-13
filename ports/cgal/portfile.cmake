@@ -7,7 +7,7 @@ vcpkg_from_github(
     REF v5.4.1
     SHA512 2ec6167d8ebf1df121f1ac372d01862f7f3acb043deea4a334e0329976306f9c9e917cdc66b355728d3f99fdb76f5491d96f10fff660716ce27bfd3793380875
     HEAD_REF master
-    PATCHES fix-incorrect-warning.patch
+    PATCHES fix-incorrect-warning.patch # https://github.com/CGAL/cgal/pull/6649
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
