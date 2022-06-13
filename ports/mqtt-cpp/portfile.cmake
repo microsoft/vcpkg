@@ -14,8 +14,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH
     "${SOURCE_PATH}"
     OPTIONS
-    -DMQTT_BUILD_EXAMPLES=off
-    -DMQTT_BUILD_TESTS=off
+    -DMQTT_BUILD_EXAMPLES=OFF
+    -DMQTT_BUILD_TESTS=OFF
     -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
     )
 
