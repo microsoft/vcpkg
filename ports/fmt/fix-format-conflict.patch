@@ -1,15 +1,15 @@
-diff --git a/doc/api.rst b/doc/api.rst
-index 93fb3fa..a01ebda 100644
---- a/doc/api.rst
-+++ b/doc/api.rst
-@@ -225,8 +225,8 @@ template and implement ``parse`` and ``format`` methods::
-     auto format(const point& p, FormatContext& ctx) -> decltype(ctx.out()) {
-       // ctx.out() is an output iterator to write to.
-       return presentation == 'f'
--                ? format_to(ctx.out(), "({:.1f}, {:.1f})", p.x, p.y)
--                : format_to(ctx.out(), "({:.1e}, {:.1e})", p.x, p.y);
-+                ? fmt::format_to(ctx.out(), "({:.1f}, {:.1f})", p.x, p.y)
-+                : fmt::format_to(ctx.out(), "({:.1e}, {:.1e})", p.x, p.y);
-     }
-   };
+diff --git a/include/fmt/format-inl.h b/include/fmt/format-inl.h
+index 2c51c50..fb3eba0 100644
+--- a/include/fmt/format-inl.h
++++ b/include/fmt/format-inl.h
+@@ -75,8 +75,8 @@ FMT_FUNC void format_error_code(detail::buffer<char>& out, int error_code,
+   error_code_size += detail::to_unsigned(detail::count_digits(abs_value));
+   auto it = buffer_appender<char>(out);
+   if (message.size() <= inline_buffer_size - error_code_size)
+-    format_to(it, FMT_STRING("{}{}"), message, SEP);
+-  format_to(it, FMT_STRING("{}{}"), ERROR_STR, error_code);
++    fmt::format_to(it, FMT_STRING("{}{}"), message, SEP);
++  fmt::format_to(it, FMT_STRING("{}{}"), ERROR_STR, error_code);
+   FMT_ASSERT(out.size() <= inline_buffer_size, "");
+ }
  
