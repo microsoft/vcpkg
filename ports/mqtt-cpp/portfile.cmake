@@ -1,14 +1,11 @@
 vcpkg_from_github(
-    OUT_SOURCE_PATH
-    SOURCE_PATH
-    REPO
-    redboltz/mqtt_cpp
-    REF
-    v13.0.0
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO redboltz/mqtt_cpp
+    REF v13.0.0    
     SHA512
-    2f0c85ac813cc6c99cc5b1ca02514ee6643abc39750bce541a362d1fcd281b8b9011cc39ddeaf4394fd3772904eed15e8ecbe6b3839caad13cae2b04201e682b
-    HEAD_REF
-    master)
+2f0c85ac813cc6c99cc5b1ca02514ee6643abc39750bce541a362d1fcd281b8b9011cc39ddeaf4394fd3772904eed15e8ecbe6b3839caad13cae2b04201e682b
+    HEAD_REF master
+    )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
