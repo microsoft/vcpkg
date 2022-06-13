@@ -8,20 +8,23 @@ vcpkg_from_github(
         fix-cmakelists.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-            glad   NANOGUI_USE_GLAD
-)
+if (VCPKG_HOST_IS_WINDOWS)
+  set(USE_GLAD -DNANOGUI_USE_GLAD=ON)
+else()
+  set(USE_GLAD -DNANOGUI_USE_GLAD=OFF)
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -DNANOGUI_EIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
         -DEIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
+        ${USE_GLAD}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
