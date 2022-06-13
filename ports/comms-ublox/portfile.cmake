@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DOPT_REQUIRE_COMMS_LIB=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 vcpkg_cmake_install()
 
