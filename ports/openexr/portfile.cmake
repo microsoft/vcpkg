@@ -1,3 +1,7 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/openexr3")
+  message(FATAL_ERROR "openexr 3 is installed, please uninstall and try again:\n    vcpkg remove openexr3")
+endif()
+
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   message(FATAL_ERROR "UWP build not supported")
 endif()
