@@ -11,7 +11,7 @@ index 3bdcfc6..00b2f13 100644
 +                               require libmp3lame lame/lame.h lame_set_VBR_quality -llibmp3lame-static -llibmpghip-static $libm_extralibs; }
  enabled libmysofa         && { check_pkg_config libmysofa libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine ||
                                 require libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine -lmysofa $zlib_extralibs; }
- enabled libnpp            && { check_lib libnpp npp.h nppGetLibVersion -lnppig -lnppicc -lnppc -lnppidei ||
+ enabled libnpp            && { check_lib libnpp npp.h nppGetLibVersion -lnppig -lnppicc -lnppc -lnppidei -lnppif ||
 @@ -6392,7 +6393,7 @@ if enabled debug_configure; then
  else
      enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
