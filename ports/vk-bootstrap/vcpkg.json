@@ -3,6 +3,7 @@
   "version": "0.5",
   "port-version": 1,
   "description": "Vulkan bootstraping library",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
