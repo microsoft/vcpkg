@@ -1,45 +1,3 @@
-#[===[.md:
-# vcpkg_configure_meson
-
-Configure Meson for Debug and Release builds of a project.
-
-## Usage
-```cmake
-vcpkg_configure_meson(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [NO_PKG_CONFIG]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-)
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `meson.build`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### OPTIONS
-Additional options passed to Meson during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
-
-### NO_PKG_CONFIG
-Disable pkg-config setup 
-
-## Notes
-This command supplies many common arguments to Meson. To see the full list, examine the source.
-
-## Examples
-
-* [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
-* [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-#]===]
-
 function(z_vcpkg_append_proglist var_to_append additional_binaries)
     string(APPEND "${var_to_append}" "[binaries]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -204,23 +162,7 @@ function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbu
     string(APPEND native_file "[cmake]\n")
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_TARGET_IS_LINUX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_TARGET_IS_ANDROID)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_TARGET_IS_OSX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_TARGET_IS_IOS)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_TARGET_IS_FREEBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_TARGET_IS_OPENBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-        elseif(VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
-        endif()
+        z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
     string(APPEND native_file "VCPKG_TARGET_TRIPLET = '${TARGET_TRIPLET}'\n")
@@ -454,13 +396,6 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND arg_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
     
-    if(NOT arg_NO_PKG_CONFIG)
-        vcpkg_find_acquire_program(PKGCONFIG)
-        get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
-        vcpkg_add_to_path("${PKGCONFIG_PATH}")
-        set(pkgconfig_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
-    endif()
-    
     set(buildtypes)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(buildname "DEBUG")
@@ -482,11 +417,12 @@ function(vcpkg_configure_meson)
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}")
         #setting up PKGCONFIG
-        vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
         if(NOT arg_NO_PKG_CONFIG)
-            set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
-            set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}/${path_suffix_${buildtype}}lib/pkgconfig/")
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_share_dir}" "$ENV{PKG_CONFIG_PATH}")
+            if ("${buildtype}" STREQUAL "DEBUG")
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
+            else()
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
+            endif()
         endif()
 
         vcpkg_execute_required_process(
@@ -510,7 +446,9 @@ function(vcpkg_configure_meson)
         endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}} done")
 
-        vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+        if(NOT arg_NO_PKG_CONFIG)
+            z_vcpkg_restore_pkgconfig_path()
+        endif()
     endforeach()
 
     vcpkg_restore_env_variables(VARS INCLUDE)

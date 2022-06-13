@@ -6,11 +6,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankheckenbach/ftgl
-    REF 483639219095ad080538e07ceb5996de901d4e74
-    SHA512 d5bf95db8db6a5c9f710bd274cb9bb82e3e67569e8f3ec55b36e068636a09252e6f191e36d8279e61b5d12408c065ce51829fc38d4d7afe5bda724752d2f084f
+    REF 36e8cd683492456def3b6a54c6dcb56cd6ee4bb4  #commmit-data 2022-05-18
+    SHA512 b357cf18890664d437f41d7bf18f39c894743e76e2e0b2296254b27e5675866956473e7b78139d0e6cdd7e8310bf8d2943ba0ddeea494ee67857d6083c490dc2
     HEAD_REF master
     PATCHES
-      Fix-headersFilePath.patch
       01_disable_doxygen.patch
       02_enable-cpp11-std.patch
 )
@@ -27,5 +26,7 @@ else ()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

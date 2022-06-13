@@ -83,7 +83,7 @@ $commonArgs = @(
 )
 $cachingArgs = @()
 
-$skipFailures = $false
+$skipFailuresArg = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -94,7 +94,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailures = $true
+        $skipFailuresArg = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -114,10 +114,6 @@ elseif ($Triplet -eq 'x64-osx') {
 else {
     $executableExtension = '.exe'
 }
-
-$xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
-mkdir $xmlResults
-$xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
@@ -166,7 +162,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --x-xunit=$xmlFile --failure-logs=$failureLogs "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes
+& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"

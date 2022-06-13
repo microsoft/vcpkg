@@ -3,8 +3,10 @@
 # Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
-
-#set(QT_IS_LATEST ON)
+set(QT_IS_LATEST ON)
+if("latest" IN_LIST FEATURES)
+    set(QT_IS_LATEST ON)
+endif()
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
@@ -13,7 +15,6 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch
         clang-cl_source_location.patch
         config_install.patch
-        dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
@@ -24,7 +25,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
-    list(APPEND ${PORT}_PATCHES
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache.patch
+        )
+else()
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache_latest.patch
         )
 endif()
 
@@ -67,9 +73,9 @@ FEATURES
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
     "concurrent"          FEATURE_future
-    "concurrent"          FEATURE_thread
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
+    "thread"              FEATURE_thread
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
@@ -246,6 +252,8 @@ set(TOOL_NAMES
         uic
         qtpaths
         qtpaths6
+        windeployqt
+        macdeployqt
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -396,16 +404,35 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${DLLS_TO_COPY} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 set(hostinfofile "${CURRENT_PACKAGES_DIR}/share/Qt6HostInfo/Qt6HostInfoConfig.cmake")
 file(READ "${hostinfofile}" _contents)
 string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/Qt6/bin")]] _contents "${_contents}")
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
 
-set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
-if(EXISTS "${coretools}")
-    file(READ "${coretools}" _contents)
-    string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [["${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
-    file(WRITE "${coretools}" "${_contents}")
+if(QT_IS_LATEST)
+    set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
+    if(EXISTS "${configfile}")
+        file(READ "${configfile}" _contents)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.exe")
+            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
+        endif()
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qtpaths.exe")
+            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qtpaths.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.debug.bat"]] _contents "${_contents}")
+        endif()
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat"]] _contents "${_contents}")
+        endif()
+        file(WRITE "${configfile}" "${_contents}")
+    endif()
+else()
+    set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
+    if(EXISTS "${coretools}")
+        file(READ "${coretools}" _contents)
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
+        file(WRITE "${coretools}" "${_contents}")
+    endif()
 endif()

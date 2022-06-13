@@ -1,24 +1,19 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF bcebc67feb99d98066dfb51a3857155ddcfa9d57
-    HEAD_REF master
-    SHA512 675a9db22c3593426c9a364a8a2934e41f65447d450347dd5683a89e4f38dfbc914dca7f6fbfa77b0afd1fb0fd12c2316c11eded1453ae4498b448ae2267fdac
+    REF e962d383c9c418767b96d2c3e864b3800e98826f
+    HEAD_REF development
+    SHA512 7ef1d4622bb1a38f201e9325ffca0de675816e9dc6f644d2e4a900409a5045f603dda5c86a3099a99f3be70175ca7bf6aed1c4c1e25aa9b5172967e30498536d
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
     REPO DragonJoker/CMakeUtils
-    REF 27747f5c91acf76107220986f114efdab0a09a68
+    REF 9fbaae40ccdc92f86989dc6875f362e7943b6a94
     HEAD_REF master
-    SHA512 acd5dafc74e197886a9b1ac52b59bdbf2d136cc8b49683eda48b8ccc45eced5f68aa334c8f9c01c7d8bf5c8908b64cbf19a97c6e3666370111bb3d2551c3b469
+    SHA512 dada8ac1f9676c60f1ff5a09a9f788eb8d85eaca450407e4bf0100fbec87228f99cf66cb23de9c9358dda72c426655814cbd1ea90360ca0c63e7660c15aff22b
 )
 
-get_filename_component(SRC_PATH ${CMAKE_SOURCE_PATH} DIRECTORY)
-if (EXISTS ${SRC_PATH}/CMake)
-    file(REMOVE_RECURSE ${SRC_PATH}/CMake)
-endif()
-file(RENAME ${CMAKE_SOURCE_PATH} ${SRC_PATH}/CMake)
-set(CMAKE_SOURCE_PATH ${SRC_PATH}/CMake)
-file(COPY ${CMAKE_SOURCE_PATH} DESTINATION ${SOURCE_PATH})
+file(REMOVE_RECURSE "${SOURCE_PATH}/CMake")
+file(COPY "${CMAKE_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/CMake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
@@ -31,9 +26,11 @@ vcpkg_cmake_configure(
         -DSDW_BUILD_TESTS=OFF
         -DSDW_BUILD_STATIC_SDW=${BUILD_STATIC}
         -DSDW_BUILD_STATIC_SDAST=${BUILD_STATIC}
+        -DSDW_UNITY_BUILD=ON
 )
 
+vcpkg_copy_pdbs()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/shaderwriter)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ShaderWriter CONFIG_PATH lib/cmake/shaderwriter)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

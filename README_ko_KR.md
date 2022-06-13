@@ -119,8 +119,7 @@ IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
 다음과 같이 툴체인 파일을 사용할 수 있습니다.
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCH
-AIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -163,7 +162,7 @@ $ ./vcpkg/vcpkg search [search term]
 CMake와 함께 vcpkg를 사용하려면 툴체인 파일을 이용해 보세요.
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -254,7 +253,7 @@ cmake 실행 시 `CMAKE_TOOLCHAIN_FILE`을 전달하는 대신,
 첫 번째 `project()` 호출 전에 CMakeLists.txt에 다음을 추가하는 방법도 있습니다.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -263,7 +262,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 vcpkg를 사용하지 않을 수 있습니다.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools

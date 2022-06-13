@@ -57,7 +57,7 @@ function(qt_cmake_configure)
     vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
-    if(NOT PORT STREQUAL "qtwebengine") # qtwebengine requires python2
+    if(NOT PORT STREQUAL "qtwebengine" OR QT_IS_LATEST) # qtwebengine requires python2; since 6.3 python3
         vcpkg_find_acquire_program(PYTHON3) # Python is required by some qt ports
         get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
         vcpkg_add_to_path(${PYTHON3_PATH})
@@ -98,6 +98,14 @@ function(qt_cmake_configure)
     string(REGEX MATCHALL "(QT_)?FEATURE_[^:=]+(:BOOL)?=OFF" disabled_features "${_qarg_OPTIONS}")
     list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
+
+    if(QT_IS_LATEST)
+        list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
+    endif()
+
+    if(NOT PORT MATCHES "qtbase")
+        list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
+    endif()
 
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -144,6 +152,7 @@ function(qt_cmake_configure)
             INSTALL_INCLUDEDIR
             HOST_PERL
             QT_SYNCQT
+            QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             ${_qarg_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
@@ -256,12 +265,14 @@ function(qt_fixup_and_cleanup)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/share"
                         "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+                        "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-        debug_message("Files in bin: '${_bin_files}'")
-        if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
+        if(NOT _bin_files STREQUAL "")
+            message(STATUS "Remaining files in bin: '${_bin_files}'")
+        else() # Only clean if empty otherwise let vcpkg throw and error. 
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
