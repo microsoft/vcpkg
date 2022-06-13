@@ -13,3 +13,16 @@ index 2c51c50..fb3eba0 100644
    FMT_ASSERT(out.size() <= inline_buffer_size, "");
  }
  
+diff --git a/src/os.cc b/src/os.cc
+index 04b4dc5..fe2c7e4 100644
+--- a/src/os.cc
++++ b/src/os.cc
+@@ -167,7 +167,7 @@ void detail::format_windows_error(detail::buffer<char>& out, int error_code,
+     if (msg) {
+       utf16_to_utf8 utf8_message;
+       if (utf8_message.convert(msg) == ERROR_SUCCESS) {
+-        format_to(buffer_appender<char>(out), "{}: {}", message, utf8_message);
++        fmt::format_to(buffer_appender<char>(out), "{}: {}", message, utf8_message);
+         return;
+       }
+     }
