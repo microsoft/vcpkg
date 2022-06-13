@@ -101,8 +101,6 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
         MATH(EXPR ISYSROOT_FLAG_POS "${ISYSROOT_FLAG_POS}+1")
         list(SUBLIST C_FLAGS ${ISYSROOT_FLAG_POS} 1 ISYSROOT)
         set(CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}} -isysroot ${ISYSROOT}")
-        string(REGEX REPLACE "-isysroot ${ISYSROOT}" "" CFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-        string(REGEX REPLACE "-isysroot ${ISYSROOT}" "" CXXFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
     endif()
 
     string(REGEX REPLACE " +" " " CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
