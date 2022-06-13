@@ -1,6 +1,7 @@
 {
   "name": "vk-bootstrap",
   "version": "0.5",
+  "port-version": 1,
   "description": "Vulkan bootstraping library",
   "dependencies": [
     {
