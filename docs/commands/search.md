@@ -14,8 +14,6 @@ Searches for available packages by name and description.
 
 Search performs a case-insensitive search through all available package names and descriptions. The results are displayed in a tabular format.
 
-Only packages currently available based on the [Registries Configuration][Registries] will be displayed.
-
 ## Example
 ```no-highlight
 $ vcpkg search zlib
