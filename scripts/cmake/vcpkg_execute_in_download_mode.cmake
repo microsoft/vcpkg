@@ -1,22 +1,3 @@
-#[===[.md:
-# vcpkg_execute_in_download_mode
-
-Execute a process even in download mode.
-
-## Usage
-```cmake
-vcpkg_execute_in_download_mode(
-    ...
-)
-```
-
-The signature of this function is identical to `execute_process()`.
-
-See [`execute_process()`] for more details.
-
-[`execute_process()`]: https://cmake.org/cmake/help/latest/command/execute_process.html
-#]===]
-
 function(vcpkg_execute_in_download_mode)
     # this allows us to grab the value of the output variables, but pass through the rest of the arguments
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "RESULT_VARIABLE;RESULTS_VARIABLE;OUTPUT_VARIABLE;ERROR_VARIABLE" "")

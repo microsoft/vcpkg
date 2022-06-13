@@ -127,7 +127,7 @@ if(BUILD_SHARED_LIBS)
     list(APPEND BIN_EXTS ${BIN_EXT})
     list(APPEND LIB_EXTS ${LIB_EXT})
 else()
-    set(SHARED no-shared)
+    set(SHARED no-shared no-module)
     set(LIB_EXTS a)
 endif()
 set(INSTALL_PKG_CONFIGS "${BUILDDIR}/openssl.pc")
@@ -263,7 +263,7 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libssl.${SHLIB_VERSION}.dylib"
                                                "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
-                                               "${BUILDDIR}/libcrypto.1.1.dylib"
+                                               "${BUILDDIR}/libcrypto.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -change "${CMAKE_INSTALL_PREFIX}/lib/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"

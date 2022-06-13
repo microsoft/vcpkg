@@ -1,6 +1,6 @@
 {
   "name": "ignition-modularscripts",
-  "version-string": "2020-11-23",
-  "port-version": 1,
-  "description": "Vcpkg helpers to package ignition libraries"
+  "version-date": "2022-05-11",
+  "description": "Vcpkg helpers to package ignition libraries",
+  "license": null
 }
