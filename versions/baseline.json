@@ -7508,6 +7508,10 @@
       "baseline": "0.8.2",
       "port-version": 2
     },
+    "webview2": {
+      "baseline": "1.0.1210.39",
+      "port-version": 0
+    },
     "wepoll": {
       "baseline": "1.5.8",
       "port-version": 1
