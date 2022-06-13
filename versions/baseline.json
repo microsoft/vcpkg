@@ -1362,7 +1362,7 @@
     },
     "check": {
       "baseline": "0.15.2",
-      "port-version": 3
+      "port-version": 4
     },
     "chipmunk": {
       "baseline": "7.0.3",
