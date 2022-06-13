@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
     fix_glog_CMAKE_MODULE_PATH.patch
-    glog_disable_debug_prefix.patch
+    glog_disable_debug_postfix.patch
     fix_crosscompile_symbolize.patch
 )
 
