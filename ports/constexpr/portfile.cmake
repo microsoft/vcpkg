@@ -9,6 +9,6 @@ vcpkg_from_github(
 
 # Copy the constexpr header files
 file(GLOB HEADER_FILES "${SOURCE_PATH}/src/include/*.h")
-file(COPY "${HEADER_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
