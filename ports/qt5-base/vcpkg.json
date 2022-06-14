@@ -42,6 +42,9 @@
     "latest": {
       "description": "(deprecated)"
     },
+    "link-openssl": {
+      "description": "Directly link to openssl"
+    },
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
