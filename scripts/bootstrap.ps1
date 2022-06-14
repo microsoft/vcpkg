@@ -7,6 +7,7 @@ param(
     [Parameter(Mandatory=$False)][switch]$disableMetrics = $false
 )
 Set-StrictMode -Version Latest
+
 # Powershell2-compatible way of forcing named-parameters
 if ($badParam)
 {
@@ -60,6 +61,17 @@ if ($LASTEXITCODE -ne 0)
     throw
 }
 
+[Environment]::SetEnvironmentVariable("VCPKG_ROOT", "$vcpkgRootDir", "user")
+[Environment]::SetEnvironmentVariable("CMAKE_TOOLCHAIN_FILE", "$vcpkgRootDir\scripts\buildsystems\vcpkg.cmake", "user")
+
+$oldPATH = [Environment]::GetEnvironmentVariable("PATH", "user")
+if (-not ("$oldPATH" -split ';' -contains "$vcpkgRootDir"))
+{
+    [Environment]::SetEnvironmentVariable("PATH", "$vcpkgRootDir;$oldPATH", "user")
+}
+
+Write-Host ""
+
 if ($disableMetrics)
 {
     Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
@@ -80,3 +92,8 @@ or by setting the VCPKG_DISABLE_METRICS environment variable.
 Read more about vcpkg telemetry at docs/about/privacy.md
 "@
 }
+
+Write-Host ""
+Write-Host "MSBuild integration"
+Write-Host "-------------------"
+Start-Process -FilePath "$vcpkgRootDir\vcpkg.exe" -ArgumentList "integrate install" -Wait -NoNewWindow
