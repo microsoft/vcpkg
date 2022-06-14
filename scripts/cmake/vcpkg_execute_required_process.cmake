@@ -85,7 +85,7 @@ Halting portfile execution.
             elseif (all_contents MATCHES "The Windows SDK version ([^ ]*) was not found.")
                 message(FATAL_ERROR "Check compile environment failed, please install Windows SDK ${CMAKE_MATCH_1} first.")
             elseif (all_contents MATCHES "The system cannot find the file specified")
-                message(FATAL_ERROR "Check compile environment failed, please ensure you've installed the compiler core features.")
+                message(FATAL_ERROR "Check compile environment failed, please ensure you install the compiler core features, Visual Studio English language pack and clone vcpkg in a path that does not contain non-ascii characters.")
             else()
                 message(FATAL_ERROR
                     "Check compile environment failed, please submit a new issue at https://github.com/microsoft/vcpkg/issues/new/choose with the following logs:"
