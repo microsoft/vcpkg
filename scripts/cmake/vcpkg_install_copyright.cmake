@@ -2,7 +2,11 @@ function(vcpkg_install_copyright)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "FILE_LIST")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(NOT DEFINED arg_FILE_LIST)
+        message(FATAL_ERROR "FILE_LIST must be specified")
     endif()
 
     list(LENGTH arg_FILE_LIST FILE_LIST_LENGTH)
