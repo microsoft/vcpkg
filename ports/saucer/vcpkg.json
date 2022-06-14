@@ -6,7 +6,6 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    "catch2",
     "fmt",
     "lockpp",
     "nlohmann-json",
