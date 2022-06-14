@@ -3,10 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO bellard/quickjs
-  REF b5e62895c619d4ffc75c9d822c8d85f1ece77e5b # 2021-03-27
+  REF 2788d71e823b522b178db3b3660ce93689534e6d # 2022-06-14
   SHA512 ed1c5d5620c35f1aa4c43898e8f7428ecb388c57acb71c30a43710c8e8a95da9aff3821e61b88b2f3932c9a80d86b08a11709152f42236f3dfa591ff7909878a
   HEAD_REF master
-  PATCHES msvc-compat.patch
+  PATCHES 
+      msvc-compat.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

@@ -1,7 +1,6 @@
 {
   "name": "quickjs",
-  "version-date": "2021-03-27",
-  "port-version": 1,
+  "version-date": "2022-06-14",
   "description": "A small and embeddable JavaScript engine supporting ES2020.",
   "homepage": "https://github.com/bellard/quickjs",
   "license": "MIT",
