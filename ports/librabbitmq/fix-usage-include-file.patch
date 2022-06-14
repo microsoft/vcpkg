@@ -1,0 +1,13 @@
+diff --git a/librabbitmq/CMakeLists.txt b/librabbitmq/CMakeLists.txt
+index 671840b..fe5713b 100644
+--- a/librabbitmq/CMakeLists.txt
++++ b/librabbitmq/CMakeLists.txt
+@@ -116,7 +116,7 @@ if (BUILD_SHARED_LIBS)
+     add_library(rabbitmq SHARED ${RABBITMQ_SOURCES})
+ 
+     target_link_libraries(rabbitmq ${RMQ_LIBRARIES})
+-
++    target_include_directories(rabbitmq PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:include>)
+     if (WIN32)
+         set_target_properties(rabbitmq PROPERTIES VERSION ${RMQ_VERSION} OUTPUT_NAME rabbitmq.${RMQ_SOVERSION})
+     else (WIN32)
