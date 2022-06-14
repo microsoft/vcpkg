@@ -82,6 +82,8 @@ Halting portfile execution.
         if (all_contents MATCHES "is not able to compile a simple test program.")
             if (all_contents MATCHES "cannot open file 'ucrtd.lib'")
                 message(FATAL_ERROR "Check compile environment failed, please install Windows SDK first.")
+            elseif (all_contents MATCHES "The Windows SDK version ([^ ]*) was not found.")
+                message(FATAL_ERROR "Check compile environment failed, please install Windows SDK ${CMAKE_MATCH_1} first.")
             elseif (all_contents MATCHES "The system cannot find the file specified")
                 message(FATAL_ERROR "Check compile environment failed, please ensure you've installed the compiler core features.")
             else()
