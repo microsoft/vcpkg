@@ -6081,8 +6081,8 @@
       "port-version": 7
     },
     "quickjs": {
-      "baseline": "2021-03-27",
-      "port-version": 1
+      "baseline": "2022-06-14",
+      "port-version": 0
     },
     "quill": {
       "baseline": "2.0.0",
