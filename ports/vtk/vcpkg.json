@@ -56,7 +56,6 @@
           "features": [
             "gdal",
             "geojson",
-            "iocgnsreader",
             "mpi",
             "python",
             "qt",
@@ -111,18 +110,6 @@
         "proj"
       ]
     },
-    "iocgnsreader": {
-      "description": "The VTK::IOCGNSReader Module",
-      "dependencies": [
-        "cgns"
-      ]
-    },
-    "ioexportgl2ps": {
-      "description": "The VTK::IOExportGL2PS Module",
-      "dependencies": [
-        "gl2ps"
-      ]
-    },
     "mpi": {
       "description": "MPI functionality for VTK",
       "dependencies": [
@@ -162,7 +149,9 @@
     "paraview": {
       "description": "Build vtk modules required by paraview",
       "dependencies": [
+        "cgns",
         "cli11",
+        "gl2ps",
         {
           "name": "vtk",
           "default-features": false,

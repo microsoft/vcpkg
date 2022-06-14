@@ -29,8 +29,6 @@ vcpkg_from_github(
         # upstream vtkm patches to make it work with vtkm 1.6
         vtkm.patch # To include an external VTKm build
         fix-gdal.patch
-        missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
-        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
         fix-find-libharu.patch
         cgns.patch
         f541a38.patch # include vtkParseAttributes.h & vtkWraText.h in headers. See https://github.com/Kitware/VTK/commit/f541a3809fc6b1b3e99063f2345ea11c118637f1
@@ -64,14 +62,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOCGNSReader
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOExportGL2PS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
         "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
@@ -87,8 +87,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
 
         "geoviscore"     VTK_MODULE_ENABLE_VTK_GeovisCore
-        "iocgnsreader"   VTK_MODULE_ENABLE_VTK_IOCGNSReader
-        "ioexportgl2ps"  VTK_MODULE_ENABLE_VTK_IOExportGL2PS
 
         ## Modules not yet implemented
         "ioioss"         VTK_MODULE_ENABLE_VTK_IOIOSS # - seacasioss not packaged
