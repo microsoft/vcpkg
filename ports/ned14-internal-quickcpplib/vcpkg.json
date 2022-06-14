@@ -3,7 +3,7 @@
   "version": "0.0.0-568e1811",
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 OR BSL-1.0",
   "dependencies": [
     "byte-lite",
     "gsl-lite",
