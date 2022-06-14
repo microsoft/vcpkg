@@ -19,7 +19,7 @@ vcpkg_extract_source_archive(<out-var>
 
 **Deprecated overload**
 ```cmake
-vcpkg_extract_source_archive(<archive> [<working-directory>])
+vcpkg_extract_source_archive(<archive> [<working_directory>])
 ```
 The deprecated overload extracts `<archive>` into `${working_directory}/<archive-filename>.extracted` if the target does not exist.
 
@@ -68,7 +68,7 @@ This option should only be passed when operating in an unstable mode like `--hea
 
 List of patches to apply to the extracted source.
 
-Patches will be applied in order, after any top-level directories are removed (see [`NO_REMOVE_ONE_LEVEL`](#no-remove-one-level)). Relative paths are interpreted relative to the current port directory.
+Patches will be applied in order, after any top-level directories are removed (see [`NO_REMOVE_ONE_LEVEL`](#no_remove_one_level)). Relative paths are interpreted relative to the current port directory.
 
 If a patch should be conditionally applied based on target information, you can construct a list and splat it.
 
@@ -89,9 +89,9 @@ vcpkg_extract_source_archive(src
 
 Pretty name for the extracted directory.
 
-Forward slashes (`/`) will be replaced with `-`. Otherwise identical to [`SOURCE_BASE`](#source-base).
+Forward slashes (`/`) will be replaced with `-`. Otherwise identical to [`SOURCE_BASE`](#source_base).
 
-See [`WORKING_DIRECTORY`](#working-directory) for more details.
+See [`WORKING_DIRECTORY`](#working_directory) for more details.
 
 ### SOURCE_BASE
 
@@ -99,7 +99,7 @@ Pretty name for the extracted directory.
 
 Must not contain path separators (`/` or `\\`).
 
-See [`WORKING_DIRECTORY`](#working-directory) for more details.
+See [`WORKING_DIRECTORY`](#working_directory) for more details.
 
 ### BASE_DIRECTORY
 
@@ -107,7 +107,7 @@ Root subfolder for the extracted directory.
 
 Defaults to `src`. Must be a relative path.
 
-See [`WORKING_DIRECTORY`](#working-directory) for more details.
+See [`WORKING_DIRECTORY`](#working_directory) for more details.
 
 ### WORKING_DIRECTORY
 
@@ -124,9 +124,16 @@ In [`--editable`](../commands/install.md#editable) mode:
 ## Examples
 
 ```cmake
-vcpkg_download_distfile(archive ...)
-vcpkg_extract_source_archive(source_path ARCHIVE "${archive}")
-# ... use "${source_path}" ...
+vcpkg_download_distfile(archive
+    URLS "https://nmap.org/dist/nmap-7.70.tar.bz2"
+    FILENAME "nmap-7.70.tar.bz2"
+    SHA512 084c148b022ff6550e269d976d0077f7932a10e2ef218236fe13aa3a70b4eb6506df03329868fc68cb3ce78e4360b200f5a7a491d3145028fed679ef1c9ecae5
+)
+vcpkg_extract_source_archive(source_path
+    ARCHIVE "${archive}"
+    REF 7.70
+    PATCHES 0001-disable-werror.patch)
+vcpkg_cmake_configure(SOURCE_PATH "${source_path}")
 ```
 
 * [GitHub Search](https://github.com/microsoft/vcpkg/search?q=vcpkg_extract_source_archive+path%3A%2Fports)
