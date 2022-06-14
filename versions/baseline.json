@@ -4602,7 +4602,7 @@
     },
     "mmloader": {
       "baseline": "1.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mmx": {
       "baseline": "2019-09-29",
