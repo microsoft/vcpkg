@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-utilities.patch
         fix-static-build.patch
+        add-unix-support.patch
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -19,17 +20,19 @@ else()
 endif()
 vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
-    OPTIONS -DGIT_FOUND=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON -Dwithout-export=${BUILD_STATIC_LIBRARY}
+    OPTIONS
+        -DGIT_FOUND=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -Dwithout-export=${BUILD_STATIC_LIBRARY}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/jemalloc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jemalloc/COPYING ${CURRENT_PACKAGES_DIR}/share/jemalloc/copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
