@@ -11,7 +11,7 @@ vcpkg_from_sourceforge(
         atlribbon.h-wtl66.patch
 )
 
-file(INSTALL "${SOURCE_PATH}/Include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+file(INSTALL "${SOURCE_PATH}/Include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}" FILES_MATCHING PATTERN "*.h")
 file(COPY "${SOURCE_PATH}/Samples" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${SOURCE_PATH}/AppWizard" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
