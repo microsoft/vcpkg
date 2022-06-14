@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "A C-language AMQP client library for use with v2.0+ of the RabbitMQ broker.",
   "homepage": "https://github.com/alanxz/rabbitmq-c",
+  "license": "MIT",
   "dependencies": [
     "openssl",
     {
