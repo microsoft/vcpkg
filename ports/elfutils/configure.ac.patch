@@ -35,8 +35,7 @@ index 5a2dc373e..b1928831e 100644
  # We need this since bzip2 doesn't have a pkgconfig file.
  BZ2_LIB="$LIBS"
  AC_SUBST([BZ2_LIB])
--eu_ZIPLIB(lzma,LZMA,lzma,lzma_auto_decoder,[LZMA (xz)])
-+eu_ZIPLIB(lzma,LZMA,[lzma lzmad],lzma_auto_decoder,[LZMA (xz)])
+ eu_ZIPLIB(lzma,LZMA,lzma,lzma_auto_decoder,[LZMA (xz)])
  AS_IF([test "x$with_lzma" = xyes], [LIBLZMA="liblzma"], [LIBLZMA=""])
  AC_SUBST([LIBLZMA])
  eu_ZIPLIB(zstd,ZSTD,zstd,ZSTD_decompress,[ZSTD (zst)])

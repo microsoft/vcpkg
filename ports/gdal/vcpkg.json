@@ -1,11 +1,10 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.1",
-  "port-version": 2,
+  "version-semver": "3.4.3",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
-  "supports": "!uwp",
   "dependencies": [
     "curl",
     "expat",
@@ -29,7 +28,7 @@
     "libwebp",
     "libxml2",
     "openjpeg",
-    "proj4",
+    "proj",
     "sqlite3",
     "tiff",
     {
@@ -43,6 +42,12 @@
     "supported-default-features"
   ],
   "features": {
+    "aws-ec2-windows": {
+      "description": "Optimized detection of AWS EC2 Windows hosts",
+      "dependencies": [
+        "atlmfc"
+      ]
+    },
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [

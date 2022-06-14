@@ -5,24 +5,30 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtmidi
-    REF dda792c5394375769466ab1c1d7773e741bbd950 # 4.0.0
-    SHA512 cb1ded29c0b22cf7f38719131a9572a4daba7071fd8cf8b5b8d7306560a218bb0ef42150bf341b76f4ddee0ae087da975116c3b153e7bb908f2a674ecacb9d7a
+    REF 84a99422a3faf1ab417fe71c0903a48debb9376a # 5.0.0
+    SHA512 388e280b7966281e22b0048d6fb2541921df1113d84e49bbc444fff591d2025588edd8d61dbe5ff017afd76c26fd05edc8f9f15d0cce16315ccc15e6aac1d57f
     HEAD_REF master
-    PATCHES
-        fix-POSIXname.patch
+    PATCHES fix-cmake-usage.patch # Remove this patch in the next update
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        alsa RTMIDI_API_ALSA
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DRTMIDI_API_ALSA=OFF
         -DRTMIDI_API_JACK=OFF
+        -DRTMIDI_BUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
