@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            SamuelMarks/c-str-span
-    REF             48c049b8d38fd09f2870646faef0603a89657706
-    SHA512          a561dc63696dc470f128cf95f8cbb50e85f5378d99ddfda9291c0cb5585225dabb2c615188474dd116ef7fa56a01e7622d63c657b6c77a88a62e96138475223a
+    REF             5bf5b883c791b0da5390e12f8d487d9df1cce8f7
+    SHA512          755b976a41d9835c81098b7b0ffb7ef51fe67efe9954c1265a8c8588289a248ab64b04a4ab3a9d43a485d5f0b403efc4d3e545af26caf620e78826269e6a282f
     HEAD_REF        master
 )
 
