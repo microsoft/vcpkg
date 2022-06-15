@@ -1,6 +1,6 @@
 {
   "name": "qtlocation",
-  "version-string": "deprecated",
+  "version": "6.3.0",
   "description": "Qt Location",
   "homepage": "https://www.qt.io/",
   "license": null

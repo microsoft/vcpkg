@@ -10,9 +10,13 @@
 set(QT_VERSION 6.3.1)
 set(QT_UPDATE_VERSION 0)
 
-if(PORT MATCHES "(qtquickcontrols2|qtlocation)")
+if(PORT MATCHES "(qtquickcontrols2)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
+endif()
+
+if(PORT MATCHES "qtlocation") # No 6.3.1 tag/branch
+    set(QT_VERSION 6.3.0)
 endif()
 
 ### Setting up the git tag.
@@ -51,7 +55,7 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
              ## New in 6.2
              qtconnectivity
              qtpositioning
-             #qtlocation
+             qtlocation
              qtmultimedia
              qtremoteobjects
              qtsensors
