@@ -18,7 +18,10 @@ vcpkg_cmake_configure(
     -DBUILD_EXAMPLES=OFF
     -DBUILD_TESTS=OFF
     -DBUILD_TOOLS=OFF
+    -DBUILD_SHARED_LIBS=${BUILD_SHARED}
+    -DBUILD_STATIC_LIBS=${BUILD_STATIC}
 )
+
 
 vcpkg_cmake_install()
 

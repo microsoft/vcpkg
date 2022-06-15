@@ -1,5 +1,5 @@
 diff --git a/librabbitmq/CMakeLists.txt b/librabbitmq/CMakeLists.txt
-index 671840b..fe5713b 100644
+index 671840b..7fcfa29 100644
 --- a/librabbitmq/CMakeLists.txt
 +++ b/librabbitmq/CMakeLists.txt
 @@ -116,7 +116,7 @@ if (BUILD_SHARED_LIBS)
@@ -7,7 +7,16 @@ index 671840b..fe5713b 100644
  
      target_link_libraries(rabbitmq ${RMQ_LIBRARIES})
 -
-+    target_include_directories(rabbitmq PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:include>)
++    target_include_directories(rabbitmq PUBLIC $<INSTALL_INTERFACE:include>)
      if (WIN32)
          set_target_properties(rabbitmq PROPERTIES VERSION ${RMQ_VERSION} OUTPUT_NAME rabbitmq.${RMQ_SOVERSION})
      else (WIN32)
+@@ -136,7 +136,7 @@ if (BUILD_STATIC_LIBS)
+     add_library(rabbitmq-static STATIC ${RABBITMQ_SOURCES})
+ 
+     target_link_libraries(rabbitmq-static ${RMQ_LIBRARIES})
+-
++    target_include_directories(rabbitmq-static PUBLIC $<INSTALL_INTERFACE:include>)
+     set_target_properties(rabbitmq-static PROPERTIES COMPILE_DEFINITIONS AMQP_STATIC)
+     if (WIN32)
+         set_target_properties(rabbitmq-static PROPERTIES
