@@ -304,19 +304,14 @@ file(COPY
 
 qt_stop_on_update()
 
-set(script_files qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
+set(script_files )
 if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
 endif()
 set(other_files
-        target_qt.conf
-        qt-cmake-private-install.cmake
         syncqt.pl
-        android_cmakelist_patcher.sh
-        android_emulator_launcher.sh
-        ensure_pro_file.cmake
         )
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")    
@@ -342,9 +337,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
     endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-    if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error.
+    #if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error.
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
-    endif()
+    #endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
