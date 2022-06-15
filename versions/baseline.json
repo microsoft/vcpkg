@@ -5317,12 +5317,12 @@
       "port-version": 0
     },
     "paho-mqtt": {
-      "baseline": "1.3.9",
+      "baseline": "1.3.10",
       "port-version": 0
     },
     "paho-mqttpp3": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "palsigslot": {
       "baseline": "1.2.1",
