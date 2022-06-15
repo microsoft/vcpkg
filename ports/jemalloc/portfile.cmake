@@ -18,18 +18,16 @@ if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
 else()
     set(BUILD_STATIC_LIBRARY ON)
 endif()
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DGIT_FOUND=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -Dwithout-export=${BUILD_STATIC_LIBRARY}
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
