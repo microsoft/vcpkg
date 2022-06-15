@@ -1,0 +1,25 @@
+diff --git a/src/linguist/shared/qm.cpp b/src/linguist/shared/qm.cpp
+index 8c3fc3f..d772855 100644
+--- a/src/linguist/shared/qm.cpp
++++ b/src/linguist/shared/qm.cpp
+@@ -552,12 +552,17 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
+                 goto end;
+             case Tag_Translation: {
+                 int len = read32(m);
+-                if (len & 1) {
++                m += 4;
++
++                // -1 indicates an empty string
++                // Otherwise streaming format is UTF-16 -> 2 bytes per character
++                if ((len != -1) && (len & 1)) {
+                     cd.appendError(QLatin1String("QM-Format error"));
+                     return false;
+                 }
+-                m += 4;
+-                QString str = QString((const QChar *)m, len/2);
++                QString str;
++                if (len != -1)
++                    str = QString((const QChar *)m, len / 2);
+                 if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+                     for (int i = 0; i < str.length(); ++i)
+                         str[i] = QChar((str.at(i).unicode() >> 8) +
