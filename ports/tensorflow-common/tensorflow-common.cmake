@@ -1,5 +1,5 @@
-set(TF_VERSION 2.7.0)
-set(TF_VERSION_SHORT 2.7)
+set(TF_VERSION 2.9.1)
+set(TF_VERSION_SHORT 2.9.1)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -43,7 +43,19 @@ if(CMAKE_HOST_WIN32)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 
+	# on macos arm64 use conda miniforge
+	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		message(STATUS "Using python from miniforge3 ")
+
+		if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/miniforge3)
+			vcpkg_execute_required_process(COMMAND curl -fsSLo Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+			vcpkg_execute_required_process(COMMAND bash ./Miniforge3.sh -p ${CURRENT_BUILDTREES_DIR}/miniforge3 -b WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+			SET(PYTHON3 ${CURRENT_BUILDTREES_DIR}/miniforge3/bin/python3)
+		endif()
+	endif()
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
+
+
 	vcpkg_add_to_path(PREPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin)
 	set(PYTHON3 ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3)
 	set(ENV{VIRTUAL_ENV} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv)
@@ -88,7 +100,11 @@ set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
 set(ENV{TF_DOWNLOAD_CLANG} 0)
 set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
-set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86_64")
+	set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+else()
+	set(ENV{CC_OPT_FLAGS} "-O3")
+endif()
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
 
@@ -152,7 +168,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 f1e892583c7b3a73d4d39ec65dc135a5b02c789b357d57414ad2b6d05ad9fbfc8ef81918ba6410e314abd6928b76f764e6ef64c0b0c84b58b50796634be03f39
+		SHA512 95ffbee1e50e396065c6f1802fd9668344c45c000e22da859bcd08ec217bcc0a8ff0e84661fdf511f210e8b09d7ae6d26c3fc1ddcf28b8aedf87c0fb1b8b60e4
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
@@ -200,10 +216,11 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
-			set(BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS currently broken
+			set(BUILD_OPTS --compilation_mode=opt) # dbg & fastbuild build on macOS currently broken
 		else()
 			set(BUILD_OPTS --compilation_mode=dbg)
 		endif()
+
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
@@ -238,6 +255,13 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
 			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
+	endif()
+
+	if(VCPKG_TARGET_IS_OSX)
+		# tensorflow supports 10.12.6 (Sierra) or higher (64-bit)
+		# but actually does not compile with < 10.14
+		#https://www.tensorflow.org/install/pip#macos
+		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -276,7 +300,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
-		else()
+		else()		
 			vcpkg_execute_build_process(
 				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
