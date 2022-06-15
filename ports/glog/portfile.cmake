@@ -8,9 +8,9 @@ vcpkg_from_github(
        glog_disable_debug_postfix.patch
        fix_glog_CMAKE_MODULE_PATH.patch
        fix_log_every_n.patch
-       fix-windows-CXX11_ATOMIC.patch
+       fix-SOME_KIND_OF_LOG.patch
        fix_crosscompile_symbolize.patch
-
+       cmakelists_atomicdetect.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
