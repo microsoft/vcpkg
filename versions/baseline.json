@@ -3468,6 +3468,10 @@
       "baseline": "1.17.6",
       "port-version": 1
     },
+    "libcaer": {
+      "baseline": "3.3.14",
+      "port-version": 0
+    },
     "libcanberra": {
       "baseline": "0.30",
       "port-version": 2
