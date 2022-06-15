@@ -6582,7 +6582,7 @@
     },
     "skia": {
       "baseline": "2022-04-15",
-      "port-version": 2
+      "port-version": 1
     },
     "skyr-url": {
       "baseline": "1.13.0",
