@@ -10,9 +10,14 @@ if(NOT DEFINED nlohmann-json_IMPLICIT_CONVERSIONS)
     set(nlohmann-json_IMPLICIT_CONVERSIONS ON)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "diagnostics"           JSON_Diagnostics
+)
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
         -DJSON_Install=ON
         -DJSON_MultipleHeaders=ON
         -DJSON_BuildTests=OFF
@@ -27,7 +32,7 @@ vcpkg_replace_string(
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
     "{_IMPORT_PREFIX}/share/nlohmann_json/nlohmann_json.natvis"
 )
-if(EXISTS ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis")
     file(RENAME
         "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis"
         "${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_json.natvis"

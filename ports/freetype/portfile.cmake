@@ -1,15 +1,15 @@
-set(FT_VERSION 2.11.1)
+set(FT_VERSION 2.12.1)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetype/freetype2
     REF ${FT_VERSION}
     FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 0848678482fbe20603a866f02da82c91122014d6f815ba4f1d9c03601c32e3ceb781f721c2b4427b6117d7c9742018af8dbb26566faf018595c70b50f8db3f08
+    SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
     PATCHES
         0003-Fix-UWP.patch
-        fix-bzip2-pc.patch  # we have a bzip2 file that we can use - https://gitlab.freedesktop.org/freetype/freetype/-/commit/b2aeca5fda870751f3c9d645e0dca4c80fa1ae5a
         brotli-static.patch
+        bzip2.patch
         fix-exports.patch
 )
 
@@ -53,7 +53,7 @@ string(REPLACE "\${_IMPORT_PREFIX}/lib/brotlidec.lib" [[\$<\$<NOT:\$<CONFIG:DEBU
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-targets.cmake "${CONFIG_MODULE}")
 
 find_library(FREETYPE_DEBUG NAMES freetyped PATHS "${CURRENT_PACKAGES_DIR}/debug/lib/" NO_DEFAULT_PATH)
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
+if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" _contents)
     if(FREETYPE_DEBUG)
         string(REPLACE "-lfreetype" "-lfreetyped" _contents "${_contents}")
@@ -61,11 +61,11 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
     string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" "${_contents}")
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc")
-    file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" _contents)
-    string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" "${_contents}")
-endif()
+
+file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" _contents)
+string(REPLACE "-I\${includedir}/freetype2" "-I\${includedir}" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc" "${_contents}")
+
 
 vcpkg_fixup_pkgconfig()
 

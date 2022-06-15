@@ -1,4 +1,4 @@
-# vcpkg_tool_release_process
+# vcpkg_catalog_release_process
 
 This document describes the acceptance criteria / process we use when doing a vcpkg release.
 
