@@ -6832,6 +6832,10 @@
       "baseline": "2021-09-10",
       "port-version": 0
     },
+    "stduuid": {
+      "baseline": "1.2.2",
+      "port-version": 0
+    },
     "stftpitchshift": {
       "baseline": "1.4.1",
       "port-version": 0
