@@ -23,6 +23,10 @@
       "host": true
     },
     {
+      "name": "webview2",
+      "platform": "windows"
+    },
+    {
       "name": "wil",
       "platform": "windows"
     }
