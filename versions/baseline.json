@@ -2582,7 +2582,7 @@
     },
     "glog": {
       "baseline": "0.5.0",
-      "port-version": 4
+      "port-version": 5
     },
     "gloo": {
       "baseline": "20201203",
@@ -2774,7 +2774,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 0
+      "port-version": 1
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -3467,6 +3467,10 @@
     "libbson": {
       "baseline": "1.17.6",
       "port-version": 1
+    },
+    "libcaer": {
+      "baseline": "3.3.14",
+      "port-version": 0
     },
     "libcanberra": {
       "baseline": "0.30",
@@ -5197,8 +5201,8 @@
       "port-version": 4
     },
     "openmvs": {
-      "baseline": "1.1.1",
-      "port-version": 3
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -5846,7 +5850,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.4",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-translations": {
       "baseline": "5.15.4",
@@ -6103,6 +6107,10 @@
     "ragel": {
       "baseline": "6.10",
       "port-version": 4
+    },
+    "random123": {
+      "baseline": "1.14.0",
+      "port-version": 0
     },
     "randomstr": {
       "baseline": "2022-02-03",
@@ -6832,6 +6840,10 @@
       "baseline": "2021-09-10",
       "port-version": 0
     },
+    "stduuid": {
+      "baseline": "1.2.2",
+      "port-version": 0
+    },
     "stftpitchshift": {
       "baseline": "1.4.1",
       "port-version": 0
@@ -7361,8 +7373,8 @@
       "port-version": 0
     },
     "vcglib": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "2022.02",
+      "port-version": 0
     },
     "vcpkg-cmake": {
       "baseline": "2022-05-10",
