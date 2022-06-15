@@ -53,15 +53,21 @@ else()
 			SET(PYTHON3 ${CURRENT_BUILDTREES_DIR}/miniforge3/bin/python3)
 		endif()
 	endif()
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
 
+	# make sure we have virtualenv installed
+	message(STATUS "Make sure we have virtualenv installed")
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install virtualenv WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
+
+	# create virtualenv.
+	message(STATUS "Create virtualenv")
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
 
 	vcpkg_add_to_path(PREPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin)
 	set(PYTHON3 ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3)
 	set(ENV{VIRTUAL_ENV} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv)
 
 	if(VCPKG_TARGET_IS_OSX)
-		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
 		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
 		set(ENV{BLAS} "None")
