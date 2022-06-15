@@ -1,22 +1,7 @@
 {
   "name": "qtlocation",
-  "version": "6.3.0",
+  "version-string": "deprecated",
   "description": "Qt Location",
   "homepage": "https://www.qt.io/",
-  "license": null,
-  "dependencies": [
-    {
-      "name": "qtbase",
-      "default-features": false
-    },
-    {
-      "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "dbus"
-      ],
-      "platform": "linux"
-    },
-    "qtpositioning"
-  ]
+  "license": null
 }

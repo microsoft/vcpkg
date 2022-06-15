@@ -7,12 +7,11 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.3.0)
+set(QT_VERSION 6.3.1)
 set(QT_UPDATE_VERSION 0)
 
-if(PORT MATCHES "qtquickcontrols2")
+if(PORT MATCHES "(qtquickcontrols2|qtlocation)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    message(STATUS "qtquickcontrols2 is integrated in qtdeclarative since Qt 6.2. Please remove your dependency on it!")
     return()
 endif()
 
@@ -52,7 +51,7 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
              ## New in 6.2
              qtconnectivity
              qtpositioning
-             qtlocation
+             #qtlocation
              qtmultimedia
              qtremoteobjects
              qtsensors
@@ -102,18 +101,17 @@ if(QT_UPDATE_VERSION)
     set(msg "" CACHE INTERNAL "")
     foreach(qt_port IN LISTS QT_PORTS)
         set(port_json "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/vcpkg.json")
-        if(EXISTS "${port_json}")
-            file(READ "${port_json}" _control_contents)
-            string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
-            string(REGEX REPLACE "[^\n]+\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
-            file(WRITE "${port_json}" "${_control_contents}")
-        endif()
+        file(READ "${port_json}" _control_contents)
+        string(REGEX REPLACE "\"version(-(string|semver))?\": [^\n]+\n" "\"version\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
+        string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
+        file(WRITE "${port_json}" "${_control_contents}")
         if(qt_port STREQUAL "qt")
             continue()
         endif()
         if("${qt_port}" IN_LIST QT_FROM_QT_GIT)
+            vcpkg_find_acquire_program(GIT)
             execute_process(
-                COMMAND git ls-remote -t https://code.qt.io/cgit/qt/${qt_port}.git "v${QT_VERSION}"
+                COMMAND "${GIT}" ls-remote -t "https://code.qt.io/cgit/qt/${qt_port}.git" "v${QT_VERSION}"
                 OUTPUT_VARIABLE out
             )
             string(SUBSTRING "${out}" 0 40 tag_sha)
@@ -130,7 +128,7 @@ if(QT_UPDATE_VERSION)
         endif()
     endforeach()
     message("${msg}")
-    file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data.cmake" "${msg}")
+    file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data_new.cmake" "${msg}")
     message(FATAL_ERROR "Done downloading version and emitting hashes.")
 endif()
 
