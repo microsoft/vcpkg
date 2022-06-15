@@ -104,6 +104,8 @@ charls:x64-windows=skip
 charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
+chmlib:arm-uwp=fail
+chmlib:x64-uwp=fail
 # chartdir does not offer stable download URLs
 chartdir:arm64-windows=skip
 chartdir:arm-uwp=skip
@@ -654,13 +656,6 @@ microsoft-signalr:x64-windows-static-md=skip
 microsoft-signalr:x86-windows=skip
 # https://github.com/mlpack/mlpack/pull/2945
 mlpack:x64-uwp=fail
-mmloader:arm64-windows=fail
-mmloader:arm-uwp=fail
-mmloader:x64-linux=fail
-mmloader:x64-osx=fail
-mmloader:x64-uwp=fail
-mmloader:x64-windows=fail
-mmloader:x86-windows=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
 mmx:x64-windows=skip
 mmx:x64-windows-static=skip
