@@ -1,8 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55e6a5f..dee41b6 100644
+index 55e6a5f..fa44dec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -492,6 +492,7 @@ if(NOT WIN32)
+@@ -58,6 +58,7 @@ option(force_lazy_lock "Forcing lazy-lock to avoid allocator/threading bootstrap
+ # install_prefix - installation directory prefix
+ # with-xslroot=<path>  XSL stylesheet root path
+ option(build-tests "Build tests" OFF)
++option(disable-zone-allocator "Disable zone allocator for Darwin" ON)
+ 
+ set (PACKAGE_NAME "jemalloc")
+ project (${PACKAGE_NAME} C)
+@@ -205,7 +206,7 @@ set(abi "elf")
+ 
+ # Whether malloc_usable_size definition can use const argument
+ CHECK_INCLUDE_FILES (malloc.h HAVE_MALLOC_H)
+-if(HAVE_MALLOC_H)
++if(HAVE_MALLOC_H OR APPLE)
+     set(JEMALLOC_USABLE_SIZE_CONST const)
+ endif()    
+ 
+@@ -492,6 +493,7 @@ if(NOT WIN32)
      set(JEMALLOC_HAVE_SYSCALL 1)
    endif()
  
@@ -10,8 +27,17 @@ index 55e6a5f..dee41b6 100644
    CHECK_FUNCTION_EXISTS(secure_getenv HAVE_SECURE_GETENV)
    if(HAVE_SECURE_GETENV)
      set(JEMALLOC_HAVE_SECURE_GETENV 1)
+@@ -702,7 +704,7 @@ set(C_SRCS
+   src/witness.c
+ )
+ 
+-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
++if(CMAKE_SYSTEM_NAME MATCHES "Darwin" AND NOT disable-zone-allocator)
+   list(APPEND C_SRCS src/zone.c)
+ endif()
+ 
 diff --git a/Utilities.cmake b/Utilities.cmake
-index 8fe8bb4..878dbe3 100644
+index 8fe8bb4..755e390 100644
 --- a/Utilities.cmake
 +++ b/Utilities.cmake
 @@ -628,17 +628,6 @@ function (ConfigureFile file_path output_path ExpandDefine)
@@ -56,32 +82,47 @@ index 8fe8bb4..878dbe3 100644
  else()
    message(FATAL_ERROR "${file_path} not found")
  endif()
-@@ -728,9 +715,14 @@ set(SRC "${WORK_FOLDER}/getpagesize.c")
+@@ -728,18 +715,35 @@ set(SRC "${WORK_FOLDER}/getpagesize.c")
  set(COMPILE_OUTPUT_FILE "${WORK_FOLDER}/getpagesize.log")
  
  file(WRITE ${SRC}
-+"#ifdef _WIN32\n"
- "#include <windows.h>\n"
+-"#include <windows.h>\n"
  "#include <stdio.h>\n"
++"#ifdef _WIN32\n"
++"#include <windows.h>\n"
++"#elif defined(__APPLE__)\n"
++"#include <sys/param.h>\n"
++"#include <sys/sysctl.h>\n"
 +"#else\n"
 +"#include <unistd.h>\n"
 +"#endif\n"
  "int main(int argc, const char** argv) {\n"
-+"#ifdef _WIN32\n"
- "int result;\n"
+-"int result;\n"
  "#ifdef _WIN32\n"
++"int result;\n"
  "SYSTEM_INFO si;\n"
-@@ -740,6 +732,9 @@ file(WRITE ${SRC}
- "result = sysconf(_SC_PAGESIZE);\n"
+ "GetSystemInfo(&si);\n"
+ "result = si.dwPageSize;\n"
++"printf(\"%d\", result);\n"
++"#elif defined(__APPLE__)\n"
++"int mib[2], value, pagesize;\n"
++"size_t size;\n"
++"mib[0] = CTL_HW;\n"
++"mib[1] = HW_PAGESIZE;\n"
++"size = sizeof value;\n"
++"if (sysctl(mib, 2, &value, &size, NULL, 0) == -1)\n"
++"    pagesize = -1;\n"
++"pagesize = value;\n"
++"printf(\"%d\", pagesize);\n"
+ "#else\n"
+-"result = sysconf(_SC_PAGESIZE);\n"
++"printf(\"%d\", getpagesize());\n"
  "#endif\n"
- "printf(\"%d\", result);\n"
-+"#else\n"
-+"printf(\"page size = %d\\n\", getpagesize());\n"
-+"#endif\n"
+-"printf(\"%d\", result);\n"
  "return 0;\n"
  "}\n"
  )
-@@ -776,6 +771,7 @@ function(JeCflagsAppend cflags APPEND_TO_VAR RESULT_VAR)
+@@ -776,6 +780,7 @@ function(JeCflagsAppend cflags APPEND_TO_VAR RESULT_VAR)
  
    # Combine the result to try
    set(TFLAGS "${${APPEND_TO_VAR}} ${cflags}")
