@@ -57,7 +57,7 @@ else()
 	# make sure we have virtualenv installed
 	message(STATUS "Make sure we have virtualenv installed")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install virtualenv WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install virtualenv ensurepip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 
 	# create virtualenv.
 	message(STATUS "Create virtualenv")
