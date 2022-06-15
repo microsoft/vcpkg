@@ -134,7 +134,7 @@
         <version>4.4.0</version>
         <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
         <url>https://download.qt.io/official_releases/qt-installer-framework/4.4.0/installer-framework-opensource-src-4.4.0.zip</url>
-        <sha512>FC713F54BFE2781CB232CD0AE8EDDB96833EC178D53A55EC0B01886AA048B13441EB49A1F33282E8EAB7259CFE512C890D50B8E632D3DBF501A0BF1FD83DE947</sha512>
+        <sha512>fc713f54bfe2781cb232cd0ae8eddb96833ec178d53a55ec0b01886aa048b13441eb49a1f33282e8eab7259cfe512c890d50b8e632d3dbf501a0bf1fd83de947</sha512>
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
