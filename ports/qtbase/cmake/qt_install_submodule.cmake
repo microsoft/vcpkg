@@ -11,7 +11,7 @@ endif()
 function(qt_download_submodule_impl)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
 
-    if("${_qarg_SUBMODULE}" IN_LIST QT_GIT_SUBMODULES)
+    if("${_qarg_SUBMODULE}" IN_LIST QT_FROM_QT_GIT)
         # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
