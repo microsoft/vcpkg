@@ -6202,7 +6202,7 @@
     },
     "redis-plus-plus": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "refl-cpp": {
       "baseline": "0.12.3",
