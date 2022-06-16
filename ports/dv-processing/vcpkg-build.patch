@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c7775b5..52d2c85 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -86,8 +86,9 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in ${CMAKE_CURRENT
+ 
+ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
++OPTION(BUILD_CONFIG_VCPKG "Set build environment compatible with VCPKG" OFF)
+ # Cmake find_package() support.
+-IF(CC_MSVC)
++IF(BUILD_CONFIG_VCPKG)
+ 	SET(CMAKE_EXPORT_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
+ ELSE()
+ 	SET(CMAKE_EXPORT_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+diff --git a/include/dv-processing/CMakeLists.txt b/include/dv-processing/CMakeLists.txt
+index b83f4e4..621b3f2 100644
+--- a/include/dv-processing/CMakeLists.txt
++++ b/include/dv-processing/CMakeLists.txt
+@@ -23,7 +23,7 @@ IF(CC_MSVC)
+ ENDIF()
+ 
+ # Compression support
+-IF(CC_MSVC)
++IF(BUILD_CONFIG_VCPKG)
+ 	FIND_PACKAGE(lz4 CONFIG REQUIRED)
+ 	TARGET_LINK_LIBRARIES(processing INTERFACE lz4::lz4)
+ ELSE()
