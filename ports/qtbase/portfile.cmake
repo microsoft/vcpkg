@@ -303,6 +303,7 @@ set(other_files
         android_cmakelist_patcher.sh
         android_emulator_launcher.sh
         ensure_pro_file.cmake
+        qt-testrunner.py
         )
 foreach(_config debug release)
     if(_config MATCHES "debug")
