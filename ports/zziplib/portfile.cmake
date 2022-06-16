@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         no-release-postfix.patch
         export-targets.patch
+        unix-cross-compile.patch
 )
 
 string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)
