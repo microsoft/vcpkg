@@ -1169,7 +1169,7 @@
       "port-version": 0
     },
     "bshoshany-thread-pool": {
-      "baseline": "2.0.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "bsio": {
