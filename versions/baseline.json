@@ -4304,6 +4304,10 @@
       "baseline": "0.9.29",
       "port-version": 2
     },
+    "lockpp": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "lodepng": {
       "baseline": "2021-12-04",
       "port-version": 1
@@ -6382,6 +6386,10 @@
     },
     "sassc": {
       "baseline": "3.6.2",
+      "port-version": 0
+    },
+    "saucer": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "sbp": {
