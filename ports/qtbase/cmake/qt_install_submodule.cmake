@@ -99,9 +99,7 @@ function(qt_cmake_configure)
     list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
 
-    if(QT_IS_LATEST)
-        list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
-    endif()
+    list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
 
     if(NOT PORT MATCHES "qtbase")
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
