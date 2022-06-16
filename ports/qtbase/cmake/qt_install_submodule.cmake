@@ -15,7 +15,7 @@ function(qt_download_submodule_impl)
         # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
-            URL "https://code.qt.io/cgit/qt/${_qarg_SUBMODULE}.git"
+            URL "https://code.qt.io/qt/${_qarg_SUBMODULE}.git"
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
