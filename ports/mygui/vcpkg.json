@@ -18,9 +18,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "tools"
-  ],
   "features": {
     "opengl": {
       "description": "Use OpenGL render system.",

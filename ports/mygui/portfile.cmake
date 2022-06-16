@@ -10,6 +10,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-generation.patch
+        Use-vcpkg-sdl2.patch
+        Install-tools.patch
 )
 
 if("opengl" IN_LIST FEATURES)
@@ -47,10 +49,7 @@ file(REMOVE_RECURSE
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
-    set(VCPKG_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-    file(GLOB EXE_FILE "${VCPKG_BINARY_DIR}-rel/bin/*.exe")
-    file(INSTALL ${EXE_FILE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tools(TOOL_NAMES FontEditor ImageEditor LayoutEditor SkinEditor AUTO_CLEAN)
 endif()
 
 # Handle copyright
