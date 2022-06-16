@@ -1,6 +1,7 @@
 {
   "name": "redis-plus-plus",
   "version-semver": "1.3.2",
+  "port-version": 1,
   "description": "This is a C++ client for Redis. It's based on hiredis, and written in C++ 11",
   "homepage": "https://github.com/sewenew/redis-plus-plus",
   "dependencies": [
@@ -15,6 +16,12 @@
     }
   ],
   "features": {
+    "async-std": {
+      "description": "Build async with std::future",
+      "dependencies": [
+        "libuv"
+      ]
+    },
     "cxx17": {
       "description": "Build redis-plus-plus with cxx 17 standard"
     }
