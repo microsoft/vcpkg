@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
@@ -16,6 +15,21 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+if(EXES)
+    file(COPY ${EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shapelib")
+    file(COPY ${EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shapelib")
+    file(REMOVE ${EXES})
+endif()
+
+file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+if(DEBUG_EXES)
+    file(REMOVE ${DEBUG_EXES})
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 vcpkg_copy_pdbs()
 
