@@ -33,8 +33,8 @@
       "port-version": 0
     },
     "air-ctl": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "aixlog": {
       "baseline": "1.5.0",
