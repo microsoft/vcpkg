@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.5.5",
-  "port-version": 5,
+  "port-version": 6,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -196,7 +196,7 @@
     "openexr": {
       "description": "OpenEXR support for opencv",
       "dependencies": [
-        "openexr"
+        "openexr3"
       ]
     },
     "opengl": {
