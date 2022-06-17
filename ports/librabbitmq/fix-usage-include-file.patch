@@ -1,22 +1,164 @@
 diff --git a/librabbitmq/CMakeLists.txt b/librabbitmq/CMakeLists.txt
-index 671840b..7fcfa29 100644
+index 671840b..8fe6c94 100644
 --- a/librabbitmq/CMakeLists.txt
 +++ b/librabbitmq/CMakeLists.txt
-@@ -116,7 +116,7 @@ if (BUILD_SHARED_LIBS)
-     add_library(rabbitmq SHARED ${RABBITMQ_SOURCES})
+@@ -56,15 +56,15 @@ endif(MSVC)
+ # binary directory, and should shadow whats in the source directory
+ set(LIBRABBITMQ_INCLUDE_DIRS
+   ${CMAKE_CURRENT_BINARY_DIR}
+-	${CMAKE_CURRENT_SOURCE_DIR}
+-	${MSINTTYPES_INCLUDE}
+-	)
++    ${CMAKE_CURRENT_SOURCE_DIR}
++    ${MSINTTYPES_INCLUDE}
++    )
+ 
+ include_directories(${LIBRABBITMQ_INCLUDE_DIRS})
+ 
+ set(LIBRABBITMQ_INCLUDE_DIRS
+-	${LIBRABBITMQ_INCLUDE_DIRS}
+-	PARENT_SCOPE)
++    ${LIBRABBITMQ_INCLUDE_DIRS}
++    PARENT_SCOPE)
+ 
+ add_definitions(-DHAVE_CONFIG_H)
+ 
+@@ -112,56 +112,102 @@ add_definitions(-DAMQP_BUILD -D_CRT_SECURE_NO_WARNINGS)
+ 
+ set(RMQ_LIBRARIES ${AMQP_SSL_LIBS} ${SOCKET_LIBRARIES} ${LIBRT} ${CMAKE_THREAD_LIBS_INIT})
+ 
++set(PUBLIC_INCLUDE_DIRS
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++  $<INSTALL_INTERFACE:include>
++)
++
++set(PRIVATE_INCLUDE_DIRS
++  ${CMAKE_CURRENT_BINARY_DIR}
++  ${SSL_INCLUDE_DIRS}
++)
++
++set(LIBRABBITMQ_INCLUDE_DIRS ${PUBLIC_INCLUDE_DIRS} PARENT_SCOPE)
++
++
+ if (BUILD_SHARED_LIBS)
+-    add_library(rabbitmq SHARED ${RABBITMQ_SOURCES})
++
++    if (NOT APPLE)
++        set(CMAKE_INSTALL_RPATH $ORIGIN)
++    endif()
++
++    add_library(rabbitmq SHARED )
++    target_sources(rabbitmq PRIVATE ${RABBITMQ_SOURCES})
  
      target_link_libraries(rabbitmq ${RMQ_LIBRARIES})
--
-+    target_include_directories(rabbitmq PUBLIC $<INSTALL_INTERFACE:include>)
-     if (WIN32)
-         set_target_properties(rabbitmq PROPERTIES VERSION ${RMQ_VERSION} OUTPUT_NAME rabbitmq.${RMQ_SOVERSION})
-     else (WIN32)
-@@ -136,7 +136,7 @@ if (BUILD_STATIC_LIBS)
-     add_library(rabbitmq-static STATIC ${RABBITMQ_SOURCES})
  
-     target_link_libraries(rabbitmq-static ${RMQ_LIBRARIES})
--
-+    target_include_directories(rabbitmq-static PUBLIC $<INSTALL_INTERFACE:include>)
-     set_target_properties(rabbitmq-static PROPERTIES COMPILE_DEFINITIONS AMQP_STATIC)
++    target_include_directories(rabbitmq
++      PUBLIC ${PUBLIC_INCLUDE_DIRS}
++      PRIVATE ${PRIVATE_INCLUDE_DIRS}
++    )
++
++    target_compile_definitions(rabbitmq PRIVATE -DHAVE_CONFIG_H)
++
++    set_target_properties(rabbitmq PROPERTIES
++      VERSION ${RMQ_VERSION}
++      SOVERSION ${RMQ_SOVERSION}
++    )
      if (WIN32)
-         set_target_properties(rabbitmq-static PROPERTIES
+-        set_target_properties(rabbitmq PROPERTIES VERSION ${RMQ_VERSION} OUTPUT_NAME rabbitmq.${RMQ_SOVERSION})
+-    else (WIN32)
+-        set_target_properties(rabbitmq PROPERTIES VERSION ${RMQ_VERSION} SOVERSION ${RMQ_SOVERSION})
+-    endif (WIN32)
++      set_target_properties(rabbitmq PROPERTIES OUTPUT_NAME rabbitmq.${RMQ_SOVERSION})
++    endif()
+ 
+     install(TARGETS rabbitmq EXPORT "${targets_export_name}"
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        )
+-
++      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++              COMPONENT rabbitmq-c-runtime
++      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++              COMPONENT rabbitmq-c-runtime
++              NAMELINK_COMPONENT runtime-c-development
++      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++              COMPONENT rabbitmq-c-development
++    )
+     set(RMQ_LIBRARY_TARGET rabbitmq)
+-endif (BUILD_SHARED_LIBS)
++endif()
++
+ 
+ if (BUILD_STATIC_LIBS)
+-    add_library(rabbitmq-static STATIC ${RABBITMQ_SOURCES})
++    add_library(rabbitmq-static STATIC )
++    target_sources(rabbitmq-static PRIVATE ${RABBITMQ_SOURCES})
+ 
+-    target_link_libraries(rabbitmq-static ${RMQ_LIBRARIES})
++    target_include_directories(rabbitmq-static
++      PUBLIC ${PUBLIC_INCLUDE_DIRS}
++      PRIVATE ${PRIVATE_INCLUDE_DIRS}
++    )
+ 
+-    set_target_properties(rabbitmq-static PROPERTIES COMPILE_DEFINITIONS AMQP_STATIC)
+-    if (WIN32)
+-        set_target_properties(rabbitmq-static PROPERTIES
+-          VERSION ${RMQ_VERSION}
+-          OUTPUT_NAME librabbitmq.${RMQ_SOVERSION})
++    target_compile_definitions(rabbitmq-static
++      PUBLIC -DAMQP_STATIC
++      PRIVATE -DHAVE_CONFIG_H
++    )
++  
++  
++    target_link_libraries(rabbitmq-static PRIVATE ${RMQ_LIBRARIES})
+ 
+-        if(MSVC)
+-            set_target_properties(rabbitmq-static PROPERTIES
+-            # Embed debugging info in the library itself instead of generating
+-            # a .pdb file.
+-            COMPILE_OPTIONS "/Z7")
+-        endif(MSVC)
++    set_target_properties(rabbitmq-static PROPERTIES
++      VERSION ${RMQ_VERSION}
++      SOVERSION ${RMQ_SOVERSION})
+ 
+-    else (WIN32)
+-        set_target_properties(rabbitmq-static PROPERTIES VERSION ${RMQ_VERSION} SOVERSION ${RMQ_SOVERSION} OUTPUT_NAME rabbitmq)
+-    endif (WIN32)
++    if (WIN32)
++      set_target_properties(rabbitmq-static PROPERTIES OUTPUT_NAME librabbitmq.${RMQ_SOVERSION})
++    else()
++      set_target_properties(rabbitmq-static PROPERTIES OUTPUT_NAME rabbitmq)
++    endif()
++
++    if(MSVC)
++        set_target_properties(rabbitmq-static PROPERTIES
++        # Embed debugging info in the library itself instead of generating
++        # a .pdb file.
++        COMPILE_OPTIONS "/Z7")
++    endif(MSVC)
+ 
+     install(TARGETS rabbitmq-static EXPORT "${targets_export_name}"
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++                COMPONENT rabbitmq-c-development
+         )
+ 
+     if (NOT DEFINED RMQ_LIBRARY_TARGET)
+         set(RMQ_LIBRARY_TARGET rabbitmq-static)
+     endif ()
+-endif (BUILD_STATIC_LIBS)
++endif ()
+ 
+ install(FILES
+   amqp.h
+@@ -170,6 +216,7 @@ install(FILES
+   ${AMQP_SSL_SOCKET_H_PATH}
+   ${STDINT_H_INSTALL_FILE}
+   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++  COMPONENT rabbitmq-c-development
+     )
+ 
+ set(RMQ_LIBRARY_TARGET ${RMQ_LIBRARY_TARGET} PARENT_SCOPE)

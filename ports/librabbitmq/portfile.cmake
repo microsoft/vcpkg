@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
       fix-uwpwarning.patch
-      fix-usage-include-file.patch
+      fix-usage-include-file.patch #Remove this patch in the next version
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
