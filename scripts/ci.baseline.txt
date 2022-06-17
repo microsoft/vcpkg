@@ -203,7 +203,6 @@ dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 dpdk:arm-uwp=fail
 dpdk:arm64-windows=fail
-dpdk:x64-linux=fail
 dpdk:x64-osx=fail
 dpdk:x64-uwp=fail
 dpdk:x64-windows-static=fail

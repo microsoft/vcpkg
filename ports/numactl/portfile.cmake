@@ -13,7 +13,7 @@ These can be installed on Ubuntu systems via sudo apt install autoconf libtool"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(SHARED_STATIC --enable-static --disable-shared)
+    set(SHARED_STATIC --enable-static --enable-shared)
 else()
     set(SHARED_STATIC --disable-static --enable-shared)
 endif()

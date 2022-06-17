@@ -1,0 +1,30 @@
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBDPDK REQUIRED libdpdk>=@PORT_VERSION@)
+mark_as_advanced(
+  LIBDPDK_STATIC_INCLUDE_DIRS
+  LIBDPDK_INCLUDE_DIRS
+  LIBDPDK_STATIC_CFLAGS
+  LIBDPDK_CFLAGS
+  LIBDPDK_STATIC_LDFLAGS
+  LIBDPDK_LDFLAGS
+  LIBDPDK_VERSION)
+
+add_library(DPDK::dpdk INTERFACE IMPORTED)
+unset(LIBDPDK_FOUND)
+
+if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL "static")
+  set(INCLUDE_DIRS "${LIBDPDK_STATIC_INCLUDE_DIRS}")
+  # https://bechsoftware.com/2021/12/05/configuring-dpdk-projects-with-cmake/
+  target_compile_options(DPDK::dpdk INTERFACE ${LIBDPDK_STATIC_CFLAGS})
+  target_link_libraries(DPDK::dpdk INTERFACE ${LIBDPDK_STATIC_LDFLAGS})
+else()
+  set(INCLUDE_DIRS "${LIBDPDK_INCLUDE_DIRS}")
+  target_compile_options(DPDK::dpdk INTERFACE ${LIBDPDK_CFLAGS})
+  target_link_libraries(DPDK::dpdk INTERFACE ${LIBDPDK_LDFLAGS})
+endif()
+
+find_package_handle_standard_args(
+  dpdk
+  REQUIRED_VARS INCLUDE_DIRS LIBDPDK_STATIC_CFLAGS LIBDPDK_CFLAGS
+                LIBDPDK_STATIC_LDFLAGS LIBDPDK_LDFLAGS
+  VERSION_VAR LIBDPDK_VERSION)

@@ -1957,8 +1957,8 @@
       "port-version": 0
     },
     "dpdk": {
-      "baseline": "19.02",
-      "port-version": 1
+      "baseline": "22.03",
+      "port-version": 0
     },
     "draco": {
       "baseline": "1.4.3",
@@ -4962,7 +4962,7 @@
     },
     "numactl": {
       "baseline": "2.0.14",
-      "port-version": 1
+      "port-version": 2
     },
     "numcpp": {
       "baseline": "2.6.0",
