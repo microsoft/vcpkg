@@ -2,6 +2,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/iconv")
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/iconv")
+    message(FATAL_ERROR STOP)
     return()
 endif()
 
@@ -66,3 +67,4 @@ ${copying_lib}
 
 ${copying_tool}
 ")
+message(FATAL_ERROR STOP)
