@@ -11,12 +11,17 @@ vcpkg_from_github(
     PATCHES fix-cmake-usage.patch # Remove this patch in the next update
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        alsa RTMIDI_API_ALSA
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DRTMIDI_API_ALSA=OFF
         -DRTMIDI_API_JACK=OFF
         -DRTMIDI_BUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

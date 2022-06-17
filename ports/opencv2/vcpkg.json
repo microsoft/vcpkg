@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 12,
+  "port-version": 13,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -29,6 +29,12 @@
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {

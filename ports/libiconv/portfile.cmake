@@ -5,17 +5,17 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
     return()
 endif()
 
-set(LIBICONV_VERSION 1.16)
+set(LIBICONV_VERSION 1.17)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz"
     FILENAME "libiconv-${LIBICONV_VERSION}.tar.gz"
-    SHA512 365dac0b34b4255a0066e8033a8b3db4bdb94b9b57a9dca17ebf2d779139fe935caf51a465d17fd8ae229ec4b926f3f7025264f37243432075e5583925bb77b7
+    SHA512 18a09de2d026da4f2d8b858517b0f26d853b21179cf4fa9a41070b2d140030ad9525637dc4f34fc7f27abca8acdc84c6751dfb1d426e78bf92af4040603ced86
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${LIBICONV_VERSION}
+    ARCHIVE "${ARCHIVE}"
+    REF "${LIBICONV_VERSION}"
     PATCHES
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
@@ -50,4 +50,19 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}") # share contains un
 
 # Please keep, the default usage is broken
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/COPYING.LIB" copying_lib)
+file(READ "${SOURCE_PATH}/COPYING" copying_tool)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "
+The libiconv and libcharset libraries and their header files are under LGPL,
+see COPYING.LIB below.
+
+The iconv program and the documentation are under GPL, see COPYING below.
+
+# COPYING.LIB
+
+${copying_lib}
+
+# COPYING
+
+${copying_tool}
+")
