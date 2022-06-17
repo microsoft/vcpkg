@@ -90,3 +90,11 @@
 ### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
 
 - [x\_vcpkg\_pkgconfig\_get\_modules](ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.md)
+
+### [vcpkg-get-python-packages](ports/vcpkg-get-python-packages.md)
+
+- [x\_vcpkg\_get\_python\_packages](ports/vcpkg-get-python-packages/x_vcpkg_get_python_packages.md)
+
+### [vcpkg-qmake](ports/vcpkg-qmake.md)
+
+- [vcpkg\_qmake\_configure](ports/vcpkg-qmake/vcpkg_qmake_configure.md)
