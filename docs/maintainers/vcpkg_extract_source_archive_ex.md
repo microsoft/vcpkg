@@ -1,10 +1,10 @@
 # vcpkg_extract_source_archive_ex
 
+**This function has been deprecated in favor of [`vcpkg_extract_source_archive()`].**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive_ex.md).
 
 Extract an archive.
-
-This command is replaced by [`vcpkg_extract_source_archive()`][].
 
 ## Usage
 ```cmake
@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
 )
 ```
 
-This command forwards all options to `vcpkg_extract_source_archive()`, with the `<out-var>` as the first argument. See the documentation for [`vcpkg_extract_source_archive()`] for parameter help.
+This command forwards all options to [`vcpkg_extract_source_archive()`], with `<out-var>` as the first argument. See the documentation for [`vcpkg_extract_source_archive()`] for parameter help.
 
 [`vcpkg_extract_source_archive()`]: vcpkg_extract_source_archive.md
 
