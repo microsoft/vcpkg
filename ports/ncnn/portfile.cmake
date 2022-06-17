@@ -19,9 +19,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_copy_tools(TOOL_NAMES <tool_names> AUTO_CLEAN)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 vcpkg_copy_pdbs()
