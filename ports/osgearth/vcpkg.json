@@ -31,8 +31,7 @@
     }
   ],
   "default-features": [
-    "default-features",
-    "tools"
+    "default-features"
   ],
   "features": {
     "blend2d": {
