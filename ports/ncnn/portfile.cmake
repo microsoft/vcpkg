@@ -20,17 +20,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-if(EXES)
-    file(COPY ${EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shapelib")
-    file(COPY ${EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shapelib")
-    file(REMOVE ${EXES})
-endif()
-
-file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(DEBUG_EXES)
-    file(REMOVE ${DEBUG_EXES})
-endif()
+vcpkg_copy_tools(TOOL_NAMES <tool_names> AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
