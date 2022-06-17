@@ -28,12 +28,13 @@ vcpkg_cmake_configure(
 ```
 
 To use this function, you must depend on the helper port [`vcpkg-cmake`](ports/vcpkg-cmake.md):
-```json
-{
-    "dependencies": [
-        {"name": "vcpkg-cmake", "host": true}
-    ]
-}
+```no-highlight
+"dependencies": [
+  {
+    "name": "vcpkg-cmake",
+    "host": true
+  }
+]
 ```
 
 ## Parameters
@@ -61,7 +62,7 @@ By default vcpkg prefers to use Ninja as the CMake Generator for all platforms. 
 ### GENERATOR
 Specifies the Generator to use.
 
-This is useful if the project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build. If used for this purpose, it should be set to `"Ninja"`.
+This is useful if the project-specific buildsystem has been wrapped in a CMake script that won't perform an actual build. If used for this purpose, it should be set to `"Ninja"`.
 
 This should not be passed alongside [`WINDOWS_USE_MSBUILD`](#windows_use_msbuild).
 
@@ -114,12 +115,14 @@ Finally, there are additional internal options passed in (with a `VCPKG_` prefix
 ## Examples
 
 ```cmake
+vcpkg_from_github(OUT_SOURCE_PATH source_path ...)
 vcpkg_cmake_configure(
     SOURCE_PATH "${source_path}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
 )
+vcpkg_cmake_install()
 ```
 
 * [GitHub Search](https://github.com/microsoft/vcpkg/search?q=vcpkg_cmake_configure+path%3A%2Fports)
