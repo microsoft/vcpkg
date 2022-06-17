@@ -17,8 +17,10 @@ else()
 endif()
 
 set(EXTRA_OPT "")
-if ("async-std" IN_LIST FEATURES)
+if ("async" IN_LIST FEATURES)
     list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_BUILD_ASYNC="libuv")
+endif()
+if ("async-std" IN_LIST FEATURES)
     list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_ASYNC_FUTURE="std")
 endif()
 

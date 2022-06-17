@@ -17,10 +17,22 @@
     }
   ],
   "features": {
+    "async": {
+      "description": "Build with async",
+      "dependencies": [
+        "libuv"
+      ]
+    },
     "async-std": {
       "description": "Build async with std::future",
       "dependencies": [
-        "libuv"
+        {
+          "name": "redis-plus-plus",
+          "default-features": false,
+          "features": [
+            "async"
+          ]
+        }
       ]
     },
     "cxx17": {
