@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
     -DBUILD_STATIC_LIBS=${BUILD_STATIC}
 )
 
-
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME rabbitmq-c CONFIG_PATH lib/cmake/rabbitmq-c)
