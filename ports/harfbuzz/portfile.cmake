@@ -18,9 +18,6 @@ else()
 endif()
 if("coretext" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dcoretext=enabled) # Enable CoreText shaper backend on macOS
-    if(NOT VCPKG_TARGET_IS_OSX)
-        message(FATAL_ERROR "Feature 'coretext' os only available on OSX")
-    endif()
 else()
     list(APPEND FEATURE_OPTIONS -Dcoretext=disabled)
 endif()
@@ -39,8 +36,9 @@ list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
 
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -Dcairo=disabled # Use Cairo graphics library
         -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
         -Ddocs=disabled          # Generate documentation with gtk-doc
@@ -76,11 +74,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/harfbuzzConfig.cmake" @ONLY)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -89,3 +85,5 @@ endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
