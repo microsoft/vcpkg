@@ -4,9 +4,12 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Extract an archive.
 
+This command replaces [`vcpkg_extract_source_archive_ex()`](vcpkg_extract_source_archive_ex.md).
+
 ## Usage
 ```cmake
-vcpkg_extract_source_archive(<out-var>
+vcpkg_extract_source_archive(
+    <out-var>
     ARCHIVE <path>
     [NO_REMOVE_ONE_LEVEL]
     [SKIP_PATCH_CHECK]
@@ -23,7 +26,7 @@ vcpkg_extract_source_archive(<archive> [<working_directory>])
 ```
 The deprecated overload extracts `<archive>` into `${working_directory}/<archive-filename>.extracted` if the target does not exist.
 
-All uses of the deprecated overload should be replaced with the main overload above.
+All uses of the deprecated overload should be replaced with the first overload above.
 
 ## Parameters
 
@@ -124,16 +127,19 @@ In [`--editable`](../commands/install.md#editable) mode:
 ## Examples
 
 ```cmake
-vcpkg_download_distfile(archive
+vcpkg_download_distfile(
+    archive # "archive" is set to the path to the downloaded file
     URLS "https://nmap.org/dist/nmap-7.70.tar.bz2"
     FILENAME "nmap-7.70.tar.bz2"
     SHA512 084c148b022ff6550e269d976d0077f7932a10e2ef218236fe13aa3a70b4eb6506df03329868fc68cb3ce78e4360b200f5a7a491d3145028fed679ef1c9ecae5
 )
-vcpkg_extract_source_archive(source_path
+vcpkg_extract_source_archive(
+    src # "src" is set to the path to the extracted files
     ARCHIVE "${archive}"
     REF 7.70
-    PATCHES 0001-disable-werror.patch)
-vcpkg_cmake_configure(SOURCE_PATH "${source_path}")
+    PATCHES 0001-disable-werror.patch
+)
+vcpkg_cmake_configure(SOURCE_PATH "${src}")
 ```
 
 * [GitHub Search](https://github.com/microsoft/vcpkg/search?q=vcpkg_extract_source_archive+path%3A%2Fports)
