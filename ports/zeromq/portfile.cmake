@@ -46,6 +46,8 @@ vcpkg_cmake_configure(
         ${LINKAGE_OPTIONS}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    MAYBE_UNUSED_VARIABLES
+        USE_PERF_TOOLS
 )
 
 vcpkg_cmake_install()
