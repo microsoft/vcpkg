@@ -8,6 +8,9 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DNCNN_BUILD_TOOLS=OFF
+        -DNCNN_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()
