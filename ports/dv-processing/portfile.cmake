@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "dv-processing" CONFIG_PATH "share/dv-processing")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
