@@ -6,8 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
     fix_glog_CMAKE_MODULE_PATH.patch
-    glog_disable_debug_prefix.patch
+    glog_disable_debug_postfix.patch
     fix_crosscompile_symbolize.patch
+    fix_cpluplus_macro.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
