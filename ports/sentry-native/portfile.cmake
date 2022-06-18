@@ -31,7 +31,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
 endif()
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
