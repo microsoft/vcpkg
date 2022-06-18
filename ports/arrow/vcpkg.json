@@ -1,7 +1,6 @@
 {
   "name": "arrow",
-  "version": "7.0.0",
-  "port-version": 2,
+  "version": "8.0.0",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -40,6 +39,12 @@
   "features": {
     "csv": {
       "description": "CSV support"
+    },
+    "cuda": {
+      "description": "cuda support",
+      "dependencies": [
+        "cuda"
+      ]
     },
     "dataset": {
       "description": "Dataset support"

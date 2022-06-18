@@ -377,7 +377,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         //:skia)
     gn_desc_target_defines(SKIA_DEFINITIONS_DBG
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        //extract_public_config:extract_skia)
+        //:skia)
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -386,7 +386,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         //:skia)
     gn_desc_target_defines(SKIA_DEFINITIONS_REL
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        //extract_public_config:extract_skia)
+        //:skia)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"

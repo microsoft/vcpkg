@@ -9,7 +9,7 @@
   "license": null,
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     {
