@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 16fef38..4f94251 100644
+index 8f06a78..6af3624 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -450,6 +450,9 @@ endif (HAVE_CXX11_ATOMIC)

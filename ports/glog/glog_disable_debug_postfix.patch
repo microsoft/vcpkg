@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1fdeac6..16fef38 100644
+index 02ae75b..8f06a78 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -65,7 +65,7 @@ set (CMAKE_CXX_VISIBILITY_PRESET hidden)
