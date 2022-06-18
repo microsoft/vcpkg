@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 28e2688..cf87798 100644
+index 846b444..02ae75b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -843,36 +843,6 @@ write_basic_package_version_file (
+@@ -1028,42 +1028,6 @@ write_basic_package_version_file (
  export (TARGETS glog NAMESPACE glog:: FILE glog-targets.cmake)
  export (PACKAGE glog)
  
@@ -26,12 +26,18 @@ index 28e2688..cf87798 100644
 -install (CODE
 -"
 -set (glog_FULL_CMake_DATADIR \"\\\${CMAKE_CURRENT_LIST_DIR}/${glog_REL_CMake_DATADIR}\")
+-set (glog_DATADIR_DESTINATION ${_glog_CMake_INSTALLDIR})
+-
+-if (NOT IS_ABSOLUTE ${_glog_CMake_INSTALLDIR})
+-  set (glog_DATADIR_DESTINATION \"\${CMAKE_INSTALL_PREFIX}/\${glog_DATADIR_DESTINATION}\")
+-endif (NOT IS_ABSOLUTE ${_glog_CMake_INSTALLDIR})
+-
 -configure_file (\"${CMAKE_CURRENT_SOURCE_DIR}/glog-modules.cmake.in\"
 -  \"${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/glog-modules.cmake\" @ONLY)
 -file (INSTALL
 -  \"${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/glog-modules.cmake\"
 -  DESTINATION
--  \"\${CMAKE_INSTALL_PREFIX}/${_glog_CMake_INSTALLDIR}\")
+-  \"\${glog_DATADIR_DESTINATION}\")
 -"
 -  COMPONENT Development
 -)
