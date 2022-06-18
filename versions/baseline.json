@@ -2122,7 +2122,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 5
+      "port-version": 6
     },
     "exiv2": {
       "baseline": "0.27.5",
@@ -2210,7 +2210,7 @@
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
-      "port-version": 1
+      "port-version": 2
     },
     "fcl": {
       "baseline": "0.7.0",
