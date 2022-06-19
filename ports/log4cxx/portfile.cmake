@@ -11,6 +11,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         expat.patch
+        threadutility.patch
         linux.patch
 )
 
