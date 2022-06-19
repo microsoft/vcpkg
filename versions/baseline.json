@@ -33,8 +33,8 @@
       "port-version": 0
     },
     "air-ctl": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "aixlog": {
       "baseline": "1.5.0",
@@ -1513,16 +1513,16 @@
       "port-version": 0
     },
     "comms": {
-      "baseline": "3.4.0",
-      "port-version": 1
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "0.20.2",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "commsdsl": {
-      "baseline": "3.6.4",
-      "port-version": 1
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "compoundfilereader": {
       "baseline": "0.1.0",
@@ -1610,7 +1610,7 @@
     },
     "cppcms": {
       "baseline": "1.2.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cppcodec": {
       "baseline": "0.2",
@@ -1750,7 +1750,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 6
+      "port-version": 7
     },
     "cunit": {
       "baseline": "2.1.3",
@@ -1861,8 +1861,8 @@
       "port-version": 5
     },
     "devicenameresolver": {
-      "baseline": "2016-06-26-0850d88fa6",
-      "port-version": 3
+      "baseline": "2016-06-26",
+      "port-version": 4
     },
     "devil": {
       "baseline": "1.8.0",
@@ -1917,7 +1917,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-06-18",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "discount": {
@@ -2106,7 +2106,7 @@
     },
     "epsilon": {
       "baseline": "0.9.2",
-      "port-version": 6
+      "port-version": 7
     },
     "esaxx": {
       "baseline": "ca7cb332011ec37",
@@ -2162,7 +2162,7 @@
     },
     "fann": {
       "baseline": "2.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "farmhash": {
       "baseline": "1.1",
@@ -2706,7 +2706,7 @@
     },
     "gtk": {
       "baseline": "4.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.6.0",
@@ -3462,7 +3462,7 @@
     },
     "libbf": {
       "baseline": "1.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libbson": {
       "baseline": "1.17.6",
@@ -3966,7 +3966,7 @@
     },
     "librabbitmq": {
       "baseline": "0.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libraqm": {
       "baseline": "0.9.0",
@@ -5689,8 +5689,8 @@
       "port-version": 5
     },
     "python3": {
-      "baseline": "3.10.2",
-      "port-version": 2
+      "baseline": "3.10.5",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6206,7 +6206,7 @@
     },
     "redis-plus-plus": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "refl-cpp": {
       "baseline": "0.12.3",
@@ -6598,7 +6598,7 @@
     },
     "skia": {
       "baseline": "2022-04-15",
-      "port-version": 0
+      "port-version": 1
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7622,7 +7622,7 @@
     },
     "wtl": {
       "baseline": "10.0.10320",
-      "port-version": 3
+      "port-version": 4
     },
     "wxchartdir": {
       "baseline": "2.0.0",
