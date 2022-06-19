@@ -1,7 +1,7 @@
-diff --git a/buildtrees/caffe2/src/639a981b79-182af8c630.clean/caffe2/core/logging.cc b/buildtrees/caffe2/src/639a981b79-182af8c630.clean/caffe2/core/logging.cc
-index 1379f3ae8..d1289dbe7 100644
---- a/buildtrees/caffe2/src/639a981b79-182af8c630.clean/caffe2/core/logging.cc
-+++ b/buildtrees/caffe2/src/639a981b79-182af8c630.clean/caffe2/core/logging.cc
+diff --git a/caffe2/core/logging.cc b/caffe2/core/logging.cc
+index 1379f3a..d1289db 100644
+--- a/caffe2/core/logging.cc
++++ b/caffe2/core/logging.cc
 @@ -120,17 +120,6 @@ using fLB::FLAGS_logtostderr;
  CAFFE2_DEFINE_int(caffe2_log_level, google::GLOG_ERROR,
                    "The minimum log level that caffe2 will output.");
