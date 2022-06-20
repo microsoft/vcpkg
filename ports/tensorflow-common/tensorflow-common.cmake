@@ -1,5 +1,5 @@
-set(TF_VERSION 2.8.2)
-set(TF_VERSION_SHORT 2.8.2)
+set(TF_VERSION 2.9.1)
+set(TF_VERSION_SHORT 2.9.1)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -177,9 +177,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 
-		c63c41d670932088327343c9ec535d3b69d05d194912ca68a1dd90d79b0fc08c33e839b360354d89585a0909f1efec347eb2394085d1ccbb6d610627c412ad2a # 2.8.2
-		#95ffbee1e50e396065c6f1802fd9668344c45c000e22da859bcd08ec217bcc0a8ff0e84661fdf511f210e8b09d7ae6d26c3fc1ddcf28b8aedf87c0fb1b8b60e4 # 2.9.1
+		SHA512 95ffbee1e50e396065c6f1802fd9668344c45c000e22da859bcd08ec217bcc0a8ff0e84661fdf511f210e8b09d7ae6d26c3fc1ddcf28b8aedf87c0fb1b8b60e4
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
