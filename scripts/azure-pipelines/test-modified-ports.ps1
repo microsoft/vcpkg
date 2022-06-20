@@ -71,7 +71,7 @@ if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
-$buildtreesRoot = Join-Path $WorkingRoot 'b'
+$buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
