@@ -1,6 +1,6 @@
 {
   "name": "tensorflow",
-  "version-semver": "2.9.1",
+  "version-semver": "2.8.2",
   "port-version": 2,
   "description": "Library for computation using data flow graphs for scalable machine learning (C API version)",
   "homepage": "https://github.com/tensorflow/tensorflow",
