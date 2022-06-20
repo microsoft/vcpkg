@@ -11,12 +11,12 @@ Second, determine a suitable package name. This should be ASCII, lowercase, and 
 
 Finally, if the server's name for the archive is not very descriptive (such as downloading a zipped commit or branch from GitHub), choose a nice archive name of the form `<packagename>-<version>.zip`.
 
-*`zlib1211.zip` is a fine name, so no change needed.*
+*`zlib1212.zip` is a fine name, so no change needed.*
 
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports/<packagename>`.
 
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
+PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.12.tar.gz zlib1212.tar.gz
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
@@ -27,7 +27,7 @@ In addition to the generated `ports/<package>/portfile.cmake`, we also need a `p
 ```json
 {
   "name": "zlib2",
-  "version-string": "1.2.11",
+  "version-string": "1.2.12",
   "description": "A Massively Spiffy Yet Delicately Unobtrusive Compression Library"
 }
 ```
