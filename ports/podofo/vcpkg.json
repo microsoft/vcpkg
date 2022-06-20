@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "PoDoFo is a library to work with the PDF file format",
   "homepage": "https://sourceforge.net/projects/podofo/",
-  "license": "GPL-2.0-only",
+  "license": "LGPL-2.0-only",
   "supports": "!uwp",
   "dependencies": [
     "freetype",
