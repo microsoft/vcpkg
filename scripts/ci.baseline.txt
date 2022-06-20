@@ -324,7 +324,6 @@ gmmlib:x86-windows=fail
 
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
-gppanel:x64-osx=fail
 gperftools:arm64-windows=fail
 gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail

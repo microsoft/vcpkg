@@ -2646,7 +2646,7 @@
     },
     "gppanel": {
       "baseline": "2020-05-20",
-      "port-version": 1
+      "port-version": 2
     },
     "graphene": {
       "baseline": "1.10.2",
