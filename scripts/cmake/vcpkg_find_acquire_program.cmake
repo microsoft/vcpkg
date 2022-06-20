@@ -476,7 +476,7 @@ function(vcpkg_find_acquire_program program)
         set(tool_subdirectory c3eeb6b9fa-76d69c6db5)
     elseif(program STREQUAL "BAZEL")
         set(program_name bazel)
-        set(program_version 5.0.0)
+        set(program_version 4.2.2)
         set(rename_binary_to "bazel")
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
             set(supported_on_unix ON)
@@ -493,7 +493,9 @@ function(vcpkg_find_acquire_program program)
                 set(download_filename "bazel-${tool_subdirectory}-x86_64")
                 set(raw_executable ON)
                 set(download_sha512 
-                d8b3b47af163234dcc5d5591136dc0b25d150f1760f23ad8ee390be45e30dfde8a02bf13148f8529c623863fe83181b64bce7a54ee2c4a4d575d71ba364350cc)
+                f38619e054df78cab38278a5901b2798f2e25b5cec53358d98278002e713d225fd3df96a209b7f22a2357835a279cee8ef1768e10561b3e9fe6361f324563bb9 # 4.2.2
+                # d8b3b47af163234dcc5d5591136dc0b25d150f1760f23ad8ee390be45e30dfde8a02bf13148f8529c623863fe83181b64bce7a54ee2c4a4d575d71ba364350cc # 5.0.0
+                )
             endif()
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
             set(supported_on_unix ON)
@@ -503,18 +505,27 @@ function(vcpkg_find_acquire_program program)
                 set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-arm64")
                 set(download_filename "bazel-${tool_subdirectory}-arm64")
                 set(raw_executable ON)
-                set(download_sha512 8b5ec0809a0b87e0b77c213609a2c09eb8b8266e9cc2869dbce1baf498a7d6df04cbcf6b332bae917701ce7a5e9f3a2eeec6ae654cad9627f9b7cb01476b682c)
+                set(download_sha512 
+                e94d111e0b7272447e4da19dd440e7222aa08453466c55916747a94251b6ac4d3a8eb69db302446297733affe1cf412b4c4ce1b09a5619abcecc4dbb611f70f4 # 4.2.2
+                # 8b5ec0809a0b87e0b77c213609a2c09eb8b8266e9cc2869dbce1baf498a7d6df04cbcf6b332bae917701ce7a5e9f3a2eeec6ae654cad9627f9b7cb01476b682c # 5.0.0
+                )
             else()
                 set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64")
                 set(download_filename "bazel-${tool_subdirectory}-x86_64")
                 set(raw_executable ON)
-                set(download_sha512 f0838731fbd102d467e772a93a220edb4cc4273e7bf68a40cebcc4f9262365661215f2642f5aedc1d61abcf1593ae7f9beb6dddb44a8400d344a79fae6d6c83f)
+                set(download_sha512 
+                a3fd8f9d71b0669d742439200f27ee0a3891c1f248df62c841ebb2b416a47534562f429f8a08793b074e9b74f2ede3d97a7e13ac9921c7ee2dc6a2dca8b7f275 # 4.2.2
+                # f0838731fbd102d467e772a93a220edb4cc4273e7bf68a40cebcc4f9262365661215f2642f5aedc1d61abcf1593ae7f9beb6dddb44a8400d344a79fae6d6c83f 5.0.0
+                )
             endif()
         else()
             set(tool_subdirectory "${program_version}-windows")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64.zip")
             set(download_filename "bazel-${tool_subdirectory}-x86_64.zip")
-            set(download_sha512 b6a2c1e619120dbca4826191d63e7920e3b44dc3d5624219d04bf8557c0c42b854fc909ad57b81f2d4b24a34819426ea4b835de0fa9643386503781e6e032a94)
+            set(download_sha512
+            8a8196e242964114316232818cb81bfa19ebfd3a029ebf550a241e33b22a6e9ed636dade06411a8706c05c4e73def0bc8d7f45ff0ec5478bcc5de21b5638204d # 4.2.2
+             # b6a2c1e619120dbca4826191d63e7920e3b44dc3d5624219d04bf8557c0c42b854fc909ad57b81f2d4b24a34819426ea4b835de0fa9643386503781e6e032a94 # 5.0.0
+            )
         endif()
     elseif(program STREQUAL "ARIA2")
         set(program_name aria2c)
