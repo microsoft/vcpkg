@@ -4,6 +4,7 @@
   "description": "OpenAL Soft is an LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.",
   "homepage": "https://github.com/kcat/openal-soft",
   "supports": "!uwp",
+  "license": "GPL-2.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
