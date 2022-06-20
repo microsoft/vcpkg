@@ -2718,7 +2718,7 @@
     },
     "gts": {
       "baseline": "0.7.6",
-      "port-version": 5
+      "port-version": 6
     },
     "guetzli": {
       "baseline": "2020-09-14",
