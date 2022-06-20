@@ -1,0 +1,965 @@
+diff --git a/CMake/FindDoubleConversion.cmake b/CMake/FindDoubleConversion.cmake
+deleted file mode 100644
+index 23e6968..0000000
+--- a/CMake/FindDoubleConversion.cmake
++++ /dev/null
+@@ -1,31 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-# Finds libdouble-conversion.
+-#
+-# This module defines:
+-# DOUBLE_CONVERSION_INCLUDE_DIR
+-# DOUBLE_CONVERSION_LIBRARY
+-#
+-
+-find_path(DOUBLE_CONVERSION_INCLUDE_DIR double-conversion/double-conversion.h)
+-find_library(DOUBLE_CONVERSION_LIBRARY NAMES double-conversion)
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(
+-  DoubleConversion
+-  DEFAULT_MSG
+-  DOUBLE_CONVERSION_LIBRARY DOUBLE_CONVERSION_INCLUDE_DIR)
+-
+-mark_as_advanced(DOUBLE_CONVERSION_INCLUDE_DIR DOUBLE_CONVERSION_LIBRARY)
+diff --git a/CMake/FindFmt.cmake b/CMake/FindFmt.cmake
+deleted file mode 100644
+index 75fa3c6..0000000
+--- a/CMake/FindFmt.cmake
++++ /dev/null
+@@ -1,42 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-find_path(LIBFMT_INCLUDE_DIR fmt/core.h)
+-mark_as_advanced(LIBFMT_INCLUDE_DIR)
+-
+-find_library(LIBFMT_LIBRARY NAMES fmt fmtd)
+-mark_as_advanced(LIBFMT_LIBRARY)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    LIBFMT
+-    DEFAULT_MSG
+-    LIBFMT_LIBRARY LIBFMT_INCLUDE_DIR)
+-
+-if(LIBFMT_FOUND)
+-    set(LIBFMT_LIBRARIES ${LIBFMT_LIBRARY})
+-    set(LIBFMT_INCLUDE_DIRS ${LIBFMT_INCLUDE_DIR})
+-    message(STATUS "Found {fmt}: ${LIBFMT_LIBRARY}")
+-    add_library(fmt::fmt UNKNOWN IMPORTED)
+-    set_target_properties(
+-      fmt::fmt PROPERTIES
+-      INTERFACE_INCLUDE_DIRECTORIES "${LIBFMT_INCLUDE_DIR}"
+-    )
+-    set_target_properties(
+-      fmt::fmt PROPERTIES
+-      IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-      IMPORTED_LOCATION "${LIBFMT_LIBRARY}"
+-    )
+-endif()
+-
+diff --git a/CMake/FindLZ4.cmake b/CMake/FindLZ4.cmake
+deleted file mode 100644
+index 918568b..0000000
+--- a/CMake/FindLZ4.cmake
++++ /dev/null
+@@ -1,41 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-# Finds liblz4.
+-#
+-# This module defines:
+-# LZ4_FOUND
+-# LZ4_INCLUDE_DIR
+-# LZ4_LIBRARY
+-#
+-
+-find_path(LZ4_INCLUDE_DIR NAMES lz4.h)
+-
+-find_library(LZ4_LIBRARY_DEBUG NAMES lz4d)
+-find_library(LZ4_LIBRARY_RELEASE NAMES lz4)
+-
+-include(SelectLibraryConfigurations)
+-SELECT_LIBRARY_CONFIGURATIONS(LZ4)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    LZ4 DEFAULT_MSG
+-    LZ4_LIBRARY LZ4_INCLUDE_DIR
+-)
+-
+-if (LZ4_FOUND)
+-    message(STATUS "Found LZ4: ${LZ4_LIBRARY}")
+-endif()
+-
+-mark_as_advanced(LZ4_INCLUDE_DIR LZ4_LIBRARY)
+diff --git a/CMake/FindLibUring.cmake b/CMake/FindLibUring.cmake
+deleted file mode 100644
+index a6d7357..0000000
+--- a/CMake/FindLibUring.cmake
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-find_path(LIBURING_INCLUDE_DIR NAMES liburing.h)
+-mark_as_advanced(LIBURING_INCLUDE_DIR)
+-
+-find_library(LIBURING_LIBRARY NAMES uring)
+-mark_as_advanced(LIBURING_LIBRARY)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-        LIBURING
+-        REQUIRED_VARS LIBURING_LIBRARY LIBURING_INCLUDE_DIR)
+-
+-if(LIBURING_FOUND)
+-  set(LIBURING_LIBRARIES ${LIBURING_LIBRARY})
+-  set(LIBURING_INCLUDE_DIRS ${LIBURING_INCLUDE_DIR})
+-endif()
+diff --git a/CMake/FindLibsodium.cmake b/CMake/FindLibsodium.cmake
+deleted file mode 100644
+index 7079676..0000000
+--- a/CMake/FindLibsodium.cmake
++++ /dev/null
+@@ -1,30 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-find_path(LIBSODIUM_INCLUDE_DIR NAMES sodium.h)
+-mark_as_advanced(LIBSODIUM_INCLUDE_DIR)
+-
+-find_library(LIBSODIUM_LIBRARY NAMES sodium)
+-mark_as_advanced(LIBSODIUM_LIBRARY)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-  LIBSODIUM
+-  REQUIRED_VARS LIBSODIUM_LIBRARY LIBSODIUM_INCLUDE_DIR)
+-
+-if(LIBSODIUM_FOUND)
+-  set(LIBSODIUM_LIBRARIES ${LIBSODIUM_LIBRARY})
+-  set(LIBSODIUM_INCLUDE_DIRS ${LIBSODIUM_INCLUDE_DIR})
+-  message(STATUS "Found Libsodium: ${LIBSODIUM_LIBRARY}")
+-endif()
+diff --git a/CMake/FindSnappy.cmake b/CMake/FindSnappy.cmake
+deleted file mode 100644
+index 8c2a44b..0000000
+--- a/CMake/FindSnappy.cmake
++++ /dev/null
+@@ -1,36 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-# Find the Snappy libraries
+-#
+-# This module defines:
+-# SNAPPY_FOUND
+-# SNAPPY_INCLUDE_DIR
+-# SNAPPY_LIBRARY
+-
+-find_path(SNAPPY_INCLUDE_DIR NAMES snappy.h)
+-
+-find_library(SNAPPY_LIBRARY_DEBUG NAMES snappyd)
+-find_library(SNAPPY_LIBRARY_RELEASE NAMES snappy)
+-
+-include(SelectLibraryConfigurations)
+-SELECT_LIBRARY_CONFIGURATIONS(SNAPPY)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    SNAPPY DEFAULT_MSG
+-    SNAPPY_LIBRARY SNAPPY_INCLUDE_DIR
+-)
+-
+-mark_as_advanced(SNAPPY_INCLUDE_DIR SNAPPY_LIBRARY)
+diff --git a/CMake/FindZstd.cmake b/CMake/FindZstd.cmake
+deleted file mode 100644
+index 42c5dd9..0000000
+--- a/CMake/FindZstd.cmake
++++ /dev/null
+@@ -1,41 +0,0 @@
+-# Copyright (c) Meta Platforms, Inc. and affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-#
+-# - Try to find Facebook zstd library
+-# This will define
+-# ZSTD_FOUND
+-# ZSTD_INCLUDE_DIR
+-# ZSTD_LIBRARY
+-#
+-
+-find_path(ZSTD_INCLUDE_DIR NAMES zstd.h)
+-
+-find_library(ZSTD_LIBRARY_DEBUG NAMES zstdd zstd_staticd)
+-find_library(ZSTD_LIBRARY_RELEASE NAMES zstd zstd_static)
+-
+-include(SelectLibraryConfigurations)
+-SELECT_LIBRARY_CONFIGURATIONS(ZSTD)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    ZSTD DEFAULT_MSG
+-    ZSTD_LIBRARY ZSTD_INCLUDE_DIR
+-)
+-
+-if (ZSTD_FOUND)
+-    message(STATUS "Found Zstd: ${ZSTD_LIBRARY}")
+-endif()
+-
+-mark_as_advanced(ZSTD_INCLUDE_DIR ZSTD_LIBRARY)
+diff --git a/build/fbcode_builder/CMake/FindGMock.cmake b/build/fbcode_builder/CMake/FindGMock.cmake
+deleted file mode 100644
+index cd042dd..0000000
+--- a/build/fbcode_builder/CMake/FindGMock.cmake
++++ /dev/null
+@@ -1,80 +0,0 @@
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-# Find libgmock
+-#
+-#  LIBGMOCK_DEFINES     - List of defines when using libgmock.
+-#  LIBGMOCK_INCLUDE_DIR - where to find gmock/gmock.h, etc.
+-#  LIBGMOCK_LIBRARIES   - List of libraries when using libgmock.
+-#  LIBGMOCK_FOUND       - True if libgmock found.
+-
+-IF (LIBGMOCK_INCLUDE_DIR)
+-  # Already in cache, be silent
+-  SET(LIBGMOCK_FIND_QUIETLY TRUE)
+-ENDIF ()
+-
+-find_package(GTest CONFIG QUIET)
+-if (TARGET GTest::gmock)
+-  get_target_property(LIBGMOCK_DEFINES GTest::gtest INTERFACE_COMPILE_DEFINITIONS)
+-  if (NOT ${LIBGMOCK_DEFINES})
+-    # Explicitly set to empty string if not found to avoid it being
+-    # set to NOTFOUND and breaking compilation
+-    set(LIBGMOCK_DEFINES "")
+-  endif()
+-  get_target_property(LIBGMOCK_INCLUDE_DIR GTest::gtest INTERFACE_INCLUDE_DIRECTORIES)
+-  set(LIBGMOCK_LIBRARIES GTest::gmock_main GTest::gmock GTest::gtest)
+-  set(LIBGMOCK_FOUND ON)
+-  message(STATUS "Found gmock via config, defines=${LIBGMOCK_DEFINES}, include=${LIBGMOCK_INCLUDE_DIR}, libs=${LIBGMOCK_LIBRARIES}")
+-else()
+-
+-  FIND_PATH(LIBGMOCK_INCLUDE_DIR gmock/gmock.h)
+-
+-  FIND_LIBRARY(LIBGMOCK_MAIN_LIBRARY_DEBUG NAMES gmock_maind)
+-  FIND_LIBRARY(LIBGMOCK_MAIN_LIBRARY_RELEASE NAMES gmock_main)
+-  FIND_LIBRARY(LIBGMOCK_LIBRARY_DEBUG NAMES gmockd)
+-  FIND_LIBRARY(LIBGMOCK_LIBRARY_RELEASE NAMES gmock)
+-  FIND_LIBRARY(LIBGTEST_LIBRARY_DEBUG NAMES gtestd)
+-  FIND_LIBRARY(LIBGTEST_LIBRARY_RELEASE NAMES gtest)
+-
+-  find_package(Threads REQUIRED)
+-  INCLUDE(SelectLibraryConfigurations)
+-  SELECT_LIBRARY_CONFIGURATIONS(LIBGMOCK_MAIN)
+-  SELECT_LIBRARY_CONFIGURATIONS(LIBGMOCK)
+-  SELECT_LIBRARY_CONFIGURATIONS(LIBGTEST)
+-
+-  set(LIBGMOCK_LIBRARIES
+-    ${LIBGMOCK_MAIN_LIBRARY}
+-    ${LIBGMOCK_LIBRARY}
+-    ${LIBGTEST_LIBRARY}
+-    Threads::Threads
+-  )
+-
+-  if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+-    # The GTEST_LINKED_AS_SHARED_LIBRARY macro must be set properly on Windows.
+-    #
+-    # There isn't currently an easy way to determine if a library was compiled as
+-    # a shared library on Windows, so just assume we've been built against a
+-    # shared build of gmock for now.
+-    SET(LIBGMOCK_DEFINES "GTEST_LINKED_AS_SHARED_LIBRARY=1" CACHE STRING "")
+-  endif()
+-
+-  # handle the QUIETLY and REQUIRED arguments and set LIBGMOCK_FOUND to TRUE if
+-  # all listed variables are TRUE
+-  INCLUDE(FindPackageHandleStandardArgs)
+-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    GMock
+-    DEFAULT_MSG
+-    LIBGMOCK_MAIN_LIBRARY
+-    LIBGMOCK_LIBRARY
+-    LIBGTEST_LIBRARY
+-    LIBGMOCK_LIBRARIES
+-    LIBGMOCK_INCLUDE_DIR
+-  )
+-
+-  MARK_AS_ADVANCED(
+-    LIBGMOCK_DEFINES
+-    LIBGMOCK_MAIN_LIBRARY
+-    LIBGMOCK_LIBRARY
+-    LIBGTEST_LIBRARY
+-    LIBGMOCK_LIBRARIES
+-    LIBGMOCK_INCLUDE_DIR
+-  )
+-endif()
+diff --git a/build/fbcode_builder/CMake/FindGflags.cmake b/build/fbcode_builder/CMake/FindGflags.cmake
+deleted file mode 100644
+index c00896a..0000000
+--- a/build/fbcode_builder/CMake/FindGflags.cmake
++++ /dev/null
+@@ -1,105 +0,0 @@
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-# Find libgflags.
+-# There's a lot of compatibility cruft going on in here, both
+-# to deal with changes across the FB consumers of this and also
+-# to deal with variances in behavior of cmake itself.
+-#
+-# Since this file is named FindGflags.cmake the cmake convention
+-# is for the module to export both GFLAGS_FOUND and Gflags_FOUND.
+-# The convention expected by consumers is that we export the
+-# following variables, even though these do not match the cmake
+-# conventions:
+-#
+-#  LIBGFLAGS_INCLUDE_DIR - where to find gflags/gflags.h, etc.
+-#  LIBGFLAGS_LIBRARY     - List of libraries when using libgflags.
+-#  LIBGFLAGS_FOUND       - True if libgflags found.
+-#
+-# We need to be able to locate gflags both from an installed
+-# cmake config file and just from the raw headers and libs, so
+-# test for the former and then the latter, and then stick
+-# the results together and export them into the variables
+-# listed above.
+-#
+-# For forwards compatibility, we export the following variables:
+-#
+-#  gflags_INCLUDE_DIR - where to find gflags/gflags.h, etc.
+-#  gflags_TARGET / GFLAGS_TARGET / gflags_LIBRARIES
+-#                     - List of libraries when using libgflags.
+-#  gflags_FOUND       - True if libgflags found.
+-#
+-
+-IF (LIBGFLAGS_INCLUDE_DIR)
+-  # Already in cache, be silent
+-  SET(Gflags_FIND_QUIETLY TRUE)
+-ENDIF ()
+-
+-find_package(gflags CONFIG QUIET)
+-if (gflags_FOUND)
+-  if (NOT Gflags_FIND_QUIETLY)
+-    message(STATUS "Found gflags from package config ${gflags_CONFIG}")
+-  endif()
+-  # Re-export the config-specified libs with our local names
+-  set(LIBGFLAGS_LIBRARY ${gflags_LIBRARIES})
+-  set(LIBGFLAGS_INCLUDE_DIR ${gflags_INCLUDE_DIR})
+-  if(NOT EXISTS "${gflags_INCLUDE_DIR}")
+-    # The gflags-devel RPM on recent RedHat-based systems is somewhat broken.
+-    # RedHat symlinks /lib64 to /usr/lib64, and this breaks some of the
+-    # relative path computation performed in gflags-config.cmake.  The package
+-    # config file ends up being found via /lib64, but the relative path
+-    # computation it does only works if it was found in /usr/lib64.
+-    # If gflags_INCLUDE_DIR does not actually exist, simply default it to
+-    # /usr/include on these systems.
+-    set(LIBGFLAGS_INCLUDE_DIR "/usr/include")
+-  endif()
+-  set(LIBGFLAGS_FOUND ${gflags_FOUND})
+-  # cmake module compat
+-  set(GFLAGS_FOUND ${gflags_FOUND})
+-  set(Gflags_FOUND ${gflags_FOUND})
+-else()
+-  FIND_PATH(LIBGFLAGS_INCLUDE_DIR gflags/gflags.h)
+-
+-  FIND_LIBRARY(LIBGFLAGS_LIBRARY_DEBUG NAMES gflagsd gflags_staticd)
+-  FIND_LIBRARY(LIBGFLAGS_LIBRARY_RELEASE NAMES gflags gflags_static)
+-
+-  INCLUDE(SelectLibraryConfigurations)
+-  SELECT_LIBRARY_CONFIGURATIONS(LIBGFLAGS)
+-
+-  # handle the QUIETLY and REQUIRED arguments and set LIBGFLAGS_FOUND to TRUE if
+-  # all listed variables are TRUE
+-  INCLUDE(FindPackageHandleStandardArgs)
+-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(gflags DEFAULT_MSG LIBGFLAGS_LIBRARY LIBGFLAGS_INCLUDE_DIR)
+-  # cmake module compat
+-  set(Gflags_FOUND ${GFLAGS_FOUND})
+-  # compat with some existing FindGflags consumers
+-  set(LIBGFLAGS_FOUND ${GFLAGS_FOUND})
+-
+-  # Compat with the gflags CONFIG based detection
+-  set(gflags_FOUND ${GFLAGS_FOUND})
+-  set(gflags_INCLUDE_DIR ${LIBGFLAGS_INCLUDE_DIR})
+-  set(gflags_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  set(GFLAGS_TARGET ${LIBGFLAGS_LIBRARY})
+-  set(gflags_TARGET ${LIBGFLAGS_LIBRARY})
+-
+-  MARK_AS_ADVANCED(LIBGFLAGS_LIBRARY LIBGFLAGS_INCLUDE_DIR)
+-endif()
+-
+-# Compat with the gflags CONFIG based detection
+-if (LIBGFLAGS_FOUND AND NOT TARGET gflags)
+-  add_library(gflags UNKNOWN IMPORTED)
+-  if(TARGET gflags-shared)
+-    # If the installed gflags CMake package config defines a gflags-shared
+-    # target but not gflags, just make the gflags target that we define
+-    # depend on the gflags-shared target.
+-    target_link_libraries(gflags INTERFACE gflags-shared)
+-    # Export LIBGFLAGS_LIBRARY as the gflags-shared target in this case.
+-    set(LIBGFLAGS_LIBRARY gflags-shared)
+-  else()
+-    set_target_properties(
+-      gflags
+-      PROPERTIES
+-        IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-        IMPORTED_LOCATION "${LIBGFLAGS_LIBRARY}"
+-        INTERFACE_INCLUDE_DIRECTORIES "${LIBGFLAGS_INCLUDE_DIR}"
+-    )
+-  endif()
+-endif()
+diff --git a/build/fbcode_builder/CMake/FindGlog.cmake b/build/fbcode_builder/CMake/FindGlog.cmake
+deleted file mode 100644
+index 752647c..0000000
+--- a/build/fbcode_builder/CMake/FindGlog.cmake
++++ /dev/null
+@@ -1,37 +0,0 @@
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-# - Try to find Glog
+-# Once done, this will define
+-#
+-# GLOG_FOUND - system has Glog
+-# GLOG_INCLUDE_DIRS - the Glog include directories
+-# GLOG_LIBRARIES - link these to use Glog
+-
+-include(FindPackageHandleStandardArgs)
+-include(SelectLibraryConfigurations)
+-
+-find_library(GLOG_LIBRARY_RELEASE glog
+-  PATHS ${GLOG_LIBRARYDIR})
+-find_library(GLOG_LIBRARY_DEBUG glogd
+-  PATHS ${GLOG_LIBRARYDIR})
+-
+-find_path(GLOG_INCLUDE_DIR glog/logging.h
+-  PATHS ${GLOG_INCLUDEDIR})
+-
+-select_library_configurations(GLOG)
+-
+-find_package_handle_standard_args(glog DEFAULT_MSG
+-  GLOG_LIBRARY
+-  GLOG_INCLUDE_DIR)
+-
+-mark_as_advanced(
+-  GLOG_LIBRARY
+-  GLOG_INCLUDE_DIR)
+-
+-set(GLOG_LIBRARIES ${GLOG_LIBRARY})
+-set(GLOG_INCLUDE_DIRS ${GLOG_INCLUDE_DIR})
+-
+-if (NOT TARGET glog::glog)
+-  add_library(glog::glog UNKNOWN IMPORTED)
+-  set_target_properties(glog::glog PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${GLOG_INCLUDE_DIRS}")
+-  set_target_properties(glog::glog PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES "C" IMPORTED_LOCATION "${GLOG_LIBRARIES}")
+-endif()
+diff --git a/build/fbcode_builder/CMake/FindLibEvent.cmake b/build/fbcode_builder/CMake/FindLibEvent.cmake
+deleted file mode 100644
+index dd11ebd..0000000
+--- a/build/fbcode_builder/CMake/FindLibEvent.cmake
++++ /dev/null
+@@ -1,77 +0,0 @@
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-# - Find LibEvent (a cross event library)
+-# This module defines
+-# LIBEVENT_INCLUDE_DIR, where to find LibEvent headers
+-# LIBEVENT_LIB, LibEvent libraries
+-# LibEvent_FOUND, If false, do not try to use libevent
+-
+-set(LibEvent_EXTRA_PREFIXES /usr/local /opt/local "$ENV{HOME}")
+-foreach(prefix ${LibEvent_EXTRA_PREFIXES})
+-  list(APPEND LibEvent_INCLUDE_PATHS "${prefix}/include")
+-  list(APPEND LibEvent_LIB_PATHS "${prefix}/lib")
+-endforeach()
+-
+-find_package(Libevent CONFIG QUIET)
+-if (TARGET event)
+-  # Re-export the config under our own names
+-
+-  # Somewhat gross, but some vcpkg installed libevents have a relative
+-  # `include` path exported into LIBEVENT_INCLUDE_DIRS, which triggers
+-  # a cmake error because it resolves to the `include` dir within the
+-  # folly repo, which is not something cmake allows to be in the
+-  # INTERFACE_INCLUDE_DIRECTORIES.  Thankfully on such a system the
+-  # actual include directory is already part of the global include
+-  # directories, so we can just skip it.
+-  if (NOT "${LIBEVENT_INCLUDE_DIRS}" STREQUAL "include")
+-    set(LIBEVENT_INCLUDE_DIR ${LIBEVENT_INCLUDE_DIRS})
+-  else()
+-    set(LIBEVENT_INCLUDE_DIR)
+-  endif()
+-
+-  # Unfortunately, with a bare target name `event`, downstream consumers
+-  # of the package that depends on `Libevent` located via CONFIG end
+-  # up exporting just a bare `event` in their libraries.  This is problematic
+-  # because this in interpreted as just `-levent` with no library path.
+-  # When libevent is not installed in the default installation prefix
+-  # this results in linker errors.
+-  # To resolve this, we ask cmake to lookup the full path to the library
+-  # and use that instead.
+-  cmake_policy(PUSH)
+-  if(POLICY CMP0026)
+-    # Allow reading the LOCATION property
+-    cmake_policy(SET CMP0026 OLD)
+-  endif()
+-  get_target_property(LIBEVENT_LIB event LOCATION)
+-  cmake_policy(POP)
+-
+-  set(LibEvent_FOUND ${Libevent_FOUND})
+-  if (NOT LibEvent_FIND_QUIETLY)
+-    message(STATUS "Found libevent from package config include=${LIBEVENT_INCLUDE_DIRS} lib=${LIBEVENT_LIB}")
+-  endif()
+-else()
+-  find_path(LIBEVENT_INCLUDE_DIR event.h PATHS ${LibEvent_INCLUDE_PATHS})
+-  find_library(LIBEVENT_LIB NAMES event PATHS ${LibEvent_LIB_PATHS})
+-
+-  if (LIBEVENT_LIB AND LIBEVENT_INCLUDE_DIR)
+-    set(LibEvent_FOUND TRUE)
+-    set(LIBEVENT_LIB ${LIBEVENT_LIB})
+-  else ()
+-    set(LibEvent_FOUND FALSE)
+-  endif ()
+-
+-  if (LibEvent_FOUND)
+-    if (NOT LibEvent_FIND_QUIETLY)
+-      message(STATUS "Found libevent: ${LIBEVENT_LIB}")
+-    endif ()
+-  else ()
+-    if (LibEvent_FIND_REQUIRED)
+-      message(FATAL_ERROR "Could NOT find libevent.")
+-    endif ()
+-    message(STATUS "libevent NOT found.")
+-  endif ()
+-
+-  mark_as_advanced(
+-    LIBEVENT_LIB
+-    LIBEVENT_INCLUDE_DIR
+-  )
+-endif()
+diff --git a/build/fbcode_builder/CMake/FindSodium.cmake b/build/fbcode_builder/CMake/FindSodium.cmake
+deleted file mode 100644
+index 3c3f124..0000000
+--- a/build/fbcode_builder/CMake/FindSodium.cmake
++++ /dev/null
+@@ -1,297 +0,0 @@
+-# Written in 2016 by Henrik Steffen Gaßmann <henrik@gassmann.onl>
+-#
+-# To the extent possible under law, the author(s) have dedicated all
+-# copyright and related and neighboring rights to this software to the
+-# public domain worldwide. This software is distributed without any warranty.
+-#
+-# You should have received a copy of the CC0 Public Domain Dedication
+-# along with this software. If not, see
+-#
+-#     http://creativecommons.org/publicdomain/zero/1.0/
+-#
+-########################################################################
+-# Tries to find the local libsodium installation.
+-#
+-# On Windows the sodium_DIR environment variable is used as a default
+-# hint which can be overridden by setting the corresponding cmake variable.
+-#
+-# Once done the following variables will be defined:
+-#
+-#   sodium_FOUND
+-#   sodium_INCLUDE_DIR
+-#   sodium_LIBRARY_DEBUG
+-#   sodium_LIBRARY_RELEASE
+-#
+-#
+-# Furthermore an imported "sodium" target is created.
+-#
+-
+-if (CMAKE_C_COMPILER_ID STREQUAL "GNU"
+-    OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+-    set(_GCC_COMPATIBLE 1)
+-endif()
+-
+-# static library option
+-if (NOT DEFINED sodium_USE_STATIC_LIBS)
+-    option(sodium_USE_STATIC_LIBS "enable to statically link against sodium" OFF)
+-endif()
+-if(NOT (sodium_USE_STATIC_LIBS EQUAL sodium_USE_STATIC_LIBS_LAST))
+-    unset(sodium_LIBRARY CACHE)
+-    unset(sodium_LIBRARY_DEBUG CACHE)
+-    unset(sodium_LIBRARY_RELEASE CACHE)
+-    unset(sodium_DLL_DEBUG CACHE)
+-    unset(sodium_DLL_RELEASE CACHE)
+-    set(sodium_USE_STATIC_LIBS_LAST ${sodium_USE_STATIC_LIBS} CACHE INTERNAL "internal change tracking variable")
+-endif()
+-
+-
+-########################################################################
+-# UNIX
+-if (UNIX)
+-    # import pkg-config
+-    find_package(PkgConfig QUIET)
+-    if (PKG_CONFIG_FOUND)
+-        pkg_check_modules(sodium_PKG QUIET libsodium)
+-    endif()
+-
+-    if(sodium_USE_STATIC_LIBS)
+-        foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
+-            if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
+-                list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
+-            endif()
+-        endforeach()
+-        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
+-
+-        # if pkgconfig for libsodium doesn't provide
+-        # static lib info, then override PKG_STATIC here..
+-        if (NOT sodium_PKG_STATIC_FOUND)
+-            set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
+-        endif()
+-
+-        set(XPREFIX sodium_PKG_STATIC)
+-    else()
+-        if (NOT sodium_PKG_FOUND)
+-            set(sodium_PKG_LIBRARIES sodium)
+-        endif()
+-
+-        set(XPREFIX sodium_PKG)
+-    endif()
+-
+-    find_path(sodium_INCLUDE_DIR sodium.h
+-        HINTS ${${XPREFIX}_INCLUDE_DIRS}
+-    )
+-    find_library(sodium_LIBRARY_DEBUG NAMES ${${XPREFIX}_LIBRARIES}
+-        HINTS ${${XPREFIX}_LIBRARY_DIRS}
+-    )
+-    find_library(sodium_LIBRARY_RELEASE NAMES ${${XPREFIX}_LIBRARIES}
+-        HINTS ${${XPREFIX}_LIBRARY_DIRS}
+-    )
+-
+-
+-########################################################################
+-# Windows
+-elseif (WIN32)
+-    set(sodium_DIR "$ENV{sodium_DIR}" CACHE FILEPATH "sodium install directory")
+-    mark_as_advanced(sodium_DIR)
+-
+-    find_path(sodium_INCLUDE_DIR sodium.h
+-        HINTS ${sodium_DIR}
+-        PATH_SUFFIXES include
+-    )
+-
+-    if (MSVC)
+-        # detect target architecture
+-        file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/arch.cpp" [=[
+-            #if defined _M_IX86
+-            #error ARCH_VALUE x86_32
+-            #elif defined _M_X64
+-            #error ARCH_VALUE x86_64
+-            #endif
+-            #error ARCH_VALUE unknown
+-        ]=])
+-        try_compile(_UNUSED_VAR "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/arch.cpp"
+-            OUTPUT_VARIABLE _COMPILATION_LOG
+-        )
+-        string(REGEX REPLACE ".*ARCH_VALUE ([a-zA-Z0-9_]+).*" "\\1" _TARGET_ARCH "${_COMPILATION_LOG}")
+-
+-        # construct library path
+-        if (_TARGET_ARCH STREQUAL "x86_32")
+-            string(APPEND _PLATFORM_PATH "Win32")
+-        elseif(_TARGET_ARCH STREQUAL "x86_64")
+-            string(APPEND _PLATFORM_PATH "x64")
+-        else()
+-            message(FATAL_ERROR "the ${_TARGET_ARCH} architecture is not supported by Findsodium.cmake.")
+-        endif()
+-        string(APPEND _PLATFORM_PATH "/$$CONFIG$$")
+-
+-        if (MSVC_VERSION LESS 1900)
+-            math(EXPR _VS_VERSION "${MSVC_VERSION} / 10 - 60")
+-        else()
+-            math(EXPR _VS_VERSION "${MSVC_VERSION} / 10 - 50")
+-        endif()
+-        string(APPEND _PLATFORM_PATH "/v${_VS_VERSION}")
+-
+-        if (sodium_USE_STATIC_LIBS)
+-            string(APPEND _PLATFORM_PATH "/static")
+-        else()
+-            string(APPEND _PLATFORM_PATH "/dynamic")
+-        endif()
+-
+-        string(REPLACE "$$CONFIG$$" "Debug" _DEBUG_PATH_SUFFIX "${_PLATFORM_PATH}")
+-        string(REPLACE "$$CONFIG$$" "Release" _RELEASE_PATH_SUFFIX "${_PLATFORM_PATH}")
+-
+-        find_library(sodium_LIBRARY_DEBUG libsodium.lib
+-            HINTS ${sodium_DIR}
+-            PATH_SUFFIXES ${_DEBUG_PATH_SUFFIX}
+-        )
+-        find_library(sodium_LIBRARY_RELEASE libsodium.lib
+-            HINTS ${sodium_DIR}
+-            PATH_SUFFIXES ${_RELEASE_PATH_SUFFIX}
+-        )
+-        if (NOT sodium_USE_STATIC_LIBS)
+-            set(CMAKE_FIND_LIBRARY_SUFFIXES_BCK ${CMAKE_FIND_LIBRARY_SUFFIXES})
+-            set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
+-            find_library(sodium_DLL_DEBUG libsodium
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES ${_DEBUG_PATH_SUFFIX}
+-            )
+-            find_library(sodium_DLL_RELEASE libsodium
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES ${_RELEASE_PATH_SUFFIX}
+-            )
+-            set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_BCK})
+-        endif()
+-
+-    elseif(_GCC_COMPATIBLE)
+-        if (sodium_USE_STATIC_LIBS)
+-            find_library(sodium_LIBRARY_DEBUG libsodium.a
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES lib
+-            )
+-            find_library(sodium_LIBRARY_RELEASE libsodium.a
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES lib
+-            )
+-        else()
+-            find_library(sodium_LIBRARY_DEBUG libsodium.dll.a
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES lib
+-            )
+-            find_library(sodium_LIBRARY_RELEASE libsodium.dll.a
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES lib
+-            )
+-
+-            file(GLOB _DLL
+-                LIST_DIRECTORIES false
+-                RELATIVE "${sodium_DIR}/bin"
+-                "${sodium_DIR}/bin/libsodium*.dll"
+-            )
+-            find_library(sodium_DLL_DEBUG ${_DLL} libsodium
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES bin
+-            )
+-            find_library(sodium_DLL_RELEASE ${_DLL} libsodium
+-                HINTS ${sodium_DIR}
+-                PATH_SUFFIXES bin
+-            )
+-        endif()
+-    else()
+-        message(FATAL_ERROR "this platform is not supported by FindSodium.cmake")
+-    endif()
+-
+-
+-########################################################################
+-# unsupported
+-else()
+-    message(FATAL_ERROR "this platform is not supported by FindSodium.cmake")
+-endif()
+-
+-
+-########################################################################
+-# common stuff
+-
+-# extract sodium version
+-if (sodium_INCLUDE_DIR)
+-    set(_VERSION_HEADER "${_INCLUDE_DIR}/sodium/version.h")
+-    if (EXISTS _VERSION_HEADER)
+-        file(READ "${_VERSION_HEADER}" _VERSION_HEADER_CONTENT)
+-        string(REGEX REPLACE ".*#[ \t]*define[ \t]*SODIUM_VERSION_STRING[ \t]*\"([^\n]*)\".*" "\\1"
+-            sodium_VERSION "${_VERSION_HEADER_CONTENT}")
+-        set(sodium_VERSION "${sodium_VERSION}" PARENT_SCOPE)
+-    endif()
+-endif()
+-
+-# communicate results
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(
+-    Sodium # The name must be either uppercase or match the filename case.
+-    REQUIRED_VARS
+-        sodium_LIBRARY_RELEASE
+-        sodium_LIBRARY_DEBUG
+-        sodium_INCLUDE_DIR
+-    VERSION_VAR
+-        sodium_VERSION
+-)
+-
+-if(Sodium_FOUND)
+-    set(sodium_LIBRARIES
+-        optimized ${sodium_LIBRARY_RELEASE} debug ${sodium_LIBRARY_DEBUG})
+-endif()
+-
+-# mark file paths as advanced
+-mark_as_advanced(sodium_INCLUDE_DIR)
+-mark_as_advanced(sodium_LIBRARY_DEBUG)
+-mark_as_advanced(sodium_LIBRARY_RELEASE)
+-if (WIN32)
+-    mark_as_advanced(sodium_DLL_DEBUG)
+-    mark_as_advanced(sodium_DLL_RELEASE)
+-endif()
+-
+-# create imported target
+-if(sodium_USE_STATIC_LIBS)
+-    set(_LIB_TYPE STATIC)
+-else()
+-    set(_LIB_TYPE SHARED)
+-endif()
+-
+-if(NOT TARGET sodium)
+-    add_library(sodium ${_LIB_TYPE} IMPORTED)
+-endif()
+-
+-set_target_properties(sodium PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES "${sodium_INCLUDE_DIR}"
+-    IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-)
+-
+-if (sodium_USE_STATIC_LIBS)
+-    set_target_properties(sodium PROPERTIES
+-        INTERFACE_COMPILE_DEFINITIONS "SODIUM_STATIC"
+-        IMPORTED_LOCATION "${sodium_LIBRARY_RELEASE}"
+-        IMPORTED_LOCATION_DEBUG "${sodium_LIBRARY_DEBUG}"
+-    )
+-else()
+-    if (UNIX)
+-        set_target_properties(sodium PROPERTIES
+-            IMPORTED_LOCATION "${sodium_LIBRARY_RELEASE}"
+-            IMPORTED_LOCATION_DEBUG "${sodium_LIBRARY_DEBUG}"
+-        )
+-    elseif (WIN32)
+-        set_target_properties(sodium PROPERTIES
+-            IMPORTED_IMPLIB "${sodium_LIBRARY_RELEASE}"
+-            IMPORTED_IMPLIB_DEBUG "${sodium_LIBRARY_DEBUG}"
+-        )
+-        if (NOT (sodium_DLL_DEBUG MATCHES ".*-NOTFOUND"))
+-            set_target_properties(sodium PROPERTIES
+-                IMPORTED_LOCATION_DEBUG "${sodium_DLL_DEBUG}"
+-            )
+-        endif()
+-        if (NOT (sodium_DLL_RELEASE MATCHES ".*-NOTFOUND"))
+-            set_target_properties(sodium PROPERTIES
+-                IMPORTED_LOCATION_RELWITHDEBINFO "${sodium_DLL_RELEASE}"
+-                IMPORTED_LOCATION_MINSIZEREL "${sodium_DLL_RELEASE}"
+-                IMPORTED_LOCATION_RELEASE "${sodium_DLL_RELEASE}"
+-            )
+-        endif()
+-    endif()
+-endif()
+diff --git a/build/fbcode_builder/CMake/FindZstd.cmake b/build/fbcode_builder/CMake/FindZstd.cmake
+deleted file mode 100644
+index 89300dd..0000000
+--- a/build/fbcode_builder/CMake/FindZstd.cmake
++++ /dev/null
+@@ -1,41 +0,0 @@
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-#
+-# - Try to find Facebook zstd library
+-# This will define
+-# ZSTD_FOUND
+-# ZSTD_INCLUDE_DIR
+-# ZSTD_LIBRARY
+-#
+-
+-find_path(ZSTD_INCLUDE_DIR NAMES zstd.h)
+-
+-find_library(ZSTD_LIBRARY_DEBUG NAMES zstdd zstd_staticd)
+-find_library(ZSTD_LIBRARY_RELEASE NAMES zstd zstd_static)
+-
+-include(SelectLibraryConfigurations)
+-SELECT_LIBRARY_CONFIGURATIONS(ZSTD)
+-
+-include(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+-    ZSTD DEFAULT_MSG
+-    ZSTD_LIBRARY ZSTD_INCLUDE_DIR
+-)
+-
+-if (ZSTD_FOUND)
+-    message(STATUS "Found Zstd: ${ZSTD_LIBRARY}")
+-endif()
+-
+-mark_as_advanced(ZSTD_INCLUDE_DIR ZSTD_LIBRARY)

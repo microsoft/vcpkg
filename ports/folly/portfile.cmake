@@ -17,6 +17,7 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-windows-minmax.patch
 	fix-deps.patch
+	fix-cmake-modules.patch
 )
 
 
