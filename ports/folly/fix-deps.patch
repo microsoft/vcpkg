@@ -1,0 +1,324 @@
+diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
+index 1689f9a..25f10a2 100644
+--- a/CMake/folly-config.cmake.in
++++ b/CMake/folly-config.cmake.in
+@@ -31,7 +31,7 @@ set(FOLLY_LIBRARIES Folly::folly)
+ find_dependency(fmt)
+ 
+ set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
+-find_dependency(Boost 1.51.0 MODULE
++find_dependency(Boost  CONFIG REQUIRED
+   COMPONENTS
+     context
+     filesystem
+@@ -39,7 +39,6 @@ find_dependency(Boost 1.51.0 MODULE
+     regex
+     system
+     thread
+-  REQUIRED
+ )
+ 
+ if (NOT folly_FIND_QUIETLY)
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index 4b78e9f..8596e7e 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -35,7 +35,7 @@ else()
+ endif()
+ set(Boost_USE_STATIC_LIBS "${FOLLY_BOOST_LINK_STATIC}")
+ 
+-find_package(Boost 1.51.0 MODULE
++find_package(Boost REQUIRED
+   COMPONENTS
+     context
+     filesystem
+@@ -43,107 +43,102 @@ find_package(Boost 1.51.0 MODULE
+     regex
+     system
+     thread
+-  REQUIRED
+ )
+-list(APPEND FOLLY_LINK_LIBRARIES ${Boost_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
++list(APPEND FOLLY_LINK_LIBRARIES Boost::boost Boost::context Boost::filesystem Boost::program_options Boost::regex Boost::system Boost::thread)
+ 
+-find_package(DoubleConversion MODULE REQUIRED)
+-list(APPEND FOLLY_LINK_LIBRARIES ${DOUBLE_CONVERSION_LIBRARY})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${DOUBLE_CONVERSION_INCLUDE_DIR})
++find_package(double-conversion CONFIG REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES double-conversion::double-conversion)
+ 
+-find_package(Glog CONFIG REQUIRED)
+-set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
++find_package(glog CONFIG REQUIRED)
++set(FOLLY_HAVE_LIBGLOG ${glog_FOUND})
+ list(APPEND FOLLY_LINK_LIBRARIES glog::glog)
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
+-
+-find_package(Gflags MODULE)
+-set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
+-if(LIBGFLAGS_FOUND)
+-  list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
+-  set(FOLLY_LIBGFLAGS_LIBRARY ${LIBGFLAGS_LIBRARY})
+-  set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
++
++find_package(gflags CONFIG)
++set(FOLLY_HAVE_LIBGFLAGS gflags_FOUND)
++if(gflags_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES gflags::gflags)
++  set(FOLLY_LIBGFLAGS_LIBRARY gflags::gflags)
+ endif()
+ 
+-find_package(LibEvent MODULE REQUIRED)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBEVENT_LIB})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
++find_package(Libevent CONFIG REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES libevent::core libevent::extra libevent::pthreads)
+ 
+-find_package(ZLIB MODULE)
++find_package(ZLIB CONFIG)
+ set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
+ if (ZLIB_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${ZLIB_LIBRARIES})
+-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${ZLIB_LIBRARIES})
++	list(APPEND FOLLY_LINK_LIBRARIES ZLIB::ZLIB)
++	list(APPEND CMAKE_REQUIRED_LIBRARIES ZLIB::ZLIB)
+ endif()
+ 
+-find_package(OpenSSL 1.1.1 MODULE REQUIRED)
+-list(APPEND FOLLY_LINK_LIBRARIES ${OPENSSL_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${OPENSSL_INCLUDE_DIR})
+-list(APPEND CMAKE_REQUIRED_LIBRARIES ${OPENSSL_LIBRARIES})
+-list(APPEND CMAKE_REQUIRED_INCLUDES ${OPENSSL_INCLUDE_DIR})
++find_package(OpenSSL  REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
++list(APPEND CMAKE_REQUIRED_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
+ check_function_exists(ASN1_TIME_diff FOLLY_HAVE_OPENSSL_ASN1_TIME_DIFF)
+-list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ${OPENSSL_LIBRARIES})
+-list(REMOVE_ITEM CMAKE_REQUIRED_INCLUDES ${OPENSSL_INCLUDE_DIR})
++list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
+ if (ZLIB_FOUND)
+-    list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ${ZLIB_LIBRARIES})
++	list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ZLIB::ZLIB)
+ endif()
+ 
+-find_package(BZip2 MODULE)
+-set(FOLLY_HAVE_LIBBZ2 ${BZIP2_FOUND})
+-if (BZIP2_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${BZIP2_INCLUDE_DIRS})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${BZIP2_LIBRARIES})
++find_package(BZip2 )
++set(FOLLY_HAVE_LIBBZ2 ${BZip2_FOUND})
++if (BZip2_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES BZip2::BZip2)
+ endif()
+ 
+-find_package(LibLZMA MODULE)
+-set(FOLLY_HAVE_LIBLZMA ${LIBLZMA_FOUND})
+-if (LIBLZMA_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBLZMA_INCLUDE_DIRS})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
++find_package(liblzma CONFIG)
++set(FOLLY_HAVE_LIBLZMA ${liblzma_FOUND})
++if (liblzma_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES liblzma::liblzma)
+ endif()
+ 
+-find_package(LZ4 MODULE)
+-set(FOLLY_HAVE_LIBLZ4 ${LZ4_FOUND})
+-if (LZ4_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LZ4_INCLUDE_DIR})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
++find_package(lz4 CONFIG)
++set(FOLLY_HAVE_LIBLZ4 ${lz4_FOUND})
++if (lz4_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES lz4::lz4)
+ endif()
+ 
+-find_package(Zstd MODULE)
+-set(FOLLY_HAVE_LIBZSTD ${ZSTD_FOUND})
+-if(ZSTD_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZSTD_INCLUDE_DIR})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${ZSTD_LIBRARY})
++find_package(Zstd CONFIG)
++set(FOLLY_HAVE_LIBZSTD ${Zstd_FOUND})
++if(Zstd_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
+ endif()
+ 
+-find_package(Snappy MODULE)
+-set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
+-if (SNAPPY_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${SNAPPY_LIBRARY})
++find_package(Snappy CONFIG)
++set(FOLLY_HAVE_LIBSNAPPY ${Snappy_FOUND})
++if (Snappy_FOUND)
++	list(APPEND FOLLY_LINK_LIBRARIES Snappy::snappy)
+ endif()
+ 
+ find_package(LibDwarf)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBDWARF_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBDWARF_INCLUDE_DIRS})
++if(LibDwarf_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBDWARF_LIBRARIES})
++  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBDWARF_INCLUDE_DIRS})
++endif()
+ 
+ find_package(Libiberty)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
++if(Libiberty_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
++  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
++endif()
++
+ 
+ find_package(LibAIO)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
++if(LibAIO_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
++  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
++endif()
+ 
+-find_package(LibUring)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
++find_package(PkgConfig)
++pkg_check_modules(liburing IMPORTED_TARGET GLOBAL liburing>=2.0)
++if(liburing_FOUND)
++	list(APPEND FOLLY_LINK_LIBRARIES PkgConfig::liburing)
++endif()
++
++find_package(unofficial-sodium CONFIG)
++if(unofficial-sodium_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES unofficial-sodium::sodium unofficial-sodium::sodium_config_public)
++endif()
+ 
+-find_package(Libsodium)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
+ 
+ list(APPEND FOLLY_LINK_LIBRARIES ${CMAKE_DL_LIBS})
+ list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
+@@ -154,9 +149,9 @@ if (PYTHON_EXTENSIONS)
+ endif ()
+ 
+ find_package(LibUnwind)
+-list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
+-if (LIBUNWIND_FOUND)
++if (LibUnwind_FOUND)
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
++  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
+   set(FOLLY_HAVE_LIBUNWIND ON)
+ endif()
+ if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+@@ -173,7 +168,8 @@ CHECK_INCLUDE_FILE_CXX(elf.h FOLLY_HAVE_ELF)
+ find_package(Backtrace)
+ 
+ set(FOLLY_HAVE_BACKTRACE ${Backtrace_FOUND})
+-set(FOLLY_HAVE_DWARF ${LIBDWARF_FOUND})
++set(FOLLY_HAVE_DWARF ${LibDwarf_FOUND})
++
+ if (NOT WIN32 AND NOT APPLE)
+   set(FOLLY_USE_SYMBOLIZER ON)
+ endif()
+@@ -299,11 +295,7 @@ endif()
+ 
+ add_library(folly_deps INTERFACE)
+ 
+-find_package(fmt CONFIG)
+-if (NOT DEFINED fmt_CONFIG)
+-    # Fallback on a normal search on the current system
+-    find_package(Fmt MODULE REQUIRED)
+-endif()
++find_package(fmt CONFIG REQUIRED)
+ target_link_libraries(folly_deps INTERFACE fmt::fmt)
+ 
+ list(REMOVE_DUPLICATES FOLLY_INCLUDE_DIRECTORIES)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ac2a741..73ab230 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -383,20 +383,6 @@ target_compile_features(folly INTERFACE cxx_generic_lambdas)
+ 
+ target_link_libraries(folly PUBLIC folly_deps)
+ 
+-# Test utilities exported for use by downstream projects
+-add_library(folly_test_util
+-  ${FOLLY_DIR}/test/DeterministicSchedule.cpp
+-  ${FOLLY_DIR}/test/JsonTestUtil.cpp
+-)
+-set_property(TARGET folly_test_util PROPERTY VERSION ${PACKAGE_VERSION})
+-target_link_libraries(folly_test_util
+-  PUBLIC
+-    ${BOOST_LIBRARIES}
+-    folly
+-    ${LIBGMOCK_LIBRARIES}
+-)
+-apply_folly_compile_options_to_target(folly_test_util)
+-list(APPEND FOLLY_INSTALL_TARGETS folly_test_util)
+ 
+ install(TARGETS ${FOLLY_INSTALL_TARGETS}
+   EXPORT folly
+@@ -470,10 +456,9 @@ option(BUILD_HANGING_TESTS "If enabled, compile tests that are known to hang." O
+ option(BUILD_SLOW_TESTS "If enabled, compile tests that take a while to run in debug mode." OFF)
+ if (BUILD_TESTS)
+   option(USE_CMAKE_GOOGLE_TEST_INTEGRATION "If enabled, use the google test integration included in CMake." ON)
+-  find_package(GMock MODULE REQUIRED)
+-  find_package(GTest MODULE REQUIRED)
++  find_package(GTest CONFIG REQUIRED)
+   if (USE_CMAKE_GOOGLE_TEST_INTEGRATION)
+-    include(GoogleTest OPTIONAL RESULT_VARIABLE HAVE_CMAKE_GTEST)
++	  include(GoogleTest OPTIONAL RESULT_VARIABLE HAVE_CMAKE_GTEST)
+     enable_testing()
+   else()
+     set(HAVE_CMAKE_GTEST OFF)
+@@ -530,23 +515,34 @@ if (BUILD_TESTS)
+     ${FOLLY_DIR}/logging/test/TestLogHandler.cpp
+     ${FOLLY_DIR}/logging/test/TestLogHandler.h
+   )
++  if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
++    # The GTEST_LINKED_AS_SHARED_LIBRARY macro must be set properly on Windows.
++    #
++    # There isn't currently an easy way to determine if a library was compiled as
++    # a shared library on Windows, so just assume we've been built against a
++    # shared build of gmock for now.
++    SET(LIBGMOCK_DEFINES "GTEST_LINKED_AS_SHARED_LIBRARY=1" CACHE STRING "")
++  endif()
++
+   target_compile_definitions(folly_test_support
+     PUBLIC
+       ${LIBGMOCK_DEFINES}
+   )
+-  target_include_directories(folly_test_support
+-    SYSTEM
+-    PUBLIC
+-      ${LIBGMOCK_INCLUDE_DIR}
+-      ${GTEST_INCLUDE_DIRS}
+-  )
+   target_link_libraries(folly_test_support
+     PUBLIC
+-      ${BOOST_LIBRARIES}
++      Boost::boost
++      Boost::context
++      Boost::filesystem
++      Boost::program_options
++      Boost::regex
++      Boost::system
++      Boost::thread
+       follybenchmark
+       folly
+-      ${LIBGMOCK_LIBRARIES}
+-      ${GLOG_LIBRARY}
++      #Gtest::gmock_main
++      #Gtest::gmock
++      Gtest::gtest
++      glog::glog
+   )
+   apply_folly_compile_options_to_target(folly_test_support)
+ 

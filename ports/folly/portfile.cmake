@@ -16,14 +16,9 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
+	fix-deps.patch
 )
 
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
-    DESTINATION "${SOURCE_PATH}/CMake/"
-)
-file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
