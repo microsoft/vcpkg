@@ -2410,7 +2410,7 @@
     },
     "fuzzylite": {
       "baseline": "6.0",
-      "port-version": 5
+      "port-version": 6
     },
     "fxdiv": {
       "baseline": "2021-02-21",
