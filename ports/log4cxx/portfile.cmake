@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
+    REF "${VERSION}"
     PATCHES
         expat.patch
         threadutility.patch
