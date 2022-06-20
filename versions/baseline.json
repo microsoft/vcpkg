@@ -7109,8 +7109,8 @@
       "port-version": 2
     },
     "tinyutf8": {
-      "baseline": "4.0.2",
-      "port-version": 1
+      "baseline": "4.4.3",
+      "port-version": 0
     },
     "tinyxml": {
       "baseline": "2.6.2",
