@@ -1949,7 +1949,7 @@
       "port-version": 1
     },
     "doctest": {
-      "baseline": "2.4.8",
+      "baseline": "2.4.9",
       "port-version": 0
     },
     "double-conversion": {
