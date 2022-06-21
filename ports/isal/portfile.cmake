@@ -63,6 +63,8 @@ else()
     )
 
     vcpkg_install_make()
+    
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/isalConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
