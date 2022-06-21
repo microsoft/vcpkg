@@ -27,6 +27,10 @@ Halting portfile execution.
 ]])
     endif()
 
+    if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+    endif()
+
     set(all_logs "")
     foreach(loop_count RANGE 1 ${arg_COUNT})
         set(out_log "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out-${loop_count}.log")

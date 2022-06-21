@@ -1,0 +1,14 @@
+diff --color -Naur v4.4.0-1eba4caf45.clean/cmake/FindCMath.cmake v4.4.0-1eba4caf45.patched/cmake/FindCMath.cmake
+--- v4.4.0-1eba4caf45.clean/cmake/FindCMath.cmake	2022-06-09 13:28:09.894347027 +0200
++++ v4.4.0-1eba4caf45.patched/cmake/FindCMath.cmake	2022-06-09 13:29:36.220230025 +0200
+@@ -31,8 +31,9 @@
+ include(CheckLibraryExists)
+ 
+ check_symbol_exists(pow "math.h" CMath_HAVE_LIBC_POW)
++find_library(CMath_LIBRARY NAMES m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++
+ if(NOT CMath_HAVE_LIBC_POW)
+-    find_library(CMath_LIBRARY NAMES m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
+ 
+     set(CMAKE_REQUIRED_LIBRARIES_SAVE ${CMAKE_REQUIRED_LIBRARIES})
+     set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${CMath_LIBRARY})
