@@ -7322,7 +7322,7 @@
     },
     "utf8proc": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "utfcpp": {
       "baseline": "3.2.1",
