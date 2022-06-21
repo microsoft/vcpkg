@@ -4,7 +4,7 @@
   "port-version": 8,
   "description": "A patent-free, Open Source/Free Software DSP library.",
   "homepage": "https://speex.org/",
-  "license": null,
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
