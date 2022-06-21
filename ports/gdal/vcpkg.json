@@ -78,7 +78,7 @@
             "hdf5",
             "netcdf"
           ],
-          "platform": "!uwp & !(windows & arm64)"
+          "platform": "!uwp & !(windows & arm64) & !android"
         },
         "giflib",
         "libiconv",
