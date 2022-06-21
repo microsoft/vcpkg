@@ -7,12 +7,12 @@
   "license": "MIT",
   "supports": "windows",
   "dependencies": [
-    "directx-headers",
-    "directxmath",
     {
       "name": "directx-dxc",
       "host": true
     },
+    "directx-headers",
+    "directxmath",
     {
       "name": "vcpkg-cmake",
       "host": true
