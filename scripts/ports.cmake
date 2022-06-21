@@ -63,6 +63,16 @@ include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_setup_pkgconfig_path.cmake")
 
+# Set up VCPKG_ROOT and VCPKG_COMMAND if needed
+if (NOT DEFINED VCPKG_ROOT)
+  get_filename_component(VCPKG_ROOT ${CMAKE_CURRENT_LIST_DIR}/.. ABSOLUTE)
+endif()
+if (NOT DEFINED VCPKG_COMMAND)
+  set(VCPKG_COMMAND ${VCPKG_ROOT}/vcpkg)
+endif()
+message(STATUS "VCPKG_ROOT = ${VCPKG_ROOT}")
+message(STATUS "VCPKG_COMMAND = ${VCPKG_COMMAND}")
+  
 function(debug_message)
     if(PORT_DEBUG)
         z_vcpkg_function_arguments(ARGS)
