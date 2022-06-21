@@ -3306,11 +3306,11 @@
     },
     "kinectsdk1": {
       "baseline": "1.8",
-      "port-version": 5
+      "port-version": 6
     },
     "kinectsdk2": {
       "baseline": "2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "kissfft": {
       "baseline": "2021-11-14",
