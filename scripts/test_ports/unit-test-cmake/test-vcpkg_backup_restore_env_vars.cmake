@@ -4,10 +4,20 @@
 
 set(ENV{A} [[::a;::b]])
 set(ENV{B} [[]])
+
+# Backup doesn't change variables.
 vcpkg_backup_env_variables(VARS A B)
 unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
 unit_test_check_variable_equal([[]] ENV{V} [[]])
 
+# Restore restores.
+set(ENV{A} [[::a;::b;::c]])
+set(ENV{B} [[::1]])
+vcpkg_restore_env_variables(VARS A B)
+unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
+unit_test_check_variable_equal([[]] ENV{V} [[]])
+
+# Restore can be called more than once.
 set(ENV{A} [[::a;::b;::c]])
 set(ENV{B} [[::1]])
 vcpkg_restore_env_variables(VARS A B)
