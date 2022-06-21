@@ -9,7 +9,8 @@
     "host-path-list",
     "list",
     "merge-libs",
-    "minimum-required"
+    "minimum-required",
+    "setup-pkgconfig-path"
   ],
   "features": {
     "backup-restore-env-vars": {
@@ -35,6 +36,9 @@
     },
     "minimum-required": {
       "description": "Test the vcpkg_minimum_required function"
+    },
+    "setup-pkgconfig-path": {
+      "description": "Test the z_vcpkg_setup/restore_pkgconfig_path functions"
     }
   }
 }
