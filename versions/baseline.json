@@ -3382,7 +3382,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lcms": {
       "baseline": "2.12",
