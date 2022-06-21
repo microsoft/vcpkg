@@ -62,13 +62,8 @@ if ($LASTEXITCODE -ne 0)
 }
 
 [Environment]::SetEnvironmentVariable("VCPKG_ROOT", "$vcpkgRootDir", "user")
+[Environment]::SetEnvironmentVariable("VCPKG_COMMAND", "$vcpkgRootDir\vcpkg.exe", "user")
 [Environment]::SetEnvironmentVariable("CMAKE_TOOLCHAIN_FILE", "$vcpkgRootDir\scripts\buildsystems\vcpkg.cmake", "user")
-
-$oldPATH = [Environment]::GetEnvironmentVariable("PATH", "user")
-if (-not ("$oldPATH" -split ';' -contains "$vcpkgRootDir"))
-{
-    [Environment]::SetEnvironmentVariable("PATH", "$vcpkgRootDir;$oldPATH", "user")
-}
 
 Write-Host ""
 
