@@ -9,6 +9,7 @@ function(z_vcpkg_setup_pkgconfig_path)
     endif()
 
     vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+    z_vcpkg_forward_backup_env_variables(PKG_CONFIG PKG_CONFIG_PATH)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
