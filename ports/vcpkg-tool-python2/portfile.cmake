@@ -28,7 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     cmake_path(NATIVE_PATH archive_path archive_path_native) # lessmsi is a bit picky about path formats.
     message(STATUS "Extracting Python2 ...")
     vcpkg_execute_in_download_mode(
-                    COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-lessmsi/lessmsi.exe" x "${archive_path_native}" # Using output_path here does not work in bash
+                    COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
                     WORKING_DIRECTORY "${output_path}" 
                     OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-out.log"
                     ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-err.log"
