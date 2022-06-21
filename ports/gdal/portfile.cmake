@@ -288,6 +288,10 @@ else()
         list(APPEND CONF_OPTS "--with-tools=no")
     endif()
 
+    if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "x86" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm"))
+        list(APPEND CONF_OPTS --with-unix-stdio-64=no)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}/gdal"
         AUTOCONFIG
