@@ -15,25 +15,25 @@
         <archiveName>python-3.10.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-windows-i386.zip</url>
-        <sha512>969d3d58d56d8fa3cc3acae2b949bf58abab945f70ae292ff20c9060d845dfc094c613c367a924abff47f307cc33af1467cdb9b75bb857868e38b2c7cdc72f79</sha512>
-        <archiveName>cmake-3.22.2-windows-i386.zip</archiveName>
+        <version>3.24.0-rc1</version>
+        <exeRelativePath>cmake-3.24.0-rc1-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-windows-i386.zip</url>
+        <sha512>63a0de4392980c289731201cdc95d2722d0006f71ae1f5475abc2477b3cc1728c668b7c709fc34bcd8531f29dfa54bfdc8bef9f8fdd42ea237462e6c43e20edb</sha512>
+        <archiveName>cmake-3.24.0-rc1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-macos-universal.tar.gz</url>
-        <sha512>08104f608ecb9a5cfef38e79f0957d21e425616c0677781445492f82cbfec805113e3b5eb4bc737b707bb26a00678e7bd55e17555a5611c08b0b9b44ac5136ac</sha512>
-        <archiveName>cmake-3.22.2-macos-universal.tar.gz</archiveName>
+        <version>3.24.0-rc1</version>
+        <exeRelativePath>cmake-3.24.0-rc1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-macos10.10-universal.tar.gz</url>
+        <sha512>e0df94d6c6cd57e310711f737f4ede428db7ac8c67b8c0f9714f98b9735e515f48b27853e9fc3a58e3a225dbb8e3a252e4165de556b2b14128f5b6339f5ae043</sha512>
+        <archiveName>cmake-3.24.0-rc1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-linux-x86_64.tar.gz</url>
-        <sha512>579e08b086f6903ef063697fca1dc2692f68a7341dd35998990b772b4221cdb5b1deecfa73bad9d46817ef09e58882b2adff9d64f959c01002c11448a878746b</sha512>
-        <archiveName>cmake-3.22.2linux-x86_64.tar.gz</archiveName>
+        <version>3.24.0-rc1</version>
+        <exeRelativePath>cmake-3.24.0-rc1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-linux-x86_64.tar.gz</url>
+        <sha512>8205f1a7d024b2f3663a9f6b3374a7143d4fa5387230acb064e01669453a4ea9e464e1cc2e2c1328cb211af33a8f29997e0f29a03a498b75df2f321d8366df85</sha512>
+        <archiveName>cmake-3.24.0-rc1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
