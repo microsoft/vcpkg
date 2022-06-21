@@ -23,8 +23,7 @@
       "default-features": false,
       "features": [
         "doubleconversion"
-      ],
-      "platform": "windows"
+      ]
     },
     {
       "name": "qtbase",
@@ -108,7 +107,7 @@
           "features": [
             "appstore-compliant"
           ],
-          "platform": "uwp"
+          "platform": "android | ios"
         },
         {
           "name": "qtbase",

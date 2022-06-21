@@ -77,35 +77,11 @@ elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND TOOL_NAMES macdeployqt)
 endif()
 
-### Download third_party modules
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
-    URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
-    REF "${${PORT}_qlitehtml_REF}"
-    FETCH_REF master
-    HEAD_REF master
-)
-# port 'litehtml' is not in vcpkg!
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
-    REPO litehtml/litehtml
-    REF "${${PORT}_litehtml_REF}" 
-    SHA512 "${${PORT}_litehtml_HASH}"
-    HEAD_REF master
-    PATCHES no_src_changes.patch
-)
-
 ##### qt_install_submodule
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
-if(QT_UPDATE_VERSION)
-    return()
-endif()
-file(COPY "${SOURCE_PATH_QLITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml")
-file(COPY "${SOURCE_PATH_LITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml/src/3rdparty/litehtml")
-
 
 if(_qis_DISABLE_NINJA)
     set(_opt DISABLE_NINJA)

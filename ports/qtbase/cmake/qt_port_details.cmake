@@ -129,7 +129,7 @@ if(QT_UPDATE_VERSION)
             string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
         endif()
     endforeach()
-    message("${msg}")
+
     file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data.cmake" "${msg}")
     message(FATAL_ERROR "Done downloading version and emitting hashes.")
 endif()
