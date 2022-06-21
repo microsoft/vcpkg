@@ -106,6 +106,18 @@ This means that the user should see:
 Examples:
  * [`brotli`](https://github.com/microsoft/vcpkg/blob/4f0a640e4c5b74166b759a862d7527c930eff32e/ports/brotli/install.patch) creates the `unofficial-brotli` package, producing target `unofficial::brotli::brotli`.
 
+### Install copyright file
+
+Each port has to provide a file named `copyright` in the folder `${CURRENT_PACKAGES_DIR}/share/${PORT}`. You can install the copyright file using the following code:
+
+```cmake
+file(INSTALL "${SOURCE_PATH}LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+```
+
+Replace `LICENSE` with the actual file name.
+
+If there are multiple license files, use [`vcpkg_install_copyright()`](vcpkg_install_copyright.md) instead.
+
 ## Features
 
 ### Do not use features to implement alternatives
