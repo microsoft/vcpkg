@@ -7374,7 +7374,7 @@
     },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-llvm": {
       "baseline": "14.0.3",
@@ -7398,7 +7398,7 @@
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
-      "port-version": 0
+      "port-version": 1
     },
     "vectorclass": {
       "baseline": "2.00.01",
