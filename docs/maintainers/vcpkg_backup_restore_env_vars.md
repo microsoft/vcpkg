@@ -6,7 +6,7 @@ Backup or restore the environment variables
 
 ## Usage:
 ```cmake
-vcpkg_backup_env_variables(VARS [<environment-variable>...])
+vcpkg_backup_env_variables(VARS [<environment-variable>...] [PARENT_SCOPE])
 vcpkg_restore_env_variables(VARS [<environment-variable>...])
 ```
 
@@ -14,6 +14,11 @@ vcpkg_restore_env_variables(VARS [<environment-variable>...])
 The variables to back up or restore.
 These are placed in the parent scope, so you must backup and restore
 from the same scope.
+
+### PARENT_SCOPE
+With this option, the backup is saved in the parent scope of the calling function
+instead of the calling function's scope.
+This option allows (limited) reuse of these functions in other maintainer functions.
 
 ## Notes
 One must always call `vcpkg_backup_env_variables` before
