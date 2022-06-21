@@ -5,7 +5,6 @@
   "description": "gpPanel is chart library for wxWidget. It inheritance from wxPanel and use modified wxMathPlot library at chart engine.",
   "homepage": "https://github.com/woollybah/gppanel",
   "license": "GPL-2.0+ WITH WxWindows-exception-3.1",
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
