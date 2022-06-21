@@ -1,0 +1,15 @@
+{
+  "name": "fawdlstty-libfv",
+  "version": "0.0.6",
+  "description": "libfv is C++20 header-only network library, support TCP/SSL/Http/websocket server and client",
+  "homepage": "https://github.com/fawdlstty/libfv",
+  "license": "MIT",
+  "dependencies": [
+    "asio",
+    "fmt",
+    "gzip-hpp",
+    "nlohmann-json",
+    "openssl",
+    "zlib"
+  ]
+}

@@ -59,6 +59,10 @@ List paths to overlays using the platform dependent PATH separator (Windows `;`,
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.
 
+#### VCPKG_FORCE_DOWNLOADED_BINARIES
+
+This environment variable, if set, ignores the use of the system binaries and will always download and use the version defined by vcpkg.
+
 #### VCPKG_KEEP_ENV_VARS
 
 This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
