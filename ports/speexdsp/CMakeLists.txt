@@ -100,6 +100,7 @@ add_library(speexdsp ${LIBSPEEXDSP_SOURCES} ${LIBSPEEXDSP_HEADERS})
 set_target_properties(speexdsp PROPERTIES PUBLIC_HEADER "${LIBSPEEXDSP_HEADERS_PUBLIC}")
 set_target_properties(speexdsp PROPERTIES VERSION "${LIBSPEEXDSP_VERSION}")
 set_target_properties(speexdsp PROPERTIES SOVERSION "${LIBSPEEXDSP_SOVERSION}")
+set_target_properties(speexdsp PROPERTIES RUNTIME_OUTPUT_NAME "libspeexdsp")
 
 # pkgconfig file
 set(prefix "${CMAKE_INSTALL_PREFIX}")
