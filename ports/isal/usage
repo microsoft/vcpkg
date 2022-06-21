@@ -1,5 +1,5 @@
 The package isal is compatible with built-in CMake targets:
 
-    FIND_PACKAGE(isal REQUIRED)
-    TARGET_LINK_LIBRARIES(main PRIVATE ISAL::isa-l) for static linkage or
+    find_package(isal REQUIRED)
+    target_link_libraries(main PRIVATE ISAL::isa-l) for static linkage or
     TARGET_LINK_LIBRARIES(main PRIVATE ISAL::isal) for dynamic linkage
