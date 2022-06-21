@@ -47,33 +47,46 @@ if("cmake-3-7" IN_LIST FEATURES)
     list(APPEND cmake_commands "${legacy_cmake}${cmake_bin_dir}/cmake")
 endif()
 
-set(packages "")
-if("find-package" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" vcpkg_json)
-    string(JSON packages_json GET "${vcpkg_json}" "features" "find-package" "dependencies")
-    string(JSON packages_count LENGTH "${packages_json}")
-    if(packages_count GREATER 0)
-        math(EXPR last "${packages_count} - 1")
-        foreach(i RANGE 0 ${last})
-            string(JSON package GET "${packages_json}" ${i} "$package")
-            list(APPEND packages "${package}")
-        endforeach()
-    endif()
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        list(REMOVE_ITEM packages "Curses")
-    endif()
-    if(VCPKG_TARGET_IS_LINUX)
-        # Port wxwidgets requires linux system libraries which conflict with vcpkg ports.
-        # This line complements the "platform" restriction from vcpkg.json.
-        list(REMOVE_ITEM packages "wxWidgets")
-    endif()
-endif()
-
 if(DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
     set(NINJA "ninja")
 else()
     vcpkg_find_acquire_program(NINJA)
 endif()
+
+if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+    z_vcpkg_select_default_vcpkg_chainload_toolchain()
+endif()
+
+function(get_packages out_packages cmake_version)
+    set(packages "")
+    if("find-package" IN_LIST FEATURES)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" vcpkg_json)
+        string(JSON packages_json GET "${vcpkg_json}" "features" "find-package" "dependencies")
+        string(JSON packages_count LENGTH "${packages_json}")
+        if(packages_count GREATER 0)
+            math(EXPR last "${packages_count} - 1")
+            foreach(i RANGE 0 ${last})
+                # Some ports may be excluded via platform expressions,
+                # because they don't support particular platforms.
+                # Using the installed vcpkg_abi_info.txt as an indicator.
+                string(JSON port GET "${packages_json}" "${i}" "name")
+                if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
+                    continue()
+                endif()
+                string(JSON since ERROR_VARIABLE since_not_found GET "${packages_json}" "${i}" "\$since")
+                if(since AND cmake_version VERSION_LESS since)
+                    continue()
+                endif()
+                if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
+                    continue()
+                endif()
+                string(JSON package GET "${packages_json}" "${i}" "\$package")
+                list(APPEND packages "${package}")
+            endforeach()
+        endif()
+    endif()
+    set("${out_packages}" "${packages}" PARENT_SCOPE)
+endfunction()
 
 function(test_cmake_project)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "CMAKE_COMMAND;NAME" "OPTIONS")
@@ -100,9 +113,13 @@ function(test_cmake_project)
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
+        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
+        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
-        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_MANIFEST_MODE=OFF"
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
     )
@@ -151,6 +168,7 @@ function(test_cmake_project)
     if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
         string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
     endif()
+    get_packages(packages "${cmake_version}")
     foreach(package IN LISTS packages)
         string(MAKE_C_IDENTIFIER "${package}" package_string)
         set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}")

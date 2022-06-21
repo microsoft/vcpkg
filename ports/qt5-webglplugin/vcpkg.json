@@ -1,6 +1,6 @@
 {
   "name": "qt5-webglplugin",
-  "version": "5.15.3",
+  "version": "5.15.5",
   "description": "Qt5 webglplugin Module;",
   "license": null,
   "dependencies": [

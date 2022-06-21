@@ -2,10 +2,7 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/android.md).**
 
-Android is not officially supported, and there are no official android triplets at the moment.
-
-However, some packages can compile to Android, and the situation is improving: see the list of [PR related to Android](https://github.com/Microsoft/vcpkg/pulls?q=+android+).
-
+*Android is not tested as part of vcpkg repository's CI process, so regressions can occur as part of library updates. PRs improving support are welcome!*
 
 ## Android build requirements
 
