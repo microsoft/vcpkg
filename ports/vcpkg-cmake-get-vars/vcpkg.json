@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-cmake-get-vars",
+  "version-date": "2022-05-10",
+  "port-version": 1,
+  "documentation": "https://vcpkg.io/en/docs/README.html",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

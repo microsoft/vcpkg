@@ -1,0 +1,29 @@
+diff --git a/giscanner/meson.build b/giscanner/meson.build
+index e63a5ab78..3d7dc678a 100644
+--- a/giscanner/meson.build
++++ b/giscanner/meson.build
+@@ -97,11 +97,11 @@ giscanner_lib = static_library('giscanner',
+   dependencies: [glib_dep, gobject_dep, gio_dep, gmodule_dep],
+ )
+
+ # https://github.com/mesonbuild/meson/issues/4117
+ if host_machine.system() == 'windows'
++  python_ext_dep = libpython_dep
+-  python_ext_dep = python.dependency()
+ else
++  python_ext_dep = libpython_dep
+-  python_ext_dep = python.dependency().partial_dependency(compile_args: true)
+ endif
+
+ if not python_ext_dep.found()
+diff --git a/meson.build b/meson.build
+index 2a9d68556..cffe9014c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -156,4 +156,5 @@ libffi_dep = dependency('libffi',
+ 
+ # python headers
+-cc.check_header('Python.h', dependencies: [python.dependency()], required: true)
++libpython_dep = dependency('python-3.10', method : 'pkg-config')
++cc.check_header('Python.h', dependencies: [libpython_dep], required: true)
+ 

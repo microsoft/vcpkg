@@ -1,0 +1,334 @@
+diff --git a/gdal/configure.ac b/gdal/configure.ac
+index 30cd613..43f1daf 100644
+--- a/gdal/configure.ac
++++ b/gdal/configure.ac
+@@ -48,6 +48,8 @@ dnl Compute the canonical host-system (the system we are building for)
+ dnl type variable $host
+ AC_CANONICAL_HOST
+ 
++PKG_PROG_PKG_CONFIG([0.21])
++
+ dnl Enable as much warnings as possible
+ AC_LANG_PUSH([C])
+ AX_COMPILER_VENDOR
+@@ -1111,6 +1111,8 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(libz,[  --with-libz[=ARG]       Include libz support (ARG=internal or libz directory)],,)
+ 
+ if test "$with_libz" = "external" -o "$with_libz" = "" -o "$with_libz" = "yes" ; then
++  PKG_CHECK_MODULES([ZLIB], [zlib], [LIBZ_SETTING=external], [LIBZ_SETTING=internal])
++elif false ; then
+ 
+   AC_CHECK_LIB(z,deflateInit_,LIBZ_SETTING=external,LIBZ_SETTING=internal,)
+ 
+@@ -1144,7 +1146,8 @@ elif test "$with_libz" != "no" -a "$with_libz" != "internal" ; then
+ fi
+ 
+ if test "$LIBZ_SETTING" = "external" ; then
+-  LIBS="-lz $LIBS"
++  LIBS="${ZLIB_LIBS} $LIBS"
++  EXTRA_INCLUDES="${ZLIB_CFLAGS} $EXTRA_INCLUDES"
+   if test "$with_libz" != "" -a "$with_libz" != "yes" -a "$with_libz" != "external" ; then
+     EXTRA_INCLUDES="-I$with_libz -I$with_libz/include $EXTRA_INCLUDES"
+   fi
+@@ -1336,12 +1338,15 @@ AC_MSG_CHECKING([for libtiff])
+ 
+ if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then
+ 
+-  dnl Only automatically pick up the external libtiff if it is >= 4.0.
+-  AC_CHECK_LIB(tiff,TIFFScanlineSize64,TIFF_SETTING=external HAVE_BIGTIFF=yes,TIFF_SETTING=internal HAVE_BIGTIFF=yes,)
++  PKG_CHECK_MODULES([TIFF],[libtiff-4 > 4.0], [TIFF_SETTING=external], [TIFF_SETTING=internal HAVE_BIGTIFF=yes])
+ 
+   if test "$TIFF_SETTING" = "external" ; then
+-    LIBS="-ltiff $LIBS"
+     AC_MSG_RESULT([using pre-installed libtiff.])
++    EXTRA_INCLUDES="$TIFF_CFLAGS $EXTRA_INCLUDES"
++    SAVED_LIBS="$LIBS"
++    LIBS="$TIFF_LIBS"
++    AC_SEARCH_LIBS(TIFFScanlineSize64,[],HAVE_BIGTIFF=yes,HAVE_BIGTIFF=no,)
++    LIBS="$TIFF_LIBS $SAVED_LIBS"
+   else
+     AC_MSG_RESULT([using internal TIFF code.])
+   fi
+@@ -1402,22 +1407,28 @@ AC_ARG_WITH(curl,
+ dnl Clear some cache variables
+ unset ac_cv_path_LIBCURL
+ 
++LIBCURL_MODVERSION=
+ if test "`basename xx/$with_curl`" = "curl-config" ; then
+   LIBCURL_CONFIG="$with_curl"
+ elif test "$with_curl" = "no" ; then
+   LIBCURL_CONFIG=no
++elif test "$with_curl" = "yes" -o "$with_curl" = "" ; then
++  PKG_CHECK_EXISTS([libcurl], [LIBCURL_CONFIG="${PKG_CONFIG} libcurl"], [LIBCURL_CONFIG=false])
++  LIBCURL_MODVERSION=`$LIBCURL_CONFIG --modversion`
+ else
+   AC_PATH_PROG(LIBCURL_CONFIG, curl-config, no)
+ fi
+ 
+ if test "$LIBCURL_CONFIG" != "no" ; then
+ 
+-  CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
+-  CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
++  CURL_VER="`$LIBCURL_CONFIG --version | awk '{print $2}'`$LIBCURL_MODVERSION"
+ 
+   AC_MSG_RESULT([        found libcurl version $CURL_VER])
+ 
+-  AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
++  SAVED_LIBS="$LIBS"
++  LIBS=`$LIBCURL_CONFIG --libs`
++  AC_SEARCH_LIBS(curl_global_init,[],CURL_SETTING=yes,CURL_SETTING=no,)
++  LIBS="$SAVED_LIBS"
+ 
+ fi
+ 
+@@ -1431,7 +1442,9 @@ dnl Proj depends on it so it must appear before.
+ dnl ---------------------------------------------------------------------------
+ 
+ SQLITE3_REQ_VERSION="3.0.0"
+-AX_LIB_SQLITE3($SQLITE3_REQ_VERSION)
++AC_CHECK_LIB(sqlite3,sqlite3_open,HAVE_SQLITE3=yes,AC_MSG_ERROR([vcpkg sqlite3 not found]),)
++SQLITE3_CFLAGS=
++SQLITE3_LDFLAGS=-lsqlite3
+ 
+ if test "$HAVE_SQLITE3" = "yes"; then
+     LIBS="$SQLITE3_LDFLAGS $LIBS"
+@@ -1571,6 +1584,11 @@ HAVE_SPATIALITE=no
+ if test -z "$with_spatialite" -o "$with_spatialite" = "no"; then
+     AC_MSG_RESULT(disabled)
+ elif test "$with_spatialite" = "yes"; then
++    PKG_CHECK_MODULES([SPATIALITE],[spatialite >= 5],[HAVE_SPATIALITE=yes],AC_MSG_ERROR([vcpkg libspatialite not found]))
++    SPATIALITE_INC="$SPATIALITE_CFLAGS"
++    LIBS="$LIBS $SPATIALITE_LIBS"
++    ac_cv_lib_spatialite_spatialite_target_cpu=yes
++elif false; then
+     AC_CHECK_HEADERS(sqlite3.h)
+     if test "$ac_cv_header_sqlite3_h" = "yes"; then
+         AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
+@@ -1639,6 +1652,19 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
+ 
+ if test "$with_liblzma" = "yes" ; then
++  PKG_CHECK_MODULES([LIBLZMA],[liblzma],[HAVE_LIBLZMA_PC=yes],[HAVE_LIBLZMA_PC=no])
++  SAVED_LIBS="$LIBS"
++  LIBS="$LIBLZMA_LIBS"
++  AC_SEARCH_LIBS(lzma_code,[],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
++  if test "$LIBLZMA_SETTING" = "yes" ; then
++    LIBS="$LIBLZMA_LIBS $SAVED_LIBS"
++  elif test "$HAVE_LIBLZMA_PC" = "yes" ; then
++    AC_MSG_ERROR([vcpkg liblzma broken])
++  else
++    LIBS="$SAVED_LIBS"
++  fi
++
++elif false; then
+   AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
+   AC_CHECK_HEADERS(lzma.h)
+ 
+@@ -1661,6 +1687,19 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(zstd,[  --with-zstd[=ARG]       Include zstd support (ARG=yes/no/installation_prefix)],,)
+ 
+ if test "$with_zstd" = "" -o "$with_zstd" = "yes" ; then
++  PKG_CHECK_MODULES([ZSTD],[libzstd],[HAVE_LIBZSTD_PC=yes],[HAVE_LIBZSTD_PC=no])
++  SAVED_LIBS="$LIBS"
++  LIBS="$ZSTD_LIBS"
++  AC_SEARCH_LIBS(ZSTD_decompressStream,[],ZSTD_SETTING=yes,ZSTD_SETTING=no,)
++  if test "$ZSTD_SETTING" = "yes" ; then
++    LIBS="$ZSTD_LIBS $SAVED_LIBS"
++  elif test "$HAVE_LIBZSTD_PC" = "yes" ; then
++    AC_MSG_ERROR([vcpkg libzstd broken])
++  else
++    LIBS="$SAVED_LIBS"
++  fi
++
++elif false; then
+   AC_CHECK_LIB(zstd,ZSTD_decompressStream,ZSTD_SETTING=yes,ZSTD_SETTING=no,)
+ 
+   if test "$ZSTD_SETTING" = "yes" ; then
+@@ -1962,6 +2001,12 @@ else
+     SAVED_LIBS="${LIBS}"
+     LIBS="${PG_LIB}"
+     AC_CHECK_LIB(pq,PQconnectdb,HAVE_PG=yes,HAVE_PG=no)
++    if test "${HAVE_PG}" = "no" ; then
++      unset ac_cv_lib_pq_PQconnectdb
++      PG_LIB="${PG_LIB} -lpgcommon -lpgport"
++      LIBS="${PG_LIB} ${SAVED_LIBS}"
++      AC_CHECK_LIB(pq,PQconnectdb,HAVE_PG=yes,HAVE_PG=no,[-lpgcommon -lpgport])
++    fi
+     LIBS="${SAVED_LIBS}"
+     if test "${HAVE_PG}" = "yes" ; then
+       LIBS="${PG_LIB} ${LIBS}"
+@@ -2322,6 +2367,15 @@ AC_ARG_WITH(geotiff,[  --with-geotiff=ARG    Libgeotiff library to use (ARG=inte
+ 
+ if test "$with_geotiff" = "yes" -o "$with_geotiff" = "" ; then
+ 
++  AC_CHECK_LIB(geotiff,GTIFAttachPROJContext,GEOTIFF_SETTING=external,GEOTIFF_SETTING=internal)
++  if test $GEOTIFF_SETTING = "external" ; then
++    LIBS="-lgeotiff $LIBS"
++  else
++    AC_MSG_ERROR([vcpkg geotiff broken])
++  fi
++
++elif false; then
++
+   if test "$TIFF_SETTING" = "internal" ; then
+     GEOTIFF_SETTING=internal
+   else
+@@ -3005,7 +3059,7 @@ elif test "$with_hdf5" = "yes" -o "$with_hdf5" = "" ; then
+     # Test that the package found is for the right architecture
+     saved_LIBS="$LIBS"
+     LIBS="$HDF5_LIBS"
+-    AC_CHECK_LIB(hdf5,H5Fopen, [HAVE_HDF5=yes], [HAVE_HDF5=no])
++    AC_SEARCH_LIBS(H5Fopen,[],[HAVE_HDF5=yes],[HAVE_HDF5=no],)
+     LIBS="$saved_LIBS"
+ 
+     if test "$HAVE_HDF5" = "yes"; then
+@@ -3135,6 +3189,24 @@ if test "$with_netcdf" = "no" ; then
+ 
+   echo "netCDF support disabled."
+ 
++elif true ; then
++
++  PKG_CHECK_MODULES([NETCDF],[netcdf],[HAVE_NETCDF_PC=yes],[HAVE_NETCDF_PC=no])
++  SAVED_LIBS="$LIBS"
++  LIBS="$NETCDF_LIBS"
++  AC_SEARCH_LIBS(nc_open,[],NETCDF_SETTING=yes,NETCDF_SETTING=no,)
++  if test "$NETCDF_SETTING" = "yes" ; then
++    LIBS="$NETCDF_LIBS $SAVED_LIBS"
++    EXTRA_INCLUDES="$NETCDF_CFLAGS $EXTRA_INCLUDES"
++    PKG_CHECK_VAR([NETCDF_ROOT],[netcdf],[prefix],,)
++    PKG_CHECK_VAR([NETCDF_INCLUDEDIR],[netcdf],[includedir],,)
++    NETCDF_NCCONFIG=
++  elif test "$HAVE_NETCDF_PC" = "yes" ; then
++    AC_MSG_ERROR([vcpkg netcdf-c broken])
++  else
++    LIBS="$SAVED_LIBS"
++  fi
++
+ else
+ 
+   dnl find nc-config location
+@@ -3355,6 +3427,21 @@ if test "$with_openjpeg" = "no" ; then
+ 
+   AC_MSG_NOTICE([OpenJPEG (JPEG2000) support disabled.])
+ 
++elif true ; then
++
++  PKG_CHECK_MODULES([OPENJPEG],[libopenjp2 >= 2.1.0],[HAVE_LIBOPENJP2_PC=yes],[HAVE_LIBOPENJP2_PC=no])
++  SAVED_LIBS="$LIBS"
++  LIBS="$OPENJPEG_LIBS"
++  AC_SEARCH_LIBS(opj_setup_decoder,[],HAVE_OPENJPEG=yes,HAVE_OPENJPEG=no,)
++  if test "$HAVE_OPENJPEG" = "yes" ; then
++    EXTRA_INCLUDES="$OPENJPEG_CFLAGS $EXTRA_INCLUDES"
++    LIBS="$OPENJPEG_LIBS $SAVED_LIBS"
++  elif test "$HAVE_LIBOPENJP2_PC" = "yes" ; then
++    AC_MSG_ERROR([vcpkg libopenjpeg broken])
++  else
++    LIBS="$SAVED_LIBS"
++  fi
++
+ else
+ 
+   PKG_PROG_PKG_CONFIG([0.21])
+@@ -4046,7 +4133,9 @@ dnl ---------------------------------------------------------------------------
+ 
+ dnl Expat 1.95.0 released in 2000-09-28
+ EXPAT_REQ_VERSION="1.95.0"
+-AX_LIB_EXPAT($EXPAT_REQ_VERSION)
++PKG_CHECK_MODULES([EXPAT],[expat],[HAVE_EXPAT=yes],[AC_MSG_ERROR([vcpkg expat not found])])
++EXPAT_LDFLAGS="$EXPAT_LIBS"
++EXPAT_INCLUDE=""
+ 
+ if test "$HAVE_EXPAT" = "yes"; then
+     LIBS="$EXPAT_LDFLAGS $LIBS"
+@@ -4069,7 +4158,13 @@ dnl Check for Google libkml support.
+ dnl ---------------------------------------------------------------------------
+ 
+ LIBKML_REQ_VERSION="1.3.0"
++if test "x${with_libkml}" = "xno"; then
++    echo "libkml support disabled."
++    HAVE_LIBKML="no"
++    LIBKML_CFLAGS=
++else
+ AX_LIB_LIBKML($LIBKML_REQ_VERSION)
++fi
+ 
+ if test "$HAVE_LIBKML" = "yes"; then
+     LIBS="$LIBKML_LDFLAGS $LIBS"
+@@ -4252,8 +4347,8 @@ else
+       dnl Add curl to LIBS; it might be local to DODS or generally installed
+       if test -x $DODS_BIN/curl-config; then
+           LIBS="$LIBS  `$DODS_BIN/curl-config --libs`"
+-      elif which curl-config > /dev/null 2>&1; then
+-          LIBS="$LIBS  `curl-config --libs`"
++      elif test "$CURL_SETTING" = "yes"; then
++          LIBS="$LIBS $CURL_LIB"
+       else
+           AC_MSG_ERROR([You gave a dods root, but I can't find curl!])
+       fi
+@@ -4295,7 +4390,7 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+   if test "${HAVE_LIBXML2}" = "yes"; then
+     SAVED_LIBS="${LIBS}"
+     LIBS="${LIBXML2_LIBS}"
+-    AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
++    AC_SEARCH_LIBS(xmlParseDoc,[],HAVE_LIBXML2=yes,HAVE_LIBXML2=no,)
+     LIBS="${SAVED_LIBS}"
+   fi
+ 
+@@ -4509,6 +4604,22 @@ WEBP_SETTING=no
+ 
+ if test "$with_webp" = "yes" -o "$with_webp" = "" ; then
+ 
++  PKG_CHECK_MODULES([WEBP],[libwebp],[HAVE_LIBWEBP_PC=yes],[HAVE_LIBWEBP_PC=no])
++  SAVED_LIBS="$LIBS"
++  LIBS="$WEBP_LIBS"
++  AC_SEARCH_LIBS(WebPDecodeRGB,[],WEBP_SETTING=yes,WEBP_SETTING=no,)
++
++  if test "$WEBP_SETTING" = "yes" ; then
++    LIBS="$WEBP_LIBS $SAVED_LIBS"
++  elif test "$HAVE_LIBWEBP_PC" = "yes" ; then
++    AC_MSG_ERROR([vcpkg libwebp broken])
++  else
++    echo "libwebp not found - WEBP support disabled"
++    LIBS="$SAVED_LIBS"
++  fi
++
++elif false ; then
++
+   AC_CHECK_LIB(webp,WebPDecodeRGB,WEBP_SETTING=yes,WEBP_SETTING=no,)
+ 
+   if test "$WEBP_SETTING" = "yes" ; then
+@@ -4540,7 +4651,7 @@ dnl ---------------------------------------------------------------------------
+ dnl Check if geos library is available.
+ dnl ---------------------------------------------------------------------------
+ 
+-GEOS_INIT(3.1.0)
++PKG_CHECK_MODULES(GEOS,geos >= 3.1.0,HAVE_GEOS=yes,AC_MSG_ERROR([vcpkg geos not found]))
+ if test "${HAVE_GEOS}" = "yes" ; then
+   AC_MSG_NOTICE([Using C API from GEOS $GEOS_VERSION])
+   STRIP_SYSTEM_LIBRARY_PATHS("${GEOS_LIBS}")
+@@ -4779,6 +4890,16 @@ dnl ---------------------------------------------------------------------------
+ 
+ AC_ARG_WITH(libjson-c,[  --with-libjson-c[=ARG]       Include libjson-c support (ARG=internal or libjson-c directory)],,)
+ 
++PKG_CHECK_MODULES([JSONC],[json-c],[HAVE_JSONC=yes],[HAVE_JSONC=no])
++SAVED_LIBS="$LIBS"
++LIBS="$JSONC_LIBS"
++AC_SEARCH_LIBS(json_object_set_serializer,[],LIBJSONC_SETTING=external,LIBJSONC_SETTING=,)
++if test "$LIBJSONC_SETTING" = "external" ; then
++  LIBS="$JSONC_LIBS $SAVED_LIBS"
++  JSON_INCLUDE="$JSONC_CFLAGS"
++else
++  LIBS="$SAVED_LIBS"
++
+ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjson_c" = "yes" ; then
+   AC_CHECK_LIB(json-c,json_object_set_serializer,LIBJSONC_SETTING=external,LIBJSONC_SETTING=internal,)
+ elif test "$with_libjson_c" = "internal" ; then
+@@ -4807,6 +4928,8 @@ else
+     AC_MSG_RESULT([using internal libjson-c code])
+ fi
+ 
++fi # json-c.pc
++
+ AC_SUBST(LIBJSONC_SETTING,$LIBJSONC_SETTING)
+ AC_SUBST(JSON_INCLUDE,$JSON_INCLUDE)
+ 

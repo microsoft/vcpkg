@@ -6,8 +6,6 @@ Vcpkg lets you take control of which version of packages to install in your proj
 
 ## Using versions with manifests
 
-With the `versions` feature flag enabled you can start adding version constraints to your dependencies.
-
 Let's start with creating a simple CMake project that depends on `fmt` and `zlib`.
 
 Create a folder with the following files:
@@ -97,7 +95,7 @@ fmt[core]:x86-windows -> 7.1.3#1 -- D:\vcpkg\buildtrees\versioning\versions\fmt\
 zlib[core]:x86-windows -> 1.2.11#9 -- D:\vcpkg\buildtrees\versioning\versions\zlib\827111046e37c98153d9d82bb6fa4183b6d728e4
 ```
 
-Instead of using the portfiles in `ports/`, vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`. The files in `ports/` are still used when running vcpkg in classic mode or when the `versions` feature flag is disabled. 
+Instead of using the portfiles in `ports/`, vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`. The files in `ports/` are still used when running vcpkg in classic mode.
 
 _NOTE: Output from vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
 
@@ -234,11 +232,11 @@ Notice how the `fmt` is now at version `6.0.0` just like we wanted.
 
 ## Versions and custom ports
 
-The last thing to discuss is how overlay ports interact with versioning resolution. The answer is: they don't. 
+The last thing to discuss is how overlay ports interact with versioning resolution. The answer is: they don't.
 
 Going into more detail, when you provide an overlay for a port, vcpkg will always use the overlay port without caring what version is contained in it. The reasons are two-fold: (1) it is consistent with the existing behavior of overlay ports of completely masking the existing port, and (2) overlay ports do not (and are not expected to) provide enough information to power vcpkg's versioning feature.
 
-If you want to have flexible port customization along with versioning features, you should consider making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
+If you want to have flexible port customization along with versioning, you should consider making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
 
 ## Further reading
 
