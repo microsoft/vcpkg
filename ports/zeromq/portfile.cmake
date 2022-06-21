@@ -28,7 +28,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTS=OFF
+        -DZMQ_BUILD_TESTS=OFF
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
         -DWITH_PERF_TOOL=OFF
