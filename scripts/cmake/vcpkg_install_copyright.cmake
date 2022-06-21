@@ -15,13 +15,14 @@ function(vcpkg_install_copyright)
     endif()
 
     set(out_string "")
-    message(STATUS "Files: ${arg_FILE_LIST}")
 
     foreach(file_item IN LISTS arg_FILE_LIST)
+        string(PREPEND file_item "${SOURCE_PATH}/")
+        
         if(NOT EXISTS "${file_item}" OR IS_DIRECTORY "${file_item}")
             message(FATAL_ERROR "The file ${file_item} does not exist or is a directory.")
         endif()
-
+ 
         get_filename_component(file_name ${file_item} NAME)
         file(READ "${file_item}" file_contents)
 
