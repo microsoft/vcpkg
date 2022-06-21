@@ -9,7 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         0001-fix-compatibility-with-boost-1.79.0.patch
-        fix-glog.patch
+	fix-glog.patch
 )
 
 vcpkg_cmake_configure(

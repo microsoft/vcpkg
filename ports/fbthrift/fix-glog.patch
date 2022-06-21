@@ -1,89 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7b248a0..8e6cc93 100644
+index 7b248a0..beae7d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -101,7 +101,7 @@ endif ()
+@@ -101,7 +101,8 @@ endif ()
  # Find required dependencies for thrift/lib
  if(lib_only OR build_all)
    find_package(Gflags REQUIRED)
 -  find_package(Glog REQUIRED)
 +  find_package(glog CONFIG REQUIRED)
++  set (GLOG_LIBRARIES glog::glog)
    find_package(folly CONFIG REQUIRED)
    find_package(fizz CONFIG REQUIRED)
    find_package(fmt CONFIG REQUIRED)
-@@ -113,7 +113,7 @@ if(lib_only OR build_all)
-   find_package(Threads)
-   include_directories(
-     ${LIBGFLAGS_INCLUDE_DIR}
--    ${GLOG_INCLUDE_DIRS}
-+    #   ${GLOG_INCLUDE_DIRS}
-     ${OPENSSL_INCLUDE_DIR}
-     ${ZSTD_INCLUDE_DIRS}
-     ${Boost_INCLUDE_DIRS}
-diff --git a/thrift/example/cpp2/CMakeLists.txt b/thrift/example/cpp2/CMakeLists.txt
-index 8343a41..ecb9580 100644
---- a/thrift/example/cpp2/CMakeLists.txt
-+++ b/thrift/example/cpp2/CMakeLists.txt
-@@ -28,7 +28,7 @@ target_link_libraries(
-   thriftcpp2
-   chatroom-cpp2
-   ${LIBGFLAGS_LIBRARY}
--  ${GLOG_LIBRARIES}
-+  glog::glog
- )
- install(
-   TARGETS example_server
-diff --git a/thrift/lib/cpp/CMakeLists.txt b/thrift/lib/cpp/CMakeLists.txt
-index 6053f29..f8bba19 100644
---- a/thrift/lib/cpp/CMakeLists.txt
-+++ b/thrift/lib/cpp/CMakeLists.txt
-@@ -43,8 +43,8 @@ target_link_libraries(
-   concurrency
-   PUBLIC
-     Folly::folly
-+    glog::glog
-     ${LIBGFLAGS_LIBRARY}
--    ${GLOG_LIBRARIES}
- )
- 
- add_library(
-@@ -99,7 +99,7 @@ target_link_libraries(
-     ${Boost_LIBRARIES}
-     Folly::folly
-     wangle::wangle
--    ${GLOG_LIBRARIES}
-+    glog::glog
-     ${OPENSSL_LIBRARIES}
- )
- 
-@@ -115,7 +115,7 @@ target_link_libraries(
-     thriftprotocol
-     transport
-     Folly::folly
--    ${GLOG_LIBRARIES}
-+    glog::glog
- )
- 
- set(THRIFT1_HEADER_DIRS
-diff --git a/thrift/lib/cpp2/CMakeLists.txt b/thrift/lib/cpp2/CMakeLists.txt
-index 094c62c..fb8f26b 100644
---- a/thrift/lib/cpp2/CMakeLists.txt
-+++ b/thrift/lib/cpp2/CMakeLists.txt
-@@ -64,7 +64,7 @@ target_link_libraries(
-     Folly::folly
-     thriftmetadata
-     thriftprotocol
--    ${GLOG_LIBRARIES}
-+    glog::glog
-     ${LIBGFLAGS_LIBRARY}
- )
- 
-@@ -133,7 +133,7 @@ target_link_libraries(
-     thrift
-     Folly::folly
-     wangle::wangle
--    ${GLOG_LIBRARIES}
-+    glog::glog
-     thrift-core
- )
- 
