@@ -3,7 +3,7 @@
   "version": "7.6.2",
   "description": "Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD, CAM, CAE.",
   "homepage": "https://github.com/Open-Cascade-SAS/OCCT",
-  "license": "LGPL-2.1",
+  "license": "OCCT-exception-1.0",
   "supports": "!(uwp | osx | arm)",
   "dependencies": [
     "fontconfig",
