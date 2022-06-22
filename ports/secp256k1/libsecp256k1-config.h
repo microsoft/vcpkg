@@ -1,8 +1,8 @@
-/**********************************************************************
- * Copyright (c) 2013, 2014 Pieter Wuille                             *
- * Distributed under the MIT software license, see the accompanying   *
- * file COPYING or http://www.opensource.org/licenses/mit-license.php.*
- **********************************************************************/
+/***********************************************************************
+ * Copyright (c) 2013, 2014 Pieter Wuille                              *
+ * Distributed under the MIT software license, see the accompanying    *
+ * file COPYING or https://www.opensource.org/licenses/mit-license.php.*
+ ***********************************************************************/
 
 #ifndef SECP256K1_BASIC_CONFIG_H
 #define SECP256K1_BASIC_CONFIG_H
@@ -20,11 +20,18 @@
 #undef USE_SCALAR_INV_BUILTIN
 #undef USE_SCALAR_INV_NUM
 
+#undef USE_EXAMPLES
+#undef USE_TESTS
+#undef USE_EXHAUSTIVE_TESTS
+#undef VALGRIND_ENABLED
+#undef ENABLE_COVERAGE
+
 #define USE_NUM_NONE 1
 #define USE_FIELD_INV_BUILTIN 1
 #define USE_SCALAR_INV_BUILTIN 1
 #define USE_FIELD_10X26 1
 #define USE_SCALAR_8X32 1
+
 #define ECMULT_WINDOW_SIZE 15
 #define ECMULT_GEN_PREC_BITS 4
 

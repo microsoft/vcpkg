@@ -10,16 +10,24 @@ vcpkg_from_github(
 file(COPY ${CURRENT_PORT_DIR}/libsecp256k1-config.h DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-file(RENAME ${SOURCE_PATH}/src/bench.c ${SOURCE_PATH}/src/bench.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/bench.h ${SOURCE_PATH}/src/bench.h.ignore)
-file(RENAME ${SOURCE_PATH}/src/bench_ecmult.c ${SOURCE_PATH}/src/bench_ecmult.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/bench_internal.c ${SOURCE_PATH}/src/bench_internal.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/precompute_ecmult.c ${SOURCE_PATH}/src/precompute_ecmult.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/precompute_ecmult_gen.c ${SOURCE_PATH}/src/precompute_ecmult_gen.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/precomputed_ecmult.c ${SOURCE_PATH}/src/precomputed_ecmult.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/precomputed_ecmult_gen.c ${SOURCE_PATH}/src/precomputed_ecmult_gen.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/tests.c ${SOURCE_PATH}/src/tests.c.ignore)
-file(RENAME ${SOURCE_PATH}/src/tests_exhaustive.c ${SOURCE_PATH}/src/tests_exhaustive.c.ignore)
+file(REMOVE ${SOURCE_PATH}/src/bench.c)
+file(REMOVE ${SOURCE_PATH}/src/bench.h)
+file(REMOVE ${SOURCE_PATH}/src/bench_ecmult.c)
+file(REMOVE ${SOURCE_PATH}/src/bench_internal.c)
+
+file(REMOVE ${SOURCE_PATH}/src/tests.c)
+file(REMOVE ${SOURCE_PATH}/src/tests_exhaustive.c)
+file(REMOVE ${SOURCE_PATH}/src/valgrind_ctime_test.c)
+
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_parsing.c)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_parsing.h)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_privatekey_parsing.c)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_privatekey_parsing.h)
+
+file(REMOVE ${SOURCE_PATH}/examples/ecdh.c)
+file(REMOVE ${SOURCE_PATH}/examples/ecdsa.c)
+file(REMOVE ${SOURCE_PATH}/examples/schnorr.c)
+file(REMOVE ${SOURCE_PATH}/examples/random.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
