@@ -16,8 +16,7 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
-	#fix-deps.patch
-	#	fix-cmake-modules.patch
+	fix-deps.patch
 )
 
 
@@ -43,19 +42,19 @@ feature(lzma LibLZMA)
 feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
-#file(REMOVE "${SOURCE_PATH}/CMake/FindDoubleConversion.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindLZ4.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindLibUring.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
-#file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
-#file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindDoubleConversion.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLZ4.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibUring.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
