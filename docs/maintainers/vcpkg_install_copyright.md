@@ -4,17 +4,24 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Merges multiple copyright files into a single file and install it.
 
-## Usage:
+## Usage Example:
 
 ```cmake
-vcpkg_install_copyright(FILE_LIST <license.md> <license_gpl.md>...)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE/license.md" "${SOURCE_PATH}/LICENSE/license_gpl.md"...)
+```
+
+You can also collect the required files using a `GLOB` pattern:
+
+```cmake
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 ```
 
 ## Parameters:
 
 ### FILE_LIST
 
-Specifies a list of license files relative to `${SOURCE_PATH}`. You must provide at least 2 files.
+Specifies a list of license files with absolute paths. You must provide at least 2 files.
 
 If you want to install just a single license file, please use
 

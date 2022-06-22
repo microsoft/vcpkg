@@ -17,7 +17,6 @@ function(vcpkg_install_copyright)
     set(out_string "")
 
     foreach(file_item IN LISTS arg_FILE_LIST)
-        string(PREPEND file_item "${SOURCE_PATH}/")
         
         if(NOT EXISTS "${file_item}" OR IS_DIRECTORY "${file_item}")
             message(FATAL_ERROR "The file ${file_item} does not exist or is a directory.")
