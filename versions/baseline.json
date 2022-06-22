@@ -6402,7 +6402,7 @@
     },
     "sciplot": {
       "baseline": "0.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sciter": {
       "baseline": "0",
