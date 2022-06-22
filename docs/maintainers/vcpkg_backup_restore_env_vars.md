@@ -16,9 +16,9 @@ These are placed in the parent scope, so you must backup and restore
 from the same scope.
 
 ### PARENT_SCOPE
-With this option, the backup is saved in the parent scope of the calling function
-instead of the calling function's scope.
-This option allows (limited) reuse of these functions in other maintainer functions.
+Normally, the backup is saved in the scope of the function call.
+With this option, the backup is saved in the parent scope of the function call instead.
+This enables the use of these commands in pairs of setup/restore functions.
 
 ## Notes
 One must always call `vcpkg_backup_env_variables` before
