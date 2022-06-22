@@ -124,7 +124,11 @@
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
-        "libspatialite"
+        "libspatialite",
+        {
+          "name": "pkgconf",
+          "host": true
+        }
       ]
     },
     "mysql-libmariadb": {
