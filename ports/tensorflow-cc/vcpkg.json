@@ -4,7 +4,7 @@
   "description": "Library for computation using data flow graphs for scalable machine learning (C++ API version)",
   "homepage": "https://github.com/tensorflow/tensorflow",
   "supports": "!(x86 | arm | uwp) | (arm64 & osx)",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": [
     "tensorflow-common"
   ]
