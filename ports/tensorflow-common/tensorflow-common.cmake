@@ -57,9 +57,9 @@ else()
 	# create virtualenv.
 	message(STATUS "Create python virtualenv")
 	if (VCPKG_TARGET_IS_LINUX)
-				vcpkg_execute_required_process(COMMAND virtualenv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND virtualenv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
 	else()
-				vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
 	endif()
 
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install virtualenv WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
