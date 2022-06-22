@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 
 file(
 	INSTALL "${SOURCE_PATH}/License.md"
