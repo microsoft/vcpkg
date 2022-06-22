@@ -1897,11 +1897,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-06-15",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-06-15",
       "port-version": 0
     },
     "dirent": {
