@@ -1,10 +1,9 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version": "0.0.0-cad832c8",
-  "port-version": 1,
+  "version-date": "2022-06-17",
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 OR BSL-1.0",
   "dependencies": [
     "byte-lite",
     "gsl-lite",
