@@ -7,6 +7,7 @@ macro(vcpkg_backup_env_variables)
             unset("z_vcpkg_env_backup_${z_vbev_envvar}" PARENT_SCOPE)
         endif()
     endforeach()
+    unset(z_vcpkg_backup_env_variables_arg_vars)
 endmacro()
 
 function(z_vcpkg_backup_env_variables)
