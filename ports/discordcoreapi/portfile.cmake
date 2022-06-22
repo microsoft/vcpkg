@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF 8fa614bb3a55e0516e8a17c86a0cd9045e872ddd
-	SHA512 40f4d9df30156276056cce275731e0bb6ccfd9ecbc105677531cf82e21bf7103ab5402c4ef7fe8d0dbdff6e6156cef272a830bf9d739866605ef6b71d6e2dcec
+	REF df56aa63c3e9818578fd0b4ba5fc16570d780cab
+	SHA512 23db58e5aa0f664f51f729831e05b174756dc5c093726485e9d8acead70ba5e8e92fc958a055a48075c8cdaf443cbb49aa784ad2ca0a49db7b991a6a10352f0a
 	HEAD_REF main
 )
 
@@ -17,6 +17,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(
 	INSTALL "${SOURCE_PATH}/License.md"
