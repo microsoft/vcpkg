@@ -6125,7 +6125,7 @@
       "port-version": 0
     },
     "range-v3": {
-      "baseline": "2021-11-02",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "range-v3-vs2015": {
