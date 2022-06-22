@@ -11,7 +11,7 @@ function(vcpkg_install_copyright)
 
     list(LENGTH arg_FILE_LIST FILE_LIST_LENGTH)
     if(FILE_LIST_LENGTH LESS_EQUAL 1)
-        message(FATAL_ERROR "Don't use ${CMAKE_CURRENT_FUNCTION} to install a single license file.")
+        message(FATAL_ERROR "Use `file(INSTALL <filename> DESTINATION \"\${CURRENT_PACKAGES_DIR}/share/\${PORT}\" RENAME copyright)` rather than ${CMAKE_CURRENT_FUNCTION} to install a single license file.")
     endif()
 
     set(out_string "")
