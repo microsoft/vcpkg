@@ -10,6 +10,14 @@ vcpkg_from_github(
 file(COPY ${CURRENT_PORT_DIR}/libsecp256k1-config.h DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+file(RENAME ${SOURCE_PATH}/src/bench.c ${SOURCE_PATH}/src/bench.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/bench_ecmult.c ${SOURCE_PATH}/src/bench_ecmult.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/bench_internal.c ${SOURCE_PATH}/src/bench_internal.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/precompute_ecmult.c ${SOURCE_PATH}/src/precompute_ecmult.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/precompute_ecmult_gen.c ${SOURCE_PATH}/src/precompute_ecmult_gen.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/tests.c ${SOURCE_PATH}/src/tests.c.ignore)
+file(RENAME ${SOURCE_PATH}/src/tests_exhaustive.c ${SOURCE_PATH}/src/tests_exhaustive.c.ignore)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
