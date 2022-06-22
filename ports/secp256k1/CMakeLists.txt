@@ -6,6 +6,8 @@ option(INSTALL_HEADERS "Install header files" ON)
 add_definitions(
     -DENABLE_MODULE_ECDH
     -DENABLE_MODULE_RECOVERY
+    -DENABLE_MODULE_EXTRAKEYS
+    -DENABLE_MODULE_SCHNORRSIG
     -DHAVE_CONFIG_H
 )
 
@@ -16,12 +18,23 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 target_include_directories(secp256k1 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
 
+file(GLOB SOURCES_PRECOMP src/precomputed_ecmult_gen.c src/precomputed_ecmult.c)
+add_library(secp256k1_precomputed ${SOURCES_PRECOMP})
+
+target_include_directories(secp256k1_precomputed PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+
 if(INSTALL_HEADERS)
     file(GLOB HEADERS include/*.h)
     install(FILES ${HEADERS} DESTINATION include)
 endif()
 
 install(TARGETS secp256k1 EXPORT unofficial-secp256k1-targets
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
+install(TARGETS secp256k1_precomputed EXPORT unofficial-secp256k1-targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib

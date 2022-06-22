@@ -3,12 +3,31 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bitcoin-core/secp256k1"
-    REF "0b7024185045a49a1a6a4c5615bf31c94f63d9c4"
-    SHA512 54e0c446ae63105800dfaf23dc934734f196c91f275db0455e58a36926c29ecc51a13d9b1eb2e45bc86199120c3c472ec7b39086787a49ce388a4df462a870bc
+    REF "44c2452fd387f7ca604ab42d73746e7d3a44d8a2"
+    SHA512 1c1969b663843c71cba0148b14430bd2417b63a6ca7d6940585844b73aee2642622b080541ad3a1712390640f305f5bb1e251985d59674e1ded9cb4688f7830d
 )
 
 file(COPY ${CURRENT_PORT_DIR}/libsecp256k1-config.h DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+file(REMOVE ${SOURCE_PATH}/src/bench.c)
+file(REMOVE ${SOURCE_PATH}/src/bench.h)
+file(REMOVE ${SOURCE_PATH}/src/bench_ecmult.c)
+file(REMOVE ${SOURCE_PATH}/src/bench_internal.c)
+
+file(REMOVE ${SOURCE_PATH}/src/tests.c)
+file(REMOVE ${SOURCE_PATH}/src/tests_exhaustive.c)
+file(REMOVE ${SOURCE_PATH}/src/valgrind_ctime_test.c)
+
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_parsing.c)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_parsing.h)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_privatekey_parsing.c)
+file(REMOVE ${SOURCE_PATH}/contrib/lax_der_privatekey_parsing.h)
+
+file(REMOVE ${SOURCE_PATH}/examples/ecdh.c)
+file(REMOVE ${SOURCE_PATH}/examples/ecdsa.c)
+file(REMOVE ${SOURCE_PATH}/examples/schnorr.c)
+file(REMOVE ${SOURCE_PATH}/examples/random.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
