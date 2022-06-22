@@ -16,6 +16,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup()
+
 file(
 	INSTALL "${SOURCE_PATH}/License.md"
 	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
