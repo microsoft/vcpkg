@@ -1,0 +1,13 @@
+diff --git a/vendor/glpk/env/dlsup.c b/vendor/glpk/env/dlsup.c
+index 741354475..968a794b7 100644
+--- a/vendor/glpk/env/dlsup.c
++++ b/vendor/glpk/env/dlsup.c
+@@ -25,6 +25,8 @@
+ 
+ #include "env.h"
+ 
++#undef __WOE__
++
+ /* GNU version ********************************************************/
+ 
+ #if defined(HAVE_LTDL)

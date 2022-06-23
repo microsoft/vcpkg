@@ -49,6 +49,7 @@ vcpkg_configure_make(
     OPTIONS
         ${OPTIONS}
         --enable-cxx
+        --with-pic
 )
 
 set(tool_names bases fac fib jacobitab psqr trialdivtab)
