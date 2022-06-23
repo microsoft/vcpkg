@@ -5525,8 +5525,8 @@
       "port-version": 2
     },
     "pmdk": {
-      "baseline": "1.11.0",
-      "port-version": 1
+      "baseline": "1.12.0",
+      "port-version": 0
     },
     "pngpp": {
       "baseline": "0.2.10",
