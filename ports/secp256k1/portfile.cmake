@@ -29,9 +29,8 @@ file(REMOVE ${SOURCE_PATH}/examples/ecdsa.c)
 file(REMOVE ${SOURCE_PATH}/examples/schnorr.c)
 file(REMOVE ${SOURCE_PATH}/examples/random.h)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
 )
