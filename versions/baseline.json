@@ -5426,7 +5426,7 @@
     },
     "pffft": {
       "baseline": "2021-10-09",
-      "port-version": 0
+      "port-version": 1
     },
     "pfring": {
       "baseline": "2019-10-17",
