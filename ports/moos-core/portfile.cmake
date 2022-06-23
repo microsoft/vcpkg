@@ -27,5 +27,4 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/Core/GPLCore.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/Core/GPLCore.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
