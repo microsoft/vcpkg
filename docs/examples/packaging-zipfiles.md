@@ -3,7 +3,7 @@
 ### Bootstrap with `create`
 First, locate a globally accessible archive of the library's sources. Zip, gzip, and bzip are all supported. Strongly prefer official sources or mirrors over unofficial mirrors.
 
-*Looking at zlib's website, the URL http://zlib.net/zlib-1.2.11.tar.gz looks appropriate.*
+*Looking at zlib's website, the URL http://zlib.net/zlib-1.2.12.tar.gz looks appropriate.*
 
 Second, determine a suitable package name. This should be ASCII, lowercase, and recognizable to someone who knows the library's "human name". If the library is already packaged in another package manager, prefer that name.
 
@@ -11,12 +11,12 @@ Second, determine a suitable package name. This should be ASCII, lowercase, and 
 
 Finally, if the server's name for the archive is not very descriptive (such as downloading a zipped commit or branch from GitHub), choose a nice archive name of the form `<packagename>-<version>.zip`.
 
-*`zlib1211.zip` is a fine name, so no change needed.*
+*`zlib1212.zip` is a fine name, so no change needed.*
 
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports/<packagename>`.
 
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
+PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.12.tar.gz zlib1212.tar.gz
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
@@ -27,7 +27,7 @@ In addition to the generated `ports/<package>/portfile.cmake`, we also need a `p
 ```json
 {
   "name": "zlib2",
-  "version-string": "1.2.11",
+  "version-string": "1.2.12",
   "description": "A Massively Spiffy Yet Delicately Unobtrusive Compression Library"
 }
 ```
@@ -42,11 +42,11 @@ The following packages will be built and installed:
     zlib2[core]:x64-uwp
 Starting package 1/1: zlib2:x64-uwp
 Building package zlib2[core]:x64-uwp...
--- Using cached C:/src/vcpkg/downloads/zlib1211.tar.gz
--- Cleaning sources at C:/src/vcpkg/buildtrees/zlib2/src/1.2.11-deec42f53b.clean. Pass --editable to vcpkg to reuse sources.
--- Extracting source C:/src/vcpkg/downloads/zlib1211.tar.gz
+-- Using cached C:/src/vcpkg/downloads/zlib1212.tar.gz
+-- Cleaning sources at C:/src/vcpkg/buildtrees/zlib2/src/1.2.12-deec42f53b.clean. Pass --editable to vcpkg to reuse sources.
+-- Extracting source C:/src/vcpkg/downloads/zlib1212.tar.gz
 -- Applying patch cmake_dont_build_more_than_needed.patch
--- Using source at C:/src/vcpkg/buildtrees/zlib2/src/1.2.11-deec42f53b.clean
+-- Using source at C:/src/vcpkg/buildtrees/zlib2/src/1.2.12-deec42f53b.clean
 -- Configuring x64-uwp
 -- Building x64-uwp-dbg
 -- Building x64-uwp-rel
