@@ -1,9 +1,10 @@
 {
   "name": "gts",
   "version": "0.7.6",
-  "port-version": 5,
+  "port-version": 6,
   "description": "3D surfaces meshed with interconnected triangles",
   "homepage": "http://gts.sourceforge.net/",
+  "supports": "!osx",
   "dependencies": [
     "glib",
     {
