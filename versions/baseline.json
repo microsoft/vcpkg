@@ -1234,7 +1234,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 6
+      "port-version": 7
     },
     "cairo": {
       "baseline": "1.17.6",
@@ -2122,7 +2122,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 5
+      "port-version": 6
     },
     "exiv2": {
       "baseline": "0.27.5",
@@ -2210,7 +2210,7 @@
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
-      "port-version": 1
+      "port-version": 2
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2306,7 +2306,7 @@
     },
     "folly": {
       "baseline": "2022.03.21.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2581,8 +2581,8 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.5.0",
-      "port-version": 5
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
