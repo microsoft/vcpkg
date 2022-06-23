@@ -4,8 +4,6 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Extract an archive.
 
-This command replaces [`vcpkg_extract_source_archive_ex()`](vcpkg_extract_source_archive_ex.md).
-
 ## Usage
 ```cmake
 vcpkg_extract_source_archive(
@@ -20,15 +18,9 @@ vcpkg_extract_source_archive(
 )
 ```
 
-**Deprecated overload**
-```cmake
-vcpkg_extract_source_archive(<archive> [<working_directory>])
-```
-The deprecated overload extracts `<archive>` into `${working_directory}/<archive-filename>.extracted` if the target does not exist.
-
-All uses of the deprecated overload should be replaced with the first overload above.
-
 ## Parameters
+
+<a id="out-var"></a>
 
 ### `<out-var>`
 
@@ -143,6 +135,24 @@ vcpkg_cmake_configure(SOURCE_PATH "${src}")
 ```
 
 * [GitHub Search](https://github.com/microsoft/vcpkg/search?q=vcpkg_extract_source_archive+path%3A%2Fports)
+
+## Remarks
+
+**Deprecated Syntax**
+
+This command also supports a deprecated overload:
+
+```cmake
+vcpkg_extract_source_archive(<archive> [<working_directory>])
+```
+
+The deprecated overload extracts `<archive>` into `${working_directory}/<archive-filename>.extracted` if the target does not exist. This incorrect behavior allows patches and other modifications to leak between different builds, resulting in hard-to-debug errors.
+
+All uses of the deprecated overload should be replaced with the syntax in [Usage](#usage) above by adding an explicit [`ARCHIVE`](#archive) parameter and replacing direct references to the extracted path with uses of the [`<out-var>`](#out-var).
+
+**Replacement**
+
+This command replaces [`vcpkg_extract_source_archive_ex()`](vcpkg_extract_source_archive_ex.md).
 
 ## Source
 [scripts/cmake/vcpkg\_extract\_source\_archive.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_extract_source_archive.cmake)

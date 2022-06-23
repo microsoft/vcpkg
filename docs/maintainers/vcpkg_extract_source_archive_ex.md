@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
 )
 ```
 
-This command forwards all options to [`vcpkg_extract_source_archive()`], with `<out-var>` as the first argument. See the documentation for [`vcpkg_extract_source_archive()`] for parameter help.
+This command forwards all options to [`vcpkg_extract_source_archive()`], with `<out-var>` as the first argument. Equivalent to `vcpkg_extract_source_archive(<out-var> <options>...)`. See the documentation for [`vcpkg_extract_source_archive()`] for parameter help.
 
 [`vcpkg_extract_source_archive()`]: vcpkg_extract_source_archive.md
 
