@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdeclarative
-    REF v5.88.0
-    SHA512 3f65c7a7574be75eeca1248e9756810dc9302570f7f2469271ef5537f264ef9772b7926102a2f076f9e70aa510db691abf0ebf9d15e858e2dc9712d138c97821
+    REF v5.89.0
+    SHA512 baad15ef1288e215a269c7b69d2de3659508ce16f91e7f20ec9255ed07810b22ea7e04f7446c50715f7b4abe2809c22d9911f03a5cc0791f7b9e5298f9e2ac59
     HEAD_REF master
 )
 
@@ -12,17 +12,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DBUNDLE_INSTALL_DIR=bin
         -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES 
+    MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_EPOXY
         BUNDLE_INSTALL_DIR
 )

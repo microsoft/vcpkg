@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://www.netlib.org/voronoi/triangle.zip"
     FILENAME "triangle.zip"

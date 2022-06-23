@@ -12,7 +12,7 @@ index aa923e1..9ee7937 100644
  # Eliminates warning about linker paths when linking both zlib and
  # liblzma.
  cmake_policy(SET CMP0003 NEW)
-@@ -149,50 +152,60 @@ else (ZLIB_FOUND)
+@@ -149,20 +152,25 @@ else (ZLIB_FOUND)
      message("Disabled deflate codec. zlib not found.")
  endif (ZLIB_FOUND)
  
@@ -38,24 +38,13 @@ index aa923e1..9ee7937 100644
  
 -find_package(PkgConfig)
 -pkg_check_modules(LZMA liblzma)
--if (LZMA_FOUND)
 +find_package(LibLZMA REQUIRED)
-+if (LibLZMA_FOUND)
++set(LZMA_FOUND 1)
++set(LZMA_LIBRARIES LibLZMA::LibLZMA)
+ if (LZMA_FOUND)
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)
-+    set(LZMA_LIBRARIES LibLZMA::LibLZMA)
-     include_directories(${LZMA_INCLUDE_DIRS})
-     link_directories(${LZMA_LIBRARY_DIRS})
-     message("Enabled lzma codec")
--else (LZMA_FOUND)
-+else (LibLZMA_FOUND)
-     set(LZMA_PKG "")
-     set(LZMA_LIBRARIES "")
-     message("Disabled lzma codec. liblzma not found.")
--endif (LZMA_FOUND)
-+endif (LibLZMA_FOUND)
- 
- set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+@@ -179,20 +187,26 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
  set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
  
  # Jansson JSON library

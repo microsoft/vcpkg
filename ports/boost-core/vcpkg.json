@@ -1,12 +1,14 @@
 {
   "name": "boost-core",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Boost core module",
   "homepage": "https://github.com/boostorg/core",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",
     "boost-static-assert",
+    "boost-throw-exception",
     "boost-vcpkg-helpers"
   ]
 }

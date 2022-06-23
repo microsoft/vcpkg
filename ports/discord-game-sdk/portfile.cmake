@@ -1,8 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "android" "uwp")
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(MESSAGE "The GameSDK only supports x86 on Windows." ALWAYS)
-endif()
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -15,8 +10,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
-    PATCHES 
-        include-cstdint.patch # allows compiling on newer versions of GCC 
+    PATCHES
+        include-cstdint.patch # allows compiling on newer versions of GCC
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION ${SOURCE_PATH})

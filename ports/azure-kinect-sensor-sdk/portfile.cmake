@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-dependency-imgui.patch
         fix-linux.patch
         fix-calibration-c.patch
+        fix-build-imgui.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -23,43 +24,36 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # .rc file needs windows.h, so do not use PREFER_NINJA here
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
     -DK4A_SOURCE_LINK=OFF
     -DK4A_MTE_VERSION=ON
     -DBUILD_EXAMPLES=OFF
     -DWITH_TEST=OFF
-    -DIMGUI_EXTERNAL_PATH=${CURRENT_INSTALLED_DIR}/include/bindings
+    -DIMGUI_EXTERNAL_PATH="${CURRENT_INSTALLED_DIR}/include/bindings"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Avoid deleting debug/lib/cmake when fixing the first cmake
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/k4a TARGET_PATH share/k4a)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/k4arecord TARGET_PATH share/k4arecord)
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/share")
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME k4a CONFIG_PATH share/k4a)
+vcpkg_cmake_config_fixup(PACKAGE_NAME k4arecord CONFIG_PATH share/k4arecord)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if ("tool" IN_LIST FEATURES)
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-        file(GLOB AZURE_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-        file(COPY ${AZURE_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${AZURE_TOOLS})
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-        file(GLOB AZURE_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-        file(REMOVE ${AZURE_TOOLS})
-    endif()
+    vcpkg_copy_tools(TOOL_NAMES k4arecorder k4aviewer AzureKinectFirmwareTool AUTO_CLEAN)
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Install Depth Engine
@@ -84,14 +78,14 @@ else ()
 endif ()
 
 if (VCPKG_TARGET_IS_LINUX)
-    file(COPY ${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0 DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 else()
-    file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk)
-    file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk)
+    file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk")
+    file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

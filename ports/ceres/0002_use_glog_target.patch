@@ -1,11 +1,11 @@
 diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
-index 3711222..8646bd0 100644
+index 0e33263..299b373 100644
 --- a/internal/ceres/CMakeLists.txt
 +++ b/internal/ceres/CMakeLists.txt
-@@ -174,17 +174,9 @@ endif (SCHUR_SPECIALIZATIONS)
+@@ -101,17 +101,9 @@ endif()
  find_package(Threads QUIET)
  list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES Threads::Threads)
-
+ 
 -if (NOT MINIGLOG AND GLOG_FOUND)
 -  list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES ${GLOG_LIBRARIES})
 -  if (gflags_FOUND)
@@ -21,5 +21,5 @@ index 3711222..8646bd0 100644
 +  list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES glog::glog)
 +endif (NOT MINIGLOG)
  
- if (SUITESPARSE AND SUITESPARSE_FOUND)
+ if (SUITESPARSE AND SuiteSparse_FOUND)
    # Define version information for use in Solver::FullReport.

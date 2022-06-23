@@ -1,26 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/sobjectizer
-    REF 972b5310b7a486dd4d4322ffb46f1c7e15c47ef6 # v.5.7.2.6
-    SHA512 0e5160981218d49beda3ed367ed34fa05c706104f68b6b06619f62a9b2a1ef92b08ddfd3ae14451e51e41bb7742789da4536289ec9d2d23dce13cdf6284108c9
+    REF 646ac5891c15af766181d8ed7061b4fa9fa43e9f # v.5.7.4
+    SHA512 c2ed2e0f41b31e56865469ddfa6f67cc41af8b154f73b8d431aad75f7af5033bddae5445e64454e17fd9c8a207a19415c7dd33102205687c4937cf92bcfb3fa2
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOBJECTIZER_BUILD_STATIC )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOBJECTIZER_BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/dev
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/dev"
     OPTIONS
         -DSOBJECTIZER_BUILD_STATIC=${SOBJECTIZER_BUILD_STATIC}
         -DSOBJECTIZER_BUILD_SHARED=${SOBJECTIZER_BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sobjectizer)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

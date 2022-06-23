@@ -1,9 +1,10 @@
 {
   "name": "qttools",
-  "version-semver": "6.2.2",
-  "port-version": 1,
+  "version": "6.3.0",
+  "port-version": 2,
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",

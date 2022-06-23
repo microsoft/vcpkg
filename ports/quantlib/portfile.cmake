@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF QuantLib-v1.24
-    SHA512 1a63d90363cda69e20e40a60a2d6357f632fac997df520b949e73feb256dac8a999395d0ebe94734ac630e9104e512b0a545f6a2111b287a41e9128127aa5bb0
+    REF QuantLib-v1.26
+    SHA512 597dcb4aa3e2701bea758c7b0c62ca0b303a16eda5f324b349ba4e8cc011f6a256fb26d5c42f2bb432da06df1c7b5ec208195e1104e620b69d2a7e8265fd6470
     HEAD_REF master
 )
 
@@ -11,20 +11,22 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DQL_BUILD_BENCHMARK=OFF
         -DQL_BUILD_EXAMPLES=OFF
         -DQL_BUILD_TEST_SUITE=OFF
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME QuantLib CONFIG_PATH lib/cmake/QuantLib)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Install custom usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

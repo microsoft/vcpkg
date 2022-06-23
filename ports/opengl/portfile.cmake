@@ -62,6 +62,18 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     elseif(WINDOWS_SDK MATCHES "8.")
         file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See https://developer.microsoft.com/windows/downloads/windows-8-1-sdk for the Windows 8.1 SDK license")
     endif()
+    
+    string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" WINDOWS_SDK_SEMVER "${WINDOWS_SDK}")
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/opengl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opengl.pc" @ONLY)
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/glu.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glu.pc" @ONLY)
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/opengl.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opengl.pc" @ONLY)
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/glu.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glu.pc" @ONLY)
+    endif()
+    vcpkg_fixup_pkgconfig()
+
 else()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()

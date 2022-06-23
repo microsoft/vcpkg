@@ -19,8 +19,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
 
-[![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 # Table of Contents
 
 - [Vcpkg: Overview](#vcpkg-overview)
@@ -30,7 +28,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Quick Start: Unix](#quick-start-unix)
   - [Installing Linux Developer Tools](#installing-linux-developer-tools)
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
-    - [Installing GCC for macOS before 10.15](#installing-gcc-for-macos-before-1015)
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
@@ -40,6 +37,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 - [Examples](#examples)
 - [Contributing](#contributing)
 - [License](#license)
+- [Security](#security)
 - [Telemetry](#telemetry)
 
 # Getting Started
@@ -122,7 +120,7 @@ In order to use vcpkg with CMake outside of an IDE,
 you can use the toolchain file:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -165,7 +163,7 @@ $ ./vcpkg/vcpkg search [search term]
 In order to use vcpkg with CMake, you can use the toolchain file:
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -214,8 +212,6 @@ You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick
 
 ## Using vcpkg with CMake
 
-If you're using vcpkg with CMake, the following may help!
-
 ### Visual Studio Code with CMake Tools
 
 Adding the following to your workspace `settings.json` will make
@@ -249,7 +245,7 @@ Finally, in `CMake options`, add the following line:
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-Unfortunately, you'll have to add this to each profile.
+You must add this line to each profile.
 
 ### Vcpkg as a Submodule
 
@@ -258,7 +254,7 @@ you can add the following to your CMakeLists.txt before the first `project()` ca
 instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -267,7 +263,7 @@ by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -328,7 +324,18 @@ with any additional questions or comments.
 
 # License
 
-The code in this repository is licensed under the [MIT License](LICENSE.txt).
+The code in this repository is licensed under the [MIT License](LICENSE.txt). The libraries
+provided by ports are licensed under the terms of their original authors. Where available, vcpkg
+places the associated license(s) in the location `installed/<triplet>/share/<port>/copyright`.
+
+# Security
+
+Most ports in vcpkg build the libraries in question using the original build system preferred
+by the original developers of those libraries, and download source code and build tools from their
+official distribution locations. For use behind a firewall, the specific access needed will depend
+on which ports are being installed. If you must install in in an "air gapped" environment, consider
+installing once in a non-"air gapped" environment, populating an
+[asset cache](docs/users/assetcaching.md) shared with the otherwise "air gapped" environment.
 
 # Telemetry
 

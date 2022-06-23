@@ -1,0 +1,38 @@
+--- a/lib/curl_ntlm_core.c
++++ b/lib/curl_ntlm_core.c
+@@ -60,12 +60,17 @@
+ 
+ #ifdef USE_WOLFSSL
+ #include <wolfssl/options.h>
+-#endif
+-
++#  include <wolfssl/openssl/des.h>
++#  include <wolfssl/openssl/md5.h>
++#  include <wolfssl/openssl/ssl.h>
++#  include <wolfssl/openssl/rand.h>
++#else
+ #  include <openssl/des.h>
+ #  include <openssl/md5.h>
+ #  include <openssl/ssl.h>
+ #  include <openssl/rand.h>
++#endif
++
+ #  if (defined(OPENSSL_VERSION_NUMBER) && \
+        (OPENSSL_VERSION_NUMBER < 0x00907001L)) && !defined(USE_WOLFSSL)
+ #    define DES_key_schedule des_key_schedule
+diff -ur a/lib/curl_ntlm_core.h b/lib/curl_ntlm_core.h
+--- a/lib/curl_ntlm_core.h	2022-05-10 23:11:15.000000000 -0700
++++ b/lib/curl_ntlm_core.h	2022-05-16 16:48:39.931726300 -0700
+@@ -35,10 +35,10 @@
+ #define NTLM_NEEDS_NSS_INIT
+ #endif
+ 
+-#if defined(USE_OPENSSL) || defined(USE_WOLFSSL)
+ #ifdef USE_WOLFSSL
+ #  include <wolfssl/options.h>
+-#endif
++#  include <wolfssl/openssl/ssl.h>
++#elif defined(USE_OPENSSL)
+ #  include <openssl/ssl.h>
+ #endif
+ 

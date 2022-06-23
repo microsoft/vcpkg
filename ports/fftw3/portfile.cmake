@@ -1,5 +1,5 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.10.tar.gz"
+    URLS "https://www.fftw.org/fftw-3.3.10.tar.gz"
     FILENAME "fftw-3.3.10.tar.gz"
     SHA512 2d34b5ccac7b08740dbdacc6ebe451d8a34cf9d9bfec85a5e776e87adf94abfd803c222412d8e10fbaa4ed46f504aa87180396af1b108666cde4314a55610b40
 )

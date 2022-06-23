@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 vcpkg_download_distfile(ARCHIVE
   URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.270.2.tar.gz
   FILENAME mDNSResponder-878.270.2.tar.gz

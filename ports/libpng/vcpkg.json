@@ -1,9 +1,10 @@
 {
   "name": "libpng",
   "version": "1.6.37",
-  "port-version": 16,
+  "port-version": 18,
   "description": "libpng is a library implementing an interface for reading and writing PNG (Portable Network Graphics) format files",
   "homepage": "https://github.com/glennrp/libpng",
+  "license": "libpng-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

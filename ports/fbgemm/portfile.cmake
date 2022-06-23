@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" ON_TARGET "uwp")
-
 # The project's CMakeLists.txt uses Python to select source files. Check if it is available in advance.
 vcpkg_find_acquire_program(PYTHON3)
 
