@@ -9,6 +9,7 @@
 
 set(QT_VERSION 6.3.0)
 set(QT_UPDATE_VERSION 0)
+set(QT_IS_LATEST 1)
 
 if(PORT MATCHES "qtquickcontrols2")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
