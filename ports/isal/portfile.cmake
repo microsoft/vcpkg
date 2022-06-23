@@ -10,6 +10,7 @@ vcpkg_from_github(
     REF v2.25.0
     SHA512 aa556c8ba26b4637493b3de50a23636668bcfd71249029c52fe6983d0bcf120d1b91f39aaa259cb58e59448d401366f3bfaaee24609db7e6a1cd3fdf1a953efe
     HEAD_REF master
+    PATCHES fix-nmake.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -55,8 +56,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
         endif()
     endif()
 
-    file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal/")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/isa-l.def" DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal/")
+    file(GLOB ISAL_HDRS "${SOURCE_PATH}/include/*")
+    file(INSTALL ${ISAL_HDRS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/isa-l.def" DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
 else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -67,6 +69,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/isalConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/isalConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/isalConfig.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
