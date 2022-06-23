@@ -38,6 +38,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STR
     list(APPEND B2_OPTIONS architecture=arm)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
     list(APPEND B2_OPTIONS architecture=power)
+elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
+    list(APPEND B2_OPTIONS architecture=arm+x86)
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
