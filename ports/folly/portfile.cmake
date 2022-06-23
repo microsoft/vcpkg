@@ -18,6 +18,21 @@ vcpkg_from_github(
 	fix-deps.patch
 )
 
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
+    DESTINATION "${SOURCE_PATH}/CMake/"
+)
+file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindDoubleConversion.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -41,18 +56,6 @@ feature(lzma LibLZMA)
 feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
-file(REMOVE "${SOURCE_PATH}/CMake/FindDoubleConversion.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindLZ4.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
