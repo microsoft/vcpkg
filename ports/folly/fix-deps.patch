@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 1689f9a..e3f99e1 100644
+index 1689f9a..992b9cb 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -28,10 +28,18 @@ endif()
+@@ -28,10 +28,17 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -13,7 +13,6 @@ index 1689f9a..e3f99e1 100644
 +find_dependency(Libevent CONFIG REQUIRED)
 +find_dependency(ZLIB MODULE)
 +find_dependency(OpenSSL MODULE REQUIRED)
-+find_dependency(LibLZMA)
 +find_dependency(unofficial-sodium CONFIG)
 +find_dependency(fmt CONFIG REQUIRED)
  
