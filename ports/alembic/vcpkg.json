@@ -6,7 +6,7 @@
   "homepage": "https://alembic.io/",
   "supports": "!(windows & x86) & !uwp",
   "dependencies": [
-    "imath",
+    "openexr",
     {
       "name": "vcpkg-cmake",
       "host": true
