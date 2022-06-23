@@ -125,10 +125,7 @@ HEAD commit should be a child of all previous HEAD commits.
 
 ### Builtin Registries
 
-Builtin registries are treated as special Git registries. Instead of fetching
-from a remote url, builtin registries consult the `$VCPKG_ROOT/.git` directory
-of the vcpkg clone. They use the currently checked out `$VCPKG_ROOT/versions`
-directory as the source for versioning information.
+Builtin registries are treated as special [Git registries](#git-registries). Instead of fetching from a remote url, builtin registries consult the `$VCPKG_ROOT/.git` directory of the vcpkg clone. They use the currently checked out `$VCPKG_ROOT/versions` directory as the source for versioning information.
 
 #### Adding a New Version
 
@@ -216,9 +213,7 @@ registries, which have the implicit versioning scheme of refs, filesystem
 registries can't rely on the version control system here. One possible option
 is to do a daily release, and have your "versions" be dates.
 
-_WARNING_: A baseline must always refer to the same set of versions. If you
-want to add new versions, you need to create a new version of the registry in
-the `baseline.json` file.
+_WARNING_: A baseline must not be modified once published. If you want to change or update versions, you need to create a new baseline in the `baseline.json` file.
 
 Here's an example of a valid `baseline.json`, for a registry that has decided
 upon dates for their versions:
