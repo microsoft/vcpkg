@@ -6477,8 +6477,8 @@
       "port-version": 3
     },
     "secp256k1": {
-      "baseline": "2022-25-06",
-      "port-version": 5
+      "baseline": "2017-19-10",
+      "port-version": 4
     },
     "selene": {
       "baseline": "0.3.1",
