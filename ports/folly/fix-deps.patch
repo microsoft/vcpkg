@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 1689f9a..16076a2 100644
+index 1689f9a..af91054 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -28,10 +28,22 @@ endif()
+@@ -28,10 +28,19 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -15,9 +15,6 @@ index 1689f9a..16076a2 100644
 +find_dependency(OpenSSL MODULE REQUIRED)
 +find_dependency(BZip2 MODULE)
 +find_dependency(LibLZMA MODULE)
-+find_dependency(lz4 CONFIG)
-+find_dependency(zstd CONFIG)
-+find_dependency(Snappy CONFIG)
 +find_dependency(unofficial-sodium CONFIG)
 +find_dependency(fmt CONFIG REQUIRED)
  
@@ -28,7 +25,7 @@ index 1689f9a..16076a2 100644
      context
      filesystem
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 4b78e9f..9f4b6ba 100644
+index 4b78e9f..138053c 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -85,19 +82,8 @@ index 4b78e9f..9f4b6ba 100644
  
  find_package(ZLIB MODULE)
  set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
-@@ -104,25 +100,22 @@ if (LIBLZMA_FOUND)
-   list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
- endif()
- 
--find_package(LZ4 MODULE)
--set(FOLLY_HAVE_LIBLZ4 ${LZ4_FOUND})
--if (LZ4_FOUND)
--  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LZ4_INCLUDE_DIR})
--  list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
-+find_package(lz4 CONFIG)
-+if (TARGET lz4::lz4)
-+  set(FOLLY_HAVE_LIBLZ4 1)
-+  list(APPEND FOLLY_LINK_LIBRARIES lz4::lz4)
+@@ -111,11 +107,10 @@ if (LZ4_FOUND)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
  endif()
  
 -find_package(Zstd MODULE)
@@ -111,19 +97,8 @@ index 4b78e9f..9f4b6ba 100644
 +  list(APPEND FOLLY_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
  endif()
  
--find_package(Snappy MODULE)
--set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
--if (SNAPPY_FOUND)
--  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
--  list(APPEND FOLLY_LINK_LIBRARIES ${SNAPPY_LIBRARY})
-+find_package(Snappy CONFIG)
-+if (TARGET Snappy::snappy)
-+set(FOLLY_HAVE_LIBSNAPPY 1)
-+list(APPEND FOLLY_LINK_LIBRARIES Snappy::snappy)
- endif()
- 
- find_package(LibDwarf)
-@@ -141,9 +134,10 @@ find_package(LibUring)
+ find_package(Snappy MODULE)
+@@ -141,9 +136,10 @@ find_package(LibUring)
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
  
@@ -137,7 +112,7 @@ index 4b78e9f..9f4b6ba 100644
  
  list(APPEND FOLLY_LINK_LIBRARIES ${CMAKE_DL_LIBS})
  list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-@@ -154,9 +148,9 @@ if (PYTHON_EXTENSIONS)
+@@ -154,9 +150,9 @@ if (PYTHON_EXTENSIONS)
  endif ()
  
  find_package(LibUnwind)
@@ -149,7 +124,7 @@ index 4b78e9f..9f4b6ba 100644
    set(FOLLY_HAVE_LIBUNWIND ON)
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-@@ -299,11 +293,7 @@ endif()
+@@ -299,11 +295,7 @@ endif()
  
  add_library(folly_deps INTERFACE)
  
