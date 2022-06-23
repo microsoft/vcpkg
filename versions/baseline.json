@@ -1213,7 +1213,7 @@
       "port-version": 1
     },
     "c89stringutils": {
-      "baseline": "2022-05-23",
+      "baseline": "2022-06-23",
       "port-version": 0
     },
     "c9y": {
