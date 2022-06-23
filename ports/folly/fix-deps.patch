@@ -1,26 +1,34 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 1689f9a..25f10a2 100644
+index 1689f9a..16076a2 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -31,7 +31,7 @@ set(FOLLY_LIBRARIES Folly::folly)
- find_dependency(fmt)
+@@ -28,10 +28,22 @@ endif()
+ set(FOLLY_LIBRARIES Folly::folly)
+ 
+ # Find folly's dependencies
+-find_dependency(fmt)
++find_dependency(double-conversion CONFIG REQUIRED)
++find_dependency(glog CONFIG REQUIRED)
++find_dependency(gflags CONFIG)
++find_dependency(Libevent CONFIG REQUIRED)
++find_dependency(ZLIB MODULE)
++find_dependency(OpenSSL MODULE REQUIRED)
++find_dependency(BZip2 MODULE)
++find_dependency(LibLZMA MODULE)
++find_dependency(lz4 CONFIG)
++find_dependency(zstd CONFIG)
++find_dependency(Snappy CONFIG)
++find_dependency(unofficial-sodium CONFIG)
++find_dependency(fmt CONFIG REQUIRED)
  
  set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
 -find_dependency(Boost 1.51.0 MODULE
-+find_dependency(Boost  CONFIG REQUIRED
++find_dependency(Boost
    COMPONENTS
      context
      filesystem
-@@ -39,7 +39,6 @@ find_dependency(Boost 1.51.0 MODULE
-     regex
-     system
-     thread
--  REQUIRED
- )
- 
- if (NOT folly_FIND_QUIETLY)
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 4b78e9f..0fc9787 100644
+index 4b78e9f..9f4b6ba 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -28,7 +36,7 @@ index 4b78e9f..0fc9787 100644
  set(Boost_USE_STATIC_LIBS "${FOLLY_BOOST_LINK_STATIC}")
  
 -find_package(Boost 1.51.0 MODULE
-+find_package(Boost REQUIRED
++find_package(Boost
    COMPONENTS
      context
      filesystem
@@ -47,8 +55,9 @@ index 4b78e9f..0fc9787 100644
 +find_package(double-conversion CONFIG REQUIRED)
 +list(APPEND FOLLY_LINK_LIBRARIES double-conversion::double-conversion)
  
- find_package(Glog CONFIG REQUIRED)
+-find_package(Glog CONFIG REQUIRED)
 -set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
++find_package(glog CONFIG REQUIRED)
 +set(FOLLY_HAVE_LIBGLOG 1)
  list(APPEND FOLLY_LINK_LIBRARIES glog::glog)
 -list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
@@ -61,7 +70,7 @@ index 4b78e9f..0fc9787 100644
 -  set(FOLLY_LIBGFLAGS_LIBRARY ${LIBGFLAGS_LIBRARY})
 -  set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
 +
-+find_package(Gflags CONFIG)
++find_package(gflags CONFIG)
 +if(TARGET gflags::gflags)
 +  set(FOLLY_HAVE_LIBGFLAGS 1)
 +  list(APPEND FOLLY_LINK_LIBRARIES gflags::gflags)
@@ -153,49 +162,3 @@ index 4b78e9f..0fc9787 100644
  target_link_libraries(folly_deps INTERFACE fmt::fmt)
  
  list(REMOVE_DUPLICATES FOLLY_INCLUDE_DIRECTORIES)
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac2a741..489c598 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -470,10 +470,9 @@ option(BUILD_HANGING_TESTS "If enabled, compile tests that are known to hang." O
- option(BUILD_SLOW_TESTS "If enabled, compile tests that take a while to run in debug mode." OFF)
- if (BUILD_TESTS)
-   option(USE_CMAKE_GOOGLE_TEST_INTEGRATION "If enabled, use the google test integration included in CMake." ON)
--  find_package(GMock MODULE REQUIRED)
--  find_package(GTest MODULE REQUIRED)
-+  find_package(GTest CONFIG REQUIRED)
-   if (USE_CMAKE_GOOGLE_TEST_INTEGRATION)
--    include(GoogleTest OPTIONAL RESULT_VARIABLE HAVE_CMAKE_GTEST)
-+	  include(GoogleTest OPTIONAL RESULT_VARIABLE HAVE_CMAKE_GTEST)
-     enable_testing()
-   else()
-     set(HAVE_CMAKE_GTEST OFF)
-@@ -530,6 +529,15 @@ if (BUILD_TESTS)
-     ${FOLLY_DIR}/logging/test/TestLogHandler.cpp
-     ${FOLLY_DIR}/logging/test/TestLogHandler.h
-   )
-+  if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-+    # The GTEST_LINKED_AS_SHARED_LIBRARY macro must be set properly on Windows.
-+    #
-+    # There isn't currently an easy way to determine if a library was compiled as
-+    # a shared library on Windows, so just assume we've been built against a
-+    # shared build of gmock for now.
-+    SET(LIBGMOCK_DEFINES "GTEST_LINKED_AS_SHARED_LIBRARY=1" CACHE STRING "")
-+  endif()
-+
-   target_compile_definitions(folly_test_support
-     PUBLIC
-       ${LIBGMOCK_DEFINES}
-@@ -545,8 +553,10 @@ if (BUILD_TESTS)
-       ${BOOST_LIBRARIES}
-       follybenchmark
-       folly
--      ${LIBGMOCK_LIBRARIES}
--      ${GLOG_LIBRARY}
-+      #Gtest::gmock_main
-+      #Gtest::gmock
-+      Gtest::gtest
-+      glog::glog
-   )
-   apply_folly_compile_options_to_target(folly_test_support)
- 

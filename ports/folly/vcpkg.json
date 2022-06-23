@@ -44,6 +44,12 @@
         "bzip2"
       ]
     },
+    "libsodium": {
+      "description": "Support libsodium for cryto",
+      "dependencies": [
+        "libsodium"
+      ]
+    },
     "lz4": {
       "description": "Support lz4 for compression",
       "dependencies": [
