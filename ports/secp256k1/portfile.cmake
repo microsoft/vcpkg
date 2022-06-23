@@ -30,9 +30,9 @@ file(REMOVE ${SOURCE_PATH}/examples/schnorr.c)
 file(REMOVE ${SOURCE_PATH}/examples/random.h)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
+	SOURCE_PATH "${SOURCE_PATH}"
+	OPTIONS_DEBUG
+	-DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
