@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.41.0",
+  "version": "1.42.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -277,6 +277,18 @@
         }
       ]
     },
+    "dataplex": {
+      "description": "Cloud Dataplex API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dataproc": {
       "description": "Cloud Dataproc API C++ Client Library",
       "dependencies": [
@@ -291,6 +303,30 @@
     },
     "debugger": {
       "description": "Stackdriver Debugger API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dialogflow-cx": {
+      "description": "Cloud Dialogflow CX API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dialogflow-es": {
+      "description": "Cloud Dialogflow ES API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
