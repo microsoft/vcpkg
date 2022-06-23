@@ -7,7 +7,7 @@ Merges multiple copyright files into a single file and install it.
 ## Usage
 
 ```cmake
-vcpkg_install_copyright(FILE_LIST <file1> <file2>...)
+vcpkg_install_copyright(FILE_LIST <file1> <file2>... [COMMENT])
 ```
 
 ## Parameters
@@ -20,6 +20,9 @@ If you want to install just a single license file, please use
 ```cmake
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 ```
+
+### COMMENT
+This optional parameter adds a comment before at the top of the file. 
 
 ## Notes
 
@@ -37,10 +40,24 @@ LICENSE-MIT.txt:
 Lorem ipsum dolor sit amet...
 ```
 
+Or with `COMMENT`:
+
+```
+A meaningful comment
+
+LICENSE-LGPL2.txt:
+
+Lorem ipsum dolor...
+
+LICENSE-MIT.txt:
+
+Lorem ipsum dolor sit amet...
+```
+
 ## Examples
 
 ```cmake
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE/license.md" "${SOURCE_PATH}/LICENSE/license_gpl.md"...)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE/license.md" "${SOURCE_PATH}/LICENSE/license_gpl.md" COMMENT "This is a comment")
 ```
 
 You can also collect the required files using a `GLOB` pattern:

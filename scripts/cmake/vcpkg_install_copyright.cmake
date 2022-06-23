@@ -1,5 +1,5 @@
 function(vcpkg_install_copyright)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "FILE_LIST")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "COMMENT" "FILE_LIST")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -27,6 +27,10 @@ function(vcpkg_install_copyright)
 
         string(APPEND out_string "${file_name}:\n\n${file_contents}\n\n")
     endforeach()
+
+    if(arg_COMMENT)
+        string(PREPEND out_string "${arg_COMMENT}\n\n")
+    endif()
 
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${out_string}")
 endfunction()
