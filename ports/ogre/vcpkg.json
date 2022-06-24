@@ -1,11 +1,12 @@
 {
   "name": "ogre",
   "version": "1.12.9",
-  "port-version": 7,
+  "port-version": 8,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
   "dependencies": [
+    "assimp",
     "pugixml",
     "sdl2",
     {
@@ -26,10 +27,7 @@
   ],
   "features": {
     "assimp": {
-      "description": "Use assimp",
-      "dependencies": [
-        "assimp"
-      ]
+      "description": "Deprecate feature, enable by default"
     },
     "csharp": {
       "description": "Build csharp bindings"
