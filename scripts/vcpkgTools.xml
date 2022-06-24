@@ -15,25 +15,25 @@
         <archiveName>python-3.10.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.24.0-rc1</version>
-        <exeRelativePath>cmake-3.24.0-rc1-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-windows-i386.zip</url>
-        <sha512>63a0de4392980c289731201cdc95d2722d0006f71ae1f5475abc2477b3cc1728c668b7c709fc34bcd8531f29dfa54bfdc8bef9f8fdd42ea237462e6c43e20edb</sha512>
-        <archiveName>cmake-3.24.0-rc1-windows-i386.zip</archiveName>
+        <version>3.24.0-rc2</version>
+        <exeRelativePath>cmake-3.24.0-rc2-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc2/cmake-3.24.0-rc2-windows-i386.zip</url>
+        <sha512>f7ed2e983b807684a056be2406682ec3b3a68166126d1052c6445fc746a92f45ec444daef5359b0e3fed3200d586cd86165cb8300b4bb044a461502fd2461661</sha512>
+        <archiveName>cmake-3.24.0-rc2-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.24.0-rc1</version>
-        <exeRelativePath>cmake-3.24.0-rc1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-macos10.10-universal.tar.gz</url>
-        <sha512>e0df94d6c6cd57e310711f737f4ede428db7ac8c67b8c0f9714f98b9735e515f48b27853e9fc3a58e3a225dbb8e3a252e4165de556b2b14128f5b6339f5ae043</sha512>
-        <archiveName>cmake-3.24.0-rc1-macos-universal.tar.gz</archiveName>
+        <version>3.24.0-rc2</version>
+        <exeRelativePath>cmake-3.24.0-rc2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc2/cmake-3.24.0-rc2-macos10.10-universal.tar.gz</url>
+        <sha512>71bcb7d8a270f3920a1f245111ec1c508e63887f8725d08ded6bc6bea16f337d28398bd85b90b4dce1f675084a2dbd16fe31b60c3c0fa278a46e8366757dc3a8</sha512>
+        <archiveName>cmake-3.24.0-rc2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.24.0-rc1</version>
-        <exeRelativePath>cmake-3.24.0-rc1-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc1/cmake-3.24.0-rc1-linux-x86_64.tar.gz</url>
-        <sha512>8205f1a7d024b2f3663a9f6b3374a7143d4fa5387230acb064e01669453a4ea9e464e1cc2e2c1328cb211af33a8f29997e0f29a03a498b75df2f321d8366df85</sha512>
-        <archiveName>cmake-3.24.0-rc1-linux-x86_64.tar.gz</archiveName>
+        <version>3.24.0-rc2</version>
+        <exeRelativePath>cmake-3.24.0-rc2-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc2/cmake-3.24.0-rc2-linux-x86_64.tar.gz</url>
+        <sha512>a0df6355af6009e4505faa19e2b1b14b38e8ffdec2fcc2432f549b02623ad041849e08d2518b8622ade0088e0adf8828160d27fa174131597636871f3bd24d12</sha512>
+        <archiveName>cmake-3.24.0-rc2-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
