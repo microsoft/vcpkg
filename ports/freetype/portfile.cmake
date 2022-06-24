@@ -1,11 +1,8 @@
-set(FT_VERSION 2.12.1)
-
-vcpkg_from_sourceforge(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freetype/freetype2
-    REF ${FT_VERSION}
-    FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
+    REPO freetype/freetype
+    REF 2db58e061ecc0d738a41d13ed8908e967bd0014c #2.12.1
+    SHA512 66a04a96bb788faf5a3a4100143b98e9ec7de12fd562fd0c0c8a8936305cfad91c38f1d9859411e8218c61a2513f2045a0d752c96b768b07933da73218f58d84
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
