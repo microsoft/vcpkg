@@ -19,7 +19,9 @@ The list of libraries is enumerated from the [`ports\`](https://github.com/Micro
 We recommend cloning directly from [GitHub](https://github.com/microsoft/vcpkg) and using `git pull` to update the list of portfiles. Once you've updated your portfiles, `vcpkg update` will indicate any installed libraries that are now out of date.
 
 ## Can I build a private library with this tool?
-Yes. See the article on [Creating Registries](../maintainers/registries.md). A registry is a catalog of ports, similar to the one provided with vcpkg that contains open source libraries.  
+Yes. Follow [our packaging zlib Example](../examples/packaging-zipfiles.md) for creating a portfile using a fake URL. Then, either pre-seed the `downloads\` folder with a zip containing your private sources or replace the normal calls to `vcpkg_download_distfile` and `vcpkg_extract_source_archive` with functions that unpack your source code.
+
+You can take this further by publishing your private libraries into a registry. See the article on [Creating Registries](../maintainers/registries.md). A registry is a catalog of ports, similar to the one provided with vcpkg that contains open source libraries.  
 
 ## Can I use a prebuilt private library with this tool?
 Yes. The `portfile.cmake` for a library is fundamentally a script that places the headers and binaries into the correct arrangement in the `${CURRENT_PACKAGES_DIR}`, so to pull in prebuilt binaries you can write a portfile which directly downloads and arranges the files.
@@ -30,8 +32,8 @@ To see an example of this, look at [`ports\opengl\portfile.cmake`](https://githu
 Our built-in, CI-tested triplets are:
 * Windows Desktop (x86, x64, x64-static, arm64)
 * Universal Windows Platform (x64, and ARM)
-* Mac OS X (x64)
-* Linux (x64)
+* Mac OS X (x64-static)
+* Linux (x64-static)
 
 However, there is an even larger number of community triplets available with more platforms and architectures, including for iOS, Android, MinGW, WebAssembly, freeBSD, and openBSD.
 
@@ -95,7 +97,7 @@ A lower level mechanism to achieve the same as the `vcpkg integrate project` NuG
 You can save some disk space by completely removing the `packages\`, `buildtrees\`, and `downloads\` folders.
 
 ## How is CMake used internally by vcpkg?
-vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
+Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 
 ## Will vcpkg support downloading compiled binaries from a public or private server?
 We would like to eventually support downloading precompiled binaries, similar to other system package managers.
