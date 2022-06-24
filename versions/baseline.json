@@ -830,7 +830,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.79.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.79.0",
@@ -1234,7 +1234,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 6
+      "port-version": 7
     },
     "cairo": {
       "baseline": "1.17.6",
@@ -1282,7 +1282,7 @@
     },
     "catch2": {
       "baseline": "3.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1917,7 +1917,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-05-05",
+      "baseline": "2022-06-18",
       "port-version": 0
     },
     "discount": {
@@ -2122,7 +2122,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 5
+      "port-version": 6
     },
     "exiv2": {
       "baseline": "0.27.5",
@@ -2210,7 +2210,7 @@
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
-      "port-version": 1
+      "port-version": 2
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2306,7 +2306,7 @@
     },
     "folly": {
       "baseline": "2022.03.21.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2314,7 +2314,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.0",
-      "port-version": 2
+      "port-version": 3
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2581,8 +2581,8 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.5.0",
-      "port-version": 5
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
@@ -2617,7 +2617,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "1.41.0",
+      "baseline": "1.42.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2646,7 +2646,7 @@
     },
     "gppanel": {
       "baseline": "2020-05-20",
-      "port-version": 1
+      "port-version": 2
     },
     "graphene": {
       "baseline": "1.10.2",
@@ -2718,7 +2718,7 @@
     },
     "gts": {
       "baseline": "0.7.6",
-      "port-version": 5
+      "port-version": 6
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -3382,7 +3382,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lcms": {
       "baseline": "2.12",
@@ -4257,7 +4257,7 @@
       "port-version": 1
     },
     "libzip": {
-      "baseline": "1.8.0",
+      "baseline": "1.9.0",
       "port-version": 0
     },
     "libzippp": {
@@ -5054,7 +5054,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 7
+      "port-version": 8
     },
     "ogre-next": {
       "baseline": "2.3.0",
@@ -5525,8 +5525,8 @@
       "port-version": 2
     },
     "pmdk": {
-      "baseline": "1.11.0",
-      "port-version": 1
+      "baseline": "1.12.0",
+      "port-version": 0
     },
     "pngpp": {
       "baseline": "0.2.10",
@@ -7186,7 +7186,7 @@
     },
     "tre": {
       "baseline": "0.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "treehh": {
       "baseline": "3.16",
@@ -7786,7 +7786,7 @@
     },
     "zeromq": {
       "baseline": "4.3.4",
-      "port-version": 5
+      "port-version": 6
     },
     "zfp": {
       "baseline": "0.5.5",
