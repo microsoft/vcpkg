@@ -7762,7 +7762,7 @@
     },
     "yoga": {
       "baseline": "1.19.0",
-      "port-version": 0
+      "port-version": 1
     },
     "yomm2": {
       "baseline": "1.1.2",
