@@ -30,11 +30,19 @@ vcpkg_cmake_configure(
         -DUSE_EXTERNAL_TINY_PROCESS_LIBRARY=ON
         -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe
         ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF  # Not enabled by default, but to be sure
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/gazebo-11/gazebo/test")
+
+foreach(postfix "" "-11")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}${postfix}/setup.sh" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}${postfix}/setup.sh" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
+endforeach()
 
 vcpkg_copy_tools(
     TOOL_NAMES gazebo gz gzclient gzserver
@@ -48,5 +56,6 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+vcpkg_fixup_pkgconfig()
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

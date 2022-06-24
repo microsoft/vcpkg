@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-Fix-nasm-debug-format-flag.patch
-        0003-add-uwp-and-v142-support.patch
+        0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
 )
 
@@ -19,12 +19,12 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 else()
-	set(BASH /bin/bash)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+    set(BASH /bin/bash)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
 
 vcpkg_find_acquire_program(NASM)
@@ -42,7 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_CRT_SUFFIX md)
     endif()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND (VCPKG_PLATFORM_TOOLSET STREQUAL v142 OR VCPKG_PLATFORM_TOOLSET STREQUAL v143))
         set(LIBVPX_TARGET_OS "uwp")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_TARGET_OS "win32")
@@ -64,7 +64,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_ARCH_DIR "ARM")
     endif()
 
-    if(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL v143)
+        set(LIBVPX_TARGET_VS "vs17")
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
         set(LIBVPX_TARGET_VS "vs16")
     else()
         set(LIBVPX_TARGET_VS "vs15")
@@ -143,10 +145,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
-    
+
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)   
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
 
 else()
