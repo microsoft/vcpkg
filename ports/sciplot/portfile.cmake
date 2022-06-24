@@ -6,14 +6,15 @@ vcpkg_from_github(
     HEAD_REF vcpkg
 )
 
-vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DSCIPLOT_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/sciplot)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/sciplot)
 
 vcpkg_copy_pdbs()
 
