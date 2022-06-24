@@ -15,9 +15,6 @@
       "host": true
     }
   ],
-  "default-features": [
-
-  ],
   "features": {
     "opengl": {
       "description": "Enable the use of the OpenGL/GLUT Library",
