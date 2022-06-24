@@ -22,6 +22,8 @@ Build and install port packages.
 
 In Classic Mode, this verb adds port packages to the existing set in the [installed directory][] (defaults to `installed/` under the vcpkg root). This can require removing and rebuilding existing packages, which can fail.
 
+<a id="package-syntax"></a>
+
 **Package Syntax**
 ```
 portname[feature1,feature2]:triplet
