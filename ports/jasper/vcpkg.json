@@ -15,15 +15,34 @@
       "host": true
     }
   ],
+  "default-features": [
+    "default-features"
+  ],
   "features": {
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "jasper",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!(windows & arm)"
+        }
+      ]
+    },
     "opengl": {
       "description": "Enable the use of the OpenGL/GLUT Library",
       "dependencies": [
         {
           "name": "freeglut",
-          "platform": "!osx"
+          "platform": "!osx & !(windows & arm)"
         },
-        "opengl"
+        {
+          "name": "opengl",
+          "platform": "!(windows & arm)"
+        }
       ]
     }
   }
