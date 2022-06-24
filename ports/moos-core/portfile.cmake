@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/MOOS)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/MOOS)
 
 # Stage tools
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
