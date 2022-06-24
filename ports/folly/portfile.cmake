@@ -16,6 +16,7 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
+        fix-abort.patch
 )
 
 file(COPY

@@ -1,8 +1,8 @@
 {
   "name": "pmdk",
-  "version": "1.11.0",
-  "port-version": 1,
+  "version": "1.12.0",
   "description": "Persistent Memory Development Kit",
   "homepage": "https://github.com/pmem/pmdk",
+  "license": "BSD-3-Clause",
   "supports": "!(arm | x86)"
 }
