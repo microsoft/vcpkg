@@ -8,27 +8,27 @@ if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
-function(qt_download_submodule_impl)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
+function(qt_download_submodule)
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "" "PATCHES")
 
-    if("${_qarg_SUBMODULE}" IN_LIST QT_GIT_SUBMODULES)
+    if("${PORT}" IN_LIST QT_FROM_QT_GIT)
         # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
-            URL "https://code.qt.io/cgit/qt/${_qarg_SUBMODULE}.git"
-            REF "${${_qarg_SUBMODULE}_REF}"
+            URL "https://code.qt.io/cgit/qt/${PORT}.git"
+            REF "${${PORT}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
     else()
         if(VCPKG_USE_HEAD_VERSION)
             set(sha512 SKIP_SHA512)
-        elseif(NOT DEFINED "${_qarg_SUBMODULE}_HASH")
-            message(FATAL_ERROR "No information for ${_qarg_SUBMODULE} -- add it to QT_PORTS and run qtbase in QT_UPDATE_VERSION mode first")
+        elseif(NOT DEFINED "${PORT}_HASH")
+            message(FATAL_ERROR "No information for ${PORT} -- add it to QT_PORTS and run qtbase in QT_UPDATE_VERSION mode first")
         else()
-            set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
+            set(sha512 SHA512 "${${PORT}_HASH}")
         endif()
 
-        qt_get_url_filename("${_qarg_SUBMODULE}" url filename)
+        qt_get_url_filename("${PORT}" url filename)
         vcpkg_download_distfile(archive
             URLS "${url}"
             FILENAME "${filename}"
@@ -40,13 +40,6 @@ function(qt_download_submodule_impl)
             PATCHES ${_qarg_PATCHES}
         )
     endif()
-    set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
-endfunction()
-
-function(qt_download_submodule)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "" "PATCHES")
-
-    qt_download_submodule_impl(SUBMODULE "${PORT}" PATCHES ${_qarg_PATCHES})
 
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
