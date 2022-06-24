@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-space.patch
         fix-protobuf-deprecated.patch
         no-inout-macros.patch
+        fix-isgloginitialized.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
