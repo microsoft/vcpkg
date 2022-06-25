@@ -396,6 +396,10 @@
       "baseline": "2.0.0.1",
       "port-version": 1
     },
+    "base64": {
+      "baseline": "2022-06-19",
+      "port-version": 0
+    },
     "basisu": {
       "baseline": "1.11",
       "port-version": 5
