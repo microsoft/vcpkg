@@ -1,9 +1,10 @@
 {
   "name": "libproxy",
   "version": "0.4.17",
-  "port-version": 2,
+  "port-version": 3,
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
+  "license": "LGPL-2.1-only",
   "supports": "!uwp",
   "dependencies": [
     "libmodman",

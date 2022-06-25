@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.16",
-  "port-version": 7,
+  "port-version": 9,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -54,6 +54,12 @@
             "contrib"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {

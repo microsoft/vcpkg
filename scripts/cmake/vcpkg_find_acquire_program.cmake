@@ -1,52 +1,3 @@
-#[===[.md:
-# vcpkg_find_acquire_program
-
-Download or find a well-known tool.
-
-## Usage
-```cmake
-vcpkg_find_acquire_program(<program>)
-```
-## Parameters
-### program
-This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
-
-## Notes
-The current list of programs includes:
-
-* 7Z
-* ARIA2 (Downloader)
-* BISON
-* CLANG
-* DARK
-* DOXYGEN
-* FLEX
-* GASPREPROCESSOR
-* GPERF
-* PERL
-* PYTHON2
-* PYTHON3
-* GIT
-* GN
-* GO
-* JOM
-* MESON
-* NASM
-* NINJA
-* NUGET
-* SCONS
-* SWIG
-* YASM
-
-Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
-
-## Examples
-
-* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
-#]===]
-
 function(z_vcpkg_find_acquire_program_version_check out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "EXACT_VERSION_MATCH"
@@ -216,21 +167,47 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "GN")
         set(program_name gn)
         set(rename_binary_to "gn")
-        set(cipd_download_gn "https://chrome-infra-packages.appspot.com/dl/gn/gn")
-        if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-            set(supported_on_unix ON)
-            set(program_version "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC")
-            set(gn_platform "linux-amd64")
-            set(download_sha512 "871e75d7f3597b74fb99e36bb41fe5a9f8ce8a4d9f167f4729fc6e444807a59f35ec8aca70c2274a99c79d70a1108272be1ad991678a8ceb39e30f77abb13135")
-        elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-            set(supported_on_unix ON)
-            set(program_version "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC")
-            set(gn_platform "mac-amd64")
-            set(download_sha512 "03ee64cb15bae7fceb412900d470601090bce147cfd45eb9b46683ac1a5dca848465a5d74c55a47df7f0e334d708151249a6d37bb021de74dd48b97ed4a07937")
-        else()
-            set(program_version "qUkAhy9J0P7c5racy-9wB6AHNK_btS18im8S06_ehhwC")
-            set(gn_platform "windows-amd64")
-            set(download_sha512 "263e02bd79eee0cb7b664831b7898565c5656a046328d8f187ef7ae2a4d766991d477b190c9b425fcc960ab76f381cd3e396afb85cba7408ca9e74eb32c175db")
+        if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/gn/version.txt")
+            file(READ "${CURRENT_HOST_INSTALLED_DIR}/share/gn/version.txt" program_version)
+            set(paths_to_search "${CURRENT_HOST_INSTALLED_DIR}/tools/gn")
+        else() # Old behavior
+            message("Consider adding vcpkg-tool-gn as a host dependency of this port or create an issue at https://github.com/microsoft/vcpkg/issues")
+            set(cipd_download_gn "https://chrome-infra-packages.appspot.com/dl/gn/gn")
+            if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+                set(supported_on_unix ON)
+                EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH)
+                if(HOST_ARCH STREQUAL "aarch64")
+                    set(program_version "GkfFAfAUyE-qfeWkdUMaeM1Ov64Fk3SjSj9pwKqZX7gC")
+                    set(gn_platform "linux-arm64")
+                    set(download_sha512 "E88201309A12C00CE60137261B8E1A759780C81D1925B819583B16D2095A16A7D32EFB2AF36C1E1D6EAA142BF6A6A811847D3140E4E94967EE28F4ADF6373E4B")
+                else()
+                    set(program_version "Fv1ENXodhXmEXy_xpZr2gQkVJh57w_IsbsrEJOU0_EoC")
+                    set(gn_platform "linux-amd64")
+                    set(download_sha512 "A7A5CD5633C5547EC1B1A95958486DDAAC91F1A65881EDC0AD8F74DF44E82F08BA74358E9A72DFCDDE6F534A6B9C9A430D3E16ACE2E4346C4D2E9113F7654B3F")
+                endif()
+            elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+                set(supported_on_unix ON)
+                EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH)
+                if(HOST_ARCH STREQUAL "arm64")
+                    set(program_version "qMPtGq7xZlpb-lHjP-SK27ftT4X71WIvguuyx6X14DEC")
+                    set(gn_platform "mac-arm64")
+                    set(download_sha512 "D096FB958D017807427911089AB5A7655AED117F6851C0491AC8063CEDB544423122EF64DF4264ECA86C20A2BDE9E64D7B72DA7ED8C95C2BA79A68B8247D36B8")
+                else()
+                    set(program_version "0x2juPLNfP9603GIyZrUfflxK6LiMcppLAoxEpYuIYoC")
+                    set(gn_platform "mac-amd64")
+                    set(download_sha512 "2696ECE7B2C8008CABDDF10024017E2ECF875F8679424E77052252BDDC83A2096DF3C61D89CD25120EF27E0458C8914BEEED9D418593BDBC4F6ED33A8D4C3DC5")
+                endif()
+            else()
+                if($ENV{PROCESSOR_ARCHITECTURE} STREQUAL "ARM64")
+                    set(program_version "q5ExVHmXyD34Q_Tzb-aRxsPipO-e37-csVRhVM7IJh0C")
+                    set(gn_platform "windows-amd64")
+                    set(download_sha512 "FA764AA44EB6F48ED50E855B4DC1DD1ABE35E45FD4AAC7F059A35293A14894C1B591215E34FB0CE9362E646EA9463BA3B489EFB7EBBAA2693D14238B50E4E686")
+                else() # AMD64
+                    set(program_version "q5ExVHmXyD34Q_Tzb-aRxsPipO-e37-csVRhVM7IJh0C")
+                    set(gn_platform "windows-amd64")
+                    set(download_sha512 "FA764AA44EB6F48ED50E855B4DC1DD1ABE35E45FD4AAC7F059A35293A14894C1B591215E34FB0CE9362E646EA9463BA3B489EFB7EBBAA2693D14238B50E4E686")
+                endif()
+            endif()
         endif()
         set(tool_subdirectory "${program_version}")
         set(download_urls "${cipd_download_gn}/${gn_platform}/+/${program_version}")
@@ -247,17 +224,17 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "PYTHON3")
         if(CMAKE_HOST_WIN32)
             set(program_name python)
-            set(program_version 3.10.2)
+            set(program_version 3.10.5)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
                 set(tool_subdirectory "python-${program_version}-x86")
                 set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-win32.zip")
                 set(download_filename "python-${program_version}-embed-win32.zip")
-                set(download_sha512 d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9)
+                set(download_sha512 7598cf838401d87c4aadb43f1d70a66c647b5c4c86d55eed747126eb21e699ee8e662eef50782eabe10c746ae3947a7f1418fa9e2c1131ca8f3ed06dcb48b00f)
             else()
                 set(tool_subdirectory "python-${program_version}-x64")
                 set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-amd64.zip")
                 set(download_filename "python-${program_version}-embed-amd64.zip")
-                set(download_sha512 e04e14f3b5e96f120a3b0d5fac07b2982b9f3394aef4591b140e84ff97c8532e1f8bf3e613bdf5aec6afeac108b975e754bf9727354bcfaa6673fc89826eac37)
+                set(download_sha512 17b1e00af8a051a4d319dd4bf340a6ad742c1b691faa30ea9f51bc0f2e9daccccd2745e2a081699428981d120d0c06007878ecaafca78936f4cfcab0054b4fb7)
             endif()
             set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
             vcpkg_list(SET post_install_command "${CMAKE_COMMAND}" -E rm python310._pth)

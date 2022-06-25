@@ -1,10 +1,10 @@
 {
   "name": "rsm-binary-io",
-  "version-semver": "2.0.4",
-  "port-version": 1,
+  "version-semver": "2.0.5",
   "description": "A binary i/o library for C++, without the agonizing pain",
   "homepage": "https://github.com/Ryan-rsm-McKenzie/binary_io",
   "documentation": "https://ryan-rsm-mckenzie.github.io/binary_io/",
+  "license": "MIT",
   "supports": "!osx & !uwp",
   "dependencies": [
     {

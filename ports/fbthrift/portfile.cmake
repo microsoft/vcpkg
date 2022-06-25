@@ -7,6 +7,9 @@ vcpkg_from_github(
     REF v2022.03.21.00
     SHA512 8d2d9430dc3a4ecc23042cd9bcf4eee888824449d05d98baec408aef806b934d643e578d3876169f69966c846aeddbe0aa84416c4e020cba028a49d2fccfe7ab
     HEAD_REF master
+    PATCHES 
+        0001-fix-compatibility-with-boost-1.79.0.patch
+        fix-glog.patch
 )
 
 vcpkg_cmake_configure(

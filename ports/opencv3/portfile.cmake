@@ -70,6 +70,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "vtk"       WITH_VTK
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
+ "dc1394"    WITH_1394
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", ovis", "python", "qt", "tbb"
@@ -376,6 +377,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME opencv CONFIG_PATH "share/opencv")
 vcpkg_copy_pdbs()
+
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  # Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake"
+      "\${_IMPORT_PREFIX}/sdk"
+      "\${_IMPORT_PREFIX}/debug/sdk"
+  )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)

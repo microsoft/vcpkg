@@ -1,10 +1,9 @@
 {
   "name": "glog",
-  "version": "0.5.0",
-  "port-version": 1,
+  "version": "0.6.0",
   "description": "C++ implementation of the Google logging module",
   "homepage": "https://github.com/google/glog",
-  "license": null,
+  "license": "BSD-3-Clause",
   "dependencies": [
     "gflags",
     {
@@ -15,5 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "unwind": {
+      "description": "Enable libunwind support",
+      "supports": "linux"
+    }
+  }
 }
