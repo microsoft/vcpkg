@@ -11,13 +11,13 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-set(OPENSSL_VERSION 3.0.3)
+set(OPENSSL_VERSION openssl-3.0.3)
 
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
-    FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 949472025211fabdaf2564122f0a9a3baef0facb6373e90cf6c4485164a50898050b179722d0b358c4d8cf1787384ea30d5fd03b98757634631d3e8978509b1a
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO openssl/openssl
+    REF ${OPENSSL_VERSION}
+    SHA512 6782119128926db90a48447cbd949859fdcf4120aeb1017fa85d7fbffbe84b3feae7bcfb86e219a30ef241eb998034c340bb62718f59b9e30aa90e647ca7a53e
 )
 
 vcpkg_find_acquire_program(PERL)
