@@ -19,7 +19,6 @@ The current list of programs includes:
 * ARIA2 (Downloader)
 * BISON
 * CLANG
-* CLANG7
 * DARK
 * DOXYGEN
 * FLEX
