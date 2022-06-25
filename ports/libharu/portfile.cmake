@@ -5,8 +5,8 @@ if("notiffsymbols" IN_LIST FEATURES)
 endif()
 vcpkg_download_distfile(SHADING_PR
     URLS "https://github.com/libharu/libharu/pull/157.diff"
-    FILENAME "libharu-shading-pr-157.patch"
-    SHA512 f2ddb22b54b4eccc79400b6a4b2d245a221898f75456a5a559523eab7a523a87dfc5dfd0ec5fb17a771697e03c7ea6ed4c6095eff73e0a4302cd6eb24584c957
+    FILENAME "libharu-pr-157-9e8ba2f.patch"
+    SHA512 10562c8c9c6975b74d625912e7d3b850376941d5e46136679371ce1315f416b6b8e91d73fd1257b907327b2d71d50b8c026547203f280e42fb7b1901245de03c
 )
 
 vcpkg_from_github(

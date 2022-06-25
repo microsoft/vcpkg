@@ -1,11 +1,3 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
-  message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
-endif()
-
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
-  message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
-endif()
-
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
@@ -43,7 +35,7 @@ FEATURES
 )
 
 set(WITH_MSMF ON)
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(WITH_MSMF OFF)
 endif()
 
@@ -53,13 +45,6 @@ if("gtk" IN_LIST FEATURES)
     set(WITH_GTK ON)
   else()
     message(WARNING "The gtk module cannot be enabled outside Linux")
-  endif()
-endif()
-
-if("ffmpeg" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_UWP)
-    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
-    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
   endif()
 endif()
 
@@ -110,11 +95,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME opencv CONFIG_PATH "share/opencv")
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
+  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv2/OpenCVModules.cmake" OPENCV_MODULES)
 
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
 find_dependency(Threads)")
@@ -145,7 +130,7 @@ find_dependency(Qt5 COMPONENTS OpenGL)")
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" "${OPENCV_MODULES}")
+  file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv2/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
