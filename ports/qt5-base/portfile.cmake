@@ -74,7 +74,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/Qt5PluginTarget.patch
                             patches/create_cmake.patch
                             patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
-                            patches/limits_include.patch       # Add missing includes to build with gcc 11
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
