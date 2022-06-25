@@ -20,7 +20,9 @@ vcpkg_from_github(
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
 
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_find_acquire_program(CLANG7)
+if(NOT DEFINED CLANG7)
+    message(FATAL_ERROR "Missing required variable CLANG7 from `vcpkg-tool-clang7`, please check your setup.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
