@@ -1,20 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 085713d4d301aeb58e7d14f44cfac6ce35fe2e77 # 0.60
-    SHA512 835536482def61c9978cda58507a7f5983b99765f69e7865cf5597b06075dc3e7ad4a3be0b2de2e44e4a4c3a6998115bf567ff586fb656cf5d95a0a7465fb2fe
+    REF 2bc89b34ad3cc37b6bca9a44a3529ff2d8fe211f # 0.61
+    SHA512 f180f863a25f671d3909f807748568bde8d66c3c236bd5777780240b5cffe6c6545e9627762caf4a488b28939f459813a3298e7d6aa52e9443639639a55f67ab
     HEAD_REF master
     PATCHES
         ddl2cpp_path.patch
-        fix-dependency.patch
 )
 
-# Use sqlpp11's own build process, skipping tests
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sqlite3  BUILD_SQLITE3_CONNECTOR
+)
+
+# Use sqlpp11's own build process
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_TESTS:BOOL=OFF
+        -DBUILD_TESTING:BOOL=OFF
+        # Use vcpkg as source for the date library
+        -DUSE_SYSTEM_DATE:BOOL=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
