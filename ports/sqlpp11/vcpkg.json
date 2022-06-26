@@ -5,7 +5,15 @@
   "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
   "homepage": "https://github.com/rbock/sqlpp11",
   "dependencies": [
-    "date"
+    "date",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "sqlite3": {

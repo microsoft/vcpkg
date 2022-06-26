@@ -15,9 +15,8 @@ vcpkg_check_features(
 )
 
 # Use sqlpp11's own build process
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING:BOOL=OFF
         # Use vcpkg as source for the date library
