@@ -9,7 +9,10 @@
   ],
   "features": {
     "sqlite3": {
-      "description": "SQLite3 connector"
+      "description": "SQLite3 connector",
+      "dependencies": [
+        "sqlite3"
+      ]
     }
   }
 }

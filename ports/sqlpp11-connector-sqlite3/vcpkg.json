@@ -1,11 +1,14 @@
 {
   "name": "sqlpp11-connector-sqlite3",
   "version-string": "0.30",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A C++ wrapper for sqlite3 meant to be used in combination with sqlpp11.",
   "dependencies": [
     "date",
     "sqlite3",
-    "sqlpp11"
+    {
+      "name": "sqlpp11",
+      "version": "0.60"
+    }
   ]
 }
