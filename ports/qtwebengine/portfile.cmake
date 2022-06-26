@@ -44,7 +44,6 @@ endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
-vcpkg_find_acquire_program(GPERF)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
@@ -54,8 +53,6 @@ if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
 
-get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
@@ -73,6 +70,9 @@ else()
     x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
 endif()
 
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -82,15 +82,26 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-#set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
-#cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
-#file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length)
+# We know that C:/buildrees/${PORT} is to long to build Release. Debug works however. Means 24 length is too much but 23 might work. 
+if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "Buildtree path '${CURRENT_BUILDTREES_DIR}' is too long.\nConsider passing --x-buildtrees-root=<shortpath> to vcpkg!\nTrying to use '${CURRENT_BUILDTREES_DIR}/../tmp'")
+    set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # activly avoid long path issues in CI. -> Means CI will not return logs
+    cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
+    string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length_new)
+    if(buildtree_length_new GREATER 22)
+         message(FATAL_ERROR "Buildtree path is too long. Build will fail! Pass --x-buildtrees-root=<shortpath> to vcpkg!")
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+endif()
 
 ### Download third_party modules
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
     URL git://code.qt.io/qt/qtwebengine-chromium.git
     REF "${${PORT}_chromium_REF}"
+    PATCHES
+        0ce5e91.diff
 )
 
 ##### qt_install_submodule

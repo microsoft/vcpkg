@@ -2,13 +2,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SergiusTheBest/plog
-    REF 1.1.6
-    SHA512 5240532df96144d5026d6f879b69f7d6f393ebc9122c6458c41076fd3db998565e45ed2ab4948f8c3cb59e08c0aad7695ee416f95b49fd70209cd937220cdf8b
+    REF 1.1.8
+    SHA512 09bf6e0cae7f20c1b42e68a174b4cd6a2fb8751db9758efb87449cbff48375708e43c147c72b7ed17fb9334acaf7802441f61578356284a8ed337fd886a45e79
     HEAD_REF master
 )
 
-# Copy header files
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}" FILES_MATCHING PATTERN "*.h")
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS -DPLOG_BUILD_SAMPLES=OFF)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 # Copy usage file
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

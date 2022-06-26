@@ -1,6 +1,9 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d314abe..d145517 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -401,4 +401,7 @@
+@@ -450,6 +450,9 @@ endif (HAVE_CXX11_ATOMIC)
+ 
  if (WITH_SYMBOLIZE)
    if (WIN32 OR CYGWIN)
 +    if(CMAKE_CROSSCOMPILING)
@@ -8,11 +11,12 @@
 +    else()
      cmake_push_check_state (RESET)
      set (CMAKE_REQUIRED_LIBRARIES DbgHelp)
-@@ -430,6 +433,7 @@
+ 
+@@ -480,6 +483,7 @@ if (WITH_SYMBOLIZE)
      ]=] HAVE_SYMBOLIZE)
-
+ 
      cmake_pop_check_state ()
 +    endif()
-
+ 
      if (HAVE_SYMBOLIZE)
        set (HAVE_STACKTRACE 1)
