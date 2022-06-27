@@ -24,8 +24,8 @@
     <tool name="cmake" os="osx">
         <version>3.24.0-rc2</version>
         <exeRelativePath>cmake-3.24.0-rc2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc2/cmake-3.24.0-rc2-macos10.10-universal.tar.gz</url>
-        <sha512>71bcb7d8a270f3920a1f245111ec1c508e63887f8725d08ded6bc6bea16f337d28398bd85b90b4dce1f675084a2dbd16fe31b60c3c0fa278a46e8366757dc3a8</sha512>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0-rc2/cmake-3.24.0-rc2-macos-universal.tar.gz</url>
+        <sha512>a8c2c12dcf59e106f4dd86189aea006e3782fd272210bb961505af66e366b342e3f553942ca0de9eb754f6285ab4f2cac29f8f48da00292fb541e7e3b0ab8dfe</sha512>
         <archiveName>cmake-3.24.0-rc2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
