@@ -33,10 +33,10 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
-# if using std::fromat, spdlog requires minimum c++20 
-set(CXX_STANDARD_OPTION ${CMAKE_CXX_STANDARD})
-if (SPDLOG_USE_STD_FORMAT AND (NOT DEFINED CXX_STANDARD_OPTION OR CXX_STANDARD_OPTION LESS 17))
-    set(CXX_STANDARD_OPTION 20)
+# if using std::fromat, spdlog requires minimum c++20, the related upstream change: https://github.com/gabime/spdlog/commit/ca747c75724a26015a4d31d93c948fe62bf39228
+if (SPDLOG_USE_STD_FORMAT)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -48,7 +48,8 @@ vcpkg_cmake_configure(
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
         -DSPDLOG_BUILD_EXAMPLE=OFF
-        -DCMAKE_CXX_STANDARD=${CXX_STANDARD_OPTION}
+        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
+        -DCMAKE_CXX_STANDARD_REQUIRED=${CMAKE_CXX_STANDARD_REQUIRED}
 )
 
 vcpkg_cmake_install()
