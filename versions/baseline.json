@@ -1844,6 +1844,10 @@
       "baseline": "1.0.0",
       "port-version": 1
     },
+    "dbus": {
+      "baseline": "1.13.18",
+      "port-version": 0
+    },
     "dcmtk": {
       "baseline": "3.6.6",
       "port-version": 3
@@ -1944,6 +1948,10 @@
       "baseline": "2019-08-12",
       "port-version": 7
     },
+    "dmx": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
     "docopt": {
       "baseline": "2018-11-01",
       "port-version": 1
@@ -1966,6 +1974,10 @@
     },
     "drlibs": {
       "baseline": "2022-04-03",
+      "port-version": 0
+    },
+    "drm": {
+      "baseline": "2.4.108",
       "port-version": 0
     },
     "drogon": {
@@ -2312,9 +2324,17 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "font-util": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "fontconfig": {
       "baseline": "2.14.0",
       "port-version": 3
+    },
+    "fontenc": {
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2391,6 +2411,10 @@
     "fruit": {
       "baseline": "3.6.0",
       "port-version": 1
+    },
+    "fs": {
+      "baseline": "1.0.8",
+      "port-version": 0
     },
     "ftgl": {
       "baseline": "2022-05-18",
@@ -2846,6 +2870,10 @@
     },
     "hypre": {
       "baseline": "2.23.0",
+      "port-version": 0
+    },
+    "ice": {
+      "baseline": "1.0.10",
       "port-version": 0
     },
     "icu": {
@@ -5384,6 +5412,10 @@
       "baseline": "2021-04-06",
       "port-version": 1
     },
+    "pciaccess": {
+      "baseline": "0.16",
+      "port-version": 0
+    },
     "pcl": {
       "baseline": "1.12.0",
       "port-version": 6
@@ -5659,6 +5691,10 @@
     "pthread": {
       "baseline": "3.0.0",
       "port-version": 1
+    },
+    "pthread-stubs": {
+      "baseline": "0.4",
+      "port-version": 0
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
@@ -6620,6 +6656,10 @@
       "baseline": "2.4.0",
       "port-version": 0
     },
+    "sm": {
+      "baseline": "1.2.3",
+      "port-version": 0
+    },
     "smpeg2": {
       "baseline": "2.0.0",
       "port-version": 7
@@ -7528,6 +7568,14 @@
       "baseline": "5.4.0",
       "port-version": 2
     },
+    "wayland": {
+      "baseline": "1.19.0",
+      "port-version": 0
+    },
+    "wayland-protocols": {
+      "baseline": "1.23",
+      "port-version": 0
+    },
     "websocketpp": {
       "baseline": "0.8.2",
       "port-version": 2
@@ -7640,6 +7688,10 @@
       "baseline": "3.0.3",
       "port-version": 1
     },
+    "x11": {
+      "baseline": "1.6.9",
+      "port-version": 0
+    },
     "x264": {
       "baseline": "164-5db6aa6cab1b146",
       "port-version": 4
@@ -7652,12 +7704,72 @@
       "baseline": "1.12",
       "port-version": 1
     },
+    "xau": {
+      "baseline": "1.0.9",
+      "port-version": 0
+    },
     "xaudio2redist": {
       "baseline": "1.2.9",
       "port-version": 0
     },
+    "xbitmaps": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "xbyak": {
       "baseline": "6.60",
+      "port-version": 0
+    },
+    "xcb": {
+      "baseline": "1.14",
+      "port-version": 0
+    },
+    "xcb-image": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
+    "xcb-keysyms": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
+    "xcb-proto": {
+      "baseline": "1.14.1",
+      "port-version": 0
+    },
+    "xcb-render-util": {
+      "baseline": "0.3.9",
+      "port-version": 0
+    },
+    "xcb-util": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
+    "xcb-util-m4": {
+      "baseline": "1",
+      "port-version": 0
+    },
+    "xcb-wm": {
+      "baseline": "0.4.1",
+      "port-version": 0
+    },
+    "xcomposite": {
+      "baseline": "0.4.5",
+      "port-version": 0
+    },
+    "xcursor": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
+    "xcvt": {
+      "baseline": "0.1.1",
+      "port-version": 0
+    },
+    "xdamage": {
+      "baseline": "1.1.5",
+      "port-version": 0
+    },
+    "xdmcp": {
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "xerces-c": {
@@ -7668,9 +7780,53 @@
       "baseline": "0.24.3",
       "port-version": 1
     },
+    "xext": {
+      "baseline": "1.3.4",
+      "port-version": 0
+    },
+    "xfixes": {
+      "baseline": "6.0.0",
+      "port-version": 0
+    },
+    "xfont": {
+      "baseline": "2.0.5",
+      "port-version": 0
+    },
     "xframe": {
       "baseline": "0.3.0",
       "port-version": 1
+    },
+    "xft": {
+      "baseline": "2.3.4",
+      "port-version": 0
+    },
+    "xi": {
+      "baseline": "1.8",
+      "port-version": 0
+    },
+    "xinerama": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
+    "xkbcommon": {
+      "baseline": "0.10.3",
+      "port-version": 0
+    },
+    "xkbcomp": {
+      "baseline": "1.4.5",
+      "port-version": 0
+    },
+    "xkbfile": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
+    "xkeyboard-config": {
+      "baseline": "2.34",
+      "port-version": 0
+    },
+    "xlib": {
+      "baseline": "1.7.2",
+      "port-version": 0
     },
     "xlnt": {
       "baseline": "1.5.0",
@@ -7688,20 +7844,60 @@
       "baseline": "2021-05-17",
       "port-version": 2
     },
+    "xorg-macros": {
+      "baseline": "1.19.3",
+      "port-version": 0
+    },
     "xorstr": {
       "baseline": "2021-10-23",
+      "port-version": 0
+    },
+    "xp": {
+      "baseline": "1.0.3",
+      "port-version": 0
+    },
+    "xpresent": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "xproperty": {
       "baseline": "0.8.1",
       "port-version": 1
     },
+    "xproto": {
+      "baseline": "2021.5",
+      "port-version": 0
+    },
     "xqilla": {
       "baseline": "2.3.4",
       "port-version": 1
     },
+    "xrandr": {
+      "baseline": "1.5.2",
+      "port-version": 0
+    },
+    "xrender": {
+      "baseline": "0.9.10",
+      "port-version": 0
+    },
+    "xres": {
+      "baseline": "1.2.1",
+      "port-version": 0
+    },
+    "xscrnsaver": {
+      "baseline": "1.2.3",
+      "port-version": 0
+    },
+    "xshmfence": {
+      "baseline": "1.3",
+      "port-version": 0
+    },
     "xsimd": {
       "baseline": "8.1.0",
+      "port-version": 0
+    },
+    "xt": {
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "xtensor": {
@@ -7722,6 +7918,18 @@
     },
     "xtl": {
       "baseline": "0.7.2",
+      "port-version": 0
+    },
+    "xtrans": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
+    "xv": {
+      "baseline": "1.0.11",
+      "port-version": 0
+    },
+    "xxf86dga": {
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "xxhash": {
