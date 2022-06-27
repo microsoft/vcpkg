@@ -63,7 +63,7 @@ find_dependency(OpenSSL)
 ]]
 )
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME PoDoFo)
+vcpkg_cmake_config_fixup(PACKAGE_NAME PoDoFo CONFIG_PATH share/podofo)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
