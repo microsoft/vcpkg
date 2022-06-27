@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-6.0.1
-    SHA512 211c3238f76dde06383e817aad0cd4bbb4ab710a1c6a822a639e1588864bd574efb199e101469c91e933d6f21d65e79c99d382a9d326b12313779c08ea3163c8
+    REF apache-arrow-8.0.0
+    SHA512 08b6ab4a3c5e0dd9c46402da8e7b9ef9f918eea177413cb31695192dfdb5a472ebbfef255b8343fe775d81e8b5eb268c3428a699fac48b36bf808f5b81e83a64
     HEAD_REF master
     PATCHES
+        vs-2022-fixes.patch
         all.patch
-        fix-dependencies.patch
+        fix-ThirdPartyToolchain.patch
 )
-
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake"
@@ -32,7 +32,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         orc         ARROW_ORC
         parquet     ARROW_PARQUET
         parquet     PARQUET_REQUIRE_ENCRYPTION
+        plasma      ARROW_PLASMA
         s3          ARROW_S3
+        cuda        ARROW_CUDA
 )
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
@@ -73,7 +75,7 @@ vcpkg_cmake_configure(
         -DARROW_DEPENDENCY_USE_SHARED=${ARROW_DEPENDENCY_USE_SHARED}
         -DARROW_THRIFT_USE_SHARED=${THRIFT_USE_SHARED} 
         -DBUILD_WARNING_LEVEL=PRODUCTION
-        -DARROW_WITH_BROTLI=ON                 
+        -DARROW_WITH_BROTLI=ON
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
@@ -97,9 +99,20 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(GLOB PARQUET_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*)
+file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
+file(REMOVE_RECURSE ${PARQUET_FILES})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if ("plasma" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES plasma-store-server AUTO_CLEAN)
+endif ()
 
 vcpkg_fixup_pkgconfig()

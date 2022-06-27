@@ -26,6 +26,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
+        0004-Fix-uwp-tools-build.patch
         rel_path.patch
         android.patch
         gettext-tools_woe32dll_gettextsrc-exports.c.patch

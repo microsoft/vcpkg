@@ -1,21 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/so5extra
-    REF 20f4c83ecde1509fbaf337dcf40f2f49dcf2690d # v.1.4.1.1
-    SHA512 a3df042b60afc4c57361b5b3c21f4b7c077f1b0ab7a4d33fda14cc915f10b22a42ef0acbb1c7c8b356ce31ee84f24391164120642faf96235549204c83b40294
+    REF be3fe020c30a7e5b3d7d2ac763c83e9a5dc7941f # v.1.5.2
+    SHA512 49286808c189af9de1736e6bf3ac58273801d81c2123da4e94836a9ae83d68a8b55414a2c2373195d9c2af6a0ea7d4244754310869f6b2fab59c13547bdf478b
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/dev/so_5_extra
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/dev/so_5_extra"
     OPTIONS
         -DSO5EXTRA_INSTALL=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/so5extra)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/so5extra)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/so5extra RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/so5extra" RENAME copyright)
 

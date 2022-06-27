@@ -1,8 +1,8 @@
 {
   "name": "qt5-quickcontrols2",
-  "version-string": "5.15.2",
-  "port-version": 1,
+  "version": "5.15.5",
   "description": "Qt5 QuickControls2 Module.",
+  "license": null,
   "dependencies": [
     {
       "name": "qt5-base",

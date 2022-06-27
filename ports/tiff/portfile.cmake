@@ -1,27 +1,21 @@
-set(LIBTIFF_VERSION 4.3.0)
+set(LIBTIFF_VERSION 4.4.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF v${LIBTIFF_VERSION}
-    SHA512 eaa2503dc1805283e0590b06e3e660a793fe849ae8b975b2d69369695d65a40640787c156574faaca856917be799eeb844e60f55555e1f219dd513cef66ea95d
+    SHA512 93955a2b802cf243e41d49048499da73862b5d3ffc005e3eddf0bf948a8bd1537f7c9e7f112e72d082549b4c49e256b9da9a3b6d8039ad8fc5c09a941b7e75d7
     HEAD_REF master
-    PATCHES cmakelists.patch
-    fix-pkgconfig.patch
-    FindCMath.patch
+    PATCHES
+        cmakelists.patch
+        FindCMath.patch
+        android-libm.patch
 )
 
 set(EXTRA_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
-endif()
-
-if("cxx" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        MESSAGE "Feature 'cxx' is not supported on ${VCPKG_TARGET_ARCHITECTURE}."
-        ON_ARCH arm arm64
-    )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -43,16 +37,19 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DBUILD_CONTRIB=OFF
         -DBUILD_TESTS=OFF
-        -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
         -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
 if(EXISTS "${_file}")

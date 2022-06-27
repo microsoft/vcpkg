@@ -1,15 +1,15 @@
 {
   "name": "boost-spirit",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Boost spirit module",
   "homepage": "https://github.com/boostorg/spirit",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",
     "boost-config",
     "boost-core",
     "boost-endian",
-    "boost-foreach",
     "boost-function",
     "boost-function-types",
     "boost-fusion",

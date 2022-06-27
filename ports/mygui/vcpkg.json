@@ -1,9 +1,11 @@
 {
   "name": "mygui",
   "version": "3.4.1",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
+  "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "freetype",
     "sdl2-image",
@@ -22,6 +24,9 @@
       "dependencies": [
         "opengl"
       ]
+    },
+    "tools": {
+      "description": "Install MyGUI tools."
     }
   }
 }

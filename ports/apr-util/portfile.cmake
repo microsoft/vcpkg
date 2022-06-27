@@ -1,5 +1,5 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
+    URLS "https://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
     FILENAME "apr-util-1.6.1.tar.bz2"
     SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
 
@@ -63,7 +63,6 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        NO_DEBUG
         OPTIONS 
             "--prefix=${CURRENT_INSTALLED_DIR}"
             "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"

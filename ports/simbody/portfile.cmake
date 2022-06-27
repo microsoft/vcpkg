@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_STATIC=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_SHARED=OFF
 )
 
 vcpkg_cmake_install()
@@ -32,6 +34,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

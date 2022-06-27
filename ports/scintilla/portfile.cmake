@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
-
 vcpkg_download_distfile(ARCHIVE
   URLS "https://www.scintilla.org/scintilla446.zip"
   FILENAME "scintilla446.zip"

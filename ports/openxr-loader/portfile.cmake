@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK
-    REF release-1.0.20
-    SHA512 26629edd9dcd17bae8d1089bfeb479914f3c7f7cd595345fad3e4be18d8dc7e079fd2ac89906199acc61ae5ce14c15ea66bcd0dfb44411788ab1ee0468c91192
+    REF release-1.0.22
+    SHA512 fe3c393c2d11981b42355acd8dbc337727120bcd0ff595abac1975c4ce5f68bb74a9a1b4c959e64e9a847ae5d504100d31979ffd7d9702c55b2dbd889de17d3e
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -12,18 +12,19 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH SDK_SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
-    REF release-1.0.20
-    SHA512 1f989b76c76cdece3c47b758a1c77a78a4bc91cb01504cc033a543da6bc85b18a4e981b35a2875cab454660fbb2443ea4d09e98079aae6e6253f768428012a20
+    REF release-1.0.22
+    SHA512 92802d57a45ca1d697d3cea1b3f5619af4ba36156cb28c2c39b2295a74ebc45907caf371c916c54ec3be44a2f3ae447ffc1cd62f54b7b24f7a081408328c7651
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
+        fix-jinja2.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH HPP_SOURCE_PATH
     REPO KhronosGroup/OpenXR-hpp
-    REF 6fcea9e472622c9c7f4df0b5f0bfe7ff5d8553f7
-    SHA512 04d1f9db6fd0a01cdf3274089ab17bf17974ff799b4690561c16067e83710e1422a2aefd070b26023ff832eb58e6a3365297a818c9546ea4c531328bd1fb2de4
+    REF release-1.0.21
+    SHA512 cda111f20392a64d5f4de6bd71f1fe7fe39d688bb2376c6b1841763459e32fd6d03b9552804b5ee464ba84cd4c05cfdaa1a6e8a8e5da3eae6b94c7797c65cb36
     HEAD_REF master
     PATCHES
         002-fix-hpp-gen.patch
@@ -68,9 +69,9 @@ foreach(HEADER ${HEADER_LIST})
 endforeach()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH lib/cmake/openxr)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

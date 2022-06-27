@@ -1,19 +1,16 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm")
-
-set(MICROHTTPD_VERSION 0.9.63)
+set(MICROHTTPD_VERSION 0.9.75)
 
 vcpkg_download_distfile(ARCHIVE
     URLS
         "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
     FILENAME "libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
-    SHA512 cb99e7af84fb6d7c0fd3894a9dc0fbff14959b35347506bd3211a65bbfad36455007b9e67493e97c9d8394834408df10eeabdc7758573e6aae0ba6f5f87afe17
+    SHA512 4dc62ed191342a61cc2767171bb1ff4050f390db14ef7100299888237b52ea0b04b939c843878fe7f5daec2b35a47b3c1b7e7c11fb32d458184fe6b19986a37c
 )
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES fix-msvc-project.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

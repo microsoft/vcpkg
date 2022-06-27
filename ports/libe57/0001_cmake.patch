@@ -86,3 +86,22 @@ diff -Naur a/CMakeLists.txt b/CMakeLists.txt
  )
  
  #include (InstallRequiredSystemLibraries)
+--- a/src/refimpl/E57RefImplConfig.cmake	2011-10-06 16:01:00.000000000 +0800
++++ b/src/refimpl/E57RefImplConfig.cmake	2022-03-01 16:48:29.117485600 +0800
+@@ -49,6 +49,8 @@
+ # NOTE: You will also need to include the boost and xerces libraries to your
+ # project.
+ 
++get_filename_component(E57RefImpl_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
++
+ IF (NOT "${E57RefImpl_DIR}/include" EQUAL "${E57RefImpl_INCLUDE_DIR}")
+     SET(E57RefImpl_LIBRARY_DEBUG E57RefImpl_LIBRARY_DEBUG-NOTFOUND)
+     SET(E57RefImpl_LIBRARY_RELEASE E57RefImpl_LIBRARY_RELEASE-NOTFOUND)
+@@ -78,6 +80,6 @@
+     NAMES   libE57RefImpl-d
+             E57RefImpl-d
+-    HINTS  ${E57RefImpl_DIR}/lib
++    HINTS  ${E57RefImpl_DIR}/debug/lib
+     DOC "E57 debug library"
+ )
+ 
