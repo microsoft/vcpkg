@@ -617,45 +617,6 @@ index 6db7e83..51e06f5 100644
      ${OpenCV_LIBS})
    target_include_directories(openMVG_main_ComputeFeatures_OpenCV PRIVATE ${OpenCV_INCLUDE_DIRS})
  
-diff --git a/src/software/SfM/SfM_GlobalPipeline.py.in b/src/software/SfM/SfM_GlobalPipeline.py.in
-index 42b41cc..7fda0cd 100644
---- a/src/software/SfM/SfM_GlobalPipeline.py.in
-+++ b/src/software/SfM/SfM_GlobalPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/SfM_SequentialPipeline.py.in b/src/software/SfM/SfM_SequentialPipeline.py.in
-index 423c85c..0ff2e77 100644
---- a/src/software/SfM/SfM_SequentialPipeline.py.in
-+++ b/src/software/SfM/SfM_SequentialPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/tutorial_demo.py.in b/src/software/SfM/tutorial_demo.py.in
-index c7361f3..1c56aab 100644
---- a/src/software/SfM/tutorial_demo.py.in
-+++ b/src/software/SfM/tutorial_demo.py.in
-@@ -12,7 +12,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
 diff --git a/src/software/VO/Tracker_opencv_klt.hpp b/src/software/VO/Tracker_opencv_klt.hpp
 index aa7dffe..2c4d237 100644
 --- a/src/software/VO/Tracker_opencv_klt.hpp

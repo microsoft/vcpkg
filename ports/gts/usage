@@ -1,0 +1,6 @@
+The port gts supports consumption from CMake:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTS gts REQUIRED)
+    target_compile_options(main PRIVATE ${GTS_CFLAGS})
+    target_link_libraries(main PRIVATE ${GTS_LDFLAGS})

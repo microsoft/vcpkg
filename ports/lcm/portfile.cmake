@@ -10,9 +10,8 @@ vcpkg_from_github(
         glib.link.patch
 )
 
-vcpkg_configure_cmake(
-     SOURCE_PATH ${SOURCE_PATH}
-     PREFER_NINJA
+vcpkg_cmake_configure(
+     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS
         -DLCM_ENABLE_JAVA=OFF
         -DLCM_ENABLE_LUA=OFF
@@ -22,11 +21,11 @@ vcpkg_configure_cmake(
         -DLCM_INSTALL_PKGCONFIG=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/lcm/cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/lcm/cmake)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/lcm" "${CURRENT_PACKAGES_DIR}/lib/lcm")
 endif()
 

@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-rapidjson-1-1.patch
         fix-linux-build.patch
         fix-osx-build.patch
+        compile-features.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/rapidjson ${SOURCE_PATH}/3rdparty/concurrentqueue)
