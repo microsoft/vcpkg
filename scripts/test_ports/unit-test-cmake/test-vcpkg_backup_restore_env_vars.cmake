@@ -8,21 +8,21 @@ set(ENV{B} [[]])
 # Backup doesn't change variables.
 vcpkg_backup_env_variables(VARS A B)
 unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
-unit_test_check_variable_equal([[]] ENV{V} [[]])
+unit_test_check_variable_equal([[]] ENV{B} [[]])
 
 # Restore restores.
 set(ENV{A} [[::a;::b;::c]])
 set(ENV{B} [[::1]])
 vcpkg_restore_env_variables(VARS A B)
 unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
-unit_test_check_variable_equal([[]] ENV{V} [[]])
+unit_test_check_variable_equal([[]] ENV{B} [[]])
 
 # Restore can be called more than once.
 set(ENV{A} [[::a;::b;::c]])
 set(ENV{B} [[::1]])
 vcpkg_restore_env_variables(VARS A B)
 unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
-unit_test_check_variable_equal([[]] ENV{V} [[]])
+unit_test_check_variable_equal([[]] ENV{B} [[]])
 
 # Backups are scoped.
 function(change_and_backup)
@@ -35,4 +35,4 @@ vcpkg_backup_env_variables(VARS A B)
 change_and_backup()
 vcpkg_restore_env_variables(VARS A B)
 unit_test_check_variable_equal([[]] ENV{A} [[::a;::b]])
-unit_test_check_variable_equal([[]] ENV{V} [[]])
+unit_test_check_variable_equal([[]] ENV{B} [[]])
