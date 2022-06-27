@@ -3974,7 +3974,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 7
+      "port-version": 8
     },
     "librdkafka": {
       "baseline": "1.8.2",
@@ -5290,7 +5290,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 13
+      "port-version": 14
     },
     "osg-qt": {
       "baseline": "Qt5",
