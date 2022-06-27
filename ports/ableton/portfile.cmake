@@ -20,9 +20,9 @@ FEATURES
     "hutsilent"               LinkHutSilent
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/ci)
-file(REMOVE_RECURSE ${SOURCE_PATH}/modules)
-file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
+file(REMOVE_RECURSE "${SOURCE_PATH}/ci")
+file(REMOVE_RECURSE "${SOURCE_PATH}/modules")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 
 
 vcpkg_cmake_configure(
@@ -32,32 +32,32 @@ vcpkg_cmake_configure(
 
 if ("coretest" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET LinkCoreTest)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkCoreTest${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkCoreTest${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 if ("discoverytest" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET LinkDiscoveryTest)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkDiscoveryTest${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkDiscoveryTest${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 if ("hut" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET LinkHut)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHut${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHut${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 if ("hutsilent" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET LinkHutSilent)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHutSilent${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHutSilent${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 
 # We must not correct the CMake include path before build
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PATCHES 
         correct_cmake_include_directory.patch
 )
 
-file(INSTALL ${SOURCE_PATH}/AbletonLinkConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
-file(INSTALL ${SOURCE_PATH}/cmake_include/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake_include/)
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
+file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake_include/")
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
