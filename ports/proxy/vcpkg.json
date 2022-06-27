@@ -1,0 +1,6 @@
+{
+    "name": "proxy",
+    "version-string": "1.0.0",
+    "description": "Proxy: Easy Polymorphism in C++",
+    "homepage": "https://github.com/microsoft/proxy"
+}
