@@ -3470,7 +3470,7 @@
     },
     "libcaer": {
       "baseline": "3.3.14",
-      "port-version": 0
+      "port-version": 1
     },
     "libcanberra": {
       "baseline": "0.30",
