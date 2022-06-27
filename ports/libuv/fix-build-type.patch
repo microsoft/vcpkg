@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac52412..2d7086a 100644
+index ac52412..15d5cb2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -381,7 +381,7 @@ endif()
@@ -29,10 +29,35 @@ index ac52412..2d7086a 100644
  if(LIBUV_BUILD_TESTS)
    # Small hack: use ${uv_test_sources} now to get the runner skeleton,
    # before the actual tests are added.
-@@ -673,12 +673,15 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+@@ -659,26 +659,39 @@ string(REPLACE ";" " " LIBS "${LIBS}")
+ file(STRINGS configure.ac configure_ac REGEX ^AC_INIT)
+ string(REGEX MATCH "([0-9]+)[.][0-9]+[.][0-9]+" PACKAGE_VERSION "${configure_ac}")
+ set(UV_VERSION_MAJOR "${CMAKE_MATCH_1}")
++if (BUILD_SHARED_LIBS)
+ # The version in the filename is mirroring the behaviour of autotools.
+ set_target_properties(uv PROPERTIES
+   VERSION ${UV_VERSION_MAJOR}.0.0
+   SOVERSION ${UV_VERSION_MAJOR})
++endif()
+ set(includedir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+ set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
+ set(prefix ${CMAKE_INSTALL_PREFIX})
++if (BUILD_SHARED_LIBS)
+ configure_file(libuv.pc.in libuv.pc @ONLY)
++else()
+ configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
++endif()
+ 
+ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
- install(FILES ${PROJECT_BINARY_DIR}/libuv.pc ${PROJECT_BINARY_DIR}/libuv-static.pc
+-install(FILES ${PROJECT_BINARY_DIR}/libuv.pc ${PROJECT_BINARY_DIR}/libuv-static.pc
++if (BUILD_SHARED_LIBS)
++install(FILES ${PROJECT_BINARY_DIR}/libuv.pc
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++else()
++install(FILES ${PROJECT_BINARY_DIR}/libuv-static.pc
          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++endif()
 +if (BUILD_SHARED_LIBS)
  install(TARGETS uv EXPORT libuvConfig
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
