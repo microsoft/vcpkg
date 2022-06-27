@@ -1,3 +1,10 @@
+if (VCPKG_HOST_IS_WINDOWS)
+  set(USE_GLAD -DNANOGUI_USE_GLAD=ON)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+else()
+  set(USE_GLAD -DNANOGUI_USE_GLAD=OFF)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanogui
@@ -6,17 +13,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
+        fix-glad-dependence.patch
 )
 
-if (VCPKG_HOST_IS_WINDOWS)
-  set(USE_GLAD -DNANOGUI_USE_GLAD=ON)
-else()
-  set(USE_GLAD -DNANOGUI_USE_GLAD=OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "example"           NANOGUI_BUILD_EXAMPLE
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DNANOGUI_EIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
         -DEIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
         ${USE_GLAD}

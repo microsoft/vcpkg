@@ -9,9 +9,15 @@
     "eigen3",
     "glfw3",
     "nanovg",
+    "glad",
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "example": {
+      "description": "Build NanoGUI example application"
+    }
+  }
 }
