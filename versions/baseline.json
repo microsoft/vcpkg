@@ -6673,8 +6673,8 @@
       "port-version": 1
     },
     "sol2": {
-      "baseline": "3.2.2",
-      "port-version": 2
+      "baseline": "3.3.0",
+      "port-version": 0
     },
     "solid3": {
       "baseline": "3.5.8",
