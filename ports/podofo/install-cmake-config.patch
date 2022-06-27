@@ -1,0 +1,10 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df623ef..b2f2201 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -576,3 +576,4 @@ IF(PODOFO_BUILD_STATIC)
+   EXPORT(TARGETS podofo_static FILE "${CMAKE_CURRENT_BINARY_DIR}/PoDoFoConfig.cmake")
+ ENDIF(PODOFO_BUILD_STATIC)
+ 
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/PoDoFoConfig.cmake" DESTINATION share/podofo)
+\ No newline at end of file
