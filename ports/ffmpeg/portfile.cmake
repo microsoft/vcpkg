@@ -307,6 +307,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
+if("mediafoundation" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-mediafoundation")
+else()
+    set(OPTIONS "${OPTIONS} --disable-mediafoundation")
+endif()
+
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
 else()
