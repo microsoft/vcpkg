@@ -7,9 +7,9 @@
   "supports": "!uwp",
   "dependencies": [
     "eigen3",
+    "glad",
     "glfw3",
     "nanovg",
-    "glad",
     {
       "name": "vcpkg-cmake",
       "host": true
