@@ -4,7 +4,7 @@
   "description": "A high quality software library for audio time-stretching and pitch-shifting.",
   "homepage": "https://www.breakfastquay.com/rubberband/",
   "license": "GPL-2.0-or-later",
-  "supports": "!uwp",
+  "supports": "!uwp & !(windows & static)",
   "dependencies": [
     "fftw3",
     "libsamplerate",
