@@ -1,29 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ThePhD/sol2
-    REF v3.2.2
-    SHA512 e5a739b37aea7150f141f6a003c2689dd33155feed5bb3cf2569abbfe9f0062eacdaaf346be523d627f0e491b35e68822c80e1117fa09ece8c9d8d5af09fdbec
+    REF v3.3.0
+    SHA512 f1eba8f9ea270a3a3fff9c7a036d130ec848d065e54a8aefd2a19ad7f17dcb6b5744d979fac54c765e8317a4cdcf72e1b9d622d114f48c6502cf2db900c8d4a3 
     HEAD_REF develop
     PATCHES fix-namespace.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sol2)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sol2)
 
 file(
     REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug
-        ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/include
+        "${CURRENT_PACKAGES_DIR}/debug"
+        "${CURRENT_PACKAGES_DIR}/lib"
+        "${CURRENT_PACKAGES_DIR}/include"
 )
 
-file(INSTALL ${SOURCE_PATH}/single/include/sol DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+file(INSTALL "${SOURCE_PATH}/include/sol" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
