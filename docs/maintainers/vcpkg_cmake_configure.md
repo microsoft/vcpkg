@@ -125,7 +125,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 ```
 
-* [GitHub Search](https://github.com/microsoft/vcpkg/search?q=vcpkg_cmake_configure+path%3A%2Fports)
+[Search microsoft/vcpkg for Examples](https://github.com/microsoft/vcpkg/search?q=vcpkg_cmake_configure+path%3A%2Fports)
 
 ## Source
 [ports/vcpkg-cmake/vcpkg\_cmake\_configure.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_configure.cmake)
