@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
-    REF v1.0.2
+    REF v1.1.0
     HEAD_REF master
-    SHA512 04a3bee2d847680aa1f55115007ceec01652bebb8d5187cfbca0af81bedff355cbac949862a82e3060071da1a58b62d5b028bcd91562b962756aa5cab614f073
+    SHA512 f8718bd039e1a25f0b95880b957c43e6eba6eada6bb7f58cedde37669a46b15b3ff9f4c4ea775e1cf949657642ef0472fa8bac5bdc98882df63e7f292fb5a723
 )
 
 vcpkg_check_features(
