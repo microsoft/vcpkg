@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO wpilibsuite/allwpilib
     REF 35eb90c135eba994a2ca2cbd50a68c367910f4b6
     SHA512 55bc608632ab67c097f3cce7c5ad9790b2b123a633c93bf5b4008f90bf79538cc142c911850d5f49b75e3a12f43ffad9f6f5f9bcdf1351cce7513ecc4b04e439
+    PATCHES fix-dependency-libuv.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
