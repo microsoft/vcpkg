@@ -5,13 +5,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF release-1.11.0
-    SHA512 6fcc7827e4c4d95e3ae643dd65e6c4fc0e3d04e1778b84f6e06e390410fe3d18026c131d828d949d2f20dde6327d30ecee24dcd3ef919e21c91e010d149f3a28
+    REF release-1.12.0
+    SHA512 6216e76a8c988b6b3739f3988c85f369eef2a8036c4412621a0d3d04ceeada00d35e487363be0a265035ac78f1a5065e1fe054a285c43df23b6abcc69f8bfe3d
     HEAD_REF main
     PATCHES
         clang-tidy-no-lint.patch
         fix-main-lib-path.patch
-        remove-werror.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -31,6 +30,7 @@ file(
         "${SOURCE_PATH}/googletest/src/gtest.cc"
         "${SOURCE_PATH}/googletest/src/gtest_main.cc"
         "${SOURCE_PATH}/googletest/src/gtest-all.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-assertion-result.cc"
         "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
         "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
         "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"

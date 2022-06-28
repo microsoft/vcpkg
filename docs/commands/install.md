@@ -22,6 +22,8 @@ Build and install port packages.
 
 In Classic Mode, this verb adds port packages to the existing set in the [installed directory][] (defaults to `installed/` under the vcpkg root). This can require removing and rebuilding existing packages, which can fail.
 
+<a id="package-syntax"></a>
+
 **Package Syntax**
 ```
 portname[feature1,feature2]:triplet
@@ -80,6 +82,8 @@ The packages subfolder for the built package (for example, `packages/zlib_x64-wi
 Print the install plan, but do not remove or install any packages.
 
 The install plan lists all packages and features that will be installed, as well as any other packages that need to be removed and rebuilt.
+
+<a id="editable"></a>
 
 ### `--editable`
 
