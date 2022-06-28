@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 049e37e..d75a3b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -264,6 +264,7 @@ ELSE()
+     SET(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
+ ELSE()
+     SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
++    ADD_DEFINITIONS(-DOSGEARTH_LIBRARY_STATIC)
+ ENDIF()
+ 
+ 

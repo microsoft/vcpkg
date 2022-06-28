@@ -16,6 +16,7 @@ vcpkg_configure_make(
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
+    [DISABLE_VERBOSE_FLAGS]
     [NO_DEBUG]
     [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -59,8 +60,8 @@ Script that needs to be called before configuration (do not use for batch files 
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
 
-## DISABLE_VERBOSE_FLAGS
-do not pass '--disable-silent-rules --verbose' to configure
+### DISABLE_VERBOSE_FLAGS
+Do not pass '--disable-silent-rules --verbose' to configure.
 
 ### OPTIONS
 Additional options passed to configure during the configuration.

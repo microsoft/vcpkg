@@ -1,13 +1,21 @@
 {
   "name": "sol2",
-  "version-string": "3.2.2",
-  "port-version": 2,
+  "version": "3.3.0",
   "description": "Sol v2.0 - a C++ <-> Lua API wrapper with advanced features and top notch performance - is here, and it's great",
   "homepage": "https://github.com/ThePhD/sol2",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "lua",
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }

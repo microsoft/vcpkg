@@ -2,10 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
-    REF 7b433e077298d0f4faf8da6d6eb5774e29bffa54  #v0.9.2
-    SHA512 f889f969f6d612770132cbd2faf8685b1613661b5fbb9e7efe86e9cd074cbd99d5d0cd23894ffc3743fb34301b387df3a81bf067d2c7102358e3fdacf5959782
-    PATCHES
-        patch_underscore_prefix.patch
+    REF 99172b11470776177939c3d2bc366fe8d904eab7  #v1.0.0
+    SHA512 8ab32d7f1e7ec0fb2aae9ae19e199f7a6b17f88af2287c13a9ca577f80f02351e601fb6c6f03c9505d6cecd047b823007ffef83a5ca3703e4d2a4dd5ff6d5d3b
 )
 
 vcpkg_find_acquire_program(NASM)

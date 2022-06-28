@@ -27,9 +27,7 @@ endif()
 
 #make sure we don't use any integrated pre-built library nor any unnecessary CMake module
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty")
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindStb.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"

@@ -1,6 +1,7 @@
 {
   "name": "nuspell",
   "version-semver": "5.1.0",
+  "port-version": 2,
   "description": [
     "Nuspell is a fast and safe spelling checker software program.",
     "It is designed for languages with rich morphology and complex word compounding.",
@@ -18,5 +19,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
 }

@@ -9,11 +9,11 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         no-etc-symlinks.patch
+        libgetopt.patch
+        fix-mingw-gperf-fallback.patch
 )
 
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
-vcpkg_add_to_path(${GPERF_PATH})
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
