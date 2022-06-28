@@ -6141,7 +6141,7 @@
       "port-version": 0
     },
     "rapidjson": {
-      "baseline": "2021-11-01",
+      "baseline": "2022-06-28",
       "port-version": 0
     },
     "rapidxml": {
