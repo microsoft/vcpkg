@@ -1,0 +1,28 @@
+diff --git a/include/mgl2/abstract.h b/include/mgl2/abstract.h
+index c8c53b8..245333b 100644
+--- a/include/mgl2/abstract.h
++++ b/include/mgl2/abstract.h
+@@ -235,7 +235,11 @@ struct MGL_EXPORT mglNum
+ };
+ //-----------------------------------------------------------------------------
+ /// List of user-defined data arrays
++#ifndef MGL_WIDGETS_DLL
+ MGL_EXPORT extern std::vector<mglDataA*> mglDataList;
++#else
++__declspec(dllimport) extern std::vector<mglDataA*> mglDataList;
++#endif
+ //-----------------------------------------------------------------------------
+ /// Abstract class for data array
+ class MGL_EXPORT mglDataA
+diff --git a/widgets/CMakeLists.txt b/widgets/CMakeLists.txt
+index a9e1269..4c1d0d4 100644
+--- a/widgets/CMakeLists.txt
++++ b/widgets/CMakeLists.txt
+@@ -2,6 +2,7 @@ include(GenerateExportHeader)
+ 
+ if(MSVC)
+ 	add_definitions(-DMGL_LIB_MSVC)
++	add_definitions(-DMGL_WIDGETS_DLL)
+ endif(MSVC)
+ 
+ if(MGL_HAVE_FLTK)

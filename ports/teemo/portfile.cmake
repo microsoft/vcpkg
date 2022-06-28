@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "osx")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/teemo
-    REF 72037259a77a618160e9a9129873c39eb888e632
-    SHA512 b9b3df732b8378048405d395d297920f606bbc1c698cebe8125efab952438ee59cadf940886506e8c044e06d139532a15ac3ea2dcd48a18754ac9843bb2287a9
+    REF 03f40f92bfbf3b83dc597a60ba36582505adfa54
+    SHA512 86962883dfe09f90c4892deb0235e4f71fc295fb837e2b33a9bcf240b4f91d0e191157968d28a6ec02dfe3f8cb9a3869c6bb5986b8a0ea96250fce6c27fe1172
     HEAD_REF master
 )
 
@@ -27,7 +25,11 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/teemo")
     vcpkg_cmake_config_fixup(CONFIG_PATH share/teemo)
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h" "#ifdef TEEMO_STATIC" "#if $<STREQUAL:${VCPKG_LIBRARY_LINKAGE},static>")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h" "#ifdef TEEMO_STATIC" "#if 1")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h" "#ifdef TEEMO_STATIC" "#if 0")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

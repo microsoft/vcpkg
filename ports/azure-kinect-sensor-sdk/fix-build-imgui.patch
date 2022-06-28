@@ -1,0 +1,13 @@
+diff --git a/tools/k4aviewer/k4alogdockcontrol.cpp b/tools/k4aviewer/k4alogdockcontrol.cpp
+index 4289f71..407e912 100644
+--- a/tools/k4aviewer/k4alogdockcontrol.cpp
++++ b/tools/k4aviewer/k4alogdockcontrol.cpp
+@@ -161,7 +161,7 @@ K4ADockControlStatus K4ALogDockControl::Show()
+ 
+     if (updated)
+     {
+-        ImGui::SetScrollHere(1.0f);
++        ImGui::SetScrollHereY(1.0f);
+     }
+ 
+     ImGui::EndChild();

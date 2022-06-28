@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO PhilipHazel/pcre2
-    REF 35fee4193b852cb504892352bd0155de10809889 # pcre2-10.39
-    SHA512 a6e50f3354dc4172df05e887dd8646d4ce6a3584fe180b17dc27b42b094e13d1d1a7e5ab3cb15dd352764d81ac33cfd03e81b0c890d9ddec72d823ca6f8bd667
+    REPO PCRE2Project/pcre2
+    REF pcre2-10.40
+    SHA512 098c21d60ecb3bb8449173f50c9ab8e6018fafd5d55548be08b15df37f8e08bcd4f851d75758c4d22505db30a3444bb65783d83cd876c63fdf0de2850815ef93
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
+        no-static-suffix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -56,7 +57,9 @@ if(BUILD_STATIC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

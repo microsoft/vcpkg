@@ -1,11 +1,7 @@
-if(NOT VCPKG_TARGET_IS_OSX)
-    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.12/sentry-native.zip"
-    FILENAME "sentry-native-0.4.12.zip"
-    SHA512 15da4407ed5e2c8d5e56e497ccc6006b29235aef6b3a81e034c93443e20a7cfdf95d55e31b88e552c55e824eb15d6f7fafe988c453a5a6f36fe45136d7268b19
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.18/sentry-native.zip"
+    FILENAME "sentry-native-0.4.18.zip"
+    SHA512 4363961a4a1560cc8777932c890231013cd73a48c51a9d9ce8175b541674da007d3bfd0ed2c50d72da2d75aa49a9004a4ea6638c4754cf29568dd66ebdb596db
 )
 
 vcpkg_extract_source_archive_ex(
@@ -30,13 +26,20 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
+    set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
         -DCRASHPAD_ZLIB_SYSTEM=ON
+    MAYBE_UNUSED_VARIABLES
+        CRASHPAD_ZLIB_SYSTEM
 )
 
 vcpkg_cmake_install()
@@ -45,7 +48,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sentry)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
@@ -59,7 +62,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )

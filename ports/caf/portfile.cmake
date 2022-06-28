@@ -1,45 +1,37 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF f7d4fc7ac679e18ba385f64434f8015c3cea9cb5 # 0.17.6
-    SHA512 8b4719c26dfad68eed6f2528263702e42f9865bb7a9f2d40909dc6c3fc20bb7259fe44a5f89390ba714c7f9359db2d171ff44685641962c24a70f4e2aa3f3f65
+    REF bfa0f83dd5c9151c263c304300c79161ae8cb595 # 0.18.6
+    SHA512 58ebd40623edc0245dd38b3a2bbbda7af7d9b030155746949dfe7c4c30bdc07ee2ee84d195dc2e914d69f58c6c46bc9ad496bbc34e7cafe0530200458a4c5a76
     HEAD_REF master
     PATCHES
-        openssl-version-override.patch
+        fix_dependency.patch
+        fix_cxx17.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
-        -DCAF_BUILD_STATIC=ON
-        -DCAF_BUILD_STATIC_ONLY=ON
-        -DCAF_NO_TOOLS=ON
-        -DCAF_NO_EXAMPLES=ON
-        -DCAF_NO_BENCHMARKS=ON
-        -DCAF_NO_UNIT_TESTS=ON
-        -DCAF_NO_PROTOBUF_EXAMPLES=ON
-        -DCAF_NO_QT_EXAMPLES=ON
-        -DCAF_NO_OPENCL=ON
-        -DCAF_NO_OPENSSL=OFF
-        -DCAF_NO_CURL_EXAMPLES=ON
-        -DCAF_OPENSSL_VERSION_OVERRIDE=ON
+        -DCAF_ENABLE_CURL_EXAMPLES=OFF
+        -DCAF_ENABLE_PROTOBUF_EXAMPLES=OFF
+        -DCAF_ENABLE_QT6_EXAMPLES=OFF
+        -DCAF_ENABLE_RUNTIME_CHECKS=OFF
+        -DCAF_ENABLE_ACTOR_PROFILER=OFF
+        -DCAF_ENABLE_EXAMPLES=OFF
+        -DCAF_ENABLE_TESTING=OFF
+        -DCAF_ENABLE_TOOLS=OFF
+        -DCAF_ENABLE_IO_MODULE=ON
+        -DCAF_ENABLE_EXCEPTIONS=ON
         -DCAF_ENABLE_UTILITY_TARGETS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-    
-file(COPY ${SOURCE_PATH}/cmake/FindCAF.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME CAF CONFIG_PATH lib/cmake/CAF)
 
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

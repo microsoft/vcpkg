@@ -41,6 +41,13 @@ if(SHARE_LEN EQUAL 0)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
+set(filename "${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp")
+if(EXISTS "${filename}")
+    file(READ "${filename}" contents)
+    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\n]*\n" "\n" contents "${contents}")
+    file(WRITE "${filename}" "${contents}")
+endif()
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt"  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

@@ -15,7 +15,7 @@ vcpkg_cmake_install(
 with additional parameters to set the `TARGET` to `install`,
 and to set the `LOGFILE_ROOT` to `install` as well.
 
-[`vcpkg_cmake_build()`]: vcpkg_cmake_build.cmake
+[`vcpkg_cmake_build()`]: vcpkg_cmake_build.md
 
 ## Examples:
 

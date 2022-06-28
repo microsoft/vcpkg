@@ -23,9 +23,16 @@ vcpkg_from_github(
 file(COPY "${LIBRAW_CMAKE_SOURCE_PATH}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${LIBRAW_CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
 
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openmp ENABLE_OPENMP
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DINSTALL_CMAKE_MODULE_PATH=share/${PORT}
         -DENABLE_EXAMPLES=OFF
         -DCMAKE_DEBUG_POSTFIX=d

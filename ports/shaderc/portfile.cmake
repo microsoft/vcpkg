@@ -11,9 +11,10 @@ vcpkg_from_github(
         disable-update-version.patch
         fix-build-type.patch
         fix-install-shaderc_util.patch
+        fix-export-cmakefiles.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/build-version.inc DESTINATION ${SOURCE_PATH}/glslc/src)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
 
 set(OPTIONS)
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -25,9 +26,8 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
         -DSHADERC_SKIP_TESTS=true 
@@ -36,12 +36,14 @@ vcpkg_configure_cmake(
         -DSHADERC_ENABLE_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc CONFIG_PATH share/unofficial-shaderc)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc_util CONFIG_PATH share/unofficial-shaderc_util)
 
 vcpkg_copy_tools(TOOL_NAMES glslc AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

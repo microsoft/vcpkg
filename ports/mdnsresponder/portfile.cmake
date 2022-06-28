@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 vcpkg_download_distfile(ARCHIVE
   URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.270.2.tar.gz
   FILENAME mDNSResponder-878.270.2.tar.gz
@@ -88,8 +86,5 @@ file(INSTALL
   "${SOURCE_PATH}/mDNSShared/dns_sd.h"
   DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
-file(INSTALL
-  "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
-)
 vcpkg_copy_pdbs()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
