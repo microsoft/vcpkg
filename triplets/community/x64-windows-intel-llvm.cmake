@@ -80,9 +80,9 @@ set(VCPKG_CRT_LINKAGE dynamic)
 set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "ONEAPI_ROOT;IFORT_COMPILER19;IFORT_COMPILER20;IFORT_COMPILER21")
 
 if(NOT PORT MATCHES "(boost|hwloc)")
-    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/x64-windows-intel.toolchain.cmake")
+    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/x64-windows-intel-llvm.toolchain.cmake")
     if(DEFINED VCPKG_PLATFORM_TOOLSET)
-        set(VCPKG_PLATFORM_TOOLSET "Intel C++ Compiler 2021")
+        set(VCPKG_PLATFORM_TOOLSET "Intel(R) oneAPI DPC++ Compiler")
     endif()
 endif()
 

@@ -1,4 +1,4 @@
-#Toolset-Name: Intel(R) oneAPI DPC++ Compiler
+#Toolset-Name: Intel C++ Compiler 2021
 #C:\Program Files (x86)\Intel\oneAPI>setvars.bat
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_LIBRARY_LINKAGE dynamic)
