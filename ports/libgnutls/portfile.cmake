@@ -33,6 +33,7 @@ vcpkg_configure_make(
         --disable-maintainer-mode
         --disable-rpath
         --disable-libdane
+        --disable-guile
         --with-included-unistring
         --without-p11-kit
         --without-tpm

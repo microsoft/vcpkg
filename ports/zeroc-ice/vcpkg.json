@@ -1,0 +1,122 @@
+{
+  "name": "zeroc-ice",
+  "version": "3.7.7",
+  "port-version": 2,
+  "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
+  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
+  "homepage": "https://github.com/zeroc-ice/ice",
+  "license": null,
+  "supports": "!uwp & !(windows & arm) & !wasm32",
+  "dependencies": [
+    "bzip2",
+    "expat",
+    "lmdb",
+    "mcpp",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
+    "zlib"
+  ],
+  "features": {
+    "glacier2lib": {
+      "description": "Glacier2 libraries"
+    },
+    "glacier2router": {
+      "description": "Glacier2Router",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "iceboxlib": {
+      "description": "IceBox libraries and runtime"
+    },
+    "iceboxtools": {
+      "description": "IceBox tools"
+    },
+    "icebridge": {
+      "description": "IceBridge",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "iceboxlib"
+          ]
+        }
+      ]
+    },
+    "icediscovery": {
+      "description": "IceDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icessl",
+            "icestormlib"
+          ]
+        }
+      ]
+    },
+    "icegridlib": {
+      "description": "IceGrid library",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib"
+          ]
+        }
+      ]
+    },
+    "icegridtools": {
+      "description": "IceGrid tools",
+      "dependencies": [
+        "expat",
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icegridlib",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "icessl": {
+      "description": "IceSSL",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "icestormlib": {
+      "description": "IceStorm library"
+    },
+    "icestormtools": {
+      "description": "IceStorm tools",
+      "dependencies": [
+        "lmdb",
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icegridlib",
+            "icestormlib"
+          ]
+        }
+      ]
+    }
+  }
+}

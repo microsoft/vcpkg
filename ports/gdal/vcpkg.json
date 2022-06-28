@@ -1,40 +1,63 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.0",
-  "port-version": 3,
+  "version-semver": "3.4.3",
+  "port-version": 2,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!(arm & windows)",
+  "license": null,
   "dependencies": [
     "curl",
     "expat",
     "geos",
-    "giflib",
-    "hdf5",
+    {
+      "name": "giflib",
+      "platform": "!windows | mingw"
+    },
     {
       "name": "json-c",
       "platform": "!windows | mingw"
     },
     "libgeotiff",
+    {
+      "name": "libiconv",
+      "platform": "windows & !mingw"
+    },
     "libjpeg-turbo",
     "liblzma",
     "libpng",
-    "libpq",
     "libwebp",
     "libxml2",
-    "netcdf-c",
     "openjpeg",
-    "proj4",
+    "proj",
     "sqlite3",
     "tiff",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     "zlib",
     "zstd"
   ],
+  "default-features": [
+    "supported-default-features"
+  ],
   "features": {
+    "aws-ec2-windows": {
+      "description": "Optimized detection of AWS EC2 Windows hosts",
+      "dependencies": [
+        "atlmfc"
+      ]
+    },
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [
         "cfitsio"
+      ]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": [
+        "hdf5"
       ]
     },
     "libspatialite": {
@@ -49,8 +72,53 @@
         "libmariadb"
       ]
     },
+    "netcdf": {
+      "description": "Enable NetCDF support",
+      "dependencies": [
+        "netcdf-c"
+      ]
+    },
+    "poppler": {
+      "description": "Enable poppler support",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "private-api"
+          ]
+        }
+      ]
+    },
+    "postgresql": {
+      "description": "Enable PostgreSQL support",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "supported-default-features": {
+      "description": "Default set of features, dependent on platform",
+      "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "postgresql"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5",
+            "netcdf"
+          ],
+          "platform": "!uwp & !(windows & arm64)"
+        }
+      ]
+    },
     "system-libraries": {
-      "$supports": "!windows",
       "description": "Include drivers which need additional libraries"
     },
     "tools": {

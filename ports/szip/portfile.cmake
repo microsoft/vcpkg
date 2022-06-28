@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF szip-${SZIP_VERSION}
+    REF "szip-${SZIP_VERSION}"
     PATCHES
         fix-linkage-config.patch
         mingw-lib-names.patch
@@ -16,7 +16,6 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
@@ -62,7 +61,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 vcpkg_fixup_pkgconfig()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/szip/copyright")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/szip/data")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

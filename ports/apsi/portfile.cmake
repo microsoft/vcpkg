@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if("hexl" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/APSI

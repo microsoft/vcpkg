@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -9,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.patch
+        Add-target-include-directory.patch
 )
 
 vcpkg_from_github(

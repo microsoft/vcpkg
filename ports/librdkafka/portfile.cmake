@@ -4,13 +4,13 @@ vcpkg_from_github(
     REF v1.9.0
     SHA512 d7bff9ef29befa2cb35b52003f7b7da4425f284600dd268b268a36fb1b915917b26cb1a3e78da40eec78cbb12e2f745d2c1e88ac82f19d2beb38aa20b511438f
     HEAD_REF master
+    PATCHES lz4.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        lz4     ENABLE_LZ4_EXT
         ssl     WITH_SSL
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DENABLE_SHAREDPTR_DEBUG=ON
         -DENABLE_DEVEL=ON
-        -DENABLE_REFCNT_DEBUG=ON
+        -DENABLE_REFCNT_DEBUG=OFF
         -DENABLE_SHAREDPTR_DEBUG=ON
         -DWITHOUT_OPTIMIZATION=ON
     OPTIONS_RELEASE
@@ -48,23 +48,15 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/RdKafka
 )
 
-if("lz4" IN_LIST FEATURES)
-    vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake
-        "find_dependency(LZ4)"
-        "include(\"\${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake\")\n  find_dependency(LZ4)"
-    )
-endif()
-
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     foreach(hdr rdkafka.h rdkafkacpp.h)
         vcpkg_replace_string(
-            ${CURRENT_PACKAGES_DIR}/include/librdkafka/${hdr}
+            "${CURRENT_PACKAGES_DIR}/include/librdkafka/${hdr}"
             "#ifdef LIBRDKAFKA_STATICLIB"
             "#if 1 // #ifdef LIBRDKAFKA_STATICLIB"
         )
@@ -72,9 +64,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSES.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSES.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 # Install usage
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 vcpkg_fixup_pkgconfig()

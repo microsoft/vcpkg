@@ -1,18 +1,26 @@
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO amiremohamadi/DuckX
-    REF v1.0.0
-    SHA512 21db28f5c62a5695363cb844ce0ca45057433dd622dad44278459dd0582c92a8ca98d8bf597955426636ad31776abdcfdbe51a7fbfe256cfa8adcb8a2fd9410d
+    REF v1.2.2
+    SHA512 3f1e626973b4638adaffcc0a20f59791f3a70abda1d2d09fddca9312014cef86d097f24873e74ef58c775b27c71a637e44f340da01a301b00ef334600bd412d6
+    PATCHES fix_dependencies.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/duckx)
 
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/duckx)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/duckx RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(COPY "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

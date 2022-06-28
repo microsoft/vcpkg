@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-external-dependencies.patch
         fix-external-dependencies2.patch
+        eigen-3.4.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)

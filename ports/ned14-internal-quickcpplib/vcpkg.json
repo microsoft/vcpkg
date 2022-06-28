@@ -1,10 +1,36 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version-string": "0.0.0-8089a948",
+  "version-date": "2022-06-17",
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
+  "license": "Apache-2.0 OR BSL-1.0",
   "dependencies": [
     "byte-lite",
-    "gsl-lite"
-  ]
+    "gsl-lite",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cxx17": {
+      "description": "Do not polyfill C++17 entities"
+    },
+    "cxx20": {
+      "description": "Do not polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "cxx17"
+          ]
+        }
+      ]
+    }
+  }
 }
