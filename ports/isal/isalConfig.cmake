@@ -57,7 +57,7 @@ else()
             LIB_NAME "isa-l"
             DEBUG_STATIC "${_IMPORT_PREFIX}/debug/lib/libisa.a"
             RELEASE_STATIC "${_IMPORT_PREFIX}/lib/libisa.a"
-            INCLUDE_DIR "${_IMPORT_PREFIX}/include/isal-l"
+            INCLUDE_DIR "${_IMPORT_PREFIX}/include"
             TYPE STATIC
         )
     else()
@@ -66,7 +66,7 @@ else()
             LIB_NAME "isal"
             DEBUG_STATIC "${_IMPORT_PREFIX}/debug/lib/libisal.so"
             RELEASE_STATIC "${_IMPORT_PREFIX}/lib/libisal.so"
-            INCLUDE_DIR "${_IMPORT_PREFIX}/include/isal-l"
+            INCLUDE_DIR "${_IMPORT_PREFIX}/include"
             TYPE SHARED
         )
     endif()
