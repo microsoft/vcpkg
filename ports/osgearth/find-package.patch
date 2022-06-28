@@ -57,7 +57,7 @@ index 36ea6c81f..8ed39eb24 100755
 +set(WEBP_LIBRARY WebP::webp)
 +find_package(BLEND2D CONFIG REQUIRED)
 +set(BLEND2D_LIBRARY blend2d::blend2d)
-+find_package(blosc REQUIRED)
++find_package(Blosc REQUIRED)
  
  if(OSGEARTH_ENABLE_PROFILING)
 -    find_package(Tracy)
