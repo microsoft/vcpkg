@@ -55,8 +55,8 @@ else()
         set_library_target(
             NAMESPACE "ISAL"
             LIB_NAME "isa-l"
-            DEBUG_STATIC "${_IMPORT_PREFIX}/debug/lib/libisa.a"
-            RELEASE_STATIC "${_IMPORT_PREFIX}/lib/libisa.a"
+            DEBUG_STATIC "${_IMPORT_PREFIX}/debug/lib/libisal.a"
+            RELEASE_STATIC "${_IMPORT_PREFIX}/lib/libisal.a"
             INCLUDE_DIR "${_IMPORT_PREFIX}/include"
             TYPE STATIC
         )
