@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512
         4a40656efe5854bd6b893d0b2b86eed5df42992d080edb9c0cb2da2c55ad8dd489a85072b138947933d94ef5ba90c7a59f0a4460e3722d0f898ceefbbf74d226 
     HEAD_REF master
+    PATCHES fix-dependency-libuv.patch
 )
 set(OPTIONS)
 if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
