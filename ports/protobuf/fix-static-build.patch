@@ -1,5 +1,5 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 4e1c5de..d3aa865 100644
+index 825cb25..4f453d6 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
 @@ -32,7 +32,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
