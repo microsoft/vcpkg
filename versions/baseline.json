@@ -5714,7 +5714,7 @@
     },
     "qpid-proton": {
       "baseline": "0.37.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -6974,7 +6974,7 @@
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
-      "port-version": 0
+      "port-version": 1
     },
     "termcolor": {
       "baseline": "2.1.0",
@@ -7310,7 +7310,7 @@
     },
     "usockets": {
       "baseline": "0.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
@@ -7346,7 +7346,7 @@
     },
     "uvw": {
       "baseline": "2.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "uwebsockets": {
       "baseline": "20.11.0",
@@ -7609,8 +7609,8 @@
       "port-version": 1
     },
     "wpilib": {
-      "baseline": "2020.3.2",
-      "port-version": 2
+      "baseline": "2020-03-02",
+      "port-version": 3
     },
     "wren": {
       "baseline": "0.4.0",
