@@ -82,8 +82,15 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
+    "include(CMakeFindDependencyMacro)"
+    "include(CMakeFindDependencyMacro)
+# gdal needs a pkg-config tool. A host dependency provides pkgconf.
+get_filename_component(vcpkg_host_prefix \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" ABSOLUTE)
+list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
+)
 
 if (BUILD_APPS)
     vcpkg_copy_tools(
@@ -133,7 +140,6 @@ if(NOT bin_files)
     )
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/gdal/vcpkg-cmake-wrapper.cmake" @ONLY)
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
