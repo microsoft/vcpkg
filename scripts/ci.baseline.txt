@@ -859,7 +859,6 @@ qbittorrent:x64-linux=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-qt5-base:arm64-windows=fail
 
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
