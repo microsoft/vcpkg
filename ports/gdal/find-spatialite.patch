@@ -1,0 +1,23 @@
+diff --git a/cmake/modules/packages/FindSPATIALITE.cmake b/cmake/modules/packages/FindSPATIALITE.cmake
+index 00612b0..6388719 100644
+--- a/cmake/modules/packages/FindSPATIALITE.cmake
++++ b/cmake/modules/packages/FindSPATIALITE.cmake
+@@ -38,9 +38,17 @@ endif()
+ 
+ find_package(PkgConfig QUIET)
+ if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(PC_SPATIALITE QUIET spatialite)
++    pkg_check_modules(PC_SPATIALITE QUIET IMPORTED_TARGET spatialite)
+     set(SPATIALITE_VERSION_STRING ${PC_SPATIALITE_VERSION})
+ endif()
++if(PC_SPATIALITE_FOUND)
++    set(SPATIALITE_INCLUDE_DIR "${PC_SPATIALITE_INCLUDE_DIRS}" CACHE STRING "")
++    set(SPATIALITE_LIBRARY "${PC_SPATIALITE_LIBRARIES}" CACHE STRING "")
++    if(NOT TARGET SPATIALITE::SPATIALITE)
++        add_library(SPATIALITE::SPATIALITE INTERFACE IMPORTED)
++        set_target_properties(SPATIALITE::SPATIALITE PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_SPATIALITE)
++    endif()
++endif()
+ 
+ find_path(SPATIALITE_INCLUDE_DIR
+           NAMES spatialite.h

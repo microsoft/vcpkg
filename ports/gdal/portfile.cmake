@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v3.5.1RC1
     SHA512 d9d12bb8da5e073c22a3f6ca40d8bf8583eb2ae538f636fe3852133b2aaf4467099f9db793b442a76200770b4faf5491210bf8e1d854129386b4d8455f9018a5
     HEAD_REF master
+    PATCHES
+        find-spatialite.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
