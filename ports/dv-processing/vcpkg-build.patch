@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c7775b5..4201f4b 100644
+index c7775b5..acf6208 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,11 +27,15 @@ IF(Git_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
@@ -35,6 +35,22 @@ index c7775b5..4201f4b 100644
  	SET(CMAKE_EXPORT_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
  ELSE()
  	SET(CMAKE_EXPORT_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+@@ -103,8 +108,13 @@ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+ 			  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+ 			  ${CMAKE_CURRENT_SOURCE_DIR}/cmakemod/inivation-setup.cmake DESTINATION ${CMAKE_EXPORT_DESTINATION})
+ 
+-# External libraries to build
+-ADD_SUBDIRECTORY(tests/external/cli11)
++IF (BUILD_CONFIG_VCPKG)
++	# Find CLI11 as an installed package
++	FIND_PACKAGE(CLI11 CONFIG REQUIRED)
++ELSE()
++	# External CLI11 checked-out as a submodule
++	ADD_SUBDIRECTORY(tests/external/cli11)
++ENDIF()
+ 
+ # Install header files.
+ ADD_SUBDIRECTORY(include)
 diff --git a/dv-processing-config.cmake.in b/dv-processing-config.cmake.in
 index 4dbf635..5557dd2 100644
 --- a/dv-processing-config.cmake.in

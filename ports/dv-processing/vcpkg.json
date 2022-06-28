@@ -13,6 +13,7 @@
     "boost-property-tree",
     "boost-stacktrace",
     "boost-tti",
+    "cli11",
     "eigen3",
     "fmt",
     "libcaer",
