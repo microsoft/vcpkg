@@ -1,0 +1,87 @@
+From 9bd640b62bf3293b53500811922068fe356294df Mon Sep 17 00:00:00 2001
+From: Henry Schreiner <HenrySchreinerIII@gmail.com>
+Date: Wed, 18 May 2022 23:19:33 -0400
+Subject: [PATCH] fix(cmake): support release and debug at the same time
+ (#3948)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Jan: try to preserve Python v2 functionality.
+
+Backported-by: Jan Kundrát <jan.kundrat@telecominfraproject.com>
+---
+ tools/pybind11Tools.cmake | 50 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 11 deletions(-)
+
+diff --git a/tools/pybind11Tools.cmake b/tools/pybind11Tools.cmake
+index c255e5cf..d378a9ed 100644
+--- a/tools/pybind11Tools.cmake
++++ b/tools/pybind11Tools.cmake
+@@ -115,24 +115,52 @@ if(PYTHON_IS_DEBUG)
+     PROPERTY INTERFACE_COMPILE_DEFINITIONS Py_DEBUG)
+ endif()
+ 
+-set_property(
+-  TARGET pybind11::module
+-  APPEND
+-  PROPERTY
+-    INTERFACE_LINK_LIBRARIES pybind11::python_link_helper
+-    "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:$<BUILD_INTERFACE:${PYTHON_LIBRARIES}>>")
+-
+ if(PYTHON_VERSION VERSION_LESS 3)
+   set_property(
+     TARGET pybind11::pybind11
+     APPEND
+     PROPERTY INTERFACE_LINK_LIBRARIES pybind11::python2_no_register)
++
++  # FIXME: this is toally untested, but it's also unchanged from v2.9.2
++  set_property(
++    TARGET pybind11::module
++    APPEND
++    PROPERTY
++      INTERFACE_LINK_LIBRARIES pybind11::python_link_helper
++      "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:$<BUILD_INTERFACE:${PYTHON_LIBRARIES}>>")
++  set_property(
++   TARGET pybind11::embed
++   APPEND
++   PROPERTY INTERFACE_LINK_LIBRARIES pybind11::pybind11 $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
++
++else()
++  if(CMAKE_VERSION VERSION_LESS 3.11)
++    set_property(
++      TARGET pybind11::module
++      APPEND
++      PROPERTY
++        INTERFACE_LINK_LIBRARIES
++        pybind11::python_link_helper
++        "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:$<BUILD_INTERFACE:${PYTHON_LIBRARIES}>>"
++    )
++    set_property(
++      TARGET pybind11::embed
++      APPEND
++      PROPERTY INTERFACE_LINK_LIBRARIES pybind11::pybind11 $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
++  else()
++    target_link_libraries(
++      pybind11::module
++      INTERFACE
++        pybind11::python_link_helper
++        "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:$<BUILD_INTERFACE:${PYTHON_LIBRARIES}>>"
++    )
++
++    target_link_libraries(pybind11::embed INTERFACE pybind11::pybind11
++                                                    $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
++
++  endif()
+ endif()
+ 
+-set_property(
+-  TARGET pybind11::embed
+-  APPEND
+-  PROPERTY INTERFACE_LINK_LIBRARIES pybind11::pybind11 $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
+ 
+ function(pybind11_extension name)
+   # The prefix and extension are provided by FindPythonLibsNew.cmake
+-- 
+2.36.0
+

@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v2.9.2
     SHA512 c6c18e5f59873adb3692640ade26472abd257607e7bb9fd48cfd1949878811e83d6ac6eb8c8dd926622d52ca4f13e5e6a58e0abaaaa1fa814ee831ea2b515272
     HEAD_REF master
+    PATCHES 0001-fix-cmake-support-release-and-debug-at-the-same-time.patch
 )
 
 vcpkg_cmake_configure(
