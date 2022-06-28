@@ -51,7 +51,7 @@ if (${LIBUS_USE_LIBUV})
 endif()
 
 target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
-target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR} "${CMAKE_CURRENT_LIST_DIR}/src")
+target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
 target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY} ${USOCKETS_EXT_LIBS})
 
 install(TARGETS uSockets
