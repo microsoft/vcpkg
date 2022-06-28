@@ -2458,7 +2458,7 @@
     },
     "gdal": {
       "baseline": "3.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "gdcm": {
       "baseline": "3.0.12",

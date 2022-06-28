@@ -124,7 +124,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_pdbs()
 
     if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/gdal304_d.pdb" "${CURRENT_PACKAGES_DIR}/lib/gdal304.pdb")
     endif()
 
 else()
