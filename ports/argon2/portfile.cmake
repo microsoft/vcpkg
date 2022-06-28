@@ -30,7 +30,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-libargon2 PACKAGE_NAME uno
 
 vcpkg_copy_tools(TOOL_NAMES argon2_tool AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/argon2_tool${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/argon2${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
