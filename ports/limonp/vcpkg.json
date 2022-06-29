@@ -1,0 +1,12 @@
+{
+  "name": "limonp",
+  "version": "2022-06-30",
+  "description": "C++ headers(hpp) with Python style",
+  "homepage": "https://github.com/playgithub/limonp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
