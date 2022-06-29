@@ -7033,8 +7033,8 @@
       "port-version": 0
     },
     "tidy-html5": {
-      "baseline": "5.7.28",
-      "port-version": 6
+      "baseline": "5.8.0",
+      "port-version": 0
     },
     "tiff": {
       "baseline": "4.4.0",
