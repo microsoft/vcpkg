@@ -17,19 +17,14 @@ vcpkg_cmake_configure(
 )
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt")
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/tidyd.exe")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/tidyd")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/tidyd${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+)
 
 vcpkg_copy_tools(TOOL_NAMES tidy AUTO_CLEAN)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
 file(INSTALL "${SOURCE_PATH}/README/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_fixup_pkgconfig()
