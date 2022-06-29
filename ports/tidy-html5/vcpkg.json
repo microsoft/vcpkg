@@ -6,10 +6,6 @@
   "license": null,
   "dependencies": [
     {
-      "name": "libxslt",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
