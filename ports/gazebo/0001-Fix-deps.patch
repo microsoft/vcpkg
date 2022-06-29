@@ -38,24 +38,44 @@ index a989ec7..7cc6f44 100644
 +  endif()
  endif (NOT freeimage_FOUND)
 diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
-index 9777a46..1375982 100644
+index 9777a46..be03eb8 100644
 --- a/cmake/SearchForStuff.cmake
 +++ b/cmake/SearchForStuff.cmake
-@@ -144,7 +144,12 @@ if (PKG_CONFIG_FOUND)
+@@ -31,7 +31,10 @@ endif()
+ 
+ ########################################
+ # The Google Protobuf library for message generation + serialization
+-find_package(Protobuf REQUIRED)
++find_package(protobuf CONFIG REQUIRED)
++set(GZ_PROTOBUF_LIBRARY protobuf::libprotobuf protobuf::libprotobuf-lite)
++set(GZ_PROTOBUF_PROTOC_LIBRARY protobuf::libprotoc)
++if (0)
+ if (NOT PROTOBUF_FOUND)
+   BUILD_ERROR ("Missing: Google Protobuf (libprotobuf-dev)")
+ endif()
+@@ -49,6 +52,7 @@ else()
+   set (GZ_PROTOBUF_LIBRARY ${PROTOBUF_LIBRARY})
+   set (GZ_PROTOBUF_PROTOC_LIBRARY ${PROTOBUF_PROTOC_LIBRARY})
+ endif()
++endif()
+ 
+ ########################################
+ include (FindOpenGL)
+@@ -144,7 +148,12 @@ if (PKG_CONFIG_FOUND)
    # Find Simbody
    set(SimTK_INSTALL_DIR ${SimTK_INSTALL_PREFIX})
    #list(APPEND CMAKE_MODULE_PATH ${SimTK_INSTALL_PREFIX}/share/cmake)
 -  find_package(Simbody)
 +  find_package(Simbody CONFIG REQUIRED)
 +  if (TARGET SimTKmath_static)
-+    set(Simbody_LIBRARIES SimTKmath_static SimTKcommon_static)
++    set(Simbody_LIBRARIES SimTKmath_static SimTKcommon_static SimTKsimbody_static)
 +  else()
-+    set(Simbody_LIBRARIES SimTKmath SimTKcommon)
++    set(Simbody_LIBRARIES SimTKmath SimTKcommon SimTKsimbody)
 +  endif()
    if (Simbody_FOUND)
      message (STATUS "Looking for Simbody - found")
      set (HAVE_SIMBODY TRUE)
-@@ -179,7 +184,7 @@ if (PKG_CONFIG_FOUND)
+@@ -179,7 +188,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
@@ -64,7 +84,7 @@ index 9777a46..1375982 100644
      message (STATUS "Using system tinyxml.")
      set (USE_EXTERNAL_TINYXML True)
    elseif(WIN32)
-@@ -225,7 +230,7 @@ if (PKG_CONFIG_FOUND)
+@@ -225,7 +234,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
@@ -73,7 +93,7 @@ index 9777a46..1375982 100644
      message (STATUS "Using system tinyxml2.")
      set (USE_EXTERNAL_TINYXML2 True)
    elseif(WIN32)
-@@ -329,6 +334,7 @@ if (PKG_CONFIG_FOUND)
+@@ -329,6 +338,7 @@ if (PKG_CONFIG_FOUND)
    #################################################
    # Find OGRE
  
@@ -81,7 +101,7 @@ index 9777a46..1375982 100644
    pkg_check_modules(OGRE-RTShaderSystem
                      OGRE-RTShaderSystem>=${MIN_OGRE_VERSION})
  
-@@ -375,8 +381,8 @@ if (PKG_CONFIG_FOUND)
+@@ -375,8 +385,8 @@ if (PKG_CONFIG_FOUND)
        set (OGRE_PLUGINDIR ${_pkgconfig_invoke_result})
      endif()
    endif()
@@ -92,7 +112,7 @@ index 9777a46..1375982 100644
      # Workaround for CMake bug https://gitlab.kitware.com/cmake/cmake/issues/17135,
      # that prevents to successfully run a find_package(<package>) call if before there
      # was a failed call to pkg_check_modules(<package> <package>)
-@@ -513,7 +519,7 @@ if (PKG_CONFIG_FOUND)
+@@ -513,7 +523,7 @@ if (PKG_CONFIG_FOUND)
    endif ()
  
    if (libavutil_FOUND AND libavformat_FOUND AND libavcodec_FOUND AND
@@ -101,7 +121,7 @@ index 9777a46..1375982 100644
      set (HAVE_FFMPEG TRUE)
    else ()
      set (HAVE_FFMPEG FALSE)
-@@ -538,7 +544,7 @@ if (PKG_CONFIG_FOUND)
+@@ -538,7 +548,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find GNU Triangulation Surface Library
    pkg_check_modules(gts gts)
@@ -110,7 +130,7 @@ index 9777a46..1375982 100644
      message (STATUS "Looking for GTS - found")
      set (HAVE_GTS TRUE)
    else ()
-@@ -551,13 +557,14 @@ if (PKG_CONFIG_FOUND)
+@@ -551,13 +561,14 @@ if (PKG_CONFIG_FOUND)
    # First and preferred option is to look for bullet standard pkgconfig,
    # so check it first. if it is not present, check for the OSRF
    # custom bullet2.82.pc file
@@ -126,7 +146,7 @@ index 9777a46..1375982 100644
      add_definitions( -DLIBBULLET_VERSION=${BULLET_VERSION} )
    else()
      set (HAVE_BULLET FALSE)
-@@ -572,7 +579,7 @@ if (PKG_CONFIG_FOUND)
+@@ -572,7 +583,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find libusb
    pkg_check_modules(libusb-1.0 libusb-1.0)
@@ -135,7 +155,7 @@ index 9777a46..1375982 100644
      BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
      set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
    else()
-@@ -648,7 +655,7 @@ endif ()
+@@ -648,7 +659,7 @@ endif ()
  ########################################
  # Find gdal
  include (FindGDAL)
@@ -144,7 +164,7 @@ index 9777a46..1375982 100644
    message (STATUS "Looking for libgdal - not found")
    BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
    set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
-@@ -732,7 +739,7 @@ endif()
+@@ -732,7 +743,7 @@ endif()
  ########################################
  # Find graphviz
  include (${gazebo_cmake_dir}/FindGraphviz.cmake)
