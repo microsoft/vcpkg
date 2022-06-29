@@ -36,6 +36,7 @@
       "platform": "!windows"
     },
     "ogre",
+    "opengl",
     {
       "name": "pkgconf",
       "host": true
