@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-doc.patch
         static-vs-shared.patch
+        debug-postfix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIB)
