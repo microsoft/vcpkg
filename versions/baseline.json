@@ -5782,7 +5782,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.5",
-      "port-version": 2
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.5",
@@ -5914,7 +5914,7 @@
     },
     "qtapplicationmanager": {
       "baseline": "6.3.0",
-      "port-version": 2
+      "port-version": 1
     },
     "qtbase": {
       "baseline": "6.3.0",
