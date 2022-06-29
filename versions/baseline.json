@@ -7022,7 +7022,7 @@
     },
     "tidy-html5": {
       "baseline": "5.7.28",
-      "port-version": 5
+      "port-version": 6
     },
     "tiff": {
       "baseline": "4.4.0",
