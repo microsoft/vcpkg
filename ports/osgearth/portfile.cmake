@@ -8,6 +8,7 @@ vcpkg_from_github(
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
+		remove-lerc-gltf.patch
 )
 
 message(STATUS "Downloading submodules")
@@ -21,28 +22,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# LERC
-vcpkg_from_github(
-    OUT_SOURCE_PATH LERC_SOURCE_PATH
-    REPO Esri/lerc
-    REF 19542a00b9a8b5c1089f74239e5859e02e403212 #v2.2.1
-    SHA512 3a4d3049da08c2303c74ce8767a3e588e8eb024f63a04c7f93ccdbbcc0fbcc85870f1c339591e0900a2cd5fe607afcd07c21ad5e4a03c8c61620fe7e2c131501
-    HEAD_REF v2.2.1
-)
-
-# RAPIDJSON
-vcpkg_from_github(
-    OUT_SOURCE_PATH RAPIDJSON_SOURCE_PATH
-    REPO Tencent/rapidjson
-    REF f54b0e47a08782a6131cc3d60f94d038fa6e0a51 #v1.1.0
-    SHA512 f30796721c0bfc789d91622b3af6db8d4fb4947a6da3fcdd33e8f37449a28e91dbfb23a98749272a478ca991aaf1696ab159c53b50f48ef69a6f6a51a7076d01
-    HEAD_REF v1.1.0
-)
-
 # Copy the submodules to the right place
 file(COPY ${IMGUI_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/src/third_party/imgui)
-file(COPY ${LERC_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/src/third_party/lerc)
-file(COPY ${RAPIDJSON_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/src/third_party/rapidjson)
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
