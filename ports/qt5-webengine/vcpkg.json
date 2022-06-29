@@ -1,7 +1,6 @@
 {
   "name": "qt5-webengine",
-  "version": "5.15.4",
-  "port-version": 2,
+  "version": "5.15.5",
   "description": "Qt5 webengine Module;",
   "license": null,
   "supports": "!static",

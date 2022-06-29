@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf8971b..242f412 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -143,7 +144,19 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ ENDIF (OSGEARTH_USE_GLES)
+ 
+ # required
+-find_package(OSG REQUIRED)
++find_package(OSG NAMES unofficial-osg)
++find_path(OSG_INCLUDE_DIR osg/Version) # For detecting the version and setting the plugin path
++set(OSG_INCLUDE_DIRS "")
++set(OSG_LIBRARY unofficial::osg::osg)
++set(OSGUTIL_LIBRARY unofficial::osg::osgUtil)
++set(OSGDB_LIBRARY unofficial::osg::osgDB)
++set(OSGTEXT_LIBRARY unofficial::osg::osgText)
++set(OSGSIM_LIBRARY unofficial::osg::osgSim)
++set(OSGVIEWER_LIBRARY unofficial::osg::osgViewer)
++set(OSGGA_LIBRARY unofficial::osg::osgViewer)
++set(OSGSHADOW_LIBRARY unofficial::osg::osgShadow)
++set(OSGMANIPULATOR_LIBRARY unofficial::osg::osgManipulator)
++set(OPENTHREADS_LIBRARY unofficial::osg::OpenThreads)
+ find_package(CURL REQUIRED)
+ find_package(GDAL REQUIRED)
+
