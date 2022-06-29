@@ -1,0 +1,30 @@
+{
+  "name": "ctk",
+  "version": "0.1.0",
+  "description": "The Common Toolkit is a community effort to provide support code for medical image analysis, surgical navigation, and related projects.",
+  "homepage": "http://commontk.org",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name":"qt5-base",
+      "default-features": false,
+      "features": [
+        "mysqlplugin"
+      ]
+    },
+    "qt5-tools",
+    "qt5-xmlpatterns",
+    "qt5-multimedia",
+    "dcmtk",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+  }
+}

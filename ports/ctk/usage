@@ -1,0 +1,5 @@
+The package ctk provides CMake targets:
+
+    find_package(CTK REQUIRED)
+    include("${CTK_USE_FILE}")
+    target_link_libraries(main PRIVATE ${CTK_LIBRARIES})
