@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO htacg/tidy-html5
@@ -8,14 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-doc.patch
+        static-vs-shared.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIB)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_CHARSET_FLAG
     OPTIONS
-        -DBUILD_SHARED_LIB=OFF
-        -DTIDY_CONSOLE_SHARED=OFF
+        -DBUILD_SHARED_LIB=${BUILD_SHARED_LIB}
+        -DTIDY_CONSOLE_SHARED=${BUILD_SHARED_LIB}
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
