@@ -5,7 +5,7 @@
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((arm | x86) & windows)",
+  "supports": "!static & !(x86 & windows)",
   "dependencies": [
     {
       "name": "ffmpeg",
