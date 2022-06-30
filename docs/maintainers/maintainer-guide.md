@@ -119,7 +119,7 @@ file(INSTALL "${SOURCE_PATH}LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/
 
 Replace `LICENSE` with the actual file name.
 
-If there are multiple license files, use [`vcpkg_concat_copyright()`](vcpkg_concat_copyright.md) instead.
+If there are multiple license files, use [`vcpkg_install_copyright()`](vcpkg_install_copyright.md) instead.
 
 ## Features
 

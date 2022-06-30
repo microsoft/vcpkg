@@ -1,4 +1,4 @@
-function(vcpkg_concat_copyright)
+function(vcpkg_install_copyright)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "COMMENT" "FILE_LIST")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
