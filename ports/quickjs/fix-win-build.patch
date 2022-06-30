@@ -1,0 +1,461 @@
+diff --git a/cutils.c b/cutils.c
+index a02fb76..f28e6f6 100644
+--- a/cutils.c
++++ b/cutils.c
+@@ -29,6 +29,32 @@
+ 
+ #include "cutils.h"
+ 
++#ifdef _MSC_VER
++#include <Windows.h>
++#include <stdint.h>
++
++// From: https://stackoverflow.com/a/26085827
++int gettimeofday(struct timeval *tvp, void *tzp)
++{
++    (void)tzp;
++    static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
++
++    SYSTEMTIME  system_time;
++    FILETIME    file_time;
++    uint64_t    time;
++
++    GetSystemTime(&system_time);
++    SystemTimeToFileTime(&system_time, &file_time);
++    time = ((uint64_t)file_time.dwLowDateTime);
++    time += ((uint64_t)file_time.dwHighDateTime) << 32;
++
++    tvp->tv_sec = (long)((time - EPOCH) / 10000000L);
++    tvp->tv_usec = (long)(system_time.wMilliseconds * 1000);
++
++    return 0;
++}
++#endif
++
+ void pstrcpy(char *buf, int buf_size, const char *str)
+ {
+     int c;
+diff --git a/cutils.h b/cutils.h
+index 31f7cd8..00f9230 100644
+--- a/cutils.h
++++ b/cutils.h
+@@ -28,14 +28,34 @@
+ #include <stdlib.h>
+ #include <inttypes.h>
+ 
++#ifdef _MSC_VER
++#include <windows.h>
++#include <intrin.h>
++
++int gettimeofday(struct timeval *tvp, void *tzp);
++#else
++#include <sys/time.h>
++#endif
++
+ /* set if CPU is big endian */
+ #undef WORDS_BIGENDIAN
+ 
++#ifndef __has_attribute
++#define likely(x)    (x)
++#define unlikely(x)  (x)
++#define force_inline __forceinline
++#define no_inline __declspec(noinline)
++#define __maybe_unused
++#define __attribute__(x)
++#define __attribute(x)
++typedef size_t ssize_t;
++#else
+ #define likely(x)       __builtin_expect(!!(x), 1)
+ #define unlikely(x)     __builtin_expect(!!(x), 0)
+ #define force_inline inline __attribute__((always_inline))
+ #define no_inline __attribute__((noinline))
+ #define __maybe_unused __attribute__((unused))
++#endif
+ 
+ #define xglue(x, y) x ## y
+ #define glue(x, y) xglue(x, y)
+@@ -114,27 +134,83 @@ static inline int64_t min_int64(int64_t a, int64_t b)
+ /* WARNING: undefined if a = 0 */
+ static inline int clz32(unsigned int a)
+ {
++#ifdef _MSC_VER
++    unsigned long idx;
++    _BitScanReverse(&idx, a);
++    return 31 ^ idx;
++#else
+     return __builtin_clz(a);
++#endif
+ }
+ 
+ /* WARNING: undefined if a = 0 */
+ static inline int clz64(uint64_t a)
+ {
++#ifdef _MSC_VER
++    unsigned long idx;
++    // BitScanReverse scans from MSB to LSB for first set bit.
++    // Returns 0 if no set bit is found.
++#if INTPTR_MAX >= INT64_MAX // 64-bit
++    _BitScanReverse64(&idx, a);
++#else
++    // Scan the high 32 bits.
++    if (_BitScanReverse(&idx, (uint32_t)(a >> 32)))
++        return 63 ^ (idx + 32);
++    // Scan the low 32 bits.
++    _BitScanReverse(&idx, (uint32_t)(a));
++#endif
++    return 63 ^ idx;
++#else
+     return __builtin_clzll(a);
++#endif
+ }
+ 
+ /* WARNING: undefined if a = 0 */
+ static inline int ctz32(unsigned int a)
+ {
++#ifdef _MSC_VER
++    unsigned long idx;
++    _BitScanForward(&idx, a);
++    return idx;
++#else
+     return __builtin_ctz(a);
++#endif
+ }
+ 
+ /* WARNING: undefined if a = 0 */
+ static inline int ctz64(uint64_t a)
+ {
+-    return __builtin_ctzll(a);
++#ifdef _MSC_VER
++    unsigned long idx;
++#if INTPTR_MAX >= INT64_MAX // 64-bit
++    _BitScanForward64(&idx, a);
++    return idx;
++#else
++    if (_BitScanForward(&idx, (uint32_t)(a)))
++        return idx;
++    _BitScanForward(&idx, (uint32_t)(a >> 32));
++    return idx + 32;
++#endif
++#else
++     return __builtin_ctzll(a);
++#endif
+ }
+ 
++#ifdef _MSC_VER
++#pragma pack(push, 1)
++struct packed_u64 {
++    uint64_t v;
++};
++
++struct packed_u32 {
++    uint32_t v;
++};
++
++struct packed_u16 {
++    uint16_t v;
++};
++#pragma pack(pop)
++#else
+ struct __attribute__((packed)) packed_u64 {
+     uint64_t v;
+ };
+@@ -146,6 +222,7 @@ struct __attribute__((packed)) packed_u32 {
+ struct __attribute__((packed)) packed_u16 {
+     uint16_t v;
+ };
++#endif
+ 
+ static inline uint64_t get_u64(const uint8_t *tab)
+ {
+diff --git a/libbf.h b/libbf.h
+index 48e9d95..dc2137a 100644
+--- a/libbf.h
++++ b/libbf.h
+@@ -27,7 +27,7 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
+-#if INTPTR_MAX >= INT64_MAX
++#if INTPTR_MAX >= INT64_MAX && !defined(_MSC_VER)
+ #define LIMB_LOG2_BITS 6
+ #else
+ #define LIMB_LOG2_BITS 5
+diff --git a/qjs.c b/qjs.c
+index d56b843..a1d8738 100644
+--- a/qjs.c
++++ b/qjs.c
+@@ -28,7 +28,9 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <assert.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <time.h>
+diff --git a/quickjs-libc.c b/quickjs-libc.c
+index e180dd0..5c7ed91 100644
+--- a/quickjs-libc.c
++++ b/quickjs-libc.c
+@@ -28,10 +28,8 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <assert.h>
+-#include <unistd.h>
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <sys/time.h>
+ #include <time.h>
+ #include <signal.h>
+ #include <limits.h>
+@@ -40,10 +38,13 @@
+ #if defined(_WIN32)
+ #include <windows.h>
+ #include <conio.h>
+-#include <utime.h>
++#include <sys/utime.h>
++#include <winsock.h>
+ #else
++#include <unistd.h>
+ #include <dlfcn.h>
+ #include <termios.h>
++#include <sys/time.h>
+ #include <sys/ioctl.h>
+ #include <sys/wait.h>
+ 
+diff --git a/quickjs.c b/quickjs.c
+index 48aeffc..a7d824e 100644
+--- a/quickjs.c
++++ b/quickjs.c
+@@ -28,7 +28,9 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <assert.h>
++#if !defined(_MSC_VER)
+ #include <sys/time.h>
++#endif
+ #include <time.h>
+ #include <fenv.h>
+ #include <math.h>
+@@ -50,7 +52,7 @@
+ 
+ #define OPTIMIZE         1
+ #define SHORT_OPCODES    1
+-#if defined(EMSCRIPTEN)
++#if defined(EMSCRIPTEN) || defined(_MSC_VER)
+ #define DIRECT_DISPATCH  0
+ #else
+ #define DIRECT_DISPATCH  1
+@@ -69,11 +71,11 @@
+ 
+ /* define to include Atomics.* operations which depend on the OS
+    threads */
+-#if !defined(EMSCRIPTEN)
++#if !defined(EMSCRIPTEN) && !defined(_MSC_VER)
+ #define CONFIG_ATOMICS
+ #endif
+ 
+-#if !defined(EMSCRIPTEN)
++#if !defined(EMSCRIPTEN) && !defined(_MSC_VER)
+ /* enable stack limitation */
+ #define CONFIG_STACK_CHECK
+ #endif
+@@ -7242,7 +7244,7 @@ static int JS_DefinePrivateField(JSContext *ctx, JSValueConst obj,
+         JS_ThrowTypeErrorNotASymbol(ctx);
+         goto fail;
+     }
+-    prop = js_symbol_to_atom(ctx, (JSValue)name);
++    prop = js_symbol_to_atom(ctx, *(JSValue*)&name);
+     p = JS_VALUE_GET_OBJ(obj);
+     prs = find_own_property(&pr, p, prop);
+     if (prs) {
+@@ -7273,7 +7275,7 @@ static JSValue JS_GetPrivateField(JSContext *ctx, JSValueConst obj,
+     /* safety check */
+     if (unlikely(JS_VALUE_GET_TAG(name) != JS_TAG_SYMBOL))
+         return JS_ThrowTypeErrorNotASymbol(ctx);
+-    prop = js_symbol_to_atom(ctx, (JSValue)name);
++    prop = js_symbol_to_atom(ctx, *(JSValue*)&name);
+     p = JS_VALUE_GET_OBJ(obj);
+     prs = find_own_property(&pr, p, prop);
+     if (!prs) {
+@@ -7300,7 +7302,7 @@ static int JS_SetPrivateField(JSContext *ctx, JSValueConst obj,
+         JS_ThrowTypeErrorNotASymbol(ctx);
+         goto fail;
+     }
+-    prop = js_symbol_to_atom(ctx, (JSValue)name);
++    prop = js_symbol_to_atom(ctx, *(JSValue*)&name);
+     p = JS_VALUE_GET_OBJ(obj);
+     prs = find_own_property(&pr, p, prop);
+     if (!prs) {
+@@ -7390,7 +7392,7 @@ static int JS_CheckBrand(JSContext *ctx, JSValueConst obj, JSValueConst func)
+     if (unlikely(JS_VALUE_GET_TAG(obj) != JS_TAG_OBJECT))
+         goto not_obj;
+     p = JS_VALUE_GET_OBJ(obj);
+-    prs = find_own_property(&pr, p, js_symbol_to_atom(ctx, (JSValue)brand));
++    prs = find_own_property(&pr, p, js_symbol_to_atom(ctx, *(JSValue*)&brand));
+     if (!prs) {
+         JS_ThrowTypeError(ctx, "invalid brand on object");
+         return -1;
+@@ -9042,7 +9044,7 @@ int JS_DefineProperty(JSContext *ctx, JSValueConst this_obj,
+                 return -1;
+             }
+             /* this code relies on the fact that Uint32 are never allocated */
+-            val = (JSValueConst)JS_NewUint32(ctx, array_length);
++            val = JS_NewUint32(ctx, array_length);
+             /* prs may have been modified */
+             prs = find_own_property(&pr, p, prop);
+             assert(prs != NULL);
+@@ -10237,7 +10239,7 @@ static JSValue js_atof(JSContext *ctx, const char *str, const char **pp,
+             } else
+ #endif
+             {
+-                double d = 1.0 / 0.0;
++                double d = INFINITY;
+                 if (is_neg)
+                     d = -d;
+                 val = JS_NewFloat64(ctx, d);
+@@ -16043,7 +16045,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
+ #else
+     sf->js_mode = 0;
+ #endif
+-    sf->cur_func = (JSValue)func_obj;
++    sf->cur_func = *(JSValue*)&func_obj;
+     sf->arg_count = argc;
+     arg_buf = argv;
+ 
+@@ -16056,7 +16058,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
+             arg_buf[i] = JS_UNDEFINED;
+         sf->arg_count = arg_count;
+     }
+-    sf->arg_buf = (JSValue*)arg_buf;
++    sf->arg_buf = (JSValueConst*)arg_buf;
+ 
+     func = p->u.cfunc.c_function;
+     switch(cproto) {
+@@ -16287,7 +16289,7 @@ static JSValue JS_CallInternal(JSContext *caller_ctx, JSValueConst func_obj,
+     sf->js_mode = b->js_mode;
+     arg_buf = argv;
+     sf->arg_count = argc;
+-    sf->cur_func = (JSValue)func_obj;
++    sf->cur_func = *(JSValue*)&func_obj;
+     init_list_head(&sf->var_ref_list);
+     var_refs = p->u.func.var_refs;
+ 
+@@ -39258,8 +39260,8 @@ static int64_t JS_FlattenIntoArray(JSContext *ctx, JSValueConst target,
+         if (!JS_IsUndefined(mapperFunction)) {
+             JSValueConst args[3] = { element, JS_NewInt64(ctx, sourceIndex), source };
+             element = JS_Call(ctx, mapperFunction, thisArg, 3, args);
+-            JS_FreeValue(ctx, (JSValue)args[0]);
+-            JS_FreeValue(ctx, (JSValue)args[1]);
++            JS_FreeValue(ctx, *(JSValue*)&args[0]);
++            JS_FreeValue(ctx, *(JSValue*)&args[1]);
+             if (JS_IsException(element))
+                 return -1;
+         }
+@@ -40676,7 +40678,7 @@ static JSValue js_string_match(JSContext *ctx, JSValueConst this_val,
+         str = JS_NewString(ctx, "g");
+         if (JS_IsException(str))
+             goto fail;
+-        args[args_len++] = (JSValueConst)str;
++        args[args_len++] = *(JSValueConst*)&str;
+     }
+     rx = JS_CallConstructor(ctx, ctx->regexp_ctor, args_len, args);
+     JS_FreeValue(ctx, str);
+@@ -41734,7 +41736,7 @@ static JSValue js_math_min_max(JSContext *ctx, JSValueConst this_val,
+     uint32_t tag;
+ 
+     if (unlikely(argc == 0)) {
+-        return __JS_NewFloat64(ctx, is_max ? -1.0 / 0.0 : 1.0 / 0.0);
++        return __JS_NewFloat64(ctx, is_max ? -INFINITY : INFINITY);
+     }
+ 
+     tag = JS_VALUE_GET_TAG(argv[0]);
+@@ -41906,6 +41908,9 @@ static JSValue js_math_random(JSContext *ctx, JSValueConst this_val,
+     return __JS_NewFloat64(ctx, u.d - 1.0);
+ }
+ 
++#pragma function (ceil)
++#pragma function (floor)
++
+ static const JSCFunctionListEntry js_math_funcs[] = {
+     JS_CFUNC_MAGIC_DEF("min", 2, js_math_min_max, 0 ),
+     JS_CFUNC_MAGIC_DEF("max", 2, js_math_min_max, 1 ),
+@@ -45704,7 +45709,7 @@ static JSMapRecord *map_add_record(JSContext *ctx, JSMapState *s,
+     } else {
+         JS_DupValue(ctx, key);
+     }
+-    mr->key = (JSValue)key;
++    mr->key = *(JSValue*)&key;
+     h = map_hash_key(ctx, key) & (s->hash_size - 1);
+     list_add_tail(&mr->hash_link, &s->hash_table[h]);
+     list_add_tail(&mr->link, &s->records);
+@@ -45926,7 +45931,7 @@ static JSValue js_map_forEach(JSContext *ctx, JSValueConst this_val,
+                 args[0] = args[1];
+             else
+                 args[0] = JS_DupValue(ctx, mr->value);
+-            args[2] = (JSValue)this_val;
++            args[2] = *(JSValue*)&this_val;
+             ret = JS_Call(ctx, func, this_arg, 3, (JSValueConst *)args);
+             JS_FreeValue(ctx, args[0]);
+             if (!magic)
+@@ -46904,7 +46909,7 @@ static JSValue js_promise_all(JSContext *ctx, JSValueConst this_val,
+                 goto fail_reject;
+             }
+             resolve_element_data[0] = JS_NewBool(ctx, FALSE);
+-            resolve_element_data[1] = (JSValueConst)JS_NewInt32(ctx, index);
++            resolve_element_data[1] = JS_NewInt32(ctx, index);
+             resolve_element_data[2] = values;
+             resolve_element_data[3] = resolving_funcs[is_promise_any];
+             resolve_element_data[4] = resolve_element_env;
+@@ -47263,7 +47268,7 @@ static JSValue js_async_from_sync_iterator_unwrap_func_create(JSContext *ctx,
+ {
+     JSValueConst func_data[1];
+ 
+-    func_data[0] = (JSValueConst)JS_NewBool(ctx, done);
++    func_data[0] = JS_NewBool(ctx, done);
+     return JS_NewCFunctionData(ctx, js_async_from_sync_iterator_unwrap,
+                                1, 0, 1, func_data);
+ }
+@@ -47841,7 +47846,7 @@ static const JSCFunctionListEntry js_global_funcs[] = {
+     JS_CFUNC_MAGIC_DEF("encodeURIComponent", 1, js_global_encodeURI, 1 ),
+     JS_CFUNC_DEF("escape", 1, js_global_escape ),
+     JS_CFUNC_DEF("unescape", 1, js_global_unescape ),
+-    JS_PROP_DOUBLE_DEF("Infinity", 1.0 / 0.0, 0 ),
++    JS_PROP_DOUBLE_DEF("Infinity", INFINITY, 0 ),
+     JS_PROP_DOUBLE_DEF("NaN", NAN, 0 ),
+     JS_PROP_UNDEFINED_DEF("undefined", 0 ),
+ 
+@@ -52692,8 +52697,8 @@ static int js_TA_cmp_generic(const void *a, const void *b, void *opaque) {
+             psc->exception = 1;
+         }
+     done:
+-        JS_FreeValue(ctx, (JSValue)argv[0]);
+-        JS_FreeValue(ctx, (JSValue)argv[1]);
++        JS_FreeValue(ctx, *(JSValue*)&argv[0]);
++        JS_FreeValue(ctx, *(JSValue*)&argv[1]);
+     }
+     return cmp;
+ }
+diff --git a/quickjs.h b/quickjs.h
+index d4a5cd3..299d938 100644
+--- a/quickjs.h
++++ b/quickjs.h
+@@ -666,7 +666,7 @@ static inline JSValue JS_DupValue(JSContext *ctx, JSValueConst v)
+         JSRefCountHeader *p = (JSRefCountHeader *)JS_VALUE_GET_PTR(v);
+         p->ref_count++;
+     }
+-    return (JSValue)v;
++    return *(JSValue*)&v;
+ }
+ 
+ static inline JSValue JS_DupValueRT(JSRuntime *rt, JSValueConst v)
+@@ -675,7 +675,7 @@ static inline JSValue JS_DupValueRT(JSRuntime *rt, JSValueConst v)
+         JSRefCountHeader *p = (JSRefCountHeader *)JS_VALUE_GET_PTR(v);
+         p->ref_count++;
+     }
+-    return (JSValue)v;
++    return *(JSValue*)&v;
+ }
+ 
+ int JS_ToBool(JSContext *ctx, JSValueConst val); /* return -1 for JS_EXCEPTION */

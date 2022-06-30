@@ -4,7 +4,27 @@ project(quickjs)
 
 option(ENABLE_BIGNUM "Enable support for Bignum extensions" ON)
 
-add_library(quickjs
+if (CMAKE_COMPILER_IS_GNU)
+    list(APPEND QUICKJS_COMPILE_OPTIONS -Wall -MMD -MF -Wno-array-bounds -Wno-format-truncation)
+elseif (CMAKE_COMPILER_IS_LANG)
+    list(APPEND QUICKJS_COMPILE_OPTIONS PRIVATE -Wall -Wextra -Wno-sign-compare -Wno-missing-field-initializers
+        -Wundef -Wuninitialized -Wunused -Wno-unused-parameter -Wwrite-strings -Wchar-subscripts -funsigned-char
+        -MMD -MF _GNU_SOURCE
+    )
+endif()
+
+set(QUICKJS_DEFINITIONS "")
+
+if (MSVC)
+    list(APPEND QUICKJS_DEFINITIONS __USE_MINGW_ANSI_STDIO _CRT_SECURE_NO_WARNINGS)
+endif()
+
+if(ENABLE_BIGNUM)
+    list(APPEND QUICKJS_SOURCES libbf.c)
+    list(APPEND QUICKJS_DEFINITIONS CONFIG_BIGNUM)
+endif()
+
+list(APPEND QUICKJS_SOURCES
     quickjs.c
     libregexp.c
     libunicode.c
@@ -12,31 +32,22 @@ add_library(quickjs
     quickjs-libc.c
 )
 
+find_path(DIRENT_INCLUDE_DIRS "dirent.h")
+
+add_library(quickjs ${QUICKJS_SOURCES})
+
 target_include_directories(quickjs PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR};${DIRENT_INCLUDE_DIRS}>
     $<INSTALL_INTERFACE:include>
 )
 
-if(WIN32)
-    target_compile_definitions(quickjs PRIVATE __USE_MINGW_ANSI_STDIO _CRT_SECURE_NO_WARNINGS)
-else()
-    target_compile_definitions(quickjs PRIVATE _GNU_SOURCE)
-endif()
+target_compile_definitions(quickjs PUBLIC ${QUICKJS_DEFINITIONS} CONFIG_VERSION=\"2021-03-27\")
+target_compile_options(quickjs PRIVATE ${QUICKJS_COMPILE_OPTIONS})
 
-if(ENABLE_BIGNUM)
-    target_sources(quickjs PRIVATE libbf.c)
-    target_compile_definitions(quickjs PUBLIC CONFIG_BIGNUM)
+if (UNIX)
+    find_package(Threads REQUIRED)
+    target_link_libraries(quickjs PRIVATE m dl Threads::Threads)
 endif()
-
-find_package(Threads)
-if(Threads_FOUND)
-    target_link_libraries(quickjs PUBLIC Threads::Threads)
-endif()
-
-# -DCONFIG_VERSION=\"$(shell cat VERSION)\"
-target_compile_definitions(quickjs PRIVATE
-    CONFIG_VERSION=\"2021-03-27\"
-)
 
 install(TARGETS quickjs
     EXPORT unofficial-quickjs-targets
