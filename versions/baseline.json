@@ -3310,7 +3310,7 @@
     },
     "kinectsdk1": {
       "baseline": "1.8",
-      "port-version": 5
+      "port-version": 6
     },
     "kinectsdk2": {
       "baseline": "2.0",
