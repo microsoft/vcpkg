@@ -974,7 +974,7 @@
     },
     "boost-regex": {
       "baseline": "1.79.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-safe-numerics": {
       "baseline": "1.79.0",
