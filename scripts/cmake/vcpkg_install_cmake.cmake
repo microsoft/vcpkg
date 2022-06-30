@@ -15,6 +15,8 @@ function(vcpkg_install_cmake)
         endif()
     endforeach()
 
+    vcpkg_list(APPEND params "-DCMAKE_INSTALL_MANDIR=S:/")
+
     vcpkg_build_cmake(Z_VCPKG_DISABLE_DEPRECATION MESSAGE
         ${params}
         LOGFILE_ROOT install

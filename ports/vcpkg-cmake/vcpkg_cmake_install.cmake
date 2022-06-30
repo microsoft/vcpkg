@@ -13,6 +13,9 @@ function(vcpkg_cmake_install)
         endif()
     endforeach()
 
+    
+    list(APPEND args "-DCMAKE_INSTALL_MANDIR=S:/")
+
     vcpkg_cmake_build(
         ${args}
         LOGFILE_BASE install
