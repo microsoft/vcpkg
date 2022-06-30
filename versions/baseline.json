@@ -4713,8 +4713,8 @@
       "port-version": 1
     },
     "ms-gltf": {
-      "baseline": "r1.9.5.4",
-      "port-version": 1
+      "baseline": "2022-06-28",
+      "port-version": 0
     },
     "ms-gsl": {
       "baseline": "4.0.0",
@@ -6149,8 +6149,8 @@
       "port-version": 0
     },
     "rapidjson": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "2022-06-28",
+      "port-version": 0
     },
     "rapidxml": {
       "baseline": "1.13",
