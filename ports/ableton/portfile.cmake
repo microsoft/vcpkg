@@ -24,10 +24,18 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/ci")
 file(REMOVE_RECURSE "${SOURCE_PATH}/modules")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 
-
+set(NEED_CATCH2 OFF)
+if ("coretest" IN_LIST FEATURES)
+    set(NEED_CATCH2 ON)
+endif()
+if ("discoverytest" IN_LIST FEATURES)
+    set(NEED_CATCH2 ON)
+endif()
+    
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS    
+        -DNEED_CATCH2=${NEED_CATCH2}
 )
 
 if ("coretest" IN_LIST FEATURES)
@@ -46,7 +54,6 @@ if ("hutsilent" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET LinkHutSilent)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHutSilent${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
-
 
 # We must not correct the CMake include path before build
 vcpkg_apply_patches(
