@@ -22,8 +22,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         graphviz  NO_GRAPHVIZ_FEATURE
 )
 
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
+vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
