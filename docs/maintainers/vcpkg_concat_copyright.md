@@ -1,13 +1,13 @@
-# vcpkg_install_copyright
+# vcpkg_concat_copyright
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_copyright.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_concat_copyright.md).
 
 Merges multiple copyright files into a single file and install it.
 
 ## Usage
 
 ```cmake
-vcpkg_install_copyright(FILE_LIST <file1> <file2>... [COMMENT])
+vcpkg_concat_copyright(FILE_LIST <file1> <file2>... [COMMENT])
 ```
 
 ## Parameters
@@ -57,16 +57,16 @@ Lorem ipsum dolor sit amet...
 ## Examples
 
 ```cmake
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE/license.md" "${SOURCE_PATH}/LICENSE/license_gpl.md" COMMENT "This is a comment")
+vcpkg_concat_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE/license.md" "${SOURCE_PATH}/LICENSE/license_gpl.md" COMMENT "This is a comment")
 ```
 
 You can also collect the required files using a `GLOB` pattern:
 
 ```cmake
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
-vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+vcpkg_concat_copyright(FILE_LIST ${LICENSE_FILES})
 ```
 
 ## Source
 
-[vcpkg_install_copyright.md](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_copyright.cmake)
+[vcpkg_concat_copyright.md](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_concat_copyright.cmake)
