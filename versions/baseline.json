@@ -3058,7 +3058,7 @@
     },
     "jasper": {
       "baseline": "2.0.33",
-      "port-version": 3
+      "port-version": 4
     },
     "jbig2dec": {
       "baseline": "0.19",
@@ -3978,7 +3978,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 7
+      "port-version": 8
     },
     "librdkafka": {
       "baseline": "1.9.0",
@@ -5294,7 +5294,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 13
+      "port-version": 14
     },
     "osg-qt": {
       "baseline": "Qt5",
@@ -5786,7 +5786,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.5",
@@ -5918,7 +5918,7 @@
     },
     "qtapplicationmanager": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtbase": {
       "baseline": "6.3.0",
@@ -6058,7 +6058,7 @@
     },
     "qtwebengine": {
       "baseline": "6.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qtwebsockets": {
       "baseline": "6.3.0",
