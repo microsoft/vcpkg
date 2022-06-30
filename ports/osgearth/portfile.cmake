@@ -11,19 +11,24 @@ vcpkg_from_github(
 		remove-lerc-gltf.patch
 )
 
-message(STATUS "Downloading submodules")
-# Download all of the submodules from github manually since vpckg doesn't support submodules natively.
-# IMGUI
-vcpkg_from_github(
-    OUT_SOURCE_PATH IMGUI_SOURCE_PATH
-    REPO ocornut/imgui
-    REF 9e8e5ac36310607012e551bb04633039c2125c87 #master
-    SHA512 1f1f743833c9a67b648922f56a638a11683b02765d86f14a36bc6c242cc524c4c5c5c0b7356b8053eb923fafefc53f4c116b21fb3fade7664554a1ad3b25e5ff
-    HEAD_REF master
-)
+if("tools" IN_LIST FEATURES)
+	message(STATUS "Downloading submodules")
+	# Download submodules from github manually since vpckg doesn't support submodules natively.
+	# IMGUI
+	#osgEarth is currently using imgui docking branch for osgearth_imgui example
+	vcpkg_from_github(
+		OUT_SOURCE_PATH IMGUI_SOURCE_PATH
+		REPO ocornut/imgui
+		REF 9e8e5ac36310607012e551bb04633039c2125c87 #docking branch
+		SHA512 1f1f743833c9a67b648922f56a638a11683b02765d86f14a36bc6c242cc524c4c5c5c0b7356b8053eb923fafefc53f4c116b21fb3fade7664554a1ad3b25e5ff
+		HEAD_REF master
+	)
 
-# Copy the submodules to the right place
-file(COPY ${IMGUI_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/src/third_party/imgui)
+	# Remove exisiting folder in case it was not cleaned
+	file(REMOVE_RECURSE "${SOURCE_PATH}/src/third_party/imgui")
+	# Copy the submodules to the right place
+	file(COPY "${IMGUI_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/third_party/imgui")
+endif()
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
@@ -95,7 +100,8 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_imgui osgearth_overlayviewer osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+		osgearth_createtile osgearth_mvtindex
         AUTO_CLEAN
     )
 endif()
