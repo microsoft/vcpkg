@@ -10,25 +10,32 @@ function(vcpkg_install_copyright)
     endif()
 
     list(LENGTH arg_FILE_LIST FILE_LIST_LENGTH)
-    if(FILE_LIST_LENGTH LESS_EQUAL 1)
-        message(FATAL_ERROR "Use `file(INSTALL <filename> DESTINATION \"\${CURRENT_PACKAGES_DIR}/share/\${PORT}\" RENAME copyright)` rather than ${CMAKE_CURRENT_FUNCTION} to install a single license file.")
+    set(out_string "")
+    
+    if(FILE_LIST_LENGTH LESS_EQUAL 0)
+        message(FATAL_ERROR "FILE_LIST must contain at least one file")
+    elseif(FILE_LIST_LENGTH EQUAL 1)
+        if(arg_COMMENT AND NOT arg_COMMENT EQUALS "")
+            file(READ "${arg_FILE_LIST}" out_string)
+        else()
+            file(INSTALL "${arg_FILE_LIST}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+            return()
+        endif()
+    else()
+        foreach(file_item IN LISTS arg_FILE_LIST)
+            
+            if(NOT EXISTS "${file_item}" OR IS_DIRECTORY "${file_item}")
+                message(FATAL_ERROR "The file ${file_item} does not exist or is a directory.")
+            endif()
+    
+            get_filename_component(file_name ${file_item} NAME)
+            file(READ "${file_item}" file_contents)
+
+            string(APPEND out_string "${file_name}:\n\n${file_contents}\n\n")
+        endforeach()
     endif()
 
-    set(out_string "")
-
-    foreach(file_item IN LISTS arg_FILE_LIST)
-        
-        if(NOT EXISTS "${file_item}" OR IS_DIRECTORY "${file_item}")
-            message(FATAL_ERROR "The file ${file_item} does not exist or is a directory.")
-        endif()
- 
-        get_filename_component(file_name ${file_item} NAME)
-        file(READ "${file_item}" file_contents)
-
-        string(APPEND out_string "${file_name}:\n\n${file_contents}\n\n")
-    endforeach()
-
-    if(arg_COMMENT)
+    if(arg_COMMENT AND NOT arg_COMMENT EQUALS "")
         string(PREPEND out_string "${arg_COMMENT}\n\n")
     endif()
 
