@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF ae4eacf147e2c2340cc4e02a790df04c793ed0a9 # openal-soft-1.21.1
-    SHA512 6ba006d3dad6efe002f285ff509a59f02b499ec3f6065df12a89c52355464117b4dbabcd04ee9cbf22cc3b4125c8e456769b172f8c3e9ee215e760b2c51a0a8f
+    REF c1c63a27de66cd44ef756b190a73bfa8bc6dbbab # openal-soft-1.22.0
+    SHA512 3d403a2c292991976880254dd6374e7f501e6b56183bfd935f5f640f250fb935f95537faf49a3ef42d75c993475971f56da8118c54c8c6668e951d1a5e576139
     HEAD_REF master
-    PATCHES
-        dont-export-symbols-in-static-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -28,7 +26,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(ALSOFT_REQUIRE_APPLE ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBTYPE=${OPENAL_LIBTYPE}
@@ -70,8 +68,8 @@ vcpkg_configure_cmake(
         CMAKE_DISABLE_FIND_PACKAGE_WindowsSDK
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenAL")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenAL")
 
 foreach(HEADER al.h alc.h)
     file(READ "${CURRENT_PACKAGES_DIR}/include/AL/${HEADER}" AL_H)
