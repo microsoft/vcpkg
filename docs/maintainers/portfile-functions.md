@@ -18,7 +18,7 @@
 - [vcpkg\_clean\_executables\_in\_bin](vcpkg_clean_executables_in_bin.md)
 - [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md)
 - [vcpkg\_common\_definitions](vcpkg_common_definitions.md)
-- [vcpkg\_concat\_copyright](vcpkg_concat_copyright.md)
+- [vcpkg_concat_copyright](vcpkg_concat_copyright.md)
 - [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md) (deprecated, use [vcpkg\_cmake\_configure](vcpkg_cmake_configure.md))
 - [vcpkg\_configure\_gn](vcpkg_configure_gn.md) (deprecated, use [vcpkg\_gn\_configure](ports/vcpkg-gn/vcpkg_gn_configure.md))
 - [vcpkg\_configure\_make](vcpkg_configure_make.md)
