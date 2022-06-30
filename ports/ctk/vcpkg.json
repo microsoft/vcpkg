@@ -5,13 +5,7 @@
   "homepage": "http://commontk.org",
   "license": "Apache-2.0",
   "dependencies": [
-    {
-      "name":"qt5-base",
-      "default-features": false,
-      "features": [
-        "mysqlplugin"
-      ]
-    },
+    "qt5-base",
     "qt5-tools",
     "qt5-xmlpatterns",
     "qt5-multimedia",
