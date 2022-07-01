@@ -4,6 +4,7 @@
   "port-version": 3,
   "description": "A C++ wrapper for MySQL meant to be used in combination with sqlpp11.",
   "homepage": "https://github.com/rbock/sqlpp11-connector-mysql",
+  "license": "BSD-2-Clause",
   "dependencies": [
     "date",
     {
