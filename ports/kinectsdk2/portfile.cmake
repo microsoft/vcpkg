@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 set(KINECTSDK20_VERSION "v2.0_1409")
 vcpkg_download_distfile(KINECTSDK20_INSTALLER
     URLS "https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-${KINECTSDK20_VERSION}-Setup.exe"
-    FILENAME "KinectSDK-${KINECTSDK20_VERSION}-Setup.exe"
-    SHA512 ae3b00f45282ab2ed6ea36c09e42e1b274074f41546ecfbe00facf1fffa2e5a762ffeffb9ba2194f716e8122e0fbd9a8ef63c62be68d2b50a40e4f8c5a821f5f
+    FILENAME "KinectSDK-${KINECTSDK20_VERSION}-Setup-20220630.exe"
+    SKIP_SHA512
 )
 
 vcpkg_find_acquire_program(DARK)
