@@ -30,7 +30,8 @@
       "name": "opencv2",
       "default-features": false,
       "features": [
-        "cuda"
+        "cuda",
+        "python"
       ],
       "platform": "windows & x64 & !static & !uwp"
     },
