@@ -7,8 +7,27 @@ vcpkg_from_github(
     PATCHES remove_compiler_flags.patch
 )
 
-find_library(LIBSASS_DEBUG sass PATHS "${CURRENT_INSTALLED_DIR}/debug/lib/" NO_DEFAULT_PATH)
-find_library(LIBSASS_RELEASE sass PATHS "${CURRENT_INSTALLED_DIR}/lib/" NO_DEFAULT_PATH)
+if(VCPKG_HOST_IS_LINUX)
+    execute_process(COMMAND "uname" "-m" OUTPUT_VARIABLE HOST_SYSTEM_PROCESSOR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(BUILD_OPTION --build=${HOST_SYSTEM_PROCESSOR}-linux-gnu)
+    if(DEFINED VCPKG_TOOLSET_PREFIX)
+        # Give a change to select an alternative toolset by user.
+        set(--host=${VCPKG_TOOLSET_PREFIX})
+    else()
+        message(NOTICE
+            "\nAutomatically select building toolset for ${VCPKG_TARGET_ARCHITECTURE}. "
+            "VCPKG_TOOLSET_PREFIX can be set in the triplet file to use specific toolset."
+            " Like for arm64:\n    set(VCPKG_TOOLSET_PREFIX aarch64-linux-gnu)\n"
+        )
+        # Select propriate toolset according to VCPKG_TARGET_ARCHITECTURE
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(HOST_OPTION --host=arm-linux-gnueabihf)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(HOST_OPTION --host=aarch64-linux-gnu)
+        endif()
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{LIBS} "$ENV{LIBS} -lgetopt")
 endif()
@@ -16,11 +35,12 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        --with-libsass-include='${CURRENT_INSTALLED_DIR}/include'
+        ${HOST_OPTION}
+        ${BUILD_OPTION}
     OPTIONS_DEBUG
-        --with-libsass-lib='${LIBSASS_DEBUG}'
+        --with-libsass='${CURRENT_INSTALLED_DIR}/debug'
     OPTIONS_RELEASE
-        --with-libsass-lib='${LIBSASS_RELEASE}'
+        --with-libsass='${CURRENT_INSTALLED_DIR}'
 )
 vcpkg_install_make(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
