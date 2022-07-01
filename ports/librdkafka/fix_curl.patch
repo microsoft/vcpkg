@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3bd67d2..f251fdc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,15 +54,10 @@ endif()
+ # }
+ 
+ # CURL {
+-find_package(CURL QUIET)
+-if(CURL_FOUND)
+-  set(with_curl_default ON)
+-else()
+-  set(with_curl_default OFF)
+-endif()
+-option(WITH_CURL "With CURL" ${with_curl_default})
++option(WITH_CURL "With CURL" OFF)
+ if(WITH_CURL)
+   list(APPEND BUILT_WITH "CURL")
++  find_package(CURL CONFIG REQUIRED)
+ endif()
+ # }
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e911c28..774646a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -206,6 +206,10 @@ if(WITH_ZLIB)
+   target_link_libraries(rdkafka PUBLIC ZLIB::ZLIB)
+ endif()
+ 
++if(WITH_CURL)
++  target_link_libraries(rdkafka PUBLIC CURL::libcurl)
++endif()
++
+ if(WITH_ZSTD)
+   target_link_libraries(rdkafka PRIVATE ${ZSTD_LIBRARY})
+   target_include_directories(rdkafka PRIVATE ${ZSTD_INCLUDE_DIR})
