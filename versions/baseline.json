@@ -3982,7 +3982,7 @@
     },
     "librdkafka": {
       "baseline": "1.8.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libressl": {
       "baseline": "3.4.2",
