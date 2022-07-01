@@ -10,7 +10,7 @@ endif()
 
 vcpkg_download_distfile(KINECTSDK10_INSTALLER
     URLS "https://download.microsoft.com/download/E/1/D/E1DEC243-0389-4A23-87BF-F47DE869FC1A/KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
-    FILENAME "KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
+    FILENAME "KinectSDK-${KINECTSDK10_VERSION}-Setup-20220630.exe"
     SKIP_SHA512
 )
 
