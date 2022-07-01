@@ -1,7 +1,7 @@
 {
   "name": "libsass",
   "version": "3.6.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "LibSass - Sass compiler written in C++",
   "homepage": "https://github.com/sass/libsass",
   "supports": "!uwp"
