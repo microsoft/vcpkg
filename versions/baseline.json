@@ -3982,7 +3982,7 @@
     },
     "librdkafka": {
       "baseline": "1.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.4.2",
@@ -4066,7 +4066,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 5
+      "port-version": 6
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -6150,7 +6150,7 @@
     },
     "rapidjson": {
       "baseline": "2022-06-28",
-      "port-version": 0
+      "port-version": 1
     },
     "rapidxml": {
       "baseline": "1.13",
