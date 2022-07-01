@@ -9,9 +9,9 @@ function(set_library_target)
     endif()
     
     if (arg_RELEASE_DYNAMIC)
-        set(ISAL_PROPERTIES IMPORTED_LOCATION_DEBUG "${arg_RELEASE_DYNAMIC}" IMPORTED_IMPLIB_DEBUG "${arg_RELEASE_STATIC}")
+        set(ISAL_PROPERTIES IMPORTED_LOCATION_RELEASE "${arg_RELEASE_DYNAMIC}" IMPORTED_IMPLIB_DEBUG "${arg_RELEASE_STATIC}")
     else()
-        set(ISAL_PROPERTIES IMPORTED_LOCATION_DEBUG "${arg_RELEASE_STATIC}")
+        set(ISAL_PROPERTIES IMPORTED_LOCATION_RELEASE "${arg_RELEASE_STATIC}")
     endif()
     
     add_library(${arg_NAMESPACE}::${arg_LIB_NAME} ${arg_TYPE} IMPORTED)
@@ -64,8 +64,8 @@ else()
         set_library_target(
             NAMESPACE "ISAL"
             LIB_NAME "isal"
-            DEBUG_STATIC "${_IMPORT_PREFIX}/debug/lib/libisal.so"
-            RELEASE_STATIC "${_IMPORT_PREFIX}/lib/libisal.so"
+            DEBUG_DYNAMIC "${_IMPORT_PREFIX}/debug/lib/libisal.so"
+            RELEASE_DYNAMIC "${_IMPORT_PREFIX}/lib/libisal.so"
             INCLUDE_DIR "${_IMPORT_PREFIX}/include"
             TYPE SHARED
         )

@@ -43,7 +43,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         else()
             file(INSTALL "${NMAKE_BINARY_DIR}/isa-l_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
-        
     endif()
 
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
