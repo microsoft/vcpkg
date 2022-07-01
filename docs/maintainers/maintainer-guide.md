@@ -111,15 +111,17 @@ Examples:
 
 ### Install copyright file
 
-Each port has to provide a file named `copyright` in the folder `${CURRENT_PACKAGES_DIR}/share/${PORT}`. You can install the copyright file using the following code:
+Each port has to provide a file named `copyright` in the folder `${CURRENT_PACKAGES_DIR}/share/${PORT}`.
+
+Many ports are using this code to install a copyright file:
 
 ```cmake
 file(INSTALL "${SOURCE_PATH}LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 ```
 
-Replace `LICENSE` with the actual file name.
+This is discouraged in favour of [`vcpkg_install_copyright()`](vcpkg_install_copyright.md). New ports should use `vcpkg_install_copyright()` instead. However, it is still valid for existing ports to use something like the code above. You may replace this with `vcpkg_install_copyright` but you don't have to.
 
-If there are multiple license files, use [`vcpkg_install_copyright()`](vcpkg_install_copyright.md) instead.
+`vcpkg_install_copyright` also includes the functionallity to handle multiple copyright files. See its [documentation](vcpkg_install_copyright.md) for more info.
 
 ## Features
 

@@ -3,6 +3,7 @@
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_copyright.md).
 
 Merges multiple copyright files into a single file and install it.
+Installs a single copyright file.
 
 ## Usage
 
@@ -13,20 +14,16 @@ vcpkg_install_copyright(FILE_LIST <file1> <file2>... [COMMENT])
 ## Parameters
 
 ### FILE_LIST
-Specifies a list of license files with absolute paths. You must provide at least 2 files.
-
-If you want to install just a single license file, please use
-
-```cmake
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-```
+Specifies a list of license files with absolute paths. You must provide at least one file.
 
 ### COMMENT
 This optional parameter adds a comment before at the top of the file. 
 
 ## Notes
 
-This function concatenates the contents of multiple copyright files to a single file.
+This function creates a file called `copyright` inside `${CURRENT_PACKAGES_DIR}/share/${PORT}`
+
+If more than one file is provided, this function concatenates the contents of multiple copyright files to a single file.
 
 The resulting `copyright` file looks similar to this:
 
