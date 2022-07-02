@@ -17,9 +17,21 @@
   ],
   "features": {
     "sqlite3": {
-      "description": "SQLite3 connector",
+      "description": "Use SQLite3 connector",
       "dependencies": [
         "sqlite3"
+      ]
+    },
+    "mariadb": {
+      "description": "Use MariaDB connector",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "mysql": {
+      "description": "Use MySQL connector",
+      "dependencies": [
+        "libmysql"
       ]
     }
   }

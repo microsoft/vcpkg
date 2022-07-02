@@ -12,6 +12,8 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         sqlite3  BUILD_SQLITE3_CONNECTOR
+        mariadb  BUILD_MARIADB_CONNECTOR
+        mysql    BUILD_MYSQL_CONNECTOR
 )
 
 # Use sqlpp11's own build process
