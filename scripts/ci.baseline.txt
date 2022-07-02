@@ -1241,6 +1241,14 @@ angle:x64-uwp=fail
 angle:arm64-windows=fail
 angle:arm-uwp=fail
 
+cmake-user:arm-uwp=pass
+cmake-user:arm64-windows=pass
+cmake-user:x64-linux=pass
+cmake-user:x64-osx=pass
+cmake-user:x64-windows-static-md=pass
+cmake-user:x64-windows-static=pass
+cmake-user:x64-windows=pass
+cmake-user:x86-windows=pass
 vcpkg-ci-boost:x64-linux=pass
 vcpkg-ci-boost:x64-windows-static-md=pass
 vcpkg-ci-boost:x64-windows-static=pass
