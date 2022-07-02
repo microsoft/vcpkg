@@ -94,6 +94,14 @@ function(vcpkg_fixup_pkgconfig)
             if(contents MATCHES "(^|\n)Libs[^:]*: *[^\n]*optimized" AND contents MATCHES "(^|\n)(Libs[^:]*: *[^\n]*debug[^\n]*)")
                 message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${CMAKE_MATCH_2}")
             endif()
+            if(contents MATCHES "(^|\n)Libs[^:]*: *([^\n]*-NOTFOUND)")
+                string(REGEX MATCH "[^ ]*\$" lib_notfound "${CMAKE_MATCH_2}")
+                message(FATAL_ERROR "Error in ${file}: 'Libs' refers to a missing lib:\n${lib_notfound}")
+            endif()
+            if(contents MATCHES "(^|\n)Libs[^:]*: *([^\n]*::[^\n ]*)")
+            string(REGEX MATCH "[^ ]*\$" target "${CMAKE_MATCH_2}")
+                message(FATAL_ERROR "Error in ${file}: 'Libs' refer to a CMake target:\n${target}")
+            endif()
 
             # this normalizes all files to end with a newline, and use LF instead of CRLF;
             # this allows us to use regex matches easier to modify these files.
