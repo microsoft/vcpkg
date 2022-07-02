@@ -66,7 +66,7 @@ Halting portfile execution.
         ${error_variable_param}
     )
     vcpkg_list(SET saved_logs)
-    foreach(logfile IN ITEMS config.log CMakeCache.txt LISTS arg_SAVE_LOG_FILES)
+    foreach(logfile IN LISTS arg_SAVE_LOG_FILES)
         set(filepath "${arg_WORKING_DIRECTORY}/${logfile}")
         if(NOT EXISTS "${filepath}")
             continue()
