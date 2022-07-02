@@ -461,9 +461,23 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
 
         set(Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
 
-        if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
-            list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--host-triplet=${VCPKG_HOST_TRIPLET}")
+        if(NOT DEFINED VCPKG_HOST_TRIPLET OR VCPKG_HOST_TRIPLET STREQUAL "")
+            execute_process(
+                COMMAND "${Z_VCPKG_EXECUTABLE}" z-print-config
+                    --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
+                OUTPUT_VARIABLE Z_VCPKG_PRINT_CONFIG_LOGTEXT
+                ERROR_VARIABLE Z_VCPKG_PRINT_CONFIG_LOGTEXT
+                RESULT_VARIABLE Z_VCPKG_PRINT_CONFIG_RESULT
+            )
+            if("${Z_VCPKG_PRINT_CONFIG_LOGTEXT}" MATCHES [["host_triplet": "([^"][^"]*)"]])
+                set(VCPKG_HOST_TRIPLET "${CMAKE_MATCH_1}" CACHE INTERNAL "Host triplet")
+            else()
+                message(STATUS "Determing host triplet before install - failed")
+                z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_BOOTSTRAP_LOG}")
+            endif()
         endif()
+
+        list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--host-triplet=${VCPKG_HOST_TRIPLET}")
 
         if(VCPKG_OVERLAY_PORTS)
             foreach(Z_VCPKG_OVERLAY_PORT IN LISTS VCPKG_OVERLAY_PORTS)
