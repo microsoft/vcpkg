@@ -586,9 +586,6 @@ mathgl:arm-uwp=fail
 mathgl:x64-osx=fail
 mathgl:arm64-osx=fail
 mathgl:x64-uwp=fail
-# Because it requires `freeimage` dependency as a dynamic library on Windows
-mdl:x64-windows-static=fail
-mdl:x64-windows-static-md=fail
 mecab:arm64-windows      = skip
 mecab:arm-uwp            = skip
 mecab:x64-linux          = skip

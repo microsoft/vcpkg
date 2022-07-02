@@ -4,7 +4,7 @@
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
-  "supports": "!arm & !x86",
+  "supports": "!arm & !x86 & !(windows & static)",
   "dependencies": [
     "boost-algorithm",
     "boost-any",
