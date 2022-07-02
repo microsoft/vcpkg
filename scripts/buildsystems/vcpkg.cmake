@@ -227,6 +227,9 @@ if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
     endif()
 endif()
 
+if(NOT DEFINED VCPKG_TARGET_TRIPLET AND NOT "$ENV{VCPKG_DEFAULT_TRIPLET}" STREQUAL "")
+    set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}")
+endif()
 if(VCPKG_TARGET_TRIPLET)
     # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
     # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
