@@ -15,8 +15,6 @@ vcpkg_from_github(
         export-components.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
-
 # schannel will enable sspi, but sspi do not support uwp
 foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
     if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
@@ -83,7 +81,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_LIBPSL=OFF
