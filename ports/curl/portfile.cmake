@@ -57,8 +57,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(OPTIONS "")
-set(OPTIONS_RELEASE "")
-set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
@@ -89,11 +87,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_LIBPSL=OFF
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
-        ${OPTIONS_DEBUG}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
