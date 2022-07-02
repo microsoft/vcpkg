@@ -1,7 +1,8 @@
+set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://repo.or.cz/libtar.git
-    REF 50dcdd27a33444b974d940ed5f225a2444e5aeba
+    HEAD_REF v1.2.20
 )
 
 vcpkg_configure_make(
