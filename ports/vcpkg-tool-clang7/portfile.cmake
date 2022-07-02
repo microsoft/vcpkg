@@ -31,7 +31,7 @@ if(NOT EXISTS ${LLVM_SOURCE_PATH}/tools/clang)
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-cmake_path(GET PYTHON3 PARENT_PATH PYTHON3_DIR)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
 set(VCPKG_BUILD_TYPE release) # we only need release here!
