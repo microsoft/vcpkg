@@ -124,6 +124,8 @@ function(vcpkg_fixup_pkgconfig)
             endif()
             # quote -L, -I, and -l paths starting with `${blah}`
             string(REGEX REPLACE " -([LIl])(\\\${[^}]*}[^ \n\t]*)" [[ -\1"\2"]] contents "${contents}")
+            # Remove line continuations before transformations
+            string(REGEX REPLACE "[ \t]*\\\\\n[ \t]*" " " contents "${contents}")
             # This section fuses XYZ.private and XYZ according to VCPKG_LIBRARY_LINKAGE
             #
             # Pkgconfig searches Requires.private transitively for Cflags in the dynamic case,

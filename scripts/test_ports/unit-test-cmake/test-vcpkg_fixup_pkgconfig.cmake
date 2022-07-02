@@ -57,6 +57,20 @@ else()
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
 endif()
 
+# line continuations
+write_pkgconfig([[
+Libs.private: \
+      -lbbb
+Libs: -L"${prefix}/lib" \
+      -l"aaa"
+]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb]])
+else()
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
+endif()
+
 # invalid: ...-NOTFOUND
 write_pkgconfig([[Libs: LIB-NOTFOUND]])
 unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # ...-NOTFOUND # ]])
