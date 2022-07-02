@@ -1,0 +1,20 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 9f76d36..6b324fe 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -1,7 +1,10 @@
+ create_subdirectory_options(CLANG TOOL)
+ 
++if (0)
+ add_clang_subdirectory(diagtool)
++endif()
+ add_clang_subdirectory(driver)
++if (0)
+ add_clang_subdirectory(clang-diff)
+ add_clang_subdirectory(clang-format)
+ add_clang_subdirectory(clang-format-vs)
+@@ -35,3 +38,4 @@ add_llvm_external_project(clang-tools-extra extra)
+ 
+ # libclang may require clang-tidy in clang-tools-extra.
+ add_clang_subdirectory(libclang)
++endif()

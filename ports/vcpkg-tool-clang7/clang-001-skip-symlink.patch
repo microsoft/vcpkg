@@ -1,0 +1,20 @@
+diff --git a/tools/driver/CMakeLists.txt b/tools/driver/CMakeLists.txt
+index 15b0519..0448b0e 100644
+--- a/tools/driver/CMakeLists.txt
++++ b/tools/driver/CMakeLists.txt
+@@ -61,6 +61,7 @@ endif()
+ 
+ add_dependencies(clang clang-headers)
+ 
++if (0)
+ if(NOT CLANG_LINKS_TO_CREATE)
+   set(CLANG_LINKS_TO_CREATE clang++ clang-cl clang-cpp)
+ endif()
+@@ -68,6 +69,7 @@ endif()
+ foreach(link ${CLANG_LINKS_TO_CREATE})
+   add_clang_symlink(${link} clang)
+ endforeach()
++endif()
+ 
+ # Configure plist creation for OS X.
+ set (TOOL_INFO_PLIST "Info.plist" CACHE STRING "Plist name")

@@ -12,7 +12,7 @@ vcpkg_download_distfile(LLVM_ARCHIVE
 vcpkg_extract_source_archive(LLVM_SOURCE_PATH
     ARCHIVE "${LLVM_ARCHIVE}"
     PATCHES
-        001-llvm-build-only-clang.patch
+        llvm-001-build-only-clang.patch
 )
 
 if(NOT EXISTS ${LLVM_SOURCE_PATH}/tools/clang)
@@ -24,8 +24,8 @@ if(NOT EXISTS ${LLVM_SOURCE_PATH}/tools/clang)
     vcpkg_extract_source_archive(CLANG_SOURCE_PATH
         ARCHIVE "${CLANG_ARCHIVE}"
         PATCHES
-            001-clang-skip-symlink.patch
-            002-clang-skip-other-tool-configuration.patch
+            clang-001-skip-symlink.patch
+            clang-002-skip-other-tool-configuration.patch
     )
     file(RENAME "${CLANG_SOURCE_PATH}" "${LLVM_SOURCE_PATH}/tools/clang")
 endif()
