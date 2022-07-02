@@ -1,9 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/gazebo
-    REF 382dcc3f36095a8d79b5bc9c8b8ad346e867c51d
+    REF gazebo11_11.11.0
     SHA512 57638cd0b23b5f2bfd32fdc159d6cd77ca34e3bd695c225591979aef4b7271eac93d3706fa1ffa2340f90013267a4171bebe1e4c142f19ad2bf67963dfed627e
-    HEAD_REF gazebo11
     PATCHES
         0001-Fix-deps.patch
         fix-build-type.patch

@@ -2457,8 +2457,8 @@
       "port-version": 1
     },
     "gazebo": {
-      "baseline": "2022-01-20",
-      "port-version": 2
+      "baseline": "11.11.0",
+      "port-version": 0
     },
     "gcem": {
       "baseline": "1.14.1",
