@@ -8,13 +8,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-freeimage-from-vcpkg.patch
-        003-install-rules.patch
-        004-freeimage-disable-faxg3.patch
-        005-missing-std-includes.patch
-        006-missing-link-windows-crypt-libraries.patch
-        007-guard-nonexisting-targets.patch
-        008-plugin-options.patch
-        009-build-static-llvm.patch
+        002-install-rules.patch
+        003-freeimage-disable-faxg3.patch
+        004-missing-std-includes.patch
+        005-missing-link-windows-crypt-libraries.patch
+        006-guard-nonexisting-targets.patch
+        007-plugin-options.patch
+        008-build-static-llvm.patch
+        009-include-priority-vendored-llvm.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)
