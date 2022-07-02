@@ -8,6 +8,10 @@
   "dependencies": [
     "json-c",
     "libgeotiff",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "proj",
     "tiff",
     {
@@ -124,11 +128,7 @@
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
-        "libspatialite",
-        {
-          "name": "pkgconf",
-          "host": true
-        }
+        "libspatialite"
       ]
     },
     "mysql-libmariadb": {
