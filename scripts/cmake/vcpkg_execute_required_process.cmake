@@ -2,7 +2,7 @@ function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE"
         "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
-        "COMMAND"
+        "COMMAND;SAVE_LOG_FILES"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -66,7 +66,7 @@ Halting portfile execution.
         ${error_variable_param}
     )
     vcpkg_list(SET saved_logs)
-    foreach(logfile IN ITEMS config.log CMakeCache.txt)
+    foreach(logfile IN ITEMS config.log CMakeCache.txt LISTS arg_SAVE_LOG_FILES)
         set(filepath "${arg_WORKING_DIRECTORY}/${logfile}")
         if(NOT EXISTS "${filepath}")
             continue()
