@@ -7,12 +7,12 @@
   "dependencies": [
     {
       "name": "sqlpp11",
-      "version>=": "0.61",
       "default-features": false,
       "features": [
         "mariadb",
         "mysql"
-      ]
+      ],
+      "version>=": "0.61"
     }
   ]
 }
