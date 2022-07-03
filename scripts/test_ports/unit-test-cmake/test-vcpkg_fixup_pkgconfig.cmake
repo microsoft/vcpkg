@@ -94,3 +94,36 @@ unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 # invalid: namespaced targets
 write_pkgconfig([[Libs: -lAAA::aaa]])
 unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # namespaced target # ]])
+
+# prefix
+write_pkgconfig(
+"prefix=${CURRENT_PACKAGES_DIR}
+execprefix=\${prefix}
+libdir=${CURRENT_PACKAGES_DIR}/lib
+includedir=${CURRENT_PACKAGES_DIR}/include
+datarootdir=${CURRENT_PACKAGES_DIR}/share
+datadir=\${datarootdir}/${PORT}
+")
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("release" "prefix=" [[${pcfiledir}/../..]])
+unit_test_pkgconfig_check_key("release" "execprefix=" [[${prefix}]])
+unit_test_pkgconfig_check_key("release" "libdir=" [[${prefix}/lib]])
+unit_test_pkgconfig_check_key("release" "includedir=" [[${prefix}/include]])
+unit_test_pkgconfig_check_key("release" "datarootdir=" [[${prefix}/share]])
+unit_test_pkgconfig_check_key("release" "datadir=" [[${datarootdir}/unit-test-cmake]])
+
+write_pkgconfig(
+"prefix=${CURRENT_PACKAGES_DIR}/debug
+execprefix=\${prefix}
+libdir=${CURRENT_PACKAGES_DIR}/debug/lib
+includedir=${CURRENT_PACKAGES_DIR}/include
+datarootdir=${CURRENT_PACKAGES_DIR}/share
+datadir=\${datarootdir}/${PORT}
+")
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "prefix=" [[${pcfiledir}/../..]])
+unit_test_pkgconfig_check_key("debug" "execprefix=" [[${prefix}]])
+unit_test_pkgconfig_check_key("debug" "libdir=" [[${prefix}/lib]])
+unit_test_pkgconfig_check_key("debug" "includedir=" [[${prefix}/../include]])
+unit_test_pkgconfig_check_key("debug" "datarootdir=" [[${prefix}/../share]])
+unit_test_pkgconfig_check_key("debug" "datadir=" [[${datarootdir}/unit-test-cmake]])
