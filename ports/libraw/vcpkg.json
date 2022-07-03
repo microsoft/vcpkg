@@ -4,7 +4,7 @@
   "port-version": 9,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
-  "supports": "!(arm & uwp)",
+  "supports": "!uwp",
   "dependencies": [
     "jasper",
     "lcms",
