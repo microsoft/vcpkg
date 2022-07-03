@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 project(boost NONE)
 
 # The following variables are used in user-config.jam file
@@ -223,6 +223,9 @@ endif()
 if(NOT python_versions STREQUAL "")
     list(JOIN python_versions "," python_versions)
     list(APPEND B2_OPTIONS "python=${python_versions}")
+    if(VCPKG_CXX_FLAGS_DEBUG MATCHES "BOOST_DEBUG_PYTHON")
+        list(APPEND B2_OPTIONS_DBG "python-debugging=on")
+    endif()
 endif()
 
 # Include port specific CMake fragment
