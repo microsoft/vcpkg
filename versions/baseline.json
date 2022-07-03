@@ -476,6 +476,10 @@
       "baseline": "3.0",
       "port-version": 1
     },
+    "bitar": {
+      "baseline": "0.0.4",
+      "port-version": 0
+    },
     "bitmagic": {
       "baseline": "7.11.2",
       "port-version": 0
