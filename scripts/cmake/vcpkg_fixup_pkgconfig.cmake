@@ -1,4 +1,4 @@
-function(z_vcpkg_fixup_pkgconfig_process_data data_variable config)
+function(z_vcpkg_fixup_pkgconfig_process_data data_variable config prefix)
     # This normalizes all data to start and to end with a newline, and
     # to use LF instead of CRLF. This allows to use simpler regex matches.
     string(REPLACE "\r\n" "\n" contents "\n${${data_variable}}\n")
@@ -24,7 +24,7 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config)
         string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
     endif()
 
-    string(REGEX REPLACE "\nprefix[\t ]*=[^\n]*" "" contents "${contents}")
+    string(REGEX REPLACE "\nprefix[\t ]*=[^\n]*" "" contents "prefix=${prefix}${contents}")
     if("${config}" STREQUAL "DEBUG")
         # prefix points at the debug subfolder
         string(REPLACE [[${prefix}/debug]] [[${prefix}]] contents "${contents}")
@@ -156,8 +156,8 @@ function(vcpkg_fixup_pkgconfig)
             endif()
             #Correct *.pc file
             file(READ "${file}" contents)
-            z_vcpkg_fixup_pkgconfig_process_data(contents "${config}")
-            file(WRITE "${file}" "prefix=\${pcfiledir}/${relative_pc_path}\n${contents}")
+            z_vcpkg_fixup_pkgconfig_process_data(contents "${config}" "\${pcfiledir}/${relative_pc_path}")
+            file(WRITE "${file}" "${contents}")
         endforeach()
 
         if(NOT arg_SKIP_CHECK) # The check can only run after all files have been corrected!
