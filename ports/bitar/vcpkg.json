@@ -1,0 +1,30 @@
+{
+  "name": "bitar",
+  "version": "0.0.4",
+  "description": "Bitar is a C++ library to simplify accessing hardware compression/decompression accelerators.",
+  "homepage": "https://github.com/ljishen/bitar",
+  "license": "MIT",
+  "supports": "linux | freebsd",
+  "dependencies": [
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
+    {
+      "name": "dpdk",
+      "version>=": "22.07#1"
+    },
+    "fmt",
+    "magic-enum",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
