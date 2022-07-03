@@ -1,23 +1,19 @@
 function(z_vcpkg_fixup_pkgconfig_process_data data_variable config)
-    set(contents "${${data_variable}}")
-    if(contents MATCHES "(^|\n)Libs[^:]*: *[^\n]*optimized" AND contents MATCHES "(^|\n)(Libs[^:]*: *[^\n]*debug[^\n]*)")
-        message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${CMAKE_MATCH_2}")
+    # This normalizes all data to start and to end with a newline, and
+    # to use LF instead of CRLF. This allows to use simpler regex matches.
+    string(REPLACE "\r\n" "\n" contents "\n${${data_variable}}\n")
+
+    if(contents MATCHES "\nLibs[^:]*: *[^\n]*optimized" AND contents MATCHES "\n(Libs[^:]*: *[^\n]*debug[^\n]*)")
+        message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${CMAKE_MATCH_1}")
     endif()
-    if(contents MATCHES "(^|\n)Libs[^:]*: *([^\n]*-NOTFOUND)")
-        string(REGEX MATCH "[^ ]*\$" lib_notfound "${CMAKE_MATCH_2}")
+    if(contents MATCHES "\nLibs[^:]*: *([^\n]*-NOTFOUND)")
+        string(REGEX MATCH "[^ ]*\$" lib_notfound "${CMAKE_MATCH_1}")
         message(FATAL_ERROR "Error in ${file}: 'Libs' refers to a missing lib:\n${lib_notfound}")
     endif()
-    if(contents MATCHES "(^|\n)Libs[^:]*: *([^\n]*::[^\n ]*)")
-    string(REGEX MATCH "[^ ]*\$" target "${CMAKE_MATCH_2}")
+    if(contents MATCHES "\nLibs[^:]*: *([^\n]*::[^\n ]*)")
+    string(REGEX MATCH "[^ ]*\$" target "${CMAKE_MATCH_1}")
         message(FATAL_ERROR "Error in ${file}: 'Libs' refer to a CMake target:\n${target}")
     endif()
-
-    # this normalizes all files to end with a newline, and use LF instead of CRLF;
-    # this allows us to use regex matches easier to modify these files.
-    if(NOT "${contents}" MATCHES "\n$")
-        string(APPEND contents "\n")
-    endif()
-    string(REPLACE "\r\n" "\n" contents "${contents}")
 
     string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
     string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
@@ -28,7 +24,7 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config)
         string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
     endif()
 
-    string(REGEX REPLACE "(^|\n)prefix[\t ]*=[^\n]*" "" contents "${contents}")
+    string(REGEX REPLACE "\nprefix[\t ]*=[^\n]*" "" contents "${contents}")
     if("${config}" STREQUAL "DEBUG")
         # prefix points at the debug subfolder
         string(REPLACE [[${prefix}/debug]] [[${prefix}]] contents "${contents}")
@@ -57,14 +53,14 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config)
 
         foreach(item IN ITEMS "Libs" "Requires" "Cflags")
             set(line "")
-            if("${contents}" MATCHES "(^|\n)${item}: *([^\n]*)")
-                string(APPEND line " ${CMAKE_MATCH_2}")
+            if("${contents}" MATCHES "\n${item}: *([^\n]*)")
+                string(APPEND line " ${CMAKE_MATCH_1}")
             endif()
-            if("${contents}" MATCHES "(^|\n)${item}\\.private: *([^\n]*)")
-                string(APPEND line " ${CMAKE_MATCH_2}")
+            if("${contents}" MATCHES "\n${item}\\.private: *([^\n]*)")
+                string(APPEND line " ${CMAKE_MATCH_1}")
             endif()
 
-            string(REGEX REPLACE "(^|\n)${item}(\\.private)?:[^\n]*\n" [[\1]] contents "${contents}")
+            string(REGEX REPLACE "\n${item}(\\.private)?:[^\n]*" "" contents "${contents}")
             if(NOT "${line}" STREQUAL "")
                 string(APPEND contents "${item}:${line}\n")
             endif()
