@@ -4,6 +4,7 @@
   "port-version": 15,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "expat",
