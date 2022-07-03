@@ -51,6 +51,10 @@ Halting portfile execution.
         endif()
     endif()
 
+    if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+    endif()
+
     vcpkg_execute_in_download_mode(
         COMMAND ${arg_COMMAND}
         OUTPUT_FILE "${log_out}"

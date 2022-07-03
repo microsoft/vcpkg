@@ -6,7 +6,7 @@ vcpkg_from_sourceforge(
     PATCHES
         001_initialize-resampler.patch
         002_disable_warning.patch
-        003_detect_arm_on_windows.patch
+        003_detect_arm.patch
 )
 
 vcpkg_check_features(

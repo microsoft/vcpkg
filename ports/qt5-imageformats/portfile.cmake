@@ -18,7 +18,12 @@ find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/de
 
 find_library(JASPER_RELEASE NAMES jasper PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(JASPER_DEBUG NAMES jasperd jasper libjasperd libjasper PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-if(NOT VCPKG_TARGET_IS_OSX)
+
+if(NOT VCPKG_TARGET_IS_OSX AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+    set(FREEGLUT_NEEDED ON)
+endif()
+
+if(FREEGLUT_NEEDED)
     find_library(FREEGLUT_RELEASE NAMES freeglut glut PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(FREEGLUT_DEBUG NAMES freeglutd freeglut glutd glut PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 endif()
@@ -45,10 +50,16 @@ endif()
 
 set(OPT_REL "TIFF_LIBS=${TIFF_RELEASE} ${LZMA_RELEASE} ${JPEG_RELEASE} ${ZLIB_RELEASE}"
             "WEBP_LIBS=${WEBPDECODER_RELEASE} ${WEBPDEMUX_RELEASE} ${WEBPMUX_RELEASE} ${WEBP_RELEASE}" 
-            "JASPER_LIBS=${JASPER_RELEASE} ${FREEGLUT_RELEASE} ${JPEG_RELEASE} ${ZLIB_RELEASE}") # This will still fail if LIBWEBP is installed with all available features due to the missing additional dependencies
+            "JASPER_LIBS=${JASPER_RELEASE} ${JPEG_RELEASE} ${ZLIB_RELEASE}") # This will still fail if LIBWEBP is installed with all available features due to the missing additional dependencies
 set(OPT_DBG "TIFF_LIBS=${TIFF_DEBUG} ${LZMA_DEBUG} ${JPEG_DEBUG} ${ZLIB_DEBUG}"
             "WEBP_LIBS=${WEBPDECODER_DEBUG} ${WEBPDEMUX_DEBUG} ${WEBPMUX_DEBUG} ${WEBP_DEBUG}"
-            "JASPER_LIBS=${JASPER_DEBUG} ${FREEGLUT_DEBUG} ${JPEG_DEBUG} ${ZLIB_DEBUG}")
+            "JASPER_LIBS=${JASPER_DEBUG}  ${JPEG_DEBUG} ${ZLIB_DEBUG}")
+
+if(FREEGLUT_NEEDED)
+    set(OPT_REL "${OPT_REL} ${FREEGLUT_RELEASE}")
+    set(OPT_DBG "${OPT_DBG} ${FREEGLUT_DEBUG}")
+endif()
+
 list(APPEND CORE_OPTIONS "WEBP_INCDIR=${CURRENT_INSTALLED_DIR}/include") # Requires libwebp[all]
 
 qt_submodule_installation(BUILD_OPTIONS ${CORE_OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
