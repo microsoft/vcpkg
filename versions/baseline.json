@@ -6349,8 +6349,8 @@
       "port-version": 4
     },
     "rxcpp": {
-      "baseline": "4.1.0",
-      "port-version": 2
+      "baseline": "4.1.1",
+      "port-version": 0
     },
     "rxqt": {
       "baseline": "bb2138c",
