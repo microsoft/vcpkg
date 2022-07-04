@@ -27,7 +27,7 @@ function(unit_test_pkgconfig_check_key build_types field value)
         set(listname "pc_strings_${build_type}")
         set(expected "${field}${value}")
         list(FILTER ${listname} INCLUDE REGEX "^${field}")
-        if(NOT "${${listname}}" STREQUAL "${expected}")
+        if(NOT "${${listname}}" STREQUAL "${expected}" AND NOT "${${listname}}_is_empty" STREQUAL "${value}_is_empty")
             message(SEND_ERROR "vcpkg_fixup_pkgconfig() resulted in a wrong value for ${build_type} builds;
     input:    [[${pc_strings_INPUT}]]
     expected: [[${expected}]]
@@ -53,6 +53,7 @@ Libs.private: -lbbb
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
 else()
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
 endif()
@@ -67,6 +68,7 @@ Libs: -L"${prefix}/lib" \
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
 else()
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
 endif()
