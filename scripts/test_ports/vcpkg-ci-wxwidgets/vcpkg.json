@@ -33,6 +33,9 @@
     },
     "wxrc": {
       "description": "Test wxrc"
+    },
+    "wxdebug_level": {
+      "description": "Enable assert checks"
     }
   }
 }

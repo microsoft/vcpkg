@@ -36,6 +36,12 @@ vcpkg_check_features(
         sound   wxUSE_SOUND
 )
 
+if("wxdebug-level" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=0)
+else()
+    list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=1)
+endif()
+
 vcpkg_find_acquire_program(PKGCONFIG)
 
 set(OPTIONS "")
@@ -98,8 +104,6 @@ vcpkg_cmake_configure(
         # The minimum cmake version requirement for Cotire is 2.8.12.
         # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
-    OPTIONS_RELEASE
-        -DwxBUILD_DEBUG_LEVEL=0
 )
 
 vcpkg_cmake_install()

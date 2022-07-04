@@ -5,6 +5,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         wxrc    USE_WXRC
 )
 
+if("wxdebug-level" IN_LIST FEATURES)
+    list(APPEND OPTIONS -DwxBUILD_DEBUG_LEVEL=0)
+else()
+    list(APPEND OPTIONS -DwxBUILD_DEBUG_LEVEL=1)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_INSTALLED_DIR}/share/wxwidgets/example"
     DISABLE_PARALLEL_CONFIGURE # Need separate dbg log for following test
@@ -12,8 +18,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DCMAKE_CONFIG_RUN=1
         "-DPRINT_VARS=CMAKE_CONFIG_RUN;wxWidgets_LIBRARIES"
-    OPTIONS_RELEASE
-        -DwxBUILD_DEBUG_LEVEL=0
 )
 vcpkg_cmake_build()
 
