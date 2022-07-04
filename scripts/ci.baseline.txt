@@ -201,15 +201,6 @@ dlib:arm-uwp=fail
 dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
-dpdk:arm-uwp=fail
-dpdk:arm64-windows=fail
-dpdk:x64-linux=fail
-dpdk:x64-osx=fail
-dpdk:x64-uwp=fail
-dpdk:x64-windows-static=fail
-dpdk:x64-windows-static-md=fail
-dpdk:x64-windows=fail
-dpdk:x86-windows=fail
 
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
