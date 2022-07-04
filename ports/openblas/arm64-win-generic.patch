@@ -16,7 +16,7 @@ index 86ce3df..c59e85d 100644
    set(X86 1)
  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc.*|power.*|Power.*")
 diff --git a/common_arm64.h b/common_arm64.h
-index 029e238..dfea822 100644
+index 029e238..45afcad 100644
 --- a/common_arm64.h
 +++ b/common_arm64.h
 @@ -33,9 +33,16 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -25,9 +25,9 @@ index 029e238..dfea822 100644
  
 +#ifdef C_MSVC
 +#include <intrin.h>
-+#define MB do {} while (0)
-+#define WMB do {} while (0)
-+#define RMB
++#define MB __dmb(_ARM64_BARRIER_ISH)
++#define WMB __dmb(_ARM64_BARRIER_ISHST)
++#define RMB __dmb(_ARM64_BARRIER_ISHLD)
 +#else
  #define MB   __asm__ __volatile__ ("dmb  ish" : : : "memory")
  #define WMB  __asm__ __volatile__ ("dmb  ishst" : : : "memory")
@@ -44,29 +44,33 @@ index 029e238..dfea822 100644
      __asm__ __volatile__(
  			 "mov	x4, #1							\n\t"
  			 "sevl								\n\t"
-@@ -70,7 +78,10 @@ static void __inline blas_lock(volatile BLASULONG *address){
+@@ -70,6 +78,10 @@ static void __inline blas_lock(volatile BLASULONG *address){
  
  
      );
--
 +    #else
 +      while (*address) {YIELDING;}
 +      ret=InterlockedExchange64((volatile LONG64 *)(address), 1);
 +    #endif
  
-   } while (ret);
  
-@@ -80,6 +91,9 @@ static void __inline blas_lock(volatile BLASULONG *address){
+   } while (ret);
+@@ -80,6 +92,14 @@ static void __inline blas_lock(volatile BLASULONG *address){
  
  #if !defined(OS_DARWIN) && !defined (OS_ANDROID)
  static __inline BLASULONG rpcc(void){
 +  #ifdef C_MSVC
-+  return __rdtsc();
++   const int64_t pmccntr_el0 = (((3 & 1) << 14) |  // op0
++        ((3 & 7) << 11) |  // op1
++        ((9 & 15) << 7) |  // crn
++        ((13 & 15) << 3) | // crm
++        ((0 & 7) << 0));   // op2
++    return _ReadStatusReg(pmccntr_el0);
 +  #else
    BLASULONG ret = 0;
    blasint shift;
   
-@@ -87,6 +101,7 @@ static __inline BLASULONG rpcc(void){
+@@ -87,6 +107,7 @@ static __inline BLASULONG rpcc(void){
    __asm__ __volatile__ ("mrs %0,cntfrq_el0; clz %w0, %w0":"=&r"(shift));
  
    return ret << shift;
@@ -76,7 +80,7 @@ index 029e238..dfea822 100644
  #define RPCC_DEFINED
 diff --git a/kernel/arm64/KERNEL.generic b/kernel/arm64/KERNEL.generic
 new file mode 100644
-index 0000000..838adb0
+index 0000000..dc6cdc2
 --- /dev/null
 +++ b/kernel/arm64/KERNEL.generic
 @@ -0,0 +1,173 @@
@@ -253,3 +257,4 @@ index 0000000..838adb0
 +#Dump kernel
 +CGEMM3MKERNEL    = ../generic/zgemm3mkernel_dump.c
 +ZGEMM3MKERNEL    = ../generic/zgemm3mkernel_dump.c
+\ No newline at end of file
