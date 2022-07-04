@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Optimized C library for EC operations on curve",
   "homepage": "https://github.com/bitcoin-core/secp256k1",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
