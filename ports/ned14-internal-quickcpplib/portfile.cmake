@@ -12,9 +12,9 @@ include("${CURRENT_PORT_DIR}/sha_manifest.cmake")
 
 if (NOT "cxx20" IN_LIST FEATURES)
     message(WARNING [=[
-    QuickCppLib and its downstream dependencies Outcome and LLFIO were tested against gsl-lite version 0.38.1 and byte-lite version 0.3.0. They are not guaranteed to work with newer versions, with failures experienced in the past up-to-and-including runtime crashes. You can pin the versions as verified to work in QuickCppLib's CI in your manifest file by adding:
+    QuickCppLib and its downstream dependencies Outcome and LLFIO were tested against span-lite version 0.10.3 and byte-lite version 0.3.0. They are not guaranteed to work with newer versions, with failures experienced in the past up-to-and-including runtime crashes. You can pin the versions as verified to work in QuickCppLib's CI in your manifest file by adding:
         "overrides": [
-            { "name": "gsl-lite", "version": "0.38.1" },
+            { "name": "span-lite", "version": "0.10.3" },
             { "name": "byte-lite", "version": "0.3.0" }
         ]
     Do not report issues to upstream without first pinning these previous versions.
@@ -37,10 +37,8 @@ if (NOT "cxx17" IN_LIST FEATURES)
         DESTINATION "${SOURCE_PATH}/include/quickcpplib/byte/include/nonstd")
 endif()
 if (NOT "cxx20" IN_LIST FEATURES)
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/gsl/gsl-lite.hpp"
-        DESTINATION "${SOURCE_PATH}/include/quickcpplib/gsl-lite/include/gsl")
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/gsl-lite/gsl-lite.hpp"
-        DESTINATION "${SOURCE_PATH}/include/quickcpplib/gsl-lite/include/gsl-lite")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/nonstd/span.hpp"
+        DESTINATION "${SOURCE_PATH}/include/quickcpplib/span-lite/include/nonstd")
 endif()
 
 vcpkg_from_github(

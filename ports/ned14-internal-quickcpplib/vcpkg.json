@@ -1,12 +1,12 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version-date": "2022-06-17",
+  "version-date": "2022-07-04",
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
   "license": "Apache-2.0 OR BSL-1.0",
   "dependencies": [
     "byte-lite",
-    "gsl-lite",
+    "span-lite",
     {
       "name": "vcpkg-cmake",
       "host": true
