@@ -1,9 +1,10 @@
 {
   "name": "libharu",
-  "version-string": "2017-08-15",
-  "port-version": 10,
+  "version-date": "2017-08-15",
+  "port-version": 11,
   "description": "libharu - free PDF library",
   "homepage": "https://github.com/libharu/libharu",
+  "license": "Zlib",
   "dependencies": [
     "libpng",
     {
