@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF v1.9.0
     SHA512 d7bff9ef29befa2cb35b52003f7b7da4425f284600dd268b268a36fb1b915917b26cb1a3e78da40eec78cbb12e2f745d2c1e88ac82f19d2beb38aa20b511438f
     HEAD_REF master
-    PATCHES lz4.patch
+    PATCHES
+        lz4.patch
+        fix_curl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
@@ -15,10 +17,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
         snappy  WITH_SNAPPY
+        curl    WITH_CURL
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF
