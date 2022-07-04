@@ -28,12 +28,13 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dds MDL_BUILD_DDS_PLUGIN
-        freeimage MDL_BUILD_FREEIMAGE_PLUGIN)
+        freeimage MDL_BUILD_FREEIMAGE_PLUGIN
+    )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-mdl-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMDL_LOG_DEPENDENCIES:BOOL=ON
 
@@ -66,7 +67,7 @@ vcpkg_copy_tools(
 )
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
+    "${CURRENT_PACKAGES_DIR}/debug/include"
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
