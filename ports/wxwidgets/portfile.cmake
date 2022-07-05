@@ -39,7 +39,7 @@ vcpkg_check_features(
 vcpkg_find_acquire_program(PKGCONFIG)
 
 set(OPTIONS_RELEASE "")
-if("debug-support" IN_LIST FEATURES)
+if(NOT "debug-support" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
 endif()
 
