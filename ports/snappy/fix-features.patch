@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 672561e..80faa68 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -160,6 +160,7 @@ int main() {
+   return zero();
+ }" HAVE_ATTRIBUTE_ALWAYS_INLINE)
+ 
++if(HAVE_SSSE3)
+ check_cxx_source_compiles("
+ #include <tmmintrin.h>
+ 
+@@ -171,12 +172,15 @@ int main() {
+   _mm_storeu_si128(&dest, pattern);
+   return 0;
+ }" SNAPPY_HAVE_SSSE3)
++endif()
+ 
++if(HAVE_BMI2)
+ check_cxx_source_compiles("
+ #include <immintrin.h>
+ int main() {
+   return _bzhi_u32(0, 1);
+ }" SNAPPY_HAVE_BMI2)
++endif()
+ 
+ include(CheckSymbolExists)
+ check_symbol_exists("mmap" "sys/mman.h" HAVE_FUNC_MMAP)
