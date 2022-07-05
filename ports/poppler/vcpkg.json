@@ -67,6 +67,15 @@
         "fontconfig"
       ]
     },
+    "glib": {
+      "description": "glib for poppler",
+      "dependencies": [
+        {
+          "name": "glib",
+          "default-features": false
+        }
+      ]
+    },
     "private-api": {
       "description": "Install headers for private API (aka unstable API/ABI headers)"
     },
@@ -78,15 +87,6 @@
       "dependencies": [
         "zlib"
       ]
-    },
-    "glib": {
-       "description" : "glib for poppler",
-       "dependencies": [
-        {
-          "name": "glib",
-          "default-features": false
-        }       
-       ]
     }
   }
 }
