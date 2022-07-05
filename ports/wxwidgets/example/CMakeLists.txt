@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.7)
 
 project(wxwidgets-example)
 
+option(wxBUILD_DEBUG_LEVEL "Debug Level" Default)
+if(NOT wxBUILD_DEBUG_LEVEL STREQUAL "Default")
+    add_compile_options("-DwxDEBUG_LEVEL=${wxBUILD_DEBUG_LEVEL}")
+endif()
+
 add_executable(main WIN32 popup.cpp)
 
 find_package(wxWidgets REQUIRED)

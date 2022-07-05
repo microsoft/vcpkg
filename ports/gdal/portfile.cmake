@@ -124,7 +124,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_pdbs()
 
     if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/gdal304_d.pdb" "${CURRENT_PACKAGES_DIR}/lib/gdal304.pdb")
     endif()
 
 else()
@@ -286,6 +286,10 @@ else()
         list(APPEND CONF_OPTS "--with-tools=yes")
     else()
         list(APPEND CONF_OPTS "--with-tools=no")
+    endif()
+
+    if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "x86" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm"))
+        list(APPEND CONF_OPTS --with-unix-stdio-64=no)
     endif()
 
     vcpkg_configure_make(

@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         002-sdl-includes.patch
         003-fix-FindGLFW.patch
+        004-fix-FindOpenAL.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
