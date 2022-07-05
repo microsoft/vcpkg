@@ -3085,7 +3085,7 @@
       "port-version": 1
     },
     "json-c": {
-      "baseline": "2019-09-10",
+      "baseline": "2022-06-26",
       "port-version": 2
     },
     "json-dto": {
