@@ -7,7 +7,7 @@ index 0686bef..e4cb094 100644
    ARM NEON support macros
  */
 -#elif !defined(PFFFT_SIMD_DISABLE) && defined(__arm__)
-+#elif !defined(PFFFT_SIMD_DISABLE) && (defined(__arm__) || defined(_M_ARM))
++#elif !defined(PFFFT_SIMD_DISABLE) && (defined(__arm__) || defined(_M_ARM) || defined(__aarch64__))
  #  include <arm_neon.h>
  typedef float32x4_t v4sf;
  #  define SIMD_SZ 4

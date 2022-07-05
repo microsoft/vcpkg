@@ -47,9 +47,9 @@ At this time, the following helpers are deprecated:
 - `vcpkg_apply_patches()` should be replaced by the `PATCHES` arguments to the "extract" helpers (e.g. [`vcpkg_from_github()`](vcpkg_from_github.md))
 - `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
 - `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
-- `vcpkg_configure_cmake` should be replaced by [`vcpkg_cmake_configure()`](ports/vcpkg-cmake/vcpkg_cmake_configure.md#vcpkg_cmake_configure) after removing `PREFER_NINJA` (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
-- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](ports/vcpkg-cmake/vcpkg_cmake_build.md#vcpkg_cmake_build) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
-- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](ports/vcpkg-cmake/vcpkg_cmake_install.md#vcpkg_cmake_install) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
+- `vcpkg_configure_cmake` should be replaced by [`vcpkg_cmake_configure()`](vcpkg_cmake_configure.md) after removing `PREFER_NINJA` (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](ports/vcpkg-cmake/vcpkg_cmake_build.md#vcpkg_cmake_build) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](ports/vcpkg-cmake/vcpkg_cmake_install.md#vcpkg_cmake_install) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
 - `vcpkg_fixup_cmake_targets` should be replaced by [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md#vcpkg_cmake_config_fixup) (from port [`vcpkg-cmake-config`](ports/vcpkg-cmake-config.md#vcpkg-cmake-config))
 
 Some of the replacement helper functions are in "tools ports" to allow consumers to pin their
