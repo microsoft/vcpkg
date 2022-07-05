@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 1.5.2
-    SHA512 759ccd71e7b032d32e97ac6a232a5436d52acb1bdda49808b3e90e69a9636e56724e4e22e3abf6768a2ef3fc2dcac8105bb32b396f8456070da1d2cce875fb87
+    REF bd1e8de7dd0596c2cbe5929cbe1f5d2257cd33db #v1.5.2
+    SHA512 6ae7e72a9f6f55563f8f612084d38bff1d2e10934fa84aad59538d323e59d205764ed364c753a55d80e9ffc7c17f542f6475b3f922edcb9085cbd83a942759d0
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
