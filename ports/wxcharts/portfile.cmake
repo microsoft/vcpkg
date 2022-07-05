@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 4c52e4ad6d3c4ba496aad7e654ee75ddd9009aadc44be37fc64f3e3ac56001a7e9728f7fdd0c78f8261bff0bf8a6748f8a7649cb160ca37c2d686530c161c2f6
 )
 
-if("wxdebug-level" IN_LIST FEATURES)
+if("wxdebug-level-0" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=0)
 else()
     list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=1)

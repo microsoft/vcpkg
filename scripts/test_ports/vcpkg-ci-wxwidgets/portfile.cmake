@@ -5,7 +5,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         wxrc    USE_WXRC
 )
 
-if("wxdebug-level" IN_LIST FEATURES)
+if("wxdebug-level-0" IN_LIST FEATURES)
     list(APPEND OPTIONS -DwxBUILD_DEBUG_LEVEL=0)
 else()
     list(APPEND OPTIONS -DwxBUILD_DEBUG_LEVEL=1)

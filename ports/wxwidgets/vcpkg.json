@@ -49,8 +49,8 @@
         }
       ]
     },
-    "wxdebug-level": {
-      "description": "Enable assert checks"
+    "wxdebug-level-0": {
+      "description": "Disable all assert checks"
     }
   }
 }

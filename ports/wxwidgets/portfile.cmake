@@ -36,7 +36,7 @@ vcpkg_check_features(
         sound   wxUSE_SOUND
 )
 
-if("wxdebug-level" IN_LIST FEATURES)
+if("wxdebug-level-0" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=0)
 else()
     list(APPEND FEATURE_OPTIONS -DwxBUILD_DEBUG_LEVEL=1)
