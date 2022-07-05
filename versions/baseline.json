@@ -5,7 +5,7 @@
       "port-version": 2
     },
     "7zip": {
-      "baseline": "22.00",
+      "baseline": "22.0",
       "port-version": 0
     },
     "abseil": {
