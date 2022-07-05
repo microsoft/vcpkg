@@ -1,5 +1,3 @@
-diff --git a/modules/freetype/CMakeLists.txt b/modules/freetype/CMakeLists.txt
-index 6dd4aaf..e734e97 100644
 --- a/modules/freetype/CMakeLists.txt
 +++ b/modules/freetype/CMakeLists.txt
 @@ -3,8 +5,10 @@ if(APPLE_FRAMEWORK)

@@ -8,11 +8,12 @@ vcpkg_from_github(
     SHA512 de7d24ac7ed78ac14673011cbecc477cae688b74222a972e553c95a557b5cb8e5913f97db525421d6a72af30998ca300112fa0b285daed65f65832eb2cf7241a
     HEAD_REF master
     PATCHES
-      0002-install-options.patch
+      0001-install-options.patch
+      0002-fix-paths-containing-symbols.patch
       0003-force-package-requirements.patch
       0004-add-ffmpeg-missing-defines.patch
       0005-fix-cuda.patch
-      fix-path-contains-++-error.patch
+      0006-fix-jasper.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
