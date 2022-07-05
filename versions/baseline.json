@@ -3058,7 +3058,7 @@
     },
     "jasper": {
       "baseline": "2.0.33",
-      "port-version": 4
+      "port-version": 5
     },
     "jbig2dec": {
       "baseline": "0.19",
@@ -3978,7 +3978,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 8
+      "port-version": 9
     },
     "librdkafka": {
       "baseline": "1.9.0",
@@ -5166,7 +5166,7 @@
     },
     "openexr": {
       "baseline": "2.5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "opengl": {
       "baseline": "2022-03-14",
@@ -5294,7 +5294,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 14
+      "port-version": 15
     },
     "osg-qt": {
       "baseline": "Qt5",
