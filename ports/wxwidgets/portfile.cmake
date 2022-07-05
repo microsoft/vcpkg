@@ -102,6 +102,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# The CMake export is not ready for use: It lacks a config file.
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/lib/cmake
+    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+)
+
 set(tools wxrc)
 if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND tools wxrc-3.1)
