@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF 35a6d7b15fedfdb5198bb6c28b31cda33b2c2a76 #v3.1.6-final
-    SHA512 f42b97a695e037130da9935e3abf117c0720325f194fcdabace95fa16a5ca06d49e35db9616bb0ef16600044397739459551a6276f3c239bd4fc160ecb6cdc16
+    REF v3.1.7
+    SHA512 d6c9613b82a7e697b60217ba8fe9be4406ce7fad1f8d2d16cbf94c9aa9b5a38f1f3e175cb7a80dac8a57196dd6aa2fc3db83b4099a4257bb1a79707002db4af2
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -89,6 +89,7 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
+        -DwxUSE_NANOSVG=sys
         -DwxUSE_SECRETSTORE=FALSE
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
