@@ -18,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         curl        ENABLE_LIBCURL
         private-api ENABLE_UNSTABLE_API_ABI_HEADERS
         zlib        ENABLE_ZLIB
+        glib        ENABLE_GLIB 
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
