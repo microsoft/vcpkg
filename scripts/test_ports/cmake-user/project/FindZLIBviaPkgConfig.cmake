@@ -1,3 +1,5 @@
+# `pkgconf` is not recognized before CMake 3.22
+find_program(PKG_CONFIG_EXECUTABLE NAMES pkgconf)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_ZLIB zlib)
 if(PC_ZLIB_FOUND)
