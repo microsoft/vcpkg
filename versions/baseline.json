@@ -7293,8 +7293,8 @@
       "port-version": 0
     },
     "urdfdom": {
-      "baseline": "1.0.4",
-      "port-version": 5
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "urdfdom-headers": {
       "baseline": "1.0.5",
