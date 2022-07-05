@@ -38,6 +38,11 @@ vcpkg_check_features(
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
+set(OPTIONS_RELEASE "")
+if("debug-support" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
+endif()
+
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
@@ -98,6 +103,8 @@ vcpkg_cmake_configure(
         # The minimum cmake version requirement for Cotire is 2.8.12.
         # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install()

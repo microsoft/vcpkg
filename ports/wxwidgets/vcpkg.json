@@ -28,9 +28,13 @@
     "zlib"
   ],
   "default-features": [
+    "debug-support",
     "sound"
   ],
   "features": {
+    "debug-support": {
+      "description": "Enable wxWidgets debugging support hooks even for release builds (wxDEBUG_LEVEL 1)"
+    },
     "example": {
       "description": "Example source code and CMake project"
     },
