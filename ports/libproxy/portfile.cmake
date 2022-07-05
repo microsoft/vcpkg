@@ -1,8 +1,3 @@
-# Enable static build in UNIX
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libproxy/libproxy
