@@ -55,7 +55,7 @@ function(z_vcpkg_download_distfile_via_aria)
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     if(DEFINED arg_SHA512 AND NOT DEFINED arg_SKIP_SHA512)
