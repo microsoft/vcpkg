@@ -22,18 +22,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         graphviz  NO_GRAPHVIZ_FEATURE
 )
 
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_EXTERNAL_TINY_PROCESS_LIBRARY=ON
-        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe
+        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF  # Not enabled by default, but to be sure
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
 vcpkg_copy_pdbs()
 
