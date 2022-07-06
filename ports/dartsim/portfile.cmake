@@ -22,9 +22,9 @@ vcpkg_cmake_configure(
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_OPENGL=ON
         -DDART_SKIP_pagmo=ON
-        -Durdfdom_headers_VERSION_MAJOR=1
+        -Durdfdom_headers_VERSION_MAJOR=3
         -Durdfdom_headers_VERSION_MINOR=0
-        -Durdfdom_headers_VERSION_PATCH=4
+        -Durdfdom_headers_VERSION_PATCH=0
 )
 
 vcpkg_cmake_install()
