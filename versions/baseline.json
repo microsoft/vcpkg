@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -2023,7 +2022,7 @@
     },
     "eastl": {
       "baseline": "3.18.00",
-      "port-version": 2
+      "port-version": 3
     },
     "easycl": {
       "baseline": "0.3",
