@@ -3,6 +3,7 @@
   "version": "21.10",
   "description": "Foundation library out of ezEngine",
   "homepage": "https://ezengine.net/",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
