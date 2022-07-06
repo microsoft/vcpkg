@@ -54,6 +54,22 @@ function(z_vcpkg_download_distfile_via_aria)
         "URLS;HEADERS"
     )
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(DEFINED arg_SHA512 AND NOT DEFINED arg_SKIP_SHA512)
+        message(FATAL_ERROR "SHA512 must be specified if SKIP_SHA512 is not specified.")
+    endif()
+
+    if(NOT DEFINED arg_FILENAME OR arg_FILENAME STREQUAL "")
+        message(FATAL_ERROR "FILENAME must be specified.")
+    endif()
+
+    if(NOT DEFINED arg_URLS OR arg_URLS STREQUAL "")
+        message(FATAL_ERROR "URLS must be specified.")
+    endif()
+
     if(DEFINED arg_FILE_DISAMBIGUATOR)
         string(PREPEND arg_FILENAME "${arg_FILE_DISAMBIGUATOR}-")
     endif()
