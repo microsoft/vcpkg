@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        export-targets.patch
+        export-targets.patch # https://github.com/brechtsanders/xlsxio/pull/105
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindMinizip.cmake")
@@ -41,7 +41,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-xlsxio)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
