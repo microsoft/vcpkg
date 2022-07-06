@@ -71,6 +71,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ###### ocv_options
         -DCMAKE_DEBUG_POSTFIX=d
+        -DINSTALL_TO_MANGLED_PATHS=OFF
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
