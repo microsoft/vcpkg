@@ -461,7 +461,7 @@ endif()
 set(OPTIONS_CROSS " --enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
-if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "(/.+)gcc$" AND CMAKE_MATCH_1)
+if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "(/.+)gcc$")
     string(APPEND OPTIONS_CROSS " --cross-prefix=${CMAKE_MATCH_1}")
 endif()
 
