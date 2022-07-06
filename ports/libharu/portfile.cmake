@@ -18,8 +18,8 @@ vcpkg_from_github(
         ${DISABLETIFF}
 )
 
-string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" BUILD_SHARED)
-string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE STREQUAL "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -31,20 +31,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
-       if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-          file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libhpdfs.lib" "${CURRENT_PACKAGES_DIR}/lib/libhpdf.lib")
-       endif()
-       if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-          file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfsd.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd.lib")
-       endif()
-    else()
-       if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-          file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libhpdfs.a" "${CURRENT_PACKAGES_DIR}/lib/libhpdf.a")
-       endif()
-       if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-          file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfs.a" "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd.a")
-       endif()
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libhpdfs${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libhpdf${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfsd${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     endif()
 endif()
 
@@ -53,9 +44,11 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/README"
     "${CURRENT_PACKAGES_DIR}/debug/CHANGES"
     "${CURRENT_PACKAGES_DIR}/debug/INSTALL"
+    "${CURRENT_PACKAGES_DIR}/debug/if"
     "${CURRENT_PACKAGES_DIR}/README"
     "${CURRENT_PACKAGES_DIR}/CHANGES"
     "${CURRENT_PACKAGES_DIR}/INSTALL"
+    "${CURRENT_PACKAGES_DIR}/if"
 )
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
