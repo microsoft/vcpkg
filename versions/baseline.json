@@ -7297,8 +7297,8 @@
       "port-version": 0
     },
     "urdfdom-headers": {
-      "baseline": "1.0.5",
-      "port-version": 2
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "urho3d": {
       "baseline": "2021-03-01",
