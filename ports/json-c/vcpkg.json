@@ -3,7 +3,7 @@
   "version-date": "2022-06-26",
   "description": "A JSON implementation in C",
   "homepage": "https://github.com/json-c/json-c",
-  "license": null,
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
