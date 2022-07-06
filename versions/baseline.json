@@ -201,8 +201,8 @@
       "port-version": 1
     },
     "assimp": {
-      "baseline": "5.0.1",
-      "port-version": 5
+      "baseline": "5.2.4",
+      "port-version": 0
     },
     "asynch": {
       "baseline": "2019-09-21",
@@ -5746,7 +5746,7 @@
     },
     "qt5-3d": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-activeqt": {
       "baseline": "5.15.5",
@@ -6006,7 +6006,7 @@
     },
     "qtquick3d": {
       "baseline": "6.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtquickcontrols2": {
       "baseline": "deprecated",
