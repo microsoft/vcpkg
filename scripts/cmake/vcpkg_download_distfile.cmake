@@ -50,9 +50,13 @@ endfunction()
 function(z_vcpkg_download_distfile_via_aria)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512"
-        "FILENAME;SHA512"
+        "FILENAME;SHA512;FILE_DISAMBIGUATOR;"
         "URLS;HEADERS"
     )
+
+    if(DEFINED arg_FILE_DISAMBIGUATOR)
+        string(PREPEND arg_FILENAME "${arg_FILE_DISAMBIGUATOR}-")
+    endif()
 
     message(STATUS "Downloading ${arg_FILENAME}...")
 
