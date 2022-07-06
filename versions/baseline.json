@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -3675,7 +3674,7 @@
     },
     "libharu": {
       "baseline": "2017-08-15",
-      "port-version": 10
+      "port-version": 11
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
