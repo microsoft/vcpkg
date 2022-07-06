@@ -1,16 +1,16 @@
-# Header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO efficient/libcuckoo
-    REF 8785773896d74f72b6224e59d37f5f8c3c1e022a
-    SHA512 e47f8fd132ee2acf347ee375759f96235cd090fdb825792f994ff5eb4d8fed55b8e8bea8d293ec96c1a5f1b46d19c6648eaf2482e482b7b9c0d6dc734bc2121d
+    REF ea8c36c65bf9cf83aaf6b0db971248c6ae3686cf
+    SHA512 5c36ebf6047afb3fa980049dc2e38b8e34443d40cff7ba9b7ee1fa8b78ff3dd92b2d0a346667a71eec6d0bfc917b3080c883146f97681f20f71ce618eac3f37f
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+# header-only library
+set(VCPKG_BUILD_TYPE release)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
@@ -19,11 +19,8 @@ vcpkg_configure_cmake(
         -DBUILD_UNIVERSAL_BENCHMARK=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
