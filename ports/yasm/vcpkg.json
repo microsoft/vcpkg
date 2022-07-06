@@ -17,7 +17,11 @@
     },
     {
       "name": "yasm",
-      "host": true
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
     }
   ],
   "features": {
