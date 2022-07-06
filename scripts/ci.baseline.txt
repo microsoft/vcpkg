@@ -788,7 +788,6 @@ openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
-openscap:x64-linux=fail
 openscap:x64-osx=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
