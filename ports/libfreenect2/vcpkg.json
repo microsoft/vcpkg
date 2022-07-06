@@ -33,6 +33,12 @@
         "glfw3",
         "opengl"
       ]
+    },
+    "openni2": {
+      "description": "OpenNI2 support for libfreenect2",
+      "dependencies": [
+        "openni2"
+      ]
     }
   }
 }
