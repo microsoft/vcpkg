@@ -3,11 +3,6 @@ if("notiffsymbols" IN_LIST FEATURES)
         set(DISABLETIFF tiff.patch)
     endif()
 endif()
-vcpkg_download_distfile(SHADING_PR
-    URLS "https://github.com/libharu/libharu/pull/157.diff"
-    FILENAME "libharu-shading-pr-157.patch"
-    SHA512 f2ddb22b54b4eccc79400b6a4b2d245a221898f75456a5a559523eab7a523a87dfc5dfd0ec5fb17a771697e03c7ea6ed4c6095eff73e0a4302cd6eb24584c957
-)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,29 +14,24 @@ vcpkg_from_github(
         fix-build-fail.patch
         add-boolean-typedef.patch
         # This patch adds shading support which is required for VTK. If desired, this could be moved into an on-by-default feature.
-        ${SHADING_PR}
+        pr-157.patch # Remove on next version update
         ${DISABLETIFF}
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-  set(VCPKG_BUILD_STATIC_LIBS OFF)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-  set(VCPKG_BUILD_STATIC_LIBS ON)
-endif()
+string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" BUILD_SHARED)
+string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE STREQUAL "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DLIBHPDF_STATIC=${VCPKG_BUILD_STATIC_LIBS}
-        -DLIBHPDF_SHARED=${VCPKG_BUILD_SHARED_LIBS}
+        -DLIBHPDF_STATIC=${BUILD_STATIC}
+        -DLIBHPDF_SHARED=${BUILD_SHARED}
 )
 
 vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
           file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libhpdfs.lib" "${CURRENT_PACKAGES_DIR}/lib/libhpdf.lib")
        endif()
