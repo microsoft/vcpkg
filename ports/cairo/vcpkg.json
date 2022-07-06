@@ -42,7 +42,8 @@
       ]
     },
     "x11": {
-      "description": "build with x11 support"
+      "description": "build with x11 support",
+      "supports": "!windows"
     }
   }
 }
