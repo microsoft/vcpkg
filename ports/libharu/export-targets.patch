@@ -1,10 +1,17 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4ca0f14..3f6f8b7 100644
+index 4ca0f14..9d60a9f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -88,8 +88,14 @@ if(UNIX AND NOT APPLE)
+@@ -87,9 +87,21 @@ if(UNIX AND NOT APPLE)
+     target_link_libraries (haru ${M_LIB})
  endif()
  
++if(LIBHPDF_SHARED)
++    if(WIN32 AND NOT CYGWIN)
++        set_target_properties(haru PROPERTIES DEFINE_SYMBOL HPDF_DLL_MAKE)
++    endif(WIN32 AND NOT CYGWIN)
++endif(LIBHPDF_SHARED)
++
  install(
 -   TARGETS
 +   TARGETS haru
