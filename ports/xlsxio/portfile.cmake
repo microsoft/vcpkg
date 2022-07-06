@@ -17,13 +17,8 @@ vcpkg_check_features(
         libzip WITH_LIBZIP
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)    
-    set(BUILD_STATIC ON)
-    set(BUILD_SHARED OFF)
-else()
-   set(BUILD_SHARED ON)
-   set(BUILD_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
