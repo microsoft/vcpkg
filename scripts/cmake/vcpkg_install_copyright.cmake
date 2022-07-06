@@ -23,7 +23,6 @@ function(vcpkg_install_copyright)
         endif()
     else()
         foreach(file_item IN LISTS arg_FILE_LIST)
-            
             get_filename_component(file_name "${file_item}" NAME)
             file(READ "${file_item}" file_contents)
 
