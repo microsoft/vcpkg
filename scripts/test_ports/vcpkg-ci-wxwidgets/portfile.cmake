@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DCMAKE_CONFIG_RUN=1
         "-DPRINT_VARS=CMAKE_CONFIG_RUN;wxWidgets_LIBRARIES"
-        --trace-expand
 )
 vcpkg_cmake_build()
 
