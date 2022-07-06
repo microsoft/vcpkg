@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -2151,6 +2150,10 @@
     },
     "ezc3d": {
       "baseline": "1.4.7",
+      "port-version": 0
+    },
+    "ezfoundation": {
+      "baseline": "21.10",
       "port-version": 0
     },
     "faad2": {
