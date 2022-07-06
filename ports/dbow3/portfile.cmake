@@ -1,4 +1,6 @@
 #the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rmsalinas/DBow3
@@ -8,13 +10,10 @@ vcpkg_from_github(
       fix_cmake.patch
 )
 
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DUSE_SIMD=ON
         -DUSE_OPENCV_CONTRIB=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
@@ -26,7 +25,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/DBow3)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/DBow3 RENAME copyright)
 vcpkg_copy_pdbs()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
