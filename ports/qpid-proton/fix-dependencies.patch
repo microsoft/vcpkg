@@ -1,5 +1,5 @@
 diff --git a/c/CMakeLists.txt b/c/CMakeLists.txt
-index 27b40e7..20e7755 100644
+index 27b40e7..a3a5d38 100644
 --- a/c/CMakeLists.txt
 +++ b/c/CMakeLists.txt
 @@ -377,11 +377,15 @@ if (PROACTOR STREQUAL "iocp" OR (NOT PROACTOR AND NOT PROACTOR_OK))
@@ -7,9 +7,8 @@ index 27b40e7..20e7755 100644
  
  if (PROACTOR STREQUAL "libuv" OR (NOT PROACTOR AND NOT PROACTOR_OK))
 -  find_package(Libuv)
--  if (Libuv_FOUND)
-+  find_package(libuv CONFIG)
-+  if (libuv_FOUND)
++  find_package(libuv NAMES libuv CONFIG)
+   if (Libuv_FOUND)
      set (PROACTOR_OK libuv)
      set (qpid-proton-proactor src/proactor/libuv.c ${qpid-proton-proactor-common})
 -    set (PROACTOR_LIBS Libuv::Libuv)
