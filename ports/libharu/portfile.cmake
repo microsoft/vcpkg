@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-include-path.patch
+        export-targets.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -25,6 +26,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-haru)
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/README.md"
@@ -35,6 +38,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/INSTALL"
 )
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")

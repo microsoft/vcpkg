@@ -1,0 +1,20 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4ca0f14..3f6f8b7 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -88,8 +88,14 @@ if(UNIX AND NOT APPLE)
+ endif()
+ 
+ install(
+-   TARGETS
++   TARGETS haru
++   EXPORT unofficial-haru
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
++
++install(EXPORT unofficial-haru
++    NAMESPACE unofficial::libharu::
++    DESTINATION share/unofficial-haru
++)
