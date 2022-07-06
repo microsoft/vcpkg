@@ -1,8 +1,8 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..2bfa22a 100755
+index d64c14f..12226cf 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
-@@ -316,10 +316,148 @@ class Converter(object):
+@@ -316,10 +316,132 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -98,21 +98,6 @@ index d64c14f..2bfa22a 100755
 +    
 +    target_sources(descriptor_upb_proto PRIVATE ${UPB_DESCRIPTOR_SOURCES})
 +
-+    add_library(all_libs INTERFACE)
-+    target_link_libraries(all_libs
-+      INTERFACE
-+      upb
-+      fastdecode
-+      utf8_range
-+      json
-+      port
-+      table
-+      descriptor_upb_proto
-+      reflection
-+      textformat
-+      mini_table_internal
-+      mini_table
-+    )
 +    set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
 +    set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
 +    set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
@@ -140,7 +125,6 @@ index d64c14f..2bfa22a 100755
 +      descriptor_upb_proto
 +      reflection
 +      textformat
-+      all_libs
 +      mini_table_internal
 +      mini_table
 +      ${UPB_CODEGEN_TARGETS}

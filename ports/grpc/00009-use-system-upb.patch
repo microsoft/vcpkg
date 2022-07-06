@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e1e40f5b10..b56bec037f 100644
+index a7e591f083..e16e70a224 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -85,6 +85,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
@@ -12,15 +12,16 @@ index e1e40f5b10..b56bec037f 100644
  set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
  set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
  
-@@ -1386,7 +1389,6 @@ target_link_libraries(gpr
+@@ -1369,7 +1372,7 @@ target_link_libraries(gpr
    absl::synchronization
    absl::time
    absl::optional
 -  upb
++  ${_gRPC_UPB_LIBRARIES}
  )
  if(_gRPC_PLATFORM_ANDROID)
    target_link_libraries(gpr
-@@ -3974,6 +3976,7 @@ endif()
+@@ -3957,6 +3960,7 @@ endif()
  
  endif()
  
@@ -28,7 +29,7 @@ index e1e40f5b10..b56bec037f 100644
  add_library(upb
    third_party/upb/third_party/utf8_range/naive.c
    third_party/upb/third_party/utf8_range/range2-neon.c
-@@ -4035,7 +4038,7 @@ if(gRPC_INSTALL)
+@@ -4018,7 +4022,7 @@ if(gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
@@ -50,7 +51,7 @@ index 3623f4aa5e..df6ced560e 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index f2a0e508c3..161e210985 100644
+index f2a0e508c3..09751f5ef0 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
 @@ -12,9 +12,19 @@
@@ -69,7 +70,7 @@ index f2a0e508c3..161e210985 100644
 +
 +elseif(gRPC_UPB_PROVIDER STREQUAL "package")
 +    find_package(upb CONFIG REQUIRED)
-+    set(_gRPC_UPB_LIBRARIES upb::all_libs)
++    set(_gRPC_UPB_LIBRARIES upb::fastdecode upb::json upb::upb upb::utf8_range upb::textformat upb::reflection upb::descriptor_upb_proto)
 +    set(_gRPC_UPB_INCLUDE_DIR)
 +    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
 +endif()
