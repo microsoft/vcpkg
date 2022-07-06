@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -2459,7 +2458,7 @@
     },
     "gazebo": {
       "baseline": "2022-01-20",
-      "port-version": 2
+      "port-version": 3
     },
     "gcem": {
       "baseline": "1.14.1",
