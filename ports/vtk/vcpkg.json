@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.0.3-pv5.9.1",
-  "port-version": 10,
+  "port-version": 11,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -16,12 +16,7 @@
       "default-features": false
     },
     "jsoncpp",
-    {
-      "name": "libharu",
-      "features": [
-        "notiffsymbols"
-      ]
-    },
+    "libharu",
     "libjpeg-turbo",
     "liblzma",
     "libogg",
