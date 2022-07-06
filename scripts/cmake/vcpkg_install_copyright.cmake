@@ -24,18 +24,14 @@ function(vcpkg_install_copyright)
     else()
         foreach(file_item IN LISTS arg_FILE_LIST)
             
-            if(NOT EXISTS "${file_item}" OR IS_DIRECTORY "${file_item}")
-                message(FATAL_ERROR "The file ${file_item} does not exist or is a directory.")
-            endif()
-    
-            get_filename_component(file_name ${file_item} NAME)
+            get_filename_component(file_name "${file_item}" NAME)
             file(READ "${file_item}" file_contents)
 
             string(APPEND out_string "${file_name}:\n\n${file_contents}\n\n")
         endforeach()
     endif()
 
-    if(arg_COMMENT AND NOT arg_COMMENT EQUALS "")
+    if(arg_COMMENT AND NOT arg_COMMENT STREQUAL "")
         string(PREPEND out_string "${arg_COMMENT}\n\n")
     endif()
 
