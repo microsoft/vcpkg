@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         fix-makefiles.patch
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
+        fix-mingw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -98,14 +99,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
+        endif()
     else()
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+        endif()
     endif()
 
     set(infile "${SOURCE_PATH}/spatialite.pc.in")

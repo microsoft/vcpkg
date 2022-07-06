@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 9.0.0
-    SHA512 f11a20e9f9615c513755f54ac400cc2e144e40caa91f616c8f640aef9caf779487dc94927b3a4b57b15a595c17b70636b872d9a77d7baaf912b1a507004e6520
+    REF 9.0.1
+    SHA512 b92a196e6801dd8d77e6c2131e15a392077e8e049a6d9befdb39ee035a3cca5a725b95196b29a4c5d7bad4d826a285e40abc3fdc040b5e11ede5c04ba4f6dbb5
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         tools-cmake.patch
+        remove-doc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
