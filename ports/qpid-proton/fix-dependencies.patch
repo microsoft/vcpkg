@@ -7,7 +7,7 @@ index 27b40e7..a3a5d38 100644
  
  if (PROACTOR STREQUAL "libuv" OR (NOT PROACTOR AND NOT PROACTOR_OK))
 -  find_package(Libuv)
-+  find_package(libuv NAMES libuv CONFIG)
++  find_package(libuv NAMES Libuv CONFIG)
    if (Libuv_FOUND)
      set (PROACTOR_OK libuv)
      set (qpid-proton-proactor src/proactor/libuv.c ${qpid-proton-proactor-common})
