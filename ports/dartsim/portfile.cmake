@@ -4,7 +4,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dartsim/dart
-    REF v6.11.0
+    REF v6.12.1
     SHA512 01fbff039bcec71d41334db2d07d0973b1ba58d30d05b29e35e1e3cee853917753b64e1101881113a33adb801559855d38d274fbb3383cfb24d85565254d112d
     HEAD_REF main
     PATCHES
