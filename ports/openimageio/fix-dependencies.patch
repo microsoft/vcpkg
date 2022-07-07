@@ -28,7 +28,7 @@ diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -158,14 +158,18 @@ endif ()
+@@ -158,14 +158,19 @@ endif ()
  checked_find_package (Freetype
                     DEFINITIONS  -DUSE_FREETYPE=1 )
  
@@ -39,6 +39,7 @@ index 631035a..d416d78 100644
                        DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
                        # PREFER_CONFIG
                        )
++set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
  if (NOT OPENCOLORIO_FOUND)
      set (OPENCOLORIO_FOUND 0)
  endif ()
@@ -71,16 +72,18 @@ index 631035a..d416d78 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-@@ -221,7 +222,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+@@ -221,9 +222,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
      # set (LIBRAW_FOUND 0)
  endif ()
  
--checked_find_package (OpenJPEG VERSION_MIN 2.0)
+-checked_find_package (OpenJPEG VERSION_MIN 2.0
+-                      RECOMMEND_MIN 2.2
+-                      RECOMMEND_MIN_REASON "for multithreading support")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG ${USE_OPENJPEG})
 +checked_find_package (OpenJPEG CONFIG)
+ # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
+ # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
  
- checked_find_package (OpenVDB
-                       VERSION_MIN 5.0
 @@ -240,6 +243,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
      checked_find_package (Ptex)
  endif ()
