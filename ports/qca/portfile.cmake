@@ -45,9 +45,9 @@ vcpkg_execute_required_process(
 message(STATUS "Importing certstore done")
 
 if("botan" IN_LIST FEATURES)
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN="yes")
+    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=yes)
 else()
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN="no")
+    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=no)
 endif()
 
 # Configure and build

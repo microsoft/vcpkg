@@ -1,20 +1,3 @@
-#[===[.md:
-# vcpkg_build_ninja
-
-Build a ninja project
-
-## Usage:
-```cmake
-vcpkg_build_ninja(
-    [TARGETS <target>...]
-)
-```
-
-## Parameters:
-### TARGETS
-Only build the specified targets.
-#]===]
-
 function(z_vcpkg_build_ninja_build config targets)
     message(STATUS "Building (${config})...")
     vcpkg_execute_build_process(

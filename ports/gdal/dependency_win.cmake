@@ -137,7 +137,7 @@ macro(find_dependency_win)
 
     if("poppler" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "POPPLER_ENABLED=YES")
-        list(APPEND NMAKE_OPTIONS "POPPLER_MAJOR_VERSION=22" "POPPLER_MINOR_VERSION=1") # Bump as needed
+        list(APPEND NMAKE_OPTIONS "POPPLER_MAJOR_VERSION=22" "POPPLER_MINOR_VERSION=3") # Bump as needed
         list(APPEND NMAKE_OPTIONS "POPPLER_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include -I${CURRENT_INSTALLED_DIR}/include/poppler /std:c++17")
         x_vcpkg_pkgconfig_get_modules(PREFIX POPPLER MODULES --msvc-syntax poppler LIBS)
         list(APPEND NMAKE_OPTIONS_REL "POPPLER_LIBS=${POPPLER_LIBS_RELEASE}")

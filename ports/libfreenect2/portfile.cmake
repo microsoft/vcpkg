@@ -15,8 +15,10 @@ string(REPLACE "(WIN32)"
 file(WRITE "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "${FINDLIBUSB}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opengl     ENABLE_OPENGL
-    opencl     ENABLE_OPENCL
+    FEATURES
+        opengl     ENABLE_OPENGL
+        opencl     ENABLE_OPENCL
+        openni2    BUILD_OPENNI2_DRIVER
 )
 
 vcpkg_cmake_configure(

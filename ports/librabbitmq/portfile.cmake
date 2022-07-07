@@ -6,10 +6,10 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
       fix-uwpwarning.patch
+      fix-link-header-files.patch #Remove this patch in the next version
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     -DBUILD_EXAMPLES=OFF
     -DBUILD_TESTS=OFF
     -DBUILD_TOOLS=OFF
+    -DBUILD_STATIC_LIBS=${BUILD_STATIC}
 )
 
 vcpkg_cmake_install()
