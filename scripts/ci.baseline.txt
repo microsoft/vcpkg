@@ -264,7 +264,6 @@ ftgl:arm-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
 
-gazebo:x64-linux=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
