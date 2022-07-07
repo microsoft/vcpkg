@@ -2458,7 +2458,7 @@
     },
     "gazebo": {
       "baseline": "2022-01-20",
-      "port-version": 2
+      "port-version": 3
     },
     "gcem": {
       "baseline": "1.14.1",
@@ -2914,15 +2914,15 @@
     },
     "ignition-msgs1": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "ignition-msgs5": {
       "baseline": "5.3.0",
-      "port-version": 5
+      "port-version": 6
     },
     "ignition-msgs6": {
       "baseline": "6.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-plugin1": {
       "baseline": "1.1.0",
@@ -5637,7 +5637,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.19.4",
+      "baseline": "3.21.2",
       "port-version": 0
     },
     "protobuf-c": {
