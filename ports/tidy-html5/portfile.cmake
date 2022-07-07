@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
         -DBUILD_SHARED_LIB=OFF
         -DTIDY_CONSOLE_SHARED=OFF
 )
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt/bin")
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt")
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
