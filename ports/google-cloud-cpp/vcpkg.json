@@ -99,6 +99,7 @@
     },
     "asset": {
       "description": "Cloud Asset API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -107,8 +108,7 @@
             "grpc-common"
           ]
         }
-      ],
-      "supports": "!windows"
+      ]
     },
     "assuredworkloads": {
       "description": "Assured Workloads API C++ Client Library",
@@ -184,6 +184,7 @@
     },
     "channel": {
       "description": "Cloud Channel API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -192,8 +193,7 @@
             "grpc-common"
           ]
         }
-      ],
-      "supports": "!windows"
+      ]
     },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
