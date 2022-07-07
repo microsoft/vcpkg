@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4ca0f14..9d60a9f 100644
+index 4ca0f14..02ad1ab 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -87,9 +87,21 @@ if(UNIX AND NOT APPLE)
+@@ -87,9 +87,23 @@ if(UNIX AND NOT APPLE)
      target_link_libraries (haru ${M_LIB})
  endif()
  
@@ -12,16 +12,18 @@ index 4ca0f14..9d60a9f 100644
 +    endif(WIN32 AND NOT CYGWIN)
 +endif(LIBHPDF_SHARED)
 +
++target_include_directories(haru PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
++
  install(
 -   TARGETS
 +   TARGETS haru
-+   EXPORT unofficial-haru
++   EXPORT unofficial-haruConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
  )
 +
-+install(EXPORT unofficial-haru
++install(EXPORT unofficial-haruConfig
 +    NAMESPACE unofficial::libharu::
 +    DESTINATION share/unofficial-haru
 +)
