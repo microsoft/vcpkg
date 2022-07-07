@@ -7,11 +7,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENSSL_SHARED shared)
 endif()
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-)
-
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
