@@ -107,7 +107,8 @@
             "grpc-common"
           ]
         }
-      ]
+      ],
+      "supports": "!windows"
     },
     "assuredworkloads": {
       "description": "Assured Workloads API C++ Client Library",
@@ -191,7 +192,8 @@
             "grpc-common"
           ]
         }
-      ]
+      ],
+      "supports": "!windows"
     },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
