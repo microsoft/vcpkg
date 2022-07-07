@@ -1,4 +1,3 @@
-#the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.0.1
     SHA512 94992141094162d44cf45ad85324517638bf794d693c6a059d6ba5d5ccbedea4f98664a0cc49ebca78f85d2860b637dfcb9d5315114493643a6c7f8fabab3073
     HEAD_REF develop
+    PATCHES
+        0001-fix-osx.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

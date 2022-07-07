@@ -101,14 +101,6 @@
       "platform": "!uwp & !(windows & (arm | arm64))"
     },
     {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
-        "python"
-      ],
-      "platform": "!uwp"
-    },
-    {
       "name": "opencv4",
       "default-features": false,
       "features": [
