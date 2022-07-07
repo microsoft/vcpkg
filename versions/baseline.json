@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -835,7 +834,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.79.0",
-      "port-version": 3
+      "port-version": 4
     },
     "boost-move": {
       "baseline": "1.79.0",
