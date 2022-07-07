@@ -89,7 +89,6 @@
       "features": [
         "freetype",
         "gdcm",
-        "ipp",
         "jasper",
         "lapack",
         "openexr",
