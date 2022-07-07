@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 55e6a5f..6670bbd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -827,15 +827,26 @@ install(FILES include/jemalloc/jemalloc${install_suffix}.h
+         DESTINATION include/jemalloc)
+ 
+ if (without-export)
++    TARGET_INCLUDE_DIRECTORIES(${C_JETLIB} INTERFACE $<INSTALL_INTERFACE:include>)
+     install(TARGETS ${C_JETLIB}
++            EXPORT  unofficial-jemalloc-config
+             LIBRARY DESTINATION lib
+             ARCHIVE DESTINATION lib)
+ else()
++    TARGET_INCLUDE_DIRECTORIES(${LIBJEMALLOCSO} INTERFACE $<INSTALL_INTERFACE:include>)
+     install(TARGETS ${LIBJEMALLOCSO}
++            EXPORT  unofficial-jemalloc-config
+             RUNTIME DESTINATION bin
+             LIBRARY DESTINATION lib
+             ARCHIVE DESTINATION lib)
+ endif()
++
++install(EXPORT unofficial-jemalloc-config
++        FILE unofficial-jemalloc-config.cmake
++        NAMESPACE unofficial::jemalloc::
++        DESTINATION share/unofficial-jemalloc
++)
++
+ if (build-tests)
+ ##################################################################
+ # Common source for Unit, Integration and stress test libraries
