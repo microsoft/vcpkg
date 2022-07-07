@@ -3074,7 +3074,7 @@
     },
     "jemalloc": {
       "baseline": "4.3.1",
-      "port-version": 5
+      "port-version": 6
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
