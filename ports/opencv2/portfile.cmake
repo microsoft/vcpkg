@@ -66,11 +66,18 @@ if("python" IN_LIST FEATURES)
   set(WITH_PYTHON ON)
 endif()
 
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    set(STATIC_CRT_LNK ON)
+else()
+    set(STATIC_CRT_LNK OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ###### ocv_options
         -DCMAKE_DEBUG_POSTFIX=d
+        -DBUILD_WITH_STATIC_CRT=${STATIC_CRT_LNK}
         -DINSTALL_TO_MANGLED_PATHS=OFF
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
