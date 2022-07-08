@@ -1618,7 +1618,7 @@
     },
     "cppcodec": {
       "baseline": "0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "cppcoro": {
       "baseline": "2020-02-28",
