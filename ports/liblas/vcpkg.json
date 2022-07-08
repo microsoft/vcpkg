@@ -3,6 +3,7 @@
   "version": "1.8.1",
   "port-version": 10,
   "description": "A C/C++ library for reading and writing the very common LAS LiDAR format.",
+  "license": "MIT",
   "dependencies": [
     "boost-detail",
     "boost-filesystem",
