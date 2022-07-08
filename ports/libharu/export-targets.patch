@@ -17,13 +17,13 @@ index 4ca0f14..02ad1ab 100644
  install(
 -   TARGETS
 +   TARGETS haru
-+   EXPORT unofficial-haruConfig
++   EXPORT unofficial-libharu-config
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
  )
 +
-+install(EXPORT unofficial-haruConfig
++install(EXPORT unofficial-libharu-config
 +    NAMESPACE unofficial::libharu::
-+    DESTINATION share/unofficial-haru
++    DESTINATION share/unofficial-libharu
 +)
