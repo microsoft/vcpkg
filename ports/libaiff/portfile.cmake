@@ -1,37 +1,18 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_sourceforge(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO aifftools/libaiff
-    REF LibAiff%205.0
-    FILENAME "libaiff-5.0-release.tar.gz"
-    SHA512 7800f9a3fbd0c5a17b8cc6c9b60181131d159ab5f5fb8e7de54e8f88c151717a988231de664a635e61940267c854a9ce83d58b12e322dcdda3aa8080c7b15f66
-    PATCHES
-        allow_utf_16_filename.patch
-        buffer_uninitialized.patch
+    REPO mtszb/libaiff
+    REF a58801a9d2ab09b2d1b578609a6337b95e22c8fb #v6.0
+    SHA512 25925f36fe4ddf29a8986d0265ca66b85b5c02673915c742913b2f0d89b349b000abc9cd57c9806ad71bc6c1a7949cff4b943284e68c35b18eb81641bfdbcc5f
+    HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/libaiff)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-
-file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/libaiff/*.h")
-foreach(HEADER ${HEADERS})
-  file(READ "${HEADER}" _contents)
-  string(REPLACE "#ifdef HAVE_STDINT_H" "#if 1" _contents "${_contents}")
-  string(REPLACE "#ifdef HAVE_STRING_H" "#if 1" _contents "${_contents}")
-  string(REPLACE "#ifdef HAVE_STDLIB_H" "#if 1" _contents "${_contents}")
-  string(REPLACE "#ifdef HAVE_INTTYPES_H" "#if 1" _contents "${_contents}")
-  file(WRITE "${HEADER}" "${_contents}")
-endforeach()
+vcpkg_install_make()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
