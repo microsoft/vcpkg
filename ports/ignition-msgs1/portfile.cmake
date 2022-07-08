@@ -1,5 +1,3 @@
-include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
-
 # Explicitly disable cross-compilation until the upstream discussion
 # https://bitbucket.org/ignitionrobotics/ign-msgs/issues/34/add-support-for-cross-compilation is solved
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -18,6 +16,8 @@ ignition_modular_library(NAME msgs
                          VERSION "1.0.0"
                          # See https://bitbucket.org/ignitionrobotics/ign-msgs/issues/33/the-ignition-msgs1_100-tag-does-not-match
                          REF ignition-msgs_1.0.0
-                         SHA512 3a270f0ac988b947091d4626be48fe8cfed5ddfde5a37b9d0f08fddcbf278099ab231fca11e2dd2296ca54e0350ea14e3f685dc238f0827f18f10ab7b75039de
+                         SHA512 18475cc76cc3b58e451faf7a57a0145a9b419cf3e4312627202d96982b066df48cbabcc9991b79a176c5180b90f019dc30114286ad5562c483759052cf63d945
                          # Fix linking order of protobuf libraries (backport of https://bitbucket.org/ignitionrobotics/ign-msgs/pull-requests/151)
-                         PATCHES fix-protobuf-static-link-order.patch)
+                         PATCHES
+                            fix-protobuf-static-link-order.patch
+                            fix-Add_std_string.patch)

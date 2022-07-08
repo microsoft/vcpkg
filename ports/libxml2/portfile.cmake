@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF a075d256fd9ff15590b86d981b75a50ead124fca
-    SHA512 bcf437b43357400f89e8766a23e841c090c48dfc1bdbb200971013e6c9ed082fb03759248547dfbd5dabf4b6887f69fed6ad790174ec206e20d47dfde2c875ab
+    REF 7846b0a677f8d3ce72486125fa281e92ac9970e8
+    SHA512 3b960e410cf812a94938cd31c317f9a8d4b2d5b3e148efb108f6dad86ce8c9553c0fe3b32dd68d15e3d5ada9db07b39f9e0b13906edf6ed1bb1cec4f137bca71
     HEAD_REF master
     PATCHES 
         disable-docs.patch
@@ -69,8 +69,6 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 endif()
@@ -91,5 +89,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xml2Conf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xml2Conf.sh")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

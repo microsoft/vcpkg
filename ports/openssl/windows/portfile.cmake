@@ -1,25 +1,34 @@
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-)
-
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
-set(OPENSSL_SHARED no-shared)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENSSL_SHARED shared)
+else()
+    set(OPENSSL_SHARED no-shared no-module)
 endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+set(ENV{AR} "${VCPKG_DETECTED_CMAKE_AR}")
+set(ENV{LD} "${VCPKG_DETECTED_CMAKE_LINKER}")
+
+# OpenSSL's buildsystem hardcodes certain PDB manipulations, so we cannot use Z7
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_RELEASE "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_RELEASE "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_DEBUG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
 
 set(CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
     no-ssl2
     no-tests
-    -utf-8
     ${OPENSSL_SHARED}
 )
 
@@ -51,7 +60,6 @@ file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-
     # Copy openssl sources.
     message(STATUS "Copying openssl release source files...")
     file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
@@ -62,6 +70,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+
+    set(ENV{CFLAGS} "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+    set(ENV{CXXFLAGS} "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}")
 
     message(STATUS "Configure ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
@@ -102,6 +115,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
 
+    set(ENV{CFLAGS} "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    set(ENV{CXXFLAGS} "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}")
+
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
@@ -125,8 +143,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
         message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
+        endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
@@ -139,10 +159,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(NOT VCPKG_BUILD_TYPE)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+    endif()
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
 endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")

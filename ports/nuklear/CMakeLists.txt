@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Nuklear LANGUAGES C CXX)
+project(Nuklear LANGUAGES C)
 
 option(INSTALL_EXAMPLE "Install the example code" OFF)
 option(INSTALL_DEMO "Install the demo code" OFF)

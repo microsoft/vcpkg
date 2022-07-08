@@ -1,10 +1,12 @@
 ## Installing and Using Packages Example: SQLite
 
+_Note: this old example uses Classic Mode, but most developers will be happier with Manifest Mode. See [Manifest Mode: CMake Example](manifest-mode-cmake.md) for an example of converting to Manifest Mode._
+
   - [Step 1: Install](#install)
   - [Step 2: Use](#use)
     - [VS/MSBuild Project (User-wide integration)](#msbuild)
     - [CMake (Toolchain file)](#cmake)
-    - [Other integration options](../users/integration.md)
+    - [Other integration options](../users/buildsystems/integration.md)
 
 ---
 <a name="install"></a>
