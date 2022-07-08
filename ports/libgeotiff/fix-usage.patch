@@ -1,0 +1,37 @@
+diff --git a/libgeotiff/cmake/project-config.cmake.in b/libgeotiff/cmake/project-config.cmake.in
+index 3690489..f0351e1 100644
+--- a/libgeotiff/cmake/project-config.cmake.in
++++ b/libgeotiff/cmake/project-config.cmake.in
+@@ -13,6 +13,9 @@
+ # @PROJECT_NAME_UPPER@_LIBRARY
+ # @PROJECT_NAME_UPPER@_LIBRARIES
+ 
++cmake_policy(PUSH)
++cmake_policy(SET CMP0012 NEW)
++
+ # Tell the user project where to find our headers and libraries
+ get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+ get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
+@@ -22,13 +25,14 @@ set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/bin")
+ unset (_ROOT)
+ unset (_DIR)
+ 
++include(CMakeFindDependencyMacro)
++@CONFIG_DEPENDENCIES@
++
+ set (@PROJECT_NAME@_LIBRARIES @GEOTIFF_LIBRARY_TARGET@)
+ if("@BUILD_SHARED_LIBS@")
+   set (@PROJECT_NAME@_SHARED_LIBRARIES ${@PROJECT_NAME@_LIBRARIES})
+ else()
+   set (@PROJECT_NAME@_STATIC_LIBRARIES ${@PROJECT_NAME@_LIBRARIES})
+-  include(CMakeFindDependencyMacro)
+-@CONFIG_DEPENDENCIES@
+ endif()
+ 
+ if(NOT @PROJECT_NAME@_FIND_QUIETLY)
+@@ -52,3 +56,5 @@ set (@PROJECT_NAME_UPPER@_FOUND 1)
+ set (@PROJECT_NAME_UPPER@_LIBRARIES ${@PROJECT_NAME@_LIBRARIES})
+ set (@PROJECT_NAME_UPPER@_INCLUDE_DIR ${@PROJECT_NAME@_INCLUDE_DIRS})
+ set (@PROJECT_NAME_UPPER@_LIBRARY ${@PROJECT_NAME@_LIBRARIES})
++
++cmake_policy(POP)
