@@ -50,6 +50,7 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
+        "boost-assign",
         "ffmpeg",
         "libmysql",
         {
@@ -58,7 +59,10 @@
           "features": [
             "gdal",
             "geojson",
+            "libarchive",
+            "liblas",
             "mpi",
+            "pdal",
             "python",
             "qt"
           ]
@@ -104,6 +108,18 @@
     },
     "geojson": {
       "description": "Convert Geo JSON format to vtkPolyData"
+    },
+    "libarchive": {
+      "description": "Support libarchive compilation",
+      "dependencies": [
+        "libarchive"
+      ]
+    },
+    "liblas": {
+      "description": "Support liblas compilation",
+      "dependencies": [
+        "liblas"
+      ]
     },
     "mpi": {
       "description": "MPI functionality for VTK",
@@ -159,6 +175,12 @@
           ],
           "platform": "windows"
         }
+      ]
+    },
+    "pdal": {
+      "description": "Support PDAL compilation",
+      "dependencies": [
+        "pdal"
       ]
     },
     "python": {

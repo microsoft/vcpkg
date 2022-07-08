@@ -20,3 +20,29 @@ index 228d246..41af04d 100644
  	    return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
            }
            else {
+diff --git a/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Controller.hpp b/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Controller.hpp
+index c5c15d0..1212aee 100644
+--- a/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Controller.hpp
++++ b/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Controller.hpp
+@@ -30,7 +30,7 @@
+ 
+ // So that hdf5 does not need to be included in the header files
+ // It would add a dependancy to programs that use Xdmf
+-#ifndef _H5Ipublic_H
++#ifndef H5Ipublic_H
+   #ifndef XDMF_HID_T
+   #define XDMF_HID_T
+     typedef int hid_t;
+diff --git a/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Writer.hpp b/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Writer.hpp
+index cfbec6f..d690da7 100644
+--- a/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Writer.hpp
++++ b/ThirdParty/xdmf3/vtkxdmf3/core/XdmfHDF5Writer.hpp
+@@ -31,7 +31,7 @@
+ 
+ // So that hdf5 does not need to be included in the header files
+ // It would add a dependancy to programs that use Xdmf
+-#ifndef _H5Ipublic_H
++#ifndef H5Ipublic_H
+   #ifndef XDMF_HID_T
+   #define XDMF_HID_T
+     typedef int hid_t;

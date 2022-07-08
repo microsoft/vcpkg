@@ -1,0 +1,148 @@
+diff --git a/ThirdParty/mpi4py/vtkmpi4py/src/mpi4py.MPI.c b/ThirdParty/mpi4py/vtkmpi4py/src/mpi4py.MPI.c
+index d01c266..0220249 100644
+--- a/ThirdParty/mpi4py/vtkmpi4py/src/mpi4py.MPI.c
++++ b/ThirdParty/mpi4py/vtkmpi4py/src/mpi4py.MPI.c
+@@ -154207,9 +154207,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Datatype(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_8Datatype_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -154497,9 +154497,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Request(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_7Request_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   Py_CLEAR(p->ob_buf);
+@@ -154877,9 +154877,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Message(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_7Message_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   Py_CLEAR(p->ob_buf);
+@@ -155073,9 +155073,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Op(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_2Op_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -155260,9 +155260,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Group(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_5Group_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -155456,9 +155456,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Info(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_4Info_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -155675,9 +155675,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Errhandler(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_10Errhandler_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -155845,9 +155845,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Comm(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_4Comm_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -156860,9 +156860,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_Win(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_3Win_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   Py_CLEAR(p->ob_mem);
+@@ -157166,9 +157166,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_File(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_4File_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -157436,9 +157436,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI_memory(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_6memory_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);
+@@ -157609,9 +157609,9 @@ static void __pyx_tp_dealloc_6mpi4py_3MPI__p_mem(PyObject *o) {
+   {
+     PyObject *etype, *eval, *etb;
+     PyErr_Fetch(&etype, &eval, &etb);
+-    ++Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) + 1);
+     __pyx_pw_6mpi4py_3MPI_6_p_mem_3__dealloc__(o);
+-    --Py_REFCNT(o);
++    Py_SET_REFCNT(o, Py_REFCNT(o) - 1);
+     PyErr_Restore(etype, eval, etb);
+   }
+   (*Py_TYPE(o)->tp_free)(o);

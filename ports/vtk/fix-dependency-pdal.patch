@@ -1,0 +1,19 @@
+diff --git a/IO/PDAL/CMakeLists.txt b/IO/PDAL/CMakeLists.txt
+index d6cd57c..1270dfb 100644
+--- a/IO/PDAL/CMakeLists.txt
++++ b/IO/PDAL/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-vtk_module_find_package(PACKAGE PDAL)
++vtk_module_find_package(PACKAGE PDAL CONFIG_MODE)
+ 
+ set(classes
+   vtkPDALReader)
+@@ -7,7 +7,7 @@ vtk_module_add_module(VTK::IOPDAL
+   CLASSES ${classes})
+ vtk_module_link(VTK::IOPDAL
+   PRIVATE
+-    pdal_base)
++    ${PDAL_LIBRARIES})
+ # XXX(pdal): PDAL should add include interfaces to its exported targets. See
+ # https://github.com/PDAL/PDAL/issues/2262.
+ vtk_module_include(VTK::IOPDAL

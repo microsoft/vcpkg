@@ -30,6 +30,8 @@ vcpkg_from_github(
         fix-gdal.patch
         missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
         UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
+        fix-mpi4py.patch
+        fix-dependency-pdal.patch
 )
 
 # =============================================================================
@@ -63,6 +65,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
         "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
+        "pdal"        VTK_MODULE_ENABLE_VTK_IOPDAL
         "python"      VTK_MODULE_ENABLE_VTK_Python
         "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
@@ -87,6 +90,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
+        "libarchive"  VTK_MODULE_ENABLE_VTK_CommonArchive
 )
 
 # Replace common value to vtk value
@@ -176,6 +180,19 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
+        -DVTK_ENABLE_OSPRAY=OFF # Requires ospray
+        -DVTK_ENABLE_VISRTX=OFF # Requires visrtx
+        # Requires adios2
+        -DVTK_MODULE_ENABLE_VTK_IOADIOS2=DONT_WANT 
+        -DVTK_MODULE_ENABLE_VTK_fides=DONT_WANT
+        -DVTK_MODULE_ENABLE_VTK_IOFides=DONT_WANT
+
+        -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=DONT_WANT # Requires OpenTURNS
+        -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=DONT_WANT # Requires OpenSlide
+        -DVTK_MODULE_ENABLE_VTK_IOMySQL=DONT_WANT # Requires upstream update libmysql, see https://bugs.mysql.com/bug.php?id=85131
+        # Requires ioss
+        -DVTK_MODULE_ENABLE_VTK_ioss=DONT_WANT
+        -DVTK_MODULE_ENABLE_VTK_IOIoss=DONT_WANT
     MAYBE_UNUSED_VARIABLES
         VTK_MODULE_ENABLE_VTK_PythonContext2D
 )
