@@ -69,8 +69,10 @@ foreach(file_name IN LISTS files)
 endforeach()
 
 # Remove libd to lib, libd just has cmake files we dont want too
+if( WIN32 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -1,18 +1,26 @@
 {
   "name": "assimp",
-  "version-string": "5.0.1",
-  "port-version": 5,
+  "version": "5.2.4",
   "description": "The Open Asset import library",
   "homepage": "https://github.com/assimp/assimp",
+  "license": "BSD-3-Clause",
   "dependencies": [
-    "irrlicht",
+    "draco",
     "kubazip",
     "minizip",
     "poly2tri",
-    "polyclipping",
+    "pugixml",
     "rapidjson",
     "stb",
     "utfcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }
