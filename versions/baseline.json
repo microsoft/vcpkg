@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -2963,7 +2962,7 @@
     },
     "imgui": {
       "baseline": "1.88",
-      "port-version": 0
+      "port-version": 1
     },
     "imgui-sfml": {
       "baseline": "2.5",
