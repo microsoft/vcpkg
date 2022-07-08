@@ -4965,8 +4965,8 @@
       "port-version": 0
     },
     "nuklear": {
-      "baseline": "2021-03-18",
-      "port-version": 1
+      "baseline": "2022-05-12",
+      "port-version": 0
     },
     "numactl": {
       "baseline": "2.0.14",
