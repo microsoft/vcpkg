@@ -11,7 +11,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  GENERATOR Ninja
   OPTIONS
     -DEZ_3RDPARTY_ENET_SUPPORT=OFF
     -DEZ_3RDPARTY_ZSTD_SUPPORT=OFF
