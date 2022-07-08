@@ -28,16 +28,10 @@
   ],
   "features": {
     "jpeg": {
-      "description": "Support for jpeg",
-      "dependencies": [
-        "libjpeg-turbo"
-      ]
+      "description": "This feature does nothing. It is retained for compatibility."
     },
     "zlib": {
-      "description": "Support zlib for compression",
-      "dependencies": [
-        "zlib"
-      ]
+      "description": "This feature does nothing. It is retained for compatibility."
     }
   }
 }
