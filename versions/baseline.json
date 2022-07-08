@@ -3429,8 +3429,8 @@
       "port-version": 0
     },
     "libaiff": {
-      "baseline": "5.0",
-      "port-version": 7
+      "baseline": "6.0",
+      "port-version": 0
     },
     "libalkimia": {
       "baseline": "8.1.70",
