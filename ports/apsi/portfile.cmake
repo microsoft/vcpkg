@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/APSI
-    REF 2b61950707ca8759e31eb889081fdcd48f0a1e6c #0.8.1
-    SHA512 020b1a81c7d72a8e58fe8d950b2dd05b4c5105dcece860f3ee0607889f903a5fa06256af6731f103acec7f462c17a00c87566d47ecb1b2afeec535e5bbdf9c0f
+    REF ba71aeb28a9f21e4ad59c45aa88232b099ce0b87 #0.8.2
+    SHA512 810bcbe0afa3d1c9d299a85bc4266135bdf9adc33bfc754c59731f6cfa6a89d449fb134cef34c4614742bd50e9f8f3916e5b64998dcea69883ca27b7da3c5f04
     HEAD_REF main
 )
 
@@ -14,6 +14,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zeromq APSI_USE_ZMQ
 )
 
+set(CROSSCOMP_OPTIONS "")
+if (NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET)
+    if (TARGET_TRIPLET MATCHES "^arm64.*")
+        set(CROSSCOMP_OPTIONS -DAPSI_FOURQ_ARM64_EXITCODE=0 -DAPSI_FOURQ_ARM64_EXITCODE__TRYRUN_OUTPUT="")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -21,6 +28,7 @@ vcpkg_cmake_configure(
         "-DAPSI_BUILD_TESTS=OFF"
         "-DAPSI_BUILD_CLI=OFF"
         ${FEATURE_OPTIONS}
+        ${CROSSCOMP_OPTIONS}
 )
 
 vcpkg_cmake_install()
