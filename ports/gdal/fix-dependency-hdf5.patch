@@ -1,0 +1,29 @@
+diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
+index 7fa3b56..ade5494 100644
+--- a/cmake/helpers/CheckDependentLibraries.cmake
++++ b/cmake/helpers/CheckDependentLibraries.cmake
+@@ -494,7 +494,10 @@ if (GDAL_USE_LIBKML)
+ endif ()
+ 
+ # CXX is only needed for KEA driver
+-gdal_check_package(HDF5 "Enable HDF5" COMPONENTS "C" "CXX" CAN_DISABLE)
++gdal_check_package(HDF5 NAMES hdf5 CONFIG "Enable HDF5" COMPONENTS "C" "CXX" CAN_DISABLE)
++if (HDF5_FOUND)
++    set(HDF5_C_LIBRARIES $<IF:$<TARGET_EXISTS:hdf5::hdf5-shared>,hdf5::hdf5-shared,hdf5::hdf5-static>)
++endif()
+ 
+ gdal_check_package(WebP "WebP compression" CAN_DISABLE)
+ gdal_check_package(FreeXL "Enable XLS driver" CAN_DISABLE)
+diff --git a/frmts/hdf5/CMakeLists.txt b/frmts/hdf5/CMakeLists.txt
+index 4b85797..919f061 100644
+--- a/frmts/hdf5/CMakeLists.txt
++++ b/frmts/hdf5/CMakeLists.txt
+@@ -24,7 +24,7 @@ if (WIN32)
+   target_compile_definitions(gdal_HDF5 PRIVATE -DWIN32)
+ endif ()
+ target_include_directories(gdal_HDF5 SYSTEM PRIVATE ${HDF5_INCLUDE_DIRS})
+-gdal_target_link_libraries(gdal_HDF5 PRIVATE ${HDF5_C_LIBRARIES})
++target_link_libraries(gdal_HDF5 PRIVATE ${HDF5_C_LIBRARIES})
+ 
+ if (HDF5_BUILD_SHARED_LIBS)
+   target_compile_definitions(gdal_HDF5 PRIVATE -DH5_BUILT_AS_DYNAMIC_LIB)
