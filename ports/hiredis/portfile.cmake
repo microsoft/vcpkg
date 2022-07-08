@@ -41,18 +41,13 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hiredis/hiredis.h"
 [[typedef long long ssize_t;
 #define _SSIZE_T_ /* for compatibility with libuv */]]
-[[#if !defined(_SSIZE_T_) && !defined(_SSIZE_T_DEFINED)
-typedef long long ssize_t;
-#define _SSIZE_T_ /* for compatibility with libuv */
-#endif]]
+[[typedef intptr_t ssize_t;]]
 )
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hiredis/sds.h"
 [[typedef long long ssize_t;
 #define SSIZE_MAX (LLONG_MAX >> 1)]]
-[[#if !defined(_SSIZE_T_) && !defined(_SSIZE_T_DEFINED)
-typedef long long ssize_t;
-#define SSIZE_MAX (LLONG_MAX >> 1)
-#endif]]
+[[typedef intptr_t ssize_t;
+#define SSIZE_MAX INTPTR_MAX]]
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
