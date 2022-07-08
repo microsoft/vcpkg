@@ -56,11 +56,11 @@ install(FILES ${headers} DESTINATION include/readline)
 target_include_directories(readline PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
 
 install(TARGETS readline
-    EXPORT unofficial-readline-win32Config
+    EXPORT unofficial-readline-win32-config
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-install(EXPORT unofficial-readline-win32Config
-    NAMESPACE unofficial::readline::
+install(EXPORT unofficial-readline-win32-config
+    NAMESPACE unofficial::readline-win32::
     DESTINATION share/unofficial-readline-win32)

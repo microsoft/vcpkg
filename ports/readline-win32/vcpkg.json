@@ -3,7 +3,7 @@
   "version": "5.0",
   "port-version": 5,
   "description": "Implementation of readline for Windows Desktop",
-  "homepage": "https://github.com/lltcggie",
+  "homepage": "https://github.com/lltcggie/readline",
   "license": null,
   "supports": "windows & !uwp",
   "dependencies": [
