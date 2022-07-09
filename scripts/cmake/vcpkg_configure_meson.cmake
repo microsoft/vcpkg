@@ -261,9 +261,6 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
     z_vcpkg_append_proglist(cross_file "${additional_binaries}")
 
     string(APPEND cross_file "[properties]\n")
-    if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
-        string(APPEND cross_file "ipc_rmid_deferred_release = true\n")
-    endif()
 
     string(APPEND cross_file "[host_machine]\n")
     string(APPEND cross_file "endian = 'little'\n")
