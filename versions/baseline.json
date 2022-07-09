@@ -2325,7 +2325,7 @@
       "port-version": 4
     },
     "fmt": {
-      "baseline": "8.1.1",
+      "baseline": "9.0.0",
       "port-version": 2
     },
     "folly": {
