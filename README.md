@@ -293,10 +293,20 @@ depending on the shell you use, then restart your console.
 
 # Examples
 
-See the [documentation](docs/README.md) for specific walkthroughs,
-including [installing and using a package](docs/examples/installing-and-using-packages.md),
-[adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
-and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
+```
+vcpkg install mongoose[ssl]:x64-windows-static
+             |        |    | 
+             package  |    target
+                      |
+                      feature
+```
+
+For more in depth examples please check these out:
+
+- See the [documentation](docs/README.md) for specific walkthroughs, including
+  - [installing and using a package](docs/examples/installing-and-using-packages.md),
+  - [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
+  - [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
 Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
