@@ -301,8 +301,6 @@ vcpkg install mongoose[ssl]:x64-windows-static
                       feature
 ```
 
-For more in depth examples please check these out:
-
 - See the [documentation](docs/README.md) for specific walkthroughs, including
   - [installing and using a package](docs/examples/installing-and-using-packages.md),
   - [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
