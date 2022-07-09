@@ -347,6 +347,17 @@ function(vcpkg_configure_meson)
 
     vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_MESON_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG})
+    endif()
+
     if(NOT vcpkg_meson_cross_file)
         z_vcpkg_meson_generate_cross_file("${arg_ADDITIONAL_CROSS_BINARIES}")
     endif()
