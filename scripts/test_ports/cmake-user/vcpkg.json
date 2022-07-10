@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-06-11",
+  "version-date": "2022-07-02",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -15,7 +15,8 @@
           "default-features": false,
           "features": [
             "cmake-current",
-            "find-package"
+            "find-package",
+            "pkg-check-modules"
           ]
         },
         {
@@ -127,6 +128,16 @@
           "$package": "ZLIB",
           "name": "zlib"
         }
+      ]
+    },
+    "pkg-check-modules": {
+      "description": "Test `find_package(PkgConfig)` and pkg_check_modules(...)",
+      "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
+        "zlib"
       ]
     }
   }

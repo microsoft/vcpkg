@@ -4,6 +4,7 @@ vcpkg_from_github(
     REPO Tencent/rapidjson
     REF 232389d4f1012dddec4ef84861face2d2ba85709 # accessed on 2022-06-28
     SHA512 0d7d751179abdaa6ebf6167d522651a2d13bc024d20c7e3f775c7397a8aab4cd866a6c91a55521ad7847e910822fcf982625c7308c74f5df663e6fd81336c9fc
+    FILE_DISAMBIGUATOR 2
     HEAD_REF master
 )
 
