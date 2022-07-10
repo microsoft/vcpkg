@@ -1,0 +1,9 @@
+liblas provides CMake targets:
+
+    # C API
+    find_package(liblas CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE las_c)
+
+    # C++ API
+    find_package(liblas CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE las)
