@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-boost-headers.patch
+        fix-cmake-config.patch
         misc-fixes.patch
 )
 
