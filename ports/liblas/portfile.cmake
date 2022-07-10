@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(VERSION 1.8.1)
                                               
 vcpkg_download_distfile(ARCHIVE
@@ -33,7 +35,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
