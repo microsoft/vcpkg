@@ -3137,7 +3137,7 @@
       "port-version": 0
     },
     "jsonnet": {
-      "baseline": "0.17.0",
+      "baseline": "0.18.0",
       "port-version": 0
     },
     "jwt-cpp": {
