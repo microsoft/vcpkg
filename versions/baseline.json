@@ -3808,6 +3808,10 @@
       "baseline": "1.5.0",
       "port-version": 4
     },
+    "libmicrodns": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "libmicrohttpd": {
       "baseline": "0.9.75",
       "port-version": 0
