@@ -2,13 +2,18 @@
 ## This file defines the current expected build state of ports in CI.
 ##
 ## States
-##   pass - (default) the port builds in the CI system.  If a port is
-##          missing from this file then it is assumed to build.
-##   fail - the port does not build in the CI system.
+##   <unspecified> (default) -
+##          If a port is missing from this file then it is assumed
+##          to build successfully if not blocked by a dependency.
+##   pass - The port must build successfully in the CI system. It is a hard
+##          error if the port build is blocked by a failed dependency.
+##   fail - The port build is expected to fail in the CI system.
 ##          This is not necessarily the same as if a port is expected to build
 ##          on a developers machine because it may fail due to the machine
-##          configuration.  When set to fail the CI system will still attempt
-##          to build the port and will report a CI failure until this file is updated.
+##          configuration. When set to fail the CI system will silently skip
+##          the port for pull request CI runs. But the CI system will still
+##          attempt to build the port in scheduled runs, reporting unexpected
+##          build success as a CI failure.
 ##   skip - Do not build this port in the CI system.
 ##          This is added to ports that may be flaky or conflict with other
 ##          ports.  Please comment for why a port is skipped so it can be
@@ -104,8 +109,6 @@ charls:x64-windows=skip
 charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
-chmlib:arm-uwp=fail
-chmlib:x64-uwp=fail
 # chartdir does not offer stable download URLs
 chartdir:arm64-windows=skip
 chartdir:arm-uwp=skip
@@ -203,15 +206,6 @@ dlib:arm-uwp=fail
 dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
-dpdk:arm-uwp=fail
-dpdk:arm64-windows=fail
-dpdk:x64-linux=fail
-dpdk:x64-osx=fail
-dpdk:x64-uwp=fail
-dpdk:x64-windows-static=fail
-dpdk:x64-windows-static-md=fail
-dpdk:x64-windows=fail
-dpdk:x86-windows=fail
 
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
@@ -265,16 +259,15 @@ foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
 forge:x86-windows=fail
-freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
 ftgl:x64-uwp=fail
+ftgl:arm-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
-fuzzylite:x64-osx=fail
 
 gazebo:x64-linux=fail
 # gsoap does not offer stable public source downloads
@@ -305,10 +298,7 @@ gherkin-c:x64-windows           = skip
 gherkin-c:x64-windows-static    = skip
 gherkin-c:x64-windows-static-md = skip
 gherkin-c:x86-windows           = skip
-gl3w:arm64-windows=fail
-gl3w:arm-uwp=fail
 glew:arm64-windows=fail
-glew:arm-uwp=fail
 glfw3:arm-uwp=fail
 glfw3:x64-uwp=fail
 glib:x64-uwp=fail
@@ -324,7 +314,6 @@ gmmlib:x86-windows=fail
 
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
-gppanel:x64-osx=fail
 gperftools:arm64-windows=fail
 gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
@@ -333,7 +322,6 @@ graphicsmagick:x64-uwp=fail
 gstreamer:x64-osx=fail
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
-gts:x64-osx=fail
 halide:x64-windows-static=fail
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
@@ -381,14 +369,6 @@ intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
-isal:arm64-windows=fail
-isal:arm-uwp=fail
-isal:x64-osx=fail
-isal:x64-uwp=fail
-isal:x64-windows=fail
-isal:x64-windows-static=fail
-isal:x64-windows-static-md=fail
-isal:x86-windows=fail
 jemalloc:arm64-windows=fail
 jemalloc:arm-uwp=fail
 jemalloc:x64-linux=fail
@@ -402,9 +382,6 @@ kfr:arm-uwp=fail
 kfr:x64-linux=fail
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
-laszip:arm-uwp=fail
-laszip:x64-uwp=fail
-lcm:x64-osx=fail
 leptonica:x64-uwp=fail
 leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
@@ -583,6 +560,10 @@ linenoise-ng:x64-uwp=fail
 live555:arm-uwp=fail
 live555:x64-osx=fail
 live555:x64-uwp=fail
+# fails due to an upstream bug
+llfio:arm64-windows=fail
+# fails due to an outdated gcc version
+llfio:x64-linux=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
 log4cplus:arm-uwp=fail
@@ -602,6 +583,7 @@ marble:arm-uwp=fail
 marble:x64-linux=fail
 marble:x64-osx=fail
 marble:x86-windows=fail
+mathgl:arm-uwp=fail
 mathgl:x64-osx=fail
 mathgl:x64-uwp=fail
 mecab:arm64-windows      = skip
@@ -638,6 +620,12 @@ microsoft-signalr:x64-windows-static-md=skip
 microsoft-signalr:x86-windows=skip
 # https://github.com/mlpack/mlpack/pull/2945
 mlpack:x64-uwp=fail
+ms-quic:arm-uwp=fail
+ms-quic:arm64-windows=fail
+ms-quic:x64-uwp=fail
+ms-quic:x64-windows-static-md=fail
+ms-quic:x64-windows=fail
+ms-quic:x86-windows=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
 mmx:x64-windows=skip
 mmx:x64-windows-static=skip
@@ -777,6 +765,7 @@ opencensus-cpp:x86-windows=fail
 opencensus-cpp:x64-uwp=fail
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
+opencsg:arm-uwp=fail
 opencsg:x64-uwp=fail
 opencv2:arm64-windows      = skip
 opencv2:arm-uwp            = skip
@@ -801,22 +790,13 @@ opendnp3:arm-uwp=fail
 openexr:arm64-windows=fail
 openexr:arm-uwp=fail
 openexr:x64-uwp=fail
-opengl:arm64-windows=fail
-opengl:arm-uwp=fail
+opengl:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599
 openmama:x64-windows-static-md=fail
 openmesh:arm64-windows=fail
 openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
-openmpi:arm64-windows=fail
-openmpi:arm-uwp=fail
-openmpi:x64-uwp=fail
-openmpi:x64-windows=fail
-openmpi:x64-windows-static=fail
-openmpi:x64-windows-static-md=fail
-openmpi:x86-windows=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
-openscap:x64-linux=fail
 openscap:x64-osx=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
@@ -986,12 +966,6 @@ rtlsdr:arm-uwp=fail
 rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 
-# rttr's build fails in CI with
-# D:\buildtrees\rttr\src\v0.9.6-9229bdee1f.clean\src\rttr\detail\library\library_win.cpp(236): error C3861: 'LoadLibraryW': identifier not found
-# .... but it succeeds when I try building it locally.
-rttr:arm-uwp=fail
-rttr:x64-uwp=fail
-
 # ryu does not support VS2022 yet
 ryu:x64-windows=fail
 ryu:x64-windows-static=fail
@@ -1020,13 +994,9 @@ sdl2-mixer:arm-uwp=fail
 sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
 sdl2-net:x64-uwp=fail
-# https://github.com/microsoft/vcpkg/issues/10918
-seal:arm-uwp=fail
-seal:x64-uwp=fail
 septag-sx:arm64-windows=fail
 septag-sx:arm-uwp=fail
 septag-sx:x64-uwp=fail
-sfml:arm64-windows=fail
 shiva:x64-windows-static=fail
 shiva:x64-windows-static-md=fail
 shiva-sfml:x64-linux=fail
@@ -1139,7 +1109,6 @@ torch-th:arm64-windows=fail
 torch-th:arm-uwp=fail
 torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
-tre:x64-osx=fail
 treehopper:x64-windows-static=fail
 treehopper:x64-linux=fail
 unicorn-lib:arm-uwp=fail
@@ -1186,8 +1155,10 @@ winpcap:x64-windows-static-md=skip
 winpcap:x86-windows        = skip
 winreg:x64-linux=fail
 winreg:x64-osx=fail
+winsock2:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599
 wpilib:arm64-windows=fail
 wpilib:x64-osx=fail
+wincrypt:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599
 wxchartdir:x64-osx=fail
 wxwidgets:x64-linux=fail
 x265:arm64-windows=fail
@@ -1261,6 +1232,14 @@ angle:x64-uwp=fail
 angle:arm64-windows=fail
 angle:arm-uwp=fail
 
+cmake-user:arm-uwp=pass
+cmake-user:arm64-windows=pass
+cmake-user:x64-linux=pass
+cmake-user:x64-osx=pass
+cmake-user:x64-windows-static-md=pass
+cmake-user:x64-windows-static=pass
+cmake-user:x64-windows=pass
+cmake-user:x86-windows=pass
 vcpkg-ci-boost:x64-linux=pass
 vcpkg-ci-boost:x64-windows-static-md=pass
 vcpkg-ci-boost:x64-windows-static=pass

@@ -61,7 +61,7 @@ index 7b6f0ad..18cf15c 100644
    #
 @@ -581,6 +589,7 @@ IF(zstd_FOUND)
    LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_static)
-   SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)  
+   SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)
    ENDIF(TARGET zstd::libzstd_shared)
 +  STRING(APPEND LIBARCHIVE_REQUIRES_PRIVATE " libzstd")
  ENDIF(ZSTD_FOUND)

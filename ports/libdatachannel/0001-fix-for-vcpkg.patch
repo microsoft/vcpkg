@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8907872..31d8836 100644
+index 28b4566..4347b6a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -28,7 +28,6 @@ endif()
@@ -10,7 +10,7 @@ index 8907872..31d8836 100644
  
  if(WIN32)
  	add_definitions(-DWIN32_LEAN_AND_MEAN)
-@@ -201,12 +200,13 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+@@ -200,12 +199,14 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
@@ -22,11 +22,12 @@ index 8907872..31d8836 100644
  if(SCTP_DEBUG)
  	add_definitions(-DSCTP_DEBUG)
  endif()
++
 +if(0)
- option(sctp_build_programs 0)
- option(sctp_build_shared_lib 0)
- set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-@@ -218,8 +218,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+ option(sctp_build_shared_lib OFF)
+ option(sctp_build_programs OFF)
+ option(sctp_inet OFF)
+@@ -219,8 +220,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
      target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
  endif()
  add_library(Usrsctp::Usrsctp ALIAS usrsctp)
@@ -37,7 +38,7 @@ index 8907872..31d8836 100644
  	${LIBDATACHANNEL_SOURCES}
  	${LIBDATACHANNEL_HEADERS}
  	${LIBDATACHANNEL_IMPL_SOURCES}
-@@ -243,16 +244,18 @@ target_include_directories(datachannel PUBLIC
+@@ -244,16 +246,18 @@ target_include_directories(datachannel PUBLIC
      $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -58,4 +59,3 @@ index 8907872..31d8836 100644
  
  if(WIN32)
  	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
- 
