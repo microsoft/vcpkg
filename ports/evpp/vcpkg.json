@@ -1,7 +1,7 @@
 {
   "name": "evpp",
-  "version-string": "0.7.0",
-  "port-version": 5,
+  "version": "0.7.0",
+  "port-version": 6,
   "description": "A modern C++ network library based on libevent for developing high performance network services in TCP/UDP/HTTP protocols.",
   "homepage": "https://github.com/Qihoo360/evpp",
   "dependencies": [

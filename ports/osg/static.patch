@@ -1,7 +1,0 @@
---- a/src/osgPlugins/curl/CMakeLists.txt
-+++ b/src/osgPlugins/curl/CMakeLists.txt
-@@ -35,3 +35,3 @@
-         ADD_DEFINITIONS(-DCURL_STATICLIB)
--        SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ws2_32 winmm wldap32)
-+        SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ws2_32 winmm wldap32 crypt32)
-     ENDIF()
