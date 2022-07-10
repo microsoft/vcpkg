@@ -100,12 +100,27 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     # just ignore them. 
     string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
     string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
+
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        # macOS and iOS - append arch and isysroot if cross-compiling
+        if(NOT "${VCPKG_OSX_ARCHITECTURES}" STREQUAL "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+            foreach(arch IN LISTS VCPKG_OSX_ARCHITECTURES)
+                string(APPEND CPPFLAGS_${flag_suffix} " -arch ${arch}")
+            endforeach()
+        endif()
+        if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)
+            string(APPEND CPPFLAGS_${flag_suffix} " -isysroot ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+        endif()
+    endif()
+
     string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
     string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
     string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
+
     debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
     debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
+    debug_message("LDFLAGS_${flag_suffix}: ${LDFLAGS_${flag_suffix}}")
 endmacro()
 
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
@@ -432,7 +447,7 @@ function(vcpkg_configure_make)
     endif()
 
     # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)

@@ -137,7 +137,7 @@ function(z_vcpkg_meson_generate_flags_properties_string out_var config_type)
         set(linker_flags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${config_type}}")
     endif()
     z_vcpkg_meson_convert_compiler_flags_to_list(linker_flags "${linker_flags}")
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         # macOS - append arch and isysroot if cross-compiling
         if(NOT "${VCPKG_OSX_ARCHITECTURES}" STREQUAL "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
             foreach(arch IN LISTS VCPKG_OSX_ARCHITECTURES)
