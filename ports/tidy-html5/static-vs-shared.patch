@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d2edac2..979ae25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -395,11 +395,11 @@ endif ()
+ 
+ #------------------------------------------------------------------------
+ # Static Library
+-#   The static library always builds.
++if(NOT BUILD_SHARED_LIB)
+ #------------------------------------------------------------------------
+ set(name tidy-static)
+ add_library ( ${name} STATIC ${CFILES} ${HFILES} ${LIBHFILES} )
+-if (WIN32)
++if (0)
+     set_target_properties( ${name} PROPERTIES 
+                            OUTPUT_NAME ${LIB_NAME}_static ) 
+ else ()
+@@ -415,12 +415,14 @@ install(TARGETS ${name}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+         )
+-install( FILES ${HFILES} DESTINATION ${INCLUDE_INSTALL_DIR} )
+ if(MSVC)
+     # install(FILES $<TARGET_PDB_FILE:${name}> DESTINATION lib OPTIONAL)
+     INSTALL(FILES ${PROJECT_BINARY_DIR}/${name}.dir/Debug/${name}.pdb
++    OPTIONAL
+     DESTINATION lib CONFIGURATIONS Debug )
+ endif()
++endif()
++install( FILES ${HFILES} DESTINATION ${INCLUDE_INSTALL_DIR} )
+ 
+ #------------------------------------------------------------------------
+ # Dynamic Library
