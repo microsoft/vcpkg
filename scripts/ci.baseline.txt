@@ -369,6 +369,7 @@ intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
+isal:x64-linux=skip
 jemalloc:arm64-windows=fail
 jemalloc:arm-uwp=fail
 jemalloc:x64-linux=fail
