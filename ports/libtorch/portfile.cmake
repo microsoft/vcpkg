@@ -13,7 +13,9 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
-find_package(Python3 REQUIRED COMPONENTS Interpreter)
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 # run `pip install ${package}`
 function(pip_install)
