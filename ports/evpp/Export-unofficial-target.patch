@@ -22,20 +22,40 @@ index d325df7..b02d37c 100644
 +configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-evpp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-evpp-config.cmake" @ONLY)
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-evpp-config.cmake DESTINATION "share/unofficial-evpp")
 diff --git a/apps/evmc/CMakeLists.txt b/apps/evmc/CMakeLists.txt
-index 9918919..96147ae 100644
+index 9918919..d14e1e3 100644
 --- a/apps/evmc/CMakeLists.txt
 +++ b/apps/evmc/CMakeLists.txt
-@@ -9,30 +9,35 @@ add_library(evmc_static STATIC ${evmc_SRCS})
+@@ -7,33 +7,37 @@ file(GLOB evmc_PUBLIC_HEADERS *.h)
+ 
+ add_library(evmc_static STATIC ${evmc_SRCS})
  target_link_libraries(evmc_static ${LIBRARIES})
++TARGET_INCLUDE_DIRECTORIES(evmc_static INTERFACE $<INSTALL_INTERFACE:include>)
++install (
++  TARGETS evmc_static
++  EXPORT  unofficial-evpp-target
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib)
  
  if (UNIX)
 -    add_library(evmc SHARED ${evmc_SRCS})
 -    target_link_libraries(evmc ${LIBRARIES})
+-
 +    if(BUILD_SHARED_LIBS)
 +      add_library(evmc SHARED ${evmc_SRCS})
 +      target_link_libraries(evmc ${LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evmc INTERFACE $<INSTALL_INTERFACE:include>)
++      set_target_properties (
++          evmc PROPERTIES
++          VERSION     "${PACKAGE_VERSION}"
++          SOVERSION   "${PACKAGE_SOVERSION}"
++      )    
++      install (
++        TARGETS evmc
++        EXPORT  unofficial-evpp-target
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
 +    endif()
- 
      set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
      include (utils)
      include (packages)
@@ -49,46 +69,54 @@ index 9918919..96147ae 100644
 -      TARGETS evmc
 -      LIBRARY DESTINATION lib
 -      ARCHIVE DESTINATION lib)
-+    
-+    if(BUILD_SHARED_LIBS)
-+      set_target_properties (
-+          evmc evnsq PROPERTIES
-+          VERSION     "${PACKAGE_VERSION}"
-+          SOVERSION   "${PACKAGE_SOVERSION}"
-+      )    
-+      install (
-+        TARGETS evmc
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib)
-+    endif()
  endif (UNIX)
  
- install (
-   TARGETS evmc_static
-+  EXPORT  unofficial-evpp-target
-   LIBRARY DESTINATION lib
-   ARCHIVE DESTINATION lib)
+-install (
+-  TARGETS evmc_static
+-  LIBRARY DESTINATION lib
+-  ARCHIVE DESTINATION lib)
  install (FILES ${evmc_PUBLIC_HEADERS} DESTINATION "include/evmc")
--
-+TARGET_INCLUDE_DIRECTORIES(evmc_static INTERFACE $<INSTALL_INTERFACE:include>)
  
+-
  if (NOT EVPP_VCPKG_BUILD)
      add_subdirectory(test)
+ endif ()
+\ No newline at end of file
 diff --git a/apps/evnsq/CMakeLists.txt b/apps/evnsq/CMakeLists.txt
-index c510814..3ff2a3e 100644
+index c510814..32dddad 100644
 --- a/apps/evnsq/CMakeLists.txt
 +++ b/apps/evnsq/CMakeLists.txt
-@@ -5,29 +5,35 @@ add_library(evnsq_static STATIC ${evnsq_SRCS})
+@@ -3,30 +3,35 @@ file(GLOB evnsq_PUBLIC_HEADERS *.h)
+ 
+ add_library(evnsq_static STATIC ${evnsq_SRCS})
  target_link_libraries(evnsq_static ${LIBRARIES})
++TARGET_INCLUDE_DIRECTORIES(evnsq_static INTERFACE $<INSTALL_INTERFACE:include>)
++install (
++  TARGETS evnsq_static
++  EXPORT  unofficial-evpp-target
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib)
  
  if (UNIX)
 -    add_library(evnsq SHARED ${evnsq_SRCS})
 -    target_link_libraries(evnsq ${LIBRARIES})
+-
 +    if(BUILD_SHARED_LIBS)
 +      add_library(evnsq SHARED ${evnsq_SRCS})
 +      target_link_libraries(evnsq ${LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evnsq INTERFACE $<INSTALL_INTERFACE:include>)
++      set_target_properties (
++          evnsq PROPERTIES
++          VERSION     "${PACKAGE_VERSION}"
++          SOVERSION   "${PACKAGE_SOVERSION}"
++      )    
++      install (
++        TARGETS evnsq
++        EXPORT  unofficial-evpp-target
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
 +    endif()
- 
      set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
      include (utils)
      include (packages)
@@ -97,40 +125,34 @@ index c510814..3ff2a3e 100644
 -        VERSION     "${PACKAGE_VERSION}"
 -        SOVERSION   "${PACKAGE_SOVERSION}"
 -    )
- 
+-
 -    install (
 -      TARGETS evnsq
 -      LIBRARY DESTINATION lib
 -      ARCHIVE DESTINATION lib)
-+    if(BUILD_SHARED_LIBS)
-+      set_target_properties (
-+          evnsq PROPERTIES
-+          VERSION     "${PACKAGE_VERSION}"
-+          SOVERSION   "${PACKAGE_SOVERSION}"
-+      )    
-+      install (
-+        TARGETS evnsq
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib)
-+    endif()
  endif (UNIX)
  
- install (
-   TARGETS evnsq_static
-+  EXPORT  unofficial-evpp-target
-   LIBRARY DESTINATION lib
-   ARCHIVE DESTINATION lib)
+-install (
+-  TARGETS evnsq_static
+-  LIBRARY DESTINATION lib
+-  ARCHIVE DESTINATION lib)
  install (FILES ${evnsq_PUBLIC_HEADERS} DESTINATION "include/evnsq")
-+TARGET_INCLUDE_DIRECTORIES(evnsq_static INTERFACE $<INSTALL_INTERFACE:include>)
  
  if (NOT EVPP_VCPKG_BUILD)
-     add_subdirectory(evnsqtail)
 diff --git a/evpp/CMakeLists.txt b/evpp/CMakeLists.txt
-index 031659f..72df2a3 100644
+index 031659f..748ee76 100644
 --- a/evpp/CMakeLists.txt
 +++ b/evpp/CMakeLists.txt
-@@ -22,48 +22,61 @@ target_link_libraries(evpp_lite_static ${DEPENDENT_LIBRARIES})
+@@ -16,55 +16,68 @@ include_directories(${PROJECT_SOURCE_DIR})
+ add_library(evpp_static STATIC ${evpp_SRCS})
+ target_link_libraries(evpp_static ${DEPENDENT_LIBRARIES})
+ target_compile_features(evpp_static PRIVATE cxx_std_11)
++TARGET_INCLUDE_DIRECTORIES(evpp_static INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ add_library(evpp_lite_static STATIC ${evpp_lite_SRCS})
+ target_link_libraries(evpp_lite_static ${DEPENDENT_LIBRARIES})
  target_compile_features(evpp_lite_static PRIVATE cxx_std_11)
++TARGET_INCLUDE_DIRECTORIES(evpp_lite_static INTERFACE $<INSTALL_INTERFACE:include>)
  
  if (UNIX)
 -    add_library(evpp SHARED ${evpp_SRCS})
@@ -138,25 +160,19 @@ index 031659f..72df2a3 100644
 +    if(BUILD_SHARED_LIBS)
 +      add_library(evpp SHARED ${evpp_SRCS})
 +      target_link_libraries(evpp ${DEPENDENT_LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evpp INTERFACE $<INSTALL_INTERFACE:include>)
 +      
 +      # boost lockfree queue
 +      add_library(evpp_boost SHARED ${evpp_SRCS})
 +      target_compile_definitions(evpp_boost PRIVATE -DH_HAVE_BOOST=1)
 +      target_link_libraries(evpp_boost        ${DEPENDENT_LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evpp_boost INTERFACE $<INSTALL_INTERFACE:include>)
 +      
 +      # https://github.com/cameron314/concurrentqueue
 +      add_library(evpp_concurrentqueue SHARED ${evpp_SRCS})
 +      target_compile_definitions(evpp_concurrentqueue PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
 +      target_link_libraries(evpp_concurrentqueue        ${DEPENDENT_LIBRARIES})
-+      set_target_properties (
-+          evpp evpp_boost evpp_concurrentqueue PROPERTIES
-+          VERSION     "${PACKAGE_VERSION}"
-+          SOVERSION   "${PACKAGE_SOVERSION}"
-+      ) 
-+    else()
-+      add_library(evpp_boost_static STATIC ${evpp_SRCS})
-+      target_compile_definitions(evpp_boost_static PRIVATE -DH_HAVE_BOOST=1)
-+      target_link_libraries(evpp_boost_static ${DEPENDENT_LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evpp_concurrentqueue INTERFACE $<INSTALL_INTERFACE:include>)
  
 -    # boost lockfree queue
 -    add_library(evpp_boost SHARED ${evpp_SRCS})
@@ -173,11 +189,34 @@ index 031659f..72df2a3 100644
 -    target_compile_definitions(evpp_concurrentqueue_static PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
 -    target_link_libraries(evpp_concurrentqueue        ${DEPENDENT_LIBRARIES})
 -    target_link_libraries(evpp_concurrentqueue_static ${DEPENDENT_LIBRARIES})
++      set_target_properties (
++          evpp evpp_boost evpp_concurrentqueue PROPERTIES
++          VERSION     "${PACKAGE_VERSION}"
++          SOVERSION   "${PACKAGE_SOVERSION}"
++      )
++      install (
++        TARGETS evpp evpp_boost evpp_concurrentqueue
++        EXPORT  unofficial-evpp-target
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)      
++    else()
++      add_library(evpp_boost_static STATIC ${evpp_SRCS})
++      target_compile_definitions(evpp_boost_static PRIVATE -DH_HAVE_BOOST=1)
++      target_link_libraries(evpp_boost_static ${DEPENDENT_LIBRARIES})
++      TARGET_INCLUDE_DIRECTORIES(evpp_boost_static INTERFACE $<INSTALL_INTERFACE:include>)
+ 
 +      add_library(evpp_concurrentqueue_static STATIC ${evpp_SRCS})
 +      target_compile_definitions(evpp_concurrentqueue_static PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
-+      target_link_libraries(evpp_concurrentqueue_static ${DEPENDENT_LIBRARIES})
++      target_link_libraries(evpp_concurrentqueue_static ${DEPENDENT_LIBRARIES}) 
++      TARGET_INCLUDE_DIRECTORIES(evpp_concurrentqueue_static INTERFACE $<INSTALL_INTERFACE:include>)
++      
++      install (
++        TARGETS evpp_static evpp_lite_static evpp_boost_static evpp_concurrentqueue_static
++        EXPORT  unofficial-evpp-target
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
 +    endif()
- 
      set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
      include (utils)
      include (packages)
@@ -186,37 +225,23 @@ index 031659f..72df2a3 100644
 -        VERSION     "${PACKAGE_VERSION}"
 -        SOVERSION   "${PACKAGE_SOVERSION}"
 -    )
- 
+-
 -    install (
 -      TARGETS evpp evpp_static evpp_lite_static evpp_boost evpp_boost_static evpp_concurrentqueue evpp_concurrentqueue_static
 -      EXPORT ${PACKAGE_NAME}
 -      RUNTIME DESTINATION bin
 -      LIBRARY DESTINATION lib
 -      ARCHIVE DESTINATION lib)
-+    if(NOT BUILD_SHARED_LIBS)
-+      install (
-+        TARGETS evpp_static evpp_lite_static evpp_boost_static evpp_concurrentqueue_static
-+        EXPORT  unofficial-evpp-target
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib)
-+        
-+      TARGET_INCLUDE_DIRECTORIES(evpp_static INTERFACE $<INSTALL_INTERFACE:include>)
-+      TARGET_INCLUDE_DIRECTORIES(evpp_lite_static INTERFACE $<INSTALL_INTERFACE:include>)   
-+      TARGET_INCLUDE_DIRECTORIES(evpp_boost_static INTERFACE $<INSTALL_INTERFACE:include>)   
-+      TARGET_INCLUDE_DIRECTORIES(evpp_concurrentqueue_static INTERFACE $<INSTALL_INTERFACE:include>)
-+    endif()
- 
+-
  else (UNIX)
      install (
        TARGETS evpp_static evpp_lite_static
 -      EXPORT ${PACKAGE_NAME}
+-      RUNTIME DESTINATION bin
 +      EXPORT  unofficial-evpp-target
-       RUNTIME DESTINATION bin
        LIBRARY DESTINATION lib
        ARCHIVE DESTINATION lib)
-+    
-+    TARGET_INCLUDE_DIRECTORIES(evpp_static INTERFACE $<INSTALL_INTERFACE:include>)
-+    TARGET_INCLUDE_DIRECTORIES(evpp_lite_static INTERFACE $<INSTALL_INTERFACE:include>)
- 
+-
  endif (UNIX)
  
+ install (FILES ${evpp_PUBLIC_HEADERS} DESTINATION "include/evpp")
