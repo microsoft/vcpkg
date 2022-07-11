@@ -20,17 +20,11 @@ vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 # run `pip install ${package}`
 function(pip_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "PACKAGE" "INSTALL_OPTIONS")
-    if(NOT DEFINED Python3_EXECUTABLE)
-        message(FATAL_ERROR "Undefined: Python3_EXECUTABLE")
-    endif()
-    execute_process(
-        COMMAND ${Python3_EXECUTABLE} -m pip install ${arg_PACKAGE} ${arg_INSTALL_OPTIONS}
+    vcpkg_execute_required_process(
+        COMMAND "${PYTHON3}" -m pip install ${arg_PACKAGE} ${arg_INSTALL_OPTIONS}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-        OUTPUT_FILE install-${arg_PACKAGE}-out.log
-        ERROR_FILE  install-${arg_PACKAGE}-err.log
-        RESULT_VARIABLE INSTALL_RETURN_CODE
-        COMMAND_ECHO NONE
-        ENCODING UTF-8
+        LOGNAME install-${arg_PACKAGE}
+        ERROR_VARIABLE INSTALL_RETURN_CODE
     )
     if(INSTALL_RETURN_CODE) # non-zero means failure
         message(FATAL_ERROR "PIP install failed. Check ${CURRENT_BUILDTREES_DIR}/install-${arg_PACKAGE}-err.log")
