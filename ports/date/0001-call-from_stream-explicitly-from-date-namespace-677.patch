@@ -1,15 +1,5 @@
-From 8c126525cca26fe16c1280e3d6d315583fd29cfb Mon Sep 17 00:00:00 2001
-From: JulZimmermann <JulZimmermann@gmail.com>
-Date: Mon, 31 May 2021 18:54:11 +0200
-Subject: [PATCH] call from_stream explicitly from date namespace (#677)
-
-Co-authored-by: Julian Zimmermann <Julian.Zimmermann@gti.de>
----
- include/date/date.h | 46 ++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
-
 diff --git a/include/date/date.h b/include/date/date.h
-index 153f801..d6545ac 100644
+index 7b6b4e4..cddd635 100644
 --- a/include/date/date.h
 +++ b/include/date/date.h
 @@ -7891,7 +7891,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt, year& y,
@@ -102,7 +92,7 @@ index 153f801..d6545ac 100644
      if (!fds.has_tod)
          is.setstate(std::ios::failbit);
      if (!is.fail())
-@@ -8096,14 +8096,14 @@ std::basic_istream<CharT, Traits>&
+@@ -8077,14 +8077,14 @@ std::basic_istream<CharT, Traits>&
  operator>>(std::basic_istream<CharT, Traits>& is,
             const parse_manip<Parsable, CharT, Traits, Alloc>& x)
  {
@@ -119,7 +109,7 @@ index 153f801..d6545ac 100644
                              format.c_str(), tp),
                  parse_manip<Parsable, CharT, Traits, Alloc>{format, tp})
  {
-@@ -8115,7 +8115,7 @@ inline
+@@ -8096,7 +8096,7 @@ inline
  auto
  parse(const std::basic_string<CharT, Traits, Alloc>& format, Parsable& tp,
        std::basic_string<CharT, Traits, Alloc>& abbrev)
@@ -128,7 +118,7 @@ index 153f801..d6545ac 100644
                              format.c_str(), tp, &abbrev),
                  parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev})
  {
-@@ -8127,7 +8127,7 @@ inline
+@@ -8108,7 +8108,7 @@ inline
  auto
  parse(const std::basic_string<CharT, Traits, Alloc>& format, Parsable& tp,
        std::chrono::minutes& offset)
@@ -137,7 +127,7 @@ index 153f801..d6545ac 100644
                              format.c_str(), tp,
                              std::declval<std::basic_string<CharT, Traits, Alloc>*>(),
                              &offset),
-@@ -8141,7 +8141,7 @@ inline
+@@ -8122,7 +8122,7 @@ inline
  auto
  parse(const std::basic_string<CharT, Traits, Alloc>& format, Parsable& tp,
        std::basic_string<CharT, Traits, Alloc>& abbrev, std::chrono::minutes& offset)
@@ -146,7 +136,7 @@ index 153f801..d6545ac 100644
                              format.c_str(), tp, &abbrev, &offset),
                  parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev, &offset})
  {
-@@ -8154,7 +8154,7 @@ template <class Parsable, class CharT>
+@@ -8135,7 +8135,7 @@ template <class Parsable, class CharT>
  inline
  auto
  parse(const CharT* format, Parsable& tp)
@@ -155,7 +145,7 @@ index 153f801..d6545ac 100644
                  parse_manip<Parsable, CharT>{format, tp})
  {
      return {format, tp};
-@@ -8164,7 +8164,7 @@ template <class Parsable, class CharT, class Traits, class Alloc>
+@@ -8145,7 +8145,7 @@ template <class Parsable, class CharT, class Traits, class Alloc>
  inline
  auto
  parse(const CharT* format, Parsable& tp, std::basic_string<CharT, Traits, Alloc>& abbrev)
@@ -164,7 +154,7 @@ index 153f801..d6545ac 100644
                              tp, &abbrev),
                  parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev})
  {
-@@ -8175,7 +8175,7 @@ template <class Parsable, class CharT>
+@@ -8156,7 +8156,7 @@ template <class Parsable, class CharT>
  inline
  auto
  parse(const CharT* format, Parsable& tp, std::chrono::minutes& offset)
@@ -173,7 +163,7 @@ index 153f801..d6545ac 100644
                              tp, std::declval<std::basic_string<CharT>*>(), &offset),
                  parse_manip<Parsable, CharT>{format, tp, nullptr, &offset})
  {
-@@ -8187,7 +8187,7 @@ inline
+@@ -8168,7 +8168,7 @@ inline
  auto
  parse(const CharT* format, Parsable& tp,
        std::basic_string<CharT, Traits, Alloc>& abbrev, std::chrono::minutes& offset)
@@ -182,42 +172,3 @@ index 153f801..d6545ac 100644
                              tp, &abbrev, &offset),
                  parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev, &offset})
  {
-@@ -8202,7 +8202,7 @@ template <class Parsable, class CharT, class Traits>
- inline
- auto
- parse(std::basic_string_view<CharT, Traits> format, Parsable& tp)
--    -> decltype(from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(), tp),
-+    -> decltype(date::from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(), tp),
-                 parse_manip<Parsable, CharT, Traits>{format, tp})
- {
-     return {format, tp};
-@@ -8213,7 +8213,7 @@ inline
- auto
- parse(std::basic_string_view<CharT, Traits> format,
-       Parsable& tp, std::basic_string<CharT, Traits, Alloc>& abbrev)
--    -> decltype(from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-+    -> decltype(date::from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-                             tp, &abbrev),
-                 parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev})
- {
-@@ -8224,7 +8224,7 @@ template <class Parsable, class CharT, class Traits>
- inline
- auto
- parse(std::basic_string_view<CharT, Traits> format, Parsable& tp, std::chrono::minutes& offset)
--    -> decltype(from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-+    -> decltype(date::from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-                             tp, std::declval<std::basic_string<CharT, Traits>*>(), &offset),
-                 parse_manip<Parsable, CharT, Traits>{format, tp, nullptr, &offset})
- {
-@@ -8236,7 +8236,7 @@ inline
- auto
- parse(std::basic_string_view<CharT, Traits> format, Parsable& tp,
-       std::basic_string<CharT, Traits, Alloc>& abbrev, std::chrono::minutes& offset)
--    -> decltype(from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-+    -> decltype(date::from_stream(std::declval<std::basic_istream<CharT, Traits>&>(), format.data(),
-                             tp, &abbrev, &offset),
-                 parse_manip<Parsable, CharT, Traits, Alloc>{format, tp, &abbrev, &offset})
- {
--- 
-2.36.1
-
