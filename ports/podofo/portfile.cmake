@@ -54,8 +54,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup()
 vcpkg_replace_string( "${CURRENT_PACKAGES_DIR}/share/${PORT}/PoDoFoConfig.cmake"
     "# Create imported target podofo_shared"
 [[
@@ -64,6 +64,8 @@ find_dependency(OpenSSL)
 # Create imported target podofo_shared
 ]]
 )
+
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

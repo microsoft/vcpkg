@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/gazebo
-    REF 382dcc3f36095a8d79b5bc9c8b8ad346e867c51d
+    REF gazebo11_11.11.0
     SHA512 57638cd0b23b5f2bfd32fdc159d6cd77ca34e3bd695c225591979aef4b7271eac93d3706fa1ffa2340f90013267a4171bebe1e4c142f19ad2bf67963dfed627e
-    HEAD_REF gazebo11
     PATCHES
         0001-Fix-deps.patch
         fix-build-type.patch
+        fix-opengl-def.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,8 +23,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         graphviz  NO_GRAPHVIZ_FEATURE
 )
 
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -34,7 +32,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF  # Not enabled by default, but to be sure
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
 vcpkg_copy_pdbs()
 

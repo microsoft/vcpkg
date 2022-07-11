@@ -1,7 +1,6 @@
 {
   "name": "gazebo",
-  "version-date": "2022-01-20",
-  "port-version": 2,
+  "version": "11.11.0",
   "description": "Open source robotics simulator.",
   "homepage": "http://gazebosim.org",
   "license": "Apache-2.0",
