@@ -2354,7 +2354,7 @@
     },
     "freealut": {
       "baseline": "1.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "freeglut": {
       "baseline": "3.2.2",
