@@ -91,7 +91,7 @@
 +  set(OPENCV_LIB_INSTALL_PATH            "${OpenCV_INSTALL_BINARIES_PREFIX}lib")
 +  set(OPENCV_3P_LIB_INSTALL_PATH         "${OPENCV_LIB_INSTALL_PATH}")
 +  set(OPENCV_SAMPLES_SRC_INSTALL_PATH    "share/opencv2/samples")
-+  set(OPENCV_INCLUDE_INSTALL_PATH        "include/opencv2")
++  set(OPENCV_INCLUDE_INSTALL_PATH        "include/opencv2.4")
 +  set(OPENCV_CONFIG_INSTALL_PATH         "share/opencv2")
  endif()
  
