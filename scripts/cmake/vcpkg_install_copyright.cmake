@@ -23,6 +23,10 @@ function(vcpkg_install_copyright)
         endif()
     else()
         foreach(file_item IN LISTS arg_FILE_LIST)
+            if(NOT EXISTS "${file_item}")
+                message(FATAL_ERROR "\n${CMAKE_CURRENT_FUNCTION} was passed a non-existing path: ${file_item}\n")
+            endif()
+
             get_filename_component(file_name "${file_item}" NAME)
             file(READ "${file_item}" file_contents)
 
