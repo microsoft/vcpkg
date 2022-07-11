@@ -197,9 +197,9 @@ if(USE_VULKAN)
 endif()
 
 if(USE_TENSORPIPE)
-  find_package(unofficial-libuv CONFIG REQUIRED) # unofficial::libuv::libuv
+  find_package(libuv CONFIG REQUIRED)
   find_package(Tensorpipe CONFIG REQUIRED) # tensorpipe
-  list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::libuv::libuv tensorpipe)
+  list(APPEND Caffe2_DEPENDENCY_LIBS uv_a tensorpipe)
 endif()
 
 if(USE_MPI)
