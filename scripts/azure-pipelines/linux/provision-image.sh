@@ -16,6 +16,9 @@ APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
   pkg-config meson nasm cmake ninja-build"
 
+# CUDA tooling
+APT_PACKAGES="$APT_PACKAGES nvidia-cudnn nvidia-cuda-toolkit"
+
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxcb-util0-dev"
@@ -63,15 +66,6 @@ apt-get -y install $APT_PACKAGES
 
 # Install the latest Haskell stack for bond
 curl -sSL https://get.haskellstack.org/ | sh
-
-# Install CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-apt-get -y update
-apt-get install -y --no-install-recommends cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
-  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 cuda-nvml-dev-11-6 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
