@@ -14,7 +14,7 @@ vcpkg_from_github(
 )
 # Note that the dependencies ASIO and ASIOSDK are completely different things:
 # -ASIO (ASyncronous IO) is a cross-platform C++ library for network and low-level I/O programming
-# -ASIOSDK is the SDK for the Steinberg ASIO (Audio Stream Input/Output) driver, for proffesional Windows audio applications
+# -ASIOSDK is the SDK for the Steinberg ASIO (Audio Stream Input/Output) driver, for profesional Windows audio applications
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -36,16 +36,19 @@ if ("discoverytest" IN_LIST FEATURES)
     set(NEED_CATCH2 ON)
 endif()
 
-set(LINK_BUILD_ASIO OFF)
+set(NEED_ASIOSDK OFF)
 if ("hut" IN_LIST FEATURES)
-  set(LINK_BUILD_ASIO ON)
+  if(WIN32)
+    # Need Steinberg ASIO audio driver SDK (only this low-latency audio driver makes the developer tool 'hut' useful on Windows)
+    set(NEED_ASIOSDK ON)
+  endif()
 endif()
     
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS    
         -DNEED_CATCH2=${NEED_CATCH2}
-        -DLINK_BUILD_ASIO=${LINK_BUILD_ASIO}
+        -DLINK_BUILD_ASIO=${NEED_ASIOSDK}
 )
 
 if ("coretest" IN_LIST FEATURES)
