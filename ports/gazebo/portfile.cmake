@@ -1,19 +1,12 @@
-vcpkg_download_distfile(gazebo3211
-    URLS "https://patch-diff.githubusercontent.com/raw/osrf/gazebo/pull/3211.diff"
-    FILENAME "gazebo3211.diff"
-    SHA512 761e254866d4705acc0b81479285f979c436b3b611739a207a575031d8a8daba48de4fc0c8de5edb9a9f89725586c5caeef9e6e1e3d63a2d961ca09df974f7de
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/gazebo
     REF gazebo11_11.11.0
-    SHA512 57638cd0b23b5f2bfd32fdc159d6cd77ca34e3bd695c225591979aef4b7271eac93d3706fa1ffa2340f90013267a4171bebe1e4c142f19ad2bf67963dfed627e
+    SHA512 0f625f71ce9c6a875ac4d694cc767735243ed20922282fb1f0ef614ddeadf35e8e08e1d8484f9dbf3c873259fae93b550742deab7954c00b055890bad2b22dff
     PATCHES
         0001-Fix-deps.patch
         fix-build-type.patch
         fix-opengl-def.patch
-        ${gazebo3211}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
