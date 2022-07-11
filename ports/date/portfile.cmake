@@ -15,6 +15,7 @@ vcpkg_from_github(
     0001-fix-uwp.patch
     0002-fix-cmake-3.14.patch
     fix-uninitialized-values.patch  #Update the new version please remove this patch
+    0001-call-from_stream-explicitly-from-date-namespace-677.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
