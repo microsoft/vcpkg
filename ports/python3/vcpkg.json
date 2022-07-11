@@ -5,7 +5,7 @@
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !mingw",
   "dependencies": [
     {
       "name": "bzip2",
