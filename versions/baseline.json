@@ -2152,6 +2152,10 @@
       "baseline": "1.4.7",
       "port-version": 0
     },
+    "ezfoundation": {
+      "baseline": "21.10",
+      "port-version": 0
+    },
     "faad2": {
       "baseline": "2.9.1",
       "port-version": 5
