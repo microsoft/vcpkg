@@ -3034,7 +3034,7 @@
     },
     "isal": {
       "baseline": "2.25.0",
-      "port-version": 2
+      "port-version": 3
     },
     "ismrmrd": {
       "baseline": "1.5.0",
@@ -6749,8 +6749,8 @@
       "port-version": 1
     },
     "spdk-isal": {
-      "baseline": "20181006",
-      "port-version": 2
+      "baseline": "2018-10-06",
+      "port-version": 3
     },
     "spdlog": {
       "baseline": "1.10.0",
