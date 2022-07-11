@@ -89,6 +89,9 @@ if(_PythonFinder_WantLibs)
             find_dependency(Intl)
             if(TARGET @PythonFinder_PREFIX@::Python)
                 get_target_property(_PYTHON_INTERFACE_LIBS @PythonFinder_PREFIX@::Python INTERFACE_LINK_LIBRARIES)
+                if(NOT _PYTHON_INTERFACE_LIBS)
+                    set(_PYTHON_INTERFACE_LIBS "")
+                endif()
                 list(REMOVE_ITEM _PYTHON_INTERFACE_LIBS "-liconv" "-lintl")
                 list(APPEND _PYTHON_INTERFACE_LIBS
                     Iconv::Iconv
@@ -99,6 +102,9 @@ if(_PythonFinder_WantLibs)
             endif()
             if(TARGET @PythonFinder_PREFIX@::Module)
                 get_target_property(_PYTHON_INTERFACE_LIBS @PythonFinder_PREFIX@::Module INTERFACE_LINK_LIBRARIES)
+                if(NOT _PYTHON_INTERFACE_LIBS)
+                    set(_PYTHON_INTERFACE_LIBS "")
+                endif()
                 list(REMOVE_ITEM _PYTHON_INTERFACE_LIBS "-liconv" "-lintl")
                 list(APPEND _PYTHON_INTERFACE_LIBS
                     Iconv::Iconv
