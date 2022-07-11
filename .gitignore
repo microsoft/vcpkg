@@ -297,6 +297,7 @@ __pycache__/
 !/triplets/x64-uwp.cmake
 !/triplets/x64-windows-static.cmake
 !/triplets/x64-windows.cmake
+!/triplets/move_pdb_files.cmake
 !/triplets/x86-windows.cmake
 
 !/triplets/community
