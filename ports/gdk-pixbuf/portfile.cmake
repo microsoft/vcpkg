@@ -59,7 +59,7 @@ vcpkg_fixup_pkgconfig()
 
 set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders gdk-pixbuf-thumbnailer)
 
-if(VCPKG_CROSSCOMPILING)
+if(NOT VCPKG_HOST_IS_WINDOWS AND VCPKG_CROSSCOMPILING)
     list(REMOVE_ITEM TOOL_NAMES gdk-pixbuf-thumbnailer)
 endif()
 
