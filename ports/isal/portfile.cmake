@@ -1,4 +1,4 @@
-if(EXISTS ${CURRENT_INSTALLED_DIR}/share/spdk-isal/copyright)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/spdk-isal/copyright")
     message(FATAL_ERROR "'${PORT}' conflicts with 'spdk-isal'. Please remove spdk-isal:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
