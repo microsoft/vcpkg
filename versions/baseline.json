@@ -2068,6 +2068,10 @@
       "baseline": "1.0.7.15",
       "port-version": 2
     },
+    "edflib": {
+      "baseline": "1.21",
+      "port-version": 0
+    },
     "edlib": {
       "baseline": "1.2.7",
       "port-version": 1
