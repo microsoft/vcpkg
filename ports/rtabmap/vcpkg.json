@@ -1,12 +1,15 @@
 {
   "name": "rtabmap",
   "version": "0.20.13",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
   "supports": "windows & !static",
   "dependencies": [
-    "opencv",
+    {
+      "name": "opencv",
+      "default-features": false
+    },
     {
       "name": "pcl",
       "default-features": false,
@@ -29,6 +32,18 @@
       "description": "Build tools",
       "dependencies": [
         "yaml-cpp"
+      ]
+    },
+      "opencv-contrib": {
+      "description": "Use OpenCV with contrib modules",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
       ]
     }
   }
