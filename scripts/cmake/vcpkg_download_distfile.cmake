@@ -50,29 +50,9 @@ endfunction()
 function(z_vcpkg_download_distfile_via_aria)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512"
-        "FILENAME;SHA512;FILE_DISAMBIGUATOR"
+        "FILENAME;SHA512"
         "URLS;HEADERS"
     )
-
-    if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
-    endif()
-
-    if(DEFINED arg_SHA512 AND NOT DEFINED arg_SKIP_SHA512)
-        message(FATAL_ERROR "SHA512 must be specified if SKIP_SHA512 is not specified.")
-    endif()
-
-    if(NOT DEFINED arg_FILENAME OR arg_FILENAME STREQUAL "")
-        message(FATAL_ERROR "FILENAME must be specified.")
-    endif()
-
-    if(NOT DEFINED arg_URLS OR arg_URLS STREQUAL "")
-        message(FATAL_ERROR "URLS must be specified.")
-    endif()
-
-    if(DEFINED arg_FILE_DISAMBIGUATOR)
-        string(PREPEND arg_FILENAME "${arg_FILE_DISAMBIGUATOR}-")
-    endif()
 
     message(STATUS "Downloading ${arg_FILENAME}...")
 
@@ -129,7 +109,7 @@ endfunction()
 
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
+        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD;FILE_DISAMBIGUATOR"
         "FILENAME;SHA512"
         "URLS;HEADERS"
     )
@@ -168,6 +148,15 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     If you do not know the file's SHA512, set this to \"0\".")
             endif()
         endif()
+    endif()
+
+    if(arg_FILE_DISAMBIGUATOR)
+        get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
+        get_filename_component(extension_component "${arg_FILENAME}" EXT)
+        get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
+
+        string(SUBSTRING "${arg_SHA512}" 0 8 hash)
+        set(arg_FILENAME "${directory_component}${filename_component}-${hash}${extension_component}")
     endif()
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
