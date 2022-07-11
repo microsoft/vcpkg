@@ -387,6 +387,16 @@ function(vcpkg_configure_meson)
     vcpkg_list(APPEND arg_OPTIONS_DEBUG -Ddebug=true --prefix "${CURRENT_PACKAGES_DIR}/debug" --includedir ../include)
     vcpkg_list(APPEND arg_OPTIONS_RELEASE -Ddebug=false --prefix "${CURRENT_PACKAGES_DIR}")
 
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_MESON_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+
     # select meson cmd-line options
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_list(APPEND arg_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
