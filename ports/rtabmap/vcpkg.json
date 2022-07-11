@@ -27,14 +27,11 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "opencv-contrib"
+  ],
   "features": {
-    "tools": {
-      "description": "Build tools",
-      "dependencies": [
-        "yaml-cpp"
-      ]
-    },
-      "opencv-contrib": {
+    "opencv-contrib": {
       "description": "Use OpenCV with contrib modules",
       "dependencies": [
         {
@@ -44,6 +41,12 @@
             "contrib"
           ]
         }
+      ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "dependencies": [
+        "yaml-cpp"
       ]
     }
   }
