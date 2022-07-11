@@ -1,4 +1,0 @@
-The package liblas provides a CMake config file:
-
-    find_package(libLAS CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE liblas liblas_c)
