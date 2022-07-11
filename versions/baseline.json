@@ -4889,8 +4889,8 @@
       "port-version": 0
     },
     "ngspice": {
-      "baseline": "35",
-      "port-version": 2
+      "baseline": "37",
+      "port-version": 0
     },
     "nifly": {
       "baseline": "1.0.0",
