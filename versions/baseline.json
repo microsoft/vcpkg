@@ -2714,7 +2714,7 @@
     },
     "gtk": {
       "baseline": "4.6.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gtkmm": {
       "baseline": "4.6.0",
