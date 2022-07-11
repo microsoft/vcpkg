@@ -7362,7 +7362,7 @@
     },
     "uvw": {
       "baseline": "2.12.1",
-      "port-version": 1
+      "port-version": 2
     },
     "uwebsockets": {
       "baseline": "20.14.0",
