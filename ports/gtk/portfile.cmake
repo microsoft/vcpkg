@@ -36,10 +36,11 @@ list(APPEND OPTIONS -Dbroadway-backend=false) #Enable the broadway (HTML5) gdk b
 list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (only when building on Windows)
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
-if(VCPKG_HOST_IS_WINDOWS)
-    set(SASSC_INSTALLED_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(SASSC_INSTALLED_DIR ${CURRENT_HOST_INSTALLED_DIR})
+if(VCPKG_CROSSCOMPILING)
+    set(SASSC_CROSS_INSTALLED_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
+    set(SASSC_CROSS_INSTALLED_DIR ${CURRENT_INSTALLED_DIR})
 endif()
 
 vcpkg_configure_meson(
@@ -66,13 +67,13 @@ vcpkg_configure_meson(
                                glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
                                gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
                                glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${SASSC_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${CURRENT_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
                                glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
                                gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
                                glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${SASSC_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${SASSC_CROSS_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
 )
 
 vcpkg_install_meson()
