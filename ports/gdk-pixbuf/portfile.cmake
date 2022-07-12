@@ -55,7 +55,7 @@ if(EXISTS "${_file}")
     file(WRITE "${_file}" "${_contents}")
 endif()
 
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 
 set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders gdk-pixbuf-thumbnailer)
 
