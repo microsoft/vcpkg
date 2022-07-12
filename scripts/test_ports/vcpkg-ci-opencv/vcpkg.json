@@ -75,9 +75,7 @@
       "name": "opencv3",
       "default-features": false,
       "features": [
-        "cuda",
         "gstreamer",
-        "halide",
         "ovis",
         "tbb"
       ],
@@ -133,7 +131,6 @@
         "cuda",
         "cudnn",
         "gstreamer",
-        "halide",
         "ovis",
         "tbb"
       ],
