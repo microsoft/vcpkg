@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a097d5c..ca278d0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -164,6 +164,7 @@ set(PC_REQUIRES)
+ set(BUILD_SHARED_LIBS OFF)
+ 
+ if(SDL2TTF_HARFBUZZ)
++    if(0)
+     if(SDL2TTF_HARFBUZZ_VENDORED)
+         message(STATUS "${PROJECT_NAME}: Using vendored harfbuzz library")
+         # HB_BUILD_UTILS variable is used by harfbuzz
+@@ -192,9 +193,16 @@ if(SDL2TTF_HARFBUZZ)
+     endif()
+     target_compile_definitions(SDL2_ttf PRIVATE TTF_USE_HARFBUZZ=1)
+     target_link_libraries(SDL2_ttf PRIVATE harfbuzz::harfbuzz)
++    endif()
++
++    find_package(harfbuzz REQUIRED)
++    target_compile_definitions(SDL2_ttf PRIVATE TTF_USE_HARFBUZZ=1)
++    target_link_libraries(SDL2_ttf PRIVATE harfbuzz::harfbuzz)
++
+ endif()
+ 
+ if(SDL2TTF_FREETYPE)
++    if(0)
+     if(SDL2TTF_FREETYPE_VENDORED)
+         message(STATUS "${PROJECT_NAME}: Using vendored freetype library")
+         # FT_DISABLE_ZLIB variable is used by freetype
+@@ -232,7 +240,11 @@ if(SDL2TTF_FREETYPE)
+         find_package(Freetype REQUIRED)
+         list(APPEND PC_REQUIRES freetype2)
+     endif()
++    endif()
++
++    find_package(Freetype REQUIRED)
+     target_link_libraries(SDL2_ttf PRIVATE Freetype::Freetype)
++
+ endif()
+ 
+ # Restore BUILD_SHARED_LIBS variable

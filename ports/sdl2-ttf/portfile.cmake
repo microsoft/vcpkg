@@ -1,31 +1,31 @@
-set(VERSION 2.0.15)
+set(VERSION 2.20.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${VERSION}.tar.gz"
-    FILENAME "SDL2_ttf-${VERSION}.tar.gz"
-    SHA512 30d685932c3dd6f2c94e2778357a5c502f0421374293d7102a64d92f9c7861229bf36bedf51c1a698b296a58c858ca442d97afb908b7df1592fc8d4f8ae8ddfd
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    REPO  libsdl-org/SDL_ttf
+    REF f5e4828ffc9d3a84f00011fede4446aecb4a685f #v2.20.0
+    SHA512 c0d2d6107e5427d9c1353e14cb4b0c3957d28391cfc772f1f972fe3aa8ba9e9dfdfcb64acd317a7836d46b3a50da9597b19a832f0baf5198654acb7b31ab1e6b
+    HEAD_REF main
+    PATCHES
+        fix-find_dependencies.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DSDL_TTF_SKIP_HEADERS=ON)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSDL2TTF_SAMPLES=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
-vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+#Clean
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")   
 
-file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf/copyright)
+#Copyright
+file(COPY "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/sdl2-ttf/copyright")
