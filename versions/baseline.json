@@ -12,7 +12,6 @@
       "baseline": "3.0.5",
       "port-version": 0
     },
-
     "abseil": {
       "baseline": "20211102.1",
       "port-version": 0
@@ -6478,8 +6477,8 @@
       "port-version": 9
     },
     "sdl2-ttf": {
-      "baseline": "2.0.15",
-      "port-version": 5
+      "baseline": "2.20.0",
+      "port-version": 0
     },
     "sdl2pp": {
       "baseline": "0.16.1",
