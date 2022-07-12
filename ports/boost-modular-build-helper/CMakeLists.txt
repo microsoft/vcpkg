@@ -115,6 +115,10 @@ string(APPEND CFLAGS "${COMPILEFLAGS}")
 foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
     string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
     string(REPLACE [["]] [[\"]] ${var} "${${var}}")
+    string(REPLACE [[%_PDB%]] [['%_PDB%']] ${var} "${${var}}")
+    # remove PDB flag for now until the pdb install rule of boost-build can be deactivated. 
+    string(REPLACE [[(-|/)PDB:[^ ]+]] "" ${var} "${${var}}") 
+    string(REPLACE [[(-|/)PDBSTRIPPED:[^ ]+]] "" ${var} "${${var}}")
     string(REGEX REPLACE "[ \t\r\n]+" " " ${var} "${${var}}")
     string(STRIP "${${var}}" ${var})
 endforeach()
@@ -263,7 +267,8 @@ add_custom_target(boost ALL
         debug-symbols=on
         # Enable debugging level 2.
         -d +2
-
+        optimization=none
+        debug-store=database
         threading=multi
 
         stage
@@ -280,6 +285,10 @@ endif()
 file(GLOB DLLS \"${SUBDIR}/*.dll\" \"${SUBDIR}/*.pyd\")
 if(DLLS)
     file(INSTALL \${DLLS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
+endif()
+file(GLOB PDBS \"${SUBDIR}/*.pdb\")
+if(PDBS)
+    file(INSTALL \${PDBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
 endif()
 "
 )
