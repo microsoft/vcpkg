@@ -38,7 +38,7 @@
     },
     "air-ctl": {
       "baseline": "1.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "aixlog": {
       "baseline": "1.5.0",
