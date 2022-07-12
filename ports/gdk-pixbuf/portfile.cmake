@@ -62,8 +62,8 @@ set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders gd
 # gdk-pixbuf-thumbnailer is not compiled for cross-compiling 
 set(IS_NEED_REMOVE_THUMBNAILER ${VCPKG_CROSSCOMPILING})
 # This adjusting logic might be place in vcpkg_common_definitions.cmake.
-if(VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS)
-    if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "(amd|AMD|x|X)64" AND VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86" OR VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
         set(IS_NEED_REMOVE_THUMBNAILER false)
     endif()
 endif()
