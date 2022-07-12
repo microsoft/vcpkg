@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "OpenCensus is a toolkit for collecting application performance and behavior data. It currently includes an API for tracing and stats.",
   "homepage": "https://github.com/census-instrumentation/opencensus-cpp",
+  "license": "Apache-2.0",
   "supports": "!windows",
   "dependencies": [
     "abseil",
