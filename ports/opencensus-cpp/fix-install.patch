@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0ecec53..07162ed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,7 +29,7 @@ project(
+ option(FUZZER "Either OFF or e.g. -fsanitize=fuzzer,address" OFF)
+ 
+ if(NOT CMAKE_CXX_STANDARD)
+-  set(CMAKE_CXX_STANDARD 11)
++  set(CMAKE_CXX_STANDARD 14)
+   set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ endif()
+ 
 diff --git a/cmake/OpenCensusHelpers.cmake b/cmake/OpenCensusHelpers.cmake
 index 8fdfe96..53bc877 100644
 --- a/cmake/OpenCensusHelpers.cmake
