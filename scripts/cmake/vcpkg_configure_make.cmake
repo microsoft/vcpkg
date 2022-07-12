@@ -133,7 +133,7 @@ function(vcpkg_configure_make)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(DEFINED arg_USE_WRAPPERS AND DEFINED arg_NO_WRAPPERS)
+    if(arg_USE_WRAPPERS AND arg_NO_WRAPPERS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed conflicting options USE_WRAPPERS and NO_WRAPPERS. Please remove one of them!")
     endif()
 
