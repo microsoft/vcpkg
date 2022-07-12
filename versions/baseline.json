@@ -3833,7 +3833,7 @@
       "port-version": 0
     },
     "libmount": {
-      "baseline": "2.37.2",
+      "baseline": "2.38",
       "port-version": 0
     },
     "libmpeg2": {
