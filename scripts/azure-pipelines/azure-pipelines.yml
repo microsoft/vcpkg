@@ -13,23 +13,23 @@ parameters:
     default: 'use default'
 
 jobs:
-#- template: windows/azure-pipelines.yml
-#  parameters:
-#    triplet: x86-windows
-#    jobName: x86_windows
-#    poolName: $(windows-pool)
-#    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    triplet: x86-windows
+    jobName: x64_windows_ifort
+    poolName: $(windows-pool)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-windows-intel
+    triplet: x64-windows
     jobName: x64_windows_intel
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-windows-intel-llvm
+    triplet: x64-windows-static
     jobName: x64_windows_intel_llvm
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
