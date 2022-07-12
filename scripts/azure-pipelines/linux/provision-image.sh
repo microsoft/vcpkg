@@ -74,6 +74,10 @@ apt-get -y install $APT_PACKAGES
 # Install the latest Haskell stack for bond
 curl -sSL https://get.haskellstack.org/ | sh
 
+# Start up cudnn
+update-nvidia-cudnn -d
+update-nvidia-cudnn -u
+
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
