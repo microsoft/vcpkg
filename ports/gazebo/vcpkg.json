@@ -4,7 +4,6 @@
   "description": "Open source robotics simulator.",
   "homepage": "http://gazebosim.org",
   "license": "Apache-2.0",
-  "supports": "!linux",
   "dependencies": [
     "boost-asio",
     "boost-date-time",
