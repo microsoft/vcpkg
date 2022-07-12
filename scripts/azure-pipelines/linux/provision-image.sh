@@ -7,9 +7,13 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
 apt-get -y dist-upgrade
+
+# Install vcpkg prerequisites
+APT_PACKAGES="git curl zip unzip tar"
+
 # Install common build dependencies
-APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
-  build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
+APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
+  build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
   libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
