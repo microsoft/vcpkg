@@ -1,7 +1,4 @@
 The package rsig is header only and can be used from CMake via:
-
-Modern CMake:
-    find_package(rsig CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE rsig::rsig)
-
-
+  
+  find_path(RSIG_INCLUDE_DIRS "rsig/rsig.h")
+  target_include_directories(main PRIVATE ${RSIG_INCLUDE_DIRS})
