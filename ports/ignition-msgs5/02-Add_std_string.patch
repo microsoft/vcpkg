@@ -1,0 +1,29 @@
+diff --git a/src/Generator.cc b/src/Generator.cc
+index 3729ad4..099a46b 100644
+--- a/src/Generator.cc
++++ b/src/Generator.cc
+@@ -67,7 +67,7 @@ Generator::~Generator()
+ 
+ /////////////////////////////////////////////////
+ bool Generator::Generate(const FileDescriptor *_file,
+-                               const string &/*_parameter*/,
++                               const std::string &/*_parameter*/,
+                                OutputDirectory *_generatorContext,
+                                std::string * /*_error*/) const
+ {
+diff --git a/src/Generator.hh b/src/Generator.hh
+index c0f2336..6132274 100644
+--- a/src/Generator.hh
++++ b/src/Generator.hh
+@@ -44,9 +44,9 @@ class Generator : public CodeGenerator
+   /// \param[in] _generatorContext Output directory.
+   /// \param[in] _error Unused string value
+   public: virtual bool Generate(const FileDescriptor *_file,
+-              const string &_parameter,
++              const std::string &_parameter,
+               OutputDirectory *_generatorContext,
+-              string *_error) const;
++              std::string *_error) const;
+ 
+   // private: GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(Generator);
+ };

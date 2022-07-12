@@ -7,8 +7,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_RELEASE
-        -DwxBUILD_DEBUG_LEVEL=0
 )
 
 vcpkg_cmake_install()
