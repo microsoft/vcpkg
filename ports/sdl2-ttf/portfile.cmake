@@ -19,8 +19,7 @@ vcpkg_cmake_configure(
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 #Clean
