@@ -267,7 +267,7 @@ add_custom_target(boost ALL
         debug-symbols=on
         # Enable debugging level 2.
         -d +2
-        optimization=none
+
         debug-store=database
         threading=multi
 
