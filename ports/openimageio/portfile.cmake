@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
+        fix-openexr-dll.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -20,8 +21,6 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -51,7 +50,7 @@ vcpkg_cmake_configure(
         -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
         -DUSE_TBB=OFF
-        -DLINKSTATIC=${LINKSTATIC}
+        -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
