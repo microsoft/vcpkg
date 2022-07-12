@@ -15,7 +15,7 @@ APT_PACKAGES="git curl zip unzip tar"
 APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
   build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
+  libxcursor-dev yasm libnuma1 libnuma-dev \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
   pkg-config meson nasm cmake ninja-build"
@@ -29,7 +29,7 @@ APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
 
 # Additionally required by qt5-base for qt5-x11extras
 APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
-  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
+  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
@@ -67,7 +67,7 @@ APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
-APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
 
 apt-get -y install $APT_PACKAGES
 
