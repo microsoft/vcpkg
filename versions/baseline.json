@@ -3677,8 +3677,8 @@
       "port-version": 1
     },
     "libharu": {
-      "baseline": "2017-08-15",
-      "port-version": 10
+      "baseline": "2.4.0-rc1",
+      "port-version": 0
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
@@ -7502,7 +7502,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 10
+      "port-version": 11
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
