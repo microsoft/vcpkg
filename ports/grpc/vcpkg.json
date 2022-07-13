@@ -36,6 +36,9 @@
     "zlib"
   ],
   "features": {
+    "absl-sync": {
+      "description": "Deprecated."
+    },
     "codegen": {
       "description": "Build code generator machinery"
     }
