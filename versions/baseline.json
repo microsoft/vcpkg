@@ -3970,7 +3970,7 @@
     },
     "libproxy": {
       "baseline": "0.4.17",
-      "port-version": 4
+      "port-version": 5
     },
     "libqcow": {
       "baseline": "20210419",
