@@ -1941,7 +1941,7 @@
       "port-version": 6
     },
     "dlib": {
-      "baseline": "19.23",
+      "baseline": "19.24",
       "port-version": 0
     },
     "dmlc": {
@@ -3677,8 +3677,8 @@
       "port-version": 1
     },
     "libharu": {
-      "baseline": "2017-08-15",
-      "port-version": 10
+      "baseline": "2.4.0-rc1",
+      "port-version": 0
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
@@ -6361,8 +6361,8 @@
       "port-version": 4
     },
     "rxcpp": {
-      "baseline": "4.1.0",
-      "port-version": 2
+      "baseline": "4.1.1",
+      "port-version": 0
     },
     "rxqt": {
       "baseline": "bb2138c",
@@ -7502,7 +7502,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 10
+      "port-version": 11
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
