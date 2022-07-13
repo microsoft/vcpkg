@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 41503e70094ea6a8355c3ef16cfd998b38edb99f3d98e27be197583d42933a6805566e3efc7311af7453bb3d40d51eb589c67324676a31ec86b3ce80000bcb98
     HEAD_REF master
     PATCHES
-        fix-static-build.patch
+        fix-vcpkg-dynamic-build.patch
         fix-default-proto-file-path.patch
 )
 

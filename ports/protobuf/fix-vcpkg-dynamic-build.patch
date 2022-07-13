@@ -1,13 +1,16 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 825cb25..4f453d6 100644
+index 825cb25..390b42a 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -32,7 +32,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+@@ -32,9 +32,9 @@ if (protobuf_BUILD_PROTOC_BINARIES)
    install(TARGETS protoc EXPORT protobuf-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
      BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
 -  if (UNIX AND NOT APPLE)
 +  if (UNIX AND NOT APPLE AND NOT protobuf_MSVC_STATIC_RUNTIME)
      set_property(TARGET protoc
-       PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+-      PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
++      PROPERTY INSTALL_RPATH "$ORIGIN:$ORIGIN/../${CMAKE_INSTALL_LIBDIR}:$ORIGIN/../../${CMAKE_INSTALL_LIBDIR}")
    elseif (APPLE)
+     set_property(TARGET protoc
+       PROPERTY INSTALL_RPATH "@loader_path/../lib")
