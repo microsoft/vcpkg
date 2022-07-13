@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DUSE_EXTERNAL_TINY_PROCESS_LIBRARY=ON
         "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DBUILD_TESTING=OFF  # Not enabled by default, but to be sure
 )
 
