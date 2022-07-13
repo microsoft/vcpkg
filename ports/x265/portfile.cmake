@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}
         -DENABLE_SHARED=${ENABLE_SHARED}
+        -DENABLE_LIBNUMA=OFF
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
 )
@@ -87,10 +88,8 @@ if(UNIX)
             file(WRITE "${FILE}" "${_contents}")
         endif()
     endforeach()
-    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
-else()
-    vcpkg_fixup_pkgconfig()
 endif()
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
