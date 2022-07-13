@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF 35a6d7b15fedfdb5198bb6c28b31cda33b2c2a76 #v3.1.6-final
-    SHA512 f42b97a695e037130da9935e3abf117c0720325f194fcdabace95fa16a5ca06d49e35db9616bb0ef16600044397739459551a6276f3c239bd4fc160ecb6cdc16
+    REF v3.1.7
+    SHA512 d6c9613b82a7e697b60217ba8fe9be4406ce7fad1f8d2d16cbf94c9aa9b5a38f1f3e175cb7a80dac8a57196dd6aa2fc3db83b4099a4257bb1a79707002db4af2
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -37,6 +37,11 @@ vcpkg_check_features(
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
+
+set(OPTIONS_RELEASE "")
+if(NOT "debug-support" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
+endif()
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
@@ -89,8 +94,8 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
+        -DwxUSE_NANOSVG=sys
         -DwxUSE_SECRETSTORE=FALSE
-        -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         ${OPTIONS}
@@ -99,13 +104,19 @@ vcpkg_cmake_configure(
         # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
     OPTIONS_RELEASE
-        -DwxBUILD_DEBUG_LEVEL=0
+        ${OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install()
 
+# The CMake export is not ready for use: It lacks a config file.
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/lib/cmake
+    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+)
+
 set(tools wxrc)
-if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR NOT VCPKG_HOST_IS_WINDOWS)
     list(APPEND tools wxrc-3.1)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
@@ -174,6 +185,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/lib/mswud/wx"
     )
+endif()
+
+if(NOT "debug-support" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.1/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    endif()
 endif()
 
 if("example" IN_LIST FEATURES)
