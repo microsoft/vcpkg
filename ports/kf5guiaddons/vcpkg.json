@@ -47,7 +47,6 @@
           "name": "qt5-wayland",
           "platform": "linux"
         }
-        
       ]
     }
   }
