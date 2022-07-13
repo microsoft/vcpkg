@@ -34,12 +34,12 @@ function(z_copy_tool_file)
                     BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}"
                     OUTPUT_VARIABLE relative_tool_dir
             )
-            # Set the Z_CURRENT_TOOL_DEPENDENCIES_SEARCH_DIR variable, which is signed
+            # Set the Z_CURRENT_TOOL_LD_LIBRARY_PATH variable, which is signed
             # to LD_LIBRARY_PATH within templates/execute_tool.sh.in script file.
             if(relative_tool_dir MATCHES "/debug/")
-                set(Z_CURRENT_TOOL_DEPENDENCIES_SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/lib:${CURRENT_INSTALLED_DIR}/debug/lib")
+                set(Z_CURRENT_TOOL_LD_LIBRARY_PATH "${CURRENT_PACKAGES_DIR}/debug/lib:${CURRENT_INSTALLED_DIR}/debug/lib")
             else()
-                set(Z_CURRENT_TOOL_DEPENDENCIES_SEARCH_DIR "${CURRENT_PACKAGES_DIR}/lib:${CURRENT_INSTALLED_DIR}/lib")
+                set(Z_CURRENT_TOOL_LD_LIBRARY_PATH "${CURRENT_PACKAGES_DIR}/lib:${CURRENT_INSTALLED_DIR}/lib")
             endif()
             # Here's the trick...
             set(Z_CURRENT_TOOL_PATH "${arg_DESTINATION}/${arg_TOOLNAME}.original")
