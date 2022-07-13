@@ -12,7 +12,7 @@
     },
     {
       "name": "openblas",
-      "platform": "!osx | !(static & windows)"
+      "platform": "!(osx | (static & windows))"
     },
     {
       "name": "vcpkg-cmake",
