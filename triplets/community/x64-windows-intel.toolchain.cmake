@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 #include("${CMAKE_CURRENT_LIST_DIR}/config.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/${VCPKG_TARGET_TRIPLET}.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/x64-windows-intel.cmake")
 
 # Set C standard.
 #set(CMAKE_C_STANDARD 11 CACHE STRING "")
