@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 97ba2f9..64a2f33 100644
+index 54df8cf..5232d46 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -107,7 +107,7 @@ else()
- endif()
- message("FREERDP_VERSION=${FREERDP_VERSION_FULL}")
+@@ -129,7 +129,7 @@ endif()
+ 
+ message(STATUS "Git Revision ${GIT_REVISION}")
  
 -set(FREERDP_INCLUDE_DIR "include/freerdp${FREERDP_VERSION_MAJOR}/")
 +set(FREERDP_INCLUDE_DIR "include/")
@@ -25,10 +25,10 @@ index a020dc5..0bc1157 100644
  file(GLOB FREERDP_HEADERS "freerdp/*.h")
  install(FILES ${FREERDP_HEADERS} DESTINATION ${FREERDP_INSTALL_INCLUDE_DIR} COMPONENT headers)
 diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
-index a94090a..08b6b88 100644
+index d8a40da..73ffba4 100644
 --- a/winpr/CMakeLists.txt
 +++ b/winpr/CMakeLists.txt
-@@ -215,7 +215,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
+@@ -221,7 +221,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
  
  	SetFreeRDPCMakeInstallDir(WINPR_CMAKE_INSTALL_DIR "WinPR${WINPR_VERSION_MAJOR}")
  

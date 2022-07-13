@@ -18,7 +18,7 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
-  'Microsoft.VisualStudio.Component.Windows10SDK',
+  "Microsoft.VisualStudio.Component.Windows11SDK.22621",
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',

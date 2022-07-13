@@ -1,0 +1,73 @@
+diff --git a/zzip/CMakeLists.txt b/zzip/CMakeLists.txt
+index 1883272..16d4380 100644
+--- a/zzip/CMakeLists.txt
++++ b/zzip/CMakeLists.txt
+@@ -175,7 +175,7 @@ set(libzzipmmapped_HDRS mmapped.h memdisk.h)
+ 
+ add_library(libzzip ${libzzip_SRCS} )
+ target_link_libraries(libzzip ZLIB::ZLIB )
+-target_include_directories (libzzip PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
++target_include_directories (libzzip PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} PUBLIC $<INSTALL_INTERFACE:include/zzip>)
+ 
+ if(ZZIPFSEEKO)
+ add_library(libzzipfseeko ${libzzipfseeko_SRCS} )
+@@ -255,14 +255,14 @@ install(FILES ${outdir}/zziplib.pc ${outdir}/zzipmmapped.pc ${outdir}/zzipfseeko
+ endif()
+ 
+ install(FILES ${libzzip_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zzip )
+-install(TARGETS libzzip 
++install(TARGETS libzzip EXPORT unofficial-zziplibTargets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ if(ZZIPFSEEKO)
+ install(FILES ${libzzipfseeko_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zzip )
+-install(TARGETS libzzipfseeko 
++install(TARGETS libzzipfseeko EXPORT unofficial-zziplibTargets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -270,12 +270,28 @@ endif()
+ 
+ if(ZZIPMMAPPED)
+ install(FILES ${libzzipmmapped_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zzip )
+-install(TARGETS libzzipmmapped
++install(TARGETS libzzipmmapped EXPORT unofficial-zziplibTargets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+ 
++install(EXPORT unofficial-zziplibTargets
++    NAMESPACE unofficial::zziplib::
++    DESTINATION share/unofficial-zziplib
++)
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-zziplib-config.cmake.in"
++[[include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/*Targets.cmake")
++foreach (TARGET_FILE ${TARGET_FILES})
++    include("${TARGET_FILE}")
++endforeach()
++]])
++configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-zziplib-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-zziplib-config.cmake" @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-zziplib-config.cmake DESTINATION share/unofficial-zziplib)
++
+ if(ZZIP_COMPAT)
+   install(FILES ${outdir}/compat/zzip.h ${outdir}/compat/zziplib.h ${outdir}/compat/zzip-io.h 
+           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+diff --git a/zzipwrap/CMakeLists.txt b/zzipwrap/CMakeLists.txt
+index ea7ea93..2d41f70 100644
+--- a/zzipwrap/CMakeLists.txt
++++ b/zzipwrap/CMakeLists.txt
+@@ -83,7 +83,7 @@ install(FILES ${outdir}/zzipwrap.pc
+ endif()
+ 
+ install(FILES ${libzzipwrap_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zzip )
+-install(TARGETS libzzipwrap
++install(TARGETS libzzipwrap EXPORT unofficial-zziplibTargets
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 

@@ -34,7 +34,6 @@ set(LIBSPEEXDSP_HEADERS
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/resample_neon.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/resample_sse.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/smallft.h"
-    "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/stack_alloc.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/vorbis_psy.h"
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_buffer.h"
 )
@@ -100,6 +99,9 @@ add_library(speexdsp ${LIBSPEEXDSP_SOURCES} ${LIBSPEEXDSP_HEADERS})
 set_target_properties(speexdsp PROPERTIES PUBLIC_HEADER "${LIBSPEEXDSP_HEADERS_PUBLIC}")
 set_target_properties(speexdsp PROPERTIES VERSION "${LIBSPEEXDSP_VERSION}")
 set_target_properties(speexdsp PROPERTIES SOVERSION "${LIBSPEEXDSP_SOVERSION}")
+if (WIN32)
+    set_target_properties(speexdsp PROPERTIES RUNTIME_OUTPUT_NAME "libspeexdsp")
+endif()
 
 # pkgconfig file
 set(prefix "${CMAKE_INSTALL_PREFIX}")

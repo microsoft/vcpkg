@@ -1,16 +1,3 @@
-#[===[
-# z_vcpkg_setup_pkgconfig_path
-
-`z_vcpkg_setup_pkgconfig_path` sets up environment variables to use `pkgconfig`, such as `PKG_CONFIG` and `PKG_CONFIG_PATH`.
-The original values are restored with `z_vcpkg_restore_pkgconfig_path`. `BASE_DIRS` indicates the base directories to find `.pc` files; typically `${CURRENT_INSTALLED_DIR}`, or `${CURRENT_INSTALLED_DIR}/debug`.
-
-```cmake
-z_vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
-# Build process that may transitively invoke pkgconfig
-z_vcpkg_restore_pkgconfig_path()
-```
-
-#]===]
 function(z_vcpkg_setup_pkgconfig_path)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
 
@@ -21,7 +8,13 @@ function(z_vcpkg_setup_pkgconfig_path)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED ENV{${envvar}})
+            set("z_vcpkg_env_backup_${envvar}" "$ENV{${envvar}}" PARENT_SCOPE)
+        else()
+            unset("z_vcpkg_env_backup_${envvar}" PARENT_SCOPE)
+        endif()
+    endforeach()
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
@@ -44,5 +37,11 @@ function(z_vcpkg_restore_pkgconfig_path)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED z_vcpkg_env_backup_${envvar})
+            set("ENV{${envvar}}" "${z_vcpkg_env_backup_${envvar}}")
+        else()
+            unset("ENV{${envvar}}")
+        endif()
+    endforeach()
 endfunction()
