@@ -269,6 +269,7 @@ add_custom_target(boost ALL
         -d +2
 
         debug-store=database
+        pch=off
         threading=multi
 
         stage
