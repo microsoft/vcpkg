@@ -38,7 +38,7 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
-    "libmount"          CMAKE_DISABLE_FIND_PACKAGE_LibMount
+    "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
 )
 
 vcpkg_cmake_configure(
@@ -55,7 +55,7 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tools(
     TOOL_NAMES solid-hardware5
     AUTO_CLEAN
- )
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -64,4 +64,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

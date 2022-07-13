@@ -1,6 +1,7 @@
 {
   "name": "kf5newstuff",
   "version": "5.89.0",
+  "port-version": 1,
   "description": "Framework for downloading and sharing additional application data",
   "homepage": "https://api.kde.org/frameworks/knewstuff/html/index.html",
   "dependencies": [
