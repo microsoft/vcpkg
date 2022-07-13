@@ -9,7 +9,6 @@
   "dependencies": [
     {
       "name": "alsa",
-      "host": true,
       "platform": "linux"
     },
     {
