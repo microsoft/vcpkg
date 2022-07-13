@@ -18,11 +18,15 @@ set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
 set(ENV{AR} "${VCPKG_DETECTED_CMAKE_AR}")
 set(ENV{LD} "${VCPKG_DETECTED_CMAKE_LINKER}")
 
-# OpenSSL's buildsystem hardcodes certain PDB manipulations, so we cannot use Z7
+# OpenSSL's buildsystem hardcodes certain PDB manipulations, so we cannot use Z7 (These are mainly install rules for PDBs....)
 string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_RELEASE "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
 string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
 string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_RELEASE "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
 string(REGEX REPLACE "(^| )-Z7($| )" " " VCPKG_COMBINED_CXX_FLAGS_DEBUG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+
+string(REGEX REPLACE "(^| )(-|/)PDB(STRIPPED)?:[^ ]+($| )" " " VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+string(REGEX REPLACE "(^| )(-|/)PDB(STRIPPED)?:[^ ]+($| )" " " VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+
 
 set(CONFIGURE_OPTIONS
     enable-static-engine
