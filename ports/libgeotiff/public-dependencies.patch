@@ -1,0 +1,47 @@
+diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
+index 1840258..fcf2dd0 100644
+--- a/libgeotiff/CMakeLists.txt
++++ b/libgeotiff/CMakeLists.txt
+@@ -311,17 +311,18 @@ endif()
+ SET_TARGET_PROPERTIES(${GEOTIFF_LIBRARY_TARGET} PROPERTIES
+    OUTPUT_NAME ${GEOTIFF_LIB_NAME})
+ 
+-set(CONFIG_DEPENDENCIES "")
++set(CONFIG_PUBLIC_DEPENDENCIES "")
++set(CONFIG_PRIVATE_DEPENDENCIES "")
+ if(TARGET TIFF::TIFF)
+     set(TIFF_LIBRARIES TIFF::TIFF)
+-    string(APPEND CONFIG_DEPENDENCIES "  find_dependency(TIFF)\n")
++    string(APPEND CONFIG_PUBLIC_DEPENDENCIES "find_dependency(TIFF)\n")
+ endif()
+ target_link_libraries(${GEOTIFF_LIBRARY_TARGET} PUBLIC
+     ${TIFF_LIBRARIES})
+ 
+ if(TARGET PROJ::proj)
+     set(PROJ_LIBRARIES PROJ::proj)
+-    string(APPEND CONFIG_DEPENDENCIES "  find_dependency(PROJ CONFIG)\n")
++    string(APPEND CONFIG_PRIVATE_DEPENDENCIES "  find_dependency(PROJ CONFIG)\n")
+ endif()
+ target_link_libraries(${GEOTIFF_LIBRARY_TARGET} PRIVATE
+     ${PROJ_LIBRARIES})
+diff --git a/libgeotiff/cmake/project-config.cmake.in b/libgeotiff/cmake/project-config.cmake.in
+index 3690489..87de991 100644
+--- a/libgeotiff/cmake/project-config.cmake.in
++++ b/libgeotiff/cmake/project-config.cmake.in
+@@ -22,13 +22,14 @@ set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/bin")
+ unset (_ROOT)
+ unset (_DIR)
+ 
++include(CMakeFindDependencyMacro)
++@CONFIG_PUBLIC_DEPENDENCIES@
+ set (@PROJECT_NAME@_LIBRARIES @GEOTIFF_LIBRARY_TARGET@)
+ if("@BUILD_SHARED_LIBS@")
+   set (@PROJECT_NAME@_SHARED_LIBRARIES ${@PROJECT_NAME@_LIBRARIES})
+ else()
+   set (@PROJECT_NAME@_STATIC_LIBRARIES ${@PROJECT_NAME@_LIBRARIES})
+-  include(CMakeFindDependencyMacro)
+-@CONFIG_DEPENDENCIES@
++@CONFIG_PRIVATE_DEPENDENCIES@
+ endif()
+ 
+ if(NOT @PROJECT_NAME@_FIND_QUIETLY)
