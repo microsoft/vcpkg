@@ -64,10 +64,10 @@ endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME lsquic)
 
 # Concatenate license files and install
-file(READ "${SOURCE_PATH}/LICENSE" LICENSE)
-file(WRITE "${CURRENT_BUILDTREES_DIR}/copyright" "${LICENSE}")
-file(READ "${SOURCE_PATH}/LICENSE.chrome" LICENSE_CHROME)
-file(APPEND "${CURRENT_BUILDTREES_DIR}/copyright" "${LICENSE_CHROME}")
+vcpkg_install_copyright(FILE_LIST 
+  "${SOURCE_PATH}/LICENSE" 
+  "${SOURCE_PATH}/LICENSE.chrome"
+)
 
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
