@@ -1941,7 +1941,7 @@
       "port-version": 6
     },
     "dlib": {
-      "baseline": "19.23",
+      "baseline": "19.24",
       "port-version": 0
     },
     "dmlc": {
