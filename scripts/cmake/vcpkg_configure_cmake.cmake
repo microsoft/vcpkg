@@ -300,6 +300,7 @@ function(vcpkg_configure_cmake)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
+            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
         )
         
         vcpkg_list(APPEND config_logs
@@ -313,6 +314,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                 LOGNAME "${arg_LOGNAME}-dbg"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log"
@@ -326,6 +328,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGNAME}-rel"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log"

@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 979ae25..4eb88a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -210,7 +210,9 @@ if(WIN32 AND MSVC)
+     set( MSVC_FLAGS "-DNOMINMAX -D_USE_MATH_DEFINES -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D__CRT_NONSTDC_NO_WARNINGS" )
+ 
+     # to distinguish between debug and release lib in windows
++    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+     set( CMAKE_DEBUG_POSTFIX "d" ) # little effect in unix
++    endif()
+ else()
+     # add any gcc flags
+ endif()
+diff --git a/tidy.pc.cmake.in b/tidy.pc.cmake.in
+index 7d819f1..cbdd299 100644
+--- a/tidy.pc.cmake.in
++++ b/tidy.pc.cmake.in
+@@ -7,5 +7,5 @@ Name: @LIB_NAME@
+ Description: @LIBTIDY_DESCRIPTION@
+ URL: @LIBTIDY_URL@
+ Version: @LIBTIDY_VERSION@
+-Libs: -L${libdir} -l@LIB_NAME@
++Libs: -L${libdir} -l@LIB_NAME@@CMAKE_DEBUG_POSTFIX@
+ Cflags: -I${includedir}

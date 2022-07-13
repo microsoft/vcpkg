@@ -1,10 +1,10 @@
 {
   "name": "libraw",
   "version-string": "201903",
-  "port-version": 8,
+  "port-version": 9,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
-  "supports": "!arm & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     "jasper",
     "lcms",
