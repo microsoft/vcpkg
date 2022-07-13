@@ -44,7 +44,11 @@ function(z_copy_tool_file)
             # Here's the trick...
             set(Z_CURRENT_TOOL_PATH "${arg_DESTINATION}/${arg_TOOLNAME}.original")
             file(COPY_FILE "${arg_DIRECTORY}/${arg_TOOLNAME}" "${Z_CURRENT_TOOL_PATH}")
-            configure_file(${SCRIPTS}/templates/execute_tool.sh.in ${arg_DESTINATION}/${arg_TOOLNAME})
+            configure_file(
+                ${SCRIPTS}/templates/execute_tool.sh.in
+                ${arg_DESTINATION}/${arg_TOOLNAME}
+                PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+            )
             # Done~
             return()
         endif()
