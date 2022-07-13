@@ -25,6 +25,7 @@ vcpkg_configure_cmake(
         -DSQLITECPP_INTERNAL_SQLITE=OFF
         -DSQLITE_ENABLE_COLUMN_METADATA=OFF
         -DSQLITECPP_INTERNAL_SQLITE=OFF
+        -DSQLITECPP_USE_STACK_PROTECTION=OFF
 )
 
 vcpkg_install_cmake()
