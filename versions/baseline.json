@@ -7422,7 +7422,7 @@
     },
     "vcpkg-get-python-packages": {
       "baseline": "2022-04-11",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-gfortran": {
       "baseline": "3",
