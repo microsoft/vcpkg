@@ -2822,7 +2822,7 @@
     },
     "hiredis": {
       "baseline": "1.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "hps": {
       "baseline": "2022-01-18",
