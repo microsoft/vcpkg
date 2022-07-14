@@ -29,6 +29,7 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME "SDL2_mixer"
     CONFIG_PATH "lib/cmake/SDL2_mixer"
 )
+vcpkg_fixup_pkgconfig()
 
 file(
     INSTALL "${SOURCE_PATH}/LICENSE.txt"
