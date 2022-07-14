@@ -2689,8 +2689,8 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.44.0",
-      "port-version": 1
+      "baseline": "1.46.3",
+      "port-version": 0
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -7309,7 +7309,7 @@
       "port-version": 0
     },
     "upb": {
-      "baseline": "2021-10-19",
+      "baseline": "2022-04-04",
       "port-version": 0
     },
     "urdfdom": {

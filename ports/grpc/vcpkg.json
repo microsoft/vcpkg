@@ -1,7 +1,6 @@
 {
   "name": "grpc",
-  "version-semver": "1.44.0",
-  "port-version": 1,
+  "version-semver": "1.46.3",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "license": "Apache-2.0",
@@ -38,7 +37,7 @@
   ],
   "features": {
     "absl-sync": {
-      "description": "Use abseil synchronization module"
+      "description": "Deprecated."
     },
     "codegen": {
       "description": "Build code generator machinery"

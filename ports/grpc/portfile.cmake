@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 591d56e1300b6d11948e1b821efac785a295989c # v1.44.0
-    SHA512 b24f82768eed95b017a499ffb539af1f59d6916ab2da5ffb1de344ea7b0b7df536d1bb29a9bcb273bd84bc1f11b62383dc6c7df62e50d57621228f5aeeca6d5d
+    REF v1.46.3
+    SHA512 e80322b65c6f8d64dc91bce9f612119191e8d329cac2fbc5da6dad9a2a7ccaa7a501470ed483e555c3ba596e8aff796fbda2747f09e9c4329aed3de4d9b6b666
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -14,13 +14,10 @@ vcpkg_from_github(
         00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
-        00006-fix-uwp-error.patch
         00009-use-system-upb.patch
-        00010-add-feature-absl-sync.patch
         00011-fix-csharp_plugin.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
-        00013-build-upbdefs.patch
         00014-pkgconfig-upbdefs.patch
 )
 
@@ -40,7 +37,6 @@ endif()
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        absl-sync gRPC_ABSL_SYNC_ENABLE
         codegen gRPC_BUILD_CODEGEN
 )
 
@@ -90,11 +86,8 @@ else()
     configure_file("${CMAKE_CURRENT_LIST_DIR}/gRPCTargets-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-vcpkg-tools.cmake" @ONLY)
 endif()
 
-# Ignore the C# extension DLL in bin/
-SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
