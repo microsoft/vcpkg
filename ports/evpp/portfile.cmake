@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-linux-build.patch
         fix-osx-build.patch
         compile-features.patch
+        Add-static-shared-handling.patch
         Export-unofficial-target.patch
 )
 
