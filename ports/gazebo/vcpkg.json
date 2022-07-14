@@ -125,6 +125,10 @@
         "openal-soft"
       ]
     },
+    "plugins": {
+      "description": "Build gazebo plugins",
+      "supports": "!(linux & dynamic)"
+    },
     "simbody": {
       "description": "Use the simbody physics engine",
       "dependencies": [

@@ -7,6 +7,8 @@ vcpkg_from_github(
         0001-Fix-deps.patch
         fix-build-type.patch
         fix-opengl-def.patch
+        fix-feature-test.patch
+        add-feature-plugins.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openal    HAVE_OPENAL
         ffmpeg    FFMPEG_FEATURE
         gts       GTS_FEATURE
+        plugins   BUILD_PLUGINS
     INVERTED_FEATURES
         simbody   CMAKE_DISABLE_FIND_PACKAGE_Simbody
         dart      CMAKE_DISABLE_FIND_PACKAGE_DART

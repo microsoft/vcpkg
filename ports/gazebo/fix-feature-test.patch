@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e0ae3d..4456aa5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -392,8 +392,6 @@ else (build_errors)
+ 
+     if (BUILD_TESTING)
+       add_subdirectory(test)
+-    else()
+-      add_subdirectory(test EXCLUDE_FROM_ALL)
+     endif()
+ 
+   endif (BUILD_GAZEBO)
+diff --git a/gazebo/CMakeLists.txt b/gazebo/CMakeLists.txt
+index 9ad9d02..5c45753 100644
+--- a/gazebo/CMakeLists.txt
++++ b/gazebo/CMakeLists.txt
+@@ -41,7 +41,9 @@ add_subdirectory(gui)
+ add_subdirectory(physics)
+ add_subdirectory(sensors)
+ add_subdirectory(util)
++if (BUILD_TESTING)
+ add_subdirectory(test)
++endif()
+ 
+ add_dependencies(gazebo_physics gazebo_msgs)
+ add_dependencies(gazebo_gui gazebo_msgs)
