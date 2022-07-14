@@ -78,6 +78,14 @@ curl -sSL https://get.haskellstack.org/ | sh
 update-nvidia-cudnn -d
 update-nvidia-cudnn -u
 
+# Install nccl
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+apt-get -y update
+apt-get install --no-install-recommends libnccl2 libnccl-dev
+
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
