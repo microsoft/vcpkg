@@ -3546,7 +3546,7 @@
     },
     "libdc1394": {
       "baseline": "2.2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libde265": {
       "baseline": "1.0.8",
