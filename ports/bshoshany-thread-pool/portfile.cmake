@@ -1,19 +1,13 @@
-#header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bshoshany/thread-pool
-    REF v2.0.0
-    SHA512 eac1674ea999d25d8d0b8f1b24714830330ba4d345e3f730e49359bae89d9259e429d48357a45f7b4355cbbe1a63f04e7fe2c4e0be08b3bbea51018c62721fcc
+    REF v3.0.0
+    SHA512 009c45bdca7555d7446add9bdfd1080d1af09071f94034933bf09629425b6945b708e41cd572b0eb270fd53a1e8a57eed606378d147c88e9f05eaf6fd89d88c9
     HEAD_REF master
 )
 
-# Install headers (header-only):
 file(GLOB HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/*.hpp")
-file(INSTALL
-    "${HEADER_FILES}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 
-)
+file(INSTALL "${HEADER_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

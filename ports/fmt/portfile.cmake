@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-write-batch.patch
         fix-invalid-command.patch
+        fix-format-conflict.patch
 )
 
 vcpkg_cmake_configure(

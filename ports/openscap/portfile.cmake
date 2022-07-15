@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
 if ("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -33,6 +34,7 @@ vcpkg_configure_cmake(
         -DENABLE_OSCAP_UTIL_VM=OFF
         -DENABLE_OSCAP_UTIL_PODMAN=OFF
         -DENABLE_OSCAP_UTIL_CHROOT=OFF
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 
 vcpkg_install_cmake()

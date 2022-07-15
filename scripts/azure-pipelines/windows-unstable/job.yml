@@ -24,7 +24,7 @@ jobs:
     inputs:
       buildType: specific
       project: '0bdbc590-a062-4c3f-b0f6-9383f67865ee'
-      pipeline: 8136
+      pipeline: 16549
       buildVersionToDownload: latestFromBranch
       branchName: 'refs/heads/$(MSVCBranchName)'
       artifactName: BuildNumber

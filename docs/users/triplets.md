@@ -94,7 +94,7 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
-Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)).
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 
 This field is optional.
 

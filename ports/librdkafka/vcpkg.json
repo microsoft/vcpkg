@@ -1,7 +1,7 @@
 {
   "name": "librdkafka",
-  "version": "1.8.2",
-  "port-version": 2,
+  "version": "1.9.0",
+  "port-version": 1,
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/edenhill/librdkafka",
   "license": null,
@@ -18,6 +18,12 @@
     }
   ],
   "features": {
+    "curl": {
+      "description": "Build with curl",
+      "dependencies": [
+        "curl"
+      ]
+    },
     "snappy": {
       "description": "Build with snappy"
     },

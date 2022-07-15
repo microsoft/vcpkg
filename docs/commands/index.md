@@ -7,6 +7,9 @@
 - [Common Options](common-options.md)
 - Commands
   - [vcpkg install](install.md)
+  - [vcpkg integrate](integrate.md)
+  - [vcpkg remove](remove.md)
+  - [vcpkg search](search.md)
 
 ## Source
 

@@ -1,0 +1,13 @@
+diff --git a/src/gaiageo/gg_shape.c b/src/gaiageo/gg_shape.c
+index ee2f1cf..01f2571 100644
+--- a/src/gaiageo/gg_shape.c
++++ b/src/gaiageo/gg_shape.c
+@@ -58,7 +58,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
+ #endif
+ 
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ #endif
+ 
+ #if OMIT_ICONV == 0		/* if ICONV is disabled no SHP support is available */

@@ -1,16 +1,6 @@
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
-  message(FATAL_ERROR "This port is only for Windows Desktop or Linux")
-endif()
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  message(FATAL_ERROR "This port is only for x64 architectures")
-endif()
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 set(MINIMUM_CUDNN_VERSION "7.6.5")
 
-include(${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake)
+include("${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake")
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT OUT_CUDA_VERSION CUDA_VERSION)
 
 # Try to find CUDNN if it exists; only download if it doesn't exist
@@ -71,6 +61,6 @@ else()
   message(FATAL_ERROR "Please install CUDNN using your system package manager (the same way you installed CUDA). For example: apt install libcudnn8-dev.")
 endif()
 
-file(INSTALL "${CURRENT_PORT_DIR}/FindCUDNN.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/FindCUDNN.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

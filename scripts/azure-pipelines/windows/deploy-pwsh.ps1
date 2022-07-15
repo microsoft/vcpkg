@@ -5,5 +5,5 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.2.3/PowerShell-7.2.3-win-x64.msi'
+$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.2.4/PowerShell-7.2.4-win-x64.msi'
 InstallMSI -Url $PwshUrl -Name 'PowerShell Core'

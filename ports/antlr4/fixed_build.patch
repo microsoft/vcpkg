@@ -1,8 +1,8 @@
 diff --git a/runtime/CMakeLists.txt b/runtime/CMakeLists.txt
-index c8b16c6..53b47dd 100644
+index baf46ca..80fa49a 100644
 --- a/runtime/CMakeLists.txt
 +++ b/runtime/CMakeLists.txt
-@@ -21,10 +21,13 @@ file(GLOB libantlrcpp_SRC
+@@ -23,10 +23,13 @@ file(GLOB libantlrcpp_SRC
    "${PROJECT_SOURCE_DIR}/runtime/src/tree/xpath/*.cpp"
  )
  
@@ -17,7 +17,7 @@ index c8b16c6..53b47dd 100644
  message(STATUS "Output libraries to ${LIB_OUTPUT_DIR}")
  
  # make sure 'make' works fine even if ${LIB_OUTPUT_DIR} is deleted.
-@@ -32,16 +35,22 @@ add_custom_target(make_lib_output_dir ALL
+@@ -34,8 +37,11 @@ add_custom_target(make_lib_output_dir ALL
      COMMAND ${CMAKE_COMMAND} -E make_directory ${LIB_OUTPUT_DIR}
      )
  
@@ -27,29 +27,9 @@ index c8b16c6..53b47dd 100644
  add_dependencies(antlr4_static make_lib_output_dir)
 +endif()
  
- find_package(utf8cpp QUIET)
- 
- set(INSTALL_utf8cpp FALSE)
- 
- if (utf8cpp_FOUND)
-+  if(BUILD_SHARED_LIBS)
-   target_link_libraries(antlr4_shared utf8cpp)
-+  else()
-   target_link_libraries(antlr4_static utf8cpp)
-+  endif()
- else()
- 
-   # older utf8cpp doesn't define the package above
-@@ -51,7 +60,7 @@ else()
- 
-   if (utf8cpp_HEADER)
-     include_directories(${utf8cpp_HEADER})
--  else()
-+  elseif(0)
-     include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
-     set(THIRDPARTY_DIR ${CMAKE_BINARY_DIR}/runtime/thirdparty)
-     set(UTFCPP_DIR ${THIRDPARTY_DIR}/utfcpp)
-@@ -76,11 +85,17 @@ else()
+ if (ANTLR_BUILD_CPP_TESTS)
+   include(FetchContent)
+@@ -70,11 +76,17 @@ if (ANTLR_BUILD_CPP_TESTS)
  endif()
  
  if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -67,7 +47,7 @@ index c8b16c6..53b47dd 100644
  endif()
  
  if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-@@ -102,7 +117,7 @@ if(WIN32)
+@@ -96,7 +108,7 @@ if(WIN32)
    set(extra_share_compile_flags "-DANTLR4CPP_EXPORTS")
    set(extra_static_compile_flags "-DANTLR4CPP_STATIC")
  endif(WIN32)
@@ -76,7 +56,7 @@ index c8b16c6..53b47dd 100644
    if(WITH_STATIC_CRT)
      target_compile_options(antlr4_shared PRIVATE "/MT$<$<CONFIG:Debug>:d>")
      target_compile_options(antlr4_static PRIVATE "/MT$<$<CONFIG:Debug>:d>")
-@@ -122,6 +137,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+@@ -116,6 +128,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
    set(extra_static_compile_flags "-DANTLR4CPP_STATIC -MP")
  endif()
  
@@ -84,7 +64,7 @@ index c8b16c6..53b47dd 100644
  set_target_properties(antlr4_shared
                        PROPERTIES VERSION   ${ANTLR_VERSION}
                                   SOVERSION ${ANTLR_VERSION}
-@@ -132,20 +148,25 @@ set_target_properties(antlr4_shared
+@@ -126,25 +139,27 @@ set_target_properties(antlr4_shared
                                   RUNTIME_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
                                   ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
                                   COMPILE_FLAGS "${disabled_compile_warnings} ${extra_share_compile_flags}")
@@ -96,19 +76,21 @@ index c8b16c6..53b47dd 100644
                                   OUTPUT_NAME "antlr4-runtime${static_lib_suffix}"
                                   ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
                                   COMPILE_FLAGS "${disabled_compile_warnings} ${extra_static_compile_flags}")
+-
 +endif()
- 
--install(TARGETS antlr4_shared
 +if(BUILD_SHARED_LIBS)
-+install(TARGETS antlr4_shared EXPORT antlr4-targets
-         DESTINATION lib
--        EXPORT antlr4-targets)
-+        RUNTIME DESTINATION bin
-+        )
+ install(TARGETS antlr4_shared
+         EXPORT antlr4-targets
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+-
 +else()
  install(TARGETS antlr4_static
-         DESTINATION lib
-         EXPORT antlr4-targets)
+         EXPORT antlr4-targets
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +endif()
  
  install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/"

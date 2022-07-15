@@ -53,6 +53,9 @@ APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 # Additionally required by gtk
 APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 
+# Additionally required by gtk3 and at-spi2-atk
+APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
