@@ -6,6 +6,8 @@ vcpkg_from_sourceforge(
     REF "${LIBDC1394_VER}"
     FILENAME "libdc1394-${LIBDC1394_VER}.tar.gz"
     SHA512 2d60ed1054da67d8518e870193b60c1d79778858f48cc6487e252de00cc57a08548515d41914a37d0227d29e158d68892c290f83930ffd95f4a483dce5aa3d25
+    PATCHES
+        fix-macosx.patch
 )
 
 vcpkg_configure_make(
