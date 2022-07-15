@@ -78,20 +78,13 @@ Halting portfile execution.
                 file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
-        
-        if (all_contents MATCHES "is not able to compile a simple test program.")
-            if (all_contents MATCHES "cannot open file 'ucrtd.lib'")
-                message(FATAL_ERROR "Check compile environment failed, please install Windows SDK first.")
-            elseif (all_contents MATCHES "The Windows SDK version ([^ ]*) was not found.")
-                message(FATAL_ERROR "Check compile environment failed, please install Windows SDK ${CMAKE_MATCH_1} first.")
-            elseif (all_contents MATCHES "The system cannot find the file specified")
-                message(FATAL_ERROR "Check compile environment failed, please ensure you install the compiler core features, Visual Studio English language pack and clone vcpkg in a path that does not contain non-ascii characters.")
-            else()
-                message(FATAL_ERROR
-                    "Check compile environment failed, please submit a new issue at https://github.com/microsoft/vcpkg/issues/new/choose with the following logs:"
-                    "${stringified_logs}"
-                )
-            endif()
+
+        if (all_contents MATCHES "cannot open file 'ucrtd.lib'")
+            message(FATAL_ERROR "Check compile environment failed, please install Windows SDK first.")
+        elseif (all_contents MATCHES "The Windows SDK version ([^ ]*) was not found.")
+            message(FATAL_ERROR "Check compile environment failed, please install Windows SDK ${CMAKE_MATCH_1} first.")
+        elseif (all_contents MATCHES "The system cannot find the file specified")
+            message(FATAL_ERROR "Check compile environment failed, please ensure you install the compiler core features, Visual Studio English language pack and clone vcpkg in a path that does not contain non-ascii characters.")
         endif()
 
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
