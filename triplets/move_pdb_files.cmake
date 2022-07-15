@@ -22,14 +22,13 @@ function(z_vcpkg_copy_pdbs)
     message(STATUS "build_rel_pdbs:${build_rel_pdbs}")
     
     set(vslang_backup "$ENV{VSLANG}")
-    set(ENV{VSLANG} 1033)
+    set(ENV{VSLANG} 1033) # to get english output from dumpbin
 
     set(no_matching_pdbs "")
-
-    #If you specify a path name that does not include a file name (the path ends in backslash), the compiler creates a .pdb file named VCx0.pdb in the specified directory.
+    #If you specify a path name that does not include a file name (the path ends in backslash), the compiler creates a .pdb file named VCx.pdb in the specified directory.
 
     foreach(dll_or_exe IN LISTS rel_dlls_or_exe)
-        execute_process(COMMAND dumpbin /PDBPATH:VERBOSE "${dll_or_exe}"
+        execute_process(COMMAND dumpbin /NOLOGO /PDBPATH:VERBOSE "${dll_or_exe}"
                         COMMAND findstr PDB
             OUTPUT_VARIABLE pdb_lines
             ERROR_QUIET
@@ -43,10 +42,11 @@ function(z_vcpkg_copy_pdbs)
         file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/" current_packages_native)
         file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/" current_buildtrees_native)
         string(REPLACE [[\]] [[\\]] current_packages_native "${current_packages_native}")
+        string(REPLACE [[\]] [[\\]] current_buildtrees_native "${current_buildtrees_native}")
 
         set(search_pdbs "${build_rel_pdbs}")
 
-        if(pdb_line MATCHES "PDB file found at.*'([^']+)'")
+        if(pdb_lines MATCHES "PDB file found at.*'([^']+)'")
             # pdb already installed
             message(STATUS "PDB found: ${CMAKE_MATCH_1}")
             continue() 
@@ -62,7 +62,7 @@ function(z_vcpkg_copy_pdbs)
             message(STATUS "found_pdbs:${found_pdbs}") # Hopyfully only one
             list(LENGTH found_pdbs found_pdbs_length)
             if(found_pdbs_length EQUAL "1")
-                file(COPY "${found_pdbs}" DESTINATION "${dll_or_exe_dir}") # All ok
+                #file(INSTALL "${found_pdbs}" DESTINATION "${dll_or_exe_dir}") # All ok
             elseif(found_pdbs_length GREATER "1")
                 message(FATAL_ERROR "More than one possible pdb for '${dll_or_exe}' found: '${found_pdbs}'! Please install the correct pdb manually!")
             elseif(found_pdbs_length EQUAL "0")
@@ -73,7 +73,7 @@ function(z_vcpkg_copy_pdbs)
                 list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
                 list(LENGTH found_pdbs found_pdbs_length)
                 if(found_pdbs_length EQUAL "1")
-                    file(COPY "${found_pdbs_length}" DESTINATION "${dll_or_exe_dir}") # All ok
+                    #file(INSTALL "${found_pdbs_length}" DESTINATION "${dll_or_exe_dir}") # All ok
                 elseif(found_pdbs_length GREATER "1")
                     message(FATAL_ERROR "More than one possible pdb for '${dll_or_exe}' found: '${found_pdbs}'! Please install the correct pdb manually!")
                 elseif(found_pdbs_length EQUAL "0" AND DEFINED CMAKE_MATCH_2)
@@ -84,7 +84,7 @@ function(z_vcpkg_copy_pdbs)
                     list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
                     list(LENGTH found_pdbs found_pdbs_length)
                     if(found_pdbs_length EQUAL "1")
-                        file(COPY "${found_pdbs}" DESTINATION "${dll_or_exe_dir}") # All ok
+                        #file(INSTALL "${found_pdbs}" DESTINATION "${dll_or_exe_dir}") # All ok
                     elseif(found_pdbs_length GREATER "1")
                         message(FATAL_ERROR "More than one possible pdb for '${dll_or_exe}' found: '${found_pdbs}'! Please install the correct pdb manually!")
                     elseif(found_pdbs_length EQUAL "0")
@@ -102,7 +102,7 @@ function(z_vcpkg_copy_pdbs)
         file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug/" current_packages_native)
         string(REPLACE [[\]] [[\\]] current_packages_native "${current_packages_native}")
 
-        if(pdb_line MATCHES "PDB file found at.*'([^']+)'")
+        if(pdb_line MATCHES "PDB file found at '([^']+)'")
             # pdb already installed
             message(STATUS "PDB found: ${CMAKE_MATCH_1}")
             continue() 
@@ -156,7 +156,7 @@ function(z_vcpkg_copy_pdbs)
 
 
         # This needs to be outside the above if. 
-        if(pdb_line MATCHES "PDB file found at.*'${current_buildtrees_native}(.*)'")
+        if(pdb_lines MATCHES "PDB file found at '(${current_buildtrees_native}[^']+)'")
             message(WARNING "File: '${dll_or_exe}' encodes absolute path to a pdb in the buildtree!")
         endif()
     endforeach()

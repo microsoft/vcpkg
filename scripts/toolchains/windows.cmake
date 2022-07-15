@@ -57,15 +57,21 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     unset(CHARSET_FLAG)
 
-    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d /Zi /FS /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
-    set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d /Zi /FS /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
-    set(CMAKE_CXX_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "")
-    set(CMAKE_C_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")
+    if(BUILD_SHARED_LIBS)
+        set(DBG_FLAGS "/Zi /FS")
+    else()
+        set(DBG_FLAGS "/Z7")
+    endif()
+
+    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${DBG_FLAGS} /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${DBG_FLAGS} /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${DBG_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "")
+    set(CMAKE_C_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${DBG_FLAGS} ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")
 
     get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
     if(NOT _CMAKE_IN_TRY_COMPILE)
-        string(APPEND CMAKE_SHARED_LINKER_FLAGS " /PDBALTPATH:../pdb/%_PDB%")
-        string(APPEND CMAKE_EXE_LINKER_FLAGS " /PDBALTPATH:../pdb/%_PDB%")
+        string(APPEND CMAKE_SHARED_LINKER_FLAGS " /PDBALTPATH:%_PDB%")
+        string(APPEND CMAKE_EXE_LINKER_FLAGS " /PDBALTPATH:%_PDB%")
 
         function(z_vcpkg_install_pdbs)
             # from https://stackoverflow.com/questions/37434946/how-do-i-iterate-over-all-cmake-targets-programmatically/62311397#62311397
@@ -93,26 +99,24 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             foreach(target IN LISTS build_targets)
                 get_target_property(type "${target}" TYPE)
                 if(type MATCHES "(SHARED_LIBRARY|EXECUTABLE|MODULE_LIBRARY)")
-                    message(STATUS "Toolchain shared pdb install: ${target}")
-                    install(FILES "$<TARGET_PDB_FILE:${target}>" DESTINATION "pdb" OPTIONAL)
-                elseif(type MATCHES "(STATIC_LIBRARY)")
+                    #message(STATUS "Toolchain shared pdb install: ${target}")
+                    #install(FILES "$<TARGET_PDB_FILE:${target}>" TYPE BIN OPTIONAL)
+                elseif(type MATCHES "(STATIC_LIBRARY|OBJECT_LIBRARY)")
+                    target_compile_options("${target}" PRIVATE "/Z7")
                    # message(STATUS "Toolchain static pdb install: ${target}")
                    # set(pdb_filename "$<PATH:REPLACE_EXTENSION,LAST_ONLY,$<TARGET_FILE_NAME:${target}>,*.pdb>")
                     #get_target_property(pdb_name "${target}" PDB_NAME)
                    # install(FILES "$<TARGET_FILE_DIR:${target}>/${pdb_filename}" DESTINATION "pdb" OPTIONAL)
-                elseif(type MATCHES "(OBJECT_LIBRARY)")
-                    set(z_vcpkg_has_obj_libs ON)
-                    message(STATUS "Toolchain object libraries pdb install: ${target}")
-                    set_target_properties("${target}" PROPERTIES 
-                                            COMPILE_PDB_NAME "${VCPKG_PORT_NAME}_${target}_obj.pdb"
-                                            COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-                                            )
-                    install(FILES "${CMAKE_BINARY_DIR}/${VCPKG_PORT_NAME}_${target}_obj.pdb" DESTINATION "pdb" OPTIONAL)
+                #elseif(type MATCHES "(OBJECT_LIBRARY)")
+                    #set(z_vcpkg_has_obj_libs ON)
+                    #message(STATUS "Toolchain object libraries pdb install: ${target}")
+                    #set_target_properties("${target}" PROPERTIES 
+                    #                        COMPILE_PDB_NAME "${VCPKG_PORT_NAME}_${target}_obj.pdb"
+                    #                        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+                    #                        )
+                    #install(FILES "${CMAKE_BINARY_DIR}/${VCPKG_PORT_NAME}_${target}_obj.pdb" DESTINATION "pdb" OPTIONAL)
                 else()
                     message(STATUS "Toolchain no pdb installed: ${target}|${type}")
-                endif()
-                if(z_vcpkg_has_obj_libs)
-
                 endif()
             endforeach()
         endfunction()
