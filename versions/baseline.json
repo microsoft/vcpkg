@@ -6478,7 +6478,7 @@
     },
     "secp256k1": {
       "baseline": "2022-07-11",
-      "port-version": 5
+      "port-version": 0
     },
     "selene": {
       "baseline": "0.3.1",
