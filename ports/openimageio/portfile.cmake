@@ -60,7 +60,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME OpenImageIO CONFIG_PATH lib/cmake/OpenImageIO)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
