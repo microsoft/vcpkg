@@ -325,7 +325,11 @@
       "port-version": 3
     },
     "azure-core-cpp": {
-      "baseline": "1.6.0",
+      "baseline": "1.7.0",
+      "port-version": 0
+    },
+    "azure-core-tracing-opentelemetry-cpp": {
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -345,7 +349,7 @@
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
-      "baseline": "1.0.0-beta.3",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
@@ -2130,7 +2134,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 6
+      "port-version": 7
     },
     "exiv2": {
       "baseline": "0.27.5",
@@ -2317,8 +2321,8 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2022.07.11.00",
-      "port-version": 0
+      "baseline": "2022.03.21.00",
+      "port-version": 2
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2482,7 +2486,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.8",
-      "port-version": 2
+      "port-version": 3
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2501,7 +2505,7 @@
       "port-version": 0
     },
     "geos": {
-      "baseline": "3.10.2",
+      "baseline": "3.11.0",
       "port-version": 0
     },
     "geotrans": {
@@ -2629,7 +2633,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "1.42.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2685,8 +2689,8 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.44.0",
-      "port-version": 1
+      "baseline": "1.46.3",
+      "port-version": 0
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3170,147 +3174,147 @@
     },
     "kf5archive": {
       "baseline": "5.89.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kf5attica": {
       "baseline": "5.89.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kf5auth": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5bookmarks": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5codecs": {
       "baseline": "5.89.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kf5completion": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5config": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5configwidgets": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5coreaddons": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5crash": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5dbusaddons": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5declarative": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5diagram": {
       "baseline": "2.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5globalaccel": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5guiaddons": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5holidays": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5i18n": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5iconthemes": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5itemmodels": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5itemviews": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5jobwidgets": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5kcmutils": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5kio": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5newstuff": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5notifications": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5package": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5plotting": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5service": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5solid": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5sonnet": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5syntaxhighlighting": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5textwidgets": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5wallet": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5widgetsaddons": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5windowsystem": {
       "baseline": "5.89.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kf5xmlgui": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kfr": {
       "baseline": "4.2.1",
@@ -5122,7 +5126,7 @@
     },
     "openal-soft": {
       "baseline": "1.22.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openblas": {
       "baseline": "0.3.20",
@@ -7305,7 +7309,7 @@
       "port-version": 0
     },
     "upb": {
-      "baseline": "2021-10-19",
+      "baseline": "2022-04-04",
       "port-version": 0
     },
     "urdfdom": {
@@ -7593,7 +7597,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "6.0.0",
+      "baseline": "6.1.0",
       "port-version": 0
     },
     "winsock2": {
