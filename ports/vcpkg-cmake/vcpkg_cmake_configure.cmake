@@ -10,7 +10,7 @@ endmacro()
 
 function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE;DISABLE_DEFAULT_PKGCONFIG_PATH;MORE_DEBUG_INFO"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE;DISABLE_DEFAULT_PKGCONFIG_PATH;MORE_CONFIG_INFO"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
@@ -198,8 +198,9 @@ function(vcpkg_cmake_configure)
         vcpkg_list(APPEND arg_OPTIONS -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON)
     endif()
     
-    if (NOT arg_MORE_DEBUG_INFO)
+    if (arg_MORE_CONFIG_INFO)
         vcpkg_list(APPEND arg_OPTIONS --trace-expand)
+        message(WARNING "Please remove option MORE_CONFIG_INFO in your commit.")
     endif()
 
     vcpkg_list(SET rel_command
