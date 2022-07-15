@@ -2,7 +2,7 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,12 @@
+@@ -1,6 +1,15 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
@@ -11,6 +11,9 @@ index b690864..fb45388 100644
 +find_dependency(unofficial-libsquish CONFIG)
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
++endif()
++if(@USE_WEBP@)
++    find_dependency(WebP CONFIG)
 +endif()
  
  # add here all the find_dependency() whenever switching to config based dependencies
@@ -60,6 +63,15 @@ index 631035a..d416d78 100644
  
  checked_find_package (OpenVDB
                        VERSION_MIN 5.0
+@@ -240,6 +243,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+     checked_find_package (Ptex)
+ endif ()
+ 
++set(WEBP_INCLUDES "")
++set(WEBP_LIBRARIES WebP::webp WebP::webpdemux)
+ checked_find_package (WebP)
+ 
+ option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)
 @@ -307,7 +309,9 @@ endmacro()
  option (USE_EMBEDDED_LIBSQUISH
          "Force use of embedded Libsquish, even if external is found" OFF)
