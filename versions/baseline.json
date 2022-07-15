@@ -3633,8 +3633,8 @@
       "port-version": 0
     },
     "libgd": {
-      "baseline": "2.3.2",
-      "port-version": 1
+      "baseline": "2.3.3",
+      "port-version": 0
     },
     "libgeotiff": {
       "baseline": "1.7.1",
