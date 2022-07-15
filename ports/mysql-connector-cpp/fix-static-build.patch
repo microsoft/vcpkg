@@ -1,7 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c4cb920..ff95984 100644
+index c4cb920..eeb17ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -126,8 +126,8 @@ ENDIF()
+ # CPPFLAGS, CXXFLAGS and LDFLAGS from the environment
+ 
+ SET(FreeBSD11Up False)
+-if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD" AND
+-    ${CMAKE_SYSTEM_VERSION} GREATER "10")
++if ("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD" AND
++    "${CMAKE_SYSTEM_VERSION}" GREATER "10")
+   SET(FreeBSD11Up True)
+ endif()
+ 
 @@ -490,10 +490,12 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/driver/nativeapi)
  ADD_SUBDIRECTORY(cppconn)
  ADD_SUBDIRECTORY(driver)
@@ -16,7 +27,7 @@ index c4cb920..ff95984 100644
  IF(DEFINED CMAKE_SYSTEM_NAME AND ${CMAKE_SYSTEM_NAME} STREQUAL "SunOS")
      # see also README
 diff --git a/driver/CMakeLists.txt b/driver/CMakeLists.txt
-index e7136aa..94362ea 100644
+index e7136aa..73cf1e6 100644
 --- a/driver/CMakeLists.txt
 +++ b/driver/CMakeLists.txt
 @@ -181,7 +181,9 @@ IF(WIN32)
@@ -78,12 +89,13 @@ index e7136aa..94362ea 100644
 +      CHANGE_CRT("T")
 +    ENDIF(STATIC_CRT)
 +  INSTALL(TARGETS mysqlcppconn-static
-+    RUNTIME DESTINATION lib
++    RUNTIME DESTINATION bin
 +    ARCHIVE DESTINATION lib
 +  )
 +  ELSE(STATIC_ONLY)
    INSTALL(TARGETS mysqlcppconn mysqlcppconn-static
-     RUNTIME DESTINATION lib
+-    RUNTIME DESTINATION lib
++    RUNTIME DESTINATION bin
      ARCHIVE DESTINATION lib
    )
 +  ENDIF(STATIC_ONLY)

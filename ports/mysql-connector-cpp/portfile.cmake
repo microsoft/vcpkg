@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-static-build.patch
 )
 
+#These variables are used to tell `mysql-connector-cpp` to use the `libmysql` installed by `vcpkg`
 set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
 find_library(MYSQL_LIB NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}" NO_DEFAULT_PATH REQUIRED)
 find_library(MYSQL_LIB_DEBUG NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH REQUIRED)
@@ -26,12 +27,6 @@ else()
 endif()
 list(APPEND OPTIONS -DSTATIC_ONLY=${MYSQLCLIENT_STATIC_LINKING})
 list(APPEND OPTIONS -DMYSQLCLIENT_STATIC_LINKING=${MYSQLCLIENT_STATIC_LINKING})
-
-set(CMAKE_SYSTEM_NAME ${VCPKG_CMAKE_SYSTEM_NAME})
-set(CMAKE_SYSTEM_VERSION 0)
-if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-    set(CMAKE_SYSTEM_VERSION ${VCPKG_CMAKE_SYSTEM_VERSION})
-endif()
 
 # Use mysql-connector-cpp's own build process, skipping examples and tests.
 vcpkg_cmake_configure(
@@ -55,20 +50,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${DLLS})
-endif()
 file(REMOVE ${CURRENT_PACKAGES_DIR}/BUILDINFO ${CURRENT_PACKAGES_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/README)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE ${DLLS})
-endif()
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/BUILDINFO ${CURRENT_PACKAGES_DIR}/debug/LICENSE ${CURRENT_PACKAGES_DIR}/debug/README)
+
+vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
