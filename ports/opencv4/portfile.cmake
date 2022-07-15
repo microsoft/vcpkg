@@ -15,7 +15,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 4d1783fd78425cc43bb2153446dd634cedd366a49592bccc0c538a40aa161fcf67db8f1b6b68f1ce0b4a93504b3f06f65931709277afb1a1ee9fe963094bca02
+    SHA512 93d7807794682990b6a1d1de1851986ae3c5d1afe6605f3f8cace03ba5e3390bee2568bc0f335af34d3fc974df64cbce0ce685261ec2abd693d259b97b15bc46
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -29,9 +29,10 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
-      0013-fix-opengl.patch
-      0014-fix-gstreamer.patch
+      # 0013-fix-opengl.patch
+      # 0014-fix-gstreamer.patch
       0015-fix-freetype.patch
+      mingw-strsafe-no-deprecate.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -321,7 +322,7 @@ if(WITH_IPP)
 endif()
 
 set(WITH_MSMF ON)
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MINGW)
   set(WITH_MSMF OFF)
 endif()
 

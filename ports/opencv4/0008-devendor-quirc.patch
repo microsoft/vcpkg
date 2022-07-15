@@ -11,8 +11,8 @@
  
 --- a/modules/objdetect/CMakeLists.txt
 +++ b/modules/objdetect/CMakeLists.txt
-@@ -2,7 +2,5 @@ set(the_description "Object Detection")
- ocv_define_module(objdetect opencv_core opencv_imgproc opencv_calib3d opencv_dnn WRAP java objc python js)
+@@ -13,7 +13,5 @@
+ )
  
  if(HAVE_QUIRC)
 -    get_property(QUIRC_INCLUDE GLOBAL PROPERTY QUIRC_INCLUDE_DIR)
@@ -20,3 +20,4 @@
 -    ocv_target_link_libraries(${the_module} quirc)
 +    ocv_target_link_libraries(${the_module} quirc::quirc)
  endif()
+
