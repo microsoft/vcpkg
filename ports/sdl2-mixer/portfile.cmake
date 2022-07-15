@@ -20,7 +20,7 @@ vcpkg_check_features(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS "-DSDL2MIXER_VENDORED=OFF" ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
