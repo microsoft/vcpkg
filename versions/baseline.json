@@ -2321,8 +2321,8 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2022.03.21.00",
-      "port-version": 2
+      "baseline": "2022.07.11.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5677,8 +5677,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2022.03.21.00",
-      "port-version": 2
+      "baseline": "2022.07.11.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
