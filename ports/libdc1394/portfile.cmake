@@ -10,13 +10,20 @@ vcpkg_from_sourceforge(
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "--disable-examples"
+    OPTIONS
+        "--disable-examples"
+        ac_cv_lib_raw1394_raw1394_channel_modify=no
+        ac_cv_path_SDL_CONFIG=no
 )
 vcpkg_install_make()
+
+file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdc1394-2.pc" "\nRequires.private: libusb-1.0\n")
+if(NOT VCPKG_BUILD_TYPE)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdc1394-2.pc" "\nRequires.private: libusb-1.0\n")
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
