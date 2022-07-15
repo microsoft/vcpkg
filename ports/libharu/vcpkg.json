@@ -1,7 +1,6 @@
 {
   "name": "libharu",
-  "version-date": "2017-08-15",
-  "port-version": 12,
+  "version-semver": "2.4.0-rc1",
   "description": "libharu - free PDF library",
   "homepage": "https://github.com/libharu/libharu",
   "license": "Zlib",
@@ -11,17 +10,10 @@
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ],
-  "default-features": [
-    "notiffsymbols"
-  ],
-  "features": {
-    "notiffsymbols": {
-      "description": "disable symbols also defined by the tiff port",
-      "dependencies": [
-        "tiff"
-      ]
-    }
-  }
+  ]
 }
