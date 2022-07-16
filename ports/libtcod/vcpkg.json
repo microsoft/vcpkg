@@ -9,7 +9,7 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "glad",
-    "lodepng-c",
+    "lodepng",
     "sdl2",
     "stb",
     "utf8proc",
