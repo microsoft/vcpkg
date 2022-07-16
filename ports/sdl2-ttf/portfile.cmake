@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME SDL2_ttf)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL2_ttf PACKAGE_NAME SDL2_ttf)
@@ -25,10 +25,8 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-#Clean
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
 
-#Copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
