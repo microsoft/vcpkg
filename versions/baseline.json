@@ -5157,8 +5157,8 @@
       "port-version": 8
     },
     "opencolorio": {
-      "baseline": "2.1.1",
-      "port-version": 2
+      "baseline": "2.1.2",
+      "port-version": 0
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
