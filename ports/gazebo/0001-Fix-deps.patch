@@ -26,7 +26,7 @@ index a989ec7..7cc6f44 100644
 +  endif()
  
 +  find_package(freeimage CONFIG REQUIRED)
-+  set(freeimage_LIBRARIES freeimage::FreeImage)
++  set(FREEIMAGE_LIBRARIES freeimage::FreeImage)
 +  if (0)
    if (WIN32)
      if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
