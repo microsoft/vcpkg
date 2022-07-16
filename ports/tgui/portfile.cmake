@@ -9,8 +9,8 @@ vcpkg_from_github(
         fix-dependencies.patch
 )
 
-set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
-set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
+set(TGUI_SHARE_PATH "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+set(TGUI_TOOLS_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 # Enable static build
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
@@ -58,6 +58,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/nanosvg" "${CU
 ) # All folders are empty
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 
 vcpkg_fixup_pkgconfig()
 

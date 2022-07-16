@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a097d5c..ca278d0 100644
+index a097d5c..66775c2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -59,7 +59,7 @@ option(SDL2TTF_HARFBUZZ "Use harfbuzz to improve text shaping" OFF)
+ set(SDL2TTF_HARFBUZZ_VENDORED "${SDL2TTF_VENDORED}")
+ 
+ # Save BUILD_SHARED_LIBS variable
+-set(SDL2TTF_BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}")
++set(SDL2TTF_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ 
+ if(SDL2TTF_BUILD_SHARED_LIBS)
+     set(sdl2_ttf_export_name SDL2_ttf)
 @@ -164,6 +164,7 @@ set(PC_REQUIRES)
  set(BUILD_SHARED_LIBS OFF)
  
@@ -39,3 +48,21 @@ index a097d5c..ca278d0 100644
  endif()
  
  # Restore BUILD_SHARED_LIBS variable
+@@ -325,7 +337,7 @@ if(SDL2TTF_INSTALL)
+         COMPONENT devel
+     )
+ 
+-    if(SDL2TTF_BUILD_SHARED_LIBS)
++    if(1)
+         # Only create a .pc file for a shared SDL2_ttf
+         set(prefix "${CMAKE_INSTALL_PREFIX}")
+         set(exec_prefix "\${prefix}")
+@@ -352,7 +364,7 @@ if(SDL2TTF_INSTALL)
+             \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\" ONLY_IF_DIFFERENT)
+         file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${PC_DESTDIR}\"
+             TYPE FILE
+-            FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\")" CONFIG Release)
++            FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\")")
+     endif()
+ 
+     if(SDL2TTF_BUILD_SHARED_LIBS AND (APPLE OR (UNIX AND NOT ANDROID)))

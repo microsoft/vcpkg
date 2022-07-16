@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake/SDL2_ttf PACKAGE_NAME SDL2_ttf)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME SDL2_ttf)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL2_ttf PACKAGE_NAME SDL2_ttf)
 endif()
