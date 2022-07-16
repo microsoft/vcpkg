@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF 1.20.1
     SHA512 bef3751dd1b190769163ff7c188479fe100d425fa98d3f0f97a3a81045fe0f0c24690b64bcde29f7af1eb7fd34915371223146598b1f0cab173e69a78c1dfc76
     HEAD_REF develop
-    PATCHES
-        stb-headers.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +16,7 @@ vcpkg_cmake_configure(
         -DLIBTCOD_GLAD=find_package
         -DLIBTCOD_LODEPNG=find_package
         -DLIBTCOD_UTF8PROC=vcpkg
-        -DLIBTCOD_STB=vcpkg
+        -DLIBTCOD_STB=find_package
 )
 
 vcpkg_cmake_install()
