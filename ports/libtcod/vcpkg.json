@@ -8,9 +8,7 @@
   "documentation": "https://libtcod.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "glad",
     "lodepng",
-    "sdl2",
     "stb",
     "utf8proc",
     {
@@ -22,5 +20,17 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "sdl": {
+      "description": "Support for SDL2 windows and events including OpenGL support and the libtcod context.",
+      "dependencies": [
+        "glad",
+        "sdl2"
+      ]
+    },
+    "threads": {
+      "description": "Support for deprecated threading functions.  If in doubt then leave this disabled."
+    }
+  }
 }
