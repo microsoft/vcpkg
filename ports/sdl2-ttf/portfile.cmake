@@ -10,13 +10,10 @@ vcpkg_from_github(
         fix-find_dependencies.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDL2TTF_SAMPLES=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
 )
 
 vcpkg_cmake_install()

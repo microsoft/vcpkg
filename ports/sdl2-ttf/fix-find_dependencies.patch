@@ -41,7 +41,7 @@ index a097d5c..66775c2 100644
          list(APPEND PC_REQUIRES freetype2)
      endif()
 +    endif()
-+
++    list(APPEND PC_REQUIRES freetype2)
 +    find_package(Freetype REQUIRED)
      target_link_libraries(SDL2_ttf PRIVATE Freetype::Freetype)
 +
