@@ -28,6 +28,17 @@ diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
+@@ -175,7 +177,9 @@ checked_find_package (TBB 2017
+                       PREFER_CONFIG)
+ 
+ checked_find_package (DCMTK VERSION_MIN 3.6.1)  # For DICOM images
+-checked_find_package (FFmpeg VERSION_MIN 3.0)
++checked_find_package (FFMPEG)
++set(FFmpeg_FOUND "${FFMPEG_FOUND}")
++set(FFMPEG_INCLUDES "${FFMPEG_INCLUDE_DIRS}")
+ checked_find_package (GIF
+                       VERSION_MIN 4
+                       RECOMMEND_MIN 5.0
 @@ -200,7 +200,9 @@ if (ENABLE_FIELD3D)
  endif ()
  
