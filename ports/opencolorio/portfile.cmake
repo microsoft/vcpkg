@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
-    REF v2.1.1
-    SHA512 86585ec860d460b158f24efb82f202deced7ce96a6bfefd42f39cad9c112add68cca6935f383f5d718c07fe1c121d8ed8b0d2069321f1dafb8ce68b49bc75194
+    REF v2.1.2
+    SHA512 594e808fb1c175d5b14eb540be0dfb6f41cd37b5bf7df8c2d24d44dfe4986643ea68e52d0282eb3b25283489789001a57a201de1eecc1560fc9461780c7da353
     HEAD_REF master
     PATCHES
         fix-dependency.patch
