@@ -7010,7 +7010,7 @@
     },
     "tgui": {
       "baseline": "2021-04-19",
-      "port-version": 3
+      "port-version": 4
     },
     "theia": {
       "baseline": "0.8",
