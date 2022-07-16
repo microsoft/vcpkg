@@ -31,6 +31,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         webp        USE_WEBP
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
+        tools       USE_OPENGL
+        tools       USE_QT
+        tools       USE_QT5
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -45,7 +48,9 @@ vcpkg_cmake_configure(
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_QT=OFF
+        -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
+        -DUSE_TBB=OFF
         -DLINKSTATIC=${LINKSTATIC}
         -DBUILD_MISSING_FMT=OFF
         -DBUILD_MISSING_ROBINMAP=OFF
@@ -54,6 +59,7 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
+        "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
 )
 
 vcpkg_cmake_install()
