@@ -1881,7 +1881,7 @@
       "port-version": 3
     },
     "directx-dxc": {
-      "baseline": "2021-12-08",
+      "baseline": "2022-07-13",
       "port-version": 0
     },
     "directx-headers": {
