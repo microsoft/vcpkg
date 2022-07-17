@@ -11,7 +11,6 @@
         "freetype",
         "gif",
         "libraw",
-        "opencolorio",
         "opencv",
         "openjpeg",
         "pybind11",

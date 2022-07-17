@@ -69,7 +69,10 @@
       ]
     },
     "opencolorio": {
-      "description": "Enable opencolorio support for openimageio",
+      "description": [
+        "Enable opencolorio support for openimageio.",
+        "This feature can only be used when openexr and opencolorio use the same version of Imath."
+      ],
       "dependencies": [
         "opencolorio"
       ]

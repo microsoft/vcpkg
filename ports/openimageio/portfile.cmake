@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-static-ffmpeg.patch
         fix-openexr-dll.patch
+        imath-version-guard.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
