@@ -13,25 +13,11 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
-
-# run `pip install ${package}`
-function(pip_install)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "PACKAGE" "INSTALL_OPTIONS")
-    vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" -m pip install ${arg_PACKAGE} ${arg_INSTALL_OPTIONS}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-        LOGNAME install-${arg_PACKAGE}
-        ERROR_VARIABLE INSTALL_RETURN_CODE
-    )
-    if(INSTALL_RETURN_CODE) # non-zero means failure
-        message(FATAL_ERROR "PIP install failed. Check ${CURRENT_BUILDTREES_DIR}/install-${arg_PACKAGE}-err.log")
-    endif()
-endfunction()
-pip_install(PACKAGE typing-extensions)
-pip_install(PACKAGE pyyaml)
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PACKAGES typing-extension pyyaml
+    OUT_PYTHON_VAR PYTHON3
+)
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SOURCE_PATH}/cmake")
