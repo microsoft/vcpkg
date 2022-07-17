@@ -2662,7 +2662,7 @@
     },
     "gpgmm": {
       "baseline": "0.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gppanel": {
       "baseline": "2020-05-20",
