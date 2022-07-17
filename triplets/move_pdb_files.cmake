@@ -26,9 +26,9 @@ function(z_vcpkg_copy_pdbs)
     list(FILTER build_dbg_pdbs    EXCLUDE REGEX "/[Vv][Cc][0-9]+\\\.pdb")
     #list(FILTER build_dbg_pdbs    INCLUDE REGEX "/\\\.libs/")   # libtool build folder
     
-    message(STATUS "${Z_VCPKG_BUILD_PATH_RELEASE}/*.pdb")
-    message(STATUS "build_rel_pdbs:${build_rel_pdbs}")
-    message(STATUS "build_rel_vc_pdbs:${build_rel_vc_pdbs}")
+    #message(STATUS "${Z_VCPKG_BUILD_PATH_RELEASE}/*.pdb")
+    #message(STATUS "build_rel_pdbs:${build_rel_pdbs}")
+    #    message(STATUS "build_rel_vc_pdbs:${build_rel_vc_pdbs}")
 
     set(vslang_backup "$ENV{VSLANG}")
     set(ENV{VSLANG} 1033) # to get english output from dumpbin
@@ -52,7 +52,8 @@ function(z_vcpkg_copy_pdbs)
 
     function(install_found_pdb dll_or_exe found_pdb)
         cmake_path(GET dll_or_exe PARENT_PATH dll_or_exe_dir)
-        file(INSTALL "${found_pdb}" DESTINATION "${dll_or_exe_dir}") 
+        file(INSTALL "${found_pdb}" DESTINATION "${dll_or_exe_dir}")
+        set(pdb_not_found FALSE PARENT_SCOPE)
     endfunction()
 
     function(find_path_pdb_in_buildtree dll_or_exe search_pdbs found_pdbs function_found function_ambigous function_not_found)
@@ -65,17 +66,16 @@ function(z_vcpkg_copy_pdbs)
             cmake_language(CALL "${function_not_found}" "${dll_or_exe}" "${search_pdbs}" "${found_pdbs}")
         endif()
         set(no_matching_pdbs "${no_matching_pdbs}" PARENT_SCOPE)
+        set(pdb_not_found "${pdb_not_found}" PARENT_SCOPE)
     endfunction()
 
     macro(normalize_pdbs_path_and_regex pdb_match_var pdb_path_out pdb_regex_out)
-        file(TO_CMAKE_PATH "${${pdb_match_var}}" "${pdb_path_out}")
-        string(REPLACE "${CURRENT_PACKAGES_DIR}/${packages_subpath}" "" "${pdb_path_out}" "${${pdb_path_out}}")
+        string(REPLACE "${CURRENT_PACKAGES_DIR}/${packages_subpath}" "" "${pdb_path_out}" "${${pdb_match_var}}")
         string(REPLACE [[.]] [[\.]] "${pdb_regex_out}" "${${pdb_path_out}}")
     endmacro()
 
     macro(normalize_pdbs_path_and_regex_filename_only pdb_match_var pdb_path_out pdb_regex_out)
-        file(TO_CMAKE_PATH "${${pdb_match_var}}" "${pdb_path_out}")
-        cmake_path(GET "${pdb_path_out}" FILENAME "${pdb_path_out}")
+        cmake_path(GET "${pdb_match_var}" FILENAME "${pdb_path_out}")
         string(REPLACE [[.]] [[\.]] "${pdb_regex_out}" "${${pdb_path_out}}")
     endmacro()
 
@@ -84,40 +84,48 @@ function(z_vcpkg_copy_pdbs)
         list(FILTER found_pdbs INCLUDE REGEX "/\\\.libs/") # libtool build folder
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found not_found)
         set(no_matching_pdbs "${no_matching_pdbs}" PARENT_SCOPE)
+        set(pdb_not_found "${pdb_not_found}" PARENT_SCOPE)
     endfunction()
 
     function(find_pdb_by_name dll_or_exe search_pdbs)
-        normalize_pdbs_path_and_regex_filename_only(CMAKE_MATCH_1 pdb_path pdb_regex) # only name lookup
+        normalize_pdbs_path_and_regex_filename_only(pdb_path_not_found pdb_path pdb_regex) # only name lookup
         set(found_pdbs "${search_pdbs}")
         list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb find_ambigous_retry_1 not_found)
         set(no_matching_pdbs "${no_matching_pdbs}" PARENT_SCOPE)
+        set(pdb_not_found "${pdb_not_found}" PARENT_SCOPE)
     endfunction()
 
     macro(analyze_dumpbin_pdbs dll_or_exe search_pdbs_var pdb_lines_var packages_subpath)
-        if(pdb_lines MATCHES "PDB file found at '(${current_buildtrees_native}[^']+)'")
-            message(WARNING "File: '${dll_or_exe}' encodes absolute path to a pdb in the buildtree!")
-        endif()
+        string(REGEX MATCHALL  "PDB file '([^']+)'" pdb_paths_not_found "${${pdb_lines_var}}")  # This will always have 4 elements
+        list(TRANSFORM pdb_paths_not_found REPLACE "PDB file '([^']+)'" "\\1")
+        cmake_path(CONVERT "${pdb_paths_not_found}" TO_CMAKE_PATH_LIST pdb_paths_not_found)
+        message(DEBUG "pdb_paths_not_found: ${pdb_paths_not_found}")
+        string(REGEX MATCHALL  "PDB file found at '([^']+)'" pdb_path_found "${${pdb_lines_var}}") # This will always be just 1 element
+        list(TRANSFORM pdb_path_found REPLACE "PDB file found at '([^']+)'" "\\1")
+        cmake_path(CONVERT "${pdb_path_found}" TO_CMAKE_PATH_LIST pdb_path_found)
+        message(DEBUG "pdb_path_found: ${pdb_path_found}")
+        
         set(pdb_not_found TRUE)
-        if(${pdb_lines_var} MATCHES "PDB file found at.*'([^']+)'") # Found case
-            message(STATUS "CMAKE_MATCH_COUNT:${CMAKE_MATCH_COUNT}")
-            file(TO_CMAKE_PATH "${CMAKE_MATCH_1}" pdb_found_path)
-            if(NOT pdb_found_path MATCHES "${CURRENT_PACKAGES_DIR}")
-                message(FATAL_ERROR "PDB found outside vcpkg package dir: ${pdb_found_path}") # pdb found outside vcpkg
-            else()
-                message(STATUS "PDB found: '${pdb_found_path}'") # pdb already installed
-                set(pdb_not_found TRUE)
-                continue()
-            endif()
+        if(pdb_path_found AND pdb_path_found MATCHES "${CURRENT_BUILDTREES_DIR}") # This is the old vcpkg behavior
+            message(WARNING "File: '${dll_or_exe}' encodes absolute path to a pdb to the buildtree!")
+            install_found_pdb("${dll_or_exe}" "${pdb_path_found}")
+        elseif(pdb_path_found AND NOT pdb_path_found MATCHES "${CURRENT_PACKAGES_DIR}")
+            message(FATAL_ERROR "PDB found outside vcpkg package dir: ${pdb_path_found}") # pdb found outside vcpkg
+        elseif(pdb_path_found AND pdb_path_found MATCHES "${CURRENT_PACKAGES_DIR}")
+            message(VERBOSE "PDB for '${dll_or_exe}' already installed at: ${pdb_path_found}")
+            set(pdb_not_found FALSE)
         endif()
-        if(${pdb_lines_var} MATCHES "PDB file '([^']+)'") # Not found case. 
-            normalize_pdbs_path_and_regex(CMAKE_MATCH_1 pdb_path pdb_regex) # MATCH_1 is same dir/name lookup, e.g. bin/somelib.pdb
+
+        foreach(pdb_path_not_found IN LISTS pdb_paths_not_found)
+            if(NOT pdb_not_found)
+                break()
+            endif()
+            normalize_pdbs_path_and_regex(pdb_path_not_found pdb_path pdb_regex) # MATCH_1 is same dir/name lookup, e.g. bin/somelib.pdb
             set(found_pdbs "${${search_pdbs_var}}")
             list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
             find_path_pdb_in_buildtree("${dll_or_exe}" "${${search_pdbs_var}}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found find_pdb_by_name)
-        elseif(pdb_not_found)
-            list(APPEND no_matching_pdbs "${dll_or_exe}")
-        endif()
+        endforeach()
     endmacro()
 
     find_program(DUMPBIN NAMES dumpbin)
@@ -148,8 +156,8 @@ function(z_vcpkg_copy_pdbs)
         endif()
         set(search_pdbs "${build_rel_pdbs}")
         analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "")
-        if(pdb_lines MATCHES "PDB file found at '(${current_buildtrees_native}[^']+)'")
-            message(WARNING "File: '${dll_or_exe}' encodes absolute path to a pdb in the buildtree!")
+        if(pdb_not_found)
+            list(APPEND no_matching_pdbs "${dll_or_exe}")
         endif()
     endforeach()
     # Debug pdbs
@@ -165,6 +173,10 @@ function(z_vcpkg_copy_pdbs)
         endif()
         set(search_pdbs "${build_dbg_pdbs}")
         analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "debug/")
+        if(pdb_not_found)
+            list(APPEND no_matching_pdbs "${dll_or_exe}")
+        endif()
+
     endforeach()
 
     set(ENV{VSLANG} "${vslang_backup}")
