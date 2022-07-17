@@ -118,7 +118,7 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 9
+      "port-version": 10
     },
     "apr-util": {
       "baseline": "1.6.1",
