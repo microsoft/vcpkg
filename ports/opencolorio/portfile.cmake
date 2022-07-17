@@ -34,6 +34,8 @@ vcpkg_cmake_configure(
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=On
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
 )
 
 vcpkg_cmake_install()
