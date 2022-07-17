@@ -1,0 +1,13 @@
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 5ad7cf6e..c9974d15 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -50,7 +50,7 @@ if (GPGMM_ENABLE_TESTS)
+ 
+ endif() # GPGMM_ENABLE_TESTS
+ 
+-if (GPGMM_ENABLE_VK)
++if (0)
+   FetchContent_Declare(
+     vulkan-headers
+     GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
