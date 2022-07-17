@@ -17,15 +17,15 @@ index 944d452..3916352 100644
 -    endif()
  endif()
 diff --git a/cmake/find/find_freeimage_ext.cmake b/cmake/find/find_freeimage_ext.cmake
-index b11573a..c3f0573 100644
+index b11573a..703458e 100644
 --- a/cmake/find/find_freeimage_ext.cmake
 +++ b/cmake/find/find_freeimage_ext.cmake
 @@ -28,6 +28,9 @@
  
  function(FIND_FREEIMAGE_EXT)
  
-+    find_package(freeimage CONFIG)
-+    if(NOT freeimage_FOUND)
++    find_package(freeimage CONFIG REQUIRED)
++    if(0)
 +
      set(FREEIMAGE_DIR "NOT-SPECIFIED" CACHE PATH "Directory that contains the freeimage library and the corresponding headers.")
      #-----------------------------------------------------------------------------------------------
