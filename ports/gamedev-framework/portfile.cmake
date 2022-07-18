@@ -10,9 +10,8 @@ vcpkg_from_github(
     SHA512 daa6808500e4259152b8173d6f289964d2e0807f434ec25a378575a0160de7c739ce8f483b157b734a1d5726720db6a22212ec2ef803ff567a51ed8a6822cfd7
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DGF_USE_EMBEDDED_LIBS=OFF
         -DGF_BUILD_GAMES=OFF
@@ -25,8 +24,11 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DGF_DEBUG=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gf TARGET_PATH share/gf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME gf
+    CONFIG_PATH lib/cmake/gf
+)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
