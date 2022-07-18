@@ -127,9 +127,18 @@ index f4f517f73b..875d3fc4c7 100644
 
  bool FeedbackMetadata::SpecDiffersFrom(
 diff --git a/src/objects/fixed-array-inl.h b/src/objects/fixed-array-inl.h
-index 5dea891511..5ae1c7903c 100644
+index 5dea891511..9d992deb0d 100644
 --- a/src/objects/fixed-array-inl.h
 +++ b/src/objects/fixed-array-inl.h
+@@ -64,7 +64,7 @@ bool FixedArray::ContainsOnlySmisOrHoles() {
+   return true;
+ }
+
+-Object FixedArray::get(int index) const {
++V8_EXPORT_PRIVATE Object FixedArray::get(int index) const {
+   PtrComprCageBase cage_base = GetPtrComprCageBase(*this);
+   return get(cage_base, index);
+ }
 @@ -83,7 +83,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
    return get(isolate, index).IsTheHole(isolate);
  }
@@ -140,9 +149,18 @@ index 5dea891511..5ae1c7903c 100644
    DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
    DCHECK(Object(value).IsSmi());
 diff --git a/src/objects/fixed-array.h b/src/objects/fixed-array.h
-index f0c3bfc097..bdc21d8bff 100644
+index f0c3bfc097..6eda3ac869 100644
 --- a/src/objects/fixed-array.h
 +++ b/src/objects/fixed-array.h
+@@ -102,7 +102,7 @@ class FixedArray
+     : public TorqueGeneratedFixedArray<FixedArray, FixedArrayBase> {
+  public:
+   // Setter and getter for elements.
+-  inline Object get(int index) const;
++  V8_EXPORT_PRIVATE inline Object get(int index) const;
+   inline Object get(PtrComprCageBase cage_base, int index) const;
+
+   static inline Handle<Object> get(FixedArray array, int index,
 @@ -134,7 +134,7 @@ class FixedArray
    inline bool is_the_hole(Isolate* isolate, int index);
 
@@ -153,7 +171,7 @@ index f0c3bfc097..bdc21d8bff 100644
    inline void set(int index, Object value, WriteBarrierMode mode);
 
 diff --git a/src/objects/intl-objects.cc b/src/objects/intl-objects.cc
-index 3ac016aaa8..3ed7ce3567 100644
+index 3ac016aaa8..fbdb915a0e 100644
 --- a/src/objects/intl-objects.cc
 +++ b/src/objects/intl-objects.cc
 @@ -958,9 +958,11 @@ Intl::CompareStringsOptions Intl::CompareStringsOptionsFor(
@@ -178,7 +196,7 @@ index 3ac016aaa8..3ed7ce3567 100644
 -                      nullptr, &len, &status);
 +        ucurr_getName(
 +		reinterpret_cast<const UChar*>(code.getTerminatedBuffer()),
-+	       	"en", UCURR_LONG_NAME,
++               "en", UCURR_LONG_NAME,
 +                nullptr, &len, &status);
      if (U_SUCCESS(status) &&
 -        u_strcmp(result, code.getTerminatedBuffer()) != 0) {
