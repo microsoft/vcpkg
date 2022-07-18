@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8e6f4f8..89971a9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,9 +30,6 @@ set(CMAKE_CXX_STANDARD 17)
+ # Always specify (aka initialize) the output directories.
+ # Otherwise, the runtime (exe) and library (DLL), could be built under different folders
+ # paths where running the executable directly could fail to find the DLL.
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+ 
+ if(NOT CMAKE_BUILD_TYPE)
+     message(WARNING "CMAKE_BUILD_TYPE not set, forcing it to Debug")
+@@ -231,3 +228,5 @@ install(TARGETS gpgmm
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
+ )
++
++install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/include DESTINATION ${CMAKE_INSTALL_PREFIX})

@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 94a07d4..8e6f4f8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -117,6 +117,10 @@ option_if_not_defined(gpgmm_enable_resource_memory_align_checks "Enables checkin
+ 
+ # The Vulkan loader is an optional dependency.
+ if (GPGMM_ENABLE_VK)
++    find_package(Vulkan REQUIRED)
++    find_path(VULKAN_HEADERS_INCLUDE_DIRS "vulkan.hpp" PATH_SUFFIXES vulkan)
++    add_library(Vulkan-Headers INTERFACE IMPORTED)
++    set_target_properties(Vulkan-Headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${VULKAN_HEADERS_INCLUDE_DIRS})
+ 	if (GPGMM_ENABLE_VK_STATIC_FUNCTIONS OR GPGMM_ENABLE_VK_LOADER)
+ 		set(GPGMM_ENABLE_VK_LOADER ON)
+ 	endif()
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 5ad7cf6..c9974d1 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -50,7 +50,7 @@ if (GPGMM_ENABLE_TESTS)
+ 
+ endif() # GPGMM_ENABLE_TESTS
+ 
+-if (GPGMM_ENABLE_VK)
++if (0)
+   FetchContent_Declare(
+     vulkan-headers
+     GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
