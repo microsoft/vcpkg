@@ -15,7 +15,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generat
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
-    PACKAGES typing-extension pyyaml
+    PACKAGES typing-extensions pyyaml
     OUT_PYTHON_VAR PYTHON3
 )
 

@@ -32,6 +32,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
     }
   ],
   "default-features": [
