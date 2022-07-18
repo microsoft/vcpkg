@@ -2662,7 +2662,7 @@
     },
     "gpgmm": {
       "baseline": "0.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gppanel": {
       "baseline": "2020-05-20",
@@ -7533,11 +7533,15 @@
       "port-version": 2
     },
     "vulkan-headers": {
-      "baseline": "1.2.203",
+      "baseline": "1.3.221",
       "port-version": 0
     },
     "vulkan-hpp": {
       "baseline": "1.2.203",
+      "port-version": 0
+    },
+    "vulkan-loader": {
+      "baseline": "1.3.221",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
