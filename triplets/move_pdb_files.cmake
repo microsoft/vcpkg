@@ -69,17 +69,6 @@ function(z_vcpkg_copy_pdbs)
         set(pdb_not_found "${pdb_not_found}" PARENT_SCOPE)
     endfunction()
 
-    macro(normalize_pdbs_path_and_regex pdb_match_var pdb_path_out pdb_regex_out)
-        string(REPLACE "${CURRENT_PACKAGES_DIR}/${packages_subpath}" "" "${pdb_path_out}" "${${pdb_match_var}}")
-        string(REPLACE [[.]] [[\.]] "${pdb_regex_out}" "${${pdb_path_out}}")
-    endmacro()
-
-    macro(normalize_pdbs_path_and_regex_filename_only pdb_match_var pdb_path_out pdb_regex_out)
-        cmake_path(GET "${pdb_match_var}" FILENAME "${pdb_path_out}")
-        string(REPLACE [[.]] [[\.]] "${pdb_regex_out}" "${${pdb_path_out}}")
-    endmacro()
-
-
     function(find_ambigous_retry_1 dll_or_exe search_pdbs found_pdbs)
         list(FILTER found_pdbs INCLUDE REGEX "/\\\.libs/") # libtool build folder
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found not_found)
@@ -88,7 +77,11 @@ function(z_vcpkg_copy_pdbs)
     endfunction()
 
     function(find_pdb_by_name dll_or_exe search_pdbs)
-        normalize_pdbs_path_and_regex_filename_only(pdb_path_not_found pdb_path pdb_regex) # only name lookup
+        cmake_path(GET pdb_path_not_found FILENAME pdb_path)
+        if(pdb_path MATCHES "[Vv][Cc][0-9]?[0-9][0-9]\\\.pdb")
+            message(FATAL_ERROR "Error cannot install pdb with generic name '${CMAKE_MATCH_O}' found in ${dll_or_exe}")
+        endif()
+        string(REPLACE [[.]] [[\.]] pdb_regex "${pdb_path}")
         set(found_pdbs "${search_pdbs}")
         list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb find_ambigous_retry_1 not_found)
@@ -121,8 +114,9 @@ function(z_vcpkg_copy_pdbs)
             if(NOT pdb_not_found)
                 break()
             endif()
-            normalize_pdbs_path_and_regex(pdb_path_not_found pdb_path pdb_regex) # MATCH_1 is same dir/name lookup, e.g. bin/somelib.pdb
             set(found_pdbs "${${search_pdbs_var}}")
+            string(REPLACE "${CURRENT_PACKAGES_DIR}/${packages_subpath}" "" pdb_path "${pdb_path_not_found}")
+            string(REPLACE [[.]] [[\.]] pdb_regex "${pdb_path}")
             list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
             find_path_pdb_in_buildtree("${dll_or_exe}" "${${search_pdbs_var}}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found find_pdb_by_name)
         endforeach()
@@ -130,6 +124,7 @@ function(z_vcpkg_copy_pdbs)
 
     find_program(DUMPBIN NAMES dumpbin)
     find_program(FINDSTR NAMES findstr)
+    
     # Release pdbs
     foreach(dll_or_exe IN LISTS rel_dlls_or_exe)
         execute_process(COMMAND "${DUMPBIN}" /NOLOGO /PDBPATH:VERBOSE "${dll_or_exe}"
@@ -151,13 +146,15 @@ function(z_vcpkg_copy_pdbs)
         #   api-ms-win-crt-runtime-l1-1-0.dll
         # ]
         
-        if(NOT error_code EQUAL "0")
-            message(FATAL_ERROR "Unable to run dumpbin! Error code: ${error_code}")
+        if(NOT error_code EQUAL "0" AND pdb_lines) # If findstr doesn't match anything it will also return -1; So test for output via pdb_lines
+            message(FATAL_ERROR "Unable to run dumpbin and findstr! Error code: ${error_code};${pdb_lines}")
         endif()
-        set(search_pdbs "${build_rel_pdbs}")
-        analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "")
-        if(pdb_not_found)
-            list(APPEND no_matching_pdbs "${dll_or_exe}")
+        if(pdb_lines)
+            set(search_pdbs "${build_rel_pdbs}")
+            analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "")
+            if(pdb_not_found)
+                list(APPEND no_matching_pdbs "${dll_or_exe}")
+            endif()
         endif()
     endforeach()
     # Debug pdbs
@@ -168,15 +165,16 @@ function(z_vcpkg_copy_pdbs)
             ERROR_QUIET
             RESULT_VARIABLE error_code
         )
-        if(NOT error_code EQUAL "0")
-            message(FATAL_ERROR "Unable to run dumpbin! Error code: ${error_code}")
+        if(NOT error_code EQUAL "0" AND pdb_lines) # If findstr doesn't match anything it will also return -1; So test for output via pdb_lines
+            message(FATAL_ERROR "Unable to run dumpbin and findstr! Error code: ${error_code};${pdb_lines}")
         endif()
-        set(search_pdbs "${build_dbg_pdbs}")
-        analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "debug/")
-        if(pdb_not_found)
-            list(APPEND no_matching_pdbs "${dll_or_exe}")
+        if(pdb_lines)
+            set(search_pdbs "${build_dbg_pdbs}")
+            analyze_dumpbin_pdbs("${dll_or_exe}" search_pdbs pdb_lines "debug/")
+            if(pdb_not_found)
+                list(APPEND no_matching_pdbs "${dll_or_exe}")
+            endif()
         endif()
-
     endforeach()
 
     set(ENV{VSLANG} "${vslang_backup}")
