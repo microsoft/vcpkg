@@ -7,6 +7,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
+get_filename_component(VULKAN_VERSION "${VULKAN_DIR}" NAME)
+if (VULKAN_VERSION VERSION_LESS 1.3.221)
+    message(FATAL_ERROR "${PORT} requires to install Vulkan SDK version greater equal than 1.3.221")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
