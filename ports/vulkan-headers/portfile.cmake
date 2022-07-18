@@ -2,14 +2,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
-    REF 52a76fd0a693708eb8c25bd0ab7a1008091f64d4 #v1.2.203
-    SHA512 e3a337f0f1d0d003db522385b40ed187416e2246e64718b7d980ecdd92ac400a9e96b06dbb52c6f09cf7725772b5772727efb61c0e2f3a67989fe693fa569d38
+    REF 9f73b931f402f23554a60015924e7e35c7047487 #v1.3.221
+    SHA512 4d566ea02ec9c20310a90fbef09ee1550ba3b0cd02db540733d985e83b07b8da3b46ec16c3cdddba5c057511bedd5efbf9514e3e6ed8f31520ee4fc6a40868bb
     HEAD_REF master
 )
 
-# This must be vulkan as other vulkan packages expect it there.
-file(COPY "${SOURCE_PATH}/include/vulkan/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vulkan")
-file(COPY "${SOURCE_PATH}/include/vk_video/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vk_video")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
