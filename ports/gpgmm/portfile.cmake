@@ -12,8 +12,6 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
-        ${EXTRA_OPTIONS}
         -DGPGMM_ENABLE_VK=ON
         "-DGPGMM_VK_TOOLS_DIR=$ENV{VULKAN_SDK}/Tools"
         -DGPGMM_STANDALONE=OFF
