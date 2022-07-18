@@ -1209,11 +1209,6 @@ sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
 
-# the version of v8 we have in the repo supports VS2022,
-# but it must have installed Windows SDK 10.0.22000.194
-v8:x86-windows=fail
-v8:x64-windows=fail
-v8:x64-windows-static=fail
 v8:x64-windows-static-md=fail
 
 zyre:x64-windows-static-md=fail
