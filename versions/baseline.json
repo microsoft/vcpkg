@@ -169,8 +169,8 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "10.6.2",
-      "port-version": 5
+      "baseline": "11.2.3",
+      "port-version": 0
     },
     "arrayfire": {
       "baseline": "3.8.0",
@@ -1305,8 +1305,8 @@
       "port-version": 8
     },
     "cctag": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "1.0.2",
+      "port-version": 0
     },
     "cctz": {
       "baseline": "2.3",
@@ -1754,11 +1754,11 @@
     },
     "cuda": {
       "baseline": "10.1",
-      "port-version": 10
+      "port-version": 11
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 7
+      "port-version": 8
     },
     "cunit": {
       "baseline": "2.1.3",
@@ -2321,8 +2321,8 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2022.03.21.00",
-      "port-version": 2
+      "baseline": "2022.07.11.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2474,7 +2474,7 @@
     },
     "gdal": {
       "baseline": "3.5.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2660,6 +2660,10 @@
       "baseline": "1.14.0",
       "port-version": 2
     },
+    "gpgmm": {
+      "baseline": "0.0.4",
+      "port-version": 0
+    },
     "gppanel": {
       "baseline": "2020-05-20",
       "port-version": 2
@@ -2742,6 +2746,10 @@
     },
     "guilite": {
       "baseline": "2022-05-05",
+      "port-version": 0
+    },
+    "gul14": {
+      "baseline": "2.6",
       "port-version": 0
     },
     "gumbo": {
@@ -3546,7 +3554,7 @@
     },
     "libdc1394": {
       "baseline": "2.2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libde265": {
       "baseline": "1.0.8",
@@ -3633,8 +3641,8 @@
       "port-version": 0
     },
     "libgd": {
-      "baseline": "2.3.2",
-      "port-version": 1
+      "baseline": "2.3.3",
+      "port-version": 0
     },
     "libgeotiff": {
       "baseline": "1.7.1",
@@ -5673,8 +5681,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2022.03.21.00",
-      "port-version": 2
+      "baseline": "2022.07.11.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -6505,8 +6513,8 @@
       "port-version": 3
     },
     "secp256k1": {
-      "baseline": "2017-19-10",
-      "port-version": 4
+      "baseline": "2022-07-11",
+      "port-version": 0
     },
     "selene": {
       "baseline": "0.3.1",
