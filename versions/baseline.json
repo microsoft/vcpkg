@@ -1966,7 +1966,7 @@
     },
     "dpdk": {
       "baseline": "22.03",
-      "port-version": 0
+      "port-version": 1
     },
     "draco": {
       "baseline": "1.5.2",
