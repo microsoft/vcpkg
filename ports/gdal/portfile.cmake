@@ -139,18 +139,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/gdal-config")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gdal-config")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../..")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gdal-config")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gdal-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../../..")
-    endif()
-endif()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT bin_files)
