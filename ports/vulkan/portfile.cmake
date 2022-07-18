@@ -16,7 +16,7 @@ if(NOT EXISTS "${VULKAN_INCLUDE}/vulkan.h")
 endif()
 message(STATUS "Found vulkan.h")
 
-# Check if the user left the version in the installation directory e.g. c:/vulkanSDK/1.1.82.1/
+# Check if the user left the version in the installation directory e.g. c:/vulkanSDK/1.3.216.0/
 if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
     set(VULKAN_VERSION "${CMAKE_MATCH_1}")
     set(VULKAN_MAJOR "${CMAKE_MATCH_2}")
@@ -24,8 +24,8 @@ if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
     set(VULKAN_PATCH "${CMAKE_MATCH_4}")
     message(STATUS "Found Vulkan SDK version ${VULKAN_VERSION}")
 
-    set(VULKAN_REQUIRED_VERSION "1.1.82.1")
-    if (VULKAN_MAJOR LESS 1 OR VULKAN_MINOR LESS 1 OR VULKAN_PATCH LESS 82)
+    set(VULKAN_REQUIRED_VERSION "1.3.216.0")
+    if (VULKAN_MAJOR LESS 1 OR VULKAN_MINOR LESS 3 OR VULKAN_PATCH LESS 216)
         message(FATAL_ERROR "Vulkan ${VULKAN_VERSION} but ${VULKAN_REQUIRED_VERSION} is required. Please download and install a more recent version from:"
                             "\n    https://vulkan.lunarg.com/sdk/home\n")
     endif()
