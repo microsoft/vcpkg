@@ -1,6 +1,9 @@
 # Only provides dynamic library
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
+# https://github.com/KhronosGroup/Vulkan-Loader/blob/master/CMakeLists.txt#L106-L109
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Loader
