@@ -11,24 +11,38 @@ function(z_vcpkg_copy_pdbs)
     endif()
 
     file(GLOB_RECURSE rel_dlls_or_exe "${CURRENT_PACKAGES_DIR}/*.dll" "${CURRENT_PACKAGES_DIR}/*.exe")
+
     set(dbg_dlls_or_exe "${rel_dlls_or_exe}")
     list(FILTER dbg_dlls_or_exe INCLUDE REGEX "(${CURRENT_PACKAGES_DIR}/([^/]+/)*debug/)")
     list(FILTER rel_dlls_or_exe EXCLUDE REGEX "(${CURRENT_PACKAGES_DIR}/([^/]+/)*debug/)")
+
+    file(GLOB_RECURSE rel_dlls_installed "${CURRENT_INSTALLED_DIR}/*.dll")
+    set(dbg_dlls_installed "${rel_dlls_installed}")
+    list(FILTER dbg_dlls_installed INCLUDE REGEX "(${CURRENT_INSTALLED_DIR}/([^/]+/)*debug/)")
+    list(FILTER rel_dlls_installed EXCLUDE REGEX "(${CURRENT_INSTALLED_DIR}/([^/]+/)*debug/)")
+
+    string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/([^/;]+/)*" "" rel_dlls_installed "${rel_dlls_installed}")
+    string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/([^/;]+/)*" "" dbg_dlls_installed "${dbg_dlls_installed}")
+    string(REPLACE "." "\\\." rel_dlls_installed "${rel_dlls_installed}")
+    string(REPLACE "." "\\\." dbg_dlls_installed "${dbg_dlls_installed}")
+    string(REPLACE "+" "\\\+" rel_dlls_installed "${rel_dlls_installed}")
+    string(REPLACE "+" "\\\+" dbg_dlls_installed "${dbg_dlls_installed}")
+    string(REPLACE "*" "\\\*" rel_dlls_installed "${rel_dlls_installed}")
+    string(REPLACE "*" "\\\*" dbg_dlls_installed "${dbg_dlls_installed}")
+    list(JOIN rel_dlls_installed "|" rel_dlls_installed)
+    list(JOIN dbg_dlls_installed "|" dbg_dlls_installed)
+    list(FILTER rel_dlls_or_exe EXCLUDE REGEX "/(${rel_dlls_installed})")
+    list(FILTER dbg_dlls_or_exe EXCLUDE REGEX "/(${dbg_dlls_installed})")
 
     file(GLOB_RECURSE build_rel_pdbs "${Z_VCPKG_BUILD_PATH_RELEASE}/*.pdb")
     set(build_rel_vc_pdbs "${build_rel_pdbs}")
     list(FILTER build_rel_vc_pdbs INCLUDE REGEX "/[Vv][Cc][0-9]+\\\.pdb")
     list(FILTER build_rel_pdbs    EXCLUDE REGEX "/[Vv][Cc][0-9]+\\\.pdb")
-    #list(FILTER build_rel_pdbs    INCLUDE REGEX "/\\\.libs/")   # libtool build folder
+
     file(GLOB_RECURSE build_dbg_pdbs "${Z_VCPKG_BUILD_PATH_DEBUG}/*.pdb")
     set(build_dbg_vc_pdbs "${build_rel_pdbs}")
     list(FILTER build_dbg_vc_pdbs INCLUDE REGEX "/[Vv][Cc][0-9]+\\\.pdb")
     list(FILTER build_dbg_pdbs    EXCLUDE REGEX "/[Vv][Cc][0-9]+\\\.pdb")
-    #list(FILTER build_dbg_pdbs    INCLUDE REGEX "/\\\.libs/")   # libtool build folder
-    
-    #message(STATUS "${Z_VCPKG_BUILD_PATH_RELEASE}/*.pdb")
-    #message(STATUS "build_rel_pdbs:${build_rel_pdbs}")
-    #    message(STATUS "build_rel_vc_pdbs:${build_rel_vc_pdbs}")
 
     set(vslang_backup "$ENV{VSLANG}")
     set(ENV{VSLANG} 1033) # to get english output from dumpbin
@@ -82,6 +96,8 @@ function(z_vcpkg_copy_pdbs)
             message(FATAL_ERROR "Error cannot install pdb with generic name '${CMAKE_MATCH_O}' found in ${dll_or_exe}")
         endif()
         string(REPLACE [[.]] [[\.]] pdb_regex "${pdb_path}")
+        string(REPLACE [[+]] [[\+]] pdb_regex "${pdb_regex}")
+        string(REPLACE [[*]] [[\*]] pdb_regex "${pdb_regex}")
         set(found_pdbs "${search_pdbs}")
         list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb find_ambigous_retry_1 not_found)
@@ -117,6 +133,8 @@ function(z_vcpkg_copy_pdbs)
             set(found_pdbs "${${search_pdbs_var}}")
             string(REPLACE "${CURRENT_PACKAGES_DIR}/${packages_subpath}" "" pdb_path "${pdb_path_not_found}")
             string(REPLACE [[.]] [[\.]] pdb_regex "${pdb_path}")
+            string(REPLACE [[+]] [[\+]] pdb_regex "${pdb_regex}")
+            string(REPLACE [[*]] [[\*]] pdb_regex "${pdb_regex}")
             list(FILTER found_pdbs INCLUDE REGEX "${pdb_regex}")
             find_path_pdb_in_buildtree("${dll_or_exe}" "${${search_pdbs_var}}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found find_pdb_by_name)
         endforeach()
@@ -124,6 +142,9 @@ function(z_vcpkg_copy_pdbs)
 
     find_program(DUMPBIN NAMES dumpbin)
     find_program(FINDSTR NAMES findstr)
+    
+    
+    
     
     # Release pdbs
     foreach(dll_or_exe IN LISTS rel_dlls_or_exe)
