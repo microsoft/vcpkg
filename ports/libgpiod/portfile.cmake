@@ -5,6 +5,11 @@ vcpkg_from_git(
     PATCHES
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cxx-bindings USE_CXX_BINDINGS
+)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND OPTIONS --enable-shared=yes)
     list(APPEND OPTIONS --enable-static=no)
@@ -18,11 +23,16 @@ include("${cmake_vars_file}")
 
 if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
     list(APPEND OPTIONS CC=${VCPKG_DETECTED_CMAKE_C_COMPILER})
-    if (VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    if (VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         list(APPEND OPTIONS ac_cv_func_malloc_0_nonnull=yes)
         list(APPEND OPTIONS ac_cv_func_realloc_0_nonnull=yes)
     endif()
 endif()
+
+if(USE_CXX_BINDINGS)
+    set(cxx-binding yes)
+endif()
+
 
 vcpkg_configure_make(
     AUTOCONFIG
@@ -31,7 +41,7 @@ vcpkg_configure_make(
         ${OPTIONS}
         --enable-tools=no
         --enable-tests=no
-        --enable-bindings-cxx=no
+        --enable-bindings-cxx=${cxx-binding}
         --enable-bindings-python=no
 )
 
