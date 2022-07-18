@@ -1,0 +1,88 @@
+diff --git a/include/EASTL/numeric_limits.h b/include/EASTL/numeric_limits.h
+index e991e7e9..e933c845 100644
+--- a/include/EASTL/numeric_limits.h
++++ b/include/EASTL/numeric_limits.h
+@@ -1435,6 +1435,19 @@ namespace eastl
+ 			static value_type round_error() 
+ 				{ return 0.5f; }
+ 
++			#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L // If using a recent version of MSVC's STL...
++			static value_type infinity()
++				{ return __builtin_huge_valf(); }
++
++			static value_type quiet_NaN()
++				{ return __builtin_nanf("0"); }
++
++			static value_type signaling_NaN()
++				{ return __builtin_nansf("1"); }
++
++			static value_type denorm_min()
++				{ return FLT_TRUE_MIN; }
++			#else
+ 			static value_type infinity() 
+ 				{ return _CSTD _FInf._Float; }
+ 
+@@ -1446,6 +1459,7 @@ namespace eastl
+ 
+ 			static value_type denorm_min() 
+ 				{ return _CSTD _FDenorm._Float; }
++			#endif
+ 
+ 		#endif
+ 	};
+@@ -1553,6 +1567,19 @@ namespace eastl
+ 			static value_type round_error() 
+ 				{ return 0.5f; }
+ 
++			#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L // If using a recent version of MSVC's STL...
++			static value_type infinity()
++				{ return __builtin_huge_val(); }
++
++			static value_type quiet_NaN()
++				{ return __builtin_nan("0"); }
++
++			static value_type signaling_NaN()
++				{ return __builtin_nans("1"); }
++
++			static value_type denorm_min()
++				{ return DBL_TRUE_MIN; }
++			#else
+ 			static value_type infinity() 
+ 				{ return _CSTD _Inf._Double; }
+ 
+@@ -1564,6 +1591,7 @@ namespace eastl
+ 
+ 			static value_type denorm_min() 
+ 				{ return _CSTD _Denorm._Double; }
++			#endif
+ 
+ 		#endif
+ 	};
+@@ -1671,6 +1699,19 @@ namespace eastl
+ 			static value_type round_error() 
+ 				{ return 0.5f; }
+ 
++			#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L // If using a recent version of MSVC's STL...
++			static value_type infinity()
++				{ return __builtin_huge_val(); }
++
++			static value_type quiet_NaN()
++				{ return __builtin_nan("0"); }
++
++			static value_type signaling_NaN()
++				{ return __builtin_nans("1"); }
++
++			static value_type denorm_min()
++				{ return LDBL_TRUE_MIN; }
++			#else
+ 			static value_type infinity() 
+ 				{ return _CSTD _LInf._Long_double; }
+ 
+@@ -1682,6 +1723,7 @@ namespace eastl
+ 
+ 			static value_type denorm_min() 
+ 				{ return _CSTD _LDenorm._Long_double; }
++			#endif
+ 
+ 		#endif
+ 	};

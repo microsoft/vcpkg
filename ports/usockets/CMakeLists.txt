@@ -12,10 +12,12 @@ else()
     set(NOT_USE_OPENSSL "-DLIBUS_NO_SSL")
 endif()
 
-find_package(unofficial-libuv CONFIG REQUIRED)
-find_path(LIBUV_INCLUDE_DIR uv.h)
-find_library(LIBUV_LIBRARY NAMES libuv)
-include_directories(APPEND "${CMAKE_CURRENT_LIST_DIR}/src")
+find_package(libuv CONFIG REQUIRED)
+if (TARGET uv)
+    set(LIBUV_LIBRARY uv)
+else()
+    set(LIBUV_LIBRARY uv_a)
+endif()
 
 file(GLOB SOURCES src/*.c src/eventing/*.c)
 
@@ -49,7 +51,7 @@ if (${LIBUS_USE_LIBUV})
 endif()
 
 target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
-target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR})
+target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
 target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY} ${USOCKETS_EXT_LIBS})
 
 install(TARGETS uSockets
