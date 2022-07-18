@@ -6222,7 +6222,7 @@
     },
     "readline-unix": {
       "baseline": "8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "readline-win32": {
       "baseline": "5.0",
