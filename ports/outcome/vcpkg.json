@@ -18,6 +18,37 @@
     }
   ],
   "features": {
+    "polyfill-cxx17": {
+      "description": "Polyfill C++17 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx17"
+          ]
+        },
+        {
+          "name": "outcome",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        }
+      ]
+    },
+    "polyfill-cxx20": {
+      "description": "Polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        }
+      ]
+    },
     "run-tests": {
       "description": "Build and run the dependency validation tests"
     }
