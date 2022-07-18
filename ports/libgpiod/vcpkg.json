@@ -12,9 +12,9 @@
       "host": true
     }
   ],
-  "features":{
+  "features": {
     "cxx-bindings": {
-      "description":"Make available cxx bindings"
+      "description": "Make available cxx bindings"
     }
   }
 }
