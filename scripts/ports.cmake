@@ -172,7 +172,18 @@ if(CMD STREQUAL "BUILD")
     set(Z_VCPKG_ERROR_LOG_COLLECTION_FILE "${CURRENT_BUILDTREES_DIR}/error-logs-${TARGET_TRIPLET}.txt")
     file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
 
+    foreach(z_pre_portfile_include IN LISTS VCPKG_PRE_PORTFILE_INCLUDES)
+        include("${z_pre_portfile_include}")
+    endforeach()
+    unset(z_pre_portfile_include)
+
     include("${CURRENT_PORT_DIR}/portfile.cmake")
+
+    foreach(z_post_portfile_include IN LISTS VCPKG_POST_PORTFILE_INCLUDES)
+        include("${z_post_portfile_include}")
+    endforeach()
+    unset(z_post_portfile_include)
+
     if(DEFINED PORT)
         # Always fixup RPATH on linux unless explicitly disabled.
         if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
