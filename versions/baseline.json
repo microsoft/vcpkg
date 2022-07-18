@@ -6493,8 +6493,8 @@
       "port-version": 6
     },
     "sdl2-mixer": {
-      "baseline": "2.0.4",
-      "port-version": 16
+      "baseline": "2.6.1",
+      "port-version": 0
     },
     "sdl2-net": {
       "baseline": "2.0.1",
@@ -6506,7 +6506,7 @@
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 2
+      "port-version": 3
     },
     "seal": {
       "baseline": "3.7.2",
