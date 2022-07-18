@@ -2664,10 +2664,6 @@
       "baseline": "1.14.0",
       "port-version": 2
     },
-    "gpgmm": {
-      "baseline": "0.0.4",
-      "port-version": 0
-    },
     "gppanel": {
       "baseline": "2020-05-20",
       "port-version": 2
