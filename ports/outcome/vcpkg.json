@@ -7,7 +7,15 @@
   "supports": "!uwp",
   "dependencies": [
     "ned14-internal-quickcpplib",
-    "status-code"
+    "status-code",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "run-tests": {

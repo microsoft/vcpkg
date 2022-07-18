@@ -22,8 +22,8 @@ Outcome depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byt
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
-    REF 99d1aac7779d21d361c8b9010215c0d8836684cb
-    SHA512 fd63ea190fd6d474e7b200369271df29cf950211e77fe7ec88865a10e0d1e8a91b3ce988337c7036564730ccb8a46a27b7225b5db63935c6d2b2cd8081d4e0c1
+    REF 147ec1e8673c34cb7cf431dfdbf211d8072d7656
+    SHA512 139723be3618b9f3c26c7da6fa5682e6810fc93192bd8752fb7a39378fa1bee8c14b8077d30f71852995bc323dd7beb6676635991995577797b054913cb10231
     HEAD_REF develop
     PATCHES
       outcome-prune-sources.patch
@@ -53,9 +53,8 @@ string(APPEND VCPKG_CXX_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
 string(APPEND VCPKG_C_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
 
 # Use Outcome's own build process, skipping examples and tests.
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_FOUND=1
@@ -64,12 +63,12 @@ vcpkg_configure_cmake(
 )
 
 if("run-tests" IN_LIST FEATURES)
-    vcpkg_build_cmake(TARGET test)
+    vcpkg_cmake_build(TARGET test)
 endif()
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/outcome)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/outcome)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
