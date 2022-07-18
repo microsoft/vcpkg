@@ -23,16 +23,16 @@ function(z_vcpkg_copy_pdbs)
 
     string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/([^/;]+/)*" "" rel_dlls_installed "${rel_dlls_installed}")
     string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/([^/;]+/)*" "" dbg_dlls_installed "${dbg_dlls_installed}")
-    string(REPLACE "." "\\\." rel_dlls_installed "${rel_dlls_installed}")
-    string(REPLACE "." "\\\." dbg_dlls_installed "${dbg_dlls_installed}")
-    string(REPLACE "+" "\\\+" rel_dlls_installed "${rel_dlls_installed}")
-    string(REPLACE "+" "\\\+" dbg_dlls_installed "${dbg_dlls_installed}")
-    string(REPLACE "*" "\\\*" rel_dlls_installed "${rel_dlls_installed}")
-    string(REPLACE "*" "\\\*" dbg_dlls_installed "${dbg_dlls_installed}")
-    list(JOIN rel_dlls_installed "|" rel_dlls_installed)
-    list(JOIN dbg_dlls_installed "|" dbg_dlls_installed)
-    list(FILTER rel_dlls_or_exe EXCLUDE REGEX "/(${rel_dlls_installed})")
-    list(FILTER dbg_dlls_or_exe EXCLUDE REGEX "/(${dbg_dlls_installed})")
+    #string(REPLACE "." "\\\." rel_dlls_installed "${rel_dlls_installed}")
+    #string(REPLACE "." "\\\." dbg_dlls_installed "${dbg_dlls_installed}")
+    #string(REPLACE "+" "\\\+" rel_dlls_installed "${rel_dlls_installed}")
+    #string(REPLACE "+" "\\\+" dbg_dlls_installed "${dbg_dlls_installed}")
+    #string(REPLACE "*" "\\\*" rel_dlls_installed "${rel_dlls_installed}")
+    #string(REPLACE "*" "\\\*" dbg_dlls_installed "${dbg_dlls_installed}")
+    #list(JOIN rel_dlls_installed "|" rel_dlls_installed)
+    #list(JOIN dbg_dlls_installed "|" dbg_dlls_installed)
+    #list(FILTER rel_dlls_or_exe EXCLUDE REGEX "/(${rel_dlls_installed})") # This Regex will be too long for cmake to handle
+    #list(FILTER dbg_dlls_or_exe EXCLUDE REGEX "/(${dbg_dlls_installed})")
 
     file(GLOB_RECURSE build_rel_pdbs "${Z_VCPKG_BUILD_PATH_RELEASE}/*.pdb")
     set(build_rel_vc_pdbs "${build_rel_pdbs}")
@@ -56,7 +56,8 @@ function(z_vcpkg_copy_pdbs)
     string(REPLACE [[\]] [[\\]] current_buildtrees_native "${current_buildtrees_native}")
 
     function(not_found dll_or_exe)
-        list(APPEND no_matching_pdbs "${dll_or_exe}")
+        string(STRIP "${dll_or_exe}" stripped)
+        list(APPEND no_matching_pdbs "${stripped}")
         set(no_matching_pdbs "${no_matching_pdbs}" PARENT_SCOPE)
     endfunction()
 
@@ -142,12 +143,15 @@ function(z_vcpkg_copy_pdbs)
 
     find_program(DUMPBIN NAMES dumpbin)
     find_program(FINDSTR NAMES findstr)
-    
-    
-    
-    
+
     # Release pdbs
     foreach(dll_or_exe IN LISTS rel_dlls_or_exe)
+        cmake_path(GET dll_or_exe FILENAME dll_or_exe_filename)
+        list(FIND rel_dlls_installed "${dll_or_exe_filename}" already_installed)
+        if(NOT already_installed EQUALS "-1")
+            continue()
+        endif()
+
         execute_process(COMMAND "${DUMPBIN}" /NOLOGO /PDBPATH:VERBOSE "${dll_or_exe}"
                         COMMAND "${FINDSTR}" PDB
             OUTPUT_VARIABLE pdb_lines
@@ -180,6 +184,11 @@ function(z_vcpkg_copy_pdbs)
     endforeach()
     # Debug pdbs
     foreach(dll_or_exe IN LISTS dbg_dlls_or_exe)
+        cmake_path(GET dll_or_exe FILENAME dll_or_exe_filename)
+        list(FIND dbg_dlls_installed "${dll_or_exe_filename}" already_installed)
+        if(NOT already_installed EQUALS "-1")
+            continue()
+        endif()
         execute_process(COMMAND "${DUMPBIN}" /NOLOGO /PDBPATH:VERBOSE "${dll_or_exe}"
                         COMMAND "${FINDSTR}" PDB
             OUTPUT_VARIABLE pdb_lines
@@ -201,6 +210,7 @@ function(z_vcpkg_copy_pdbs)
     set(ENV{VSLANG} "${vslang_backup}")
 
     if(NOT no_matching_pdbs STREQUAL "")
+        list(REMOVE_DUPLICATES no_matching_pdbs)
         list(JOIN no_matching_pdbs "\n\t" msg)
         message(WARNING "Could not find a matching pdb file for:\n${msg}\n")
     endif()
