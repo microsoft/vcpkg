@@ -6,15 +6,16 @@ set(OUTPUT_STRING)
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
-                                        CMAKE_HOST_SYSTEM_NAME
+                                        CMAKE_SYSTEM_VERSION
                                         CMAKE_SYSTEM_PROCESSOR
+                                        CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
 endif()
 # Programs to check
-set(PROGLIST AR RANLIB STRIP NM OBJDUMP DLLTOOL MT LINKER)
+set(PROGLIST AR RANLIB READELF STRIP NM OBJDUMP DLLTOOL MT LINKER)
 foreach(prog IN LISTS PROGLIST)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog})
 endforeach()
@@ -77,7 +78,7 @@ endif()
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
@@ -112,6 +113,21 @@ macro(_vcpkg_adjust_flags flag_var)
             endif()
         endif()
     endif()
+    if(CMAKE_SYSTEM_NAME MATCHES "Android")
+        if("${flag_var}" MATCHES "CMAKE_(C|CXX)_FLAGS$")
+            if(ANDROID_NDK_MAJOR GREATER_EQUAL 23)
+                if (ANDROID_LLVM_TRIPLE MATCHES "[0-9]+")
+                    string(APPEND ${flag_var} " ${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${ANDROID_LLVM_TRIPLE} ")
+                else()
+                    string(APPEND ${flag_var} " ${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${ANDROID_LLVM_TRIPLE}${ANDROID_NATIVE_API_LEVEL} ")
+                endif()
+            elseif(ANDROID_NDK_MAJOR GREATER_EQUAL 19)
+                string(REGEX REPLACE "-march=[^ ]+" "" ${flag_var} "${${flag_var}}")
+                string(REGEX REPLACE "-mtune=[^ ]+" "" ${flag_var} "${${flag_var}}")
+                string(APPEND ${flag_var} " ${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${ANDROID_LLVM_TRIPLE} ")
+            endif()
+        endif()
+    endif()
 endmacro()
 
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
@@ -128,7 +144,6 @@ foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
     endforeach()
 endforeach()
-
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 
