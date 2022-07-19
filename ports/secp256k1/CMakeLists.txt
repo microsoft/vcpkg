@@ -15,7 +15,7 @@ add_definitions(
 file(GLOB SOURCES src/secp256k1.c)
 add_library(secp256k1 ${SOURCES})
 
-target_include_directories(secp256k1 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_SOURCE_DIR}/src> $<INSTALL_INTERFACE:include>)
+target_include_directories(secp256k1 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> $<INSTALL_INTERFACE:include>)
 
 file(GLOB SOURCES_PRECOMP src/precomputed_ecmult.c src/precomputed_ecmult_gen.c)
 add_library(secp256k1_precomputed ${SOURCES_PRECOMP})
