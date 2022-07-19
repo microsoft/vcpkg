@@ -45,16 +45,13 @@ else()
     message(FATAL_ERROR "Pre-built binaries for Clang 7 not available, aborting install (platform: ${VCPKG_CMAKE_SYSTEM_NAME}, architecture: ${VCPKG_TARGET_ARCHITECTURE}).")
 endif()
 
-include(CMakePrintHelpers)
-cmake_print_variables(LLVM_BASE_URL LLVM_FILENAME LLVM_CLANG7)
+vcpkg_download_distfile(LLVM_ARCHIVE_PATH
+  URLS     "${LLVM_BASE_URL}/${LLVM_FILENAME}"
+  SHA512   ${LLVM_HASH}
+  FILENAME "${LLVM_FILENAME}"
+)
 
 if(NOT EXISTS ${LLVM_CLANG7})
-    vcpkg_download_distfile(LLVM_ARCHIVE_PATH
-      URLS     "${LLVM_BASE_URL}/${LLVM_FILENAME}"
-      SHA512   ${LLVM_HASH}
-      FILENAME "${LLVM_FILENAME}"
-    )
-
     file(MAKE_DIRECTORY "${LLVM_DIRECTORY}")
 
     if(VCPKG_TARGET_IS_WINDOWS)
