@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -168,7 +168,7 @@
+@@ -170,7 +170,7 @@
  
      ## Provide some pkg-config integration
      set(PKGCONFIG_INSTALL_DIR
@@ -13,7 +13,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -335,12 +335,20 @@
+@@ -356,12 +356,20 @@
      install(
        TARGETS
          Catch2
