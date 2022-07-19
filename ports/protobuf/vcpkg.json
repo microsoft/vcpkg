@@ -1,6 +1,6 @@
 {
   "name": "protobuf",
-  "version-semver": "3.19.4",
+  "version-semver": "3.21.2",
   "description": "Protocol Buffers - Google's data interchange format",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",

@@ -1,9 +1,9 @@
-set(GEOS_VERSION 3.10.2)
+set(GEOS_VERSION 3.11.0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
     FILENAME "geos-${GEOS_VERSION}.tar.bz2"
-    SHA512 390381711ccf56b862c2736cf6329200822f121de1c49df52b8b85cabea8c7787b199df2196acacc2e5c677ff3ebe042d93d70e89deadbc19d754499edb65126
+    SHA512 40c7553bbb93673c231ddd0131b73bf43b3f50524bc5bd9e6934c068d2c09632f388b7429254ae15d9641da2d15e3a626b430438854e98d9e7419ad04e535189
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH

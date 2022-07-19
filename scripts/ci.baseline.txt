@@ -2,13 +2,18 @@
 ## This file defines the current expected build state of ports in CI.
 ##
 ## States
-##   pass - (default) the port builds in the CI system.  If a port is
-##          missing from this file then it is assumed to build.
-##   fail - the port does not build in the CI system.
+##   <unspecified> (default) -
+##          If a port is missing from this file then it is assumed
+##          to build successfully if not blocked by a dependency.
+##   pass - The port must build successfully in the CI system. It is a hard
+##          error if the port build is blocked by a failed dependency.
+##   fail - The port build is expected to fail in the CI system.
 ##          This is not necessarily the same as if a port is expected to build
 ##          on a developers machine because it may fail due to the machine
-##          configuration.  When set to fail the CI system will still attempt
-##          to build the port and will report a CI failure until this file is updated.
+##          configuration. When set to fail the CI system will silently skip
+##          the port for pull request CI runs. But the CI system will still
+##          attempt to build the port in scheduled runs, reporting unexpected
+##          build success as a CI failure.
 ##   skip - Do not build this port in the CI system.
 ##          This is added to ports that may be flaky or conflict with other
 ##          ports.  Please comment for why a port is skipped so it can be
@@ -364,14 +369,8 @@ intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
-isal:arm64-windows=fail
-isal:arm-uwp=fail
-isal:x64-osx=fail
-isal:x64-uwp=fail
-isal:x64-windows=fail
-isal:x64-windows-static=fail
-isal:x64-windows-static-md=fail
-isal:x86-windows=fail
+# Conflict with spdk-isal
+isal:x64-linux=skip
 jemalloc:arm64-windows=fail
 jemalloc:arm-uwp=fail
 jemalloc:x64-linux=fail
@@ -429,7 +428,6 @@ libigl:x64-uwp=fail
 libirecovery:x64-windows-static-md=fail
 # 120 min build time for libjxl arm-uwp-rel, reason unknown
 libjxl:arm-uwp=skip
-liblas:arm64-windows=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
@@ -454,6 +452,9 @@ libmesh:x64-windows-static-md=skip
 libmesh:x86-windows=skip
 libmesh:x64-osx=skip
 libmesh:x64-linux=skip
+# Build fails since PIC is not enabled and some configuration tests do not work properly on UWP
+libmicrodns:arm-uwp=fail
+libmicrodns:x64-uwp=fail
 libmikmod:x64-osx=fail
 libmodman:arm-uwp=fail
 libmodman:x64-uwp=fail
@@ -563,6 +564,10 @@ linenoise-ng:x64-uwp=fail
 live555:arm-uwp=fail
 live555:x64-osx=fail
 live555:x64-uwp=fail
+# fails due to an upstream bug
+llfio:arm64-windows=fail
+# fails due to an outdated gcc version
+llfio:x64-linux=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
 log4cplus:arm-uwp=fail
@@ -756,12 +761,6 @@ opencc:arm64-windows=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:arm-uwp=fail
 opencc:x64-uwp=fail
-opencensus-cpp:arm64-windows=fail
-opencensus-cpp:x64-windows=fail
-opencensus-cpp:x64-windows-static=fail
-opencensus-cpp:x64-windows-static-md=fail
-opencensus-cpp:x86-windows=fail
-opencensus-cpp:x64-uwp=fail
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
 opencsg:arm-uwp=fail
@@ -796,7 +795,6 @@ openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
-openscap:x64-linux=fail
 openscap:x64-osx=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
@@ -1232,6 +1230,14 @@ angle:x64-uwp=fail
 angle:arm64-windows=fail
 angle:arm-uwp=fail
 
+cmake-user:arm-uwp=pass
+cmake-user:arm64-windows=pass
+cmake-user:x64-linux=pass
+cmake-user:x64-osx=pass
+cmake-user:x64-windows-static-md=pass
+cmake-user:x64-windows-static=pass
+cmake-user:x64-windows=pass
+cmake-user:x86-windows=pass
 vcpkg-ci-boost:x64-linux=pass
 vcpkg-ci-boost:x64-windows-static-md=pass
 vcpkg-ci-boost:x64-windows-static=pass

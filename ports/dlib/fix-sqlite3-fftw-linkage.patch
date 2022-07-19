@@ -1,7 +1,8 @@
 diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index 9f3001d..962cfc4 100644
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
-@@ -747,32 +750,15 @@
+@@ -814,32 +814,15 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_LINK_WITH_SQLITE3)
@@ -38,10 +39,12 @@ diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
        endif()
  
  
+diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
+index 2667a2e..cc7b4a2 100644
 --- a/dlib/cmake_utils/dlibConfig.cmake.in
 +++ b/dlib/cmake_utils/dlibConfig.cmake.in
-@@ -28,6 +28,14 @@
-    include("${dlib_CMAKE_DIR}/dlib.cmake")
+@@ -31,6 +31,14 @@ if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
+    unset(dlib_deps_threads_check)
  endif()
  
 +include(CMakeFindDependencyMacro)

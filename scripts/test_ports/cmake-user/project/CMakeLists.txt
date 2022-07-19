@@ -44,6 +44,7 @@ install(TARGETS exe lib
 
 # find_package overload and wrapper
 set(FIND_PACKAGES "" CACHE STRING "List of packages to be found and used")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 foreach(package ${FIND_PACKAGES})
     string(TOUPPER "${package}" package_upper)
     set(CMAKE_FIND_DEBUG_MODE ON)
