@@ -2446,7 +2446,7 @@
     },
     "gamedev-framework": {
       "baseline": "1.0.0",
-      "port-version": 2
+      "port-version": 0
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
