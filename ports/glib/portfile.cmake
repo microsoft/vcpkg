@@ -14,7 +14,7 @@ vcpkg_from_gitlab(
     SHA512 805100bdd240122e1a74b432d7be7458af5b3b0507d46ed9cb0ce2ed6facf6e7d927b1d869831c9ba21b4a40a6667989ff69fc4f661bd044cb08932184804e79
     PATCHES
         use-libiconv-on-windows.patch
-        libintl.pacth
+        libintl.patch
 )
 
 if (selinux IN_LIST FEATURES)
