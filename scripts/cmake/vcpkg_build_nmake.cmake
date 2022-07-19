@@ -69,7 +69,7 @@ function(vcpkg_build_nmake)
                     vcpkg_list(APPEND make_opts "INSTALLDIR=${install_dir_native}\\debug")
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
-                set(ENV{CL} "$(VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+                set(ENV{CL} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
                 set(ENV{LINK} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
                 set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
