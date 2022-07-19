@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF v2.0.5
-    SHA512 65d982d7fe532a61335613f414f3b8fa5333747bdf7aefc2c2d52022d227594ade827639049b97e3c4ffae9f38f32cb15f1a17b1780fb0a943e1a3af05e2b576
+    REF 8271c643c21d1b2f344e339f559f2de6f3663191  #v2.1.0-beta3
+    SHA512 a136f15a87f92c5cab40d49dcc2441f04c14575fa31aba5bd413313ee904d3abc4ebb8f413124781d101f793058c15a07f0a47d50d4fc5a74e7b150a1d1459cf
     HEAD_REF master
     PATCHES
         001-fix-build-path.patch
@@ -29,13 +29,9 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
 
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/luajit.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/minilua.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/minilua.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-            file(COPY "${CURRENT_PACKAGES_DIR}/debug/bin/lua51.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools")
-        endif()
         vcpkg_copy_pdbs()
     else()
         vcpkg_execute_build_process(
@@ -68,13 +64,9 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
 
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/luajit.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/minilua.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/minilua.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools)
-        endif()
         vcpkg_copy_pdbs()
     else()
         vcpkg_execute_build_process(
