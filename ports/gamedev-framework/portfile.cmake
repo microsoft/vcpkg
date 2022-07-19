@@ -11,7 +11,7 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGF_USE_EMBEDDED_LIBS=OFF
         -DGF_BUILD_GAMES=OFF
