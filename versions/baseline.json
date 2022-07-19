@@ -842,7 +842,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.79.0",
-      "port-version": 5
+      "port-version": 6
     },
     "boost-move": {
       "baseline": "1.79.0",
