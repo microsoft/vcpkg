@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "7.84.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -156,6 +157,9 @@
     },
     "tool": {
       "description": "Builds curl executable"
+    },
+    "unicode": {
+      "description": "Enables the Unicode version of the Windows API functions"
     },
     "winidn": {
       "description": "WinIDN support"
