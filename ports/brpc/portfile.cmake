@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-boost-ptr.patch
-        brpc-1783.diff
+        brpc-1783.diff #https://github.com/apache/incubator-brpc/pull/1783
 )
 
 vcpkg_cmake_configure(
