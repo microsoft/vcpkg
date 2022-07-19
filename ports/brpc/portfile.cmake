@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 bd4c67967796592030903041ddb9205e24c9f196e63ebc153e08fbce723d93d27cd4f30f3c2cf904a93cda66ffa9db7d465d6e5fdac27a045ae84afad3dd1dc3
     HEAD_REF master
     PATCHES
-        #fix-build.patch
+        fix-build.patch
         fix-boost-ptr.patch
         brpc-1783.diff
 )
