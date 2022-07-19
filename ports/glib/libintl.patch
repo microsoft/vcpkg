@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index 7773f56..9d1120f 100644
+index 7773f56..171d193 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2089,42 +2089,11 @@ endif
+@@ -2089,42 +2089,10 @@ endif
  # FIXME: glib-gettext.m4 has much more checks to detect broken/uncompatible
  # implementations. This could be extended if issues are found in some platforms.
  libintl_deps = []
@@ -38,14 +38,14 @@ index 7773f56..9d1120f 100644
 -  else
 -    libintl_deps = [libintl] + libintl_deps
 -    have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', 
-+libintl = dependency('Intl', method:'cmake', required : true)
-+libintl_deps += [libintl]
-+have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', args : osx_ldflags,
-                                                    dependencies : libintl_deps)
+-                                                   dependencies : libintl_deps)
 -  endif
 -endif
 -
-+												   
++libintl = dependency('Intl', method:'cmake', required : true)
++libintl_deps += [libintl]
++have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset',
++                                                   dependencies : libintl_deps)												   
  glib_conf.set('HAVE_BIND_TEXTDOMAIN_CODESET', have_bind_textdomain_codeset)
  
  # We require gettext to always be present
