@@ -5713,7 +5713,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.9.2",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "pystring": {
