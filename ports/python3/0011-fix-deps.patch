@@ -1,0 +1,10 @@
+diff --git a/PCbuild/python.props b/PCbuild/python.props
+index c451429da..4a7b2a4b6 100644
+--- a/PCbuild/python.props
++++ b/PCbuild/python.props
+@@ -237,4 +237,5 @@
+     <Message Importance="high" Text="PyDllName:           $(PyDllName)" />
+     <Message Importance="high" Text="WindowsSdkVersion:   $(TargetPlatformVersion)" />
+   </Target>
++  <Import Project="python_vcpkg.props" />
+ </Project>
