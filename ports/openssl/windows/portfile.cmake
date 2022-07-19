@@ -149,7 +149,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
         message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
         endif()
