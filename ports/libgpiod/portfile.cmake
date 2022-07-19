@@ -29,6 +29,7 @@ if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
     endif()
 endif()
 
+set(cxx-binding no)
 if(USE_CXX_BINDINGS)
     set(cxx-binding yes)
 endif()
