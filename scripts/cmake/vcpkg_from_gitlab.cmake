@@ -69,7 +69,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 include(vcpkg_execute_in_download_mode)
 
-function(z_uri_encode input outpu_variable)
+function(z_uri_encode input output_variable)
     string(HEX "${input}" hex)
     string(LENGTH "${hex}" length)
     math(EXPR last "${length} - 1")
@@ -81,7 +81,7 @@ function(z_uri_encode input outpu_variable)
             string(APPEND result "%${char}")
         endif()
     endforeach()
-    set("${outpu_variable}" ${result} PARENT_SCOPE)
+    set("${output_variable}" ${result} PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_from_gitlab)
