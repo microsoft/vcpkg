@@ -78,6 +78,31 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc")
+    find_library(BOOST_THREAD_DBG NAMES boost_thread-vc140-mt-gd boost_thread
+        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH
+    )
+    find_library(FREEIMAGE_DBG NAMES FreeImaged PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc"
+        "-lboost-thread-mt" "${BOOST_THREAD_DBG}"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc"
+        "-lfreeimage" "${FREEIMAGE_DBG}"
+    )
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc")
+    find_library(BOOST_THREAD_REL NAMES boost_thread-vc140-mt boost_thread
+        PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH
+    )
+    find_library(FREEIMAGE_REL NAMES FreeImage PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc"
+        "-lboost-thread-mt" "${BOOST_THREAD_REL}"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc"
+        "-lfreeimage" "${FREEIMAGE_REL}"
+    )
+endif()
+
 vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
