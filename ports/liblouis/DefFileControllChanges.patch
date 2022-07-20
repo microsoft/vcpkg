@@ -1,0 +1,56 @@
+diff --git a/liblouis/lou_translateString.c b/liblouis/lou_translateString.c
+index 11a50e35..b822b484 100644
+--- a/liblouis/lou_translateString.c
++++ b/liblouis/lou_translateString.c
+@@ -2247,7 +2247,7 @@ undefinedCharacter(widechar c, const TranslationTableHeader *table, int pos,
+ 
+ 	const char *text = (mode & noUndefined) ? "" : _lou_showString(&c, 1, 1);
+ 	size_t length = strlen(text);
+-	widechar dots[length];
++	widechar *dots = (widechar*)malloc( length * CHARSIZE );
+ 
+ 	for (unsigned int k = 0; k < length; k += 1) {
+ 		dots[k] = 0;
+@@ -2267,8 +2267,15 @@ undefinedCharacter(widechar c, const TranslationTableHeader *table, int pos,
+ 		if (!dots[k]) dots[k] = _lou_charToFallbackDots(text[k]);
+ 	}
+ 
+-	return for_updatePositions(dots, 1, length, 0, pos, input, output, posMapping,
+-			cursorPosition, cursorStatus);
++	int retVal = for_updatePositions(dots, 1, length, 0, pos, input, output, posMapping,
++	 			cursorPosition, cursorStatus);
++
++    if(dots)
++    {
++        free(dots);
++    }
++
++    return retVal;
+ }
+ 
+ static int
+diff --git a/windows/Makefile.nmake b/windows/Makefile.nmake
+index c2097628..1ec24bd5 100755
+--- a/windows/Makefile.nmake
++++ b/windows/Makefile.nmake
+@@ -4,9 +4,9 @@
+ 
+ !include configure.mk
+ 
+-CC = clang-cl
++CC = cl
+ 
+-CFLAGS = /nologo /O2 /W3 /c /MD /Iinclude /D_EXPORTING
++CFLAGS = /nologo /O2 /W3 /c /MT /Zi /Iinclude /D_EXPORTING
+ # The Visual C++ C Runtime deprecates several standard library functions in
+ # preference for _s variants that are specific to Visual C++. This removes
+ # those deprecation warnings.
+@@ -22,7 +22,7 @@ WIDECHAR_TYPE = unsigned short int
+ WIDECHAR_TYPE = unsigned int
+ !endif
+ 
+-DLLFLAGS = /dll /nologo
++DLLFLAGS = /dll /nologo /debug
+ LIBFLAGS = /nologo
+ 
+ HEADERS = $(SRCDIR)\internal.h $(SRCDIR)\liblouis.h \
