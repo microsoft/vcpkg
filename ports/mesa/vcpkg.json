@@ -96,7 +96,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "arm-target"
+            "target-arm"
           ],
           "platform": "arm32"
         },
@@ -112,7 +112,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "x86-target"
+            "target-x86"
           ],
           "platform": "x64 | x86"
         }
