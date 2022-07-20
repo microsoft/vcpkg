@@ -14,6 +14,7 @@ vcpkg_from_github(
       0004-add-ffmpeg-missing-defines.patch
       0005-fix-cuda.patch
       0006-fix-jasper.patch
+      0007-fix-config.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
