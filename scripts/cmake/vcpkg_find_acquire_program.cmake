@@ -380,33 +380,14 @@ function(vcpkg_find_acquire_program program)
         endif()
     elseif(program STREQUAL "CLANG")
         set(program_name clang)
-        set(tool_subdirectory "clang-12.0.0")
-        set(program_version 12.0.0)
+        set(tool_subdirectory "clang-14.0.6")
+        set(program_version 14.0.6)
         if(CMAKE_HOST_WIN32)
             set(paths_to_search
-                # Support LLVM in Visual Studio 2019
-                "$ENV{LLVMInstallDir}/x64/bin"
-                "$ENV{LLVMInstallDir}/bin"
-                "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
-                "$ENV{VCINSTALLDIR}/Tools/Llvm/bin"
-                "${DOWNLOADS}/tools/${tool_subdirectory}-windows/bin"
                 "${DOWNLOADS}/tools/clang/${tool_subdirectory}/bin")
-
-            if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-                set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
-            else()
-                set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
-            endif()
-
-            if(host_arch MATCHES "64")
-                set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
-                set(download_filename "LLVM-${program_version}-win64.7z.exe")
-                set(download_sha512 67a9b54abad5143fa5f79f0cfc184be1394c9fc894fa9cee709943cb6ccbde8f0ea6003d8fcc20eccf035631abe4009cc0f694ac84e7879331cebba8125e4c7f)
-            else()
-                set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win32.exe")
-                set(download_filename "LLVM-${program_version}-win32.7z.exe")
-                set(download_sha512 92fa5252fd08c1414ee6d71e2544cd2c44872124c47225f8d98b3af711d20e699f2888bc30642dfd00e005013da1607a593674fb4878951cc434694f9a119199)
-            endif()
+            set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
+            set(download_filename "LLVM-${program_version}-win64.7z.exe")
+            set(download_sha512 31b65971482366674cb8d986a5038c9a31fade832a7198c585bb7700f07b89dd9ffc3603124184eff06c7b9ec3caa11eacf51912be47db604180c792f143f6f2)
         endif()
         set(brew_package_name "llvm")
         set(apt_package_name "clang")
