@@ -22,8 +22,7 @@ if(NOT VCPKG_PREFER_SYSTEM_LIBS)
 
   # libdpdk.pc and libdpdk-libs.pc are installed to this path
   set(ENV{PKG_CONFIG_PATH}
-      "${_IMPORT_PREFIX}${path_suffix}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}"
-  )
+      "${_IMPORT_PREFIX}${path_suffix}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 else()
   unset(backup_env_pkg_config_path)
 endif()
@@ -33,7 +32,16 @@ if(DEFINED ENV{PKG_CONFIG})
 else()
   set(PKG_CONFIG_EXECUTABLE "@PKGCONFIG@")
 endif()
+
 find_package(PkgConfig REQUIRED)
+if(${PKG_CONFIG_VERSION_STRING} VERSION_LESS "0.28")
+  message(
+    FATAL_ERROR
+      "  pkg-config version 0.28 or greater is required for DPDK.\n"
+      "  Upgrade pkg-config or use the PKG_CONFIG environment variable to set the path to a newer version of pkg-config. See\n"
+      "    https://doc.dpdk.org/guides/linux_gsg/sys_reqs.html#compilation-of-the-dpdk"
+  )
+endif()
 pkg_check_modules(LIBDPDK REQUIRED libdpdk>=@PORT_VERSION@)
 
 if(DEFINED backup_env_pkg_config_path)
@@ -65,7 +73,9 @@ else()
   target_link_libraries(unofficial::@PORT@::dpdk INTERFACE ${LIBDPDK_LDFLAGS})
 endif()
 
-target_include_directories(unofficial::@PORT@::dpdk INTERFACE ${INCLUDE_DIRS})
+set_target_properties(
+  unofficial::@PORT@::dpdk PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                      "${INCLUDE_DIRS}")
 
 find_package_handle_standard_args(
   unofficial-@PORT@

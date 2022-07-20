@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 if(VCPKG_TARGET_IS_LINUX)
   execute_process(
     COMMAND uname --kernel-release
@@ -32,7 +34,7 @@ vcpkg_from_github(
   SHA512 ff80a9f87e71cd743ea5e62f515849bc6746fe7496a0d4b63ecf2bfe0d88da74f0e6c0257c07838c1f9ff41abd81827932b97731fb0fce60d56a8bab7e32347c
   HEAD_REF main
   PATCHES
-      enable-either-static-or-shared-build.patch
+      enable-only-static-build.patch
       remove-examples-src-from-datadir.patch
       stop-building-apps.patch)
 

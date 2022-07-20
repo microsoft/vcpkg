@@ -1,5 +1,5 @@
 diff --git a/drivers/meson.build b/drivers/meson.build
-index 1d8123b00c..2de654692d 100644
+index 1d8123b00c..7ccf9187b2 100644
 --- a/drivers/meson.build
 +++ b/drivers/meson.build
 @@ -126,14 +126,15 @@ foreach subpath:subdirs
@@ -22,17 +22,17 @@ index 1d8123b00c..2de654692d 100644
                  endif
              endforeach
          endif
-@@ -158,6 +159,7 @@ foreach subpath:subdirs
- 
-         install_headers(headers)
+@@ -173,6 +174,7 @@ foreach subpath:subdirs
+                 output: out_filename,
+                 depends: [tmp_lib])
  
 +        if get_option('default_library') == 'static'
-         # generate pmdinfo sources by building a temporary
-         # lib and then running pmdinfogen on the contents of
-         # that lib. The final lib reuses the object files and
-@@ -220,6 +222,13 @@ foreach subpath:subdirs
-             endif
-         endif
+         # now build the static driver
+         static_lib = static_library(lib_name,
+                 sources,
+@@ -182,6 +184,14 @@ foreach subpath:subdirs
+                 c_args: cflags,
+                 install: true)
  
 +        static_dep = declare_dependency(
 +                include_directories: includes,
@@ -41,10 +41,11 @@ index 1d8123b00c..2de654692d 100644
 +        set_variable('static_@0@'.format(lib_name), static_dep)
 +
 +        else
-         shared_lib = shared_library(lib_name, sources,
-                 objects: objs,
-                 include_directories: includes,
-@@ -237,14 +246,10 @@ foreach subpath:subdirs
++
+         # now build the shared driver
+         version_map = '@0@/@1@/version.map'.format(meson.current_source_dir(), drv_path)
+         implib = 'lib' + lib_name + '.dll.a'
+@@ -237,14 +247,10 @@ foreach subpath:subdirs
          shared_dep = declare_dependency(link_with: shared_lib,
                  include_directories: includes,
                  dependencies: shared_deps)
@@ -62,7 +63,7 @@ index 1d8123b00c..2de654692d 100644
          if developer_mode
              message('drivers/@0@: Defining dependency "@1@"'.format(
 diff --git a/drivers/net/octeontx/base/meson.build b/drivers/net/octeontx/base/meson.build
-index 8e5e8c1b55..39593cd8a6 100644
+index 8e5e8c1b55..a793c193c3 100644
 --- a/drivers/net/octeontx/base/meson.build
 +++ b/drivers/net/octeontx/base/meson.build
 @@ -10,7 +10,7 @@ sources = [
@@ -70,12 +71,12 @@ index 8e5e8c1b55..39593cd8a6 100644
  static_objs = []
  foreach d: depends
 -    if not is_variable('shared_rte_' + d)
-+    if get_option('default_library') == 'shared' and not is_variable('shared_rte_' + d)
++    if not is_variable('static_rte_' + d)
          subdir_done()
      endif
      static_objs += get_variable('static_rte_' + d)
 diff --git a/lib/meson.build b/lib/meson.build
-index 24adbe44c9..e614ec57af 100644
+index 24adbe44c9..f8e0788d36 100644
 --- a/lib/meson.build
 +++ b/lib/meson.build
 @@ -146,14 +146,15 @@ foreach l:libraries
@@ -106,18 +107,22 @@ index 24adbe44c9..e614ec57af 100644
      # first build static lib
      static_lib = static_library(libname,
              sources,
-@@ -246,6 +248,10 @@ foreach l:libraries
-                 output: name + '.sym_chk')
-     endif
- 
+@@ -201,7 +203,14 @@ foreach l:libraries
+         # use pre-build objects to build shared lib
+         sources = []
+         objs += static_lib.extract_all_objects(recursive: false)
++    endif
++
 +    dpdk_static_libraries = [static_lib] + dpdk_static_libraries
 +    set_variable('static_rte_' + name, static_dep)
 +
-+    else
-     shared_lib = shared_library(libname,
-             sources,
-             objects: objs,
-@@ -262,10 +268,10 @@ foreach l:libraries
+     else
++
++    if use_function_versioning and not is_windows
+         # for compat we need to rebuild with
+         # RTE_BUILD_SHARED_LIB defined
+         cflags += '-DRTE_BUILD_SHARED_LIB'
+@@ -262,10 +271,10 @@ foreach l:libraries
              dependencies: shared_deps)
  
      dpdk_libraries = [shared_lib] + dpdk_libraries
