@@ -330,7 +330,7 @@
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-identity-cpp": {
       "baseline": "1.3.0",

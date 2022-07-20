@@ -1,0 +1,13 @@
+diff --git a/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt b/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
+index bf3077e..2bd6d91 100644
+--- a/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
++++ b/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
+@@ -36,7 +36,7 @@ if (BUILD_AZURE_CORE_TRACING_OPENTELEMETRY)
+         find_package(azure-core-cpp REQUIRED)
+       endif()
+     endif()
+-    find_package(opentelemetry-cpp "1.3.0" CONFIG REQUIRED)
++    find_package(opentelemetry-cpp "1.4.1" CONFIG REQUIRED)
+ 
+     set(
+       AZURE_CORE_OPENTELEMETRY_HEADER
