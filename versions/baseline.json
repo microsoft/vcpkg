@@ -6714,7 +6714,7 @@
     },
     "solid3": {
       "baseline": "3.5.8",
-      "port-version": 1
+      "port-version": 2
     },
     "sophus": {
       "baseline": "2021-09-14",
