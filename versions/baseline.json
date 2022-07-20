@@ -4090,7 +4090,7 @@
     },
     "libspatialindex": {
       "baseline": "1.9.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libspatialite": {
       "baseline": "5.0.1",
