@@ -298,7 +298,7 @@ __pycache__/
 !/triplets/x64-windows-static.cmake
 !/triplets/x64-windows.cmake
 !/triplets/x86-windows.cmake
-
+!/triplets/download_llvm.cmake
 !/triplets/community
 !/triplets/community/**
 

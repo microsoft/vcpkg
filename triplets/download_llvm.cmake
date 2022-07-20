@@ -1,0 +1,15 @@
+if(COMMAND vcpkg_find_acquire_program)
+    set(VCPKG_HOST_IS_WINDOWS TRUE)
+    vcpkg_find_acquire_program(CLANG)
+    cmake_path(GET CLANG PARENT_PATH LLVM_ROOT)
+    cmake_path(GET LLVM_ROOT PARENT_PATH LLVM_ROOT)
+    set(ENV{LLVMInstallDir} "${LLVM_ROOT}")
+    set(ENV{LLVMToolsVersion} "14.0.6")
+    set(ENV{PATH} "${LLVM_ROOT}/bin;$ENV{PATH}")
+    if(NOT EXISTS "${LLVM_ROOT}/bin/link.exe")
+        file(CREATE_LINK "${LLVM_ROOT}/bin/lld-link.exe" "${LLVM_ROOT}/bin/link.exe" COPY_ON_ERROR)
+    endif()
+    #
+endif()
+
+#set(VCPKG_CMAKE_CONFIGURE_OPTIONS --trace-expand)
