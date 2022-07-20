@@ -1,6 +1,6 @@
 {
   "name": "mesa",
-  "version": "22.0.2",
+  "version": "22.1.4",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
@@ -91,6 +91,30 @@
           "features": [
             "libclc"
           ]
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "arm-target"
+          ],
+          "platform": "arm32"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64"
+          ],
+          "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "x86-target"
+          ],
+          "platform": "x64 | x86"
         }
       ]
     },

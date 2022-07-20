@@ -5,8 +5,6 @@
 set(PATCHES
     # Fix symbols exporting for MinGW GCC x86
     def-fixes.patch
-    # Fix MinGW clang build
-    clang.patch
     # Clover build on Windows
     clover.patch
 )
@@ -20,8 +18,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.0.2
-    SHA512 1139bae1fa9f9b49727c5aaddad9b2908c7643d7c6c435544e8322c84d17c012f04aa73876bef8cab9b517e36957eb2a678b3001da2d69a32497ef4569f6172e
+    REF mesa-22.1.4
+    SHA512 463320374cba3ad8c46ca3639b6a7d3e7eaa92dd88c399bd526199aad807ce546855eeb1b132ed8ac42c368ed854acb7933866ae23fbf17734ec3d4ced000dfb
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
