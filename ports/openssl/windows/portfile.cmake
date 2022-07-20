@@ -63,7 +63,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     set(OPENSSLDIR_RELEASE "${CURRENT_PACKAGES_DIR}")
 
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang" OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
         # Clang always uses /Z7;  Patching /Zi /Fd<Name> out of openssl requires more work. 
         file(READ "${SOURCE_PATH_RELEASE}/Configurations/windows-makefile.tmpl" contents)
         # Remove install rules for pdbs if they don't exist
@@ -112,7 +112,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Copying openssl debug source files... done")
     set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang" OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(READ "${SOURCE_PATH_DEBUG}/Configurations/windows-makefile.tmpl" contents)
         string(REGEX REPLACE [["\$\(PERL\)" "\$\(SRCDIR\)\\util\\copy.pl" \$\(INSTALL_(ENGINE|MODULE|SHLIB|PROGRAM)PDBS\)]] "echo " contents "${contents}")
         string(REGEX REPLACE [["\$\(PERL\)" "\$\(SRCDIR\)\\util\\copy.pl" ossl_static.pdb]] "echo " contents "${contents}")
