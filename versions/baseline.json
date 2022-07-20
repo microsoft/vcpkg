@@ -1301,7 +1301,7 @@
       "port-version": 2
     },
     "ccd": {
-      "baseline": "2.1-4",
+      "baseline": "2.1",
       "port-version": 4
     },
     "ccfits": {
