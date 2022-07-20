@@ -4,6 +4,7 @@
   "port-version": 4,
   "description": "Library for collision detection between two convex shapes",
   "homepage": "https://github.com/danfis/libccd",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
