@@ -127,13 +127,17 @@
     },
     "plugins": {
       "description": "Build gazebo plugins",
-      "supports": "!(linux & dynamic)"
+      "supports": "!linux"
     },
     "simbody": {
       "description": "Use the simbody physics engine",
       "dependencies": [
         "simbody"
       ]
+    },
+    "tools": {
+      "description": "Build gazebo tools",
+      "supports": "!(linux & static)"
     }
   }
 }

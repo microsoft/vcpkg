@@ -1,8 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e0ae3d..4456aa5 100644
+index 3e0ae3d..eeb1ba7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -392,8 +392,6 @@ else (build_errors)
+@@ -384,16 +384,18 @@ else (build_errors)
+     set(TEST_TYPE "UNIT")
+     add_subdirectory(gazebo)
+     add_subdirectory(media)
++    if (BUILD_TOOLS)
+     add_subdirectory(tools)
++    endif()
++    if (BUILD_PLUGINS)
+     add_subdirectory(plugins)
++    endif()
+     add_subdirectory(interfaces)
+     add_subdirectory(worlds)
+     add_subdirectory(models)
  
      if (BUILD_TESTING)
        add_subdirectory(test)
