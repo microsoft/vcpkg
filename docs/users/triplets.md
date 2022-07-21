@@ -93,6 +93,13 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
+### VCPKG_MESON_CONFIGURE_OPTIONS
+Set additional Meson configure options that are appended to the configure command (in [`vcpkg_configure_meson`](../maintainers/vcpkg_configure_meson.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
+
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
 Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 

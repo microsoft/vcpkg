@@ -451,6 +451,9 @@ libmesh:x64-windows-static-md=skip
 libmesh:x86-windows=skip
 libmesh:x64-osx=skip
 libmesh:x64-linux=skip
+# Build fails since PIC is not enabled and some configuration tests do not work properly on UWP
+libmicrodns:arm-uwp=fail
+libmicrodns:x64-uwp=fail
 libmikmod:x64-osx=fail
 libmodman:arm-uwp=fail
 libmodman:x64-uwp=fail
@@ -757,12 +760,6 @@ opencc:arm64-windows=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:arm-uwp=fail
 opencc:x64-uwp=fail
-opencensus-cpp:arm64-windows=fail
-opencensus-cpp:x64-windows=fail
-opencensus-cpp:x64-windows-static=fail
-opencensus-cpp:x64-windows-static-md=fail
-opencensus-cpp:x86-windows=fail
-opencensus-cpp:x64-uwp=fail
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
 opencsg:arm-uwp=fail

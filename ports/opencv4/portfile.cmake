@@ -381,6 +381,7 @@ vcpkg_cmake_configure(
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_GENERATE_PKGCONFIG=ON
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
