@@ -131,7 +131,7 @@ index e7136aa..766da42 100644
 +      CHANGE_CRT("T")
 +    ENDIF(STATIC_CRT)
 +  INSTALL(TARGETS mysqlcppconn-static
-+    EXPORT mysql-connector-cpp-targets
++    EXPORT unofficial-mysql-connector-cpp-targets
 +    RUNTIME DESTINATION bin
      ARCHIVE DESTINATION lib
    )
