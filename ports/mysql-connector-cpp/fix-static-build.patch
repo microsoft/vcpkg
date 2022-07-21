@@ -138,7 +138,7 @@ index e7136aa..766da42 100644
 +  ENDIF(STATIC_ONLY)
 +  IF(DYNAMIC_ONLY)
 +  INSTALL(TARGETS mysqlcppconn
-+    EXPORT mysql-connector-cpp-targets
++    EXPORT unofficial-mysql-connector-cpp-targets
 +    RUNTIME DESTINATION bin
 +    ARCHIVE DESTINATION lib
 +  )
