@@ -5,11 +5,6 @@ vcpkg_from_git(
     PATCHES
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cxx-bindings USE_CXX_BINDINGS
-)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND OPTIONS --enable-shared=yes)
     list(APPEND OPTIONS --enable-static=no)
@@ -29,9 +24,10 @@ if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
     endif()
 endif()
 
-set(cxx-binding no)
-if(USE_CXX_BINDINGS)
-    set(cxx-binding yes)
+if ("cxx-bindings" IN_LIST FEATURES)
+  set(USE_CXX_BINDINGS yes)
+else()
+  set(USE_CXX_BINDINGS no)
 endif()
 
 
@@ -42,7 +38,7 @@ vcpkg_configure_make(
         ${OPTIONS}
         --enable-tools=no
         --enable-tests=no
-        --enable-bindings-cxx=${cxx-binding}
+        --enable-bindings-cxx=${USE_CXX_BINDINGS}
         --enable-bindings-python=no
 )
 
