@@ -147,7 +147,7 @@ index e7136aa..766da42 100644
    IF(ENABLE_BUILD_DYNAMIC OR ENABLE_BUILD_STATIC)
      IF(ENABLE_BUILD_DYNAMIC)
        INSTALL(TARGETS mysqlcppconn
-+        EXPORT mysql-connector-cpp-targets
++        EXPORT unofficial-mysql-connector-cpp-targets
          LIBRARY DESTINATION ${INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${INSTALL_LIBDIR}
        )
