@@ -5185,8 +5185,8 @@
       "port-version": 0
     },
     "opencv4": {
-      "baseline": "4.5.5",
-      "port-version": 6
+      "baseline": "4.6.0",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.1",
