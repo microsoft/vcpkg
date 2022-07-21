@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "BLE driver is a library for Bluetooth Low Energy communication using Nordic Semiconductor development kits.",
   "homepage": "https://github.com/NordicSemiconductor/pc-ble-driver",
-  "license": null,
+  "license": "BSD-3-clause",
   "dependencies": [
     "asio",
     "cli11",
