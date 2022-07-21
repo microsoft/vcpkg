@@ -80,6 +80,7 @@ endif()
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS 
+                            --trace-expand
                            ${FEATURE_OPTIONS}
                            -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
                      CONFIGURE_OPTIONS_RELEASE
