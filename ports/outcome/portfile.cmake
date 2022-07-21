@@ -41,15 +41,6 @@ elseif(NOT "polyfill-cxx17" IN_LIST FEATURES)
     list(APPEND extra_config -DCMAKE_CXX_STANDARD=17)
 endif()
 
-# quickcpplib parses CMAKE_MSVC_RUNTIME_LIBRARY and cannot support the default crt linkage generator expression from vcpkg
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
-    else()
-        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
-    endif()
-endif()
-
 # Because outcome's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
