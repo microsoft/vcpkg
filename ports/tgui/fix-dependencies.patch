@@ -12,7 +12,7 @@ index d86f11d3..42b708d8 100644
  
  # Link to SDL and set include and library search directories
 -target_link_libraries(tgui PRIVATE SDL2::Core SDL2::TTF)
-+if(BUILD_SHARED_LIBS)
++if(TARGET SDL2_ttf::SDL2_ttf)
 +    target_link_libraries(tgui PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)
 +else()
 +    target_link_libraries(tgui PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf-static)
