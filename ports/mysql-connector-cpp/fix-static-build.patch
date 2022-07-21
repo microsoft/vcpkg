@@ -166,8 +166,8 @@ index e7136aa..766da42 100644
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
 +  "${CMAKE_SOURCE_DIR}/mysql-connector-cpp-config.cmake.in"
-+  "${CMAKE_CURRENT_BINARY_DIR}/mysql-connector-cpp-config.cmake"
-+  INSTALL_DESTINATION "share/mysql-connector-cpp"
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mysql-connector-cpp-config.cmake"
++  INSTALL_DESTINATION "share/unofficial-mysql-connector-cpp"
 +)
  
  # Install some MySQL specific headers
