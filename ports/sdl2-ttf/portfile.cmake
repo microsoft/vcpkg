@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDL2TTF_SAMPLES=OFF
+        -DSDL2TTF_HARFBUZZ=ON
 )
 
 vcpkg_cmake_install()

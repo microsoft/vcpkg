@@ -15,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "harfbuzz": {
+      "description": "Enable HarfBuzz support",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    }
+  }
 }
