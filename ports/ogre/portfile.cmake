@@ -16,6 +16,7 @@ vcpkg_from_github(
         toolchain_fixes.patch
         fix-dependency.patch
         disable-dependency-qt.patch
+        fix-dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -77,35 +78,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc")
-    find_library(BOOST_THREAD_DBG NAMES boost_thread-vc140-mt-gd boost_thread
-        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH
-    )
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/debug" [[${prefix}]] BOOST_THREAD_DBG "${BOOST_THREAD_DBG}")
-    find_library(FREEIMAGE_DBG NAMES FreeImaged PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/debug" [[${prefix}]] FREEIMAGE_DBG "${FREEIMAGE_DBG}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc"
-        "-lboost-thread-mt" "${BOOST_THREAD_DBG}"
-    )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OGRE.pc"
-        "-lfreeimage" "${FREEIMAGE_DBG}"
-    )
-endif()
-if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc")
-    find_library(BOOST_THREAD_REL NAMES boost_thread-vc140-mt boost_thread
-        PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH
-    )
-    string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] BOOST_THREAD_REL "${BOOST_THREAD_REL}")
-    find_library(FREEIMAGE_REL NAMES FreeImage PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] FREEIMAGE_REL "${FREEIMAGE_REL}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc"
-        "-lboost-thread-mt" "${BOOST_THREAD_REL}"
-    )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OGRE.pc"
-        "-lfreeimage" "${FREEIMAGE_REL}"
-    )
-endif()
 
 vcpkg_cmake_config_fixup()
 
