@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+find_package(unofficial-mysql-connector-cpp CONFIG REQUIRED)
 
 if(TARGET mysqlcppconn AND NOT TARGET mysqlcppconn-static)
     add_library(mysqlcppconn-static INTERFACE IMPORTED)

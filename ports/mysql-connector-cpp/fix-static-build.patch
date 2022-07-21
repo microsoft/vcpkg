@@ -176,7 +176,7 @@ index e7136aa..766da42 100644
  
  INSTALL(FILES ${MYSQLCPPCONN_SPECIFIC_INSTALL_HEADERS} DESTINATION include)
  
-+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mysql-connector-cpp-config.cmake" DESTINATION "share/unofficial-mysql-connector-cpp")
-+install(EXPORT mysql-connector-cpp-targets DESTINATION share/unofficial-mysql-connector-cpp)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mysql-connector-cpp-config.cmake" DESTINATION "share/unofficial-mysql-connector-cpp")
++install(EXPORT unofficial-mysql-connector-cpp-targets DESTINATION share/unofficial-mysql-connector-cpp)
  
  MESSAGE(STATUS "Configuring driver")

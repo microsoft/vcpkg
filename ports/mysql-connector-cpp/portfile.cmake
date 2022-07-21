@@ -44,8 +44,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-mysql-connector-cpp)
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/BUILDINFO"
     "${CURRENT_PACKAGES_DIR}/LICENSE"
