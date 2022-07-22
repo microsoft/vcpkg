@@ -5774,7 +5774,7 @@
     },
     "qt5-activeqt": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-androidextras": {
       "baseline": "5.15.5",
@@ -5782,7 +5782,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.5",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5802,11 +5802,11 @@
     },
     "qt5-declarative": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-doc": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-gamepad": {
       "baseline": "5.15.5",
@@ -5818,7 +5818,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.5",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-location": {
       "baseline": "5.15.5",
@@ -5862,7 +5862,7 @@
     },
     "qt5-script": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-scxml": {
       "baseline": "5.15.5",
@@ -5886,15 +5886,15 @@
     },
     "qt5-svg": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-tools": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-translations": {
       "baseline": "5.15.5",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-virtualkeyboard": {
       "baseline": "5.15.5",
