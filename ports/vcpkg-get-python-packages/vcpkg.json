@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-get-python-packages",
+  "version-date": "2022-04-11",
+  "port-version": 1,
+  "documentation": "https://vcpkg.io/en/docs/README.html",
+  "license": "MIT",
+  "supports": "native"
+}

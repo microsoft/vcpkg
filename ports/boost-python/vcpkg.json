@@ -1,8 +1,9 @@
 {
   "name": "boost-python",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost python module",
   "homepage": "https://github.com/boostorg/python",
+  "license": "BSL-1.0",
   "supports": "!uwp & !emscripten & !ios & !android",
   "dependencies": [
     "boost-align",

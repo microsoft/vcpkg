@@ -1,7 +1,7 @@
 # vcpkg-cmake
 
-This port contains cmake functions for dealing with a CMake buildsystem.
+This port contains portfile helper functions for dealing with a CMake buildsystem.
 
-In the common case, `vcpkg_cmake_configure()` (with appropriate arguments)
-followed by `vcpkg_cmake_install()` will be enough to build and install a port.
-`vcpkg_cmake_build()` is provided for more complex cases.
+- [`vcpkg_cmake_configure()`](../vcpkg_cmake_configure.md)
+- [`vcpkg_cmake_install()`](vcpkg-cmake/vcpkg_cmake_install.md)
+- [`vcpkg_cmake_build()`](vcpkg-cmake/vcpkg_cmake_build.md)

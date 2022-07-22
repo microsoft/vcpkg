@@ -1,10 +1,14 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_TARGET_IS_MINGW)
+    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF feb2022
-    SHA512 7e30e38f97e944e49f5d2a6d3035d201016ac7ec5ca1042475485f7cbac165d66f4c5a2c84f2a47dad755c59b3f8947e1251b00b3e577fbc3e58f1957d8a224e
+    REF may2022
+    SHA512 b5783c55a1faa9ac616f93d13af91d072e5cef65bcb02c402f2a4d072036135ae610264dc5ebe4e15c56b152c0b3fd0fb87666ab16e74507218906f4210687db
     HEAD_REF main
 )
 
@@ -52,33 +56,34 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
+        -DBUILD_SAMPLE=OFF
         -DBC_USE_OPENMP=ON
         -DBUILD_DX11=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/directxtex/cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("openexr" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     TEXASSEMBLE_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/feb2022/texassemble.exe"
-    FILENAME "texassemble-feb2022.exe"
-    SHA512 ea1f9fff62a5ebc9c33221852a843063d58405be7529f663e4567b138bca79e73e47b1e0fb6054c4e024a630323c72aba505eee35414cf14970c331afa9ff43f
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/may2022/texassemble.exe"
+    FILENAME "texassemble-may2022.exe"
+    SHA512 22963920f3047533d2ec6d9751f4d2eb4d530e6c4a96099322a070f5f311785d79d07c2e79fd05daa9992deba116f630de14436df4f42b415d7511fd6193241e
   )
 
   vcpkg_download_distfile(
     TEXCONV_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/feb2022/texconv.exe"
-    FILENAME "texconv-feb2022.exe"
-    SHA512 1565f5a4bd08de88e01ece59df6658975bfd8551a912d65ac03c0ddd5ab536c8794811d3e49d14e8fe4c61fa2a6c9d50994d372f5d3efab7d9aeb6f3f92d56c9
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/may2022/texconv.exe"
+    FILENAME "texconv-may2022.exe"
+    SHA512 9f0c9307f00062883be8a2afff0f6428020d9f056db5a2f175ea3ff72e50f6fd5c57b2dbc448fe8352a86837b318bd3874995dc87d741bdeb413060618a0b08f
   )
 
   vcpkg_download_distfile(
     TEXDIAG_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/feb2022/texdiag.exe"
-    FILENAME "texdiag-feb2022.exe"
-    SHA512 5dd93da696eff959b5c93ba8ac763ff6df52fbfc6ca3a3adf1b9da0121beaea2c16008e097f74d562b7a69ed20ada50fd5d35d47311338e6c819e3483bc54ee3
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/may2022/texdiag.exe"
+    FILENAME "texdiag-may2022.exe"
+    SHA512 01fc96ea5cc286dfea097d3b8bedb92d41dbbab949953315e640ee019578c33e2e1b0db476e51576c92763bacfa4cdf270ebad7cac1c59b185d5fdc0752f0393
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
@@ -89,9 +94,9 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${TEXDIAG_EXE}
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-feb2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-feb2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-feb2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-may2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-may2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-may2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

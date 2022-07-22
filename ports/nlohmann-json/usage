@@ -5,7 +5,7 @@ The package nlohmann-json provides CMake targets:
 
 The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
 
-    set(nlohmann_json_JSON_ImplicitConversions OFF)
+    set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 
 For more information, see the docs here:
     

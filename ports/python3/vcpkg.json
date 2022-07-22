@@ -1,11 +1,11 @@
 {
   "name": "python3",
-  "version": "3.10.2",
+  "version": "3.10.5",
   "port-version": 1,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !mingw",
   "dependencies": [
     {
       "name": "bzip2",

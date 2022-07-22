@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/flac
-    REF ce6dd6b5732e319ef60716d9cc9af6a836a4011a
-    SHA512 d0d3b5451f8d74aa0a0832fbe95cca55597ce9654765a95adaac98ecd0da9e803b98551a40a3fb3fd5b86bc5f40cd1a791127c03da5322e7f01e7fa761171a21
+    REF 1151c93e992bb8c7c6394e04aa880d711c531c7f #1.3.4
+    SHA512 ebf8de3dbd8fc2153af2f4a05ecc04817570233c30e0ec1fbdbc99f810860801b951248ca6404152cba4038f5839985f4076bcee477c00fd23bd583a45b89b17
     HEAD_REF master
     PATCHES
         uwp-library-console.patch
@@ -29,12 +29,12 @@ if("asm" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    asm WITH_ASM
+    FEATURES
+        asm WITH_ASM
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -42,12 +42,10 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR})
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(
-    CONFIG_PATH share/FLAC/cmake
-    TARGET_PATH share/FLAC
-)
+vcpkg_cmake_config_fixup(PACKAGE_NAME FLAC CONFIG_PATH share/FLAC/cmake)
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -72,18 +70,15 @@ else()
         "#if 1"
     )
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/flac.pc" "Version:" "Version: 1.3.3")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/flac.pc" " -lm" "")
-endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/flac++.pc" "Version:" "Version: 1.3.3")
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac.pc")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac.pc" "Version:" "Version: 1.3.3")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac++.pc" "Version:" "Version: 1.3.3")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac.pc" " -lm" "")
+
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac.pc")
+       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/flac.pc" " -lm" "")
     endif()
 endif()
+
 vcpkg_fixup_pkgconfig()
 
 # This license (BSD) is relevant only for library - if someone would want to install

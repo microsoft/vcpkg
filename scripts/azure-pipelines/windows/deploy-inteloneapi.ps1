@@ -7,7 +7,7 @@
 
 # Seems like only the HPC kit is really needed?
 #$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17768/w_BaseKit_p_2021.2.0.2871_offline.exe'
-$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18417/w_HPCKit_p_2022.1.0.93_offline.exe'
+$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18578/w_HPCKit_p_2022.1.3.145_offline.exe'
 
 # Possible oneAPI Base components:
 #intel.oneapi.win.vtune           2021.1.1-68           true      Intel® VTune(TM) Profiler

@@ -1,8 +1,9 @@
 {
   "name": "boost-msm",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost msm module",
   "homepage": "https://github.com/boostorg/msm",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-assert",

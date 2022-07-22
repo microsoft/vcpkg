@@ -1,0 +1,17 @@
+diff --git a/src/ffmpeg.imageio/CMakeLists.txt b/src/ffmpeg.imageio/CMakeLists.txt
+index 5840206..cc52e4c 100644
+--- a/src/ffmpeg.imageio/CMakeLists.txt
++++ b/src/ffmpeg.imageio/CMakeLists.txt
+@@ -2,9 +2,10 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # https://github.com/OpenImageIO/oiio
+ 
+-if (FFmpeg_FOUND)
++if (USE_FFMPEG)
++    find_package(FFMPEG REQUIRED)
+     add_oiio_plugin (ffmpeginput.cpp
+-                     INCLUDE_DIRS ${FFMPEG_INCLUDES}
++                     INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS}
+                      LINK_LIBRARIES ${FFMPEG_LIBRARIES}
+                                     ${BZIP2_LIBRARIES}
+                      DEFINITIONS "-DUSE_FFMPEG"

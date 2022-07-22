@@ -1,9 +1,9 @@
 {
   "name": "ogre-next",
-  "version-string": "2019-10-20",
-  "port-version": 2,
+  "version": "2.3.1",
   "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
+  "license": "MIT",
   "dependencies": [
     "boost-date-time",
     "boost-thread",
@@ -15,6 +15,14 @@
     "sdl2",
     "tbb",
     "tinyxml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib",
     "zziplib"
   ],

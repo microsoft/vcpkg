@@ -1,8 +1,9 @@
 {
   "name": "boost-assign",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost assign module",
   "homepage": "https://github.com/boostorg/assign",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-config",

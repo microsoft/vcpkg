@@ -1,30 +1,3 @@
-#[===[.md:
-# vcpkg_configure_qmake
-
-Configure a qmake-based project.
-
-```cmake
-vcpkg_configure_qmake(
-    SOURCE_PATH <pro_file_path>
-    [OPTIONS arg1 [arg2 ...]]
-    [OPTIONS_RELEASE arg1 [arg2 ...]]
-    [OPTIONS_DEBUG arg1 [arg2 ...]]
-    [BUILD_OPTIONS arg1 [arg2 ...]]
-    [BUILD_OPTIONS_RELEASE arg1 [arg2 ...]]
-    [BUILD_OPTIONS_DEBUG arg1 [arg2 ...]]
-)
-```
-
-### SOURCE_PATH
-The path to the *.pro qmake project file.
-
-### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
-The options passed to qmake to the configure step.
-
-### BUILD\_OPTIONS, BUILD\_OPTIONS\_RELEASE, BUILD\_OPTIONS\_DEBUG
-The options passed to qmake to the build step.
-#]===]
-
 function(vcpkg_configure_qmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
@@ -55,19 +28,8 @@ function(vcpkg_configure_qmake)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     endif()
 
-    vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-
-    vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-    get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
-    vcpkg_add_to_path("${PKGCONFIG_PATH}")
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
-            "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-            "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-            "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -98,15 +60,11 @@ function(vcpkg_configure_qmake)
             file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
         endif()
 
-        vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
+        z_vcpkg_restore_pkgconfig_path()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
-            "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
-            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
-            "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug" "${CURRENT_PACKAGES_DIR}/debug")
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
@@ -135,6 +93,8 @@ function(vcpkg_configure_qmake)
             file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
             file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
         endif()
+        
+        z_vcpkg_restore_pkgconfig_path()
     endif()
 
 endfunction()

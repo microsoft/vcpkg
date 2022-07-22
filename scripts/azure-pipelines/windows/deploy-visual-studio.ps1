@@ -14,14 +14,18 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
   'Microsoft.VisualStudio.Component.VC.ATL',
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
-  'Microsoft.VisualStudio.Component.Windows10SDK.18362',
-  'Microsoft.VisualStudio.Component.Windows10SDK.19041',
+  'Microsoft.VisualStudio.Component.VC.ATL.ARM',
+  'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
+  'Microsoft.VisualStudio.Component.VC.MFC.ARM',
+  'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
+  "Microsoft.VisualStudio.Component.Windows11SDK.22621",
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
-  'Microsoft.VisualStudio.ComponentGroup.UWP.VC.BuildTools'
+  'Microsoft.VisualStudio.ComponentGroup.UWP.VC.BuildTools',
+  'Microsoft.VisualStudio.Component.VC.CMake.Project'
 )
 
 <#

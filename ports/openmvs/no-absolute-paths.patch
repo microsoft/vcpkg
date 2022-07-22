@@ -1,0 +1,42 @@
+diff --git a/MvgMvsPipeline.py b/MvgMvsPipeline.py.in
+index 53a4a5cc..97735396 100644
+--- a/MvgMvsPipeline.py
++++ b/MvgMvsPipeline.py.in
+@@ -109,14 +109,14 @@ def find(afile):
+             return d
+     return None
+ 
+-
++current_dir = os.path.dirname(os.path.abspath(__file__))
+ # Try to find openMVG and openMVS binaries in PATH
+-OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
+-OPENMVS_BIN = whereis("ReconstructMesh")
++OPENMVG_BIN = os.path.join(current_dir, '..', 'openmvg')
++OPENMVS_BIN = current_dir
+ 
+ # Try to find openMVG camera sensor database
+-CAMERA_SENSOR_DB_FILE = "sensor_width_camera_database.txt"
+-CAMERA_SENSOR_DB_DIRECTORY = find(CAMERA_SENSOR_DB_FILE)
++CAMERA_SENSOR_DB_FILE = os.path.join(OPENMVG_BIN, 'sensor_width_camera_database.txt')
++CAMERA_SENSOR_DB_DIRECTORY = OPENMVS_BIN
+ 
+ # Ask user for openMVG and openMVS directories if not found
+ if not OPENMVG_BIN:
+
+diff --git a/MvgOptimizeSfM.py b/MvgOptimizeSfM.py.in
+index 930d6805..6eb672c1 100644
+--- a/MvgOptimizeSfM.py
++++ b/MvgOptimizeSfM.py.in
+@@ -56,9 +56,10 @@ def launch(cmdline):
+         sys.exit('\r\nProcess canceled by user, all files remains')
+ 
+ 
++current_dir = os.path.dirname(os.path.abspath(__file__))
+ # Try to find openMVG and openMVS binaries in PATH
+-OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
+-OPENMVS_BIN = whereis("ReconstructMesh")
++OPENMVG_BIN = os.path.join(current_dir, '..', 'openmvg')
++OPENMVS_BIN = current_dir
+ 
+ # Ask user for openMVG and openMVS directories if not found
+ if not OPENMVG_BIN:

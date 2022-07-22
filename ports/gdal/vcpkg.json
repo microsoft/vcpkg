@@ -1,60 +1,132 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.2",
+  "version-semver": "3.5.1",
+  "port-version": 4,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "atlmfc",
-      "platform": "windows & !uwp"
-    },
-    "curl",
-    "expat",
-    "geos",
-    {
-      "name": "giflib",
-      "platform": "!windows | mingw"
-    },
-    {
-      "name": "json-c",
-      "platform": "!windows | mingw"
-    },
+    "json-c",
     "libgeotiff",
     {
-      "name": "libiconv",
-      "platform": "windows & !mingw"
+      "name": "pkgconf",
+      "host": true
     },
-    "libjpeg-turbo",
-    "liblzma",
-    "libpng",
-    "libwebp",
-    "libxml2",
-    "openjpeg",
     "proj",
-    "sqlite3",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
-    "zlib",
-    "zstd"
+    "zlib"
   ],
   "default-features": [
-    "supported-default-features"
+    "default-features"
   ],
   "features": {
+    "aws-ec2-windows": {
+      "description": "Optimized detection of AWS EC2 Windows hosts",
+      "dependencies": [
+        "atlmfc"
+      ]
+    },
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [
         "cfitsio"
       ]
     },
+    "curl": {
+      "description": "Enable CURL network support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "default-features": {
+      "description": "Default set of features, including recommended features",
+      "dependencies": [
+        "expat",
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "curl",
+            "geos",
+            "libspatialite",
+            "recommended-features"
+          ]
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "postgresql"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5",
+            "netcdf"
+          ],
+          "platform": "!uwp & !(windows & arm64) & !android"
+        },
+        "giflib",
+        "libiconv",
+        "libjpeg-turbo",
+        "liblzma",
+        "libpng",
+        "libwebp",
+        "libxml2",
+        "openjpeg",
+        "openssl",
+        "pcre2",
+        "qhull",
+        "zstd"
+      ]
+    },
+    "freexl": {
+      "description": "Enable FREEXL support",
+      "dependencies": [
+        "freexl"
+      ]
+    },
+    "geos": {
+      "description": "Enable GEOS support",
+      "dependencies": [
+        "geos"
+      ]
+    },
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
-        "hdf5"
+        {
+          "name": "hdf5",
+          "default-features": false,
+          "features": [
+            "cpp"
+          ]
+        }
+      ]
+    },
+    "lerc": {
+      "description": "Enable LERC support",
+      "dependencies": [
+        "lerc"
       ]
     },
     "libspatialite": {
@@ -72,11 +144,14 @@
     "netcdf": {
       "description": "Enable NetCDF support",
       "dependencies": [
-        "netcdf-c"
+        {
+          "name": "netcdf-c",
+          "default-features": false
+        }
       ]
     },
     "poppler": {
-      "description": "Enable poppler support",
+      "description": "Enable PDF reading support via poppler",
       "dependencies": [
         {
           "name": "poppler",
@@ -93,30 +168,32 @@
         "libpq"
       ]
     },
+    "recommended-features": {
+      "description": "Features that are explicity marked as recommended by GDAL.",
+      "dependencies": [
+        "expat",
+        {
+          "name": "sqlite3",
+          "features": [
+            "rtree"
+          ]
+        }
+      ]
+    },
     "supported-default-features": {
-      "description": "Default set of features, dependent on platform",
+      "description": "This feature is an alias for default-features. It is retained for compatibility.",
       "dependencies": [
         {
           "name": "gdal",
-          "default-features": false,
           "features": [
-            "postgresql"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "hdf5",
-            "netcdf"
-          ],
-          "platform": "!uwp & !(windows & arm64)"
+            "default-features"
+          ]
         }
       ]
     },
     "system-libraries": {
-      "description": "Include drivers which need additional libraries"
+      "$supports": "!windows",
+      "description": "This feature does nothing. It is retained for compatibility."
     },
     "tools": {
       "description": "Builds gdal and ogr executables"

@@ -2,15 +2,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/protozero
-    SHA512 d09a34865c535264c52f9c605ccb6f453c357f5e3a7b0dc72b097de288eabc6985a5b81ddbe79c47d0af2d8f74e33bd380fefce47acb15d8d51d5c151d71786b
-    REF v1.7.0
+    SHA512 90bf1f487efa0ad9da2f3b887b7a6dbd849fa3687dd2126c324f902a8584722f4f7d4a2ea86f6a0e75999f7be829f6ae26cad9df1cae55d0b29a9ec24a4dbfd2
+    REF v1.7.1
     HEAD_REF master
-    PATCHES fix-builderror.patch
+    PATCHES
+        fix-no-tests.patch  # from https://github.com/mapbox/protozero/pull/110
 )
 
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
 )

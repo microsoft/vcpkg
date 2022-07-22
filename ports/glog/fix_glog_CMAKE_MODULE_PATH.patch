@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 846b444..20441d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1027,7 +1027,7 @@ write_basic_package_version_file (
+ 
+ export (TARGETS glog NAMESPACE glog:: FILE glog-targets.cmake)
+ export (PACKAGE glog)
+-
++if(0)
+ get_filename_component (_PREFIX "${CMAKE_INSTALL_PREFIX}" ABSOLUTE)
+ 
+ # Directory containing the find modules relative to the config install
+@@ -1063,6 +1063,7 @@ file (INSTALL
+ "
+   COMPONENT Development
+ )
++endif()
+ 
+ install (FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config.cmake
+diff --git a/glog-config.cmake.in b/glog-config.cmake.in
+index 5c5c9c0..31fac52 100644
+--- a/glog-config.cmake.in
++++ b/glog-config.cmake.in
+@@ -5,7 +5,6 @@ endif (CMAKE_VERSION VERSION_LESS @glog_CMake_VERSION@)
+ @PACKAGE_INIT@
+ 
+ include (CMakeFindDependencyMacro)
+-include (${CMAKE_CURRENT_LIST_DIR}/glog-modules.cmake)
+ 
+ @gflags_DEPENDENCY@
+ @Unwind_DEPENDENCY@

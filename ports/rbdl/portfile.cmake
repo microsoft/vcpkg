@@ -4,7 +4,7 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RBDL_STATIC)
 
-vcpkg_from_github(ARCHIVE
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbdl/rbdl
     REF v2.6.0

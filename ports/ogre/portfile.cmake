@@ -15,7 +15,6 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
         fix-dependency.patch
-        fix-findimgui.patch
         disable-dependency-qt.patch
 )
 
@@ -70,49 +69,55 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DFREETYPE_FOUND=ON
         -DOGRE_CMAKE_DIR=share/ogre
+    MAYBE_UNUSED_VARIABLES
+        OGRE_BUILD_RENDERSYSTEM_GLES
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
+
 vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
+file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
 if(REL_CFGS)
-  file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+  file(COPY ${REL_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   file(REMOVE ${REL_CFGS})
 endif()
 
-file(GLOB DBG_CFGS ${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg)
+file(GLOB DBG_CFGS "${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg")
 if(DBG_CFGS)
-  file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(COPY ${DBG_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
   file(REMOVE ${DBG_CFGS})
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib")
     else()
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib")
     endif()
     if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib")
         else()
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib")
         endif()
     endif()
 
-    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/ogre/*.cmake)
+    file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/ogre/*.cmake")
     foreach(SHARE_FILE ${SHARE_FILES})
         file(READ "${SHARE_FILE}" _contents)
         string(REPLACE "lib/OgreMain" "lib/manual-link/OgreMain" _contents "${_contents}")
@@ -120,13 +125,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
-file(GLOB share_cfgs ${CURRENT_PACKAGES_DIR}/share/OGRE/*.cfg)
+file(GLOB share_cfgs "${CURRENT_PACKAGES_DIR}/share/OGRE/*.cfg")
 foreach(file ${share_cfgs})
     vcpkg_replace_string("${file}" "${CURRENT_PACKAGES_DIR}" "../..")
 endforeach()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

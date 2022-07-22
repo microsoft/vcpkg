@@ -1,8 +1,9 @@
 {
   "name": "boost-geometry",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost geometry module",
   "homepage": "https://github.com/boostorg/geometry",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-any",

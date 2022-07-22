@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.38.0",
-  "port-version": 2,
+  "version": "2.0.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -62,6 +61,18 @@
         }
       ]
     },
+    "apigeeconnect": {
+      "description": "Apigee Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "appengine": {
       "description": "App Engine Admin API C++ Client Library",
       "dependencies": [
@@ -88,6 +99,7 @@
     },
     "asset": {
       "description": "Cloud Asset API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -172,6 +184,7 @@
     },
     "channel": {
       "description": "Cloud Channel API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -206,6 +219,18 @@
         }
       ]
     },
+    "contactcenterinsights": {
+      "description": "Contact Center AI Insights API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "container": {
       "description": "Kubernetes Engine API C++ Client Library",
       "dependencies": [
@@ -230,8 +255,44 @@
         }
       ]
     },
+    "datacatalog": {
+      "description": "Google Cloud Data Catalog API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datamigration": {
       "description": "Database Migration API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dataplex": {
+      "description": "Cloud Dataplex API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dataproc": {
+      "description": "Cloud Dataproc API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -254,8 +315,44 @@
         }
       ]
     },
+    "dialogflow-cx": {
+      "description": "Cloud Dialogflow CX API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dialogflow-es": {
+      "description": "Cloud Dialogflow ES API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dlp": {
       "description": "Cloud Data Loss Prevention (DLP) API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "documentai": {
+      "description": "Cloud Document AI API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -414,6 +511,42 @@
         }
       ]
     },
+    "language": {
+      "description": "Cloud Natural Language API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "logging": {
+      "description": "Google Cloud Logging C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "managedidentities": {
+      "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "memcache": {
       "description": "Cloud Memorystore for Memcached API C++ Client Library",
       "dependencies": [
@@ -510,6 +643,18 @@
         }
       ]
     },
+    "profiler": {
+      "description": "Cloud Profiler API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "pubsub": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
@@ -548,6 +693,18 @@
     },
     "resourcemanager": {
       "description": "Cloud Resource Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "resourcesettings": {
+      "description": "Resource Settings API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -668,6 +825,18 @@
     },
     "spanner": {
       "description": "The Google Cloud Spanner C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "speech": {
+      "description": "The Google Cloud Speech-to-Text C++ client library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

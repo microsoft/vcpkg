@@ -1,8 +1,9 @@
 {
   "name": "boost-xpressive",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost xpressive module",
   "homepage": "https://github.com/boostorg/xpressive",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

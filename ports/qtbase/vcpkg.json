@@ -1,9 +1,11 @@
 {
   "name": "qtbase",
-  "version": "6.2.4",
+  "version": "6.3.1",
+  "port-version": 1,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "freetype",
     {
@@ -61,6 +63,7 @@
     "sql-psql",
     "sql-sqlite",
     "testlib",
+    "thread",
     "widgets",
     "zstd"
   ],
@@ -82,7 +85,16 @@
       ]
     },
     "concurrent": {
-      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+      "description": "Provides a high-level multi-threading API. Qt Concurrent",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus"
@@ -165,6 +177,14 @@
           "features": [
             "freetype"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -275,6 +295,9 @@
     },
     "testlib": {
       "description": "Qt Testlib"
+    },
+    "thread": {
+      "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
       "description": "Enable Vulkan support"

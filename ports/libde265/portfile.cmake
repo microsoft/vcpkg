@@ -10,10 +10,16 @@ vcpkg_from_github(
         fix-libde265-headers.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        sse DISABLE_SSE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

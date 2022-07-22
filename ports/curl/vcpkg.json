@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "version": "7.82.0",
+  "version": "7.84.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -182,6 +182,12 @@
             "schannel"
           ]
         }
+      ]
+    },
+    "wolfssl": {
+      "description": "SSL support (wolfSSL)",
+      "dependencies": [
+        "wolfssl"
       ]
     }
   }
