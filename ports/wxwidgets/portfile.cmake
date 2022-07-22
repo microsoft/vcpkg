@@ -118,6 +118,7 @@ file(REMOVE_RECURSE
 
 set(tools wxrc)
 if(NOT VCPKG_TARGET_IS_WINDOWS OR NOT VCPKG_HOST_IS_WINDOWS)
+    list(APPEND tools wxrc-3.2)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
     if(NOT VCPKG_BUILD_TYPE)
@@ -204,6 +205,8 @@ if("example" IN_LIST FEATURES)
     )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/example/popup.cpp" "../sample.xpm" "sample.xpm")
 endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
