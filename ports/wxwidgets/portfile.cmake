@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.7
-    SHA512 d6c9613b82a7e697b60217ba8fe9be4406ce7fad1f8d2d16cbf94c9aa9b5a38f1f3e175cb7a80dac8a57196dd6aa2fc3db83b4099a4257bb1a79707002db4af2
+    REF v3.2.0
+    SHA512 0bb40ccab51f5e83a38feeaf462c9d1852f821d19592328327f829890d89a3abb2a991c43cdbac55da8f5ee40aab8bd5fea6abcd052198302770292f92f9f9ad
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -108,6 +108,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH lib/cmake/${PORT})
 
 # The CMake export is not ready for use: It lacks a config file.
 file(REMOVE_RECURSE
@@ -117,7 +118,6 @@ file(REMOVE_RECURSE
 
 set(tools wxrc)
 if(NOT VCPKG_TARGET_IS_WINDOWS OR NOT VCPKG_HOST_IS_WINDOWS)
-    list(APPEND tools wxrc-3.1)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
     if(NOT VCPKG_BUILD_TYPE)
@@ -191,7 +191,7 @@ if(NOT "debug-support" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
     else()
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.1/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.2/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
     endif()
 endif()
 
@@ -205,7 +205,4 @@ if("example" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/example/popup.cpp" "../sample.xpm" "sample.xpm")
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
