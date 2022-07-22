@@ -4509,7 +4509,7 @@
       "port-version": 0
     },
     "mbedtls": {
-      "baseline": "2.28.0",
+      "baseline": "2.28.1",
       "port-version": 0
     },
     "mcpp": {
