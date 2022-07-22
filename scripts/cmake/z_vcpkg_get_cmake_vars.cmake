@@ -1,5 +1,5 @@
 function(z_vcpkg_get_cmake_vars out_file)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "")
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "OPTIONS")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -17,6 +17,7 @@ function(z_vcpkg_get_cmake_vars out_file)
             CACHE PATH "The file to include to access the CMake variables from a generated project.")
         vcpkg_configure_cmake(
             SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
+            OPTIONS ${arg_OPTIONS}
             OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log"
             OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
             PREFER_NINJA
