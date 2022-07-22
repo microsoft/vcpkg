@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         "use-opentelemetry-cpp-141.patch"
 )
+# Removed hard dependency on specific opentelemetry-cpp version as per https://github.com/Azure/azure-sdk-for-cpp/pull/3844
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry/
