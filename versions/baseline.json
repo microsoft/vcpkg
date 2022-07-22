@@ -6197,12 +6197,12 @@
       "port-version": 3
     },
     "rbdl": {
-      "baseline": "2.6.0",
-      "port-version": 3
+      "baseline": "3.2.0",
+      "port-version": 4
     },
     "rbdl-orb": {
-      "baseline": "3.1.2",
-      "port-version": 1
+      "baseline": "3.2.0",
+      "port-version": 2
     },
     "re2": {
       "baseline": "2021-11-01",
