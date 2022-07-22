@@ -1169,7 +1169,7 @@
       "port-version": 2
     },
     "brpc": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "brunocodutra-metal": {
@@ -1177,7 +1177,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.11.2",
+      "baseline": "1.12.1",
       "port-version": 0
     },
     "bshoshany-thread-pool": {
@@ -1301,8 +1301,8 @@
       "port-version": 2
     },
     "ccd": {
-      "baseline": "2.1-4",
-      "port-version": 3
+      "baseline": "2.1",
+      "port-version": 4
     },
     "ccfits": {
       "baseline": "2.5",
@@ -1337,8 +1337,8 @@
       "port-version": 2
     },
     "cgal": {
-      "baseline": "5.4.1",
-      "port-version": 1
+      "baseline": "5.4.2",
+      "port-version": 0
     },
     "cgicc": {
       "baseline": "3.2.19",
@@ -1542,7 +1542,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "concurrentqueue": {
       "baseline": "1.0.3",
@@ -1857,8 +1857,8 @@
       "port-version": 1
     },
     "dcmtk": {
-      "baseline": "3.6.6",
-      "port-version": 3
+      "baseline": "3.6.7",
+      "port-version": 0
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2006,7 +2006,7 @@
     },
     "dv-processing": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "dx": {
       "baseline": "1.0.1",
@@ -2449,8 +2449,8 @@
       "port-version": 6
     },
     "gamedev-framework": {
-      "baseline": "0.20.0",
-      "port-version": 2
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
@@ -2585,8 +2585,8 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.70.5",
-      "port-version": 2
+      "baseline": "2.72.3",
+      "port-version": 0
     },
     "glibmm": {
       "baseline": "2.70.0",
@@ -2693,7 +2693,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.46.3",
+      "baseline": "1.48.0",
       "port-version": 0
     },
     "grppi": {
@@ -4474,7 +4474,7 @@
     },
     "marble": {
       "baseline": "22.04.0",
-      "port-version": 0
+      "port-version": 1
     },
     "marl": {
       "baseline": "2022-03-02",
@@ -4509,7 +4509,7 @@
       "port-version": 0
     },
     "mbedtls": {
-      "baseline": "2.28.0",
+      "baseline": "2.28.1",
       "port-version": 0
     },
     "mcpp": {
@@ -5089,7 +5089,7 @@
       "port-version": 8
     },
     "ogre-next": {
-      "baseline": "2.3.0",
+      "baseline": "2.3.1",
       "port-version": 0
     },
     "ois": {
@@ -5105,8 +5105,8 @@
       "port-version": 3
     },
     "onednn": {
-      "baseline": "2.4.3",
-      "port-version": 1
+      "baseline": "2.6.1",
+      "port-version": 0
     },
     "oniguruma": {
       "baseline": "6.9.7.1",
@@ -5186,7 +5186,7 @@
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 5
+      "port-version": 7
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5246,7 +5246,7 @@
     },
     "openscap": {
       "baseline": "1.3.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl": {
       "baseline": "3.0.5",
@@ -5662,7 +5662,7 @@
     },
     "protobuf": {
       "baseline": "3.21.2",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.4.0",
@@ -6714,7 +6714,7 @@
     },
     "solid3": {
       "baseline": "3.5.8",
-      "port-version": 1
+      "port-version": 2
     },
     "sophus": {
       "baseline": "2021-09-14",
@@ -6833,8 +6833,8 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.37.2",
-      "port-version": 2
+      "baseline": "3.39.1",
+      "port-version": 0
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
@@ -7465,7 +7465,7 @@
       "port-version": 0
     },
     "vcpkg-tool-meson": {
-      "baseline": "0.62.1",
+      "baseline": "0.63",
       "port-version": 0
     },
     "vcpkg-tool-mozbuild": {
@@ -7710,7 +7710,7 @@
     },
     "xlnt": {
       "baseline": "1.5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "xlsxio": {
       "baseline": "2021-03-24",
@@ -7809,7 +7809,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.8.16",
+      "baseline": "4.9.1",
       "port-version": 0
     },
     "z85": {
