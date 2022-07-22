@@ -4,10 +4,8 @@ project(wxwidgets-example)
 
 add_executable(main WIN32 popup.cpp)
 
-find_package(wxWidgets REQUIRED)
-target_compile_definitions(main PRIVATE ${wxWidgets_DEFINITIONS} "$<$<CONFIG:DEBUG>:${wxWidgets_DEFINITIONS_DEBUG}>")
-target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
-target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
+find_package(wxWidgets CONFIG REQUIRED)
+target_link_libraries(main PRIVATE wx::wxcore wx::wxbase)
 
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)
