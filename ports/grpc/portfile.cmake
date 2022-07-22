@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.46.3
-    SHA512 e80322b65c6f8d64dc91bce9f612119191e8d329cac2fbc5da6dad9a2a7ccaa7a501470ed483e555c3ba596e8aff796fbda2747f09e9c4329aed3de4d9b6b666
+    REF v1.48.0
+    SHA512 558c659b325eb2f64f6caf78c0701eaaf3d9ae35f6d25ccd69b8995d5b82b98ca1a7ef9f497a0a1dab5914d2328c044c108373152426a15045d0c978b27f3503
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -15,10 +15,10 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
-        00011-fix-csharp_plugin.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
         00014-pkgconfig-upbdefs.patch
+        00015-disable-download-archive.patch
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
