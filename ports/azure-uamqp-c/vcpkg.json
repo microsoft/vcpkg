@@ -1,6 +1,6 @@
 {
   "name": "azure-uamqp-c",
-  "version-date": "2022-01-21",
+  "version-date": "2022-07-18",
   "port-version": 1,
   "description": "AMQP library for C",
   "homepage": "https://github.com/Azure/azure-uamqp-c",
