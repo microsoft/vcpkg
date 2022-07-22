@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         no-absolute-paths.patch
+        find-opencv-debug.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
