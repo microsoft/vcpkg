@@ -30,6 +30,7 @@ vcpkg_extract_source_archive_ex(
         rel_path.patch
         android.patch
         gettext-tools_woe32dll_gettextsrc-exports.c.patch
+        libtextstyle.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
@@ -74,6 +75,7 @@ function(build_libintl_and_tools)
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
             ${OPTIONS}
+            --with-included-libxml=no
     )
     vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
 endfunction()

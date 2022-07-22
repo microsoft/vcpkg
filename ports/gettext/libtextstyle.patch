@@ -1,0 +1,28 @@
+diff --git a/libtextstyle/lib/strerror.c b/libtextstyle/lib/strerror.c
+index 1a53a8b92..6a1d153a3 100644
+--- a/libtextstyle/lib/strerror.c
++++ b/libtextstyle/lib/strerror.c
+@@ -30,7 +30,7 @@
+ #include "verify.h"
+ 
+ /* Use the system functions, not the gnulib overrides in this file.  */
+-#undef sprintf
++//#undef sprintf
+ 
+ char *
+ strerror (int n)
+diff --git a/libtextstyle/lib/vasnprintf.c b/libtextstyle/lib/vasnprintf.c
+index 62f8fbf4d..795069471 100644
+--- a/libtextstyle/lib/vasnprintf.c
++++ b/libtextstyle/lib/vasnprintf.c
+@@ -202,7 +202,9 @@
+ # endif
+ #endif
+ /* Here we need to call the native sprintf, not rpl_sprintf.  */
+-#undef sprintf
++//#if defined(sprintf)
++//#undef sprintf
++//#endif
+ 
+ /* GCC >= 4.0 with -Wall emits unjustified "... may be used uninitialized"
+    warnings in this file.  Use -Dlint to suppress them.  */
