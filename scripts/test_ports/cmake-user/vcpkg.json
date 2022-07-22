@@ -119,12 +119,6 @@
           "default-features": false
         },
         {
-          "$package": "wxWidgets",
-          "name": "wxwidgets",
-          "default-features": false,
-          "platform": "!linux & !mingw & !uwp"
-        },
-        {
           "$package": "ZLIB",
           "name": "zlib"
         }
