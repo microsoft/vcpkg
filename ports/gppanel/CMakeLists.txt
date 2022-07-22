@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 project(gpPanel CXX)
 
 set(wxWidgets_EXCLUDE_COMMON_LIBRARIES TRUE)
-find_package(wxWidgets CONFIG REQUIRED)
+find_package(wxWidgets REQUIRED COMPONENTS core base)
+include(${wxWidgets_USE_FILE})
 
 file(GLOB_RECURSE SOURCES "gpPanel/*.cpp")
 file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include" "include/*.h")
@@ -15,7 +16,7 @@ target_include_directories(gpPanel PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(gpPanel PRIVATE wx::wxcore wx::wxbase)
+target_link_libraries(gpPanel PRIVATE ${wxWidgets_LIBRARIES})
 
 install(TARGETS gpPanel EXPORT gpPanel-config 
     RUNTIME DESTINATION bin

@@ -16,10 +16,10 @@ index 1649104..eeec1c1 100644
  		TARGETS mgllab
  		RUNTIME DESTINATION bin	)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 136425d..5dcc2b2 100644
+index d0c779d..acd9d7f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -639,10 +639,15 @@ if(enable-glut)
+@@ -579,10 +579,15 @@ if(enable-glut)
  	if(NOT MGL_HAVE_OPENGL)
  		message(SEND_ERROR "You have to enable OpenGL if you plan to use GLUT.")
  	endif(NOT MGL_HAVE_OPENGL)
@@ -36,42 +36,3 @@ index 136425d..5dcc2b2 100644
  else(enable-glut)
  	set(MGL_HAVE_GLUT 0)
  endif(enable-glut)
-@@ -667,7 +672,7 @@ endif(enable-fltk)
- 
- if(enable-wx)
- 	set(MGL_HAVE_WX 1)
--	FIND_PACKAGE(wxWidgets COMPONENTS base core gl)
-+	FIND_PACKAGE(wxWidgets CONFIG REQUIRED)
- 	if(NOT wxWidgets_FOUND)
- 		message(SEND_ERROR "Couldn't find wxWidgets library.")
- 	endif(NOT wxWidgets_FOUND)
-@@ -808,7 +813,6 @@ if(NOT enable-lgpl)
- 		add_subdirectory( lang )
- 	endif(enable-python OR enable-lua OR enable-octave)
- add_subdirectory( utils )
--add_subdirectory( examples )
- if(NOT WIN32)
- 	add_subdirectory( fonts )
- endif(NOT WIN32)
-
-warning: LF will be replaced by CRLF in CMakeLists.txt.
-The file will have its original line endings in your working directory
-diff --git a/widgets/CMakeLists.txt b/widgets/CMakeLists.txt
-index 4c1d0d4..e8b91f9 100644
---- a/widgets/CMakeLists.txt
-+++ b/widgets/CMakeLists.txt
-@@ -23,9 +23,8 @@ endif(MGL_HAVE_GLUT)
- 
- if(MGL_HAVE_WX)
- 	mgl_add_lib(wx wx.cpp ../include/mgl2/wx.h)
--	include(${wxWidgets_USE_FILE})
--	target_link_libraries(mgl-wx mgl ${wxWidgets_LIBRARIES})
--	target_link_libraries(mgl-wx-static mgl-static ${wxWidgets_LIBRARIES})
-+	target_link_libraries(mgl-wx PUBLIC mgl wx::wxcore wx::wxbase wx::wxgl)
-+	target_link_libraries(mgl-wx-static PUBLIC mgl-static wx::wxcore wx::wxbase wx::wxgl)
- endif(MGL_HAVE_WX)
- 
- add_subdirectory( qt4 )
-
-warning: LF will be replaced by CRLF in widgets/CMakeLists.txt.
-The file will have its original line endings in your working directory

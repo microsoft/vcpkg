@@ -2666,7 +2666,7 @@
     },
     "gppanel": {
       "baseline": "2020-05-20",
-      "port-version": 3
+      "port-version": 2
     },
     "graphene": {
       "baseline": "1.10.2",
@@ -4490,7 +4490,7 @@
     },
     "mathgl": {
       "baseline": "2.5",
-      "port-version": 1
+      "port-version": 0
     },
     "matio": {
       "baseline": "1.5.23",
@@ -5550,7 +5550,7 @@
     },
     "plplot": {
       "baseline": "5.13.0",
-      "port-version": 16
+      "port-version": 15
     },
     "plustache": {
       "baseline": "0.4.0",
@@ -7662,14 +7662,14 @@
     },
     "wxchartdir": {
       "baseline": "2.0.0",
-      "port-version": 1
+      "port-version": 0
     },
     "wxcharts": {
       "baseline": "2022-07-05",
-      "port-version": 1
+      "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.2.0",
+      "baseline": "3.1.7",
       "port-version": 0
     },
     "x-plane": {
