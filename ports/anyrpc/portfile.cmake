@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     FILE_DISAMBIGUATOR 1
     PATCHES
-        mingw.patch
+        mingw.patch # Remove this when https://github.com/sgieseking/anyrpc/pull/46 is released
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ANYRPC_LIB_BUILD_SHARED)
