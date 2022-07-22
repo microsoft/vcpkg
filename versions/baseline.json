@@ -7238,7 +7238,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 3
+      "port-version": 4
     },
     "trompeloeil": {
       "baseline": "41",
