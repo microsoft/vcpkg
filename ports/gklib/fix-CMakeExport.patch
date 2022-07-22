@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9cd1b4b..9288428 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,15 +17,23 @@ else(MSVC)
+ endif(MSVC)
+ 
+ add_library(GKlib ${GKlib_sources} ${win32_sources})
++target_include_directories(GKlib INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ if(UNIX)
+   target_link_libraries(GKlib m)
+ endif(UNIX)
+ 
+-include_directories("test")
+-add_subdirectory("test")
++# include_directories("test")
++# add_subdirectory("test")
+ 
+-install(TARGETS GKlib
++install(TARGETS GKlib EXPORT unofficial-gklib-config
+   ARCHIVE DESTINATION lib/${LINSTALL_PATH}
+   LIBRARY DESTINATION lib/${LINSTALL_PATH})
++
++install(EXPORT unofficial-gklib-config
++  NAMESPACE unofficial::gklib::
++  DESTINATION share/unofficial-gklib
++  FILE unofficial-gklib-config.cmake
++)
++
+ install(FILES ${GKlib_includes} DESTINATION include/${HINSTALL_PATH})
