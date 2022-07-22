@@ -2,11 +2,9 @@ vcpkg_from_gitlab(
 	GITLAB_URL https://gitlab.com/inivation/
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO dv/libcaer
-	REF 3.3.14
-	SHA512 6e91ebd20796b59c51ebb10be58d12577f3b6370425bbeffcf1a96ff91ad9f3ffaefb2741d0a932b241f2664c157d77158cf475b0f7e39ba208d5482f408fc8b
-	HEAD_REF ab9470e8900364822fb74ad3c1e99fa4088914df
-	PATCHES
-		libcaer-static-build.patch
+	REF master
+	SHA512 1d100f196ee0539b453323c31f8234a8de09aba22447c5eb5cf5249f0fc2a9712abc70da87a7acb3342dd5785f5fb12ba04e15b4b0a7e9c4dd4ba80773c9e36d
+	HEAD_REF da6e7cc31a239cf6c071bb110a285f8ebd81c628
 )
 
 vcpkg_cmake_configure(
@@ -14,7 +12,7 @@ vcpkg_cmake_configure(
 	OPTIONS
 		-DENABLE_OPENCV=ON
 		-DEXAMPLES_INSTALL=OFF
-		-DENABLE_BINDIR_INSTALLATION=ON
+		-DBUILD_CONFIG_VCPKG=ON
 )
 vcpkg_cmake_install()
 
