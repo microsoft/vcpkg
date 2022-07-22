@@ -4272,6 +4272,10 @@
       "baseline": "4.4.1",
       "port-version": 8
     },
+    "libxpm": {
+      "baseline": "3.5.11",
+      "port-version": 0
+    },
     "libxslt": {
       "baseline": "1.1.35",
       "port-version": 1
