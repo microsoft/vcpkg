@@ -1,14 +1,15 @@
-set(version 3.21.2)
+set(version 3.21.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF 839b18b1ba42639fedecfd751102afcc5736b5d4 #v3.21.2
-    SHA512 41503e70094ea6a8355c3ef16cfd998b38edb99f3d98e27be197583d42933a6805566e3efc7311af7453bb3d40d51eb589c67324676a31ec86b3ce80000bcb98
+    REF b1eb1260fce7308081822413a0cba77365e7a6ab #v3.21.3
+    SHA512 71bdd8e997fdb7d3f8ef6f4f5ac79a69b84283f8e7962809b64aab6778ec6f7051c52af8b1501ec78c63edfe668af4bed43bfc132e17baa8d8e465c0d5a5d770
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+        compile_options.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -33,7 +34,7 @@ if (VCPKG_DOWNLOAD_MODE)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/cmake"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
