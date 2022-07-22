@@ -7,8 +7,7 @@ vcpkg_from_sourceforge(
     FILENAME "plplot-${PLPLOT_VERSION}.tar.gz"
     SHA512 1d5cb5da17d4bde6d675585bff1f8dcb581719249a0b2687867e767703f8dab0870e7ea44b9549a497f4ac0141a3cabf6761c49520c0e2b26ffe581468512cbb
     PATCHES
-      0001-findwxwidgets-fixes.patch
-      0002-wxwidgets-dev-fixes.patch
+      wxwidgets-dev-fixes.patch
       install-interface-include-directories.patch
       use-math-h-nan.patch
       fix_utils.patch
