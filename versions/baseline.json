@@ -7710,7 +7710,7 @@
     },
     "xlnt": {
       "baseline": "1.5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "xlsxio": {
       "baseline": "2021-03-24",
