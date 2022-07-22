@@ -37,8 +37,6 @@ IFS=" ""	$nl"
 
 file_conv=
 
-echo "Using vcpkg compile wrapper"
-
 # func_file_conv build_file lazy
 # Convert a $build file to $host form and store it in $file
 # Currently only supports Windows hosts. If the determined conversion
