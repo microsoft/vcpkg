@@ -3,53 +3,7 @@ cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 
 get_filename_component(_vcpkg_wx_root "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
-set(wxWidgets_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
-set(WX_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
-unset(_vcpkg_wx_root)
-
-if(WIN32 AND CMAKE_HOST_WIN32)
-    # FindwxWidgets.cmake win32 mode, multi-config
-    # Force FindwxWidgets.cmake win32 mode for all windows targets built on windows
-    set(_vcpkg_wxwidgets_backup_crosscompiling "${CMAKE_CROSSCOMPILING}")
-    set(CMAKE_CROSSCOMPILING 0)
-    # Get cache variables for debug libs
-    set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/debug/lib" CACHE INTERNAL "")
-    set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
-    _find_package(${ARGS})
-    # Reset for regular lookup
-    unset(wxWidgets_CONFIGURATION CACHE)
-    unset(wxWidgets_USE_REL_AND_DBG CACHE)
-    set(WX_CONFIGURATION_LIST "")
-    set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/lib" CACHE INTERNAL "")
-else()
-    # FindwxWidgets.cmake unix mode, single-config
-    if(MINGW)
-        # Force FindwxWidgets.cmake unix mode for mingw cross builds
-        set(_vcpkg_wxwidgets_backup_crosscompiling "${CMAKE_CROSSCOMPILING}")
-        set(CMAKE_CROSSCOMPILING 1)
-    endif()
-    set(_vcpkg_wxconfig "")
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR "Debug" IN_LIST MAP_IMPORTED_CONFIG_${CMAKE_BUILD_TYPE})
-        # Debug
-        set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/debug/lib" CACHE INTERNAL "")
-        file(GLOB _vcpkg_wxconfig LIST_DIRECTORIES false "${wxWidgets_LIB_DIR}/wx/config/*")
-    endif()
-    if(NOT _vcpkg_wxconfig)
-        # Release or fallback
-        set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/lib" CACHE INTERNAL "")
-        file(GLOB _vcpkg_wxconfig LIST_DIRECTORIES false "${wxWidgets_LIB_DIR}/wx/config/*")
-    endif()
-    set(wxWidgets_CONFIG_EXECUTABLE "${_vcpkg_wxconfig}" CACHE INTERNAL "")
-    unset(_vcpkg_wxconfig)
-endif()
-set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
-
-_find_package(${ARGS})
-
-if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
-    set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")
-    unset(_vcpkg_wxwidgets_backup_crosscompiling)
-endif()
+set(wxWidgets_USE_FILE "${_vcpkg_wx_root}/share/wxwidgets/wxWidgetsConfig.cmake")
 
 if(WIN32 AND CMAKE_HOST_WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     find_package(EXPAT QUIET)
