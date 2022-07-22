@@ -7,8 +7,7 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true,
-      "platform": "windows"
+      "host": true
     }
   ]
 }
