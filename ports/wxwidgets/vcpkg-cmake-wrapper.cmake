@@ -38,6 +38,7 @@ if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         find_package(PNG QUIET)
         find_package(TIFF QUIET)
         find_package(ZLIB QUIET)
+        find_package(unofficial-nanosvg QUIET)
         list(APPEND wxWidgets_LIBRARIES
             ${EXPAT_LIBRARIES}
             ${JPEG_LIBRARIES}
