@@ -1972,6 +1972,10 @@
       "baseline": "22.03",
       "port-version": 1
     },
+    "dpp": {
+      "baseline": "2022-07-23",
+      "port-version": 0
+    },
     "draco": {
       "baseline": "1.5.2",
       "port-version": 0

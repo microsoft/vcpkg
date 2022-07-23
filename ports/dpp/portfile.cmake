@@ -1,0 +1,28 @@
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO brainboxdotcc/DPP
+	REF b21ab2570ab7ecd3f902f6f8a9a66300c58f4686
+	SHA512 144389f498a5bff3b0238fc2551a654e6dc079a059271964e31923ee0756d5879a0dcd396b515c4610bbc8851a1d3f67a957938ab8c2f4472ece900c64b9fda9
+	HEAD_REF master
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/dpp")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(
+	INSTALL "${SOURCE_PATH}/LICENSE"
+	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+	RENAME copyright
+)
