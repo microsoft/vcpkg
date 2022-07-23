@@ -23,6 +23,7 @@ vcpkg_extract_source_archive_ex(
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix-win-build.patch
         check-autoconf-archive.patch
+        pkgdata.patch # /release is only valid for exes not dlls
 )
 
 vcpkg_find_acquire_program(PYTHON3)
