@@ -14,6 +14,7 @@ include(${wxWidgets_USE_FILE})
 if(WIN32)
     set(wxWidgets_wxrc_EXECUTABLE "${wxWidgets_ROOT_DIR}/tools/wxwidgets/wxrc.exe" CACHE FILEPATH "Location of wxWidgets resource file compiler binary (wxrc)")
 else()
+    set(wxWidgets_wxrc_EXECUTABLE "${wxWidgets_ROOT_DIR}/tools/wxwidgets/wxrc" CACHE FILEPATH "Location of wxWidgets resource file compiler binary (wxrc)")
     set(wxWidgets_CONFIG_EXECUTABLE "${wxWidgets_ROOT_DIR}/tools/wxwidgets/wx-config" CACHE FILEPATH "Location of wxWidgets library configuration provider binary (wx-config).")
 endif()
 
