@@ -1881,7 +1881,7 @@
       "port-version": 3
     },
     "directx-dxc": {
-      "baseline": "2022-07-13",
+      "baseline": "2022-07-18",
       "port-version": 0
     },
     "directx-headers": {
@@ -1909,7 +1909,7 @@
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-06-15",
+      "baseline": "2022-07-19",
       "port-version": 0
     },
     "dirent": {
