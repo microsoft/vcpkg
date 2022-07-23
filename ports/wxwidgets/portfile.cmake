@@ -37,8 +37,6 @@ vcpkg_check_features(
         sound   wxUSE_SOUND
 )
 
-vcpkg_find_acquire_program(PKGCONFIG)
-
 set(OPTIONS_RELEASE "")
 if(NOT "debug-support" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
@@ -58,17 +56,20 @@ else()
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
 endif()
 
-# wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
-# vcpkg's port pkgconf would prevent this lookup.
-if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG})
+if(DEFINED ENV{PKG_CONFIG})
+    set(PKGCONFIG "$ENV{PKG_CONFIG}")
+elseif(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING)
+    # wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
+    # vcpkg's port pkgconf would prevent this lookup.
     find_program(system_pkg_config NAMES pkg-config)
     if(system_pkg_config)
-        set(ENV{PKG_CONFIG} "${system_pkg_config}")
+        set(PKGCONFIG "${system_pkg_config}")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND OPTIONS -DPKG_CONFIG_ARGN=--static)
     endif()
 endif()
+vcpkg_find_acquire_program(PKGCONFIG)
 
 # This may be set to ON by users in a custom triplet.
 # The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
