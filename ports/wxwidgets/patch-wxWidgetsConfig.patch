@@ -1,0 +1,62 @@
+diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
+index 6ef5a6ee78..d1d8126676 100644
+--- a/build/cmake/wxWidgetsConfig.cmake.in
++++ b/build/cmake/wxWidgetsConfig.cmake.in
+@@ -2,11 +2,11 @@
+ 
+ # determine target from compiler, platform and library type
+ if(WIN32 AND NOT CYGWIN AND NOT MSYS)
+-    if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
++    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL MSVC)
+         set(wxCOMPILER_PREFIX "vc")
+-    elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
++    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL GNU)
+         set(wxCOMPILER_PREFIX "gcc")
+-    elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
++    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL Clang)
+         set(wxCOMPILER_PREFIX "clang")
+     endif()
+ 
+@@ -74,24 +74,26 @@ foreach(libname @wxLIB_TARGETS@)
+         endif()
+ 
+         # add an alias from wx::<lib> to wx::wx<lib>
+-        if(CMAKE_VERSION VERSION_LESS "3.18")
+-            # CMake <3.18 does not support alias to non-global imported target, create a copy of the library
+-            get_target_property(target_type wx::${libname} TYPE)
+-            if(target_type STREQUAL STATIC_LIBRARY)
+-                add_library(wx::${name} STATIC IMPORTED)
++        if(NOT TARGET wx::${name})
++            if(CMAKE_VERSION VERSION_LESS "3.18")
++                # CMake <3.18 does not support alias to non-global imported target, create a copy of the library
++                get_target_property(target_type wx::${libname} TYPE)
++                if(target_type STREQUAL STATIC_LIBRARY)
++                    add_library(wx::${name} STATIC IMPORTED)
++                else()
++                    add_library(wx::${name} SHARED IMPORTED)
++                endif()
++                wx_inherit_property(wx::${libname} wx::${name} IMPORTED_CONFIGURATIONS)
++                wx_inherit_property(wx::${libname} wx::${name} INTERFACE_COMPILE_DEFINITIONS)
++                wx_inherit_property(wx::${libname} wx::${name} INTERFACE_INCLUDE_DIRECTORIES)
++                wx_inherit_property(wx::${libname} wx::${name} INTERFACE_LINK_LIBRARIES)
++                wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LINK_INTERFACE_LANGUAGES)
++                wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LOCATION)
++                wx_inherit_property(wx::${libname} wx::${name} IMPORTED_IMPLIB)
++                wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LINK_DEPENDENT_LIBRARIES)
+             else()
+-                add_library(wx::${name} SHARED IMPORTED)
++                add_library(wx::${name} ALIAS wx::${libname})
+             endif()
+-            wx_inherit_property(wx::${libname} wx::${name} IMPORTED_CONFIGURATIONS)
+-            wx_inherit_property(wx::${libname} wx::${name} INTERFACE_COMPILE_DEFINITIONS)
+-            wx_inherit_property(wx::${libname} wx::${name} INTERFACE_INCLUDE_DIRECTORIES)
+-            wx_inherit_property(wx::${libname} wx::${name} INTERFACE_LINK_LIBRARIES)
+-            wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LINK_INTERFACE_LANGUAGES)
+-            wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LOCATION)
+-            wx_inherit_property(wx::${libname} wx::${name} IMPORTED_IMPLIB)
+-            wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LINK_DEPENDENT_LIBRARIES)
+-        else()
+-            add_library(wx::${name} ALIAS wx::${libname})
+         endif()
+ 
+         # add to FindwxWidgets variable

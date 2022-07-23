@@ -10,6 +10,7 @@ vcpkg_from_github(
         nanosvg-ext-depend.patch
         fix-libs-export.patch
         fix-pcre2.patch
+        patch-wxWidgetsConfig.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
