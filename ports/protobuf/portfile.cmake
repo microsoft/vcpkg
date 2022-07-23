@@ -1,4 +1,4 @@
-set(version 3.21.2)
+set(version 3.21.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
