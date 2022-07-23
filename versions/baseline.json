@@ -3014,7 +3014,7 @@
     },
     "iniparser": {
       "baseline": "2020-04-06",
-      "port-version": 2
+      "port-version": 3
     },
     "inja": {
       "baseline": "3.3.0",
@@ -4922,7 +4922,7 @@
     },
     "nifticlib": {
       "baseline": "2020-04-30",
-      "port-version": 1
+      "port-version": 2
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
@@ -7046,7 +7046,7 @@
     },
     "thor": {
       "baseline": "2.0",
-      "port-version": 5
+      "port-version": 6
     },
     "threadpool": {
       "baseline": "0.2.5",
