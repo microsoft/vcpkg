@@ -2,6 +2,7 @@
   "name": "unit-test-cmake",
   "version-string": "0",
   "description": "Ensures that the CMake scripts are unit tested.",
+  "license": "MIT",
   "supports": "x64",
   "default-features": [
     "backup-restore-env-vars",
