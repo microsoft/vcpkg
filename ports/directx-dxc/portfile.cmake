@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.7.2207/dxc_2022_07_13.zip"
-    FILENAME "dxc_2022_07_13.zip"
-    SHA512 4d70cfa859f09bcc06ab12f20af2e320a473f9ea7f1b971c4a0bc9949f110ed2fceeffe287378db43397f9e8d44bb880986a64ead84f733f9a8c9bba340599ce
+    URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.7.2207/dxc_2022_07_18.zip"
+    FILENAME "dxc_2022_07_18.zip"
+    SHA512 b34d770ed9299e6a9ade12cd8d9add28f50e41abdfcdbc7e272568d7f78fe5a8f2bbe5f905839981b97d34b52e1fa627ceacd55743f2cf71e39861418b11ae3b
 )
 
 vcpkg_download_distfile(
