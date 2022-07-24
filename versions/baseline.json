@@ -4550,7 +4550,7 @@
     },
     "metis": {
       "baseline": "5.1.0",
-      "port-version": 8
+      "port-version": 9
     },
     "metrohash": {
       "baseline": "1.1.3",
