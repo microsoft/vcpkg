@@ -33,11 +33,24 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_cmake_config_fixup()
 if("ssl" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME hiredis_ssl CONFIG_PATH share/hiredis_ssl)
 endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hiredis/hiredis.h"
+[[typedef long long ssize_t;
+#define _SSIZE_T_ /* for compatibility with libuv */]]
+[[typedef intptr_t ssize_t;]]
+)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hiredis/sds.h"
+[[typedef long long ssize_t;
+#define SSIZE_MAX (LLONG_MAX >> 1)]]
+[[typedef intptr_t ssize_t;
+#define SSIZE_MAX INTPTR_MAX]]
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

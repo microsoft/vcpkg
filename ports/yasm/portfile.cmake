@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${HOST_TOOLS_OPTIONS}
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
         -DENABLE_NLS=OFF
         -DYASM_BUILD_TESTS=OFF
 )
