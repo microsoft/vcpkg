@@ -34,7 +34,6 @@ set(LIBSPEEXDSP_HEADERS
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/resample_neon.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/resample_sse.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/smallft.h"
-    "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/stack_alloc.h"
     "${CMAKE_CURRENT_LIST_DIR}/libspeexdsp/vorbis_psy.h"
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_buffer.h"
 )

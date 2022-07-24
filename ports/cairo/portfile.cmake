@@ -1,5 +1,3 @@
-set(CAIRO_VERSION 1.17.4)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,6 +8,7 @@ vcpkg_from_gitlab(
     PATCHES
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
+        mingw-dllexport.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -25,9 +24,6 @@ else()
 endif()
 
 if ("x11" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature x11 only support UNIX.")
-    endif()
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
     list(APPEND OPTIONS -Dxlib=enabled)
 else()
@@ -37,9 +33,6 @@ list(APPEND OPTIONS -Dxcb=disabled)
 list(APPEND OPTIONS -Dxlib-xcb=disabled)
 
 if("gobject" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS -Dglib=enabled)
 else()
     list(APPEND OPTIONS -Dglib=disabled)
