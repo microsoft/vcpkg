@@ -40,7 +40,7 @@ endfunction()
 
 # "Libs: " only
 write_pkgconfig([[
-Libs: -L"${prefix}/lib" -l"aaa"
+Libs: -L${prefix}/lib -l"aaa"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
@@ -75,7 +75,7 @@ endif()
 
 # Replace ';' with ' '
 write_pkgconfig([[
-Libs: -L"${prefix}/lib"\;-l"aaa"
+Libs: -L${prefix}/lib\;-l"aaa"
 Libs.private: -lbbb\;-l"ccc"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
@@ -142,3 +142,8 @@ unit_test_pkgconfig_check_key("debug" "libdir=" [[${prefix}/lib]])
 unit_test_pkgconfig_check_key("debug" "includedir=" [[${prefix}/../include]])
 unit_test_pkgconfig_check_key("debug" "datarootdir=" [[${prefix}/../share]])
 unit_test_pkgconfig_check_key("debug" "datadir=" [[${datarootdir}/unit-test-cmake]])
+
+# -I, -l or -L with ${blah} in variables
+write_pkgconfig([[blah_libs=-L${blah}/lib64 -l${blah}/libblah.a -I${blah}/include]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug;release" "blah_libs=" [[-L"${blah}/lib64" -l"${blah}/libblah.a" -I"${blah}/include"]])
