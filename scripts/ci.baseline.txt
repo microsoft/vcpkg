@@ -207,10 +207,6 @@ dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 
-# uwp not supported by dpp
-dpp:arm-uwp=fail
-dpp:x64-uwp=fail
-
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
 duktape:x64-osx=skip
