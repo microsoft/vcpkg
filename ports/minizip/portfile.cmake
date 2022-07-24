@@ -10,6 +10,7 @@ vcpkg_from_github(
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
         0003-no-io64.patch
+        0004-define.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
