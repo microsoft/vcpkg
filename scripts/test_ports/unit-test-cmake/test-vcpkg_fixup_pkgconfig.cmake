@@ -43,19 +43,19 @@ write_pkgconfig([[
 Libs: -L${prefix}/lib -l"aaa"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
-unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -l"aaa"]])
+unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa]])
 
 # "Libs: " and Libs.private
 write_pkgconfig([[
 Libs: -L"${prefix}/lib" -l"aaa"
-Libs.private: -lbbb
+Libs.private: -l"bbb ccc"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa "-lbbb ccc"]])
     unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
 else()
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa]])
 endif()
 
 # line continuations
@@ -67,10 +67,10 @@ Libs: -L"${prefix}/lib" \
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa -lbbb]])
     unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
 else()
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa]])
 endif()
 
 # Replace ';' with ' '
@@ -80,10 +80,10 @@ Libs.private: -lbbb\;-l"ccc"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -l"aaa" -lbbb -l"ccc"]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa -lbbb -lccc]])
     unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
 else()
-    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -l"aaa"]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa]])
 endif()
 
 # invalid: ...-NOTFOUND

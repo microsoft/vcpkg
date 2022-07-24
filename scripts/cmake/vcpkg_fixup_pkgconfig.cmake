@@ -19,8 +19,6 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
         string(REPLACE [[${prefix}/include]] [[${prefix}/../include]] contents "${contents}")
         string(REPLACE [[${prefix}/share]] [[${prefix}/../share]] contents "${contents}")
     endif()
-    # quote -L, -I, and -l paths starting with `${blah}`
-    string(REGEX REPLACE "([ =])(-[LIl]\\\${[^}]*}[^ ;\n\t]*)" [[\1"\2"]] contents "${contents}")
     # Remove line continuations before transformations
     string(REGEX REPLACE "[ \t]*\\\\\n[ \t]*" " " contents "${contents}")
     # This section fuses XYZ.private and XYZ according to VCPKG_LIBRARY_LINKAGE
@@ -64,6 +62,18 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
             set(libs "${no_lists}")
         endif()
 
+        separate_arguments(libs_list UNIX_COMMAND "${libs}")
+        set(libs_filtered "")
+        foreach(item IN LISTS libs_list)
+            if(item MATCHES "[\$`\"\\ ]")
+                set(item "\"${item}\"")
+            endif()
+            list(APPEND libs_filtered "${item}")
+        endforeach()
+        list(JOIN libs_filtered " " libs_filtered)
+        string(REPLACE "${libs}" "${libs_filtered}" contents "${contents}")
+        set(libs "${libs_filtered}")
+
         if(libs MATCHES "optimized" AND libs MATCHES "debug")
             message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${libs}")
         endif()
@@ -74,6 +84,10 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
             message(FATAL_ERROR "Error in ${file}: 'Libs' refer to a CMake target:\n...${CMAKE_MATCH_0}")
         endif()
     endif()
+
+    # Quote -L, -I, and -l paths starting with `${blah}`
+    # This was already handled for "Libs", but there might be additional occurrences in other lines.
+    string(REGEX REPLACE "([ =])(-[LIl]\\\${[^}]*}[^ ;\n\t]*)" [[\1"\2"]] contents "${contents}")
 
     set("${arg_variable}" "${contents}" PARENT_SCOPE)
 endfunction()
