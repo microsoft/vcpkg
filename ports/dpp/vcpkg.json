@@ -10,6 +10,7 @@
     "nlohmann-json",
     "openssl",
     "opus",
+    "zlib",
     {
       "name": "vcpkg-cmake",
       "host": true
