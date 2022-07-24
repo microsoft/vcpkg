@@ -32,7 +32,6 @@ vcpkg_check_features(
 )
 
 set(feature_list dbus jack libinstpatch midishare opensles oboe oss sdl2 pulseaudio readline lash systemd dart)
-vcpkg_list(SET FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()
