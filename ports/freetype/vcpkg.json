@@ -6,6 +6,10 @@
   "license": "FTL OR GPL-2.0-or-later",
   "dependencies": [
     {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
