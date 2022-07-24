@@ -20,7 +20,7 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
         string(REPLACE [[${prefix}/share]] [[${prefix}/../share]] contents "${contents}")
     endif()
     # quote -L, -I, and -l paths starting with `${blah}`
-    string(REGEX REPLACE " -([LIl])(\\\${[^}]*}[^ \n\t]*)" [[ -\1"\2"]] contents "${contents}")
+    string(REGEX REPLACE "([ =]-[LIl])(\\\${[^}]*}[^ ;\n\t]*)" [[\1"\2"]] contents "${contents}")
     # Remove line continuations before transformations
     string(REGEX REPLACE "[ \t]*\\\\\n[ \t]*" " " contents "${contents}")
     # This section fuses XYZ.private and XYZ according to VCPKG_LIBRARY_LINKAGE
