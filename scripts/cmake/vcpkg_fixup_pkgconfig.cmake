@@ -1,7 +1,7 @@
-function(z_vcpkg_fixup_pkgconfig_process_data data_variable config prefix)
+function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix)
     # This normalizes all data to start and to end with a newline, and
     # to use LF instead of CRLF. This allows to use simpler regex matches.
-    string(REPLACE "\r\n" "\n" contents "\n${${data_variable}}\n")
+    string(REPLACE "\r\n" "\n" contents "\n${${arg_variable}}\n")
 
     string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
     string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
@@ -12,8 +12,8 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config prefix)
         string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
     endif()
 
-    string(REGEX REPLACE "\nprefix[\t ]*=[^\n]*" "" contents "prefix=${prefix}${contents}")
-    if("${config}" STREQUAL "DEBUG")
+    string(REGEX REPLACE "\nprefix[\t ]*=[^\n]*" "" contents "prefix=${arg_prefix}${contents}")
+    if("${arg_config}" STREQUAL "DEBUG")
         # prefix points at the debug subfolder
         string(REPLACE [[${prefix}/debug]] [[${prefix}]] contents "${contents}")
         string(REPLACE [[${prefix}/include]] [[${prefix}/../include]] contents "${contents}")
@@ -75,10 +75,10 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config prefix)
         endif()
     endif()
 
-    set("${data_variable}" "${contents}" PARENT_SCOPE)
+    set("${arg_variable}" "${contents}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_fixup_pkgconfig_check_files file config)
+function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     set(path_suffix_DEBUG /debug)
     set(path_suffix_RELEASE "")
 
@@ -89,15 +89,15 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
     endif()
 
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
-        "${CURRENT_PACKAGES_DIR}${path_suffix_${config}}/lib/pkgconfig"
+        "${CURRENT_PACKAGES_DIR}${path_suffix_${arg_config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
-        "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/pkgconfig"
+        "${CURRENT_INSTALLED_DIR}${path_suffix_${arg_config}}/lib/pkgconfig"
         "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
     )
 
     # First make sure everything is ok with the package and its deps
-    cmake_path(GET file STEM LAST_ONLY package_name)
-    debug_message("Checking package (${config}): ${package_name}")
+    cmake_path(GET arg_file STEM LAST_ONLY package_name)
+    debug_message("Checking package (${arg_config}): ${package_name}")
     execute_process(
         COMMAND "${PKGCONFIG}" --print-errors --exists "${package_name}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
