@@ -1,6 +1,6 @@
 {
   "name": "dpp",
-  "version-date": "2022-07-23",
+  "version-date": "2022-07-24",
   "description": "D++ Extremely Lightweight C++ Discord Library.",
   "homepage": "dpp.dev/",
   "license": "Apache-2.0",
@@ -10,7 +10,6 @@
     "nlohmann-json",
     "openssl",
     "opus",
-    "zlib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,6 +17,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
