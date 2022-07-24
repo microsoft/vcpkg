@@ -73,6 +73,19 @@ else()
     unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
 endif()
 
+# Replace ';' with ' '
+write_pkgconfig([[
+Libs: -L"${prefix}/lib"\;-l"aaa"
+Libs.private: -lbbb\;-l"ccc"
+]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa" -lbbb -l"ccc"]])
+    unit_test_pkgconfig_check_key("debug;release" "Libs.private:" "")
+else()
+    unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ -L"${prefix}/lib" -l"aaa"]])
+endif()
+
 # invalid: ...-NOTFOUND
 write_pkgconfig([[Libs: LIB-NOTFOUND]])
 unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # ...-NOTFOUND # ]])

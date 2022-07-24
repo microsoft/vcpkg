@@ -57,6 +57,13 @@ function(z_vcpkg_fixup_pkgconfig_process_data data_variable config prefix)
 
     if(contents MATCHES "\nLibs: *([^\n]*)")
         set(libs "${CMAKE_MATCH_1}")
+        if(libs MATCHES [[;]])
+            # Assuming that ';' comes from CMake lists only. Candidate for parameter control.
+            string(REPLACE ";" " " no_lists "${libs}")
+            string(REPLACE "${libs}" "${no_lists}" contents "${contents}")
+            set(libs "${no_lists}")
+        endif()
+
         if(libs MATCHES "optimized" AND libs MATCHES "debug")
             message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${libs}")
         endif()
