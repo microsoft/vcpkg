@@ -38,14 +38,14 @@ function(unit_test_pkgconfig_check_key build_types field value)
     endforeach()
 endfunction()
 
-# "Libs: " only
+# "Libs:" only
 write_pkgconfig([[
 Libs: -L${prefix}/lib -l"aaa"
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -laaa]])
 
-# "Libs: " and Libs.private
+# "Libs:" and "Libs.private:"
 write_pkgconfig([[
 Libs: -L"${prefix}/lib" -l"aaa"
 Libs.private: -l"bbb ccc"
