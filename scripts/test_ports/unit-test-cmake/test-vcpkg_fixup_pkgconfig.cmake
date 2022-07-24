@@ -92,19 +92,29 @@ unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # ...-NOTFOUND
 
 # invalid: optimized/debug
 write_pkgconfig([[Libs: -laaa -loptimized -lrel -ldebug -ldbg -lbbb]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "Libs:" [[ -laaa -ldbg -lbbb]])
+unit_test_pkgconfig_check_key("release" "Libs:" [[ -laaa -lrel -lbbb]])
 
 write_pkgconfig([[Libs: -laaa -Loptimized -Lrel -Ldebug -Ldbg -lbbb]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "Libs:" [[ -laaa -Ldbg -lbbb]])
+unit_test_pkgconfig_check_key("release" "Libs:" [[ -laaa -Lrel -lbbb]])
 
-write_pkgconfig([[Libs: optimized;librel.a;debug;libdbg.a;aaa.lib]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+write_pkgconfig([[Libs: optimized\;librel.a\;debug\;libdbg.a\;aaa.lib]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "Libs:" [[ libdbg.a aaa.lib]])
+unit_test_pkgconfig_check_key("release" "Libs:" [[ librel.a aaa.lib]])
 
-write_pkgconfig([[Libs: aaa.lib;optimized;librel.a;debug;libdbg.a]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+write_pkgconfig([[Libs: aaa.lib\;optimized\;librel.a\;debug\;libdbg.a]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "Libs:" [[ aaa.lib libdbg.a]])
+unit_test_pkgconfig_check_key("release" "Libs:" [[ aaa.lib librel.a]])
 
 write_pkgconfig([[Libs: aaa.lib optimized librel.a debug libdbg.a bbb.lib]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug" "Libs:" [[ aaa.lib libdbg.a bbb.lib]])
+unit_test_pkgconfig_check_key("release" "Libs:" [[ aaa.lib librel.a bbb.lib]])
 
 # invalid: namespaced targets
 write_pkgconfig([[Libs: -lAAA::aaa]])
