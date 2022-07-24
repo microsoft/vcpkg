@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF 8b00644751578ba67b709a827cbe5133d849d339 #v2.2.6
-    SHA512 37361c6fdbb54eba78e59f03c9ca702129f0fb522721dfb4e744fdc9a8721e665728fa5606bc68c2fb2ce971b4829cfc472f0a7cd72ce3fe14b3a335b098f7ec
+    REF v2.2.8
+    SHA512 8173f2d368a214cf1eb7faae2f6326db43fb094ec9c83e652f953290c3f29c34ebd0b92cbb439bea8d814d3a7e4f9dc0c18c648df1d414989d5d8b4700c79535
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
