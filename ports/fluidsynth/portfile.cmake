@@ -6,28 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        separate-gentables.patch
+        gentables.patch
 )
-
-if ("buildtools" IN_LIST FEATURES)
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}/src/gentables"
-        LOGFILE_BASE configure-tools
-    )
-
-    vcpkg_cmake_build(
-        LOGFILE_BASE install-tools
-        TARGET install
-    )
-
-    vcpkg_copy_tools(TOOL_NAMES make_tables AUTO_CLEAN)
-
-    vcpkg_add_to_path(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        buildtools  VCPKG_BUILD_MAKE_TABLES
         sndfile     enable-libsndfile
 )
 
@@ -53,12 +38,11 @@ list(APPEND FEATURE_OPTIONS -DCOREMIDI_FOUND=${VCPKG_TARGET_IS_OSX})
 list(APPEND FEATURE_OPTIONS -Denable-alsa=${VCPKG_TARGET_IS_LINUX})
 list(APPEND FEATURE_OPTIONS -DALSA_FOUND=${VCPKG_TARGET_IS_LINUX})
 
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
-
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DLIB_INSTALL_DIR=lib
@@ -75,8 +59,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
-# Copy fluidsynth.exe to tools dir
-vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
+set(tools fluidsynth)
+if("buildtools" IN_LIST FEATURES)
+    list(APPEND tools make_tables)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

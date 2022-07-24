@@ -12,6 +12,7 @@
     {
       "name": "fluidsynth",
       "host": true,
+      "default-features": false,
       "features": [
         "buildtools"
       ]
