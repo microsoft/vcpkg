@@ -2,9 +2,9 @@ vcpkg_from_gitlab(
 	GITLAB_URL https://gitlab.com/inivation/
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO dv/libcaer
-	REF master
+	REF 933dfa60a138091afb03014f8c24183bab7bba4e
 	SHA512 6e74e308833ca3c923b318a42bab30edb04f763cdd5b243701416b72278d7315fdd8a62ebb87b704212507f76c3e45bc9728df17ea2d1eab5133dfcf550c8c35
-	HEAD_REF 933dfa60a138091afb03014f8c24183bab7bba4e
+	HEAD_REF master
 )
 
 vcpkg_cmake_configure(
