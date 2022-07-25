@@ -6506,7 +6506,7 @@
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 3
+      "port-version": 4
     },
     "seal": {
       "baseline": "3.7.2",
