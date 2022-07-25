@@ -27,6 +27,11 @@ if(VCPKG_TARGET_IS_UWP)
     set(configure_opts WINDOWS_USE_MSBUILD)
 endif()
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(rpath "@loader_path")
+else()
+    set(rpath "\$ORIGIN")
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Release"
     ${configure_opts}
@@ -35,6 +40,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
+        -DCMAKE_INSTALL_RPATH=${rpath}
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
         -DPKG_CONFIG_EXECUTABLE=FALSE
