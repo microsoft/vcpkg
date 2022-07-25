@@ -49,6 +49,9 @@
     "dataset": {
       "description": "Dataset support"
     },
+    "example": {
+      "description": "Install the minimal example (source code)"
+    },
     "filesystem": {
       "description": "Filesystem support"
     },

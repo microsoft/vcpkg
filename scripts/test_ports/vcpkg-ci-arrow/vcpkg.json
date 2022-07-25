@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-arrow",
+  "version-date": "2022-07-25",
+  "description": "Builds an example app in order to validate the arrow port.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "arrow",
+      "default-features": false,
+      "features": [
+        "csv",
+        "example"
+      ]
+    }
+  ]
+}

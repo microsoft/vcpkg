@@ -109,6 +109,10 @@ else()
     file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake")
 endif()
 
+if("example" IN_LIST FEATURES)
+    file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
+endif()
+
 if ("plasma" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES plasma-store-server AUTO_CLEAN)
 endif ()
