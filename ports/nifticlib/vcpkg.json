@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Nifticlib is a C I/O library for reading and writing files in the nifti-1 data format.",
   "homepage": "https://github.com/NIFTI-Imaging/nifti_clib",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     "zlib"
