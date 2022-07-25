@@ -27,13 +27,7 @@ vcpkg_fixup_pkgconfig()
 
 set(tool_names "opencc" "opencc_dict" "opencc_phrase_extract")
 if("tools" IN_LIST FEATURES)
-    foreach(opencc_tool IN LISTS tool_names)
-        file(COPY
-            "${CURRENT_PACKAGES_DIR}/bin/${opencc_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-        )
-    endforeach()
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
 foreach(opencc_tool IN LISTS tool_names)
