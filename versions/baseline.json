@@ -4742,7 +4742,7 @@
     },
     "ms-gltf": {
       "baseline": "2022-06-28",
-      "port-version": 0
+      "port-version": 1
     },
     "ms-gsl": {
       "baseline": "4.0.0",
@@ -7421,7 +7421,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2022-07-02",
+      "baseline": "2022-07-18",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
