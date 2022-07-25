@@ -1,0 +1,7 @@
+{
+  "name": "gs1-barcode-engine",
+  "version-date": "2021-09-10",
+  "description": "The GS1 Barcode Engine is a native C library that supports the generation of GS1 barcode symbols and processing of GS1 Application Identifier data.",
+  "homepage": "https://github.com/gs1/gs1-barcode-engine",
+  "license": "Apache-2.0"
+}
