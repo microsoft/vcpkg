@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         vs-2022-fixes.patch
-        all.patch
+        msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
 )
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
