@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-8.0.0
-    SHA512 08b6ab4a3c5e0dd9c46402da8e7b9ef9f918eea177413cb31695192dfdb5a472ebbfef255b8343fe775d81e8b5eb268c3428a699fac48b36bf808f5b81e83a64
+    REF apache-arrow-8.0.1
+    SHA512 b32f5a3666de7d6d16ea828697bb42e1b6605f58719c42e670c9ec0a8782057dac933f6e14e97b46f82802fc38cc7f4cc825794a4a95ac641593c2ee26ac5bbe
     HEAD_REF master
     PATCHES
         vs-2022-fixes.patch
