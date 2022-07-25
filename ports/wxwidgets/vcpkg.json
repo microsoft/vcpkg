@@ -1,7 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.1.6",
-  "port-version": 2,
+  "version": "3.1.7",
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -26,16 +25,16 @@
       "name": "vcpkg-cmake",
       "host": true
     },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
     "zlib"
   ],
   "default-features": [
+    "debug-support",
     "sound"
   ],
   "features": {
+    "debug-support": {
+      "description": "Enable wxWidgets debugging support hooks even for release builds (wxDEBUG_LEVEL 1)"
+    },
     "example": {
       "description": "Example source code and CMake project"
     },
