@@ -57,11 +57,12 @@ index f070323..290b5a7 100644
 +  add_library(Brotli::brotlicommon ALIAS unofficial::brotli::brotlicommon)
 +  add_library(Brotli::brotlienc ALIAS unofficial::brotli::brotlienc)
 +  add_library(Brotli::brotlidec ALIAS unofficial::brotli::brotlidec)
-+  get_target_property(BROTLI_INCLUDE_DIR unofficial::brotli::brotlicommon-static INTERFACE_INCLUDE_DIRECTORIES)
    # TODO: Don't use global includes but rather target_include_directories
-+  if(NOT BROTLI_INCLUDE_DIR)
-   get_target_property(BROTLI_INCLUDE_DIR Brotli::brotlicommon
+-  get_target_property(BROTLI_INCLUDE_DIR Brotli::brotlicommon
++  get_target_property(BROTLI_INCLUDE_DIR unofficial::brotli::brotlicommon
                        INTERFACE_INCLUDE_DIRECTORIES)
++  if(NOT BROTLI_INCLUDE_DIR)
++    get_target_property(BROTLI_INCLUDE_DIR unofficial::brotli::brotlicommon-static INTERFACE_INCLUDE_DIRECTORIES)
 +  endif()
    include_directories(SYSTEM ${BROTLI_INCLUDE_DIR})
  endif()
