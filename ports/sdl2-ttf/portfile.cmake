@@ -10,11 +10,16 @@ vcpkg_from_github(
         fix-find_dependencies.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        harfbuzz SDL2TTF_HARFBUZZ
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDL2TTF_SAMPLES=OFF
-        -DSDL2TTF_HARFBUZZ=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
