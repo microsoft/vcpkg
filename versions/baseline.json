@@ -3705,8 +3705,8 @@
       "port-version": 0
     },
     "libhv": {
-      "baseline": "1.2.4",
-      "port-version": 2
+      "baseline": "1.2.6",
+      "port-version": 0
     },
     "libhydrogen": {
       "baseline": "2022-06-21",
