@@ -9,9 +9,16 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
 )
 
+set(OPTIONS "")
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "--disable-Bsymbolic")
+endif()
+
 vcpkg_configure_make(
     USE_WRAPPERS
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
 )
 
 vcpkg_install_make()

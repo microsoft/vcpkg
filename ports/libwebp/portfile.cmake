@@ -79,3 +79,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# For compatibility
+file(READ "${CURRENT_PACKAGES_DIR}/share/WebP/WebPTargets.cmake" contents)
+string(APPEND contents "
+if(NOT TARGET WebP::libwebpmux)
+  add_library(WebP::libwebpmux INTERFACE IMPORTED)
+  set_target_properties(WebP::libwebpmux PROPERTIES INTERFACE_LINK_LIBRARIES WebP::webpmux)
+endif()
+")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/WebP/WebPTargets.cmake" "${contents}")
