@@ -13,7 +13,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "diy"
   ],
   "features": {
     "cuda": {
@@ -28,7 +29,12 @@
     "mpi": {
       "description": "Use the MPI controller.",
       "dependencies": [
-        "mpi"
+        "mpi",
+        {
+          "name": "diy",
+          "default-features": false,
+          "features" : [ "mpi"]
+        }
       ]
     },
     "omp": {

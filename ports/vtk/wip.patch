@@ -1,0 +1,55 @@
+diff --git a/edd2e5233f-10fb100bb1.clean/IO/Legacy/vtkDataReader.cxx b/edd2e5233f-10fb100bb1/IO/Legacy/vtkDataReader.cxx
+index d6aa4d0ac..7fc9a6be1 100644
+--- a/edd2e5233f-10fb100bb1.clean/IO/Legacy/vtkDataReader.cxx
++++ b/edd2e5233f-10fb100bb1/IO/Legacy/vtkDataReader.cxx
+@@ -289,7 +289,7 @@ int vtkDataReader::ReadLine(char result[256])
+ int vtkDataReader::ReadString(char result[256])
+ {
+   this->IS->width(256);
+-  *this->IS >> result;
++  *this->IS >> *result;
+   if (this->IS->fail())
+   {
+     return 0;
+diff --git a/edd2e5233f-10fb100bb1.clean/ThirdParty/diy2/CMakeLists.txt b/edd2e5233f-10fb100bb1/ThirdParty/diy2/CMakeLists.txt
+index 3224fc0f0..882da4512 100644
+--- a/edd2e5233f-10fb100bb1.clean/ThirdParty/diy2/CMakeLists.txt
++++ b/edd2e5233f-10fb100bb1/ThirdParty/diy2/CMakeLists.txt
+@@ -1,8 +1,14 @@
+-vtk_module_third_party_internal(
++vtk_module_third_party(
++INTERNAL
+   HEADER_ONLY
+   LICENSE_FILES "vtkdiy2/LICENSE.txt"
+                 "vtkdiy2/LEGAL.txt"
+-  VERSION       "3.5.0")
++  VERSION       "3.5.0"
++  STANDARD_INCLUDE_DIRS
++EXTERNAL
++    PACKAGE diy CONFIG_MODE
++    TARGETS DIY::diy
++    STANDARD_INCLUDE_DIRS)
+ 
+ if (TARGET VTK::mpi)
+   vtk_module_link(VTK::diy2
+diff --git a/edd2e5233f-10fb100bb1.clean/ThirdParty/diy2/vtk_diy2.h.in b/edd2e5233f-10fb100bb1/ThirdParty/diy2/vtk_diy2.h.in
+index 17f6564e3..3392c56d8 100644
+--- a/edd2e5233f-10fb100bb1.clean/ThirdParty/diy2/vtk_diy2.h.in
++++ b/edd2e5233f-10fb100bb1/ThirdParty/diy2/vtk_diy2.h.in
+@@ -16,13 +16,13 @@
+ #define vtk_diy2_h
+ 
+ /* Use the diy2 library configured for VTK.  */
+-#cmakedefine01 VTK_MODULE_USE_EXTERNAL_vtkdiy2
++#cmakedefine01 VTK_MODULE_USE_EXTERNAL_VTK_diy2
+ 
+ /* enable/disable DIY MPI */
+ #cmakedefine DIY_NO_MPI
+ 
+-#if VTK_MODULE_USE_EXTERNAL_vtkdiy2
+-#  define VTK_DIY2(header) <header>
++#if VTK_MODULE_USE_EXTERNAL_VTK_diy2
++#  define VTK_DIY2(header) <diy/header>
+ #else
+ #  define VTK_DIY2(header) <vtkdiy2/include/header>
+ #  define diy vtkdiy2 // mangle namespace diy

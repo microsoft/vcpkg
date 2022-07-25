@@ -166,6 +166,7 @@ vcpkg_cmake_configure(
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
+        -DVTK_MODULE_USE_EXTERNAL_VTK_diy2:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
