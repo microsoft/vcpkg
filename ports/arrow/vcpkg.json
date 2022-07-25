@@ -13,7 +13,6 @@
     "brotli",
     "bzip2",
     "gflags",
-    "glog",
     "lz4",
     "openssl",
     "re2",
