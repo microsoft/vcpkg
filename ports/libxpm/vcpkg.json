@@ -4,6 +4,7 @@
   "description": "XPM format pixmap library",
   "homepage": "https://github.com/freedesktop/libXpm",
   "supports": "windows",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
