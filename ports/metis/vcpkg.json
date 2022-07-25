@@ -3,5 +3,16 @@
   "version-string": "5.1.0",
   "port-version": 9,
   "description": "Serial Graph Partitioning and Fill-reducing Matrix Ordering",
-  "homepage": "https://glaros.dtc.umn.edu/gkhome/metis/metis/overview"
+  "homepage": "https://glaros.dtc.umn.edu/gkhome/metis/metis/overview",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
