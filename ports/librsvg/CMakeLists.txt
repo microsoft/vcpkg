@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
-find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
+pkg_check_modules(LIBCROCO libcroco-0.6 IMPORTED_TARGET)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
 pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0 IMPORTED_TARGET)
 pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
@@ -105,7 +105,7 @@ target_link_libraries(rsvg-2.40 PRIVATE
     PkgConfig::PANGO
     PkgConfig::GDK_PIXBUF
     ${PANGO_FT2_LIB}
-    unofficial::libcroco::croco-0.6
+    PkgConfig::LIBCROCO
 )
 target_link_libraries(pixbufloader-svg PRIVATE
     rsvg-2.40
@@ -138,11 +138,11 @@ install(FILES
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(PkgConfig)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
 pkg_check_modules(GDK_PIXBUF gdk-pixbuf IMPORTED_TARGET)
 pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
-find_dependency(unofficial-libcroco CONFIG)
+pkg_check_modules(LIBCROCO libcroco-0.6 IMPORTED_TARGET)
 
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-librsvg-targets.cmake)
 ")
