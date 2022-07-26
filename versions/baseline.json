@@ -2005,8 +2005,8 @@
       "port-version": 2
     },
     "dv-processing": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 2
     },
     "dx": {
       "baseline": "1.0.1",
