@@ -18,7 +18,7 @@ set(PATCHES
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
         patches/windows/tcl_version.patch
-        patches/windowsmacro-def.patch
+        patches/windows/macro-def.patch
         )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
