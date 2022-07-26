@@ -1,0 +1,30 @@
+diff --git a/IO/CGNS/vtkCGNSReader.cxx b/IO/CGNS/vtkCGNSReader.cxx
+index f9883b17bf95bc22adc6e800a6155f0f608bb917..80e83035d098bcf13d8aeaf747bc9f3c4fdd268f 100644
+--- a/IO/CGNS/vtkCGNSReader.cxx
++++ b/IO/CGNS/vtkCGNSReader.cxx
+@@ -58,7 +58,6 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <cstdlib>
+-#include <functional>
+ #include <iterator>
+ #include <map>
+ #include <set>
+@@ -4213,17 +4212,6 @@ int vtkCGNSReader::GetUnstructuredZone(
+   return 0;
+ }
+ 
+-//----------------------------------------------------------------------------
+-class WithinTolerance : public std::binary_function<double, double, bool>
+-{
+-public:
+-  result_type operator()(first_argument_type a, second_argument_type b) const
+-  {
+-    bool result = (std::fabs(a - b) <= (a * 1E-6));
+-    return (result_type)result;
+-  }
+-};
+-
+ //----------------------------------------------------------------------------
+ int vtkCGNSReader::RequestData(vtkInformation* vtkNotUsed(request),
+   vtkInformationVector** vtkNotUsed(inputVector), vtkInformationVector* outputVector)

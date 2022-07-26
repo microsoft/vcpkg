@@ -1,0 +1,126 @@
+diff --git a/Filters/Hybrid/Testing/Cxx/TestTemporalCacheMemkind.cxx b/Filters/Hybrid/Testing/Cxx/TestTemporalCacheMemkind.cxx
+index 51fe2237c9eba6b0c254f7146785dc97f49a1ef1..85ac12ecdb0d1ad3644557afb8b4a38716cbba9c 100644
+--- a/Filters/Hybrid/Testing/Cxx/TestTemporalCacheMemkind.cxx
++++ b/Filters/Hybrid/Testing/Cxx/TestTemporalCacheMemkind.cxx
+@@ -29,7 +29,6 @@
+ #include <vtkTemporalInterpolator.h>
+ 
+ #include <cassert>
+-#include <functional>
+ #include <vector>
+ 
+ namespace
+@@ -101,15 +100,10 @@ int vtkTemporalSphereSource2::RequestInformation(
+ }
+ 
+ //------------------------------------------------------------------------------
+-class vtkTestTemporalCacheSimpleWithinTolerance2 : public std::binary_function<double, double, bool>
++static bool vtkTestTemporalCacheSimpleWithinTolerance2(double a, double b)
+ {
+-public:
+-  result_type operator()(first_argument_type a, second_argument_type b) const
+-  {
+-    bool result = (fabs(a - b) <= (a * 1E-6));
+-    return (result_type)result;
+-  }
+-};
++  return (fabs(a - b) <= (a * 1E-6));
++}
+ 
+ //------------------------------------------------------------------------------
+ int vtkTemporalSphereSource2::RequestData(
+@@ -122,9 +116,11 @@ int vtkTemporalSphereSource2::RequestData(
+   if (this->TimeStep == 0 && outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
+   {
+     double requestedTimeValue = outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
+-    this->ActualTimeStep = std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
+-                             std::bind(vtkTestTemporalCacheSimpleWithinTolerance2(),
+-                               std::placeholders::_1, requestedTimeValue)) -
++    this->ActualTimeStep =
++      std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
++        [requestedTimeValue](double const& v) {
++          return vtkTestTemporalCacheSimpleWithinTolerance2(v, requestedTimeValue);
++        }) -
+       this->TimeStepValues.begin();
+     this->ActualTimeStep = this->ActualTimeStep + this->TimeStepRange[0];
+   }
+diff --git a/Filters/Hybrid/Testing/Cxx/TestTemporalCacheSimple.cxx b/Filters/Hybrid/Testing/Cxx/TestTemporalCacheSimple.cxx
+index a5fb3e2d7e56fb92a731917017ad94fa2a6faf9d..4b659b2cab433eaa1c789a2f392009817580680d 100644
+--- a/Filters/Hybrid/Testing/Cxx/TestTemporalCacheSimple.cxx
++++ b/Filters/Hybrid/Testing/Cxx/TestTemporalCacheSimple.cxx
+@@ -32,7 +32,6 @@
+ #include "vtkTemporalInterpolator.h"
+ #include "vtkThreshold.h"
+ #include <algorithm>
+-#include <functional>
+ #include <vector>
+ 
+ //
+@@ -116,15 +115,12 @@ int vtkTemporalSphereSource::RequestInformation(
+   return 1;
+ }
+ //------------------------------------------------------------------------------
+-class vtkTestTemporalCacheSimpleWithinTolerance : public std::binary_function<double, double, bool>
++
++static bool vtkTestTemporalCacheSimpleWithinTolerance(double a, double b)
+ {
+-public:
+-  result_type operator()(first_argument_type a, second_argument_type b) const
+-  {
+-    bool result = (fabs(a - b) <= (a * 1E-6));
+-    return (result_type)result;
+-  }
+-};
++  return (fabs(a - b) <= (a * 1E-6));
++}
++
+ //------------------------------------------------------------------------------
+ int vtkTemporalSphereSource::RequestData(
+   vtkInformation* request, vtkInformationVector** inputVector, vtkInformationVector* outputVector)
+@@ -137,9 +133,11 @@ int vtkTemporalSphereSource::RequestData(
+   if (this->TimeStep == 0 && outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
+   {
+     double requestedTimeValue = outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
+-    this->ActualTimeStep = std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
+-                             std::bind(vtkTestTemporalCacheSimpleWithinTolerance(),
+-                               std::placeholders::_1, requestedTimeValue)) -
++    this->ActualTimeStep =
++      std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
++        [requestedTimeValue](double const& v) {
++          return vtkTestTemporalCacheSimpleWithinTolerance(v, requestedTimeValue);
++        }) -
+       this->TimeStepValues.begin();
+     this->ActualTimeStep = this->ActualTimeStep + this->TimeStepRange[0];
+   }
+diff --git a/IO/H5part/vtkH5PartReader.cxx b/IO/H5part/vtkH5PartReader.cxx
+index 2077cea14dda2707e9d6bfd4b9bceb6c32510f51..86a2aefc67ddf74c8aded84f9d277f36977b61f6 100644
+--- a/IO/H5part/vtkH5PartReader.cxx
++++ b/IO/H5part/vtkH5PartReader.cxx
+@@ -73,7 +73,6 @@
+ #include "vtkUnsignedShortArray.h"
+ 
+ #include <algorithm>
+-#include <functional>
+ 
+ #include "vtk_h5part.h"
+ // clang-format off
+@@ -480,17 +479,13 @@ int GetVTKDataType(hid_t datatype)
+     H5Dclose(dataset);                                                                             \
+   }
+ 
+-class H5PartToleranceCheck : public std::binary_function<double, double, bool>
++class H5PartToleranceCheck
+ {
+ public:
+   H5PartToleranceCheck(double tol) { this->tolerance = tol; }
+   double tolerance;
+   //
+-  result_type operator()(first_argument_type a, second_argument_type b) const
+-  {
+-    bool result = (fabs(a - b) <= (this->tolerance));
+-    return (result_type)result;
+-  }
++  bool operator()(double a, double b) const { return (fabs(a - b) <= (this->tolerance)); }
+ };
+ //------------------------------------------------------------------------------
+ int vtkH5PartReader::RequestData(vtkInformation* vtkNotUsed(request),
