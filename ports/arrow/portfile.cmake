@@ -8,6 +8,7 @@ vcpkg_from_github(
         vs-2022-fixes.patch
         msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
+        static-link-libs.patch # https://github.com/apache/arrow/pull/13707
 )
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
