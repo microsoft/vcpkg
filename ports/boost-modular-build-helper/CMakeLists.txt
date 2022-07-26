@@ -118,8 +118,8 @@ foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
     string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
     string(REPLACE [["]] [[\"]] ${var} "${${var}}")
     if(WIN32)
-        # env variables need extra '' to be not expanded early
-        string(REGEX REPLACE [[(%[^%]+%)]] [['\1']] ${var} "${${var}}")
+        # env variables need extra %%var%% to be not expanded early
+        string(REGEX REPLACE [[(%[^%]+%)]] [[%\1%]] ${var} "${${var}}")
         # remove PDB flag, until the pdb install rule of boost-build can be deactivated. 
         string(REGEX REPLACE "-PDB:[^ ]+" "" ${var} "${${var}}") 
     endif()
