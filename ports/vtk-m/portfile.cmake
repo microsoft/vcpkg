@@ -30,19 +30,24 @@ list(APPEND OPTIONS -DVTKm_ENABLE_RENDERING=ON)
 list(APPEND OPTIONS -DVTKm_ENABLE_DEVELOPER_FLAGS=OFF)
 list(APPEND OPTIONS -DVTKm_ENABLE_CPACK=OFF)
 list(APPEND OPTIONS -DVTKm_USE_DEFAULT_TYPES_FOR_VTK=ON)
+list(APPEND OPTIONS -DVTKM_USE_EXTERNAL_DIY=ON)
+
 # For port customizations on unix systems. 
 # Please feel free to make these port features if it makes any sense
 #list(APPEND OPTIONS -DVTKm_ENABLE_GL_CONTEXT=ON) # or
 #list(APPEND OPTIONS -DVTKm_ENABLE_EGL_CONTEXT=ON) # or
 #list(APPEND OPTIONS -DVTKm_ENABLE_OSMESA_CONTEXT=ON)
-list(APPEND OPTIONS -DBUILD_TESTING=OFF)
+list(APPEND OPTIONS -DVTKm_ENABLE_TESTING=OFF)
 
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
                   REF 13a117e0e8935eef3f320b5a1cd71d9911ad9853 # v1.6.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
                   SHA512 54f7f52ab4ee7954b6a303ffd3b8bcb18105b5d2fd8ed54b4e487fce2ebfbc51507e632189f775c79eea22ad24bd56bca401ddd679fc03d787342dd33d2ba18b
-                  FILE_DISAMBIGUATOR 1)
+                  FILE_DISAMBIGUATOR 1
+                  PATCHES
+                    ext_diy.patch
+                  )
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${OPTIONS}

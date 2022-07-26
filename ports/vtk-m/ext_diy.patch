@@ -1,0 +1,142 @@
+diff --git a/vtkm/thirdparty/diy/CMakeLists.txt b/vtkm/thirdparty/diy/CMakeLists.txt
+index 2e273ecd9..675816c97 100644
+--- a/vtkm/thirdparty/diy/CMakeLists.txt
++++ b/vtkm/thirdparty/diy/CMakeLists.txt
+@@ -9,6 +9,8 @@
+ ##============================================================================
+ vtkm_get_kit_name(kit_name kit_dir)
+ 
++
++
+ include(CMakeDependentOption)
+ if (NOT DEFINED VTKm_ENABLE_DIY_NOMPI)
+   cmake_dependent_option(
+@@ -21,40 +23,43 @@ if (VTKm_ENABLE_DIY_NOMPI AND
+   message(WARNING "VTKm_ENABLE_DIY_NOMPI support with MSVC shared builds is experimental and may not work.")
+ endif()
+ 
+-## Configure diy
+-set(build_examples OFF)
+-set(build_tests OFF)
+-
+-set(threads OFF)
+-set(log OFF)
+-set(profile OFF)
+-set(caliper OFF)
+-
+-set(build_diy_mpi_lib ON)
+-
+-set(mpi OFF)
+-set(build_diy_nompi_lib OFF)
+-if (VTKm_ENABLE_MPI)
+-  set(mpi ON)
+-endif()
+-if (VTKm_ENABLE_DIY_NOMPI)
+-  set(build_diy_nompi_lib ON)
+-endif()
+-
+-mark_as_advanced(FORCE caliper log profile wrapped_mpi)
+-
+-set(diy_prefix "vtkmdiy")
+-set(diy_install_include_dir ${VTKm_INSTALL_INCLUDE_DIR}/${kit_dir}/vtkmdiy/include)
+-set(diy_install_bin_dir ${VTKm_INSTALL_BIN_DIR})
+-set(diy_install_lib_dir ${VTKm_INSTALL_LIB_DIR})
+-set(diy_export_name ${VTKm_EXPORT_NAME})
+-if (VTKm_INSTALL_ONLY_LIBRARIES)
+-  set(diy_install_only_libraries)
++if(VTKM_USE_EXTERNAL_DIY)
++    find_package(DIY REQUIRED)
++else()
++    ## Configure diy
++    set(build_examples OFF)
++    set(build_tests OFF)
++
++    set(threads OFF)
++    set(log OFF)
++    set(profile OFF)
++    set(caliper OFF)
++
++    set(build_diy_mpi_lib ON)
++
++    set(mpi OFF)
++    set(build_diy_nompi_lib OFF)
++    if (VTKm_ENABLE_MPI)
++      set(mpi ON)
++    endif()
++    if (VTKm_ENABLE_DIY_NOMPI)
++      set(build_diy_nompi_lib ON)
++    endif()
++
++    mark_as_advanced(FORCE caliper log profile wrapped_mpi)
++
++    set(diy_prefix "vtkmdiy")
++    set(diy_install_include_dir ${VTKm_INSTALL_INCLUDE_DIR}/${kit_dir}/vtkmdiy/include)
++    set(diy_install_bin_dir ${VTKm_INSTALL_BIN_DIR})
++    set(diy_install_lib_dir ${VTKm_INSTALL_LIB_DIR})
++    set(diy_export_name ${VTKm_EXPORT_NAME})
++    if (VTKm_INSTALL_ONLY_LIBRARIES)
++      set(diy_install_only_libraries)
++    endif()
++    set(diy_dont_install_export)
+ endif()
+-set(diy_dont_install_export)
+ 
+ # placeholder to support external DIY
+-set(VTKM_USE_EXTERNAL_DIY OFF)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Configure.h.in
+   ${VTKm_BINARY_INCLUDE_DIR}/${kit_dir}/Configure.h)
+ 
+@@ -65,24 +70,30 @@ function(vtkm_diy_set_target_output_directory target)
+ endfunction()
+ 
+ #-----------------------------------------------------------------------------
+-add_subdirectory(vtkmdiy)
+-
+-# move diy libraries
+-if (TARGET vtkmdiympi)
+-  vtkm_diy_set_target_output_directory(vtkmdiympi)
+-endif()
+-if (TARGET vtkmdiympi_nompi)
+-  vtkm_diy_set_target_output_directory(vtkmdiympi_nompi)
++if(NOT VTKM_USE_EXTERNAL_DIY)
++    add_subdirectory(vtkmdiy)
++
++    # move diy libraries
++    if (TARGET vtkmdiympi)
++      vtkm_diy_set_target_output_directory(vtkmdiympi)
++    endif()
++    if (TARGET vtkmdiympi_nompi)
++      vtkm_diy_set_target_output_directory(vtkmdiympi_nompi)
++    endif()
+ endif()
+ 
+ include(VTKmDIYUtils)
+ 
+ add_library(vtkm_diy INTERFACE)
+ vtkm_diy_init_target()
+-target_include_directories(vtkm_diy INTERFACE
+-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-  $<INSTALL_INTERFACE:${VTKm_INSTALL_INCLUDE_DIR}/vtkm/thirdparty/diy>)
+-target_link_libraries(vtkm_diy INTERFACE vtkmdiy)
++if(NOT VTKM_USE_EXTERNAL_DIY)
++    target_include_directories(vtkm_diy INTERFACE
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++      $<INSTALL_INTERFACE:${VTKm_INSTALL_INCLUDE_DIR}/vtkm/thirdparty/diy>)
++    target_link_libraries(vtkm_diy INTERFACE vtkmdiy)
++else()
++    target_link_libraries(vtkm_diy INTERFACE DIY::diy)
++endif()
+ 
+ # special logic for when both versions of the diy library are built
+ if (VTKm_ENABLE_DIY_NOMPI)
+@@ -104,7 +115,9 @@ else()
+   if (TARGET vtkmdiympi)
+     target_link_libraries(vtkm_diy INTERFACE vtkmdiympi)
+   else()
+-    target_link_libraries(vtkm_diy INTERFACE vtkmdiympi_nompi)
++    if(NOT VTKM_USE_EXTERNAL_DIY)
++        target_link_libraries(vtkm_diy INTERFACE vtkmdiympi_nompi)
++    endif()
+   endif()
+ endif()
+ 
