@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.4.0-stable
     SHA512 e43560f83f6c62d78b10c4df7db21f02386f22b893688b98d2f3432e3b3946a4e80960c7402404a8c0486c87b1dde5b7a3827f9d4d3be13f87f370dfc1179c78
     HEAD_REF master
+    PATCHES
+      wolfssl_pr5401.diff
     )
 
 vcpkg_cmake_configure(
