@@ -1,4 +1,9 @@
 The package mysql-connector-cpp provides CMake targets:
 
     find_package(mysql-connector-cpp REQUIRED)
-    target_link_libraries(main PRIVATE mysqlcppconn mysqlcppconn-static)
+    target_link_libraries(main PRIVATE mysqlcppconn)
+
+    or
+
+    find_package(mysql-connector-cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mysqlcppconn-static)
