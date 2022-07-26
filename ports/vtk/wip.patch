@@ -3,11 +3,11 @@ index d6aa4d0ac..7fc9a6be1 100644
 --- a/IO/Legacy/vtkDataReader.cxx
 +++ b/IO/Legacy/vtkDataReader.cxx
 @@ -289,7 +289,7 @@ int vtkDataReader::ReadLine(char result[256])
- int vtkDataReader::ReadString(char result[256])
+-int vtkDataReader::ReadString(char result[256])
++int vtkDataReader::ReadString(char (&result)[256])
  {
    this->IS->width(256);
--  *this->IS >> result;
-+  *this->IS >> *result;
+  *this->IS >> result;
    if (this->IS->fail())
    {
      return 0;
