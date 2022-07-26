@@ -12,14 +12,7 @@ vcpkg_from_github(
         find_blas.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/libjpeg")
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/libpng")
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/zlib")
-
-# This fixes static builds; dlib doesn't pull in the needed transitive dependencies
-file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
-string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
-file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
+file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -38,7 +31,6 @@ vcpkg_cmake_configure(
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -50,9 +42,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dlib)
 
 vcpkg_fixup_pkgconfig()
 
-# There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 # Remove other files not required in package
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/all")
@@ -73,6 +65,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dlib/config.h" "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dlib/config.h" "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/dlib/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
