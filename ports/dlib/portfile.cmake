@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sqlite3-fftw-linkage.patch
-        force_finding_packages.patch
         find_blas.patch
 )
 
@@ -26,7 +25,9 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
         -DDLIB_JPEG_SUPPORT=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
