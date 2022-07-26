@@ -33,6 +33,8 @@ vcpkg_from_github(
         fix-find-libharu.patch
         a3d59cded884364a53d3b333735e967e52844fbf.patch
         d2d9f7d41ed5b856d548ba9d006a0b136921ecd7.patch
+        MR9432.patch
+        MR9433.patch
 )
 
 # =============================================================================

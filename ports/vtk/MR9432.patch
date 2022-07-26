@@ -1,0 +1,116 @@
+diff --git a/IO/Legacy/vtkDataReader.cxx b/IO/Legacy/vtkDataReader.cxx
+index 6f0a44bc3cb2ca3346d3c8a041fc5c88cfe4e6e6..848be9ab69dc8854eec0b5a77e4d68f151866371 100644
+--- a/IO/Legacy/vtkDataReader.cxx
++++ b/IO/Legacy/vtkDataReader.cxx
+@@ -293,8 +293,11 @@ int vtkDataReader::ReadLine(char result[256])
+ // Returns zero if there was an error.
+ int vtkDataReader::ReadString(char result[256])
+ {
++  // Force the parameter to be seen as a 256-byte array rather than a decayed
++  // pointer.
++  char(&result_ref)[256] = *reinterpret_cast<char(*)[256]>(result);
+   this->IS->width(256);
+-  *this->IS >> result;
++  *this->IS >> result_ref;
+   if (this->IS->fail())
+   {
+     return 0;
+@@ -664,7 +667,7 @@ int vtkDataReader::ReadHeader(const char* fname)
+ //------------------------------------------------------------------------------
+ int vtkDataReader::IsFileValid(const char* dstype)
+ {
+-  char line[1024];
++  char line[256];
+ 
+   if (!dstype)
+   {
+@@ -2215,7 +2218,7 @@ int vtkDataReader::ReadScalarData(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipScalar = 0;
+   vtkDataArray* data;
+   int numComp = 1;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2308,7 +2311,7 @@ int vtkDataReader::ReadVectorData(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipVector = 0;
+   char line[256], name[256];
+   vtkDataArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2360,7 +2363,7 @@ int vtkDataReader::ReadNormalData(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipNormal = 0;
+   char line[256], name[256];
+   vtkDataArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2412,7 +2415,7 @@ int vtkDataReader::ReadTensorData(vtkDataSetAttributes* a, vtkIdType numPts, vtk
+   int skipTensor = 0;
+   char line[256], name[256];
+   vtkDataArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2462,7 +2465,7 @@ int vtkDataReader::ReadCoScalarData(vtkDataSetAttributes* a, vtkIdType numPts)
+ {
+   int i, j, idx, numComp = 0, skipScalar = 0;
+   char name[256];
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->Read(&numComp)))
+   {
+@@ -2561,7 +2564,7 @@ int vtkDataReader::ReadTCoordsData(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipTCoord = 0;
+   char line[256], name[256];
+   vtkDataArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->Read(&dim) && this->ReadString(line)))
+   {
+@@ -2621,7 +2624,7 @@ int vtkDataReader::ReadGlobalIds(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipGlobalIds = 0;
+   char line[256], name[256];
+   vtkDataArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2668,7 +2671,7 @@ int vtkDataReader::ReadPedigreeIds(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipPedigreeIds = 0;
+   char line[256], name[256];
+   vtkAbstractArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -2715,7 +2718,7 @@ int vtkDataReader::ReadEdgeFlags(vtkDataSetAttributes* a, vtkIdType numPts)
+   int skipEdgeFlags = 0;
+   char line[256], name[256];
+   vtkAbstractArray* data;
+-  char buffer[1024];
++  char buffer[256];
+ 
+   if (!(this->ReadString(buffer) && this->ReadString(line)))
+   {
+@@ -3377,7 +3380,7 @@ vtkFieldData* vtkDataReader::ReadFieldData(FieldType fieldType)
+   // Read the number of arrays specified
+   for (i = 0; i < numArrays; i++)
+   {
+-    char buffer[1024];
++    char buffer[256];
+     this->ReadString(buffer);
+     if (strcmp(buffer, "NULL_ARRAY") == 0)
+     {
