@@ -85,7 +85,11 @@ function(z_vcpkg_copy_pdbs)
     endfunction()
 
     function(find_ambigous_retry_1 dll_or_exe search_pdbs found_pdbs)
-        list(FILTER found_pdbs INCLUDE REGEX "/\\\.libs/") # libtool build folder
+        if(PORT MATCHES "boost-.+")
+            list(FILTER found_pdbs INCLUDE REGEX "/stage/lib/")
+        else()
+            list(FILTER found_pdbs INCLUDE REGEX "/\\\.libs/") # libtool build folder
+        endif()
         find_path_pdb_in_buildtree("${dll_or_exe}" "${search_pdbs}" "${found_pdbs}" install_found_pdb ambigous_pdbs_found not_found)
         set(no_matching_pdbs "${no_matching_pdbs}" PARENT_SCOPE)
         set(pdb_not_found "${pdb_not_found}" PARENT_SCOPE)
