@@ -48,11 +48,12 @@ index f070323..290b5a7 100644
    else()
      set(PACKAGE_NAME ${DEPENDENCY_NAME})
    endif()
-@@ -1129,10 +1132,16 @@ macro(build_brotli)
+@@ -1129,10 +1132,17 @@ macro(build_brotli)
  endmacro()
  
  if(ARROW_WITH_BROTLI)
 -  resolve_dependency(Brotli PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
++  set(Brotli_SOURCE SYSTEM)
 +  resolve_dependency(unofficial-brotli USE_CONFIG TRUE PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
 +  add_library(Brotli::brotlicommon ALIAS unofficial::brotli::brotlicommon)
 +  add_library(Brotli::brotlienc ALIAS unofficial::brotli::brotlienc)
@@ -108,23 +109,25 @@ index f070323..290b5a7 100644
                       REQUIRED_VERSION
                       ${ARROW_RAPIDJSON_REQUIRED_VERSION}
                       IS_RUNTIME_DEPENDENCY
-@@ -2260,7 +2279,8 @@ macro(build_lz4)
+@@ -2260,7 +2279,9 @@ macro(build_lz4)
  endmacro()
  
  if(ARROW_WITH_LZ4)
 -  resolve_dependency(Lz4 PC_PACKAGE_NAMES liblz4)
++  set(Lz4_SOURCE SYSTEM)
 +  resolve_dependency(lz4 USE_CONFIG TRUE PC_PACKAGE_NAMES liblz4)
 +  add_library(LZ4::lz4 ALIAS lz4::lz4)
  
    # TODO: Don't use global includes but rather target_include_directories
    get_target_property(LZ4_INCLUDE_DIR LZ4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
-@@ -2517,11 +2537,10 @@ macro(build_utf8proc)
+@@ -2517,11 +2538,11 @@ macro(build_utf8proc)
  endmacro()
  
  if(ARROW_WITH_UTF8PROC)
 -  resolve_dependency(utf8proc
 -                     REQUIRED_VERSION
 -                     "2.2.0"
++  set(utf8proc_SOURCE SYSTEM)
 +  resolve_dependency(unofficial-utf8proc
                       PC_PACKAGE_NAMES
                       libutf8proc)
