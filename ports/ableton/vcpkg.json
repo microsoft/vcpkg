@@ -1,15 +1,13 @@
 {
   "name": "ableton",
   "version": "3.0.5",
+  "port-version": 1,
   "description": "Ableton Link, a technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices.",
   "homepage": "https://www.ableton.com/en/link/",
   "documentation": "http://ableton.github.io/link/",
   "license": "GPL-2.0-or-later",
   "dependencies": [
-    {
-      "name": "asio",
-      "platform": "windows"
-    },
+    "asio",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -33,7 +31,13 @@
       ]
     },
     "hut": {
-      "description": "Build LinkHut command line tool"
+      "description": "Build LinkHut command line tool",
+      "dependencies": [
+        {
+          "name": "asiosdk",
+          "platform": "windows"
+        }
+      ]
     },
     "hutsilent": {
       "description": "Build LinkHutSilent command line tool"

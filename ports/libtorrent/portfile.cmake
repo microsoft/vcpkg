@@ -30,8 +30,8 @@ endif()
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
-        REF e9bbf16bdd899f42aef0f0c2b1f214de2c15ac92 # v2.0.6
-        SHA512 5bc93be6b1bf5208f1bfc10ffe515e20face41ebf0f9cf7afc8f1c03addc42a88f92ec79a2c2a1d1a4fd0a3014b752d68e7e62cd86349694636b79da31ed8e08
+        REF 722d78250a30c89c92970a78be970269a395be36 # v2.0.7
+        SHA512 69c7e6c02db6ff6b10d94b52470eda38839b4121960f7d19c3829eb453a84a62f017e1607bbb8dd63528c1461686fa6f30af605a046faae2c9c916aa688b555f
         HEAD_REF RC_2_0
 )
 
