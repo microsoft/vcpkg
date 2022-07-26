@@ -1,3 +1,42 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 7d9c5c7..33afd70 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -705,7 +705,7 @@ endif()
+ 
+ if(ARROW_WITH_BROTLI)
+   # Order is important for static linking
+-  set(ARROW_BROTLI_LIBS Brotli::brotlienc Brotli::brotlidec Brotli::brotlicommon)
++  set(ARROW_BROTLI_LIBS unofficial::brotli::brotlienc unofficial::brotli::brotlidec unofficial::brotli::brotlicommon)
+   list(APPEND ARROW_LINK_LIBS ${ARROW_BROTLI_LIBS})
+   list(APPEND ARROW_STATIC_LINK_LIBS ${ARROW_BROTLI_LIBS})
+   if(Brotli_SOURCE STREQUAL "SYSTEM")
+@@ -721,9 +721,9 @@ if(ARROW_WITH_BZ2)
+ endif()
+ 
+ if(ARROW_WITH_LZ4)
+-  list(APPEND ARROW_STATIC_LINK_LIBS LZ4::lz4)
++  list(APPEND ARROW_STATIC_LINK_LIBS lz4::lz4)
+   if(Lz4_SOURCE STREQUAL "SYSTEM")
+-    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS LZ4::lz4)
++    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS lz4::lz4)
+   endif()
+ endif()
+ 
+@@ -793,10 +793,10 @@ if(ARROW_WITH_OPENTELEMETRY)
+ endif()
+ 
+ if(ARROW_WITH_UTF8PROC)
+-  list(APPEND ARROW_LINK_LIBS utf8proc::utf8proc)
+-  list(APPEND ARROW_STATIC_LINK_LIBS utf8proc::utf8proc)
++  list(APPEND ARROW_LINK_LIBS utf8proc)
++  list(APPEND ARROW_STATIC_LINK_LIBS utf8proc)
+   if(utf8proc_SOURCE STREQUAL "SYSTEM")
+-    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS utf8proc::utf8proc)
++    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS utf8proc)
+   endif()
+ endif()
+ 
 diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
 index f070323..290b5a7 100644
 --- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
@@ -48,16 +87,13 @@ index f070323..290b5a7 100644
    else()
      set(PACKAGE_NAME ${DEPENDENCY_NAME})
    endif()
-@@ -1129,10 +1132,17 @@ macro(build_brotli)
+@@ -1129,10 +1132,14 @@ macro(build_brotli)
  endmacro()
  
  if(ARROW_WITH_BROTLI)
 -  resolve_dependency(Brotli PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
 +  set(Brotli_SOURCE SYSTEM)
 +  resolve_dependency(unofficial-brotli USE_CONFIG TRUE PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
-+  add_library(Brotli::brotlicommon ALIAS unofficial::brotli::brotlicommon)
-+  add_library(Brotli::brotlienc ALIAS unofficial::brotli::brotlienc)
-+  add_library(Brotli::brotlidec ALIAS unofficial::brotli::brotlidec)
    # TODO: Don't use global includes but rather target_include_directories
 -  get_target_property(BROTLI_INCLUDE_DIR Brotli::brotlicommon
 +  get_target_property(BROTLI_INCLUDE_DIR unofficial::brotli::brotlicommon
@@ -91,18 +127,21 @@ index f070323..290b5a7 100644
  
    if(NOT Protobuf_USE_STATIC_LIBS AND MSVC_TOOLCHAIN)
      add_definitions(-DPROTOBUF_USE_DLLS)
-@@ -2260,7 +2279,9 @@ macro(build_lz4)
+@@ -2260,10 +2276,11 @@ macro(build_lz4)
  endmacro()
  
  if(ARROW_WITH_LZ4)
 -  resolve_dependency(Lz4 PC_PACKAGE_NAMES liblz4)
 +  set(Lz4_SOURCE SYSTEM)
 +  resolve_dependency(lz4 USE_CONFIG TRUE PC_PACKAGE_NAMES liblz4)
-+  add_library(LZ4::lz4 ALIAS lz4::lz4)
  
    # TODO: Don't use global includes but rather target_include_directories
-   get_target_property(LZ4_INCLUDE_DIR LZ4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
-@@ -2517,11 +2538,11 @@ macro(build_utf8proc)
+-  get_target_property(LZ4_INCLUDE_DIR LZ4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
++  get_target_property(LZ4_INCLUDE_DIR lz4::lz4 INTERFACE_INCLUDE_DIRECTORIES)
+   include_directories(SYSTEM ${LZ4_INCLUDE_DIR})
+ endif()
+ 
+@@ -2517,9 +2534,8 @@ macro(build_utf8proc)
  endmacro()
  
  if(ARROW_WITH_UTF8PROC)
@@ -113,11 +152,26 @@ index f070323..290b5a7 100644
 +  resolve_dependency(unofficial-utf8proc
                       PC_PACKAGE_NAMES
                       libutf8proc)
-+  add_library(utf8proc::utf8proc ALIAS utf8proc)
  
-   add_definitions(-DARROW_WITH_UTF8PROC)
+@@ -2527,7 +2543,7 @@ if(ARROW_WITH_UTF8PROC)
  
-@@ -3719,6 +3738,9 @@ if(ARROW_WITH_GRPC)
+   # TODO: Don't use global definitions but rather
+   # target_compile_definitions or target_link_libraries
+-  get_target_property(UTF8PROC_COMPILER_DEFINITIONS utf8proc::utf8proc
++  get_target_property(UTF8PROC_COMPILER_DEFINITIONS utf8proc
+                       INTERFACE_COMPILER_DEFINITIONS)
+   if(UTF8PROC_COMPILER_DEFINITIONS)
+     add_definitions(-D${UTF8PROC_COMPILER_DEFINITIONS})
+@@ -2535,7 +2551,7 @@ if(ARROW_WITH_UTF8PROC)
+ 
+   # TODO: Don't use global includes but rather
+   # target_include_directories or target_link_libraries
+-  get_target_property(UTF8PROC_INCLUDE_DIR utf8proc::utf8proc
++  get_target_property(UTF8PROC_INCLUDE_DIR utf8proc
+                       INTERFACE_INCLUDE_DIRECTORIES)
+   include_directories(SYSTEM ${UTF8PROC_INCLUDE_DIR})
+ endif()
+@@ -3719,6 +3735,9 @@ if(ARROW_WITH_GRPC)
    # TODO: Don't use global includes but rather target_include_directories
    get_target_property(GRPC_INCLUDE_DIR gRPC::grpc++ INTERFACE_INCLUDE_DIRECTORIES)
    include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
@@ -127,3 +181,16 @@ index f070323..290b5a7 100644
  
    if(GRPC_VENDORED)
      set(GRPCPP_PP_INCLUDE TRUE)
+diff --git a/cpp/src/arrow/adapters/orc/CMakeLists.txt b/cpp/src/arrow/adapters/orc/CMakeLists.txt
+index b1b6847..444a45e 100644
+--- a/cpp/src/arrow/adapters/orc/CMakeLists.txt
++++ b/cpp/src/arrow/adapters/orc/CMakeLists.txt
+@@ -30,7 +30,7 @@ set(ORC_MIN_TEST_LIBS
+     GTest::gtest_main
+     GTest::gtest
+     Snappy::snappy
+-    LZ4::lz4
++    lz4::lz4
+     ZLIB::ZLIB)
+ 
+ if(ARROW_BUILD_STATIC)
