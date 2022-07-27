@@ -4010,7 +4010,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 9
+      "port-version": 10
     },
     "librdkafka": {
       "baseline": "1.9.0",
