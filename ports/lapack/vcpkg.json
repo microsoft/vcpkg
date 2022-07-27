@@ -5,7 +5,7 @@
   "license": null,
   "dependencies": [
     {
-      "name": "clapack",
+      "name": "clapack"
     }
   ]
 }
