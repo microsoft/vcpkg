@@ -1,0 +1,22 @@
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index c1555a339..d2cfe1358 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -32,7 +32,8 @@ lib advapi32 ;
+ lib secur32 ;
+ lib ws2_32 ;
+ lib mswsock ;
+-explicit psapi advapi32 secur32 ws2_32 mswsock ;
++lib synchronization ;
++explicit psapi advapi32 secur32 ws2_32 mswsock synchronization;
+ 
+ # UNIX libs
+ lib rt ;
+@@ -212,6 +213,7 @@ project boost/log
+         <target-os>windows:<library>ws2_32
+         <target-os>windows:<library>mswsock
+         <target-os>windows:<library>advapi32
++        <target-os>windows:<library>synchronization
+ 
+         <target-os>cygwin:<define>BOOST_USE_WINDOWS_H
+         # Boost.Interprocess does not compile on Cygwin: https://github.com/boostorg/interprocess/issues/76
