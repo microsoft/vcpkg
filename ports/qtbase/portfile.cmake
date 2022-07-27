@@ -16,6 +16,7 @@ set(${PORT}_PATCHES
         harfbuzz.patch
         fix_egl.patch
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
+        installed_dir.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -340,6 +341,7 @@ string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__
 string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${vcpkg_installed_dir}/${HOST_TRIPLET}" toolchain_contents "${toolchain_contents}")
 file(WRITE "${qttoolchain}" "${toolchain_contents}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
