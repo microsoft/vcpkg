@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 4bdcecdf0f986abc748245d21616bf2c304461e9a37572c66743f69141fc3f37eb846fdaedc6c910135d986534f7989cbcc52a884ae7a52464fbb2a07b16a327
     HEAD_REF master
     PATCHES
-        fix-sqlite3-fftw-linkage.patch
+        fix-dependencies.patch
         find_blas.patch
 )
 
