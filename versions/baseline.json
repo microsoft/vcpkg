@@ -74,7 +74,7 @@
     },
     "amf": {
       "baseline": "1.4.21",
-      "port-version": 1
+      "port-version": 0
     },
     "ampl-asl": {
       "baseline": "2020-11-11",
