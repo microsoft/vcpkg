@@ -75,9 +75,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-file(COPY
-    "${SOURCE_PATH}/docs/FTL.TXT"
-    "${SOURCE_PATH}/docs/GPLv2.TXT"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.TXT"
+        "${SOURCE_PATH}/docs/FTL.TXT"
+        "${SOURCE_PATH}/docs/GPLv2.TXT"
 )
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
