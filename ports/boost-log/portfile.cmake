@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF boost-1.79.0
     SHA512 da3fff9756f991a6b3a1529499c4f58fa4ac6167c2dfaf1b7debd45e5a2c1f0687dee1e0edb21d28859971f9e0afab3e1aae3a48b6a39a98dc6d52a697b0f2c4
     HEAD_REF master
+    PATCHES synchro.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
