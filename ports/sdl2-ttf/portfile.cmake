@@ -1,5 +1,3 @@
-set(VERSION 2.20.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  libsdl-org/SDL_ttf
@@ -7,7 +5,7 @@ vcpkg_from_github(
     SHA512 c0d2d6107e5427d9c1353e14cb4b0c3957d28391cfc772f1f972fe3aa8ba9e9dfdfcb64acd317a7836d46b3a50da9597b19a832f0baf5198654acb7b31ab1e6b
     HEAD_REF main
     PATCHES
-        fix-find_dependencies.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSDL2TTF_VENDORED=OFF
         -DSDL2TTF_SAMPLES=OFF
         ${FEATURE_OPTIONS}
 )
