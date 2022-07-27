@@ -26,7 +26,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
@@ -46,13 +46,13 @@ else()
     set(CONFIG_PATH lib/cmake/SndFile)
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME SndFile CONFIG_PATH ${CONFIG_PATH})
+vcpkg_cmake_config_fixup(PACKAGE_NAME SndFile CONFIG_PATH "${CONFIG_PATH}")
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
