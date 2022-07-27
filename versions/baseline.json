@@ -5401,8 +5401,8 @@
       "port-version": 2
     },
     "parmetis": {
-      "baseline": "4.0.3",
-      "port-version": 5
+      "baseline": "2022-07-27",
+      "port-version": 0
     },
     "parquet": {
       "baseline": "0",
