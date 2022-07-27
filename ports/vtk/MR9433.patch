@@ -1,24 +1,3 @@
-diff --git a/.gitlab/ci/configure_fedora34_mpi_python_qt_tbb.cmake b/.gitlab/ci/configure_fedora34_mpi_python_qt_tbb.cmake
-index d27656e6f094c5dc5511401dd33aeb982797c4aa..3720e73621ca384a4cf3a44cadd3df0124bb83f7 100644
---- a/.gitlab/ci/configure_fedora34_mpi_python_qt_tbb.cmake
-+++ b/.gitlab/ci/configure_fedora34_mpi_python_qt_tbb.cmake
-@@ -1,6 +1,7 @@
- set(VTK_USE_EXTERNAL ON CACHE STRING "")
- 
- # These libraries are not supported right now.
-+set(VTK_MODULE_USE_EXTERNAL_VTK_diy2 OFF CACHE BOOL "")
- set(VTK_MODULE_USE_EXTERNAL_VTK_libharu OFF CACHE BOOL "")
- set(VTK_MODULE_USE_EXTERNAL_VTK_exprtk OFF CACHE BOOL "")
- set(VTK_MODULE_USE_EXTERNAL_VTK_ioss OFF CACHE BOOL "")
-diff --git a/Documentation/release/dev/external-diy.md b/Documentation/release/dev/external-diy.md
-new file mode 100644
-index 0000000000000000000000000000000000000000..0530b314d27bcb7af6d93637669fc838f6ecf6cb
---- /dev/null
-+++ b/Documentation/release/dev/external-diy.md
-@@ -0,0 +1,3 @@
-+## external diy2
-+
-+The `diy2` library may now be provided from outside of VTK.
 diff --git a/ThirdParty/diy2/CMakeLists.txt b/ThirdParty/diy2/CMakeLists.txt
 index 3224fc0f01cb0c5f152c186e47b6979625d78717..8c4f38a7ed337ae457756add8686f83d35f6de86 100644
 --- a/ThirdParty/diy2/CMakeLists.txt
