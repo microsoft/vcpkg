@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF v1.9.0
-    SHA512 955ea6aa184ad1c0cd3902e252cd7dc6c3b877311e037243223d2e07824146440c690828e77fc41ee943bd8738b8cd03a9b011c1dedacc52e9a7f63d40d242b4
+    REF v1.9.2
+    SHA512 a82cc4adb0ad0823a5baf61eb88751cdf111f1e2f6c5df9ec6f6b882624d7cfe5f4694435877eeab44f18abcf0d057f1e8c60a97c5327cc90ae3608ed84ecc7e
     HEAD_REF master
     PATCHES
         fix-dependency.patch
