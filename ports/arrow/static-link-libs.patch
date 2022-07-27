@@ -1,0 +1,12 @@
+diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
+index 690c51a..2f7d26b 100644
+--- a/cpp/src/arrow/CMakeLists.txt
++++ b/cpp/src/arrow/CMakeLists.txt
+@@ -570,6 +570,7 @@ add_arrow_lib(arrow
+               ${ARROW_SHARED_PRIVATE_LINK_LIBS}
+               STATIC_LINK_LIBS
+               ${ARROW_STATIC_LINK_LIBS}
++              STATIC_INSTALL_INTERFACE_LIBS
+               ${ARROW_STATIC_INSTALL_INTERFACE_LIBS}
+               SHARED_INSTALL_INTERFACE_LIBS
+               ${ARROW_SHARED_INSTALL_INTERFACE_LIBS})
