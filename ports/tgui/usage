@@ -1,3 +1,4 @@
-# tgui provides CMake targets:
+tgui provides CMake targets:
+
     find_package(TGUI CONFIG REQUIRED)
     target_link_libraries(main PRIVATE tgui)
