@@ -133,7 +133,7 @@ function(vcpkg_configure_make)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    z_vcpkg_get_cmake_vars(cmake_vars_file OPTIONS "-DVCPKG_IS_MAKE_PORT=ON")
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
