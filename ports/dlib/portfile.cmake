@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
+        -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
