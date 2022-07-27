@@ -23,10 +23,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME SDL2_ttf)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_ttf CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL2_ttf PACKAGE_NAME SDL2_ttf)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_ttf CONFIG_PATH lib/cmake/SDL2_ttf)
 endif()
 
 vcpkg_fixup_pkgconfig()
