@@ -36,6 +36,8 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DPYTHON_EXECUTABLE=${PYTHON3}
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PYTHON_EXECUTABLE
 )
 
 vcpkg_cmake_install()
