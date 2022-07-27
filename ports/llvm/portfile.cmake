@@ -16,6 +16,7 @@ vcpkg_from_github(
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-install-bolt.patch
+        a2ac383b44172ec47e4086d7572597ab251a4793.diff
 )
 
 vcpkg_check_features(
