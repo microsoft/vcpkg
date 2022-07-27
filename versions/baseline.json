@@ -826,7 +826,7 @@
     },
     "boost-log": {
       "baseline": "1.79.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-logic": {
       "baseline": "1.79.0",
