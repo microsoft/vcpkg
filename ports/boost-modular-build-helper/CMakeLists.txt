@@ -48,6 +48,21 @@ endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
     list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    if(CMAKE_SYSTEM_VERSION)
+        set(ver ${CMAKE_SYSTEM_VERSION})
+        string(REGEX MATCH "^([0-9]+).([0-9])" ver ${ver})
+        string(REGEX MATCH "^([0-9]+)" verMajor ${ver})
+        # Check for Windows 10, b/c we'll need to convert to hex 'A'.
+        if("${verMajor}" MATCHES "10")
+            set(verMajor "A")
+            string(REGEX REPLACE "^([0-9]+)" ${verMajor} ver ${ver})
+        endif()
+        # Remove all remaining '.' characters.
+        string(REPLACE "." "" ver ${ver})
+        # Prepend each digit with a zero.
+        string(REGEX REPLACE "([0-9A-Z])" "0\\1" ver ${ver})
+        list(APPEND B2_OPTIONS define="_WIN32_WINNT=0x${ver}")
+    endif()
 endif()
 
 if(VCPKG_DETECTED_MSVC)
