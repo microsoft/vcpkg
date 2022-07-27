@@ -1,0 +1,133 @@
+diff --git a/libavcodec/amfenc.c b/libavcodec/amfenc.c
+index fb23ed7..547432a 100644
+--- a/libavcodec/amfenc.c
++++ b/libavcodec/amfenc.c
+@@ -685,6 +685,58 @@ int ff_amf_receive_packet(AVCodecContext *avctx, AVPacket *avpkt)
+             frame_ref_storage_buffer->pVtbl->Release(frame_ref_storage_buffer);
+         }
+ 
++        // Override Picture Type for Frame
++        if (avctx->codec->id == AV_CODEC_ID_H264) {
++          switch (frame->pict_type) {
++            case AV_PICTURE_TYPE_I:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_I);
++              break;
++            case AV_PICTURE_TYPE_P:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_P);
++              break;
++            case AV_PICTURE_TYPE_B:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_B);
++              break;
++            case AV_PICTURE_TYPE_S:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_SKIP);
++              break;
++            default:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_NONE);
++              break;
++          }
++          // Keyframe overrides previous assignment.
++          if (frame->key_frame) {
++            av_log(ctx, AV_LOG_DEBUG, "IDR,AUD,PPS and SPS set - h264\n");
++            AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_INSERT_SPS, 1);
++            AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_INSERT_PPS, 1);
++            AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_PICTURE_TYPE_IDR);
++          }
++        } else if (avctx->codec->id == AV_CODEC_ID_HEVC) {
++          switch (frame->pict_type) {
++            case AV_PICTURE_TYPE_I:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_HEVC_PICTURE_TYPE_I);
++              break;
++            case AV_PICTURE_TYPE_P:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_HEVC_PICTURE_TYPE_P);
++              break;
++            case AV_PICTURE_TYPE_B:
++              av_log(ctx, AV_LOG_WARNING, "Ignoring B-Frame, unsupported by AMD AMF H.265 Encoder.");
++              break;
++            case AV_PICTURE_TYPE_S:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_HEVC_PICTURE_TYPE_SKIP);
++              break;
++            default:
++              AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_HEVC_PICTURE_TYPE_NONE);
++              break;
++          }
++          // Keyframe overrides previous assignment.
++          if (frame->key_frame) {
++            av_log(ctx, AV_LOG_DEBUG, "IDR,PPS and SPS set - h265\n");
++            AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_INSERT_HEADER, 1);
++            AMF_ASSIGN_PROPERTY_INT64(res, surface, AMF_VIDEO_ENCODER_HEVC_FORCE_PICTURE_TYPE, AMF_VIDEO_ENCODER_HEVC_PICTURE_TYPE_IDR);
++          }
++        }
++
+         surface->pVtbl->SetPts(surface, frame->pts);
+         AMF_ASSIGN_PROPERTY_INT64(res, surface, PTS_PROP, frame->pts);
+ 
+diff --git a/libavcodec/amfenc_h264.c b/libavcodec/amfenc_h264.c
+index fe30d7f..c5db9ee 100644
+--- a/libavcodec/amfenc_h264.c
++++ b/libavcodec/amfenc_h264.c
+@@ -197,7 +197,65 @@ static av_cold int amf_encode_init_h264(AVCodecContext *avctx)
+     /// Color Range (Partial/TV/MPEG or Full/PC/JPEG)
+     if (avctx->color_range == AVCOL_RANGE_JPEG) {
+         AMF_ASSIGN_PROPERTY_BOOL(res, ctx->encoder, AMF_VIDEO_ENCODER_FULL_RANGE_COLOR, 1);
++    } else {
++		AMF_ASSIGN_PROPERTY_BOOL(res, ctx->encoder, AMF_VIDEO_ENCODER_FULL_RANGE_COLOR, 0);
++	}
++    
++    // Color space (Color profile of the input surface.)
++    int isFullRange = avctx->color_range == AVCOL_RANGE_JPEG;
++    int colorSpace = AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN;
++    switch(avctx->colorspace) {
++        case AVCOL_SPC_SMPTE170M:
++            colorSpace = isFullRange ? AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_601 : AMF_VIDEO_CONVERTER_COLOR_PROFILE_601;
++            break;
++        case AVCOL_SPC_BT709:
++            colorSpace = isFullRange ? AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_709 : AMF_VIDEO_CONVERTER_COLOR_PROFILE_709;
++            break;
++        case AVCOL_SPC_BT2020_NCL:
++            colorSpace = isFullRange ? AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_2020 : AMF_VIDEO_CONVERTER_COLOR_PROFILE_2020;
++            break;
++    }
++    if (colorSpace != AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN){
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_INPUT_COLOR_PROFILE,colorSpace);
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_OUTPUT_COLOR_PROFILE,colorSpace);
++        av_log(ctx, AV_LOG_ERROR, "Set Color Space to %d\n",colorSpace);
++    }
++    // Color Transfer (Characteristic transfer function of the input surface used to perform the mapping between linear light components and a nonlinear RGB signal.)
++    int colorTransfer = AMF_COLOR_TRANSFER_CHARACTERISTIC_UNDEFINED;
++    switch (avctx->color_trc) {
++        case AVCOL_TRC_SMPTE170M:
++            colorTransfer = AMF_COLOR_TRANSFER_CHARACTERISTIC_SMPTE170M;
++            break;
++        case AVCOL_TRC_BT709:
++            colorTransfer = AMF_COLOR_TRANSFER_CHARACTERISTIC_BT709;
++            break;
++        case AVCOL_TRC_BT2020_10:
++            colorTransfer = AMF_COLOR_TRANSFER_CHARACTERISTIC_BT2020_10;
++            break;
++    }
++    if(colorTransfer != AMF_COLOR_TRANSFER_CHARACTERISTIC_UNDEFINED){
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_INPUT_TRANSFER_CHARACTERISTIC,colorTransfer);
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_OUTPUT_TRANSFER_CHARACTERISTIC,colorTransfer);
++        av_log(ctx, AV_LOG_ERROR, "Set Color Transfer to %d\n",colorTransfer);
++    }
++    // Color Primaries Color space primaries for the input surface which are the maximum red, green, and blue value permitted within the color space.
++    int colorPrimaries = AMF_COLOR_PRIMARIES_UNDEFINED;
++    switch(avctx->color_primaries){
++        case AVCOL_PRI_SMPTE170M:
++            colorPrimaries = AMF_COLOR_PRIMARIES_SMPTE170M;
++            break;
++        case AVCOL_PRI_BT709:
++            colorPrimaries = AMF_COLOR_PRIMARIES_BT709;
++            break;
++        case AVCOL_PRI_BT2020:
++            colorPrimaries = AMF_COLOR_PRIMARIES_BT2020;
++            break;
+     }
++    if(colorPrimaries != AMF_COLOR_PRIMARIES_UNDEFINED){
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_INPUT_COLOR_PRIMARIES,colorPrimaries);
++        AMF_ASSIGN_PROPERTY_INT64(res,ctx->encoder,AMF_VIDEO_ENCODER_OUTPUT_COLOR_PRIMARIES,colorPrimaries);
++        av_log(ctx, AV_LOG_ERROR, "Set Color Primaries to %d\n",colorPrimaries);
++     }
+ 
+     // autodetect rate control method
+     if (ctx->rate_control_mode == AMF_VIDEO_ENCODER_RATE_CONTROL_METHOD_UNKNOWN) {

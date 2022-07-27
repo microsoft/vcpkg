@@ -63,6 +63,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "amf"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "alsa"
           ],
           "platform": "linux"
@@ -240,6 +248,12 @@
             "openssl"
           ]
         }
+      ]
+    },
+    "amf": {
+      "description": "AMD video decoding/encoding acceleration",
+      "dependencies": [
+        "amf"
       ]
     },
     "alsa": {

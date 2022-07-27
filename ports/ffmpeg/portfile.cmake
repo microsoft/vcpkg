@@ -24,6 +24,7 @@ vcpkg_from_github(
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        0020-fix-idr-on-amf.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -319,6 +320,12 @@ if("modplug" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmodplug")
 else()
     set(OPTIONS "${OPTIONS} --disable-libmodplug")
+endif()
+
+if("amf" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-amf")
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("nvcodec" IN_LIST FEATURES)
