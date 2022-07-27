@@ -4557,8 +4557,8 @@
       "port-version": 0
     },
     "metis": {
-      "baseline": "5.1.0",
-      "port-version": 8
+      "baseline": "2022-07-27",
+      "port-version": 0
     },
     "metrohash": {
       "baseline": "1.1.3",
