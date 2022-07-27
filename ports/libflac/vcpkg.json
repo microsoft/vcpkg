@@ -18,7 +18,8 @@
   ],
   "features": {
     "asm": {
-      "description": "Use any assembly optimization routines"
+      "description": "Use any assembly optimization routines",
+      "supports": "x86"
     }
   }
 }
