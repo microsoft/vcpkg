@@ -4293,7 +4293,7 @@
       "port-version": 1
     },
     "libzip": {
-      "baseline": "1.9.0",
+      "baseline": "1.9.2",
       "port-version": 0
     },
     "libzippp": {
