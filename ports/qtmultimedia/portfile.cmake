@@ -38,7 +38,7 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
-# alas is not ready
+# alsa is not ready
 list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
