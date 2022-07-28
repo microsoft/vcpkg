@@ -35,6 +35,9 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(TBB_LIB_PREFIX lib)
 else()
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+    
     if (VCPKG_CRT_LINKAGE STREQUAL static)
         set(RELEASE_CONFIGURATION Release-MT)
         set(DEBUG_CONFIGURATION Debug-MT)
@@ -60,18 +63,30 @@ else()
             string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
                         "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_RUNTIME" SLN_CONFIGURE "${SLN_CONFIGURE}")
         endif()
+        string(REPLACE [[<ImportGroup Label="ExtensionTargets">]] "<Import Project=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/tbb.props\" />\n<ImportGroup Label=\"ExtensionTargets\">" SLN_CONFIGURE "${SLN_CONFIGURE}")
         file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
     endmacro()
 
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbb.vcxproj)
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc.vcxproj)
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc_proxy.vcxproj)
-
+    configure_file("${CURRENT_PORT_DIR}/tbb.props.in" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/tbb.props" @ONLY)
+    set(ENV{MSBFLAGS} "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
+        /p:VCPkgLocalAppDataDisabled=true
+        /p:UseIntelMKL=No
+        /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
+        /m
+        /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
+        /p:ForceImportAfterCppTargets=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/tbb.props\"
+        /p:VcpkgTriplet=${TARGET_TRIPLET}
+        /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
+        )
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH build/vs2013/makefile.sln
         RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
+        OPTIONS /p:ForceImportAfterCppTargets=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/tbb.props\"
     )
     # Settings for TBBConfigInternal.cmake.in
     set(TBB_LIB_EXT lib)
