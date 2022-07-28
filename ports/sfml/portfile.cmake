@@ -4,6 +4,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     HEAD_REF master
     SHA512 7aed2fc29d1da98e6c4d598d5c86cf536cb4eb5c2079cdc23bb8e502288833c052579dadbe0ce13ad6461792d959bf6d9660229f54c54cf90a541c88c6b03d59
     PATCHES
+        fix-dependencies.patch
         use-system-freetype.patch
         stb_include.patch
         arm64.patch
