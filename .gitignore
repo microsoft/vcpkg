@@ -299,6 +299,7 @@ __pycache__/
 !/triplets/x64-windows.cmake
 !/triplets/x86-windows.cmake
 !/triplets/download_llvm.cmake
+!/triplets/port_flags.cmake
 !/triplets/x64-windows-llvm.toolchain.cmake
 !/triplets/community
 !/triplets/community/**
