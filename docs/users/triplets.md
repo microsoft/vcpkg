@@ -194,7 +194,7 @@ Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the
 ## Linux Variables
 
 ### VCPKG_FIXUP_ELF_RPATH
-When this option is set to (true|1|on), vcpkg will add `$ORIGIN` and `$ORIGIN/<path_relative_to_lib>` to the `RUNPATH` header of executables and shared libraries. This allows packages to be relocatable on Linux.
+When this option is set to (true|1|on), vcpkg will add `$ORIGIN` and `$ORIGIN/<path_relative_to_lib>` to the `RUNPATH` header of executables and shared libraries. This allows packages to be relocated on Linux.
 
 ## MacOS Variables
 
