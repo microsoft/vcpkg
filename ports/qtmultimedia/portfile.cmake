@@ -3,7 +3,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
                     remove_unistd.patch
-                    fix-dependency-alsa.patch
 )
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
