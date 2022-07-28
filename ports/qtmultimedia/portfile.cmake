@@ -3,7 +3,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
                     remove_unistd.patch
-                    )
+                    fix-dependency-alsa.patch
+)
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
 
@@ -39,6 +40,7 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_ALSA=ON")
     list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON")
 else()
     list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
