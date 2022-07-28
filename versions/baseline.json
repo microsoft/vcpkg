@@ -177,7 +177,7 @@
       "port-version": 0
     },
     "arrow": {
-      "baseline": "8.0.0",
+      "baseline": "8.0.1",
       "port-version": 0
     },
     "ashes": {
@@ -1858,7 +1858,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.7",
-      "port-version": 0
+      "port-version": 1
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -1971,6 +1971,10 @@
     "dpdk": {
       "baseline": "22.03",
       "port-version": 1
+    },
+    "dpp": {
+      "baseline": "10.0.15",
+      "port-version": 0
     },
     "draco": {
       "baseline": "1.5.2",
@@ -2505,7 +2509,7 @@
       "port-version": 2
     },
     "geographiclib": {
-      "baseline": "2.1",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "geos": {
@@ -4094,7 +4098,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 6
+      "port-version": 7
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -4289,7 +4293,7 @@
       "port-version": 1
     },
     "libzip": {
-      "baseline": "1.9.0",
+      "baseline": "1.9.2",
       "port-version": 0
     },
     "libzippp": {
@@ -7669,7 +7673,7 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.1.7",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "x-plane": {
