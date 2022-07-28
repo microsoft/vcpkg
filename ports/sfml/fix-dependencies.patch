@@ -2,7 +2,11 @@ diff --git a/cmake/SFMLConfig.cmake.in b/cmake/SFMLConfig.cmake.in
 index ce81953..bd2d330 100644
 --- a/cmake/SFMLConfig.cmake.in
 +++ b/cmake/SFMLConfig.cmake.in
-@@ -1,3 +1,4 @@
+@@ -1,3 +1,8 @@
++set(SFML_STATIC_LIBRARIES false)
++if(NOT "@BUILD_SHARED_LIBS@")
++    set(SFML_STATIC_LIBRARIES true)
++endif()
 +include(CMakeFindDependencyMacro)
  # This script provides the SFML libraries as imported targets
  # ------------------------------------
@@ -21,6 +25,29 @@ index 1028110..927d1a4 100644
              sfml_bind_dependency(TARGET OpenGL FRIENDLY_NAME "OpenGL" SEARCH_NAMES "OpenGL" "GL")
          endif()
      endif()
+@@ -63,6 +66,8 @@ if(SFML_STATIC_LIBRARIES)
+     # sfml-graphics
+     list(FIND SFML_FIND_COMPONENTS "graphics" FIND_SFML_GRAPHICS_COMPONENT_INDEX)
+     if(FIND_SFML_GRAPHICS_COMPONENT_INDEX GREATER -1)
++        find_dependency(Freetype)
++        set(FreeType_LIB Freetype::Freetype)
+         sfml_bind_dependency(TARGET Freetype FRIENDLY_NAME "FreeType" SEARCH_NAMES "freetype")
+     endif()
+ 
+diff --git a/src/SFML/Graphics/CMakeLists.txt b/src/SFML/Graphics/CMakeLists.txt
+index 883c758..402efbe 100644
+--- a/src/SFML/Graphics/CMakeLists.txt
++++ b/src/SFML/Graphics/CMakeLists.txt
+@@ -134,7 +134,8 @@ if(SFML_OS_ANDROID)
+     target_link_libraries(sfml-graphics PRIVATE z EGL GLESv1_CM)
+ endif()
+ 
+-sfml_find_package(Freetype INCLUDE "FREETYPE_INCLUDE_DIRS" LINK "FREETYPE_LIBRARY")
++set(FreeType_LIB Freetype::Freetype)
++sfml_find_package(Freetype LINK FreeType_LIB)
+ target_link_libraries(sfml-graphics PRIVATE Freetype)
+ 
+ # add preprocessor symbols
 diff --git a/src/SFML/Window/CMakeLists.txt b/src/SFML/Window/CMakeLists.txt
 index 98ea439..0f1fb53 100644
 --- a/src/SFML/Window/CMakeLists.txt
