@@ -9,16 +9,16 @@ endfunction()
 
 get_vcpkg_triplet_variables()
 # Set C standard.
-set(CMAKE_C_STANDARD 11 CACHE STRING "")
-set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
-set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
-set(std_c_flags "-std:c11") #/Zc:__STDC__
+# set(CMAKE_C_STANDARD 11 CACHE STRING "")
+# set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
+# set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
+# set(std_c_flags "-std:c11") #/Zc:__STDC__
 
 # Set C++ standard.
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
-set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
-set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
-set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
+# set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
+# set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
+# set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
+# set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
 
 # Set Windows definitions:
 set(windows_defs "/DWIN32 /D_WIN64 /D_WINDOWS /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00")
