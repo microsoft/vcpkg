@@ -39,7 +39,7 @@ else()
 endif()
 
 # alsa is not ready
-list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
