@@ -45,6 +45,7 @@ vcpkg_cmake_configure(
         -DTGUI_BACKEND=Custom
         -DTGUI_BUILD_DOC=OFF
         -DTGUI_BUILD_FRAMEWORK=OFF
+        -DTGUI_INSTALL_PKGCONFIG_FILES=OFF
     OPTIONS_DEBUG
         -DTGUI_BUILD_GUI_BUILDER=OFF
     MAYBE_UNUSED_VARIABLES
@@ -77,17 +78,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/nanosvg"
     "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/glad"
 )
-
-vcpkg_fixup_pkgconfig()
-set(lib " -ltgui")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(APPEND lib "-s")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/tgui.pc" " -ltgui" "${lib}")
-endif()
-if(NOT VCPKG_BUILD_TYPE)
-    string(APPEND lib "-d")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tgui.pc" " -ltgui" "${lib}")
-endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
