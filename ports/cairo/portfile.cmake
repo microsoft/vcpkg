@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
         mingw-dllexport.patch
+        fix_werror.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)

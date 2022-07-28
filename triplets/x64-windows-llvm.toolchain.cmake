@@ -46,7 +46,7 @@ endif()
 set(CMAKE_CL_NOLOGO "/nologo" CACHE STRING "")
 
 # Set compiler flags.
-set(CLANG_FLAGS "/clang:-fasm /clang:-fopenmp-simd")
+set(CLANG_FLAGS "/clang:-fasm") #/clang:-fopenmp-simd -openmp
 
 # Setup try_compile correctly. 
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE 
