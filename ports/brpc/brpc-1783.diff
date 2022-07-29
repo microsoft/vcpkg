@@ -1,0 +1,592 @@
+diff --git a/BUILD.bazel b/BUILD.bazel
+index 11db84d02..7592a1862 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -56,7 +56,7 @@ config_setting(
+ 
+ COPTS = [
+     "-DBTHREAD_USE_FAST_PTHREAD_MUTEX",
+-    "-D__const__=",
++    "-D__const__=__unused__",
+     "-D_GNU_SOURCE",
+     "-DUSE_SYMBOLIZE",
+     "-DNO_TCMALLOC",
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 057695afc..bfc9fe4f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,7 +108,7 @@ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} ${DEFINE_CLOCK_GETTIME} -DBRPC_WITH_GLOG
+ if(WITH_MESALINK)
+     set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DUSE_MESALINK")
+ endif()
+-set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__= -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DBRPC_REVISION=\\\"${BRPC_REVISION}\\\" -D__STRICT_ANSI__")
++set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__=__unused__ -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DBRPC_REVISION=\\\"${BRPC_REVISION}\\\" -D__STRICT_ANSI__")
+ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} ${DEBUG_SYMBOL} ${THRIFT_CPP_FLAG}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer")
+ set(CMAKE_C_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-unused-parameter -fno-omit-frame-pointer")
+diff --git a/Makefile b/Makefile
+index e2e1a6b2e..da506f7c5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -20,10 +20,9 @@ include config.mk
+ 
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-# 3. Removed -Werror: Not block compilation for non-vital warnings, especially when the
++# 2. Removed -Werror: Not block compilation for non-vital warnings, especially when the
+ #    code is tested on newer systems. If the code is used in production, add -Werror back
+-CPPFLAGS+=-DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__= -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DNDEBUG -DBRPC_REVISION=\"$(shell ./tools/get_brpc_revision.sh .)\"
++CPPFLAGS+=-DBTHREAD_USE_FAST_PTHREAD_MUTEX -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DNDEBUG -DBRPC_REVISION=\"$(shell ./tools/get_brpc_revision.sh .)\"
+ CXXFLAGS=$(CPPFLAGS) -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer -std=c++0x
+ CFLAGS=$(CPPFLAGS) -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-unused-parameter -fno-omit-frame-pointer
+ DEBUG_CXXFLAGS = $(filter-out -DNDEBUG,$(CXXFLAGS)) -DUNIT_TEST -DBVAR_NOT_LINK_DEFAULT_VARIABLES
+diff --git a/config_brpc.sh b/config_brpc.sh
+index 842f100f9..cf04b7260 100755
+--- a/config_brpc.sh
++++ b/config_brpc.sh
+@@ -320,6 +320,10 @@ append_to_output "STATIC_LINKINGS=$STATIC_LINKINGS"
+ append_to_output "DYNAMIC_LINKINGS=$DYNAMIC_LINKINGS"
+ CPPFLAGS="-DBRPC_WITH_GLOG=$WITH_GLOG -DGFLAGS_NS=$GFLAGS_NS"
+ 
++# Avoid over-optimizations of TLS variables by GCC>=4.8
++# See: https://github.com/apache/incubator-brpc/issues/1693
++CPPFLAGS="${CPPFLAGS} -D__const__=__unused__"
++
+ if [ ! -z "$DEBUGSYMBOLS" ]; then
+     CPPFLAGS="${CPPFLAGS} $DEBUGSYMBOLS"
+ fi
+diff --git a/docs/cn/getting_started.md b/docs/cn/getting_started.md
+index 2602f5b41..56f80db3b 100644
+--- a/docs/cn/getting_started.md
++++ b/docs/cn/getting_started.md
+@@ -290,7 +290,7 @@ GCC7中over-aligned的问题暂时被禁止。
+ 
+ 使用其他版本的gcc可能会产生编译警告，请联系我们予以修复。
+ 
+-请在makefile中给cxxflags增加`-D__const__=`选项以避免[gcc4+中的errno问题](thread_local.md).
++请在makefile中给cxxflags增加`-D__const__=__unused__`选项以避免[gcc4+中的errno问题](thread_local.md).
+ 
+ ## Clang: 3.5-4.0
+ 
+diff --git a/docs/cn/thread_local.md b/docs/cn/thread_local.md
+index f8e1a491e..41e024749 100644
+--- a/docs/cn/thread_local.md
++++ b/docs/cn/thread_local.md
+@@ -57,9 +57,8 @@ Use *p ...                   -  still the errno of original pthread, undefined b
+ 
+ 严格地说这个问题不是gcc4导致的，而是glibc给__errno_location的签名不够准确，一个返回thread-local指针的函数依赖于段寄存器（TLS的一般实现方式），这怎么能算const呢？由于我们还未找到覆盖__errno_location的方法，所以这个问题目前实际的解决方法是：
+ 
+-**务必在直接或间接使用bthread的项目的gcc编译选项中添加`-D__const__=`，即把`__const__`定义为空，避免gcc4做相关优化。**
++**务必在直接或间接使用bthread的项目的gcc编译选项中添加`-D__const__=__unused__`，即把`__const__`定义为一个无副作用的属性，避免gcc4做相关优化。**
+ 
+-把`__const__`定义为空对程序其他部分的影响几乎为0。另外如果你没有**直接**使用errno（即你的项目中没有出现errno），或使用的是gcc
+-3.4，即使没有定义`-D__const__=`，程序的正确性也不会受影响，但为了防止未来可能的问题，我们强烈建议加上。
++把`__const__`定义为`__unused__`对程序其他部分的影响几乎为0。另外如果你没有**直接**使用errno（即你的项目中没有出现errno），或使用的是gcc 3.4，即使没有定义`-D__const__=__unused__`，程序的正确性也不会受影响，但为了防止未来可能的问题，我们强烈建议加上。
+ 
+-需要说明的是，和errno类似，pthread_self也有类似的问题，不过一般pthread_self除了打日志没有其他用途，影响面较小，在`-D__const__=`后pthread_self也会正常。
++需要说明的是，和errno类似，pthread_self也有类似的问题，不过一般pthread_self除了打日志没有其他用途，影响面较小，在`-D__const__=__unused__`后pthread_self也会正常。
+diff --git a/docs/en/getting_started.md b/docs/en/getting_started.md
+index c500f5807..4242f82a0 100644
+--- a/docs/en/getting_started.md
++++ b/docs/en/getting_started.md
+@@ -297,7 +297,7 @@ The over-aligned issues in GCC7 is suppressed temporarily now.
+ 
+ Using other versions of gcc may generate warnings, contact us to fix.
+ 
+-Adding `-D__const__=` to cxxflags in your makefiles is a must to avoid [errno issue in gcc4+](thread_local.md).
++Adding `-D__const__=__unused__` to cxxflags in your makefiles is a must to avoid [errno issue in gcc4+](thread_local.md).
+ 
+ ## Clang: 3.5-4.0
+ 
+diff --git a/example/BUILD b/example/BUILD
+index ee2c6ffd0..d688749d8 100644
+--- a/example/BUILD
++++ b/example/BUILD
+@@ -16,7 +16,7 @@
+ COPTS = [
+     "-D__STDC_FORMAT_MACROS",
+     "-DBTHREAD_USE_FAST_PTHREAD_MUTEX",
+-    "-D__const__=",
++    "-D__const__=__unused__",
+     "-D_GNU_SOURCE",
+     "-DUSE_SYMBOLIZE",
+     "-DNO_TCMALLOC",
+diff --git a/example/asynchronous_echo_c++/CMakeLists.txt b/example/asynchronous_echo_c++/CMakeLists.txt
+index 18fec20ee..4a118b19a 100644
+--- a/example/asynchronous_echo_c++/CMakeLists.txt
++++ b/example/asynchronous_echo_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/auto_concurrency_limiter/CMakeLists.txt b/example/auto_concurrency_limiter/CMakeLists.txt
+index ef20bf0a7..88b784277 100644
+--- a/example/auto_concurrency_limiter/CMakeLists.txt
++++ b/example/auto_concurrency_limiter/CMakeLists.txt
+@@ -70,7 +70,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/backup_request_c++/CMakeLists.txt b/example/backup_request_c++/CMakeLists.txt
+index d247bc150..fc39ba3cd 100644
+--- a/example/backup_request_c++/CMakeLists.txt
++++ b/example/backup_request_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/cancel_c++/CMakeLists.txt b/example/cancel_c++/CMakeLists.txt
+index 26f2581ba..ea611e03f 100644
+--- a/example/cancel_c++/CMakeLists.txt
++++ b/example/cancel_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/cascade_echo_c++/CMakeLists.txt b/example/cascade_echo_c++/CMakeLists.txt
+index 24d9249ae..6ca2e25dc 100644
+--- a/example/cascade_echo_c++/CMakeLists.txt
++++ b/example/cascade_echo_c++/CMakeLists.txt
+@@ -80,7 +80,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/dynamic_partition_echo_c++/CMakeLists.txt b/example/dynamic_partition_echo_c++/CMakeLists.txt
+index 5a268a6c9..8df3ad62e 100644
+--- a/example/dynamic_partition_echo_c++/CMakeLists.txt
++++ b/example/dynamic_partition_echo_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/echo_c++/CMakeLists.txt b/example/echo_c++/CMakeLists.txt
+index 4e6f5231d..d7babd7f7 100644
+--- a/example/echo_c++/CMakeLists.txt
++++ b/example/echo_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/echo_c++/Makefile b/example/echo_c++/Makefile
+index 710cc7eda..fddde8cbc 100644
+--- a/example/echo_c++/Makefile
++++ b/example/echo_c++/Makefile
+@@ -20,8 +20,7 @@ BRPC_PATH=../..
+ include $(BRPC_PATH)/config.mk
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
++CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+ ifeq ($(NEED_GPERFTOOLS), 1)
+ 	CXXFLAGS+=-DBRPC_ENABLE_CPU_PROFILER
+ endif
+diff --git a/example/grpc_c++/CMakeLists.txt b/example/grpc_c++/CMakeLists.txt
+index 5f9032e1c..49010e963 100644
+--- a/example/grpc_c++/CMakeLists.txt
++++ b/example/grpc_c++/CMakeLists.txt
+@@ -75,7 +75,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/http_c++/CMakeLists.txt b/example/http_c++/CMakeLists.txt
+index 388b58c2e..34f3050fa 100644
+--- a/example/http_c++/CMakeLists.txt
++++ b/example/http_c++/CMakeLists.txt
+@@ -86,7 +86,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/http_c++/Makefile b/example/http_c++/Makefile
+index dc9d430f6..515456559 100644
+--- a/example/http_c++/Makefile
++++ b/example/http_c++/Makefile
+@@ -20,8 +20,7 @@ BRPC_PATH=../../
+ include $(BRPC_PATH)/config.mk
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
++CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+ ifeq ($(NEED_GPERFTOOLS), 1)
+ 	CXXFLAGS+=-DBRPC_ENABLE_CPU_PROFILER
+ endif
+diff --git a/example/memcache_c++/CMakeLists.txt b/example/memcache_c++/CMakeLists.txt
+index 2554b8295..85b4affcb 100644
+--- a/example/memcache_c++/CMakeLists.txt
++++ b/example/memcache_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/memcache_c++/Makefile b/example/memcache_c++/Makefile
+index 2579f68f4..03b3d4cd7 100644
+--- a/example/memcache_c++/Makefile
++++ b/example/memcache_c++/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer
++CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer
+ HDRS+=$(BRPC_PATH)/output/include
+ LIBS+=$(BRPC_PATH)/output/lib
+ HDRPATHS = $(addprefix -I, $(HDRS))
+diff --git a/example/multi_threaded_echo_c++/CMakeLists.txt b/example/multi_threaded_echo_c++/CMakeLists.txt
+index c68010dc1..4a7291c47 100644
+--- a/example/multi_threaded_echo_c++/CMakeLists.txt
++++ b/example/multi_threaded_echo_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/multi_threaded_echo_c++/Makefile b/example/multi_threaded_echo_c++/Makefile
+index 558b77c36..cd344f98d 100644
+--- a/example/multi_threaded_echo_c++/Makefile
++++ b/example/multi_threaded_echo_c++/Makefile
+@@ -20,8 +20,7 @@ BRPC_PATH=../..
+ include $(BRPC_PATH)/config.mk
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
++CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+ ifeq ($(NEED_GPERFTOOLS), 1)
+ 	CXXFLAGS+=-DBRPC_ENABLE_CPU_PROFILER
+ endif
+diff --git a/example/multi_threaded_echo_fns_c++/CMakeLists.txt b/example/multi_threaded_echo_fns_c++/CMakeLists.txt
+index 148490a05..8345076eb 100644
+--- a/example/multi_threaded_echo_fns_c++/CMakeLists.txt
++++ b/example/multi_threaded_echo_fns_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/nshead_extension_c++/CMakeLists.txt b/example/nshead_extension_c++/CMakeLists.txt
+index 72c9b4183..b0b93a23d 100644
+--- a/example/nshead_extension_c++/CMakeLists.txt
++++ b/example/nshead_extension_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/nshead_pb_extension_c++/CMakeLists.txt b/example/nshead_pb_extension_c++/CMakeLists.txt
+index 82c055bab..448c7070f 100644
+--- a/example/nshead_pb_extension_c++/CMakeLists.txt
++++ b/example/nshead_pb_extension_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/parallel_echo_c++/CMakeLists.txt b/example/parallel_echo_c++/CMakeLists.txt
+index 65b251530..b24bb41f9 100644
+--- a/example/parallel_echo_c++/CMakeLists.txt
++++ b/example/parallel_echo_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/partition_echo_c++/CMakeLists.txt b/example/partition_echo_c++/CMakeLists.txt
+index fecdfa0c3..25d98dbe5 100644
+--- a/example/partition_echo_c++/CMakeLists.txt
++++ b/example/partition_echo_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/redis_c++/CMakeLists.txt b/example/redis_c++/CMakeLists.txt
+index f1bafece8..a7b008b5a 100644
+--- a/example/redis_c++/CMakeLists.txt
++++ b/example/redis_c++/CMakeLists.txt
+@@ -90,7 +90,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/redis_c++/Makefile b/example/redis_c++/Makefile
+index 4ba9505f0..7c94e195d 100644
+--- a/example/redis_c++/Makefile
++++ b/example/redis_c++/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer
++CXXFLAGS+=$(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer
+ HDRS+=$(BRPC_PATH)/output/include
+ LIBS+=$(BRPC_PATH)/output/lib
+ HDRPATHS = $(addprefix -I, $(HDRS))
+diff --git a/example/selective_echo_c++/CMakeLists.txt b/example/selective_echo_c++/CMakeLists.txt
+index 74135282e..7d65c7759 100644
+--- a/example/selective_echo_c++/CMakeLists.txt
++++ b/example/selective_echo_c++/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/session_data_and_thread_local/CMakeLists.txt b/example/session_data_and_thread_local/CMakeLists.txt
+index 120f92e22..28ba03565 100644
+--- a/example/session_data_and_thread_local/CMakeLists.txt
++++ b/example/session_data_and_thread_local/CMakeLists.txt
+@@ -85,7 +85,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+diff --git a/example/streaming_echo_c++/CMakeLists.txt b/example/streaming_echo_c++/CMakeLists.txt
+index 57fe261e7..34e041d77 100644
+--- a/example/streaming_echo_c++/CMakeLists.txt
++++ b/example/streaming_echo_c++/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
+ 
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
+     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/example/thrift_extension_c++/Makefile b/example/thrift_extension_c++/Makefile
+index 980b2085b..47b381fdb 100644
+--- a/example/thrift_extension_c++/Makefile
++++ b/example/thrift_extension_c++/Makefile
+@@ -20,8 +20,7 @@ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -g -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -g -DNDEBUG -O2 -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+ ifeq ($(NEED_GPERFTOOLS), 1)
+ 	CXXFLAGS+=-DBRPC_ENABLE_CPU_PROFILER
+ endif
+diff --git a/src/butil/errno.h b/src/butil/errno.h
+index 0390a840b..14856eeb6 100644
+--- a/src/butil/errno.h
++++ b/src/butil/errno.h
+@@ -22,7 +22,12 @@
+ #ifndef BUTIL_BAIDU_ERRNO_H
+ #define BUTIL_BAIDU_ERRNO_H
+ 
+-#define __const__
++#ifndef __const__
++// Avoid over-optimizations of TLS variables by GCC>=4.8
++// See: https://github.com/apache/incubator-brpc/issues/1693
++#define __const__ __unused__
++#endif
++
+ #include <errno.h>                           // errno
+ #include "butil/macros.h"                     // BAIDU_CONCAT
+ 
+diff --git a/test/BUILD.bazel b/test/BUILD.bazel
+index c4649ab12..a170eaf8c 100644
+--- a/test/BUILD.bazel
++++ b/test/BUILD.bazel
+@@ -24,7 +24,7 @@ config_setting(
+ COPTS = [
+     "-D__STDC_FORMAT_MACROS",
+     "-DBTHREAD_USE_FAST_PTHREAD_MUTEX",
+-    "-D__const__=",
++    "-D__const__=__unused__",
+     "-D_GNU_SOURCE",
+     "-DUSE_SYMBOLIZE",
+     "-DNO_TCMALLOC",
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index f3e0c9bb3..980794f5f 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -52,7 +52,7 @@ else()
+ endif()
+ 
+ set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DBRPC_WITH_GLOG=${WITH_GLOG_VAL} -DGFLAGS_NS=${GFLAGS_NS}")
+-set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__= -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DUNIT_TEST -Dprivate=public -Dprotected=public -DBVAR_NOT_LINK_DEFAULT_VARIABLES -D__STRICT_ANSI__ -include ${PROJECT_SOURCE_DIR}/test/sstream_workaround.h")
++set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__=__unused__ -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DUNIT_TEST -Dprivate=public -Dprotected=public -DBVAR_NOT_LINK_DEFAULT_VARIABLES -D__STRICT_ANSI__ -include ${PROJECT_SOURCE_DIR}/test/sstream_workaround.h")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -g -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer")
+ use_cxx11()
+ 
+diff --git a/test/Makefile b/test/Makefile
+index 99f7b4f74..5aa90e8be 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -18,7 +18,7 @@
+ NEED_GPERFTOOLS=1
+ NEED_GTEST=1
+ include ../config.mk
+-CPPFLAGS+=-DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__= -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DUNIT_TEST -Dprivate=public -Dprotected=public -DBVAR_NOT_LINK_DEFAULT_VARIABLES --include sstream_workaround.h
++CPPFLAGS+=-DBTHREAD_USE_FAST_PTHREAD_MUTEX -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DUNIT_TEST -Dprivate=public -Dprotected=public -DBVAR_NOT_LINK_DEFAULT_VARIABLES --include sstream_workaround.h
+ CXXFLAGS=$(CPPFLAGS) -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer -std=c++0x
+ 
+ #required by butil/crc32.cc to boost performance for 10x
+diff --git a/tools/BUILD b/tools/BUILD
+index 99f472fda..04b3abbf9 100644
+--- a/tools/BUILD
++++ b/tools/BUILD
+@@ -16,7 +16,7 @@
+ COPTS = [
+     "-D__STDC_FORMAT_MACROS",
+     "-DBTHREAD_USE_FAST_PTHREAD_MUTEX",
+-    "-D__const__=",
++    "-D__const__=__unused__",
+     "-D_GNU_SOURCE",
+     "-DUSE_SYMBOLIZE",
+     "-DNO_TCMALLOC",
+diff --git a/tools/parallel_http/Makefile b/tools/parallel_http/Makefile
+index 5b8664708..a57c5d5f5 100644
+--- a/tools/parallel_http/Makefile
++++ b/tools/parallel_http/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
+ HDRPATHS = -I$(BRPC_PATH)/output/include $(addprefix -I, $(HDRS))
+ LIBPATHS = -L$(BRPC_PATH)/output/lib $(addprefix -L, $(LIBS))
+ STATIC_LINKINGS += $(BRPC_PATH)/output/lib/libbrpc.a
+diff --git a/tools/rpc_press/Makefile b/tools/rpc_press/Makefile
+index c1d866d05..8cae3033c 100644
+--- a/tools/rpc_press/Makefile
++++ b/tools/rpc_press/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
+ HDRPATHS = -I$(BRPC_PATH)/output/include $(addprefix -I, $(HDRS))
+ LIBPATHS = -L$(BRPC_PATH)/output/lib $(addprefix -L, $(LIBS))
+ STATIC_LINKINGS += $(BRPC_PATH)/output/lib/libbrpc.a
+diff --git a/tools/rpc_replay/Makefile b/tools/rpc_replay/Makefile
+index fcd5eb6f9..8f4eadde8 100644
+--- a/tools/rpc_replay/Makefile
++++ b/tools/rpc_replay/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer -Wno-unused-parameter
+ HDRPATHS = -I$(BRPC_PATH)/output/include $(addprefix -I, $(HDRS))
+ LIBPATHS = -L$(BRPC_PATH)/output/lib $(addprefix -L, $(LIBS))
+ STATIC_LINKINGS += $(BRPC_PATH)/output/lib/libbrpc.a
+diff --git a/tools/rpc_view/Makefile b/tools/rpc_view/Makefile
+index c654cfd5a..13f026cbe 100644
+--- a/tools/rpc_view/Makefile
++++ b/tools/rpc_view/Makefile
+@@ -19,8 +19,7 @@ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+ # Notes on the flags:
+ # 1. Added -fno-omit-frame-pointer: perf/tcmalloc-profiler use frame pointers by default
+-# 2. Added -D__const__= : Avoid over-optimizations of TLS variables by GCC>=4.8
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+ HDRPATHS = -I$(BRPC_PATH)/output/include $(addprefix -I, $(HDRS))
+ LIBPATHS = -L$(BRPC_PATH)/output/lib $(addprefix -L, $(LIBS))
+ STATIC_LINKINGS += $(BRPC_PATH)/output/lib/libbrpc.a
+diff --git a/tools/trackme_server/Makefile b/tools/trackme_server/Makefile
+index 79e8536d0..5bdd53f86 100644
+--- a/tools/trackme_server/Makefile
++++ b/tools/trackme_server/Makefile
+@@ -17,7 +17,7 @@
+ 
+ BRPC_PATH = ../../
+ include $(BRPC_PATH)/config.mk
+-CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -W -Wall -fPIC -fno-omit-frame-pointer
++CXXFLAGS = $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -pipe -W -Wall -fPIC -fno-omit-frame-pointer
+ HDRPATHS = -I$(BRPC_PATH)/output/include $(addprefix -I, $(HDRS))
+ LIBPATHS = -L$(BRPC_PATH)/output/lib $(addprefix -L, $(LIBS))
+ STATIC_LINKINGS += $(BRPC_PATH)/output/lib/libbrpc.a

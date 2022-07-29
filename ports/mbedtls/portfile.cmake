@@ -3,8 +3,8 @@ set(VCPKG_LIBRARY_LINKAGE static)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
-    REF 8b3f26a5ac38d4fdccbc5c5366229f3e01dafcc0 # mbedtls-2.28.0
-    SHA512 a5d2694ae87347be7ebf5c32b86d7bb809cc696b549947efb3d12d41d5f726d4f7caed3cc6ee3f3c9b9e46b3c42c4ce8a5f9741b1b0a3c644b6ae615d2f4c55a
+    REF v2.28.1
+    SHA512 b71d052acfb83daff11e0182f32b0ad0af7c59d2b74bd19f270531a3da9ed3ce1d3adcaf756e161bf05a10fe1b6b7753e360e9dbb5b7b123f09201b1202ef689
     HEAD_REF mbedtls-2.28
     PATCHES
         enable-pthread.patch
