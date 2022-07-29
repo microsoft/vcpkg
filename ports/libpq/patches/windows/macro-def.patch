@@ -1,0 +1,16 @@
+diff --git a/src/include/common/checksum_helper.h b/src/include/common/checksum_helper.h
+index cac7570ea..d0ca1243c 100644
+--- a/src/include/common/checksum_helper.h
++++ b/src/include/common/checksum_helper.h
+@@ -18,6 +18,11 @@
+ #include "common/sha2.h"
+ #include "port/pg_crc32c.h"
+ 
++#if defined(CHECKSUM_TYPE_NONE)
++// winioctl.h defines CHECKSUM_TYPE_NONE to 0 as a macro. 
++#undef CHECKSUM_TYPE_NONE
++#endif
++
+ /*
+  * Supported checksum types. It's not necessarily the case that code using
+  * these functions needs a cryptographically strong checksum; it may only
