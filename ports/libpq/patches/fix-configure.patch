@@ -2,6 +2,15 @@ diff --git a/configure.ac b/configure.ac
 index fba79ee..4fadb94 100644
 --- a/configure.ac
 +++ b/configure.ac
+@@ -19,7 +19,7 @@ m4_pattern_forbid(^PGAC_)dnl to catch undefined macros
+ 
+ AC_INIT([PostgreSQL], [14.4], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
+ 
+-m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
++m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_warn([Autoconf version 2.69 is required.
+ Untested combinations of 'autoconf' and PostgreSQL versions are not
+ recommended.  You can remove the check from 'configure.ac' but it is then
+ your responsibility whether the result works or not.])])
 @@ -1184,7 +1184,8 @@ if test "$enable_thread_safety" = yes; then
  fi
  
