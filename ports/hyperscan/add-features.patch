@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f54dcd6..08dc942 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -479,11 +479,11 @@ endif()
+ 
+ # we need static libs for Chimera - too much deep magic for shared libs
+ if (CORRECT_PCRE_VERSION AND PCRE_BUILD_SOURCE AND BUILD_STATIC_LIBS)
+-    set(BUILD_CHIMERA TRUE)
++    set(BUILD_CHIMERA TRUE CACHE BOOL TRUE)
+ endif()
+ 
+ add_subdirectory(unit)
+-if (EXISTS ${CMAKE_SOURCE_DIR}/tools/CMakeLists.txt)
++if (EXISTS ${CMAKE_SOURCE_DIR}/tools/CMakeLists.txt AND BUILD_TOOLS)
+     add_subdirectory(tools)
+ endif()
+ if (EXISTS ${CMAKE_SOURCE_DIR}/chimera/CMakeLists.txt AND BUILD_CHIMERA)
+@@ -531,11 +531,11 @@ endif()
+ 
+ # we need static libs for Chimera - too much deep magic for shared libs
+ if (CORRECT_PCRE_VERSION AND PCRE_BUILD_SOURCE AND BUILD_STATIC_LIBS)
+-    set(BUILD_CHIMERA TRUE)
++    set(BUILD_CHIMERA TRUE CACHE BOOL TRUE)
+ endif()
+ 
+ add_subdirectory(unit)
+-if (EXISTS ${CMAKE_SOURCE_DIR}/tools/CMakeLists.txt)
++if (EXISTS ${CMAKE_SOURCE_DIR}/tools/CMakeLists.txt AND BUILD_TOOLS)
+     add_subdirectory(tools)
+ endif()
+ if (EXISTS ${CMAKE_SOURCE_DIR}/chimera/CMakeLists.txt AND BUILD_CHIMERA)

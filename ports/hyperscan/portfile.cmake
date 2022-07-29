@@ -11,6 +11,13 @@ vcpkg_from_github(
     PATCHES
         0001-remove-Werror.patch
         fix-dependency-pcre.patch
+        add-features.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools   BUILD_TOOLS
+        chimera BUILD_CHIMERA
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -19,6 +26,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )

@@ -26,11 +26,24 @@
     "boost-type-traits",
     "boost-unordered",
     "boost-utility",
-    "pcre",
     "ragel",
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "chimera": {
+      "description": "Build chimera",
+      "dependencies": [
+        "pcre"
+      ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "dependencies": [
+        "pcre"
+      ]
+    }
+  }
 }
