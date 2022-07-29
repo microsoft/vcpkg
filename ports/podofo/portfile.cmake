@@ -17,6 +17,7 @@ vcpkg_from_sourceforge(
         0005-fix-crypto.patch
         fix-x64-osx.patch
         install-cmake-config.patch
+        fix-compiler.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)
