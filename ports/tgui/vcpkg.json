@@ -17,45 +17,28 @@
     }
   ],
   "default-features": [
-    "sdl2",
     "sfml"
   ],
   "features": {
     "sdl2": {
-      "description": "build the SDL backend",
+      "description": "Build the SDL backend",
       "dependencies": [
+        {
+          "name": "opengl",
+          "platform": "!android & !ios"
+        },
         "sdl2",
         "sdl2-ttf"
       ]
     },
     "sfml": {
-      "description": "build the SFML backend",
+      "description": "Build the SFML backend",
       "dependencies": [
-        {
-          "name": "glad",
-          "features": [
-            "egl"
-          ],
-          "platform": "!android & !ios"
-        },
-        {
-          "name": "opengl",
-          "platform": "android | ios"
-        },
         "sfml"
       ]
     },
     "tool": {
-      "description": "Build GUI builder",
-      "dependencies": [
-        {
-          "name": "tgui",
-          "features": [
-            "sdl2",
-            "sfml"
-          ]
-        }
-      ]
+      "description": "Build GUI builder"
     }
   }
 }

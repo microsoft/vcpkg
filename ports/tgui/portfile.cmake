@@ -1,3 +1,7 @@
+if(NOT "sdl2" IN_LIST FEATURES AND NOT "sfml" IN_LIST FEATURES)
+    message(FATAL_ERROR "At least one of the backend features must be selected: sdl2 sfml")
+endif()
+
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 elseif(VCPKG_TARGET_IS_IOS)
