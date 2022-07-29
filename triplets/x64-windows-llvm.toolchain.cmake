@@ -9,10 +9,10 @@ endfunction()
 
 get_vcpkg_triplet_variables()
 # Set C standard.
-# set(CMAKE_C_STANDARD 11 CACHE STRING "")
-# set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
-# set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
-# set(std_c_flags "-std:c11") #/Zc:__STDC__
+set(CMAKE_C_STANDARD 11 CACHE STRING "")
+set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
+set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
+set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
 
 # Set C++ standard.
 # set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
@@ -87,7 +87,7 @@ set(CMAKE_MT "mt.exe" CACHE STRING "" FORCE)
 # -mcrc32 for libpq
 # -mrtm 
 # -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
-
+# /Za unknown
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} -mcrc32 -msse4.2 ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")

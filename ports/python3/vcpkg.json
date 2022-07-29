@@ -40,7 +40,11 @@
       "name": "sqlite3",
       "platform": "!(windows & static)"
     },
-    "zlib"
+    "zlib",
+    {
+        "name": "vcpkg-cmake-get-vars",
+        "host": true
+    }
   ],
   "features": {
     "deprecated-win7-support": {

@@ -11,6 +11,8 @@ set(PATCHES
     0009-python.pc.patch
     0010-bz2d.patch
     0011-fix-deps.patch
+    clang-cl.patch
+    clang-cl_2.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -64,7 +66,9 @@ function(make_python_pkgconfig)
     file(WRITE ${out_full_path} "${pkgconfig_file}")
 endfunction()
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
     if(PYTHON_ALLOW_EXTENSIONS)

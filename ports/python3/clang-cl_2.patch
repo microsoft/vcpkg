@@ -1,0 +1,99 @@
+diff --git a/Include/cpython/fileutils.h b/Include/cpython/fileutils.h
+index ccf37e946..f7b8bf044 100644
+--- a/Include/cpython/fileutils.h	
++++ b/Include/cpython/fileutils.h
+@@ -84,7 +84,7 @@ PyAPI_FUNC(int) _Py_fstat_noraise(
+ 
+ PyAPI_FUNC(int) _Py_stat(
+     PyObject *path,
+-    struct stat *status);
++    struct _Py_stat_struct *status);
+ 
+ PyAPI_FUNC(int) _Py_open(
+     const char *pathname,
+diff --git a/Modules/_ctypes/malloc_closure.c b/Modules/_ctypes/malloc_closure.c
+index 788bae6a9..fc2a489e3 100644
+--- a/Modules/_ctypes/malloc_closure.c	
++++ b/Modules/_ctypes/malloc_closure.c
+@@ -88,6 +88,7 @@ static void more_core(void)
+ 
+ /******************************************************************/
+ 
++#if USING_MALLOC_CLOSURE_DOT_C
+ /* put the item back into the free list */
+ void Py_ffi_closure_free(void *p)
+ {
+@@ -133,3 +134,4 @@ void *Py_ffi_closure_alloc(size_t size, void** codeloc)
+ #endif
+     return (void *)item;
+ }
++#endif
+diff --git a/Python/fileutils.c b/Python/fileutils.c
+index 3b53baa00..68d2cf6a7 100644
+--- a/Python/fileutils.c	
++++ b/Python/fileutils.c
+@@ -1212,7 +1213,7 @@ _Py_fstat(int fd, struct _Py_stat_struct *status)
+    raised. */
+ 
+ int
+-_Py_stat(PyObject *path, struct stat *statbuf)
++_Py_stat(PyObject *path, struct _Py_stat_struct *status)
+ {
+ #ifdef MS_WINDOWS
+     int err;
+@@ -1228,7 +1229,7 @@ _Py_stat(PyObject *path, struct stat *statbuf)
+ 
+     err = _wstat(wpath, &wstatbuf);
+     if (!err)
+-        statbuf->st_mode = wstatbuf.st_mode;
++        status->st_mode = wstatbuf.st_mode;
+ #if !USE_UNICODE_WCHAR_CACHE
+     PyMem_Free(wpath);
+ #endif /* USE_UNICODE_WCHAR_CACHE */
+@@ -1248,7 +1249,7 @@ _Py_stat(PyObject *path, struct stat *statbuf)
+         return -2;
+     }
+ 
+-    ret = stat(cpath, statbuf);
++    ret = stat(cpath, status);
+     Py_DECREF(bytes);
+     return ret;
+ #endif
+diff --git a/PC/launcher.c b/PC/launcher.c
+index 734e75333..8dd926796 100644
+--- a/PC/launcher.c	
++++ b/PC/launcher.c
+@@ -2016,7 +2016,7 @@ installed, use -0 for available pythons", &p[1]);
+ }
+ 
+ #if defined(_WINDOWS)
+-
++#pragma comment(linker,"/ENTRY:wWinMainCRTStartup ")
+ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    LPWSTR lpstrCmd, int nShow)
+ {
+@@ -2024,7 +2024,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+ }
+ 
+ #else
+-
++#pragma comment(linker,"/ENTRY:wmainCRTStartup")
+-int cdecl wmain(int argc, wchar_t ** argv)
++int wmain(int argc, wchar_t ** argv)
+ {
+     return process(argc, argv);
+diff --git a/PCbuild/venvlauncher.vcxproj b/PCbuild/venvlauncher.vcxproj
+index 123e84ec4..e412ed609 100644
+--- a/PCbuild/venvlauncher.vcxproj	
++++ b/PCbuild/venvlauncher.vcxproj
+@@ -100,6 +149,10 @@
+     <Link>
+       <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <SubSystem>Console</SubSystem>
++      <EntryPointSymbol Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">wmainCRTStartup</EntryPointSymbol>
++      <EntryPointSymbol Condition="'$(Configuration)|$(Platform)'=='PGInstrument|x64'">wmainCRTStartup</EntryPointSymbol>
++      <EntryPointSymbol Condition="'$(Configuration)|$(Platform)'=='PGUpdate|x64'">wmainCRTStartup</EntryPointSymbol>
++      <EntryPointSymbol Condition="'$(Configuration)|$(Platform)'=='Release|x64'">wmainCRTStartup</EntryPointSymbol>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
