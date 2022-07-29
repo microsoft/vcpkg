@@ -2830,7 +2830,7 @@
     },
     "highfive": {
       "baseline": "2.3",
-      "port-version": 2
+      "port-version": 3
     },
     "highway": {
       "baseline": "0.14.2",
