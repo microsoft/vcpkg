@@ -21,7 +21,7 @@ set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
 # set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
 
 # Set Windows definitions:
-set(windows_defs "/DWIN32 /D_WIN64 /D_WINDOWS /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00")
+set(windows_defs "/DWIN32 /D_WIN64 /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00")
 string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE")
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
 
