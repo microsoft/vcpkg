@@ -12,6 +12,7 @@ vcpkg_from_github(
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        fix_flags.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -102,30 +103,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME generate-${TARGET_TRIPLET})
 
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+    configure_file("${CURRENT_PORT_DIR}/libvpx.props.in" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libvpx.props" @ONLY)
+    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj" "</Project>" "<Import Project=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libvpx.props\" />\n</Project>")
     vcpkg_build_msbuild(
         PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
         OPTIONS /p:UseEnv=True
+                /p:ForceImportAfterCppTargets="${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libvpx.props"
     )
 
-    # note: pdb file names are hardcoded in the lib file, cannot rename
-    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb")
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        else()
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        endif()
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb")
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        else()
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        endif()
-    endif()
+    vcpkg_copy_pdbs()
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
