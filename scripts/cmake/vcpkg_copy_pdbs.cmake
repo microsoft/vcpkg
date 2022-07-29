@@ -41,7 +41,7 @@ function(vcpkg_copy_pdbs)
 
         if(NOT dlls_without_matching_pdbs STREQUAL "")
             list(JOIN dlls_without_matching_pdbs "\n    " message)
-            message(WARNING "Could not find a matching pdb file for:
+            message(DEBUG "Could not find a matching pdb file for:
     ${message}\n")
         endif()
     endif()
