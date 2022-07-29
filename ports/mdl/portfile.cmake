@@ -18,7 +18,7 @@ elseif(VCPKG_HOST_IS_OSX)
     set(LLVM_FILENAME  "clang+llvm-${LLVM_VERSION}-x86_64-apple-darwin.tar.xz")
     set(LLVM_HASH      c5ca6a7756e0cecdf78d4d0c522fe7e803d4b1b2049cb502a034fe8f5ca30fcbf0e738ebfbc89c87de8adcd90ea64f637eb82e9130bb846b43b91f67dfa4b916)
 else()
-    message(FATAL_ERROR "Pre-built binaries for Clang 7 not available, aborting install (platform: ${VCPKG_CMAKE_SYSTEM_NAME}, architecture: ${VCPKG_HOST_ARCHITECTURE}).")
+    message(FATAL_ERROR "Pre-built binaries for Clang 7 not available, aborting install (platform: ${VCPKG_CMAKE_SYSTEM_NAME}).")
 endif()
 
 vcpkg_download_distfile(LLVM_ARCHIVE_PATH
