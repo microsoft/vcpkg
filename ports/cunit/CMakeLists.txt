@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8.0)
-project (libcunit C)
+project (cunit C)
 
 set(HEADERS_DIR  "${PROJECT_SOURCE_DIR}/CUnit/Headers")
 set(SOURCES_DIR "${PROJECT_SOURCE_DIR}/CUnit/Sources")
@@ -25,7 +25,7 @@ file(WRITE "${PROJECT_BINARY_DIR}/CUnit.h" "${CUNIT_H}")
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories(${HEADERS_DIR})
 
-add_library(libcunit
+add_library(cunit
   "${SOURCES_DIR}/Automated/Automated.c"
   "${SOURCES_DIR}/Basic/Basic.c"
   "${SOURCES_DIR}/Console/Console.c"
@@ -35,7 +35,8 @@ add_library(libcunit
   "${SOURCES_DIR}/Framework/TestRun.c"
   "${SOURCES_DIR}/Framework/Util.c"
 )
-target_compile_definitions(libcunit PRIVATE -DCU_BUILD_DLL)
+target_compile_definitions(cunit PRIVATE -DCU_BUILD_DLL)
+target_include_directories(cunit INTERFACE $<INSTALL_INTERFACE:include>)
 
 if(BUILD_EXAMPLES)
   include_directories(${EXAMPLES_DIR})
@@ -43,16 +44,21 @@ if(BUILD_EXAMPLES)
   add_executable(BasicTest ${EXAMPLES_DIR}/BasicTest/BasicTest.c "${EXAMPLES_DIR}/ExampleTests.c")
   add_executable(ConsoleTest ${EXAMPLES_DIR}/ConsoleTest/ConsoleTest.c "${EXAMPLES_DIR}/ExampleTests.c")
 
-  target_link_libraries(AutomatedTest libcunit)
-  target_link_libraries(BasicTest libcunit)
-  target_link_libraries(ConsoleTest libcunit)
+  target_link_libraries(AutomatedTest cunit)
+  target_link_libraries(BasicTest cunit)
+  target_link_libraries(ConsoleTest cunit)
 endif()
 
-install(
-  TARGETS libcunit
+install(TARGETS cunit EXPORT unofficial-cunit-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+)
+
+install(EXPORT unofficial-cunit-config
+  NAMESPACE unofficial::cunit::
+  DESTINATION share/unofficial-cunit
+  FILE unofficial-cunit-config.cmake
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
