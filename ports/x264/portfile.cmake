@@ -8,11 +8,12 @@ vcpkg_from_github(
     HEAD_REF stable
     PATCHES
         "uwp-cflags.patch"
+        "allow_clang-cl.patch"
 )
 
 vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+vcpkg_add_to_path("${NASM_EXE_PATH}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
@@ -33,8 +34,9 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     NO_ADDITIONAL_PATHS
+    #USE_WRAPPERS
     OPTIONS
         ${OPTIONS}
         --enable-strip
@@ -54,7 +56,7 @@ if(NOT VCPKG_TARGET_IS_UWP)
     vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc")
@@ -70,20 +72,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib" "${CURRENT_PACKAGES_DIR}/lib/libx264.lib")
 
     if (NOT VCPKG_BUILD_TYPE)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib")
     endif()
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # force U_STATIC_IMPLEMENTATION macro
-    file(READ ${CURRENT_PACKAGES_DIR}/include/x264.h HEADER_CONTENTS)
+    file(READ "${CURRENT_PACKAGES_DIR}/include/x264.h" HEADER_CONTENTS)
     string(REPLACE "defined(U_STATIC_IMPLEMENTATION)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/x264.h "${HEADER_CONTENTS}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/include/x264.h" "${HEADER_CONTENTS}")
 
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
 
