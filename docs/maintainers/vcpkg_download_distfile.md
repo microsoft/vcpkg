@@ -14,7 +14,6 @@ vcpkg_download_distfile(
     FILENAME <output.zip>
     SHA512 <5981de...>
     [ALWAYS_REDOWNLOAD]
-    [FILE_DISAMBIGUATOR <1>]
 )
 ```
 ## Parameters
@@ -49,9 +48,6 @@ Requires `SKIP_SHA512`.
 A list of headers to append to the download request. This can be used for authentication during a download.
 
 Headers should be specified as "<header-name>: <header-value>".
-
-### FILE_DISAMBIGUATOR
-A token to uniquely identify the resulting filename if the SHA512 changes, to avoid stepping on the same file name. Use this parameter to prevent errors caused by the use of a cached file with the same name.
 
 ## Notes
 The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.

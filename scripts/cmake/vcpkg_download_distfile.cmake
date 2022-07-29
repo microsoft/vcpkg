@@ -109,7 +109,7 @@ endfunction()
 
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD;FILE_DISAMBIGUATOR"
+        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
         "FILENAME;SHA512"
         "URLS;HEADERS"
     )
@@ -150,7 +150,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
     endif()
 
-    if(arg_FILE_DISAMBIGUATOR)
+    if(NOT arg_SKIP_SHA512)
         get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
         get_filename_component(extension_component "${arg_FILENAME}" EXT)
         get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
