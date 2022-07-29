@@ -11,7 +11,6 @@ vcpkg_from_github(
     SHA512 109e64c114336979a4bd0d44765e4bc26cb4ecb6e4db92d7441230d148438b084d01cb56dd292f09a6fd28b0f7420044455ffb519147cc3aea71e322142cd9a0
     HEAD_REF 0.9
     PATCHES
-        fix-usage.patch
         fix-dependencies.patch
 )
 
