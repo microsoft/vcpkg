@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         openssl.patch
+        remove_wx.patch
 )
 
 vcpkg_check_features(
