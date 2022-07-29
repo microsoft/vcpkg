@@ -155,6 +155,7 @@ function(boost_modular_build)
         string(REGEX REPLACE "-clangw14[0-9]-m(t|d)(-g)?" "" NEW_FILENAME "${NEW_FILENAME}")
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+        string(REPLACE "-gyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs with python debugging
         string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
