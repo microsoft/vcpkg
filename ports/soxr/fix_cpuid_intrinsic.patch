@@ -1,0 +1,20 @@
+diff --git a/src/soxr.c b/src/soxr.c
+index 8ffe7c90c..089c5d166 100644
+--- a/src/soxr.c
++++ b/src/soxr.c
+@@ -196,13 +196,13 @@ soxr_io_spec_t soxr_io_spec(
+ 
+ 
+ #if (WITH_CR32S && WITH_CR32) || (WITH_CR64S && WITH_CR64)
+-  #if defined __GNUC__ && defined __x86_64__
++  #if (defined __GNUC__ || defined __clang__) && defined __x86_64__
+     #define CPUID(type, eax_, ebx_, ecx_, edx_) \
+       __asm__ __volatile__ ( \
+         "cpuid \n\t" \
+         : "=a" (eax_), "=b" (ebx_), "=c" (ecx_), "=d" (edx_) \
+         : "a" (type), "c" (0));
+-  #elif defined __GNUC__ && defined __i386__
++  #elif (defined __GNUC__ || defined __clang__) && defined __i386__
+     #define CPUID(type, eax_, ebx_, ecx_, edx_) \
+       __asm__ __volatile__ ( \
+         "mov %%ebx, %%edi \n\t" \
