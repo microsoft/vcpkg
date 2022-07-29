@@ -4706,7 +4706,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 7
+      "port-version": 8
     },
     "mpark-variant": {
       "baseline": "1.4.0",
