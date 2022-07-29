@@ -19,6 +19,7 @@ set(PATCHES
         patches/windows/fix-compile-flag-Zi.patch
         patches/windows/tcl_version.patch
         patches/windows/macro-def.patch
+        patches/fix-configure.patch
         )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
