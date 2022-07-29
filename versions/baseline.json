@@ -5730,7 +5730,7 @@
     },
     "python3": {
       "baseline": "3.10.5",
-      "port-version": 1
+      "port-version": 2
     },
     "qca": {
       "baseline": "2.3.4",

@@ -1,8 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
 set(PYTHON_VERSION_PATCH  5)
@@ -15,6 +10,7 @@ set(PATCHES
     0005-only-build-required-projects.patch
     0009-python.pc.patch
     0010-bz2d.patch
+    0011-fix-deps.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -108,14 +104,14 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             "/p:IncludeSSL=true"
             "/p:IncludeTkinter=false"
             "/p:IncludeTests=false"
-            "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
+            "/p:ForceImportBeforeCppTargets=\"${SOURCE_PATH}/PCbuild/python_vcpkg.props\""
         )
     else()
         set(OPTIONS
             "/p:IncludeExtensions=false"
             "/p:IncludeExternals=false"
             "/p:IncludeTests=false"
-            "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
+            "/p:ForceImportBeforeCppTargets=\"${SOURCE_PATH}/PCbuild/python_vcpkg.props\""
         )
     endif()
     if(VCPKG_TARGET_IS_UWP)
