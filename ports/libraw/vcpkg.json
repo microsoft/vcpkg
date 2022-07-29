@@ -1,7 +1,7 @@
 {
   "name": "libraw",
   "version-string": "201903",
-  "port-version": 9,
+  "port-version": 10,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "supports": "!uwp",
