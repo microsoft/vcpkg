@@ -12,9 +12,11 @@ vcpkg_from_github(
     HEAD_REF 0.9
     PATCHES
         fix-dependencies.patch
+        devendor-stb.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/Backends/SDL/cmake_modules") # Config available
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/TGUI/extlibs/stb")
 
 set(TGUI_SHARE_PATH "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 set(TGUI_TOOLS_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
@@ -70,7 +72,6 @@ file(REMOVE_RECURSE
      # Empty folders
     "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/nanosvg"
     "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/glad"
-    "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/stb"
 )
 
 vcpkg_fixup_pkgconfig()

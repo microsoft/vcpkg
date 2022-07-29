@@ -6,6 +6,7 @@
   "homepage": "https://tgui.eu",
   "license": "Zlib",
   "dependencies": [
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -41,8 +42,7 @@
           "name": "opengl",
           "platform": "android | ios"
         },
-        "sfml",
-        "stb"
+        "sfml"
       ]
     },
     "tool": {
