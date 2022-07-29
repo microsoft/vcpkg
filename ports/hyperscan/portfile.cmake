@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-remove-Werror.patch
+        fix-dependency-pcre.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

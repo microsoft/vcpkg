@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a12bee..f54dcd6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@ set (HS_MINOR_VERSION 4)
+ set (HS_PATCH_VERSION 0)
+ set (HS_VERSION ${HS_MAJOR_VERSION}.${HS_MINOR_VERSION}.${HS_PATCH_VERSION})
+ 
+-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
++list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ include(CheckCCompilerFlag)
+ include(CheckCXXCompilerFlag)
+ include(CheckCXXSymbolExists)
+diff --git a/cmake/pcre.cmake b/cmake/pcre.cmake
+index e0acda5..f02a2f3 100644
+--- a/cmake/pcre.cmake
++++ b/cmake/pcre.cmake
+@@ -52,7 +52,9 @@ if (PCRE_BUILD_SOURCE)
+ else ()
+     # pkgconf should save us
+     find_package(PkgConfig)
+-    pkg_check_modules(PCRE libpcre>=${PCRE_REQUIRED_VERSION})
++    pkg_check_modules(PCRE libpcre>=${PCRE_REQUIRED_VERSION} IMPORTED_TARGET)
++    set(PCRE_LDFLAGS PkgConfig::PCRE)
++    add_library(pcre ALIAS PkgConfig::PCRE)
+     if (PCRE_FOUND)
+         set(CORRECT_PCRE_VERSION TRUE)
+         message(STATUS "PCRE version ${PCRE_REQUIRED_VERSION} or above")
