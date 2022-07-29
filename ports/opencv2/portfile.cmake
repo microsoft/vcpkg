@@ -67,11 +67,7 @@ if("python" IN_LIST FEATURES)
   set(WITH_PYTHON ON)
 endif()
 
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    set(STATIC_CRT_LNK ON)
-else()
-    set(STATIC_CRT_LNK OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT_LNK)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
