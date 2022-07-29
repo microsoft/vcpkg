@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-8.0.0
-    SHA512 08b6ab4a3c5e0dd9c46402da8e7b9ef9f918eea177413cb31695192dfdb5a472ebbfef255b8343fe775d81e8b5eb268c3428a699fac48b36bf808f5b81e83a64
+    REF apache-arrow-8.0.1
+    SHA512 b32f5a3666de7d6d16ea828697bb42e1b6605f58719c42e670c9ec0a8782057dac933f6e14e97b46f82802fc38cc7f4cc825794a4a95ac641593c2ee26ac5bbe
     HEAD_REF master
     PATCHES
         vs-2022-fixes.patch
-        all.patch
+        msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
+        static-link-libs.patch # https://github.com/apache/arrow/pull/13707
 )
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
@@ -87,8 +88,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
@@ -96,23 +98,29 @@ endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
-
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if("parquet" IN_LIST FEATURES)
+    file(GLOB PARQUET_FILES "${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*")
+    file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
+    file(REMOVE_RECURSE ${PARQUET_FILES})
+    file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake" "${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake")
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-parquet" usage-parquet)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-parquet}")
+else()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake")
+endif()
 
-file(GLOB PARQUET_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*)
-file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
-file(REMOVE_RECURSE ${PARQUET_FILES})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if("example" IN_LIST FEATURES)
+    file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
+endif()
 
 if ("plasma" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES plasma-store-server AUTO_CLEAN)
 endif ()
 
-vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}" @ONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/NOTICE.txt")

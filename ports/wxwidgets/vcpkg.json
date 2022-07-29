@@ -1,6 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.1.7",
+  "version": "3.2.0",
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -23,6 +23,10 @@
     "tiff",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"
