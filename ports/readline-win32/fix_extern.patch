@@ -1,0 +1,34 @@
+diff --git a/src/readline/5.0/readline-5.0-src/readline.h b/src/readline/5.0/readline-5.0-src/readline.h
+index 494018979..f072bf369 100644
+--- a/src/readline/5.0/readline-5.0-src/readline.h	
++++ b/src/readline/5.0/readline-5.0-src/readline.h
+@@ -27,9 +27,9 @@
+ extern "C" {
+ #endif
+ 
+-#ifndef __GNUC__
+-# define __DLL_IMPORT__  __declspec(dllimport)
+-# define __DLL_EXPORT__  __declspec(dllexport)
++#ifdef _MSC_VER
++# define __DLL_IMPORT__  __declspec(dllimport) extern
++# define __DLL_EXPORT__  __declspec(dllexport) extern
+ #else
+ # define __DLL_IMPORT__  __attribute__((dllimport)) extern
+ # define __DLL_EXPORT__  __attribute__((dllexport)) extern
+diff --git a/src/readline/5.0/readline-5.0-src/rlstdc.h b/src/readline/5.0/readline-5.0-src/rlstdc.h
+index dd3f3865c..af77d679b 100644
+--- a/src/readline/5.0/readline-5.0-src/rlstdc.h	
++++ b/src/readline/5.0/readline-5.0-src/rlstdc.h
+@@ -42,9 +42,9 @@
+ #  endif
+ #endif
+ 
+-#ifndef __GNUC__
+-# define __DLL_IMPORT__  __declspec(dllimport)
+-# define __DLL_EXPORT__  __declspec(dllexport)
++#ifdef _MSC_VER
++# define __DLL_IMPORT__  __declspec(dllimport) extern
++# define __DLL_EXPORT__  __declspec(dllexport) extern
+ #else
+ # define __DLL_IMPORT__  __attribute__((dllimport)) extern
+ # define __DLL_EXPORT__  __attribute__((dllexport)) extern
