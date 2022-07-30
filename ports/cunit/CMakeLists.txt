@@ -3,7 +3,6 @@ project (cunit C)
 
 set(HEADERS_DIR  "${PROJECT_SOURCE_DIR}/CUnit/Headers")
 set(SOURCES_DIR "${PROJECT_SOURCE_DIR}/CUnit/Sources")
-set(EXAMPLES_DIR "${PROJECT_SOURCE_DIR}/Examples")
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 -D_CRT_SECURE_NO_WARNINGS)
@@ -12,6 +11,7 @@ endif()
 configure_file(
   "${HEADERS_DIR}/CUnit.h.in"
   "${PROJECT_BINARY_DIR}/CUnit.h"
+  @ONLY
 )
 
 file(READ "${PROJECT_BINARY_DIR}/CUnit.h" CUNIT_H)
@@ -38,22 +38,7 @@ add_library(cunit
 target_compile_definitions(cunit PRIVATE -DCU_BUILD_DLL)
 target_include_directories(cunit INTERFACE $<INSTALL_INTERFACE:include>)
 
-if(BUILD_EXAMPLES)
-  include_directories(${EXAMPLES_DIR})
-  add_executable(AutomatedTest ${EXAMPLES_DIR}/AutomatedTest/AutomatedTest.c "${EXAMPLES_DIR}/ExampleTests.c")
-  add_executable(BasicTest ${EXAMPLES_DIR}/BasicTest/BasicTest.c "${EXAMPLES_DIR}/ExampleTests.c")
-  add_executable(ConsoleTest ${EXAMPLES_DIR}/ConsoleTest/ConsoleTest.c "${EXAMPLES_DIR}/ExampleTests.c")
-
-  target_link_libraries(AutomatedTest cunit)
-  target_link_libraries(BasicTest cunit)
-  target_link_libraries(ConsoleTest cunit)
-endif()
-
-install(TARGETS cunit EXPORT unofficial-cunit-config
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-)
+install(TARGETS cunit EXPORT unofficial-cunit-config)
 
 install(EXPORT unofficial-cunit-config
   NAMESPACE unofficial::cunit::
@@ -62,6 +47,6 @@ install(EXPORT unofficial-cunit-config
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(DIRECTORY "${HEADERS_DIR}/" DESTINATION include/cunit FILES_MATCHING PATTERN "*.h")
-  install(FILES "${PROJECT_BINARY_DIR}/CUnit.h" DESTINATION include/cunit)
+  install(DIRECTORY "${HEADERS_DIR}/" DESTINATION include/CUnit FILES_MATCHING PATTERN "*.h")
+  install(FILES "${PROJECT_BINARY_DIR}/CUnit.h" DESTINATION include/CUnit)
 endif()
