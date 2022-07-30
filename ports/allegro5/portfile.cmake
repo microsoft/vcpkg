@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-pdb-install.patch
         do-not-copy-pdbs-to-lib.patch
         export-targets.patch
+        remove_win_defines.patch #should probably be #ifndef instead?
 )
 
 
