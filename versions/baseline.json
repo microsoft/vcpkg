@@ -1693,8 +1693,8 @@
       "port-version": 3
     },
     "cpuinfo": {
-      "baseline": "2022-04-02",
-      "port-version": 1
+      "baseline": "2022-07-19",
+      "port-version": 0
     },
     "cr": {
       "baseline": "2020-04-26",
