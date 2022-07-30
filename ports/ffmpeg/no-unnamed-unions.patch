@@ -1,0 +1,57 @@
+diff --git a/libavcodec/mf_utils.h b/libavcodec/mf_utils.h
+index d514723c3..46c2334ac 100644
+--- a/libavcodec/mf_utils.h
++++ b/libavcodec/mf_utils.h
+@@ -145,10 +145,10 @@ char *ff_hr_str_buf(char *buf, size_t size, HRESULT hr);
+ #define ff_hr_str(hr) ff_hr_str_buf((char[80]){0}, 80, hr)
+ 
+ // Possibly compiler-dependent; the MS/MinGW definition for this is just crazy.
+-#define FF_VARIANT_VALUE(type, contents) &(VARIANT){ .vt = (type), contents }
++#define FF_VARIANT_VALUE(type, contents) &(VARIANT){ .__VARIANT_NAME_1.__VARIANT_NAME_2.vt = (type), contents }
+ 
+-#define FF_VAL_VT_UI4(v) FF_VARIANT_VALUE(VT_UI4, .ulVal = (v))
+-#define FF_VAL_VT_BOOL(v) FF_VARIANT_VALUE(VT_BOOL, .boolVal = (v))
++#define FF_VAL_VT_UI4(v) FF_VARIANT_VALUE(VT_UI4, .__VARIANT_NAME_1.__VARIANT_NAME_2.__VARIANT_NAME_3.ulVal = (v))
++#define FF_VAL_VT_BOOL(v) FF_VARIANT_VALUE(VT_BOOL, .__VARIANT_NAME_1.__VARIANT_NAME_2.__VARIANT_NAME_3.boolVal = (v))
+ 
+ IMFSample *ff_create_memory_sample(void *fill_data, size_t size, size_t align);
+ enum AVSampleFormat ff_media_type_to_sample_fmt(IMFAttributes *type);
+diff --git a/libavdevice/dshow.c b/libavdevice/dshow.c
+index 73a9a48b2..8166a1d78 100644
+--- a/libavdevice/dshow.c
++++ b/libavdevice/dshow.c
+@@ -19,6 +19,7 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
++
+ #include "dshow_capture.h"
+ #include "libavutil/parseutils.h"
+ #include "libavutil/pixdesc.h"
+@@ -27,9 +28,9 @@
+ #include "libavformat/riff.h"
+ #include "avdevice.h"
+ #include "libavcodec/raw.h"
+-#include "objidl.h"
+-#include "shlwapi.h"
+-
++#include <objidl.h>
++#include <shlwapi.h>
++#include <oaidl.h>
+ 
+ static enum AVPixelFormat dshow_pixfmt(DWORD biCompression, WORD biBitCount)
+ {
+@@ -261,11 +262,11 @@ dshow_cycle_devices(AVFormatContext *avctx, ICreateDevEnum *devenum,
+         if (r != S_OK)
+             goto fail1;
+ 
+-        var.vt = VT_BSTR;
++        var.__VARIANT_NAME_1.__VARIANT_NAME_2.vt = VT_BSTR;
+         r = IPropertyBag_Read(bag, L"FriendlyName", &var, NULL);
+         if (r != S_OK)
+             goto fail1;
+-        friendly_name = dup_wchar_to_utf8(var.bstrVal);
++        friendly_name = dup_wchar_to_utf8(var.__VARIANT_NAME_1.__VARIANT_NAME_2.__VARIANT_NAME_3.bstrVal);
+ 
+         if (pfilter) {
+             if (strcmp(device_name, friendly_name) && strcmp(device_name, unique_name))

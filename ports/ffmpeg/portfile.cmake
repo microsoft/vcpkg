@@ -24,6 +24,7 @@ vcpkg_from_github(
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        # no-unnamed-unions.patch # use this if you have __STDC__ set and don't want to set _FORCENAMELESSUNION
 )
 
 if (SOURCE_PATH MATCHES " ")
