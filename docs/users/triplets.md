@@ -8,7 +8,7 @@ In Vcpkg, we use triplets to describe an imaginary "target configuration set" fo
 
 We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use `--overlay-triplets=` (or equivalent such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake `VCPKG_OVERLAY_TRIPLETS`](buildsystems/cmake-integration.md#vcpkg_overlay_triplets), or [MSBuild Additional Options](buildsystems/msbuild-integration.md#vcpkg-additional-install-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project away from the default, see our [Integration Document](buildsystems/integration.md#triplet-selection).
+To change the triplet used by your project, you can pass `--triplet=<triplet>` on the command line or see our [Buildsystem-Specific Documentation](buildsystems/integration.md).
 
 ## Community triplets
 
@@ -65,6 +65,7 @@ This field is optional and, if present, will be passed into the build as `CMAKE_
 
 See also the CMake documentation for `CMAKE_SYSTEM_VERSION`: https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_VERSION.html.
 
+<a name="VCPKG_CHAINLOAD_TOOLCHAIN_FILE"></a>
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 
@@ -92,8 +93,15 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
+### VCPKG_MESON_CONFIGURE_OPTIONS
+Set additional Meson configure options that are appended to the configure command (in [`vcpkg_configure_meson`](../maintainers/vcpkg_configure_meson.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
+
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
-Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)).
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 
 This field is optional.
 

@@ -1,54 +1,3 @@
-#[===[.md:
-# vcpkg_from_git
-
-Download and extract a project from git
-
-## Usage:
-```cmake
-vcpkg_from_git(
-    OUT_SOURCE_PATH <SOURCE_PATH>
-    URL <https://android.googlesource.com/platform/external/fdlibm>
-    REF <59f7335e4d...>
-    [HEAD_REF <ref>]
-    [PATCHES <patch1.patch> <patch2.patch>...]
-)
-```
-
-## Parameters:
-### OUT_SOURCE_PATH
-Specifies the out-variable that will contain the extracted location.
-
-This should be set to `SOURCE_PATH` by convention.
-
-### URL
-The url of the git repository.
-
-### REF
-The git sha of the commit to download.
-
-### FETCH_REF
-The git branch to fetch in non-HEAD mode. After this is fetched,
-then `REF` is checked out. This is useful in cases where the git server
-does not allow checking out non-advertised objects.
-
-### HEAD_REF
-The git branch to use when the package is requested to be built from the latest sources.
-
-Example: `main`, `develop`, `HEAD`
-
-### PATCHES
-A list of patches to be applied to the extracted sources.
-
-Relative paths are based on the port directory.
-
-## Notes:
-`OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
-
-## Examples:
-
-* [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
-#]===]
-
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
@@ -175,7 +124,7 @@ function(vcpkg_from_git)
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
+            COMMAND "${GIT}" -c core.autocrlf=false archive "${rev_parse_ref}" -o "${temp_archive}"
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME git-archive
         )

@@ -1,8 +1,8 @@
 {
   "name": "vcglib",
-  "version-string": "1.0.1",
-  "port-version": 1,
+  "version-string": "2022.02",
   "description": "library for manipulation, processing, cleaning, simplifying triangle meshes.",
+  "license": "GPL-3.0-only",
   "dependencies": [
     "eigen3"
   ]

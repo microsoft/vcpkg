@@ -16,6 +16,7 @@ vcpkg_from_github(
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
     SHA512 4d1783fd78425cc43bb2153446dd634cedd366a49592bccc0c538a40aa161fcf67db8f1b6b68f1ce0b4a93504b3f06f65931709277afb1a1ee9fe963094bca02
+    FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -76,6 +77,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "vtk"       WITH_VTK
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
+ "dc1394"    WITH_1394
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt, "tbb"
@@ -380,6 +382,7 @@ vcpkg_cmake_configure(
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_GENERATE_PKGCONFIG=ON
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF

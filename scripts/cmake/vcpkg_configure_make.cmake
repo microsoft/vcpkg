@@ -1,94 +1,3 @@
-#[===[.md:
-# vcpkg_configure_make
-
-Configure configure for Debug and Release builds of a project.
-
-## Usage
-```cmake
-vcpkg_configure_make(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [AUTOCONFIG]
-    [USE_WRAPPERS]
-    [DETERMINE_BUILD_TRIPLET]
-    [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
-    [NO_ADDITIONAL_PATHS]
-    [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
-    [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
-    [ADD_BIN_TO_PATH]
-    [NO_DEBUG]
-    [SKIP_CONFIGURE]
-    [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
-    [PRERUN_SHELL <${SHELL_PATH}>]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-)
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `configure`/`configure.ac`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### PROJECT_SUBPATH
-Specifies the directory containing the ``configure`/`configure.ac`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### SKIP_CONFIGURE
-Skip configure process
-
-### USE_WRAPPERS
-Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
-
-### BUILD_TRIPLET
-Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
-
-### DETERMINE_BUILD_TRIPLET
-For ports having a configure script following the autotools rules for selecting the triplet
-
-### NO_ADDITIONAL_PATHS
-Don't pass any additional paths except for --prefix to the configure call
-
-### AUTOCONFIG
-Need to use autoconfig to generate configure file.
-
-### PRERUN_SHELL
-Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
-
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
-
-## DISABLE_VERBOSE_FLAGS
-do not pass '--disable-silent-rules --verbose' to configure
-
-### OPTIONS
-Additional options passed to configure during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
-
-### CONFIG_DEPENDENT_ENVIRONMENT
-List of additional configuration dependent environment variables to set. 
-Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
-General environment variables can be set from within the portfile itself. 
-
-### CONFIGURE_ENVIRONMENT_VARIABLES
-List of additional environment variables to pass via the configure call. 
-
-## Notes
-This command supplies many common arguments to configure. To see the full list, examine the source.
-
-## Examples
-
-* [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
-* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-* [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-#]===]
-
 macro(z_vcpkg_determine_host_mingw out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(host_arch $ENV{PROCESSOR_ARCHITEW6432})
@@ -208,19 +117,6 @@ macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     endif()
 endmacro()
 
-# Setup include environment (since these are buildtype independent restoring them is unnecessary)
-macro(z_prepend_include_path var)
-    unset(ENV{${var}})
-    if(NOT DEFINED z_vcpkg_env_backup_${var} OR "${z_vcpkg_env_backup_${var}}" STREQUAL "")
-        vcpkg_host_path_list(APPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
-    else()
-        foreach (one_bk IN ITEMS ${z_vcpkg_env_backup_${var}})
-            vcpkg_host_path_list(PREPEND ENV{${var}} "${one_bk}")
-        endforeach()
-        vcpkg_host_path_list(PREPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
-    endif()
-endmacro()
-
 macro(z_convert_to_list input output)
     string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
 endmacro()
@@ -333,15 +229,43 @@ function(vcpkg_configure_make)
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
         if(CMAKE_HOST_WIN32)
-            set(append_env)
+            vcpkg_list(SET add_to_env)
             if(arg_USE_WRAPPERS)
-                set(append_env ";${MSYS_ROOT}/usr/share/automake-1.16")
-                string(APPEND append_env ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
             endif()
-            # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-            string(REPLACE ";$ENV{SystemRoot}\\System32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-            string(REPLACE ";$ENV{SystemRoot}\\system32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-            set(ENV{PATH} "${NEWPATH}")
+            cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+            cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+            file(REAL_PATH "${system_root}" system_root)
+
+            message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
+
+            set(find_system_dirs 
+                    "${system_root}/system32"
+                    "${system_root}/System32"
+                    "${system_root}/system32/"
+                    "${system_root}/System32/")
+
+            string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
+
+            set(index "-1")
+            foreach(system_dir IN LISTS find_system_dirs find_system_dirs_upper)
+                list(FIND path_list "${system_dir}" index)
+                if(NOT index EQUAL "-1")
+                    break()
+                endif()
+            endforeach()
+
+            if(index GREATER_EQUAL "0")
+                vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            else()
+                message(WARNING "Unable to find system32 dir in the PATH variable! Appending required msys paths!")
+                vcpkg_list(APPEND path_list ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            endif()
+
+            cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+            set(ENV{PATH} "${native_path_list}")
+
             set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
 
@@ -544,10 +468,10 @@ function(vcpkg_configure_make)
     endif()
 
     # Used by CL 
-    z_prepend_include_path(INCLUDE)
+    vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
-    z_prepend_include_path(C_INCLUDE_PATH)
-    z_prepend_include_path(CPLUS_INCLUDE_PATH)
+    vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
 
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -812,6 +736,7 @@ function(vcpkg_configure_make)
                 COMMAND ${command}
                 WORKING_DIRECTORY "${target_dir}"
                 LOGNAME "config-${TARGET_TRIPLET}-${short_name_${current_buildtype}}"
+                SAVE_LOG_FILES config.log
             )
             if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE libtool_files "${target_dir}*/libtool")
@@ -820,10 +745,6 @@ function(vcpkg_configure_make)
                     string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
                     file(WRITE "${lt_file}" "${_contents}")
                 endforeach()
-            endif()
-            
-            if(EXISTS "${target_dir}/config.log")
-                file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
         z_vcpkg_restore_pkgconfig_path()

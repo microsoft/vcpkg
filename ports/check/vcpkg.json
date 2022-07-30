@@ -1,10 +1,10 @@
 {
   "name": "check",
   "version": "0.15.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A unit testing framework for C",
   "homepage": "https://github.com/libcheck/check",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

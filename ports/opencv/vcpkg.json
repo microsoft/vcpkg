@@ -1,6 +1,7 @@
 {
   "name": "opencv",
   "version": "4.5.5",
+  "port-version": 1,
   "description": "Computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -57,6 +58,18 @@
           "default-features": false,
           "features": [
             "cudnn"
+          ]
+        }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dc1394"
           ]
         }
       ]

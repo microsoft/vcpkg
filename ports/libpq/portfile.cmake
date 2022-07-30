@@ -1,36 +1,6 @@
 set(PORT_VERSION 14.1)
 # NOTE: the python patches must be regenerated on version update
 
-macro(feature_unsupported)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} not supported by configure script on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-macro(feature_not_implemented_yet)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} is not yet implement on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(readline bonjour libedit systemd llvm)
-    feature_not_implemented_yet(uuid)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        feature_not_implemented_yet(client python tcl)
-    endif()
-elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(readline libedit systemd llvm python tcl uuid)
-else()
-    feature_not_implemented_yet(readline bonjour libedit systemd llvm python tcl uuid)
-endif()
-
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
@@ -51,12 +21,6 @@ set(PATCHES
         patches/fix-configure.patch        
         )
 
-if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
-endif()
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES patches/linux/configure.patch)
-endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)

@@ -10,7 +10,6 @@
   - [Linked NuGet Package](#linked-nuget-package)
 - [Common Configuration](#common-configuration)
 - [Manifest Mode Configuration](#manifest-mode-configuration)
-- [Classic Mode Configuration](#classic-mode-configuration)
 
 ## Integration Methods
 
@@ -43,14 +42,14 @@ The following examples assume they are at the root of your repository with a sub
 **Example `Directory.Build.props`**:
 ```xml
 <Project>
- <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\vcpkg.props" />
+ <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\msbuild\vcpkg.props" />
 </Project>
 ```
 
 **Example `Directory.Build.targets`**:
 ```xml
 <Project>
- <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\vcpkg.targets" />
+ <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\msbuild\vcpkg.targets" />
 </Project>
 ```
 
@@ -60,7 +59,7 @@ More information about `Directory.Build.targets` and `Directory.Build.props` can
 
 ### Linked NuGet Package
 
-**Note: This approach is not recommended for new projects, since it makes them difficult to share with others. For a portable, self-contained NuGet package, see the [`export command`](#export-command)**
+**Note: This approach is not recommended for new projects, since it makes them difficult to share with others. For a portable, self-contained NuGet package, see the [`export command`](export-command.md)**
 
 VS projects can also be integrated through a NuGet package. This will modify the project file, so we do not recommend this approach for open source projects.
 

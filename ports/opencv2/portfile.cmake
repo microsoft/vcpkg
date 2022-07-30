@@ -39,6 +39,7 @@ FEATURES
  "qt"       WITH_QT
  "tiff"     WITH_TIFF
  "world"    BUILD_opencv_world
+ "dc1394"   WITH_1394
 )
 
 set(WITH_MSMF ON)

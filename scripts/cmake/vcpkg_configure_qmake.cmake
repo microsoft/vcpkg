@@ -1,30 +1,3 @@
-#[===[.md:
-# vcpkg_configure_qmake
-
-Configure a qmake-based project.
-
-```cmake
-vcpkg_configure_qmake(
-    SOURCE_PATH <pro_file_path>
-    [OPTIONS arg1 [arg2 ...]]
-    [OPTIONS_RELEASE arg1 [arg2 ...]]
-    [OPTIONS_DEBUG arg1 [arg2 ...]]
-    [BUILD_OPTIONS arg1 [arg2 ...]]
-    [BUILD_OPTIONS_RELEASE arg1 [arg2 ...]]
-    [BUILD_OPTIONS_DEBUG arg1 [arg2 ...]]
-)
-```
-
-### SOURCE_PATH
-The path to the *.pro qmake project file.
-
-### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
-The options passed to qmake to the configure step.
-
-### BUILD\_OPTIONS, BUILD\_OPTIONS\_RELEASE, BUILD\_OPTIONS\_DEBUG
-The options passed to qmake to the build step.
-#]===]
-
 function(vcpkg_configure_qmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
