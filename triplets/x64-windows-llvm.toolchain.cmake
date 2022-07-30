@@ -21,10 +21,18 @@ set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
 # set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
 
 # Set Windows definitions:
-set(windows_defs "/DWIN32 /D_WIN64 /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00")
+set(windows_defs "/DWIN32 /D_WIN64")
+string(APPEND windows_defs " /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00") # tweak for target windows
 string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE")
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
-string(APPEND windows_defs " /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTDC_NAMES")
+string(APPEND windows_defs " /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTDC_NAMES") # due to -D__STDC__=1 required for e.g. _fopen -> fopen and other not underscored functions/defines
+
+# Ignore /WX and -werror
+set(ignore_werror "/WX-")
+cmake_language(DEFER add_compile_options "/WX-") # make sure the flag is added at the end!
+
+# general architecture flags
+set(arch_flags "-mcrc32 -msse4.2")
 
 # Set runtime library.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
@@ -89,17 +97,24 @@ set(CMAKE_MT "mt.exe" CACHE STRING "" FORCE)
 # -mrtm 
 # -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
 # /Za unknown
-set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} -mcrc32 -msse4.2 ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags}" CACHE STRING "")
+set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} ${arch_flags} ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_MINSIZEREL "/O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "/O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} -mcrc32 -msse4.2 /EHsc /GR ${VCPKG_CXX_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_cxx_flags}" CACHE STRING "")
+set(CMAKE_CXX_FLAGS "${CMAKE_CL_NOLOGO} /EHsc /GR ${windows_defs} ${arch_flags} ${VCPKG_CXX_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_cxx_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /FC ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${VCPKG_CXX_FLAGS_RELEASE} ${CLANG_CXX_LTO_FLAGS}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} ${VCPKG_CXX_FLAGS_RELEASE} ${CLANG_CXX_LTO_FLAGS}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${VCPKG_CXX_FLAGS_RELEASE} ${CLANG_CXX_LTO_FLAGS}" CACHE STRING "")
+
+# Remove duplicated whitespaces
+foreach(flag_suf IN ITEMS ";_DEBUG;_RELEASE;_MINSIZEREL;_RELWITHDEBINFO")
+    string(REGEX REPLACE " +" " " CMAKE_C_FLAGS${flag} "${CMAKE_C_FLAGS${flag}}")
+    string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS${flag} "${CMAKE_CXX_FLAGS${flag}}")
+endforeach()
+unset(flag_suf)
 
 # Set linker flags.
 foreach(LINKER SHARED_LINKER MODULE_LINKER EXE_LINKER)
