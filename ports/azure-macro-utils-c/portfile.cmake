@@ -17,6 +17,8 @@ else()
         SHA512 8f9fd02012202db6cff5b647edbc8332a2c03963e80182a630af6a884f23df96b8e24d60e5412bfc2a0a7f43240a54f9597040aa28a9d3e1566755e1d52aac62
         HEAD_REF master
         FILE_DISAMBIGUATOR 1
+        PATCHES
+            ifdef-clang-cl.patch
     )
 endif()
 

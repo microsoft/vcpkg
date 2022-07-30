@@ -1,0 +1,152 @@
+diff --git a/inc/azure_macro_utils/macro_utils_generated.h b/inc/azure_macro_utils/macro_utils_generated.h
+index 6ca14a19c..188b42b12 100644
+--- a/inc/azure_macro_utils/macro_utils_generated.h
++++ b/inc/azure_macro_utils/macro_utils_generated.h
+@@ -8533,7 +8533,7 @@
+ 
+ #define MU_THE_NTH_ARG(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, P35, P36, P37, P38, P39, P40, P41, P42, P43, P44, P45, P46, P47, P48, P49, P50, P51, P52, P53, P54, P55, P56, P57, P58, P59, P60, P61, P62, P63, P64, P65, P66, P67, P68, P69, P70, P71, P72, P73, P74, P75, P76, P77, P78, P79, P80, P81, P82, P83, P84, P85, P86, P87, P88, P89, P90, P91, P92, P93, P94, P95, P96, P97, P98, P99, P100, P101, P102, P103, P104, P105, P106, P107, P108, P109, P110, P111, P112, P113, P114, P115, P116, P117, P118, P119, P120, P121, P122, P123, P124,  ... ) P124
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_COUNT_1_OR_MORE_ARG(...) MU_THE_NTH_ARG MU_LPAREN __VA_ARGS__, \
+ 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+ #define MU_MORE_THAN_1_ARG(...) MU_THE_NTH_ARG MU_LPAREN __VA_ARGS__, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0)
+@@ -9051,7 +9051,7 @@ MU_FOR_EACH_1_1(X, P2)
+ #define MU_FOR_EACH_1_1(X, P1) \
+ X(P1)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_,MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_,MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -9676,7 +9676,7 @@ MU_FOR_EACH_1_KEEP_1_1(X, keep, P2)
+ #define MU_FOR_EACH_1_KEEP_1_1(X, keep, P1) \
+ X(keep, P1)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -10303,7 +10303,7 @@ X(keep1, keep2, P1)
+ 
+ #define MU_FOR_EACH_1_KEEP_2_0(...)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -10622,7 +10622,7 @@ MU_FOR_EACH_2_KEEP_1_2(X, keep, P3, P4)
+ #define MU_FOR_EACH_2_KEEP_1_2(X, keep, P1, P2) \
+     X(keep, P1, P2) \
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_2_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -10942,7 +10942,7 @@ MU_FOR_EACH_2_KEEP_2_2(X, keep1, keep2, P3, P4)
+ #define MU_FOR_EACH_2_KEEP_2_2(X, keep1, keep2, P1, P2) \
+     X(keep1, keep2, P1, P2) \
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_2_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_2_, MU_C2(MU_DEC, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -12197,7 +12197,7 @@ X(124, P1, P2) \
+ MU_FOR_EACH_2_COUNTED_122(X, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, P35, P36, P37, P38, P39, P40, P41, P42, P43, P44, P45, P46, P47, P48, P49, P50, P51, P52, P53, P54, P55, P56, P57, P58, P59, P60, P61, P62, P63, P64, P65, P66, P67, P68, P69, P70, P71, P72, P73, P74, P75, P76, P77, P78, P79, P80, P81, P82, P83, P84, P85, P86, P87, P88, P89, P90, P91, P92, P93, P94, P95, P96, P97, P98, P99, P100, P101, P102, P103, P104, P105, P106, P107, P108, P109, P110, P111, P112, P113, P114, P115, P116, P117, P118, P119, P120, P121, P122, P123, P124)
+ 
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ /*the COUNTED breed of MU_FOR_EACH macro invokes a macro with 3 parameters: 1st being the count of invocation. For example.
+ MU_FOR_EACH_2_COUNTER(MACRO, a,b,c,d,e,f) will result in 
+@@ -12219,7 +12219,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
+ #define MU_FOR_EACH_2_REVERSE(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_REVERSE_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+ #endif
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_EXPAND_OR_MU_C1(x) x
+ #else
+ #define MU_EXPAND_OR_MU_C1(...) __VA_ARGS__
+diff --git a/macro_utils_h_generator/macro_utils_generated.tt b/macro_utils_h_generator/macro_utils_generated.tt
+index 03890841a..b8fb66fb9 100644
+--- a/macro_utils_h_generator/macro_utils_generated.tt
++++ b/macro_utils_h_generator/macro_utils_generated.tt
+@@ -69,7 +69,7 @@
+ #define MU_THE_NTH_ARG(<#for(var i=1;i<=nMacroParameters;i++)#>
+ <#{#>P<#=i#>, <#}#> ... ) P<#=nMacroParameters#>
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_COUNT_1_OR_MORE_ARG(...) MU_THE_NTH_ARG MU_LPAREN __VA_ARGS__, \
+ <#for(var i=nMacroParameters-1;i>=1;i--){#><#=i.ToString()+((i>1)?", ":"")#><#}#>)
+ #define MU_MORE_THAN_1_ARG(...) MU_THE_NTH_ARG MU_LPAREN __VA_ARGS__, <#for(var i=nMacroParameters-2;i>=1;i--){#><#=1#>,<#}#>0)
+@@ -102,7 +102,7 @@ MU_FOR_EACH_1_<#=i-1#>(X, <#for(var j=2;j<=i;j++){#>P<#=j.ToString()+((j<i)?", "
+ #define MU_FOR_EACH_1_1(X, P1) \
+ X(P1)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_,MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_,MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -120,7 +120,7 @@ MU_FOR_EACH_1_KEEP_1_<#=i-1#>(X, keep, <#for(var j=2;j<=i;j++){#>P<#=(j).ToStrin
+ #define MU_FOR_EACH_1_KEEP_1_1(X, keep, P1) \
+ X(keep, P1)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -140,7 +140,7 @@ X(keep1, keep2, P1)
+ 
+ #define MU_FOR_EACH_1_KEEP_2_0(...)
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_1_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_1_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_1_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -162,7 +162,7 @@ MU_FOR_EACH_2_KEEP_1_<#=i-2#>(X, keep, <#for(var j=3;j<=i;j++){#>P<#=(j).ToStrin
+ #define MU_FOR_EACH_2_KEEP_1_2(X, keep, P1, P2) \
+     X(keep, P1, P2) \
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_2_KEEP_1(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_1_, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__)))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -185,7 +185,7 @@ MU_FOR_EACH_2_KEEP_2_<#=i-2#>(X, keep1, keep2, <#for(var j=3;j<=i;j++){#>P<#=(j)
+ #define MU_FOR_EACH_2_KEEP_2_2(X, keep1, keep2, P1, P2) \
+     X(keep1, keep2, P1, P2) \
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_2_, MU_C2(MU_DEC,MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ #else
+ #define MU_FOR_EACH_2_KEEP_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_KEEP_2_, MU_C2(MU_DEC, MU_C2(MU_DEC,MU_C1(MU_COUNT_ARG(__VA_ARGS__))))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+@@ -240,7 +240,7 @@ MU_FOR_EACH_2_COUNTED_<#=i-2#>(X, <#for(var j=3;j<=i;j++){#>P<#=j.ToString()+((j
+ 
+ <#}#>
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_FOR_EACH_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
+ /*the COUNTED breed of MU_FOR_EACH macro invokes a macro with 3 parameters: 1st being the count of invocation. For example.
+ MU_FOR_EACH_2_COUNTER(MACRO, a,b,c,d,e,f) will result in 
+@@ -262,7 +262,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
+ #define MU_FOR_EACH_2_REVERSE(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_REVERSE_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
+ #endif
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && ! defined(__clang__)
+ #define MU_EXPAND_OR_MU_C1(x) x
+ #else
+ #define MU_EXPAND_OR_MU_C1(...) __VA_ARGS__
