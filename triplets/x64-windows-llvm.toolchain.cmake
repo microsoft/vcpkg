@@ -29,7 +29,7 @@ string(APPEND windows_defs " /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTD
 
 # Ignore /WX and -werror
 set(ignore_werror "/WX-")
-cmake_language(DEFER add_compile_options "/WX-") # make sure the flag is added at the end!
+cmake_language(DEFER CALL add_compile_options "/WX-") # make sure the flag is added at the end!
 
 # general architecture flags
 set(arch_flags "-mcrc32 -msse4.2")
