@@ -26,6 +26,8 @@ string(APPEND windows_defs " /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00") # tweak for
 string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE")
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
 string(APPEND windows_defs " /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTDC_NAMES") # due to -D__STDC__=1 required for e.g. _fopen -> fopen and other not underscored functions/defines
+string(APPEND windows_defs " /D_FORCENAMELESSUNION") # Due to -D__STDC__ to access tagVARIANT members (ffmpeg)
+
 
 # Ignore /WX and -werror
 set(ignore_werror "/WX-")
@@ -33,6 +35,11 @@ cmake_language(DEFER CALL add_compile_options "/WX-") # make sure the flag is ad
 
 # general architecture flags
 set(arch_flags "-mcrc32 -msse4.2")
+# -mcrc32 for libpq
+# -mrtm for tbb (will break qtdeclarative since it cannot run the executables in CI)
+# -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
+
+# /Za unknown
 
 # Set runtime library.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
@@ -93,10 +100,6 @@ set(CMAKE_ASM_MASM_COMPILER "ml64.exe" CACHE STRING "" FORCE)
 set(CMAKE_RC_COMPILER "rc.exe" CACHE STRING "" FORCE)
 set(CMAKE_MT "mt.exe" CACHE STRING "" FORCE)
 
-# -mcrc32 for libpq
-# -mrtm 
-# -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
-# /Za unknown
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} ${arch_flags} ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
@@ -117,13 +120,14 @@ endforeach()
 unset(flag_suf)
 
 # Set linker flags.
-foreach(LINKER SHARED_LINKER MODULE_LINKER EXE_LINKER)
-  set(CMAKE_${LINKER}_FLAGS_INIT "/Brepro ${VCPKG_LINKER_FLAGS}")
-  set(CMAKE_${LINKER}_FLAGS_DEBUG "/INCREMENTAL:NO /DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
-  set(CMAKE_${LINKER}_FLAGS_RELEASE "/OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
-  set(CMAKE_${LINKER}_FLAGS_MINSIZEREL "/OPT:REF /OPT:ICF" CACHE STRING "")
-  set(CMAKE_${LINKER}_FLAGS_RELWITHDEBINFO "/OPT:REF /OPT:ICF /DEBUG:FULL" CACHE STRING "")
+foreach(linker IN ITEMS "SHARED_LINKER;MODULE_LINKER;EXE_LINKER")
+  set(CMAKE_${linker}_FLAGS_INIT "/Brepro ${VCPKG_LINKER_FLAGS}")
+  set(CMAKE_${linker}_FLAGS_DEBUG "/INCREMENTAL:NO /DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_RELEASE "/OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_MINSIZEREL "/OPT:REF /OPT:ICF" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_RELWITHDEBINFO "/OPT:REF /OPT:ICF /DEBUG:FULL" CACHE STRING "")
 endforeach()
+unset(linker)
 
 # Set assembler flags.
 set(CMAKE_ASM_MASM_FLAGS_INIT "${CMAKE_CL_NOLOGO}")
@@ -138,6 +142,8 @@ unset(CLANG_C_LTO_FLAGS)
 unset(CLANG_CXX_LTO_FLAGS)
 unset(windows_defs)
 unset(std_c_flags)
+unset(ignore_werror)
+unset(arch_flags)
 unset(VCPKG_DBG_FLAG)
 unset(VCPKG_CRT_FLAG)
 
