@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.0.18
     SHA512 727fe50a5fb1df86ec5d807770f408a52609cbeb8510b4f4183b2a35a537905719bdb6348afcb103ff00ce946a8094ac9559b6e3e5b2ccc2a2d0c08f75577eeb
     HEAD_REF master
+    PATCHES fix_pid_t.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

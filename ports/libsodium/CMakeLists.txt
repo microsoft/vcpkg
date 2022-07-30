@@ -57,7 +57,7 @@ set_target_properties(${PROJECT_NAME}
         OUTPUT_NAME "lib${PROJECT_NAME}"
 )
 
-if (MSVC)
+if (0)
 
     target_include_directories(${PROJECT_NAME}
         PRIVATE
@@ -109,6 +109,22 @@ else ()
     add_library(${PROJECT_NAME}_config_private INTERFACE)
     add_library(${PROJECT_NAME}_config_public INTERFACE)
 
+    if(MSVC)
+        target_compile_options(${PROJECT_NAME}_config_private
+        INTERFACE
+            /D_CONSOLE
+            /D_CRT_SECURE_NO_WARNINGS
+            /DCPU_UNALIGNED_ACCESS=1
+            /wd4068 # Unknown pragma
+            /wd4197
+            /wd4244 # Macro redefinition
+    )
+        target_link_libraries(${PROJECT_NAME}_config_public
+        INTERFACE
+            advapi32
+    )
+    endif()
+
     # use interface libs to track special flags only required for certain objects
     add_library(${PROJECT_NAME}_aesni_config INTERFACE)
     add_library(${PROJECT_NAME}_avx_config INTERFACE)
@@ -128,42 +144,44 @@ else ()
             $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/sodium>
     )
 
-    target_compile_options(${PROJECT_NAME}_config_private
-        INTERFACE
-            -flax-vector-conversions
-            -fvisibility=hidden
-            -fwrapv
-            -Wall
-            -Wextra
-            -Wbad-function-cast
-            -Wcast-qual
-            #-Wdiv-by-zero
-            #-Wduplicated-branches
-            #-Wduplicated-cond
-            -Wfloat-equal
-            -Wformat=2
-            -Wlogical-op
-            -Wmaybe-uninitialized
-            #-Wmisleading-indentation
-            -Wmissing-declarations
-            -Wmissing-prototypes
-            -Wnested-externs
-            #-Wno-type-limits
-            #-Wno-unknown-pragmas
-            -Wnormalized=id
-            #-Wnull-dereference
-            -Wold-style-declaration
-            -Wpointer-arith
-            -Wredundant-decls
-            #-Wrestrict
-            #-Wsometimes-uninitialized
-            -Wstrict-prototypes
-            -Wswitch-enum
-            #-Wvariable-decl
-            -Wwrite-strings
-    )
+    if(NOT MSVC)
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -flax-vector-conversions
+                -fvisibility=hidden
+                -fwrapv
+                -Wall
+                -Wextra
+                -Wbad-function-cast
+                -Wcast-qual
+                #-Wdiv-by-zero
+                #-Wduplicated-branches
+                #-Wduplicated-cond
+                -Wfloat-equal
+                -Wformat=2
+                -Wlogical-op
+                -Wmaybe-uninitialized
+                #-Wmisleading-indentation
+                -Wmissing-declarations
+                -Wmissing-prototypes
+                -Wnested-externs
+                #-Wno-type-limits
+                #-Wno-unknown-pragmas
+                -Wnormalized=id
+                #-Wnull-dereference
+                -Wold-style-declaration
+                -Wpointer-arith
+                -Wredundant-decls
+                #-Wrestrict
+                #-Wsometimes-uninitialized
+                -Wstrict-prototypes
+                -Wswitch-enum
+                #-Wvariable-decl
+                -Wwrite-strings
+        )
+    endif()
 
-    if (NOT MINGW)
+    if (NOT MINGW AND NOT MSVC)
         target_compile_options(${PROJECT_NAME}_config_private
             INTERFACE
                 -fPIC
@@ -200,21 +218,21 @@ else ()
         target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE USE_BLOCKING_RANDOM)
     endif ()
 
-    if (ENABLE_PTHREADS)
+    if (ENABLE_PTHREADS AND NOT MSVC)
         target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_PTHREAD)
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -ftls-model=local-dynamic)
         target_compile_options(${PROJECT_NAME}_config_public INTERFACE -pthread)
     endif ()
 
-    if (ENABLE_SSP AND NOT MINGW)
+    if (ENABLE_SSP AND NOT (MINGW OR MSVC))
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fstack-protector-all)
     endif ()
 
-    if (ENABLE_PIE AND NOT MINGW)
+    if (ENABLE_PIE AND NOT (MINGW OR MSVC))
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fPIE)
     endif ()
 
-    if (ENABLE_RETPOLINE)
+    if (ENABLE_RETPOLINE AND NOT MSVC)
         target_compile_options(${PROJECT_NAME}_config_private
             INTERFACE
                 -mindirect-branch=thunk-inline
@@ -222,7 +240,7 @@ else ()
         )
     endif ()
 
-    if (ENABLE_NATIVE_OPTIMIZATIONS)
+    if (ENABLE_NATIVE_OPTIMIZATIONS AND NOT MSVC)
         target_compile_options(${PROJECT_NAME}_config_private
             INTERFACE
                 -ftree-vectorize
@@ -257,26 +275,36 @@ else ()
     sodium_check_func(getpid HAVE_GETPID)
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mmmx")
+        endif()
         check_c_source_compiles(
             "
             #pragma GCC target(\"mmx\")
+            #pragma clang attribute push (__attribute__((target(\"mmx\"))), apply_to=function)
             #include <mmintrin.h>
             int main(void)
             {
             __m64 x = _mm_setzero_si64();
             }
+            #pragma clang attribute pop
             "
             HAVE_MMINTRIN_H
         )
 
         if (HAVE_MMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_MMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_mmx_config INTERFACE -mmmx)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_mmx_config INTERFACE -mmmx)
+            endif()
         endif ()
-
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -msse2")
+        endif()
         check_c_source_compiles(
             "
             #pragma GCC target(\"sse2\")
+            #pragma clang attribute push (__attribute__((target(\"sse2\"))), apply_to=function)
             #ifndef __SSE2__
             # define __SSE2__
             #endif
@@ -286,112 +314,155 @@ else ()
             __m128d x = _mm_setzero_pd();
             __m128i z = _mm_srli_epi64(_mm_setzero_si128(), 26);
             }
+            #pragma clang attribute pop
             "
             HAVE_EMMINTRIN_H
         )
 
         if (HAVE_EMMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_EMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_sse2_config INTERFACE -msse2)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_sse2_config INTERFACE -msse2)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -msse3")
+        endif()
         check_c_source_compiles(
             "
             #pragma GCC target(\"sse3\")
+            #pragma clang attribute push (__attribute__((target(\"sse3\"))), apply_to=function)
             #include <pmmintrin.h>
             int main(void) {
             __m128 x = _mm_addsub_ps(_mm_cvtpd_ps(_mm_setzero_pd()), _mm_cvtpd_ps(_mm_setzero_pd()));
             }
+            #pragma clang attribute pop
             "
             HAVE_PMMINTRIN_H
         )
 
         if (HAVE_PMMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_PMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_sse3_config INTERFACE -msse3)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_sse3_config INTERFACE -msse3)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mssse3")
+        endif()
         check_c_source_compiles(
             "
             #pragma GCC target(\"ssse3\")
+            #pragma clang attribute push (__attribute__((target(\"ssse3\"))), apply_to=function)
             #include <tmmintrin.h>
             int main(void) {
             __m64 x = _mm_abs_pi32(_m_from_int(0));
             }
+            #pragma clang attribute pop
             "
             HAVE_TMMINTRIN_H
         )
 
         if (HAVE_TMMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_TMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_ssse3_config INTERFACE -mssse3)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_ssse3_config INTERFACE -mssse3)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -msse4.1")
+        endif()
         check_c_source_compiles(
             "
             #pragma GCC target(\"sse4.1\")
+            #pragma clang attribute push (__attribute__((target(\"sse4.1\"))), apply_to=function)
             #include <smmintrin.h>
             int main(void) {
             __m128i x = _mm_minpos_epu16(_mm_setzero_si128());
             }
+            #pragma clang attribute pop
             "
             HAVE_SMMINTRIN_H
         )
 
         if (HAVE_SMMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_SMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_sse41_config INTERFACE -msse4.1)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_sse41_config INTERFACE -msse4.1)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mavx")
+        endif()
         check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX opcodes
             #endif
+            #pragma clang attribute push (__attribute__((target(\"avx\"))), apply_to=function)
             #pragma GCC target(\"avx\")
             #include <immintrin.h>
             int main(void) {
             _mm256_zeroall();
             }
+            #pragma clang attribute pop
             "
             HAVE_AVXINTRIN_H
         )
 
         if (HAVE_AVXINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVXINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_avx_config INTERFACE -mavx)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_avx_config INTERFACE -mavx)
+            else()
+                target_compile_options(${PROJECT_NAME}_avx_config INTERFACE /arch:AVX)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mavx2")
+        endif()
         check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX2 opcodes
             #endif
             #pragma GCC target(\"avx2\")
+            #pragma clang attribute push (__attribute__((target(\"avx2\"))), apply_to=function)
             #include <immintrin.h>
             int main(void) {
             __m256 x = _mm256_set1_ps(3.14);
             __m256 y = _mm256_permutevar8x32_ps(x, _mm256_set1_epi32(42));
             return _mm256_movemask_ps(_mm256_cmp_ps(x, y, _CMP_NEQ_OQ));
             }
+            #pragma clang attribute pop
             "
             HAVE_AVX2INTRIN_H
         )
 
         if (HAVE_AVX2INTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX2INTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_avx2_config INTERFACE -mavx2)
-
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_avx2_config INTERFACE -mavx2)
+            else()
+                target_compile_options(${PROJECT_NAME}_avx2_config INTERFACE /arch:AVX2)
+            endif()
             check_c_source_compiles(
                 "
                 #ifdef __native_client__
                 # error NativeClient detected - Avoiding AVX2 opcodes
                 #endif
                 #pragma GCC target(\"avx2\")
+                #pragma clang attribute push (__attribute__((target(\"avx2\"))), apply_to=function)
                 #include <immintrin.h>
                 int main(void) {
                 __m256i y = _mm256_broadcastsi128_si256(_mm_setzero_si128());
                 }
+                #pragma clang attribute pop
                 "
                 _mm256_broadcastsi128_si256_DEFINED
             )
@@ -404,12 +475,16 @@ else ()
             endif ()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mavx512f")
+        endif()
         check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX512F opcodes
             #endif
             #pragma GCC target(\"avx512f\")
+            #pragma clang attribute push (__attribute__((target(\"avx512f\"))), apply_to=function)
             #include <immintrin.h>
             
             #ifndef __AVX512F__
@@ -428,15 +503,23 @@ else ()
             __m512i x = _mm512_setzero_epi32();
             __m512i y = _mm512_permutexvar_epi64(_mm512_setr_epi64(0, 1, 4, 5, 2, 3, 6, 7), x);
             }
+            #pragma clang attribute pop
             "
             HAVE_AVX512FINTRIN_H
         )
 
         if (HAVE_AVX512FINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX512FINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_avx512f_config INTERFACE -mavx512f)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_avx512f_config INTERFACE -mavx512f)
+            else()
+                target_compile_options(${PROJECT_NAME}_avx512f_config INTERFACE /arch:AVX512)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -maes -mpclmul")
+        endif()
         check_c_source_compiles(
             "
             #ifdef __native_client__
@@ -444,41 +527,52 @@ else ()
             #endif
             #pragma GCC target(\"aes\")
             #pragma GCC target(\"pclmul\")
+            #pragma clang attribute push (__attribute__((target(\"pclmul,aes\"))), apply_to=function)
             #include <wmmintrin.h>
 
             int main(void) {
             __m128i x = _mm_aesimc_si128(_mm_setzero_si128());
             __m128i y = _mm_clmulepi64_si128(_mm_setzero_si128(), _mm_setzero_si128(), 0);
             }
+            #pragma clang attribute pop
             "
             HAVE_WMMINTRIN_H
         )
 
         if (HAVE_WMMINTRIN_H)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_WMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME}_aesni_config INTERFACE -maes)
-            target_compile_options(${PROJECT_NAME}_pclmul_config INTERFACE -mpclmul)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_aesni_config INTERFACE -maes)
+                target_compile_options(${PROJECT_NAME}_pclmul_config INTERFACE -mpclmul)
+            endif()
         endif ()
 
+        if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            set(CMAKE_REQUIRED_FLAGS " -mrdrnd")
+        endif()
         check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding RDRAND opcodes
             #endif
             #pragma GCC target(\"rdrnd\")
+            #pragma clang attribute push (__attribute__((target(\"rdrnd\"))), apply_to=function)
             #include <immintrin.h>
 
             int main(void) {
             unsigned long long x;
             _rdrand64_step(&x);
             }
+            #pragma clang attribute pop
             "
             HAVE_RDRAND
         )
 
         if (HAVE_RDRAND)
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_RDRAND=1)
-            target_compile_options(${PROJECT_NAME}_rdrand_config INTERFACE -mrdrnd)
+            if(NOT CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+                target_compile_options(${PROJECT_NAME}_rdrand_config INTERFACE -mrdrnd)
+            endif()
         endif ()
 
         check_c_source_compiles(
@@ -701,9 +795,6 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/generichash_blake2.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ref.c
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse2.h
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse41.h
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-avx2.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-ref.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/generichash_blake2b.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/crypto_hash.c
@@ -898,6 +989,7 @@ else ()
         OBJECT
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/sse2/poly1305_sse2.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/sse2/poly1305_sse2.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse2.h
     )
 
     if (NOT ENABLE_MINIMAL)
@@ -950,6 +1042,7 @@ else ()
         OBJECT
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-sse41.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-sse41.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse41.h
     )
 
     target_link_libraries(${PROJECT_NAME}_sse41
@@ -963,6 +1056,7 @@ else ()
 
     add_library(${PROJECT_NAME}_avx2
         OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-avx2.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-avx2.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-avx2.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-avx2.c
@@ -1025,14 +1119,14 @@ endif ()
 
 if (BUILD_SHARED_LIBS)
     if (MSVC)
-        target_compile_definitions(${PROJECT_NAME}
-            PRIVATE
+        target_compile_definitions(${PROJECT_NAME}_config_public
+            INTERFACE
                 SODIUM_DLL_EXPORT
         )
     endif ()
 else ()
-    if (MSVC)
-        target_compile_definitions(${PROJECT_NAME}
+    if (0)
+        target_compile_definitions(${PROJECT_NAME}_config_public
             PUBLIC
                 SODIUM_STATIC
         )
@@ -1093,7 +1187,7 @@ install(FILES ${CMAKE_BINARY_DIR}/sodium/version.h
     DESTINATION include/sodium
 )
 
-if (MSVC)
+if (0)
     install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}-targets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
