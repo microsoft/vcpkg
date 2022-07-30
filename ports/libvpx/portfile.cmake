@@ -113,9 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 /p:ForceImportAfterCppTargets="${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libvpx.props"
     )
 
-    vcpkg_copy_pdbs()
-
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+   if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
@@ -129,15 +127,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "${CURRENT_PACKAGES_DIR}/include"
         RENAME
             "vpx")
+    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
 
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+         file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
+
+    vcpkg_copy_pdbs()
 
 else()
 
