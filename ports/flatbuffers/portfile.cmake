@@ -10,6 +10,7 @@ vcpkg_from_github(
         ignore_use_of_cmake_toolchain_file.patch
         no-werror.patch
         fix-uwp-build.patch
+        remove_wx.patch
 )
 
 set(options "")
