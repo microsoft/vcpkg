@@ -1,17 +1,11 @@
 # Shared library support is broken upstream (https://github.com/dartsim/dart/issues/1005#issuecomment-375406260)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(WIN_PR_PATCH
-    URLS "https://github.com/dartsim/dart/pull/1666.diff"
-    FILENAME dartsim-pr-1666.patch
-    SHA512 1f1055c3be60ed6efcf2731950c55f1022e2a34e8bae9641c856e85d41106399fc761916159a58175da9413497693aa7622f7f77f6d0756ff4f466052087d5bb
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dartsim/dart
-    REF d28c2860dcf709c95e18a3cc14f4b1ff091f46b3
-    SHA512 0e818c6d081dc1ded30d929d7e904237056ad4607ff3cd02cc86137ecb100a93eafa6b855e760bd3c5d3bcc4afe8a1eae367b6c61daf7d00ab3028149e005efa
+    REF 7cc82690d2e1f503cc94167df9482aca5a633dd5
+    SHA512 b26212073b56c2f59dbf6846a585379cdee21eaf19a5efd0126dcb7220e34929e238c8c6da7d2aa85b3107e41c15ad7831046e913f185359b14618b2f7415bcd
     HEAD_REF main
     PATCHES
         disable_unit_tests_examples_and_tutorials.patch
