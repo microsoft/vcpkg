@@ -11,6 +11,10 @@ vcpkg_from_github(
 # Use greg7mdp/gtl's own build process, skipping examples and tests
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DGTL_BUILD_TESTS=OFF
+        -DGTL_BUILD_EXAMPLES=OFF
+        -DGTL_BUILD_BENCHMARKS=OFF
 )
 vcpkg_cmake_install()
 
