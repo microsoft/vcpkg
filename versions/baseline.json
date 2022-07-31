@@ -1813,7 +1813,7 @@
       "port-version": 2
     },
     "dartsim": {
-      "baseline": "6.12.1",
+      "baseline": "6.12.2",
       "port-version": 0
     },
     "dataframe": {
