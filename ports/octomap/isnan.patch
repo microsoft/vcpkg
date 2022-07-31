@@ -1,0 +1,13 @@
+diff --git a/octomap/src/compare_octrees.cpp b/octomap/src/compare_octrees.cpp
+index 78e03b8cd..0df8464f6 100644
+--- a/octomap/src/compare_octrees.cpp
++++ b/octomap/src/compare_octrees.cpp
+@@ -39,7 +39,7 @@
+ #include <list>
+ #include <cmath>
+ 
+-#ifdef _MSC_VER // fix missing isnan for VC++
++#if defined(_MSC_VER) && !defined(__clang__)  // fix missing isnan for VC++
+ #define isnan(x) _isnan(x)  
+ #endif
+ 

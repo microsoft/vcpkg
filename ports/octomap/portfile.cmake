@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       "001-fix-exported-targets.patch"
+      "isnan.patch"
 )
 
 vcpkg_configure_cmake(
