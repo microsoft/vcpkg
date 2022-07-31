@@ -3,6 +3,7 @@
   "version": "6.12.1",
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
+  "license": "BSD-2-Clause",
   "dependencies": [
     "assimp",
     "boost-algorithm",
