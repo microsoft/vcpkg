@@ -1,13 +1,9 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
 if("openssl" IN_LIST FEATURES AND "schannel" IN_LIST FEATURES)
     message(FATAL_ERROR "Only one SSL backend must be selected.")
-endif()
-
-if("schannel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature schannel not supported on non-Windows platforms.")
 endif()
 
 vcpkg_from_github(
@@ -29,7 +25,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES 
+    FEATURES
         iconv WITH_ICONV
         mariadbclient VCPKG_MARIADBCLIENT
 )
@@ -46,7 +42,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DINSTALL_INCLUDEDIR=include/mysql  # legacy port decisiong
+        -DINSTALL_INCLUDEDIR=include/mysql # legacy port decisiong
         -DINSTALL_LIBDIR=lib
         -DINSTALL_PLUGINDIR=plugins/${PORT}
         -DWITH_UNIT_TESTS=OFF
@@ -69,9 +65,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmariadb.pc" " -lmariadb" " -llibmariadb")
     endif()
 endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# copy license file
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
