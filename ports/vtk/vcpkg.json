@@ -6,6 +6,7 @@
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
   "dependencies": [
+    "diy",
     "double-conversion",
     "eigen3",
     "expat",
