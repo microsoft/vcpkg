@@ -25,6 +25,8 @@ vcpkg_cmake_configure(
         -Durdfdom_headers_VERSION_MAJOR=1
         -Durdfdom_headers_VERSION_MINOR=1
         -Durdfdom_headers_VERSION_PATCH=0
+    MAYBE_UNUSED_VARIABLES
+        DART_MSVC_DEFAULT_OPTIONS
 )
 
 vcpkg_cmake_install()
