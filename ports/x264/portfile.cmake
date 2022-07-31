@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
     HEAD_REF stable
     PATCHES
-        "uwp-cflags.patch"
+        uwp-cflags.patch
+        parallel-install.patch
 )
 
 vcpkg_find_acquire_program(NASM)
