@@ -3,6 +3,7 @@
   "version-string": "164-5db6aa6cab1b146",
   "port-version": 5,
   "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
-  "homepage": "https://github.com/mirror/x264",
+  "homepage": "https://www.videolan.org/developers/x264.html",
+  "license": "GPL-2.0-or-later",
   "supports": "!(arm & windows)"
 }
