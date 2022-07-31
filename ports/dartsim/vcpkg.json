@@ -18,6 +18,7 @@
     "ccd",
     "eigen3",
     "fcl",
+    "fmt",
     "octomap",
     "ode",
     "tinyxml2",
