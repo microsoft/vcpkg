@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "mp-units - A Units Library for C++",
   "homepage": "https://github.com/mpusz/units",
+  "license": "MIT",
   "dependencies": [
     "fmt",
     "gsl-lite",
