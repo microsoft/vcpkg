@@ -1,6 +1,7 @@
 {
   "name": "kf5declarative",
   "version": "5.89.0",
+  "port-version": 1,
   "description": "Integration of QML and KDE work spaces",
   "homepage": "https://api.kde.org/frameworks/kdeclarative/html/index.html",
   "dependencies": [

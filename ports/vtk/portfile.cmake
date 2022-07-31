@@ -30,6 +30,7 @@ vcpkg_from_github(
         fix-gdal.patch
         missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
         UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
+        fix-find-libharu.patch
 )
 
 # =============================================================================
@@ -143,6 +144,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "mpi"          VTK_USE_MPI
         "all"          VTK_BUILD_ALL_MODULES
 )
+
 # =============================================================================
 # Configure & Install
 
