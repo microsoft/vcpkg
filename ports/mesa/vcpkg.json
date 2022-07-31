@@ -89,7 +89,9 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libclc"
+            "libclc",
+            "target-x86",
+            "enable-rtti"
           ]
         }
       ]
