@@ -76,11 +76,12 @@ set(PIXBUFLOADERSVG_SOURCES
 )
 
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/rsvg.def
-        COMMAND echo "EXPORTS" > ${CMAKE_CURRENT_SOURCE_DIR}/rsvg.def
-        COMMAND ${CMAKE_C_COMPILER} /EP ${CMAKE_CURRENT_SOURCE_DIR}/rsvg.symbols >> ${CMAKE_CURRENT_SOURCE_DIR}/rsvg.def)
-    list(APPEND LIBRSVG_SOURCES rsvg.def)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32" "${CMAKE_CURRENT_SOURCE_DIR}/config.h" COPYONLY)
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/rsvg.symbols" contents)
+    string(REGEX REPLACE [[/\*[^/]+\*/]] "" contents "${contents}")
+    string(REGEX REPLACE [[//[^\n]+]] "" contents "${contents}")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/rsvg.def" "EXPORTS\n${contents}")
+    list(APPEND LIBRSVG_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/rsvg.def")
 else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.linux ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
     list(APPEND LIBRSVG_SOURCES rsvg.symbols)
