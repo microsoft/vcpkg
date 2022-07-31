@@ -20,7 +20,7 @@ index 3f27dffe9..354e0f7dc 100644
  
  string (REPLACE ";" " " osgearth_LDFLAGS "${osgearth_LDFLAGS}")
  
-+add_library(osgearth @OSGEARTH_DYNAMIC_OR_STATIC@ IMPORTED)
++add_library(osgEarth UNKNOWN IMPORTED)
 +
  set_target_properties(osgearth
    PROPERTIES
