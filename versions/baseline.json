@@ -1889,7 +1889,7 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.602.0",
+      "baseline": "1.606.3",
       "port-version": 0
     },
     "directxmath": {
@@ -1897,7 +1897,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxsdk": {
@@ -1905,15 +1905,15 @@
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-06-15",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-07-19",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "dirent": {
@@ -7381,7 +7381,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-30",
       "port-version": 0
     },
     "uvw": {
