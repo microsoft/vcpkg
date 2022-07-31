@@ -47,17 +47,17 @@
           "name": "libmariadb",
           "default-features": false,
           "features": [
-            "schannel"
+            "openssl"
           ],
-          "platform": "windows & !mingw"
+          "platform": "!windows | mingw"
         },
         {
           "name": "libmariadb",
           "default-features": false,
           "features": [
-            "openssl"
+            "schannel"
           ],
-          "platform": "!windows | mingw"
+          "platform": "windows & !mingw"
         }
       ]
     },
