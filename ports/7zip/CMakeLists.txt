@@ -382,6 +382,7 @@ else()
     target_sources(7zip PRIVATE C/XzCrc64Opt.c)
 endif()
 
+
 target_compile_definitions(7zip
     PUBLIC
         -D_REENTRANT
@@ -392,6 +393,11 @@ target_compile_definitions(7zip
         -DUNICODE
         -D_UNICODE
 )
+
+target_compile_options(7zip
+    PRIVATE
+      /arch:AVX2
+  )
 
 target_include_directories(7zip
     INTERFACE
