@@ -1,5 +1,5 @@
 diff --git a/inc/azure_macro_utils/macro_utils_generated.h b/inc/azure_macro_utils/macro_utils_generated.h
-index 6ca14a19c..188b42b12 100644
+index 6ca14a19c..955fee096 100644
 --- a/inc/azure_macro_utils/macro_utils_generated.h
 +++ b/inc/azure_macro_utils/macro_utils_generated.h
 @@ -8533,7 +8533,7 @@
@@ -64,7 +64,7 @@ index 6ca14a19c..188b42b12 100644
  
  #define MU_FOR_EACH_2_COUNTED_2(X, P1, P2) \
      X(2, P1, P2)
-@@ -12197,7 +12197,7 @@ X(124, P1, P2) \
+@@ -12197,7 +12198,7 @@ X(124, P1, P2) \
  MU_FOR_EACH_2_COUNTED_122(X, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, P35, P36, P37, P38, P39, P40, P41, P42, P43, P44, P45, P46, P47, P48, P49, P50, P51, P52, P53, P54, P55, P56, P57, P58, P59, P60, P61, P62, P63, P64, P65, P66, P67, P68, P69, P70, P71, P72, P73, P74, P75, P76, P77, P78, P79, P80, P81, P82, P83, P84, P85, P86, P87, P88, P89, P90, P91, P92, P93, P94, P95, P96, P97, P98, P99, P100, P101, P102, P103, P104, P105, P106, P107, P108, P109, P110, P111, P112, P113, P114, P115, P116, P117, P118, P119, P120, P121, P122, P123, P124)
  
  
@@ -73,7 +73,7 @@ index 6ca14a19c..188b42b12 100644
  #define MU_FOR_EACH_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
  /*the COUNTED breed of MU_FOR_EACH macro invokes a macro with 3 parameters: 1st being the count of invocation. For example.
  MU_FOR_EACH_2_COUNTER(MACRO, a,b,c,d,e,f) will result in 
-@@ -12219,7 +12219,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
+@@ -12219,7 +12220,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
  #define MU_FOR_EACH_2_REVERSE(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_REVERSE_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
  #endif
  
@@ -83,7 +83,7 @@ index 6ca14a19c..188b42b12 100644
  #else
  #define MU_EXPAND_OR_MU_C1(...) __VA_ARGS__
 diff --git a/macro_utils_h_generator/macro_utils_generated.tt b/macro_utils_h_generator/macro_utils_generated.tt
-index 03890841a..b8fb66fb9 100644
+index 03890841a..627e672e4 100644
 --- a/macro_utils_h_generator/macro_utils_generated.tt
 +++ b/macro_utils_h_generator/macro_utils_generated.tt
 @@ -69,7 +69,7 @@
@@ -147,7 +147,8 @@ index 03890841a..b8fb66fb9 100644
 +#define MU_FOR_EACH_2_COUNTED_1(...)
  
  #define MU_FOR_EACH_2_COUNTED_2(X, P1, P2) \
-     X(2, P1, P2)@@ -240,7 +240,7 @@ MU_FOR_EACH_2_COUNTED_<#=i-2#>(X, <#for(var j=3;j<=i;j++){#>P<#=j.ToString()+((j
+     X(2, P1, P2)
+@@ -240,7 +241,7 @@ MU_FOR_EACH_2_COUNTED_<#=i-2#>(X, <#for(var j=3;j<=i;j++){#>P<#=j.ToString()+((j
  
  <#}#>
  
@@ -156,7 +157,7 @@ index 03890841a..b8fb66fb9 100644
  #define MU_FOR_EACH_2(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) MU_LPAREN MACRO_TO_INVOKE, __VA_ARGS__)
  /*the COUNTED breed of MU_FOR_EACH macro invokes a macro with 3 parameters: 1st being the count of invocation. For example.
  MU_FOR_EACH_2_COUNTER(MACRO, a,b,c,d,e,f) will result in 
-@@ -262,7 +262,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
+@@ -262,7 +263,7 @@ MU_FOR_EACH_2_REVERSE(X,a,b,c,d,e,f) => X(e,f) X(c,d) X (a, b) in this order */
  #define MU_FOR_EACH_2_REVERSE(MACRO_TO_INVOKE, ...) MU_C2(MU_FOR_EACH_2_REVERSE_, MU_C1(MU_COUNT_ARG(__VA_ARGS__))) ( MACRO_TO_INVOKE, __VA_ARGS__)
  #endif
  
