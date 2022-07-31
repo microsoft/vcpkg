@@ -1,6 +1,6 @@
 {
   "name": "gtl",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "Greg's Template Library of useful classes.",
   "license": "Apache-2.0",
   "dependencies": [
