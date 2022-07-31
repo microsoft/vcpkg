@@ -1,0 +1,19 @@
+diff --git a/IO/H5part/vtkH5PartReader.cxx b/IO/H5part/vtkH5PartReader.cxx
+index db21a1ea2251fa31761403267059c91e433a500b..ca1ee3950f5ec77c8dd4c53df1aefccd7b13e7d8 100644
+--- a/IO/H5part/vtkH5PartReader.cxx
++++ b/IO/H5part/vtkH5PartReader.cxx
+@@ -605,9 +605,11 @@ int vtkH5PartReader::RequestData(vtkInformation* vtkNotUsed(request),
+   if (outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
+   {
+     double requestedTimeValue = outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP());
+-    this->ActualTimeStep =
+-      std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
+-        std::bind2nd(H5PartToleranceCheck(this->TimeStepTolerance), requestedTimeValue)) -
++    auto toleranceCheck = H5PartToleranceCheck(this->TimeStepTolerance);
++    this->ActualTimeStep = std::find_if(this->TimeStepValues.begin(), this->TimeStepValues.end(),
++                             [&toleranceCheck, &requestedTimeValue](double timeStepValue) {
++                               return toleranceCheck(timeStepValue, requestedTimeValue);
++                             }) -
+       this->TimeStepValues.begin();
+     //
+     if (requestedTimeValue < this->TimeStepValues.front() ||
