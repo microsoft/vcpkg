@@ -6,6 +6,12 @@
   "homepage": "https://www.videolan.org/developers/x264.html",
   "license": "GPL-2.0-or-later",
   "supports": "!(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
   "features": {
     "tool": {
       "description": "Build the command line tool",

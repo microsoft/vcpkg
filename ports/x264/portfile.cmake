@@ -10,6 +10,38 @@ vcpkg_from_github(
         allow-clang-cl.patch
 )
 
+# Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
+function(ensure_tool_in_path name filepath)
+    unset(program_found CACHE)
+    find_program(program_found "${name}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
+    if(NOT filepath STREQUAL program_found)
+        cmake_path(GET filepath PARENT_PATH parent_path)
+        vcpkg_add_to_path(PREPEND "${parent_path}")
+    endif()
+endfunction()
+
+# Ensure that parent-scope variable 'var' doesn't contain a space,
+# updating 'ENV{PATH}' and 'var' if needed.
+function(transform_path_no_space var)
+    set(path "${${var}}")
+    if(path MATCHES " ")
+        cmake_path(GET path FILENAME program_name)
+        set("${var}" "${program_name}" PARENT_SCOPE)
+        ensure_tool_in_path("${program_name}" "${path}")
+    endif()
+endfunction()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+transform_path_no_space(VCPKG_DETECTED_CMAKE_C_COMPILER)
+set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+
+vcpkg_list(SET OPTIONS)
+if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
+    vcpkg_list(APPEND OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
+endif()
+
 vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
 if(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
@@ -26,7 +58,6 @@ else()
     vcpkg_list(APPEND OPTIONS_RELEASE --disable-cli)
 endif()
 
-vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
         --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP
