@@ -7,6 +7,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 a8a8ef1e4ccffee2313a18b9b8dda06c7ede6d49fdde8578694500634e3c90278fd30af7d88938d5ecb08c519cc3e09d21fe69d0f21cb766e056ceedbb3eafb0
     PATCHES
         fix_werror_clang-cl.patch
+        fix_clang-cl.patch
 )
 
 vcpkg_extract_source_archive_ex(
