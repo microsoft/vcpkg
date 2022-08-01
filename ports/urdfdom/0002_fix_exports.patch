@@ -1,18 +1,13 @@
 diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
-index ac7c079..4332f26 100644
+index ac7c079..67f175d 100644
 --- a/urdf_parser/CMakeLists.txt
 +++ b/urdf_parser/CMakeLists.txt
-@@ -20,9 +20,14 @@ macro(add_urdfdom_library)
-   endif()
-   set_target_properties(${add_urdfdom_library_LIBNAME} PROPERTIES
-     DEFINE_SYMBOL URDFDOM_EXPORTS
--    SOVERSION ${URDF_MAJOR_MINOR_VERSION})
-+    SOVERSION ${URDF_MAJOR_MINOR_VERSION}
-+    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+@@ -23,6 +23,10 @@ macro(add_urdfdom_library)
+     SOVERSION ${URDF_MAJOR_MINOR_VERSION})
  endmacro()
  
 +if(MSVC)
-+add_definitions(-D_USE_MATH_DEFINES)
++  add_definitions(-D_USE_MATH_DEFINES)
 +endif()
 +
  if(TARGET console_bridge::console_bridge)
