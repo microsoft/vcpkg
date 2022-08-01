@@ -122,7 +122,7 @@
     },
     "apr-util": {
       "baseline": "1.6.1",
-      "port-version": 7
+      "port-version": 8
     },
     "apsi": {
       "baseline": "0.8.2",
@@ -1654,7 +1654,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 1
+      "port-version": 2
     },
     "cpptoml": {
       "baseline": "v0.1.1",
@@ -2737,7 +2737,7 @@
       "port-version": 0
     },
     "gtl": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "gts": {
