@@ -27,6 +27,7 @@ function(z_vcpkg_get_visual_studio_generator)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
             message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
+    
     if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
         set(generator "Visual Studio 12 2013")
     elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
@@ -37,6 +38,10 @@ function(z_vcpkg_get_visual_studio_generator)
         set(generator "Visual Studio 16 2019")
     elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
         set(generator "Visual Studio 17 2022")
+    endif()
+
+    if(DEFINED VCPKG_VS_CMAKE_GENERATOR)
+        set(generator "${VCPKG_VS_CMAKE_GENERATOR}")
     endif()
 
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")

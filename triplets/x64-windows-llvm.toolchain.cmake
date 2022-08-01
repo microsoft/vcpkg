@@ -15,10 +15,11 @@ set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
 set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
 
 # Set C++ standard.
-# set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
-# set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
-# set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
+#set(CMAKE_CXX_STANDARD 14 CACHE STRING "")
+#set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
+#set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
 # set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
+#set(std_cxx_flags "/permissive- -std:c++14 /Zc:__cplusplus")
 
 # Set Windows definitions:
 set(windows_defs "/DWIN32 /D_WIN64")
@@ -62,7 +63,7 @@ endif()
 set(CMAKE_CL_NOLOGO "/nologo" CACHE STRING "")
 
 # Set compiler flags.
-set(CLANG_FLAGS "/clang:-fasm") #/clang:-fopenmp-simd -openmp
+set(CLANG_FLAGS "/clang:-fasm -fmacro-backtrace-limit=0") #/clang:-fopenmp-simd -openmp
 
 # Setup try_compile correctly. 
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE 
