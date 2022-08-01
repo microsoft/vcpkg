@@ -1,0 +1,15 @@
+diff --git a/debuginfod/Makefile.am b/debuginfod/Makefile.am
+index 3adb2755..db0eadab 100644
+--- a/debuginfod/Makefile.am
++++ b/debuginfod/Makefile.am
+@@ -76,8 +76,8 @@ debuginfod_find_SOURCES = debuginfod-find.c
+ debuginfod_find_LDADD = $(libdw) $(libelf) $(libeu) $(libdebuginfod) $(argp_LDADD) $(fts_LIBS)
+ 
+ if LIBDEBUGINFOD
+-noinst_LIBRARIES = libdebuginfod.a
+-noinst_LIBRARIES += libdebuginfod_pic.a
++lib_LIBRARIES = libdebuginfod.a
++noinst_LIBRARIES = libdebuginfod_pic.a
+ endif
+ 
+ libdebuginfod_a_SOURCES = debuginfod-client.c

@@ -3,8 +3,16 @@ vcpkg_from_git(
     URL https://sourceware.org/git/elfutils
     REF ca4a785fc3061c7d136b198e9ffe0b14cf90c2be #elfutils-0.186
 
-    PATCHES configure.ac.patch
+    PATCHES
+        configure.ac.patch
+        install-libdebuginfod.patch
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        libdebuginfod WITH_LIBDEBUGINFOD
+)
+
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
@@ -13,11 +21,17 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
+if(WITH_LIBDEBUGINFOD)
+    set(LIBDEBUGINFOD_FLAG yes)
+else()
+    set(LIBDEBUGINFOD_FLAG dummy)
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
     OPTIONS --disable-debuginfod 
-            --enable-libdebuginfod=dummy
+            --enable-libdebuginfod=${LIBDEBUGINFOD_FLAG}
             --with-zlib
             --with-bzlib
             --with-lzma
@@ -28,8 +42,12 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc/debuginfod" "${CURRENT_PACKAGES_DIR}/etc/debuginfod")
+if (WITH_LIBDEBUGINFOD)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/debuginfod")
+else()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc/debuginfod" "${CURRENT_PACKAGES_DIR}/etc/debuginfod")
+endif()
 
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
