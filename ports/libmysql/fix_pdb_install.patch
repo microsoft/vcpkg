@@ -1,0 +1,34 @@
+diff --git a/cmake/install_macros.cmake b/cmake/install_macros.cmake
+index 0d44ef29a..54d7de94c 100644
+--- a/cmake/install_macros.cmake	
++++ b/cmake/install_macros.cmake
+@@ -48,7 +48,7 @@ MACRO (INSTALL_DEBUG_SYMBOLS targets)
+     ENDIF()
+ 
+     # No .pdb file for static libraries.
+-    IF(NOT type MATCHES "STATIC_LIBRARY")
++    IF(NOT type MATCHES "STATIC_LIBRARY" AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+       INSTALL(FILES $<TARGET_PDB_FILE:${target}>
+         DESTINATION ${INSTALL_LOCATION} COMPONENT ${comp})
+     ENDIF()
+@@ -272,7 +272,7 @@ FUNCTION(INSTALL_DEBUG_TARGET target)
+     OPTIONAL)
+ 
+   # For windows, install .pdb files for .exe and .dll files.
+-  IF(MSVC AND NOT target_type STREQUAL "STATIC_LIBRARY")
++  IF(CMAKE_C_COMPILER_ID STREQUAL "MSVC" AND NOT target_type STREQUAL "STATIC_LIBRARY")
+     GET_FILENAME_COMPONENT(ext ${debug_target_location} EXT)
+     STRING(REPLACE "${ext}" ".pdb"
+       debug_pdb_target_location "${debug_target_location}" )
+@@ -281,9 +281,9 @@ FUNCTION(INSTALL_DEBUG_TARGET target)
+       SET(PDB_RENAME_PARAM RENAME "${pdb_rename}")
+     ENDIF()
+ 
+-    INSTALL(FILES ${debug_pdb_target_location}
++    INSTALL(FILES $<TARGET_PDB_FILE:${target}> #${debug_pdb_target_location}
+       DESTINATION ${ARG_DESTINATION}
+-      ${PDB_RENAME_PARAM}
++      #${PDB_RENAME_PARAM}
+       CONFIGURATIONS Release RelWithDebInfo
+       COMPONENT ${ARG_COMPONENT}
+       OPTIONAL)
