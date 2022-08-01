@@ -42,6 +42,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         remove_test_demos.patch
         no-host-cpu-checks.patch
+        fix_clang-cl.patch
 )
 # Meson install wrongly pkgconfig file!
 vcpkg_configure_meson(
