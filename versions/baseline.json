@@ -1237,7 +1237,7 @@
       "port-version": 0
     },
     "c9y": {
-      "baseline": "0.3.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "caf": {
@@ -2009,8 +2009,8 @@
       "port-version": 2
     },
     "dv-processing": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "dx": {
       "baseline": "1.0.1",
@@ -3065,7 +3065,7 @@
       "port-version": 8
     },
     "ixwebsocket": {
-      "baseline": "11.4.2",
+      "baseline": "11.4.3",
       "port-version": 0
     },
     "jack2": {
@@ -5665,7 +5665,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.21.3",
+      "baseline": "3.21.4",
       "port-version": 0
     },
     "protobuf-c": {
@@ -7813,7 +7813,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.9.1",
+      "baseline": "4.10.2",
       "port-version": 0
     },
     "z85": {
