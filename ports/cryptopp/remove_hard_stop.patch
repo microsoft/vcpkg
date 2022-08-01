@@ -1,0 +1,13 @@
+diff --git a/config_os.h b/config_os.h
+index 524629069..3805c6d17 100644
+--- a/config_os.h
++++ b/config_os.h
+@@ -31,7 +31,7 @@
+ // discussed at http://github.com/weidai11/cryptopp/issues/147.
+ #if (defined(_MSC_VER) && defined(__clang__) && \
+    !(defined( __clang_analyzer__)) && !defined(__INTEL_LLVM_COMPILER))
+-# error: "Unsupported configuration"
++//# error: "Unsupported configuration"
+ #endif
+ 
+ // Windows platform
