@@ -1,0 +1,48 @@
+diff --git a/meson.build b/meson.build
+index de0020079..d79ef4cc0 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1454,19 +1454,19 @@ endif
+ 
+ # Check for some linker flags
+ ld_args_bsymbolic = []
+-if cc.links('int main() { return 0; }', args : '-Wl,-Bsymbolic', name : 'Bsymbolic')
++if cc.links('int main() { return 0; }', args : '-Wl,-Bsymbolic', name : 'Bsymbolic') and cc.get_argument_syntax() != 'msvc'
+   ld_args_bsymbolic += '-Wl,-Bsymbolic'
+ endif
+ ld_args_gc_sections = []
+ if cc.links('static char unused() { return 5; } int main() { return 0; }',
+-            args : '-Wl,--gc-sections', name : 'gc-sections')
++            args : '-Wl,--gc-sections', name : 'gc-sections') and cc.get_argument_syntax() != 'msvc'
+   ld_args_gc_sections += '-Wl,--gc-sections'
+ endif
+ with_ld_version_script = false
+ if cc.links('int main() { return 0; }',
+             args : '-Wl,--version-script=@0@'.format(
+               join_paths(meson.source_root(), 'build-support/conftest.map')),
+-            name : 'version-script')
++            name : 'version-script') and cc.get_argument_syntax() != 'msvc'
+   with_ld_version_script = true
+ endif
+ with_ld_dynamic_list = false
+diff --git a/src/gallium/auxiliary/tgsi/tgsi_ureg.c b/src/gallium/auxiliary/tgsi/tgsi_ureg.c
+index 207fcc45b..7d98bfc04 100644
+--- a/src/gallium/auxiliary/tgsi/tgsi_ureg.c
++++ b/src/gallium/auxiliary/tgsi/tgsi_ureg.c
+@@ -477,13 +477,13 @@ out:
+ 
+ struct ureg_dst
+ ureg_DECL_output_masked(struct ureg_program *ureg,
+-                        unsigned name,
+-                        unsigned index,
++                        enum tgsi_semantic semantic_name,
++                        unsigned semantic_index,
+                         unsigned usage_mask,
+                         unsigned array_id,
+                         unsigned array_size)
+ {
+-   return ureg_DECL_output_layout(ureg, name, index, 0,
++   return ureg_DECL_output_layout(ureg, semantic_name, semantic_index, 0,
+                                   ureg->nr_output_regs, usage_mask, array_id,
+                                   array_size, FALSE);
+ }

@@ -9,6 +9,8 @@ set(PATCHES
     clang.patch
     # Clover build on Windows
     clover.patch
+    # fix building with clang-cl
+    fix_clang-cl.patch
 )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
