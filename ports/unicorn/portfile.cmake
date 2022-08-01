@@ -12,45 +12,25 @@ set(VCPKG_CRT_LINKAGE "static")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unicorn-engine/unicorn
-    REF 52f90cda023abaca510d59f021c88629270ad6c0 # v1.0.3
-    SHA512 bb47e7d680b122e38bd9390f44a3f7e3c3e314ea3ac86dbab3e755b7bcc2db5daca3a4432276a874f59675f811f7785d68ec0d39696c955d3718d6a720adf70b
+    REF 6c1cbef6ac505d355033aef1176b684d02e1eb3a # v2.0.0
+    SHA512 7d23def10d1a72a9514ef10f2f9b50f29ce24d4994c06ce5980141a2bed8cdd76478d2e7849b7783e574d1fe97945dc7cd0ce1990c4b4b0479a5170eba4169e1
     HEAD_REF master
+    PATCHES
+        fix-usage.patch
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(UNICORN_PLATFORM "Win32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(UNICORN_PLATFORM "x64")
-else()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUNICORN_BUILD_TESTS=OFF
+    )
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/msvc/unicorn.sln"
-    PLATFORM "${UNICORN_PLATFORM}"
-)
+vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-else()
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
+vcpkg_fixup_pkgconfig()
 
-file(
-    INSTALL "${SOURCE_PATH}/msvc/distro/include/unicorn"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-    RENAME "unicorn"
-)
-file(
-    INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-    RENAME "copyright"
-)
-file(
-    INSTALL "${SOURCE_PATH}/COPYING_GLIB"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
