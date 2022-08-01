@@ -1,14 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
-    REF 5db6aa6cab1b146e07b60cc1736a01f21da01154
-    SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
+    REF baee400fa9ced6f5481a728138fed6e867b0ff7f # 0.164.3095 in pc file, to be updated below
+    SHA512 3c7147457cbe0fea20cf3ed8cf7bbdca9ac15060cf86f81b9b5b54b018f922964e91b3c38962c81fedef92bc5b14489e04d0966d03d2b7a85b4dabab6ad816a2
     HEAD_REF stable
     PATCHES
         uwp-cflags.patch
         parallel-install.patch
         allow-clang-cl.patch
 )
+# Note on x264 versioning:
+# The pc file exports "0.164.<N>" where is the number of commits.
+# This must be fixed here because vcpkg uses a GH tarball instead of cloning the source.
+# (The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.)
+vcpkg_replace_string("${SOURCE_PATH}/version.sh" [[ver="x"]] [[ver="3095"]])
 
 # Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
 function(ensure_tool_in_path name filepath)
@@ -60,10 +65,7 @@ endif()
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
-        --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP
         --extra-cflags=-D_WIN32_WINNT=0x0A00
-        --extra-ldflags=-APPCONTAINER
-        --extra-ldflags=WindowsApp.lib
         --disable-asm
     )
 endif()
