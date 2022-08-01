@@ -31,9 +31,15 @@ add_library(mime.core
 
 target_include_directories(socket.core PRIVATE ${LUASOCKET_INCLUDES})
 target_link_libraries(socket.core PRIVATE ${LUASOCKET_LIBRARIES})
+set_target_properties(socket.core PROPERTIES RUNTIME_OUTPUT_NAME core
+                                             ARCHIVE_OUTPUT_NAME socket.core
+                                             LIBRARY_OUTPUT_NAME socket.core)
 
 target_include_directories(mime.core PRIVATE ${LUASOCKET_INCLUDES})
 target_link_libraries(mime.core PRIVATE ${LUASOCKET_LIBRARIES})
+set_target_properties(mime.core PROPERTIES RUNTIME_OUTPUT_NAME core
+                                           ARCHIVE_OUTPUT_NAME mime.core
+                                           LIBRARY_OUTPUT_NAME mime.core)
 
 add_definitions(
     "-DLUASOCKET_API=__declspec(dllexport)"
