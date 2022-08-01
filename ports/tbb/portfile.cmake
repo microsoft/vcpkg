@@ -26,15 +26,8 @@ file (COPY
   DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb
 )
 
-# file (COPY
-#   ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-#   DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb
-# )
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
