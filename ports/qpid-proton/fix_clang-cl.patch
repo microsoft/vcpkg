@@ -1,0 +1,17 @@
+diff --git a/c/src/ssl/schannel.cpp b/c/src/ssl/schannel.cpp
+index 5d2ff8b02..beadd9e63 100644
+--- a/c/src/ssl/schannel.cpp
++++ b/c/src/ssl/schannel.cpp
+@@ -2084,10 +2084,10 @@ static bool server_name_matches(const char *server_name, CERT_EXTENSION *alt_nam
+ 
+   if (!matched) {
+     PCERT_INFO info = cert->pCertInfo;
+-    DWORD len = CertGetNameString(cert, CERT_NAME_ATTR_TYPE, 0, szOID_COMMON_NAME, 0, 0);
++    DWORD len = CertGetNameString(cert, CERT_NAME_ATTR_TYPE, 0, (void*)szOID_COMMON_NAME, 0, 0);
+     char *name = (char *) malloc(len);
+     if (name) {
+-      int count = CertGetNameString(cert, CERT_NAME_ATTR_TYPE, 0, szOID_COMMON_NAME, name, len);
++      int count = CertGetNameString(cert, CERT_NAME_ATTR_TYPE, 0, (void*)szOID_COMMON_NAME, name, len);
+       if (count)
+         matched = match_dns_pattern(server_name, (const char *) name, strlen(name));
+       free(name);

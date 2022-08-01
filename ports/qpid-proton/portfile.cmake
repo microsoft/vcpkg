@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF fee5e94afb83b92ffa60a6f815d5102a67915166 # 0.37.0
     SHA512 e9fbd02444dd073908186e6873b4e230e0a5971929e9b1a49758240d166f6da4e6c88d701c66d5e5539bea0beca380c763bffcef5b0e1ed5f9fc2691f5f86559 
     HEAD_REF next
-    PATCHES fix-dependencies.patch
+    PATCHES 
+        fix-dependencies.patch
+        fix_clang-cl.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindPython.cmake")
