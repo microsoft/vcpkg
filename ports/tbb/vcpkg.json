@@ -1,8 +1,7 @@
 {
   "name": "tbb",
-  "version-string": "2020_U3",
-  "port-version": 8,
+  "version-string": "2021.5",
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/01org/tbb",
-  "supports": "!(uwp | arm | arm64) | linux | osx"
+  "supports": "!(windows & uwp) | linux | osx"
 }
