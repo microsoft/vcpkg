@@ -1250,7 +1250,7 @@
     },
     "cairo": {
       "baseline": "1.17.6",
-      "port-version": 3
+      "port-version": 4
     },
     "cairomm": {
       "baseline": "1.16.1",
@@ -1354,7 +1354,7 @@
     },
     "cgns": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -1766,7 +1766,7 @@
     },
     "cunit": {
       "baseline": "2.1.3",
-      "port-version": 7
+      "port-version": 8
     },
     "curl": {
       "baseline": "7.84.0",
@@ -1889,7 +1889,7 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.602.0",
+      "baseline": "1.606.3",
       "port-version": 0
     },
     "directxmath": {
@@ -1897,7 +1897,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxsdk": {
@@ -1905,15 +1905,15 @@
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-06-15",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-07-19",
+      "baseline": "2022-07-29",
       "port-version": 0
     },
     "dirent": {
@@ -2274,7 +2274,7 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 5
+      "port-version": 6
     },
     "flash-runtime-extensions": {
       "baseline": "2.4",
@@ -2338,7 +2338,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.0",
-      "port-version": 3
+      "port-version": 4
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2590,7 +2590,7 @@
     },
     "glib": {
       "baseline": "2.72.3",
-      "port-version": 0
+      "port-version": 1
     },
     "glibmm": {
       "baseline": "2.70.0",
@@ -2830,7 +2830,7 @@
     },
     "highfive": {
       "baseline": "2.3",
-      "port-version": 2
+      "port-version": 3
     },
     "highway": {
       "baseline": "0.14.2",
@@ -7381,7 +7381,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-05-09",
+      "baseline": "2022-07-30",
       "port-version": 0
     },
     "uvw": {
