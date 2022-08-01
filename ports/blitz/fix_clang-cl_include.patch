@@ -1,0 +1,13 @@
+diff --git a/blitz/bzconfig.h b/blitz/bzconfig.h
+index 17d30b847..89c8464b9 100644
+--- a/blitz/bzconfig.h	
++++ b/blitz/bzconfig.h
+@@ -49,7 +49,7 @@
+ /* Intel icc compiler */
+ #include <blitz/intel/bzconfig.h>
+ 
+-#elif defined(_MSC_VER)
++#elif defined(_MSC_VER) && !defined(__clang__)
+ /* Microsoft VS.NET compiler */
+ #include <blitz/ms/bzconfig.h>
+ 
