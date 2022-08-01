@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
         "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"       
 )
 
