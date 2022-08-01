@@ -17,7 +17,7 @@ index 9574be9..2d44fc9 100644
  
 -target_include_directories(unicorn PUBLIC
 -    include
-+target_include_directories(unicorn INTERFACE
++target_include_directories(unicorn PUBLIC
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 +    $<INSTALL_INTERFACE:include> 
  )
