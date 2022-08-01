@@ -341,10 +341,6 @@ function(vcpkg_configure_make)
         z_vcpkg_append_to_configure_environment(configure_env CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
         z_vcpkg_append_to_configure_environment(configure_env AS ":")   # If required set the ENV variable AS in the portfile correctly
 
-        foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
-            z_vcpkg_append_to_configure_environment(configure_env ${_env} "${${_env}}")
-        endforeach()
-        debug_message("configure_env: '${configure_env}'")
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
         # LINK This is the command used to actually link a C program.
@@ -409,6 +405,12 @@ function(vcpkg_configure_make)
         endif()
     endif()
     
+    # Explicit environment variable setup
+    foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
+        z_vcpkg_append_to_configure_environment(configure_env ${_env} "${${_env}}")
+    endforeach()
+    debug_message("configure_env: '${configure_env}'")
+
     # Cleanup previous build dirs
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
