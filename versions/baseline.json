@@ -4022,7 +4022,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 5
+      "port-version": 6
     },
     "librsync": {
       "baseline": "2.3.2",
