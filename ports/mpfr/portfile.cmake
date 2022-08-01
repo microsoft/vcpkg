@@ -1,4 +1,4 @@
-if (VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive\n")
 endif()
 
@@ -12,7 +12,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES 
+    PATCHES
         dll.patch
         src-only.patch
 )
@@ -31,5 +31,13 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING.LESSER" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/AUTHORS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/BUGS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING.LESSER"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/NEWS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/TODO"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING.LESSER")
