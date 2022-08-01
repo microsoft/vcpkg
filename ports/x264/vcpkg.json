@@ -5,5 +5,11 @@
   "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
   "homepage": "https://www.videolan.org/developers/x264.html",
   "license": "GPL-2.0-or-later",
-  "supports": "!(arm & windows)"
+  "supports": "!(arm & windows)",
+  "features": {
+    "tool": {
+      "description": "Build the command line tool",
+      "supports": "!uwp"
+    }
+  }
 }

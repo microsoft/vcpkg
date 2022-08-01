@@ -18,6 +18,13 @@ if(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
     set(ENV{AS} "${NASM}") # for non-WIN32
 endif()
 
+vcpkg_list(SET OPTIONS_RELEASE)
+if("tool" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS_RELEASE --enable-cli)
+else()
+    vcpkg_list(APPEND OPTIONS_RELEASE --disable-cli)
+endif()
+
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
@@ -48,6 +55,7 @@ vcpkg_configure_make(
         --disable-lsmash
         --disable-bashcompletion
     OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
         --enable-strip
     OPTIONS_DEBUG
         --enable-debug
@@ -56,7 +64,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-if(NOT VCPKG_TARGET_IS_UWP)
+if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
 endif()
 
