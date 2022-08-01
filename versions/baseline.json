@@ -1654,7 +1654,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 1
+      "port-version": 2
     },
     "cpptoml": {
       "baseline": "v0.1.1",
