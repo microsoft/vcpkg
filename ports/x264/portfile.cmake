@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         uwp-cflags.patch
         parallel-install.patch
+        allow-clang-cl.patch
 )
 
 vcpkg_list(SET EXTRA_ARGS)
