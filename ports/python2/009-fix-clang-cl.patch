@@ -1,0 +1,26 @@
+diff --git a/PC/msvcrtmodule.c b/PC/msvcrtmodule.c
+index 111d637e7..0b0597642 100644
+--- a/PC/msvcrtmodule.c
++++ b/PC/msvcrtmodule.c
+@@ -437,6 +437,6 @@ initmsvcrt(void)
+                                                   _VC_CRT_BUILD_VERSION,
+                                                   _VC_CRT_RBUILD_VERSION);
+     st = PyModule_AddObject(m, "CRT_ASSEMBLY_VERSION", version);
+-    if (st < 0) return NULL;
++    if (st < 0) return;
+ #endif
+ }
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index d896a38fc..a732965c2 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -124,8 +124,7 @@ WIN32 is still required for the locale module.
+  * _Py_STRINGIZE2(1200) which then expands to
+  * "1200"
+  */
+-#define _Py_STRINGIZE(X) _Py_STRINGIZE1((X))
+-#define _Py_STRINGIZE1(X) _Py_STRINGIZE2 ## X
++#define _Py_STRINGIZE(X) _Py_STRINGIZE2(X)
+ #define _Py_STRINGIZE2(X) #X
+ 
+ /* MSVC defines _WINxx to differentiate the windows platform types
