@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/trantor
-    REF v1.5.3
-    SHA512 2d032c59ad1b57bb1711fe99436fbc8eec5400d91bf310986cb4985e2c2ce1143844701a67241d0fe8dc7ab706b828feded3138aef8cf9d5620e581a1a770079
+    REF v1.5.6
+    SHA512 9c9827b1640fa23f2941c6c10ffe692d4207595de1cb149f94140c0f20d4fe6c45e3efcc50d464bd40aff80443dfe3bdd8db263302755ab8f639a920e497c0b3
     HEAD_REF master
     PATCHES
-        vcpkg.patch
 )
 
 vcpkg_cmake_configure(

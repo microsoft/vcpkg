@@ -1,9 +1,9 @@
 {
   "name": "boost-asio",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
-  "supports": "!emscripten",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-array",
@@ -24,7 +24,17 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
-    "openssl"
-  ]
+    "boost-vcpkg-helpers"
+  ],
+  "features": {
+    "ssl": {
+      "description": "Build with SSL support",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!emscripten"
+        }
+      ]
+    }
+  }
 }

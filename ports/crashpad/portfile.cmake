@@ -1,20 +1,19 @@
-vcpkg_fail_port_install(
-    ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "LINUX")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 9a31d3f8e9815774026a753a1ff6155347cd549f
+    REF 68aba08c48bb428b7b159b3371163f86e8d5a126
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
-    
+
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
@@ -28,7 +27,7 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "c426ff98e1d9e9d59777fe8b883a5c0ceeca9ca3"
+    "5654edb4225bcad13901155c819febb5748e502b"
 )
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
@@ -67,23 +66,20 @@ set(OPTIONS_REL "")
 
 if(CMAKE_HOST_WIN32)
     # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
 
     set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\"")
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_DEBUG}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_DEBUG}\" \
+        extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}\" \
+        extra_arflags=\"${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}\"")
 
     set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\"")
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_RELEASE}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_RELEASE}\" \
+        extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}\" \
+        extra_arflags=\"${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}\"")
 
     set(DISABLE_WHOLE_PROGRAM_OPTIMIZATION "\
         extra_cflags=\"/GL-\" \
@@ -116,12 +112,15 @@ install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
 # remove empty directories
-file(REMOVE_RECURSE 
-    "${PACKAGES_INCLUDE_DIR}/util/net/testdata" 
+file(REMOVE_RECURSE
+    "${PACKAGES_INCLUDE_DIR}/util/net/testdata"
     "${PACKAGES_INCLUDE_DIR}/build/ios")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/crashpadConfig.cmake" @ONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/build/config")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/util/mach/__pycache__")
 
 vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/LICENSE"

@@ -1,13 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF ae4eacf147e2c2340cc4e02a790df04c793ed0a9 # openal-soft-1.21.1
-    SHA512 6ba006d3dad6efe002f285ff509a59f02b499ec3f6065df12a89c52355464117b4dbabcd04ee9cbf22cc3b4125c8e456769b172f8c3e9ee215e760b2c51a0a8f
+    REF dc83d99c95a42c960150ddeee06c124134b52208 # openal-soft-1.22.2
+    SHA512 3fbbdfbb2609ef8187d20ce74b2fb8082037288f3fd80df71d360705d8efdadfe8f62811af1cd824cb6572c8c3479b370f8ae3819b8b8bb0b20c34f7a73cc530
     HEAD_REF master
-    PATCHES
-        dont-export-symbols-in-static-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -30,7 +26,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(ALSOFT_REQUIRE_APPLE ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBTYPE=${OPENAL_LIBTYPE}
@@ -48,7 +44,7 @@ vcpkg_configure_cmake(
         -DALSOFT_BACKEND_PULSEAUDIO=OFF
         -DALSOFT_BACKEND_COREAUDIO=${ALSOFT_REQUIRE_APPLE}
         -DALSOFT_BACKEND_JACK=OFF
-        -DALSOFT_BACKEND_OPENSL=OFF
+        -DALSOFT_BACKEND_OPENSL=${VCPKG_TARGET_IS_ANDROID}
         -DALSOFT_BACKEND_WAVE=ON
         -DALSOFT_BACKEND_WINMM=OFF
         -DALSOFT_BACKEND_DSOUND=OFF
@@ -72,8 +68,8 @@ vcpkg_configure_cmake(
         CMAKE_DISABLE_FIND_PACKAGE_WindowsSDK
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenAL")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenAL")
 
 foreach(HEADER al.h alc.h)
     file(READ "${CURRENT_PACKAGES_DIR}/include/AL/${HEADER}" AL_H)

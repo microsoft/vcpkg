@@ -1,7 +1,8 @@
 {
   "name": "liburing",
-  "version": "2.0",
+  "version": "2.1",
   "description": "Linux-native io_uring I/O access library",
   "homepage": "https://github.com/axboe/liburing",
+  "license": null,
   "supports": "linux"
 }

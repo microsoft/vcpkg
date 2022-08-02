@@ -1,7 +1,8 @@
 {
   "name": "cmake-user",
-  "version-date": "2021-07-24",
+  "version-date": "2022-07-02",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "license": "MIT",
   "default-features": [
     "ci"
   ],
@@ -13,21 +14,26 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
-            "find-package"
+            "cmake-current",
+            "find-package",
+            "pkg-check-modules"
           ]
         },
         {
           "name": "cmake-user",
           "default-features": false,
           "features": [
-            "cmake-3-4"
+            "cmake-3-7"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
         }
       ]
     },
-    "cmake-3-4": {
-      "description": "Use CMake 3.4 to build the test project"
+    "cmake-3-7": {
+      "description": "Run the tests with CMake 3.7"
+    },
+    "cmake-current": {
+      "description": "Run the tests with vcpkg's current version of CMake"
     },
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
@@ -37,12 +43,24 @@
           "name": "bzip2"
         },
         {
+          "$package": "CURL",
+          "name": "curl",
+          "default-features": false
+        },
+        {
           "$package": "EXPAT",
           "name": "expat"
         },
         {
+          "$package": "Fontconfig",
+          "$since": "3.14",
+          "name": "fontconfig",
+          "platform": "!mingw & !uwp"
+        },
+        {
           "$package": "Freetype",
-          "name": "freetype"
+          "name": "freetype",
+          "default-features": false
         },
         {
           "$package": "Intl",
@@ -53,18 +71,73 @@
           "name": "giflib"
         },
         {
+          "$package": "ICU",
+          "name": "icu",
+          "platform": "!uwp"
+        },
+        {
+          "$package": "Iconv",
+          "$since": "3.11",
+          "name": "libiconv"
+        },
+        {
+          "$package": "JPEG",
+          "name": "libjpeg-turbo"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
         {
-          "$package": "Curses",
-          "name": "ncurses",
-          "platform": "!windows & !uwp"
+          "$package": "PNG",
+          "name": "libpng"
+        },
+        {
+          "$package": "PostgreSQL",
+          "name": "libpq",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXml2",
+          "$since": "3.11",
+          "name": "libxml2",
+          "default-features": false
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXslt",
+          "$since": "3.11",
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "TIFF",
+          "name": "tiff",
+          "default-features": false
+        },
+        {
+          "$package": "wxWidgets",
+          "name": "wxwidgets",
+          "default-features": false,
+          "platform": "!linux & !uwp"
         },
         {
           "$package": "ZLIB",
           "name": "zlib"
         }
+      ]
+    },
+    "pkg-check-modules": {
+      "description": "Test `find_package(PkgConfig)` and pkg_check_modules(...)",
+      "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
+        "zlib"
       ]
     }
   }

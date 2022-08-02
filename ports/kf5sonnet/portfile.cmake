@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/sonnet
-    REF v5.88.0
-    SHA512 bfd56c43cd0bfefd0d12635aaca5a520d834ad7507c4d4a1a9dc6a0cb1271d1bc466cb8286aea57991f7a5cb10d9c10dddd8b4406be7e6eb79e26a46190527b2
+    REF v5.89.0
+    SHA512 18e2b9f9553229853952e2b0e3e6fac9c87417014f607144419bfe10b9d40cf5b542b253a43e5305d75ccef525f8cce36c112e1bad9398365847d5ec2996e8e4
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
@@ -44,6 +44,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

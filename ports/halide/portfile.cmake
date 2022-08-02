@@ -1,11 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+set(HALIDE_VERSION_TAG v14.0.0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF 5dabcaa9effca1067f907f6c8ea212f3d2b1d99a  # v12.0.1
-    SHA512 5ab44703850885561337e23d8b538a5adfe1611e24e8daa4a1313756b4f9dfeb54e89bf8400d46a3340c00234402681b4f44ba3ed5322027fd6cb5dfbd525acd
-    HEAD_REF release/12.x
+    REF ${HALIDE_VERSION_TAG}
+    SHA512 c7b1186cca545f30d038f1e9bb28ca7231023869d191c50722213da4c7e9adfd4a53129fe395cd7938cb7cb3fb1bf80f9cd3b4b8473a0246f15b9ad8d3e40fe2
+    HEAD_REF release/14.x
 )
 
 vcpkg_check_features(
@@ -68,8 +70,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
 
-file(GLOB readmes "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.md")
-file(REMOVE ${readmes})
-
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)

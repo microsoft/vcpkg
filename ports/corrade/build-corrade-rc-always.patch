@@ -1,0 +1,27 @@
+--- a/src/Corrade/Utility/CMakeLists.txt
++++ b/src/Corrade/Utility/CMakeLists.txt
+@@ -185,13 +185,12 @@
+ # corrade-rc when generating WinRT targets by setting
+ #  set_target_properties(corrade-rc PROPERTIES VS_WINRT_COMPONENT OFF)
+ # Then this would be if(NOT CMAKE_CROSSCOMPILING OR CORRADE_TARGET_WINDOWS_RT).
+ # However, it seems like this feature never materialized, as doing this will
+ # result in corrade-rc that's looking for vcruntime140_app.dll in order to be
+ # run. Last checked: Nov 2019.
+-if(NOT CMAKE_CROSSCOMPILING)
+     # Sources for standalone corrade-rc
+     set(CorradeUtilityRc_SRCS
+         Arguments.cpp
+         Debug.cpp
+         Directory.cpp
+         Configuration.cpp
+@@ -235,9 +234,10 @@
+     if(CORRADE_TARGET_UNIX)
+         target_link_libraries(corrade-rc PRIVATE ${CMAKE_DL_LIBS})
+     endif()
+     set_target_properties(corrade-rc PROPERTIES FOLDER "Corrade/Utility")
+     install(TARGETS corrade-rc DESTINATION ${CORRADE_BINARY_INSTALL_DIR})
+ 
++if(NOT CMAKE_CROSSCOMPILING)
+     # Corrade::rc target alias for superprojects
+     add_executable(Corrade::rc ALIAS corrade-rc)
+ endif()

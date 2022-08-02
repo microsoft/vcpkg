@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.7.3
-    SHA512 20146bf59898704f3b44778fa46e919d9124ef8a33eb1cfcce7f437507c20920829a0074e1c9e2493a1764b8a36b1a91b03f117fd78e740253b15d2146dca628
+    REF v1.7.5
+    SHA512 8be77961026d13b55dbfcc2e43972b4fb8f1cd9a6bfb8098d5bdfc8b60ff67c2d3ede4bdb5815614a8233dc184cbf3aa363a9d33eed96b9f748544e20b15f2c7
     HEAD_REF master
     PATCHES
         vcpkg.patch
         drogon_config.patch
         static-brotli.patch
-        Fix-Drogon-not-building-caused-by-FindFilesystem-105.patch
+        use-libmariadb.patch
 )
 
 vcpkg_check_features(
@@ -56,7 +56,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Copy pdb files

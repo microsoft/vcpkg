@@ -18,7 +18,7 @@
 - [vcpkg\_clean\_executables\_in\_bin](vcpkg_clean_executables_in_bin.md)
 - [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md)
 - [vcpkg\_common\_definitions](vcpkg_common_definitions.md)
-- [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md) (deprecated, use [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md))
+- [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md) (deprecated, use [vcpkg\_cmake\_configure](vcpkg_cmake_configure.md))
 - [vcpkg\_configure\_gn](vcpkg_configure_gn.md) (deprecated, use [vcpkg\_gn\_configure](ports/vcpkg-gn/vcpkg_gn_configure.md))
 - [vcpkg\_configure\_make](vcpkg_configure_make.md)
 - [vcpkg\_configure\_meson](vcpkg_configure_meson.md)
@@ -33,7 +33,7 @@
 - [vcpkg\_execute\_required\_process\_repeat](vcpkg_execute_required_process_repeat.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
-- [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md)
+- [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md) (deprecated)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
 - [vcpkg\_find\_fortran](vcpkg_find_fortran.md)
 - [vcpkg\_fixup\_cmake\_targets](vcpkg_fixup_cmake_targets.md) (deprecated, use [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md))
@@ -48,6 +48,7 @@
 - [vcpkg\_host\_path\_list](vcpkg_host_path_list.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md) (deprecated, use [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md))
 - [vcpkg\_install\_gn](vcpkg_install_gn.md) (deprecated, use [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md))
+- [vcpkg\_install\_copyright](vcpkg_install_copyright.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
 - [vcpkg\_install\_meson](vcpkg_install_meson.md)
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
@@ -64,20 +65,37 @@
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
 - [z\_vcpkg\_get\_cmake\_vars](internal/z_vcpkg_get_cmake_vars.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
+- [z\_vcpkg\_setup\_pkgconfig\_path](internal/z_vcpkg_setup_pkgconfig_path.md)
 
 ## Scripts from Ports
 
 ### [vcpkg-cmake](ports/vcpkg-cmake.md)
 
 - [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
-- [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
-- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake/vcpkg_cmake_get_vars.md)
+- [vcpkg\_cmake\_configure](vcpkg_cmake_configure.md)
 - [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
+
+### [vcpkg-gn](ports/vcpkg-gn.md)
+
+- [vcpkg\_gn\_configure](ports/vcpkg-gn/vcpkg_gn_configure.md)
+- [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md)
 
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
 
+### [vcpkg-cmake-get-vars](ports/vcpkg-cmake-get-vars.md)
+
+- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake-get-vars/vcpkg_cmake_get_vars.md)
+
 ### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
 
 - [x\_vcpkg\_pkgconfig\_get\_modules](ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.md)
+
+### [vcpkg-get-python-packages](ports/vcpkg-get-python-packages.md)
+
+- [x\_vcpkg\_get\_python\_packages](ports/vcpkg-get-python-packages/x_vcpkg_get_python_packages.md)
+
+### [vcpkg-qmake](ports/vcpkg-qmake.md)
+
+- [vcpkg\_qmake\_configure](ports/vcpkg-qmake/vcpkg_qmake_configure.md)

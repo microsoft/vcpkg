@@ -1,8 +1,9 @@
 {
   "name": "boost-coroutine",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
+  "license": "BSL-1.0",
   "supports": "!arm & !uwp & !emscripten",
   "dependencies": [
     "boost-assert",
@@ -23,7 +24,6 @@
     },
     "boost-move",
     "boost-system",
-    "boost-thread",
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",

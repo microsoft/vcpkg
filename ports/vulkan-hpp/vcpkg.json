@@ -1,7 +1,6 @@
 {
   "name": "vulkan-hpp",
-  "version-string": "1.2.184",
-  "port-version": 1,
+  "version": "1.2.203",
   "description": "Header only C++ bindings for the Vulkan C API",
   "dependencies": [
     "vulkan"

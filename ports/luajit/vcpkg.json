@@ -1,8 +1,9 @@
 {
   "name": "luajit",
-  "version-string": "2.0.5",
-  "port-version": 4,
+  "version": "2.0.5",
+  "port-version": 8,
   "description": "LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.",
   "homepage": "https://github.com/LuaJIT/LuaJIT",
+  "license": "MIT",
   "supports": "!uwp"
 }

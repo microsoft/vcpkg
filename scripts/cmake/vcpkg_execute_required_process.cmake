@@ -1,57 +1,8 @@
-#[===[.md:
-# vcpkg_execute_required_process
-
-Execute a process with logging and fail the build if the command fails.
-
-## Usage
-```cmake
-vcpkg_execute_required_process(
-    COMMAND <${PERL}> [<arguments>...]
-    WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
-    LOGNAME <build-${TARGET_TRIPLET}-dbg>
-    [TIMEOUT <seconds>]
-    [OUTPUT_VARIABLE <var>]
-    [ERROR_VARIABLE <var>]
-)
-```
-## Parameters
-### ALLOW_IN_DOWNLOAD_MODE
-Allows the command to execute in Download Mode.
-[See execute_process() override](../../scripts/cmake/execute_process.cmake).
-
-### COMMAND
-The command to be executed, along with its arguments.
-
-### WORKING_DIRECTORY
-The directory to execute the command in.
-
-### LOGNAME
-The prefix to use for the log files.
-
-### TIMEOUT
-Optional timeout after which to terminate the command.
-
-### OUTPUT_VARIABLE
-Optional variable to receive stdout of the command.
-
-### ERROR_VARIABLE
-Optional variable to receive stderr of the command.
-
-This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
-
-## Examples
-
-* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-* [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
-* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
-#]===]
-
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE"
         "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
-        "COMMAND"
+        "COMMAND;SAVE_LOG_FILES"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -100,6 +51,10 @@ Halting portfile execution.
         endif()
     endif()
 
+    if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+    endif()
+
     vcpkg_execute_in_download_mode(
         COMMAND ${arg_COMMAND}
         OUTPUT_FILE "${log_out}"
@@ -110,9 +65,22 @@ Halting portfile execution.
         ${output_variable_param}
         ${error_variable_param}
     )
+    vcpkg_list(SET saved_logs)
+    foreach(logfile IN LISTS arg_SAVE_LOG_FILES)
+        set(filepath "${arg_WORKING_DIRECTORY}/${logfile}")
+        if(NOT EXISTS "${filepath}")
+            continue()
+        endif()
+        cmake_path(GET filepath FILENAME filename)
+        if(NOT filename MATCHES "[.]log\$")
+            string(APPEND filename ".log")
+        endif()
+        configure_file("${filepath}" "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}" COPYONLY)
+        vcpkg_list(APPEND saved_logs "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}")
+    endforeach()
     if(NOT error_code EQUAL 0)
         set(stringified_logs "")
-        foreach(log IN ITEMS "${log_out}" "${log_err}")
+        foreach(log IN LISTS saved_logs ITEMS "${log_out}" "${log_err}")
             if(NOT EXISTS "${log}")
                 continue()
             endif()
@@ -120,6 +88,7 @@ Halting portfile execution.
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
 

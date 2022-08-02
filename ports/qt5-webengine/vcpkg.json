@@ -1,8 +1,8 @@
 {
   "name": "qt5-webengine",
-  "version-string": "5.15.2",
-  "port-version": 3,
+  "version": "5.15.5",
   "description": "Qt5 webengine Module;",
+  "license": null,
   "supports": "!static",
   "dependencies": [
     {
@@ -23,7 +23,8 @@
     "qt5-quickcontrols",
     "qt5-quickcontrols2",
     "qt5-tools",
-    "qt5-webchannel"
+    "qt5-webchannel",
+    "vcpkg-tool-nodejs"
   ],
   "features": {
     "proprietary-codecs": {

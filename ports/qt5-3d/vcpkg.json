@@ -1,8 +1,9 @@
 {
   "name": "qt5-3d",
-  "version-string": "5.15.2",
-  "port-version": 2,
+  "version": "5.15.5",
+  "port-version": 1,
   "description": "Qt5 3d Module - Functionality for near-realtime simulation systems with support for 2D and 3D rendering",
+  "license": null,
   "dependencies": [
     "assimp",
     {

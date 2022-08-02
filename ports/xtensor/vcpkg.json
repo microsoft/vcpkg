@@ -1,10 +1,19 @@
 {
   "name": "xtensor",
-  "version": "0.23.10",
+  "version": "0.24.0",
   "description": "C++ tensors with broadcasting and lazy computing",
   "homepage": "https://github.com/xtensor-stack/xtensor",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "xtl"
   ],
   "features": {

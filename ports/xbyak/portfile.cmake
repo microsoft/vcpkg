@@ -1,17 +1,15 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
-    REF v6.00
-    SHA512 8bea95ddb44be39312083173cd4401039bd402c4732d97f9ff63174f6db29793f80dc1f1589d64bd96b4b13af819133897cd9843523662d13d57158c3837a778
+    REF v6.60
+    SHA512 83dba532c7aaa618d61f2d345caeb0ca0b1c3e4946b758095410f269ba954d1870325ed05aa7a1f8aab0b5a2961ecd878980ab835f3db3078a969d2d951aa7e9
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xbyak")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"

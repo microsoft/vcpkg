@@ -1,14 +1,12 @@
 set(X264_VERSION 164)
 
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
     REF 5db6aa6cab1b146e07b60cc1736a01f21da01154
     SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
     HEAD_REF stable
-    PATCHES 
+    PATCHES
         "uwp-cflags.patch"
 )
 
@@ -61,11 +59,13 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc")
     if(EXISTS "${pcfile}")
-        vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+      vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
     endif()
-    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x264.pc")
-    if(EXISTS "${pcfile}")
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x264.pc")
+      if(EXISTS "${pcfile}")
         vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+      endif()
     endif()
 endif()
 

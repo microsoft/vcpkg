@@ -10,44 +10,34 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${SDL2_IMAGE_VERSION}
+    PATCHES
+        0001-sdl2-image-potentially-uninitialized_local-pointer-variable-start.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/sdl2-image-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-set(USE_JPEG OFF)
-if("libjpeg-turbo" IN_LIST FEATURES)
-    set(USE_JPEG ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        libjpeg-turbo USE_JPEG
+        tiff USE_TIFF
+        libwebp USE_WEBP
+)
 
-set(USE_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-    set(USE_TIFF ON)
-endif()
-
-set(USE_WEBP OFF)
-if("libwebp" IN_LIST FEATURES)
-    set(USE_WEBP ON)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
         -DUSE_PNG=ON
-        -DUSE_JPEG=${USE_JPEG}
-        -DUSE_TIFF=${USE_TIFF}
-        -DUSE_WEBP=${USE_WEBP}
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-image)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-image/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2-image/copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

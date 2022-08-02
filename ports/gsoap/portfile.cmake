@@ -1,7 +1,5 @@
 message(FATAL_ERROR "gsoap does not offer permanent public downloads of its sources; all versions except the latest are removed from sourceforge. Therefore, vcpkg cannot support this library directly in the central catalog. If you would like to use gsoap, you can use this port as a starting point (${CMAKE_CURRENT_LIST_DIR}) and update it to use a permanent commercial copy or the latest public download. Do not report issues with this library to the vcpkg GitHub.")
 
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gsoap2
@@ -52,7 +50,7 @@ file(COPY ${SOURCE_PATH}/gsoap/custom DESTINATION ${CURRENT_PACKAGES_DIR}/share/
 file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Cleanup surplus empty directory
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gsoap/plugin/.deps")    
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gsoap/plugin/.deps")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

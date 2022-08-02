@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.88.0
-    SHA512 2ec44db614de6c705dbf43915d28afd2f945cb71d12c5a1dac6d2f76592970c067a354b9e81dc5a05a676b5e33ef78172687b3ec0e895041d72d4b7cf06925bb
+    REF v5.89.0
+    SHA512 83f748690efe8024f603057cc97ab713f82ba6fbdb4462bb6052a8e89945e4117d6b1f030e0064120ae7e34a9b06860ba77d56617d5663578f0ac11a74dba2db
     HEAD_REF master
-    PATCHES
-        x11_private_dependency.diff
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -32,5 +30,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

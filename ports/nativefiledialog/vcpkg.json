@@ -1,7 +1,6 @@
 {
   "name": "nativefiledialog",
-  "version-date": "2019-08-28",
-  "port-version": 1,
+  "version-date": "2022-01-20",
   "description": "A tiny, neat C library that portably invokes native file open and save dialogs",
   "homepage": "https://github.com/mlabbe/nativefiledialog",
   "supports": "!uwp",

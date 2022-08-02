@@ -3,19 +3,16 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF d3286c9cc04ba16cc8f73de9a98fbcd7c02f3c7b
-    SHA512 c358449870d580aeb10e32f8be0ca39e8a76d8dc06fda973788fafb5971333e546611c399190be49d40f5f3c18a1105d9699eef271a560aff25ce168a396926e
+    REF 95800fd4d4b08678a6c0ebb63eb242893025b660 #5.2.1
+    SHA512 fe703bc6ed681cb9983d7d6e21c8ffa7650337e470c09a7241de58a463c23e315516b1a81a18c14f682706056a0ec66932b63d2e24945bdcea03169bc1122bb2
     HEAD_REF master
     PATCHES
-        hdf5.patch
         double-conversion.patch
         openjpeg.patch
         openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        python_gpu_wrapping.patch
         opencl.patch
-        cufftw.patch
         use-the-lrintf-intrinsic.patch
 )
 
@@ -29,6 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tbb"          Module_ITKTBB
         "rtk"          Module_RTK
         "tools"        RTK_BUILD_APPLICATIONS
+        "opencv"       Module_ITKVideoBridgeOpenCV
         # There are a lot of more (remote) modules and options in ITK
         # feel free to add those as a feature
 )
@@ -110,6 +108,12 @@ if("python" IN_LIST FEATURES)
         "-DSWIG_DIR=${SWIG_DIR}"
         )
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
+endif()
+if("opencv" IN_LIST FEATURES)
+    message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+        )
 endif()
 
 set(USE_64BITS_IDS OFF)
@@ -194,9 +198,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.1/vcl_where_root_dir.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.3/vcl_where_root_dir.h")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.1/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.1/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

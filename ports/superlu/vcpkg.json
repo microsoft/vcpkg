@@ -1,7 +1,7 @@
 {
   "name": "superlu",
-  "version-string": "2020-01-07",
-  "port-version": 4,
+  "version-date": "2020-01-07",
+  "port-version": 5,
   "description": "Supernodal sparse direct solver.",
   "homepage": "https://github.com/xiaoyeli/superlu",
   "supports": "!(uwp | arm)",

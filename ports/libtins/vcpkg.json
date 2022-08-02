@@ -1,8 +1,9 @@
 {
   "name": "libtins",
   "version": "4.3",
-  "port-version": 4,
+  "port-version": 6,
   "description": "High-level, multiplatform C++ network packet sniffing and crafting library",
+  "license": "BSD-2-Clause",
   "supports": "!uwp",
   "dependencies": [
     "boost-any",

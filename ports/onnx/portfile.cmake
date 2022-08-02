@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 7519d326cd2b2b13a269ec0d01af07c32115d183dae6e1eaae55f5b23b6c92b2aadbb2b1e555557f4201bbcf921fa563d09d45d7f1d3bd2399c1a94a6ef63303
     PATCHES
         fix-cmakelists.patch
+        fix-dependency-protobuf.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)

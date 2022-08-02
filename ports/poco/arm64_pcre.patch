@@ -1,16 +1,3 @@
-diff --git a/Foundation/include/Poco/Platform.h b/Foundation/include/Poco/Platform.h
-index 9a945f3..f5a9a7f 100644
---- a/Foundation/include/Poco/Platform.h
-+++ b/Foundation/include/Poco/Platform.h
-@@ -191,7 +191,7 @@
- 	#else
- 		#define POCO_ARCH_LITTLE_ENDIAN 1
- 	#endif
--#elif defined(__arm64__) || defined(__arm64)
-+#elif defined(__arm64__) || defined(__arm64) || defined(_M_ARM64)
- 	#define POCO_ARCH POCO_ARCH_ARM64
- 	#if defined(__ARMEB__)
- 		#define POCO_ARCH_BIG_ENDIAN 1
 diff --git a/Foundation/src/EventLogChannel.cpp b/Foundation/src/EventLogChannel.cpp
 index 1f51296..c67b71b 100644
 --- a/Foundation/src/EventLogChannel.cpp
@@ -24,7 +11,7 @@ index 1f51296..c67b71b 100644
  #include "Poco/EventLogChannel.h"
  #include "Poco/Message.h"
 diff --git a/Foundation/src/utils.h b/Foundation/src/utils.h
-index 4328344..5eeafcd 100644
+index 0a222c7..0843315 100644
 --- a/Foundation/src/utils.h
 +++ b/Foundation/src/utils.h
 @@ -91,7 +91,7 @@ int main(int argc, char** argv) {

@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO xiph/speex
-  REF Speex-1.2.0
-  SHA512  612dfd67a9089f929b7f2a613ed3a1d2fda3d3ec0a4adafe27e2c1f4542de1870b42b8042f0dcb16d52e08313d686cc35b76940776419c775417f5bad18b448f
+  REF 5dceaaf3e23ee7fd17c80cb5f02a838fd6c18e01 #Speex-1.2.1
+  SHA512  d03da906ec26ddcea2e1dc4157ac6dd056e1407381b0f37edd350552a02a7372e9108b4e39ae522f1b165be04b813ee11db0b47d17607e4dad18118b9041636b
   HEAD_REF master
   PATCHES ${PATCHES}
 )
@@ -14,12 +14,11 @@ vcpkg_from_github(
 if(VCPKG_TARGET_IS_WINDOWS)
   file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
   
-  vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+  vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
   )
-  vcpkg_install_cmake()
+  vcpkg_cmake_install()
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/speex/speex.h"
@@ -28,9 +27,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
   endif()
 else()
+  if(VCPKG_TARGET_IS_OSX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with brew install autoconf automake libtool")
+  elseif(VCPKG_TARGET_IS_LINUX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with apt-get install autoconf automake libtool")
+  endif()
   vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS --disable-binaries # no example programs (require libogg)
   )
   vcpkg_install_make()
 

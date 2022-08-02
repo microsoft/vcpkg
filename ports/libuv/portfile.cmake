@@ -1,39 +1,35 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF 6ce14710da7079eb248868171f6343bc409ea3a4 # v1.42.0
-    SHA512 305b0e8beb9372d22b767f1f792c6351d4b2d747b31cda95a4657cfca101806a17dd0bfab2039d22e29387c9d5ee376fe1b22d63aba1baf0d88817cbcacd97b8
+    REF e8b7eb6908a847ffbe6ab2eec7428e43a0aa53a2  #v1.44.1
+    SHA512 c8918fe3cdfcfec7c7da4af8286b5fd28805f41a40a283a22ff578631835539d9f52b46310f1ac0a464a570f9664d6793bb6c63541f01a4f379b3ad2f7c56aea
     HEAD_REF v1.x
+    PATCHES fix-build-type.patch
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DUV_SKIP_HEADERS=ON
+    OPTIONS
+        -DLIBUV_BUILD_TESTS=OFF
+        -DQEMU=OFF
+        -DASAN=OFF
+        -DTSAN=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libuv CONFIG_PATH share/unofficial-libuv)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libuv)
+vcpkg_fixup_pkgconfig()
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/unofficial-libuv-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-libuv/unofficial-libuv-config.cmake"
-    @ONLY
-)
-
-file(READ "${CURRENT_PACKAGES_DIR}/include/uv.h" UV_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "defined(USING_UV_SHARED)" "1" UV_H "${UV_H}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/uv.h" "defined(USING_UV_SHARED)" "1")
 else()
-    string(REPLACE "defined(USING_UV_SHARED)" "0" UV_H "${UV_H}")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/uv.h" "defined(USING_UV_SHARED)" "0")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/uv.h" "${UV_H}")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

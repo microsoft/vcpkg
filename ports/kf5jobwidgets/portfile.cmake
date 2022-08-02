@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kjobwidgets
-    REF v5.88.0
-    SHA512 9d945adc0194a8f5cfea702c5f60b2046f5b350094959fa67a648a8dc23d3445304e96f5a75e03ec33281e63e606fb0e0893ac79a3cc438c5b302c37b7882838
+    REF v5.89.0
+    SHA512 6fcc1fbef4de8adde1577739a28b5a3671829b24d4d8885a6b22f7b99662f058502183ab7d4f8c47f2c69f02a1932ac94a55be93bd6245fe97d8819644b1e708
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,6 +27,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

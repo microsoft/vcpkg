@@ -1,7 +1,7 @@
 {
   "name": "bde",
-  "version-string": "3.2.0.0",
-  "port-version": 4,
+  "version": "3.2.0.0",
+  "port-version": 5,
   "description": "Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.",
-  "supports": "!windows"
+  "supports": "!windows & !arm"
 }

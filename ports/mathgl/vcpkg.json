@@ -1,7 +1,6 @@
 {
   "name": "mathgl",
-  "version": "2.4.3",
-  "port-version": 8,
+  "version": "2.5",
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "dependencies": [
     {
@@ -20,6 +19,12 @@
     "zlib"
   ],
   "features": {
+    "arma": {
+      "description": "Armadillo support",
+      "dependencies": [
+        "armadillo"
+      ]
+    },
     "fltk": {
       "description": "fltk module",
       "dependencies": [

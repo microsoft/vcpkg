@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(FLINT_VERSION 2.8.0)
 set(FLINT_HASH "916285d13a55d12a041236195a9d7bbc5c1c3c30c3aa2f169efee6063b800d34f96ad3235f1c77285b04305ce685e5890169c984108d50d0c9ee7a77c3f6e73d")
 
@@ -23,7 +21,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DWITH_NTL=OFF
-        -DWITH_CBLAS=OFF 
+        -DWITH_CBLAS=OFF
 )
 
 vcpkg_cmake_install()

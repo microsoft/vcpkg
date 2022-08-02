@@ -25,10 +25,8 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_tcl=OFF
-        -DENABLE_d=OFF
-        -DENABLE_qt=OFF
-        -DENABLE_ocaml=OFF
+        -DDEFAULT_NO_BINDINGS=ON
+        -DENABLE_cxx=ON
         -DPL_HAVE_QHULL=OFF
         -DPLPLOT_USE_QT5=OFF
         -DPL_DOUBLE=ON

@@ -1,25 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
-    REF v5.88.0
-    SHA512 233ea884aafc70a186698fece376727cac5ae79daa6396752a375c8b66c6bbf9ea952ee14cd48b54fcf58af2f931d9c96a83f3d01c8e2c29ab618ee961285762
+    REF v5.89.0
+    SHA512 e77d5233b6549332f180be3dcf0459688d6565c24e1af409814aab92d415ebb2b8a04ad720dfa9ed6f017f3ab86fab766b909e30a860bb83c5ddd51def7c3e5f
     HEAD_REF master
     PATCHES
-        use_cmake_to_find_zstd.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/24
+        control-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-        "lzma"  CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
-        "zstd"  CMAKE_DISABLE_FIND_PACKAGE_ZSTD
+    FEATURES
+        "bzip2" VCPKG_USE_BZIP2
+        "lzma"  VCPKG_USE_LIBLZMA
+        "zstd"  VCPKG_USE_ZSTD
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
 )
@@ -35,6 +37,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

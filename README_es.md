@@ -22,8 +22,6 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 * Discord: [\#include \<C++\>](https://www.includecpp.org), en el canal #🌏vcpkg
 * Docs: [Documentación](docs/README.md)
 
-[![Estado de compilación](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 ## Tabla de contenido
 
 - [Vcpkg](#vcpkg)
@@ -33,7 +31,6 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
     - [Inicio rápido: Unix](#inicio-rápido-unix)
     - [Instalando Herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-linux)
     - [Instalando Herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
-      - [Instalando GCC en macOS previo a 10.15](#instalando-gcc-en-macos-previo-a-1015)
     - [Usando Vcpkg con CMake](#usando-vcpkg-con-cmake)
       - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
       - [Vcpkg con proyectos de Visual Studio(CMake)](#vcpkg-con-proyectos-de-visual-studiocmake)
@@ -44,6 +41,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
   - [Ejemplos](#ejemplos)
   - [Contribuyendo](#contribuyendo)
   - [Licencia](#licencia)
+- [Seguridad](#seguridad)
   - [Telemetría](#telemetría)
 
 ## Primeros pasos
@@ -113,7 +111,7 @@ Para utilizar Vcpkg con CMake sin un IDE,
 puede utilizar el archivo de herramientas incluido:
 
 ```cmd
-> cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [directorio de compilación] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [directorio de compilación]
 ```
 
@@ -134,9 +132,6 @@ Prerrequisitos para Linux:
 Prerrequisitos para macOS:
 
 - [Herramientas de desarrollo de Apple][getting-started:macos-dev-tools]
-- En macOS 10.14 o inferior, también necesita:
-  - [Homebrew][getting-started:macos-brew]
-  - [g++][getting-started:macos-gcc] >= 6 de Homebrew
 
 Primero, descargue y compile vcpkg, puede ser instalado donde sea,
 pero recomendamos usar vcpkg como submodulo para proyectos de CMake.
@@ -173,7 +168,7 @@ $ ./vcpkg/vcpkg search [término de búsqueda]
 Para usar vcpkg con CMake, tiene que usar el siguiente archivo toolchain:
 
 ```sh
-$ cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [directorio de compilación] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [directorio de compilación]
 ```
 
@@ -217,25 +212,6 @@ $ xcode-select --install
 ```
 
 Luego seguir los pasos que aparecerán en las ventanas que se muestran.
-
-En macOS 10.14 y previos, también requiere instalar g++ de homebrew;
-siguiendo los pasos en la sección siguiente.
-
-#### Instalando GCC en macOS previo a 10.15
-
-Este paso _solo_  es requerido si está usando una versión de macOS previa a 10.15.
-Instalar homebrew debería ser sencillo; visite <brew.sh> para mas información,
-pero de manera simple, ejecute el siguiente comando:
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-```
-
-luego, para obtener una versión actualizada de gcc, ejecute el comando:
-
-```sh
-$ brew install gcc
-```
 
 Posteriormente podrá compilar vcpkg junto con la [guía de inicio rápido](#inicio-rápido-unix)
 
@@ -285,7 +261,7 @@ puede agregar lo siguiente as su CMakeLists,txt antes de la primera llamada a `p
 en vez de pasar `CMAKE_TOOLCHAIN_FILE` a la invocación de CMake.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -343,13 +319,11 @@ puede usar un simple `vcpkg install --feature-flags=manifests`
 Para más información, revise la especificación de [manifiesto][getting-started:manifest-spec]
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
-[getting-started:linux-gcc]: #installing-linux-developer-tools
-[getting-started:macos-dev-tools]: #installing-macos-developer-tools
-[getting-started:macos-brew]: #installing-gcc-on-macos
-[getting-started:macos-gcc]: #installing-gcc-on-macos
+[getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux
+[getting-started:macos-dev-tools]: #Instalando-Herramientas-de-desarrollo-en-macOS
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
 [getting-started:manifest-spec]: docs/specifications/manifests.md
 
@@ -366,7 +340,7 @@ para activar el autocompletado en la terminal de elección ejecute:
 o
 
 ```sh
-$ ./vcpkg integrate bash
+$ ./vcpkg integrate bash # o zsh
 ```
 
 según la terminal que use, luego reinicie la consola.
@@ -407,6 +381,16 @@ con cualquier pregunta adicional o comentarios.
 ## Licencia
 
 El código en este repositorio se encuentra licenciado mediante la [Licencia MIT](LICENSE.txt).
+Las bibliotecas proveídas por los `ports` están licenciadas mediante los terminos de los autores originales.
+Donde estén disponibles, vcpkg almacena las licencias asociadas en la siguiente ubicación `installed/<triplet>/share/<port>/copyright`.
+
+# Seguridad
+
+La mayoría de los `ports` en vcpkg construyen las bibliotecas usando su sistema de compilación preferido
+por los autores originales de las bibliotecas, y descargan el código fuente asi como las herramientas de compilación
+de sus ubicaciones de distribucion oficiales. Para aquellos que usan un firewall, el acceso dependerá de cuales `ports`
+están siendo instalados. Si tiene que instalarlos en un entorno aislado, puede instalarlos previamente en un entorno
+no aislado, generando un [caché del paquete](docs/users/assetcaching.md) compartido con el entorno aislado.
 
 ## Telemetría
 

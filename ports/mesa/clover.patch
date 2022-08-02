@@ -1,0 +1,63 @@
+From b7c465dc43693cb1ad7e073cc7d8f89f5cfbd0ac Mon Sep 17 00:00:00 2001
+From: pal1000 <liviuprodea@yahoo.com>
+Date: Sat, 13 Nov 2021 11:39:58 +0200
+Subject: [PATCH] clover: Use static pipe loader on Windows
+
+Currently this only supports linking in swrast, but more Windows-supporting
+drivers can be added pretty easily.
+---
+ src/gallium/targets/opencl/meson.build | 18 +++++++++++++++---
+ src/gallium/targets/opencl/target.c    |  2 ++
+ 2 files changed, 17 insertions(+), 3 deletions(-)
+ create mode 100644 src/gallium/targets/opencl/target.c
+
+diff --git a/src/gallium/targets/opencl/meson.build b/src/gallium/targets/opencl/meson.build
+index ec65fcbe18e..f6ca4a28f20 100644
+--- a/src/gallium/targets/opencl/meson.build
++++ b/src/gallium/targets/opencl/meson.build
+@@ -85,19 +85,31 @@ if not (dep_clang.found() and dep_clang_usable)
+   endif
+ endif
+ 
++if host_machine.system() == 'windows'
++  libpipe_loader = libpipe_loader_static
++  target_files = ['target.c']
++else
++  libpipe_loader = libpipe_loader_dynamic
++  target_files = []
++endif
++
+ ocldef = files(opencl_libname + '.def')[0]
+ 
+ libopencl = shared_library(
+   opencl_libname,
+-  [],
++  target_files,
++  include_directories : [
++    inc_include, inc_util, inc_src, inc_gallium, inc_gallium_winsys, inc_gallium_drivers, inc_gallium_aux
++  ],
+   vs_module_defs : ocldef,
+   link_args : [ld_args_gc_sections, opencl_link_args],
+   link_depends : opencl_link_deps,
+   link_whole : libclover,
+-  link_with : [libpipe_loader_dynamic, libgallium],
++  link_with : [libpipe_loader, libgallium, libws_null, libwsw],
+   dependencies : [
+     idep_mesautil,
+-    dep_clock, dep_dl, dep_unwind, dep_elf, dep_clang, dep_version
++    dep_clock, dep_dl, dep_unwind, dep_elf, dep_clang, dep_version,
++    driver_swrast
+   ],
+   version : '@0@.0.0'.format(opencl_version),
+   install : true,
+diff --git a/src/gallium/targets/opencl/target.c b/src/gallium/targets/opencl/target.c
+new file mode 100644
+index 00000000000..308e23bb4a0
+--- /dev/null
++++ b/src/gallium/targets/opencl/target.c
+@@ -0,0 +1,2 @@
++#include "target-helpers/drm_helper.h"
++#include "target-helpers/sw_helper.h"
+-- 
+2.33.1.windows.1
+

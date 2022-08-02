@@ -1,9 +1,9 @@
 diff -urN a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -40,8 +40,10 @@
+@@ -42,8 +42,10 @@ if(CMAKE_VERSION VERSION_EQUAL "3.3.0" OR
  endif()
-
+ 
  if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 -  find_package(PkgConfig REQUIRED)
 -  pkg_check_modules(UUID REQUIRED uuid)
@@ -14,15 +14,3 @@ diff -urN a/CMakeLists.txt b/CMakeLists.txt
  endif()
  if(APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
-diff -urN a/runtime/src/support/guid.cpp b/runtime/src/support/guid.cpp
---- a/runtime/src/support/guid.cpp
-+++ b/runtime/src/support/guid.cpp
-@@ -22,6 +22,7 @@
-  THE SOFTWARE.
-  */
-
-+#include "antlr4-common.h"
- #include "guid.h"
-
- #ifdef GUID_LIBUUID
- 
