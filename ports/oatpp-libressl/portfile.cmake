@@ -12,6 +12,7 @@ vcpkg_from_github(
     PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
 )
 
+set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 vcpkg_cmake_configure(
