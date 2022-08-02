@@ -5224,6 +5224,10 @@
       "baseline": "2.5.0",
       "port-version": 0
     },
+    "openldap": {
+      "baseline": "2.5.13",
+      "port-version": 0
+    },
     "openmama": {
       "baseline": "6.3.1",
       "port-version": 1
