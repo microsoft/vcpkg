@@ -1,0 +1,26 @@
+diff --git a/include/wx/containr.h b/include/wx/containr.h
+index 1c32c01f6..b2d8ca2f6 100644
+--- a/include/wx/containr.h
++++ b/include/wx/containr.h
+@@ -186,7 +186,7 @@ extern WXDLLIMPEXP_CORE bool wxSetFocusToChild(wxWindow *win, wxWindow **child);
+ 
+ // The template parameter W must be a wxWindow-derived class.
+ template <class W>
+-class wxNavigationEnabled : public W
++class WXDLLIMPEXP_CORE wxNavigationEnabled : public W
+ {
+ public:
+     typedef W BaseWindowClass;
+diff --git a/src/stc/scintilla/include/Scintilla.h b/src/stc/scintilla/include/Scintilla.h
+index 8c57520e1..c10da4ba2 100644
+--- a/src/stc/scintilla/include/Scintilla.h
++++ b/src/stc/scintilla/include/Scintilla.h
+@@ -27,7 +27,7 @@ int Scintilla_LinkLexers(void);
+ #endif
+ 
+ // Include header that defines basic numeric types.
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) && _MSC_VER < 1920
+ // Older releases of MSVC did not have stdint.h.
+ #include <stddef.h>
+ #elif defined( __VMS )

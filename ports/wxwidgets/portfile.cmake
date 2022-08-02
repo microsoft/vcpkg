@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-libs-export.patch
         fix-pcre2.patch
         gtk3-link-libraries.patch
+        fix_clang-cl.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
