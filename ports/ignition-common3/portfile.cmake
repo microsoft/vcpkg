@@ -7,6 +7,6 @@ ignition_modular_library(NAME common
 # Remove non-relocatable helper scripts (see https://github.com/ignitionrobotics/ign-common/issues/82)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/ign_remotery_vis" "${CURRENT_PACKAGES_DIR}/debug/bin/ign_remotery_vis")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
