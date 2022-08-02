@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         openssl.patch
+        fix_amalgamate_argument_length_limit.patch
 )
 
 vcpkg_check_features(
@@ -23,11 +24,16 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
+set(CONFIGURE_OPTIONS ${FEATURE_OPTIONS} -DOPEN62541_VERSION=${VERSION})
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} -DBUILD_SHARED_LIBS=ON -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DOPEN62541_VERSION=${VERSION}
+        ${CONFIGURE_OPTIONS}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -36,6 +42,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
