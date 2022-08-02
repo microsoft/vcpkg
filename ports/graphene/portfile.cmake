@@ -5,14 +5,13 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/graphene/1.10/graphene-${VERSION}.tar.xz"
     FILENAME "graphene-${VERSION}.tar.xz"
     SHA512 a8a8ef1e4ccffee2313a18b9b8dda06c7ede6d49fdde8578694500634e3c90278fd30af7d88938d5ecb08c519cc3e09d21fe69d0f21cb766e056ceedbb3eafb0
-    PATCHES
-        fix_werror_clang-cl.patch
-        fix_clang-cl.patch
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix_clang-cl.patch
 )
 
 vcpkg_configure_meson(
