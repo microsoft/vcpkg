@@ -1,3 +1,10 @@
+function(z_vcpkg_check_hash result file_path sha512)
+    file(SHA512 "${file_path}" file_hash)
+    string(TOLOWER "${sha512}" sha512_lower)
+    string(COMPARE EQUAL "${file_hash}" "${sha512_lower}" hash_match)
+    set("${result}" "${hash_match}" PARENT_SCOPE)
+endfunction()
+
 function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         # When using the internal hash skip, do not output an explicit message.
@@ -8,9 +15,10 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
         return()
     endif()
 
-    file(SHA512 "${file_path}" file_hash)
-    string(TOLOWER "${sha512}" sha512_lower)
-    if(NOT "${file_hash}" STREQUAL "${sha512_lower}")
+    set(hash_match OFF)
+    z_vcpkg_check_hash(hash_match "${file_path}" "${sha512}")
+
+    if(NOT hash_match)
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
@@ -151,6 +159,22 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     endif()
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
+
+    if(EXISTS "${downloaded_file_path}" AND NOT arg_SKIP_SHA512)
+        set(hash_match OFF)
+        z_vcpkg_check_hash(hash_match "${downloaded_file_path}" "${arg_SHA512}")
+        
+        if(NOT hash_match)
+            get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
+            get_filename_component(extension_component "${arg_FILENAME}" EXT)
+            get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
+
+            string(SUBSTRING "${arg_SHA512}" 0 8 hash)
+            set(arg_FILENAME "${directory_component}${filename_component}-${hash}${extension_component}")
+            set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
+        endif()
+    endif()
+
     set(download_file_path_part "${DOWNLOADS}/temp/${arg_FILENAME}")
 
     # Works around issue #3399
