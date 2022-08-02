@@ -280,10 +280,12 @@ set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 
 if(CMAKE_HOST_WIN32)
     # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+
+    # TODO: 
+    # - Setup compilers
+    # - Setup linker flags
 
     # turn a space delimited string into a gn list:
     # "a b c" -> ["a","b","c"]
@@ -294,11 +296,11 @@ if(CMAKE_HOST_WIN32)
         set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
     endfunction()
 
-    to_gn_list(SKIA_C_FLAGS_DBG "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-    to_gn_list(SKIA_C_FLAGS_REL "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+    to_gn_list(SKIA_C_FLAGS_DBG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    to_gn_list(SKIA_C_FLAGS_REL "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
 
-    to_gn_list(SKIA_CXX_FLAGS_DBG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-    to_gn_list(SKIA_CXX_FLAGS_REL "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+    to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+    to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
 
     string(APPEND OPTIONS_DBG " extra_cflags_c=${SKIA_C_FLAGS_DBG} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
