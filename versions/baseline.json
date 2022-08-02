@@ -4013,8 +4013,8 @@
       "port-version": 10
     },
     "librdkafka": {
-      "baseline": "1.9.0",
-      "port-version": 1
+      "baseline": "1.9.2",
+      "port-version": 0
     },
     "libressl": {
       "baseline": "3.4.2",
