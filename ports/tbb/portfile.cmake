@@ -15,19 +15,10 @@ vcpkg_from_github(
     )
 
     vcpkg_install_cmake()
+    vcpkg_cmake_config_fixup(
+        CONFIG_PATH lib/cmake/TBB
+    )
 
-
-file(COPY
-  ${SOURCE_PATH}/include/tbb
-  DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file (COPY
-  ${CURRENT_PACKAGES_DIR}/lib/cmake
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb
-)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
