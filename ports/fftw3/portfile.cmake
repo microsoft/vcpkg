@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         patch_targets.patch
         fftw3_arch_fix.patch
         aligned_malloc.patch
+        bigobj.patch
 )
 
 vcpkg_check_features(

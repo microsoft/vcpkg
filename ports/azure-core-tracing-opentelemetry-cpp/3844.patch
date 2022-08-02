@@ -1,0 +1,22 @@
+From e1fd9ed9f476fc94f4143df6ba8b683113af33ed Mon Sep 17 00:00:00 2001
+From: Larry Osterman <LarryOsterman@users.noreply.github.com>
+Date: Fri, 22 Jul 2022 11:37:48 -0700
+Subject: [PATCH] Removed hard dependency on opentelemetry version
+
+---
+ sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt b/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
+index bf3077e676..6d0dc15151 100644
+--- a/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
++++ b/sdk/core/azure-core-tracing-opentelemetry/CMakeLists.txt
+@@ -36,7 +36,7 @@ if (BUILD_AZURE_CORE_TRACING_OPENTELEMETRY)
+         find_package(azure-core-cpp REQUIRED)
+       endif()
+     endif()
+-    find_package(opentelemetry-cpp "1.3.0" CONFIG REQUIRED)
++    find_package(opentelemetry-cpp CONFIG REQUIRED)
+ 
+     set(
+       AZURE_CORE_OPENTELEMETRY_HEADER
