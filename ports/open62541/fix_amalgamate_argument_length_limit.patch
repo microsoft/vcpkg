@@ -1,0 +1,74 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd9203f..8c7d3ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1118,22 +1118,34 @@ add_custom_target(open62541-generator-statuscode DEPENDS
+         ${PROJECT_BINARY_DIR}/src_generated/open62541/statuscodes.c)
+ 
+ if(UA_ENABLE_AMALGAMATION)
++    set(OUTPUT_CONTENTS "")
++    foreach(HEADER IN LISTS ${exported_headers} ${default_plugin_headers} ${ua_architecture_headers})
++        set(OUTPUT_CONTENTS "${OUTPUT_CONTENTS}${HEADER}\n")
++    endforeach(HEADER)
++    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/open62541.h.in ${OUTPUT_CONTENTS})
++
+     # single-file release
+     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/open62541.h
+                        PRE_BUILD
+                        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/amalgamate.py
+                                ${OPEN62541_VER_COMMIT} ${CMAKE_CURRENT_BINARY_DIR}/open62541.h
+-                               ${exported_headers} ${default_plugin_headers} ${ua_architecture_headers}
++                               ${CMAKE_CURRENT_BINARY_DIR}/open62541.h.in
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tools/amalgamate.py
+-                               ${exported_headers} ${default_plugin_headers} ${ua_architecture_headers})
+-
++                               ${CMAKE_CURRENT_BINARY_DIR}/open62541.h.in)
++
++    set(OUTPUT_CONTENTS "")
++    foreach(SOURCE IN LISTS ${internal_headers} ${lib_sources} ${default_plugin_sources} ${ua_architecture_sources})
++        set(OUTPUT_CONTENTS "${OUTPUT_CONTENTS}${SOURCE}\n")
++    endforeach(SOURCE)
++    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/open62541.c.in ${OUTPUT_CONTENTS})
++    
+     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/open62541.c
+                        PRE_BUILD
+                        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/amalgamate.py
+                                ${OPEN62541_VER_COMMIT} ${CMAKE_CURRENT_BINARY_DIR}/open62541.c
+-                               ${internal_headers} ${lib_sources} ${default_plugin_sources} ${ua_architecture_sources}
++                               ${CMAKE_CURRENT_BINARY_DIR}/open62541.c.in
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tools/amalgamate.py ${internal_headers}
+-                               ${lib_sources} ${default_plugin_sources} ${ua_architecture_sources} )
++                               ${CMAKE_CURRENT_BINARY_DIR}/open62541.c.in)
+ 
+     add_custom_target(open62541-amalgamation-source DEPENDS ${PROJECT_BINARY_DIR}/open62541.c)
+     add_custom_target(open62541-amalgamation-header DEPENDS ${PROJECT_BINARY_DIR}/open62541.h)
+diff --git a/tools/amalgamate.py b/tools/amalgamate.py
+index 1c91388..3c27355 100644
+--- a/tools/amalgamate.py
++++ b/tools/amalgamate.py
+@@ -14,7 +14,7 @@ import io
+ parser = argparse.ArgumentParser()
+ parser.add_argument('version', help='file version')
+ parser.add_argument('outfile', help='outfile with extension .c/.h')
+-parser.add_argument('inputs', nargs='*', action='store', help='input filenames')
++parser.add_argument('inputs', help='input filenames')
+ args = parser.parse_args()
+ 
+ outname = args.outfile.split("/")[-1]
+@@ -65,7 +65,15 @@ else:
+ #define %s
+ ''' % (outname.upper() + u"_H_", outname.upper() + u"_H_"))
+ 
+-for fname in args.inputs:
++inputFiles = []
++with io.open(args.inputs, encoding='utf8') as fi:
++    for line in fi:
++        line = line.strip()
++        if line == '':
++            continue
++        inputFiles.append(line)
++
++for fname in inputFiles:
+     with io.open(fname, encoding='utf8', errors='replace') as infile:
+         file.write(u"\n/*********************************** amalgamated original file \"" + fname + u"\" ***********************************/\n\n")
+         print ("Integrating file '" + fname + "'...", end=""),
