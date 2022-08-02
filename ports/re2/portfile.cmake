@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 2021-11-01
     SHA512 9ea04638b7a8667fa9a9d9894c543417c86dde21a93bd4508ae8a43fdd21384092866a3f55e93249942f36488c165e93bee18c61bab3cf138a920654563b8122
     HEAD_REF master
+    PATCHES clang-cl.patch
 )
 
 vcpkg_cmake_configure(

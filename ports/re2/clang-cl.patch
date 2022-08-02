@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fcd3870f2..dd91114dc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,7 +27,7 @@ set(SONAME 9)
+ 
+ set(EXTRA_TARGET_LINK_LIBRARIES)
+ 
+-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
++if(MSVC)
+   if(MSVC_VERSION LESS 1900)
+     message(FATAL_ERROR "you need Visual Studio 2015 or later")
+   endif()
