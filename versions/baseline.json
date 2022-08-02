@@ -2641,7 +2641,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "2.0.1",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -6613,7 +6613,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "2.2.0",
+      "baseline": "2.2.2",
       "port-version": 0
     },
     "simdutf": {
