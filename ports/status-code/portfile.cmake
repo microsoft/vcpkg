@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 0cca391ad9168581641b569e031f25c7ee1673b3
     SHA512 5fdf3e268d0a4a388202547ceac271832642648fdc50824a8f26d86bad1d45c93394ff6651e50232dde534e057dfadaf7a7436b893dd7b182a75bcd57e24fc9d
     HEAD_REF master
+    PATCHES
+        remove_flag_manipulations.patch
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
@@ -13,7 +15,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -DPROJECT_IS_DEPENDENCY=On
+        -DPROJECT_IS_DEPENDENCY=ON
 )
 
 vcpkg_install_cmake()
