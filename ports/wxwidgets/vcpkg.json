@@ -40,11 +40,11 @@
     "debug-support": {
       "description": "Enable wxWidgets debugging support hooks even for release builds (wxDEBUG_LEVEL 1)"
     },
-    "fonts": {
-      "description": "Enable to use the font functionality of wxWidgets"
-    },
     "example": {
       "description": "Example source code and CMake project"
+    },
+    "fonts": {
+      "description": "Enable to use the font functionality of wxWidgets"
     },
     "sound": {
       "description": "Build wxSound support",
