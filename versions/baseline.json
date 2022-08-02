@@ -5014,11 +5014,11 @@
     },
     "oatpp": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-consul": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-curl": {
       "baseline": "1.3.0",
@@ -5026,7 +5026,7 @@
     },
     "oatpp-libressl": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-mbedtls": {
       "baseline": "1.3.0",
@@ -5046,15 +5046,15 @@
     },
     "oatpp-sqlite": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-ssdp": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-swagger": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "oatpp-websocket": {
       "baseline": "1.3.0",
