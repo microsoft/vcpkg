@@ -13,7 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libdebuginfod WITH_LIBDEBUGINFOD
 )
 
-
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
