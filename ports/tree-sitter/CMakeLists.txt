@@ -29,24 +29,24 @@ set_target_properties(
              POSITION_INDEPENDENT_CODE ON
              SOVERSION ${TS_SOVERSION_MAJOR}.${TS_SOVERSION_MINOR})
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tree-sitter.pc.in
-               ${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tree-sitter.pc.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc" @ONLY)
 
 install(
   TARGETS tree-sitter
   EXPORT unofficial-tree-sitter-config
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
-install(FILES ${PROJECT_SOURCE_DIR}/include/tree_sitter/api.h
-              ${PROJECT_SOURCE_DIR}/include/tree_sitter/parser.h
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tree_sitter)
+install(FILES "${PROJECT_SOURCE_DIR}/include/tree_sitter/api.h"
+              "${PROJECT_SOURCE_DIR}/include/tree_sitter/parser.h"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tree_sitter")
 
 install(
   EXPORT unofficial-tree-sitter-config
   NAMESPACE unofficial::tree-sitter::
   DESTINATION share/unofficial-tree-sitter)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

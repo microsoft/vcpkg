@@ -11,8 +11,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/lib)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/tree-sitter.pc.in DESTINATION ${SOURCE_PATH}/lib)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/lib")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/tree-sitter.pc.in" DESTINATION "${SOURCE_PATH}/lib")
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}/lib"
@@ -28,11 +28,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# Allow empty include directory
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
 vcpkg_fixup_pkgconfig()
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
