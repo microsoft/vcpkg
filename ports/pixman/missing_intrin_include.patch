@@ -1,0 +1,13 @@
+diff --git a/pixman/pixman-x86.c b/pixman/pixman-x86.c
+index 0130b7bfa..d3d0fe1d9 100644
+--- a/pixman/pixman-x86.c
++++ b/pixman/pixman-x86.c
+@@ -24,7 +24,7 @@
+ #endif
+ 
+ #include "pixman-private.h"
+-
++#include "intrin.h"
+ #if defined(USE_X86_MMX) || defined (USE_SSE2) || defined (USE_SSSE3)
+ 
+ /* The CPU detection code needs to be in a file not compiled with
