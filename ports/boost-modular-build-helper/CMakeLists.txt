@@ -38,6 +38,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STR
     list(APPEND B2_OPTIONS architecture=arm)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
     list(APPEND B2_OPTIONS architecture=power)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
+    list(APPEND B2_OPTIONS architecture=loongarch)
 elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
     list(APPEND B2_OPTIONS architecture=arm+x86)
 else()
@@ -68,7 +70,11 @@ endif()
 if(WIN32)
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
-    list(APPEND B2_OPTIONS target-os=darwin)
+    if(IOS)
+        list(APPEND B2_OPTIONS target-os=iphone)
+    else()
+        list(APPEND B2_OPTIONS target-os=darwin)
+    endif()
 elseif(ANDROID)
     list(APPEND B2_OPTIONS target-os=android)
 else()
@@ -204,6 +210,15 @@ if(WITH_PYTHON3)
     list(APPEND python_versions "${python3_version}")
 endif()
 
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        list(APPEND B2_OPTIONS "python-debugging=on")
+    endif()
+endif()
+
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
@@ -218,11 +233,6 @@ if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
             "   <find-shared-library>openmpi ;\n"
         )
     endif()
-endif()
-
-if(NOT python_versions STREQUAL "")
-    list(JOIN python_versions "," python_versions)
-    list(APPEND B2_OPTIONS "python=${python_versions}")
 endif()
 
 # Include port specific CMake fragment

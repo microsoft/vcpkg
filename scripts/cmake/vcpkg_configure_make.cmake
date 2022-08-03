@@ -229,15 +229,43 @@ function(vcpkg_configure_make)
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
         if(CMAKE_HOST_WIN32)
-            set(append_env)
+            vcpkg_list(SET add_to_env)
             if(arg_USE_WRAPPERS)
-                set(append_env ";${MSYS_ROOT}/usr/share/automake-1.16")
-                string(APPEND append_env ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
             endif()
-            # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-            string(REPLACE ";$ENV{SystemRoot}\\System32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-            string(REPLACE ";$ENV{SystemRoot}\\system32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-            set(ENV{PATH} "${NEWPATH}")
+            cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+            cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+            file(REAL_PATH "${system_root}" system_root)
+
+            message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
+
+            set(find_system_dirs 
+                    "${system_root}/system32"
+                    "${system_root}/System32"
+                    "${system_root}/system32/"
+                    "${system_root}/System32/")
+
+            string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
+
+            set(index "-1")
+            foreach(system_dir IN LISTS find_system_dirs find_system_dirs_upper)
+                list(FIND path_list "${system_dir}" index)
+                if(NOT index EQUAL "-1")
+                    break()
+                endif()
+            endforeach()
+
+            if(index GREATER_EQUAL "0")
+                vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            else()
+                message(WARNING "Unable to find system32 dir in the PATH variable! Appending required msys paths!")
+                vcpkg_list(APPEND path_list ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            endif()
+
+            cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+            set(ENV{PATH} "${native_path_list}")
+
             set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
 

@@ -13,6 +13,9 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         multithreading       BULLET2_MULTITHREADING
+        double-precision     USE_DOUBLE_PRECISION
+    INVERTED_FEATURES
+        rtti                 USE_MSVC_DISABLE_RTTI
 )
 
 vcpkg_cmake_configure(
@@ -21,9 +24,13 @@ vcpkg_cmake_configure(
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
         -DBUILD_CPU_DEMOS=OFF
         -DBUILD_BULLET2_DEMOS=OFF
+        -DBUILD_OPENGL3_DEMOS=OFF
         -DBUILD_BULLET3=OFF
-        -DBUILD_EXTRAS=OFF
-        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_EXTRAS=ON
+        -DBUILD_BULLET_ROBOTICS_GUI_EXTRA=OFF
+        -DBUILD_BULLET_ROBOTICS_EXTRA=OFF
+        -DBUILD_GIMPACTUTILS_EXTRA=OFF        
+        -DBUILD_UNIT_TESTS=OFF        
         -DINSTALL_LIBS=ON
         ${FEATURE_OPTIONS}
 )

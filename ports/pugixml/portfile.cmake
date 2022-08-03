@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.12.1
     SHA512 c1a80518e8d7b21f2a15b2023b77e87484f5b7581e68ff508785a60cab53d1689b5508f5a652d6f0d4fbcc91f66d59246fdfe499fd6b0e188c7914ed5919980b
     HEAD_REF master
+    PATCHES
+        dllexport.patch
 )
 
 vcpkg_cmake_configure(
