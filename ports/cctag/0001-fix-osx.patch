@@ -1,5 +1,3 @@
-diff --git a/src/cctag/utils/Exceptions.hpp b/src/cctag/utils/Exceptions.hpp
-index 094d278..c2f009f 100644
 --- a/src/cctag/utils/Exceptions.hpp
 +++ b/src/cctag/utils/Exceptions.hpp
 @@ -7,7 +7,7 @@
@@ -11,12 +9,3 @@ index 094d278..c2f009f 100644
  #include <boost/exception/diagnostic_information.hpp>
  #include <boost/exception/errinfo_file_name.hpp>
  #include <boost/exception/exception.hpp>
-@@ -88,7 +88,7 @@ public:
- 	value_type&       value()       { return _value; }
- 
- private:
--	
-+
- 	#if( BOOST_VERSION >= 105400 )
- 	inline std::string name_value_string() const override
- 	{
