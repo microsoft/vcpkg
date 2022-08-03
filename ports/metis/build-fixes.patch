@@ -1,13 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a15d19a..a6a7a42 100644
+index a15d19a..7210a61 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,9 +1,9 @@
 -cmake_minimum_required(VERSION 2.8)
 +cmake_minimum_required(VERSION 3.22)
  project(METIS C)
  
  set(SHARED FALSE CACHE BOOL "build a shared library")
+ 
+-if(MSVC)
++if(0)
+   set(METIS_INSTALL FALSE)
+ else()
+   set(METIS_INSTALL TRUE)
 @@ -34,19 +34,13 @@ include(./conf/gkbuild.cmake)
  #
  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${METIS_COPTIONS}")
