@@ -191,6 +191,11 @@ Valid values are, for example, `14.25` or `14.27.29110`.
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
 Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
 
+## Linux Variables
+
+### VCPKG_FIXUP_ELF_RPATH
+When this option is set to (true|1|on), vcpkg will add `$ORIGIN` and `$ORIGIN/<path_relative_to_lib>` to the `RUNPATH` header of executables and shared libraries. This allows packages to be relocated on Linux.
+
 ## MacOS Variables
 
 ### VCPKG_INSTALL_NAME_DIR
