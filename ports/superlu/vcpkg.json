@@ -4,8 +4,8 @@
   "port-version": 6,
   "description": "Supernodal sparse direct solver.",
   "homepage": "https://github.com/xiaoyeli/superlu",
-  "supports": "!(uwp | arm)",
   "license": "BSD-4-Clause-UC",
+  "supports": "!(uwp | arm)",
   "dependencies": [
     "blas",
     {
