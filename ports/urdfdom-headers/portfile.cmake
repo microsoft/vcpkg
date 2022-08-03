@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake PACKAGE_NAME urdfdom_headers)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/urdfdom_headers/cmake PACKAGE_NAME urdfdom_headers)
@@ -21,20 +21,9 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers")
 endif()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_fixup_pkgconfig()
 
-# The config files for this project use underscore
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/urdfdom-headers")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/urdfdom-headers" "${CURRENT_PACKAGES_DIR}/share/urdfdom_headers")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
