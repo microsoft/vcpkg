@@ -9,15 +9,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF 7d10c82196c8e45554f27c00681474a9fb86d137 # 8.0.20
-    SHA512 9f5e8cc254ea2a4cf76313287c7bb6fc693400810464dd2901e67d51ecb27f8916009464fd8aed8365c3038314b845b3d517db6e82ae5c7908612f0b3b72335f
+    REF fbdaa4def30d269bc4de5b85de61de34b11c0afc # 8.0.30
+    SHA512 4f5495542b94f0dce680a5ea8a85805df1d1a204e306319fefbe6293a04d25b0a492e37bdf2a9e21cbd71a622568f3d4a97e6dba809344fd2d71aa1668b4cc29
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
         system-libs.patch
-        rename-version.patch
         export-cmake-targets.patch
-        004-added-limits-include.patch
         openssl.patch
         Add-target-include-directories.patch
 )

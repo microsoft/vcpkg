@@ -1,16 +1,12 @@
-diff --git a/VERSION b/VERSION.txt
-similarity index 100%
-rename from VERSION
-rename to VERSION.txt
 diff --git a/cmake/mysql_version.cmake b/cmake/mysql_version.cmake
-index bed6e9f02e2..a924ef09bac 100644
+index 36a87146..376ca899 100644
 --- a/cmake/mysql_version.cmake
 +++ b/cmake/mysql_version.cmake
 @@ -30,7 +30,7 @@ SET(PROTOCOL_VERSION "10")
  
- # Generate "something" to trigger cmake rerun when VERSION changes
+ # Generate "something" to trigger cmake rerun when MYSQL_VERSION changes
  CONFIGURE_FILE(
--  ${CMAKE_SOURCE_DIR}/VERSION
+-  ${CMAKE_SOURCE_DIR}/MYSQL_VERSION
 +  ${CMAKE_SOURCE_DIR}/VERSION.txt
    ${CMAKE_BINARY_DIR}/VERSION.dep
  )
@@ -19,7 +15,7 @@ index bed6e9f02e2..a924ef09bac 100644
  
  MACRO(MYSQL_GET_CONFIG_VALUE keyword var)
   IF(NOT ${var})
--   FILE (STRINGS ${CMAKE_SOURCE_DIR}/VERSION str REGEX "^[ ]*${keyword}=")
+-   FILE (STRINGS ${CMAKE_SOURCE_DIR}/MYSQL_VERSION str REGEX "^[ ]*${keyword}=")
 +   FILE (STRINGS ${CMAKE_SOURCE_DIR}/VERSION.txt str REGEX "^[ ]*${keyword}=")
     IF(str)
       STRING(REPLACE "${keyword}=" "" str ${str})
