@@ -10,6 +10,7 @@ vcpkg_from_github(
         libexslt-pkgconfig.patch
         fix-gcrypt-deps.patch
         skip-install-docs.patch
+        extern_export.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -10,6 +10,7 @@ vcpkg_from_github(
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-disable-sdlmain-target-search-on-uwp.patch
         0004-Define-crt-macros.patch
+        0005-emscripten-fix-undefined-symbol-errors-in-non-threaded.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)

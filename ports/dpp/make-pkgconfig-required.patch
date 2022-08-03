@@ -1,0 +1,16 @@
+diff --git a/cmake/FindSodium.cmake b/cmake/FindSodium.cmake
+index 23c5317..abbd08f 100644
+--- a/cmake/FindSodium.cmake
++++ b/cmake/FindSodium.cmake
+@@ -46,9 +46,9 @@ endif()
+ # UNIX
+ if(UNIX)
+   # import pkg-config
+-  find_package(PkgConfig QUIET)
++  find_package(PkgConfig REQUIRED)
+   if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(sodium_PKG QUIET libsodium)
++    pkg_check_modules(sodium_PKG REQUIRED libsodium)
+   endif()
+ 
+   if(sodium_USE_STATIC_LIBS)
