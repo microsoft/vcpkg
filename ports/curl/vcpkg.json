@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "7.84.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -131,7 +132,7 @@
           "features": [
             "sectransp"
           ],
-          "platform": "osx"
+          "platform": "osx | ios"
         },
         {
           "name": "curl",
@@ -147,7 +148,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
         }
       ]
     },

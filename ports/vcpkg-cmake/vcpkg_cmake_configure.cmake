@@ -60,22 +60,28 @@ function(vcpkg_cmake_configure)
         endif()
     endif()
 
-    set(ninja_can_be_used ON) # Ninja as generator
-    set(ninja_host ON) # Ninja as parallel configurator
-
-    if(host_architecture STREQUAL "x86")
+    set(ninja_host ON) # Ninja availability
+    if(host_architecture STREQUAL "x86" OR DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         # Prebuilt ninja binaries are only provided for x64 hosts
-        set(ninja_can_be_used OFF)
-        set(ninja_host OFF)
+        find_program(NINJA NAMES ninja ninja-build)
+        if(NOT NINJA)
+            set(ninja_host OFF)
+            set(arg_DISABLE_PARALLEL_CONFIGURE ON)
+            set(arg_WINDOWS_USE_MSBUILD ON)
+        endif()
     endif()
 
-    set(generator "Ninja")
-    if(DEFINED arg_GENERATOR)
-        set(generator "${arg_GENERATOR}")
-    elseif(arg_WINDOWS_USE_MSBUILD OR NOT ninja_can_be_used)
-        set(generator "")
-        set(arch "")
+    set(generator "")
+    set(architecture_options "")
+    if(arg_WINDOWS_USE_MSBUILD AND VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH arch)
+        vcpkg_list(APPEND architecture_options "-A${arch}")
+    elseif(DEFINED arg_GENERATOR)
+        set(generator "${arg_GENERATOR}")
+    elseif(ninja_host)
+        set(generator "Ninja")
+    elseif(NOT VCPKG_HOST_IS_WINDOWS)
+        set(generator "Unix Makefiles")
     endif()
 
     if(NOT generator)
@@ -86,12 +92,13 @@ function(vcpkg_cmake_configure)
             "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
-    # If we use Ninja, make sure it's on PATH
-    if(generator STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
+    if(generator STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
+        # If we use Ninja, it must be on PATH for CMake's ExternalProject,
+        # cf. https://gitlab.kitware.com/cmake/cmake/-/issues/23355.
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
-        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -172,10 +179,6 @@ function(vcpkg_cmake_configure)
         "-DVCPKG_MANIFEST_INSTALL=OFF"
     )
 
-    if(DEFINED arch AND NOT arch STREQUAL "")
-        vcpkg_list(APPEND arg_OPTIONS "-A${arch}")
-    endif()
-
     # Sets configuration variables for macOS builds
     foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
@@ -197,25 +200,22 @@ function(vcpkg_cmake_configure)
     vcpkg_list(SET rel_command
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
+        ${architecture_options}
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
         ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
+        ${architecture_options}
         "-DCMAKE_BUILD_TYPE=Debug"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
         ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
-    if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
+    if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
-        if(NOT DEFINED ninja_path)
-            # if ninja_path was defined above, we've already done this
-            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
-            vcpkg_add_to_path("${ninja_path}")
-        endif()
 
         #parallelize the configure step
         set(ninja_configure_contents

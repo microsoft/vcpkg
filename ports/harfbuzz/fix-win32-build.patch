@@ -1,0 +1,13 @@
+diff --git a/src/meson.build b/src/meson.build
+index e336037a2..a7c501b78 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -473,7 +473,7 @@ defs_list = [harfbuzz_def]
+ version = '0.@0@.0'.format(hb_version_int)
+ 
+ extra_hb_cpp_args = []
+-if cpp.get_id() == 'msvc'
++if cpp.get_argument_syntax() == 'msvc'
+   if get_option('default_library') != 'static'
+     extra_hb_cpp_args += '-DHB_DLL_EXPORT'
+   endif

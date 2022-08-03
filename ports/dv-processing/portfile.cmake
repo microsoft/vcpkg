@@ -2,11 +2,9 @@ vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.com/inivation
         OUT_SOURCE_PATH SOURCE_PATH
         REPO dv/dv-processing
-        REF rel_1.4
-        SHA512 c011ca0e6d9842913ff35b0a03f9053bfbc98c090b6936e01f6514b8a35d31ee6d0a821f491be96400113e93967aa2d3e8ab19e558f5c3e9f8eba9ad4e1fe013
-        HEAD_REF d4ffab46a2849372789c5a2084821011165086ab
-        PATCHES
-                vcpkg-build.patch
+        REF 96d082a862bb1e5bfdc79b39aa09e7a50c2dac49
+        SHA512 cf74e8a6f94f690e159778b59eb2e4d9c8f51f09437e94a507a2ec8f42e167fe6d1413ba91ab608624a02b4b479b27f454e7b7792d125ce5a163f4aa98e774cc
+        HEAD_REF rel_1.5
 )
 
 vcpkg_from_gitlab(
@@ -27,6 +25,7 @@ vcpkg_cmake_configure(
 	        -DENABLE_TESTS=OFF
 		-DENABLE_SAMPLES=OFF
 		-DENABLE_PYTHON=OFF
+		-DENABLE_UTILITIES=OFF
 		-DBUILD_CONFIG_VCPKG=ON
 )
 
