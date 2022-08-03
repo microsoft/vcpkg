@@ -1,8 +1,10 @@
 {
   "name": "libmariadb",
   "version-semver": "3.1.15",
+  "port-version": 1,
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
   "homepage": "https://github.com/MariaDB/mariadb-connector-c",
+  "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -35,7 +37,8 @@
       ]
     },
     "schannel": {
-      "description": "SSL support (Secure Channel)"
+      "description": "SSL support (Secure Channel)",
+      "supports": "windows | mingw"
     },
     "ssl": {
       "description": "Default SSL backend",

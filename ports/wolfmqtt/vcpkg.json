@@ -1,7 +1,7 @@
 {
   "name": "wolfmqtt",
-  "version": "1.13.0",
-  "description": "MQTT library used with wolfSSL libraray for many platforms",
+  "version": "1.14.0",
+  "description": "MQTT library used with wolfSSL library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
   "supports": "!uwp",

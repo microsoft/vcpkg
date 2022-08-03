@@ -22,7 +22,7 @@ foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
     endif()
 endforeach()
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+if("sectransp" IN_LIST FEATURES AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
@@ -61,7 +61,7 @@ if("idn2" IN_LIST FEATURES)
 endif()
 
 if("sectransp" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
 endif()
 
 # UWP targets

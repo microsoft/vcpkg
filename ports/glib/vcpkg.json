@@ -1,6 +1,7 @@
 {
   "name": "glib",
   "version": "2.72.3",
+  "port-version": 1,
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
   "license": "LGPL-2.1-only",
