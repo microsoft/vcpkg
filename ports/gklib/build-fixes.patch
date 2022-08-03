@@ -24,7 +24,7 @@ index 9cd1b4b..a6b629e 100644
 +  )
 +install(FILES ${GKlib_includes} DESTINATION "include/GKlib")
 +install(FILES "win32/adapt.h" DESTINATION "include/GKlib/win32")
-+install(EXPORT GKlibTargets FILE "GKLibTargets.cmake" DESTINATION "share/GKlib")
++install(EXPORT GKlibTargets FILE "GKlibTargets.cmake" DESTINATION "share/GKlib")
 +file(WRITE "${CMAKE_INSTALL_PREFIX}/share/GKlib/GKlibConfig.cmake" [=[
 +include("${CMAKE_CURRENT_LIST_DIR}/GKlibTargets.cmake")
 +]=])
