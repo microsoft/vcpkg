@@ -1,5 +1,5 @@
 diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
-index d8eb93d..240dbe6 100644
+index d8eb93d..3e5c42a 100644
 --- a/cmake/urdfdom-config.cmake.in
 +++ b/cmake/urdfdom-config.cmake.in
 @@ -3,8 +3,12 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
@@ -16,7 +16,7 @@ index d8eb93d..240dbe6 100644
  foreach(lib @PKG_LIBRARIES@)
    set(onelib "${lib}-NOTFOUND")
    set(onelibd "${lib}-NOTFOUND")
-@@ -29,6 +33,10 @@ foreach(lib @PKG_LIBRARIES@)
+@@ -29,10 +33,14 @@ foreach(lib @PKG_LIBRARIES@)
    endif()
    list(APPEND @PKG_NAME@_TARGETS @PROJECT_NAME@::${lib})
  endforeach()
@@ -27,6 +27,11 @@ index d8eb93d..240dbe6 100644
  
  foreach(dep @PKG_DEPENDS@)
    if(NOT ${dep}_FOUND)
+-    find_package(${dep})
++    find_dependency(${dep})
+   endif()
+   list(APPEND @PKG_NAME@_INCLUDE_DIRS ${${dep}_INCLUDE_DIRS})
+   list(APPEND @PKG_NAME@_LIBRARIES ${${dep}_LIBRARIES})
 @@ -41,3 +49,5 @@ endforeach()
  foreach(exp @PKG_EXPORTS@)
    include(${@PROJECT_NAME@_DIR}/${exp}Export.cmake)

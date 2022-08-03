@@ -4,7 +4,7 @@
   "description": "Provides core data structures and a simple XML parsers for populating the class data structures from an URDF file.",
   "homepage": "https://github.com/ros/urdfdom",
   "license": "BSD-2-Clause",
-  "supports": "!(windows & staticcrt)",
+  "supports": "!staticcrt",
   "dependencies": [
     "console-bridge",
     "tinyxml",
