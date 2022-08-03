@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
-  "license": null,
+  "license": "BSD-3-Clause",
   "supports": "windows & !static",
   "dependencies": [
     {
