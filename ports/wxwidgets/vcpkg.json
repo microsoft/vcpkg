@@ -44,7 +44,16 @@
       "description": "Example source code and CMake project"
     },
     "fonts": {
-      "description": "Enable to use the font functionality of wxWidgets"
+      "description": "Enable to use the font functionality of wxWidgets",
+      "dependencies": [
+        { 
+          "name": "pango",
+          "platform": "!windows & !osx"
+        },
+        { "name": "fontconfig",
+          "platform": "!windows & !osx"
+        }
+      ]
     },
     "sound": {
       "description": "Build wxSound support",
