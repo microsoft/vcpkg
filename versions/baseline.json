@@ -3501,8 +3501,8 @@
       "port-version": 1
     },
     "libcaer": {
-      "baseline": "3.3.14",
-      "port-version": 1
+      "baseline": "2022-07-25",
+      "port-version": 0
     },
     "libcanberra": {
       "baseline": "0.30",
