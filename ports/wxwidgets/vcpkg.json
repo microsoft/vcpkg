@@ -46,11 +46,12 @@
     "fonts": {
       "description": "Enable to use the font functionality of wxWidgets",
       "dependencies": [
-        { 
-          "name": "pango",
+        {
+          "name": "fontconfig",
           "platform": "!windows & !osx"
         },
-        { "name": "fontconfig",
+        {
+          "name": "pango",
           "platform": "!windows & !osx"
         }
       ]
