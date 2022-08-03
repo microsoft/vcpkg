@@ -8,6 +8,7 @@ vcpkg_from_github(
         uwp-cflags.patch
         parallel-install.patch
         allow-clang-cl.patch
+        configure-as.patch # Ignore ':' from `vcpkg_configure_make`
 )
 # Note on x264 versioning:
 # The pc file exports "0.164.<N>" where is the number of commits.
@@ -49,11 +50,21 @@ endif()
 
 vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
-if(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
+set(gaspp_archs arm arm64)
+if(NOT "asm" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --disable-asm)
+elseif(NOT "$ENV{AS}" STREQUAL "")
+    # Accept setting from triplet
+elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
     vcpkg_find_acquire_program(NASM)
+    transform_path_no_space(NASM)
     list(APPEND EXTRA_ARGS CONFIGURE_ENVIRONMENT_VARIABLES AS)
     set(AS "${NASM}") # for CONFIGURE_ENVIRONMENT_VARIABLES
     set(ENV{AS} "${NASM}") # for non-WIN32
+elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST gaspp_archs AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
+    vcpkg_find_acquire_program(GASPREPROCESSOR)
+    list(FILTER GASPREPROCESSOR INCLUDE REGEX gas-preprocessor)
+    file(INSTALL "${GASPREPROCESSOR}" DESTINATION "${SOURCE_PATH}/tools" RENAME "gas-preprocessor.pl")
 endif()
 
 vcpkg_list(SET OPTIONS_RELEASE)
@@ -64,10 +75,7 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
-    list(APPEND OPTIONS
-        --extra-cflags=-D_WIN32_WINNT=0x0A00
-        --disable-asm
-    )
+    list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX)
