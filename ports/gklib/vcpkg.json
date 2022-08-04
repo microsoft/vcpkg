@@ -1,11 +1,10 @@
 {
-  "name": "metis",
+  "name": "gklib",
   "version-date": "2022-07-27",
-  "description": "Serial Graph Partitioning and Fill-reducing Matrix Ordering",
-  "homepage": "https://github.com/KarypisLab/METIS",
+  "description": "General helper libraries for KarypisLab.",
+  "homepage": "https://github.com/KarypisLab/GKlib/",
   "license": "Apache-2.0",
   "dependencies": [
-    "gklib",
     {
       "name": "vcpkg-cmake",
       "host": true
