@@ -1730,7 +1730,7 @@
     },
     "cryptopp": {
       "baseline": "8.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cspice": {
       "baseline": "67",
