@@ -1,7 +1,7 @@
 {
   "name": "jasper",
   "version": "2.0.33",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
   "homepage": "https://github.com/mdadams/jasper",
   "dependencies": [
@@ -28,7 +28,7 @@
           "features": [
             "opengl"
           ],
-          "platform": "!(windows & arm)"
+          "platform": "!(windows & arm) & !uwp"
         }
       ]
     },
@@ -37,11 +37,11 @@
       "dependencies": [
         {
           "name": "freeglut",
-          "platform": "!osx & !(windows & arm)"
+          "platform": "!osx & !(windows & arm) & !uwp"
         },
         {
           "name": "opengl",
-          "platform": "!(windows & arm)"
+          "platform": "!(windows & arm) & !uwp"
         }
       ]
     }

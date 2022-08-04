@@ -6,38 +6,19 @@ vcpkg_from_github(
     REF v1.19.0
     SHA512 B1CB1F23CF9B5DD2491B6883CAF8FB47E264B736C94F6AA6655E9A6F641664B4BCEEB48F74C98B955F0EE02BA2E0AE8E01539A928ABB4B81FAE13ED3B57287CA
     HEAD_REF master
-    PATCHES add-project-declaration.patch
+    PATCHES
+        add-project-declaration.patch
+        Export-unofficial-yoga-config.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_build_cmake()
-vcpkg_copy_pdbs()
+vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/yoga DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-yoga)
 
-set(YOGA_LIB_PREFFIX )
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    set(YOGA_LIB_PREFFIX lib)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    set(YOGA_BINARY_PATH )
-    if (VCPKG_TARGET_IS_WINDOWS)
-        set(YOGA_BINARY_PATH Release/)
-    endif()
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${YOGA_BINARY_PATH}${YOGA_LIB_PREFFIX}yogacore${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    set(YOGA_BINARY_PATH )
-    if (VCPKG_TARGET_IS_WINDOWS)
-        set(YOGA_BINARY_PATH Debug/)
-    endif()
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${YOGA_BINARY_PATH}${YOGA_LIB_PREFFIX}yogacore${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_copy_pdbs()
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

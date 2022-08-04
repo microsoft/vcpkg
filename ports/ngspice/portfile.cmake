@@ -6,9 +6,9 @@ set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
-    REF 35
-    FILENAME "ngspice-35.tar.gz"
-    SHA512 2f9b0f951e3ca8d52692beadb895b352311f67b8760f99d0e2f4718fce4b497dd68e2b933029eeacb4ed57551e959bc6e3747e64feb4722a4f841e734f5a664b
+    REF 37
+    FILENAME "ngspice-37.tar.gz"
+    SHA512 d49f7e78d3dd17ac8ea03d79dfbe8a9cf57c012395285cc0c0cf379e0c0c81f11cad68d5366dc2d2478959ed197e4d43380fbc15baf44f987f20ad00f1ee04ca
     PATCHES
         use-winbison-sharedspice.patch
         use-winbison-vngspice.patch

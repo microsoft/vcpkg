@@ -1,18 +1,34 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF 15d5340f174212d6f93ae55c0d9af606c3d361c0 #version 3.2
-    SHA512 f922e8bbb041a498e948587f03e8dc8a07b92e641f38d50a8eafb8b3ce1e0c92bb1ee01360d57e794429912734b60cf05ba143445a442bc95af39e3dd9fc3670
+    REF 6b5fb806a9190f7425c32db65d3ea905a55a9c16 #version 3.3
+    SHA512 fe79ce6c73341f83d4aee8cb4da5341dead56a92f998212f7898079b79725f46b2209d64e68fe3b4d99d3c5c25775a8efd1bf3c3b3a049d4f609d3e30172d3bf
     HEAD_REF master
     PATCHES
-        osgearth-library-static.patch
         link-libraries.patch
-        use-unofficial-osg-config.patch
         find-package.patch
         remove-tool-debug-suffix.patch
-        fix-gcc11-compilation.patch
-        blend2d-fix.patch
+		remove-lerc-gltf.patch
 )
+
+if("tools" IN_LIST FEATURES)
+	message(STATUS "Downloading submodules")
+	# Download submodules from github manually since vpckg doesn't support submodules natively.
+	# IMGUI
+	#osgEarth is currently using imgui docking branch for osgearth_imgui example
+	vcpkg_from_github(
+		OUT_SOURCE_PATH IMGUI_SOURCE_PATH
+		REPO ocornut/imgui
+		REF 9e8e5ac36310607012e551bb04633039c2125c87 #docking branch
+		SHA512 1f1f743833c9a67b648922f56a638a11683b02765d86f14a36bc6c242cc524c4c5c5c0b7356b8053eb923fafefc53f4c116b21fb3fade7664554a1ad3b25e5ff
+		HEAD_REF master
+	)
+
+	# Remove exisiting folder in case it was not cleaned
+	file(REMOVE_RECURSE "${SOURCE_PATH}/src/third_party/imgui")
+	# Copy the submodules to the right place
+	file(COPY "${IMGUI_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/third_party/imgui")
+endif()
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
@@ -50,6 +66,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
@@ -83,7 +100,8 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_imgui osgearth_overlayviewer osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+		osgearth_createtile osgearth_mvtindex
         AUTO_CLEAN
     )
 endif()
