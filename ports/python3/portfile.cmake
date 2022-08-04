@@ -190,7 +190,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
-    
+
     # Remove static library belonging to executable
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
@@ -205,7 +205,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         endif()
     endif()
 else()
-    # Python Stable ABI is incompatible with --with-pydebug option
+    # The Python Stable ABI, `libpython3.so` is not produced by the upstream build system with --with-pydebug option
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_BUILD_TYPE)
         set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
     endif()
