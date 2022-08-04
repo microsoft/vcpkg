@@ -6950,7 +6950,7 @@
     },
     "superlu": {
       "baseline": "2020-01-07",
-      "port-version": 5
+      "port-version": 6
     },
     "symengine": {
       "baseline": "0.9.0",
