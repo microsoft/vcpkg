@@ -1,14 +1,11 @@
 {
   "name": "qtmultimedia",
   "version": "6.3.1",
+  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    {
-      "name": "alsa",
-      "platform": "linux"
-    },
     {
       "name": "qtbase",
       "default-features": false,
