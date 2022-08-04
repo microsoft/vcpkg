@@ -27,3 +27,16 @@ index 49c536a..5630526 100644
  
  wx_option(wxUSE_LIBLZMA "use LZMA compression" OFF)
  set(wxTHIRD_PARTY_LIBRARIES ${wxTHIRD_PARTY_LIBRARIES} wxUSE_LIBLZMA "use liblzma for LZMA compression")
+diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
+index 6ef5a6e..248a701 100644
+--- a/build/cmake/wxWidgetsConfig.cmake.in
++++ b/build/cmake/wxWidgetsConfig.cmake.in
+@@ -1,5 +1,8 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-nanosvg CONFIG)
++
+ # determine target from compiler, platform and library type
+ if(WIN32 AND NOT CYGWIN AND NOT MSYS)
+     if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
