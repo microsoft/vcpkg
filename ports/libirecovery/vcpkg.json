@@ -7,6 +7,10 @@
   "dependencies": [
     "getopt",
     "libusbmuxd",
-    "readline"
+    "readline",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    }
   ]
 }

@@ -18,7 +18,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES 
     patch.patch
-    remove_hard_stop.patch
+    #remove_hard_stop.patch
 )
 
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})

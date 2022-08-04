@@ -8,13 +8,14 @@ vcpkg_from_github(
     HEAD_REF msvc-master
 )
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libirecovery.sln
     INCLUDES_SUBPATH include
     LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
-    ALLOW_ROOT_INCLUDES
+    LANGUAGE C
+    ADDITIONAL_LIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/getopt.lib"
+    ADDITIONAL_LIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/getopt.lib"
 )
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")

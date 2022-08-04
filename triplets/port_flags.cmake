@@ -5,9 +5,10 @@ endif()
 if(PORT MATCHES "^(re2)$")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
-if(PORT MATCHES "^(arrow|flint|folly|glog|zydis|libirecovery|graphicsmagick|freerdp|gtk|irrlicht|libde265|cryptopp|llfio)$")
-    # llfio -> code has correctness issues which cl accepts. (wrong thread_local and fried declaration)
-    # cryptopp misses to pass -m<arch> flags for the clang-cl build
+# Note: All gn ports still use cl unless we figure out to pass it a toolchain somehow. 
+if(PORT MATCHES "^(arrow|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver)$")
+    # mongo-c-driver -> strange redefinition error. Couldn't find why it claims that the defs are different. 
+    # llfio -> code has correctness issues which cl accepts. (wrong thread_local and friend declaration)
     # gtk -> .res files in archives via /WHOLEARCHIVE not correctly handled by lld-link
     # libde265 -> probably some macro collision
     # arrow implicit deleted default constructor
