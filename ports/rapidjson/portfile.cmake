@@ -17,7 +17,12 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME RapidJSON CONFIG_PATH lib/cmake/RapidJSON)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME RapidJSON CONFIG_PATH cmake/RapidJSON)
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME RapidJSON CONFIG_PATH lib/cmake/RapidJSON)
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
