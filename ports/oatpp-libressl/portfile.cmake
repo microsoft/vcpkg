@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"       
+        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
 )
 
 vcpkg_cmake_install()
