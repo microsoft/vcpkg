@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 7014ffdaa160bfa2509fc283cb7176d7994a37f51509c7374659292efad076c8fb594f9f6990bab1aa5562d1f66e93403ea35a5bf2a924436560a2d4669ffcfd
     HEAD_REF master
     PATCHES
-       Do-not-export-eigen.patch
+       do-not-install-eigen.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,12 +27,12 @@ vcpkg_cmake_configure(
         # Build options
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
-        -DLIBIGL_INSTALL=OFF
+        -DLIBIGL_INSTALL=ON
         -DLIBIGL_USE_STATIC_LIBRARY=OFF
 )
 
 vcpkg_cmake_install()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_copy_pdbs()
 
 # libigl is a header-only library.
