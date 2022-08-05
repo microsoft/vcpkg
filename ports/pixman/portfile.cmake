@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
-endif()
-
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
             -Dmmx=disabled
@@ -42,6 +38,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         remove_test_demos.patch
         no-host-cpu-checks.patch
+        fix_clang-cl.patch
+        missing_intrin_include.patch
 )
 # Meson install wrongly pkgconfig file!
 vcpkg_configure_meson(
