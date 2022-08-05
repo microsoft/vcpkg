@@ -44,10 +44,12 @@ macro(append_bool_option feature_name option_name)
   endif()
 endmacro()
 
+set(DPDK_OPTIONS "")
 append_bool_option("docs" "enable_docs")
 append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
+string(REPLACE "-Denable_docs=true" "-Denable_docs=false" DPDK_OPTIONS_DEBUG "${DPDK_OPTIONS}")
 
 list(APPEND PYTHON_PACKAGES pyelftools)
 if("docs" IN_LIST FEATURES)
@@ -55,8 +57,15 @@ if("docs" IN_LIST FEATURES)
 endif()
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH} OPTIONS
-                      -Ddisable_drivers=regex/cn9k -Dexamples= ${DPDK_OPTIONS})
+vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -Ddisable_drivers=regex/cn9k
+    -Dexamples=
+  OPTIONS_RELEASE
+    ${DPDK_OPTIONS}
+  OPTIONS_DEBUG
+    ${DPDK_OPTIONS_DEBUG}
+)
 vcpkg_install_meson()
 
 vcpkg_copy_tools(TOOL_NAMES dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py
