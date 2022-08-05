@@ -4406,7 +4406,7 @@
     },
     "luasocket": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lunasvg": {
       "baseline": "2.3.1",
