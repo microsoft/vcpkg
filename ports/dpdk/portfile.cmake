@@ -33,6 +33,7 @@ vcpkg_from_github(
   HEAD_REF main
   PATCHES
       enable-either-static-or-shared-build.patch
+      fix-dependencies.patch
       remove-examples-src-from-datadir.patch
       stop-building-apps.patch)
 
