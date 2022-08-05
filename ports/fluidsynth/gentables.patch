@@ -1,0 +1,54 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2803ca8..49f3505 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -419,6 +419,10 @@ else ( MACOSX_FRAMEWORK )
+    install ( FILES ${public_main_HEADER} DESTINATION ${INCLUDE_INSTALL_DIR} )
+ endif ( MACOSX_FRAMEWORK )
+ 
++option(VCPKG_BUILD_MAKE_TABLES "Build `make_tables`" OFF)
++if(VCPKG_BUILD_MAKE_TABLES)
++    add_subdirectory(gentables)
++elseif(0)
+ # ******* Auto Generated Lookup Tables ******
+ 
+ include(ExternalProject)
+@@ -440,4 +444,11 @@ ExternalProject_Add(gentables
+         "${CMAKE_COMMAND}" --build "${GENTAB_BDIR}"
+     INSTALL_COMMAND ${GENTAB_BDIR}/make_tables.exe "${CMAKE_BINARY_DIR}/"
+ )
++endif()
++if(TARGET make_tables AND NOT CMAKE_CROSSCOMPILING)
++    set(GENTABLES make_tables)
++else()
++    find_program(GENTABLES make_tables REQUIRED)
++endif()
++add_custom_target(gentables COMMAND "${GENTABLES}" "${CMAKE_BINARY_DIR}/")
+ add_dependencies(libfluidsynth-OBJ gentables)
+diff --git a/src/gentables/CMakeLists.txt b/src/gentables/CMakeLists.txt
+index 638f299..19dd9e6 100644
+--- a/src/gentables/CMakeLists.txt
++++ b/src/gentables/CMakeLists.txt
+@@ -12,6 +12,7 @@ unset(ENV{LDFLAGS})
+ 
+ project (gentables C)
+ 
++if (0)
+ set ( CMAKE_BUILD_TYPE Debug )
+ 
+ # hardcode ".exe" as suffix to the binary, else in case of cross-platform cross-compiling the calling cmake will not know the suffix used here and fail to find the binary
+@@ -20,6 +21,7 @@ set ( CMAKE_EXECUTABLE_SUFFIX ".exe" )
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR})
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR})
++endif()
+ 
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
+ 
+@@ -34,3 +36,5 @@ if ( WIN32 )
+ else ( WIN32 )
+     target_link_libraries (make_tables "m")
+ endif ()
++
++install(TARGETS make_tables DESTINATION bin)
+\ No newline at end of file

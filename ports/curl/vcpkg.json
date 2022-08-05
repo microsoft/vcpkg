@@ -132,7 +132,7 @@
           "features": [
             "sectransp"
           ],
-          "platform": "osx"
+          "platform": "osx | ios"
         },
         {
           "name": "curl",
@@ -148,7 +148,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
         }
       ]
     },
