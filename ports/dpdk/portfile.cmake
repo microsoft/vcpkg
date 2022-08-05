@@ -69,8 +69,11 @@ vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_install_meson()
 
-vcpkg_copy_tools(TOOL_NAMES dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py
-                 dpdk-hugepages.py AUTO_CLEAN)
+set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
+if("tests" IN_LIST FEATURES)
+  list(APPEND tools dpdk-test)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
 
