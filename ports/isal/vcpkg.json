@@ -1,7 +1,6 @@
 {
   "name": "isal",
-  "version": "2.25.0",
-  "port-version": 3,
+  "version": "2.30.0",
   "description": "Intel(R) Intelligent Storage Acceleration Library",
   "homepage": "https://github.com/intel/isa-l",
   "license": "BSD-3-Clause",

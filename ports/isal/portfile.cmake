@@ -4,11 +4,10 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO 01org/isa-l
-    REF v2.25.0
-    SHA512 aa556c8ba26b4637493b3de50a23636668bcfd71249029c52fe6983d0bcf120d1b91f39aaa259cb58e59448d401366f3bfaaee24609db7e6a1cd3fdf1a953efe
+    REPO intel/isa-l
+    REF v2.30.0
+    SHA512 d3ecfb7326097534b06a74b584100336509525ae7cadc6112d0c27e3d8704f3810e18f583d3cc33fa266bfec96db023607622b22ddbf17988ec4bf1bb3b3b9b2
     HEAD_REF master
-    PATCHES fix-nmake.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -30,7 +29,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_NAME Makefile.nmake
         TARGET ${NMAKE_TARGET}
-        OPTIONS CC=cl
+        OPTIONS
+            CFLAGS_REL=
     )
 
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
