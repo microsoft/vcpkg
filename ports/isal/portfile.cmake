@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v2.30.0
     SHA512 d3ecfb7326097534b06a74b584100336509525ae7cadc6112d0c27e3d8704f3810e18f583d3cc33fa266bfec96db023607622b22ddbf17988ec4bf1bb3b3b9b2
     HEAD_REF master
+    PATCHES
+        osx-asm-sysroot.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -63,6 +65,9 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            # No rpl_malloc provided, and probably not depending on ‘malloc (0)’ returning a valid pointer
+            ac_cv_func_malloc_0_nonnull=yes
     )
 
     vcpkg_install_make()
