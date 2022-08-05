@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e05272..44dd7cb 100644
+index c552091..1413cb0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -82,8 +82,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
+@@ -90,8 +90,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
  
  if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
  	find_package(OpenSSL REQUIRED)
@@ -11,7 +11,7 @@ index 4e05272..44dd7cb 100644
  endif()
  
  if(OPENSSL_FOUND)
-@@ -113,24 +111,19 @@ else()
+@@ -121,24 +119,19 @@ else()
  	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
  endif()
  
@@ -44,18 +44,8 @@ index 4e05272..44dd7cb 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -207,6 +200,9 @@ include(DefinePlatformSpecifc)
- # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
- set(Poco_COMPONENTS "")
- 
-+# Do not declare the link library in the code!
-+add_definitions(-DPOCO_NO_AUTOMATIC_LIBS)
-+
- if(ENABLE_TESTS)
- 	add_subdirectory(CppUnit)
- 	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -339,8 +335,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Redis AND ENABLE_REDIS)
- 	list(APPEND Poco_COMPONENTS "Redis")
+@@ -351,8 +344,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
+ 	list(APPEND Poco_COMPONENTS "Prometheus")
  endif()
  
 -if(EXISTS ${PROJECT_SOURCE_DIR}/PDF AND ENABLE_PDF)
@@ -68,12 +58,12 @@ index 4e05272..44dd7cb 100644
  	list(APPEND Poco_COMPONENTS "PDF")
  endif()
  
-@@ -478,15 +477,6 @@ install(
+@@ -492,15 +488,6 @@ install(
  		Devel
  )
  
 -if(POCO_UNBUNDLED)
--	install(FILES cmake/FindPCRE.cmake
+-	install(FILES cmake/FindPCRE2.cmake
 -			DESTINATION "${PocoConfigPackageLocation}")
 -	install(FILES cmake/V39/FindEXPAT.cmake
 -			DESTINATION "${PocoConfigPackageLocation}/V39")
@@ -85,7 +75,7 @@ index 4e05272..44dd7cb 100644
  message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
  if(BUILD_SHARED_LIBS)
 diff --git a/Data/CMakeLists.txt b/Data/CMakeLists.txt
-index 7d1e99e..9d0a85c 100644
+index 0772af6..692fd2f 100644
 --- a/Data/CMakeLists.txt
 +++ b/Data/CMakeLists.txt
 @@ -45,7 +45,7 @@ else(ENABLE_DATA_SQLITE)
@@ -98,7 +88,7 @@ index 7d1e99e..9d0a85c 100644
  	add_subdirectory(MySQL)
  else()
 diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
-index f71b145..7034974 100644
+index ce411cf..5a30b7c 100644
 --- a/Data/MySQL/CMakeLists.txt
 +++ b/Data/MySQL/CMakeLists.txt
 @@ -21,7 +21,7 @@ set_target_properties(DataMySQL
@@ -124,7 +114,7 @@ index 6ddcd39..9e50803 100644
  #endif
  
 diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
-index b52e2c5..0dcfae2 100644
+index 3a176d7..b0fc05e 100644
 --- a/Data/SQLite/CMakeLists.txt
 +++ b/Data/SQLite/CMakeLists.txt
 @@ -7,7 +7,7 @@ file(GLOB_RECURSE HDRS_G "include/*.h")
@@ -146,42 +136,42 @@ index b52e2c5..0dcfae2 100644
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 6f5100f..c9fa2e5 100644
+index 096624b..2385f36 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
 @@ -35,7 +35,7 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
  # If POCO_UNBUNDLED is enabled we try to find the required packages
  # The configuration will fail if the packages are not found
  if(POCO_UNBUNDLED)
--	find_package(PCRE REQUIRED)
-+	find_package(unofficial-pcre CONFIG REQUIRED)
+-	find_package(PCRE2 REQUIRED)
++	find_package(unofficial-pcre2 CONFIG REQUIRED)
  	find_package(ZLIB REQUIRED)
  
  	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
-@@ -101,7 +101,7 @@ set_target_properties(Foundation
+@@ -107,7 +107,7 @@ set_target_properties(Foundation
  )
  
  if(POCO_UNBUNDLED)
--	target_link_libraries(Foundation PUBLIC Pcre::Pcre ZLIB::ZLIB)
-+	target_link_libraries(Foundation PUBLIC unofficial::pcre::pcre ZLIB::ZLIB)
+-	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB)
++	target_link_libraries(Foundation PUBLIC unofficial::Pcre2::Pcre2 ZLIB::ZLIB)
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
      add_definitions(
          -D_pcre_utf8_table1=_poco_pcre_utf8_table1
 diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
-index 46c2d3f..af2e78c 100644
+index 82c5788..5a3cb23 100644
 --- a/Foundation/cmake/PocoFoundationConfig.cmake
 +++ b/Foundation/cmake/PocoFoundationConfig.cmake
 @@ -2,7 +2,7 @@ if(@POCO_UNBUNDLED@)
  	include(CMakeFindDependencyMacro)
  	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
  	find_dependency(ZLIB REQUIRED)
--	find_dependency(PCRE REQUIRED)
-+	find_dependency(unofficial-pcre REQUIRED)
+-	find_dependency(PCRE2 REQUIRED)
++	find_dependency(unofficial-pcre2 REQUIRED)
  endif()
  
  include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")
 diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
-index 4fbf06f..793285a 100644
+index 123657a..9856c55 100644
 --- a/XML/CMakeLists.txt
 +++ b/XML/CMakeLists.txt
 @@ -20,7 +20,7 @@ endif()
