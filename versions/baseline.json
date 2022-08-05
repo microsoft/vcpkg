@@ -4594,7 +4594,7 @@
     },
     "milerius-sfml-imgui": {
       "baseline": "1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "mimalloc": {
       "baseline": "2.0.6",
@@ -6517,12 +6517,12 @@
       "port-version": 9
     },
     "sdl2-ttf": {
-      "baseline": "2.0.15",
-      "port-version": 5
+      "baseline": "2.20.0",
+      "port-version": 0
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 4
+      "port-version": 5
     },
     "seal": {
       "baseline": "3.7.2",
@@ -6574,7 +6574,7 @@
     },
     "sfml": {
       "baseline": "2.5.1",
-      "port-version": 13
+      "port-version": 14
     },
     "sfsexp": {
       "baseline": "1.3.1",
@@ -7050,7 +7050,7 @@
     },
     "tgui": {
       "baseline": "2021-04-19",
-      "port-version": 3
+      "port-version": 4
     },
     "theia": {
       "baseline": "0.8",
