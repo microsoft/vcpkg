@@ -19,6 +19,7 @@ set(PATCHES
         patches/windows/fix-compile-flag-Zi.patch
         patches/windows/tcl_version.patch
         patches/windows/macro-def.patch
+        patches/fix-configure.patch
         )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -86,7 +87,7 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_get_vars(vars_file)
     include("${vars_file}")
-    
+
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -212,7 +213,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
-
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup

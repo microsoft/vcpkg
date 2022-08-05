@@ -29,6 +29,10 @@
       "platform": "!(windows & static)"
     },
     {
+      "name": "libuuid",
+      "platform": "!osx & !windows"
+    },
+    {
       "name": "openssl",
       "platform": "!(windows & static)"
     },

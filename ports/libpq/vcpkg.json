@@ -15,8 +15,8 @@
       "platform": "osx"
     },
     {
-        "name": "vcpkg-cmake-get-vars",
-        "host": true
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ],
   "default-features": [
