@@ -10,13 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(YASM)
-get_filename_component(YASM_PATH ${YASM} DIRECTORY)
-vcpkg_add_to_path("${YASM_PATH}")
-
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path("${NASM_PATH}")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_PATH "${NASM}" DIRECTORY)
+    vcpkg_add_to_path("${NASM_PATH}")
+endif()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -57,6 +55,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${ISAL_HDRS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/isa-l.def" DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
 else()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        vcpkg_find_acquire_program(YASM)
+        get_filename_component(YASM_PATH "${NASM}" DIRECTORY)
+        vcpkg_add_to_path("${YASM_PATH}")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
     )
