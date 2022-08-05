@@ -77,23 +77,7 @@ vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_find_acquire_program(PKGCONFIG)
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
-  @ONLY)
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-file(
-  INSTALL "${SOURCE_PATH}/license/README"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config-version.cmake"
-  VERSION ${PORT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/license/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
