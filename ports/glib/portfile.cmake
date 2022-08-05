@@ -1,9 +1,3 @@
-# Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
-endif()
-
 set(GLIB_MAJOR_MINOR 2.72)
 set(GLIB_PATCH 3)
 vcpkg_from_gitlab(
@@ -84,7 +78,7 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 

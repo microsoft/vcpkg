@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d642a06..157b000 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -194,7 +194,24 @@ endfunction()
+ add_definitions(${WOLFTPM_DEFINITIONS})
+ 
+ # generate options file
+-set(OPTION_FILE "wolftpm/options.h")
++message("Generating user options header...")
++if (${CMAKE_DISABLE_SOURCE_CHANGES})
++    set(WOLFTPM_BUILD_OUT_OF_TREE_DEFAULT "${CMAKE_DISABLE_SOURCE_CHANGES}")
++else()
++    set(WOLFTPM_BUILD_OUT_OF_TREE_DEFAULT "no")
++endif()
++
++set(WOLFTPM_BUILD_OUT_OF_TREE "${WOLFTPM_BUILD_OUT_OF_TREE_DEFAULT}" CACHE STRING
++    "Don't generate files in the source tree (default: ${WOLFTPM_BUILD_OUT_OF_TREE_DEFAULT})")
++set_property(CACHE WOLFTPM_BUILD_OUT_OF_TREE
++    PROPERTY STRINGS "yes;no")
++
++if (${WOLFTPM_BUILD_OUT_OF_TREE})
++   set(WOLFTPM_OUTPUT_BASE ${CMAKE_CURRENT_BINARY_DIR})
++else()
++   set(WOLFTPM_OUTPUT_BASE ${CMAKE_CURRENT_SOURCE_DIR})
++endif()
++set(OPTION_FILE "${WOLFTPM_OUTPUT_BASE}/wolftpm/options.h")
+ 
+ file(REMOVE ${OPTION_FILE})
+ 

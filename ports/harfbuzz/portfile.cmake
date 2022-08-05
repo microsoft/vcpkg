@@ -56,7 +56,7 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS)
 	file(GLOB PC_FILES 
 		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
 		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")

@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
         no-etc-symlinks.patch
         libgetopt.patch
         fix-mingw-gperf-fallback.patch
+        fix-preprocessor-clang-cl.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
