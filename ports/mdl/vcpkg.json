@@ -1,6 +1,6 @@
 {
   "name": "mdl",
-  "version-semver": "2021.1.2",
+  "version": "2021.1.2",
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",

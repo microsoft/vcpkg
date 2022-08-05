@@ -81,7 +81,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dds MDL_BUILD_DDS_PLUGIN
         freeimage MDL_BUILD_FREEIMAGE_PLUGIN
-    )
+)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-mdl-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
