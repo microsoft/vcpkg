@@ -7225,7 +7225,7 @@
       "port-version": 3
     },
     "tracy": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "transwarp": {
