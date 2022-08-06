@@ -18,6 +18,7 @@
     "libgeotiff",
     "libxml2",
     "nanoflann",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
