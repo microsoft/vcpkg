@@ -270,7 +270,6 @@ ftgl:arm-uwp=fail
 functions-framework-cpp:x64-uwp=fail
 
 gazebo:x64-linux=fail
-gdk-pixbuf:x64-windows-static=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
@@ -1121,7 +1120,6 @@ unicorn-lib:x64-uwp=fail
 unittest-cpp:arm64-windows=fail
 unittest-cpp:arm-uwp=fail
 unittest-cpp:x64-uwp=fail
-urdfdom:x64-windows-static=fail
 usd:x86-windows=fail
 uthenticode:arm-uwp=fail
 uthenticode:x64-uwp=fail
