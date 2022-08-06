@@ -42,15 +42,14 @@ if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME citygml
     CONFIG_PATH lib/cmake/citygml

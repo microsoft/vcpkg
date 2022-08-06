@@ -3,10 +3,9 @@
   "version-semver": "2.4.3",
   "description": "C++ Library for CityGML Parsing and Visualization",
   "homepage": "https://github.com/jklimke/libcitygml",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1-only",
   "supports": "windows",
   "dependencies": [
-    "xerces-c",
     "opengl",
     {
       "name": "vcpkg-cmake",
@@ -15,7 +14,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "xerces-c"
   ],
   "features": {
     "gdal": {
