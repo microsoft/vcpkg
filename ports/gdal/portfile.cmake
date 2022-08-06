@@ -138,14 +138,18 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-list(REMOVE_ITEM bin_files "${CURRENT_PACKAGES_DIR}/bin/gdal-config")
 if(NOT bin_files)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

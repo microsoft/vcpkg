@@ -122,7 +122,7 @@
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!linux & !mingw & !uwp"
+          "platform": "!linux & !uwp"
         },
         {
           "$package": "ZLIB",
