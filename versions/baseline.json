@@ -3170,7 +3170,7 @@
     },
     "kd-soap": {
       "baseline": "1.9.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kdbindings": {
       "baseline": "1.0.0",

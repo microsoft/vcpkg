@@ -8,25 +8,19 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KDSoap_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DKDSoap_STATIC=${KDSoap_STATIC}
         -DKDSoap_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KDSoap TARGET_PATH share/KDSoap)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "KDSoap" CONFIG_PATH "lib/cmake/KDSoap")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+vcpkg_copy_tools(TOOL_NAMES "kdwsdl2cpp" AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
