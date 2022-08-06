@@ -90,22 +90,30 @@
 +  set(3P_LIBRARY_OUTPUT_PATH             "${LIBRARY_OUTPUT_PATH}")
 +  set(OPENCV_LIB_INSTALL_PATH            "${OpenCV_INSTALL_BINARIES_PREFIX}lib")
 +  set(OPENCV_3P_LIB_INSTALL_PATH         "${OPENCV_LIB_INSTALL_PATH}")
-+  set(OPENCV_SAMPLES_SRC_INSTALL_PATH    "share/opencv/samples")
-+  set(OPENCV_INCLUDE_INSTALL_PATH        "include")
-+  set(OPENCV_CONFIG_INSTALL_PATH         "share/opencv")
++  set(OPENCV_SAMPLES_SRC_INSTALL_PATH    "share/opencv2/samples")
++  set(OPENCV_INCLUDE_INSTALL_PATH        "include/opencv2.4")
++  set(OPENCV_CONFIG_INSTALL_PATH         "share/opencv2")
  endif()
  
  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${OPENCV_LIB_INSTALL_PATH}")
-@@ -356,7 +327,7 @@ endif()
+@@ -354,15 +325,8 @@ if(INSTALL_TO_MANGLED_PATHS)
+   set(OPENCV_INCLUDE_INSTALL_PATH ${OPENCV_INCLUDE_INSTALL_PATH}/opencv-${OPENCV_VERSION})
+ endif()
  
- if(WIN32)
-   # Postfix of DLLs:
+-if(WIN32)
+-  # Postfix of DLLs:
 -  set(OPENCV_DLLVERSION "${OPENCV_VERSION_MAJOR}${OPENCV_VERSION_MINOR}${OPENCV_VERSION_PATCH}")
-+  set(OPENCV_DLLVERSION "")
++  set(OPENCV_DLLVERSION 2)
    set(OPENCV_DEBUG_POSTFIX d)
- else()
-   # Postfix of so's:
-@@ -397,8 +368,6 @@ if(CMAKE_HOST_WIN32)
+-else()
+-  # Postfix of so's:
+-  set(OPENCV_DLLVERSION "")
+-  set(OPENCV_DEBUG_POSTFIX "")
+-endif()
+ 
+ if(DEFINED CMAKE_DEBUG_POSTFIX)
+   set(OPENCV_DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
+@@ -397,8 +361,6 @@ if(CMAKE_HOST_WIN32)
    endif()
  endif()
  
@@ -114,7 +122,7 @@
  
  if(GIT_EXECUTABLE)
    execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty --match "2.[0-9].[0-9]*"
-@@ -501,7 +470,9 @@ if(BUILD_DOCS)
+@@ -501,7 +463,9 @@ if(BUILD_DOCS)
  endif(BUILD_DOCS)
  
  # --- Python Support ---
@@ -125,7 +133,7 @@
  
  # --- Java Support ---
  include(cmake/OpenCVDetectApacheAnt.cmake)
-@@ -885,11 +853,7 @@ if(ANDROID)
+@@ -885,11 +849,7 @@ if(ANDROID)
  endif()
  
  if(DEFINED WITH_FFMPEG OR HAVE_FFMPEG)
@@ -137,8 +145,6 @@
    status("      avcodec:"      FFMPEG_libavcodec_FOUND    THEN "YES (ver ${FFMPEG_libavcodec_VERSION})"    ELSE NO)
    status("      avformat:"     FFMPEG_libavformat_FOUND   THEN "YES (ver ${FFMPEG_libavformat_VERSION})"   ELSE NO)
    status("      avutil:"       FFMPEG_libavutil_FOUND     THEN "YES (ver ${FFMPEG_libavutil_VERSION})"     ELSE NO)
-diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index e61059a..ec6f34f 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
 @@ -269,7 +269,6 @@ if(MSVC)
@@ -149,8 +155,6 @@ index e61059a..ec6f34f 100644
    endif()
  
    if(ENABLE_SSE4_1 AND CV_ICC AND NOT OPENCV_EXTRA_FLAGS MATCHES "/arch:")
-diff --git a/cmake/OpenCVFindLibsVideo.cmake b/cmake/OpenCVFindLibsVideo.cmake
-index 146043f..1202225 100644
 --- a/cmake/OpenCVFindLibsVideo.cmake
 +++ b/cmake/OpenCVFindLibsVideo.cmake
 @@ -185,12 +185,8 @@ endif(WITH_XIMEA)
@@ -197,6 +201,17 @@ index 146043f..1202225 100644
    set(OpenCV_INCLUDE_DIRS_CONFIGCMAKE "\"\${OpenCV_CONFIG_PATH}/include\" \"\${OpenCV_CONFIG_PATH}/include/opencv\"")
    set(OpenCV2_INCLUDE_DIRS_CONFIGCMAKE "\"\"")
  
+--- a/cmake/OpenCVGenPkgconfig.cmake
++++ b/cmake/OpenCVGenPkgconfig.cmake
+@@ -95,7 +95,7 @@ set(includedir  "\${prefix}/${OPENCV_INCLUDE_INSTALL_PATH}")
+ if(INSTALL_TO_MANGLED_PATHS)
+   set(OPENCV_PC_FILE_NAME "opencv-${OPENCV_VERSION}.pc")
+ else()
+-  set(OPENCV_PC_FILE_NAME opencv.pc)
++  set(OPENCV_PC_FILE_NAME opencv2.pc)
+ endif()
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/opencv-XXX.pc.in"
+                "${CMAKE_BINARY_DIR}/unix-install/${OPENCV_PC_FILE_NAME}"
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -86,10 +86,10 @@ macro(ocv_add_dependencies full_modname)
