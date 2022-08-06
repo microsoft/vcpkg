@@ -13,8 +13,8 @@ vcpkg_from_gitlab(
     REPO lib/libx11
     REF  4c96f3567a8d045ee57b886fddc9618b71282530 #x11 v 1.7.3.1
     SHA512 15c55b6283aec363f6af5b549584d487ec5a8c0f74b95dc44674ff50764abe5b9fa216e2af3c5408faf12d17b04e9433f0ad66da6e32a0dfef0427ca131ef23b
-    HEAD_REF master # branch name
-    PATCHES cl.build.patch #patch name
+    HEAD_REF master
+    PATCHES cl.build.patch
             io_include.patch
             ${PATCHES}
             vcxserver.patch
