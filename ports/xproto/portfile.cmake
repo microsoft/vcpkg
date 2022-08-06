@@ -46,6 +46,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Handle copyright
 file(GLOB_RECURSE _files "${SOURCE_PATH}/COPYING*")
 file(INSTALL ${_files} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
+vcpkg_install_copyright(FILE_LIST ${_files})
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "")
 endif()
