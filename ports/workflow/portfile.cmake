@@ -5,6 +5,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         REF v0.9.7-win
         SHA512 c23b8c1910c4ca5d57fa732e3084f56e17fdfead5561a8eab7be469d8f6081d830555365b2cf74e27956ffa88a6fb284dbde4654b23b130da9fbb4eb404686bd
         HEAD_REF windows
+        PATCHES fix_missing_parens.patch
     )
 else()
     vcpkg_from_github(

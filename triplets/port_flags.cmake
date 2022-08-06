@@ -6,7 +6,7 @@ if(PORT MATCHES "^(re2)$")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 # Note: All gn ports still use cl unless we figure out to pass it a toolchain somehow. 
-if(PORT MATCHES "^(arrow|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver)$")
+if(PORT MATCHES "^(arrow|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver|tcl)$")
     # mongo-c-driver -> strange redefinition error. Couldn't find why it claims that the defs are different. 
     # llfio -> code has correctness issues which cl accepts. (wrong thread_local and friend declaration)
     # gtk -> .res files in archives via /WHOLEARCHIVE not correctly handled by lld-link
@@ -16,6 +16,7 @@ if(PORT MATCHES "^(arrow|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrli
     # graphicsmagick -> requires wrapping the allocators in namespace std
     # glog hardcodes builtin expected if build with clang-cl (#if 1 otehrwise #if 0) -> folly sees that. 
     # zydis,freerdp,irrlicht UTF-16 encoding in rc file
+    # tcl -> requires nmake compiler setup
     # TODO: Recheck flint
     message(STATUS "Falling back to cl!")
     unset(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)

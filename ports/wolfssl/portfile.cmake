@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       wolfssl_pr5401.diff
+      fix_clang-cl.patch
     )
 
 vcpkg_cmake_configure(

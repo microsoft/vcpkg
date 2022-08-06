@@ -1,0 +1,18 @@
+diff --git a/port/cpl_safemaths.hpp b/port/cpl_safemaths.hpp
+index 6d536855c..2a0ca417b 100644
+--- a/port/cpl_safemaths.hpp
++++ b/port/cpl_safemaths.hpp
+@@ -37,12 +37,12 @@
+ #define __has_builtin(x) 0
+ #endif
+ 
+-#if (__GNUC__ >= 5 && !defined( __INTEL_COMPILER)) || __has_builtin(__builtin_sadd_overflow)
++#if (__GNUC__ >= 5 && !defined( __INTEL_COMPILER)) || (__has_builtin(__builtin_sadd_overflow) && !defined(_MSC_VER))
+ #  define BUILTIN_OVERFLOW_CHECK_AVAILABLE
+ 
+ #elif defined(_MSC_VER)
+ 
+ #  include "safeint.h"
+ 
+ #elif defined(GDAL_COMPILATION)
+ #  include "cpl_port.h"

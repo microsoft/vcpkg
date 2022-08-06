@@ -1,0 +1,17 @@
+diff --git a/cmake/compilation_flags.cmake b/cmake/compilation_flags.cmake
+index 395f1b5cf..16ddf5167 100644
+--- a/cmake/compilation_flags.cmake
++++ b/cmake/compilation_flags.cmake
+@@ -5,6 +5,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ include("cmake/sanitizers.cmake")
+ process_sanitizer(PEPARSE)
+ 
++if(0)
+ if (MSVC)
+   list(APPEND DEFAULT_CXX_FLAGS /W4 /analyze)
+ 
+@@ -42,3 +43,4 @@ else ()
+     )
+   endif ()
+ endif ()
++endif()
