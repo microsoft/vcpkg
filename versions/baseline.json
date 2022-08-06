@@ -4264,6 +4264,10 @@
       "baseline": "4.3.0",
       "port-version": 3
     },
+    "libxau": {
+      "baseline": "1.0.9",
+      "port-version": 0
+    },
     "libxdiff": {
       "baseline": "0.23",
       "port-version": 2
@@ -7719,10 +7723,6 @@
     "xalan-c": {
       "baseline": "1.12",
       "port-version": 1
-    },
-    "xau": {
-      "baseline": "1.0.9",
-      "port-version": 0
     },
     "xaudio2redist": {
       "baseline": "1.2.9",
