@@ -6,13 +6,13 @@
   "license": "X11-distribute-modifications-variant",
   "dependencies": [
     "bzip2",
+    "libxau",
     {
       "name": "libxslt",
       "host": true
     },
     "pthread",
     "pthread-stubs",
-    "libxau",
     "xcb-proto",
     "xcb-util-m4",
     "xdmcp",
