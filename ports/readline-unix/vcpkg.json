@@ -1,7 +1,7 @@
 {
   "name": "readline-unix",
   "version": "8.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Implementation of readline for unix",
   "license": "GPL-3.0-or-later",
   "supports": "!windows",
