@@ -4694,7 +4694,7 @@
     },
     "moos-essential": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "moos-ui": {
       "baseline": "10.0.1",
