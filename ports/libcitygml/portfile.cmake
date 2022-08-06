@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jklimke/libcitygml
-    REF 32c3fda258c008122da943a7b8b3236657543149 # 2.4.1
-    SHA512 04fec6a9a57fc08dfc8b8b9c2a6520cd67405a11df40fcfc77f0dde578a370269a66a1610fdba314d4a417ceafffbe497ec556c44c2ee7c9f5ba02af219dda5e
+    REF 4dacf5d61da59fa7efd91ea6c3c0cf9a48c85bb4 # 2.4.3
+    SHA512 765f9d05fba9108cb6f23803824a61ab0bf30b05ae4cf5c8faa87915c03bb3ad5c1fdc03d420aea2dd3708d60040d6e10232a714595ab161f6e1527f3176d2aa
     HEAD_REF master
     PATCHES
-        0001_remove_glu_dep.patch
+        0001_cmake_path.patch
         0002_fix_tools.patch
 )
 
@@ -51,8 +51,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME citygml
+    CONFIG_PATH lib/cmake/citygml
+)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
