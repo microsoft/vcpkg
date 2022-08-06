@@ -1,21 +1,28 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d869715..073a73f 100644
+index ef92706..fee22e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -117,10 +117,10 @@ endif()
- # On Windows GDI+ supports GIF, JPEG, EXIF, PNG, and TIFF.
- # see https://docs.microsoft.com/en-us/windows/desktop/gdiplus/-gdiplus-types-of-bitmaps-about
- if(SIMAGE_USE_GDIPLUS)
--  find_package(GdiPlus)
-+  find_package(GdiPlus REQUIRED)
+@@ -129,6 +129,9 @@ if(SIMAGE_USE_GDIPLUS)
+     }
+   " GDIPLUS_FOUND)
+   unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT GDIPLUS_FOUND)
++    message(FATAL_ERROR "GDI+ is required on Windows.")
++  endif()
  endif()
  if(SIMAGE_USE_AVIENC)
--  find_package(Vfw)
-+  find_package(Vfw REQUIRED)
+   set(CMAKE_REQUIRED_LIBRARIES vfw32)
+@@ -142,6 +145,9 @@ if(SIMAGE_USE_AVIENC)
+     }
+   " VFW_FOUND)
+   unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT VFW_FOUND)
++  	message(FATAL_ERROR "Video for Windows is required on Windows.")
++  endif()
  endif()
  
  # On macOS QuickTime supports BMP, GIF, JPEG, JPEG 2000, PNG, TIFF, and TGA.
-@@ -267,7 +267,7 @@ if(SIMAGE_OGGVORBIS_SUPPORT)
+@@ -286,7 +292,7 @@ if(SIMAGE_OGGVORBIS_SUPPORT)
    find_package(Ogg REQUIRED)
    find_package(Vorbis REQUIRED)
    if(OGG_FOUND)
@@ -24,7 +31,7 @@ index d869715..073a73f 100644
    endif()
  endif()
  
-@@ -287,8 +287,8 @@ if(NOT SIMAGE_QUICKTIME_SUPPORT AND NOT SIMAGE_CGIMAGE_SUPPORT AND NOT SIMAGE_GD
+@@ -306,8 +312,8 @@ if(NOT SIMAGE_QUICKTIME_SUPPORT AND NOT SIMAGE_CGIMAGE_SUPPORT AND NOT SIMAGE_GD
    if(SIMAGE_TIFF_SUPPORT)
      find_package(TIFF REQUIRED)
      if(TIFF_FOUND)

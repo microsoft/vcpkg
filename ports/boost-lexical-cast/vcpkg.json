@@ -1,8 +1,9 @@
 {
   "name": "boost-lexical-cast",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost lexical_cast module",
   "homepage": "https://github.com/boostorg/lexical_cast",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

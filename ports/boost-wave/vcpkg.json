@@ -1,8 +1,9 @@
 {
   "name": "boost-wave",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost wave module",
   "homepage": "https://github.com/boostorg/wave",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
@@ -17,6 +18,7 @@
       "name": "boost-filesystem",
       "platform": "!uwp"
     },
+    "boost-format",
     "boost-iterator",
     "boost-lexical-cast",
     {

@@ -1,9 +1,10 @@
 {
   "name": "rxspencer",
   "version": "3.9.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Henry Spencer's BSD regular expression library.",
   "homepage": "https://garyhouston.github.io/regex/",
+  "license": "MIT AND CC0-1.0",
   "supports": "!uwp",
   "dependencies": [
     {

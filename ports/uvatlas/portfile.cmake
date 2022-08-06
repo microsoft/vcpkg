@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF feb2022
-    SHA512 20f9c38dd68edfca8179d26ab7f772b3190e843c01442ae3d7c7c1cd9a5a21a68455c124f0e8aab7efd3aacc9f6fb5907591b35a6a901683dad2a2f91d785106
+    REF jul2022
+    SHA512 fe857766d598c73badba6eda3128775f9195d0a1a7658e9b48a77dd631da4bbd31ab946bc98f8e9b229a6bc99a785ac3da693cb655be0f6a1393ad176e26b688
     HEAD_REF main
 )
 
@@ -30,14 +30,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/feb2022/uvatlastool.exe"
-    FILENAME "uvatlastool-feb2022.exe"
-    SHA512 bc7e00b67e9f7adda52882fdd6b0e54d3a34eb11164f189d5423efcbc7ee0dce5b2c0fbadce592e10917ab215f5d6c380bbc70597ac1001ea169364d563dff5f
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jul2022/uvatlastool.exe"
+    FILENAME "uvatlastool-jul2022.exe"
+    SHA512 3c1f7d25f10a85895d75d4102e127af857c4eae1bb3773b84e0f48e30ba9be517469b1a7504c6859e5b75481fea427052af21f3491f6993bf3dc360829c086b8
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -46,7 +46,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-feb2022.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-jul2022.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

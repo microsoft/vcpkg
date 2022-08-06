@@ -3,16 +3,25 @@
 # SPDX-License-Identifier: MIT
 #
 
-sudo apt -y update
-sudo apt -y dist-upgrade
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get -y update
+apt-get -y dist-upgrade
+
+# Install vcpkg prerequisites
+APT_PACKAGES="git curl zip unzip tar"
+
 # Install common build dependencies
-APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
-  build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
+APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
+  build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
+  libxcursor-dev yasm libnuma1 libnuma-dev \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
-  pkg-config meson"
+  pkg-config meson nasm cmake ninja-build"
+
+# CUDA tooling
+APT_PACKAGES="$APT_PACKAGES nvidia-cudnn nvidia-cuda-toolkit"
 
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
@@ -20,7 +29,7 @@ APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
 
 # Additionally required by qt5-base for qt5-x11extras
 APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
-  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
+  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
@@ -51,36 +60,35 @@ APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 # Additionally required by gtk
 APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 
+# Additionally required by gtk3 and at-spi2-atk
+APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
+
+# Additionally required by at-spi2-atk
+APT_PACKAGES="$APT_PACKAGES libxtst-dev"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
-APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
 
-sudo apt -y install $APT_PACKAGES
+apt-get -y install $APT_PACKAGES
 
-# Install newer version of nasm than the apt package, required by intel-ipsec
-mkdir /tmp/nasm
-cd /tmp/nasm
-curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
-tar -xf nasm-2.15.05.tar.gz
-cd nasm-2.15.05/
-./configure --prefix=/usr && make -j
-sudo make install
-cd ~
+# Install the latest Haskell stack for bond
+curl -sSL https://get.haskellstack.org/ | sh
 
-# Install the latest Haskell stack
-curl -sSL https://get.haskellstack.org/ | sudo sh
+# Start up cudnn
+update-nvidia-cudnn -d
+update-nvidia-cudnn -u
 
-# Install CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-sudo apt -y update
-sudo apt install -y --no-install-recommends cuda-compiler-11-3 cuda-libraries-dev-11-3 cuda-driver-dev-11-3 \
-  cuda-cudart-dev-11-3 libcublas-11-3 libcurand-dev-11-3 libcudnn8-dev libnccl2 libnccl-dev
+# Install nccl
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+apt-get -y update
+apt-get install --no-install-recommends libnccl2 libnccl-dev
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt update
-sudo add-apt-repository universe
-sudo apt install -y powershell
+dpkg -i packages-microsoft-prod.deb
+apt-get update
+add-apt-repository universe
+apt-get install -y powershell

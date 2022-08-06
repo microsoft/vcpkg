@@ -1,8 +1,9 @@
 {
   "name": "boost-coroutine2",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost coroutine2 module",
   "homepage": "https://github.com/boostorg/coroutine2",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-assert",

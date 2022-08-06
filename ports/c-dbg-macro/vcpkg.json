@@ -1,0 +1,6 @@
+{
+  "name": "c-dbg-macro",
+  "version-date": "2020-02-29",
+  "description": "A dbg(...) macro for C",
+  "homepage": "https://github.com/eerimoq/dbg-macro"
+}

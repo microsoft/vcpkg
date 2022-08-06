@@ -40,6 +40,7 @@ set(SRCS librtmp/amf.c
 
 if(MSVC)
     set(SRCS_MSVC "librtmp/librtmp.def")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
 endif()
 
 add_library(librtmp ${SRCS} ${HEADERS} ${SRCS_MSVC})

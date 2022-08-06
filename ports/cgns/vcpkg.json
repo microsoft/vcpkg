@@ -1,6 +1,7 @@
 {
   "name": "cgns",
-  "version-semver": "4.2.0",
+  "version-semver": "4.3.0",
+  "port-version": 1,
   "description": "The CFD General Notation System (CGNS) provides a standard for recording and recovering computer data associated with the numerical solution of fluid dynamics equations.",
   "homepage": "http://cgns.org/",
   "default-features": [
@@ -20,6 +21,14 @@
           "features": [
             "tools"
           ]
+        },
+        {
+          "name": "vcpkg-cmake",
+          "host": true
+        },
+        {
+          "name": "vcpkg-cmake-config",
+          "host": true
         }
       ]
     },
@@ -58,7 +67,7 @@
       "description": "Build tests"
     },
     "tools": {
-      "description": "Build tools"
+      "description": "No effects, preserved for upgrade compatibility"
     }
   }
 }

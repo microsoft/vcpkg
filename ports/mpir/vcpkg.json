@@ -1,6 +1,7 @@
 {
   "name": "mpir",
   "version-date": "2022-03-02",
+  "port-version": 1,
   "description": "Multiple Precision Integers and Rationals",
   "homepage": "https://github.com/wbhart/mpir",
   "license": "GPL-3.0-only",

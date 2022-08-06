@@ -11,6 +11,12 @@ vcpkg_from_github(
         shared-zstd.patch
 )
 
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cmake/CheckCXXIntrinsicsSpecific.cmake"
+    "check_cxx_source_runs"
+    "check_cxx_source_compiles"
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ms-gsl SEAL_USE_MSGSL

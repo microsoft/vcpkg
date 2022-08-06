@@ -1,9 +1,0 @@
-diff --git a/imconfig-SFML.h b/imconfig-SFML.h
-index ddfe05d..bd7174e 100644
---- a/imconfig-SFML.h
-+++ b/imconfig-SFML.h
-@@ -24,4 +24,3 @@
-                          static_cast<sf::Uint8>(z * 255.f), static_cast<sf::Uint8>(w * 255.f));    \
-     }
- 
--#define ImTextureID unsigned int

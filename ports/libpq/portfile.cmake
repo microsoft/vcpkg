@@ -1,38 +1,11 @@
-set(PORT_VERSION 12.9)
+set(PORT_VERSION 14.4)
 # NOTE: the python patches must be regenerated on version update
-
-macro(feature_unsupported)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} not supported by configure script on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-macro(feature_not_implemented_yet)
-    foreach(_feat ${ARGN})
-        if("${FEATURES}" MATCHES "${_feat}")
-            message(FATAL_ERROR "Feature ${_feat} is not yet implement on the target platform")
-        endif()
-    endforeach()
-endmacro()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(readline bonjour libedit systemd llvm)
-    feature_not_implemented_yet(uuid)
-elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(readline libedit systemd llvm python tcl uuid)
-else()
-    feature_not_implemented_yet(readline bonjour libedit systemd llvm python tcl uuid)
-endif()
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 11697d8283f5df5a9c74c2406e94d1b6da6df8358ad48f3b773825aab98e8395f9fd4e3fc8b1e6ebad3743c3dadbda8b795d4fe84a447d7913223e136cf2b88f
+    SHA512 dd2f80248684e331d2ffb1e26cd2a285df1fb18710807a0c31aedabf917912ce9267f8ca26318e5371d916c6fe476f8a17886d82d3ff86a974e6f24c19a6aafb
 )
 
 set(PATCHES
@@ -43,20 +16,17 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
-        patches/windows/fix-compile-flag-Zi.patch)
+        patches/windows/fix-compile-flag-Zi.patch
+        patches/windows/tcl_version.patch
+        patches/windows/macro-def.patch
+        patches/fix-configure.patch
+        )
 
-if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
-    list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
-endif()
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES patches/linux/configure.patch)
-endif()
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
 endif()
-if(VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND PATCHES patches/windows/MSBuildProject-static-crt.patch)
 endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
@@ -70,7 +40,7 @@ else()
 endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
 unset(buildenv_contents)
@@ -106,15 +76,18 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg
     set(INSTALL_PATH_SUFFIX_${_buildtype} "/debug")
     set(BUILDPATH_${_buildtype} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${_short}")
     file(REMOVE_RECURSE "${BUILDPATH_${_buildtype}}") #Clean old builds
-    set(PACKAGE_DIR_${_buildtype} ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}})
+    set(PACKAGE_DIR_${_buildtype} "${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}}")
     unset(_short)
     unset(_buildtype)
 endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -184,17 +157,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
            string(REPLACE "xml       => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
            string(REPLACE "iconv     => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
         if("${FEATURES}" MATCHES "xslt")
            string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
         if("${FEATURES}" MATCHES "zlib")
            string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "lz4")
+           string(REPLACE "lz4       => undef" "lz4       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
+        configure_file("${CURRENT_PORT_DIR}/libpq.props.in" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props" @ONLY)
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
         set(ENV{MSBFLAGS} "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
             /p:VCPkgLocalAppDataDisabled=true
@@ -202,6 +177,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
             /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
+            /p:ForceImportAfterCppTargets=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}
             /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
             )
@@ -212,8 +188,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
             vcpkg_execute_required_process(
                 COMMAND ${PERL} build.pl ${_buildtype}
-                WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-                LOGNAME build-${TARGET_TRIPLET}-${_buildtype}
+                WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+                LOGNAME "build-${TARGET_TRIPLET}-${_buildtype}"
             )
             message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
         else()
@@ -222,8 +198,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}...")
                 vcpkg_execute_required_process(
                     COMMAND ${PERL} build.pl ${_buildtype} ${build_lib}
-                    WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-                    LOGNAME build-${build_lib}-${TARGET_TRIPLET}-${_buildtype}
+                    WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+                    LOGNAME "build-${build_lib}-${TARGET_TRIPLET}-${_buildtype}"
                 )
                 message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}... done")
             endforeach()
@@ -231,38 +207,43 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
-            COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} client
-            WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-            LOGNAME install-${TARGET_TRIPLET}-${_buildtype}
+            COMMAND ${PERL} install.pl "${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}}" client
+            WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+            LOGNAME "install-${TARGET_TRIPLET}-${_buildtype}"
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
 
-
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/symbols")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/symbols")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
     if(NOT HAS_TOOLS)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
     else()
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
     set(USE_DL OFF)
 else()
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile DESTINATION ${SOURCE_PATH})
-
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
+    
+    if("nls" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --enable-nls)
+        set(ENV{MSGFMT} "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin/msgfmt${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    else()
+        list(APPEND BUILD_OPTS --disable-nls)
+    endif()
     if("openssl" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-openssl)
     else()
@@ -273,10 +254,35 @@ else()
     else()
         list(APPEND BUILD_OPTS --without-zlib)
     endif()
+    if("icu" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-icu)
+    else()
+        list(APPEND BUILD_OPTS --without-icu)
+    endif()
+    if("lz4" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-lz4)
+    else()
+        list(APPEND BUILD_OPTS --without-lz4)
+    endif()
     if("readline" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-readline)
     else()
         list(APPEND BUILD_OPTS --without-readline)
+    endif()
+    if("xml" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-libxml)
+    else()
+        list(APPEND BUILD_OPTS --without-libxml)
+    endif()
+    if("xslt" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-libxslt)
+    else()
+        list(APPEND BUILD_OPTS --without-libxslt)
+    endif()
+    if("python" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-python)
+    else()
+        list(APPEND BUILD_OPTS --without-python)
     endif()
     if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
         list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
@@ -285,7 +291,8 @@ else()
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
         DETERMINE_BUILD_TRIPLET
         OPTIONS
@@ -304,25 +311,25 @@ else()
     endif()
     vcpkg_install_make()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     if(NOT HAS_TOOLS)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     else()
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
     endif()
     if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.a ${CURRENT_PACKAGES_DIR}/lib/libpq.dll.a)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/bin/libpq.dll)
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpq.a" "${CURRENT_PACKAGES_DIR}/lib/libpq.dll.a")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpq.dll" "${CURRENT_PACKAGES_DIR}/bin/libpq.dll")
         endif()
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.a ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll.a)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libpq.dll)
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.a" "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll.a")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/libpq.dll")
         endif()
     endif()
     if(VCPKG_TARGET_IS_MINGW)
@@ -330,6 +337,9 @@ else()
     else()
         set(USE_DL ON)
     endif()
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/postgresql/server/pg_config.h" "#define CONFIGURE_ARGS" "// #define CONFIGURE_ARGS")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pg_config.h" "#define CONFIGURE_ARGS" "// #define CONFIGURE_ARGS")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake" @ONLY)

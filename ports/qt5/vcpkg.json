@@ -1,6 +1,6 @@
 {
   "name": "qt5",
-  "version": "5.15.3",
+  "version": "5.15.5",
   "description": "Qt5 Application Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -162,6 +162,9 @@
         },
         {
           "name": "qt5-winextras",
+          "features": [
+            "declarative"
+          ],
           "platform": "windows"
         },
         {
@@ -189,16 +192,7 @@
       ]
     },
     "latest": {
-      "description": "Build latest qt version (5.15.2) instead of LTS (Currently latest==LTS)",
-      "dependencies": [
-        {
-          "name": "qt5-base",
-          "default-features": false,
-          "features": [
-            "latest"
-          ]
-        }
-      ]
+      "description": "(deprecated)"
     },
     "location": {
       "description": [],

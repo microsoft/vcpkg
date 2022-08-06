@@ -1,0 +1,30 @@
+diff --git a/libexslt/exsltexports.h b/libexslt/exsltexports.h
+index 381567e0a..5088e0ec4 100644
+--- a/libexslt/exsltexports.h
++++ b/libexslt/exsltexports.h
+@@ -48,8 +48,8 @@
+   #undef EXSLTPUBVAR
+   #undef EXSLTCALL
+   #if defined(IN_LIBEXSLT) && !defined(LIBEXSLT_STATIC)
+-    #define EXSLTPUBFUN __declspec(dllexport)
+-    #define EXSLTPUBVAR __declspec(dllexport)
++    #define EXSLTPUBFUN extern __declspec(dllexport)
++    #define EXSLTPUBVAR extern __declspec(dllexport)
+   #else
+     #define EXSLTPUBFUN
+     #if !defined(LIBEXSLT_STATIC)
+diff --git a/libxslt/xsltexports.h b/libxslt/xsltexports.h
+index 99b6ac387..bbc556fb6 100644
+--- a/libxslt/xsltexports.h
++++ b/libxslt/xsltexports.h
+@@ -50,8 +50,8 @@
+   #undef XSLTPUBVAR
+   #undef XSLTCALL
+   #if defined(IN_LIBXSLT) && !defined(LIBXSLT_STATIC)
+-    #define XSLTPUBFUN __declspec(dllexport)
+-    #define XSLTPUBVAR __declspec(dllexport)
++    #define XSLTPUBFUN extern __declspec(dllexport)
++    #define XSLTPUBVAR extern __declspec(dllexport)
+   #else
+     #define XSLTPUBFUN
+     #if !defined(LIBXSLT_STATIC)

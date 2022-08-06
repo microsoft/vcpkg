@@ -1,0 +1,3 @@
+
+    find_package(Parquet CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ${PARQUET_LIBRARIES})

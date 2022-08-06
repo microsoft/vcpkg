@@ -1,8 +1,9 @@
 {
   "name": "boost-graph",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-any",

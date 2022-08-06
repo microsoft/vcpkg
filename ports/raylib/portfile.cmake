@@ -10,12 +10,17 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+    set(patches fix-linkGlfw.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
     REF 4.0.0
     SHA512 e9ffab14ab902e3327202e68ca139209ff24100dab62eb03fef50adf363f81e2705d81e709c58cf1514e68e6061c8963555bd2d00744daacc3eb693825fc3417
     HEAD_REF master
+    PATCHES ${patches}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
@@ -34,8 +39,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_GAMES=OFF

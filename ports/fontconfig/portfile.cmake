@@ -1,22 +1,27 @@
-set(FONTCONFIG_VERSION 2.13.94)
+set(FONTCONFIG_VERSION 2.14.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fontconfig/fontconfig
     REF ${FONTCONFIG_VERSION}
-    SHA512 815f999146970c7f0e6c15a21f218d4b3f75b26d4ef14d36711bc0a1de19e59cc62d6a2c53993dd38b963ae30820c4db29f103380d5001886d55b6a7df361154
+    SHA512 0f36fa503c0277750ff253534f9305c9b4c86fd0d88a470e3b666080951714c51f13a69eecab382d0a7883a07494fc71730213e6086194a92aa5dfc075789e85
     HEAD_REF master
+    PATCHES
+        no-etc-symlinks.patch
+        libgetopt.patch
+        fix-mingw-gperf-fallback.patch
+        fix-preprocessor-clang-cl.patch
 )
 
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
-vcpkg_add_to_path(${GPERF_PATH})
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -Ddoc=disabled
+        -Dcache-build=disabled
+        -Dtests=disabled
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
@@ -64,21 +69,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-
-# Build the fontconfig cache
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
-    set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
-    set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
-    vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
-                                   WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin"
-                                   LOGNAME fc-cache-${TARGET_TRIPLET})
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
-endif()
 
 if(NOT VCPKG_TARGET_IS_LINUX)
     set(VCPKG_TARGET_IS_LINUX 0) # To not leave empty AND statements in the wrapper

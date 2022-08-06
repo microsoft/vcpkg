@@ -70,6 +70,12 @@ vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+# Remove headers with "common" names that conflict with other packages which aren't intended to be installed
+# See https://github.com/zeromq/czmq/issues/2197
+foreach(FILE readme.txt sha1.h sha1.inc_c slre.h slre.inc_c zgossip_engine.inc zgossip_msg.h zhash_primes.inc zsock_option.inc)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/${FILE}")
+endforeach()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/czmq_library.h
         "if defined CZMQ_STATIC"

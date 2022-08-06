@@ -1,18 +1,18 @@
-set(7ZIP_VERSION 21.07)
+set(7ZIP_VERSION "2200")
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.7-zip.org/a/7z2107-src.7z"
-    FILENAME "7z2107-src.7z"
-    SHA512 c13521a9829ac239a89015e1f5da27eeaa2469754e3f8ca32311d964ea9d0b40a17e4f8ccbd425d3e865aa768be345368f1c36f354d5710ac7cb2749dd6a3ab5
+    URLS "https://www.7-zip.org/a/7z${7ZIP_VERSION}-src.7z"
+    FILENAME "7z${7ZIP_VERSION}-src.7z"
+    SHA512 ff5bab0ad5c16dee84208b42df27ab1df34499365d934b33f61cd8c79b2a946e8875b1524540c1306381a51d6b24535bbcaf92819bf5331814d6c14cf12d3b07
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${7ZIP_VERSION}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/7zip-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

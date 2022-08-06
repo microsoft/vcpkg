@@ -6,9 +6,9 @@ Triplet is a standard term used in cross compiling as a way to completely captur
 
 In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
-We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use overlay triplets (such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake Manifest Mode](manifests.md#vcpkg_overlay_triplets), or [MSBuild Manifest Mode](manifests.md#vcpkgadditionalinstalloptions-additional-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
+We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use `--overlay-triplets=` (or equivalent such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake `VCPKG_OVERLAY_TRIPLETS`](buildsystems/cmake-integration.md#vcpkg_overlay_triplets), or [MSBuild Additional Options](buildsystems/msbuild-integration.md#vcpkg-additional-install-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project away from the default, see our [Integration Document](integration.md#triplet-selection).
+To change the triplet used by your project, you can pass `--triplet=<triplet>` on the command line or see our [Buildsystem-Specific Documentation](buildsystems/integration.md).
 
 ## Community triplets
 
@@ -65,6 +65,7 @@ This field is optional and, if present, will be passed into the build as `CMAKE_
 
 See also the CMake documentation for `CMAKE_SYSTEM_VERSION`: https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_VERSION.html.
 
+<a name="VCPKG_CHAINLOAD_TOOLCHAIN_FILE"></a>
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 
@@ -92,8 +93,15 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
+### VCPKG_MESON_CONFIGURE_OPTIONS
+Set additional Meson configure options that are appended to the configure command (in [`vcpkg_configure_meson`](../maintainers/vcpkg_configure_meson.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
+
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
-Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)).
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 
 This field is optional.
 
@@ -182,6 +190,11 @@ Valid values are, for example, `14.25` or `14.27.29110`.
 ### VCPKG_LOAD_VCVARS_ENV
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
 Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
+
+## Linux Variables
+
+### VCPKG_FIXUP_ELF_RPATH
+When this option is set to (true|1|on), vcpkg will add `$ORIGIN` and `$ORIGIN/<path_relative_to_lib>` to the `RUNPATH` header of executables and shared libraries. This allows packages to be relocated on Linux.
 
 ## MacOS Variables
 

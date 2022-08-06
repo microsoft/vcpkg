@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -16,8 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${FEATURE_OPTIONS}
   OPTIONS_RELEASE
     -DTOOLS_INSTALLDIR=tools/aubio
@@ -31,15 +30,7 @@ vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright and credentials
-file(COPY
-    ${SOURCE_PATH}/COPYING
-    ${SOURCE_PATH}/AUTHORS
-    ${SOURCE_PATH}/ChangeLog
-    ${SOURCE_PATH}/README.md
-  DESTINATION
-    ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
