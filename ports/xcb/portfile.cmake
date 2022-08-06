@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     REPO lib/libxcb
     REF  ddafdba11f6919e6fcf977c09c78b06f94de47aa #v1.14 + some patches
     SHA512 d8382b04f2b00671cded9e22d6066164511ee4c08e2cf5de4ec28d09e41228e30d3ba7d0e6b5141abf4e4bc777aa662fe9d1d04f3e1e26e0b323549e845c8072
-    HEAD_REF master # branch name
+    HEAD_REF master
     PATCHES makefile.patch # without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
             configure.patch 
             use_xwindows_includes.patch # use the X11 include wrappers for windows headers

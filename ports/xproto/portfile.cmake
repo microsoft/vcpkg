@@ -30,7 +30,7 @@ vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
                       OPTIONS "-Dlegacy=true")
 vcpkg_install_meson()
 
-# To make CMake consumption easier. 
+# To make CMake consumption easier.
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/")
  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/")
  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")

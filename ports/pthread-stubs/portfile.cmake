@@ -5,9 +5,8 @@ vcpkg_from_gitlab(
     REPO lib/pthread-stubs
     REF 50f0755a7f894acae168f19c66e52a3f139ca4ec # 0.4.0
     SHA512  15fcb2144a8abb7b9b1b8f6d9732759351268fb440c7a59380b0ca6ddf48b74a37ce5afbf777ce58fc1993df0c8d6ffb82e452800ce2fcaf16edcbcc1750e338
-    HEAD_REF master # branch name
-) 
-
+    HEAD_REF master
+)
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,7 +19,7 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pthread-stubs.pc")
