@@ -1,0 +1,27 @@
+diff --git a/osgEarthConfig.cmake.in b/osgEarthConfig.cmake.in
+index 3f27dffe9..354e0f7dc 100644
+--- a/osgEarthConfig.cmake.in
++++ b/osgEarthConfig.cmake.in
+@@ -13,11 +13,11 @@ endif()
+ set(osgearth_DEFINITIONS ${${XPREFIX}_CFLAGS})
+ 
+ find_path(osgearth_INCLUDE_DIR
+-    NAMES OSGEARTH/RTREE.H
++    NAMES osgEarth/rtree.h
+     HINTS ${${XPREFIX}_INCLUDE_DIRS}
+ )
+ 
+-set(OSGEARTH_NAMES osgearth)
++set(OSGEARTH_NAMES osgEarth)
+ 
+ find_library(osgearth_LIBRARY
+     NAMES ${OSGEARTH_NAMES}
+@@ -38,6 +38,8 @@ find_package_handle_standard_args(osgearth DEFAULT_MSG
+ 
+ string (REPLACE ";" " " osgearth_LDFLAGS "${osgearth_LDFLAGS}")
+ 
++add_library(osgEarth UNKNOWN IMPORTED)
++
+ set_target_properties(osgearth
+   PROPERTIES
+   IMPORTED_LOCATION             "${osgearth_LIBRARIES}"

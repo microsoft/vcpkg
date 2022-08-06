@@ -227,6 +227,7 @@ else()
             ${DISABLES}
             ${PLATFORM}
             "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--libdir=${CMAKE_INSTALL_PREFIX}/lib"
             "--openssldir=/etc/ssl"
             ${CFLAGS}
             VERBATIM

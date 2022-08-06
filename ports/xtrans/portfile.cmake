@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
     REPO lib/libxtrans
     REF  3b5df889f58a99980a35a7b4a18eb4e7d2abeac4 #v1.4
     SHA512 d1a1ecd8aa07d19a8b4936a37109cecd0c965b859a17ea838835230f9326c1a353feef388052df03173562cbf0f3e3764146c3669b1928698cd55ccc4f92992c
-    HEAD_REF master # branch name
+    HEAD_REF master
     PATCHES win32.patch
             symbols.patch
 ) 
@@ -23,8 +23,8 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 if(NOT WIN32)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/include")
