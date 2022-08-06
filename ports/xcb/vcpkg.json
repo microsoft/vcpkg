@@ -12,7 +12,7 @@
     },
     "pthread",
     "pthread-stubs",
-    "xau",
+    "libxau",
     "xcb-proto",
     "xcb-util-m4",
     "xdmcp",
