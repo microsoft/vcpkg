@@ -1,7 +1,7 @@
 {
   "name": "highfive",
   "version": "2.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
   "homepage": "https://github.com/BlueBrain/HighFive",
   "license": "BSL-1.0",
