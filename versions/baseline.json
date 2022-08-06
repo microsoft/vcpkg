@@ -4821,8 +4821,8 @@
       "port-version": 3
     },
     "nameof": {
-      "baseline": "0.10.1",
-      "port-version": 1
+      "baseline": "0.10.2",
+      "port-version": 0
     },
     "nana": {
       "baseline": "1.7.4",
