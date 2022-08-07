@@ -4,6 +4,10 @@ if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/include/libintl.h")
     )
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 #Based on https://github.com/winlibs/gettext
