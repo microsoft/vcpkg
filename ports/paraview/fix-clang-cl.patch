@@ -1,0 +1,49 @@
+diff --git a/Library/VisItLib/common/utility/win32-regex.c b/Library/VisItLib/common/utility/win32-regex.c
+index 36660880d..26e783ea7 100644
+--- a/Library/VisItLib/common/utility/win32-regex.c
++++ b/Library/VisItLib/common/utility/win32-regex.c
+@@ -4214,9 +4214,9 @@ re_match_2_internal (
+     case charset_not:
+       {
+         register unsigned char c;
+-        boolean not = (re_opcode_t) *(p - 1) == charset_not;
++        boolean bnot = (re_opcode_t) *(p - 1) == charset_not;
+ 
+-            DEBUG_PRINT2 ("EXECUTING charset%s.\n", not ? "_not" : "");
++            DEBUG_PRINT2 ("EXECUTING charset%s.\n", bnot ? "_not" : "");
+ 
+         PREFETCH ();
+         c = TRANSLATE (*d); /* The character to match.  */
+@@ -4225,11 +4225,11 @@ re_match_2_internal (
+                bit list is a full 32 bytes long.  */
+         if (c < (unsigned) (*p * BYTEWIDTH)
+         && p[1 + c / BYTEWIDTH] & (1 << (c % BYTEWIDTH)))
+-          not = !not;
++          bnot = !bnot;
+ 
+         p += 1 + *p;
+ 
+-        if (!not) goto fail;
++        if (!bnot) goto fail;
+ 
+         SET_REGS_MATCHED ();
+             d++;
+@@ -4698,15 +4698,15 @@ re_match_2_internal (
+         else if ((re_opcode_t) p1[3] == charset
+              || (re_opcode_t) p1[3] == charset_not)
+           {
+-            int not = (re_opcode_t) p1[3] == charset_not;
++            int inot = (re_opcode_t) p1[3] == charset_not;
+ 
+             if (c < (unsigned char) (p1[4] * BYTEWIDTH)
+             && p1[5 + c / BYTEWIDTH] & (1 << (c % BYTEWIDTH)))
+-              not = !not;
++              inot = !inot;
+ 
+                     /* `not' is equal to 1 if c would match, which means
+                         that we can't change to pop_failure_jump.  */
+-            if (!not)
++            if (!inot)
+                       {
+                   p[-3] = (unsigned char) pop_failure_jump;
+                         DEBUG_PRINT1 ("  No match => pop_failure_jump.\n");

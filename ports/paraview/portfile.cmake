@@ -42,6 +42,7 @@ vcpkg_from_gitlab(
     SHA512 03a6254989d3e286a462683af92caba1e90decbdcfb2e729f2d7e1116b04d63a05c28d02c4615d780fdd0d33e2719f96617233d6e0602410cc6d894f92fe6ee3
     PATCHES 
         ${VisItPatches}
+        fix-clang-cl.patch
 )
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
