@@ -17,5 +17,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "boost" : {
+      "description" : "Use Boost for Unicode string convertions ",
+      "dependencies": [ "boost-locale"]
+    },
+    "unicode": {
+      "description" : "Enable Unicode support"
+    }
+  }
 }
