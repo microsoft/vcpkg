@@ -1,0 +1,127 @@
+diff --git a/3fd/broker/CMakeLists.txt b/3fd/broker/CMakeLists.txt
+index ce631b25f..541089007 100644
+--- a/3fd/broker/CMakeLists.txt
++++ b/3fd/broker/CMakeLists.txt
+@@ -47,5 +47,5 @@ add_library(3fd-broker STATIC
+ 
+ install(
+     TARGETS 3fd-broker
+-    DESTINATION "${PROJECT_SOURCE_DIR}/../../build/lib"
++    DESTINATION "lib"
+ )
+\ No newline at end of file
+diff --git a/3fd/core/CMakeLists.txt b/3fd/core/CMakeLists.txt
+index 40e9eaec5..f0ecb78fc 100644
+--- a/3fd/core/CMakeLists.txt
++++ b/3fd/core/CMakeLists.txt
+@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10)
+ 
+ project(3fd-core)
+ 
+-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+-
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-show-template-tree -fno-elide-type")
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+@@ -60,5 +58,5 @@ add_library(3fd-core STATIC
+ 
+ install(
+     TARGETS 3fd-core
+-    DESTINATION "${PROJECT_SOURCE_DIR}/../../build/lib"
++    DESTINATION "lib"
+ )
+\ No newline at end of file
+diff --git a/3fd/opencl/CMakeLists.txt b/3fd/opencl/CMakeLists.txt
+index 6b474d8ba..027b38a39 100644
+--- a/3fd/opencl/CMakeLists.txt
++++ b/3fd/opencl/CMakeLists.txt
+@@ -51,5 +51,5 @@ add_library(3fd-opencl STATIC
+ 
+ install(
+     TARGETS 3fd-opencl
+-    DESTINATION "${PROJECT_SOURCE_DIR}/../../build/lib"
++    DESTINATION "lib"
+ )
+\ No newline at end of file
+diff --git a/3fd/sqlite/CMakeLists.txt b/3fd/sqlite/CMakeLists.txt
+index 086254dac..f93d8b0b7 100644
+--- a/3fd/sqlite/CMakeLists.txt
++++ b/3fd/sqlite/CMakeLists.txt
+@@ -48,5 +48,5 @@ add_library(3fd-sqlite STATIC
+ 
+ install(
+     TARGETS 3fd-sqlite
+-    DESTINATION "${PROJECT_SOURCE_DIR}/../../build/lib"
++    DESTINATION "lib"
+ )
+\ No newline at end of file
+diff --git a/3fd/utils/CMakeLists.txt b/3fd/utils/CMakeLists.txt
+index a7af0a9b7..5a3ab0eb1 100644
+--- a/3fd/utils/CMakeLists.txt
++++ b/3fd/utils/CMakeLists.txt
+@@ -52,5 +52,5 @@ add_library(3fd-utils STATIC
+ 
+ install(
+     TARGETS 3fd-utils
+-    DESTINATION "${PROJECT_SOURCE_DIR}/../../build/lib"
++    DESTINATION "lib"
+ )
+\ No newline at end of file
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d7ab817c9..648216a25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,10 +1,18 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
++set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
++set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
++
+ project(3fd)
+ 
+-add_subdirectory(gtest)
+-add_subdirectory(nanodbc)
+-add_subdirectory(sqlite3)
++#add_subdirectory(nanodbc)
++#add_subdirectory(sqlite3)
++find_package(SQLite3 REQUIRED)
++find_package(nanodbc CONFIG REQUIRED)
++
++if(MSVC)
++add_definitions(-DUNICODE -D_UNICODE)
++endif()
+ 
+ add_subdirectory(3fd/core)
+ add_subdirectory(3fd/utils)
+@@ -12,5 +20,8 @@ add_subdirectory(3fd/sqlite)
+ add_subdirectory(3fd/broker)
+ add_subdirectory(3fd/opencl)
+ 
++if(BUILD_TESTS)
++find_package(gtest)
+ add_subdirectory(UnitTests)
+-add_subdirectory(IntegrationTests)
+\ No newline at end of file
++add_subdirectory(IntegrationTests)
++endif()
+\ No newline at end of file
+diff --git a/build/lib/3fd-broker.lib b/build/lib/3fd-broker.lib
+new file mode 100644
+index 000000000..8058d967c
+Binary files /dev/null and b/build/lib/3fd-broker.lib differ
+diff --git a/build/lib/3fd-core.lib b/build/lib/3fd-core.lib
+new file mode 100644
+index 000000000..42c89e591
+Binary files /dev/null and b/build/lib/3fd-core.lib differ
+diff --git a/build/lib/3fd-opencl.lib b/build/lib/3fd-opencl.lib
+new file mode 100644
+index 000000000..e0a9bc1a3
+Binary files /dev/null and b/build/lib/3fd-opencl.lib differ
+diff --git a/build/lib/3fd-sqlite.lib b/build/lib/3fd-sqlite.lib
+new file mode 100644
+index 000000000..ef8808e9d
+Binary files /dev/null and b/build/lib/3fd-sqlite.lib differ
+diff --git a/build/lib/3fd-utils.lib b/build/lib/3fd-utils.lib
+new file mode 100644
+index 000000000..8f90a80e1
+Binary files /dev/null and b/build/lib/3fd-utils.lib differ

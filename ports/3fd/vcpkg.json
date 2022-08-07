@@ -18,6 +18,11 @@
       "platform": "windows"
     },
     "rapidxml",
-    "sqlite3"
+    "sqlite3",
+    "nanodbc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
