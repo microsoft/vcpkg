@@ -12,9 +12,9 @@ vcpkg_from_github(
 
 # Ruby is required by the sdformat build process
 vcpkg_find_acquire_program(RUBY)
-get_filename_component(RUBY_PATH ${RUBY} DIRECTORY)
+get_filename_component(RUBY_PATH "${RUBY}" DIRECTORY)
 set(_path $ENV{PATH})
-vcpkg_add_to_path(${RUBY_PATH})
+vcpkg_add_to_path("${RUBY_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Move location of sdformat.dll from lib to bin
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sdformat.dll")

@@ -1,0 +1,52 @@
+diff --git a/CMake/ITKSetStandardCompilerFlags.cmake b/CMake/ITKSetStandardCompilerFlags.cmake
+index 6aee82d67..c4752c461 100644
+--- a/CMake/ITKSetStandardCompilerFlags.cmake
++++ b/CMake/ITKSetStandardCompilerFlags.cmake
+@@ -260,7 +260,7 @@ macro(check_compiler_platform_flags)
+   # On Visual Studio 8 MS deprecated C. This removes all 1.276E1265 security
+   # warnings
+   if(WIN32)
+-       if(NOT MINGW)
++       if(MSVC)
+          if(NOT ITK_ENABLE_VISUAL_STUDIO_DEPRECATED_C_WARNINGS)
+            add_definitions(
+              -D_CRT_FAR_MAPPINGS_NO_DEPRECATE
+diff --git a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
+index c061f0721..a32665b1d 100644
+--- a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
++++ b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
+@@ -91,7 +91,7 @@ set(CMAKE_MODULE_PATH
+ if(WIN32)
+   if(NOT BORLAND)
+     if(NOT CYGWIN)
+-      if(NOT MINGW)
++      if(MSVC)
+         if(NOT ITK_ENABLE_VISUAL_STUDIO_DEPRECATED_C_WARNINGS)
+           add_definitions(
+             -D_CRT_FAR_MAPPINGS_NO_DEPRECATE
+diff --git a/Modules/ThirdParty/VNL/src/vxl/config/cmake/Modules/VXLStandardOptions.cmake b/Modules/ThirdParty/VNL/src/vxl/config/cmake/Modules/VXLStandardOptions.cmake
+index 93d58ebb6..324b1a218 100644
+--- a/Modules/ThirdParty/VNL/src/vxl/config/cmake/Modules/VXLStandardOptions.cmake
++++ b/Modules/ThirdParty/VNL/src/vxl/config/cmake/Modules/VXLStandardOptions.cmake
+@@ -54,7 +54,7 @@ endif()
+ # Taken from ITK build environment
+ # On Visual Studio 8 MS deprecated C. This removes many security warnings
+ if(WIN32)
+-       if(NOT MINGW)
++       if(MSVC)
+          if(NOT VXL_ENABLE_VISUAL_STUDIO_DEPRECATED_C_WARNINGS)
+            add_definitions(
+              -D_CRT_FAR_MAPPINGS_NO_DEPRECATE
+diff --git a/Modules/ThirdParty/VNL/src/vxl/config/cmake/config/vxl_utils.cmake b/Modules/ThirdParty/VNL/src/vxl/config/cmake/config/vxl_utils.cmake
+index 417581aa9..24207f982 100644
+--- a/Modules/ThirdParty/VNL/src/vxl/config/cmake/config/vxl_utils.cmake
++++ b/Modules/ThirdParty/VNL/src/vxl/config/cmake/config/vxl_utils.cmake
+@@ -87,7 +87,7 @@ function( vxl_add_library )
+ 
+     # This enables object-level build parallelism in VNL libraries for MSVC
+     if(MSVC AND NOT vxl_add_DISABLE_MSVC_MP) 
+-      target_compile_definitions(${vxl_add_LIBRARY_NAME} PRIVATE " /MP ")
++      target_compile_options(${vxl_add_LIBRARY_NAME} PRIVATE "/MP")
+     endif()
+ 
+     set_property(GLOBAL APPEND PROPERTY VXLTargets_MODULES ${vxl_add_LIBRARY_NAME})

@@ -14,6 +14,7 @@ vcpkg_from_github(
         wrapping.patch
         opencl.patch
         use-the-lrintf-intrinsic.patch
+        clang-cl.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "cufftw"       ITK_USE_CUFFTW
         "opencl"       ITK_USE_GPU
         "tbb"          Module_ITKTBB
-        "rtk"          Module_RTK
+        "rtk"          Module_RTK # rtl fails on newer Cuda due to removed cuda archs.
         "tools"        RTK_BUILD_APPLICATIONS
         "opencv"       Module_ITKVideoBridgeOpenCV
         # There are a lot of more (remote) modules and options in ITK
@@ -184,7 +185,7 @@ vcpkg_cmake_configure(
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
-    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch rtk/cuda.patch)
 endif()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
