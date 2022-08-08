@@ -317,8 +317,8 @@
       "port-version": 1
     },
     "azmq": {
-      "baseline": "2020-03-03",
-      "port-version": 1
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "azure-c-shared-utility": {
       "baseline": "2022-01-21",
@@ -365,7 +365,7 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.4.0",
+      "baseline": "12.5.0",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
@@ -1929,7 +1929,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-07-05",
+      "baseline": "2022-08-07",
       "port-version": 0
     },
     "discount": {
@@ -2133,7 +2133,7 @@
       "port-version": 1
     },
     "eve": {
-      "baseline": "2021-10-16",
+      "baseline": "2022-03-15",
       "port-version": 0
     },
     "eventpp": {
@@ -2153,7 +2153,7 @@
       "port-version": 1
     },
     "expected-lite": {
-      "baseline": "0.6.0",
+      "baseline": "0.6.2",
       "port-version": 0
     },
     "exprtk": {
@@ -2225,7 +2225,7 @@
       "port-version": 0
     },
     "fawdlstty-libfv": {
-      "baseline": "0.0.6",
+      "baseline": "0.0.8",
       "port-version": 0
     },
     "fbgemm": {
@@ -2573,8 +2573,8 @@
       "port-version": 4
     },
     "glad": {
-      "baseline": "0.1.34",
-      "port-version": 3
+      "baseline": "0.1.36",
+      "port-version": 0
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "2022-01-03",
+      "baseline": "0.1.0",
       "port-version": 0
     },
     "minisat-master-keying": {
@@ -7241,7 +7241,7 @@
       "port-version": 4
     },
     "tree-sitter": {
-      "baseline": "0.26.0",
+      "baseline": "0.20.6",
       "port-version": 0
     },
     "treehh": {
