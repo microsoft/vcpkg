@@ -7241,7 +7241,7 @@
       "port-version": 4
     },
     "tree-sitter": {
-      "baseline": "0.26.0",
+      "baseline": "0.20.6",
       "port-version": 0
     },
     "treehh": {
