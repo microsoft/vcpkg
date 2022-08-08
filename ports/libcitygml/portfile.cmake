@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 765f9d05fba9108cb6f23803824a61ab0bf30b05ae4cf5c8faa87915c03bb3ad5c1fdc03d420aea2dd3708d60040d6e10232a714595ab161f6e1527f3176d2aa
     HEAD_REF master
     PATCHES
-        0001_cmake_path.patch
         0002_fix_tools.patch
 )
 
@@ -20,40 +19,27 @@ if ("osg" IN_LIST FEATURES)
     SET(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND ADDITIONAL_OPTIONS
-        -DLIBCITYGML_DYNAMIC=ON
-    )
-else()
-    list(APPEND ADDITIONAL_OPTIONS
-        -DLIBCITYGML_DYNAMIC=OFF
-    )
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CITYGML_BUILD_DYNAMIC)
+list(APPEND ADDITIONAL_OPTIONS -DLIBCITYGML_DYNAMIC=${CITYGML_BUILD_DYNAMIC})
 
 if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        list(APPEND ADDITIONAL_OPTIONS
-            -DLIBCITYGML_STATIC_CRT=ON
-        )
-    else()
-        list(APPEND ADDITIONAL_OPTIONS
-            -DLIBCITYGML_STATIC_CRT=OFF
-        )
-    endif()
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CITYGML_CRT_STATIC)
+    list(APPEND ADDITIONAL_OPTIONS -DLIBCITYGML_STATIC_CRT=${CITYGML_CRT_STATIC})
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME citygml
-    CONFIG_PATH lib/cmake/citygml
-)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME citygml CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME citygml CONFIG_PATH lib/cmake/citygml)
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
