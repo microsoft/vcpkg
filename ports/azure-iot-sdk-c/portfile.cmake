@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
         -Dwarnings_as_errors=OFF
+        -Dhsm_type_sastoken=OFF
     MAYBE_UNUSED_VARIABLES
         build_as_dynamic
         warnings_as_errors
