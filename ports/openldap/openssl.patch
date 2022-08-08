@@ -1,16 +1,4 @@
 diff --git a/configure.ac b/configure.ac
-index 05e3f51..dd672a1 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -3429,4 +3429,7 @@ fi
- STATIC_BACKENDS="$SLAPD_STATIC_BACKENDS"
- STATIC_OVERLAYS="$SLAPD_STATIC_OVERLAYS"
- ]])
-+
-+AC_CONFIG_MACRO_DIR([m4])
-+
- AC_OUTPUT
-diff --git a/configure.ac b/configure.ac
 index 626d024..e97f548 100644
 --- a/configure.ac
 +++ b/configure.ac

@@ -4,12 +4,21 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 30fdc884b513c53169910eec377c2ad05013b9f06bab3123d50d028108b24548791f7f47f18bcb3a2b4868edeab02c10d81ffa320c02d7b562f2e8f2fa25d6c9
 )
 
+vcpkg_list(SET EXTRA_PATCHES)
+
+# Check autoconf version < 2.70
+execute_process(COMMAND autoconf --version OUTPUT_VARIABLE AUTOCONF_VERSION_STR)
+if(NOT "${AUTOCONF_VERSION_STR}" STREQUAL "" AND "${AUTOCONF_VERSION_STR}" MATCHES ".*2\\.[0-6].*")
+    vcpkg_list(APPEND EXTRA_PATCHES m4.patch)
+endif()
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         openssl.patch
         subdirs.patch
+        ${EXTRA_PATCHES}
 )
 
 vcpkg_list(SET FEATURE_OPTIONS)
