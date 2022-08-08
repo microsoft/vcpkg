@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "2022-01-03",
+      "baseline": "0.1.0",
       "port-version": 0
     },
     "minisat-master-keying": {
