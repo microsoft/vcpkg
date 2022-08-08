@@ -295,10 +295,10 @@ depending on the shell you use, then restart your console.
 
 ```
 vcpkg install mongoose[ssl]:x64-windows-static
-             |        |    | 
-             package  |    target
+              |       |    | 
+              package |    target triplet
                       |
-                      feature
+                      feature list
 ```
 
 - See the [documentation](docs/README.md) for specific walkthroughs, including
