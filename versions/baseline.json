@@ -1706,7 +1706,7 @@
     },
     "crashrpt": {
       "baseline": "1.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "crc32c": {
       "baseline": "1.1.2",
