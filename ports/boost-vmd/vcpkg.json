@@ -1,6 +1,6 @@
 {
   "name": "boost-vmd",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost vmd module",
   "homepage": "https://github.com/boostorg/vmd",
   "license": "BSL-1.0",

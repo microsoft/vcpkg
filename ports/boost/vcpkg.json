@@ -1,6 +1,6 @@
 {
   "name": "boost",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "license": "BSL-1.0",

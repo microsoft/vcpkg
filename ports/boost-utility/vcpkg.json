@@ -1,6 +1,6 @@
 {
   "name": "boost-utility",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost utility module",
   "homepage": "https://github.com/boostorg/utility",
   "license": "BSL-1.0",

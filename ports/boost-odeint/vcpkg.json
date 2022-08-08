@@ -1,6 +1,6 @@
 {
   "name": "boost-odeint",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "license": "BSL-1.0",

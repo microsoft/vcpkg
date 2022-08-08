@@ -1,6 +1,6 @@
 {
   "name": "boost-accumulators",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost accumulators module",
   "homepage": "https://github.com/boostorg/accumulators",
   "license": "BSL-1.0",

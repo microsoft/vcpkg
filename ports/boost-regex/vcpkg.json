@@ -1,7 +1,6 @@
 {
   "name": "boost-regex",
-  "version": "1.79.0",
-  "port-version": 1,
+  "version-string": "1.80.0.beta1",
   "description": "Boost regex module",
   "homepage": "https://github.com/boostorg/regex",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-detail",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost detail module",
   "homepage": "https://github.com/boostorg/detail",
   "license": "BSL-1.0",

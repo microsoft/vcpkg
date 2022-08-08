@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.79.0
-    SHA512 2f036406e8343895b3749bd7769b1dadb48d7552862898842b43eccf51c62153f4683c46cef91fd97228d6022e60a9bdb0726a00bcc74f519e0539b3a69dc0bf
+    REF boost-1.80.0.beta1
+    SHA512 c97462b258b904e3a78edbb117943e360f56498867ec24dac3aa05a1a986cb5985069cd651bbe4e7143f3fb9a6efdb633c0ce96f757c87ed88b2f4d2dbf70d6d
     HEAD_REF master
     PATCHES
         0001-Fix-boost-ICU-support.patch

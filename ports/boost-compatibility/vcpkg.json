@@ -1,6 +1,6 @@
 {
   "name": "boost-compatibility",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost compatibility module",
   "homepage": "https://github.com/boostorg/compatibility",
   "license": "BSL-1.0",

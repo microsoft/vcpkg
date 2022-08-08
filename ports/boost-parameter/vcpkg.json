@@ -1,6 +1,6 @@
 {
   "name": "boost-parameter",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost parameter module",
   "homepage": "https://github.com/boostorg/parameter",
   "license": "BSL-1.0",

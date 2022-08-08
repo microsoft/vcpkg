@@ -1,6 +1,6 @@
 {
   "name": "boost-predef",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost predef module",
   "homepage": "https://github.com/boostorg/predef",
   "license": "BSL-1.0",

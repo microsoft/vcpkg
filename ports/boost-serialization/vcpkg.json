@@ -1,6 +1,6 @@
 {
   "name": "boost-serialization",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost serialization module",
   "homepage": "https://github.com/boostorg/serialization",
   "license": "BSL-1.0",

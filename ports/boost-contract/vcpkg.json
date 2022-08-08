@@ -1,6 +1,6 @@
 {
   "name": "boost-contract",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost contract module",
   "homepage": "https://github.com/boostorg/contract",
   "license": "BSL-1.0",

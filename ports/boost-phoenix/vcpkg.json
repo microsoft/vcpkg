@@ -1,6 +1,6 @@
 {
   "name": "boost-phoenix",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost phoenix module",
   "homepage": "https://github.com/boostorg/phoenix",
   "license": "BSL-1.0",

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.79.0
-    SHA512 1243e4bdf5f2570c1f92e12dbe9cdef55d72d73d0e6abc6253eae928280ba913bfbc3a4d92d09a9c9b98e06ef95345c2c99dd0983d8dd2a7f1d8f0826530e1dd
+    REF boost-1.80.0.beta1
+    SHA512 31183d2b47984f86bc049b6fc9c152d95ee78ae881be26e8a45ffcccaccaef5a7d1267de12f1caee8252271d99f68659441d644e7167d6c4fe88e728a13041b2
     HEAD_REF master
     PATCHES 0001-json-array-erase-relocate.patch
 )

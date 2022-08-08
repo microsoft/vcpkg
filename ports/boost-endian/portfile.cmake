@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/endian
-    REF boost-1.79.0
-    SHA512 b2fa5408e863a250d749c7a86bf755d1e77243d410b11fa5d67c4361014d641feb6510c2e36393dcb3ebe4a2b81dde7858b976af4c46094e0e25bae904705207
+    REF boost-1.80.0.beta1
+    SHA512 fe020df4c8661fd425c93e5c15f357af41bc3322cf4fed7b39017f9099ebee1ea61e21cbd10e261e8afe7ed841d97e13ec9aaf969664b54c8654f089f445ca5f
     HEAD_REF master
 )
 

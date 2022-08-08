@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/serialization
-    REF boost-1.79.0
-    SHA512 d2b7039a25898d08ff586b1ce25183412defbfe6e6a7b6427ac54553de88ca079c1c15b92d34c9e76390692a22bc8b7821a53efc6eeb01a6520d4ce1d2fd675a
+    REF boost-1.80.0.beta1
+    SHA512 252fe5bba9039083eaf6b46169802aefda71b65814baf8201841912d31de0ed9e4ea86d88b6b339afd69f340b4ee06d9cbb7e51461baccde5ff880ed468f6750
     HEAD_REF master
 )
 

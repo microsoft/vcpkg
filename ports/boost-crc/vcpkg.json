@@ -1,6 +1,6 @@
 {
   "name": "boost-crc",
-  "version": "1.79.0",
+  "version-string": "1.80.0.beta1",
   "description": "Boost crc module",
   "homepage": "https://github.com/boostorg/crc",
   "license": "BSL-1.0",
