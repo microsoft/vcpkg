@@ -5410,7 +5410,7 @@
     },
     "openssl": {
       "baseline": "3.0.5",
-      "port-version": 4
+      "port-version": 5
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
