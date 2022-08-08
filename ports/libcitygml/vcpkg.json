@@ -30,8 +30,11 @@
         "osg"
       ]
     },
+    "tests": {
+      "description": "Enable tests"
+    },
     "tools": {
-      "description": "Enable tools and tests"
+      "description": "Enable tools"
     }
   }
 }

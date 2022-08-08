@@ -1,4 +1,16 @@
 diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
+--- a/CMakeLists.txt	2022-08-09 21:19:08.769104800 +0800
++++ b/CMakeLists.txt	2022-08-09 21:19:15.728280700 +0800
+@@ -144,6 +144,9 @@
+   ADD_SUBDIRECTORY( osgplugin )
+ ENDIF(LIBCITYGML_OSGPLUGIN)
+ 
++# tools
++OPTION(LIBCITYGML_TOOLS "Set to ON to build libcitygml tools." ON)
++
+ # test
+ OPTION(LIBCITYGML_TESTS "Set to ON to build libcitygml tests programs." ON)
+ IF   (LIBCITYGML_TESTS)
 --- a/osgplugin/CMakeLists.txt	2022-03-07 17:47:34.904978100 +0800
 +++ b/osgplugin/CMakeLists.txt	2022-03-07 17:45:07.831913300 +0800
 @@ -20,14 +20,12 @@
@@ -28,7 +40,7 @@ diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
 -    LIBRARY DESTINATION ${PLUGIN_INSTALL_PATH}
 -    ARCHIVE DESTINATION ${PLUGIN_INSTALL_PATH}
 -)
-+if(LIBCITYGML_TESTS)
++if(LIBCITYGML_TOOLS)
 +  add_executable(citygmlOsgViewer CitygmlOsgViewer.cpp)
 +  target_link_libraries(citygmlOsgViewer ${OPENSCENEGRAPH_LIBRARIES} citygml)
 +  INSTALL(
@@ -37,4 +49,4 @@ diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
 +      LIBRARY DESTINATION ${PLUGIN_INSTALL_PATH}
 +      ARCHIVE DESTINATION ${PLUGIN_INSTALL_PATH}
 +  )
-+endif(LIBCITYGML_TESTS)
++endif(LIBCITYGML_TOOLS)
