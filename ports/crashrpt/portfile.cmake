@@ -12,13 +12,14 @@ vcpkg_from_git(
     REF 4616504670be5a425a525376648d912a72ce18f2
     PATCHES
         001-add-install-target-and-find-deps.patch
+        002-fix-wtl-includepath.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
 # Vendored minizip is still used since it contains modifications needed for CrashRpt
 foreach(DEPENDENCY dbghelp jpeg libogg libpng libtheora tinyxml wtl zlib)
-    if(EXISTS ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
-        file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
+    if(EXISTS "${SOURCE_PATH}/thirdparty/${DEPENDENCY}")
+        file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty/${DEPENDENCY}")
     endif()
 endforeach()
 
@@ -35,7 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # PREFER_NINJA is not used below since CrashSender fails to build with errors like this one:
 # C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.23.28105\ATLMFC\include\atlconv.h(788): error C2440: 'return': cannot convert from 'LPCTSTR' to 'LPCOLESTR'
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     # PREFER_NINJA
     OPTIONS
         -DCRASHRPT_BUILD_SHARED_LIBS=${CRASHRPT_BUILD_SHARED_LIBS}
@@ -49,4 +50,4 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
