@@ -317,8 +317,8 @@
       "port-version": 1
     },
     "azmq": {
-      "baseline": "2020-03-03",
-      "port-version": 1
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "azure-c-shared-utility": {
       "baseline": "2022-01-21",
