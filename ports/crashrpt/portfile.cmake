@@ -13,6 +13,7 @@ vcpkg_from_git(
     PATCHES
         001-add-install-target-and-find-deps.patch
         002-fix-wtl-includepath.patch
+        003-add-definition-UNICODE.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -33,18 +34,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         demos CRASHRPT_BUILD_DEMOS
 )
 
-# PREFER_NINJA is not used below since CrashSender fails to build with errors like this one:
-# C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.23.28105\ATLMFC\include\atlconv.h(788): error C2440: 'return': cannot convert from 'LPCTSTR' to 'LPCOLESTR'
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    # PREFER_NINJA
     OPTIONS
         -DCRASHRPT_BUILD_SHARED_LIBS=${CRASHRPT_BUILD_SHARED_LIBS}
         -DCRASHRPT_LINK_CRT_AS_DLL=${CRASHRPT_LINK_CRT_AS_DLL}
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 

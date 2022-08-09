@@ -13,7 +13,11 @@
     "libtheora",
     "tinyxml",
     "wtl",
-    "zlib"
+    "zlib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "demos": {
