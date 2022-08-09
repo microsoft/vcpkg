@@ -6320,6 +6320,10 @@
       "baseline": "0.6.0",
       "port-version": 0
     },
+    "rioki-glow": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "rmlui": {
       "baseline": "4.4",
       "port-version": 0
