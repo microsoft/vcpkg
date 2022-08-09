@@ -9,6 +9,9 @@
     "openssl"
   ],
   "features": {
+    "cyrus-sasl": {
+      "description": "with Cyrus SASL support"
+    },
     "tools": {
       "description": "Enable client tools"
     }

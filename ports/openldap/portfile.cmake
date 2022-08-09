@@ -26,6 +26,12 @@ if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND FEATURE_OPTIONS --enable-tools)
 endif()
 
+if("cyrus-sasl" IN_LIST FEATURES)
+    vcpkg_list(APPEND FEATURE_OPTIONS --with-cyrus-sasl)
+else()
+    vcpkg_list(APPEND FEATURE_OPTIONS --without-cyrus-sasl)
+endif()
+
 # Disable build environment details in binaries
 set(ENV{SOURCE_DATE_EPOCH} "1659614616")
 
