@@ -1,7 +1,7 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO tree-sitter/tree-sitter
-  REF ccd6bf554d922596ce905730d98a77af368bba5c #v0.26.0
+  REF ccd6bf554d922596ce905730d98a77af368bba5c #v0.20.6
   SHA512 ab7eeecafc9d7d17093e25479903fa8c77a84ce4c3a41d737d49bcf9348ab6cc55cf3d6cce0229781292c2b05342fbf45641e40545ea3fde09e441e02f2cdb83
   HEAD_REF master
   PATCHES pkgconfig.patch

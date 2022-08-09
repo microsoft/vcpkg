@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(
   tree-sitter
   LANGUAGES C
-  VERSION 0.26.0
+  VERSION 0.20.6
 )
 
 set(TS_SOVERSION_MAJOR 0)
