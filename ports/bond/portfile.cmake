@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF  ${BOND_VER}
     SHA512 3a7884eb00e6d0ab40c688f4a40cb2d3f356c48b38d48a9a08c756047a94b82619ef345483f42c3240732f5da06816b65a61acb83bfebb3c2c6b44099ce71bf9
     HEAD_REF master
-    PATCHES fix-install-path.patch skip-grpc-compilation.patch
+    PATCHES fix-install-path.patch skip-grpc-compilation.patch fix_clang-cl.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)

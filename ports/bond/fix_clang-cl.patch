@@ -1,0 +1,30 @@
+diff --git a/cmake/Config.cmake b/cmake/Config.cmake
+index f8ba54801..96ffe7bad 100644
+--- a/cmake/Config.cmake
++++ b/cmake/Config.cmake
+@@ -35,7 +35,7 @@ if (MSVC)
+     # MSVC needs this because of how template-heavy our code is.
+     add_compile_options (/bigobj)
+     # turn up warning level
+-    add_compile_options (/W4 /WX /sdl)
++    add_compile_options (/W4 /sdl)
+     # Enable SDL recommended warnings that aren't enabled by /W4
+     # 4242: 'identifier': conversion from 'type1' to 'type2', possible loss of data
+     # 4302: 'conversion': truncation from 'type1' to 'type2'
+@@ -147,6 +147,7 @@ add_definitions (-DBOOST_ALL_NO_LIB)
+ # VS2015U2 fixed a bug with atomics and emits a warning without this definition.
+ add_definitions (-D_ENABLE_ATOMIC_ALIGNMENT_FIX)
+ 
++if(NOT MSVC)
+ cxx_add_compile_options(Clang
+     -fPIC
+     -fstrict-aliasing
+@@ -176,7 +177,7 @@ cxx_add_compile_options(GNU
+     # Suppress warnings in Boost about using deprecated types like std::auto_ptr
+     -Wno-deprecated-declarations
+     -Wno-unused-local-typedefs)
+-
++endif()
+ include_directories (
+     ${BOND_INCLUDE}
+     ${BOND_GENERATED}
