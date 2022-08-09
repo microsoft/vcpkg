@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be010e137..0eb99e617 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,13 +22,13 @@ project(bux-sqlite)
+ set(GNU_LIKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -g3 -Og")
+ #string(APPEND CMAKE_CXX_FLAGS " -g3")
+ 
+-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT MSVC)
+     message("Clang")
+     string(APPEND CMAKE_CXX_FLAGS "${GNU_LIKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
+ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+     message("GNU")
+     string(APPEND CMAKE_CXX_FLAGS "${GNU_LIKE_CXX_FLAGS}")
+-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++elseif(MSVC)
+     message("MSVC")
+     string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /std:c++latest /MP")
+ else()
+@@ -36,7 +36,7 @@ else()
+ endif()
+ 
+ IF(DEFINED FETCH_DEPENDEES)
+-    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++    if(MSVC)
+         string(APPEND CMAKE_CXX_FLAGS " /I ${fetchedbux_SOURCE_DIR}/include")
+     else()
+         string(APPEND CMAKE_CXX_FLAGS " -I${fetchedbux_SOURCE_DIR}/include")
+@@ -45,6 +45,7 @@ ENDIF()
+ message("Root/CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
+ 
+ find_package(fmt CONFIG REQUIRED)
++find_package(SQLite3 REQUIRED)
+ 
+ add_subdirectory (src)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 75f105570..c83418bde 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,6 +4,7 @@ if(DEFINED FETCH_DEPENDEES)
+ else()
+     target_include_directories(bux-sqlite PRIVATE ../include ../${DEPENDEE_ROOT}/bux/include)
+ endif()
+-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++if(MSVC)
+ target_link_libraries(bux-sqlite PRIVATE fmt::fmt)
+ endif()
++target_link_libraries(bux-sqlite PRIVATE SQLite::SQLite3)

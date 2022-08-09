@@ -1,6 +1,7 @@
 {
   "name": "buck-yeh-bux-sqlite",
   "version": "1.0.1",
+  "port-version": 1
   "description": "Modern C++ wrapper classes and utilities of the original sqlite3 API",
   "homepage": "https://github.com/buck-yeh/bux-sqlite",
   "license": "MIT",
