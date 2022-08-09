@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         avro.patch          # Private vcpkg build fixes
+        cast_const_char.patch # Fix const char* cannot be cast to void*
 )
 
 vcpkg_cmake_configure(
