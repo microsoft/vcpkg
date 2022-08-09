@@ -1402,7 +1402,7 @@
     },
     "civetweb": {
       "baseline": "1.15",
-      "port-version": 1
+      "port-version": 2
     },
     "cjson": {
       "baseline": "1.7.15",
