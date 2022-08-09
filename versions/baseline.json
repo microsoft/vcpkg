@@ -273,8 +273,8 @@
       "port-version": 2
     },
     "aws-c-common": {
-      "baseline": "0.6.9",
-      "port-version": 2
+      "baseline": "0.6.20",
+      "port-version": 0
     },
     "aws-c-compression": {
       "baseline": "0.2.14",
@@ -289,8 +289,8 @@
       "port-version": 2
     },
     "aws-c-io": {
-      "baseline": "0.10.7",
-      "port-version": 2
+      "baseline": "0.10.22",
+      "port-version": 0
     },
     "aws-c-mqtt": {
       "baseline": "0.7.6",
