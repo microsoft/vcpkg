@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-protobuf-deprecated.patch
         no-inout-macros.patch
         fix-isgloginitialized.patch
+        fix_clang-cl.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -51,7 +52,7 @@ vcpkg_cmake_configure(
     -DUSE_NERVANA_GPU=OFF
     -DUSE_NNPACK=OFF
     -DUSE_OBSERVERS=OFF
-    -DUSE_OPENMP=ON
+    -DUSE_OPENMP=OFF
     -DUSE_REDIS=OFF
     -DUSE_ROCKSDB=OFF
     -DUSE_SNPE=OFF
