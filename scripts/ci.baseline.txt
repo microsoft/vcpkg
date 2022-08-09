@@ -60,7 +60,6 @@ bond:x64-osx=fail
 bond:arm64-osx=fail
 bond:x64-uwp=fail
 botan:x64-uwp=fail
-breakpad:arm64-windows=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
