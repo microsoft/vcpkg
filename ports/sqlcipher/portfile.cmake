@@ -38,14 +38,14 @@ message(STATUS "Pre-building ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
 	COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
 	${NMAKE_OPTIONS}
-	WORKING_DIRECTORY ${SOURCE_PATH}
+	WORKING_DIRECTORY "${SOURCE_PATH}"
 	LOGNAME pre-build-${TARGET_TRIPLET}
 )
 message(STATUS "Pre-building ${TARGET_TRIPLET} done")
 
 # The rest of the build process with the CMakeLists.txt is merely a copy of sqlite3
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -65,19 +65,19 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH share/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT SQLITE3_SKIP_TOOLS AND EXISTS ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher${VCPKG_HOST_EXECUTABLE_SUFFIX})
+if(NOT SQLITE3_SKIP_TOOLS AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/sqlcipher-config.in.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/sqlcipher-config.cmake
+    "${CMAKE_CURRENT_LIST_DIR}/sqlcipher-config.in.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/sqlcipher-config.cmake"
     @ONLY
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
