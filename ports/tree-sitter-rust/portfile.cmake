@@ -1,0 +1,16 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO tree-sitter/tree-sitter-rust
+  REF 0f14a10011ac6e56f309fb99a94829c3312b743a
+  SHA512 24da5d6cd0e9726d311c925290962b662279df8cc774ca3c49f996e33ec60433f792eb711912ff6c8429906bb7e2fbd3263e0a62b5bee814b9dead16cb40f2be
+  HEAD_REF master
+)
+
+vcpkg_ts_parser_add(
+  LANGUAGE rust
+  SOURCE_PATH "${SOURCE_PATH}"
+  MIN_ABI_VERSION 13
+)
+

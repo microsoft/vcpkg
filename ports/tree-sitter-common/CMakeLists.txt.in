@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(@PARSER_NAME@)
+
+set(
+  PARSER_SOURCES
+  ${PROJECT_SOURCE_DIR}/src/parser.c
+)
+
+if(EXISTS ${PROJECT_SOURCE_DIR}/src/scanner.c)
+  set(PARSER_SOURCES ${PARSER_SOURCES} ${PROJECT_SOURCE_DIR}/src/scanner.c)
+elseif(EXISTS ${PROJECT_SOURCE_DIR}/src/scanner.cc)
+  set(PARSER_SOURCES ${PARSER_SOURCES} ${PROJECT_SOURCE_DIR}/src/scanner.cc)
+endif()
+
+add_library(@PARSER_NAME@ ${PARSER_SOURCES})
+
+target_include_directories(@PARSER_NAME@ PUBLIC ${PROJECT_SOURCE_DIR}/src)
+
+set_target_properties(
+  @PARSER_NAME@
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    OUTPUT_NAME @PARSER_LANGUAGE@
+    PREFIX ""
+)
+
+include(GNUInstallDirs)
+install(
+  TARGETS @PARSER_NAME@
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/tree-sitter/parser
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/tree-sitter/parser
+)

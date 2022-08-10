@@ -1,0 +1,16 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO tree-sitter/tree-sitter-css
+  REF 7c390622166517b01445e0bb08f72831731d3088
+  SHA512 dfdbac1e2df62e0123252d38eb4cc7709cfc411f4936bbc8c20dd49c593b934228346676b0938cecafa2920c612136d2d971c62dfaa389f96872b899a0cffb4c
+  HEAD_REF master
+)
+
+vcpkg_ts_parser_add(
+  LANGUAGE css
+  SOURCE_PATH "${SOURCE_PATH}"
+  MIN_ABI_VERSION 13
+)
+
