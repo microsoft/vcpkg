@@ -1,13 +1,3 @@
-#[===[.md:
-# vcpkg_build_qmake
-
-Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-
-```cmake
-vcpkg_build_qmake()
-```
-#]===]
-
 function(z_run_jom_build invoke_command targets log_prefix log_suffix)
     message(STATUS "Package ${log_prefix}-${TARGET_TRIPLET}-${log_suffix}")
     vcpkg_execute_build_process(

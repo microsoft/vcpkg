@@ -46,14 +46,6 @@ jobs:
   - script: .\scripts\azure-pipelines\windows\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  # Note that we run docs checks before PR checks because they are likely to invalidate a whole run anyway
-  - task: Powershell@2
-    displayName: 'Generate Documentation'
-    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
-    inputs:
-      filePath: 'docs/regenerate.ps1'
-      arguments: '-VcpkgRoot . -WarningAction Stop'
-      pwsh: true
   - script: '.\vcpkg.exe format-manifest --all'
     displayName: 'Format Manifests'
     condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
@@ -104,3 +96,12 @@ jobs:
     inputs:
       PathtoPublish: scripts/list_files
       ArtifactName: 'file lists for ${{ parameters.triplet }}'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    condition: ne(variables['XML_RESULTS_FILE'], '')
+    inputs:
+      testRunTitle: ${{ parameters.triplet }}
+      testResultsFormat: xUnit
+      testResultsFiles: $(XML_RESULTS_FILE)
+      platform: ${{ parameters.triplet }}
+

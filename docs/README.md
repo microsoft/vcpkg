@@ -12,6 +12,10 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Patching Example: Patching libpng to work for x64-uwp](examples/patching.md)
 - [Getting Started with Versioning](examples/versioning.getting-started.md)
 
+### Command Line Reference
+
+- [Command Line Reference](commands/index.md)
+
 ### User Help
 
 - [Buildsystem Integration](users/buildsystems/integration.md)

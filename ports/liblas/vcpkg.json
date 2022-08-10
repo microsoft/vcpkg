@@ -1,8 +1,10 @@
 {
   "name": "liblas",
   "version": "1.8.1",
-  "port-version": 9,
+  "port-version": 10,
   "description": "A C/C++ library for reading and writing the very common LAS LiDAR format.",
+  "license": null,
+  "supports": "!arm & !staticcrt",
   "dependencies": [
     "boost-detail",
     "boost-filesystem",
@@ -14,20 +16,25 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "libgeotiff"
+    "libgeotiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "jpeg": {
-      "description": "Support for jpeg",
-      "dependencies": [
-        "libjpeg-turbo"
-      ]
+      "description": "This feature does nothing. It is retained for compatibility."
+    },
+    "tools": {
+      "description": "Build utilities."
     },
     "zlib": {
-      "description": "Support zlib for compression",
-      "dependencies": [
-        "zlib"
-      ]
+      "description": "This feature does nothing. It is retained for compatibility."
     }
   }
 }

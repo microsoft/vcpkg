@@ -8,7 +8,7 @@ endif()
 #set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
 message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) and time (>2h per configuration) to be successfully build.\n\
 -- As such ${PORT} is currently experimental.\n\
--- If ${PORT} fails post build validation please try manually reducing VCPKG_MAX_CONCURRENY and open up an issue if it still cannot build. \n\
+-- If ${PORT} fails post build validation please try manually reducing VCPKG_MAX_CONCURRENCY and open up an issue if it still cannot build. \n\
 -- If it fails due to post validation the successfully installed files can be found in ${CURRENT_PACKAGES_DIR} \n\
 -- and just need to be copied into ${CURRENT_INSTALLED_DIR}")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -45,7 +45,7 @@ vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
-set(PATCHES common.pri.patch 
+set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
             build_2.patch

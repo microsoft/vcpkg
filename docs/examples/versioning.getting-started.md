@@ -145,7 +145,7 @@ If you want to upgrade your dependencies, you can bump the minimum version const
 { "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc" }
 ```
 
-This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. See the [`builtin-baseline` documentation](../users/versioning.md#builtin-baseline) for more information.
+This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. See the [`builtin-baseline` documentation](../users/manifests.md#builtin-baseline) for more information.
 
 In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `3426db05b996481ca31e95fff3734cf23e0f51bc` to find out what version of `zlib` was the latest at that point in time (in our case it was `1.2.11#9`).
 
