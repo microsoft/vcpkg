@@ -1,6 +1,6 @@
 {
   "name": "tracelogging",
-  "version-string": "0.3.1",
+  "version": "0.3.1",
   "description": "TraceLogging is a set of technologies for emitting structured events. It is primarily used with Event Tracing for Windows (ETW). Some parts of TraceLogging are also available on other operating systems such as Linux with TraceLogging for LTTng.",
   "homepage": "https://github.com/microsoft/tracelogging",
   "dependencies": [
