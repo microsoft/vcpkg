@@ -4386,7 +4386,7 @@
     },
     "lttng-ust": {
       "baseline": "2.12.5",
-      "port-version": 0
+      "port-version": 1
     },
     "lua": {
       "baseline": "5.4.4",
