@@ -1622,7 +1622,7 @@
     },
     "cppcms": {
       "baseline": "1.2.1",
-      "port-version": 5
+      "port-version": 6
     },
     "cppcodec": {
       "baseline": "0.2",
