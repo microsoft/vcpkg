@@ -44,7 +44,7 @@ index d6b3465..870897b 100644
 @@ -38,7 +38,7 @@ if(wxUSE_XRC)
          endif()
  
-         install(CODE "execute_process( \
+         wx_install(CODE "execute_process( \
 -            COMMAND ${CMAKE_COMMAND} -E create_symlink \
 +            COMMAND ${CMAKE_COMMAND} -E copy \
              ${CMAKE_INSTALL_PREFIX}/bin/${wxrc_output_name}${EXE_SUFFIX} \
