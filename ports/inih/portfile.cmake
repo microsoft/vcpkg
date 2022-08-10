@@ -15,9 +15,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-inih)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
+inih provides CMake targets:
+    find_package(unofficial-inih CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::inih::inih)
+]=])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include")
