@@ -50,7 +50,7 @@ find_dependency(LibArchive)
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract41" "-ltesseract41d")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract52" "-ltesseract52d")
 endif()
 vcpkg_fixup_pkgconfig()
 
