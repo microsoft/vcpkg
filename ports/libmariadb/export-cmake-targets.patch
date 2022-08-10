@@ -1,8 +1,8 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index c109a20..e1fa3f1 100644
+index d4e07f7..4823858 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -405,6 +405,7 @@ ELSE()
+@@ -423,6 +423,7 @@ ELSE()
    ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
  ENDIF()
@@ -10,19 +10,20 @@ index c109a20..e1fa3f1 100644
  
  TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE ${SYSTEM_LIBS})
  
-@@ -453,13 +454,30 @@ ENDIF()
+@@ -472,13 +473,32 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
 +          EXPORT unofficial-libmariadb-targets
            LIBRARY DESTINATION lib)
+ IF(WIN32)
  INSTALL(TARGETS libmariadb
-           COMPONENT SharedLibraries
+         COMPONENT SharedLibraries
 +        EXPORT unofficial-libmariadb-targets
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION lib
          ARCHIVE DESTINATION lib)
- 
++
 +install(EXPORT unofficial-libmariadb-targets
 +    NAMESPACE unofficial::
 +    DESTINATION share/unofficial-libmariadb
@@ -38,6 +39,7 @@ index c109a20..e1fa3f1 100644
 +]])
 +configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake" @ONLY)
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake DESTINATION share/unofficial-libmariadb)
- 
- IF(0)
-    # On Windows, install PDB
++        
+ ELSE()
+ # in cmake 3.12+ we can use
+ #INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
