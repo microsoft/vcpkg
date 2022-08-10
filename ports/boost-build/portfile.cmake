@@ -10,12 +10,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 638f2883b9c49265d5566eadc8c93d16cb351edeb941110bad8a17871ea7d53df8eb13c80aaefb94f354b71a22454958af1ecb9a441686dbaa9631e33682a9f2
+    SHA512 9076732697f9d8f682b5857f6552b537e7745fedfcee3b82083d497a1f58a795ae73c652ab2a04340b9264155738f4eccfe33095bc996169a4e5117e641644fb
     HEAD_REF master
     PATCHES
-        0001-don-t-skip-install-targets.patch
         0002-fix-get-version.patch
-        0003-update-architecture-feature.jam-file.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
