@@ -33,6 +33,22 @@ Specifies the target machine architecture.
 
 Valid options are `x86`, `x64`, `arm`, `arm64` and `wasm32`.
 
+### VCPKG_TARGET_ARCHITECTURE_MESON_CPU
+Sepcifies the cpu type name of `VCPKG_TARGET_ARCHITECTURE` for cross compilation with meson build system, to support additional architectures.
+
+For more information about cross compilation with meson. See https://mesonbuild.com/Cross-compilation.html#machine-entries
+
+### VCPKG_TARGET_ARCHITECTURE_MESON_CPU_FAMILY
+Specifies the cpu family of `VCPKG_TARGET_ARCHITECTURE_MESON_CPU`.
+
+For more information about cpu families. See https://mesonbuild.com/Reference-tables.html#cpu-families
+
+### VCPKG_TARGET_ARCHITECTURE_MESON_CPU_ENDIAN
+Specifies the endian of `VCPKG_TARGET_ARCHITECTURE` for cross compilation with meson build system. This variable is optional and the default value is `little` if it is not defined.
+
+Valid options are `big` and `little`.
+
+
 ### VCPKG_CRT_LINKAGE
 Specifies the desired CRT linkage (for MSVC).
 

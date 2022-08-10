@@ -233,9 +233,6 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         elseif(MACHINE MATCHES "i386")
             set(build_cpu_fam x86)
             set(build_cpu i386)
-        elseif(MACHINE MATCHES "loongarch64")
-            set(build_cpu_fam loongarch64)
-            set(build_cpu loongarch64)
         else()
             # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
             message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
@@ -244,26 +241,44 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         message(FATAL_ERROR "Failed to detect the host architecture!")
     endif()
 
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
-        set(host_cpu_fam x86_64)
-        set(host_cpu x86_64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
-        set(host_cpu_fam x86)
-        set(host_cpu i686)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
-        set(host_cpu_fam aarch64)
-        set(host_cpu armv8)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)$")
-        set(host_cpu_fam arm)
-        set(host_cpu armv7hl)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch64")
-        set(host_cpu_fam loongarch64)
-        set(host_cpu loongarch64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
-        set(host_cpu_fam mips64)
-        set(host_cpu ${VCPKG_TARGET_ARCHITECTURE})
+    if(DEFINED VCPKG_TARGET_ARCHITECTURE_MESON_CPU)
+        # host_cpu
+        set(host_cpu ${VCPKG_TARGET_ARCHITECTURE_MESON_CPU})
+        # host_cpu_fam
+        if(DEFINED VCPKG_TARGET_ARCHITECTURE_MESON_CPU_FAMILY)
+            set(host_cpu_fam ${VCPKG_TARGET_ARCHITECTURE_MESON_CPU_FAMILY})
+        else()
+            message(FATAL_ERROR "VCPKG_TARGET_ARCHITECTURE_MESON_CPU_FAMILY must also be defined.")
+        endif()
+        # host_cpu_endian
+        if(DEFINED VCPKG_TARGET_ARCHITECTURE_MESON_CPU_ENDIAN)
+            set(host_cpu_endian ${VCPKG_TARGET_ARCHITECTURE_MESON_CPU_ENDIAN})
+        else()
+            set(host_cpu_endian "little")
+        endif()
     else()
-        message(FATAL_ERROR "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}!" )
+        set(host_cpu_endian "little")
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
+            set(host_cpu_fam x86_64)
+            set(host_cpu x86_64)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
+            set(host_cpu_fam x86)
+            set(host_cpu i686)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
+            set(host_cpu_fam aarch64)
+            set(host_cpu armv8)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)$")
+            set(host_cpu_fam arm)
+            set(host_cpu armv7hl)
+        else()
+            message(FATAL_ERROR "Cross-compiling for architecture ${VCPKG_TARGET_ARCHITECTURE} \
+is unsupported by vcpkg with meson by default. The following cmake variables \
+can be provided in custom triplet to support additional architecture. \n\
+  VCPKG_TARGET_ARCHITECTURE_MESON_CPU:        the cpu type name used for meson.\n\
+  VCPKG_TARGET_ARCHITECTURE_MESON_CPU_FAMILY: the cpu family name used for meson\n\
+  VCPKG_TARGET_ARCHITECTURE_MESON_CPU_ENDIAN: the endian of the cpu(\"big\" or \"little\")\n\
+For more information, see https://github.com/microsoft/vcpkg/blob/master/docs/users/triplets.md")
+        endif()
     endif()
 
     set(cross_file "")
@@ -272,7 +287,7 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
     string(APPEND cross_file "[properties]\n")
 
     string(APPEND cross_file "[host_machine]\n")
-    string(APPEND cross_file "endian = 'little'\n")
+    string(APPEND cross_file "endian = '${host_cpu_endian}'\n")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
         set(meson_system_name "windows")
     else()
