@@ -27,6 +27,12 @@ elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
                -Dsse2=disabled
                -Dssse3=disabled
        )
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled
+    )
 endif()
 
 set(PIXMAN_VERSION 0.40.0)
