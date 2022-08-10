@@ -7224,6 +7224,10 @@
       "baseline": "2019-04-19",
       "port-version": 3
     },
+    "tracelogging": {
+      "baseline": "0.3.1",
+      "port-version": 0
+    },
     "tracy": {
       "baseline": "0.8.1",
       "port-version": 0

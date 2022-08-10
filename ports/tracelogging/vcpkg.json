@@ -1,0 +1,17 @@
+{
+  "name": "tracelogging",
+  "version": "0.3.1",
+  "description": "TraceLogging is a set of technologies for emitting structured events. It is primarily used with Event Tracing for Windows (ETW). Some parts of TraceLogging are also available on other operating systems such as Linux with TraceLogging for LTTng.",
+  "homepage": "https://github.com/microsoft/tracelogging",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
