@@ -1,13 +1,3 @@
-From a9f8c032bb7915c075f0fb32a0bbfa633ca3b388 Mon Sep 17 00:00:00 2001
-Date: Wed, 7 Jul 2021 15:13:43 -0400
-Subject: [PATCH] Fix Qt
-
----
- CMakeLists.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5cdae617..fe98199b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -966,13 +966,13 @@ IF(ANDROID)
@@ -26,6 +16,3 @@ index 5cdae617..fe98199b 100644
  ENDIF()
  
  IF(BUILD_TOOLS)
--- 
-2.32.0.windows.1
-
