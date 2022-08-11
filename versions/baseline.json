@@ -422,7 +422,7 @@
     },
     "bdwgc": {
       "baseline": "8.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "beast": {
       "baseline": "0",
