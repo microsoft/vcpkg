@@ -1,16 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO minio/minio-cpp
-    REF 0847e56f31e13d32c924029d5ffaa865f8396462
-    SHA512 47817c8acc92060afca5ebd7c9bc7c9a9e09a50046180d7d3d67993f207d295c90e491417702ebb1ab2b0a6e85a5fcc334054ce4f6d542cb42c3675b5aed1c3f
+    REF v0.1.0
+    SHA512 40442ff91e2894945425cbfc21bbd7448201a454c36bea84ffcfee70ab5a71c18e0948f7a1c5453205b7199914fa8fa820f53961c8262cd4fdf646470846f65e
     HEAD_REF main
-    PATCHES
-        fix_cmake_file.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_DOC=OFF
         -DBUILD_EXAMPLES=OFF
 )
 

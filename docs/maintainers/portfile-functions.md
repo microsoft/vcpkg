@@ -48,6 +48,7 @@
 - [vcpkg\_host\_path\_list](vcpkg_host_path_list.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md) (deprecated, use [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md))
 - [vcpkg\_install\_gn](vcpkg_install_gn.md) (deprecated, use [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md))
+- [vcpkg\_install\_copyright](vcpkg_install_copyright.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
 - [vcpkg\_install\_meson](vcpkg_install_meson.md)
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)

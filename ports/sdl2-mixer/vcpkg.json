@@ -1,9 +1,10 @@
 {
   "name": "sdl2-mixer",
-  "version": "2.0.4",
-  "port-version": 16,
+  "version": "2.6.1",
+  "port-version": 1,
   "description": "Multi-channel audio mixer library for SDL.",
-  "homepage": "https://www.libsdl.org/projects/SDL_mixer",
+  "homepage": "https://github.com/libsdl-org/SDL_mixer",
+  "license": "Zlib",
   "dependencies": [
     "sdl2",
     {
@@ -19,35 +20,32 @@
     "nativemidi"
   ],
   "features": {
-    "dynamic-load": {
-      "description": "Load plugins with dynamic call."
-    },
     "fluidsynth": {
-      "description": "Support for FluidSynth MIDI/SF2 audio format.",
+      "description": "Use FluidSynth to play MIDI audio format.",
       "dependencies": [
         "fluidsynth"
       ]
     },
     "libflac": {
-      "description": "Support for FLAC audio format.",
+      "description": "Use libflac to play FLAC audio format instead of the built-in dr_flac.",
       "dependencies": [
         "libflac"
       ]
     },
     "libmodplug": {
-      "description": "Support for MOD audio format.",
+      "description": "Support for MOD audio format using libmodplug.",
       "dependencies": [
         "libmodplug"
       ]
     },
     "libvorbis": {
-      "description": "Support for OGG Vorbis audio format.",
+      "description": "Use libvorbis to play OGG Vorbis audio format instead of the built-in stb_vorbis.",
       "dependencies": [
         "libvorbis"
       ]
     },
     "mpg123": {
-      "description": "Support for MP3 audio format.",
+      "description": "Use mpg123 to play MP3 audio format instead of the built-in dr_mp3.",
       "dependencies": [
         "mpg123"
       ]
@@ -56,7 +54,7 @@
       "description": "Support for MIDI audio format on Windows and macOS."
     },
     "opusfile": {
-      "description": "Support for Opus audio format.",
+      "description": "Support for Opus audio format using opusfile.",
       "dependencies": [
         "opusfile"
       ]
