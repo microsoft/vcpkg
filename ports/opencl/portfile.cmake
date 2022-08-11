@@ -28,16 +28,15 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} dynamic USE_DYNAMIC_VCXX_RUNTIME)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
         -DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF
         -DUSE_DYNAMIC_VCXX_RUNTIME=${USE_DYNAMIC_VCXX_RUNTIME}
 )
 
-vcpkg_build_cmake(TARGET OpenCL)
+vcpkg_cmake_build(TARGET OpenCL)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
