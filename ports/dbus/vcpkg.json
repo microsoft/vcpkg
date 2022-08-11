@@ -7,6 +7,7 @@
   "dependencies": [
     "expat",
     "glib",
+    "libx11",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,7 +15,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "x11"
+    }
   ]
 }
