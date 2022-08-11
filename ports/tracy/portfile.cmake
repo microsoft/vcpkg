@@ -11,7 +11,7 @@ vcpkg_from_github(
     SHA512 6e0ff0be7621490b607eaae46d4ec13ea66b0061ed580c99d75eda3a7c9479b34c70da9ad844bd4a05e329bb40cebf48e7c6bab05d2a946d56b2d432c7ddc125
     HEAD_REF master
     PATCHES
-        001-fix-capstone-5.patch
+        002-fix-capstone-5.patch
 )
 
 vcpkg_cmake_configure(
