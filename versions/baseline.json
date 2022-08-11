@@ -4264,6 +4264,10 @@
       "baseline": "4.3.0",
       "port-version": 3
     },
+    "libx11": {
+      "baseline": "1.7.3.1",
+      "port-version": 0
+    },
     "libxau": {
       "baseline": "1.0.9",
       "port-version": 0
@@ -4271,6 +4275,10 @@
     "libxdiff": {
       "baseline": "0.23",
       "port-version": 2
+    },
+    "libxdmcp": {
+      "baseline": "1.1.3",
+      "port-version": 0
     },
     "libxlsxwriter": {
       "baseline": "1.1.4",
@@ -7708,10 +7716,6 @@
       "baseline": "3.0.3",
       "port-version": 1
     },
-    "x11": {
-      "baseline": "1.6.9",
-      "port-version": 0
-    },
     "x264": {
       "baseline": "164-5db6aa6cab1b146",
       "port-version": 4
@@ -7744,10 +7748,6 @@
       "baseline": "2022-01-24",
       "port-version": 0
     },
-    "xdmcp": {
-      "baseline": "1.1.3",
-      "port-version": 0
-    },
     "xerces-c": {
       "baseline": "3.2.3",
       "port-version": 4
@@ -7759,10 +7759,6 @@
     "xframe": {
       "baseline": "0.3.0",
       "port-version": 1
-    },
-    "xlib": {
-      "baseline": "1.7.3.1",
-      "port-version": 0
     },
     "xlnt": {
       "baseline": "1.5.0",
