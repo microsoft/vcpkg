@@ -15,9 +15,6 @@
     }
   ],
   "features": {
-    "tools": {
-      "description": "Build OpenCC command-line tools"
-    },
     "rapidjson": {
       "description": "Use system version of RapidJSON",
       "dependencies": [
@@ -26,6 +23,9 @@
           "default-features": false
         }
       ]
+    },
+    "tools": {
+      "description": "Build OpenCC command-line tools"
     }
   }
 }
