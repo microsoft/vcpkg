@@ -1,6 +1,6 @@
 {
   "name": "opencl",
-  "version-string": "3.0.11",
+  "version": "3.0.11",
   "description": "C/C++ headers and ICD loader (Installable Client Driver) for OpenCL",
   "homepage": "https://github.com/KhronosGroup/OpenCL-Headers",
   "supports": "!uwp"
