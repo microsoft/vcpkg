@@ -159,7 +159,8 @@
       "description": "Builds curl executable"
     },
     "unicode": {
-      "description": "Enables the Unicode version of the Windows API functions"
+      "description": "Enables the Unicode version of the Windows API functions",
+      "supports": "windows"
     },
     "winidn": {
       "description": "WinIDN support"
