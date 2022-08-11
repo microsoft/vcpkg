@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.80.0.beta1",
+    $version = "1.80.0",
     $portsDir = $null
 )
 
@@ -171,10 +171,10 @@ function GeneratePortManifest() {
         $Dependencies = @()
     )
     $manifest = @{
-        "name"              = $PortName
-        "version-string"    = $version
-        "homepage"          = $Homepage
-        "description"       = $Description
+        "name"          = $PortName
+        "version"       = $version
+        "homepage"      = $Homepage
+        "description"   = $Description
     }
     if ($License) {
         $manifest["license"] += $License
