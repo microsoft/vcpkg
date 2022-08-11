@@ -1,0 +1,49 @@
+diff --color -ur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2022-05-20 15:46:44.000000000 +0200
++++ b/CMakeLists.txt	2022-08-11 21:02:57.015193082 +0200
+@@ -3,13 +3,24 @@
+ project(poly2tri LANGUAGES CXX)
+ set(CMAKE_CXX_STANDARD 14)
+ 
++set(INSTALL_BIN_DIR      "bin"                     CACHE PATH "Path where exe and dll will be installed")
++set(INSTALL_LIB_DIR      "lib"                     CACHE PATH "Path where lib will be installed")
++set(INSTALL_INCLUDE_DIR  "include/${PROJECT_NAME}" CACHE PATH "Path where headers will be installed")
++set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"   CACHE PATH "Path where cmake configs will be installed")
++
+ option(P2T_BUILD_TESTS "Build tests" OFF)
+ option(P2T_BUILD_TESTBED "Build the testbed application" OFF)
+ 
+ file(GLOB SOURCES poly2tri/common/*.cc poly2tri/sweep/*.cc)
+ file(GLOB HEADERS poly2tri/*.h poly2tri/common/*.h poly2tri/sweep/*.h)
++
+ add_library(poly2tri ${SOURCES} ${HEADERS})
+-target_include_directories(poly2tri INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
++set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${${PROJECT_NAME}_HEADERS}")
++target_include_directories(${PROJECT_NAME} PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/poly2tri>
++    $<INSTALL_INTERFACE:include>
++    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
++)
+ 
+ get_target_property(poly2tri_target_type poly2tri TYPE)
+ if(poly2tri_target_type STREQUAL SHARED_LIBRARY)
+@@ -26,3 +37,19 @@
+ if(P2T_BUILD_TESTBED)
+     add_subdirectory(testbed)
+ endif()
++
++install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}")
++
++install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
++  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
++  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
++  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
++  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
++  COMPONENT dev
++)
++
++install (EXPORT ${PROJECT_NAME}Targets
++    FILE ${PROJECT_NAME}Config.cmake
++    NAMESPACE ${PROJECT_NAME}::
++    DESTINATION "${INSTALL_CMAKE_DIR}"
++)

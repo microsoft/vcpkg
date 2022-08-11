@@ -1,16 +1,12 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO greenm01/poly2tri
-    REF 88de49021b6d9bef6faa1bc94ceb3fbd85c3c204
-    SHA512 fa256bcf923ad59f42205edf5a7e07cac6cbd9a37cefb9a0961a2e06aea7fa8ffd09d4e26154c0028601c12804483842cb935d9f602385f5f203c9628382c4fb
+    REPO jhasse/poly2tri
+    REF 81612cb108b54c14c695808f494f432990b279fd
+    SHA512 4310ca8c2c2e62374883e942aa3c78a4c132f5c827b7082a7af60e81586dad589371e52ab08edd473454d37226bcd65c57acdb1e9ec31d49f73af32401d18c79
     HEAD_REF master
     PATCHES
-        fix-sweep-h-codepage.patch
+        cmake.patch
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
