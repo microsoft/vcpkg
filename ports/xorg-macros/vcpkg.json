@@ -3,6 +3,6 @@
   "version": "1.19.3",
   "description": "X.org macros utilities.",
   "homepage": "https://xcb.freedesktop.org/",
-  "license": "MIT",
+  "license": null,
   "supports": "!uwp"
 }
