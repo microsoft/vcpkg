@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF 8271c643c21d1b2f344e339f559f2de6f3663191  #v2.1.0-beta3
-    SHA512 a136f15a87f92c5cab40d49dcc2441f04c14575fa31aba5bd413313ee904d3abc4ebb8f413124781d101f793058c15a07f0a47d50d4fc5a74e7b150a1d1459cf
+    REF 633f265f67f322cbe2c5fd11d3e46d968ac220f7  #2022-08-11
+    SHA512 0a1d79ab7d2de6894bcff33309e015fdba0ea67cf0425d75b9301a30006039e81b527178dbb3485e1adea177ffe062e6fcef74307f8e725678e70562d57d1a5b
     HEAD_REF master
     PATCHES
         001-fix-build-path.patch
         002-fix-crt-linkage.patch
-        003-do-not-set-macosx-deployment-target.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
