@@ -1,18 +1,14 @@
-From 219b3f5a681731bcaeee9fee0f136e6eb6143d33 Mon Sep 17 00:00:00 2001
-From: Bruk Tedla <biruk.tedla93@gmail.com>
-Date: Thu, 17 Sep 2020 19:45:27 +0300
-Subject: [PATCH] disable_tests_enable_static_build
-
----
- CMakeLists.txt        | 4 ++--
- sigc++/CMakeLists.txt | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2e7f383..b2b8395 100644
+index e1b28fe..b9a9d40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -89,8 +89,8 @@ enable_testing()
+@@ -84,13 +84,13 @@ install (FILES
+ 		DESTINATION 
+ 			"${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+ 
+-enable_testing()
++#enable_testing()
+ 
  
  
  add_subdirectory (sigc++)
@@ -36,6 +32,3 @@ index fa5a91a..86f1be7 100644
  
  set_property (TARGET ${SIGCPP_LIB_NAME} PROPERTY VERSION ${PACKAGE_VERSION})
  set_property(TARGET ${SIGCPP_LIB_NAME}  PROPERTY SOVERSION ${LIBSIGCPP_SOVERSION})
--- 
-2.27.0.windows.1
-

@@ -1,5 +1,5 @@
 diff --git a/include/stxxl/bits/algo/ksort.h b/include/stxxl/bits/algo/ksort.h
-index 33ec8cf..4079a57 100644
+index 33ec8cf..8101741 100644
 --- a/include/stxxl/bits/algo/ksort.h
 +++ b/include/stxxl/bits/algo/ksort.h
 @@ -299,11 +299,7 @@ create_runs(
@@ -66,7 +66,7 @@ index 9df12ff..7110246 100644
  
  STXXL_END_NAMESPACE
 diff --git a/include/stxxl/bits/containers/btree/leaf.h b/include/stxxl/bits/containers/btree/leaf.h
-index d7c619f..c6b2fcc 100644
+index d7c619f..969adfd 100644
 --- a/include/stxxl/bits/containers/btree/leaf.h
 +++ b/include/stxxl/bits/containers/btree/leaf.h
 @@ -66,7 +66,7 @@ public:
@@ -79,7 +79,7 @@ index d7c619f..c6b2fcc 100644
          key_compare comp;
  
 diff --git a/include/stxxl/bits/containers/btree/node.h b/include/stxxl/bits/containers/btree/node.h
-index 13dec7b..a4c47d8 100644
+index 13dec7b..c26cfff 100644
 --- a/include/stxxl/bits/containers/btree/node.h
 +++ b/include/stxxl/bits/containers/btree/node.h
 @@ -71,7 +71,7 @@ public:
@@ -92,7 +92,7 @@ index 13dec7b..a4c47d8 100644
          key_compare comp;
  
 diff --git a/include/stxxl/bits/containers/hash_map/hash_map.h b/include/stxxl/bits/containers/hash_map/hash_map.h
-index 0759bd2..ecf19cd 100644
+index 0759bd2..edcc2ac 100644
 --- a/include/stxxl/bits/containers/hash_map/hash_map.h
 +++ b/include/stxxl/bits/containers/hash_map/hash_map.h
 @@ -1258,10 +1258,7 @@ protected:
@@ -117,7 +117,7 @@ index 0759bd2..ecf19cd 100644
          //! reference to hash_map
          const self_type& m_map;
 diff --git a/include/stxxl/bits/io/wbtl_file.h b/include/stxxl/bits/io/wbtl_file.h
-index 933a216..30828a0 100644
+index 933a216..d9f0674 100644
 --- a/include/stxxl/bits/io/wbtl_file.h
 +++ b/include/stxxl/bits/io/wbtl_file.h
 @@ -65,7 +65,7 @@ class wbtl_file : public disk_queued_file
@@ -130,7 +130,7 @@ index 933a216..30828a0 100644
          bool operator () (
              const place& entry,
 diff --git a/include/stxxl/bits/mng/block_alloc.h b/include/stxxl/bits/mng/block_alloc.h
-index 19ade8b..887f0e6 100644
+index 19ade8b..dac408f 100644
 --- a/include/stxxl/bits/mng/block_alloc.h
 +++ b/include/stxxl/bits/mng/block_alloc.h
 @@ -138,7 +138,7 @@ private:
@@ -143,7 +143,7 @@ index 19ade8b..887f0e6 100644
  
  public:
 diff --git a/include/stxxl/bits/mng/block_alloc_interleaved.h b/include/stxxl/bits/mng/block_alloc_interleaved.h
-index a82ee34..5aba23a 100644
+index a82ee34..83925a3 100644
 --- a/include/stxxl/bits/mng/block_alloc_interleaved.h
 +++ b/include/stxxl/bits/mng/block_alloc_interleaved.h
 @@ -93,7 +93,7 @@ struct interleaved_RC : public interleaved_striping
@@ -156,7 +156,7 @@ index a82ee34..5aba23a 100644
      }
  
 diff --git a/include/stxxl/bits/mng/disk_allocator.h b/include/stxxl/bits/mng/disk_allocator.h
-index 59ad085..c1e0f83 100644
+index 59ad085..a4e534e 100644
 --- a/include/stxxl/bits/mng/disk_allocator.h
 +++ b/include/stxxl/bits/mng/disk_allocator.h
 @@ -44,7 +44,7 @@ class disk_allocator : private noncopyable
@@ -186,6 +186,23 @@ index 59ad085..c1e0f83 100644
      }
  
      if (space != free_space.end())
+diff --git a/include/stxxl/bits/msvc_compatibility.h b/include/stxxl/bits/msvc_compatibility.h
+index c2c937d..0cb22e5 100644
+--- a/include/stxxl/bits/msvc_compatibility.h
++++ b/include/stxxl/bits/msvc_compatibility.h
+@@ -19,10 +19,12 @@
+ 
+ #include <cmath>
+ 
++#if _MSC_VER < 1900
+ inline double log2(double x)
+ {
+     return (log(x) / log(2.));
+ }
++#endif // ^^^ _MSC_VER < 1900
+ 
+ // http://msdn.microsoft.com/en-us/library/2ts7cx93.aspx
+ #define snprintf _snprintf
 diff --git a/include/stxxl/bits/parallel.h b/include/stxxl/bits/parallel.h
 index d973861..c858d87 100644
 --- a/include/stxxl/bits/parallel.h
@@ -199,7 +216,7 @@ index d973861..c858d87 100644
  #else
  
 diff --git a/include/stxxl/bits/parallel/base.h b/include/stxxl/bits/parallel/base.h
-index 141d515..7dae74f 100644
+index 141d515..1c970f9 100644
 --- a/include/stxxl/bits/parallel/base.h
 +++ b/include/stxxl/bits/parallel/base.h
 @@ -33,7 +33,6 @@ namespace parallel {
@@ -258,7 +275,7 @@ index 57e7599..f41d9aa 100644
  protected:
      Comparator& m_comp;
 diff --git a/lib/io/wbtl_file.cpp b/lib/io/wbtl_file.cpp
-index 310d76a..6d52e2e 100644
+index 310d76a..5f1a766 100644
 --- a/lib/io/wbtl_file.cpp
 +++ b/lib/io/wbtl_file.cpp
 @@ -304,7 +304,7 @@ wbtl_file::offset_type wbtl_file::get_next_write_block()

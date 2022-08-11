@@ -1,8 +1,9 @@
 {
   "name": "boost-odeint",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

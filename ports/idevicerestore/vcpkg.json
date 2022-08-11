@@ -1,7 +1,7 @@
 {
   "name": "idevicerestore",
-  "version-string": "1.0.12",
-  "port-version": 6,
+  "version": "1.0.12",
+  "port-version": 7,
   "description": "Restore/upgrade firmware of iOS devices",
   "supports": "windows",
   "dependencies": [

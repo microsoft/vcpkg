@@ -1,6 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.5.5",
+  "version": "4.6.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -11,6 +11,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     },
     "zlib"
@@ -62,6 +66,12 @@
             "cuda"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {
@@ -136,7 +146,7 @@
       ]
     },
     "gtk": {
-      "description": "GDCM support for opencv",
+      "description": "GTK support for opencv",
       "dependencies": [
         "gtk"
       ]

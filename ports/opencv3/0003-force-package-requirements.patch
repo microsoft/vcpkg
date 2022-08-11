@@ -32,7 +32,7 @@
    else()
      ocv_clear_internal_cache_vars(WEBP_LIBRARY WEBP_INCLUDE_DIR)
 -    include(cmake/OpenCVFindWebP.cmake)
-+    find_package(WebP REQUIRED)
++    find_package(WEBP NAMES WebP REQUIRED)
      if(WEBP_FOUND)
        set(HAVE_WEBP 1)
      endif()

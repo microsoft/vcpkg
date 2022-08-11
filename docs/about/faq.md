@@ -5,8 +5,10 @@ Yes! Start out by reading our [contribution guidelines](https://github.com/Micro
 If you want to contribute but don't have a particular library in mind then take a look at the list
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
-## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
-Yes! See [the `export` command](../users/integration.md#export-command).
+## Can vcpkg create pre-built binary packages? What is the binary format used by vcpkg?
+Yes! See the [`export` command](../users/buildsystems/export-command.md) if you wish to produce binaries for exporting into other environments.
+
+Alternatively, if your goal is to preserve binaries produced by `vcpkg install` operations for later re-use, see the [Binary Caching feature](../users/binarycaching.md)
 
 ## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
@@ -19,31 +21,43 @@ We recommend cloning directly from [GitHub](https://github.com/microsoft/vcpkg) 
 ## Can I build a private library with this tool?
 Yes. Follow [our packaging zlib Example](../examples/packaging-zipfiles.md) for creating a portfile using a fake URL. Then, either pre-seed the `downloads\` folder with a zip containing your private sources or replace the normal calls to `vcpkg_download_distfile` and `vcpkg_extract_source_archive` with functions that unpack your source code.
 
+You can take this further by publishing your private libraries into a registry. See the article on [Creating Registries](../maintainers/registries.md). A registry is a catalog of ports, similar to the one provided with vcpkg that contains open source libraries.  
+
 ## Can I use a prebuilt private library with this tool?
 Yes. The `portfile.cmake` for a library is fundamentally a script that places the headers and binaries into the correct arrangement in the `${CURRENT_PACKAGES_DIR}`, so to pull in prebuilt binaries you can write a portfile which directly downloads and arranges the files.
 
 To see an example of this, look at [`ports\opengl\portfile.cmake`](https://github.com/microsoft/vcpkg/blob/master/ports/opengl/portfile.cmake) which simply copies files out of the Windows SDK.
 
-## Which platforms I can target with Vcpkg?
-We currently target Windows Desktop (x86 and x64) as well as the Universal Windows Platform (x86, x64, and ARM). See `vcpkg help triplet` for the current list.
+## Which platforms can I target with vcpkg?
+Our built-in, CI-tested triplets are:
+* Windows Desktop (x86, x64, x64-static, arm64)
+* Universal Windows Platform (x64, and ARM)
+* Mac OS X (x64-static)
+* Linux (x64-static)
 
-## Does Vcpkg run on Linux/OSX?
-Yes! We continuously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
+However, there is an even larger number of community triplets available with more platforms and architectures, including for iOS, Android, MinGW, WebAssembly, freeBSD, and openBSD.
+
+You can also define your own triplets depending on your needs.
+
+See `vcpkg help triplet` for the current list.
+
+## Does vcpkg run on Linux/OS X?
+Yes! We continuously test on OS X and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
 
 ## How do I update vcpkg?
 Execute `git pull` to get the latest sources, then run `bootstrap-vcpkg.bat` (Windows) or `./bootstrap-vcpkg.sh` (Unix) to update vcpkg.
 
 ## How do I use different versions of a library on one machine?
-Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.
+Within a single instance of vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in vcpkg correspond to the `X-dev` or `X-devel` packages.
 
-To use different versions of a library for different projects, we recommend making separate instances of Vcpkg and using the [per-project integration mechanisms](../users/integration.md). The versions of each library are specified by the files in `ports\`, so they are easily manipulated using standard `git` commands. This makes it very easy to roll back the entire set of libraries to a consistent set of older versions which all work with each other. If you need to then pin a specific library forward, that is as easy as checking out the appropriate version of `ports\<package>\`.
+To use different versions of a library for different projects, we recommend making separate instances of vcpkg and using the [per-project integration mechanisms](../users/buildsystems/integration.md). The versions of each library are specified by the files in `ports\`, so they are easily manipulated using standard `git` commands. This makes it very easy to roll back the entire set of libraries to a consistent set of older versions which all work with each other. If you need to then pin a specific library forward, that is as easy as checking out the appropriate version of `ports\<package>\`.
 
 If your application is very sensitive to the versions of libraries, we recommend checking in the specific set of portfiles you need into your source control along with your project sources and using the `--vcpkg-root` option to redirect the working directory of `vcpkg.exe`.
 
-## How does Vcpkg protect my privacy?
+## How does vcpkg protect my privacy?
 See the [Privacy document](privacy.md) for all information regarding privacy.
 
-## Can I use my own CMake toolchain file with Vcpkg's toolchain file?
+## Can I use my own CMake toolchain file with vcpkg's toolchain file?
 Yes. If you already have a CMake toolchain file, you will need to include our toolchain file at the end of yours. This should be as simple as an `include(<vcpkg_root>\scripts\buildsystems\vcpkg.cmake)` directive. Alternatively, you could copy the contents of our `scripts\buildsystems\vcpkg.cmake` into the end of your existing toolchain file.
 
 ## Can I use my own/specific flags for rebuilding libs?
@@ -51,11 +65,11 @@ Yes. In the current version, there is not yet a standardized global way to chang
 
 By saving the changes to the portfile (and checking them in), you'll get the same results even if you're rebuilding from scratch in the future and forgot what exact settings you used.
 
-## Can I get Vcpkg integration for custom configurations?
+## Can I get vcpkg integration for custom configurations?
 
-Yes. While Vcpkg will only produce the standard "Release" and "Debug" configurations when building a library, you can get integration support for your projects' custom configurations, in addition to your project's standard configurations.
+Yes. While vcpkg will only produce the standard "Release" and "Debug" configurations when building a library, you can get integration support for your projects' custom configurations, in addition to your project's standard configurations.
 
-First of all, Vcpkg will automatically assume any custom configuration starting with "Release" (resp. "Debug") as a configuration that is compatible with the standard "Release" (resp. "Debug") configuration and will act accordingly.
+First of all, vcpkg will automatically assume any custom configuration starting with "Release" (resp. "Debug") as a configuration that is compatible with the standard "Release" (resp. "Debug") configuration and will act accordingly.
 
 For other configurations, you only need to override the MSBuild `$(VcpkgConfiguration)` macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration. Unfortunately, due to the sequential nature of MSBuild, you'll need to add those settings much higher in your vcxproj so that it is declared before the Vcpk integration is loaded. It is recommend that the `$(VcpkgConfiguration)` macro is added to the "Globals" PropertyGroup.
 
@@ -82,13 +96,13 @@ A lower level mechanism to achieve the same as the `vcpkg integrate project` NuG
 
 You can save some disk space by completely removing the `packages\`, `buildtrees\`, and `downloads\` folders.
 
-## How is CMake used internally by Vcpkg?
+## How is CMake used internally by vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 
-## Will Vcpkg support downloading compiled binaries from a public or private server?
+## Will vcpkg support downloading compiled binaries from a public or private server?
 We would like to eventually support downloading precompiled binaries, similar to other system package managers.
 
-In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export`](../users/integration.md#export) command.
+In a corporate scenario, we currently recommend building the libraries once and using the [Binary Caching](../users/binarycaching.md) feature to re-use binaries across different machines and for local development vs. CI scenarios. 
 
 ## What Visual C++ toolsets are supported?
 We support Visual Studio 2015 Update 3 and above.

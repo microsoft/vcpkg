@@ -1,9 +1,9 @@
 diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
-index e5e2976..be1083a 100644
+index 4745483..b55462d 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
-@@ -213,55 +213,13 @@ else (EIGEN3_FOUND)
- endif (EIGEN3_FOUND)
+@@ -217,55 +217,14 @@ else (Eigen3_FOUND)
+ endif (Eigen3_FOUND)
  
  # glog (and maybe gflags).
 -#
@@ -35,15 +35,15 @@ index e5e2976..be1083a 100644
 -    # Search quietly s/t we control the timing of the error message if not found.
 -    find_package(Glog QUIET)
 -  endif()
-+include (CMakeFindDependencyMacro)
-+find_dependency (glog NO_MODULE)
  
 -  if (GLOG_FOUND)
 -    ceres_message(STATUS "Found required Ceres dependency: glog")
 -  else()
 -    ceres_report_not_found("Missing required Ceres dependency: glog.")
 -  endif()
--
++include (CMakeFindDependencyMacro)
++find_dependency (glog NO_MODULE)
+ 
 -  # gflags is only a public dependency of Ceres via glog, thus is not required
 -  # if Ceres was built with MINIGLOG.
 -  if (CERES_USES_GFLAGS)
@@ -59,7 +59,7 @@ index e5e2976..be1083a 100644
 -endif(CERES_USES_MINIGLOG)
 +# SuiteSparse
 +if (@SUITESPARSE@)
-+    find_dependency(suitesparse CONFIG)
++    find_dependency(SuiteSparse CONFIG)
 +endif()
  
  # Import exported Ceres targets, if they have not already been imported.

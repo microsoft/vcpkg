@@ -1,9 +1,10 @@
 {
   "name": "socket-io-client",
   "version": "3.1.0",
+  "port-version": 1,
   "description": "C++11 implementation of Socket.IO client",
   "homepage": "https://github.com/socketio/socket.io-client-cpp",
-  "supports": "static",
+  "license": "MIT",
   "dependencies": [
     "asio",
     "rapidjson",

@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6d300da..fae4ca7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,8 +66,28 @@ if(NOT SW_BUILD)
+     find_package(PNG)
+     find_package(TIFF)
+     find_package(ZLIB)
+-    find_package(PkgConfig)
+-    if (PKG_CONFIG_FOUND)
++    find_package(WEBP NAMES WebP REQUIRED)
++    find_package(JP2K NAMES OpenJPEG REQUIRED)
++    
++    set(GIF_LIBRARIES GIF::GIF)
++    set(JPEG_LIBRARIES JPEG::JPEG)
++    set(PNG_LIBRARIES PNG::PNG)
++    set(TIFF_LIBRARIES TIFF::TIFF)
++    set(ZLIB_LIBRARIES ZLIB::ZLIB)
++
++    set(JP2K "${JP2K_FOUND}")
++    set(JP2K_INCLUDE_DIRS "")
++    set(HAVE_LIBJP2K 1)
++    set(JP2K_LIBRARIES openjp2) # imported target
++
++    set(WEBP "${WEBP_FOUND}")
++    set(WEBP_INCLUDE_DIRS "")
++    set(WEBPMUX 1)
++    set(HAVE_LIBWEBP_ANIM 1)
++    set(WEBPMUX_FOUND TRUE)
++    set(WEBP_LIBRARIES WebP::libwebpmux WebP::webp)
++
++    if (0)
+         pkg_check_modules(WEBP libwebp QUIET)
+         pkg_check_modules(WEBPMUX libwebpmux>=${MINIMUM_WEBPMUX_VERSION} QUIET)
+         pkg_check_modules(JP2K libopenjp2>=2.0 QUIET)
+diff --git a/cmake/templates/LeptonicaConfig.cmake.in b/cmake/templates/LeptonicaConfig.cmake.in
+index 342c37d..506fb2a 100644
+--- a/cmake/templates/LeptonicaConfig.cmake.in
++++ b/cmake/templates/LeptonicaConfig.cmake.in
+@@ -19,6 +19,14 @@
+ #      - Leptonica_VERSION_PATCH         : Patch version part of Leptonica_VERSION: "@VERSION_PATCH@"
+ #
+ # ===================================================================================
++include(CMakeFindDependencyMacro)
++find_dependency(JPEG)
++find_dependency(ZLIB)
++find_dependency(PNG)
++find_dependency(TIFF)
++find_dependency(GIF)
++find_dependency(WebP)
++find_dependency(OpenJPEG)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/LeptonicaTargets.cmake)
+ 
+@@ -36,7 +44,8 @@ SET(Leptonica_VERSION_PATCH     @VERSION_PATCH@)
+ # ======================================================
+ 
+ # Provide the include directories to the caller
+-set(Leptonica_INCLUDE_DIRS      "@INCLUDE_DIR@")
++get_filename_component(Leptonica_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../include" ABSOLUTE)
++list(APPEND Leptonica_INCLUDE_DIRS "${Leptonica_INCLUDE_DIRS}/leptonica")
+ 
+ # ====================================================================
+ # Link libraries:

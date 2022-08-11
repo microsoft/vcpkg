@@ -1,0 +1,48 @@
+diff --git a/cmake/IgnUtils.cmake b/cmake/IgnUtils.cmake
+index bc6dbdc..1e8adbb 100644
+--- a/cmake/IgnUtils.cmake
++++ b/cmake/IgnUtils.cmake
+@@ -138,7 +138,7 @@ macro(ign_find_package PACKAGE_NAME)
+   #------------------------------------
+   # Define the expected arguments
+   set(options REQUIRED PRIVATE EXACT QUIET BUILD_ONLY PKGCONFIG_IGNORE)
+-  set(oneValueArgs VERSION PRETTY PURPOSE EXTRA_ARGS PKGCONFIG PKGCONFIG_LIB PKGCONFIG_VER_COMPARISON)
++  set(oneValueArgs VERSION PRETTY PURPOSE EXTRA_ARGS PKGCONFIG PKGCONFIG_LIB PKGCONFIG_VER_COMPARISON BY_PKGCONFIG)
+   set(multiValueArgs REQUIRED_BY PRIVATE_FOR COMPONENTS OPTIONAL_COMPONENTS)
+ 
+   #------------------------------------
+@@ -183,9 +183,15 @@ macro(ign_find_package PACKAGE_NAME)
+   endif()
+ 
+ 
++  if (NOT ign_find_package_BY_PKGCONFIG)
+   #------------------------------------
+   # Call find_package with the provided arguments
+   find_package(${${PACKAGE_NAME}_find_package_args})
++  else()
++  find_package(PkgConfig REQUIRED)
++  include(FindPkgConfig)
++  pkg_check_modules(${PACKAGE_NAME} ${ign_find_package_BY_PKGCONFIG})
++  endif()
+ 
+   if(${PACKAGE_NAME}_FOUND)
+ 
+@@ -300,17 +306,11 @@ macro(ign_find_package PACKAGE_NAME)
+     endif()
+ 
+     if(ign_find_package_REQUIRED_BY)
+-
+-      # Identify which components are privately requiring this package
+-      foreach(component ${ign_find_package_PRIVATE_FOR})
+-        set(${component}_${PACKAGE_NAME}_PRIVATE true)
+-      endforeach()
+-
+       # If this is required by some components, add it to the
+       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
+       # componenets
+       foreach(component ${ign_find_package_REQUIRED_BY})
+-        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
++        if(NOT ign_find_package_BY_PKGCONFIG)
+           ign_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
+         endif()
+       endforeach()

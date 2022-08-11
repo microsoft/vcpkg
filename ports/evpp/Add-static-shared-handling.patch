@@ -1,0 +1,98 @@
+diff --git a/apps/evmc/CMakeLists.txt b/apps/evmc/CMakeLists.txt
+index 9918919..f8cffa7 100644
+--- a/apps/evmc/CMakeLists.txt
++++ b/apps/evmc/CMakeLists.txt
+@@ -9,6 +9,7 @@ add_library(evmc_static STATIC ${evmc_SRCS})
+ target_link_libraries(evmc_static ${LIBRARIES})
+ 
+ if (UNIX)
++    if(BUILD_SHARED_LIBS)
+     add_library(evmc SHARED ${evmc_SRCS})
+     target_link_libraries(evmc ${LIBRARIES})
+ 
+@@ -25,6 +26,7 @@ if (UNIX)
+       TARGETS evmc
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib)
++    endif()
+ endif (UNIX)
+ 
+ install (
+diff --git a/apps/evnsq/CMakeLists.txt b/apps/evnsq/CMakeLists.txt
+index c510814..65f15cd 100644
+--- a/apps/evnsq/CMakeLists.txt
++++ b/apps/evnsq/CMakeLists.txt
+@@ -5,6 +5,7 @@ add_library(evnsq_static STATIC ${evnsq_SRCS})
+ target_link_libraries(evnsq_static ${LIBRARIES})
+ 
+ if (UNIX)
++    if(BUILD_SHARED_LIBS)
+     add_library(evnsq SHARED ${evnsq_SRCS})
+     target_link_libraries(evnsq ${LIBRARIES})
+ 
+@@ -21,6 +22,7 @@ if (UNIX)
+       TARGETS evnsq
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib)
++    endif()
+ endif (UNIX)
+ 
+ install (
+diff --git a/evpp/CMakeLists.txt b/evpp/CMakeLists.txt
+index 031659f..c16d708 100644
+--- a/evpp/CMakeLists.txt
++++ b/evpp/CMakeLists.txt
+@@ -22,24 +22,19 @@ target_link_libraries(evpp_lite_static ${DEPENDENT_LIBRARIES})
+ target_compile_features(evpp_lite_static PRIVATE cxx_std_11)
+ 
+ if (UNIX)
++    if(BUILD_SHARED_LIBS)
+     add_library(evpp SHARED ${evpp_SRCS})
+     target_link_libraries(evpp ${DEPENDENT_LIBRARIES})
+ 
+     # boost lockfree queue
+     add_library(evpp_boost SHARED ${evpp_SRCS})
+-    add_library(evpp_boost_static STATIC ${evpp_SRCS})
+     target_compile_definitions(evpp_boost PRIVATE -DH_HAVE_BOOST=1)
+-    target_compile_definitions(evpp_boost_static PRIVATE -DH_HAVE_BOOST=1)
+     target_link_libraries(evpp_boost        ${DEPENDENT_LIBRARIES})
+-    target_link_libraries(evpp_boost_static ${DEPENDENT_LIBRARIES})
+ 
+     # https://github.com/cameron314/concurrentqueue
+     add_library(evpp_concurrentqueue SHARED ${evpp_SRCS})
+-    add_library(evpp_concurrentqueue_static STATIC ${evpp_SRCS})
+     target_compile_definitions(evpp_concurrentqueue PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
+-    target_compile_definitions(evpp_concurrentqueue_static PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
+     target_link_libraries(evpp_concurrentqueue        ${DEPENDENT_LIBRARIES})
+-    target_link_libraries(evpp_concurrentqueue_static ${DEPENDENT_LIBRARIES})
+ 
+     set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+     include (utils)
+@@ -51,11 +46,26 @@ if (UNIX)
+     )
+ 
+     install (
+-      TARGETS evpp evpp_static evpp_lite_static evpp_boost evpp_boost_static evpp_concurrentqueue evpp_concurrentqueue_static
++      TARGETS evpp evpp_boost evpp_concurrentqueue
+       EXPORT ${PACKAGE_NAME}
+       RUNTIME DESTINATION bin
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib)
++    else()
++    add_library(evpp_boost_static STATIC ${evpp_SRCS})
++    target_compile_definitions(evpp_boost_static PRIVATE -DH_HAVE_BOOST=1)
++    target_link_libraries(evpp_boost_static ${DEPENDENT_LIBRARIES})
++
++    add_library(evpp_concurrentqueue_static STATIC ${evpp_SRCS})
++    target_compile_definitions(evpp_concurrentqueue_static PRIVATE -DH_HAVE_CAMERON314_CONCURRENTQUEUE=1)
++    target_link_libraries(evpp_concurrentqueue_static ${DEPENDENT_LIBRARIES})
++
++    install (
++      TARGETS evpp_static evpp_lite_static evpp_boost_static evpp_concurrentqueue_static
++      EXPORT ${PACKAGE_NAME}
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib)
++    endif()
+ 
+ else (UNIX)
+     install (

@@ -1,11 +1,17 @@
+set(PATCHES 0001-fix-for-vcpkg.patch)
+
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND PATCHES uwp-warnings.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF 127f157fc00abeb6fe5a57ce56a7c4e092721203 #v0.16.4
-    SHA512 ef7d1f652af031c13260a4c436c949eb566d40d15dcde5b56ab782e9e9d7b5e287f4a6a61bc4eb3fcdbb835c102637b0368f3c43af6f9fa9c87cd99d15bde454
+    REF f8ac6955e3cd673ac23a2172cd7dc42fc013b7b3 #v0.17.9
+    SHA512 3a8e3a47032a1fad770639c1bac266388c87046432cd44b391f146820cf3d3a871834e104deb9fb6fa901d6f82eba8aea0baa0b0eeb7cfb24808c408b020407b
     HEAD_REF master
     PATCHES
-        0001-fix-for-vcpkg.patch
+        ${PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,6 +27,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
+        -DUSE_SYSTEM_JUICE=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
 )

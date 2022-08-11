@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.78.0",
+    $version = "1.79.0",
     $portsDir = $null
 )
 
@@ -24,7 +24,6 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost-vcpkg-helpers" = 1;
 }
 
 $portData = @{
@@ -168,6 +167,7 @@ function GeneratePortManifest() {
         [string]$PortName,
         [string]$Homepage,
         [string]$Description,
+        [string]$License,
         $Dependencies = @()
     )
     $manifest = @{
@@ -175,6 +175,9 @@ function GeneratePortManifest() {
         "version"     = $version
         "homepage"    = $Homepage
         "description" = $Description
+    }
+    if ($License) {
+        $manifest["license"] += $License
     }
     if ($portData.Contains($PortName)) {
         $manifest += $portData[$PortName]
@@ -230,6 +233,7 @@ function GeneratePort() {
         -PortName $portName `
         -Homepage "https://github.com/boostorg/$Library" `
         -Description "Boost $Library module" `
+        -License "BSL-1.0" `
         -Dependencies $Dependencies
 
     $portfileLines = @(
@@ -275,9 +279,6 @@ function GeneratePort() {
 
     if ($NeedsBuild) {
         $portfileLines += @(
-            "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
-            "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg in order to build.`")"
-            "endif()"
             "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
         )
         # b2-options.cmake contains port-specific build options
@@ -564,6 +565,7 @@ if ($updateServicePorts) {
         -PortName "boost" `
         -Homepage "https://boost.org" `
         -Description "Peer-reviewed portable C++ source libraries" `
+        -License "BSL-1.0" `
         -Dependencies $boostPortDependencies
 
     Set-Content -LiteralPath "$portsDir/boost/portfile.cmake" `
@@ -574,18 +576,21 @@ if ($updateServicePorts) {
     # Generate manifest files for boost-uninstall
     GeneratePortManifest `
         -PortName "boost-uninstall" `
-        -Description "Internal vcpkg port used to uninstall Boost"
+        -Description "Internal vcpkg port used to uninstall Boost" `
+        -License "MIT"
 
     # Generate manifest files for boost-vcpkg-helpers
     GeneratePortManifest `
         -PortName "boost-vcpkg-helpers" `
         -Description "Internal vcpkg port used to modularize Boost" `
+        -License "MIT" `
         -Dependencies @("boost-uninstall")
 
     # Generate manifest files for boost-modular-build-helper
     GeneratePortManifest `
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
+        -License "MIT" `
         -Dependencies @("boost-uninstall", "vcpkg-cmake")
 
     # Generate manifest files for boost-build
@@ -593,6 +598,7 @@ if ($updateServicePorts) {
         -PortName "boost-build" `
         -Homepage "https://github.com/boostorg/build" `
         -Description "Boost.Build" `
+        -License "BSL-1.0" `
         -Dependencies @("boost-uninstall")
 
     # Update Boost version in CMake files

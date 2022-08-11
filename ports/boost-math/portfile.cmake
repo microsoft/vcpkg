@@ -3,15 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.78.0
-    SHA512 a5de0dfddca56ef67c750db55d103e41822ae3823c023f884211a1d993ebd4a35cceab024b405e48f51acc7f2ae7d1e97aa7e4c603eca929027b62ca2d234ff9
+    REF boost-1.79.0
+    SHA512 97d7d11b80c5d583ceed3548f294876180d4ff8e0aab5b39c1dc5249300a124c4ac2d8894b3c4e8bec9f7fa42e3886f679a47b8b86feb7c1d9e8389b767bb499
     HEAD_REF master
     PATCHES 001-remove-checks.patch
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-math requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

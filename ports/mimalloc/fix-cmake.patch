@@ -9,18 +9,8 @@
    endif()
  
 -  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_libdir} LIBRARY)  
++  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir} NAMELINK_SKIP)
    install(EXPORT mimalloc DESTINATION ${mi_install_cmakedir})
-+  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP)
  endif()
  
  # static library
-@@ -370,9 +370,6 @@ # install(TARGETS mimalloc-obj EXPORT mimalloc DESTINATION ${mi_install_objdir})
- 
-   # the FILES expression can also be: $<TARGET_OBJECTS:mimalloc-obj>
-   # but that fails cmake versions less than 3.10 so we leave it as is for now
--  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/mimalloc-obj.dir/src/static.c${CMAKE_C_OUTPUT_EXTENSION}
--          DESTINATION ${mi_install_objdir}
--          RENAME ${mi_basename}${CMAKE_C_OUTPUT_EXTENSION} )
- endif()
- 
- # -----------------------------------------------------------------------------

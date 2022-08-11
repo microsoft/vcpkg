@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f403af..4ced28a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,7 +72,7 @@ SET(FREEGLUT_HEADERS
+     include/GL/freeglut_ext.h
+     include/GL/freeglut_std.h
+ )
+-IF(FREEGLUT_REPLACE_GLUT)
++IF(TRUE)
+     LIST(APPEND FREEGLUT_HEADERS
+         include/GL/glut.h
+     )
+@@ -319,23 +319,27 @@ IF(CMAKE_COMPILER_IS_GNUCC)
+   ENDIF()
+ ENDIF(CMAKE_COMPILER_IS_GNUCC)
+ 
++SET(xlibs_private "")
+ INCLUDE(CheckIncludeFiles)
+ IF(UNIX AND NOT(ANDROID OR BLACKBERRY OR FREEGLUT_WAYLAND))
+     FIND_PACKAGE(X11 REQUIRED)
+-    INCLUDE_DIRECTORIES(${X11_X11_INCLUDE_PATH})
+-    LIST(APPEND LIBS ${X11_X11_LIB})
++    LIST(APPEND LIBS X11::X11)
++    set(xlibs_private "-lX11")
+     IF(X11_Xrandr_FOUND)
+         SET(HAVE_X11_EXTENSIONS_XRANDR_H TRUE)
+-        LIST(APPEND LIBS ${X11_Xrandr_LIB})
++        LIST(APPEND LIBS X11::Xrandr)
++        STRING(APPEND xlibs_private " -lXrandr")
+     ENDIF()
+-    IF(X11_xf86vmode_FOUND)
++    IF(X11_Xxf86vm_FOUND)
+         SET(HAVE_X11_EXTENSIONS_XF86VMODE_H TRUE)
+-        LIST(APPEND LIBS ${X11_Xxf86vm_LIB})
++        LIST(APPEND LIBS X11::Xxf86vm)
++        STRING(APPEND xlibs_private " -lXxf86vm")
+     ENDIF()
+     IF(X11_Xinput_FOUND)
+         # Needed for multi-touch:
+         CHECK_INCLUDE_FILES("${X11_Xinput_INCLUDE_PATH}/X11/extensions/XInput2.h" HAVE_X11_EXTENSIONS_XINPUT2_H)
+-        LIST(APPEND LIBS ${X11_Xinput_LIB})
++        LIST(APPEND LIBS X11::Xi)
++        STRING(APPEND xlibs_private " -lXi")
+     ELSE()
+         MESSAGE(FATAL_ERROR "Missing X11's XInput.h (X11/extensions/XInput.h)")
+     ENDIF()
+@@ -586,13 +590,13 @@ ELSEIF(FREEGLUT_GLES)
+   ELSEIF(FREEGLUT_WAYLAND)
+     SET(PC_LIBS_PRIVATE "-lwayland-client -lwayland-cursor -lwayland-egl -lGLESv2 -lGLESv1_CM -lEGL -lxkbcommon -lm")
+   ELSE()
+-    SET(PC_LIBS_PRIVATE "-lX11 -lXxf86vm -lXrandr -lGLESv2 -lGLESv1_CM -lEGL -lm")
++    SET(PC_LIBS_PRIVATE "${xlibs_private} -lGLESv2 -lGLESv1_CM -lEGL -lm")
+   ENDIF()
+ ELSE()
+   IF(FREEGLUT_WAYLAND)
+     SET(PC_LIBS_PRIVATE "-lwayland-client -lwayland-cursor -lwayland-egl -lGL -lxkbcommon -lm")
+   ELSE()
+-    SET(PC_LIBS_PRIVATE "-lX11 -lXxf86vm -lXrandr -lGL -lm")
++    SET(PC_LIBS_PRIVATE "${xlibs_private} -lGL -lm")
+   ENDIF()
+ ENDIF()
+ # Client applications need to define FreeGLUT GLES version to

@@ -3,7 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
                     remove_unistd.patch
-                    )
+)
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
 
@@ -23,6 +23,9 @@ set(${PORT}_PATCHES fix_windows_header_include.patch
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+    "widgets"       CMAKE_REQUIRE_FIND_PACKAGE_Qt6Widgets
+    #"gstreamer"     CMAKE_REQUIRE_FIND_PACKAGE_GStreamer
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
@@ -35,11 +38,8 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
-endif()
+# alsa is not ready
+list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
