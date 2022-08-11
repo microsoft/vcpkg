@@ -9,7 +9,7 @@ set(USER_CONFIG_TOOLSET_OPTIONS "")
 set(USER_CONFIG_EXTRA_LINES "")
 set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS)
+set(B2_OPTIONS "")
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -106,7 +106,7 @@ if(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(JOIN libpath_args " " libpath_arg)
     string(APPEND COMPILEFLAGS " ${libpath_arg} /D_WIN32_WINNT=0x0A00")
     list(APPEND B2_OPTIONS windows-api=store)
-    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib) # TODO: Fix this; Probably should use a VCPKG_DETECTED_ variable and also be applied in the !store case
 endif()
 
 set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
@@ -117,9 +117,22 @@ string(APPEND CFLAGS "${COMPILEFLAGS}")
 foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
     string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
     string(REPLACE [["]] [[\"]] ${var} "${${var}}")
+    if(WIN32)
+        # env variables need extra %%var%% to be not expanded early
+        string(REGEX REPLACE [[(%[^%]+%)]] [[%\1%]] ${var} "${${var}}")
+        # remove PDB flag, until the pdb install rule of boost-build can be deactivated. 
+        string(REGEX REPLACE "-PDB:[^ ]+" "" ${var} "${${var}}") 
+    endif()
     string(REGEX REPLACE "[ \t\r\n]+" " " ${var} "${${var}}")
     string(STRIP "${${var}}" ${var})
 endforeach()
+
+if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
+    list(APPEND B2_OPTIONS
+            debug-store=database
+            pch=off
+        )
+endif()
 
 if(USER_CONFIG_TOOLSET STREQUAL "msvc")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)

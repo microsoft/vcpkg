@@ -1,7 +1,11 @@
 {
   "name": "opencv4",
+<<<<<<< HEAD
   "version": "4.5.5",
   "port-version": 8,
+=======
+  "version": "4.6.0",
+>>>>>>> 1370b2c88f1e683c5c6a2465133eaa9a9b3ee679
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
