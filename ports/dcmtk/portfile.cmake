@@ -9,21 +9,16 @@ vcpkg_from_github(
       ${CMAKE_CURRENT_LIST_DIR}/windows-patch.patch
 )
 
-set(ENABLE_SHARED_LIBS ON)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(ENABLE_SHARED_LIBS OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
- FEATURES
- "iconv"   WITH_ICONV
- "icu"     WITH_ICU
- "openssl" WITH_OPENSSL
- "png"     WITH_PNG
- "tiff"    WITH_TIFF
- "xml2"    WITH_XML2
- "zlib"    WITH_ZLIB
- "tools"   ENABLE_APPS
+    FEATURES
+        "iconv"   WITH_ICONV
+        "icu"     WITH_ICU
+        "openssl" WITH_OPENSSL
+        "png"     WITH_PNG
+        "tiff"    WITH_TIFF
+        "xml2"    WITH_XML2
+        "zlib"    WITH_ZLIB
+        "tools"   ENABLE_APPS
 )
 
 vcpkg_cmake_configure(
@@ -40,9 +35,7 @@ vcpkg_cmake_configure(
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
         -DDCMTK_ENABLE_PRIVATE_TAGS=ON
-        -DBUILD_APPS=${ENABLE_APPS}
         -DCMAKE_CXX_STANDARD=17
-        -DBUILD_SHARED_LIBS:BOOL=${ENABLE_SHARED_LIBS}
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
         -DDCMTK_ENABLE_STL=ON
@@ -50,6 +43,9 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
+        -DBUILD_APPS=OFF
+    OPTIONS_RELEASE
+        -DBUILD_APPS=${ENABLE_APPS}
 )
 
 vcpkg_cmake_install()
@@ -146,4 +142,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "
 
 vcpkg_fixup_pkgconfig()
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dcmtk" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
