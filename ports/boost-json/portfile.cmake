@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF boost-1.80.0.beta1
     SHA512 31183d2b47984f86bc049b6fc9c152d95ee78ae881be26e8a45ffcccaccaef5a7d1267de12f1caee8252271d99f68659441d644e7167d6c4fe88e728a13041b2
     HEAD_REF master
-    PATCHES 0001-json-array-erase-relocate.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
