@@ -8,25 +8,24 @@ vcpkg_from_github(
     HEAD_REF onetbb_2021
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTBB_TEST=OFF
         -DTBB_STRICT=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TBB)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/share/doc
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
     # These are duplicate libraries provided on Windows -- users should use the tbb12 libraries instead
-    ${CURRENT_PACKAGES_DIR}/lib/tbb.lib
-    ${CURRENT_PACKAGES_DIR}/debug/lib/tbb_debug.lib
+    "${CURRENT_PACKAGES_DIR}/lib/tbb.lib"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/tbb_debug.lib"
 )
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake" _contents)
@@ -35,4 +34,4 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 ${_contents}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
