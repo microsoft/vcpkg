@@ -74,3 +74,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/x11/vcpkg-cmake-wrapper.cmake" @ONLY)
