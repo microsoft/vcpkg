@@ -1,8 +1,8 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..12226cf 100755
+index 29c73bb8..d85c1d7a 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
-@@ -316,10 +316,132 @@ class Converter(object):
+@@ -307,11 +307,134 @@ def convert(self):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -35,6 +35,7 @@ index d64c14f..12226cf 100755
 +
      %(toplevel)s
  
+-  """)
 +    set(UPB_DESCRIPTOR_PROTO "${VCPKG_UPB_HOST_INCLUDE_DIR}/google/protobuf/descriptor.proto")
 +    if (VCPKG_UPB_BUILD_CODEGEN)
 +      set(UPB_CODEGEN_TARGETS protoc-gen-upb protoc-gen-upbdefs)
@@ -66,7 +67,9 @@ index d64c14f..12226cf 100755
 +        protobuf::libprotobuf
 +        protobuf::libprotoc
 +      )
++    endif()
 +
++    if(NOT CMAKE_CROSSCOMPILING AND VCPKG_UPB_BUILD_CODEGEN)
 +      set(PROTOC_PROGRAM "\$<TARGET_FILE:protobuf::protoc>")
 +      set(PROTOC_GEN_UPB_PROGRAM "\$<TARGET_FILE:protoc-gen-upb>")
 +      set(PROTOC_GEN_UPBDEFS_PROGRAM "\$<TARGET_FILE:protoc-gen-upbdefs>")
@@ -76,8 +79,8 @@ index d64c14f..12226cf 100755
 +      find_program(PROTOC_GEN_UPBDEFS_PROGRAM protoc-gen-upbdefs)
 +    endif()
 +
-+    set(UPB_DESCRIPTOR_SOURCES 
-+      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.h" 
++    set(UPB_DESCRIPTOR_SOURCES
++      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.h"
 +      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upb.c"
 +      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upbdefs.h"
 +      "${CMAKE_CURRENT_BINARY_DIR}/google/protobuf/descriptor.upbdefs.c"
@@ -86,7 +89,7 @@ index d64c14f..12226cf 100755
 +    add_custom_command(
 +      OUTPUT ${UPB_DESCRIPTOR_SOURCES}
 +      DEPENDS "${UPB_DESCRIPTOR_PROTO}"
-+      COMMAND 
++      COMMAND
 +        "${PROTOC_PROGRAM}"
 +        "-I${VCPKG_UPB_HOST_INCLUDE_DIR}"
 +        "--plugin=protoc-gen-upb=${PROTOC_GEN_UPB_PROGRAM}"
@@ -95,7 +98,7 @@ index d64c14f..12226cf 100755
 +        "--upbdefs_out=${CMAKE_CURRENT_BINARY_DIR}"
 +        "${UPB_DESCRIPTOR_PROTO}"
 +    )
-+    
++
 +    target_sources(descriptor_upb_proto PRIVATE ${UPB_DESCRIPTOR_SOURCES})
 +
 +    set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
@@ -131,7 +134,7 @@ index d64c14f..12226cf 100755
 +      EXPORT upb-config
 +    )
 +    install(EXPORT upb-config NAMESPACE upb:: DESTINATION share/upb)
-+
-   """)
++    """)
  
  data = {}
+ converter = Converter()

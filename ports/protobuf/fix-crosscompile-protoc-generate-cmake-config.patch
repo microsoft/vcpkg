@@ -1,0 +1,29 @@
+diff --git a/cmake/protobuf-config.cmake.in b/cmake/protobuf-config.cmake.in
+index 61669118c..5e32d4ecb 100644
+--- a/cmake/protobuf-config.cmake.in
++++ b/cmake/protobuf-config.cmake.in
+@@ -7,6 +7,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/protobuf-options.cmake")
+ # Imported targets
+ include("${CMAKE_CURRENT_LIST_DIR}/protobuf-targets.cmake")
+ 
++set(_protobuf_generate_compiler protobuf::protoc)
++if(CMAKE_CROSSCOMPILING)
++  find_program(Protobuf_PROTOC_EXECUTABLE protoc DOC "Host protobuf compiler path")
++  set(_protobuf_generate_compiler "${Protobuf_PROTOC_EXECUTABLE}")
++endif()
++
+ function(protobuf_generate)
+   include(CMakeParseArguments)
+ 
+@@ -146,9 +152,9 @@ function(protobuf_generate)
+ 
+     add_custom_command(
+       OUTPUT ${_generated_srcs}
+-      COMMAND protobuf::protoc
++      COMMAND "${_protobuf_generate_compiler}"
+       ARGS ${protobuf_generate_PROTOC_OPTIONS} --${protobuf_generate_LANGUAGE}_out ${_plugin_options}:${protobuf_generate_PROTOC_OUT_DIR} ${_plugin} ${_protobuf_include_path} ${_abs_file}
+-      DEPENDS ${_abs_file} protobuf::protoc
++      DEPENDS ${_abs_file} "${_protobuf_generate_compiler}"
+       COMMENT ${_comment}
+       VERBATIM )
+   endforeach()

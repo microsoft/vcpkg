@@ -10,9 +10,9 @@ vcpkg_from_github(
         fix-static-build.patch
         fix-default-proto-file-path.patch
         compile_options.patch
+        fix-crosscompile-protoc-generate-cmake-config.patch
 )
 
-string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" protobuf_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIME)
 
@@ -40,7 +40,6 @@ vcpkg_cmake_configure(
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
-        -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
         ${FEATURE_OPTIONS}
 )
@@ -62,8 +61,8 @@ protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake"
-        "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-        "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
     )
 endif()
 
@@ -76,14 +75,10 @@ endif()
 
 protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(protobuf_BUILD_PROTOC_BINARIES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
-    else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${version}.0 AUTO_CLEAN)
-    endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
 else()
-    file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+    vcpkg_copy_tools(TOOL_NAMES protoc protoc-${version}.0 AUTO_CLEAN)
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
@@ -119,10 +114,6 @@ foreach(_package IN LISTS packages)
 endforeach()
 
 vcpkg_fixup_pkgconfig()
-
-if(NOT protobuf_BUILD_PROTOC_BINARIES)
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/protobuf-targets-vcpkg-protoc.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-targets-vcpkg-protoc.cmake" COPYONLY)
-endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

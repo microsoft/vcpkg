@@ -26,14 +26,13 @@ vcpkg_check_features(
         codegen VCPKG_UPB_BUILD_CODEGEN
 )
 
-if(NOT VCPKG_UPB_BUILD_CODEGEN)
-    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" "${CURRENT_HOST_INSTALLED_DIR}/tools/upb")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS ${FEATURE_OPTIONS}
         "-DVCPKG_UPB_HOST_INCLUDE_DIR=${CURRENT_HOST_INSTALLED_DIR}/include"
+        "-DPROTOC_PROGRAM=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DPROTOC_GEN_UPB_PROGRAM=${CURRENT_HOST_INSTALLED_DIR}/tools/upb/protoc-gen-upb${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DPROTOC_GEN_UPBDEFS_PROGRAM=${CURRENT_HOST_INSTALLED_DIR}/tools/upb/protoc-gen-upbdefs${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -46,8 +45,6 @@ if (VCPKG_UPB_BUILD_CODEGEN)
             protoc-gen-upbdefs
             protoc-gen-upb
     )
-else()
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/upb-config-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/upb/upb-config-vcpkg-tools.cmake" @ONLY)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/upb/fuzz" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
