@@ -1,13 +1,31 @@
 {
   "name": "opencc",
-  "version-date": "2020-04-26",
-  "port-version": 10,
+  "version": "1.1.4",
   "description": "A project for conversion between Traditional and Simplified Chinese",
   "homepage": "https://github.com/BYVoid/OpenCC",
   "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "tools": {
       "description": "Build OpenCC command-line tools"
+    },
+    "rapidjson": {
+      "description": "Use system version of RapidJSON",
+      "dependencies": [
+        {
+          "name": "rapidjson",
+          "default-features": false
+        }
+      ]
     }
   }
 }
