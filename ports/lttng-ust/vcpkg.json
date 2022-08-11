@@ -3,5 +3,5 @@
   "version": "2.12.5",
   "description": "LTTng-UST, the Linux Trace Toolkit Next Generation Userspace Tracer, is port of the low-overhead tracing capabilities of the LTTng kernel tracer to user-space. The library 'liblttng-ust' enables tracing of applications and libraries.",
   "homepage": "https://github.com/lttng/lttng-ust",
-  "supports": "linux & !static"
+  "supports": "linux"
 }
