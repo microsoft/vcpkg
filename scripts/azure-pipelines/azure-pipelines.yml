@@ -3,7 +3,7 @@
 #
 variables:
   windows-pool: 'PrWin-2022-08-10'
-  linux-pool: 'PrLin-2022-08-12'
+  linux-pool: 'PrLin-2022-07-14'
   osx-pool: 'PrOsx-2022-02-04'
 
 parameters:
