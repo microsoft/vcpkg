@@ -33,13 +33,6 @@ vcpkg_from_github(
 )
 
 set(extra_config)
-# setting CMAKE_CXX_STANDARD here to prevent outcome from messing with compiler flags
-# the cmake package config requires said C++ standard target transitively via quickcpplib
-if (NOT "polyfill-cxx20" IN_LIST FEATURES)
-    list(APPEND extra_config -DCMAKE_CXX_STANDARD=20)
-elseif(NOT "polyfill-cxx17" IN_LIST FEATURES)
-    list(APPEND extra_config -DCMAKE_CXX_STANDARD=17)
-endif()
 
 # Because outcome's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
