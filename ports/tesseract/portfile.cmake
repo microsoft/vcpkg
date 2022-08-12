@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO tesseract-ocr/tesseract
     REF 5ad5325a0aa8effc47ca033625b6a51682f82767 #v5.2.0
     SHA512 c6ed442c9deb28772aeb918142dab08d5b55eeeeccb0c1d3f13cf51bb72af227afb7f14c19a5c8db40d6a7b8cfeccb3af08a78adfcd7431e4a06f65372709ceb
+    PATCHES fix-depend-libarchive.patch
 )
 
 # The built-in cmake FindICU is better
@@ -27,11 +28,15 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSTATIC=${BUILD_STATIC}
         -DUSE_SYSTEM_ICU=True
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DTARGET_ARCHITECTURE=${TARGET_ARCHITECTURE}
         -DSW_BUILD=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenCL
+        STATIC
+        TARGET_ARCHITECTURE
 )
 
 vcpkg_cmake_install()
