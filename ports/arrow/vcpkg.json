@@ -26,6 +26,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "xsimd",
     "zlib",
     "zstd"
   ],
