@@ -184,7 +184,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     # check if file with same name already exists in downloads
-    if(EXISTS "${downloaded_file_path}")
+    if(EXISTS "${downloaded_file_path}" AND NOT arg_ALWAYS_REDOWNLOAD)
         set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
         if(_VCPKG_NO_DOWNLOADS)
             string(APPEND advice_message " Downloads are disabled please provide a valid file at path ${downloaded_file_path} and retry.")
