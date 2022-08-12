@@ -1,6 +1,6 @@
 {
   "name": "boost-proto",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost proto module",
   "homepage": "https://github.com/boostorg/proto",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-yap",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost yap module",
   "homepage": "https://github.com/boostorg/yap",
   "license": "BSL-1.0",

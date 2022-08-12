@@ -1,6 +1,6 @@
 {
   "name": "boost-flyweight",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost flyweight module",
   "homepage": "https://github.com/boostorg/flyweight",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-geometry",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost geometry module",
   "homepage": "https://github.com/boostorg/geometry",
   "license": "BSL-1.0",

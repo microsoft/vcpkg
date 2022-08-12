@@ -1,6 +1,6 @@
 {
   "name": "boost-iterator",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost iterator module",
   "homepage": "https://github.com/boostorg/iterator",
   "license": "BSL-1.0",

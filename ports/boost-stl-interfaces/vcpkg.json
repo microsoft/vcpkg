@@ -1,6 +1,6 @@
 {
   "name": "boost-stl-interfaces",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost stl_interfaces module",
   "homepage": "https://github.com/boostorg/stl_interfaces",
   "license": "BSL-1.0",

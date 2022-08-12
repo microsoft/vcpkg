@@ -1,6 +1,6 @@
 {
   "name": "boost-hana",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost hana module",
   "homepage": "https://github.com/boostorg/hana",
   "license": "BSL-1.0",

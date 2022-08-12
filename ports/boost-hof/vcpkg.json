@@ -1,6 +1,6 @@
 {
   "name": "boost-hof",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost hof module",
   "homepage": "https://github.com/boostorg/hof",
   "license": "BSL-1.0",

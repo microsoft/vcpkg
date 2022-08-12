@@ -1,6 +1,6 @@
 {
   "name": "boost-unordered",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
   "license": "BSL-1.0",

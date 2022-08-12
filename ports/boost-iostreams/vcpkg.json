@@ -1,6 +1,6 @@
 {
   "name": "boost-iostreams",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "license": "BSL-1.0",

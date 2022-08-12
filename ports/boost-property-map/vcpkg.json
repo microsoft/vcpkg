@@ -1,6 +1,6 @@
 {
   "name": "boost-property-map",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost property_map module",
   "homepage": "https://github.com/boostorg/property_map",
   "license": "BSL-1.0",

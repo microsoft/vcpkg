@@ -1,6 +1,6 @@
 {
   "name": "boost-icl",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost icl module",
   "homepage": "https://github.com/boostorg/icl",
   "license": "BSL-1.0",

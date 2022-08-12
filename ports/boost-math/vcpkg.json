@@ -1,6 +1,6 @@
 {
   "name": "boost-math",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost math module",
   "homepage": "https://github.com/boostorg/math",
   "license": "BSL-1.0",

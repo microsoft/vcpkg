@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/tuple
-    REF boost-1.80.0.beta1
-    SHA512 fd17839d86f1614c5c5e40a9e542b1c58c3e566236ed3a625ffa21720b324b7ec67e16dbefebbac9380d595a19f19cf0d969495a249e2dd03dd59ca85df2bba6
+    REF boost-1.80.0
+    SHA512 4c7bf3efa65405d64842201cdd62e0ed0a0e7893ba7b9e6f9162adaa065c481afefecc50fc7c731460b7829ef50e598845029926891519971bec11a896a3c2e3
     HEAD_REF master
 )
 

@@ -1,6 +1,6 @@
 {
   "name": "boost-config",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost config module",
   "homepage": "https://github.com/boostorg/config",
   "license": "BSL-1.0",

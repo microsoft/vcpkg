@@ -1,6 +1,6 @@
 {
   "name": "boost-pfr",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost pfr module",
   "homepage": "https://github.com/boostorg/pfr",
   "license": "BSL-1.0",

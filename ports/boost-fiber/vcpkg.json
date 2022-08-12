@@ -1,6 +1,6 @@
 {
   "name": "boost-fiber",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost fiber module",
   "homepage": "https://github.com/boostorg/fiber",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-msm",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost msm module",
   "homepage": "https://github.com/boostorg/msm",
   "license": "BSL-1.0",

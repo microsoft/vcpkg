@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
-    REF boost-1.80.0.beta1
-    SHA512 44911cef839aee53ed17b6e9ca33f6bcc5cc8cabc37e1f6e92105763354a517a7e6d2569a3bf0e3b071f42b1c44a3980d3e161a968a8578b54cfb280567c9cce
+    REF boost-1.80.0
+    SHA512 76d93705a76a7e1e805d48106dd7cb53850db635af70f3c76f0cdb5c86ab417e1433713d5e30431ddfc92f77e89b9cbee6b312949caec88f8586e8a43ecf2962
     HEAD_REF master
     PATCHES fix-build-boost_mpi_python-on-windows.patch
 )

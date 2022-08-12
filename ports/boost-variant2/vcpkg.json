@@ -1,6 +1,6 @@
 {
   "name": "boost-variant2",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost variant2 module",
   "homepage": "https://github.com/boostorg/variant2",
   "license": "BSL-1.0",

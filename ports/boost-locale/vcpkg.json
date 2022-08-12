@@ -1,6 +1,6 @@
 {
   "name": "boost-locale",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "license": "BSL-1.0",

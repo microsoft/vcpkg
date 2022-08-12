@@ -1,6 +1,6 @@
 {
   "name": "boost-vcpkg-helpers",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Internal vcpkg port used to modularize Boost",
   "license": "MIT",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "boost-assign",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost assign module",
   "homepage": "https://github.com/boostorg/assign",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-ptr-container",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost ptr_container module",
   "homepage": "https://github.com/boostorg/ptr_container",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-metaparse",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost metaparse module",
   "homepage": "https://github.com/boostorg/metaparse",
   "license": "BSL-1.0",

@@ -1,6 +1,6 @@
 {
   "name": "boost-callable-traits",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost callable_traits module",
   "homepage": "https://github.com/boostorg/callable_traits",
   "license": "BSL-1.0",

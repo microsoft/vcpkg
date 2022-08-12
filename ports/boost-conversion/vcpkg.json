@@ -1,6 +1,6 @@
 {
   "name": "boost-conversion",
-  "version-string": "1.80.0.beta1",
+  "version": "1.80.0",
   "description": "Boost conversion module",
   "homepage": "https://github.com/boostorg/conversion",
   "license": "BSL-1.0",
