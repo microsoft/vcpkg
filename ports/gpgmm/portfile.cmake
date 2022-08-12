@@ -6,17 +6,13 @@ vcpkg_from_github(
   HEAD_REF main
 )
 
-# gpgmm\third_party config requires Git. Make the tool visible.
-vcpkg_find_acquire_program(GIT)
-get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
-vcpkg_add_to_path("${GIT_DIR}")
-
 vcpkg_cmake_configure(
-  SOURCE_PATH ${SOURCE_PATH}
+  SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
   OPTIONS
-  -DGPGMM_STANDALONE=OFF
-  -DGPGMM_ENABLE_TESTS=OFF
+      -DGPGMM_STANDALONE=OFF
+      -DGPGMM_ENABLE_TESTS=OFF
+      -DGPGMM_ENABLE_VK=OFF
 )
 
 vcpkg_cmake_install()
@@ -27,5 +23,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(GLOB GPGMM_INCLUDE "${SOURCE_PATH}/src/include/*.h")
+file(COPY ${GPGMM_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
