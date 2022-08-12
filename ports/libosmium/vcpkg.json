@@ -8,6 +8,7 @@
     "boost",
     "bzip2",
     "expat",
+    "lz4",
     "proj",
     "protozero",
     "utfcpp",
