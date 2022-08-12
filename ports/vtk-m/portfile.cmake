@@ -46,7 +46,7 @@ vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com"
                   SHA512 54f7f52ab4ee7954b6a303ffd3b8bcb18105b5d2fd8ed54b4e487fce2ebfbc51507e632189f775c79eea22ad24bd56bca401ddd679fc03d787342dd33d2ba18b
                   FILE_DISAMBIGUATOR 1
                   PATCHES
-                    ext_diy.patch
+                    #ext_diy.patch
                   )
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
