@@ -4506,7 +4506,7 @@
     },
     "mathgl": {
       "baseline": "2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "matio": {
       "baseline": "1.5.23",
