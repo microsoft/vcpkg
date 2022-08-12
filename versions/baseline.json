@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.1",
       "port-version": 0
     },
     "minisat-master-keying": {
