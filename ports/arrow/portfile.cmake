@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
-        static-link-libs.patch # https://github.com/apache/arrow/pull/13707
+        static-link-libs.patch # https://github.com/apache/arrow/pull/13707 & pull/13863
 )
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
