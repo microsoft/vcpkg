@@ -7777,8 +7777,8 @@
       "port-version": 0
     },
     "xtensor-blas": {
-      "baseline": "0.17.2",
-      "port-version": 2
+      "baseline": "0.20.0",
+      "port-version": 0
     },
     "xtensor-fftw": {
       "baseline": "2019-11-30",
