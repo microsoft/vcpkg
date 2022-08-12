@@ -1,6 +1,7 @@
 {
   "name": "mathgl",
   "version": "2.5",
+  "port-version": 1,
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "dependencies": [
     {
