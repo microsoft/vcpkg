@@ -5573,8 +5573,8 @@
       "port-version": 4
     },
     "poppler": {
-      "baseline": "22.3.0",
-      "port-version": 2
+      "baseline": "22.8.0",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
