@@ -14,7 +14,7 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
         -DBUILD_DOCUMENTATION=OFF
         -DENABLE_GTEST=OFF
         -DUSE_SYSTEM_RAPIDJSON=ON
