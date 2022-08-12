@@ -21,12 +21,16 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             -Dsse2=enabled
             -Dssse3=enabled)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-   list(APPEND OPTIONS
-               #-Darm-simd=enabled does not work with arm64-windows
-               -Dmmx=disabled
-               -Dsse2=disabled
-               -Dssse3=disabled
-       )
+    list(APPEND OPTIONS
+            #-Darm-simd=enabled does not work with arm64-windows
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
 endif()
 
 set(PIXMAN_VERSION 0.40.0)
