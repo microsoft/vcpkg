@@ -9,11 +9,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
-    REF b2bb1b213c79169b7c994a99f21f47f11be465d4 # v3.1.15
-    SHA512 51ebd2e9fd505eebc7691c60fe0b86cfc5368f8b370fba6c3ec8f5514319ef1e0de4910ad5e093cd7d5e5c7782120e22e8c85c94af9389fa4e240cedf012d755
-    HEAD_REF 3.1
+    REF 5e94e7c27ffad7e76665b1333a67975316b9c3c2 # v3.3.1
+    SHA512 0f740f88f64037990bf9d4593574b147ee02adb1fbbeb03c0dec745f0ee27d7cf03417dd09546ab70e16b4465622b8567864dbb243de0a3a7ffaebe313f7c231
+    HEAD_REF 3.3
     PATCHES
-        arm64.patch
         md.patch
         disable-test-build.patch
         fix-InstallPath.patch
