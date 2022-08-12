@@ -2614,7 +2614,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 10
+      "port-version": 11
     },
     "gmsh": {
       "baseline": "4.9.0",
