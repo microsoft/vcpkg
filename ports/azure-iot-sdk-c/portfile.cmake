@@ -14,8 +14,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 5805fb669ffe2adff021d68c62725d0bd783ac49
-        SHA512 8f1aa1020f3bb8b3e801f3977d11be50fd07d961c89ac921f795ef8a99312f12e1ddb2268ce3d2fb84b6a42bb5806cde410e6b51c7c4539a9a11a9ae512dbcd1
+        REF 02bfa1bab1620999af7fe971e68d61171827cb8b
+        SHA512 0c961fcef48849e394c492283c6244425d86db7ab5d15d2a767a30c670cf5b6a01f1e95a7260e6d61b5d16babffef1e127a33e617be002d2a98221ae72160ad0
         HEAD_REF master
         PATCHES
             fix-install-location.patch
@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
         -Dwarnings_as_errors=OFF
+        -Dhsm_type_sastoken=OFF
     MAYBE_UNUSED_VARIABLES
         build_as_dynamic
         warnings_as_errors
