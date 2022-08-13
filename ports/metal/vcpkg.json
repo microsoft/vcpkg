@@ -3,6 +3,7 @@
   "version": "2.1.4",
   "description": "Love template metaprogramming",
   "homepage": "https://brunocodutra.github.io/metal",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
