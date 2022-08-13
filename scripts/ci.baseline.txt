@@ -800,6 +800,10 @@ openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-windows-static=fail
 openscap:x64-osx=fail
+# https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
+# openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
+openvdb:x64-windows-static=fail
+openvdb:x64-windows-static-md=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
 openvr:arm-uwp=fail
