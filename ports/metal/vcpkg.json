@@ -1,6 +1,6 @@
 {
   "name": "metal",
-  "version-string": "2.1.4",
+  "version": "2.1.4",
   "description": "Love template metaprogramming",
   "homepage": "https://brunocodutra.github.io/metal",
   "dependencies": [
