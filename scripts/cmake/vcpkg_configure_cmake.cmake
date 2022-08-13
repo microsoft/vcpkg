@@ -39,6 +39,10 @@ function(z_vcpkg_get_visual_studio_generator)
         set(generator "Visual Studio 17 2022")
     endif()
 
+    if(DEFINED VCPKG_CMAKE_VS_GENERATOR)
+        set(generator "${VCPKG_CMAKE_VS_GENERATOR}")
+    endif()
+
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
         set(generator_arch "Win32")
     elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")

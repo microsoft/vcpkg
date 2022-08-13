@@ -107,6 +107,10 @@ This field is optional.
 
 Also available as build-type specific `VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE` variables.
 
+### VCPKG_CMAKE_VS_GENERATOR
+Sets the default VS generator vcpkg will use to configure cmake if a port can not use the Ninja generator. 
+Required if not using the default Visual Studio toolsets (v14[0-3]) like e.g. ClangCL or Intel or mixing newer newer VS IDEs with older VS toolsets
+
 ### VCPKG_MAKE_CONFIGURE_OPTIONS
 Set additional automake / autoconf configure options that are appended to the configure command (in [`vcpkg_configure_make`](../maintainers/vcpkg_configure_make.md)).
 
