@@ -5,8 +5,9 @@ vcpkg_from_github(
     SHA512 026f038e979bb884bdc4e465bd60ffe60d3d74d38159a70897da7c890230450a0457a943e25c8bdb3f17bafdaa388a6a21f6d44502b4d08860dae6cb4e75a477
     HEAD_REF master
     PATCHES
-        "doxygen.patch"
-        "find-tbb.patch"
+        doxygen.patch
+        find-tbb.patch
+        disable-werror.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
