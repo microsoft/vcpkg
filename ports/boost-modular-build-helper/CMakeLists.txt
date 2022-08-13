@@ -136,7 +136,7 @@ if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
         )
 endif()
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(USER_CONFIG_TOOLSET MATCHES "(msvc|clang-win)")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
@@ -163,7 +163,7 @@ if(NOT LDFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "(msvc|clang-win)")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
