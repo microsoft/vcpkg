@@ -4564,6 +4564,10 @@
       "baseline": "0.16",
       "port-version": 0
     },
+    "metal": {
+      "baseline": "2.1.4",
+      "port-version": 0
+    },
     "metis": {
       "baseline": "2022-07-27",
       "port-version": 0
