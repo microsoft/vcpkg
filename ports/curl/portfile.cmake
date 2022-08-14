@@ -32,10 +32,6 @@ foreach(feature IN ITEMS "winldap" "winidn")
     endif()
 endforeach()
 
-if("unicode" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature 'unicode' is not supported on non-Windows platforms.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
