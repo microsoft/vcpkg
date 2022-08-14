@@ -6094,7 +6094,7 @@
     },
     "qttools": {
       "baseline": "6.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.3.1",
@@ -6158,7 +6158,7 @@
     },
     "qwt": {
       "baseline": "6.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -7481,8 +7481,8 @@
       "port-version": 1
     },
     "vcpkg-qmake": {
-      "baseline": "2022-05-10",
-      "port-version": 1
+      "baseline": "2022-08-14",
+      "port-version": 0
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
