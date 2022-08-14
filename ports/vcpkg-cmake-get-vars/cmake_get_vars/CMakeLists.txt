@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
+if(APPLE)
+    list(APPEND VCPKG_LANGUAGES "OBJC")
+    list(APPEND VCPKG_LANGUAGES "OBJCXX")
+endif()
 
 set(OUTPUT_STRING)
 # Build default checklists

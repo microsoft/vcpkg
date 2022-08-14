@@ -54,7 +54,10 @@ function(z_vcpkg_append_proglist var_to_append additional_binaries)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Prepend to use the correct ninja. 
     # string(APPEND "${var_to_append}" "ninja = '${NINJA}'\n") # This does not work due to meson issues
-    
+    if ((VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang") AND (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
+        string(APPEND "${var_to_append}" "objc = '${VCPKG_DETECTED_CMAKE_OBJC_COMPILER}'\n")
+        string(APPEND "${var_to_append}" "objc_args = '${VCPKG_DETECTED_CMAKE_OBJC_FLAGS_RELEASE}'\n")
+    endif()
     foreach(additional_binary IN LISTS additional_binaries)
         string(APPEND "${var_to_append}" "${additional_binary}\n")
     endforeach()
@@ -441,7 +444,6 @@ function(vcpkg_configure_meson)
                 z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
             endif()
         endif()
-
         vcpkg_execute_required_process(
             COMMAND ${MESON} ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}} ${arg_SOURCE_PATH}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}"
