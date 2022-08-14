@@ -19,12 +19,16 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        vulkan  SDL_VULKAN
-        x11     SDL_X11_SHARED
+        vulkan   SDL_VULKAN
+        x11      SDL_X11_SHARED
+        wayland  SDL_WAYLAND_SHARED
 )
 
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
+endif()
+if ("wayland" IN_LIST FEATURES)
+    message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev\n")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)

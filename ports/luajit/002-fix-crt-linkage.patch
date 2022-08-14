@@ -1,8 +1,8 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index 6a889e1..08c4e3c 100644
+index ff9df57..912bdc9 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -64,20 +64,23 @@ buildvm -m vmdef -o %SOURCEDIR%\jit\vmdef.lua %ALL_LIB%
+@@ -74,22 +74,25 @@ buildvm -m vmdef -o %SOURCEDIR%\jit\vmdef.lua %ALL_LIB%
  buildvm -m folddef -o %SOURCEDIR%\lj_folddef.h %SOURCEDIR%\lj_opt_fold.c
  @if errorlevel 1 goto :BAD
  
@@ -12,14 +12,16 @@ index 6a889e1..08c4e3c 100644
 -@if "%2" neq "debug" goto :NODEBUG
 +@if "%3" neq "debug" goto :NODEBUG
  @shift
- @set LJCOMPILE=%LJCOMPILE% /Zi
+ @set BUILDTYPE=debug
+ @set LJCOMPILE=%LJCOMPILE% /Zi %DEBUGCFLAGS%
 +@set CRT_LINKAGE=%CRT_LINKAGE%d
  :NODEBUG
+ @set LJLINK=%LJLINK% /%BUILDTYPE%
 -@if "%2"=="amalg" goto :AMALGDLL
-+@if "%3"=="amalg" goto :AMALGDLL
 -@if "%2"=="static" goto :STATIC
-+@if "%3"=="static" goto :STATIC
 -%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
++@if "%3"=="amalg" goto :AMALGDLL
++@if "%3"=="static" goto :STATIC
 +%LJCOMPILE% %CRT_LINKAGE% /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
  @if errorlevel 1 goto :BAD
  %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
@@ -31,7 +33,7 @@ index 6a889e1..08c4e3c 100644
  @if errorlevel 1 goto :BAD
  %LJLIB% /OUT:%LJLIBNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
-@@ -94,7 +94,7 @@
+@@ -103,7 +106,7 @@ buildvm -m folddef -o %SOURCEDIR%\lj_folddef.h %SOURCEDIR%\lj_opt_fold.c
  if exist %LJDLLNAME%.manifest^
    %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
  

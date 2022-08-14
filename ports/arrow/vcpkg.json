@@ -1,6 +1,7 @@
 {
   "name": "arrow",
   "version": "8.0.1",
+  "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -64,7 +65,8 @@
       ]
     },
     "jemalloc": {
-      "description": "jemalloc allocator"
+      "description": "jemalloc allocator",
+      "supports": "!windows"
     },
     "json": {
       "description": "JSON support",
@@ -73,7 +75,8 @@
       ]
     },
     "mimalloc": {
-      "description": "mimalloc allocator"
+      "description": "mimalloc allocator",
+      "supports": "windows"
     },
     "orc": {
       "description": "ORC support",
