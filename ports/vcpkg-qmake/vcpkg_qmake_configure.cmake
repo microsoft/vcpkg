@@ -82,7 +82,7 @@ function(vcpkg_qmake_configure)
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-        qmake_append_program(qmake_build_tools "QMAKE_LINK_C_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     endif()
 
     if(DEFINED VCPKG_QT_TARGET_MKSPEC)
@@ -108,12 +108,18 @@ function(vcpkg_qmake_configure)
         endmacro()
         
         qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}")
-        qmake_add_flags("QMAKE_CFLAGS_${buildtype}" "*=" "${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}")
-        qmake_add_flags("QMAKE_CXXFLAGS_${buildtype}" "*=" "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}")
-        qmake_add_flags("QMAKE_LFLAGS" "*=" "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}")
-        qmake_add_flags("QMAKE_LFLAGS_DLL" "*=" "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}")
-        qmake_add_flags("QMAKE_LFLAGS_EXE" "*=" "${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_COMBINED_RC_FLAGS_${buildtype}}") # not exported by vcpkg_cmake_get_vars yet
+        qmake_add_flags("QMAKE_CFLAGS_${buildtype}" "*=" "${VCPKG_COMBINED_C_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_CXXFLAGS_${buildtype}" "*=" "${VCPKG_COMBINED_CXX_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS" "*=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_DLL" "*=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_SHLIB" "*=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_EXE" "*=" "${VCPKG_COMBINED_EXE_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_APP" "*=" "${VCPKG_COMBINED_EXE_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_PLUGIN" "*=" "${VCPKG_COMBINED_MODULE_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LIBFLAGS" "*=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+
+        # QMAKE_CXXFLAGS_SHLIB
 
         # Setup qt.conf
         if(NOT VCPKG_QT_CONF_${buildtype})
@@ -128,17 +134,6 @@ function(vcpkg_qmake_configure)
 
         vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
         vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
-
-        set(qmake_comp_flags "")
-        # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
-        vcpkg_list(APPEND qmake_comp_flags "QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
-                                           "QMAKE_RC+=${VCPKG_COMBINED_RC_FLAGS_${buildtype}}"
-                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_COMBINED_C_FLAGS_${buildtype}}"
-                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_COMBINED_CXX_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS*=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LIBFLAGS*=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_EXE*=${VCPKG_COMBINED_EXE_LINKER_FLAGS_${buildtype}}"
-                                           )
 
         message(STATUS "Configuring ${config_triplet}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
