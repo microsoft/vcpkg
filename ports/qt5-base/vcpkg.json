@@ -37,7 +37,11 @@
       "host": true
     },
     "zlib",
-    "zstd"
+    "zstd",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
   ],
   "features": {
     "latest": {
