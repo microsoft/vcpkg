@@ -709,7 +709,6 @@ nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 nettle:arm-uwp=fail
 nettle:arm64-windows=fail
-nettle:x64-osx=fail
 ngspice:x64-windows-static=fail
 nng:arm-uwp=fail
 nng:x64-uwp=fail
