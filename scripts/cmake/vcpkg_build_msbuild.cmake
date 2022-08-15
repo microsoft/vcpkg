@@ -31,7 +31,9 @@ function(vcpkg_build_msbuild)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_build_msbuild was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-
+    if(DEFINED arg_USE_VCPKG_INTEGRATION)
+        message(WARNING "Usage of USE_VCPKG_INTEGRATION is deprecated! Please remove it!")
+    endif()
     if(NOT DEFINED arg_RELEASE_CONFIGURATION)
         set(arg_RELEASE_CONFIGURATION Release)
     endif()
@@ -54,13 +56,9 @@ function(vcpkg_build_msbuild)
     list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
         "/p:Platform=${arg_PLATFORM}"
-        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
-        "/p:VCPkgLocalAppDataDisabled=true"
-        "/p:UseIntelMKL=No"
-        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
-        "/p:VcpkgManifestInstall=false"
-        "/p:VcpkgManifestEnabled=false"
         "/m"
+        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
+        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -69,16 +67,10 @@ function(vcpkg_build_msbuild)
         list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
     endif()
 
-    if(arg_USE_VCPKG_INTEGRATION)
-        list(
-            APPEND arg_OPTIONS
-            "/p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets"
-            "/p:VcpkgTriplet=${TARGET_TRIPLET}"
-            "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
-        )
-    else()
-        list(APPEND arg_OPTIONS "/p:VcpkgEnabled=false")
-    endif()
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    cmake_path(GET "${arg_PROJECT_PATH}" PARENT_PATH project_path)
+    configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_PATH} for Release")
