@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">    
+    <WindowsTargetPlatformVersion>@TARGET_PLATFORM_VERSION@</WindowsTargetPlatformVersion>
+    <PlatformToolset>@VCPKG_PLATFORM_TOOLSET@</PlatformToolset>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <CLCompile>
+        <!-- vcpkg -->
+        <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebug</RuntimeLibrary>
+        <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_RELEASE_CONFIGURATION}'">MultiThreaded</RuntimeLibrary>
+        <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebugDLL</RuntimeLibrary>
+        <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_RELEASE_CONFIGURATION}'">MultiThreadedDLL</RuntimeLibrary>
+        <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            %(AdditionalIncludeDirectories);${MSBUILD_INCLUDE_DIRS_DEBUG}
+        </AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            %(AdditionalIncludeDirectories);${MSBUILD_INCLUDE_DIRS_RELEASE}
+        </AdditionalIncludeDirectories>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            %(AdditionalOptions) @MSBUILD_COMPILER_FLAGS_DEBUG@ @MSBUILD_CFLAGS_DEBUG@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            %(AdditionalOptions) @MSBUILD_COMPILER_FLAGS_RELEASE@ @MSBUILD_CFLAGS_RELEASE@
+        </AdditionalOptions>
+        @MSBUILD_ADDITIONAL_CLCOMPILE_XML@
+    </CLCompile>
+    <Link>
+        <!-- Required Libs -->
+        <AdditionalDependencies Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            ${MSBUILD_LIBRARIES_DEBUG};@arg_ADDITIONAL_LIBS_DEBUG@;%(AdditionalDependencies)
+        </AdditionalDependencies>
+        <AdditionalDependencies Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            ${MSBUILD_LIBRARIES_RELEASE};@arg_ADDITIONAL_LIBS_RELEASE@;%(AdditionalDependencies)
+        </AdditionalDependencies >
+        <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            @MSBUILD_LIBRARIES_DIRS_RELEASE@
+        </AdditionalLibraryDirectories>
+        <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            @MSBUILD_LIBRARIES_DIRS_DEBUG@
+        </AdditionalLibraryDirectories>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
+        </AdditionalOptions>
+        @MSBUILD_ADDITIONAL_LINK_XML@
+    </Link>
+    <Lib>
+      <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
+      <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+        %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@
+      </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+        %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@
+      </AdditionalOptions>
+      @MSBUILD_ADDITIONAL_LIB_XML@
+    </Lib>
+  </ItemDefinitionGroup>
+  @MSBUILD_ADDITIONAL_PROJECT_XML@
+</Project>

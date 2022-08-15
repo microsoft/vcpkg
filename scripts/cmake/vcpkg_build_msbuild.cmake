@@ -1,3 +1,24 @@
+#/p:ForceImportBeforeCppTargets=
+#/p:ForceImportAfterCppTargets=
+#/p:CustomBeforeMicrosoftCommonTargets
+#/p:CustomAferMicrosoftCommonTargets
+#CustomBeforeMicrosoftCommonProps
+#CustomBeforeMicrosoftCommonTargets
+#CustomAfterMicrosoftCommonProps
+#CustomAfterMicrosoftCommonTargets
+##
+# ForceImportAfterCppDefaultProps
+# ForceImportBeforeCppProps
+# ForceImportAfterCppProps
+# ForceImportBeforeCppTargets
+# ForceImportAfterCppTargets
+# -noAutoResponse
+# -maxCpuCount: COUNT
+
+#Directory.Build.props
+#Directory.Build.targets
+
+#https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2022
 function(vcpkg_build_msbuild)
     cmake_parse_arguments(
         PARSE_ARGV 0
