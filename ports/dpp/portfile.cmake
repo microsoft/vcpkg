@@ -7,7 +7,7 @@ vcpkg_from_github(
 0a03741fec7f8af91ef5375145a1a3b4acb20b40bab6c0c351d270f1d06a9a87e751f2c006c11de57bc2e5158f5ec121f5c1cb6831e3b0c23f440a9edb36fe7b
     HEAD_REF master
     PATCHES
-        make-pkgconfig-required.patch    
+        make-pkgconfig-required.patch
 )
 
 vcpkg_cmake_configure(
