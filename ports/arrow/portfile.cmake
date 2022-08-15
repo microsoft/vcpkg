@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 1191793dd56471fb2b402afbe9b31cde4c5126785243e538e42ba95ccd31d523121f07b144461c99a4b7449e611aa5998bd0de95e8e4b0e3c80397499fe746f0
     HEAD_REF master
     PATCHES
+        cuda-ptr.patch
         msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
         static-link-libs.patch # https://github.com/apache/arrow/pull/13707 & pull/13863
