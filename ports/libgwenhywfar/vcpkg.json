@@ -3,6 +3,7 @@
   "version-semver": "5.7.3",
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
+  "license": "LGPL-2.1-only",
   "dependencies": [
     "libgcrypt",
     {
