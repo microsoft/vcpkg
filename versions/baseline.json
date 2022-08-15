@@ -4949,8 +4949,8 @@
       "port-version": 2
     },
     "nlohmann-json": {
-      "baseline": "3.10.5",
-      "port-version": 3
+      "baseline": "3.11.2",
+      "port-version": 0
     },
     "nlopt": {
       "baseline": "2.7.1",
