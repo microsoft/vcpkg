@@ -441,7 +441,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" Z_VCPKG_BOOTSTRAP_LOG)
+        set(Z_VCPKG_BOOTSTRAP_LOG "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_BOOTSTRAP_LOG}" Z_NATIVE_VCPKG_BOOTSTRAP_LOG)
         execute_process(
             COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
             OUTPUT_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
@@ -452,7 +453,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             message(STATUS "Bootstrapping vcpkg before install - done")
         else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_BOOTSTRAP_LOG}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_BOOTSTRAP_LOG}")
         endif()
     endif()
 
@@ -511,7 +512,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
         )
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
+        set(Z_VCPKG_MANIFEST_INSTALL_LOGFILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
         if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
@@ -524,7 +526,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             endif()
         else()
             message(STATUS "Running vcpkg install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE}")
         endif()
     endif()
 endif()
