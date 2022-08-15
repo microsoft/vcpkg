@@ -1,5 +1,5 @@
 {
-  "name": "shoftmedia-libgnutls",
+  "name": "shiftmedia-libgnutls",
   "version": "3.6.15",
   "description": "Unofficial GnuTLS fork with added custom native Visual Studio project build tools. ",
   "homepage": "https://github.com/ShiftMediaProject/gnutls",
