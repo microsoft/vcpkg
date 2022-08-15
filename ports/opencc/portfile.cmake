@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ver.1.1.4
     SHA512 ab8e7e6a0cc71106cf09eb32899fa8620b946a406f042d75a2444096e0b383cb1993d6c2d12cd7862e71854da4cd5893442bce51df84c32ed09fdfb4a2846f46
     HEAD_REF master
+    PATCHES 
+        fix-dependencies.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -15,6 +17,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_DOCUMENTATION=OFF
         -DENABLE_GTEST=OFF
+        -DUSE_SYSTEM_RAPIDJSON=ON
 )
 
 vcpkg_cmake_install(

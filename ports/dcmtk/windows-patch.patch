@@ -1,0 +1,32 @@
+diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
+index 47e3476..2c974e8 100644
+--- a/CMake/3rdparty.cmake
++++ b/CMake/3rdparty.cmake
+@@ -3,11 +3,7 @@ if(WIN32)
+   # For Windows, we don't used FIND_PACKAGE because DCMTK usually is used with its
+   # own set of 3rd-party support libraries that can be downloaded from DCMTK's
+   # website (pre-built).
+-  if(MINGW)
+-    set(DCMTK_USE_FIND_PACKAGE TRUE CACHE BOOL "${USE_FIND_PACKAGE_DOCS}")
+-  else()
+-    set(DCMTK_USE_FIND_PACKAGE FALSE CACHE BOOL "${USE_FIND_PACKAGE_DOCS}")
+-  endif()
++  set(DCMTK_USE_FIND_PACKAGE TRUE CACHE BOOL "${USE_FIND_PACKAGE_DOCS}")
+ else()
+   # Only find_package is supported
+   set(DCMTK_USE_FIND_PACKAGE TRUE CACHE BOOL "${USE_FIND_PACKAGE_DOCS}")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9f8d268..28ddc3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.0.0...3.13.2 FATAL_ERROR)
+ # Declare project
+ project(DCMTK)
+ 
++if(MSVC)
++  string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus")
++endif()
++
+ #-----------------------------------------------------------------------------
+ # General project settings to configure DCMTK build process
+ #-----------------------------------------------------------------------------

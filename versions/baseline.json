@@ -422,7 +422,7 @@
     },
     "bdwgc": {
       "baseline": "8.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "beast": {
       "baseline": "0",
@@ -842,7 +842,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.79.0",
-      "port-version": 7
+      "port-version": 8
     },
     "boost-move": {
       "baseline": "1.79.0",
@@ -1858,7 +1858,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.7",
-      "port-version": 1
+      "port-version": 2
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2009,7 +2009,7 @@
       "port-version": 2
     },
     "dv-processing": {
-      "baseline": "1.5.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "dx": {
@@ -2181,7 +2181,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.1.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "fann": {
@@ -2482,7 +2482,7 @@
     },
     "gdal": {
       "baseline": "3.5.1",
-      "port-version": 4
+      "port-version": 5
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2585,7 +2585,7 @@
       "port-version": 0
     },
     "glfw3": {
-      "baseline": "3.3.7",
+      "baseline": "3.3.8",
       "port-version": 0
     },
     "gli": {
@@ -3622,7 +3622,7 @@
     },
     "libffi": {
       "baseline": "3.4.2",
-      "port-version": 5
+      "port-version": 6
     },
     "libfido2": {
       "baseline": "1.10.0",
@@ -3678,7 +3678,7 @@
     },
     "libgpiod": {
       "baseline": "1.6.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -3821,8 +3821,8 @@
       "port-version": 1
     },
     "libmariadb": {
-      "baseline": "3.1.15",
-      "port-version": 1
+      "baseline": "3.3.1",
+      "port-version": 0
     },
     "libmaxminddb": {
       "baseline": "1.4.3",
@@ -4225,7 +4225,7 @@
       "port-version": 11
     },
     "libuv": {
-      "baseline": "1.44.1",
+      "baseline": "1.44.2",
       "port-version": 0
     },
     "libuvc": {
@@ -4397,8 +4397,8 @@
       "port-version": 2
     },
     "luajit": {
-      "baseline": "2.0.5",
-      "port-version": 8
+      "baseline": "2022-08-11",
+      "port-version": 0
     },
     "luasec": {
       "baseline": "1.1.0",
@@ -4506,7 +4506,7 @@
     },
     "mathgl": {
       "baseline": "2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "matio": {
       "baseline": "1.5.23",
@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.1",
       "port-version": 0
     },
     "minisat-master-keying": {
@@ -4819,6 +4819,10 @@
     "mygui": {
       "baseline": "3.4.1",
       "port-version": 3
+    },
+    "mysql-connector-cpp": {
+      "baseline": "1.1.13",
+      "port-version": 0
     },
     "nameof": {
       "baseline": "0.10.2",
@@ -5150,7 +5154,7 @@
     },
     "openal-soft": {
       "baseline": "1.22.2",
-      "port-version": 1
+      "port-version": 2
     },
     "openblas": {
       "baseline": "0.3.20",
@@ -5162,7 +5166,7 @@
     },
     "opencc": {
       "baseline": "1.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "opencensus-cpp": {
       "baseline": "2021-08-26",
@@ -5214,7 +5218,7 @@
     },
     "opengl": {
       "baseline": "2022-03-14",
-      "port-version": 0
+      "port-version": 1
     },
     "opengl-registry": {
       "baseline": "2021-11-17",
@@ -5234,6 +5238,10 @@
     },
     "openjpeg": {
       "baseline": "2.5.0",
+      "port-version": 0
+    },
+    "openldap": {
+      "baseline": "2.5.13",
       "port-version": 0
     },
     "openmama": {
@@ -5258,7 +5266,7 @@
     },
     "openni2": {
       "baseline": "2.2.0.33",
-      "port-version": 13
+      "port-version": 14
     },
     "openscap": {
       "baseline": "1.3.1",
@@ -5266,7 +5274,7 @@
     },
     "openssl": {
       "baseline": "3.0.5",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5522,7 +5530,7 @@
     },
     "pixman": {
       "baseline": "0.40.0",
-      "port-version": 2
+      "port-version": 3
     },
     "pkgconf": {
       "baseline": "1.8.0",
@@ -6320,6 +6328,10 @@
       "baseline": "0.6.0",
       "port-version": 0
     },
+    "rioki-glow": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "rmlui": {
       "baseline": "4.4",
       "port-version": 0
@@ -6585,7 +6597,7 @@
       "port-version": 2
     },
     "shaderwriter": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "shapelib": {
@@ -6849,7 +6861,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.39.1",
+      "baseline": "3.39.2",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -7765,8 +7777,8 @@
       "port-version": 0
     },
     "xtensor-blas": {
-      "baseline": "0.17.2",
-      "port-version": 2
+      "baseline": "0.20.0",
+      "port-version": 0
     },
     "xtensor-fftw": {
       "baseline": "2019-11-30",
