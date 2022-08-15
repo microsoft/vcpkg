@@ -138,15 +138,12 @@ function(configure_qt)
         
         qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_COMBINED_RC_FLAGS_${_buildname}}") # not exported by vcpkg_cmake_get_vars yet
-        qmake_add_flags("QMAKE_CFLAGS_${_buildname}" "*=" "${VCPKG_COMBINED_C_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_CXXFLAGS_${_buildname}" "*=" "${VCPKG_COMBINED_CXX_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS" "*=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS_DLL" "*=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS_SHLIB" "*=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS_EXE" "*=" "${VCPKG_COMBINED_EXE_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS_APP" "*=" "${VCPKG_COMBINED_EXE_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LFLAGS_PLUGIN" "*=" "${VCPKG_COMBINED_MODULE_LINKER_FLAGS_${_buildname}}")
-        qmake_add_flags("QMAKE_LIBFLAGS" "*=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_CFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_C_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_CXXFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_CXX_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_LFLAGS" "+=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_LFLAGS_SHLIB" "+=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_LFLAGS_PLUGIN" "+=" "${VCPKG_COMBINED_MODULE_LINKER_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_LIBFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${_buildname}}")
         
         # These paths get hardcoded into qmake. So point them into the CURRENT_INSTALLED_DIR instead of CURRENT_PACKAGES_DIR
         # makefiles will be fixed to install into CURRENT_PACKAGES_DIR in install_qt
@@ -181,13 +178,13 @@ function(configure_qt)
                 set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
             endif()
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "${INVOKE_OPTIONS}" "${qmake_build_tools}" "${qmake_comp_flags}" -- ${BUILD_OPTIONS} "${qmake_build_tools}" "${qmake_comp_flags}"
+                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "${INVOKE_OPTIONS}" -- ${BUILD_OPTIONS} ${qmake_build_tools} ${qmake_comp_flags}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
         else()# call configure (builds qmake for triplet and calls it like above)
             vcpkg_execute_required_process(
-                COMMAND "${INVOKE}" ${BUILD_OPTIONS}
+                COMMAND "${INVOKE}" ${BUILD_OPTIONS} ${qmake_build_tools} ${qmake_comp_flags}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
@@ -207,7 +204,7 @@ function(configure_qt)
         string(REGEX REPLACE "\\[EffectiveSourcePaths\\]\r?\nPrefix=[^\r\n]+\r?\n" "" _contents ${_contents})
         string(REPLACE "Sysroot=\n" "" _contents ${_contents})
         string(REPLACE "SysrootifyPrefix=false\n" "" _contents ${_contents})
-        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
-    endforeach()  
+        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")
+    endforeach()
 
 endfunction()
