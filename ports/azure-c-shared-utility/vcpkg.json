@@ -5,6 +5,7 @@
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "license": "MIT",
+  "builtin-baseline": "e0c6c99ce8ed8bdfb77dc3d316c80d2a2d9f0d02",
   "supports": "!uwp",
   "dependencies": [
     "azure-macro-utils-c",
@@ -52,5 +53,11 @@
         }
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "name": "openssl",
+      "version-string": "1.1.1n"
+    }
+  ]
 }
