@@ -1,6 +1,6 @@
 set(PACKAGE_VERSION_MAJOR 3)
-set(PACKAGE_VERSION_MINOR 6)
-set(PACKAGE_VERSION_PATCH 15)
+set(PACKAGE_VERSION_MINOR 7)
+set(PACKAGE_VERSION_PATCH 6)
 set(PACKAGE_VERSION ${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH})
 
 set(GNULIB_REF "fb64a781")
@@ -11,13 +11,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/gnutls
     REF ${PACKAGE_VERSION}
-    SHA512 f9b8b453a4484c97051ea2a7e6b318cc3590824921998214586c49a8d2d04c726a719e4c6f46be6efa86d501506632d0091865669bf2e4cfd888f605b43566f9
+    SHA512 8a3ff480e065cf517468fac9d8d4474cfa6ed354fa83ae60de224580f359f8dcfbfed6cf640d33783779174ade0bca0fbe1c529097ee103af2b02546fc2acaec
     HEAD_REF master
     PATCHES
+        nettle.patch
         external-libtasn1.patch
         runtime.patch
         pkgconfig.patch
-        nettle.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
@@ -90,7 +90,7 @@ get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
 file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
 
 set(VERSION ${PACKAGE_VERSION})
-set(GNUTLS_REQUIRES_PRIVATE "Requires.private: nettle, libhogweed, libtasn1")
+set(GNUTLS_REQUIRES_PRIVATE "Requires.private: nettle, hogweed, libtasn1")
 set(GNUTLS_LIBS_PRIVATE "-lcrypt32 -lws2_32 -lkernel32 -lncrypt")
 
 set(prefix "${CURRENT_INSTALLED_DIR}")

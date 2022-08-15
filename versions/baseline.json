@@ -6609,7 +6609,7 @@
       "port-version": 0
     },
     "shiftmedia-libgnutls": {
-      "baseline": "3.6.15",
+      "baseline": "3.7.6",
       "port-version": 0
     },
     "shiva": {
