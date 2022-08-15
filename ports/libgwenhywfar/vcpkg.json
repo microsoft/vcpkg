@@ -9,7 +9,12 @@
       "name": "libgnutls",
       "features": [
         "openssl"
-      ]
+      ],
+      "platform": "!windows"
+    },
+    {
+      "name": "shiftmedia-libgnutls",
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake-config",
