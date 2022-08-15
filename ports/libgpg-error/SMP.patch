@@ -54,7 +54,7 @@ index fe25657..35f08cd 100644
  #include <errno.h>
  #include <stddef.h>
 diff --git a/src/estream.c b/src/estream.c
-index 0542f59..572024d 100644
+index 0542f59..917f213 100644
 --- a/src/estream.c
 +++ b/src/estream.c
 @@ -71,12 +71,15 @@
@@ -108,7 +108,25 @@ index 0542f59..572024d 100644
  /* Generally used types.  */
  
  typedef void *(*func_realloc_t) (void *mem, size_t size);
-@@ -4770,37 +4782,27 @@ tmpfd (void)
+@@ -1816,6 +1828,9 @@ func_file_create_w32 (void **cookie, HANDLE *rethd, const char *path,
+   else
+     creation_distribution |= OPEN_EXISTING;
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++  hd = CreateFile2 (wpath, desired_access, share_mode, creation_distribution, NULL);
++#else
+   hd = CreateFileW (wpath,
+                     desired_access,
+                     share_mode,
+@@ -1823,6 +1838,7 @@ func_file_create_w32 (void **cookie, HANDLE *rethd, const char *path,
+                     creation_distribution,
+                     0,     /* flags and attributes  */
+                     NULL); /* template file  */
++#endif
+   if (hd == INVALID_HANDLE_VALUE)
+     {
+       _set_errno (map_w32_to_errno (GetLastError ()));
+@@ -4770,37 +4786,27 @@ tmpfd (void)
  {
  #ifdef HAVE_W32_SYSTEM
    int attempts, n;
@@ -148,7 +166,7 @@ index 0542f59..572024d 100644
    *p++ = '\\';
    name = p;
    for (attempts=0; attempts < 10; attempts++)
-@@ -4812,18 +4814,25 @@ tmpfd (void)
+@@ -4812,18 +4818,25 @@ tmpfd (void)
            *p++ = tohex (((value >> 28) & 0x0f));
            value <<= 4;
          }
@@ -528,7 +546,7 @@ index fb1bebf..0554309 100644
  #include <langinfo.h>
  #endif
 diff --git a/src/sysutils.c b/src/sysutils.c
-index bc3a68d..a1974a7 100644
+index bc3a68d..5a80c10 100644
 --- a/src/sysutils.c
 +++ b/src/sysutils.c
 @@ -22,10 +22,17 @@
@@ -550,7 +568,7 @@ index bc3a68d..a1974a7 100644
  #endif
  #ifdef HAVE_STAT
  # include <sys/stat.h>
-@@ -68,7 +72,7 @@ _gpgrt_getenv (const char *name)
+@@ -68,7 +75,7 @@ _gpgrt_getenv (const char *name)
      int len, size;
      char *result;
  
@@ -559,7 +577,7 @@ index bc3a68d..a1974a7 100644
      if (!len && GetLastError () == ERROR_ENVVAR_NOT_FOUND)
        {
          _gpg_err_set_errno (0);
-@@ -79,7 +83,7 @@ _gpgrt_getenv (const char *name)
+@@ -79,7 +86,7 @@ _gpgrt_getenv (const char *name)
      result = _gpgrt_malloc (size);
      if (!result)
        return NULL;
@@ -568,7 +586,7 @@ index bc3a68d..a1974a7 100644
      if (len >= size)
        {
          /* Changed in the meantime - retry.  */
-@@ -141,7 +145,7 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+@@ -141,7 +148,7 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
  
      if (!value && overwrite)
        {
@@ -577,7 +595,7 @@ index bc3a68d..a1974a7 100644
            return GPG_ERR_EINVAL;
          if (getenv (name))
            {
-@@ -155,8 +159,8 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+@@ -155,8 +162,8 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
          return 0;
        }
  
@@ -588,7 +606,7 @@ index bc3a68d..a1974a7 100644
        return GPG_ERR_EINVAL; /* (Might also be ENOMEM.) */
      if (overwrite || !getenv (name))
        {
-@@ -570,6 +574,7 @@ _gpgrt_getusername (void)
+@@ -570,6 +577,7 @@ _gpgrt_getusername (void)
    char *result = NULL;
  
  #ifdef HAVE_W32_SYSTEM
@@ -596,7 +614,7 @@ index bc3a68d..a1974a7 100644
    wchar_t wtmp[1];
    wchar_t *wbuf;
    DWORD wsize = 1;
-@@ -592,6 +597,7 @@ _gpgrt_getusername (void)
+@@ -592,6 +600,7 @@ _gpgrt_getusername (void)
    xfree (wbuf);
    return buf;
  
