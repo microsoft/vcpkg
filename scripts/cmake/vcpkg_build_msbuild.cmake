@@ -17,7 +17,7 @@
 
 #Directory.Build.props
 #Directory.Build.targets
-
+# https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.vcprojectengine.vcclcompilertool.compileas?view=visualstudiosdk-2022
 #https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2022
 function(vcpkg_build_msbuild)
     cmake_parse_arguments(
