@@ -1,0 +1,76 @@
+diff --git a/SMP/libgnutls.vcxproj b/SMP/libgnutls.vcxproj
+index 11a6095..d87e615 100644
+--- a/SMP/libgnutls.vcxproj
++++ b/SMP/libgnutls.vcxproj
+@@ -1235,7 +1235,7 @@
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweedd.lib;libgmpd.lib;libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -1303,7 +1303,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>libhogweedd_winrt.lib;libgmpd_winrt.lib;libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -1368,7 +1368,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweedd.lib;libgmpd.lib;libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -1436,7 +1436,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>libhogweedd_winrt.lib;libgmpd_winrt.lib;libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -1802,7 +1802,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweed.lib;libgmp.lib;libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -1947,7 +1947,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweed.lib;libgmp.lib;libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+@@ -2174,7 +2174,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <ImportLibrary>$(OutDir)\lib\x86\$(TargetName).lib</ImportLibrary>
+       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
+       <ModuleDefinitionFile>libgnutls.def</ModuleDefinitionFile>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweed.lib;libgmp.lib;libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <LargeAddressAware>true</LargeAddressAware>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+@@ -2495,7 +2495,7 @@ del /f /q $(OutDir)\licenses\gnutls.txt
+       <ImportLibrary>$(OutDir)\lib\x64\$(TargetName).lib</ImportLibrary>
+       <ProfileGuidedDatabase>$(IntDir)\$(TargetName).pgd</ProfileGuidedDatabase>
+       <ModuleDefinitionFile>libgnutls.def</ModuleDefinitionFile>
+-      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;libhogweed.lib;libgmp.lib;libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>Crypt32.lib;Ws2_32.lib;Kernel32.lib;Ncrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalOptions>/IGNORE:4006,4221,4042 %(AdditionalOptions)</AdditionalOptions>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
