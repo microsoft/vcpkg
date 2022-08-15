@@ -52,7 +52,7 @@ vcpkg_cmake_configure(
         ${EXTRA_CMAKE_OPTION}
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(DISABLE_PARALLEL)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
