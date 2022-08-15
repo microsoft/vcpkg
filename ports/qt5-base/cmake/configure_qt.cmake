@@ -54,7 +54,7 @@ function(configure_qt)
     qmake_append_program(qmake_build_tools "QMAKE_NM" "${VCPKG_DETECTED_CMAKE_NM}")
     qmake_append_program(qmake_build_tools "QMAKE_RC" "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
     qmake_append_program(qmake_build_tools "QMAKE_MT" "${VCPKG_DETECTED_CMAKE_MT}")
-    if(VCPKG_TARGET_IS_LINUX)
+    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_DETECTED_CMAKE_AR MATCHES "ar$")
         # This is the reason why users should probably use a
         # customized qt.conf with more domain knowledge.
         vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=qc")
