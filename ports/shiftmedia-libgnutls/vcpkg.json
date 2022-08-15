@@ -3,7 +3,7 @@
   "version": "3.6.15",
   "description": "Unofficial GnuTLS fork with added custom native Visual Studio project build tools. ",
   "homepage": "https://github.com/ShiftMediaProject/gnutls",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1-only",
   "supports": "windows",
   "dependencies": [
     "gettext",
