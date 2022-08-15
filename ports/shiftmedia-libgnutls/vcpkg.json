@@ -2,7 +2,7 @@
   "name": "shoftmedia-libgnutls",
   "version": "3.6.15",
   "description": "Unofficial GnuTLS fork with added custom native Visual Studio project build tools. ",
-  "homepage": "https://www.gnutls.org/",
+  "homepage": "https://github.com/ShiftMediaProject/gnutls",
   "supports": "windows",
   "dependencies": [
     "gettext",
@@ -12,10 +12,5 @@
     "nettle",
     "vs-yasm",
     "yasm-tool-helper"
-  ],
-  "features": {
-    "openssl": {
-      "description": "enables the OpenSSL compatibility library"
-    }
-  }
+  ]
 }
