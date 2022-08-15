@@ -37,16 +37,16 @@
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebugDLL</RuntimeLibrary>
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_RELEASE_CONFIGURATION}'">MultiThreadedDLL</RuntimeLibrary>
         <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/include;${MSBUILD_INCLUDE_DIRS_DEBUG}
+            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/include;${MSBUILD_INCLUDE_DIRS_DEBUG}
         </AdditionalIncludeDirectories>
         <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/include;${MSBUILD_INCLUDE_DIRS_RELEASE}
+            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/include;${MSBUILD_INCLUDE_DIRS_RELEASE}
         </AdditionalIncludeDirectories>
         @MSBUILD_ADDITIONAL_CLCOMPILE_XML@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="**/*.cpp;**/*.cxx">
+    <ClCompile Update="**/*.cpp;**/*.cxx">
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG@ @MSBUILD_CFLAGS_DEBUG@
         </AdditionalOptions>
@@ -56,7 +56,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup >
-    <ClCompile Include="**/*.c">
+    <ClCompile Update="**/*.c">
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG@ @MSBUILD_CFLAGS_DEBUG@
         </AdditionalOptions>
@@ -75,10 +75,10 @@
             ${MSBUILD_LIBRARIES_RELEASE};@arg_ADDITIONAL_LIBS_RELEASE@;%(AdditionalDependencies)
         </AdditionalDependencies >
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            @MSBUILD_LIBRARIES_DIRS_RELEASE@;@_VCPKG_INSTALLED_DIR@/lib;$(AdditionalLibraryDirectories)
+            @MSBUILD_LIBRARIES_DIRS_RELEASE@;@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/lib;$(AdditionalLibraryDirectories)
         </AdditionalLibraryDirectories>
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            @MSBUILD_LIBRARIES_DIRS_DEBUG@;@_VCPKG_INSTALLED_DIR@/debug/lib;$(AdditionalLibraryDirectories)
+            @MSBUILD_LIBRARIES_DIRS_DEBUG@;@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/debug/lib;$(AdditionalLibraryDirectories)
         </AdditionalLibraryDirectories>
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
