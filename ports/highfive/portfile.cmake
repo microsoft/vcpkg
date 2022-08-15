@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         fix-dependency-hdf5.patch
         fix-error-C1128.patch
+        fix_compiler_flags.patch
 )
 
 vcpkg_check_features(

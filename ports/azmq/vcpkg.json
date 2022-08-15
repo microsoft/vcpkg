@@ -1,7 +1,6 @@
 {
   "name": "azmq",
-  "version-string": "2020-03-03",
-  "port-version": 1,
+  "version": "1.0.3",
   "description": [
     "Boost Asio style bindings for ZeroMQ",
     "This library is built on top of ZeroMQ's standard C interface and is intended to work well with C++ applications which use the Boost libraries in general, and Asio in particular.",
