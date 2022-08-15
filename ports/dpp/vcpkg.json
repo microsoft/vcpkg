@@ -2,7 +2,7 @@
   "name": "dpp",
   "version": "10.0.15",
   "description": "D++ Extremely Lightweight C++ Discord Library.",
-  "homepage": "https://dpp.dev/",
+  "homepage": "dpp.dev/",
   "license": "Apache-2.0",
   "supports": "(windows & !static & !uwp) | linux | osx",
   "dependencies": [
