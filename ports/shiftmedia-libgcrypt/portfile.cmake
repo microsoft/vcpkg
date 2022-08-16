@@ -3,7 +3,6 @@ set(PACKAGE_VERSION_MINOR 10)
 set(PACKAGE_VERSION_PATCH 1)
 set(PACKAGE_VERSION ${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH})
 
-message(WARNING "libgcrypt on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/libgcrypt
