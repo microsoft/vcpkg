@@ -18,7 +18,7 @@ vcpkg_cmake_install(
 ### DISABLE_PARALLEL
 Disables running the build in parallel.
 
-By default builds are run with up to [VCPKG_MAX_CONCURRENCY](../users/config-environment.md#vcpkgmaxconcurrency) jobs. This option limits the build to a single job and should be used only if the underlying build is unable to run correctly with concurrency.
+By default builds are run with up to [VCPKG_MAX_CONCURRENCY](../users/config-environment.md#VCPKG_MAX_CONCURRENCY) jobs. This option limits the build to a single job and should be used only if the underlying build is unable to run correctly with concurrency.
 
 ### ADD_BIN_TO_PATH
 Adds the configuration-specific `bin/` directory to the `PATH` during the build.
