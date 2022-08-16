@@ -2474,7 +2474,7 @@
     },
     "gazebo": {
       "baseline": "2022-01-20",
-      "port-version": 3
+      "port-version": 4
     },
     "gcem": {
       "baseline": "1.14.1",
