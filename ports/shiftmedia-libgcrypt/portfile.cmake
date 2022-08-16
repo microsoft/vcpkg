@@ -2,8 +2,8 @@ message(WARNING "libgcrypt on Windows uses a fork managed by the ShiftMediaProje
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/libgcrypt
-    REF libgcrypt-1.9.4
-    SHA512 9885239fd22136e6fb7c99a6771f7b8c813842fe36bcfd345bb9a3d290819042a29ae8cd9cd504fe77c657aa4052a3210d2f495301b3f4af6b97320bb1f4fafb
+    REF libgcrypt-1.10.1
+    SHA512 6da8225ec73c51562cd76a0c0abc19506a7378750ed2a9ea45f03df3c8d7cf500840459deb9b0a694a5602fe77ee2b0dd5b2e37376745233350b0f218dff4f1c
     HEAD_REF master
     PATCHES 
         outdir.patch
