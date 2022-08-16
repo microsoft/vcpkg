@@ -51,6 +51,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tesseract)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake"
     "find_dependency(Leptonica)"
 [[
+find_dependency(CURL)
 find_dependency(Leptonica)
 find_dependency(LibArchive)
 ]]
