@@ -1234,7 +1234,7 @@
     },
     "c89stringutils": {
       "baseline": "0.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "c9y": {
       "baseline": "0.4.0",
@@ -2514,7 +2514,7 @@
     },
     "geos": {
       "baseline": "3.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "geotrans": {
       "baseline": "3.8",
@@ -3941,8 +3941,8 @@
       "port-version": 2
     },
     "libosmium": {
-      "baseline": "2.17.1",
-      "port-version": 1
+      "baseline": "2.18.0",
+      "port-version": 0
     },
     "libosmscout": {
       "baseline": "1.1.1",
@@ -4253,7 +4253,7 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.2.3",
+      "baseline": "1.2.4",
       "port-version": 0
     },
     "libwebsockets": {
@@ -4949,8 +4949,8 @@
       "port-version": 2
     },
     "nlohmann-json": {
-      "baseline": "3.10.5",
-      "port-version": 3
+      "baseline": "3.11.2",
+      "port-version": 0
     },
     "nlopt": {
       "baseline": "2.7.1",
@@ -5206,7 +5206,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6974,7 +6974,7 @@
     },
     "szip": {
       "baseline": "2.1.1",
-      "port-version": 8
+      "port-version": 9
     },
     "tabulate": {
       "baseline": "2019-01-06",
@@ -7045,8 +7045,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "4.1.1",
-      "port-version": 11
+      "baseline": "5.2.0",
+      "port-version": 0
     },
     "tfhe": {
       "baseline": "1.0.1",
