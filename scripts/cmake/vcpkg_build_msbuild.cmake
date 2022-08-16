@@ -25,7 +25,7 @@ function(vcpkg_build_msbuild)
         arg
         "USE_VCPKG_INTEGRATION"
         "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;LIBRARIES;LIBRARIES_RELEASE;LIBRARIES_DEBUG"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_RELEASE;ADDITIONAL_LIBS_DEBUG"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -72,6 +72,9 @@ function(vcpkg_build_msbuild)
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
     )
+
+    list(APPEND arg_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS})
+    list(APPEND arg_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS})
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
