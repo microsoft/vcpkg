@@ -13,6 +13,16 @@ vcpkg_cmake_install(
 )
 ```
 
+To use this function, you must depend on the helper port [`vcpkg-cmake`](ports/vcpkg-cmake.md):
+```no-highlight
+"dependencies": [
+  {
+    "name": "vcpkg-cmake",
+    "host": true
+  }
+]
+```
+
 ## Parameters
 
 ### DISABLE_PARALLEL

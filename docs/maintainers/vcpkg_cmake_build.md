@@ -19,6 +19,16 @@ vcpkg_cmake_build(
 )
 ```
 
+To use this function, you must depend on the helper port [`vcpkg-cmake`](ports/vcpkg-cmake.md):
+```no-highlight
+"dependencies": [
+  {
+    "name": "vcpkg-cmake",
+    "host": true
+  }
+]
+```
+
 ## Parameters
 
 All supported parameters to [`vcpkg_cmake_install()`] are supported by `vcpkg_cmake_build()`. See [`vcpkg_cmake_install()`] for additional parameter documentation.
