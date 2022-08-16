@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d5f0f408..a436f51c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -94,6 +94,11 @@ target_compile_definitions(wolfmqtt PRIVATE
+     "BUILDING_WOLFMQTT"
+     )
+ 
++    # Tell mqtt_types.h we are using a ./configure like output / options.h
++target_compile_definitions(wolfmqtt PRIVATE
++    "BUILDING_CMAKE"
++    )
++
+ #TODO generate options file
+ configure_file(wolfmqtt/options.h.in wolfmqtt/options.h)
+ 
+diff --git a/wolfmqtt/mqtt_types.h b/wolfmqtt/mqtt_types.h
+index f8e8f4d7..f7e33280 100644
+--- a/wolfmqtt/mqtt_types.h
++++ b/wolfmqtt/mqtt_types.h
+@@ -65,7 +65,8 @@
+ #endif
+ 
+ #ifdef ENABLE_MQTT_TLS
+-    #if !defined(WOLFSSL_USER_SETTINGS) && !defined(USE_WINDOWS_API)
++    #if !defined(WOLFSSL_USER_SETTINGS) && \
++        (!defined(USE_WINDOWS_API) || defined(BUILDING_CMAKE))
+         #include <wolfssl/options.h>
+     #endif
+     #include <wolfssl/wolfcrypt/settings.h>
+diff --git a/wolfmqtt/vs_settings.h b/wolfmqtt/vs_settings.h
+index a385c4e0..9d8231a0 100644
+--- a/wolfmqtt/vs_settings.h
++++ b/wolfmqtt/vs_settings.h
+@@ -4,8 +4,9 @@
+ #ifndef _WOLFMQTT_VS_SETTINGS_
+ #define _WOLFMQTT_VS_SETTINGS_
+ 
+-/* Don't include this if using autoconf cross-compile */
+-#ifndef HAVE_CONFIG_H
++/* Don't include this if using autoconf cross-compile or cmake */
++#if !defined(HAVE_CONFIG_H) && !defined(BUILDING_CMAKE)
++
+ 
+ /* TLS Support */
+ #undef  ENABLE_MQTT_TLS
+@@ -58,6 +59,7 @@
+ #undef  WOLFMQTT_NO_ERROR_STRINGS
+ //#define WOLFMQTT_NO_ERROR_STRINGS
+ 
+-#endif /* !HAVE_CONFIG_H */
++
++#endif /* !HAVE_CONFIG_H && !BUILDING_CMAKE */
+ 
+ #endif /* _WOLFMQTT_VS_SETTINGS_ */

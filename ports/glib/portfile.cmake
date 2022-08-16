@@ -1,17 +1,11 @@
-# Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
-endif()
-
-set(GLIB_MAJOR_MINOR 2.70)
-set(GLIB_PATCH 5)
+set(GLIB_MAJOR_MINOR 2.72)
+set(GLIB_PATCH 3)
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/glib
     REF "${GLIB_MAJOR_MINOR}.${GLIB_PATCH}"
-    SHA512 69c032358e0a0d88414a97e0bc898b5ce2797839a432b95790d03f108e55a79eee2d51bab5e281cc9469e2a57accc0d2c9bbaa80f9369050534387d1a215dd98
+    SHA512 805100bdd240122e1a74b432d7be7458af5b3b0507d46ed9cb0ce2ed6facf6e7d927b1d869831c9ba21b4a40a6667989ff69fc4f661bd044cb08932184804e79
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
@@ -84,7 +78,7 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
