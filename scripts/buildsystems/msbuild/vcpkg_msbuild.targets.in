@@ -58,10 +58,10 @@
             ${MSBUILD_LIBRARIES_RELEASE};@arg_ADDITIONAL_LIBS_RELEASE@;%(AdditionalDependencies)
         </AdditionalDependencies >
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            @MSBUILD_LIBRARIES_DIRS_RELEASE@;@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/lib;$(AdditionalLibraryDirectories)
+            %(AdditionalLibraryDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/lib;@MSBUILD_LIBRARIES_DIRS_RELEASE@
         </AdditionalLibraryDirectories>
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            @MSBUILD_LIBRARIES_DIRS_DEBUG@;@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/debug/lib;$(AdditionalLibraryDirectories)
+            %(AdditionalLibraryDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/debug/lib;@MSBUILD_LIBRARIES_DIRS_DEBUG@
         </AdditionalLibraryDirectories>
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
