@@ -5202,11 +5202,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -7046,7 +7046,7 @@
     },
     "tesseract": {
       "baseline": "5.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tfhe": {
       "baseline": "1.0.1",
