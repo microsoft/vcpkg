@@ -5,8 +5,6 @@ set(PACKAGE_VERSION ${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_
 
 set(GNULIB_REF "fb64a781")
 
-message(WARNING "${PORT} on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/gnutls
