@@ -3674,7 +3674,7 @@
     },
     "libgpg-error": {
       "baseline": "1.42",
-      "port-version": 3
+      "port-version": 4
     },
     "libgpiod": {
       "baseline": "1.6.3",
