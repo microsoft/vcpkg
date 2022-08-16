@@ -84,11 +84,6 @@ endif()
 
 string(REGEX REPLACE "^ " "" CFLAGS "${CFLAGS}")
 
-if(CMAKE_HOST_WIN32)
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT};$ENV{PATH}")
-else()
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT}:$ENV{PATH}")
-endif()
 set(ENV{ANDROID_DEV} "${CMAKE_SYSROOT}/usr")
 
 if(NOT IOS)
@@ -227,6 +222,7 @@ else()
             ${DISABLES}
             ${PLATFORM}
             "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--libdir=${CMAKE_INSTALL_PREFIX}/lib"
             "--openssldir=/etc/ssl"
             ${CFLAGS}
             VERBATIM

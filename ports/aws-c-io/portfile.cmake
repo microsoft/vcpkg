@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-io
-    REF 57b00febac48e78f8bf8cff4c82a249e6648842a # v0.10.7
-    SHA512 ffcf5ba4ccdff23ca390fc4eb935f88040447589886348234aa1c24b531401521df99a6ac578c1679a3c1a06dfcef6deb833a0b9d53e31d42576a3ad03ade6fc
+    REF cfe553a770e9c2d1c93b8cdfb870b9f2a46b436e # v0.10.22
+    SHA512 7a741f5b1c895ceb11f73b67828fd3623c180cb8a3863f3b63a67ac1437d2c47911d50510777b13ee66fd0a009ab09a8c83fd036a0fca2f25a0835f48f023de7
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
 )
