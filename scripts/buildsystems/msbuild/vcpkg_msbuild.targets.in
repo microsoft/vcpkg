@@ -13,23 +13,23 @@
     <UseIntelMKL>No</UseIntelMKL>
     <ImportProjectExtensionProps>false</ImportProjectExtensionProps>
   </PropertyGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
+  <ItemGroup>
+    <ClCompile Update="@project_root@*">
         <!-- vcpkg -->
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebug</RuntimeLibrary>
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_RELEASE_CONFIGURATION}'">MultiThreaded</RuntimeLibrary>
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebugDLL</RuntimeLibrary>
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|${arg_RELEASE_CONFIGURATION}'">MultiThreadedDLL</RuntimeLibrary>
         <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/include;${MSBUILD_INCLUDE_DIRS_DEBUG}
+            @VCPKG_MSBUILD_INCLUDE_DIRS_DEBUG@
         </AdditionalIncludeDirectories>
         <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/include;${MSBUILD_INCLUDE_DIRS_RELEASE}
+            @VCPKG_MSBUILD_INCLUDE_DIRS_RELEASE@
         </AdditionalIncludeDirectories>
     </ClCompile>
-  </ItemDefinitionGroup>
+  </ItemGroup>
   <ItemGroup>
-    <ClCompile Update="**/*.cpp;**/*.cxx">
+    <ClCompile Update="@project_root@**/*.cpp;@project_root@**/*.cxx">
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG@ @MSBUILD_CFLAGS_DEBUG@
         </AdditionalOptions>
@@ -39,7 +39,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup >
-    <ClCompile Update="**/*.c">
+    <ClCompile Update="@project_root@**/*.c">
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG@ @MSBUILD_CFLAGS_DEBUG@
         </AdditionalOptions>
@@ -52,16 +52,16 @@
     <Link>
         <!-- Required Libs -->
         <AdditionalDependencies Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            ${MSBUILD_LIBRARIES_DEBUG};@arg_ADDITIONAL_LIBS_DEBUG@;%(AdditionalDependencies)
+            @VCPKG_MSBUILD_ADDITIONAL_LIBS_DEBUG@
         </AdditionalDependencies>
         <AdditionalDependencies Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            ${MSBUILD_LIBRARIES_RELEASE};@arg_ADDITIONAL_LIBS_RELEASE@;%(AdditionalDependencies)
+            @VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE@
         </AdditionalDependencies >
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-            %(AdditionalLibraryDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/lib;@MSBUILD_LIBRARIES_DIRS_RELEASE@
+            @VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE@
         </AdditionalLibraryDirectories>
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-            %(AdditionalLibraryDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/debug/lib;@MSBUILD_LIBRARIES_DIRS_DEBUG@
+            @VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG@
         </AdditionalLibraryDirectories>
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
@@ -71,15 +71,28 @@
         </AdditionalOptions>
     </Link>
     <Lib>
-      <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
-      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
-      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
-      <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
-        %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@
-      </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
-        %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@
-      </AdditionalOptions>
+        <!-- Required Libs -->
+        <AdditionalDependencies Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            @VCPKG_MSBUILD_ADDITIONAL_LIBS_DEBUG@
+        </AdditionalDependencies>
+        <AdditionalDependencies Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            @VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE@
+        </AdditionalDependencies >
+        <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            @VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE@
+        </AdditionalLibraryDirectories>
+        <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            @VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG@
+        </AdditionalLibraryDirectories>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
+        </AdditionalOptions>
+        <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
+        <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
+        <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
     </Lib>
   </ItemDefinitionGroup>
   @VCPKG_MSBUILD_ADDITIONAL_TARGETS_XML@

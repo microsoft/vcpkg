@@ -272,6 +272,8 @@ else() # VCPKG_TARGET_IS_WINDOWS
         USE_VCPKG_INTEGRATION
         OPTIONS
             ${MSBUILD_OPTIONS}
+        ADDITIONAL_LIBS_RELEASE mcpp.lib bz2.lib
+        ADDITIONAL_LIBS_DEBUG mcppd.lib bz2d.lib
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

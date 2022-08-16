@@ -75,6 +75,12 @@ function(vcpkg_build_msbuild)
 
     list(APPEND arg_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS})
     list(APPEND arg_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS})
+    list(APPEND VCPKG_MSBUILD_INCLUDE_DIRS_DEBUG "${CURRENT_INSTALLED_DIR}/include" ${MSBUILD_INCLUDE_DIRS_DEBUG} "%(AdditionalIncludeDirectories)")
+    list(APPEND VCPKG_MSBUILD_INCLUDE_DIRS_RELEASE "${CURRENT_INSTALLED_DIR}/include" ${MSBUILD_INCLUDE_DIRS_RELEASE} "%(AdditionalIncludeDirectories)")
+    list(APPEND VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib" ${MSBUILD_LIBRARIES_DIRS_DEBUG} "%(AdditionalLibraryDirectories)")
+    list(APPEND VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE "${CURRENT_INSTALLED_DIR}/lib" ${MSBUILD_LIBRARIES_DIRS_RELEASE} "%(AdditionalLibraryDirectories)")
+    list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG} ${MSBUILD_LIBRARIES_DEBUG} "%(AdditionalDependencies)")
+    list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE} ${MSBUILD_LIBRARIES_RELEASE} "%(AdditionalDependencies)")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
@@ -85,6 +91,7 @@ function(vcpkg_build_msbuild)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
     cmake_path(GET arg_PROJECT_PATH PARENT_PATH project_path)
+    file(RELATIVE_PATH project_root "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}" "${project_path}")
     configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -93,6 +100,7 @@ function(vcpkg_build_msbuild)
         vcpkg_execute_required_process(
             COMMAND msbuild "${arg_PROJECT_PATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
+                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
@@ -106,6 +114,7 @@ function(vcpkg_build_msbuild)
         vcpkg_execute_required_process(
             COMMAND msbuild "${arg_PROJECT_PATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
+                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"

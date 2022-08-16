@@ -62,7 +62,13 @@ function(vcpkg_install_msbuild)
 
     list(APPEND arg_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS})
     list(APPEND arg_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS})
-
+    list(APPEND VCPKG_MSBUILD_INCLUDE_DIRS_DEBUG "${CURRENT_INSTALLED_DIR}/include" ${MSBUILD_INCLUDE_DIRS_DEBUG} "%(AdditionalIncludeDirectories)")
+    list(APPEND VCPKG_MSBUILD_INCLUDE_DIRS_RELEASE "${CURRENT_INSTALLED_DIR}/include" ${MSBUILD_INCLUDE_DIRS_RELEASE} "%(AdditionalIncludeDirectories)")
+    list(APPEND VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib" ${MSBUILD_LIBRARIES_DIRS_DEBUG} "%(AdditionalLibraryDirectories)")
+    list(APPEND VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE "${CURRENT_INSTALLED_DIR}/lib" ${MSBUILD_LIBRARIES_DIRS_RELEASE} "%(AdditionalLibraryDirectories)")
+    list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG} ${MSBUILD_LIBRARIES_DEBUG} "%(AdditionalDependencies)")
+    list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE} ${MSBUILD_LIBRARIES_RELEASE} "%(AdditionalDependencies)")
+    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
@@ -88,10 +94,13 @@ function(vcpkg_install_msbuild)
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
         set(source_project_subpath "${source_copy_path}/${arg_PROJECT_SUBPATH}")
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
+        file(RELATIVE_PATH project_root "${project_path}" "${source_copy_path}")
         configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
+                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
+                "/p:ForceImportAfterCppTargets=${project_path}/Directory.Build.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${source_copy_path}"
@@ -120,10 +129,13 @@ function(vcpkg_install_msbuild)
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
         set(source_project_subpath "${source_copy_path}/${arg_PROJECT_SUBPATH}")
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
+        file(RELATIVE_PATH project_root "${project_path}" "${source_copy_path}")
         configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
+                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
+                "/p:ForceImportAfterCppTargets=${project_path}/Directory.Build.targets"
                 #"/p:ForceImportBeforeCppTargets=${project_path}/Directory.Build.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
