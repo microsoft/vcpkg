@@ -6,6 +6,7 @@
   "license": "MIT",
   "supports": "windows",
   "dependencies": [
+    "xorg-macros",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -8,14 +8,15 @@ REF libXpm-3.5.13
 SHA512 250c8bf672789a81cfa258a516d40936f48a56cfaee94bf3f628e3f4a462bdd90eaaea787d66daf09ce4809b89c3eaea1e0771de03a6d7f1a59b31cc82be1c44
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
+vcpkg_configure_make(
+     SOURCE_PATH "${SOURCE_PATH}"
+     AUTOCONFIG
+ )
 
-vcpkg_cmake_install()
+ vcpkg_install_make()
 
 
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
