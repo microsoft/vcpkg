@@ -1,0 +1,36 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0e2d8e2..e2920b3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,5 @@
+-SUBDIRS=admin data m4 src plugins tools gui test po doc checks
+-DIST_SUBDIRS=admin data m4 src plugins tools gui test doc po checks
++SUBDIRS=data m4 src plugins tools gui test po checks
++DIST_SUBDIRS=data m4 src plugins tools gui test po checks
+
+
+ AUTOMAKE_OPTIONS = foreign
+diff --git a/configure.ac b/configure.ac
+index bd0a1bf..92d3c79 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1343,7 +1343,6 @@ AC_MSG_RESULT($plugins)
+ #
+ AC_CONFIG_FILES([Doxyfile
+                  Makefile
+-                 admin/Makefile
+                  m4/Makefile
+                  po/Makefile
+                  gwenhywfar-config.in
+@@ -1354,11 +1353,6 @@ AC_CONFIG_FILES([Doxyfile
+                  gwenhywfar.iss
+                  checks/Makefile
+                  data/Makefile
+-                 doc/Makefile
+-                 doc/dialog/Makefile
+-                 doc/dialog/images/Makefile
+-                 doc/inherit/Makefile
+-                doc/plugindescr.xsd
+                  src/Makefile
+                  src/types.h
+                  src/ressource.rc

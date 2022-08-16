@@ -1,0 +1,113 @@
+From a3888059f40c4c8dcd23b7173b4be54e07a1eca2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 16 Aug 2022 16:41:10 +0200
+Subject: [PATCH] Fix variadic marco usage
+
+---
+ src/base/debug.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/src/base/debug.h b/src/base/debug.h
+index a3a60aea..20820907 100644
+--- a/src/base/debug.h
++++ b/src/base/debug.h
+@@ -94,12 +94,12 @@ uint32_t GWEN_Debug_Snprintf(char *buffer,
+                              const char *fmt, ...);
+ 
+ #ifndef NO_VARIADIC_MACROS
+-# define DBG_ERROR(dbg_logger, format, args...) {\
++# define DBG_ERROR(dbg_logger, format, ...) {\
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Error) {\
+    char dbg_buffer[300]; \
+     \
+    if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1,\
+-       __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++       __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=(char)0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Error, dbg_buffer);\
+     }\
+@@ -122,12 +122,12 @@ void DBG_ERROR(const char *logdomain, const char *format, ...);
+  };
+ 
+ #ifndef NO_VARIADIC_MACROS
+-# define DBG_WARN(dbg_logger, format, args...) {\
++# define DBG_WARN(dbg_logger, format, ...) {\
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Warning) {\
+    char dbg_buffer[300]; \
+     \
+    if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1,\
+-       __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++       __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=(char)0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Warning, dbg_buffer);\
+     }\
+@@ -149,12 +149,12 @@ void DBG_WARN(const char *logdomain, const char *format, ...);
+  };
+ 
+ #ifndef NO_VARIADIC_MACROS
+-# define DBG_NOTICE(dbg_logger, format, args...) \
++# define DBG_NOTICE(dbg_logger, format, ...) \
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Notice) {\
+    char dbg_buffer[300]; \
+     \
+    if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1,\
+-       __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++       __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=(char)0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Notice, dbg_buffer);\
+    }\
+@@ -178,12 +178,12 @@ void DBG_NOTICE(const char *logdomain, const char *format, ...);
+ 
+ 
+ #ifndef NO_VARIADIC_MACROS
+-# define DBG_INFO(dbg_logger, format, args...) \
++# define DBG_INFO(dbg_logger, format, ...) \
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Info) {\
+    char dbg_buffer[300]; \
+     \
+    if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1,\
+-       __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++       __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=(char)0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Info, dbg_buffer);\
+    }\
+@@ -211,21 +211,21 @@ void DBG_INFO(const char *logdomain, const char *format, ...);
+ #ifndef DISABLE_DEBUGLOG
+ 
+ # ifndef NO_VARIADIC_MACROS
+-#  define DBG_DEBUG(dbg_logger, format, args...) \
++#  define DBG_DEBUG(dbg_logger, format, ...) \
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Debug) {\
+    char dbg_buffer[300]; \
+    \
+-   if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1, __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++   if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1, __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Debug, dbg_buffer);\
+    }\
+  };
+ 
+-#  define DBG_VERBOUS(dbg_logger, format, args...) \
++#  define DBG_VERBOUS(dbg_logger, format, ...) \
+  if (GWEN_Logger_GetLevel(dbg_logger)>=GWEN_LoggerLevel_Verbous) {\
+    char dbg_buffer[300]; \
+    \
+-   if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1, __FILE__":%5d: " format  , __LINE__ , ## args)>0) { \
++   if (snprintf(dbg_buffer, sizeof(dbg_buffer)-1, __FILE__":%5d: " format  , __LINE__ , ## __VA_ARGS__)>0) { \
+      dbg_buffer[sizeof(dbg_buffer)-1]=0; \
+      GWEN_Logger_Log(dbg_logger, GWEN_LoggerLevel_Verbous, dbg_buffer);\
+    }\
+@@ -261,8 +261,8 @@ void DBG_INFO(const char *logdomain, const char *format, ...);
+ #else
+ 
+ # ifndef NO_VARIADIC_MACROS
+-#  define DBG_DEBUG(dbg_logger, format, args...)
+-#  define DBG_VERBOUS(dbg_logger, format, args...)
++#  define DBG_DEBUG(dbg_logger, format, ...)
++#  define DBG_VERBOUS(dbg_logger, format, ...)
+ # endif /* ifndef NO_VARIADIC_MACROS */
+ 
+ # define DBG_DEBUG_ERR(dbg_logger, dbg_err)
+-- 
+2.37.1
+

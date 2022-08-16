@@ -1,11 +1,17 @@
 {
   "name": "libgwenhywfar",
-  "version-semver": "5.7.3",
-  "port-version": 1,
+  "version-semver": "5.10.1",
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
   "license": "LGPL-2.1-only",
   "dependencies": [
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     {
       "name": "libgcrypt",
       "platform": "!(windows | uwp)"
