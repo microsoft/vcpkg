@@ -425,9 +425,8 @@ libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
-# the msbuild for libgpg:x64-uwp and libgpg-error:x64-uwp are broken on VS2022 due to TargetPlatformMinVersion not existing
+# the msbuild for libgpg:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
 libgpg:x64-uwp=fail
-libgpg-error:x64-uwp=fail
 libgxps:x64-windows-static=fail
 libgxps:x64-windows-static-md=fail
 libhdfs3:x64-linux=fail
