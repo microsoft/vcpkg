@@ -6604,6 +6604,10 @@
       "baseline": "1.5.0",
       "port-version": 3
     },
+    "shiftmedia-libgcrypt": {
+      "baseline": "1.9.4",
+      "port-version": 0
+    },
     "shiva": {
       "baseline": "1.0",
       "port-version": 5
