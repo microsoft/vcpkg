@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(libmysql)
+find_dependency(Boost)
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mysql-connector-cpp-targets.cmake")
+check_required_components(mysql-connector-cpp)

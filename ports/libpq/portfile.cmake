@@ -1,11 +1,11 @@
-set(PORT_VERSION 14.1)
+set(PORT_VERSION 14.4)
 # NOTE: the python patches must be regenerated on version update
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 4a0bec157d5464bb9e5f5c0eb0efdede55526e03f6f4d660b87d161a47705eb152fa0878960b1581bce42a5ed28a1f457825ea54e8d22e34b5b8eb36473ceefd
+    SHA512 dd2f80248684e331d2ffb1e26cd2a285df1fb18710807a0c31aedabf917912ce9267f8ca26318e5371d916c6fe476f8a17886d82d3ff86a974e6f24c19a6aafb
 )
 
 set(PATCHES
@@ -18,7 +18,8 @@ set(PATCHES
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
         patches/windows/tcl_version.patch
-        patches/fix-configure.patch        
+        patches/windows/macro-def.patch
+        patches/fix-configure.patch
         )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -84,6 +85,9 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -165,6 +169,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
+        configure_file("${CURRENT_PORT_DIR}/libpq.props.in" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props" @ONLY)
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
         set(ENV{MSBFLAGS} "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
             /p:VCPkgLocalAppDataDisabled=true
@@ -172,6 +177,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
             /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
+            /p:ForceImportAfterCppTargets=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}
             /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
             )
@@ -207,7 +213,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
-
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
