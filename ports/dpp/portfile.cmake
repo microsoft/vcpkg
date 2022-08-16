@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brainboxdotcc/DPP
-    REF  
-8fbeee90d1c0977026a319ccbdcc619d6580925a
-    SHA512  
-20aa3846f3b4c68a78b57ea57f4fe71e2257dc978c5c16448763ce605d4c29af20dd5780bb40c06afb043508fe4ea650e56ff52dbc021e1e47d31573791a5bea
+    REF 6e0e324dad8bf00b497d9340c0aa675b3e62f530
+    SHA512  835f99e4bd092c7b60b299bf5de65ed6d10cc23743bdfa8c0ac93a66a224c7af1a0c30aedbac6b128d3db38bc5bfb8e12b314392ab3bf9ccc84a85c2a3fc12c1
     HEAD_REF master
     PATCHES
         make-pkgconfig-required.patch
