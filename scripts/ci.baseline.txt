@@ -233,6 +233,7 @@ embree2:x64-uwp=skip
 embree2:x64-windows-static-md=skip
 embree2:x64-windows-static=skip
 embree2:x64-windows=skip
+embree2:x86-windows=skip
 epsilon:arm-uwp=fail
 epsilon:x64-uwp=fail
 fastrtps:arm-uwp=fail
@@ -812,6 +813,7 @@ openscap:x64-windows-static=fail
 openscap:x64-osx=fail
 # https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
 # openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
+openvdb:x64-windows-static=fail
 openvdb:x64-windows-static-md=fail
 openvpn3:x64-osx=fail
 openvpn3:arm64-osx=fail
