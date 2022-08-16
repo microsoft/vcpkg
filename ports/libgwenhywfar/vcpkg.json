@@ -1,21 +1,29 @@
 {
   "name": "libgwenhywfar",
   "version-semver": "5.7.3",
+  "port-version": 1,
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
   "license": "LGPL-2.1-only",
   "dependencies": [
-    "libgcrypt",
+    {
+      "name": "libgcrypt",
+      "platform": "!(windows | uwp)"
+    },
     {
       "name": "libgnutls",
       "features": [
         "openssl"
       ],
-      "platform": "!windows"
+      "platform": "!(windows | uwp)"
+    },
+    {
+      "name": "shiftmedia-libgcrypt",
+      "platform": "windows | uwp"
     },
     {
       "name": "shiftmedia-libgnutls",
-      "platform": "windows"
+      "platform": "windows | uwp"
     },
     {
       "name": "vcpkg-cmake-config",
