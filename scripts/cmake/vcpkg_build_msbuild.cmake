@@ -25,7 +25,7 @@ function(vcpkg_build_msbuild)
         arg
         "USE_VCPKG_INTEGRATION"
         "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;LIBRARIES;LIBRARIES_RELEASE;LIBRARIES_DEBUG"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -55,10 +55,22 @@ function(vcpkg_build_msbuild)
 
     list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
+        "/p:UseMultiToolTask=true"
+        "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
+        "/p:EnforceProcessCountAcrossBuilds=true"
+        "/m:${VCPKG_CONCURRENCY}"
+        "-maxCpuCount:${VCPKG_CONCURRENCY}"
+        # other Properties 
         "/p:Platform=${arg_PLATFORM}"
-        "/m"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
+        # vcpkg properties
+        "/p:VcpkgApplocalDeps=false"
+        "/p:VcpkgManifestInstall=false"
+        "/p:VcpkgManifestEnabled=false"
+        "/p:VcpkgEnabled=false"
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

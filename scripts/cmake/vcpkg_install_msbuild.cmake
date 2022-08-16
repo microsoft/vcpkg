@@ -4,7 +4,7 @@ function(vcpkg_install_msbuild)
         "arg"
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_RELEASE;ADDITIONAL_LIBS_DEBUG"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -45,9 +45,23 @@ function(vcpkg_install_msbuild)
         "/p:UseMultiToolTask=true"
         "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
         "/p:EnforceProcessCountAcrossBuilds=true"
-        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/m:${VCPKG_CONCURRENCY}"
+        "-maxCpuCount:${VCPKG_CONCURRENCY}"
+        # other Properties 
+        "/p:Platform=${arg_PLATFORM}"
+        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
+        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
+        # vcpkg properties
+        "/p:VcpkgApplocalDeps=false"
+        "/p:VcpkgManifestInstall=false"
+        "/p:VcpkgManifestEnabled=false"
+        "/p:VcpkgEnabled=false"
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
     )
+
+    list(APPEND arg_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS})
+    list(APPEND arg_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS})
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
@@ -65,7 +79,6 @@ function(vcpkg_install_msbuild)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
 
-
     get_filename_component(source_path_suffix "${arg_SOURCE_PATH}" NAME)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Release")
@@ -75,13 +88,10 @@ function(vcpkg_install_msbuild)
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
         set(source_project_subpath "${source_copy_path}/${arg_PROJECT_SUBPATH}")
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
-        #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.props")
         configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
-        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/vcpkg.Build.targets")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
-                #"/p:ForceImportAfterCppTargets=${project_path}/Directory.Build.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${source_copy_path}"
@@ -110,9 +120,7 @@ function(vcpkg_install_msbuild)
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
         set(source_project_subpath "${source_copy_path}/${arg_PROJECT_SUBPATH}")
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
-        #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.props")
         configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
-        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/vcpkg.Build.targets")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"

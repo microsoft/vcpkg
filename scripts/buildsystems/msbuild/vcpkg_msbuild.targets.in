@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Label="Globals">
+  <PropertyGroup>
     <WindowsTargetPlatformVersion>@arg_TARGET_PLATFORM_VERSION@</WindowsTargetPlatformVersion>
     <PlatformToolset>@VCPKG_PLATFORM_TOOLSET@</PlatformToolset>
     <Platform>@arg_PLATFORM@</Platform>
-    <VCPkgLocalAppDataDisabled>true</VCPkgLocalAppDataDisabled>
+    <VcpkgApplocalDeps>false</VcpkgApplocalDeps>
     <VcpkgManifestInstall>false</VcpkgManifestInstall>
     <VcpkgManifestEnabled>false</VcpkgManifestEnabled>
     <VcpkgEnabled>false</VcpkgEnabled>
     <VcpkgTriplet>@TARGET_TRIPLET@</VcpkgTriplet>
     <VcpkgInstalledDir>@_VCPKG_INSTALLED_DIR@</VcpkgInstalledDir>
     <UseIntelMKL>No</UseIntelMKL>
-    <ForceImportAfterCppTargets>vcpkg.Build.targets</ForceImportAfterCppTargets>
     <ImportProjectExtensionProps>false</ImportProjectExtensionProps>
-    @MSBUILD_ADDITIONAL_PROPERTYGROUP_XML@
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration">
-    <WindowsTargetPlatformVersion>@arg_TARGET_PLATFORM_VERSION@</WindowsTargetPlatformVersion>
-    <PlatformToolset>@VCPKG_PLATFORM_TOOLSET@</PlatformToolset>
-    <Platform>@arg_PLATFORM@</Platform>
-    <VCPkgLocalAppDataDisabled>true</VCPkgLocalAppDataDisabled>
-    <VcpkgManifestInstall>false</VcpkgManifestInstall>
-    <VcpkgManifestEnabled>false</VcpkgManifestEnabled>
-    <VcpkgEnabled>false</VcpkgEnabled>
-    <VcpkgTriplet>@TARGET_TRIPLET@</VcpkgTriplet>
-    <VcpkgInstalledDir>@_VCPKG_INSTALLED_DIR@</VcpkgInstalledDir>
-    <UseIntelMKL>No</UseIntelMKL>
-    <ForceImportAfterCppTargets>vcpkg.Build.targets</ForceImportAfterCppTargets>
-    @MSBUILD_ADDITIONAL_PROPERTYGROUP_XML@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -42,7 +26,6 @@
         <AdditionalIncludeDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
             %(AdditionalIncludeDirectories);@_VCPKG_INSTALLED_DIR@/@TARGET_TRIPLET@/include;${MSBUILD_INCLUDE_DIRS_RELEASE}
         </AdditionalIncludeDirectories>
-        @MSBUILD_ADDITIONAL_CLCOMPILE_XML@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -86,7 +69,6 @@
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
         </AdditionalOptions>
-        @MSBUILD_ADDITIONAL_LINK_XML@
     </Link>
     <Lib>
       <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
@@ -98,8 +80,7 @@
       <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
         %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@
       </AdditionalOptions>
-      @MSBUILD_ADDITIONAL_LIB_XML@
     </Lib>
   </ItemDefinitionGroup>
-  @MSBUILD_ADDITIONAL_PROJECT_XML@
+  @VCPKG_MSBUILD_ADDITIONAL_TARGETS_XML@
 </Project>

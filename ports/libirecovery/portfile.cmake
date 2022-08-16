@@ -15,6 +15,7 @@ vcpkg_install_msbuild(
     LICENSE_SUBPATH COPYING
     USE_VCPKG_INTEGRATION
     ALLOW_ROOT_INCLUDES
+    ADDITIONAL_LIBS getopt.lib
 )
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
