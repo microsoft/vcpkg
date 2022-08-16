@@ -4,7 +4,7 @@
   "description": "Unofficial GnuTLS fork with added custom native Visual Studio project build tools. ",
   "homepage": "https://github.com/ShiftMediaProject/gnutls",
   "license": "LGPL-2.1-only",
-  "supports": "windows",
+  "supports": "windows & uwp",
   "dependencies": [
     "gettext",
     "gmp",
