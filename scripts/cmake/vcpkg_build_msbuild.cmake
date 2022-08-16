@@ -84,7 +84,7 @@ function(vcpkg_build_msbuild)
 
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
-    cmake_path(GET "${arg_PROJECT_PATH}" PARENT_PATH project_path)
+    cmake_path(GET arg_PROJECT_PATH PARENT_PATH project_path)
     configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
