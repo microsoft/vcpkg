@@ -5530,7 +5530,7 @@
     },
     "pixman": {
       "baseline": "0.40.0",
-      "port-version": 3
+      "port-version": 4
     },
     "pkgconf": {
       "baseline": "1.8.0",
