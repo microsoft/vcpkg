@@ -17,7 +17,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa   #v4.2.0
+    REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa #v4.2.0
     SHA512 f6b1738d96fef89059062f570f67aaa8b143ccfbee78abfe5fbb25083371a4c432f3d1d0d357e4b475b4b72a6db7823c2341b70ac947759603b033c2b0acec47
     HEAD_REF master
     PATCHES ${patches}
