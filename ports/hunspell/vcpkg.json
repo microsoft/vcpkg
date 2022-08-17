@@ -1,12 +1,16 @@
 {
   "name": "hunspell",
   "version": "1.7.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "The most popular spellchecking library.",
   "homepage": "https://github.com/hunspell/hunspell",
   "supports": "!uwp",
   "dependencies": [
-    "libiconv"
+    "libiconv",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    }
   ],
   "features": {
     "tools": {
@@ -18,6 +22,10 @@
           "features": [
             "tools"
           ]
+        },
+        {
+          "name": "vcpkg-msbuild",
+          "host": true
         }
       ]
     }

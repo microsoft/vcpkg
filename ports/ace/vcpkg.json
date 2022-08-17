@@ -1,10 +1,17 @@
 {
   "name": "ace",
   "version": "7.0.8",
+  "port-version": 1,
   "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
   "license": "DOC",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    }
+  ],
   "features": {
     "ssl": {
       "description": "Enable SSL/TLS features in ACE",
