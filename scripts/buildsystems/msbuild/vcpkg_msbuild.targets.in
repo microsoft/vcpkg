@@ -64,11 +64,23 @@
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             @VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG@
         </AdditionalLibraryDirectories>
-        <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|DynamicLibrary'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
         </AdditionalOptions>
-        <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|DynamicLibrary'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|Application'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|Application'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|StaticLibrary'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
+        </AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|StaticLibrary'">
+            %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
         </AdditionalOptions>
     </Link>
     <Lib>
@@ -85,10 +97,10 @@
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
             @VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG@
         </AdditionalLibraryDirectories>
-        <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|StaticLibrary'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@
         </AdditionalOptions>
-        <AdditionalOptions Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|StaticLibrary'">
             %(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@
         </AdditionalOptions>
         <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
