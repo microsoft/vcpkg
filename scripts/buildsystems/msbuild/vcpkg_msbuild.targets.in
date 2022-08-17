@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="'$(vcpkg_msbuild_props_imported)' != 'true'" Project="vcpkg_msbuild.props" />
   <PropertyGroup>
     <WindowsTargetPlatformVersion>@arg_TARGET_PLATFORM_VERSION@</WindowsTargetPlatformVersion>
     <PlatformToolset>@VCPKG_PLATFORM_TOOLSET@</PlatformToolset>
@@ -13,8 +14,8 @@
     <UseIntelMKL>No</UseIntelMKL>
     <ImportProjectExtensionProps>false</ImportProjectExtensionProps>
   </PropertyGroup>
-  <ItemGroup>
-    <ClCompile Update="@project_root@*">
+  <ItemDefinitionGroup>
+    <ClCompile>
         <!-- vcpkg -->
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_DEBUG_CONFIGURATION}'">MultiThreadedDebug</RuntimeLibrary>
         <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|${arg_RELEASE_CONFIGURATION}'">MultiThreaded</RuntimeLibrary>
@@ -27,7 +28,7 @@
             @VCPKG_MSBUILD_INCLUDE_DIRS_RELEASE@
         </AdditionalIncludeDirectories>
     </ClCompile>
-  </ItemGroup>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Update="@project_root@**/*.cpp;@project_root@**/*.cxx">
         <AdditionalOptions Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'">

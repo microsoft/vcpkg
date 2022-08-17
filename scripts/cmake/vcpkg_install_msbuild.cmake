@@ -4,7 +4,7 @@ function(vcpkg_install_msbuild)
         "arg"
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_RELEASE;ADDITIONAL_LIBS_DEBUG"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_RELEASE;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_PROPS;ADDITIONAL_TARGETS"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -68,6 +68,13 @@ function(vcpkg_install_msbuild)
     list(APPEND VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE "${CURRENT_INSTALLED_DIR}/lib" ${MSBUILD_LIBRARIES_DIRS_RELEASE} "%(AdditionalLibraryDirectories)")
     list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG} ${MSBUILD_LIBRARIES_DEBUG} "%(AdditionalDependencies)")
     list(APPEND VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE} ${MSBUILD_LIBRARIES_RELEASE} "%(AdditionalDependencies)")
+
+    foreach(prop_file IN LISTS arg_ADDITIONAL_PROPS)
+        list(APPEND VCPKG_MSBUILD_ADDITIONAL_PROPS_XML "<Import Project=\"${prop_file}\" />")
+    endforeach()
+    foreach(target_file IN LISTS arg_ADDITIONAL_TARGETS)
+        list(APPEND VCPKG_MSBUILD_ADDITIONAL_TARGETS_XML "<Import Project=\"${target_file}\" />")
+    endforeach()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
@@ -95,12 +102,17 @@ function(vcpkg_install_msbuild)
         set(source_project_subpath "${source_copy_path}/${arg_PROJECT_SUBPATH}")
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
         file(RELATIVE_PATH project_root "${project_path}" "${source_copy_path}")
-        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
+        #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
+        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/vcpkg_msbuild.targets")
+        #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.props.in" "${project_path}/Directory.Build.props")
+        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.props.in" "${project_path}/vcpkg_msbuild.props")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
-                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
-                "/p:ForceImportAfterCppTargets=${project_path}/Directory.Build.targets"
+                "/p:ForceImportAfterCppProps=${project_path}/vcpkg_msbuild.props"
+                "/p:ForceImportAfterCppTargets=${project_path}/vcpkg_msbuild.targets"
+                "-detailedSummary:True"
+                "-v:diag"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${source_copy_path}"
@@ -131,12 +143,14 @@ function(vcpkg_install_msbuild)
         cmake_path(GET source_project_subpath PARENT_PATH project_path)
         file(RELATIVE_PATH project_root "${project_path}" "${source_copy_path}")
         configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
+        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/vcpkg_msbuild.targets")
+        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.props.in" "${project_path}/Directory.Build.props")
+        configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.props.in" "${project_path}/vcpkg_msbuild.props")
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
-                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
-                "/p:ForceImportAfterCppTargets=${project_path}/Directory.Build.targets"
-                #"/p:ForceImportBeforeCppTargets=${project_path}/Directory.Build.targets"
+                "/p:ForceImportAfterCppProps=${project_path}/vcpkg_msbuild.props"
+                "/p:ForceImportAfterCppTargets=${project_path}/vcpkg_msbuild.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
             WORKING_DIRECTORY "${source_copy_path}"

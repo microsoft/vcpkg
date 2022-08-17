@@ -87,12 +87,15 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
     else()
         message(STATUS "WARNING: Static builds of Python will not have C extension modules available.")
     endif()
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
+    list(APPEND add_libs_rel "${ZLIB_RELEASE}")
+    list(APPEND add_libs_dbg "${ZLIB_DEBUG}")
     configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
@@ -100,7 +103,9 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
-
+    set(VCPKG_C_FLAGS "-D_Py_HAVE_ZLIB")
+    set(VCPKG_CXX_FLAGS "-D_Py_HAVE_ZLIB")
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_SET_CHARSET_FLAG=OFF")
     if(PYTHON_ALLOW_EXTENSIONS)
         set(OPTIONS
             "/p:IncludeExtensions=true"
@@ -109,14 +114,14 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             "/p:IncludeSSL=true"
             "/p:IncludeTkinter=false"
             "/p:IncludeTests=false"
-            "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
+            #"/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
         )
     else()
         set(OPTIONS
             "/p:IncludeExtensions=false"
             "/p:IncludeExternals=false"
             "/p:IncludeTests=false"
-            "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
+            #"/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
         )
     endif()
     if(VCPKG_TARGET_IS_UWP)
@@ -144,6 +149,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
         TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
+        ADDITIONAL_LIBS_RELEASE ${add_libs_rel}
+        ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
         SKIP_CLEAN
     )
 
