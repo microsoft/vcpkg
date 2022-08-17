@@ -112,7 +112,7 @@ function(vcpkg_install_msbuild)
                 "/p:ForceImportAfterCppProps=${project_path}/vcpkg_msbuild.props"
                 "/p:ForceImportAfterCppTargets=${project_path}/vcpkg_msbuild.targets"
                 "-detailedSummary:True"
-                "-v:diag"
+                #"-v:diag"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${source_copy_path}"
