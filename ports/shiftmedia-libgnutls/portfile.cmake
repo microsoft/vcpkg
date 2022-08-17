@@ -85,7 +85,7 @@ vcpkg_install_msbuild(
 )
 
 get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 set(VERSION ${PACKAGE_VERSION})
 set(GNUTLS_REQUIRES_PRIVATE "Requires.private: nettle, hogweed, libtasn1")
@@ -106,6 +106,6 @@ set(includedir "\${prefix}/../include")
 set(GMP_LIBS "-lgmpd")
 set(GNUTLS_LIBS -lgnutlsd)
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
-vcpkg_fixup_pkgconfig()
 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
