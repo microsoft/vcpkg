@@ -44,10 +44,10 @@
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_DEBUG_CONFIGURATION}'"  >@VCPKG_MSBUILD_LIBRARY_DIRS_DEBUG@</AdditionalLibraryDirectories>
         <AdditionalDependencies Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'"      >@VCPKG_MSBUILD_ADDITIONAL_LIBS_RELEASE@</AdditionalDependencies >
         <AdditionalLibraryDirectories Condition="'$(Configuration)'=='${arg_RELEASE_CONFIGURATION}'">@VCPKG_MSBUILD_LIBRARY_DIRS_RELEASE@</AdditionalLibraryDirectories>
-        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|DynamicLibrary'"  >%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@</AdditionalOptions>
-        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|DynamicLibrary'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@</AdditionalOptions>
-        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|Application'"  >%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@</AdditionalOptions>
-        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|Application'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@</AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|DynamicLibrary'"  >%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@ /WX:NO</AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|DynamicLibrary'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@ /WX:NO</AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|Application'"  >%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_DEBUG@ @MSBUILD_LIBS_DEBUG@ /WX:NO</AdditionalOptions>
+        <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|Application'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_RELEASE@ @MSBUILD_LIBS_RELEASE@ /WX:NO</AdditionalOptions>
         <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_DEBUG_CONFIGURATION}|StaticLibrary'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG@</AdditionalOptions>
         <AdditionalOptions Condition="'$(Configuration)|$(ConfigurationType)'=='${arg_RELEASE_CONFIGURATION}|StaticLibrary'">%(AdditionalOptions) @VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE@</AdditionalOptions>
     </Link>
