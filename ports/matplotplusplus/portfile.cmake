@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
-    REF 36d8dc6c3b94b7a71c4f129763f2c6ad8fc0b54a
-    SHA512 ac8902e953a2a9f6bd62e14e2eb0bd42e407bae6c0b2921ad16ce547e4921ba2c8d8a9cc68e75831676dce3cd89cdf8294862710e838510b68e20f8a6cdf806f
+    REF b45015e2be88e3340b400f82637b603d733d45ce  #v1.1.0
+    SHA512 c1eeaa8828a4f8c5b899b4222510e181a2036353b0bf6f1deb89b9d61273d5e4ab0d36ae0214dd171cf2737777f24fd6f250ec2d6074f6c20d3c69b7579a6a7a
     HEAD_REF master
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
@@ -33,7 +33,6 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DCPM_USE_LOCAL_PACKAGES=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_INSTALLER=ON
