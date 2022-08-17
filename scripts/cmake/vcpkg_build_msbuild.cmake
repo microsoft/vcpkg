@@ -91,7 +91,7 @@ function(vcpkg_build_msbuild)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
     cmake_path(GET arg_PROJECT_PATH PARENT_PATH project_path)
-    file(RELATIVE_PATH project_root "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}" "${project_path}")
+    file(RELATIVE_PATH project_root "${project_path}" "${CURRENT_BUILDTREES_DIR}/src/")
     #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/Directory.Build.targets")
     configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.targets.in" "${project_path}/vcpkg_msbuild.targets")
     #configure_file("${SCRIPTS}/buildsystems/msbuild/vcpkg_msbuild.props.in" "${project_path}/Directory.Build.props")
@@ -118,7 +118,8 @@ function(vcpkg_build_msbuild)
         vcpkg_execute_required_process(
             COMMAND msbuild "${arg_PROJECT_PATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
-                "/p:CustomAferMicrosoftCommonTargets=${project_path}/Directory.Build.targets"
+                "/p:ForceImportAfterCppProps=${project_path}/vcpkg_msbuild.props"
+                "/p:ForceImportAfterCppTargets=${project_path}/vcpkg_msbuild.targets"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"

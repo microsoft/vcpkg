@@ -15,6 +15,7 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/src/PMDK.sln
     TARGET "Solution Items\\libpmem,Solution Items\\libpmemlog,Solution Items\\libpmemblk,Solution Items\\libpmemobj,Solution Items\\libpmempool,Solution Items\\Tools\\pmempool"
     OPTIONS /p:SRCVERSION=${PMDK_VERSION}
+    ADDITIONAL_LIBS getopt.lib
 )
 
 set(DEBUG_ARTIFACTS_PATH ${SOURCE_PATH}/src/x64/Debug)
