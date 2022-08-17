@@ -4517,8 +4517,8 @@
       "port-version": 1
     },
     "matplotplusplus": {
-      "baseline": "2021-04-11",
-      "port-version": 6
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "matroska": {
       "baseline": "1.6.3",
