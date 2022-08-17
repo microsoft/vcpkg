@@ -2329,7 +2329,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2022.07.11.00",
+      "baseline": "2022.08.15.00",
       "port-version": 0
     },
     "font-chef": {
