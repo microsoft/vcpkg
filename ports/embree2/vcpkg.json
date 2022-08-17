@@ -2,5 +2,6 @@
   "name": "embree2",
   "version-string": "deprecated",
   "description": "(this port is deprecated, use embree3 instead!) High Performance Ray Tracing Kernels.",
-  "homepage": "https://github.com/embree/embree"
+  "homepage": "https://github.com/embree/embree",
+  "license": null
 }
