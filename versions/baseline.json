@@ -177,8 +177,8 @@
       "port-version": 0
     },
     "arrow": {
-      "baseline": "8.0.1",
-      "port-version": 1
+      "baseline": "9.0.0",
+      "port-version": 0
     },
     "ashes": {
       "baseline": "2022-06-08",
@@ -2329,7 +2329,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2022.07.11.00",
+      "baseline": "2022.08.15.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3369,8 +3369,8 @@
       "port-version": 0
     },
     "kubazip": {
-      "baseline": "0.1.19",
-      "port-version": 1
+      "baseline": "0.2.4",
+      "port-version": 0
     },
     "kubernetes": {
       "baseline": "2022-01-19",
@@ -5202,11 +5202,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5530,7 +5530,7 @@
     },
     "pixman": {
       "baseline": "0.40.0",
-      "port-version": 3
+      "port-version": 4
     },
     "pkgconf": {
       "baseline": "1.8.0",
@@ -6217,8 +6217,8 @@
       "port-version": 1
     },
     "raylib": {
-      "baseline": "4.0.0",
-      "port-version": 3
+      "baseline": "4.2.0",
+      "port-version": 0
     },
     "rbdl": {
       "baseline": "3.2.0",
@@ -6465,8 +6465,8 @@
       "port-version": 1
     },
     "sciplot": {
-      "baseline": "0.2.2",
-      "port-version": 1
+      "baseline": "0.3.1",
+      "port-version": 0
     },
     "sciter": {
       "baseline": "0",
@@ -7046,7 +7046,7 @@
     },
     "tesseract": {
       "baseline": "5.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tfhe": {
       "baseline": "1.0.1",
@@ -7710,7 +7710,7 @@
     },
     "x264": {
       "baseline": "164-5db6aa6cab1b146",
-      "port-version": 4
+      "port-version": 5
     },
     "x265": {
       "baseline": "3.4",
