@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         static.patch
+        mingw.patch
 )
 
 vcpkg_configure_cmake(

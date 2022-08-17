@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
-    REF v2.1.1
-    SHA512 86585ec860d460b158f24efb82f202deced7ce96a6bfefd42f39cad9c112add68cca6935f383f5d718c07fe1c121d8ed8b0d2069321f1dafb8ce68b49bc75194
+    REF v2.1.2
+    SHA512 594e808fb1c175d5b14eb540be0dfb6f41cd37b5bf7df8c2d24d44dfe4986643ea68e52d0282eb3b25283489789001a57a201de1eecc1560fc9461780c7da353
     HEAD_REF master
     PATCHES
         fix-dependency.patch
-        fix-buildTools.patch
+        fix-pkgconfig.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findexpat.cmake")
@@ -34,20 +34,30 @@ vcpkg_cmake_configure(
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=On
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME OpenColorIO CONFIG_PATH "lib/cmake/OpenColorIO")
+set(dll_import 0)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(dll_import 1)
+endif()
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/OpenColorIO/OpenColorABI.h"
+    "ifndef OpenColorIO_SKIP_IMPORTS"
+    "if ${dll_import}"
+)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenColorIO")
 
 vcpkg_copy_pdbs()
 
-# Clean redundant files
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/debug/OpenColorIOConfig.cmake"
-    "${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/ocio"
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
@@ -57,8 +67,5 @@ if(OCIO_BUILD_APPS)
 endif()
 
 vcpkg_fixup_pkgconfig()
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ocio/setup_ocio.sh" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../")
-endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

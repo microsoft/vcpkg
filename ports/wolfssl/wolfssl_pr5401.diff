@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f2da855cce3..467f4b79725 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2044,7 +2044,11 @@ endif()
+ 
+ if(NOT BUILD_SP)
+   list(APPEND HEADER_EXCLUDE
+-    "wolfssl/wolfcrypt/sp.h"
++    "wolfssl/wolfcrypt/sp.h")
++endif()
++
++if(NOT BUILD_SP_INT)
++  list(APPEND HEADER_EXCLUDE
+     "wolfssl/wolfcrypt/sp_int.h")
+ endif()
+ 

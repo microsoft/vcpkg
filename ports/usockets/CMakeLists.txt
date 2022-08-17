@@ -41,7 +41,7 @@ endif()
 
 if (CMAKE_USE_NETWORK)
     list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/networking)
-    list(APPEND USOCKETS_EXT_LIBS Ws2_32)
+    list(APPEND USOCKETS_EXT_LIBS ws2_32)
 endif()
 
 add_library(uSockets ${SOURCES})
