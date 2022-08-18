@@ -7702,7 +7702,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "x-plane": {
       "baseline": "3.0.3",

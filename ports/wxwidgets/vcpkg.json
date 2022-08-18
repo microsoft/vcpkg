@@ -43,14 +43,6 @@
     "example": {
       "description": "Example source code and CMake project"
     },
-    "webview": {
-      "description": "The Edge backend uses Microsoft's Edge WebView2",
-      "dependencies": [
-        {
-          "name": "webview2"
-        }
-      ]
-    },
     "fonts": {
       "description": "Enable to use the font functionality of wxWidgets",
       "dependencies": [
@@ -72,6 +64,12 @@
           "default-features": false,
           "platform": "!windows & !osx"
         }
+      ]
+    },
+    "webview": {
+      "description": "The Edge backend uses Microsoft's Edge WebView2",
+      "dependencies": [
+        "webview2"
       ]
     }
   }
