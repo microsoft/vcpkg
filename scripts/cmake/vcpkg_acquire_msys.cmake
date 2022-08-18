@@ -80,7 +80,6 @@ function(z_vcpkg_acquire_msys_declare_package)
             string(APPEND Z_VCPKG_MSYS_TOTAL_HASH "${patch_sha}")
         endforeach()
         set(Z_VCPKG_MSYS_TOTAL_HASH "${Z_VCPKG_MSYS_TOTAL_HASH}" PARENT_SCOPE)
-        set(Z_VCPKG_MSYS_TOTAL_HASH "${Z_VCPKG_MSYS_TOTAL_HASH}" PARENT_SCOPE)
     endif()
 endfunction()
 
