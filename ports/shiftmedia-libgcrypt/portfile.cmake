@@ -82,7 +82,10 @@ vcpkg_install_msbuild(
 )
 
 get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+if(VCPKG_TARGET_IS_UWP)
+    set(WINRT_SUBFOLDER libgcrypt_winrt)
+endif()
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
