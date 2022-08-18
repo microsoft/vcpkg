@@ -7,9 +7,11 @@ vcpkg_from_github(
 )
 
 vcpkg_msbuild_install(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ideviceinstaller.vcxproj
     LICENSE_SUBPATH COPYING
+    DEPENDENT_PKGCONFIG libimobiledevice-1.0 libzip
+    ADDITIONAL_LIBS getopt.lib
 )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

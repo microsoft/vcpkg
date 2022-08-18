@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 vcpkg_msbuild_install(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libirecovery.sln
     INCLUDES_SUBPATH include
     LICENSE_SUBPATH COPYING
@@ -17,4 +17,4 @@ vcpkg_msbuild_install(
     ADDITIONAL_LIBS getopt.lib
 )
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
