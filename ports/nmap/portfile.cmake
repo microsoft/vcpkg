@@ -39,23 +39,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME upgrade-Packet-${TARGET_TRIPLET}
     )
     # Build
-    vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/mswin32/nmap.vcxproj
-    PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH mswin32/nmap.vcxproj
+        PLATFORM ${MSBUILD_PLATFORM}
     )
-    
-    # Install
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Release/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Release/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Debug/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Debug/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
 else()
     set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
     set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
@@ -83,7 +71,7 @@ else()
         )
         
         message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(INSTALL "${source_path_release}/nmap" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
     endif()
     
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
@@ -96,19 +84,19 @@ else()
 
         vcpkg_execute_required_process(
             COMMAND "./configure" ${OPTIONS}
-            WORKING_DIRECTORY ${source_path_debug}
+            WORKING_DIRECTORY "${source_path_debug}"
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
         
         message(STATUS "Building ${TARGET_TRIPLET}-dbg")
         vcpkg_execute_required_process(
             COMMAND make
-            WORKING_DIRECTORY ${source_path_debug}
+            WORKING_DIRECTORY "${source_path_debug}"
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
         
         message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+        file(INSTALL "${source_path_release}/nmap" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools")
     endif()
     
     set(SOURCE_PATH "${source_path_release}")
@@ -117,4 +105,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

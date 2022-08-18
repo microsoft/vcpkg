@@ -18,21 +18,13 @@ vcpkg_extract_source_archive_ex(
     PATCHES msbuild-use-default-sma.patch
 )
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/UnRARDll.vcxproj"
-    OPTIONS_DEBUG /p:OutDir=../../${TARGET_TRIPLET}-dbg/
-    OPTIONS_RELEASE /p:OutDir=../../${TARGET_TRIPLET}-rel/
-    OPTIONS /VERBOSITY:Diagnostic /DETAILEDSUMMARY
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "UnRARDll.vcxproj"
 )
 
 #INCLUDE (named dll.hpp in source, and unrar.h in all rarlabs distributions)
 file(INSTALL "${SOURCE_PATH}/dll.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME unrar.h)
-
-#DLL & LIB
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/unrar.dll"  DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/unrar.lib"  DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.dll"  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.lib"  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 vcpkg_copy_pdbs()
 

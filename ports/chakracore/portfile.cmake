@@ -27,6 +27,9 @@ if(WIN32)
         OPTIONS
             "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
+        INCLUDES_SUBPATH "lib/Jsrt"
+        INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
+        LICENSE_SUBPATH "LICENSE.txt"
     )
 else()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
@@ -64,22 +67,15 @@ else()
             ECHO_ERROR_VARIABLE
         )
     endif()
-endif()
-
-
-file(INSTALL
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCore.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommon.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraDebug.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-)
-if(WIN32)
     file(INSTALL
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommonWindows.h"
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
+        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCore.h"
+        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommon.h"
+        "${BUILDTREE_PATH}/lib/Jsrt/ChakraDebug.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
-else()
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(out_file libChakraCore.so)
     else()
