@@ -66,13 +66,13 @@ APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
 # Additionally required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
+# Additionally required by bond
+APT_PACKAGES="$APT_PACKAGES haskell-stack"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
 
 apt-get -y install $APT_PACKAGES
-
-# Install the latest Haskell stack for bond
-curl -sSL https://get.haskellstack.org/ | sh
 
 # Start up cudnn
 update-nvidia-cudnn -d
@@ -89,6 +89,7 @@ apt-get install --no-install-recommends libnccl2 libnccl-dev
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
+rm -f packages-microsoft-prod.deb
 apt-get update
 add-apt-repository universe
 apt-get install -y powershell

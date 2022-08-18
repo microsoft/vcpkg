@@ -157,6 +157,7 @@ if("contrib" IN_LIST FEATURES)
       0007-fix-hdf5.patch
       0013-fix-ceres.patch
       0016-fix-freetype-contrib.patch
+      0018-fix-depend-tesseract.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
