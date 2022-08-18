@@ -153,14 +153,13 @@ get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 set(VERSION ${PACKAGE_VERSION})
-set(GNUTLS_REQUIRES_PRIVATE "Requires.private: nettle, hogweed, libtasn1")
+set(GNUTLS_REQUIRES_PRIVATE "Requires.private: gmp, nettle, hogweed, libtasn1")
 set(GNUTLS_LIBS_PRIVATE "-lcrypt32 -lws2_32 -lkernel32 -lncrypt")
 
 set(prefix "${CURRENT_INSTALLED_DIR}")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
-set(GMP_LIBS "-lgmp")
 set(GNUTLS_LIBS "-lgnutls")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gnutls.pc" @ONLY)
 
@@ -168,7 +167,6 @@ set(prefix "${CURRENT_INSTALLED_DIR}/debug")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/../include")
-set(GMP_LIBS "-lgmpd")
 set(GNUTLS_LIBS "-lgnutlsd")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
 
