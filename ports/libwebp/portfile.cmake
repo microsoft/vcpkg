@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libwebp
-    REF v1.2.3
-    SHA512 27f86817350e6d0e215c449665046df8c63203344f9a2846770af292ce8fee486a72adfd5e1122aa67e7d2f3e3972cd8423da95fee7edf10c9848bcbda46264c
+    REF v1.2.4
+    SHA512 85c7d2bd1697ed6f18d565056d0105edd63697f144d2c935e9c0563ff09f4acc56d4ac509668f920e8d5dc3c74b53a42f65265fc758fed173cb2168c4d6a551c
     HEAD_REF master
     PATCHES
         0002-cmake-config.patch
@@ -79,13 +79,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-# For compatibility
-file(READ "${CURRENT_PACKAGES_DIR}/share/WebP/WebPTargets.cmake" contents)
-string(APPEND contents "
-if(NOT TARGET WebP::libwebpmux)
-  add_library(WebP::libwebpmux INTERFACE IMPORTED)
-  set_target_properties(WebP::libwebpmux PROPERTIES INTERFACE_LINK_LIBRARIES WebP::webpmux)
-endif()
-")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/WebP/WebPTargets.cmake" "${contents}")
