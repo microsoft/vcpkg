@@ -274,6 +274,8 @@ ftgl:arm-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
 
+# VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
+gazebo:x64-windows=fail
 gazebo:x64-linux=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -325,6 +327,11 @@ gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
 graphicsmagick:arm-uwp=fail
 graphicsmagick:x64-uwp=fail
+# graphicsmagick non-uwp trigger an ICE in VS 2022 17.3 https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1557251
+graphicsmagick:x86-windows=fail
+graphicsmagick:x64-windows=fail
+graphicsmagick:x64-windows-static=fail
+graphicsmagick:x64-windows-static-md=fail
 gstreamer:x64-osx=fail
 gstreamer:arm64-osx=fail
 gtk:x64-windows-static=fail
@@ -886,6 +893,8 @@ qt5-canvas3d:x86-windows=skip
 qt5-wayland:x64-osx=fail
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
+# Post build checks fail
+qtwebengine:arm64-windows=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -895,8 +904,6 @@ qt5-webengine:x64-osx=fail
 # Succesful built requires protobuf to be installed after qt5-webengine not before. Otherwise the build picks up the wrong headers from inside vcpkg.
 qt5-webengine:x64-windows=skip
 qt5-webengine:x86-windows=skip
-# VS2022 17.2 ICE https://developercommunity.visualstudio.com/t/Visual-Studio-2022-v1720-reports-fata/10039296
-qtwebengine:x64-windows=fail
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 qt5-x11extras:arm64-osx=fail
@@ -985,10 +992,6 @@ rsasynccpp:x64-osx=fail
 rsm-binary-io:x64-linux=fail
 # Requires g++10 but CI compiler only has g++9
 rsm-bsa:x64-linux=fail
-# VS2022 17.2 ICE https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1490389
-rsocket:x64-windows=fail
-rsocket:x64-windows-static=fail
-rsocket:x64-windows-static-md=fail
 rtlsdr:x64-uwp=fail
 rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
@@ -1262,16 +1265,6 @@ dimcli:x64-windows-static=fail
 zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
 zeroc-ice:x64-uwp=fail
-
-# ANGLE triggers an intermittent ice in C1XX
-# https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1472813
-angle:x86-windows=fail
-angle:x64-windows=fail
-angle:x64-windows-static=fail
-angle:x64-windows-static-md=fail
-angle:x64-uwp=fail
-angle:arm64-windows=fail
-angle:arm-uwp=fail
 
 cmake-user:arm-uwp=pass
 cmake-user:arm64-windows=pass
