@@ -9,10 +9,6 @@ vcpkg_from_github(
     REF libgcrypt-${PACKAGE_VERSION}
     SHA512 6da8225ec73c51562cd76a0c0abc19506a7378750ed2a9ea45f03df3c8d7cf500840459deb9b0a694a5602fe77ee2b0dd5b2e37376745233350b0f218dff4f1c
     HEAD_REF master
-    PATCHES 
-        outdir.patch
-        gpgerror.patch
-        runtime.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -33,6 +29,48 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 else()
     set(RuntimeLibraryExt "DLL")
 endif()
+
+# patch output library file path and name; inject RuntimeLibrary property to control CRT linkage 
+foreach(PROPS IN ITEMS
+    "${SOURCE_PATH}/SMP/smp_deps.props"
+    "${SOURCE_PATH}/SMP/smp_winrt_deps.props")
+    vcpkg_replace_string(
+        "${PROPS}"
+        [=[_winrt</TargetName>]=]
+        [=[</TargetName>]=]
+    )
+    vcpkg_replace_string(
+        "${PROPS}"
+        [=[<TargetName>lib$(RootNamespace)]=]
+        [=[<TargetName>$(RootNamespace)]=]
+    )
+    vcpkg_replace_string(
+        "${PROPS}"
+        [=[<OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>]=]
+        [=[<OutDir>$(ProjectDir)..\msvc\</OutDir>]=]
+    )
+    vcpkg_replace_string(
+        "${PROPS}"
+        [=[</TreatSpecificWarningsAsErrors>]=]
+        [=[</TreatSpecificWarningsAsErrors><RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>]=]
+    )
+endforeach()
+
+# patch gpg-error library file name
+foreach(VCXPROJ IN ITEMS
+    "${SOURCE_PATH}/SMP/libgcrypt.vcxproj"
+    "${SOURCE_PATH}/SMP/libgcrypt_winrt.vcxproj")
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "_winrt.lib"
+        ".lib"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "libgpg-error"
+        "gpg-error"
+    )
+endforeach()
 
 vcpkg_install_msbuild(
     USE_VCPKG_INTEGRATION
