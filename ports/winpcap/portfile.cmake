@@ -59,8 +59,9 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "
     file(COPY "${CURRENT_PORT_DIR}/Packet.vcxproj" DESTINATION "${SOURCE_PATH}/packetNtx/Dll/Project/")
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "packetNtx/Dll/Project/Packet.sln"
     RELEASE_CONFIGURATION "Release"
     DEBUG_CONFIGURATION "Debug"
     PLATFORM ${PLATFORM}
@@ -87,8 +88,9 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "
     file(COPY "${CURRENT_PORT_DIR}/wpcap.vcxproj" DESTINATION "${SOURCE_PATH}/wpcap/PRJ/")
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "wpcap/PRJ/wpcap.sln"
     RELEASE_CONFIGURATION "Release - No AirPcap"
     DEBUG_CONFIGURATION "Debug - No AirPcap"
     PLATFORM ${PLATFORM}

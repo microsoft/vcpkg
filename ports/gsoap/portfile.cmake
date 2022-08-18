@@ -16,13 +16,13 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/gsoap")
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_msbuild_install(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
         PLATFORM ${BUILD_ARCH}
         TARGET Build
     )
     vcpkg_msbuild_install(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
         PLATFORM ${BUILD_ARCH}
         TARGET Build
