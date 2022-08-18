@@ -91,13 +91,13 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFF
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
-set(LIBGCRYPT_CONFIG_LIBS "-L\${libdir} -lgcrypt")
+set(LIBGCRYPT_CONFIG_LIBS "-lgcrypt")
 configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libgcrypt.pc" @ONLY)
 
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/../include")
-set(LIBGCRYPT_CONFIG_LIBS "-L\${libdir} -lgcryptd")
+set(LIBGCRYPT_CONFIG_LIBS "-lgcryptd")
 configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libgcrypt.pc" @ONLY)
 
 vcpkg_fixup_pkgconfig()
