@@ -101,6 +101,7 @@ if("icegridtools" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridregistry")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
+    list(APPEND pkgconfig_packages expat)
 endif()
 
 # IceStorm
@@ -270,8 +271,14 @@ else() # VCPKG_TARGET_IS_WINDOWS
         TARGET "C++11\\ice++11"
         OPTIONS
             ${MSBUILD_OPTIONS}
-        ADDITIONAL_LIBS_RELEASE mcpp.lib bz2.lib
-        ADDITIONAL_LIBS_DEBUG mcppd.lib bz2d.lib
+        OPTIONS_DEBUG
+            "/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        OPTIONS_RELEASE
+            "/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        DEPENDENT_PKGCONFIG bzip2 ${pkgconfig_packages}
+        ADDITIONAL_LIBS lmdb.lib
+        ADDITIONAL_LIBS_RELEASE mcpp.lib ${libs_rel}
+        ADDITIONAL_LIBS_DEBUG mcppd.lib ${libs_dbg}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
@@ -296,11 +303,11 @@ else() # VCPKG_TARGET_IS_WINDOWS
 endif()
 
 # Remove unnecessary static libraries.
-file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
-file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
-list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
-list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
-file(REMOVE ${PDLIBS} ${PRLIBS})
+#file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
+#file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
+#list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
+#list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
+#file(REMOVE ${PDLIBS} ${PRLIBS})
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zeroc-ice RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/zeroc-ice" RENAME copyright)
