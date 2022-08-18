@@ -19,7 +19,7 @@ vcpkg_extract_source_archive_ex(
   PATCHES ${PATCHES}
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
   SOURCE_PATH ${SOURCE_PATH}
   PROJECT_SUBPATH Win32/SciLexer.vcxproj
   LICENSE_SUBPATH License.txt

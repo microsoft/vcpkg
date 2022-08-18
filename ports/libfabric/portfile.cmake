@@ -13,7 +13,7 @@ vcpkg_from_github(
 set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v142")
 set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v142")
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libfabric.vcxproj
     INCLUDES_SUBPATH include
@@ -21,11 +21,9 @@ vcpkg_install_msbuild(
     PLATFORM "x64"
     RELEASE_CONFIGURATION ${LIBFABRIC_RELEASE_CONFIGURATION}
     DEBUG_CONFIGURATION ${LIBFABRIC_DEBUG_CONFIGURATION}
-    USE_VCPKG_INTEGRATION
-    ALLOW_ROOT_INCLUDES
-    OPTIONS
-      /p:SolutionDir=${SOURCE_PATH}
-      /p:AdditionalIncludeDirectories="${CURRENT_INSTALLED_DIR}/include"
+    INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
+    #OPTIONS
+    # /p:SolutionDir=${SOURCE_PATH} ?
 )
 
 #Move includes under subdirectory to avoid colisions with other libraries

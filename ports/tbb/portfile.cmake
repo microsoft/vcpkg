@@ -67,7 +67,7 @@ else()
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc.vcxproj)
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc_proxy.vcxproj)
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH build/vs2013/makefile.sln
         RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}

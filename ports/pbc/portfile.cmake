@@ -96,16 +96,14 @@ else()
     file(COPY ${FILES} ${MPIR_LIBRARIES_DBG} DESTINATION "${SOURCE_PATH_PARENT}/mpir/${LibrarySuffix}/${Platform}/Debug")
 
     get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
-    vcpkg_install_msbuild(SOURCE_PATH ${SOURCE_PATH_PARENT}
+    vcpkg_msbuild_install(SOURCE_PATH ${SOURCE_PATH_PARENT}
         PROJECT_SUBPATH ${SOURCE_PATH_SUFFIX}/pbcwin/projects/pbclib.vcxproj
         INCLUDES_SUBPATH ${SOURCE_PATH_SUFFIX}/include
         LICENSE_SUBPATH ${SOURCE_PATH_SUFFIX}/COPYING
         RELEASE_CONFIGURATION "Release${ConfigurationSuffix}"
         DEBUG_CONFIGURATION "Debug${ConfigurationSuffix}"
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
         OPTIONS /p:SolutionDir=../
-        ALLOW_ROOT_INCLUDES ON
+        INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     )
 
     # clean up mpir stuff

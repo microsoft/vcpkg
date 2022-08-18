@@ -137,12 +137,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
-  vcpkg_install_msbuild(
+  vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
-    SKIP_CLEAN
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -280,12 +279,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   if("xml" IN_LIST FEATURES)
     file(RELATIVE_PATH PROJECT_SUBPATH_XML "${SOURCE_PATH}" "${ACE_ROOT}/ACEXML/ACEXML.sln")
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
       PLATFORM ${MSBUILD_PLATFORM}
-      SKIP_CLEAN
     )
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"

@@ -72,7 +72,7 @@ foreach(CSPROJ IN ITEMS
     )
 endforeach()
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH EasyHook.sln
     TARGET EasyHookDll

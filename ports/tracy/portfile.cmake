@@ -92,10 +92,9 @@ endfunction()
 
 if("capture" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
+        vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
             PROJECT_SUBPATH "capture/build/win32/capture.vcxproj"
-            USE_VCPKG_INTEGRATION
         )
     else()
         tracy_tool_install_make(capture capture)
@@ -104,10 +103,9 @@ endif()
 
 if("csvexport" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
+        vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
             PROJECT_SUBPATH "csvexport/build/win32/csvexport.vcxproj"
-            USE_VCPKG_INTEGRATION
         )
     else()
         tracy_tool_install_make(csvexport csvexport)
@@ -116,10 +114,9 @@ endif()
 
 if("import-chrome" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
+        vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
             PROJECT_SUBPATH "import-chrome/build/win32/import-chrome.vcxproj"
-            USE_VCPKG_INTEGRATION
         )
     else()
         tracy_tool_install_make(import-chrome import-chrome)
@@ -128,10 +125,9 @@ endif()
 
 if("profiler" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
+        vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
             PROJECT_SUBPATH "profiler/build/win32/Tracy.vcxproj"
-            USE_VCPKG_INTEGRATION
         )
     else()
         tracy_tool_install_make(profiler Tracy)
@@ -140,10 +136,9 @@ endif()
 
 if("update" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
+        vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
             PROJECT_SUBPATH "update/build/win32/update.vcxproj"
-            USE_VCPKG_INTEGRATION
         )
     else()
         tracy_tool_install_make(update update)

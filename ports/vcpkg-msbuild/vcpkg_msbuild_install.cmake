@@ -2,13 +2,13 @@ function(vcpkg_msbuild_install)
     cmake_parse_arguments(
         PARSE_ARGV 0
         "arg"
-        "SKIP_CLEAN"
-        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET;LANGUAGE"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
+        "CLEAN"
+        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET;INCLUDE_INSTALL_DIR"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "vcpkg_install_msbuild was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     if(NOT DEFINED arg_RELEASE_CONFIGURATION)
@@ -16,6 +16,9 @@ function(vcpkg_msbuild_install)
     endif()
     if(NOT DEFINED arg_DEBUG_CONFIGURATION)
         set(arg_DEBUG_CONFIGURATION Debug)
+    endif()
+    if(NOT DEFINED arg_INCLUDE_INSTALL_DIR)
+        set(INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include/${port}")
     endif()
     if(NOT DEFINED arg_PLATFORM)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -37,10 +40,20 @@ function(vcpkg_msbuild_install)
     if(NOT DEFINED arg_TARGET)
         set(arg_TARGET Rebuild)
     endif()
+    if(DEFINED arg_ADDITIONAL_LIBS)
+        vcpkg_list(APPEND arg_ADDITIONAL_LIBS_DEBUG "${arg_ADDITIONAL_LIBS}")
+        vcpkg_list(APPEND arg_ADDITIONAL_LIBS_RELEASE "${arg_ADDITIONAL_LIBS}")
+    endif()
+
+    vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
+
+    set(source_copy "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    file(REMOVE_RECURSE "${source_copy}")
+    file(MAKE_DIRECTORY "${source_copy}")
+    file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${source_copy}")
 
     vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
                                OUTPUT_TARGETS target_file
-                               LANGUAGE ${arg_LANGUAGE}
                                RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
                                DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
                                DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
@@ -76,25 +89,23 @@ function(vcpkg_msbuild_install)
         list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
     endif()
 
-    set(source_path_suffix "")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Release")
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
-
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+        file(REMOVE_RECURSE "${working_dir}")
+        file(MAKE_DIRECTORY "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${source_copy}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
+                "/p:OutDir=${working_dir}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
-            WORKING_DIRECTORY "${source_copy_path}"
+            WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-rel"
         )
-        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
-        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
-        file(GLOB_RECURSE exes "${source_copy_path}/*.exe")
+        file(GLOB_RECURSE libs "${working_dir}/*.lib")
+        file(GLOB_RECURSE dlls "${working_dir}/*.dll")
+        file(GLOB_RECURSE exes "${working_dir}/*.exe")
         if(NOT libs STREQUAL "")
             file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         endif()
@@ -109,20 +120,20 @@ function(vcpkg_msbuild_install)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Debug")
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
+        file(REMOVE_RECURSE "${working_dir}")
+        file(MAKE_DIRECTORY "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${source_copy}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
+                "/p:OutDir=${working_dir}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
-            WORKING_DIRECTORY "${source_copy_path}"
+            WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
-        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
-        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
+        file(GLOB_RECURSE libs "${working_dir}/*.lib")
+        file(GLOB_RECURSE dlls "${working_dir}/*.dll")
         if(NOT libs STREQUAL "")
             file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
@@ -133,25 +144,14 @@ function(vcpkg_msbuild_install)
 
     vcpkg_copy_pdbs()
 
-    if(NOT arg_SKIP_CLEAN)
+    if(arg_CLEAN)
         vcpkg_clean_msbuild()
     endif()
 
     if(DEFINED arg_INCLUDES_SUBPATH)
         file(COPY "${arg_SOURCE_PATH}/${arg_INCLUDES_SUBPATH}/"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
+            DESTINATION "${arg_INCLUDE_INSTALL_DIR}"
         )
-        file(GLOB root_includes
-            LIST_DIRECTORIES false
-            "${CURRENT_PACKAGES_DIR}/include/*")
-        if(NOT root_includes STREQUAL "")
-            if(arg_REMOVE_ROOT_INCLUDES)
-                file(REMOVE ${root_includes})
-            elseif(arg_ALLOW_ROOT_INCLUDES)
-            else()
-                message(FATAL_ERROR "Top-level files were found in ${CURRENT_PACKAGES_DIR}/include; this may indicate a problem with the call to `vcpkg_install_msbuild()`.\nTo avoid conflicts with other libraries, it is recommended to not put includes into the root `include/` directory.\nPass either ALLOW_ROOT_INCLUDES or REMOVE_ROOT_INCLUDES to handle these files.\n")
-            endif()
-        endif()
     endif()
 
     if(DEFINED arg_LICENSE_SUBPATH)

@@ -35,12 +35,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # This text file gets copied as a library, and included as one in the package 
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/hermes/COPYING.LIB")
     
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH VisualC/SDL1_2017.sln
         INCLUDES_SUBPATH include
         LICENSE_SUBPATH COPYING
-        ALLOW_ROOT_INCLUDES
+        INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     )
     
     #Take all the fils into include/SDL to sovle conflict with SDL2 port

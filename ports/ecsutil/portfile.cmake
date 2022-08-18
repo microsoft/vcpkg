@@ -23,7 +23,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH ECSUtil.sln
     PLATFORM ${PLATFORM}

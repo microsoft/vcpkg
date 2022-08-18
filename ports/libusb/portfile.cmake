@@ -42,7 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   # which causes issues with the windows MSBUILD process
   file(REMOVE "${SOURCE_PATH}/README.md")
 
-  vcpkg_install_msbuild(
+  vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
       LICENSE_SUBPATH COPYING

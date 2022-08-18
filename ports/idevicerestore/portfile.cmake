@@ -9,11 +9,10 @@ vcpkg_from_github(
         fix-libgen.h-cannot-be-found.patch
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH idevicerestore.vcxproj
     LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
 )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

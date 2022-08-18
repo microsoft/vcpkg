@@ -25,19 +25,17 @@ vcpkg_from_github(
 
 # Build:
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # UWP:
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "3FD/3FD.WinRT.UWP.vcxproj"
         PLATFORM ${BUILD_ARCH}
-        USE_VCPKG_INTEGRATION
     )
 elseif (NOT VCPKG_CMAKE_SYSTEM_NAME) # Win32:
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "3FD/3FD.vcxproj"
         PLATFORM ${BUILD_ARCH}
         TARGET Build
-        USE_VCPKG_INTEGRATION
     )
 else()
     message(FATAL_ERROR "Unsupported system: 3FD is not currently ported to VCPKG in ${VCPKG_CMAKE_SYSTEM_NAME}!")

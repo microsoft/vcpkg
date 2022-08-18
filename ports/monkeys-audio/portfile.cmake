@@ -32,13 +32,13 @@ else()
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH Source/Projects/VS2019/MACDll/MACDll.vcxproj
         PLATFORM ${PLATFORM}
     )
 else()
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH Source/Projects/VS2019/MACLib/MACLib.vcxproj
         PLATFORM ${PLATFORM}
@@ -46,7 +46,7 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH Source/Projects/VS2019/Console/Console.vcxproj
         PLATFORM ${PLATFORM}

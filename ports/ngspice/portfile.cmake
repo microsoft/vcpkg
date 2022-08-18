@@ -31,7 +31,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/man")
 file(REMOVE_RECURSE "${SOURCE_PATH}/tests")
 
 # this builds the main dll
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     INCLUDES_SUBPATH /src/include
     LICENSE_SUBPATH COPYING

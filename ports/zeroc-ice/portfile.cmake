@@ -264,12 +264,10 @@ else() # VCPKG_TARGET_IS_WINDOWS
     )
 
     # Build Ice
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
-        SKIP_CLEAN
         TARGET "C++11\\ice++11"
-        USE_VCPKG_INTEGRATION
         OPTIONS
             ${MSBUILD_OPTIONS}
         ADDITIONAL_LIBS_RELEASE mcpp.lib bz2.lib

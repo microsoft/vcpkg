@@ -29,18 +29,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
     endforeach()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "platform/vsnet/osip2.vcxproj"
         INCLUDES_SUBPATH include
-        USE_VCPKG_INTEGRATION
-        REMOVE_ROOT_INCLUDES
+        INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     )
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
-        USE_VCPKG_INTEGRATION
     )
 
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)

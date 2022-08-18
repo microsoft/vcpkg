@@ -144,15 +144,13 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
     endif()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
-        TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
         ADDITIONAL_LIBS_RELEASE ${add_libs_rel}
         ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
-        SKIP_CLEAN
     )
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()

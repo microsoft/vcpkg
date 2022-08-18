@@ -8,13 +8,12 @@ vcpkg_from_github(
     HEAD_REF msvc-master
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libirecovery.sln
     INCLUDES_SUBPATH include
     LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
-    ALLOW_ROOT_INCLUDES
+    INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     ADDITIONAL_LIBS getopt.lib
 )
 

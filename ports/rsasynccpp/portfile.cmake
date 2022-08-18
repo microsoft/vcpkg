@@ -33,7 +33,7 @@ else ()
 endif()
 
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH RStein.AsyncCppLib.sln
     LICENSE_SUBPATH LICENSE

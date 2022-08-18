@@ -42,14 +42,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(HSP_TARGET libhunspell)
     endif()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "msvc/Hunspell.sln"
         INCLUDES_SUBPATH src/hunspell
         PLATFORM ${HUNSPELL_ARCH}
         RELEASE_CONFIGURATION Release${HUNSPELL_CONFIGURATION}
         DEBUG_CONFIGURATION Debug${HUNSPELL_CONFIGURATION}
-        ALLOW_ROOT_INCLUDES
+        INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     )
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

@@ -38,17 +38,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(RuntimeLibraryExt "DLL")
     endif()
 
-    vcpkg_install_msbuild(
-        USE_VCPKG_INTEGRATION
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH SMP/libgpg-error.sln
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         LICENSE_SUBPATH COPYING.LIB
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
-        SKIP_CLEAN
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
 
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
