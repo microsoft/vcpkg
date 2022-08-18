@@ -36,6 +36,8 @@ endfunction()
 #   - Z_VCPKG_MSYS_ARCHIVES
 #   - Z_VCPKG_MSYS_TOTAL_HASH
 #   - Z_VCPKG_MSYS_PACKAGES
+#   - Z_VCPKG_MSYS_${arg_NAME}_ARCHIVE
+#   - Z_VCPKG_MSYS_${arg_NAME}_PATCHES
 function(z_vcpkg_acquire_msys_declare_package)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "NAME;URL;SHA512" "DEPS;PATCHES")
 
@@ -125,7 +127,10 @@ function(vcpkg_acquire_msys out_msys_root)
                 SHA512 "${sha512}"
                 FILENAME "${filename}"
             )
-            list(APPEND Z_VCPKG_MSYS_ARCHIVES "${archive}")
+            string(REGEX MATCH "^(([^-]+(-[^0-9][^-]*)*)-.+\.pkg\.tar\.(xz|zst))$" pkg_name "${filename}")
+            set(pkg_name "${CMAKE_MATCH_2}")
+            list(APPEND Z_VCPKG_MSYS_ARCHIVES "${pkg_name}")
+            set(Z_VCPKG_MSYS_${pkg_name}_ARCHIVE "${archive}")
             string(APPEND Z_VCPKG_MSYS_TOTAL_HASH "${sha512}")
         endforeach()
     endif()
