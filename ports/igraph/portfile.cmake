@@ -4,9 +4,9 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.9.10/igraph-0.9.10.tar.gz"
-    FILENAME "igraph-0.9.10.tar.gz"
-    SHA512 e5306b4e546ce5e7854cb87d6e2c0b4250976ccdfdd3c81e8834a92432f6e3771215ceb7da74ce460c7bdbc191c3bbadd775de7b0d80e7daef3802741be81fb3
+    URLS "https://github.com/igraph/igraph/releases/download/0.10.0/igraph-0.10.0.tar.gz"
+    FILENAME "igraph-0.10.0.tar.gz"
+    SHA512 7087929ea2658bebecb9b9f53f2b00f675c0f223b17ae4ec641c4f3976aef1a192c1b969233d380ad7c3b8a65e27964c02efd3b5d51b27e7ed537faa84f8e06f
 )
 
 vcpkg_extract_source_archive_ex(
@@ -34,13 +34,20 @@ elseif (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 endif()
 
+# Extra flags that are set only on some platforms go here:
+set (ADDITIONAL_FLAGS "")
+
+if (VCPKG_TARGET_IS_UWP)
+    # Treat UWP as corss-compiling, as exectuables cannot be run.
+    list(APPEND ADDITIONAL_FLAGS "-DCMAKE_CROSSCOMPILING=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
         # Currently, external GMP provides no performance or functionality benefits.
@@ -51,6 +58,7 @@ vcpkg_cmake_configure(
         -DIGRAPH_USE_INTERNAL_BLAS=OFF
         -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
+        ${ADDITIONAL_FLAGS}
         ${FEATURE_OPTIONS}
 )
 
