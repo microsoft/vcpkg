@@ -1,8 +1,0 @@
-get_filename_component(_gmp_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_gmp_root "${_gmp_root}" PATH)
-get_filename_component(_gmp_root "${_gmp_root}" PATH)
-
-add_library(gmp::gmp INTERFACE IMPORTED)
-set_target_properties(gmp::gmp PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_gmp_root}/include")
-
-unset(_gmp_root)
