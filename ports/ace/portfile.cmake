@@ -121,25 +121,10 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
-    file(WRITE "${SOURCE_PATH}/Directory.Build.props" "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
-                                                     <ItemDefinitionGroup>
-                                                     <ClCompile>
-                                                     <AdditionalOptions>/MP</AdditionalOptions>
-                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
-                                                     </ClCompile>
-                                                     <Link>
-                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
-                                                     </Link>
-                                                     </ItemDefinitionGroup>
-                                                     </Project>")
-  endif()
-
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
   vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH ${PROJECT_SUBPATH}
+    PROJECT_SUBPATH "${PROJECT_SUBPATH}"
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
   )
@@ -163,8 +148,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
   endfunction()
 
-  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}")
+  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS

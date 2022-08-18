@@ -47,11 +47,6 @@ function(vcpkg_msbuild_install)
 
     vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
 
-    set(source_copy "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-    file(REMOVE_RECURSE "${source_copy}")
-    file(MAKE_DIRECTORY "${source_copy}")
-    file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${source_copy}")
-
     vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
                                OUTPUT_TARGETS target_file
                                RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
@@ -91,13 +86,13 @@ function(vcpkg_msbuild_install)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Release")
-        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         file(REMOVE_RECURSE "${working_dir}")
         file(MAKE_DIRECTORY "${working_dir}")
+        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${working_dir}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
-                "/p:OutDir=${working_dir}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${working_dir}"
@@ -120,13 +115,13 @@ function(vcpkg_msbuild_install)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Debug")
-        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         file(REMOVE_RECURSE "${working_dir}")
         file(MAKE_DIRECTORY "${working_dir}")
+        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${working_dir}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
-                "/p:OutDir=${working_dir}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
             WORKING_DIRECTORY "${working_dir}"

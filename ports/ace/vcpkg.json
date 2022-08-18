@@ -6,6 +6,7 @@
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
   "license": "DOC",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-msbuild",
