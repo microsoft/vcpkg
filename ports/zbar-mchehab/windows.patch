@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 105da09..f34ef33 100644
+index c8fea14..eb0a097 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -54,7 +54,7 @@ AC_DEFINE_UNQUOTED([LIB_VERSION_REVISION],
+@@ -55,7 +55,7 @@ AC_DEFINE_UNQUOTED([LIB_VERSION_REVISION],
    [Library revision])
  
  AM_CPPFLAGS="-I\$(top_srcdir)/include"

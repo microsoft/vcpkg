@@ -5,11 +5,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mchehab/zbar
-    REF 0.23.1
-    SHA512 ae7741cf750a10cf53dc11abcd482c3885507153ee37f6e3364ed5ed72184ebb009560b8c40d8090603a551fb681700a962838a59ce77d005d080ee49fbfa54b
+    REF 0.23.90
+    SHA512 d73d71873bec68ee021997512a9edbd223f5f5fe43c66c4dd3502224ba6009be2e5e1714766cb8e1056244673e87e0939ed0319116f61d7371b5ab79fb5e04eb
     HEAD_REF master
     PATCHES
-        autoconf.patch
         c99.patch
         issue219.patch
         windows.patch
