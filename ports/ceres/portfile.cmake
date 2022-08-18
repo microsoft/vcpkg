@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
     REF f68321e7de8929fbcdb95dd42877531e64f72f66 #2.1.0
-    SHA512 b482988d837187e348250122b1acacbb4fd6354709efa6335c0322a68234a38292c072499a886b69a30614f85c818d3d2e9eeb3d3d0ca17d8f013a38d9151207
+    SHA512 67bbd8a9385a40fe69d118fbc84da0fcc9aa1fbe14dd52f5403ed09686504213a1d931e95a1a0148d293b27ab5ce7c1d618fbf2e8fed95f2bbafab851a1ef449
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch

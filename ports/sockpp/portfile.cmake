@@ -8,11 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt "\${SOCKPP}-static" "\${SOCKPP}")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "\${SOCKPP}-static" "\${SOCKPP}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSOCKPP_BUILD_SHARED=OFF
         -DSOCKPP_BUILD_STATIC=ON
@@ -23,9 +22,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/sockppConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/sockppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

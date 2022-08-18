@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         avoid-docs.patch
+        guard-imported-lib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -28,17 +29,17 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/c-ares)
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/ares.h"
         "#ifdef CARES_STATICLIB" "#if 1"
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin") # Empty folders
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

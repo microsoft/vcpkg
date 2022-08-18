@@ -19,6 +19,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     z_vcpkg_determine_autotools_target_cpu(HOST_ARCH)
     list(APPEND OPTIONS --build=${BUILD_ARCH}-pc-mingw32)
     list(APPEND OPTIONS --host=${HOST_ARCH}-pc-mingw32)
+    
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND OPTIONS --disable-asm)
+    endif()
+    
     set(ENV{AS} "${NASM}")
 endif()
 

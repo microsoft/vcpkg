@@ -12,14 +12,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wchar     SPDLOG_WCHAR_SUPPORT
 )
 
-# configured in triplet file
+# SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
 if(NOT DEFINED SPDLOG_WCHAR_FILENAMES)
     set(SPDLOG_WCHAR_FILENAMES OFF)
 endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if("wchar" IN_LIST FEATURES)
         message(WARNING "Feature 'wchar' is only supported for Windows and has no effect on other platforms.")
-    elseif(SPDLOG_WCHAR_FILENAMES) 
+    elseif(SPDLOG_WCHAR_FILENAMES)
         message(FATAL_ERROR "Build option 'SPDLOG_WCHAR_FILENAMES' is for Windows.")
     endif()
 endif()
@@ -45,10 +45,23 @@ vcpkg_copy_pdbs()
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
 
+# add support for integration other than cmake
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
     "// #define SPDLOG_FMT_EXTERNAL"
-    "#define SPDLOG_FMT_EXTERNAL"
+    "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
 )
+if(SPDLOG_WCHAR_SUPPORT)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_WCHAR_TO_UTF8_SUPPORT"
+        "#ifndef SPDLOG_WCHAR_TO_UTF8_SUPPORT\n#define SPDLOG_WCHAR_TO_UTF8_SUPPORT\n#endif"
+    )
+endif()
+if(SPDLOG_WCHAR_FILENAMES)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_WCHAR_FILENAMES"
+        "#ifndef SPDLOG_WCHAR_FILENAMES\n#define SPDLOG_WCHAR_FILENAMES\n#endif"
+    )
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share)

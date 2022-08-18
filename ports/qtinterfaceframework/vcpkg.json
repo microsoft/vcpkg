@@ -1,7 +1,6 @@
 {
   "name": "qtinterfaceframework",
-  "version": "6.2.4",
-  "port-version": 2,
+  "version": "6.3.1",
   "description": "Qt Interface Framework",
   "homepage": "https://www.qt.io/",
   "license": null,

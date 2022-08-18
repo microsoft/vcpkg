@@ -1,10 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.8.2
-    SHA512 8c8ae291129b78e3b8367307ad1b1715af1438cd76d7160d64d13a58adf84c7c9f51efeba4656f55e101c25e4cb744db0d8bb5c01a2decb229e4567d16bdcb22
+    REF v1.9.2
+    SHA512 f067b227bc784e1dee61261d540632e54a4e5849934d1f55571979fea6b3c6858c27bcd397cf33fbee2409df12b149bb78f201f33646d14b5288a33147a9c9dc
     HEAD_REF master
-    PATCHES lz4.patch
+    PATCHES
+        lz4.patch
+        fix_curl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
@@ -15,10 +17,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
         snappy  WITH_SNAPPY
+        curl    WITH_CURL
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF

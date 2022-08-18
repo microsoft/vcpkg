@@ -1,8 +1,9 @@
 {
   "name": "boost-log",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost log module",
   "homepage": "https://github.com/boostorg/log",
+  "license": "BSL-1.0",
   "supports": "!uwp & !emscripten",
   "dependencies": [
     "boost-align",

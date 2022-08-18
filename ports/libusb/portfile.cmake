@@ -1,18 +1,17 @@
-
 if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
 endif()
 
-set(VERSION 1.0.24)
+set(VERSION 1.0.26)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF c6a35c56016ea2ab2f19115d2ea1e85e0edae155 # v1.0.24
-    SHA512 985c020d9ae6f7135e3bfee68dddcf70921481db3d10e420f55d5ee9534f7fe7be6a2a31ee73a3b282b649fcc36da4fed848e0bd0410c20eaf1deb9a8e3086e8
+    REF 4239bc3a50014b8e6a5a2a59df1fff3b7469543b # v1.0.26
+    SHA512 f07ec9ef4df555733dab9388595cd10bc87195da54f4c646478d4a0496ee7b8933de03e957c7466291c120102d8801e8b26846cb27b201bb9cbca5df03f3a6ef
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
     set(MSVS_VERSION 2019)
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")

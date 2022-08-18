@@ -1,8 +1,9 @@
 {
   "name": "boost-ublas",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost ublas module",
   "homepage": "https://github.com/boostorg/ublas",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-compute",
     "boost-concept-check",

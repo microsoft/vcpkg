@@ -1,13 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
-    REF 2e40f55bfb460fc9d8cbcd290a0c9eb908d5af7e # gd-2.3.2
-    SHA512 c3f2db40f774b44e3fd3fbc743efe70916a71ecd948bf8cb4aeb8a9b9fefd9f17e02d82a9481bac6fcc3624f057b5a308925b4196fb612b65bb7304747d33ffa
+    REF b5319a41286107b53daa0e08e402aa1819764bdc # gd-2.3.3
+    SHA512 b4c6ca1d9575048de35a38b0db69e7380e160293133c1f72ae570f83ce614d4f2fd2615d217f7a0023e2265652c1089561b906beabca56c15e6ec0250e4394b2
     HEAD_REF master
     PATCHES
         0001-fix-cmake.patch
-        no-write-source-dir.patch
-        intrin.patch
         fix_msvc_build.patch
 )
 
@@ -30,20 +28,15 @@ vcpkg_check_features(
         fontconfig   ENABLE_FONTCONFIG
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(LIBGD_SHARED_LIBS ON)
-  set(LIBGD_STATIC_LIBS OFF)
-else()
-  set(LIBGD_SHARED_LIBS OFF)
-  set(LIBGD_STATIC_LIBS ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLIBGD_SHARED_LIBS=${LIBGD_SHARED_LIBS}
-        -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
+        -DLIBGD_SHARED_LIBS=${BUILD_SHARED}
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
         -DBUILD_TEST=OFF
 )
 

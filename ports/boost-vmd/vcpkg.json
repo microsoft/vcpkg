@@ -1,8 +1,9 @@
 {
   "name": "boost-vmd",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost vmd module",
   "homepage": "https://github.com/boostorg/vmd",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-preprocessor",
     "boost-vcpkg-helpers"

@@ -1,10 +1,9 @@
 {
   "name": "qtapplicationmanager",
-  "version": "6.2.4",
+  "version": "6.3.1",
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!(windows & arm)",
   "dependencies": [
     "libarchive",
     "libyaml",

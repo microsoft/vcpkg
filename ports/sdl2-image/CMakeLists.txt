@@ -68,9 +68,9 @@ if(USE_WEBP)
 endif()
 
 if(USE_PNG)
-    find_package(libpng REQUIRED)
+    find_package(PNG REQUIRED)
     add_definitions(-DLOAD_PNG)
-    target_link_libraries(SDL2_image PRIVATE png)
+    target_link_libraries(SDL2_image PRIVATE PNG::PNG)
 endif()
 
 if(USE_JPEG)

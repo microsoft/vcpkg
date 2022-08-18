@@ -27,12 +27,11 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-vcpkg.patch
-    0002-disable-waring-4065.patch
+    0002-remove-WX-Werror.patch
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     ${FEATURE_OPTIONS}
   OPTIONS_DEBUG
@@ -40,10 +39,10 @@ vcpkg_configure_cmake(
     -DINSTALL_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/boringssl)
   vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/boringssl")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -4,20 +4,22 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.9.8/igraph-0.9.8.tar.gz"
-    FILENAME "igraph-0.9.8.tar.gz"
-    SHA512 4f0af3e2b4e2ed782064afc8a7aa0f104c683c35de3f71240d41a1b5097dd41101a483d4e5f9ce4dca1a5ca0bb616e1c125d58ccf50066b1405e8188fe4d796f
+    URLS "https://github.com/igraph/igraph/releases/download/0.9.9/igraph-0.9.9.tar.gz"
+    FILENAME "igraph-0.9.9.tar.gz"
+    SHA512 bbfe8b76e7806ba4c70cbf0dc5ce6724f1805383c1fb6ac05c5cd1bfc829682ff2184e4f836886a562851d1af1384fd7cccb5027c4aa0deadd0e35d50aabb451
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+      "glpk-uwp.patch" # patch GLPK for UWP compatibility
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    graphml   IGRAPH_GRAPHML_SUPPORT
-    openmp    IGRAPH_OPENMP_SUPPORT
+        graphml         IGRAPH_GRAPHML_SUPPORT
+        openmp          IGRAPH_OPENMP_SUPPORT
 )
 
 # Allow cross-compilation. See https://igraph.org/c/html/latest/igraph-Installation.html#igraph-Installation-cross-compiling
@@ -38,10 +40,6 @@ vcpkg_cmake_configure(
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        # OpenBLAS provides BLAS/LAPACK but some tests fail with OpenBLAS on Windows.
-        # See https://github.com/igraph/igraph/issues/1491
-        -DIGRAPH_USE_INTERNAL_BLAS=ON
-        -DIGRAPH_USE_INTERNAL_LAPACK=ON
         -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
@@ -49,6 +47,9 @@ vcpkg_cmake_configure(
         -DIGRAPH_USE_INTERNAL_GMP=ON
         # PLFIT is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_PLFIT=ON
+        # Use BLAS and LAPACK from vcpkg
+        -DIGRAPH_USE_INTERNAL_BLAS=OFF
+        -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )

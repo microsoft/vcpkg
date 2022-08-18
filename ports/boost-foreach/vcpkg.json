@@ -1,8 +1,9 @@
 {
   "name": "boost-foreach",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost foreach module",
   "homepage": "https://github.com/boostorg/foreach",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

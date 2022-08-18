@@ -1,11 +1,11 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.2.4",
+  "version": "6.3.1",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((arm | x86) & windows)",
+  "supports": "!static & !(x86 & windows)",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -22,6 +22,10 @@
     {
       "name": "glib",
       "platform": "!windows"
+    },
+    {
+      "name": "gperf",
+      "host": true
     },
     {
       "name": "harfbuzz",
@@ -102,6 +106,10 @@
     {
       "name": "snappy",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
     },
     {
       "name": "vcpkg-tool-nodejs",
