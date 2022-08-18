@@ -12,9 +12,7 @@ vcpkg_from_github(
     SHA512 8a3ff480e065cf517468fac9d8d4474cfa6ed354fa83ae60de224580f359f8dcfbfed6cf640d33783779174ade0bca0fbe1c529097ee103af2b02546fc2acaec
     HEAD_REF master
     PATCHES
-        nettle.patch
         external-libtasn1.patch
-        runtime.patch
         pkgconfig.patch
 )
 
@@ -70,6 +68,73 @@ else()
     set(RuntimeLibraryExt "DLL")
 endif()
 
+# patch output library file path and name
+foreach(PROPS IN ITEMS
+"${SOURCE_PATH}/SMP/smp_deps.props"
+"${SOURCE_PATH}/SMP/smp_winrt_deps.props")
+vcpkg_replace_string(
+    "${PROPS}"
+    [=[_winrt</TargetName>]=]
+    [=[</TargetName>]=]
+)
+vcpkg_replace_string(
+    "${PROPS}"
+    [=[<TargetName>lib$(RootNamespace)]=]
+    [=[<TargetName>$(RootNamespace)]=]
+)
+endforeach()
+
+# patch hogweed, gpm, nettle, zlib libraries file names; inject RuntimeLibrary property to control CRT linkage 
+foreach(VCXPROJ IN ITEMS
+"${SOURCE_PATH}/SMP/libgnutls.vcxproj"
+"${SOURCE_PATH}/SMP/libgnutls_winrt.vcxproj")
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "_winrt.lib"
+    ".lib"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "libhogweed"
+    "hogweed"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "hogweedd"
+    "hogweed"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "libgmp"
+    "gmp"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "gmpd"
+    "gmp"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "libnettle"
+    "nettle"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "nettled"
+    "nettle"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    "libzlib"
+    "zlib"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
+    [=[</DisableSpecificWarnings>]=]
+    [=[</DisableSpecificWarnings><RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>]=]
+)
+endforeach()
+
 vcpkg_install_msbuild(
     USE_VCPKG_INTEGRATION
     SOURCE_PATH "${SOURCE_PATH}"
@@ -96,7 +161,7 @@ set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(GMP_LIBS "-lgmp")
-set(GNUTLS_LIBS -lgnutls)
+set(GNUTLS_LIBS "-lgnutls")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gnutls.pc" @ONLY)
 
 set(prefix "${CURRENT_INSTALLED_DIR}/debug")
@@ -104,7 +169,7 @@ set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/../include")
 set(GMP_LIBS "-lgmpd")
-set(GNUTLS_LIBS -lgnutlsd)
+set(GNUTLS_LIBS "-lgnutlsd")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
 
 vcpkg_fixup_pkgconfig()
