@@ -46,11 +46,6 @@ foreach(PROPS IN ITEMS
     )
     vcpkg_replace_string(
         "${PROPS}"
-        [=[<OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>]=]
-        [=[<OutDir>$(ProjectDir)..\msvc\</OutDir>]=]
-    )
-    vcpkg_replace_string(
-        "${PROPS}"
         [=[</TreatSpecificWarningsAsErrors>]=]
         [=[</TreatSpecificWarningsAsErrors><RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>]=]
     )
@@ -81,6 +76,7 @@ vcpkg_install_msbuild(
     RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
     DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
     SKIP_CLEAN
+    OPTIONS /p:OutDir=..\\msvc
     OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
     OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
 )
