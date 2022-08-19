@@ -1402,7 +1402,7 @@
     },
     "civetweb": {
       "baseline": "1.15",
-      "port-version": 1
+      "port-version": 2
     },
     "cjson": {
       "baseline": "1.7.15",
@@ -1870,7 +1870,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 5
+      "port-version": 6
     },
     "devicenameresolver": {
       "baseline": "2016-06-26",
@@ -2634,7 +2634,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 11
+      "port-version": 12
     },
     "gmsh": {
       "baseline": "4.9.0",
@@ -3021,8 +3021,8 @@
       "port-version": 1
     },
     "inih": {
-      "baseline": "51",
-      "port-version": 1
+      "baseline": "56",
+      "port-version": 0
     },
     "iniparser": {
       "baseline": "2020-04-06",
@@ -3674,7 +3674,7 @@
     },
     "libgpg-error": {
       "baseline": "1.42",
-      "port-version": 3
+      "port-version": 4
     },
     "libgpiod": {
       "baseline": "1.6.3",
@@ -4618,7 +4618,7 @@
     },
     "minio-cpp": {
       "baseline": "0.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "minisat-master-keying": {
       "baseline": "2.3.6",
@@ -5330,7 +5330,7 @@
     },
     "opus": {
       "baseline": "1.3.1",
-      "port-version": 6
+      "port-version": 7
     },
     "opusfile": {
       "baseline": "0.12",
@@ -6138,7 +6138,7 @@
     },
     "quazip": {
       "baseline": "1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "quickfast": {
       "baseline": "1.5",
@@ -6603,6 +6603,10 @@
     "shapelib": {
       "baseline": "1.5.0",
       "port-version": 3
+    },
+    "shiftmedia-libgcrypt": {
+      "baseline": "1.10.1",
+      "port-version": 0
     },
     "shiva": {
       "baseline": "1.0",
@@ -7237,7 +7241,7 @@
       "port-version": 3
     },
     "tracy": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "transwarp": {
@@ -7714,7 +7718,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 6
+      "port-version": 7
     },
     "xalan-c": {
       "baseline": "1.12",
