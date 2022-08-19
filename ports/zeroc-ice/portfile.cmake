@@ -10,10 +10,9 @@ vcpkg_from_github(
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
 set(UNIX_BUILD_DIR "${SOURCE_PATH}")
-set(WIN_DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
-set(WIN_RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
+set(WIN_DEBUG_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}")
+set(WIN_RELEASE_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
 
 # install_includes
 function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
@@ -266,15 +265,15 @@ else() # VCPKG_TARGET_IS_WINDOWS
 
     # Build Ice
     vcpkg_msbuild_install(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
         TARGET "C++11\\ice++11"
         OPTIONS
             ${MSBUILD_OPTIONS}
         OPTIONS_DEBUG
-            "/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+            #"/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
         OPTIONS_RELEASE
-            "/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+            #"/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
         DEPENDENT_PKGCONFIG bzip2 ${pkgconfig_packages}
         ADDITIONAL_LIBS lmdb.lib
         ADDITIONAL_LIBS_RELEASE mcpp.lib ${libs_rel}
@@ -303,11 +302,11 @@ else() # VCPKG_TARGET_IS_WINDOWS
 endif()
 
 # Remove unnecessary static libraries.
-#file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
-#file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
-#list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
-#list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
-#file(REMOVE ${PDLIBS} ${PRLIBS})
+file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
+file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
+list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
+list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
+file(REMOVE ${PDLIBS} ${PRLIBS})
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/zeroc-ice" RENAME copyright)

@@ -47,8 +47,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
     )
 
-    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
     
     set(exec_prefix "\${prefix}")
     set(libdir "\${prefix}/lib")
