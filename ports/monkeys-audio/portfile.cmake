@@ -32,6 +32,8 @@ else()
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    list(APPEND VCPKG_C_FLAGS "-D_AFXDLL")
+    list(APPEND VCPKG_CXX_FLAGS "-D_AFXDLL")
     vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH Source/Projects/VS2019/MACDll/MACDll.vcxproj
@@ -52,14 +54,14 @@ if ("tools" IN_LIST FEATURES)
         PLATFORM ${PLATFORM}
     )
 
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Console.lib ${CURRENT_PACKAGES_DIR}/debug/lib/Console.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/Console.exe ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/mac.exe)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/Console.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/Console.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/Console.exe" "${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/mac.exe")
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/MACLib.lib ${CURRENT_PACKAGES_DIR}/debug/lib/MACLib.lib)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/MACLib.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/MACLib.lib")
 endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)

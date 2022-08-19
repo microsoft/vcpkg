@@ -47,6 +47,7 @@ function(vcpkg_msbuild_install)
 
     vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
 
+    file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by vcpkg_msbuild_create_props
     vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
                                OUTPUT_TARGETS target_file
                                RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
