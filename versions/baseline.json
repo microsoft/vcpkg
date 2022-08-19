@@ -6717,8 +6717,8 @@
       "port-version": 0
     },
     "socket-io-client": {
-      "baseline": "3.1.0",
-      "port-version": 1
+      "baseline": "2022-08-19",
+      "port-version": 0
     },
     "sockpp": {
       "baseline": "0.7.1",
