@@ -6665,8 +6665,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "2022-04-15",
-      "port-version": 1
+      "baseline": "0.36.0",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
