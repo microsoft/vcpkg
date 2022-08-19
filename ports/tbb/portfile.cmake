@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TBB)
+vcpkg_cmake_config_fixup(PACKAGE_NAME TBB CONFIG_PATH "lib/cmake/TBB")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
