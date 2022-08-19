@@ -1,0 +1,18 @@
+--- configure.ac	2017-02-13 14:34:06.983449082 +0100
++++ configure.ac	2017-02-13 15:36:50.944653536 +0100
+@@ -355,7 +355,14 @@
+ 
+ 
+ # Checking for libgpg-error.
+-AM_PATH_GPG_ERROR(1.17,, AC_MSG_ERROR([libgpg-error was not found]))
++if test "${GPG_ERROR_CFLAGS+set}" != "set"; then
++  AM_PATH_GPG_ERROR(1.17,, AC_MSG_ERROR([libgpg-error was not found]))
++else
++  GPG_ERROR_CFLAGS="$GPG_ERROR_CFLAGS"
++  GPG_ERROR_LIBS="$GPG_ERROR_LIBS"
++  AC_SUBST(GPG_ERROR_CFLAGS)
++  AC_SUBST(GPG_ERROR_LIBS)
++fi
+ 
+ #
+ # Checks for library functions.
