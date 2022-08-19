@@ -11,9 +11,18 @@ if(NOT VCPKG_PREFER_SYSTEM_LIBS)
     set(path_suffix "")
   endif()
   set(backup_env_pkg_config_path "$ENV{PKG_CONFIG_PATH}")
+
+  # Compute the installation prefix relative to this file.
+  get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+  endif()
+
   # libdpdk.pc and libdpdk-libs.pc are installed to this path
   set(ENV{PKG_CONFIG_PATH}
-      "@CURRENT_INSTALLED_DIR@${path_suffix}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}"
+      "${_IMPORT_PREFIX}${path_suffix}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}"
   )
 else()
   unset(backup_env_pkg_config_path)

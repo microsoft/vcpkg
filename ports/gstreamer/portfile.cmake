@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 d6b8e9fc195a60dfb83fe8a49040c21ca5603e3ada2036d56851e6e61a1cd2653ad45f33e39388bde859dfb4806f4a60d9dbfac5fe41b6d2a8b395c44d4525e3
     HEAD_REF master
-    PATCHES gstreamer-disable-hot-doc.patch
+    PATCHES gstreamer-disable-hot-doc.patch fix-clang-cl.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_SOURCE_PATH
@@ -12,7 +12,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 6070f1febf2a1bcc6e68f1e03c1b76891db210773065696e26fac20f0bd3ff47e1634222a49f93a10f6e47717ff21084c9ae0feed6a20facb9650aeb879cc380
     HEAD_REF master
-    PATCHES gstreamer-disable-no-unused.patch
+    PATCHES gstreamer-disable-no-unused.patch fix-clang-cl-gstreamer.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch)
@@ -25,7 +25,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 d2005e6a3bda5f08395b131347e8f4054c2469e04e65d1acc1a1572bf10d81d4dad4e43d6a8600346b6175a2310f81157a0cd27398ef69b5363b16346febfb39
     HEAD_REF master
-    PATCHES ${PLUGIN_BASE_PATCHES}
+    PATCHES ${PLUGIN_BASE_PATCHES} fix-clang-cl-base.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_GOOD_SOURCE_PATH
@@ -33,7 +33,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 71e9f36d407db3b75d9a68f6447093aa011b2b586b06e0a1bb79c7db37c9114de505699e99a4dad06d8d9c742e91f48dd35457283babe440f88a9e40d3da465b
     HEAD_REF master
-    PATCHES ${PLUGIN_GOOD_PATCHES}
+    PATCHES ${PLUGIN_GOOD_PATCHES} fix-clang-cl-good.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_BAD_SOURCE_PATH
@@ -41,6 +41,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 f63ca3abf380bba92dca4ac3a51cba5ea95093693cf64d167a7a9c0bf6341c35a74fd42332673dbd1581ea70da0a35026aa3e2ce99b5e573268ccb55b5491c1d
     HEAD_REF master
+    PATCHES fix-clang-cl-bad.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_UGLY_SOURCE_PATH
@@ -48,7 +49,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 70dcd4a36d3bd35f680eaa3c980842fbb57f55f17d1453c6a95640709b1b33a263689bf54caa367154267d281e5474686fedaa980de24094de91886a57b6547a
     HEAD_REF master
-    PATCHES ${PLUGIN_UGLY_PATCHES}
+    PATCHES ${PLUGIN_UGLY_PATCHES} fix-clang-cl-ugly.patch
 )
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
