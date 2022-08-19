@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(FATAL_ERROR "unicorn can currently only be built with /MT or /MTd (static CRT linkage)")
 endif()
@@ -31,7 +27,19 @@ vcpkg_msbuild_install(
     PLATFORM "${UNICORN_PLATFORM}"
     INCLUDES_SUBPATH "include/unicorn"
     LICENSE_SUBPATH "COPYING"
-)   
+)
+
+set(lib_suffix "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(lib_suffix "_static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
+file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
+list(FILTER PDLIBS EXCLUDE REGEX ".*/unicorn${lib_suffix}\\\.lib$")
+list(FILTER PRLIBS EXCLUDE REGEX ".*/unicorn${lib_suffix}\\\.lib$")
+file(REMOVE ${PDLIBS} ${PRLIBS})
 
 file(
     INSTALL "${SOURCE_PATH}/COPYING_GLIB"
