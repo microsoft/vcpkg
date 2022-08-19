@@ -19,11 +19,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME sioclient CONFIG_PATH lib/cmake/sioclient)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/sioclient/sioclientConfig.cmake"
     "include(CMakeFindDependencyMacro)"
-    "include(CMakeFindDependencyMacro)
+    [[include(CMakeFindDependencyMacro)
 find_dependency(websocketpp CONFIG)
 find_dependency(asio CONFIG)
 find_dependency(RapidJSON CONFIG)
-find_dependency(OpenSSL)")
+find_dependency(OpenSSL)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
