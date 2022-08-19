@@ -13,6 +13,8 @@ vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH usbmuxd.vcxproj
     LICENSE_SUBPATH COPYING.GPLv2
+    DEPENDENT_PKGCONFIG libimobiledevice-1.0
+    ADDITIONAL_LIBS getopt.lib
 )
 
 # No headers

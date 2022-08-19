@@ -46,7 +46,7 @@ else()
         list(APPEND configs "debug")
         execute_process(
             COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${BUILDTREE_PATH}"
+            WORKING_DIRECTORY "${BUILDTREE_PATH}-dbg"
 
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
@@ -59,7 +59,7 @@ else()
         list(APPEND configs "release")
         execute_process(
             COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${BUILDTREE_PATH}"
+            WORKING_DIRECTORY "${BUILDTREE_PATH}-rel"
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
             RESULT_VARIABLE CHAKRA_BUILD_SH_RES
@@ -84,8 +84,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
     set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
-    set(out_dir_debug "${BUILDTREE_PATH}/out/Debug")
-    set(out_dir_release "${BUILDTREE_PATH}/out/Release")
+    set(out_dir_debug "${BUILDTREE_PATH}-dbg/out/Debug")
+    set(out_dir_release "${BUILDTREE_PATH}-rel/out/Release")
     foreach(config ${configs})
         file(INSTALL
             ${out_dir_${config}}/${out_file}

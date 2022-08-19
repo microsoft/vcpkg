@@ -27,9 +27,9 @@ endif()
 
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "msvc/unicorn.sln
+    PROJECT_SUBPATH "msvc/unicorn.sln"
     PLATFORM "${UNICORN_PLATFORM}"
-    INCLUDES_SUBPATH "msvc/distro/include"
+    INCLUDES_SUBPATH "include/unicorn"
     LICENSE_SUBPATH "COPYING"
 )   
 
