@@ -1,0 +1,11 @@
+--- libassuan.orig/src/Makefile.am	2017-09-24 14:20:05.906065400 +0200
++++ libassuan/src/Makefile.am	2017-09-24 14:40:59.038850200 +0200
+@@ -97,7 +97,7 @@
+ 	$(LTRCCOMPILE) -i $< -o $@
+ 
+ libassuan_res = versioninfo.lo
++libassuan_res_ldflag = -Wl,.libs/versioninfo.obj
+-libassuan_res_ldflag = -Wl,.libs/versioninfo.o
+
+ no_undefined = -no-undefined
+ export_symbols = -export-symbols $(srcdir)/libassuan.def

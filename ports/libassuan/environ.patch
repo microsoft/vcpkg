@@ -1,0 +1,11 @@
+--- libassuan.orig/src/setenv.c
++++ libassuan/src/setenv.c
+@@ -43,7 +43,7 @@
+ #endif
+ 
+ #if !_LIBC
+-# define __environ	environ
++# define __environ	_environ
+ # ifndef HAVE_ENVIRON_DECL
+ extern char **environ;
+ # endif
