@@ -3021,8 +3021,8 @@
       "port-version": 1
     },
     "inih": {
-      "baseline": "51",
-      "port-version": 1
+      "baseline": "56",
+      "port-version": 0
     },
     "iniparser": {
       "baseline": "2020-04-06",
