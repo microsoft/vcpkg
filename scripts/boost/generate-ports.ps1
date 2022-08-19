@@ -612,7 +612,7 @@ if ($updateServicePorts) {
             -Encoding UTF8 `
             -Raw
         $content = $content -replace `
-            "set\(BOOST_VERSION [0-9\.]+\)", `
+            "set\(BOOST_VERSION [0-9\.a-zA-Z]+\)", `
             "set(BOOST_VERSION $version)"
 
         Set-Content -LiteralPath $_ `
