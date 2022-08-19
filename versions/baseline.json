@@ -3930,7 +3930,7 @@
     },
     "libopensp": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libopusenc": {
       "baseline": "0.2.1",
