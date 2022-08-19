@@ -19,6 +19,12 @@
   "features": {
     "cpp": {
       "description": "C++ bindings"
+    },
+    "qt": {
+      "description": "Qt bindings",
+      "dependencies": [
+        "qt5-base"
+      ]
     }
   }
 }

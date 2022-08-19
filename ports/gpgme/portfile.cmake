@@ -21,6 +21,7 @@ vcpkg_configure_make(
         --disable-gpg-test
         --disable-gpgsm-test
         --disable-g13-test
+        --disable-glibtest
         --enable-languages=${LANGUAGES}
         --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
         --with-libassuan-prefix=${CURRENT_INSTALLED_DIR}/tools/libassuan
