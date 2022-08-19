@@ -40,7 +40,7 @@ else()
 endif()
 
 # AM_GNU_GETTEXT is required
-set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/gettext/aclocal/\"")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_HOST_INSTALLED_DIR}/share/gettext/aclocal/\"")
 
 vcpkg_configure_make(
     AUTOCONFIG
