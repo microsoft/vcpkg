@@ -1,0 +1,16 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 11d14e4..fde4b7b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -137,6 +137,11 @@ set_target_properties(
+       1.1
+ )
+ 
++if(USE_SYSTEM_RAPIDJSON)
++  find_package(RapidJSON CONFIG REQUIRED)
++  target_link_libraries(libopencc PRIVATE rapidjson)
++endif()
++
+ # Installation
+ 
+ install(
