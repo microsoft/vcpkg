@@ -9,7 +9,8 @@
   "dependencies": [
     {
       "name": "vcpkg-msbuild",
-      "host": true
+      "host": true,
+      "platform": "windows"
     }
   ],
   "features": {

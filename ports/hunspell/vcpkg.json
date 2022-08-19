@@ -9,7 +9,8 @@
     "libiconv",
     {
       "name": "vcpkg-msbuild",
-      "host": true
+      "host": true,
+      "platform": "windows"
     }
   ],
   "features": {
@@ -22,10 +23,6 @@
           "features": [
             "tools"
           ]
-        },
-        {
-          "name": "vcpkg-msbuild",
-          "host": true
         }
       ]
     }
