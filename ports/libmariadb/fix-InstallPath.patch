@@ -12,10 +12,10 @@ index a82dbb7..e9005fa 100644
  /* mysqld compile time options */
  #ifndef MYSQL_CHARSET
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index bcfd4de..c109a20 100644
+index 7faf827..d4e07f7 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -398,10 +398,10 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
+@@ -417,10 +417,10 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
  TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
  
  IF(UNIX)
@@ -28,19 +28,25 @@ index bcfd4de..c109a20 100644
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
  ENDIF()
  
-@@ -453,13 +453,15 @@ ENDIF()
+@@ -472,11 +472,13 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
 -          DESTINATION ${INSTALL_LIBDIR})
 +          LIBRARY DESTINATION lib)
+ IF(WIN32)
  INSTALL(TARGETS libmariadb
-           COMPONENT SharedLibraries
+         COMPONENT SharedLibraries
 -        DESTINATION ${INSTALL_LIBDIR})
 +        RUNTIME DESTINATION bin
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
- 
+ ELSE()
+ # in cmake 3.12+ we can use
+ #INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
+@@ -488,7 +490,7 @@ INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
+         COMPONENT Development NAMELINK_ONLY)
+ ENDIF()
  
 -IF(MSVC)
 +IF(0)
@@ -48,10 +54,10 @@ index bcfd4de..c109a20 100644
     INSTALL(FILES $<TARGET_PDB_FILE:libmariadb> DESTINATION "${INSTALL_LIBDIR}"
             CONFIGURATIONS Debug RelWithDebInfo
 diff --git a/mariadb_config/mariadb_config.c.in b/mariadb_config/mariadb_config.c.in
-index 5574943..fc1ca7c 100644
+index 36c0117..4184e4b 100644
 --- a/mariadb_config/mariadb_config.c.in
 +++ b/mariadb_config/mariadb_config.c.in
-@@ -210,7 +210,7 @@ end:
+@@ -225,7 +225,7 @@ end:
    }
    if (!p || !p[0])
    {
