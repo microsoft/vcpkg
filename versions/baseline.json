@@ -3674,7 +3674,7 @@
     },
     "libgpg-error": {
       "baseline": "1.42",
-      "port-version": 3
+      "port-version": 4
     },
     "libgpiod": {
       "baseline": "1.6.3",
@@ -6603,6 +6603,10 @@
     "shapelib": {
       "baseline": "1.5.0",
       "port-version": 3
+    },
+    "shiftmedia-libgcrypt": {
+      "baseline": "1.10.1",
+      "port-version": 0
     },
     "shiva": {
       "baseline": "1.0",
