@@ -1970,7 +1970,7 @@
     },
     "dpdk": {
       "baseline": "22.03",
-      "port-version": 2
+      "port-version": 3
     },
     "dpp": {
       "baseline": "10.0.16",
