@@ -1,3 +1,7 @@
+Fix symbol visibility across build triplets.
+Submitted upstream in https://github.com/P-H-C/phc-winner-argon2/pull/262
+
+
 diff --git a/include/argon2.h b/include/argon2.h
 index 3980bb3..2738960 100644
 --- a/include/argon2.h
