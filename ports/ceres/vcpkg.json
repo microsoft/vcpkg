@@ -7,7 +7,6 @@
   "license": "Apache-2.0",
   "dependencies": [
     "eigen3",
-    "glog",
     {
       "name": "vcpkg-cmake",
       "host": true

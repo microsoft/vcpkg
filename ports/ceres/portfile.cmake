@@ -32,7 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "cxsparse"          CXSPARSE
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
-        "tools"             GFLAGS
         "cuda"              CUDA
 )
 
@@ -40,6 +39,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DGFLAGS=OFF
+        -DMINIGLOG=ON
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF
