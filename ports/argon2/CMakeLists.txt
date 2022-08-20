@@ -5,7 +5,6 @@ project(argon2)
 set(ARGON2_VERSION 20190702)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-option(OPTIMIZATIONS "Build with optimizations" OFF)
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang")
  OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
@@ -26,21 +25,16 @@ set (ARGON2_SRC
     "src/encoding.c"
 )
 
-if (OPTIMIZATIONS)
-    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-    message(STATUS "Checking support for hardware optimization:")
-    try_compile(WITH_OPTIMIZATIONS
-        ${CMAKE_CURRENT_BINARY_DIR}/optimization
-        SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/opt.c
-        CMAKE_FLAGS -DINCLUDE_DIRECTORIES=${CMAKE_CURRENT_SOURCE_DIR}/include
-        OUTPUT_VARIABLE OUTPUT_TEST_SUPPORT_OPTIMIZATION)
+message(STATUS "Checking support for hardware optimization:")
+try_compile(WITH_OPTIMIZATIONS
+    ${CMAKE_CURRENT_BINARY_DIR}/optimization
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/opt.c
+    CMAKE_FLAGS -DINCLUDE_DIRECTORIES=${CMAKE_CURRENT_SOURCE_DIR}/include
+    OUTPUT_VARIABLE OUTPUT_TEST_SUPPORT_OPTIMIZATION)
 
-    message(STATUS "Build with hardware optimization? ${WITH_OPTIMIZATIONS}")
-
-else (OPTIMIZATIONS)
-    set(WITH_OPTIMIZATIONS FALSE)
-endif()
+message(STATUS "Build with hardware optimization? ${WITH_OPTIMIZATIONS}")
 
 if (WITH_OPTIMIZATIONS)
     list(APPEND ARGON2_SRC "src/opt.c")
