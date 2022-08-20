@@ -2,15 +2,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 27b8bd8..33fe623 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2,7 +2,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+@@ -2,8 +2,8 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
      message(FATAL_ERROR "Prevented in-tree built. Please create a build directory outside of the source code and call cmake from there")
  endif ()
  
 -project(sfml-imgui)
-+project(milerius-sfml-imgui)
  cmake_minimum_required(VERSION 3.9)
++project(milerius-sfml-imgui)
  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
  
+ ##! Package
 @@ -26,7 +26,7 @@ include(CMakePackageConfigHelpers)
  
  install(TARGETS

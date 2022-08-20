@@ -18,4 +18,6 @@ ignition_modular_library(NAME msgs
                          REF ignition-msgs_1.0.0
                          SHA512 18475cc76cc3b58e451faf7a57a0145a9b419cf3e4312627202d96982b066df48cbabcc9991b79a176c5180b90f019dc30114286ad5562c483759052cf63d945
                          # Fix linking order of protobuf libraries (backport of https://bitbucket.org/ignitionrobotics/ign-msgs/pull-requests/151)
-                         PATCHES fix-protobuf-static-link-order.patch)
+                         PATCHES
+                            fix-protobuf-static-link-order.patch
+                            fix-Add_std_string.patch)
