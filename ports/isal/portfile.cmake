@@ -85,6 +85,7 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/isalConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/isalConfig.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-isal-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-isal/unofficial-isal-config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/isalConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/isalConfig.cmake" @ONLY) # legacy
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
