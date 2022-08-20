@@ -120,7 +120,6 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
     debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
-    debug_message("LDFLAGS_${flag_suffix}: ${LDFLAGS_${flag_suffix}}")
 endmacro()
 
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
