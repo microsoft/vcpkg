@@ -151,7 +151,10 @@
       "dependencies": [
         "cgns",
         "cli11",
-        "gl2ps",
+        {
+          "name": "gl2ps",
+          "platform": "!osx"
+        },
         {
           "name": "vtk",
           "default-features": false,
