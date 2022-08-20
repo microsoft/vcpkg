@@ -28,7 +28,7 @@ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 
-if (WIN32)
+if (WIN32 AND NOT MINGW)
     if ("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         set_library_target(
             NAMESPACE "ISAL"

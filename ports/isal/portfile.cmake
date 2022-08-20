@@ -18,7 +18,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUA
     vcpkg_add_to_path("${NASM_PATH}")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(NMAKE_TARGET dll)
     else()
@@ -56,6 +56,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(GLOB ISAL_HDRS "${SOURCE_PATH}/include/*")
     file(INSTALL ${ISAL_HDRS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/isa-l.def" DESTINATION "${CURRENT_PACKAGES_DIR}/include/isal")
+
 else()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         vcpkg_find_acquire_program(YASM)
@@ -63,13 +64,21 @@ else()
         vcpkg_add_to_path("${YASM_PATH}")
     endif()
 
+    vcpkg_list(SET options)
+    if(VCPKG_TARGET_IS_MINGW)
+        # There is only a .def file used by nmake, no declspec(...)
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+        # isal forces yasm for mingw, but stumbles over feature level detection
+        vcpkg_list(APPEND options AS=)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
+            ${options}
             # No rpl_malloc provided, and probably not depending on ‘malloc (0)’ returning a valid pointer
             ac_cv_func_malloc_0_nonnull=yes
     )
-
     vcpkg_install_make()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
