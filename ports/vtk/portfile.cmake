@@ -63,7 +63,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
         "paraview"    VTK_MODULE_ENABLE_VTK_IOCGNSReader
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOExportGL2PS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
@@ -78,7 +77,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_cli11
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
-        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_opengl
@@ -110,6 +108,16 @@ if("python" IN_LIST FEATURES)
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+endif()
+
+# Disable gl2ps related features for OSX, due to lack of freeglut dependency
+if(NOT VCPKG_TARGET_IS_OSX)
+    if("paraview" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "-DVTK_MODULE_ENABLE_VTK_IOExportGL2PS=YES")
+    endif()
+    if("opengl" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "-DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES")
+    endif()
 endif()
 
 if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
