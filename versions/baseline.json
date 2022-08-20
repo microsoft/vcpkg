@@ -4456,6 +4456,10 @@
       "baseline": "2.3.1",
       "port-version": 0
     },
+    "luv": {
+      "baseline": "1.44.2",
+      "port-version": 0
+    },
     "lv2": {
       "baseline": "1.18.2",
       "port-version": 1
