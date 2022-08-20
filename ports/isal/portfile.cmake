@@ -80,6 +80,7 @@ else()
             ac_cv_func_malloc_0_nonnull=yes
     )
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
