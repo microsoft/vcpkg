@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
 )
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
@@ -40,7 +40,7 @@ vcpkg_msbuild_install(
     PROJECT_SUBPATH mDNSResponder.sln
     PLATFORM ${BUILD_ARCH}
     TARGET dns-sd
-    INCLUDE_SUBPATH mDNSShared
+    INCLUDES_SUBPATH mDNSShared
     INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
 )
 

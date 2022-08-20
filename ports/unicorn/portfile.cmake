@@ -37,9 +37,13 @@ endif()
 
 file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
 file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
+file(GLOB PDDLLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
+file(GLOB PRDLLS "${CURRENT_PACKAGES_DIR}/bin/*")
 list(FILTER PDLIBS EXCLUDE REGEX ".*/unicorn${lib_suffix}\\\.lib$")
 list(FILTER PRLIBS EXCLUDE REGEX ".*/unicorn${lib_suffix}\\\.lib$")
-file(REMOVE ${PDLIBS} ${PRLIBS})
+list(FILTER PDDLLS EXCLUDE REGEX ".*/unicorn\\\.dll$")
+list(FILTER PRDLLS EXCLUDE REGEX ".*/unicorn\\\.dll$")
+file(REMOVE ${PDLIBS} ${PRLIBS} ${PDDLLS} ${PRDLLS})
 
 file(
     INSTALL "${SOURCE_PATH}/COPYING_GLIB"
