@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF QuantLib-v1.26
-    SHA512 597dcb4aa3e2701bea758c7b0c62ca0b303a16eda5f324b349ba4e8cc011f6a256fb26d5c42f2bb432da06df1c7b5ec208195e1104e620b69d2a7e8265fd6470
+    REF QuantLib-v1.27
+    SHA512 c763e7083e1e832d39adb507cc6b34b1ad0a0b7f2b7ffe390428f93fb1df84fcbbf43bcb31dd2f2381da2ac563c88a10fbd932ea5155bd43c604025960039b58
     HEAD_REF master
 )
 

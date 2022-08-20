@@ -233,6 +233,9 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         elseif(MACHINE MATCHES "i386")
             set(build_cpu_fam x86)
             set(build_cpu i386)
+        elseif(MACHINE MATCHES "loongarch64")
+            set(build_cpu_fam loongarch64)
+            set(build_cpu loongarch64)
         else()
             # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
             message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
@@ -253,6 +256,9 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)$")
         set(host_cpu_fam arm)
         set(host_cpu armv7hl)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch64")
+        set(host_cpu_fam loongarch64)
+        set(host_cpu loongarch64)
     else()
         message(FATAL_ERROR "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}!" )
     endif()
@@ -264,7 +270,7 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
 
     string(APPEND cross_file "[host_machine]\n")
     string(APPEND cross_file "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" meson_system_name)
@@ -313,6 +319,15 @@ function(z_vcpkg_meson_generate_cross_file_config config_type) #https://mesonbui
         if(${config_type} STREQUAL "DEBUG")
             set(crt_type ${crt_type}d)
         endif()
+        set(c_winlibs "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+        set(cpp_winlibs "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        foreach(libvar IN ITEMS c_winlibs cpp_winlibs)
+            string(REGEX REPLACE "( |^)(-|/)" [[;\2]] "${libvar}" "${${libvar}}")
+            string(REPLACE ".lib " ".lib;" "${libvar}" "${${libvar}}")
+            vcpkg_list(REMOVE_ITEM "${libvar}" "")
+            vcpkg_list(JOIN "${libvar}" "', '" "${libvar}")
+            string(APPEND cross_${config_type}_log "${libvar} = ['${${libvar}}']\n")
+        endforeach()
         string(APPEND cross_${config_type}_log "b_vscrt = '${crt_type}'\n")
     endif()
     string(TOLOWER "${config_type}" lowerconfig)
@@ -340,6 +355,17 @@ function(vcpkg_configure_meson)
     vcpkg_find_acquire_program(MESON)
 
     vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_MESON_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG})
+    endif()
 
     if(NOT vcpkg_meson_cross_file)
         z_vcpkg_meson_generate_cross_file("${arg_ADDITIONAL_CROSS_BINARIES}")
@@ -429,21 +455,12 @@ function(vcpkg_configure_meson)
             COMMAND ${MESON} ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}} ${arg_SOURCE_PATH}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}"
             LOGNAME config-${TARGET_TRIPLET}-${suffix_${buildtype}}
+            SAVE_LOG_FILES
+                meson-logs/meson-log.txt
+                meson-info/intro-dependencies.json
+                meson-logs/install-log.txt
         )
 
-        #Copy meson log files into buildtree for CI
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-${suffix_${buildtype}}.log")
-        endif()
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/intro-dependencies.json" "${CURRENT_BUILDTREES_DIR}/intro-dependencies-${suffix_${buildtype}}.log")
-        endif()
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-${suffix_${buildtype}}.log")
-        endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}} done")
 
         if(NOT arg_NO_PKG_CONFIG)
