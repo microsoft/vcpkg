@@ -42,13 +42,6 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-error.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-errord.lib")
-    endif()
-endif()
-
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
