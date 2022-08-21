@@ -568,49 +568,6 @@ endif()
 
 cmake_policy(POP)
 
-# Any policies applied to the below macros and functions leak into consumers
-# Consumer policies are ignored for the below overriden functions since policies settings are recorded at the time function/macros are being defined
-
-# Need to override try_compile and try_run to pass some variables in project mode vs src mode
-if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
-    function(try_compile resultVar bindir srcdir)
-        cmake_policy(PUSH)
-        if(POLICY CMP0056)
-            cmake_policy(SET CMP0056 NEW)
-        endif()
-        if(POLICY CMP0067)
-            cmake_policy(SET CMP0067 NEW)
-        endif()
-        z_vcpkg_function_arguments(ARGS)
-        if(IS_DIRECTORY "${srcdir}") # project try_compile
-            cmake_parse_arguments(PARSE_ARGV 2 "arg" "" "OUTPUT_VARIABLE" "CMAKE_FLAGS")
-            if(DEFINED arg_CMAKE_FLAGS)
-                list(REMOVE_ITEM ARGS CMAKE_FLAGS ${arg_CMAKE_FLAGS})
-            endif()
-            foreach(try_compile_var IN LISTS CMAKE_TRY_COMPILE_PLATFORM_VARIABLES)
-                if(${try_compile_var})
-                    list(APPEND arg_CMAKE_FLAGS "-D${try_compile_var}=${${try_compile_var}}")
-                endif()
-            endforeach()
-            if(arg_OUTPUT_VARIABLE)
-                list(REMOVE_ITEM ARGS OUTPUT_VARIABLE ${arg_OUTPUT_VARIABLE})
-                _try_compile(${ARGS} CMAKE_FLAGS ${arg_CMAKE_FLAGS} OUTPUT_VARIABLE ${arg_OUTPUT_VARIABLE})
-            else()
-                _try_compile(${ARGS} CMAKE_FLAGS ${arg_CMAKE_FLAGS})
-            endif()
-        else() # source based try_compile
-            _try_compile(${ARGS})
-            cmake_parse_arguments(PARSE_ARGV 2 "arg" "" "OUTPUT_VARIABLE" "")
-        endif()
-        
-        if(DEFINED arg_OUTPUT_VARIABLE)
-            set(${arg_OUTPUT_VARIABLE} ${${arg_OUTPUT_VARIABLE}} PARENT_SCOPE)
-        endif()
-        set(${resultVar} ${${resultVar}} PARENT_SCOPE)
-        cmake_policy(POP)
-    endfunction()
-endif()
-
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
     _add_executable(${ARGS})

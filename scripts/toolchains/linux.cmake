@@ -1,11 +1,26 @@
 if(NOT _VCPKG_LINUX_TOOLCHAIN)
+set(_VCPKG_LINUX_TOOLCHAIN 1)
+
+if(POLICY CMP0056)
+    cmake_policy(SET CMP0056 NEW)
+endif()
+if(POLICY CMP0066)
+    cmake_policy(SET CMP0066 NEW)
+endif()
+if(POLICY CMP0067)
+    cmake_policy(SET CMP0067 NEW)
+endif()
+if(POLICY CMP0137)
+    cmake_policy(SET CMP0137 NEW)
+endif()
+
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
                                                  VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
                                                  VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
                                                  VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
                                                  )
-set(_VCPKG_LINUX_TOOLCHAIN 1)
+
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CROSSCOMPILING OFF CACHE BOOL "")
 endif()

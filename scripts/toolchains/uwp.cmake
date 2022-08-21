@@ -1,4 +1,10 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
+
+cmake_policy(SET CMP0056 NEW)
+cmake_policy(SET CMP0066 NEW)
+cmake_policy(SET CMP0067 NEW)
+cmake_policy(SET CMP0137 NEW)
+
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE VCPKG_SET_CHARSET_FLAG 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
                                                  VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
