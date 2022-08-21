@@ -67,25 +67,20 @@ foreach(VCXPROJ IN ITEMS
     )
 endforeach()
 
-vcpkg_install_msbuild(
-    USE_VCPKG_INTEGRATION
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH SMP/libgcrypt.sln
     PLATFORM ${TRIPLET_SYSTEM_ARCH}
     LICENSE_SUBPATH COPYING.LIB
     RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
     DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
-    SKIP_CLEAN
     OPTIONS /p:OutDir=..\\msvc
-    OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-    OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
 )
 
-get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
 if(VCPKG_TARGET_IS_UWP)
     set(WINRT_SUBFOLDER libgcrypt_winrt)
 endif()
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
