@@ -51,5 +51,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
 endif()
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
+
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
