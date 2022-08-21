@@ -9,6 +9,7 @@ vcpkg_from_github(
         find-package.patch
         remove-tool-debug-suffix.patch
 		remove-lerc-gltf.patch
+		fix-osgearth-config.patch
 )
 
 if("tools" IN_LIST FEATURES)

@@ -1,10 +1,8 @@
 # vcpkg_cmake_configure
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_cmake_configure.md).
+**The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_cmake_configure.md).**
 
 Configure a CMake-based project.
-
-This command replaces [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 
 ## Usage
 
@@ -127,6 +125,10 @@ vcpkg_cmake_install()
 ```
 
 [Search microsoft/vcpkg for Examples](https://github.com/microsoft/vcpkg/search?q=vcpkg_cmake_configure+path%3A%2Fports)
+
+## Remarks
+
+This command replaces [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 
 ## Source
 [ports/vcpkg-cmake/vcpkg\_cmake\_configure.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_configure.cmake)
