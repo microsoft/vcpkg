@@ -12,23 +12,6 @@
 diff -ru libassuan.orig/src/Makefile.in libassuan/src/Makefile.in
 --- libassuan.orig/src/Makefile.in	2020-06-10 17:26:08.699728800 +0200
 +++ libassuan/src/Makefile.in	2020-06-10 17:22:11.066865300 +0200
-diff -ru libassuan.orig/src/Makefile.am libassuan/src/Makefile.am
---- libassuan.orig/src/Makefile.am	2017-09-24 14:20:05.906065400 +0200
-+++ libassuan/src/Makefile.am	2017-09-24 14:40:59.038850200 +0200
-@@ -148,10 +148,10 @@
-               $(DESTDIR)$(bindir)/gpgcedev.dll
- endif
- 
-+mkheader$(EXEEXT): mkheader.c Makefile
--mkheader: mkheader.c Makefile
- 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) \
-           $(LDFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
- 
-+assuan.h: assuan.h.in mkheader$(EXEEXT) $(parts_of_assuan_h)
-+	./mkheader$(EXEEXT) $(host_os) $(srcdir)/assuan.h.in \
--assuan.h: assuan.h.in mkheader $(parts_of_assuan_h)
--	./mkheader $(host_os) $(srcdir)/assuan.h.in \
-                    $(PACKAGE_VERSION) $(VERSION_NUMBER) >$@
 diff -ru libassuan.orig/src/assuan-handler.c libassuan/src/assuan-handler.c
 --- libassuan.orig/src/assuan-handler.c 2016-06-25 16:27:49.000000000 +0200
 +++ libassuan/src/assuan-handler.c      2017-09-24 15:32:51.200956200 +0200
