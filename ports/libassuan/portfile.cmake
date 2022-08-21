@@ -55,7 +55,11 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-conf
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 
 if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    vcpkg_copy_tools(TOOL_NAMES mkheader SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
+    if(VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_copy_tools(TOOL_NAMES mkheader mkerrorcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
+    elseif(VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tools(TOOL_NAMES mkheader mkerrorcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src")
+    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
