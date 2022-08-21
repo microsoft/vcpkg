@@ -12,6 +12,7 @@ add_library(EDFlib ${sources})
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     target_compile_definitions(EDFlib PRIVATE _LARGEFILE64_SOURCE _LARGEFILE_SOURCE)
+    target_compile_options(EDFlib PRIVATE -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security)
 endif()
 
 set_target_properties(EDFlib PROPERTIES PUBLIC_HEADER edflib.h)
@@ -52,19 +53,12 @@ if(BUILD_TOOLS)
     add_executable(sweep_generator sweep_generator.c)
     target_link_libraries(sweep_generator PRIVATE EDFlib)
 
-    add_executable(test_edflib test_edflib.c)
-    target_link_libraries(test_edflib PRIVATE EDFlib)
-
-    add_executable(test_generator test_generator.c)
-    target_link_libraries(test_generator PRIVATE EDFlib)
-
     if(NEED_LINKING_AGAINST_LIBM)
         target_link_libraries(sine_generator PRIVATE m)
         target_link_libraries(sweep_generator PRIVATE m)
-        target_link_libraries(test_generator PRIVATE m)
     endif()
 
-    install(TARGETS sine_generator sweep_generator test_edflib test_generator
+    install(TARGETS sine_generator sweep_generator
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     )
 endif()
