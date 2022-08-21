@@ -1,6 +1,18 @@
 set(LIBASSUAN_BRANCH 2.5)
 set(LIBASSUAN_VERSION ${LIBASSUAN_BRANCH}.5)
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    set (PATCHES
+            find-libgpg-error.patch     # https://github.com/LibreOffice/core/tree/master/external/libassuan
+            w32-build-fixes.patch
+            w32-build-fixes-2.patch
+            w32-stdc.patch
+            versioninfo_obj_extn.patch
+            environ.patch               # https://docs.microsoft.com/en-us/cpp/c-runtime-library/environ-wenviron, no support for UWP
+                                        # better fix would be to get rid of assuan's own setenv and resort to gnulib's 
+    )
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.gnupg.org/ftp/gcrypt/${PORT}/${PORT}-${LIBASSUAN_VERSION}.tar.bz2"
     FILENAME "${PORT}-${LIBASSUAN_VERSION}.tar.bz2"
@@ -11,14 +23,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        find-libgpg-error.patch     # https://github.com/LibreOffice/core/tree/master/external/libassuan
         fix-autoconf-macros.patch
-        w32-build-fixes.patch
-        w32-build-fixes-2.patch
-        w32-stdc.patch
-        versioninfo_obj_extn.patch
-        environ.patch               # https://docs.microsoft.com/en-us/cpp/c-runtime-library/environ-wenviron, no support for UWP
-                                    # better fix would be to get rid of assuan's own setenv and resort to gnulib's 
+        ${PATCHES}
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -30,8 +36,8 @@ if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     
     if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string(
-            "${SOURCE_PATH}/src/Makefile.am"
-            [=[./mkheader$(EXEEXT_FOR_BUILD)]=]
+            "${SOURCE_PATH}/src/Makeafile.am"
+            [=[./mkheader$(EXEEXT)]=]
             [=[mkheader.exe]=]
         )
     endif()
