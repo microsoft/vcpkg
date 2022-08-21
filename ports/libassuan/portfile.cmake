@@ -2,9 +2,10 @@ set(LIBASSUAN_BRANCH 2.5)
 set(LIBASSUAN_VERSION ${LIBASSUAN_BRANCH}.5)
 
 if (VCPKG_TARGET_IS_WINDOWS)
+    set(EXTRA_OPTS "CFLAGS=\$CFLAGS -D__STDC__=1")
+
     set (PATCHES
-            find-libgpg-error.patch     # https://github.com/LibreOffice/core/tree/master/external/libassuan
-            w32-build-fixes.patch
+            w32-build-fixes.patch       # https://github.com/LibreOffice/core/tree/master/external/libassuan
             w32-build-fixes-2.patch
             w32-stdc.patch
             versioninfo_obj_extn.patch
@@ -23,13 +24,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-autoconf-macros.patch
         ${PATCHES}
 )
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND EXTRA_OPTS "CFLAGS=\$CFLAGS -D__STDC__=1")
-endif()
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libassuan")
