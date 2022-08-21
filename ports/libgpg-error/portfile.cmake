@@ -14,6 +14,25 @@ vcpkg_from_git(
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libgpg-error")
+    
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(EXEEXT_FOR_BUILD "bfd_cv_build_exeext=.exe")
+        
+        vcpkg_replace_string(
+            "${SOURCE_PATH}/src/Makefile.am"
+            [=[./mkheader$(EXEEXT_FOR_BUILD)]=]
+            [=[mkheader$(EXEEXT_FOR_BUILD)]=]
+        )
+        vcpkg_replace_string(
+            "${SOURCE_PATH}/src/Makefile.am"
+            [=[./mkerrcodes$(EXEEXT_FOR_BUILD)]=]
+            [=[mkerrcodes$(EXEEXT_FOR_BUILD)]=]
+        )
+    endif()
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,6 +40,7 @@ vcpkg_configure_make(
         --disable-tests
         --disable-doc
         --disable-silent-rules
+        ${EXEEXT_FOR_BUILD}
 )
 
 vcpkg_install_make()
@@ -40,6 +60,10 @@ endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
+
+if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_copy_tools(TOOL_NAMES mkheader mkerrorcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale" "${CURRENT_PACKAGES_DIR}/debug/share")
