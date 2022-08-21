@@ -16,19 +16,17 @@ vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libgpg-error")
-    
+
     if (VCPKG_TARGET_IS_WINDOWS)
-        set(EXEEXT_FOR_BUILD "bfd_cv_build_exeext=.exe")
-        
         vcpkg_replace_string(
             "${SOURCE_PATH}/src/Makefile.am"
             [=[./mkheader$(EXEEXT_FOR_BUILD)]=]
-            [=[mkheader$(EXEEXT_FOR_BUILD)]=]
+            [=[mkheader.exe]=]
         )
         vcpkg_replace_string(
             "${SOURCE_PATH}/src/Makefile.am"
             [=[./mkerrcodes$(EXEEXT_FOR_BUILD)]=]
-            [=[mkerrcodes$(EXEEXT_FOR_BUILD)]=]
+            [=[mkerrcodes.exe]=]
         )
     endif()
 endif()
