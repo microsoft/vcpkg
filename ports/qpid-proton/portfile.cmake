@@ -15,6 +15,11 @@ file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindJsonCpp.cmake")
 
 vcpkg_find_acquire_program(PYTHON3)
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(rpath "@loader_path")
+else()
+    set(rpath "\$ORIGIN")
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # It may cause call CHECK_LIBRARY_EXISTS before call project to set the language
@@ -27,7 +32,9 @@ vcpkg_cmake_configure(
         -DENABLE_WARNING_ERROR=OFF
         -DENABLE_BENCHMARKS=OFF
         -DENABLE_FUZZ_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DCMAKE_INSTALL_RPATH=${rpath}
         -DPython_EXECUTABLE=${PYTHON3}
 )
 

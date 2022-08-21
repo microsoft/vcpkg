@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF 9fcf039b573d153ba9bbc2beb5f11259ddacdcff # v1.5.1
-    SHA512 3db2668c3f971dc54156df2a3520645224fbb55460957da35940889c3148cb2cbc67c10cd23b9614ece70235d1f6003618310129eb9c40ced42db058c140dd58
+    REF v1.5.2
+    SHA512 33cda9e0422c6e8cb56e48bd812f381bf07a92a0aa2fbadddbca7cfde585c66299142186a3a76a97163e5570042452a62c1e53180ebfbf016a44eee998b16286
     HEAD_REF master
 )
 
@@ -34,13 +34,13 @@ vcpkg_replace_string(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+        "${CURRENT_PACKAGES_DIR}/include/nng/nng.h"
         "!defined(NNG_STATIC_LIB)"
         "1 /* !defined(NNG_STATIC_LIB) */"
     )
 else()
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+        "${CURRENT_PACKAGES_DIR}/include/nng/nng.h"
         "!defined(NNG_STATIC_LIB)"
         "0 /* !defined(NNG_STATIC_LIB) */"
     )

@@ -1,0 +1,17 @@
+diff --git a/include/apr_version.h b/include/apr_version.h
+index e96de3835..de3437d71 100644
+--- a/include/apr_version.h
++++ b/include/apr_version.h
+@@ -114,9 +114,9 @@
+ 
+ /** An alternative formatted string of APR's version */
+ /* macro for Win32 .rc files using numeric csv representation */
+-#define APR_VERSION_STRING_CSV APR_MAJOR_VERSION ##, \
+-                             ##APR_MINOR_VERSION ##, \
+-                             ##APR_PATCH_VERSION
++#define APR_VERSION_STRING_CSV APR_MAJOR_VERSION , \
++                               APR_MINOR_VERSION , \
++                               APR_PATCH_VERSION
+ 
+ 
+ #ifndef APR_VERSION_ONLY

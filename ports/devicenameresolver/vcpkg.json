@@ -1,8 +1,9 @@
 {
   "name": "devicenameresolver",
-  "version-string": "2016-06-26-0850d88fa6",
-  "port-version": 3,
+  "version-date": "2016-06-26",
+  "port-version": 4,
   "description": "a little library that resolves a path from a (virtual) device name.",
+  "license": null,
   "supports": "windows & !uwp",
   "dependencies": [
     {

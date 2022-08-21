@@ -1,23 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ab7dbed..ea5516e 100644
+index e5dcf54..c60cd53 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -324,15 +324,15 @@ if(APPLE)
- else()
-   
-   include(ARMA_FindMKL)
--  include(ARMA_FindOpenBLAS)
-   include(ARMA_FindATLAS)
--  include(ARMA_FindBLAS)
--  include(ARMA_FindLAPACK)
-   
-   if(ALLOW_FLEXIBLAS_LINUX AND (${CMAKE_SYSTEM_NAME} MATCHES "Linux"))
-     include(ARMA_FindFlexiBLAS)
+@@ -335,13 +335,12 @@ else()
+   else()
+     set(FlexiBLAS_FOUND false)
    endif()
-   
+-  
++
 +  find_package(BLAS)
 +  find_package(LAPACK) 
-+
+   include(ARMA_FindMKL)
+-  include(ARMA_FindOpenBLAS)
+   include(ARMA_FindATLAS)     # TODO: remove support for ATLAS in next major version
+-  include(ARMA_FindBLAS)
+-  include(ARMA_FindLAPACK)
+-  
++ 
+   message(STATUS "FlexiBLAS_FOUND = ${FlexiBLAS_FOUND}" )
    message(STATUS "      MKL_FOUND = ${MKL_FOUND}"       )
    message(STATUS " OpenBLAS_FOUND = ${OpenBLAS_FOUND}"  )
-   message(STATUS "    ATLAS_FOUND = ${ATLAS_FOUND}"     )

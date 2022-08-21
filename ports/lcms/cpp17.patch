@@ -1,0 +1,13 @@
+diff --git a/include/lcms2.h b/include/lcms2.h
+index 7e061ce7c..5d234c4e4 100644
+--- a/include/lcms2.h
++++ b/include/lcms2.h
+@@ -152,7 +152,7 @@ typedef double               cmsFloat64Number;
+ #endif
+ 
+ // Handle "register" keyword
+-#if defined(CMS_NO_REGISTER_KEYWORD) && !defined(CMS_DLL) && !defined(CMS_DLL_BUILD) 
++#if __cplusplus >= 201703L || defined(CMS_NO_REGISTER_KEYWORD) && !defined(CMS_DLL) && !defined(CMS_DLL_BUILD) 
+ #  define CMSREGISTER
+ #else
+ #  define CMSREGISTER register

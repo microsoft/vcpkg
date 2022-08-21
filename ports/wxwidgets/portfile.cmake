@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF 9c0a8be1dc32063d91ed1901fd5fcd54f4f955a1 #v3.1.5
-    SHA512 33817f766b36d24e5e6f4eb7666f2e4c1ec305063cb26190001e0fc82ce73decc18697e8005da990a1c99dc1ccdac9b45bb2bbe5ba73e6e2aa860c768583314c
+    REF v3.2.0
+    SHA512 0bb40ccab51f5e83a38feeaf462c9d1852f821d19592328327f829890d89a3abb2a991c43cdbac55da8f5ee40aab8bd5fea6abcd052198302770292f92f9f9ad
     HEAD_REF master
     PATCHES
         install-layout.patch
-        mingw-output-name.patch
-        fix-build.patch
-        fix-linux-configure.patch # Remove this patch in the next update
-        fix-libs-export.patch
         relocatable-wx-config.patch
+        nanosvg-ext-depend.patch
+        fix-libs-export.patch
+        fix-pcre2.patch
+        gtk3-link-libraries.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -31,11 +31,20 @@ These development packages can be installed on Ubuntu systems via
     endforeach()
 endif()
 
-set(OPTIONS "")
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sound   wxUSE_SOUND
+        fonts   wxUSE_PRIVATE_FONTS
+        webview wxUSE_WEBVIEW_EDGE
+)
+
+set(OPTIONS_RELEASE "")
+if(NOT "debug-support" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
 endif()
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND OPTIONS
         -DwxUSE_OPENGL=OFF
@@ -49,17 +58,20 @@ else()
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
 endif()
 
-# wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
-# vcpkg's port pkgconf would prevent this lookup.
-if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG})
+if(DEFINED ENV{PKG_CONFIG})
+    set(PKGCONFIG "$ENV{PKG_CONFIG}")
+elseif(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING)
+    # wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
+    # vcpkg's port pkgconf would prevent this lookup.
     find_program(system_pkg_config NAMES pkg-config)
     if(system_pkg_config)
-        set(ENV{PKG_CONFIG} "${system_pkg_config}")
+        set(PKGCONFIG "${system_pkg_config}")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND OPTIONS -DPKG_CONFIG_ARGN=--static)
     endif()
 endif()
+vcpkg_find_acquire_program(PKGCONFIG)
 
 # This may be set to ON by users in a custom triplet.
 # The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
@@ -75,23 +87,38 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DwxUSE_REGEX=builtin
+        ${FEATURE_OPTIONS}
+        -DwxUSE_REGEX=sys
         -DwxUSE_ZLIB=sys
         -DwxUSE_EXPAT=sys
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
-        -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
+        -DwxUSE_NANOSVG=sys
+        -DwxUSE_SECRETSTORE=FALSE
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         ${OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        # The minimum cmake version requirement for Cotire is 2.8.12.
+        # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/wxWidgets)
+
+# The CMake export is not ready for use: It lacks a config file.
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/lib/cmake
+    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+)
 
 set(tools wxrc)
-if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND tools wxrc-3.1)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR NOT VCPKG_HOST_IS_WINDOWS)
+    list(APPEND tools wxrc-3.2)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
     if(NOT VCPKG_BUILD_TYPE)
@@ -159,6 +186,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/lib/mswud/wx"
     )
+endif()
+
+if(NOT "debug-support" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.2/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    endif()
 endif()
 
 if("example" IN_LIST FEATURES)

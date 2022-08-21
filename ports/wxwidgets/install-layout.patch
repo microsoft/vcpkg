@@ -1,34 +1,34 @@
 diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
-index 902b7c5..dba3d07 100644
+index 32bd959..74f31ed 100644
 --- a/build/cmake/functions.cmake
 +++ b/build/cmake/functions.cmake
-@@ -374,7 +374,7 @@ macro(wx_add_library name)
-         wx_install(TARGETS ${name}
-             LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
-             ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
--            RUNTIME DESTINATION "lib${wxPLATFORM_LIB_DIR}"
-+            RUNTIME DESTINATION "bin"
-             BUNDLE DESTINATION Applications/wxWidgets
-             )
-     endif()
+@@ -418,7 +418,7 @@ macro(wx_add_library name)
+         set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
+ 
+         # Setup install
+-        set(runtime_dir "lib")
++        set(runtime_dir "bin")
+         if(WIN32 AND NOT WIN32_MSVC_NAMING)
+             # configure puts the .dll in the bin directory
+             set(runtime_dir "bin")
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
-index 0bc4f93..65fe3b8 100644
+index 3ff14ab..7bd00d3 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -149,7 +149,7 @@ else()
-     set(wxCOMPILER_PREFIX)
+@@ -146,7 +146,7 @@ if(WIN32)
+     endif()
  endif()
  
--if(MSVC)
-+if(MSVC AND NOT wxBUILD_DISABLE_PLATFORM_LIB_DIR)
+-if(WIN32_MSVC_NAMING)
++if(0)
      if(wxBUILD_SHARED)
-         set(lib_suffix "dll")
+         set(lib_suffix "_dll")
      else()
 diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
-index 968dff8..5b4fda9 100644
+index 84cb9f5..e2f460a 100644
 --- a/build/cmake/install.cmake
 +++ b/build/cmake/install.cmake
-@@ -45,7 +45,7 @@ else()
+@@ -48,7 +48,7 @@ else()
  
      install(DIRECTORY DESTINATION "bin")
      install(CODE "execute_process( \
@@ -38,15 +38,15 @@ index 968dff8..5b4fda9 100644
          ${CMAKE_INSTALL_PREFIX}/bin/wx-config \
          )"
 diff --git a/build/cmake/utils/CMakeLists.txt b/build/cmake/utils/CMakeLists.txt
-index 4108d6a..19d730e 100644
+index d6b3465..870897b 100644
 --- a/build/cmake/utils/CMakeLists.txt
 +++ b/build/cmake/utils/CMakeLists.txt
-@@ -39,7 +39,7 @@ if(wxUSE_XRC)
-             )"
-         )
-         install(CODE "execute_process( \
+@@ -38,7 +38,7 @@ if(wxUSE_XRC)
+         endif()
+ 
+         wx_install(CODE "execute_process( \
 -            COMMAND ${CMAKE_COMMAND} -E create_symlink \
 +            COMMAND ${CMAKE_COMMAND} -E copy \
-             ${CMAKE_INSTALL_PREFIX}/bin/wxrc-${wxMAJOR_VERSION}.${wxMINOR_VERSION}${EXE_SUFFIX} \
+             ${CMAKE_INSTALL_PREFIX}/bin/${wxrc_output_name}${EXE_SUFFIX} \
              ${CMAKE_INSTALL_PREFIX}/bin/wxrc${EXE_SUFFIX} \
              )"

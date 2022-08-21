@@ -1,23 +1,31 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uclouvain/openjpeg
-    REF 37ac30ceff6640bbab502388c5e0fa0bff23f505 #v2.4.0
-    SHA512 7554d64701f1b51501a977bc165e61e4696d97f1f40e4c784c729824878a716c13ac378c6b2dd0d23a11d9e3fa316ff6fc817ca5a614ef4d6530db06a8f83971
+    REF a5891555eb49ed7cc26b2901ea680acda136d811 #v2.5.0
+    SHA512 f388d5770445152cd5ed18c61d2a56a6d2b88c2b56db0d460d09be36f3e6e40cf5be505aa63ac5975e07688be3dfe752080f4939bd792d42c61f4f8ddcaa1f0d
     HEAD_REF master
-    PATCHES 
-        dll.location.patch
-        fix-lrintf-to-opj_lrintf.patch
-        Enable-tools-of-each-features.patch
+    PATCHES
+        arm.patch
+        no-wx.patch
+        fix-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(feature_tools "tools" BUILD_JPIP_SERVER) # Requires pthread
+    if("tools" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "-DFCGI_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/fastcgi")
+    endif()
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "jpwl"          BUILD_JPWL
-        "mj2"           BUILD_MJ2
         "jpip"          BUILD_JPIP
-        "jp3d"          BUILD_JP3D
+        ${feature_tools}
+        "tools"         BUILD_VIEWER
+        "tools"         BUILD_CODEC
+        "tools"         BUILD_LUTS_GENERATOR
 )
 
 vcpkg_cmake_configure(
@@ -53,17 +61,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 set(TOOL_NAMES)
-if("jpwl" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_jpwl_compress opj_jpwl_decompress)
-endif()
-if("mj2" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_mj2_compress opj_mj2_decompress opj_mj2_extract opj_mj2_wrap)
-endif()
-if("jpip" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_dec_server opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
-endif()
-if("jp3d" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES opj_jp3d_compress opj_jp3d_decompress)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)

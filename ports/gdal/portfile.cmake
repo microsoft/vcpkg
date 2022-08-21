@@ -1,376 +1,156 @@
-set(GDAL_PATCHES
-    0001-Fix-debug-crt-flags.patch
-    0002-Fix-build.patch
-    0004-Fix-cfitsio.patch
-    0005-Fix-configure.patch
-    0007-Control-tools.patch
-    0008-Fix-absl-string_view.patch
-    0009-atlbase.patch
-    0010-symprefix.patch
-)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.4.2
-    SHA512 4dadfaefb4924e17395b2d8b695e185e91e9ad28b4b8666b64f11f40164411974f8ade747592060b515907ee73bf335610698c5e53e56a8937a89ddfffc3d66b
+    REF v3.5.1
+    SHA512 658e515a16ed2b45a0b3dffa6bb23f28d6454a902d8d9efbed320e353112463ff8e9c3efd5b6c98cf61cf187dc88a0dd13f4989041acc836de2b9c07e8da32e9
     HEAD_REF master
-    PATCHES ${GDAL_PATCHES}
+    PATCHES
+        find-link-libraries.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
-set(extra_exports "")
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    if (VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(LINKAGE_FLAGS "/MT")
-    else()
-        set(LINKAGE_FLAGS "/MD")
-    endif()
-
-    set(NMAKE_OPTIONS
-        "DATADIR=${CURRENT_PACKAGES_DIR}/share/gdal"
-        "HTMLDIR=${CURRENT_PACKAGES_DIR}/share/gdal/html"
-        "MSVC_VER=1900"
-    )
-    set(NMAKE_OPTIONS_REL
-        "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
-        "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-    )
-    set(NMAKE_OPTIONS_DBG
-        "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
-        "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        DEBUG=1
-    )
-
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        list(APPEND NMAKE_OPTIONS "WIN64=YES")
-    endif()
-
-    if(VCPKG_TARGET_IS_UWP)
-        list(APPEND NMAKE_OPTIONS "SYM_PREFIX=" "EXTRA_LINKER_FLAGS=/APPCONTAINER WindowsApp.lib")
-    endif()
-
-    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        list(APPEND NMAKE_OPTIONS "HAVE_ATLBASE_H=NO")
-    endif()
-
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
-        list(APPEND NMAKE_OPTIONS "SSEFLAGS=/DNO_SSSE" "AVXFLAGS=/DNO_AVX")
-    endif()
-
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND NMAKE_OPTIONS "DLLBUILD=0")
-    else()
-        list(APPEND NMAKE_OPTIONS "DLLBUILD=1" "WITH_PDB=1")
-    endif()
-
-    include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
-    find_dependency_win()
-
-    if("tools" IN_LIST FEATURES)
-        list(APPEND NMAKE_OPTIONS_REL "BUILD_TOOLS=1")
-    else()
-        list(APPEND NMAKE_OPTIONS_REL "BUILD_TOOLS=0")
-    endif()
-    list(APPEND NMAKE_OPTIONS_DBG "BUILD_TOOLS=0")
-
-    # Begin build process
-    vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}/gdal"
-        TARGET devinstall
-        OPTIONS
-            ${NMAKE_OPTIONS}
-        OPTIONS_RELEASE
-            ${NMAKE_OPTIONS_REL}
-        OPTIONS_DEBUG
-            ${NMAKE_OPTIONS_DBG}
-    )
-
-    if("tools" IN_LIST FEATURES)
-        set(GDAL_EXES
-            gdal_contour
-            gdal_create
-            gdal_grid
-            gdal_rasterize
-            gdal_translate
-            gdal_viewshed
-            gdaladdo
-            gdalbuildvrt
-            gdaldem
-            gdalenhance
-            gdalinfo
-            gdallocationinfo
-            gdalmanage
-            gdalmdiminfo
-            gdalmdimtranslate
-            gdalsrsinfo
-            gdaltindex
-            gdaltransform
-            gdalwarp
-            gnmanalyse
-            gnmmanage
-            nearblack
-            ogr2ogr
-            ogrinfo
-            ogrlineref
-            ogrtindex
-        )
-        # vcpkg_copy_tools removes the bin directories for us so no need to remove again
-        vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
-    elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/share/gdal/html")
-
-    vcpkg_copy_pdbs()
-
-    if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb")
-    endif()
-
-else()
-    # See https://github.com/microsoft/vcpkg/issues/16990
-    file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
-
-    set(CONF_OPTS
-        --with-gnm=yes
-        --with-hide-internal-symbols=yes
-        --with-java=no
-        --with-perl=no
-        --with-python=no
-        )
-    set(CONF_CHECKS "")
-    function(add_config option check)
-        list(APPEND CONF_OPTS "${option}")
-        set(CONF_OPTS "${CONF_OPTS}" PARENT_SCOPE)
-        list(APPEND CONF_CHECKS "${check}")
-        set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
-    endfunction()
-    # parameters in the same order as the dependencies in vcpkg.json
-    add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
-    add_config("--with-expat=yes"    "Expat support:             yes")
-    add_config("--with-geos=yes"     "GEOS support:              yes")
-    add_config("--with-gif=yes"      "LIBGIF support:            external")
-    add_config("--with-libjson=yes"  "checking for JSONC... yes")
-    add_config("--with-geotiff=yes"  "LIBGEOTIFF support:        external")
-    add_config("--with-jpeg=yes"     "LIBJPEG support:           external")
-    add_config("--with-liblzma=yes"  "LIBLZMA support:           yes")
-    add_config("--with-png=yes"      "LIBPNG support:            external")
-    add_config("--with-webp=yes"     "WebP support:              yes")
-    add_config("--with-xml2=yes"     "libxml2 support:           yes")
-    add_config("--with-openjpeg=yes" "OpenJPEG support:          yes")
-    add_config("--with-proj=yes"     "PROJ >= 6:                 yes")
-    add_config("--with-sqlite3=yes"  "SQLite support:            yes")
-    add_config("--with-libtiff=yes"  "LIBTIFF support:           external")
-    add_config("--with-libz=yes"     "LIBZ support:              external")
-    add_config("--with-zstd=yes"     "ZSTD support:              yes")
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND CONF_OPTS --without-libtool --without-ld-shared)
-    endif()
-
-    if("system-libraries" IN_LIST FEATURES)
-        set(DISABLE_SYSTEM_LIBRARIES OFF)
-    else()
-        set(DISABLE_SYSTEM_LIBRARIES ON)
-    endif()
-
-    if ("libspatialite" IN_LIST FEATURES)
-        add_config("--with-spatialite=yes"  "SpatiaLite support:        yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-spatialite=no"   "SpatiaLite support:        no")
-    endif()
-
-    if ("poppler" IN_LIST FEATURES)
-        add_config("--with-poppler=yes"  "Poppler support:           yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-poppler=no"   "Poppler support:           no")
-    endif()
-    if ("postgresql" IN_LIST FEATURES)
-        add_config("--with-pg=yes"  "PostgreSQL support:        yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-pg=no"   "PostgreSQL support:        no")
-    endif()
-
-    if ("mysql-libmariadb" IN_LIST FEATURES)
-        add_config("--with-mysql=yes"  "MySQL support:             yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-mysql=no"   "MySQL support:             no")
-    endif()
-
-    if ("cfitsio" IN_LIST FEATURES)
-        add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-cfitsio=no"   "CFITSIO support:           no")
-    endif()
-
-    if ("hdf5" IN_LIST FEATURES)
-        add_config("--with-hdf5=yes"     "HDF5 support:              yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-hdf5=no"      "HDF5 support:              no")
-    endif()
-
-    if ("netcdf" IN_LIST FEATURES)
-        add_config("--with-netcdf=yes"   "NetCDF support:            yes")
-    elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-netcdf=no"    "NetCDF support:            no")
-    endif()
-
-    if(DISABLE_SYSTEM_LIBRARIES)
-        list(APPEND CONF_OPTS
-            # Too much: --disable-all-optional-drivers
-            # alphabetical order
-            --with-armadillo=no
-            --with-blosc=no
-            --with-brunsli=no
-            --with-charls=no
-            --with-crypto=no
-            --with-cryptopp=no
-            --with-dds=no
-            --with-dods-root=no
-            --with-ecw=no
-            --with-epsilon=no
-            --with-exr=no
-            --with-fgdb=no
-            --with-fme=no
-            --with-freexl=no
-            --with-grass=no
-            --with-gta=no
-            --with-hdf4=no
-            --with-hdfs=no
-            --with-heif=no
-            --with-idb=no
-            --with-ingres=no
-            --with-jp2lura=no
-            --with-jp2mrsid=no
-            --with-jasper=no
-            --with-jxl=no
-            --with-kakadu=no
-            --with-kea=no
-            --with-lerc=no
-            --with-libdeflate=no
-            --with-libgrass=no
-            --with-libkml=no
-            --with-lz4=no
-            --with-mdb=no
-            --with-mongocxx=no
-            --with-mongocxxv3=no
-            --with-mrsid=no
-            --with-mrsid_lidar=no
-            --with-msg=no
-            --with-null=no
-            --with-oci=no
-            --with-odbc=no
-            --with-ogdi=no
-            --with-opencl=no
-            --with-pcidsk=no
-            --with-pcraster=no
-            --with-pcre=no
-            --with-pcre2=no
-            --with-pdfium=no
-            --with-podofo=no
-            --with-qhull=no
-            --with-rasdaman=no
-            --with-rasterlite2=no
-            --with-rdb=no
-            --with-sfcgal=no
-            --with-sosi=no
-            --with-teigha=no
-            --with-tiledb=no
-            --with-xerces=no
-            )
-    endif()
-
-    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES proj LIBS)
-
-    if("tools" IN_LIST FEATURES)
-        list(APPEND CONF_OPTS "--with-tools=yes")
-    else()
-        list(APPEND CONF_OPTS "--with-tools=no")
-    endif()
-
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}/gdal"
-        AUTOCONFIG
-        COPY_SOURCE
-        OPTIONS
-            ${CONF_OPTS}
-        OPTIONS_RELEASE
-            "--with-proj-extra-lib-for-test=${PROJ_LIBS_RELEASE}"
-        OPTIONS_DEBUG
-            --enable-debug
-            --with-tools=no
-            "--with-proj-extra-lib-for-test=${PROJ_LIBS_DEBUG}"
-        )
-
-    # Verify configuration results (tightly coupled to vcpkg_configure_make)
-    function(check_config logfile)
-        set(failed_checks "")
-        file(READ "${logfile}" log)
-        foreach(check IN LISTS CONF_CHECKS)
-            if(NOT log MATCHES "${check}")
-                string(APPEND failed_checks "\n   ${check}")
-            endif()
-        endforeach()
-        if(failed_checks)
-            get_filename_component(file "${logfile}" NAME_WE)
-            message(FATAL_ERROR "${file}: Configuration failed for ${failed_checks}")
-        endif()
-    endfunction()
-    foreach(suffix IN ITEMS rel dbg)
-        set(log "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-${suffix}-out.log")
-        if(EXISTS "${log}")
-            check_config("${log}")
-        endif()
-    endforeach()
-
-    vcpkg_install_make(MAKEFILE GNUmakefile)
-
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/lib/gdalplugins"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins"
-        "${CURRENT_PACKAGES_DIR}/debug/share"
-        )
-
-    vcpkg_fixup_pkgconfig()
-    set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc")
-    if(EXISTS "${pc_file_debug}")
-        vcpkg_replace_string("${pc_file_debug}" "\${prefix}/../../include" "\${prefix}/../include")
-        vcpkg_replace_string("${pc_file_debug}" "\${exec_prefix}/include" "\${prefix}/../include")
-    endif()
-
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
-    endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
-
-    if("libspatialite" IN_LIST FEATURES)
-        list(APPEND extra_exports SPATIALITE)
-        x_vcpkg_pkgconfig_get_modules(
-            PREFIX SPATIALITE
-            MODULES spatialite
-            LIBS
-        )
-    endif()
+# Cf. cmake/helpers/CheckDependentLibraries.cmake
+# The default for all `GDAL_USE_<PKG>` dependencies is `OFF`.
+# Here, we explicitly control dependencies provided via vpcpkg.
+# "core" is used for a dependency which must be enabled to avoid vendored lib.
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cfitsio          GDAL_USE_CFITSIO
+        curl             GDAL_USE_CURL
+        recommended-features GDAL_USE_EXPAT
+        freexl           GDAL_USE_FREEXL
+        geos             GDAL_USE_GEOS
+        core             GDAL_USE_GEOTIFF
+        default-features GDAL_USE_GIF
+        hdf5             GDAL_USE_HDF5
+        default-features GDAL_USE_ICONV
+        default-features GDAL_USE_JPEG
+        core             GDAL_USE_JSONC
+        lerc             GDAL_USE_LERC
+        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        default-features GDAL_USE_LIBLZMA
+        default-features GDAL_USE_LIBXML2
+        mysql-libmariadb GDAL_USE_MYSQL 
+        netcdf           GDAL_USE_NETCDF
+        odbc             GDAL_USE_ODBC
+        default-features GDAL_USE_OPENJPEG
+        default-features GDAL_USE_OPENSSL
+        default-features GDAL_USE_PCRE2
+        default-features GDAL_USE_PNG
+        poppler          GDAL_USE_POPPLER
+        postgresql       GDAL_USE_POSTGRESQL
+        default-features GDAL_USE_QHULL
+        #core             GDAL_USE_SHAPELIB  # https://github.com/OSGeo/gdal/issues/5711, https://github.com/microsoft/vcpkg/issues/16041
+        core             GDAL_USE_SHAPELIB_INTERNAL
+        libspatialite    GDAL_USE_SPATIALITE
+        recommended-features GDAL_USE_SQLITE3
+        core             GDAL_USE_TIFF
+        default-features GDAL_USE_WEBP
+        core             GDAL_USE_ZLIB
+        default-features GDAL_USE_ZSTD
+)
+if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
 endif()
 
-string(COMPARE NOTEQUAL "${NMAKE_OPTIONS}" "" NMAKE_BUILD)
-set(GDAL_EXTRA_LIBS_DEBUG "")
-set(GDAL_EXTRA_LIBS_RELEASE "")
-foreach(prefix IN LISTS extra_exports)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_DEBUG}")
-    string(APPEND GDAL_EXTRA_LIBS_DEBUG " ${libs}")
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_RELEASE}")
-    string(APPEND GDAL_EXTRA_LIBS_RELEASE " ${libs}")
-endforeach()
-string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_DEBUG "${GDAL_EXTRA_LIBS_DEBUG}")
-string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_RELEASE "${GDAL_EXTRA_LIBS_RELEASE}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
+    FEATURES
+        tools           BUILD_APPS
+)
 
+# Compatibility with older Android versions https://github.com/OSGeo/gdal/pull/5941
+if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
+    list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_DOCS=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DGDAL_USE_INTERNAL_LIBS=OFF
+        -DGDAL_USE_EXTERNAL_LIBS=OFF
+        -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
+        -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DGDAL_CHECK_PACKAGE_NetCDF_NAMES=netCDF
+        -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
+    OPTIONS_RELEASE
+        ${FEATURE_OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -DBUILD_APPS=OFF
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
+    "include(CMakeFindDependencyMacro)"
+    "include(CMakeFindDependencyMacro)
+# gdal needs a pkg-config tool. A host dependency provides pkgconf.
+get_filename_component(vcpkg_host_prefix \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" ABSOLUTE)
+list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
+)
+
+if (BUILD_APPS)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            gdalinfo
+            gdalbuildvrt
+            gdaladdo
+            gdal_grid
+            gdal_translate
+            gdal_rasterize
+            gdalsrsinfo
+            gdalenhance
+            gdalmanage
+            gdaltransform
+            gdaltindex
+            gdaldem
+            gdal_create
+            gdal_viewshed
+            nearblack
+            ogrlineref
+            ogrtindex
+            gdalwarp
+            gdal_contour
+            gdallocationinfo
+            ogrinfo
+            ogr2ogr
+            ogrlineref
+            nearblack
+            gdalmdiminfo
+            gdalmdimtranslate
+            gnmanalyse
+            gnmmanage
+        AUTO_CLEAN
+    )
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+
+file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
+if(NOT bin_files)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/gdal/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

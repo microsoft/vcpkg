@@ -6,6 +6,14 @@ if(TARGET libunibreak)
   return()
 endif()
 
+# Compute the installation prefix relative to this file.
+get_filename_component(_INSTALL_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_INSTALL_DIR "${_INSTALL_DIR}" PATH)
+get_filename_component(_INSTALL_DIR "${_INSTALL_DIR}" PATH)
+if(_INSTALL_DIR STREQUAL "/")
+  set(_INSTALL_DIR "")
+endif()
+
 add_library(unibreak INTERFACE IMPORTED GLOBAL)
 add_library(libunibreak::libunibreak ALIAS unibreak)
 
