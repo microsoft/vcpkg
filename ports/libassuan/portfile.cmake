@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
         fix-autoconf-macros.patch
         w32-build-fixes.patch
         w32-build-fixes-2.patch
-        w32-stdc.patch              # https://gerrit.libreoffice.org/c/core/+/133339
+        w32-stdc.patch
         versioninfo_obj_extn.patch
         environ.patch               # https://docs.microsoft.com/en-us/cpp/c-runtime-library/environ-wenviron, no support for UWP
                                     # better fix would be to get rid of assuan's own setenv and resort to gnulib's 
@@ -23,6 +23,18 @@ vcpkg_extract_source_archive(
 
 if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND EXTRA_OPTS "CFLAGS=\$CFLAGS -D__STDC__=1")
+endif()
+
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libassuan")
+    
+    if (VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string(
+            "${SOURCE_PATH}/src/Makefile.am"
+            [=[./mkheader$(EXEEXT_FOR_BUILD)]=]
+            [=[mkheader.exe]=]
+        )
+    endif()
 endif()
 
 vcpkg_configure_make(
@@ -41,6 +53,10 @@ vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+
+if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_copy_tools(TOOL_NAMES mkheader SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
