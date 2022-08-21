@@ -36,8 +36,8 @@ if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     
     if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string(
-            "${SOURCE_PATH}/src/Makeafile.am"
-            [=[./mkheader$(EXEEXT)]=]
+            "${SOURCE_PATH}/src/Makefile.am"
+            [=[./mkheader]=]
             [=[mkheader.exe]=]
         )
     endif()
@@ -57,14 +57,15 @@ vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+endif()
 
-if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    if(VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_copy_tools(TOOL_NAMES mkheader mkerrorcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
-    elseif(VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_copy_tools(TOOL_NAMES mkheader mkerrorcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+
+    if(TARGET_TRIPLET STREQUAL HOST_TRIPLET )
+        vcpkg_copy_tools(TOOL_NAMES mkheader SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
     endif()
 endif()
 
