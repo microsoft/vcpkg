@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.com/inivation
         OUT_SOURCE_PATH SOURCE_PATH
         REPO dv/dv-processing
-        REF 96d082a862bb1e5bfdc79b39aa09e7a50c2dac49
-        SHA512 cf74e8a6f94f690e159778b59eb2e4d9c8f51f09437e94a507a2ec8f42e167fe6d1413ba91ab608624a02b4b479b27f454e7b7792d125ce5a163f4aa98e774cc
+        REF 6029bb4ecc06566b5f68375c68f00dfe78587baa
+        SHA512 9d0928e6ded1dab147814f380c57fb5b2c467c213c1fd12dddad9982e7d6a94a7bef526fcd248dd672b4b84753a44599b10d7794640ec63027152cd33b675787
         HEAD_REF rel_1.5
 )
 
