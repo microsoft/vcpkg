@@ -34,8 +34,6 @@ if ("tools" IN_LIST FEATURES)
         TOOL_NAMES
             sine_generator
             sweep_generator
-            test_edflib
-            test_generator
         AUTO_CLEAN
     )
 endif()
