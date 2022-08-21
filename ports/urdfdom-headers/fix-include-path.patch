@@ -1,12 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 25c3704..247ca0b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,7 +54,7 @@ install(FILES
+   DESTINATION ${CMAKE_CONFIG_INSTALL_DIR} COMPONENT cmake)
+ 
+ # Make the package config file
+-if (NOT MSVC)
++if (1)
+   set(PACKAGE_DESC "Unified Robot Description Format")
+   set(pkg_conf_file "urdfdom_headers.pc")
+   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkgconfig/${pkg_conf_file}.in" "${CMAKE_BINARY_DIR}/${pkg_conf_file}" @ONLY)
 diff --git a/cmake/urdfdom_headers-config.cmake.in b/cmake/urdfdom_headers-config.cmake.in
-index 4686d39..026b65e 100644
+index b53e466..b35805a 100644
 --- a/cmake/urdfdom_headers-config.cmake.in
 +++ b/cmake/urdfdom_headers-config.cmake.in
 @@ -3,8 +3,8 @@ if (@PACKAGE_NAME@_CONFIG_INCLUDED)
  endif()
  set(@PACKAGE_NAME@_CONFIG_INCLUDED TRUE)
  
--set(@PACKAGE_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/include")
+-set(@PACKAGE_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@")
 +set(@PACKAGE_NAME@_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../include")
  
 -include("${@PACKAGE_NAME@_DIR}/@PACKAGE_NAME@Export.cmake")

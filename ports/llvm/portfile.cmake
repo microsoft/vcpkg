@@ -1,4 +1,4 @@
-set(LLVM_VERSION "14.0.3")
+set(LLVM_VERSION "14.0.4")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,8 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${LLVM_VERSION}
-    SHA512 511e93fd9b1c414c38fe9e2649679ac0b16cb04f7f7838569d187b04c542a185e364d6db73e96465026e3b2533649eb75ac95507d12514af32b28bdfb66f2646
-    HEAD_REF master
+    SHA512 e14e6c3a1915a96e9ddc609f16ca3a398ca6f7fd0a691dadaa24490078a661340e845cb2d18f3679de4f47300bb822c33ae69548af6a0370d55737831a28b959
+    HEAD_REF main
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
         0004-fix-dr-1734.patch
@@ -180,6 +180,7 @@ if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
 endif()
 
+# this is for normal targets
 set(known_llvm_targets
     AArch64
     AMDGPU
@@ -209,9 +210,24 @@ foreach(llvm_target IN LISTS known_llvm_targets)
     endif()
 endforeach()
 
+# this is for experimental targets
+set(known_llvm_experimental_targets
+    SPRIV
+)
+
+set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "")
+foreach(llvm_target IN LISTS known_llvm_experimental_targets)
+    string(TOLOWER "target-${llvm_target}" feature_name)
+    if(feature_name IN_LIST FEATURES)
+        list(APPEND LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "${llvm_target}")
+    endif()
+endforeach()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
+
+set(LLVM_LINK_JOBS 1)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/llvm
@@ -228,9 +244,10 @@ vcpkg_cmake_configure(
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
+        "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         -DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
-        -DLLVM_PARALLEL_LINK_JOBS=1
+        "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
 )
 

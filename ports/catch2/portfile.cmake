@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF v3.0.1
     SHA512 065094c19cdf98b40f96a390e887542f895495562a91cdc28d68ce03690866d846ec87d320405312a2b97eacaa5351d3e55f0012bb9de40073c8d4444d82b0a1
     HEAD_REF devel
-    PATCHES 
+    PATCHES
         fix-install-path.patch
 )
 
@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCATCH_INSTALL_DOCS=OFF
+        -DCMAKE_CXX_STANDARD=17
 )
 
 vcpkg_cmake_install()

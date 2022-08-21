@@ -7,12 +7,21 @@ vcpkg_from_github(
     PATCHES
         fix-ws2-linking-windows.patch
         fix-conversion.patch
+        fix-dependency-libuv.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
     set(REDIS_PLUS_PLUS_CXX_STANDARD 17)
 else()
     set(REDIS_PLUS_PLUS_CXX_STANDARD 11)
+endif()
+
+set(EXTRA_OPT "")
+if ("async" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_BUILD_ASYNC="libuv")
+endif()
+if ("async-std" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_ASYNC_FUTURE="std")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" REDIS_PLUS_PLUS_BUILD_STATIC)
@@ -26,6 +35,7 @@ vcpkg_cmake_configure(
         -DREDIS_PLUS_PLUS_BUILD_SHARED=${REDIS_PLUS_PLUS_BUILD_SHARED}
         -DREDIS_PLUS_PLUS_BUILD_TEST=OFF
         -DREDIS_PLUS_PLUS_CXX_STANDARD=${REDIS_PLUS_PLUS_CXX_STANDARD}
+        ${EXTRA_OPT}
 )
 
 vcpkg_cmake_install()

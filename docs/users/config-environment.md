@@ -59,6 +59,10 @@ List paths to overlays using the platform dependent PATH separator (Windows `;`,
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.
 
+#### VCPKG_FORCE_DOWNLOADED_BINARIES
+
+This environment variable, if set, ignores the use of the system binaries and will always download and use the version defined by vcpkg.
+
 #### VCPKG_KEEP_ENV_VARS
 
 This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
@@ -69,9 +73,10 @@ pass in environment variables that should cause rebuilds on change, see [`VCPKG_
 
 Example: `FOO_SDK_DIR;BAR_SDK_DIR`
 
+<a name="VCPKG_MAX_CONCURRENCY"></a>
 #### VCPKG_MAX_CONCURRENCY
 
-This environment variables limits the amount of concurrency requested by underlying buildsystems. If unspecified, this defaults to logical cores + 1.
+This environment variables limits the amount of concurrency used by underlying buildsystems. If unspecified, this defaults to logical cores + 1.
 
 #### VCPKG_DEFAULT_BINARY_CACHE
 
