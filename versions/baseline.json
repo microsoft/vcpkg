@@ -1870,7 +1870,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 6
+      "port-version": 7
     },
     "devicenameresolver": {
       "baseline": "2016-06-26",
@@ -1970,7 +1970,7 @@
     },
     "dpdk": {
       "baseline": "22.03",
-      "port-version": 1
+      "port-version": 2
     },
     "dpp": {
       "baseline": "10.0.16",
@@ -2021,7 +2021,7 @@
       "port-version": 4
     },
     "dxut": {
-      "baseline": "11.27",
+      "baseline": "11.28",
       "port-version": 0
     },
     "eabase": {
@@ -2073,7 +2073,7 @@
       "port-version": 1
     },
     "effects11": {
-      "baseline": "11.27",
+      "baseline": "11.28",
       "port-version": 0
     },
     "effolkronium-random": {
@@ -2250,7 +2250,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 15
+      "port-version": 16
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -3021,8 +3021,8 @@
       "port-version": 1
     },
     "inih": {
-      "baseline": "51",
-      "port-version": 1
+      "baseline": "56",
+      "port-version": 0
     },
     "iniparser": {
       "baseline": "2020-04-06",
@@ -3101,8 +3101,8 @@
       "port-version": 5
     },
     "jemalloc": {
-      "baseline": "4.3.1",
-      "port-version": 5
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
@@ -3674,7 +3674,7 @@
     },
     "libgpg-error": {
       "baseline": "1.42",
-      "port-version": 3
+      "port-version": 4
     },
     "libgpiod": {
       "baseline": "1.6.3",
@@ -3761,8 +3761,8 @@
       "port-version": 4
     },
     "libjpeg-turbo": {
-      "baseline": "2.1.3",
-      "port-version": 3
+      "baseline": "2.1.4",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "1.0.3",
@@ -3930,7 +3930,7 @@
     },
     "libopensp": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libopusenc": {
       "baseline": "0.2.1",
@@ -4042,7 +4042,7 @@
     },
     "librttopo": {
       "baseline": "1.1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "libsamplerate": {
       "baseline": "0.2.2",
@@ -4618,7 +4618,7 @@
     },
     "minio-cpp": {
       "baseline": "0.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "minisat-master-keying": {
       "baseline": "2.3.6",
@@ -5393,7 +5393,7 @@
       "port-version": 0
     },
     "pango": {
-      "baseline": "1.50.7",
+      "baseline": "1.50.9",
       "port-version": 0
     },
     "pangolin": {
@@ -6604,6 +6604,10 @@
       "baseline": "1.5.0",
       "port-version": 3
     },
+    "shiftmedia-libgcrypt": {
+      "baseline": "1.10.1",
+      "port-version": 0
+    },
     "shiva": {
       "baseline": "1.0",
       "port-version": 5
@@ -6713,8 +6717,8 @@
       "port-version": 0
     },
     "socket-io-client": {
-      "baseline": "3.1.0",
-      "port-version": 1
+      "baseline": "2022-08-19",
+      "port-version": 0
     },
     "sockpp": {
       "baseline": "0.7.1",
@@ -7702,15 +7706,15 @@
     },
     "wxwidgets": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "x-plane": {
       "baseline": "3.0.3",
       "port-version": 1
     },
     "x264": {
-      "baseline": "164-5db6aa6cab1b146",
-      "port-version": 5
+      "baseline": "0.164.3095",
+      "port-version": 0
     },
     "x265": {
       "baseline": "3.4",
