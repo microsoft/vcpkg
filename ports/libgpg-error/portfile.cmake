@@ -1,5 +1,5 @@
 if (VCPKG_TARGET_IS_WINDOWS)
-    set (PATCHES SMP.patch msvc.patch)
+    set(PATCHES SMP.patch msvc.patch)
 endif()
 
 vcpkg_from_git(
@@ -8,8 +8,9 @@ vcpkg_from_git(
     FETCH_REF libgpg-error-1.45
     REF dbac537e5e865fb6f3aa8596d213aa8c47a9dea1 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgpg-error.git;a=commit;h=dbac537e5e865fb6f3aa8596d213aa8c47a9dea1
     HEAD_REF master
-    PATCHES ${PATCHES} 
-            gettext.patch
+    PATCHES
+        gettext.patch
+        ${PATCHES}
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
@@ -38,11 +39,10 @@ vcpkg_configure_make(
         --disable-tests
         --disable-doc
         --disable-silent-rules
-        ${EXEEXT_FOR_BUILD}
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -52,7 +52,7 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 
-    if(TARGET_TRIPLET STREQUAL HOST_TRIPLET )
+    if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
         vcpkg_copy_tools(TOOL_NAMES mkheader mkerrcodes SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src")
     endif()
 endif()
