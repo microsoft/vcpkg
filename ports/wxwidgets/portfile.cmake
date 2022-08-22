@@ -36,6 +36,7 @@ vcpkg_check_features(
     FEATURES
         sound   wxUSE_SOUND
         fonts   wxUSE_PRIVATE_FONTS
+        webview wxUSE_WEBVIEW_EDGE
 )
 
 set(OPTIONS_RELEASE "")
