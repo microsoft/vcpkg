@@ -1,17 +1,28 @@
+set(GPGME_BRANCH 1.18)
+set(GPGME_VERSION ${GPGME_BRANCH}.0)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/gpgme
-    REF gpgme-1.14.0
-    SHA512 b4608fd1d9a4122d8886917274e323afc9a30494c13a3dea51e17e9779f925bf8d67e584434d6a13018f274a6cbcf0a5e36f2fea794a065906bbb556b765398e
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+     URLS "https://www.gnupg.org/ftp/gcrypt/${PORT}/${PORT}-${GPGME_VERSION}.tar.bz2"
+     FILENAME "${PORT}-${GPGME_VERSION}.tar.bz2"
+     SHA512 c0cb0b337d017793a15dd477a7f5eaef24587fcda3d67676bf746bb342398d04792c51abe3c26ae496e799c769ce667d4196d91d86e8a690d02c6718c8f6b4ac
+ )
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
-       disable-tests.patch
-       disable-docs.patch
-)
+        lambda_fix.diff         # https://dev.gnupg.org/rMf02c20cc9c5756690b07abfd02a43533547ba2ef
+        lambda_fix2.diff        # https://dev.gnupg.org/T6141#161881
+                                # https://dev.gnupg.org/T6143
+        disable-tests.patch
+        disable-docs.patch
+ )
 
 list(REMOVE_ITEM FEATURES core)
 string(REPLACE ";" "," LANGUAGES "${FEATURES}")
+
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin")
+
 
 vcpkg_configure_make(
     AUTOCONFIG
@@ -25,11 +36,13 @@ vcpkg_configure_make(
         --enable-languages=${LANGUAGES}
         --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
         --with-libassuan-prefix=${CURRENT_INSTALLED_DIR}/tools/libassuan
+        ${EXTRA_OPTS}
 )
 
 vcpkg_install_make()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Gpgmepp)
 vcpkg_copy_pdbs() 
+
 # We have no dependency on glib, so remove this extra .pc file
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
 vcpkg_fixup_pkgconfig()
