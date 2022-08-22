@@ -15,8 +15,8 @@
     "pixman",
     "pthread",
     "tool-meson",
-    "x11",
-    "xau",
+    "libx11",
+    "libxau",
     "xcb",
     "xcb-image",
     "xcb-keysyms",
@@ -25,7 +25,7 @@
     "xcb-util",
     "xcb-util-m4",
     "xcb-wm",
-    "xdmcp",
+    "libxdmcp",
     "xfont",
     "xkbcommon",
     "xkbcomp",
@@ -72,8 +72,8 @@
     "xnest": {
       "description": "Build xnest server",
       "dependencies": [
-        "x11",
-        "xau",
+        "libx11",
+        "libxau",
         "xext"
       ]
     },

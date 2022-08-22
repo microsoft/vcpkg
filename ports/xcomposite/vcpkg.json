@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcomposite",
   "dependencies": [
     "bzip2",
-    "x11",
+    "libx11",
     "xfixes",
     "xorg-macros",
     "xproto"
