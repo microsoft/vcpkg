@@ -630,7 +630,7 @@
     },
     "boost-context": {
       "baseline": "1.79.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-contract": {
       "baseline": "1.79.0",
@@ -2482,7 +2482,7 @@
     },
     "gdal": {
       "baseline": "3.5.1",
-      "port-version": 5
+      "port-version": 6
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2646,7 +2646,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3118,7 +3118,7 @@
     },
     "json-c": {
       "baseline": "2022-06-26",
-      "port-version": 1
+      "port-version": 2
     },
     "json-dto": {
       "baseline": "0.3.1",
@@ -5154,7 +5154,7 @@
     },
     "openal-soft": {
       "baseline": "1.22.2",
-      "port-version": 2
+      "port-version": 3
     },
     "openblas": {
       "baseline": "0.3.20",
@@ -6149,7 +6149,7 @@
       "port-version": 7
     },
     "quill": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "quirc": {
@@ -6254,7 +6254,7 @@
     },
     "readosm": {
       "baseline": "1.1.0a",
-      "port-version": 2
+      "port-version": 3
     },
     "realsense2": {
       "baseline": "2.50.0",
@@ -6518,7 +6518,7 @@
     },
     "sdl2-image": {
       "baseline": "2.0.5",
-      "port-version": 6
+      "port-version": 7
     },
     "sdl2-mixer": {
       "baseline": "2.6.1",
@@ -7845,7 +7845,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.10.2",
+      "baseline": "4.11.0",
       "port-version": 0
     },
     "z85": {
