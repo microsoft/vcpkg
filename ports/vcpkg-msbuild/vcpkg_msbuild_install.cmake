@@ -2,7 +2,7 @@ function(vcpkg_msbuild_install)
     cmake_parse_arguments(
         PARSE_ARGV 0
         "arg"
-        "CLEAN;NO_TOOLCHAIN_PROPS"
+        "CLEAN;NO_TOOLCHAIN_PROPS;NO_INSTALL"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET;INCLUDE_INSTALL_DIR"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
     )
@@ -103,18 +103,20 @@ function(vcpkg_msbuild_install)
             WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-rel"
         )
-        file(GLOB_RECURSE libs "${working_dir}/*.lib")
-        file(GLOB_RECURSE dlls "${working_dir}/*.dll")
-        file(GLOB_RECURSE exes "${working_dir}/*.exe")
-        if(NOT libs STREQUAL "")
-            file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        endif()
-        if(NOT dlls STREQUAL "")
-            file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        endif()
-        if(NOT exes STREQUAL "")
-            file(COPY ${exes} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        if(NOT arg_NO_INSTALL)
+            file(GLOB_RECURSE libs "${working_dir}/*.lib")
+            file(GLOB_RECURSE dlls "${working_dir}/*.dll")
+            file(GLOB_RECURSE exes "${working_dir}/*.exe")
+            if(NOT libs STREQUAL "")
+                file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+            endif()
+            if(NOT dlls STREQUAL "")
+                file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+            endif()
+            if(NOT exes STREQUAL "")
+                file(COPY ${exes} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+                vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+            endif()
         endif()
     endif()
 
@@ -132,13 +134,15 @@ function(vcpkg_msbuild_install)
             WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
-        file(GLOB_RECURSE libs "${working_dir}/*.lib")
-        file(GLOB_RECURSE dlls "${working_dir}/*.dll")
-        if(NOT libs STREQUAL "")
-            file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        endif()
-        if(NOT dlls STREQUAL "")
-            file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        if(NOT arg_NO_INSTALL)
+            file(GLOB_RECURSE libs "${working_dir}/*.lib")
+            file(GLOB_RECURSE dlls "${working_dir}/*.dll")
+            if(NOT libs STREQUAL "")
+                file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            endif()
+            if(NOT dlls STREQUAL "")
+                file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+            endif()
         endif()
     endif()
 

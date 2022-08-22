@@ -1,5 +1,4 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 set(PMDK_VERSION "1.12.0")
 
 vcpkg_from_github(
@@ -20,6 +19,10 @@ vcpkg_msbuild_install(
     INCLUDES_SUBPATH "src/include"
     INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
 )
+
+# TODO: Port needs devendoring of getopt.
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/getopt.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/getopt.lib")
 
 # Remove unneeded header files
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/libvmmalloc.h")

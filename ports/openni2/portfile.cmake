@@ -26,6 +26,7 @@ vcpkg_msbuild_install(
     PROJECT_SUBPATH OpenNI.sln
     OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
     NO_TOOLCHAIN_PROPS # Port uses /clr which conflicts with /EHs(a) from the toolchain
+    NO_INSTALL # Port seems to have its own layout regarding bin/lib
 )
 
 # Install OpenNI2
@@ -36,8 +37,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 
 set(SOURCE_INCLUDE_PATH "${SOURCE_PATH}/Include")
-set(SOURCE_BIN_PATH_RELEASE "${SOURCE_PATH}/Bin/${PLATFORM}-Release")
-set(SOURCE_BIN_PATH_DEBUG "${SOURCE_PATH}/Bin/${PLATFORM}-Debug")
+set(SOURCE_BIN_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Bin/${PLATFORM}-Release")
+set(SOURCE_BIN_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Bin/${PLATFORM}-Debug")
 set(SOURCE_CONFIG_PATH "${SOURCE_PATH}/Config")
 set(SOURCE_THIRDPARTY_PATH "${SOURCE_PATH}/ThirdParty")
 
