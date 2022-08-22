@@ -4,6 +4,7 @@
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
   "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "gettext",
