@@ -4,7 +4,7 @@
   "description": "library for the Render Extension to the X11 protocol",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxrender",
   "dependencies": [
-    "x11",
+    "libx11",
     "xorg-macros"
   ]
 }

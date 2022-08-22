@@ -7,7 +7,7 @@
     "bzip2",
     "fontenc",
     "freetype",
-    "x11",
+    "libx11",
     "xext",
     "xorg-macros",
     "xproto",

@@ -4,7 +4,7 @@
   "description": "Xlib-based library for the XFIXES Extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxfixes",
   "dependencies": [
-    "x11",
+    "libx11",
     "xorg-macros",
     "xproto"
   ]

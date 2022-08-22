@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxdamage",
   "dependencies": [
     "bzip2",
-    "x11",
+    "libx11",
     "xfixes",
     "xorg-macros",
     "xproto"

@@ -4,7 +4,7 @@
   "description": "XKB keyboard description compiler",
   "homepage": "https://gitlab.freedesktop.org/xorg/app/xkbcomp",
   "dependencies": [
-    "x11",
+    "libx11",
     "xkbfile",
     "xproto"
   ]

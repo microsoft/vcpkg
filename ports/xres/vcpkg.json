@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxres",
   "dependencies": [
     "bzip2",
-    "x11",
+    "libx11",
     "xext",
     "xorg-macros",
     "xproto"

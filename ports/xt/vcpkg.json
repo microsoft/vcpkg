@@ -8,7 +8,7 @@
     "glib",
     "ice",
     "sm",
-    "x11",
+    "libx11",
     "xorg-macros",
     "xproto"
   ]

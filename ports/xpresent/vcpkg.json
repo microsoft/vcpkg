@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxpresent",
   "dependencies": [
     "bzip2",
-    "x11",
+    "libx11",
     "xext",
     "xfixes",
     "xorg-macros",

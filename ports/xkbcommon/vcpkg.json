@@ -12,6 +12,6 @@
     },
     "xcb",
     "xcb-render-util",
-    "xlib"
+    "libx11"
   ]
 }

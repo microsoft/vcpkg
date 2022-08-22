@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libice",
   "dependencies": [
     "bzip2",
-    "xlib",
+    "libx11",
     "xorg-macros",
     "xproto",
     "xtrans"

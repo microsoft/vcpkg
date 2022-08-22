@@ -6,8 +6,8 @@
   "supports": "!windows",
   "dependencies": [
     "bzip2",
-    "x11",
-    "xau",
+    "libx11",
+    "libxau",
     "xext",
     "xorg-macros",
     "xproto"
