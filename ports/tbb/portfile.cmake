@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME TBB CONFIG_PATH "lib/cmake/TBB")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TBB")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
@@ -29,8 +29,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/lib/tbb_debug.lib"
 )
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/TBB/TBBConfig.cmake" _contents)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/TBB/TBBConfig.cmake" "
+file(READ "${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake" _contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 ${_contents}")
