@@ -7,8 +7,8 @@
     "bzip2",
     "glib",
     "ice",
-    "sm",
     "libx11",
+    "sm",
     "xorg-macros",
     "xproto"
   ]

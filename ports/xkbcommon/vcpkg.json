@@ -5,13 +5,13 @@
   "homepage": "https://xkbcommon.org/",
   "dependencies": [
     "getopt",
+    "libx11",
     "tool-meson",
     {
       "name": "wayland",
       "platform": "linux"
     },
     "xcb",
-    "xcb-render-util",
-    "libx11"
+    "xcb-render-util"
   ]
 }
