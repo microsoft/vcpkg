@@ -23,7 +23,7 @@ endif()
 set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 if(WIN32)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(additional_options NO_TOOLCHAIN) # don't know how to fix the linker error about __guard_check_icall_thunk 
+        set(additional_options NO_TOOLCHAIN_PROPS) # don't know how to fix the linker error about __guard_check_icall_thunk 
     endif()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(additional_options PLATFORM "x86")
