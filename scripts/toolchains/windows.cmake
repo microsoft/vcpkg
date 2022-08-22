@@ -1,9 +1,18 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
+set(_VCPKG_WINDOWS_TOOLCHAIN 1)
 
-cmake_policy(SET CMP0056 NEW)
-cmake_policy(SET CMP0066 NEW)
-cmake_policy(SET CMP0067 NEW)
-cmake_policy(SET CMP0137 NEW)
+if(POLICY CMP0056)
+    cmake_policy(SET CMP0056 NEW)
+endif()
+if(POLICY CMP0066)
+    cmake_policy(SET CMP0066 NEW)
+endif()
+if(POLICY CMP0067)
+    cmake_policy(SET CMP0067 NEW)
+endif()
+if(POLICY CMP0137)
+    cmake_policy(SET CMP0137 NEW)
+endif()
 
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE VCPKG_SET_CHARSET_FLAG 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
@@ -11,7 +20,7 @@ list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_
                                                  VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
                                                  VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
                                                  VCPKG_PLATFORM_TOOLSET)
-set(_VCPKG_WINDOWS_TOOLCHAIN 1)
+
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
 
 set(CMAKE_SYSTEM_NAME Windows CACHE STRING "")
