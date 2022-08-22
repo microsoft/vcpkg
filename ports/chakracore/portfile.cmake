@@ -10,6 +10,8 @@ vcpkg_from_github(
         fix-debug-linux-build.patch
 )
 
+
+
 if(WIN32)
     find_path(COR_H_PATH cor.h)
     if(COR_H_PATH MATCHES "NOTFOUND")
@@ -22,6 +24,9 @@ set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 if(WIN32)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(additional_options NO_TOOLCHAIN) # don't know how to fix the linker error about __guard_check_icall_thunk 
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(additional_options PLATFORM "x86")
     endif()
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
     vcpkg_msbuild_install(

@@ -20,6 +20,10 @@ vcpkg_from_github(
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
 configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" @ONLY)
 
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(additional_options PLATFORM "x86")
+endif()
 # Build OpenNI2
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,6 +31,7 @@ vcpkg_msbuild_install(
     OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
     NO_TOOLCHAIN_PROPS # Port uses /clr which conflicts with /EHs(a) from the toolchain
     NO_INSTALL # Port seems to have its own layout regarding bin/lib
+    ${additional_options}
 )
 
 # Install OpenNI2
