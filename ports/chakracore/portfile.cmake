@@ -35,6 +35,7 @@ if(WIN32)
         OPTIONS
             "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
+            "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
         INCLUDES_SUBPATH "lib/Jsrt"
         INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
         LICENSE_SUBPATH "LICENSE.txt"
