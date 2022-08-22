@@ -62,8 +62,13 @@ foreach(VCXPROJ IN ITEMS
     )
     vcpkg_replace_string(
         "${VCXPROJ}"
-        "libgpg-error"
-        "gpg-error"
+        "libgpg-error.lib;"
+        ""
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "libgpg-errord.lib;"
+        ""
     )
 endforeach()
 
@@ -74,6 +79,7 @@ vcpkg_msbuild_install(
     LICENSE_SUBPATH COPYING.LIB
     RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
     DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
+    DEPENDENT_PKGCONFIG gpg-error
     OPTIONS /p:OutDir=..\\msvc
 )
 
