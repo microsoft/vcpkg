@@ -1,7 +1,6 @@
 {
   "name": "hunspell",
-  "version": "1.7.0",
-  "port-version": 8,
+  "version": "1.7.1",
   "description": "The most popular spellchecking library.",
   "homepage": "https://github.com/hunspell/hunspell",
   "supports": "!uwp",
