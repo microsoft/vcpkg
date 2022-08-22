@@ -1,0 +1,27 @@
+From a8c20b8494d750d6005cf18f7477139abc4e3117 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Mon, 22 Aug 2022 17:39:42 +0200
+Subject: [PATCH] w32: guard unistd.h include on Windows
+
+---
+ src/mbox-util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/mbox-util.c b/src/mbox-util.c
+index 22816d64..c5313e02 100644
+--- a/src/mbox-util.c
++++ b/src/mbox-util.c
+@@ -29,7 +29,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #include "mbox-util.h"
+-- 
+2.37.1
+

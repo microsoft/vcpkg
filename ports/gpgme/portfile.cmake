@@ -14,15 +14,28 @@ vcpkg_extract_source_archive(
         0001-build-Update-ax_cxx_compile_stdcxx-macro.patch
         0001-cpp-Fix-building-with-C-11.patch
         0001-qt-Fix-building-with-C-11.patch
-        disable-tests.patch
+        0001-gpgme-tool-use-alloca-instead-of-VLAs.patch
+        0001-w32-guard-unistd.h-include-on-Windows.patch    # https://dev.gnupg.org/D561
+        disable-tests.patch                                 # https://dev.gnupg.org/D560
         disable-docs.patch
- )
+        windows_unistd_io.patch
+        versioninfo.patch
+)
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    if (NOT VCPKG_TARGET_IS_MINGW)
+        set(EXTRA_LIBS "LIBS=\$LIBS -lgetopt")
+
+        set(ENV{CC} "clang-cl.exe")
+        set(ENV{CXX} "clang-cl.exe")
+        set(ENV{LD} "lld-link.exe")
+    endif()
+endif()
 
 list(REMOVE_ITEM FEATURES core)
 string(REPLACE ";" "," LANGUAGES "${FEATURES}")
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin")
-
 
 vcpkg_configure_make(
     AUTOCONFIG
@@ -36,7 +49,7 @@ vcpkg_configure_make(
         --enable-languages=${LANGUAGES}
         --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
         --with-libassuan-prefix=${CURRENT_INSTALLED_DIR}/tools/libassuan
-        ${EXTRA_OPTS}
+        ${EXTRA_LIBS}
 )
 
 vcpkg_install_make()

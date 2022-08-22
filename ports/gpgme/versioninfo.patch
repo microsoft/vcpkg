@@ -1,0 +1,13 @@
+diff --git a/src/versioninfo.rc.in b/src/versioninfo.rc.in
+index 78003687..e16b347b 100644
+--- a/src/versioninfo.rc.in
++++ b/src/versioninfo.rc.in
+@@ -12,8 +12,6 @@
+ 
+ /* This file is processed by configure to create versioninfo.rc */
+ 
+-#line __LINE__ "versioninfo.rc.in"
+-
+ #include <afxres.h>
+ 
+ 

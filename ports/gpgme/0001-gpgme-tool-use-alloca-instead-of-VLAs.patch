@@ -1,0 +1,25 @@
+From 892cf6cbb0f54db5ba217ef2dcf663b3ca1bbe2c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Mon, 22 Aug 2022 18:23:47 +0200
+Subject: [PATCH] gpgme-tool: use alloca instead of VLAs
+
+---
+ src/gpgme-tool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gpgme-tool.c b/src/gpgme-tool.c
+index 7d3ca16d..a60d312b 100644
+--- a/src/gpgme-tool.c
++++ b/src/gpgme-tool.c
+@@ -328,7 +328,7 @@ result_init (struct result_xml_state *state, int indent,
+ gpg_error_t
+ result_xml_indent (struct result_xml_state *state)
+ {
+-  char spaces[state->indent + 1];
++  char* spaces = (char*)alloca((state->indent + 1) * sizeof(char));
+   int i;
+   for (i = 0; i < state->indent; i++)
+     spaces[i] = ' ';
+-- 
+2.37.1
+

@@ -1,0 +1,70 @@
+diff --git a/src/gpgme-tool.c b/src/gpgme-tool.c
+index a60d312b..22746772 100644
+--- a/src/gpgme-tool.c
++++ b/src/gpgme-tool.c
+@@ -39,6 +39,13 @@
+ #include "argparse.h"
+ #include "gpgme.h"
+ 
++#ifdef _MSC_VER
++#define R_OK 4
++#define W_OK 2
++#define X_OK R_OK
++#define F_OK 0
++#endif
++
+ /* GCC attributes.  */
+ #if __GNUC__ >= 4
+ # define GT_GCC_A_SENTINEL(a) __attribute__ ((sentinel(a)))
+diff --git a/src/priv-io.h b/src/priv-io.h
+index d21f1b34..e4a88e06 100644
+--- a/src/priv-io.h
++++ b/src/priv-io.h
+@@ -33,7 +33,9 @@
+ #ifdef HAVE_SYS_TYPES_H
+ # include <sys/types.h>
+ #endif
+-
++#ifdef _MSC_VER
++typedef int pid_t;
++#endif
+ 
+ /* A single file descriptor passed to spawn.  For child fds, dup_to
+    specifies the fd it should become in the child, but only 0, 1 and 2
+diff --git a/src/util.h b/src/util.h
+index 89075848..5d16a05c 100644
+--- a/src/util.h
++++ b/src/util.h
+@@ -35,6 +35,13 @@
+ #ifdef HAVE_UNISTD_H
+ # include <unistd.h>
+ #endif
++#ifdef _MSC_VER
++typedef int pid_t;
++#define R_OK 4
++#define W_OK 2
++#define X_OK R_OK
++#define F_OK 0
++#endif
+ 
+ #include "gpgme.h"
+ 
+diff --git a/src/w32-util.c b/src/w32-util.c
+index 02058e70..2cf9f116 100644
+--- a/src/w32-util.c
++++ b/src/w32-util.c
+@@ -67,8 +67,13 @@
+ 
+ 
+ #define HAVE_ALLOW_SET_FOREGROUND_WINDOW 1
+-#ifndef F_OK
++#ifdef _MSC_VER
+ # define F_OK 0
++# ifndef S_IRUSR
++#  define S_IRUSR S_IREAD  /* read, user */
++#  define S_IWUSR S_IWRITE /* write, user */
++#  define S_IXUSR 0        /* execute, user */
++# endif
+ #endif
+ 
+ /* The Registry key used by GNUPG.  */

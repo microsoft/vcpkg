@@ -3,8 +3,15 @@
   "version": "1.18.0",
   "description": "A library designed to make access to GnuPG easier for applications",
   "homepage": "https://gnupg.org/software/gpgme/index.html",
-  "supports": "!windows",
   "dependencies": [
+    {
+      "name": "getopt",
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "glib",
+      "platform": "windows"
+    },
     "libassuan",
     "libgpg-error",
     {
