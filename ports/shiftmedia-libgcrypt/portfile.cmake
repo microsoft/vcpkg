@@ -65,6 +65,11 @@ foreach(VCXPROJ IN ITEMS
         "libgpg-error"
         "gpg-error"
     )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "gpg-errord"
+        "gpg-error"
+    )
 endforeach()
 
 vcpkg_install_msbuild(

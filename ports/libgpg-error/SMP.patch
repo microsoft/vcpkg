@@ -1,0 +1,766 @@
+diff --git a/autogen.sh b/autogen.sh
+index 9b36158..ac8c522 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -505,8 +505,8 @@ info "Running $ACLOCAL ${aclocal_flags} ..."
+ $ACLOCAL ${aclocal_flags}
+ info "Running autoheader..."
+ $AUTOHEADER
+-info "Running automake --gnu ..."
+-$AUTOMAKE --gnu;
++info "Running automake --gnu --add-missing..."
++$AUTOMAKE --gnu --add-missing;
+ info "Running autoconf${FORCE} ..."
+ $AUTOCONF${FORCE}
+ 
+diff --git a/src/argparse.c b/src/argparse.c
+index cedb2f5..888c30a 100644
+--- a/src/argparse.c
++++ b/src/argparse.c
+@@ -33,14 +33,19 @@
+ #include <stdarg.h>
+ #include <limits.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <time.h>
+ 
+ #include "gpgrt-int.h"
+ 
+ #ifdef HAVE_W32_SYSTEM
++# include <io.h>
+ # define PATHSEP_C ';'
+ # define DIRSEP_C  '\\'
++# define R_OK    4
++# define strcasecmp _stricmp
+ #else
+ # define PATHSEP_C ':'
+ # define DIRSEP_C  '/'
+diff --git a/src/estream-printf.c b/src/estream-printf.c
+index fe25657..35f08cd 100644
+--- a/src/estream-printf.c
++++ b/src/estream-printf.c
+@@ -85,7 +85,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdarg.h>
+ #include <errno.h>
+ #include <stddef.h>
+diff --git a/src/estream.c b/src/estream.c
+index 0542f59..917f213 100644
+--- a/src/estream.c
++++ b/src/estream.c
+@@ -71,12 +71,15 @@
+ # include <sys/time.h>
+ #endif
+ #include <sys/types.h>
+-#include <sys/file.h>
+-#include <sys/stat.h>
++#ifdef HAVE_SYS_STAT_H
++# include <sys/stat.h>
++#endif
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdarg.h>
+ #include <fcntl.h>
+ #include <errno.h>
+@@ -86,6 +89,7 @@
+ #  include <winsock2.h>
+ # endif
+ # include <windows.h>
++# include <io.h>
+ #else
+ # ifdef HAVE_POLL_H
+ #  include <poll.h>
+@@ -116,6 +120,15 @@
+ 
+ 
+ #ifdef HAVE_W32_SYSTEM
++# ifndef S_IRUSR
++#  define S_IRUSR _S_IREAD
++# endif
++# ifndef S_IWUSR
++#  define S_IWUSR _S_IWRITE
++# endif
++# ifndef S_IXUSR
++#  define S_IXUSR _S_IEXEC
++# endif
+ # ifndef  S_IRGRP
+ #  define S_IRGRP S_IRUSR
+ # endif
+@@ -165,7 +178,6 @@ int _setmode (int handle, int mode);
+ /* A helper macro used to convert to a hex string.  */
+ #define tohex(n) ((n) < 10 ? ((n) + '0') : (((n) - 10) + 'A'))
+ 
+-
+ /* Generally used types.  */
+ 
+ typedef void *(*func_realloc_t) (void *mem, size_t size);
+@@ -1816,6 +1828,9 @@ func_file_create_w32 (void **cookie, HANDLE *rethd, const char *path,
+   else
+     creation_distribution |= OPEN_EXISTING;
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++  hd = CreateFile2 (wpath, desired_access, share_mode, creation_distribution, NULL);
++#else
+   hd = CreateFileW (wpath,
+                     desired_access,
+                     share_mode,
+@@ -1823,6 +1838,7 @@ func_file_create_w32 (void **cookie, HANDLE *rethd, const char *path,
+                     creation_distribution,
+                     0,     /* flags and attributes  */
+                     NULL); /* template file  */
++#endif
+   if (hd == INVALID_HANDLE_VALUE)
+     {
+       _set_errno (map_w32_to_errno (GetLastError ()));
+@@ -4770,37 +4786,27 @@ tmpfd (void)
+ {
+ #ifdef HAVE_W32_SYSTEM
+   int attempts, n;
+-#ifdef HAVE_W32CE_SYSTEM
+   wchar_t buffer[MAX_PATH+9+12+1];
+ # define mystrlen(a) wcslen (a)
+   wchar_t *name, *p;
+-#else
+-  char buffer[MAX_PATH+9+12+1];
+-# define mystrlen(a) strlen (a)
+-  char *name, *p;
+-#endif
+   HANDLE file;
+   int pid = GetCurrentProcessId ();
+   unsigned int value;
+   int i;
+ 
+-  n = GetTempPath (MAX_PATH+1, buffer);
++  n = GetTempPathW (MAX_PATH+1, buffer);
+   if (!n || n > MAX_PATH || mystrlen (buffer) > MAX_PATH)
+     {
+       _set_errno (ENOENT);
+       return -1;
+     }
+   p = buffer + mystrlen (buffer);
+-#ifdef HAVE_W32CE_SYSTEM
+   wcscpy (p, L"_estream");
+-#else
+-  strcpy (p, "_estream");
+-#endif
+   p += 8;
+   /* We try to create the directory but don't care about an error as
+      it may already exist and the CreateFile would throw an error
+      anyway.  */
+-  CreateDirectory (buffer, NULL);
++  CreateDirectoryW (buffer, NULL);
+   *p++ = '\\';
+   name = p;
+   for (attempts=0; attempts < 10; attempts++)
+@@ -4812,18 +4818,25 @@ tmpfd (void)
+           *p++ = tohex (((value >> 28) & 0x0f));
+           value <<= 4;
+         }
+-#ifdef HAVE_W32CE_SYSTEM
+       wcscpy (p, L".tmp");
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_PC_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
++      CREATEFILE2_EXTENDED_PARAMETERS ex = { 0 };
++      ex.dwFileFlags = FILE_FLAG_DELETE_ON_CLOSE;
++      ex.dwFileAttributes = FILE_ATTRIBUTE_TEMPORARY;
++      file = CreateFile2(buffer,
++                         GENERIC_READ | GENERIC_WRITE,
++                         0,
++                         CREATE_NEW,
++                         &ex);
+ #else
+-      strcpy (p, ".tmp");
+-#endif
+-      file = CreateFile (buffer,
++      file = CreateFileW (buffer,
+                          GENERIC_READ | GENERIC_WRITE,
+                          0,
+                          NULL,
+                          CREATE_NEW,
+                          FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+                          NULL);
++#endif
+       if (file != INVALID_HANDLE_VALUE)
+         {
+ #ifdef HAVE_W32CE_SYSTEM
+diff --git a/src/gpg-error.c b/src/gpg-error.c
+index 4e8bd8b..2c64a40 100644
+--- a/src/gpg-error.c
++++ b/src/gpg-error.c
+@@ -53,6 +53,9 @@
+ 
+ 
+ #if HAVE_W32_SYSTEM
++# define strcasecmp _stricmp
++# define strncasecmp _strnicmp
++
+ /* The implementation follows below.  */
+ static char *get_locale_dir (void);
+ static void drop_locale_dir (char *locale_dir);
+diff --git a/src/gpg-error.h.in b/src/gpg-error.h.in
+index b97f38a..f112e59 100644
+--- a/src/gpg-error.h.in
++++ b/src/gpg-error.h.in
+@@ -249,7 +249,7 @@ typedef unsigned int gpg_error_t;
+ 
+ /* A macro defined if a GCC style __FUNCTION__ macro is available.  */
+ #undef GPGRT_HAVE_MACRO_FUNCTION
+-#if _GPG_ERR_GCC_VERSION >= 20500
++#if _GPG_ERR_GCC_VERSION >= 20500 || defined(_MSC_VER)
+ # define GPGRT_HAVE_MACRO_FUNCTION 1
+ #endif
+ 
+diff --git a/src/init.c b/src/init.c
+index 2d9f7ab..9d1c338 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -53,6 +53,10 @@ static int tls_index = TLS_OUT_OF_INDEXES;  /* Index for the TLS functions.  */
+ static char *get_locale_dir (void);
+ static void drop_locale_dir (char *locale_dir);
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_PC_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
++# define getenv(x) NULL
++#endif
++
+ #else /*!HAVE_W32_SYSTEM*/
+ 
+ #define get_locale_dir() LOCALEDIR
+diff --git a/src/logging.c b/src/logging.c
+index e4b7e40..e0c28b6 100644
+--- a/src/logging.c
++++ b/src/logging.c
+@@ -38,13 +38,17 @@
+ #  include <winsock2.h>
+ # endif
+ # include <windows.h>
++# include <process.h>
++# include <io.h>
+ #else /*!HAVE_W32_SYSTEM*/
+ # include <sys/socket.h>
+ # include <sys/un.h>
+ # include <netinet/in.h>
+ # include <arpa/inet.h>
+ #endif /*!HAVE_W32_SYSTEM*/
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ /* #include <execinfo.h> */
+ 
+@@ -53,6 +57,10 @@
+ 
+ 
+ #ifdef HAVE_W32_SYSTEM
++# ifndef S_IRUSR
++#  define S_IRUSR _S_IREAD
++#  define S_IWUSR _S_IWRITE
++# endif
+ # ifndef S_IRWXG
+ #  define S_IRGRP S_IRUSR
+ #  define S_IWGRP S_IWUSR
+@@ -61,6 +69,9 @@
+ #  define S_IROTH S_IRUSR
+ #  define S_IWOTH S_IWUSR
+ # endif
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_PC_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
++# define getpid() GetCurrentProcessId()
++#endif
+ #endif
+ 
+ 
+diff --git a/src/mkheader.c b/src/mkheader.c
+index 1d2ea20..88444b1 100644
+--- a/src/mkheader.c
++++ b/src/mkheader.c
+@@ -16,7 +16,12 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <errno.h>
++#ifdef _WIN32
++#include <io.h>
++#define R_OK 4
++#else
+ #include <unistd.h>
++#endif
+ 
+ #define PGM "mkheader"
+ 
+@@ -573,18 +578,9 @@ write_special (const char *fname, int lnr, const char *tag)
+               sys_types_h_included = 1;
+             }
+         }
+-      else if (have_w64_system)
+-        {
+-          if (!stdint_h_included && have_stdint_h)
+-            {
+-              fputs ("#include <stdint.h>\n", stdout);
+-              stdint_h_included = 1;
+-            }
+-          fputs ("typedef int64_t pid_t\n", stdout);
+-        }
+       else
+         {
+-          fputs ("typedef int     pid_t\n", stdout);
++          fputs ("typedef int     pid_t;\n", stdout);
+         }
+     }
+   else if (!strcmp (tag, "include:err-sources"))
+diff --git a/src/spawn-w32.c b/src/spawn-w32.c
+index 3ede1f2..44a71a2 100644
+--- a/src/spawn-w32.c
++++ b/src/spawn-w32.c
+@@ -34,12 +34,15 @@
+ #ifdef HAVE_SIGNAL_H
+ # include <signal.h>
+ #endif
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #ifdef HAVE_STAT
+ # include <sys/stat.h>
+ #endif
+ #define WIN32_LEAN_AND_MEAN  /* We only need the OS core stuff.  */
++#include <io.h>
+ #include <windows.h>
+ 
+ #include "gpgrt-int.h"
+@@ -315,7 +318,7 @@ do_create_pipe_and_estream (int filedes[2],
+   err = GPG_ERR_GENERAL;
+   if (!create_inheritable_pipe (fds, flags))
+     {
+-      filedes[0] = _open_osfhandle (handle_to_fd (fds[0]), O_RDONLY);
++      filedes[0] = _open_osfhandle ((intptr_t) (fds[0]), O_RDONLY);
+       if (filedes[0] == -1)
+         {
+           _gpgrt_log_error ("failed to translate osfhandle %p\n", fds[0]);
+@@ -323,7 +326,7 @@ do_create_pipe_and_estream (int filedes[2],
+         }
+       else
+         {
+-          filedes[1] = _open_osfhandle (handle_to_fd (fds[1]), O_APPEND);
++          filedes[1] = _open_osfhandle ((intptr_t) (fds[1]), O_APPEND);
+           if (filedes[1] == -1)
+             {
+               _gpgrt_log_error ("failed to translate osfhandle %p\n", fds[1]);
+@@ -396,7 +399,7 @@ _gpgrt_spawn_process (const char *pgmname, const char *argv[],
+       0,         /* Returns pid.  */
+       0          /* Returns tid.  */
+     };
+-  STARTUPINFO si;
++  STARTUPINFOA si;
+   int cr_flags;
+   char *cmdline;
+   HANDLE inpipe[2]  = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE};
+@@ -551,16 +554,16 @@ _gpgrt_spawn_process (const char *pgmname, const char *argv[],
+               | CREATE_SUSPENDED);
+   _gpgrt_log_debug ("CreateProcess, path='%s' cmdline='%s'\n",
+                     pgmname, cmdline);
+-  ret = CreateProcess (pgmname,     /* Program to start.  */
+-                      cmdline,       /* Command line arguments.  */
+-                      &sec_attr,     /* Process security attributes.  */
+-                      &sec_attr,     /* Thread security attributes.  */
+-                      TRUE,          /* Inherit handles.  */
+-                      cr_flags,      /* Creation flags.  */
+-                      NULL,          /* Environment.  */
+-                      NULL,          /* Use current drive/directory.  */
+-                      &si,           /* Startup information. */
+-                      &pi            /* Returns process information.  */
++  ret = CreateProcessA (pgmname,     /* Program to start.  */
++                       cmdline,       /* Command line arguments.  */
++                       &sec_attr,     /* Process security attributes.  */
++                       &sec_attr,     /* Thread security attributes.  */
++                       TRUE,          /* Inherit handles.  */
++                       cr_flags,      /* Creation flags.  */
++                       NULL,          /* Environment.  */
++                       NULL,          /* Use current drive/directory.  */
++                       &si,           /* Startup information. */
++                       &pi            /* Returns process information.  */
+                         );
+   if (!ret)
+     {
+@@ -631,7 +634,11 @@ _gpgrt_spawn_process (const char *pgmname, const char *argv[],
+   if (r_errfp)
+     *r_errfp = errfp;
+ 
+-  *pid = handle_to_pid (pi.hProcess);
++#ifdef HAVE_W64_SYSTEM
++  *pid = (pi.dwProcessId);
++#else
++  *pid = (int)(pi.hProcess);
++#endif
+   return 0;
+ }
+ 
+@@ -644,7 +651,7 @@ _gpgrt_spawn_process_fd (const char *pgmname, const char *argv[],
+   gpg_err_code_t err;
+   SECURITY_ATTRIBUTES sec_attr;
+   PROCESS_INFORMATION pi = { NULL, 0, 0, 0 };
+-  STARTUPINFO si;
++  STARTUPINFOA si;
+   char *cmdline;
+   int ret, i;
+   HANDLE stdhd[3];
+@@ -675,18 +682,18 @@ _gpgrt_spawn_process_fd (const char *pgmname, const char *argv[],
+ 
+   _gpgrt_log_debug ("CreateProcess, path='%s' cmdline='%s'\n",
+                     pgmname, cmdline);
+-  ret = CreateProcess (pgmname,      /* Program to start.  */
+-                      cmdline,       /* Command line arguments.  */
+-                      &sec_attr,     /* Process security attributes.  */
+-                      &sec_attr,     /* Thread security attributes.  */
+-                      TRUE,          /* Inherit handles.  */
+-                      (CREATE_DEFAULT_ERROR_MODE
+-                       | GetPriorityClass (GetCurrentProcess ())
+-                       | CREATE_SUSPENDED | DETACHED_PROCESS),
+-                      NULL,          /* Environment.  */
+-                      NULL,          /* Use current drive/directory.  */
+-                      &si,           /* Startup information. */
+-                      &pi            /* Returns process information.  */
++  ret = CreateProcessA (pgmname,      /* Program to start.  */
++                       cmdline,       /* Command line arguments.  */
++                       &sec_attr,     /* Process security attributes.  */
++                       &sec_attr,     /* Thread security attributes.  */
++                       TRUE,          /* Inherit handles.  */
++                       (CREATE_DEFAULT_ERROR_MODE
++                        | GetPriorityClass (GetCurrentProcess ())
++                        | CREATE_SUSPENDED | DETACHED_PROCESS),
++                       NULL,          /* Environment.  */
++                       NULL,          /* Use current drive/directory.  */
++                       &si,           /* Startup information. */
++                       &pi            /* Returns process information.  */
+                       );
+   if (!ret)
+     {
+@@ -714,7 +721,11 @@ _gpgrt_spawn_process_fd (const char *pgmname, const char *argv[],
+   ResumeThread (pi.hThread);
+   CloseHandle (pi.hThread);
+ 
+-  *pid = handle_to_pid (pi.hProcess);
++#ifdef HAVE_W64_SYSTEM
++  *pid = (pi.dwProcessId);
++#else
++  *pid = (int)(pi.hProcess);
++#endif
+   return 0;
+ }
+ 
+@@ -822,7 +833,7 @@ _gpgrt_spawn_process_detached (const char *pgmname, const char *argv[],
+       0,         /* Returns pid.  */
+       0          /* Returns tid.  */
+     };
+-  STARTUPINFO si;
++  STARTUPINFOA si;
+   int cr_flags;
+   char *cmdline;
+   int ret;
+@@ -857,16 +868,16 @@ _gpgrt_spawn_process_detached (const char *pgmname, const char *argv[],
+               | DETACHED_PROCESS);
+   _gpgrt_log_debug ("CreateProcess(detached), path='%s' cmdline='%s'\n",
+                     pgmname, cmdline);
+-  ret = CreateProcess (pgmname,       /* Program to start.  */
+-                      cmdline,       /* Command line arguments.  */
+-                      &sec_attr,     /* Process security attributes.  */
+-                      &sec_attr,     /* Thread security attributes.  */
+-                      FALSE,         /* Inherit handles.  */
+-                      cr_flags,      /* Creation flags.  */
+-                      NULL,          /* Environment.  */
+-                      NULL,          /* Use current drive/directory.  */
+-                      &si,           /* Startup information. */
+-                      &pi            /* Returns process information.  */
++  ret = CreateProcessA (pgmname,       /* Program to start.  */
++                       cmdline,       /* Command line arguments.  */
++                       &sec_attr,     /* Process security attributes.  */
++                       &sec_attr,     /* Thread security attributes.  */
++                       FALSE,         /* Inherit handles.  */
++                       cr_flags,      /* Creation flags.  */
++                       NULL,          /* Environment.  */
++                       NULL,          /* Use current drive/directory.  */
++                       &si,           /* Startup information. */
++                       &pi            /* Returns process information.  */
+                        );
+   if (!ret)
+     {
+@@ -896,9 +907,13 @@ _gpgrt_spawn_process_detached (const char *pgmname, const char *argv[],
+ void
+ _gpgrt_kill_process (pid_t pid)
+ {
+-  if (pid != (pid_t) INVALID_HANDLE_VALUE)
++  if (pid != (pid_t) (-1))
+     {
+-      HANDLE process = (HANDLE) pid;
++#ifdef HAVE_W64_SYSTEM
++      HANDLE process = OpenProcess (PROCESS_TERMINATE, FALSE, pid);
++#else
++      HANDLE process = (HANDLE)pid;
++#endif
+ 
+       /* Arbitrary error code.  */
+       _gpgrt_pre_syscall ();
+@@ -911,9 +926,13 @@ _gpgrt_kill_process (pid_t pid)
+ void
+ _gpgrt_release_process (pid_t pid)
+ {
+-  if (pid != (pid_t)INVALID_HANDLE_VALUE)
++  if (pid != (pid_t) (-1))
+     {
++#ifdef HAVE_W64_SYSTEM
++      HANDLE process = OpenProcess(DELETE, FALSE, pid);
++#else
+       HANDLE process = (HANDLE)pid;
++#endif
+ 
+       CloseHandle (process);
+     }
+diff --git a/src/strerror.c b/src/strerror.c
+index fb1bebf..0554309 100644
+--- a/src/strerror.c
++++ b/src/strerror.c
+@@ -32,6 +32,13 @@
+ #include "gettext.h"
+ #include "err-codes.h"
+ 
++#ifdef _MSC_VER
++#   include <crtversion.h>
++#   if _VC_CRT_MAJOR_VERSION < 14
++#       define snprintf _snprintf
++#   endif
++#endif
++
+ #if defined(ENABLE_NLS) && defined(HAVE_LANGINFO_CODESET)
+ #include <langinfo.h>
+ #endif
+diff --git a/src/sysutils.c b/src/sysutils.c
+index bc3a68d..5a80c10 100644
+--- a/src/sysutils.c
++++ b/src/sysutils.c
+@@ -22,10 +22,17 @@
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #ifdef HAVE_W32_SYSTEM
+ # include <windows.h>
++# include <direct.h>
++# include <io.h>
++# ifndef W_OK
++#  define W_OK 2
++# endif
+ #endif
+ #ifdef HAVE_STAT
+ # include <sys/stat.h>
+@@ -68,7 +75,7 @@ _gpgrt_getenv (const char *name)
+     int len, size;
+     char *result;
+ 
+-    len = GetEnvironmentVariable (name, NULL, 0);
++    len = GetEnvironmentVariableA (name, NULL, 0);
+     if (!len && GetLastError () == ERROR_ENVVAR_NOT_FOUND)
+       {
+         _gpg_err_set_errno (0);
+@@ -79,7 +86,7 @@ _gpgrt_getenv (const char *name)
+     result = _gpgrt_malloc (size);
+     if (!result)
+       return NULL;
+-    len = GetEnvironmentVariable (name, result, size);
++    len = GetEnvironmentVariableA (name, result, size);
+     if (len >= size)
+       {
+         /* Changed in the meantime - retry.  */
+@@ -141,7 +148,7 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+ 
+     if (!value && overwrite)
+       {
+-        if (!SetEnvironmentVariable (name, NULL))
++        if (!SetEnvironmentVariableA (name, NULL))
+           return GPG_ERR_EINVAL;
+         if (getenv (name))
+           {
+@@ -155,8 +162,8 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+         return 0;
+       }
+ 
+-    exists = GetEnvironmentVariable (name, tmpbuf, sizeof tmpbuf);
+-    if ((! exists || overwrite) && !SetEnvironmentVariable (name, value))
++    exists = GetEnvironmentVariableA (name, tmpbuf, sizeof tmpbuf);
++    if ((! exists || overwrite) && !SetEnvironmentVariableA (name, value))
+       return GPG_ERR_EINVAL; /* (Might also be ENOMEM.) */
+     if (overwrite || !getenv (name))
+       {
+@@ -570,6 +577,7 @@ _gpgrt_getusername (void)
+   char *result = NULL;
+ 
+ #ifdef HAVE_W32_SYSTEM
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY!=WINAPI_FAMILY_PC_APP && WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP)
+   wchar_t wtmp[1];
+   wchar_t *wbuf;
+   DWORD wsize = 1;
+@@ -592,6 +600,7 @@ _gpgrt_getusername (void)
+   xfree (wbuf);
+   return buf;
+ 
++#endif
+ #else /* !HAVE_W32_SYSTEM */
+ 
+ # if defined(HAVE_PWD_H) && defined(HAVE_GETPWUID)
+diff --git a/src/w32-estream.c b/src/w32-estream.c
+index 5bb1bcf..d1f1b71 100644
+--- a/src/w32-estream.c
++++ b/src/w32-estream.c
+@@ -30,6 +30,9 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #ifdef HAVE_SYS_TIME_H
+ # include <sys/time.h>
+ #endif
+@@ -38,6 +41,9 @@
+ #endif
+ #include <io.h>
+ #include <windows.h>
++#ifdef HAVE_W32_SYSTEM
++typedef SSIZE_T ssize_t;
++#endif
+ 
+ /* Enable tracing.  The value is the module name to be printed.  */
+ /*#define ENABLE_TRACING "estream" */
+diff --git a/src/w32-gettext.c b/src/w32-gettext.c
+index 817c1ca..2f45f18 100644
+--- a/src/w32-gettext.c
++++ b/src/w32-gettext.c
+@@ -649,7 +649,11 @@ my_nl_locale_name (const char *categoryname)
+         return retval;
+ 
+       /* Use native Win32 API locale ID.  */
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++      lcid = LOCALE_USER_DEFAULT;
++#else
+       lcid = GetThreadLocale ();
++#endif
+       /* Strip off the sorting rules, keep only the language part.  */
+       langid = LANGIDFROMLCID (lcid);
+     }
+@@ -1216,14 +1220,23 @@ load_domain (const char *filename)
+     if (!wfilename)
+       fh = INVALID_HANDLE_VALUE;
+     else
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++      fh = CreateFile2 (wfilename, GENERIC_READ, FILE_SHARE_WRITE, OPEN_EXISTING, NULL);
++#else
+       fh = CreateFileW (wfilename, GENERIC_READ, FILE_SHARE_WRITE, NULL,
+                         OPEN_EXISTING, 0, NULL);
++#endif
+     xfree (wfilename);
++    if (fh == INVALID_HANDLE_VALUE)
++        return NULL;
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++    WIN32_FILE_ATTRIBUTE_DATA fileinfo;
++    GetFileAttributesEx(wfilename, GetFileExInfoStandard, &fileinfo);
++    size = fileinfo.nFileSizeHigh;
++#else
++    size = GetFileSize(fh, NULL);
++#endif
+   }
+-  if (fh == INVALID_HANDLE_VALUE)
+-    return NULL;
+-
+-  size = GetFileSize (fh, NULL);
+   if (size == INVALID_FILE_SIZE)
+     {
+       CloseHandle (fh);
+@@ -1425,6 +1438,9 @@ wchar_to_cp (const wchar_t *string, size_t length, size_t *retlen,
+ static char *
+ wchar_to_native (const wchar_t *string, size_t length, size_t *retlen)
+ {
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++  unsigned int cpno = CP_ACP;
++#else
+   unsigned int cpno = GetConsoleOutputCP ();
+ 
+   /* GetConsoleOutputCP returns the 8-Bit codepage that should be used
+@@ -1432,6 +1448,7 @@ wchar_to_native (const wchar_t *string, size_t length, size_t *retlen)
+      to the codepage GUI programs should use (CP_ACP). */
+   if (!cpno)
+     cpno = GetACP ();
++#endif
+ 
+   return wchar_to_cp (string, length, retlen, cpno);
+ }
+diff --git a/src/w32-iconv.c b/src/w32-iconv.c
+index 888b722..faad56b 100644
+--- a/src/w32-iconv.c
++++ b/src/w32-iconv.c
+@@ -951,7 +951,11 @@ name_to_codepage(const char *name)
+ 
+     if (*name == '\0' ||
+ 	strcmp(name, "char") == 0)
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++        return CP_ACP;
++#else
+         return GetACP();
++#endif
+     else if (strcmp(name, "wchar_t") == 0)
+         return 1200;
+     else if (_strnicmp(name, "cp", 2) == 0)
+diff --git a/src/w32-reg.c b/src/w32-reg.c
+index d1d2ca6..588cffa 100644
+--- a/src/w32-reg.c
++++ b/src/w32-reg.c
+@@ -46,6 +46,9 @@ char *
+ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
+                              const char *name)
+ {
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++    return NULL;
++#else
+   HKEY root_key, key_handle;
+   DWORD n1, nbytes, type;
+   char *result = NULL;
+@@ -111,7 +114,7 @@ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
+       tmp = xtrymalloc (n1 + 1);
+       if (!tmp)
+         goto leave;
+-      nbytes = ExpandEnvironmentStrings (result, tmp, n1);
++      nbytes = ExpandEnvironmentStringsA (result, tmp, n1);
+       if (nbytes && nbytes > n1)
+         {
+           xfree (tmp);
+@@ -119,7 +122,7 @@ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
+           tmp = xtrymalloc (n1 + 1);
+           if (!tmp)
+             goto leave;
+-          nbytes = ExpandEnvironmentStrings (result, tmp, n1);
++          nbytes = ExpandEnvironmentStringsA (result, tmp, n1);
+           if (nbytes && nbytes > n1) {
+             xfree (tmp); /* Oops - truncated, better don't expand at all. */
+             goto leave;
+@@ -151,6 +154,7 @@ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
+  leave:
+   RegCloseKey (key_handle);
+   return result;
++#endif
+ }
+ 
+ 

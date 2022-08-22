@@ -1,0 +1,14 @@
+Avoid MFC dependency - can go with very basic includes instead
+
+--- libassuan/src/versioninfo.rc.in~	2015-10-16 15:40:36.000000000 +0200
++++ libassuan/src/versioninfo.rc.in	2017-11-29 04:19:57.870117200 +0100
+@@ -12,9 +12,7 @@
+ 
+ /* This file is processed by configure to create versioninfo.rc */
+
+-#line __LINE__ "versioninfo.rc.in"
+ 
+-#include <afxres.h>
+ 
+ 
+ VS_VERSION_INFO VERSIONINFO
