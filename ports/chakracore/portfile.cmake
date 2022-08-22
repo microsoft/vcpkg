@@ -20,6 +20,9 @@ endif()
 
 set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 if(WIN32)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(additional_options NO_TOOLCHAIN) # don't know how to fix the linker error about __guard_check_icall_thunk 
+    endif()
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -30,6 +33,7 @@ if(WIN32)
         INCLUDES_SUBPATH "lib/Jsrt"
         INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
         LICENSE_SUBPATH "LICENSE.txt"
+        ${additional_options}
     )
 else()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
