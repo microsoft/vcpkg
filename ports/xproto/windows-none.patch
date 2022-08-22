@@ -2,24 +2,35 @@ diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
 index 70e1debd5..236ec96a7 100644
 --- a/include/X11/Xwindows.h
 +++ b/include/X11/Xwindows.h
-@@ -69,6 +69,8 @@ The Open Group.
+@@ -69,6 +69,16 @@ The Open Group.
  #endif
  #undef Status
  #define Status wStatus
-+#undef None // FS.h defines None which is used in winnt.h
-+#undef ControlMask // X.h defines ControlMask which is used in processthreadapi.h
++#ifdef None // FS.h defines None which is used in winnt.h
++#pragma push_macro("None")
++#define NoneDefined
++#undef None
++#endif
++#ifdef ControlMask // X.h defines ControlMask which is used in processthreadapi.h
++#pragma push_macro("ControlMask")
++#define ControlMaskDefined
++#undef ControlMask
++#endif
  #define ATOM wATOM
  #define BYTE wBYTE
  #define FreeResource wFreeResource
-@@ -76,6 +77,12 @@ The Open Group.
+@@ -76,6 +77,14 @@ The Open Group.
  #undef NOMINMAX
  #undef Status
- #define Status int
-+#ifdef _FS_H_
-+#define None 0L
+-#define Status int
++typedef int Status;
++#ifdef NoneDefined
++#pragma pop_macro("None")
++#undef NoneDefined
 +#endif
-+#ifdef X_H
-+#define ControlMask (1<<2)
++#ifdef ControlMaskDefined
++#pragma pop_macro("ControlMask")
++#undef ControlMaskDefined
 +#endif
  #undef BYTE
  #undef BOOL
@@ -28,7 +39,7 @@ diff --git a/include/X11/Xwinsock.h b/include/X11/Xwinsock.h
 index 624047d..e8d5653 100644
 --- a/include/X11/Xwinsock.h
 +++ b/include/X11/Xwinsock.h
-@@ -47,23 +47,31 @@ The Open Group.
+@@ -47,23 +47,42 @@ The Open Group.
  #define _NO_BOOL_TYPEDEF
  #define BOOL WINBOOL
  #define INT32 wINT32
@@ -38,19 +49,31 @@ index 624047d..e8d5653 100644
  #endif
  #undef Status
  #define Status wStatus
++#ifdef None
++#pragma push_macro("None")
++#define NoneDefined
 +#undef None
++#endif
++#ifdef ControlMask
++#pragma push_macro("ControlMask")
++#define ControlMaskDefined
 +#undef ControlMask
++#endif
  #define ATOM wATOM
  #define BYTE wBYTE
  #define FreeResource wFreeResource
  #include <winsock2.h>
++#include <ws2tcpip.h>
  #undef Status
- #define Status int
-+#ifdef _FS_H_
-+#define None 0L
+-#define Status int
++typedef int Status;
++#ifdef NoneDefined
++#pragma pop_macro("None")
++#undef NoneDefined
 +#endif
-+#ifdef X_H
-+#define ControlMask (1<<2)
++#ifdef ControlMaskDefined
++#pragma pop_macro("ControlMask")
++#undef ControlMaskDefined
 +#endif
  #undef BYTE
  #undef BOOL

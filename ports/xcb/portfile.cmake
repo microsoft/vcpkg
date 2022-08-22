@@ -1,5 +1,5 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
@@ -7,13 +7,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb
-    REF  21414e7c447f18224c577ed5e32bd5d6e45c44f9 #4b40b44cb6d088b6ffa2fb5cf3ad8f12da588cef #v1.14
-    SHA512 467c53dad0838080a2f15ed6175322926ba2e2f2b6d002f690c31f859f21912172378a1211df9ee3e0644570cb4397c7d55b4f9656c8d6566a1668d3bfd6eff4 # bd600b9e321f39758bf32582933b4167d335af74acd7312ecc1072bc8df3f511b4f7a85ead3075b73449a3167764cd0fc77f799a86dfe42012f94a4d20a20bd7
-    HEAD_REF master # branch name
-    PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
-            configure.patch
-            fixes.patch
-            getpid_include.patch
+    REF  ddafdba11f6919e6fcf977c09c78b06f94de47aa #v1.14 + some patches
+    SHA512 d8382b04f2b00671cded9e22d6066164511ee4c08e2cf5de4ec28d09e41228e30d3ba7d0e6b5141abf4e4bc777aa662fe9d1d04f3e1e26e0b323549e845c8072
+    HEAD_REF master
+    PATCHES makefile.patch # without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
+            configure.patch 
+            use_xwindows_includes.patch # use the X11 include wrappers for windows headers
+            getpid_include.patch # add include for getpid on windows
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -65,15 +65,43 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/xkb.h"
-                         "extern xcb_extension_t xcb_xkb_id;"
-                         "__declspec(dllimport) extern xcb_extension_t xcb_xkb_id;")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/xfixes.h"
-                         "extern xcb_extension_t xcb_xfixes_id;"
-                         "__declspec(dllimport) extern xcb_extension_t xcb_xfixes_id;")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_TARGET_IS_MINGW)
+    set(extensions 
+            bigreq 
+            composite
+            damage
+            dpms
+            dri2
+            dri3
+            ge
+            glx
+            present
+            randr
+            record
+            render
+            res
+            screensaver
+            shape
+            shm
+            sync
+            xc_misc
+            xevie
+            xf86dri
+            xfixes
+            xinerama
+            xinput
+            xkb
+            xprint
+            xtest
+            xv
+            xvmc)
+    foreach(ext IN LISTS extensions)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/${ext}.h"
+                     "extern xcb_extension_t"
+                     "__declspec(dllimport) extern xcb_extension_t")
+    endforeach()
 endif()
 endif()

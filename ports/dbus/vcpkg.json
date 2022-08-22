@@ -1,11 +1,13 @@
 {
   "name": "dbus",
-  "version-semver": "1.13.18",
+  "version": "1.13.18",
   "description": "D-Bus specification and reference implementation, including libdbus and dbus-daemon",
   "homepage": "https://gitlab.freedesktop.org/dbus/dbus",
+  "license": "AFL-2.1 OR GPL-2.0-or-later",
   "dependencies": [
     "expat",
     "glib",
+    "libx11",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,7 +15,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "x11"
+    }
   ]
 }

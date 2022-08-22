@@ -6,7 +6,7 @@ index 28dfc673a..37d268f27 100644
  #   include <unistd.h>
  #  endif
  #  ifdef WIN32
-+#   include <io.h>
++#   include <io.h> // For open()
  #   include <X11/Xw32defs.h>
  #  else
  #   include <sys/file.h>

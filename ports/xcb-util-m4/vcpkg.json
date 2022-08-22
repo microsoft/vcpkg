@@ -1,6 +1,7 @@
 {
   "name": "xcb-util-m4",
-  "version-string": "1",
+  "version-date": "2022-01-24",
   "description": "GNU autoconf macros shared across XCB projects",
-  "homepage": "https://gitlab.freedesktop.org/xorg/util/xcb-util-m4"
+  "homepage": "https://gitlab.freedesktop.org/xorg/util/xcb-util-m4",
+  "license": null
 }

@@ -83,6 +83,8 @@ Print the install plan, but do not remove or install any packages.
 
 The install plan lists all packages and features that will be installed, as well as any other packages that need to be removed and rebuilt.
 
+<a id="editable"></a>
+
 ### `--editable`
 
 **Classic Mode Only**

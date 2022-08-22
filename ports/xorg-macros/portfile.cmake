@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
@@ -15,7 +15,7 @@ vcpkg_from_gitlab(
     REPO util/macros
     REF  b8766308d2f78bc572abe5198007cf7aeec9b761 #v1.19.3
     SHA512 dc7383b1579dc6ef0473161764096c8161f23a4c4ba2182e7abd7f73f443eb0520e02f1dfaaba2f8ebb43e0ed93c1e6e5e7cf517561476b858d2471a8ecaf907
-    HEAD_REF master # branch name
+    HEAD_REF master
     PATCHES ${PATCHES}
 ) 
 

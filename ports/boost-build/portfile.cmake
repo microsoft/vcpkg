@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         0001-don-t-skip-install-targets.patch
         0002-fix-get-version.patch
+        0003-update-architecture-feature.jam-file.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

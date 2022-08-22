@@ -1,6 +1,6 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) 
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
@@ -13,7 +13,6 @@ string(REGEX REPLACE "/[^/]+$" "" XMLLINT_DIR "${XMLLINT_PATH}")
 file(TO_NATIVE_PATH "${XMLLINT_DIR}" XMLLINT_DIR_NATIVE)
 message(STATUS "Using xmlling at: ${XMLLINT_PATH}")
 vcpkg_add_to_path("${XMLLINT_DIR_NATIVE}")
-#(also requires python2?)
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -25,9 +24,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO proto/xcbproto
-    REF  496e3ce329c3cc9b32af4054c30fa0f306deb007 #v1.14.1
-    SHA512   36a23f0de08f2ae06c32af9cb4b48acec97e754365a1576703445a70d8ed24b227295d471f26738c49bbc4602cfa0cb6ec40705768715184b8f4be629bd2b8b3
-    HEAD_REF master # branch name
+    REF  70ca65fa35c3760661b090bc4b2601daa7a099b8 #v1.14.1 + patches
+    SHA512   9e08e1d2ab1fe7a8d3985568918a858ddfb31b8016ccac8ea2447631e7cede3bcc7b1ed86491d497ab871674c9b55d94fab25ee13ff6de9a44590b91d9166fda
+    HEAD_REF master
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -46,6 +45,5 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
