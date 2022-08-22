@@ -1,10 +1,14 @@
 {
   "name": "geographiclib",
   "version": "2.1.1",
+  "port-version": 1,
   "description": "GeographicLib, a C++ library for performing geographic conversions",
   "homepage": "https://geographiclib.sourceforge.io",
   "license": "MIT",
   "dependencies": [
+    "boost-math",
+    "boost-multiprecision",
+    "boost-serialization",
     {
       "name": "vcpkg-cmake",
       "host": true
