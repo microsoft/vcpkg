@@ -17,7 +17,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
 
@@ -85,44 +85,6 @@ else()
          PLATFORM ${BUILD_ARCH}
          INCLUDE_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/include"
     )
-
-    vcpkg_copy_pdbs()
-
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(COPY
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp.lib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-        )
-
-        if (ACTIVEMQCPP_SHARED_LIB)
-            file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll"
-                DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-            )
-            file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb"
-                DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-            )
-        endif()
-    endif()
-
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(COPY
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-        )
-
-        if (ACTIVEMQCPP_SHARED_LIB)
-            file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
-                DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-            )
-            file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb"
-                DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-            )
-        endif()
-    endif()
 
     file(COPY "${SOURCE_PATH}/src/main/activemq" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
     file(COPY "${SOURCE_PATH}/src/main/cms"      DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)

@@ -101,6 +101,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/chakracore")
     endif()
 else()
+    # Remove unnecessary static libraries.
     file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
     file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
     list(FILTER PDLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
@@ -109,6 +110,8 @@ else()
 endif()
 
 vcpkg_copy_pdbs()
+
+
 
 file(INSTALL
     "${SOURCE_PATH}/LICENSE.txt"

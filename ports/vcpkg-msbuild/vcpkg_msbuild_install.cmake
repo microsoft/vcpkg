@@ -2,7 +2,7 @@ function(vcpkg_msbuild_install)
     cmake_parse_arguments(
         PARSE_ARGV 0
         "arg"
-        "CLEAN"
+        "CLEAN;NO_TOOLCHAIN_PROPS"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET;INCLUDE_INSTALL_DIR"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
     )
@@ -47,14 +47,20 @@ function(vcpkg_msbuild_install)
 
     vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
 
-    file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by vcpkg_msbuild_create_props
-    vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
-                               OUTPUT_TARGETS target_file
-                               RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
-                               DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
-                               DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
-                               ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
-                               ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
+    if(NOT arg_NO_TOOLCHAIN_PROPS)
+        file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by vcpkg_msbuild_create_props
+        vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
+                                   OUTPUT_TARGETS target_file
+                                   RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
+                                   DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
+                                   DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
+                                   ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
+                                   ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
+        list(APPEND arg_OPTIONS         
+            "/p:ForceImportAfterCppProps=${props_file}"
+            "/p:ForceImportAfterCppTargets=${target_file}"
+        )
+    endif()
 
 
     list(APPEND arg_OPTIONS
@@ -75,8 +81,6 @@ function(vcpkg_msbuild_install)
         "/p:VcpkgEnabled=false"
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
-        "/p:ForceImportAfterCppProps=${props_file}"
-        "/p:ForceImportAfterCppTargets=${target_file}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
