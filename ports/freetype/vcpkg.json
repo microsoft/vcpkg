@@ -35,7 +35,7 @@
       ]
     },
     "error-strings": {
-      "description": "Enable suport for meaningful error descriptions."
+      "description": "Enable support for meaningful error descriptions."
     },
     "png": {
       "description": "Support PNG compressed OpenType embedded bitmaps.",

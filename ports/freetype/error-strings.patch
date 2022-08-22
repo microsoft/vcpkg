@@ -16,7 +16,7 @@ index feb4be39a..4eea860e8 100644
    "NOT FT_DISABLE_BROTLI" OFF)
  
 +option(FT_ENABLE_ERROR_STRINGS
-+  "Enable suport for meaningful error descriptions" OFF)
++  "Enable support for meaningful error descriptions" OFF)
  
  # Disallow in-source builds
  if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
