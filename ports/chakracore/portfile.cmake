@@ -1,7 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET osx uwp)
-if(WIN32)
-    vcpkg_fail_port_install(ON_CRT_LINKAGE static ON_LIBRARY_LINKAGE static)
-endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(

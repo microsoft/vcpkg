@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         fix-makefiles.patch
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
+        fix-mingw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -49,7 +50,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PREFIX PKGCONFIG
         MODULES --msvc-syntax ${pkg_config_modules}
         LIBS
+        CFLAGS
     )
+    
+    set(CL_FLAGS_RELEASE "${CL_FLAGS} ${PKGCONFIG_CFLAGS_RELEASE}")
+    set(CL_FLAGS_DEBUG "${CL_FLAGS} ${PKGCONFIG_CFLAGS_DEBUG}")
 
     # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
     if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
@@ -77,12 +82,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            "CL_FLAGS=${CL_FLAGS}"
         OPTIONS_RELEASE
+            "CL_FLAGS=${CL_FLAGS_RELEASE}"
             "INST_DIR=${INST_DIR}"
             "LIBS_ALL=${LIBS_ALL_RELEASE}"
         OPTIONS_DEBUG
+            "CL_FLAGS=${CL_FLAGS_DEBUG}"
             "INST_DIR=${INST_DIR}\\debug"
             "LIBS_ALL=${LIBS_ALL_DEBUG}"
             "LINK_FLAGS=/debug"
@@ -94,14 +99,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
+        endif()
     else()
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+        endif()
     endif()
 
     set(infile "${SOURCE_PATH}/spatialite.pc.in")
@@ -169,6 +178,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}

@@ -1,11 +1,10 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
     REF v4.7.3
     SHA512 80cf1f76420b506789b1f7edd9af826801236499dd0757be3438e3cdf286b95ddd7dd35909622b3862244f6b535a8744f0b25989fb3740a4a0fd984410fb420b
     HEAD_REF master
+    PATCHES fix-DisableWC4191.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -14,7 +13,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         set(PLATFORM x64)
     endif()
-    
+
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
@@ -39,7 +38,7 @@ else()
         COPY_SOURCE
         AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS 
+        OPTIONS
             --with-oracle-import=runtime
     )
 

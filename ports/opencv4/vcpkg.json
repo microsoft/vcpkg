@@ -1,9 +1,10 @@
 {
   "name": "opencv4",
-  "version": "4.5.4",
+  "version": "4.6.0",
   "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -11,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     },
     "zlib"
@@ -62,6 +67,12 @@
             "cuda"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {
@@ -116,6 +127,13 @@
         }
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
@@ -129,7 +147,7 @@
       ]
     },
     "gtk": {
-      "description": "GDCM support for opencv",
+      "description": "GTK support for opencv",
       "dependencies": [
         "gtk"
       ]
@@ -210,7 +228,10 @@
       ]
     },
     "python": {
-      "description": "Python wrapper support for opencv"
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",

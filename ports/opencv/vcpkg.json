@@ -1,9 +1,9 @@
 {
   "name": "opencv",
-  "version": "4.5.4",
-  "port-version": 1,
+  "version": "4.6.0",
   "description": "Computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "opencv4",
@@ -58,6 +58,18 @@
           "default-features": false,
           "features": [
             "cudnn"
+          ]
+        }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dc1394"
           ]
         }
       ]
@@ -119,6 +131,18 @@
           "default-features": false,
           "features": [
             "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "freetype support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "freetype"
           ]
         }
       ]

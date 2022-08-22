@@ -1,8 +1,9 @@
 {
   "name": "boost-stacktrace",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost stacktrace module",
   "homepage": "https://github.com/boostorg/stacktrace",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-array",

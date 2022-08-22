@@ -1,7 +1,6 @@
 {
   "name": "gamedev-framework",
-  "version-semver": "0.20.0",
-  "port-version": 1,
+  "version-semver": "1.0.0",
   "maintainers": [
     "Julien Bernard <julien.bernard@univ-fcomte.fr>",
     "Arthur Hugeat <hugeat.arthur@gmail.com>"
@@ -30,6 +29,14 @@
       "platform": "!linux"
     },
     "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

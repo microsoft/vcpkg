@@ -1,28 +1,15 @@
-# Glib uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
-# Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
-endif()
-
-set(GLIB_MAJOR_MINOR 2.70)
-set(GLIB_PATCH 1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 639317c98ab72ad853608ab4d395484daff135c0222556c51ca93fd8533c5759db14478beda964e4feb02bb2737a46a4eda25063f98a9c6ba6ae4bc5d74bf5e1)
-
-vcpkg_extract_source_archive_ex(
+set(GLIB_MAJOR_MINOR 2.72)
+set(GLIB_PATCH 3)
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GLIB_VERSION}
+    REPO GNOME/glib
+    REF "${GLIB_MAJOR_MINOR}.${GLIB_PATCH}"
+    SHA512 805100bdd240122e1a74b432d7be7458af5b3b0507d46ed9cb0ce2ed6facf6e7d927b1d869831c9ba21b4a40a6667989ff69fc4f661bd044cb08932184804e79
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
 )
-
 
 if (selinux IN_LIST FEATURES)
     if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
@@ -44,7 +31,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dinstalled_tests=false
         ${OPTIONS}
@@ -57,15 +44,15 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-set(GLIB_TOOLS  gdbus
-                gio
-                gio-querymodules
-                glib-compile-resources
-                glib-compile-schemas
-                gobject-query
-                gresource
-                gsettings
-                )
+set(GLIB_TOOLS gdbus
+               gio
+               gio-querymodules
+               glib-compile-resources
+               glib-compile-schemas
+               gobject-query
+               gresource
+               gsettings
+               )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(NOT VCPKG_TARGET_IS_OSX)
@@ -91,10 +78,10 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-    
+
 IF(VCPKG_TARGET_IS_WINDOWS)
     set(SYSTEM_LIBRARIES dnsapi iphlpapi winmm lshlwapi)
 else()
@@ -114,7 +101,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc")
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${SYSTEM_LIBRARIES})
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Fix python scripts
 set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")

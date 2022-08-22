@@ -1,39 +1,3 @@
-#[===[.md:
-# vcpkg_execute_build_process
-
-Execute a required build process
-
-## Usage
-```cmake
-vcpkg_execute_build_process(
-    COMMAND <cmd> [<args>...]
-    [NO_PARALLEL_COMMAND <cmd> [<args>...]]
-    WORKING_DIRECTORY </path/to/dir>
-    LOGNAME <log_name>
-)
-```
-## Parameters
-### COMMAND
-The command to be executed, along with its arguments.
-
-### NO_PARALLEL_COMMAND
-Optional parameter which specifies a non-parallel command to attempt if a
-failure potentially due to parallelism is detected.
-
-### WORKING_DIRECTORY
-The directory to execute the command in.
-
-### LOGNAME
-The prefix to use for the log files.
-
-This should be a unique name for different triplets so that the logs don't
-conflict when building multiple at once.
-
-## Examples
-
-* [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
-#]===]
-
 set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1102:"
     " fatal error C1060: "
@@ -42,6 +6,7 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1104:"
     "LINK : fatal error LNK1201:"
     "ld terminated with signal 9"
+    "Killed signal terminated program"
     # Multiple threads using the same directory at the same time cause conflicts, will try again.
     "Cannot create parent directory"
     "Cannot write file"
@@ -71,6 +36,13 @@ function(vcpkg_execute_build_process)
     set(log_out "${log_prefix}-out.log")
     set(log_err "${log_prefix}-err.log")
     set(all_logs "${log_out}" "${log_err}")
+
+    if(X_PORT_PROFILE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        if(DEFINED arg_NO_PARALLEL_COMMAND)
+            vcpkg_list(PREPEND arg_NO_PARALLEL_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        endif()
+    endif()
 
     execute_process(
         COMMAND ${arg_COMMAND}
@@ -150,6 +122,7 @@ function(vcpkg_execute_build_process)
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gpg/libassuan
@@ -21,7 +19,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")

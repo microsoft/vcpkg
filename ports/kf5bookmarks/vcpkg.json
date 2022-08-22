@@ -1,6 +1,7 @@
 {
   "name": "kf5bookmarks",
   "version": "5.89.0",
+  "port-version": 1,
   "description": "Bookmarks management library",
   "homepage": "https://api.kde.org/frameworks/kbookmarks/html/index.html",
   "dependencies": [

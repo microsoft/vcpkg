@@ -1,11 +1,10 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
     REPO gstreamer/gst-build
     REF 1.19.2
     SHA512 d6b8e9fc195a60dfb83fe8a49040c21ca5603e3ada2036d56851e6e61a1cd2653ad45f33e39388bde859dfb4806f4a60d9dbfac5fe41b6d2a8b395c44d4525e3
     HEAD_REF master
+    PATCHES gstreamer-disable-hot-doc.patch fix-clang-cl.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_SOURCE_PATH
@@ -13,10 +12,12 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 6070f1febf2a1bcc6e68f1e03c1b76891db210773065696e26fac20f0bd3ff47e1634222a49f93a10f6e47717ff21084c9ae0feed6a20facb9650aeb879cc380
     HEAD_REF master
+    PATCHES gstreamer-disable-no-unused.patch fix-clang-cl-gstreamer.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch)
+    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch)
     list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
+    list(APPEND PLUGIN_UGLY_PATCHES plugins-ugly-disable-doc.patch)
 endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_BASE_SOURCE_PATH
@@ -24,7 +25,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 d2005e6a3bda5f08395b131347e8f4054c2469e04e65d1acc1a1572bf10d81d4dad4e43d6a8600346b6175a2310f81157a0cd27398ef69b5363b16346febfb39
     HEAD_REF master
-    PATCHES ${PLUGIN_BASE_PATCHES}
+    PATCHES ${PLUGIN_BASE_PATCHES} fix-clang-cl-base.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_GOOD_SOURCE_PATH
@@ -32,7 +33,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 71e9f36d407db3b75d9a68f6447093aa011b2b586b06e0a1bb79c7db37c9114de505699e99a4dad06d8d9c742e91f48dd35457283babe440f88a9e40d3da465b
     HEAD_REF master
-    PATCHES ${PLUGIN_GOOD_PATCHES}
+    PATCHES ${PLUGIN_GOOD_PATCHES} fix-clang-cl-good.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_BAD_SOURCE_PATH
@@ -40,6 +41,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 f63ca3abf380bba92dca4ac3a51cba5ea95093693cf64d167a7a9c0bf6341c35a74fd42332673dbd1581ea70da0a35026aa3e2ce99b5e573268ccb55b5491c1d
     HEAD_REF master
+    PATCHES fix-clang-cl-bad.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_PLUGIN_UGLY_SOURCE_PATH
@@ -47,6 +49,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 70dcd4a36d3bd35f680eaa3c980842fbb57f55f17d1453c6a95640709b1b33a263689bf54caa367154267d281e5474686fedaa980de24094de91886a57b6547a
     HEAD_REF master
+    PATCHES ${PLUGIN_UGLY_PATCHES} fix-clang-cl-ugly.patch
 )
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -57,15 +60,27 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-file(RENAME ${GST_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer)
-file(RENAME ${GST_PLUGIN_BASE_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base)
-file(RENAME ${GST_PLUGIN_GOOD_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good)
-file(RENAME ${GST_PLUGIN_BAD_SOURCE_PATH}  ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad)
-file(RENAME ${GST_PLUGIN_UGLY_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly)
-file(RENAME ${GST_MESON_PORTS_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers)
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer")
+    file(RENAME "${GST_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer")
+endif()
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base")
+    file(RENAME "${GST_PLUGIN_BASE_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base")
+endif()
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good")
+    file(RENAME "${GST_PLUGIN_GOOD_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good")
+endif()
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad")
+    file(RENAME "${GST_PLUGIN_BAD_SOURCE_PATH}"  "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad")
+endif()
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly")
+    file(RENAME "${GST_PLUGIN_UGLY_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly")
+endif()
+if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers")
+    file(RENAME "${GST_MESON_PORTS_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers")
+endif()
 
 if(VCPKG_TARGET_IS_OSX)
-    # In Darwin platform, there can be an old version of `bison`, 
+    # In Darwin platform, there can be an old version of `bison`,
     # Which can't be used for `gst-build`. It requires 2.4+
     vcpkg_find_acquire_program(BISON)
     execute_process(
@@ -82,10 +97,21 @@ if(VCPKG_TARGET_IS_OSX)
 endif()
 
 # make tools like 'glib-mkenums' visible
-get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
+get_filename_component(GLIB_TOOL_DIR "${CURRENT_INSTALLED_DIR}/tools/glib" ABSOLUTE)
 message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
-vcpkg_add_to_path(PREPEND ${GLIB_TOOL_DIR})
+vcpkg_add_to_path(PREPEND "${GLIB_TOOL_DIR}")
 
+if ("x264" IN_LIST FEATURES)
+    set(PLUGIN_UGLY_X264 enabled)
+else()
+    set(PLUGIN_UGLY_X264 disabled)
+endif()
+
+if("plugins-base" IN_LIST FEATURES)
+    set(PLUGIN_BASE_SUPPORT enabled)
+else()
+    set(PLUGIN_BASE_SUPPORT disabled)
+endif()
 if("plugins-bad" IN_LIST FEATURES)
     # requires 'libdrm', 'dssim', 'libmicrodns'
     message(FATAL_ERROR "The feature 'plugins-bad' is not supported in this port version")
@@ -97,6 +123,18 @@ if("plugins-ugly" IN_LIST FEATURES)
     set(PLUGIN_UGLY_SUPPORT enabled)
 else()
     set(PLUGIN_UGLY_SUPPORT disabled)
+endif()
+
+if ("gl-graphene" IN_LIST FEATURES)
+    set(GL_GRAPHENE enabled)
+else()
+    set(GL_GRAPHENE disabled)
+endif()
+
+if ("flac" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_FLAC enabled)
+else()
+    set(PLUGIN_GOOD_FLAC disabled)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -122,7 +160,7 @@ vcpkg_add_to_path("${GIT_DIR}")
 #   https://github.com/GStreamer/gst-plugins-ugly/blob/1.18.4/meson_options.txt
 #
 vcpkg_configure_meson(
-    SOURCE_PATH ${GST_BUILD_SOURCE_PATH}
+    SOURCE_PATH "${GST_BUILD_SOURCE_PATH}"
     OPTIONS
         # gstreamer
         -Dgstreamer:default_library=${LIBRARY_LINKAGE}
@@ -136,17 +174,21 @@ vcpkg_configure_meson(
         -Dgstreamer:tests=disabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:tools=disabled
+        -Dgstreamer:doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
         # gst-plugins-base
+        -Dbase=${PLUGIN_BASE_SUPPORT}
         -Dgst-plugins-base:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-base:examples=disabled
         -Dgst-plugins-base:tests=disabled
+        -Dgst-plugins-base:doc=disabled
         -Dgst-plugins-base:tools=disabled
         -Dgst-plugins-base:introspection=disabled
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
+        -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-good:qt5=disabled
@@ -157,8 +199,10 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:vpx=auto # libvpx
         -Dgst-plugins-good:examples=disabled
         -Dgst-plugins-good:tests=disabled
+        -Dgst-plugins-good:doc=disabled
         -Dgst-plugins-good:nls=disabled
         -Dgst-plugins-good:orc=disabled
+        -Dgst-plugins-good:flac=${PLUGIN_GOOD_FLAC}
         # gst-plugins-bad
         -Dbad=${PLUGIN_BAD_SUPPORT}
         -Dgst-plugins-bad:default_library=${LIBRARY_LINKAGE}
@@ -166,6 +210,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:hls-crypto=openssl
         -Dgst-plugins-bad:examples=disabled
         -Dgst-plugins-bad:tests=disabled
+        -Dgst-plugins-bad:doc=disabled
         -Dgst-plugins-bad:introspection=disabled
         -Dgst-plugins-bad:nls=${LIBRARY_LINKAGE}
         -Dgst-plugins-bad:orc=disabled
@@ -173,8 +218,10 @@ vcpkg_configure_meson(
         -Dugly=${PLUGIN_UGLY_SUPPORT}
         -Dgst-plugins-ugly:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-ugly:tests=disabled
+        -Dgst-plugins-ugly:doc=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
+        -Dgst-plugins-ugly:x264=${PLUGIN_UGLY_X264}
         # see ${GST_BUILD_SOURCE_PATH}/meson_options.txt
         -Dpython=disabled
         -Dlibav=disabled
@@ -214,50 +261,48 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:glib-asserts=disabled
         -Dgst-plugins-bad:glib-checks=disabled
 )
-if(VCPKG_TARGET_IS_WINDOWS)
-    # note: can't find where z.lib comes from. replace it to appropriate library name manually
-    get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
-    vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
-    get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
-    vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
-    vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
-endif()
+
 vcpkg_install_meson()
 
 # Remove duplicated GL headers (we already have `opengl-registry`)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
-                    ${CURRENT_PACKAGES_DIR}/include/GL
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
+                    "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
-            ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
+            "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
+)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/debug/libexec"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include"
+                    "${CURRENT_PACKAGES_DIR}/libexec"
+                    "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include"
 )
 
-file(INSTALL ${GST_BUILD_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
-                    ${CURRENT_PACKAGES_DIR}/libexec
-                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
-)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/bin
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
+                        "${CURRENT_PACKAGES_DIR}/bin"
     )
-    set(PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
-    set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+    set(PREFIX "${CMAKE_SHARED_LIBRARY_PREFIX}")
+    set(SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
+                "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
     )
 endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
+    if (NOT VCPKG_BUILD_TYPE)
+        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
+                           "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
+        )
+        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
-    )
-    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
+
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${GST_BUILD_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

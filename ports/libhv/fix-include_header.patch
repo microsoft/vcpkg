@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 59e9b41..f0a162e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -215,7 +215,7 @@ list_source_directories(LIBHV_SRCS ${LIBHV_SRCDIRS})
+ if(BUILD_SHARED)
+     add_library(hv SHARED ${LIBHV_SRCS})
+     target_compile_definitions(hv PRIVATE HV_DYNAMICLIB)
+-    target_include_directories(hv PRIVATE ${LIBHV_SRCDIRS})
++    target_include_directories(hv PRIVATE ${LIBHV_SRCDIRS} INTERFACE $<INSTALL_INTERFACE:include>)
+     target_link_libraries(hv ${LIBS})
+     install(TARGETS hv
+         EXPORT libhvConfig
+@@ -228,7 +228,7 @@ endif()
+ if(BUILD_STATIC)
+     add_library(hv_static STATIC ${LIBHV_SRCS})
+     target_compile_definitions(hv_static PRIVATE HV_STATICLIB)
+-    target_include_directories(hv_static PRIVATE ${LIBHV_SRCDIRS})
++    target_include_directories(hv_static PRIVATE ${LIBHV_SRCDIRS} INTERFACE $<INSTALL_INTERFACE:include>)
+     target_link_libraries(hv_static ${LIBS})
+     install(TARGETS hv_static
+         EXPORT libhvConfig

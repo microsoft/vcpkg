@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Starlink/ast/releases/download/v9.2.7/ast-9.2.7.tar.gz"
     FILENAME "ast-9.2.7.tar.gz"
@@ -8,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}    
+    ARCHIVE ${ARCHIVE}
 )
 
 set(CONFIGURE_OPTIONS

@@ -1,10 +1,11 @@
 {
   "name": "kf5archive",
   "version": "5.89.0",
+  "port-version": 2,
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
+  "license": "LGPL-2.0-or-later",
   "dependencies": [
-    "bzip2",
     "ecm",
     "qt5-base",
     {
@@ -17,7 +18,16 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "bzip2"
+  ],
   "features": {
+    "bzip2": {
+      "description": "Support for bzip2 compressed files and data streams",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
     "lzma": {
       "description": "Support for xz compressed files and data streams",
       "dependencies": [

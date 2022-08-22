@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platforms" ON_TARGET "Windows")
-
 set(VERSION_MAJOR 5)
 set(VERSION_MINOR 6)
 set(VERSION_PATCH 0)
@@ -13,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
     REF ${VERSION}
 )
 
@@ -39,7 +37,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-silent-rules
-        --disable-binreloc 
+        --disable-binreloc
         --with-guis=${GUIS}
         --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
         --with-libgcrypt-prefix=${CURRENT_INSTALLED_DIR}/tools/libgcrypt

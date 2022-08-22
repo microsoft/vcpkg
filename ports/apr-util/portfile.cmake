@@ -12,6 +12,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES
             use-vcpkg-expat.patch
             apr.patch
+            unglue.patch
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -63,7 +64,6 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        NO_DEBUG
         OPTIONS 
             "--prefix=${CURRENT_INSTALLED_DIR}"
             "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"

@@ -1,0 +1,26 @@
+diff --git a/meson.build b/meson.build
+index 9b00253..495671e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -388,10 +388,11 @@ int32x4_t testfunc(int16_t *a, int16_t *b) {
+   endif
+ endif
+ 
++build_system = build_machine.system()
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+ 
+-    if not gst_proj.get_variable('gst_debug')
++    if not gst_proj.get_variable('gst_debug') and build_system != 'windows'
+         message('GStreamer debug system is disabled')
+         add_project_arguments('-Wno-unused', language: 'c')
+     else
+@@ -404,7 +405,7 @@ else
+ #include <gst/gstconfig.h>
+ #ifdef GST_DISABLE_GST_DEBUG
+ #error "debugging disabled, make compiler fail"
+-#endif''' , dependencies: gst_dep)
++#endif''' , dependencies: gst_dep) and build_system != 'windows'
+         message('GStreamer debug system is disabled')
+         add_project_arguments('-Wno-unused', language: 'c')
+     else

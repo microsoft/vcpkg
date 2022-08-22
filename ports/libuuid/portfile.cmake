@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
-
 set(LIBUUID_VERSION 1.0.3)
 
 vcpkg_from_sourceforge(

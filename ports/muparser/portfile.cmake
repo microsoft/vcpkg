@@ -1,27 +1,34 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beltoforion/muparser
-    REF 207d5b77c05c9111ff51ab91082701221220c477 # v2.3.2
-    SHA512 75cebef831eeb08c92c08d2b29932a4af550edbda56c2adb6bc86b1228775294013a07d51974157b39460e60dab937b0b641553cd7ddeef72ba0b23f65c52bf4
+    REF 6d65387be8f4ef329829c6d6ace779b26942e075 # v2.3.3-1
+    SHA512 cda1133b534b1c77d80b15d50d71f372a423fab2bc7b9204d106589350b3cfc955dbfdcfe8c17890e3cfd747b559f4d3c4f0ea6c9c3c73e6aa159afc82bcc6c0
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS 
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -DENABLE_SAMPLES=OFF
         -DENABLE_OPENMP=OFF
-    OPTIONS_DEBUG 
-        -DDISABLE_INSTALL_HEADERS=ON
+        -DENABLE_WIDE_CHAR=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/muparser")
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserDef.h" "#if defined(_UNICODE)" "#if 0")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserDLL.h" "#ifndef _UNICODE" "#if 1")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserFixes.h" "#ifndef MUPARSER_STATIC" "#if 0")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserFixes.h" "#ifndef MUPARSER_STATIC" "#if 1")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

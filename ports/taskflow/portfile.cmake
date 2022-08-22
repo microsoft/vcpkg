@@ -2,14 +2,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taskflow/taskflow
-    REF cbcf750895259d1e01089d4cc4535dc962bc7848 #v3.2.0
-    SHA512 584f81a8c9d314fbd5bc3497cead659488e17ded90cca9144e867ea5d18f50bd8bc554eaefc21ed82e73b5c92a89c5502434e214b0543b65442a2c261d2ef396
+    REF bfad4b9a0cc5acad5fc99fb6ff6b904b79f27f93 #v3.3.0
+    SHA512 489807c84438a727832e9d530c9b2948240bebee48f210ce4a8c69917cbb71306df378440621b1bf091e4aa62c86681d71afd38a3343c8ea872a4eefcabc496e
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTF_BUILD_BENCHMARKS=OFF
         -DTF_BUILD_CUDA=OFF
@@ -19,11 +18,11 @@ vcpkg_configure_cmake(
         -DCMAKE_CUDA_COMPILER=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Taskflow)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Taskflow)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

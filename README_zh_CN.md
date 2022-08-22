@@ -5,7 +5,7 @@
 Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 这个工具和生态链正在不断发展，我们一直期待您的贡献！
 
-若您从未使用过vcpkg或希望了解如何使用vcpkg，请查阅[快速开始](#入门)章节。
+若您从未使用过vcpkg，或者您正在尝试了解如何使用vcpkg，请查阅 [入门](#入门) 章节。
 
 如需获取有关可用命令的简短描述，请在编译vcpkg后执行 `vcpkg help` 或执行 `vcpkg help [command]` 来获取具体的帮助信息。
 
@@ -32,13 +32,13 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
 - [Tab补全/自动补全](#tab补全自动补全)
   - [示例](#示例)
-  - [贡献者](#贡献者)
-- [License](#license)
+  - [贡献](#贡献)
+- [开源协议](#开源协议)
 - [数据收集](#数据收集)
 
 # 入门
 
-首先，请阅读以下任一方面的快速入门指南：
+首先，请阅读以下任一快速入门指南：
 [Windows](#快速开始-windows) 或 [macOS和Linux](#快速开始-unix)，
 这取决于您使用的是什么平台。
 
@@ -57,7 +57,7 @@ vcpkg团队和贡献者可以看到它的地方，
 
 ## 快速开始: Windows
 
-需求:
+前置条件:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
 - [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
@@ -95,21 +95,21 @@ vcpkg团队和贡献者可以看到它的地方，
 > .\vcpkg\vcpkg search [search term]
 ```
 
-若您希望在 Visual Studio 中使用vcpkg，请运行以下命令 (首次启动需要管理员权限)
+若您希望在 Visual Studio 中使用vcpkg，请运行以下命令 (可能需要管理员权限)
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
 ```
 
 在此之后，您可以创建一个非cmake项目 (或打开已有的项目)。
-在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件且无需添加额外配置。
+在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件且无需额外配置。
 
 若您在 Visual Studio 中使用cmake工程，请查阅[这里](#visual-studio-cmake-工程中使用-vcpkg)。
 
 为了在IDE以外在cmake中使用vcpkg，您需要使用以下工具链文件:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -120,11 +120,11 @@ vcpkg团队和贡献者可以看到它的地方，
 
 ## 快速开始: Unix
 
-Linux平台的使用需求:
+Linux平台前置条件:
 - [Git][getting-started:git]
 - [g++][getting-started:linux-gcc] >= 6
 
-macOS平台的使用需求:
+macOS平台前置条件:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
 
 首先，**请使用git clone vcpkg** 并执行 bootstrap.sh 脚本。
@@ -150,7 +150,7 @@ $ ./vcpkg/vcpkg search [search term]
 为了在cmake中使用vcpkg，您需要使用以下工具链文件:
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -238,14 +238,14 @@ $ xcode-select --install
 而无需将 `CMAKE_TOOLCHAIN_FILE` 传递给cmake调用。
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
 使用此种方式可无需设置 `CMAKE_TOOLCHAIN_FILE` 即可使用vcpkg，且更容易完成配置工作。
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -284,7 +284,7 @@ $ ./vcpkg integrate bash # 或 zsh
 
 观看4分钟 [demo视频](https://www.youtube.com/watch?v=y41WFKbQFTw)。
 
-## 贡献者
+## 贡献
 
 Vcpkg是一个开源项目，并通过您的贡献不断发展。
 下面是一些您可以贡献的方式:
@@ -292,7 +292,7 @@ Vcpkg是一个开源项目，并通过您的贡献不断发展。
 * [提交一个关于vcpkg或已支持包的新issue][contributing:submit-issue]
 * [提交修复PR和创建新包][contributing:submit-pr]
 
-请参阅我们的 [贡献准则](CONTRIBUTING.md) 了解更多详细信息。
+请参阅我们的 [贡献准则](CONTRIBUTING_zh.md) 了解更多详细信息。
 
 该项目采用了 [Microsoft开源行为准则][contributing:coc]。
 获取更多信息请查看 [行为准则FAQ][contributing:coc-faq] 或联系 [opencode@microsoft.com](mailto:opencode@microsoft.com) 提出其他问题或意见。
@@ -302,7 +302,7 @@ Vcpkg是一个开源项目，并通过您的贡献不断发展。
 [contributing:coc]: https://opensource.microsoft.com/codeofconduct/
 [contributing:coc-faq]: https://opensource.microsoft.com/codeofconduct/
 
-# License
+# 开源协议
 
 在此存储库中使用的代码均遵循 [MIT License](LICENSE.txt)。
 

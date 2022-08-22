@@ -1,10 +1,10 @@
 {
   "name": "aws-c-auth",
   "version": "0.6.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C99 library implementation of AWS client-side authentication: standard credentials providers and signing.",
   "homepage": "https://github.com/awslabs/aws-c-auth",
-  "supports": "!arm & !uwp",
+  "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-common",
     "aws-c-http",

@@ -1,10 +1,11 @@
 {
   "name": "python3",
-  "version-semver": "3.10.1",
-  "port-version": 4,
+  "version": "3.10.5",
+  "port-version": 2,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
-  "supports": "!uwp",
+  "license": "Python-2.0",
+  "supports": "!uwp & !mingw",
   "dependencies": [
     {
       "name": "bzip2",
@@ -26,6 +27,10 @@
     {
       "name": "liblzma",
       "platform": "!(windows & static)"
+    },
+    {
+      "name": "libuuid",
+      "platform": "!osx & !windows"
     },
     {
       "name": "openssl",

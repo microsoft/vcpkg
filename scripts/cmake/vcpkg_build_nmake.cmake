@@ -1,73 +1,3 @@
-#[===[.md:
-# vcpkg_build_nmake
-
-Build a msvc makefile project.
-
-## Usage:
-```cmake
-vcpkg_build_nmake(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [NO_DEBUG]
-    [ENABLE_INSTALL]
-    [TARGET <all>]
-    [PROJECT_SUBPATH <${SUBPATH}>]
-    [PROJECT_NAME <${MAKEFILE_NAME}>]
-    [PRERUN_SHELL <${SHELL_PATH}>]
-    [PRERUN_SHELL_DEBUG <${SHELL_PATH}>]
-    [PRERUN_SHELL_RELEASE <${SHELL_PATH}>]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [TARGET <target>])
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the source files.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### PROJECT_SUBPATH
-Specifies the sub directory containing the `makefile.vc`/`makefile.mak`/`makefile.msvc` or other msvc makefile.
-
-### PROJECT_NAME
-Specifies the name of msvc makefile name.
-Default is `makefile.vc`
-
-### ENABLE_INSTALL
-Install binaries after build.
-
-### PRERUN_SHELL
-Script that needs to be called before build
-
-### PRERUN_SHELL_DEBUG
-Script that needs to be called before debug build
-
-### PRERUN_SHELL_RELEASE
-Script that needs to be called before release build
-
-### OPTIONS
-Additional options passed to generate during the generation.
-
-### OPTIONS_RELEASE
-Additional options passed to generate during the Release generation. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to generate during the Debug generation. These are in addition to `OPTIONS`.
-
-### TARGET
-The target passed to the nmake build command (`nmake/nmake install`). If not specified, no target will
-be passed.
-
-## Notes:
-You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your makefile supports the
-"install" target
-
-## Examples
-
-* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-#]===]
-
 function(vcpkg_build_nmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
@@ -105,10 +35,9 @@ function(vcpkg_build_nmake)
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
     # Set needed env
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
@@ -127,7 +56,7 @@ function(vcpkg_build_nmake)
         set(project_subpath "")
     endif()
 
-    vcpkg_backup_env_variables(VARS CL)
+    vcpkg_backup_env_variables(VARS CL LINK)
     cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR NORMALIZE install_dir_native)
     foreach(build_type IN ITEMS debug release)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL build_type)
@@ -140,7 +69,8 @@ function(vcpkg_build_nmake)
                     vcpkg_list(APPEND make_opts "INSTALLDIR=${install_dir_native}\\debug")
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
-                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+                set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
                 set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
             else()
@@ -152,7 +82,8 @@ function(vcpkg_build_nmake)
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
 
-                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+                set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
+                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
                 set(prerun_variable_name arg_PRERUN_SHELL_RELEASE)
             endif()
 

@@ -1,5 +1,0 @@
-Source: llfio-run-tests
-Version: 0
-Description: Ensures that LLFIO built with vcpkg version of dependencies produces working executables.
-Build-Depends: llfio[run-tests], llfio[status-code,run-tests]
-Supports: x64

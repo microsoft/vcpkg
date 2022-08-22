@@ -77,3 +77,15 @@ vcpkg_from_github(
 ```
 
 For private ports, we recommend using `vcpkg_from_git()` instead of `vcpkg_from_github()` and the pre-seeding method above.
+
+## Pass Jenkins gitUsernamePassword credentials
+
+The simplest and most secure option to Git authentication to GitHub from Jenkins is using [GitHub App](https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc) and the following:
+```groovy
+withCredentials([gitUsernamePassword(credentialsId: 'jenkins-github-app')]) {
+  withEnv(['VCPKG_KEEP_ENV_VARS=GIT_ASKPASS']) {
+    bat 'cmake'
+  }
+}
+```
+This sets the GIT_ASKPASS with a path to helper script which responds with git credentials query and instructs `vcpkg` to keep this environment variable. The password is a [GitHub App token](https://github.blog/2021-04-05-behind-githubs-new-authentication-token-formats/) with 1 hour lifetime.

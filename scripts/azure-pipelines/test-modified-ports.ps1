@@ -83,7 +83,7 @@ $commonArgs = @(
 )
 $cachingArgs = @()
 
-$skipFailures = $false
+$skipFailuresArg = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -94,7 +94,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailures = $true
+        $skipFailuresArg = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -115,11 +115,8 @@ else {
     $executableExtension = '.exe'
 }
 
-$xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
-mkdir $xmlResults
-$xmlFile = Join-Path $xmlResults "$Triplet.xml"
-
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
+$xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
 if ($IsWindows)
 {
@@ -136,39 +133,37 @@ if ($LASTEXITCODE -ne 0)
     throw "vcpkg clean failed"
 }
 
-$skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
-    -Triplet $Triplet `
-    -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
-    -SkipFailures:$skipFailures
-
-$hostArgs = @()
-if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
-{
-    # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
-    # The workaround is to pass the skip list as host-excludes as well.
-    $hostArgs = @("--host-exclude=$skipList")
-}
-
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     # Prefetch tools for better output
-    & "./vcpkg$executableExtension" fetch cmake
-    & "./vcpkg$executableExtension" fetch ninja
-    & "./vcpkg$executableExtension" fetch git
+    foreach ($tool in @('cmake', 'ninja', 'git')) {
+        & "./vcpkg$executableExtension" fetch $tool
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "Failed to fetch $tool"
+        }
+    }
 
     Write-Host "Determining parent hashes using HEAD~1"
-    $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
+    $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
     $parentHashes = @("--parent-hashes=$parentHashesFile")
-    & git revert -n -m 1 HEAD
-    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
-        | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
-    & git reset --hard HEAD
+    & git revert -n -m 1 HEAD | Out-Null
+    # The vcpkg.cmake toolchain file is not part of ABI hashing,
+    # but changes must trigger at least some testing.
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+    & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
 
     Write-Host "Running CI using parent hashes"
+    & git reset --hard HEAD
 }
 
-& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
+# The vcpkg.cmake toolchain file is not part of ABI hashing,
+# but changes must trigger at least some testing.
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
@@ -178,7 +173,4 @@ if ($LASTEXITCODE -ne 0)
     throw "vcpkg ci failed"
 }
 
-& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
-    -triplet $Triplet `
-    -baselineFile .\scripts\ci.baseline.txt `
-    -passingIsPassing:$PassingIsPassing
+Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"

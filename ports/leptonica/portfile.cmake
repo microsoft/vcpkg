@@ -1,34 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
-    REF 2ff4313a85427ceb272540c570106b2f893da097 # 1.81.1
-    SHA512 0e35538f1407e7220e68d635e5fd4c82219b58fb4b6ca8132d72892f52853e13451a2a160644a122c47598f77d2e87046cfb072be261be9a941342f476dc6376
+    REF f4138265b390f1921b9891d6669674d3157887d8 # 1.82.0
+    SHA512 cd8c55454fc2cb4d23c2b3f01870e154766fa5a35c07b79d25c2d85dc2675dcb224d9be8a1cdcb7e9a0bd3c17e90141aa4084f67a311a1c327d7ac2439ba196a
     HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
-        find-dependency.patch
-        fix-find-libwebp.patch
-        Modify-include-dir.patch
+        fix-CMakeDependency.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
-
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSW_BUILD=OFF
-        -DCPPAN_BUILD=OFF
-        -DSTATIC=${STATIC}
-        -DCMAKE_REQUIRED_INCLUDES=${CURRENT_INSTALLED_DIR}/include # for check_include_file()
-    MAYBE_UNUSED_VARIABLES
-        STATIC
+        -DCMAKE_REQUIRE_FIND_PACKAGE_GIF=TRUE
+        -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=TRUE
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=TRUE
+        -DCMAKE_REQUIRE_FIND_PACKAGE_TIFF=TRUE
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=TRUE
 )
 
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/leptonica)
 
 vcpkg_copy_pdbs()
 

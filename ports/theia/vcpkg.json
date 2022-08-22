@@ -1,7 +1,7 @@
 {
   "name": "theia",
   "version-string": "0.8",
-  "port-version": 5,
+  "port-version": 6,
   "description": "An open source library for multiview geometry and structure from motion",
   "homepage": "https://github.com/sweeneychris/TheiaSfM",
   "dependencies": [

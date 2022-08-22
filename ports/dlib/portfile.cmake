@@ -3,23 +3,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF 70ea028f12e10f4d992a0c4f0169749eae5bb185 #v19.22
-    SHA512 f7c5988d6a1b2384a54a3e1a330c50011d3325bb87b4edd9fa08a2f4daeffdcb276ea21bc1d4cfd766b4e4d0a9c13b235e4b6002aa97af5327b833f91b688fd0
+    REF 6097093ab329fcd19aed03a8fe67949f6971a65d #v19.24
+    SHA512 4bdcecdf0f986abc748245d21616bf2c304461e9a37572c66743f69141fc3f37eb846fdaedc6c910135d986534f7989cbcc52a884ae7a52464fbb2a07b16a327
     HEAD_REF master
     PATCHES
-        fix-sqlite3-fftw-linkage.patch
-        force_finding_packages.patch
+        fix-dependencies.patch
         find_blas.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/libjpeg")
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/libpng")
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/zlib")
-
-# This fixes static builds; dlib doesn't pull in the needed transitive dependencies
-file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
-string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
-file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
+file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -33,12 +25,14 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
         -DDLIB_JPEG_SUPPORT=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
+        -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -50,9 +44,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dlib)
 
 vcpkg_fixup_pkgconfig()
 
-# There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 # Remove other files not required in package
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/all")
@@ -73,6 +67,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dlib/config.h" "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dlib/config.h" "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/dlib/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")

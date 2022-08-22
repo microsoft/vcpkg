@@ -14,31 +14,25 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hdf5    WITH_HDF5
-        cuda    WITH_CUDA
+        cuda    BUILD_CUDA_LIB
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FLANN_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FLANN_BUILD_DYNAMIC)
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
-        -DBUILD_DYNAMIC=${FLANN_BUILD_DYNAMIC}
-        -DBUILD_STATIC=${FLANN_BUILD_STATIC}
-        -DBUILD_CUDA_LIB=${WITH_CUDA}
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_DOC=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_MATLAB_BINDINGS=OFF
+        -DUSE_OPENMP=OFF
+    OPTIONS_DEBUG 
         -DCMAKE_DEBUG_POSTFIX=d
-        -DHDF5_NO_FIND_PACKAGE_CONFIG_FILE=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

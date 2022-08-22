@@ -1,30 +1,40 @@
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS "https://nice.freedesktop.org/releases/libnice-0.1.15.tar.gz"
-    FILENAME "libnice-0.1.15.tar.gz"
-    SHA512 60a8bcca06c0ab300dfabbf13e45aeac2085d553c420c5cc4d2fdeb46b449b2b9c9aee8015b0662c16bd1cecf5a49824b7e24951a8a0b66a87074cb00a619c0c
-)
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-   )
+    REPO libnice/libnice
+    REF 55b71d47f2b427b3baa8812818ed3f059acc748d # 0.1.18
+    SHA512 78575c487d74734d2dff1c04103fd55c76cf5e78edde03ffd68050348881a3efc985513cfd30553bfce0568c8edfcd61be7dea8991731efc749ee4fee2f503d6
+    HEAD_REF master
+) 
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-    OPTIONS_RELEASE -DOPTIMIZE=1
-    OPTIONS_DEBUG -DDEBUGGABLE=1
+        -Dgtk_doc=disabled #Enable generating the API reference (depends on GTK-Doc)
+        -Dintrospection=disabled #Enable GObject Introspection (depends on GObject)'
+        -Dtests=disabled
+        -Dexamples=disabled
+        -Dgstreamer=disabled
+        -Dcrypto-library=openssl
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
-vcpkg_install_cmake()
+# Could be features: 
+# option('gupnp', type: 'feature', value: 'auto',
+  # description: 'Enable or disable GUPnP IGD support')
+# option('ignored-network-interface-prefix', type: 'array', value: ['docker', 'veth', 'virbr', 'vnet'],
+  # description: 'Ignore network interfaces whose name starts with a string from this list in the ICE connection check algorithm. For example, "virbr" to ignore virtual bridge interfaces added by virtd, which do not help in finding connectivity.')
+# option('crypto-library', type: 'combo', choices : ['auto', 'gnutls', 'openssl'], value : 'auto')
+
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tools(TOOL_NAMES stunbdc stund AUTO_CLEAN)
+vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

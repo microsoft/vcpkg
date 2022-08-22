@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "osx" "linux")
-
 # Check architecture:
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BUILD_ARCH "Win32")

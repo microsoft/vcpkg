@@ -1,32 +1,23 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO jbcoe/polymorphic_value
-	REF 1.3.0
-	SHA512 67d49933c46d2a2bccb68c65c6f28b92603e193c68ff434b2c6b1602a573855a176fc98227d85cd24a64ae9299461adb42e792b4f165482bb250488620161742
-	HEAD_REF master
-	PATCHES 001_no_catch_submodule.patch
-		002_fixed_config.patch
+	REF 8b386a006c68c25c8f8c119c1f9620a916fb5afc #v1.3.0
+	SHA512 4b131b5d7c86d589418d85f25afcee70ceb48c11d2ea807ef0e97667ba273ee27659ebf95a2a7aefb6379e43bb8e5f3c25d7921cfa348ca53db4b56a5336933c
+	HEAD_REF main
 )
 
-vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 		-DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-if(VCPKG_HEAD_VERSION)
-	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/polymorphic_value TARGET_PATH share/polymorphic_value)
-	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-else()
-	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/polymorphic_value)
-	file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
-endif()
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/polymorphic_value)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(
-	INSTALL ${SOURCE_PATH}/LICENSE.txt 
-	DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-	RENAME copyright
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

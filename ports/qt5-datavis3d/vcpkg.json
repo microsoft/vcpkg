@@ -1,8 +1,8 @@
 {
   "name": "qt5-datavis3d",
-  "version-string": "5.15.2",
-  "port-version": 1,
+  "version": "5.15.5",
   "description": "Qt5 Data Visualization 3d Module - UI Components for creating 3D data visualizations",
+  "license": null,
   "dependencies": [
     {
       "name": "qt5-base",

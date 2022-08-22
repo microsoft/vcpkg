@@ -1,12 +1,10 @@
 # highfive should be updated together with hdf5
 
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
-    REF hdf5-1_12_1
-    SHA512 8a736b6a66bf4ec904a0e0dd9e8e0e791d8a04c996c5ea6b73b7d6f8145c4bfa4ed5c6e4f11740ceb1d1226a333c8242968e604dbdac2b7b561a1bd265423434
+    REF hdf5-1_12_2
+    SHA512 8f110e035a9bd5b07687b30fb944ed72e5b6a6e0ea74ee650250f40f0d4ff81e304366a76129a50a2d37c7f4c59a57356d0d9eed18db6cb90e924c62273d17a4
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
@@ -49,7 +47,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(REMOVE "${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake")#Outdated; does not find debug szip
 
-if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
+if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
@@ -67,7 +65,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
-        -DHDF5_INSTALL_CMAKE_DIR=share
+        -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
         -DSZIP_USE_EXTERNAL=ON
@@ -86,12 +84,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_fixup_pkgconfig()
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-    foreach(file IN LISTS pc_files)
+
+file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pc_files)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string("${file}" " -lhdf5" " -llibhdf5")
-    endforeach()
-endif()
+    endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${file}" "/msmpi.lib\"" "/msmpi\"")
+    endif()
+endforeach()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
@@ -100,29 +102,35 @@ string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
 )
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
-if(FEATURES MATCHES "tools")
+if("tools" IN_LIST FEATURES)
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
         h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
     )
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(TRANSFORM HDF5_TOOLS REPLACE  "^(.+)$" "\\1-shared")
     else()
     endif()
-    
+
     foreach(HDF5_TOOL IN LISTS HDF5_TOOLS)
         if (NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
             OR NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
             list(REMOVE_ITEM HDF5_TOOLS "${HDF5_TOOL}")
         endif()
     endforeach()
-    
+
+    if("parallel" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS h5perf)
+    else()
+        list(APPEND HDF5_TOOLS h5perf_serial)
+    endif()
+
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
 
 if ("utils" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES mirror_server mirror_server_stop 
+        TOOL_NAMES mirror_server mirror_server_stop
         AUTO_CLEAN
     )
 endif()

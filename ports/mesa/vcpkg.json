@@ -1,10 +1,15 @@
 {
   "name": "mesa",
-  "version": "21.2.5",
+  "version": "22.0.2",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
+  "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
   "supports": "!(windows & arm)",
   "dependencies": [
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

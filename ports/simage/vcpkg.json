@@ -1,9 +1,10 @@
 {
   "name": "simage",
-  "version-semver": "1.8.1",
-  "port-version": 3,
+  "version-semver": "1.8.2",
+  "port-version": 1,
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
+  "license": "ISC",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -129,8 +130,13 @@
     "sndfile": {
       "description": "Use libsndfile to load/save sampled sound",
       "dependencies": [
-        "libflac",
-        "libsndfile"
+        {
+          "name": "libsndfile",
+          "default-features": false,
+          "features": [
+            "external-libs"
+          ]
+        }
       ]
     },
     "tiff": {

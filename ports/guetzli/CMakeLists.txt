@@ -17,6 +17,8 @@ list(REMOVE_ITEM guetzli_srcs "guetzli/guetzli.cc")
 
 add_library(guetzli_lib ${guetzli_srcs})
 
+target_compile_features(guetzli_lib PUBLIC cxx_std_11)
+
 add_executable(guetzli guetzli/guetzli.cc)
 
 target_link_libraries(guetzli_lib ${butteraugli_library} ${PNG_LIBRARIES})

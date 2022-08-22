@@ -1,8 +1,10 @@
 {
   "name": "cmake",
-  "version-string": "3.20.0",
+  "version": "3.22.2",
+  "port-version": 1,
   "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software.",
   "homepage": "https://cmake.org/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "bzip2",
     "curl",
@@ -17,6 +19,10 @@
     },
     "nghttp2",
     "qtbase",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]
