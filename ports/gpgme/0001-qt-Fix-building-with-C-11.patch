@@ -1,0 +1,88 @@
+From 83176ad7d3e57ad7804d3c885e1b4fcd1d4d96f9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ingo=20Kl=C3=B6cker?= <dev@ingo-kloecker.de>
+Date: Mon, 22 Aug 2022 14:39:22 +0200
+Subject: [PATCH] qt: Fix building with C++11
+
+* lang/qt/src/qgpgmerefreshsmimekeysjob.cpp
+(QGpgMERefreshSMIMEKeysJob::start): Replace 'auto' in lambda with the
+actual type.
+* lang/qt/src/qgpgmesignkeyjob.cpp (class TrustSignatureProperties): Add
+default c'tor and c'tor initializing all members.
+* lang/qt/src/util.cpp (toFingerprints): Replace 'auto' in lambda with
+the actual type.
+* lang/qt/tests/run-exportjob.cpp (createExportJob): Replace 'auto'
+return type with actual type.
+--
+
+This fixes compilation with strict C++11.
+
+GnuPG-bug-id: 6141
+---
+ lang/qt/src/qgpgmerefreshsmimekeysjob.cpp | 2 +-
+ lang/qt/src/qgpgmesignkeyjob.cpp          | 9 +++++++++
+ lang/qt/src/util.cpp                      | 2 +-
+ lang/qt/tests/run-exportjob.cpp           | 2 +-
+ 4 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/lang/qt/src/qgpgmerefreshsmimekeysjob.cpp b/lang/qt/src/qgpgmerefreshsmimekeysjob.cpp
+index 3187a0cd..3e430ad7 100644
+--- a/lang/qt/src/qgpgmerefreshsmimekeysjob.cpp
++++ b/lang/qt/src/qgpgmerefreshsmimekeysjob.cpp
+@@ -94,7 +94,7 @@ GpgME::Error QGpgMERefreshSMIMEKeysJob::start(const std::vector<GpgME::Key> &key
+         return {};
+     }
+ 
+-    const bool gotWrongKeys = std::any_of(std::begin(keys), std::end(keys), [](const auto &k) {
++    const bool gotWrongKeys = std::any_of(std::begin(keys), std::end(keys), [](const GpgME::Key &k) {
+         return k.protocol() != GpgME::CMS;
+     });
+     if (gotWrongKeys) {
+diff --git a/lang/qt/src/qgpgmesignkeyjob.cpp b/lang/qt/src/qgpgmesignkeyjob.cpp
+index 506d64a1..1693a5be 100644
+--- a/lang/qt/src/qgpgmesignkeyjob.cpp
++++ b/lang/qt/src/qgpgmesignkeyjob.cpp
+@@ -57,6 +57,15 @@ using namespace GpgME;
+ namespace
+ {
+ struct TrustSignatureProperties {
++    TrustSignatureProperties() = default;
++    // needed for C++11 because until C++14 "aggregate initialization requires
++    // class type, that has no default member initializers"
++    TrustSignatureProperties(TrustSignatureTrust trust_, unsigned int depth_, const QString &scope_)
++        : trust{trust_}
++        , depth{depth_}
++        , scope{scope_}
++    {}
++
+     TrustSignatureTrust trust = TrustSignatureTrust::None;
+     unsigned int depth = 0;
+     QString scope;
+diff --git a/lang/qt/src/util.cpp b/lang/qt/src/util.cpp
+index c6e1a6ae..d4190eb8 100644
+--- a/lang/qt/src/util.cpp
++++ b/lang/qt/src/util.cpp
+@@ -56,7 +56,7 @@ QStringList toFingerprints(const std::vector<GpgME::Key> &keys)
+ {
+     QStringList fprs;
+     fprs.reserve(keys.size());
+-    std::transform(std::begin(keys), std::end(keys), std::back_inserter(fprs), [](const auto &k) {
++    std::transform(std::begin(keys), std::end(keys), std::back_inserter(fprs), [](const GpgME::Key &k) {
+         return QString::fromLatin1(k.primaryFingerprint());
+     });
+     return fprs;
+diff --git a/lang/qt/tests/run-exportjob.cpp b/lang/qt/tests/run-exportjob.cpp
+index 0f8fd8fd..40072c85 100644
+--- a/lang/qt/tests/run-exportjob.cpp
++++ b/lang/qt/tests/run-exportjob.cpp
+@@ -57,7 +57,7 @@ static void showUsageAndExitWithCode(int exitCode)
+     exit(exitCode);
+ }
+ 
+-static auto createExportJob(unsigned int mode)
++static QGpgME::ExportJob *createExportJob(unsigned int mode)
+ {
+     if (mode & Context::ExportSecretSubkey) {
+         return QGpgME::openpgp()->secretSubkeyExportJob(/*armor=*/true);
+-- 
+2.37.1
+

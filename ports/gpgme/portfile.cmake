@@ -11,9 +11,9 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        lambda_fix.diff         # https://dev.gnupg.org/rMf02c20cc9c5756690b07abfd02a43533547ba2ef
-        lambda_fix2.diff        # https://dev.gnupg.org/T6141#161881
-                                # https://dev.gnupg.org/T6143
+        0001-build-Update-ax_cxx_compile_stdcxx-macro.patch
+        0001-cpp-Fix-building-with-C-11.patch
+        0001-qt-Fix-building-with-C-11.patch
         disable-tests.patch
         disable-docs.patch
  )
