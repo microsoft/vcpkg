@@ -35,7 +35,9 @@ vcpkg_from_github(
       enable-either-static-or-shared-build.patch
       fix-dependencies.patch
       remove-examples-src-from-datadir.patch
-      stop-building-apps.patch)
+      stop-building-apps.patch
+      no-absolute-driver-path.patch
+)
 
 macro(append_bool_option feature_name option_name)
   if("${feature_name}" IN_LIST FEATURES)
