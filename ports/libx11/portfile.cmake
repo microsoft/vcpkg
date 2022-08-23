@@ -84,9 +84,10 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 if(NOT VCPKG_CROSSCOMPILING)
     file(READ "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" config_contents)
     string(REGEX MATCH "ac_cv_objext=[^\n]+" objsuffix "${config_contents}")
-    string(REPLACE "ac_cv_objext=" "" objsuffix "${objsuffix}")
+    string(REPLACE "ac_cv_objext=" "." objsuffix "${objsuffix}")
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    file(TOUCH "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/makekeys${objsuffix}" DESTINATION )
+    #file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
 endif()
