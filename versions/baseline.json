@@ -6729,7 +6729,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.4",
+      "baseline": "5.7.4.2",
       "port-version": 0
     },
     "soci": {
