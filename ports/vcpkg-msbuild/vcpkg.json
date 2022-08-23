@@ -4,7 +4,7 @@
   "port-version": 1,
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
-  "supports": "native",
+  "supports": "native & windows",
   "dependencies": [
     "pkgconf",
     {
