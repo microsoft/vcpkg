@@ -7541,8 +7541,8 @@
       "port-version": 0
     },
     "vectorclass": {
-      "baseline": "2.00.01",
-      "port-version": 2
+      "baseline": "2.02.00",
+      "port-version": 0
     },
     "visit-struct": {
       "baseline": "1.0",
