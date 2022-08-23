@@ -11,14 +11,10 @@ vcpkg_from_github(
         0004-add-win-arm64.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        tools BUILD_TOOLS
-)
+file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
+configure_file("${SOURCE_PATH}/README.md" "${SOURCE_PATH}/README" COPYONLY)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
-
     #architecture detection
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(HUNSPELL_ARCH Win32)
@@ -30,10 +26,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         message(FATAL_ERROR "unsupported architecture")
     endif()
 
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(HUNSPELL_CONFIGURATION _dll)
     else()
-        set(HUNSPELL_CONFIGURATION )
+        set(HUNSPELL_CONFIGURATION "")
     endif()
 
     if("tools" IN_LIST FEATURES)
@@ -51,20 +47,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         DEBUG_CONFIGURATION Debug${HUNSPELL_CONFIGURATION}
         ALLOW_ROOT_INCLUDES
     )
+    vcpkg_copy_pdbs()
+
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ENV{CFLAGS} "$ENV{CFLAGS} -DHUNSPELL_STATIC")
         set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -DHUNSPELL_STATIC")
     endif()
-    if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
-        file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
-        string(REPLACE " parsers tools" "" _contents "${_contents}")
-        file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
+    if(NOT "tools" IN_LIST FEATURES)
+        vcpkg_replace_string("${SOURCE_PATH}/src/Makefile.am" " parsers tools" "")
     endif()
     vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES gzip
     )
@@ -76,7 +71,6 @@ else()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     vcpkg_fixup_pkgconfig()
 endif()
-vcpkg_copy_pdbs()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if (VCPKG_TARGET_IS_WINDOWS)
@@ -84,16 +78,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     else()
         set(HUNSPELL_EXPORT_HDR "${CURRENT_PACKAGES_DIR}/include/hunspell/hunvisapi.h")
     endif()
-    vcpkg_replace_string(
-        ${HUNSPELL_EXPORT_HDR}
-        "#if defined(HUNSPELL_STATIC)"
-        "#if 1"
-    )
+    vcpkg_replace_string("${HUNSPELL_EXPORT_HDR}" "#if defined(HUNSPELL_STATIC)" "#if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/COPYING.LESSER" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright-lgpl)
-file(INSTALL "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright-mpl)
+vcpkg_install_copyright(
+    COMMENT "Hunspell is licensed under LGPL/GPL/MPL tri-license."
+    FILE_LIST
+        "${SOURCE_PATH}/license.hunspell"
+        "${SOURCE_PATH}/license.myspell"
+        "${SOURCE_PATH}/COPYING.MPL"
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/COPYING.LESSER"
+)
