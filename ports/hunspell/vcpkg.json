@@ -8,9 +8,11 @@
     "libiconv"
   ],
   "features": {
-    "tools": {
-      "description": "Build hunspell tools",
+    "nls": {
+      "description": "Enable native language support",
+      "supports": "!windows | mingw",
       "dependencies": [
+        "gettext",
         {
           "name": "gettext",
           "host": true,
@@ -19,6 +21,9 @@
           ]
         }
       ]
+    },
+    "tools": {
+      "description": "Build hunspell tools"
     }
   }
 }

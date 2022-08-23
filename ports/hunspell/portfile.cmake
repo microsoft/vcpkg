@@ -59,14 +59,28 @@ else()
     if(NOT "tools" IN_LIST FEATURES)
         vcpkg_replace_string("${SOURCE_PATH}/src/Makefile.am" " parsers tools" "")
     endif()
-    vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
+    vcpkg_list(SET options)
+    if("nls" IN_LIST FEATURES)
+        vcpkg_list(APPEND options "--enable-nls")
+    else()
+        set(ENV{AUTOPOINT} true) # true, the program
+        vcpkg_list(APPEND options "--disable-nls")
+    endif()
+    if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
+        file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
+        string(REPLACE " parsers tools" "" _contents "${_contents}")
+        file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES gzip
+        OPTIONS
+            ${options}
     )
-    #install-pkgconfDATA:
-    vcpkg_build_make(BUILD_TARGET dist LOGFILE_ROOT build-dist)
+    if("nls" IN_LIST FEATURES)
+        vcpkg_build_make(BUILD_TARGET dist LOGFILE_ROOT build-dist)
+    endif()
     vcpkg_install_make()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
