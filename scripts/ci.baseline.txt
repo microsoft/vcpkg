@@ -383,8 +383,6 @@ intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
-# Conflict with spdk-isal
-isal:x64-linux=skip
 jemalloc:arm64-windows=fail
 jemalloc:arm-uwp=fail
 jemalloc:x64-osx=fail
@@ -1076,6 +1074,8 @@ spdk-ipsec:x64-windows=fail
 spdk-ipsec:x64-windows-static=fail
 spdk-ipsec:x64-windows-static-md=fail
 spdk-ipsec:x86-windows=fail
+# Conflict with isal, and "internal" dep of spdk:x64-linux=fail
+spdk-isal:x64-linux=skip
 spirv-tools:arm-uwp=fail
 spirv-tools:x64-uwp=fail
 stormlib:arm-uwp=fail
@@ -1194,6 +1194,8 @@ xalan-c:x64-windows-static=fail
 xalan-c:arm64-windows=fail
 xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
+# Crosscompiling libx11 requires additional steps and patches to the Makefiles. 
+libx11:arm64-windows=fail
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
 yara:arm-uwp=fail
