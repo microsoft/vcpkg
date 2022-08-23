@@ -1974,7 +1974,7 @@
     },
     "dpdk": {
       "baseline": "22.03",
-      "port-version": 2
+      "port-version": 3
     },
     "dpp": {
       "baseline": "10.0.16",
@@ -2394,7 +2394,7 @@
     },
     "freetype": {
       "baseline": "2.12.1",
-      "port-version": 1
+      "port-version": 2
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
@@ -2566,7 +2566,7 @@
     },
     "gklib": {
       "baseline": "2022-07-27",
-      "port-version": 1
+      "port-version": 2
     },
     "gl2ps": {
       "baseline": "1.4.2",
@@ -2650,7 +2650,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -5481,8 +5481,8 @@
       "port-version": 0
     },
     "pdal": {
-      "baseline": "2.4.0",
-      "port-version": 1
+      "baseline": "2.4.3",
+      "port-version": 0
     },
     "pdal-c": {
       "baseline": "2.1",
@@ -5653,8 +5653,8 @@
       "port-version": 4
     },
     "poppler": {
-      "baseline": "22.3.0",
-      "port-version": 1
+      "baseline": "22.8.0",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
@@ -6229,7 +6229,7 @@
       "port-version": 0
     },
     "rapidcsv": {
-      "baseline": "8.53",
+      "baseline": "8.64",
       "port-version": 0
     },
     "rapidjson": {
@@ -6741,7 +6741,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.4",
+      "baseline": "5.7.4.2",
       "port-version": 0
     },
     "soci": {
@@ -7553,8 +7553,8 @@
       "port-version": 0
     },
     "vectorclass": {
-      "baseline": "2.00.01",
-      "port-version": 2
+      "baseline": "2.02.00",
+      "port-version": 0
     },
     "visit-struct": {
       "baseline": "1.0",
