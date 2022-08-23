@@ -75,7 +75,8 @@ func_windres_wrapper ()
 		;;
 	--include-dir*)
 		eat=1
-		set x "$@" "-I $2"
+		func_file_conv "$2"
+		set x "$@" "-I $file"
 		shift
 		;;
 	-o)
