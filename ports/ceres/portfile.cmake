@@ -35,9 +35,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"             GFLAGS
         "cuda"              CUDA
 )
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
-endif()
+# if(VCPKG_TARGET_IS_UWP)
+#     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
+# endif()
 
 foreach (FEATURE ${FEATURE_OPTIONS})
     message(STATUS "${FEATURE}")
