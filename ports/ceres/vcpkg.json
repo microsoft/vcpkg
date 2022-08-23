@@ -8,6 +8,10 @@
   "dependencies": [
     "eigen3",
     {
+      "name": "glog",
+      "platform" : "!uwp"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
