@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-disable-test.patch
         0003-fix-win-build.patch
         0004-add-win-arm64.patch
+        0005-autotools-subdirs.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
@@ -56,20 +57,15 @@ else()
         set(ENV{CFLAGS} "$ENV{CFLAGS} -DHUNSPELL_STATIC")
         set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -DHUNSPELL_STATIC")
     endif()
-    if(NOT "tools" IN_LIST FEATURES)
-        vcpkg_replace_string("${SOURCE_PATH}/src/Makefile.am" " parsers tools" "")
-    endif()
     vcpkg_list(SET options)
+    if("tools" IN_LIST FEATURES)
+        vcpkg_list(APPEND options "--enable-tools")
+    endif()
     if("nls" IN_LIST FEATURES)
         vcpkg_list(APPEND options "--enable-nls")
     else()
         set(ENV{AUTOPOINT} true) # true, the program
         vcpkg_list(APPEND options "--disable-nls")
-    endif()
-    if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
-        file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
-        string(REPLACE " parsers tools" "" _contents "${_contents}")
-        file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
     endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -77,13 +73,14 @@ else()
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
             ${options}
+        OPTIONS_DEBUG
+            --disable-tools
     )
     if("nls" IN_LIST FEATURES)
         vcpkg_build_make(BUILD_TARGET dist LOGFILE_ROOT build-dist)
     endif()
     vcpkg_install_make()
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     vcpkg_fixup_pkgconfig()
 
