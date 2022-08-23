@@ -67,7 +67,7 @@ if(VCPKG_CROSSCOMPILING)
     #TODO: Test if a simple touch is enough!
     #file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makekeys${objsuffix}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util")
     if(NOT VCPKG_BUILD_TYPE)
-        file(COPY "${FOR_BUILD_FILES}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/util")
+        file(COPY ${FOR_BUILD_FILES} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/util")
     endif()
 endif()
 vcpkg_install_make()
@@ -82,10 +82,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/x11/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 if(NOT VCPKG_CROSSCOMPILING)
     file(READ "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" config_contents)
@@ -95,3 +91,9 @@ if(NOT VCPKG_CROSSCOMPILING)
     file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     #file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
+
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/x11/vcpkg-cmake-wrapper.cmake" @ONLY)
+
