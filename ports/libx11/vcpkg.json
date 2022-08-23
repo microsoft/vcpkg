@@ -7,6 +7,10 @@
   "dependencies": [
     "bzip2",
     {
+      "name": "libx11",
+      "host": true
+    },
+    {
       "name": "libxslt",
       "host": true
     },
