@@ -2566,7 +2566,7 @@
     },
     "gklib": {
       "baseline": "2022-07-27",
-      "port-version": 1
+      "port-version": 2
     },
     "gl2ps": {
       "baseline": "1.4.2",
