@@ -1,0 +1,55 @@
+From a06ac96abb6267adcee618e1d5463f166e1ee60d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 19:14:11 +0200
+Subject: [PATCH] Guard strings.h
+
+---
+ lang/cpp/src/importresult.cpp | 9 +++++++--
+ lang/cpp/src/key.cpp          | 5 +++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/lang/cpp/src/importresult.cpp b/lang/cpp/src/importresult.cpp
+index 0a7ad03d..dd693f41 100644
+--- a/lang/cpp/src/importresult.cpp
++++ b/lang/cpp/src/importresult.cpp
+@@ -34,8 +34,13 @@
+ #include <cstdlib>
+ #include <cstring>
+ 
+-#include <string.h>
+-#include <strings.h>
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# include <string.h>
++# define strcasecmp _stricmp
++#elif
++# include <strings.h>
++#endif
++
+ #include <istream>
+ #include <iterator>
+ 
+diff --git a/lang/cpp/src/key.cpp b/lang/cpp/src/key.cpp
+index d118073f..9c264de9 100644
+--- a/lang/cpp/src/key.cpp
++++ b/lang/cpp/src/key.cpp
+@@ -33,14 +33,15 @@
+ 
+ #include <gpgme.h>
+ 
+-#include <string.h>
+-#include <strings.h>
+ #include <cassert>
+ #include <istream>
+ #include <iterator>
+ 
+ #if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# include <string.h>
+ # define strcasecmp _stricmp
++#elif
++# include <strings.h>
+ #endif
+ 
+ const GpgME::Key::Null GpgME::Key::null;
+-- 
+2.37.1
+

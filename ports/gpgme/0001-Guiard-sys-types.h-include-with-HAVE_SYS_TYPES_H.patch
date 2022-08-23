@@ -1,0 +1,107 @@
+From 2a905c7fcddd1e5434f021e6234634575cb67c5f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 18:56:09 +0200
+Subject: [PATCH] Guiard sys/types.h include with HAVE_SYS_TYPES_H
+
+---
+ doc/mkdefsinc.c                        | 4 +++-
+ lang/cpp/src/data.h                    | 4 +++-
+ lang/cpp/src/interfaces/dataprovider.h | 4 +++-
+ tests/gpg/t-cancel.c                   | 4 +++-
+ tests/gpg/t-eventloop.c                | 4 +++-
+ tests/run-threaded.c                   | 4 +++-
+ 6 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/doc/mkdefsinc.c b/doc/mkdefsinc.c
+index e985b836..1215d1df 100644
+--- a/doc/mkdefsinc.c
++++ b/doc/mkdefsinc.c
+@@ -20,7 +20,9 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <time.h>
+-#include <sys/types.h>
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif
+ #include <sys/stat.h>
+ #ifdef HAVE_UNISTD_H
+ # include <unistd.h>
+diff --git a/lang/cpp/src/data.h b/lang/cpp/src/data.h
+index df8607e7..ec6e2296 100644
+--- a/lang/cpp/src/data.h
++++ b/lang/cpp/src/data.h
+@@ -26,7 +26,9 @@
+ #include "global.h"
+ #include "key.h"
+ 
+-#include <sys/types.h> // for size_t, off_t
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif // for size_t, off_t
+ #include <cstdio> // FILE
+ #include <algorithm>
+ #include <memory>
+diff --git a/lang/cpp/src/interfaces/dataprovider.h b/lang/cpp/src/interfaces/dataprovider.h
+index c8f387d6..403276d1 100644
+--- a/lang/cpp/src/interfaces/dataprovider.h
++++ b/lang/cpp/src/interfaces/dataprovider.h
+@@ -25,7 +25,9 @@
+ #ifndef __GPGMEPP_INTERFACES_DATAPROVIDER_H__
+ #define __GPGMEPP_INTERFACES_DATAPROVIDER_H__
+ 
+-#include <sys/types.h>
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif
+ 
+ #include "gpgmepp_export.h"
+ 
+diff --git a/tests/gpg/t-cancel.c b/tests/gpg/t-cancel.c
+index 209bcd93..1de0158c 100644
+--- a/tests/gpg/t-cancel.c
++++ b/tests/gpg/t-cancel.c
+@@ -35,7 +35,9 @@
+ #ifdef HAVE_SYS_TIME_H
+ # include <sys/time.h>
+ #endif
+-#include <sys/types.h>
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif
+ #ifdef HAVE_UNISTD_H
+ # include <unistd.h>
+ #endif
+diff --git a/tests/gpg/t-eventloop.c b/tests/gpg/t-eventloop.c
+index 0106670b..4af79234 100644
+--- a/tests/gpg/t-eventloop.c
++++ b/tests/gpg/t-eventloop.c
+@@ -30,7 +30,9 @@
+ #include <string.h>
+ #include <assert.h>
+ #include <errno.h>
+-#include <sys/types.h>
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif
+ #ifdef HAVE_POLL_H
+ # include <poll.h>
+ #else
+diff --git a/tests/run-threaded.c b/tests/run-threaded.c
+index bf63bf8a..d1f34bc9 100644
+--- a/tests/run-threaded.c
++++ b/tests/run-threaded.c
+@@ -33,7 +33,9 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <sys/stat.h>
+-#include <sys/types.h>
++#ifdef HAVE_SYS_TYPES_H
++# include <sys/types.h>
++#endif
+ #include <fcntl.h>
+ 
+ #ifdef HAVE_UNISTD_H
+-- 
+2.37.1
+

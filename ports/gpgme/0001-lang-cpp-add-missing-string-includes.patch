@@ -1,0 +1,37 @@
+From 3256b9428686b72b484c034a8344f8da6471b164 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 22:36:21 +0200
+Subject: [PATCH] lang, cpp: add missing string includes
+
+---
+ lang/cpp/src/gpgaddexistingsubkeyeditinteractor.h | 1 +
+ lang/cpp/src/gpgrevokekeyeditinteractor.h         | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/lang/cpp/src/gpgaddexistingsubkeyeditinteractor.h b/lang/cpp/src/gpgaddexistingsubkeyeditinteractor.h
+index c30f18e4..2a580b6e 100644
+--- a/lang/cpp/src/gpgaddexistingsubkeyeditinteractor.h
++++ b/lang/cpp/src/gpgaddexistingsubkeyeditinteractor.h
+@@ -27,6 +27,7 @@
+ #include "editinteractor.h"
+ 
+ #include <memory>
++#include <string>
+ 
+ namespace GpgME
+ {
+diff --git a/lang/cpp/src/gpgrevokekeyeditinteractor.h b/lang/cpp/src/gpgrevokekeyeditinteractor.h
+index c33a71b6..731f346c 100644
+--- a/lang/cpp/src/gpgrevokekeyeditinteractor.h
++++ b/lang/cpp/src/gpgrevokekeyeditinteractor.h
+@@ -29,6 +29,7 @@
+ 
+ #include <memory>
+ #include <vector>
++#include <string>
+ 
+ namespace GpgME
+ {
+-- 
+2.37.1
+

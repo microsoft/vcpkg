@@ -1,0 +1,27 @@
+From 9b5e00640d696b3338cd7c58f3b58b34c0ef3025 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 18:22:36 +0200
+Subject: [PATCH] Guard sys/time.h include with HAVE_SYS_TIME_H
+
+---
+ lang/cpp/src/key.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lang/cpp/src/key.h b/lang/cpp/src/key.h
+index 0e6380db..ea46c949 100644
+--- a/lang/cpp/src/key.h
++++ b/lang/cpp/src/key.h
+@@ -30,7 +30,9 @@
+ #include "gpgmefw.h"
+ 
+ #include <memory>
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ 
+ #include <vector>
+ #include <algorithm>
+-- 
+2.37.1
+

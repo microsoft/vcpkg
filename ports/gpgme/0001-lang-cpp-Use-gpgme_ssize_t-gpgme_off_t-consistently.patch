@@ -1,0 +1,149 @@
+From e5e049a85881c1eec4fa5b3f9548a652b87a66f4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 19:36:14 +0200
+Subject: [PATCH] lang, cpp: Use gpgme_ssize_t, gpgme_off_t consistently
+
+---
+ lang/cpp/src/callbacks.cpp             |  2 +-
+ lang/cpp/src/data.cpp                  | 12 ++++++------
+ lang/cpp/src/data.h                    | 14 ++++++--------
+ lang/cpp/src/editinteractor.cpp        |  2 +-
+ lang/cpp/src/interfaces/dataprovider.h |  4 ++--
+ 5 files changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/lang/cpp/src/callbacks.cpp b/lang/cpp/src/callbacks.cpp
+index 21c2a813..3e36428d 100644
+--- a/lang/cpp/src/callbacks.cpp
++++ b/lang/cpp/src/callbacks.cpp
+@@ -84,7 +84,7 @@ gpgme_error_t passphrase_callback(void *opaque, const char *uid_hint, const char
+             size_t passphrase_length = std::strlen(passphrase);
+             size_t written = 0;
+             do {
+-                ssize_t now_written = gpgme_io_write(fd, passphrase + written, passphrase_length - written);
++                gpgme_ssize_t now_written = gpgme_io_write(fd, passphrase + written, passphrase_length - written);
+                 if (now_written < 0) {
+                     err = make_err_from_syserror();
+                     break;
+diff --git a/lang/cpp/src/data.cpp b/lang/cpp/src/data.cpp
+index 7a93cbc2..776cd2a5 100644
+--- a/lang/cpp/src/data.cpp
++++ b/lang/cpp/src/data.cpp
+@@ -83,7 +83,7 @@ GpgME::Data::Data(const char *filename)
+     }
+ }
+ 
+-GpgME::Data::Data(const char *filename, off_t offset, size_t length)
++GpgME::Data::Data(const char *filename, gpgme_off_t offset, size_t length)
+ {
+     gpgme_data_t data;
+     const gpgme_error_t e = gpgme_data_new_from_filepart(&data, filename, nullptr, offset, length);
+@@ -97,7 +97,7 @@ GpgME::Data::Data(FILE *fp)
+     d.reset(new Private(e ? nullptr : data));
+ }
+ 
+-GpgME::Data::Data(FILE *fp, off_t offset, size_t length)
++GpgME::Data::Data(FILE *fp, gpgme_off_t offset, size_t length)
+ {
+     gpgme_data_t data;
+     const gpgme_error_t e = gpgme_data_new_from_filepart(&data, nullptr, fp, offset, length);
+@@ -134,7 +134,7 @@ GpgME::Data::Data(DataProvider *dp)
+         d->data = nullptr;
+     }
+     if (dp->isSupported(DataProvider::Seek)) {
+-        off_t size = seek(0, SEEK_END);
++        gpgme_off_t size = seek(0, SEEK_END);
+         seek(0, SEEK_SET);
+         std::string sizestr = std::to_string(size);
+         // Ignore errors as this is optional
+@@ -217,17 +217,17 @@ GpgME::Error GpgME::Data::setFileName(const char *name)
+     return Error(gpgme_data_set_file_name(d->data, name));
+ }
+ 
+-ssize_t GpgME::Data::read(void *buffer, size_t length)
++gpgme_ssize_t GpgME::Data::read(void *buffer, size_t length)
+ {
+     return gpgme_data_read(d->data, buffer, length);
+ }
+ 
+-ssize_t GpgME::Data::write(const void *buffer, size_t length)
++gpgme_ssize_t GpgME::Data::write(const void *buffer, size_t length)
+ {
+     return gpgme_data_write(d->data, buffer, length);
+ }
+ 
+-off_t GpgME::Data::seek(off_t offset, int whence)
++gpgme_off_t GpgME::Data::seek(gpgme_off_t offset, int whence)
+ {
+     return gpgme_data_seek(d->data, offset, whence);
+ }
+diff --git a/lang/cpp/src/data.h b/lang/cpp/src/data.h
+index ec6e2296..0b218cbb 100644
+--- a/lang/cpp/src/data.h
++++ b/lang/cpp/src/data.h
+@@ -25,10 +25,8 @@
+ 
+ #include "global.h"
+ #include "key.h"
++#include <gpgme.h>
+ 
+-#ifdef HAVE_SYS_TYPES_H
+-# include <sys/types.h>
+-#endif // for size_t, off_t
+ #include <cstdio> // FILE
+ #include <algorithm>
+ #include <memory>
+@@ -52,8 +50,8 @@ public:
+     // Memory-Based Data Buffers:
+     Data(const char *buffer, size_t size, bool copy = true);
+     explicit Data(const char *filename);
+-    Data(const char *filename, off_t offset, size_t length);
+-    Data(std::FILE *fp, off_t offset, size_t length);
++    Data(const char *filename, gpgme_off_t offset, size_t length);
++    Data(std::FILE *fp, gpgme_off_t offset, size_t length);
+     // File-Based Data Buffers:
+     explicit Data(std::FILE *fp);
+     explicit Data(int fd);
+@@ -108,9 +106,9 @@ public:
+     char *fileName() const;
+     Error setFileName(const char *name);
+ 
+-    ssize_t read(void *buffer, size_t length);
+-    ssize_t write(const void *buffer, size_t length);
+-    off_t seek(off_t offset, int whence);
++    gpgme_ssize_t read(void *buffer, size_t length);
++    gpgme_ssize_t write(const void *buffer, size_t length);
++    gpgme_off_t seek(gpgme_off_t offset, int whence);
+ 
+     /* Convenience function to do a seek (0, SEEK_SET).  */
+     Error rewind();
+diff --git a/lang/cpp/src/editinteractor.cpp b/lang/cpp/src/editinteractor.cpp
+index 08cb1bc9..953e9fc3 100644
+--- a/lang/cpp/src/editinteractor.cpp
++++ b/lang/cpp/src/editinteractor.cpp
+@@ -121,7 +121,7 @@ public:
+                     // if there's a result, write it:
+                     if (*result) {
+                         gpgme_err_set_errno(0);
+-                        const ssize_t len = std::strlen(result);
++                        const gpgme_ssize_t len = std::strlen(result);
+                         if (writeAll(fd, result, len) != len) {
+                             err = Error::fromSystemError();
+                             if (ei->debug) {
+diff --git a/lang/cpp/src/interfaces/dataprovider.h b/lang/cpp/src/interfaces/dataprovider.h
+index 403276d1..9eb7f765 100644
+--- a/lang/cpp/src/interfaces/dataprovider.h
++++ b/lang/cpp/src/interfaces/dataprovider.h
+@@ -46,8 +46,8 @@ public:
+     };
+     virtual bool isSupported(Operation op) const = 0;
+ 
+-    virtual ssize_t read(void   *buffer, size_t bufSize) = 0;
+-    virtual ssize_t write(const void *buffer, size_t bufSize) = 0;
++    virtual gpgrt_ssize_t read(void   *buffer, size_t bufSize) = 0;
++    virtual gpgrt_ssize_t write(const void *buffer, size_t bufSize) = 0;
+     virtual off_t seek(off_t offset, int whence) = 0;
+     virtual void release() = 0;
+ };
+-- 
+2.37.1
+

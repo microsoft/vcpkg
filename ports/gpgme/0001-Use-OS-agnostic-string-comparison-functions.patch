@@ -1,0 +1,117 @@
+From 318ecfd648522de6f34220cfdfd97c154033298f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 14:46:12 +0200
+Subject: [PATCH] Use OS-agnostic string comparison functions
+
+---
+ configure.ac         | 12 ++++++++++++
+ lang/cpp/src/key.cpp |  4 ++++
+ lang/qt/src/dn.cpp   |  4 ++++
+ src/cJSON.c          |  3 +++
+ src/gpgme-tool.c     |  7 +++++++
+ src/vfs-mount.c      |  4 ++++
+ 6 files changed, 34 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index aed0762f..72e2bd6a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -617,6 +617,18 @@ AM_SUBST_NOTMAKE(API__OFF_T)
+ AC_SUBST(API__SSIZE_T)
+ AM_SUBST_NOTMAKE(API__SSIZE_T)
+ 
++# Check the string comparison functions
++AC_CHECK_DECLS([strcasecmp,strncasecmp],[],[],[#include <strings.h>])
++AC_CHECK_DECLS([_stricmp,_strnicmp],[],[],[#include <string.h>])
++if test "x$ac_cv_have_decl_strcasecmp" = xno -a \
++  "x$ac_cv_have_decl__stricmp" = xno; then
++AC_MSG_ERROR([No strcasecmp implementation found])
++fi
++if test "x$ac_cv_have_decl_strncasecmp" = xno -a \
++  "x$ac_cv_have_decl__strnicmp" = xno; then
++AC_MSG_ERROR([No strncasecmp implementation found])
++fi
++
+ # Checks for compiler features.
+ if test "$GCC" = yes; then
+     CFLAGS="$CFLAGS -Wall -Wcast-align -Wshadow -Wstrict-prototypes"
+diff --git a/lang/cpp/src/key.cpp b/lang/cpp/src/key.cpp
+index 293c9e5b..d118073f 100644
+--- a/lang/cpp/src/key.cpp
++++ b/lang/cpp/src/key.cpp
+@@ -39,6 +39,10 @@
+ #include <istream>
+ #include <iterator>
+ 
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# define strcasecmp _stricmp
++#endif
++
+ const GpgME::Key::Null GpgME::Key::null;
+ 
+ namespace GpgME
+diff --git a/lang/qt/src/dn.cpp b/lang/qt/src/dn.cpp
+index 836158b0..a5420a62 100644
+--- a/lang/qt/src/dn.cpp
++++ b/lang/qt/src/dn.cpp
+@@ -40,6 +40,10 @@
+ 
+ #include <gpg-error.h>
+ 
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# define strcasecmp _stricmp
++#endif
++
+ static const struct {
+     const char *name;
+     const char *oid;
+diff --git a/src/cJSON.c b/src/cJSON.c
+index 1925a04e..724b5d8d 100644
+--- a/src/cJSON.c
++++ b/src/cJSON.c
+@@ -50,6 +50,9 @@
+ 
+ #include "cJSON.h"
+ 
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# define strcasecmp _stricmp
++#endif
+ 
+ /* Only use calloc. */
+ #define CALLOC_ONLY 1
+diff --git a/src/gpgme-tool.c b/src/gpgme-tool.c
+index 22746772..33df6a79 100644
+--- a/src/gpgme-tool.c
++++ b/src/gpgme-tool.c
+@@ -46,6 +46,13 @@
+ #define F_OK 0
+ #endif
+ 
++#if !HAVE_DECL_STRNCASECMP && HAVE_DECL__STRNICMP
++# define strncasecmp _strnicmp
++#endif
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# define strcasecmp _stricmp
++#endif
++
+ /* GCC attributes.  */
+ #if __GNUC__ >= 4
+ # define GT_GCC_A_SENTINEL(a) __attribute__ ((sentinel(a)))
+diff --git a/src/vfs-mount.c b/src/vfs-mount.c
+index c6ee7c97..7d05d9d7 100644
+--- a/src/vfs-mount.c
++++ b/src/vfs-mount.c
+@@ -30,6 +30,10 @@
+ #include "ops.h"
+ #include "util.h"
+ 
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++# define strcasecmp _stricmp
++#endif
++
+ typedef struct
+ {
+   struct _gpgme_op_vfs_mount_result result;
+-- 
+2.37.1
+

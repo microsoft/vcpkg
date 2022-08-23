@@ -1,0 +1,331 @@
+From 30ff4183becac17771200377cc151434089f214a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Mon, 22 Aug 2022 17:39:42 +0200
+Subject: [PATCH] Guard unistd.h includes
+
+---
+ doc/mkdefsinc.c              | 4 +++-
+ lang/cpp/src/callbacks.cpp   | 4 +++-
+ lang/qt/tests/t-config.cpp   | 4 +++-
+ src/assuan-support.c         | 4 +++-
+ src/mbox-util.c              | 4 +++-
+ tests/gpg/t-cancel.c         | 4 +++-
+ tests/gpg/t-decrypt-verify.c | 4 +++-
+ tests/gpg/t-decrypt.c        | 4 +++-
+ tests/gpg/t-edit-sign.c      | 4 +++-
+ tests/gpg/t-edit.c           | 4 +++-
+ tests/gpg/t-encrypt-sign.c   | 4 +++-
+ tests/gpg/t-encrypt-sym.c    | 4 +++-
+ tests/gpg/t-gpgconf.c        | 4 +++-
+ tests/gpg/t-sign.c           | 4 +++-
+ tests/gpg/t-signers.c        | 4 +++-
+ tests/gpg/t-support.h        | 4 +++-
+ tests/gpg/t-thread1.c        | 4 +++-
+ tests/gpgsm/t-support.h      | 4 +++-
+ tests/run-support.h          | 4 +++-
+ tests/run-threaded.c         | 4 +++-
+ 20 files changed, 60 insertions(+), 20 deletions(-)
+
+diff --git a/doc/mkdefsinc.c b/doc/mkdefsinc.c
+index 0f30d933..e985b836 100644
+--- a/doc/mkdefsinc.c
++++ b/doc/mkdefsinc.c
+@@ -22,7 +22,9 @@
+ #include <time.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #define PGM "mkdefsinc"
+ 
+diff --git a/lang/cpp/src/callbacks.cpp b/lang/cpp/src/callbacks.cpp
+index 21c2a813..86266541 100644
+--- a/lang/cpp/src/callbacks.cpp
++++ b/lang/cpp/src/callbacks.cpp
+@@ -40,7 +40,9 @@
+ #include <cassert>
+ #include <cerrno>
+ #include <cstring>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdlib.h>
+ 
+ static inline gpgme_error_t make_err_from_syserror()
+diff --git a/lang/qt/tests/t-config.cpp b/lang/qt/tests/t-config.cpp
+index b84dbfd4..7bb52cb0 100644
+--- a/lang/qt/tests/t-config.cpp
++++ b/lang/qt/tests/t-config.cpp
+@@ -41,7 +41,9 @@
+ #include "cryptoconfig.h"
+ #include "engineinfo.h"
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ using namespace QGpgME;
+ 
+diff --git a/src/assuan-support.c b/src/assuan-support.c
+index 0bc003b9..c034c5e7 100644
+--- a/src/assuan-support.c
++++ b/src/assuan-support.c
+@@ -34,7 +34,9 @@
+ # include <sys/time.h>
+ #endif
+ #ifndef HAVE_W32_SYSTEM
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/wait.h>
+ #endif
+ 
+diff --git a/src/mbox-util.c b/src/mbox-util.c
+index 22816d64..c5313e02 100644
+--- a/src/mbox-util.c
++++ b/src/mbox-util.c
+@@ -29,7 +29,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #include "mbox-util.h"
+diff --git a/tests/gpg/t-cancel.c b/tests/gpg/t-cancel.c
+index d5fb6664..209bcd93 100644
+--- a/tests/gpg/t-cancel.c
++++ b/tests/gpg/t-cancel.c
+@@ -36,7 +36,9 @@
+ # include <sys/time.h>
+ #endif
+ #include <sys/types.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <pthread.h>
+ #ifdef HAVE_POLL_H
+ # include <poll.h>
+diff --git a/tests/gpg/t-decrypt-verify.c b/tests/gpg/t-decrypt-verify.c
+index cbd6cc70..4375d8a6 100644
+--- a/tests/gpg/t-decrypt-verify.c
++++ b/tests/gpg/t-decrypt-verify.c
+@@ -29,7 +29,9 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-decrypt.c b/tests/gpg/t-decrypt.c
+index 408564d7..1d9c04be 100644
+--- a/tests/gpg/t-decrypt.c
++++ b/tests/gpg/t-decrypt.c
+@@ -29,7 +29,9 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-edit-sign.c b/tests/gpg/t-edit-sign.c
+index a3938b92..9c4357bc 100644
+--- a/tests/gpg/t-edit-sign.c
++++ b/tests/gpg/t-edit-sign.c
+@@ -31,7 +31,9 @@
+ #include <string.h>
+ #include <assert.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #include <gpgme.h>
+diff --git a/tests/gpg/t-edit.c b/tests/gpg/t-edit.c
+index b34ee3f7..e4639b00 100644
+--- a/tests/gpg/t-edit.c
++++ b/tests/gpg/t-edit.c
+@@ -30,7 +30,9 @@
+ #include <string.h>
+ #include <assert.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #include <gpgme.h>
+diff --git a/tests/gpg/t-encrypt-sign.c b/tests/gpg/t-encrypt-sign.c
+index dbdae0b6..ee0b488c 100644
+--- a/tests/gpg/t-encrypt-sign.c
++++ b/tests/gpg/t-encrypt-sign.c
+@@ -28,7 +28,9 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-encrypt-sym.c b/tests/gpg/t-encrypt-sym.c
+index 127bac60..f4e62749 100644
+--- a/tests/gpg/t-encrypt-sym.c
++++ b/tests/gpg/t-encrypt-sym.c
+@@ -26,7 +26,9 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <assert.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-gpgconf.c b/tests/gpg/t-gpgconf.c
+index 8e2bb3e1..2ef04a3b 100644
+--- a/tests/gpg/t-gpgconf.c
++++ b/tests/gpg/t-gpgconf.c
+@@ -22,7 +22,9 @@
+ #include <config.h>
+ #endif
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <locale.h>
+diff --git a/tests/gpg/t-sign.c b/tests/gpg/t-sign.c
+index 54138241..9ee66061 100644
+--- a/tests/gpg/t-sign.c
++++ b/tests/gpg/t-sign.c
+@@ -28,7 +28,9 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-signers.c b/tests/gpg/t-signers.c
+index cc8609a9..29746a5a 100644
+--- a/tests/gpg/t-signers.c
++++ b/tests/gpg/t-signers.c
+@@ -28,7 +28,9 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <gpgme.h>
+ 
+diff --git a/tests/gpg/t-support.h b/tests/gpg/t-support.h
+index b3f54e57..c401d4ec 100644
+--- a/tests/gpg/t-support.h
++++ b/tests/gpg/t-support.h
+@@ -19,7 +19,9 @@
+  * SPDX-License-Identifier: LGPL-2.1-or-later
+  */
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <locale.h>
+diff --git a/tests/gpg/t-thread1.c b/tests/gpg/t-thread1.c
+index 57d00502..6d7c63ea 100644
+--- a/tests/gpg/t-thread1.c
++++ b/tests/gpg/t-thread1.c
+@@ -29,7 +29,9 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <pthread.h>
+ 
+ #include <gpgme.h>
+diff --git a/tests/gpgsm/t-support.h b/tests/gpgsm/t-support.h
+index fe65364f..c5ef9fed 100644
+--- a/tests/gpgsm/t-support.h
++++ b/tests/gpgsm/t-support.h
+@@ -19,7 +19,9 @@
+  * SPDX-License-Identifier: LGPL-2.1-or-later
+  */
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <locale.h>
+diff --git a/tests/run-support.h b/tests/run-support.h
+index d7b2987b..dacbfca8 100644
+--- a/tests/run-support.h
++++ b/tests/run-support.h
+@@ -19,7 +19,9 @@
+  * SPDX-License-Identifier: LGPL-2.1-or-later
+  */
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <locale.h>
+diff --git a/tests/run-threaded.c b/tests/run-threaded.c
+index 634b6811..bf63bf8a 100644
+--- a/tests/run-threaded.c
++++ b/tests/run-threaded.c
+@@ -36,7 +36,9 @@
+ #include <sys/types.h>
+ #include <fcntl.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #define PGM "run-threaded"
+ 
+-- 
+2.37.1
+
