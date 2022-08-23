@@ -1194,8 +1194,6 @@ xalan-c:x64-windows-static=fail
 xalan-c:arm64-windows=fail
 xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
-# Crosscompiling libx11 requires additional steps and patches to the Makefiles. 
-libx11:arm64-windows=fail
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
 yara:arm-uwp=fail

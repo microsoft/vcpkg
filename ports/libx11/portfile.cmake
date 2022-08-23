@@ -64,8 +64,6 @@ vcpkg_configure_make(
 if(VCPKG_CROSSCOMPILING)
     file(GLOB FOR_BUILD_FILES "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/*")
     file(COPY ${FOR_BUILD_FILES} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util")
-    #TODO: Test if a simple touch is enough!
-    #file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makekeys${objsuffix}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util")
     if(NOT VCPKG_BUILD_TYPE)
         file(COPY ${FOR_BUILD_FILES} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/util")
     endif()
@@ -88,8 +86,7 @@ if(NOT VCPKG_CROSSCOMPILING)
     string(REGEX MATCH "ac_cv_objext=[^\n]+" objsuffix "${config_contents}")
     string(REPLACE "ac_cv_objext=" "" objsuffix "${objsuffix}")
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-    file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-    #file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
 endif()
