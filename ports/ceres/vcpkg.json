@@ -9,7 +9,7 @@
     "eigen3",
     {
       "name": "glog",
-      "platform": "!uwp"
+      "platform": "!(arm & uwp)"
     },
     {
       "name": "vcpkg-cmake",
