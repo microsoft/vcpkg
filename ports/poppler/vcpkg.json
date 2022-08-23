@@ -70,12 +70,15 @@
       "description": "glib for poppler",
       "dependencies": [
         {
-          "name": "cairo",
+          "name": "glib",
           "default-features": false
         },
         {
-          "name": "glib",
-          "default-features": false
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "cairo"
+          ]
         }
       ]
     },
