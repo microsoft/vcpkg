@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) 
 
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
@@ -9,11 +9,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxtrans
-    REF  c4262efc9688e495261d8b23a12f956ab38e006f #v1.4
-    SHA512 137f0ffcae97f2375e5babbf21d336b67e7bf35f6a74377b14f035cdba66992d21f8d90f3c1dc243f8fd3d27d32af36c59af45443db59908969d0d65598865a2
-    HEAD_REF master # branch name
-    PATCHES ip6.patch #patch name
-            _win32.patch
+    REF  3b5df889f58a99980a35a7b4a18eb4e7d2abeac4 #v1.4
+    SHA512 d1a1ecd8aa07d19a8b4936a37109cecd0c965b859a17ea838835230f9326c1a353feef388052df03173562cbf0f3e3764146c3669b1928698cd55ccc4f92992c
+    HEAD_REF master
+    PATCHES win32.patch
             symbols.patch
 ) 
 
@@ -24,8 +23,8 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 if(NOT WIN32)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/include")
@@ -61,4 +60,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "")
 endif()
