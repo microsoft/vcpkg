@@ -2,7 +2,7 @@
   "default": {
     "3fd": {
       "baseline": "2.6.3",
-      "port-version": 2
+      "port-version": 3
     },
     "7zip": {
       "baseline": "22.0",
@@ -22,11 +22,11 @@
     },
     "ace": {
       "baseline": "7.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 9
+      "port-version": 10
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -1362,7 +1362,7 @@
     },
     "chakracore": {
       "baseline": "2021-04-22",
-      "port-version": 2
+      "port-version": 3
     },
     "charls": {
       "baseline": "2.3.4",
@@ -2046,7 +2046,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 5
+      "port-version": 6
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
@@ -2070,7 +2070,7 @@
     },
     "ecsutil": {
       "baseline": "1.0.7.15",
-      "port-version": 2
+      "port-version": 3
     },
     "edlib": {
       "baseline": "1.2.7",
@@ -2726,7 +2726,7 @@
     },
     "gsoap": {
       "baseline": "2.8.112",
-      "port-version": 1
+      "port-version": 2
     },
     "gst-rtsp-server": {
       "baseline": "1.19.2",
@@ -2870,7 +2870,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 8
+      "port-version": 9
     },
     "hwloc": {
       "baseline": "2.7.1",
@@ -2894,11 +2894,11 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 3
+      "port-version": 4
     },
     "idevicerestore": {
       "baseline": "1.0.12",
-      "port-version": 7
+      "port-version": 8
     },
     "if97": {
       "baseline": "2.1.2",
@@ -3622,7 +3622,7 @@
     },
     "libfabric": {
       "baseline": "1.13.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libffi": {
       "baseline": "3.4.2",
@@ -3678,7 +3678,7 @@
     },
     "libgpg-error": {
       "baseline": "1.42",
-      "port-version": 4
+      "port-version": 5
     },
     "libgpiod": {
       "baseline": "1.6.3",
@@ -3758,11 +3758,11 @@
     },
     "libimobiledevice": {
       "baseline": "1.3.17",
-      "port-version": 0
+      "port-version": 1
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 4
+      "port-version": 5
     },
     "libjpeg-turbo": {
       "baseline": "2.1.4",
@@ -3846,7 +3846,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.75",
-      "port-version": 0
+      "port-version": 1
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
@@ -3942,7 +3942,7 @@
     },
     "libosip2": {
       "baseline": "5.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libosmium": {
       "baseline": "2.18.0",
@@ -4214,7 +4214,7 @@
     },
     "libusb": {
       "baseline": "1.0.26",
-      "port-version": 1
+      "port-version": 2
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
@@ -4222,7 +4222,7 @@
     },
     "libusbmuxd": {
       "baseline": "1.2.219",
-      "port-version": 2
+      "port-version": 3
     },
     "libuuid": {
       "baseline": "1.0.3",
@@ -4246,7 +4246,7 @@
     },
     "libvpx": {
       "baseline": "1.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -4554,7 +4554,7 @@
     },
     "mdnsresponder": {
       "baseline": "878.270.2",
-      "port-version": 2
+      "port-version": 3
     },
     "mdspan": {
       "baseline": "2021-11-03",
@@ -4702,7 +4702,7 @@
     },
     "monkeys-audio": {
       "baseline": "5.70",
-      "port-version": 2
+      "port-version": 3
     },
     "moos-core": {
       "baseline": "10.4.0",
@@ -4734,7 +4734,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 8
+      "port-version": 9
     },
     "mpark-variant": {
       "baseline": "1.4.0",
@@ -4758,7 +4758,7 @@
     },
     "mpir": {
       "baseline": "2022-03-02",
-      "port-version": 1
+      "port-version": 2
     },
     "mpmcqueue": {
       "baseline": "2021-12-01",
@@ -4950,7 +4950,7 @@
     },
     "ngspice": {
       "baseline": "37",
-      "port-version": 0
+      "port-version": 1
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -4974,7 +4974,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 5
+      "port-version": 6
     },
     "nmslib": {
       "baseline": "2.1.1",
@@ -5102,7 +5102,7 @@
     },
     "ocilib": {
       "baseline": "4.7.3",
-      "port-version": 2
+      "port-version": 3
     },
     "octomap": {
       "baseline": "1.9.5",
@@ -5282,7 +5282,7 @@
     },
     "openni2": {
       "baseline": "2.2.0.33",
-      "port-version": 14
+      "port-version": 15
     },
     "openscap": {
       "baseline": "1.3.1",
@@ -5446,7 +5446,7 @@
     },
     "pbc": {
       "baseline": "0.5.14",
-      "port-version": 6
+      "port-version": 7
     },
     "pcapplusplus": {
       "baseline": "22.05",
@@ -5598,7 +5598,7 @@
     },
     "pmdk": {
       "baseline": "1.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pngpp": {
       "baseline": "0.2.10",
@@ -5766,11 +5766,11 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 5
+      "port-version": 6
     },
     "python3": {
       "baseline": "3.10.5",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6382,7 +6382,7 @@
     },
     "rsasynccpp": {
       "baseline": "0.0.7",
-      "port-version": 1
+      "port-version": 2
     },
     "rsig": {
       "baseline": "0.1.1",
@@ -6482,7 +6482,7 @@
     },
     "scintilla": {
       "baseline": "4.4.6",
-      "port-version": 1
+      "port-version": 2
     },
     "sciplot": {
       "baseline": "0.3.1",
@@ -6522,7 +6522,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 17
+      "port-version": 18
     },
     "sdl1-net": {
       "baseline": "1.2.8",
@@ -6626,7 +6626,7 @@
     },
     "shiftmedia-libgcrypt": {
       "baseline": "1.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "shiva": {
       "baseline": "1.0",
@@ -7026,7 +7026,7 @@
     },
     "tbb": {
       "baseline": "2020_U3",
-      "port-version": 8
+      "port-version": 9
     },
     "tcb-span": {
       "baseline": "2021-12-15",
@@ -7262,7 +7262,7 @@
     },
     "tracy": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "transwarp": {
       "baseline": "2.2.2",
@@ -7346,7 +7346,7 @@
     },
     "unicorn": {
       "baseline": "1.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "unicorn-lib": {
       "baseline": "2022-01-24",
@@ -7370,7 +7370,7 @@
     },
     "unrar": {
       "baseline": "6.1.7",
-      "port-version": 0
+      "port-version": 1
     },
     "upb": {
       "baseline": "2022-04-04",
@@ -7394,7 +7394,7 @@
     },
     "usbmuxd": {
       "baseline": "1.2.235",
-      "port-version": 1
+      "port-version": 2
     },
     "usd": {
       "baseline": "20.08",
@@ -7500,9 +7500,13 @@
       "baseline": "2021-11-16",
       "port-version": 2
     },
-    "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2022-02-10",
+    "vcpkg-msbuild": {
+      "baseline": "2022-08-04",
       "port-version": 1
+    },
+    "vcpkg-pkgconfig-get-modules": {
+      "baseline": "2022-08-80",
+      "port-version": 0
     },
     "vcpkg-qmake": {
       "baseline": "2022-05-10",
@@ -7654,7 +7658,7 @@
     },
     "winpcap": {
       "baseline": "4.1.3",
-      "port-version": 8
+      "port-version": 9
     },
     "winpty": {
       "baseline": "0.4.3",
@@ -7898,7 +7902,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.7",
-      "port-version": 2
+      "port-version": 3
     },
     "zeromq": {
       "baseline": "4.3.4",
