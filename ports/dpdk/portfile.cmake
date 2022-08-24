@@ -33,8 +33,11 @@ vcpkg_from_github(
   HEAD_REF main
   PATCHES
       enable-either-static-or-shared-build.patch
+      fix-dependencies.patch
       remove-examples-src-from-datadir.patch
-      stop-building-apps.patch)
+      stop-building-apps.patch
+      no-absolute-driver-path.patch
+)
 
 macro(append_bool_option feature_name option_name)
   if("${feature_name}" IN_LIST FEATURES)
@@ -44,10 +47,12 @@ macro(append_bool_option feature_name option_name)
   endif()
 endmacro()
 
+set(DPDK_OPTIONS "")
 append_bool_option("docs" "enable_docs")
 append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
+string(REPLACE "-Denable_docs=true" "-Denable_docs=false" DPDK_OPTIONS_DEBUG "${DPDK_OPTIONS}")
 
 list(APPEND PYTHON_PACKAGES pyelftools)
 if("docs" IN_LIST FEATURES)
@@ -55,32 +60,31 @@ if("docs" IN_LIST FEATURES)
 endif()
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH} OPTIONS
-                      -Ddisable_drivers=regex/cn9k -Dexamples= ${DPDK_OPTIONS})
+vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -Ddisable_drivers=regex/cn9k
+    -Dexamples=
+  OPTIONS_RELEASE
+    ${DPDK_OPTIONS}
+  OPTIONS_DEBUG
+    ${DPDK_OPTIONS_DEBUG}
+)
 vcpkg_install_meson()
 
-vcpkg_copy_tools(TOOL_NAMES dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py
-                 dpdk-hugepages.py AUTO_CLEAN)
+set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
+if("tests" IN_LIST FEATURES)
+  list(APPEND tools dpdk-test)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_find_acquire_program(PKGCONFIG)
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
-  @ONLY)
+if("docs" IN_LIST FEATURES)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/dpdk")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/dpdk/doc")
+endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(
-  INSTALL "${SOURCE_PATH}/license/README"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config-version.cmake"
-  VERSION ${PORT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/license/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

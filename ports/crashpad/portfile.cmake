@@ -66,23 +66,20 @@ set(OPTIONS_REL "")
 
 if(CMAKE_HOST_WIN32)
     # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
 
     set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\"")
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_DEBUG}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_DEBUG}\" \
+        extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}\" \
+        extra_arflags=\"${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}\"")
 
     set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\"")
+        extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_RELEASE}\" \
+        extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_RELEASE}\" \
+        extra_ldflags=\"${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}\" \
+        extra_arflags=\"${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}\"")
 
     set(DISABLE_WHOLE_PROGRAM_OPTIMIZATION "\
         extra_cflags=\"/GL-\" \
