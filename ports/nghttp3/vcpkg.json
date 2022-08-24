@@ -1,0 +1,12 @@
+{
+  "name": "nghttp3",
+  "version": "0.7.0",
+  "description": "Implementation of RFC 9114 HTTP/3 mapping over QUIC and RFC 9204 QPACK in C",
+  "homepage": "https://github.com/nghttp2/nghttp2",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
