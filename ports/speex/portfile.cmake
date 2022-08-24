@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-vla-check.patch
+        subdirs.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
