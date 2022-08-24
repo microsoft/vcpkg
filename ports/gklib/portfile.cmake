@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         build-fixes.patch
         fix_conflicting_definition.patch
+        fix-mingw.patch
 )
 
 # Delete files that are workarounds for very old copies of msvc.

@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 7ee8c78be6b9d56ab2d8cf4c33e953b7ae4d6f0f #v2022.08.01.00
-    SHA512 31d04af419d481f3dc5d438d6ac4b880fe6825a18688366c923bd16b71cf75231b5618b655f642207c1a48386d152dfde0d539814a916499e1951cf0da38971e
+    REF 46c03de426e26f4c5a92df37ab233c586fbe369a #v2022.08.15.00
+    SHA512 6798878d6892ed79d954fb5754ee102ea04868bce4be9be5dc7c6d6c7ddcbc5573719fe09470d89c385d9e487a75d1a9abc70c29c67698b957fc68b97a8bea32
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -56,8 +56,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
         -DLIBAIO_FOUND=OFF
-        -DLIBURCU_FOUND=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )

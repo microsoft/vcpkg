@@ -68,6 +68,17 @@ func_windres_wrapper ()
       eat=
     else
       case $1 in
+	--define*)
+		eat=1
+		set x "$@" "-d $2"
+		shift
+		;;
+	--include-dir*)
+		eat=1
+		func_file_conv "$2"
+		set x "$@" "-I $file"
+		shift
+		;;
 	-o)
 	  eat=1
 	  func_file_conv "$2"
