@@ -1,0 +1,33 @@
+From a420e06837b5c2546d5084f78de9a8045d0edf1c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 14:27:33 +0200
+Subject: [PATCH] Do not clear the LIBS var
+
+---
+ configure.ac | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index afb69c08..f32c7652 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1053,13 +1053,14 @@ AC_SUBST(DOXYGEN_TAGFILES)
+ #
+ # Search for dlopen
+ #
+-LIBS=""
++#OLD_LIBS=$LIBS
++#LIBS=
+ AC_SEARCH_LIBS(dlopen, c dl)
+ if test "$LIBS" = "-lc"; then
+     LIBS=""
+ fi
+ ld_library="$LIBS"
+-LIBS=""
++#LIBS=$OLD_LIBS
+ all_libraries="$all_libraries $ld_library"
+ 
+ 
+-- 
+2.37.1
+

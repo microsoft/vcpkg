@@ -1,0 +1,30 @@
+From 1ad61529ddba0b1eb181d4e2e2180844c1e6f1bb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 10:37:07 +0200
+Subject: [PATCH] Add ssize_t typdefs on Windows
+
+---
+ configure.ac | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 2f89efd9..fa066dee 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1380,6 +1380,13 @@ AH_BOTTOM([
+ #if !HAVE_DECL_STRNCASECMP && HAVE_DECL__STRNICMP
+ #define strncasecmp _strnicmp
+ #endif
++
++#if defined(_WIN64)
++# include <stdint.h>
++  typedef int64_t ssize_t;
++#elif defined(_WIN32)
++  typedef long ssize_t;
++#endif
+ ])
+ 
+ 
+-- 
+2.37.1
+

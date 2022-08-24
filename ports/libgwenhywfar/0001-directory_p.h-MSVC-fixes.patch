@@ -1,0 +1,25 @@
+From 671577b1618bd72ee74207b90a78ee4db7381174 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 23:55:51 +0200
+Subject: [PATCH] directory_p.h: MSVC fixes
+
+---
+ src/os/windows/directory_p.h | 1 -
+ src/os/windows/fslock.c      | 6 ++++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/os/windows/directory_p.h b/src/os/windows/directory_p.h
+index 15a0a6a5..9feb04b5 100644
+--- a/src/os/windows/directory_p.h
++++ b/src/os/windows/directory_p.h
+@@ -36,7 +36,6 @@
+ 
+ 
+ #include <sys/types.h>
+-#include <dirent.h>
+ #include <windows.h>
+ 
+ #include <gwenhywfar/gwenhywfarapi.h>
+-- 
+2.37.1
+

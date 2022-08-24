@@ -1,0 +1,109 @@
+From 4742d03533d5d289fcb51c672776a14a11ef9ef5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 21:15:52 +0200
+Subject: [PATCH] APIs: support MSVC
+
+---
+ gui/cocoa/cocoa_gui.h | 2 +-
+ gui/cpp/api.h         | 2 +-
+ gui/fox16/api.h       | 2 +-
+ gui/gtk2/gtk2_gui.h   | 2 +-
+ gui/gtk3/gtk3_gui.h   | 2 +-
+ gui/qt4/qt4_gui.hpp   | 2 +-
+ gui/qt5/qt5_gui.hpp   | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/gui/cocoa/cocoa_gui.h b/gui/cocoa/cocoa_gui.h
+index 3b15bc6a..4f99693b 100644
+--- a/gui/cocoa/cocoa_gui.h
++++ b/gui/cocoa/cocoa_gui.h
+@@ -13,7 +13,7 @@
+ 
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_COCOA_GUI
+ #   define COCOAGUI_API __attribute__ ((visibility("default")))
+ # else
+diff --git a/gui/cpp/api.h b/gui/cpp/api.h
+index c0bdba57..77aa7e79 100644
+--- a/gui/cpp/api.h
++++ b/gui/cpp/api.h
+@@ -12,7 +12,7 @@
+ 
+ #include <gwenhywfar/types.h>
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_CPP_GUI
+ /* building Cpp */
+ #  if GWENHYWFAR_SYS_IS_WINDOWS
+diff --git a/gui/fox16/api.h b/gui/fox16/api.h
+index 6e81c2eb..41bc8e0f 100644
+--- a/gui/fox16/api.h
++++ b/gui/fox16/api.h
+@@ -13,7 +13,7 @@
+ #include <gwenhywfar/types.h>
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) || defined _MSC_VER
+ # ifdef BUILDING_FOX16_GUI
+ /* building Fox16 */
+ #  if GWENHYWFAR_SYS_IS_WINDOWS
+diff --git a/gui/gtk2/gtk2_gui.h b/gui/gtk2/gtk2_gui.h
+index 8f939139..55a9c309 100644
+--- a/gui/gtk2/gtk2_gui.h
++++ b/gui/gtk2/gtk2_gui.h
+@@ -14,7 +14,7 @@
+ #include <gtk/gtk.h>
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_GTK2_GUI
+ #   define GTK2GUI_API __attribute__ ((visibility("default")))
+ # else
+diff --git a/gui/gtk3/gtk3_gui.h b/gui/gtk3/gtk3_gui.h
+index 73986b32..77545310 100644
+--- a/gui/gtk3/gtk3_gui.h
++++ b/gui/gtk3/gtk3_gui.h
+@@ -14,7 +14,7 @@
+ #include <gtk/gtk.h>
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_GTK3_GUI
+ #   define GTK3GUI_API __attribute__ ((visibility("default")))
+ # else
+diff --git a/gui/qt4/qt4_gui.hpp b/gui/qt4/qt4_gui.hpp
+index 4f72ff74..5e762d76 100644
+--- a/gui/qt4/qt4_gui.hpp
++++ b/gui/qt4/qt4_gui.hpp
+@@ -12,7 +12,7 @@
+ #define QT4_GUI_H
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_QT4_GUI
+ #   define QT4GUI_API __attribute__ ((visibility("default")))
+ # else
+diff --git a/gui/qt5/qt5_gui.hpp b/gui/qt5/qt5_gui.hpp
+index d2de1493..719b4bc2 100644
+--- a/gui/qt5/qt5_gui.hpp
++++ b/gui/qt5/qt5_gui.hpp
+@@ -14,7 +14,7 @@
+ #define QT5_GUI_H
+ 
+ 
+-#if defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
++#if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
+ # ifdef BUILDING_QT5_GUI
+ #   define QT5GUI_API __attribute__ ((visibility("default")))
+ # else
+-- 
+2.37.1
+

@@ -1,0 +1,91 @@
+From 1423dc6a23a92a8b2eb1e9f91638dc31aaf9adde Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 00:09:22 +0200
+Subject: [PATCH] Guiard sys/time.h include with HAVE_SYS_TIME_H
+
+---
+ src/os/posix/gwentime.c     | 4 +++-
+ src/os/posix/gwentime_p.h   | 4 +++-
+ src/os/posix/inetsocket.c   | 4 +++-
+ src/os/posix/process.c      | 4 +++-
+ src/os/windows/inetsocket.c | 4 +++-
+ 5 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/src/os/posix/gwentime.c b/src/os/posix/gwentime.c
+index 5925c5f7..30b9a174 100644
+--- a/src/os/posix/gwentime.c
++++ b/src/os/posix/gwentime.c
+@@ -34,7 +34,9 @@
+ #include <gwenhywfar/misc.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ #include <time.h>
+ #include <errno.h>
+ #include <string.h>
+diff --git a/src/os/posix/gwentime_p.h b/src/os/posix/gwentime_p.h
+index 617f2604..d06a4c3a 100644
+--- a/src/os/posix/gwentime_p.h
++++ b/src/os/posix/gwentime_p.h
+@@ -31,7 +31,9 @@
+ 
+ #include <gwenhywfar/gwentime.h>
+ 
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ #include <time.h>
+ 
+ 
+diff --git a/src/os/posix/inetsocket.c b/src/os/posix/inetsocket.c
+index 1ab3fd0e..3b26e4ef 100644
+--- a/src/os/posix/inetsocket.c
++++ b/src/os/posix/inetsocket.c
+@@ -40,7 +40,9 @@
+ #include <fcntl.h>
+ #include <string.h>
+ #include <stdlib.h>
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ #include <sys/un.h>
+ 
+ #include <sys/types.h>
+diff --git a/src/os/posix/process.c b/src/os/posix/process.c
+index 4327e9b0..e5e9604f 100644
+--- a/src/os/posix/process.c
++++ b/src/os/posix/process.c
+@@ -39,7 +39,9 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #ifdef HAVE_UNISTD_H
+diff --git a/src/os/windows/inetsocket.c b/src/os/windows/inetsocket.c
+index fadad75d..292e99a9 100644
+--- a/src/os/windows/inetsocket.c
++++ b/src/os/windows/inetsocket.c
+@@ -42,7 +42,9 @@
+ #include <fcntl.h>
+ #include <string.h>
+ #include <stdlib.h>
+-#include <sys/time.h>
++#ifdef HAVE_SYS_TIME_H
++# include <sys/time.h>
++#endif
+ 
+ 
+ 
+-- 
+2.37.1
+

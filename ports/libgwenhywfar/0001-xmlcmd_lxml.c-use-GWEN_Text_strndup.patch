@@ -1,0 +1,33 @@
+From ebdbbdfc88f9bc6f155f70ffd7d3bb37442be805 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 23:54:01 +0200
+Subject: [PATCH] xmlcmd_lxml.c: use GWEN_Text_strndup
+
+---
+ src/xmlcmd/xmlcmd_lxml.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/xmlcmd/xmlcmd_lxml.c b/src/xmlcmd/xmlcmd_lxml.c
+index 6d0d5888..9b8e3b6b 100644
+--- a/src/xmlcmd/xmlcmd_lxml.c
++++ b/src/xmlcmd/xmlcmd_lxml.c
+@@ -32,6 +32,7 @@
+ #include "xmlcmd_lxml_p.h"
+ 
+ #include <gwenhywfar/debug.h>
++#include <gwenhywfar/text.h>
+ 
+ 
+ #include <ctype.h>
+@@ -625,7 +626,7 @@ GWEN_XMLCMD_LXML_TWOSTRINGS *_twoStrings_fromString(const char *source, uint8_t
+     int idx;
+ 
+     idx=s-source;
+-    ts->string1=strndup(source, idx);
++    ts->string1=GWEN_Text_strndup(source, idx);
+     ts->ownStringsBitmap|=1;
+     s++;
+     if (s &&*s)
+-- 
+2.37.1
+

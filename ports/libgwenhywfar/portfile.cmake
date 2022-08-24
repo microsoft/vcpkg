@@ -17,8 +17,29 @@ vcpkg_extract_source_archive_ex(
         0001-Add-support-for-static-builds.patch
         0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch
         0001-Fix-variadic-marco-usage.patch                     # https://www.aquamaniac.de/rdm/issues/267
-        disable_docs.patch
         disable_gwenbuild_tool.patch
+        0001-Use-OS-agnostic-string-comparison-functions.patch
+        0001-Guard-unistd.h-includes.patch
+        0001-sycio_tls-add-missing-windows.h-include.patch
+        0001-Guiard-sys-time.h-include-with-HAVE_SYS_TIME_H.patch
+        0001-Add-ssize_t-typdefs-on-Windows.patch
+        0001-MSVC-add-missing-mode_t-typedefs.patch
+        0001-MSVC-add-missing-permission-bits.patch
+        0001-directory_p.h-MSVC-fixes.patch
+        0001-pathmanager.c-add-missing-winreg.h-include.patch
+        0001-xmlcmd_lxml.c-use-GWEN_Text_strndup.patch
+        0001-Do-not-clear-the-LIBS-var.patch
+        0001-Disable-testlib.patch
+        0001-ohbci.c-add-missing-flags.patch
+        0001-APIs-support-MSVC.patch
+        0001-Disable-docs.patch
+        0001-Disable-tests.patch
+)
+
+file(REMOVE "${SOURCE_PATH}/m4/lib-ld.m4"
+            "${SOURCE_PATH}/m4/lib-link.m4"
+            "${SOURCE_PATH}/m4/lib-prefix.m4"
+            "${SOURCE_PATH}/m4/libtool.m4"
 )
 
 if ("libxml2" IN_LIST FEATURES)
@@ -34,9 +55,12 @@ endif()
 list(JOIN FEATURES_GUI " " GUIS)
 
 if(VCPKG_TARGET_IS_OSX)
-    set(LDFLAGS "-framework CoreFoundation -framework Security")
-else()
-    set(LDFLAGS "")
+    list(APPEND VCPKG_LINKER_FLAGS "-framework CoreFoundation -framework Security")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND windows_defs "-D__STDC__=1 -D_CRT_INTERNAL_NONSTDC_NAMES -D_CRT_DECLARE_NONSTDC_NAMES")
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_C_COMPILER=clang-cl.exe" "-DCMAKE_CXX_COMPILER=clang-cl.exe" "-DCMAKE_LINKER=lld-link.exe" "-DCMAKE_AR=lib.exe")
+    string(APPEND VCPKG_C_FLAGS " ${windows_defs} -Xcompiler -fuse-ld=lld -std:c11")
+    string(APPEND VCPKG_CXX_FLAGS " ${windows_defs} -Xcompiler -fuse-ld=lld")
 endif()
 
 # AM_GNU_GETTEXT is required
@@ -55,7 +79,6 @@ vcpkg_configure_make(
         --with-qt5-moc="${CURRENT_INSTALLED_DIR}/tools/qt5/bin/moc"
         --with-qt5-uic="${CURRENT_INSTALLED_DIR}/tools/qt5/bin/uic"
         ${WITH_LIBXML2_CODE}
-        "LDFLAGS=${LDFLAGS}"
 )
 
 vcpkg_install_make()

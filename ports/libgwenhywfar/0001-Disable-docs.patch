@@ -1,5 +1,15 @@
+From 5f53c1995df1dd874f6e48cafccee696a8791be4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 21:41:49 +0200
+Subject: [PATCH] Disable docs
+
+---
+ Makefile.am  | 4 ++--
+ configure.ac | 6 ------
+ 2 files changed, 2 insertions(+), 8 deletions(-)
+
 diff --git a/Makefile.am b/Makefile.am
-index 0e2d8e2..e2920b3 100644
+index d391d137..9476fabd 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -1,5 +1,5 @@
@@ -7,14 +17,14 @@ index 0e2d8e2..e2920b3 100644
 -DIST_SUBDIRS=admin data m4 src plugins tools gui test doc po checks
 +SUBDIRS=data m4 src plugins tools gui test po checks
 +DIST_SUBDIRS=data m4 src plugins tools gui test po checks
-
-
+ 
+ 
  AUTOMAKE_OPTIONS = foreign
 diff --git a/configure.ac b/configure.ac
-index bd0a1bf..92d3c79 100644
+index f32c7652..ad5e4a33 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1343,7 +1343,6 @@ AC_MSG_RESULT($plugins)
+@@ -1424,7 +1424,6 @@ AH_BOTTOM([
  #
  AC_CONFIG_FILES([Doxyfile
                   Makefile
@@ -22,7 +32,7 @@ index bd0a1bf..92d3c79 100644
                   m4/Makefile
                   po/Makefile
                   gwenhywfar-config.in
-@@ -1354,11 +1353,6 @@ AC_CONFIG_FILES([Doxyfile
+@@ -1435,11 +1434,6 @@ AC_CONFIG_FILES([Doxyfile
                   gwenhywfar.iss
                   checks/Makefile
                   data/Makefile
@@ -30,7 +40,10 @@ index bd0a1bf..92d3c79 100644
 -                 doc/dialog/Makefile
 -                 doc/dialog/images/Makefile
 -                 doc/inherit/Makefile
--                doc/plugindescr.xsd
+-		 doc/plugindescr.xsd
                   src/Makefile
                   src/types.h
                   src/ressource.rc
+-- 
+2.37.1
+

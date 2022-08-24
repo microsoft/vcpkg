@@ -1,0 +1,27 @@
+From 4d274189174967acac61c234c16c3e2f34ac45ce Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 12:22:25 +0200
+Subject: [PATCH]  MSVC: add missing mode_t typedefs
+
+---
+ configure.ac | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index fa066dee..c81bd87e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1387,6 +1387,10 @@ AH_BOTTOM([
+ #elif defined(_WIN32)
+   typedef long ssize_t;
+ #endif
++
++#ifdef _MSC_VER
++  typedef unsigned short mode_t;
++#endif
+ ])
+ 
+ 
+-- 
+2.37.1
+

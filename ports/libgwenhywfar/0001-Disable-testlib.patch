@@ -1,0 +1,52 @@
+From 4dabf1c3911f128da71d8ac661466b77ded673f9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 14:41:03 +0200
+Subject: [PATCH] Disable testlib
+
+---
+ src/Makefile.am | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index c845591f..5525ddec 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -10,8 +10,8 @@ AM_CPPFLAGS= -I$(gwenhywfar_symlinkdir) \
+ 
+ AM_CFLAGS=$(visibility_cflags) @WERROR@
+ 
+-SUBDIRS = base sio os parser crypt3 crypttoken gui cryptmsg html sar xmlcmd test_framework
+-DIST_SUBDIRS=base sio os parser crypt3 crypttoken gui cryptmsg html sar xmlcmd test_framework
++SUBDIRS = base sio os parser crypt3 crypttoken gui cryptmsg html sar xmlcmd
++DIST_SUBDIRS=base sio os parser crypt3 crypttoken gui cryptmsg html sar xmlcmd
+ 
+ DEFS += \
+   -DBUILDING_GWENHYWFAR \
+@@ -63,23 +63,17 @@ libgwenhywfar_la_LIBADD=\
+   html/libgwenhtml.la \
+   gui/libgui.la \
+   sar/libsar.la \
+   xmlcmd/libxmlcmd.la \
+-  test_framework/libtestframework.la $(i18n_libs) $(PTHREAD_CFLAGS) $(PTHREAD_LIBS) $(ICONV_LIBS) $(LIBGCRYPT_LIBS) $(LIBGNUTLS_LIBS) $(LIBXML_LIBS) $(all_libraries)
++  $(i18n_libs) $(PTHREAD_CFLAGS) $(PTHREAD_LIBS) $(ICONV_LIBS) $(LIBGCRYPT_LIBS) $(LIBGNUTLS_LIBS) $(LIBXML_LIBS) $(all_libraries)
+ 
+ libgwenhywfar_la_CFLAGS=$(PTHREAD_CFLAGS)
+ 
+-noinst_PROGRAMS=testlib
+-testlib_SOURCES=testlib.c
+-testlib_LDADD=libgwenhywfar.la
+-
+ libgwenhywfar_la_LDFLAGS= \
+   -no-undefined $(STRIPALL) $(ressource_ldflags) \
+   -version-info \
+    $(GWENHYWFAR_SO_CURRENT):$(GWENHYWFAR_SO_REVISION):$(GWENHYWFAR_SO_AGE)
+ 
+ 
+-TESTS = testlib
+-
+ sources:
+ 	for f in $(libgwenhywfar_la_SOURCES); do \
+ 	  echo $(subdir)/$$f >>$(top_srcdir)/i18nsources; \
+-- 
+2.37.1
+

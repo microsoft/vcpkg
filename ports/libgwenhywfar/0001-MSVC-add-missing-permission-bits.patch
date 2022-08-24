@@ -1,0 +1,52 @@
+From 0e2aecc3fa2ddc94fde09f80ed43c69900489dac Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 12:25:45 +0200
+Subject: [PATCH] MSVC: add missing permission bits
+
+---
+ configure.ac | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index c81bd87e..afb69c08 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1391,6 +1391,35 @@ AH_BOTTOM([
+ #ifdef _MSC_VER
+   typedef unsigned short mode_t;
+ #endif
++
++#ifndef S_IRUSR
++#define S_IRUSR S_IREAD  /* read, user */
++#define S_IWUSR S_IWRITE /* write, user */
++#define S_IXUSR 0        /* execute, user */
++#define S_IRGRP 0 /* read, group */
++#define S_IWGRP 0 /* write, group */
++#define S_IXGRP 0 /* execute, group */
++#define S_IROTH 0 /* read, others */
++#define S_IWOTH 0 /* write, others */
++#define S_IXOTH 0 /* execute, others */
++#define S_IRWXU 0
++#define S_IRWXG 0
++#define S_IRWXO 0
++#endif
++
++// Windows does not define the S_ISREG and S_ISDIR macros in stat.h, so we do.
++// We have to define _CRT_INTERNAL_NONSTDC_NAMES 1 before #including sys/stat.h
++// in order for Microsoft's stat.h to define names like S_IFMT, S_IFREG, and S_IFDIR,
++// rather than just defining  _S_IFMT, _S_IFREG, and _S_IFDIR as it normally does.
++#define _CRT_INTERNAL_NONSTDC_NAMES 1
++#include <sys/stat.h>
++#if !defined(S_ISREG) && defined(S_IFMT) && defined(S_IFREG)
++# define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
++#endif
++#if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
++# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
++#endif
++
+ ])
+ 
+ 
+-- 
+2.37.1
+

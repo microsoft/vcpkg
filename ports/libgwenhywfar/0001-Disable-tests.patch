@@ -1,0 +1,37 @@
+From c9435033b8359b9f1c85c80b6982619618841b97 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 21:42:20 +0200
+Subject: [PATCH] Disable tests
+
+---
+ Makefile.am  | 4 ++--
+ configure.ac | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 9476fabd..985dff2f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,5 @@
+-SUBDIRS=data m4 src plugins tools gui test po checks
+-DIST_SUBDIRS=data m4 src plugins tools gui test po checks
++SUBDIRS=data m4 src plugins tools gui po checks
++DIST_SUBDIRS=data m4 src plugins tools gui po checks
+ 
+ 
+ AUTOMAKE_OPTIONS = foreign
+diff --git a/configure.ac b/configure.ac
+index ad5e4a33..b7025e7d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1490,7 +1490,6 @@ AC_CONFIG_FILES([Doxyfile
+                  tools/gwenbuild/builders/windows/Makefile
+                  tools/gwenbuild/types/Makefile
+                  tools/gwenbuild/templates/Makefile
+-                 test/Makefile
+                  gui/Makefile
+                  gui/cpp/Makefile
+                  gui/cpp/gwengui-cpp-config.cmake
+-- 
+2.37.1
+

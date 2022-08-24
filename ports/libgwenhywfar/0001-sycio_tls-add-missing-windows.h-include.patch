@@ -1,0 +1,27 @@
+From 78c42484e94972c30737b105f96eeef50a292a46 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 23:25:26 +0200
+Subject: [PATCH] sycio_tls: add missing windows.h include
+
+---
+ src/sio/syncio_tls.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/sio/syncio_tls.c b/src/sio/syncio_tls.c
+index d5715c79..d8b99e81 100644
+--- a/src/sio/syncio_tls.c
++++ b/src/sio/syncio_tls.c
+@@ -26,6 +26,10 @@
+ # include <config.h>
+ #endif
+ 
++#ifdef _WIN32
++# include <windows.h>
++#endif
++
+ #define DISABLE_DEBUGLOG
+ 
+ /*#define GWEN_TLS_DEBUG*/
+-- 
+2.37.1
+

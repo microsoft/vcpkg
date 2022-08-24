@@ -1,0 +1,238 @@
+From cb159efaff9aac71919efdbc11b3c40ba6e13c09 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 7 Oct 2021 18:48:44 +0200
+Subject: [PATCH] Use OS-agnostic string comparison functions
+
+---
+ configure.ac             | 23 +++++++++++++++++++++++
+ src/base/debug.c         |  3 ---
+ src/base/error.c         |  3 ---
+ src/base/i18n.c          |  3 ---
+ src/base/logger.c        |  3 ---
+ src/base/plugin.c        |  3 ---
+ src/base/plugindescr.c   |  3 ---
+ src/base/stringlist.c    |  3 ---
+ src/base/stringlist2.c   |  3 ---
+ src/gui/dialog.c         |  1 -
+ src/os/posix/fslock.c    |  1 -
+ src/parser/url.c         |  1 -
+ src/sio/ssl_cert_descr.c |  1 -
+ tools/typemaker/code_c.c |  1 -
+ 14 files changed, 23 insertions(+), 29 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index da063b31..2f89efd9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -273,6 +273,16 @@ AC_CHECK_DECLS([sigprocmask], [], [], [
+   #  include <signal.h>
+   #endif
+ ])
++AC_CHECK_DECLS([strcasecmp,strncasecmp],[],[],[#include <strings.h>])
++AC_CHECK_DECLS([_stricmp,_strnicmp],[],[],[#include <string.h>])
++if test "x$ac_cv_have_decl_strcasecmp" = xno -a \
++  "x$ac_cv_have_decl__stricmp" = xno; then
++AC_MSG_ERROR([No strcasecmp implementation found])
++fi
++if test "x$ac_cv_have_decl_strncasecmp" = xno -a \
++  "x$ac_cv_have_decl__strnicmp" = xno; then
++AC_MSG_ERROR([No strncasecmp implementation found])
++fi
+ 
+ 
+ ###-------------------------------------------------------------------------
+@@ -1358,6 +1368,19 @@ AC_SUBST(gwenhywfar_plugins_cfgmgr_dirs)
+ AC_SUBST(gwenhywfar_plugins_cfgmgr_libs)
+ AC_MSG_RESULT($plugins)
+ 
++AH_BOTTOM([
++#if HAVE_DECL_STRCASECMP || HAVE_DECL_STRNCASECMP
++#include <strings.h>
++#endif
++
++#if !HAVE_DECL_STRCASECMP && HAVE_DECL__STRICMP
++#define strcasecmp _stricmp
++#endif
++
++#if !HAVE_DECL_STRNCASECMP && HAVE_DECL__STRNICMP
++#define strncasecmp _strnicmp
++#endif
++])
+ 
+ 
+ ###-------------------------------------------------------------------------
+diff --git a/src/base/debug.c b/src/base/debug.c
+index b9286272..a7646ed0 100644
+--- a/src/base/debug.c
++++ b/src/base/debug.c
+@@ -35,9 +35,6 @@
+ #include <stdarg.h>
+ #include <assert.h>
+ #include <stdio.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ #include <gwenhywfar/misc.h>
+ 
+ 
+diff --git a/src/base/error.c b/src/base/error.c
+index c2c51116..61b6c15a 100644
+--- a/src/base/error.c
++++ b/src/base/error.c
+@@ -47,9 +47,6 @@
+ #include <stdio.h>
+ #include <assert.h>
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ 
+ #include "gwenhywfar/debug.h"
+ #include "gwenhywfar/misc.h"
+diff --git a/src/base/i18n.c b/src/base/i18n.c
+index 29fcc3d5..31d27e79 100644
+--- a/src/base/i18n.c
++++ b/src/base/i18n.c
+@@ -40,9 +40,6 @@
+ #include <string.h>
+ #include <errno.h>
+ 
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ 
+ #ifdef HAVE_I18N
+ # include <libintl.h>
+diff --git a/src/base/logger.c b/src/base/logger.c
+index 082f3349..ef1715cc 100644
+--- a/src/base/logger.c
++++ b/src/base/logger.c
+@@ -41,9 +41,6 @@
+ # include <syslog.h>
+ #endif
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ #ifdef HAVE_TIME_H
+ # include <time.h>
+ #endif
+diff --git a/src/base/plugin.c b/src/base/plugin.c
+index 7d9d1f31..8b3ff784 100644
+--- a/src/base/plugin.c
++++ b/src/base/plugin.c
+@@ -43,9 +43,6 @@
+ #endif
+ #include <errno.h>
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ #include <ctype.h>
+ 
+ #ifdef OS_WIN32
+diff --git a/src/base/plugindescr.c b/src/base/plugindescr.c
+index 3dd399e5..170d65be 100644
+--- a/src/base/plugindescr.c
++++ b/src/base/plugindescr.c
+@@ -43,9 +43,6 @@
+ #endif
+ #include <errno.h>
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ 
+ 
+ 
+diff --git a/src/base/stringlist.c b/src/base/stringlist.c
+index d125abb6..5e5b05c3 100644
+--- a/src/base/stringlist.c
++++ b/src/base/stringlist.c
+@@ -41,9 +41,6 @@
+ #include <assert.h>
+ #include <ctype.h>
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ 
+ 
+ 
+diff --git a/src/base/stringlist2.c b/src/base/stringlist2.c
+index bba14558..2e414c42 100644
+--- a/src/base/stringlist2.c
++++ b/src/base/stringlist2.c
+@@ -37,9 +37,6 @@
+ #include <stdlib.h>
+ #include <assert.h>
+ #include <string.h>
+-#ifdef HAVE_STRINGS_H
+-# include <strings.h>
+-#endif
+ 
+ 
+ GWEN_STRINGLIST2 *GWEN_StringList2_new(void)
+diff --git a/src/gui/dialog.c b/src/gui/dialog.c
+index e15b6b89..1584df6d 100644
+--- a/src/gui/dialog.c
++++ b/src/gui/dialog.c
+@@ -41,7 +41,6 @@
+ 
+ #include <assert.h>
+ #include <ctype.h>
+-#include <strings.h>
+ 
+ 
+ GWEN_INHERIT_FUNCTIONS(GWEN_DIALOG)
+diff --git a/src/os/posix/fslock.c b/src/os/posix/fslock.c
+index e6508035..46328561 100644
+--- a/src/os/posix/fslock.c
++++ b/src/os/posix/fslock.c
+@@ -45,7 +45,6 @@
+ #include <unistd.h>
+ #include <errno.h>
+ #include <string.h>
+-#include <strings.h>
+ 
+ 
+ #define GWEN_FSLOCK_TIMEOUT_ASK (7000.0)   /* about 7 secs */
+diff --git a/src/parser/url.c b/src/parser/url.c
+index aadba92a..15398efc 100644
+--- a/src/parser/url.c
++++ b/src/parser/url.c
+@@ -11,7 +11,6 @@
+ #include <gwenhywfar/debug.h>
+ #include <assert.h>
+ #include <stdlib.h>
+-#include <strings.h>
+ 
+ #include <gwenhywfar/types.h>
+ #include <gwenhywfar/urlfns.h>
+diff --git a/src/sio/ssl_cert_descr.c b/src/sio/ssl_cert_descr.c
+index 3f4733e1..b5521b12 100644
+--- a/src/sio/ssl_cert_descr.c
++++ b/src/sio/ssl_cert_descr.c
+@@ -11,7 +11,6 @@
+ #include <gwenhywfar/debug.h>
+ #include <assert.h>
+ #include <stdlib.h>
+-#include <strings.h>
+ 
+ #include <gwenhywfar/gwentime.h>
+ #include <gwenhywfar/ssl_cert_flags.h>
+diff --git a/tools/typemaker/code_c.c b/tools/typemaker/code_c.c
+index e2e88eb9..2c4d3edd 100644
+--- a/tools/typemaker/code_c.c
++++ b/tools/typemaker/code_c.c
+@@ -2859,7 +2859,6 @@ int write_code_file_c(ARGUMENTS *args, GWEN_XMLNODE *node)
+   GWEN_SyncIo_WriteLine(sio, "#include <gwenhywfar/debug.h>");
+   GWEN_SyncIo_WriteLine(sio, "#include <assert.h>");
+   GWEN_SyncIo_WriteLine(sio, "#include <stdlib.h>");
+-  GWEN_SyncIo_WriteLine(sio, "#include <strings.h>");
+   GWEN_SyncIo_WriteLine(sio, "");
+ 
+   /* write headers */
+-- 
+2.37.1
+

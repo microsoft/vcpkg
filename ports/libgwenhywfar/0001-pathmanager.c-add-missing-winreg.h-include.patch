@@ -1,0 +1,27 @@
+From 894ce0c20719c372039c639547076c0a5ead7e9f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 24 Aug 2022 23:50:44 +0200
+Subject: [PATCH] pathmanager.c: add missing winreg.h include
+
+---
+ src/base/pathmanager.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/base/pathmanager.c b/src/base/pathmanager.c
+index b393c107..e5a7ffa4 100644
+--- a/src/base/pathmanager.c
++++ b/src/base/pathmanager.c
+@@ -47,6 +47,9 @@
+ #ifdef OS_WIN32
+ # include <windows.h>
+ #endif
++#if defined(_WIN32)
++#include <winreg.h>
++#endif
+
+
+ static GWEN_DB_NODE *gwen__paths=0;
+
+-- 
+2.37.1
+

@@ -1,0 +1,30 @@
+From eff9e859dff3beb7db5c3c69861fdb005d98d36b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 25 Aug 2022 20:51:25 +0200
+Subject: [PATCH] ohbci.c: add missing flags
+
+---
+ plugins/ct/ohbci/ohbci.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/plugins/ct/ohbci/ohbci.c b/plugins/ct/ohbci/ohbci.c
+index 8b790523..f6385083 100644
+--- a/plugins/ct/ohbci/ohbci.c
++++ b/plugins/ct/ohbci/ohbci.c
+@@ -46,7 +46,12 @@
+ # define ftruncate chsize
+ #endif
+ 
+-
++#ifdef _WIN32
++#define R_OK 4
++#define W_OK 2
++#define X_OK R_OK
++#define F_OK 0
++#endif
+ 
+ 
+ GWEN_INHERIT(GWEN_CRYPT_TOKEN, GWEN_CRYPT_TOKEN_OHBCI)
+-- 
+2.37.1
+

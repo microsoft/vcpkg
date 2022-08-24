@@ -1,0 +1,759 @@
+From 8207a1b1d89b1e4be8e054a1716aac34a0f53bc2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 23 Aug 2022 01:59:19 +0200
+Subject: [PATCH] Guard unistd.h includes
+
+---
+ checks/syncio_http.c                        | 4 +++-
+ checks/syncio_https.c                       | 4 +++-
+ checks/syncio_tls.c                         | 4 +++-
+ doc/dialog/testdialog.c                     | 4 +++-
+ gui/cocoa/libtest.m                         | 4 +++-
+ gui/fox16/libtest.cpp                       | 4 +++-
+ gui/gtk2/libtest.c                          | 4 +++-
+ gui/gtk3/libtest.c                          | 4 +++-
+ gui/qt4/libtest.cpp                         | 4 +++-
+ gui/qt5/libtest.cpp                         | 4 +++-
+ gui/testdialogs/dlg_test.c                  | 4 +++-
+ gui/testdialogs/dlg_test2.c                 | 4 +++-
+ plugins/configmgr/dir/cfgdir.c              | 4 +++-
+ plugins/ct/ohbci/ohbci.c                    | 4 +++-
+ src/base/pathmanager.c                      | 4 +++-
+ src/binreloc.c                              | 4 +++-
+ src/crypttoken/ctfile.c                     | 4 +++-
+ src/gui/cgui.c                              | 4 +++-
+ src/gui/cprogress.c                         | 4 +++-
+ src/html/libtest.c                          | 4 +++-
+ src/os/posix/directory.c                    | 4 +++-
+ src/os/posix/fslock.c                       | 4 +++-
+ src/os/posix/inetsocket.c                   | 4 +++-
+ src/os/posix/process.c                      | 4 +++-
+ src/os/posix/syncio_file.c                  | 4 +++-
+ src/os/process_all.c                        | 4 +++-
+ src/os/windows/inetsocket.c                 | 4 +++-
+ src/sar/sar.c                               | 4 +++-
+ src/sio/httpsession.c                       | 4 +++-
+ test/testthread.c                           | 4 +++-
+ tools/gsa/add.c                             | 4 +++-
+ tools/gwenbuild/buildctx/buildctx.c         | 4 +++-
+ tools/gwenbuild/buildctx/buildctx_bdeps.c   | 4 +++-
+ tools/gwenbuild/buildctx/buildctx_depfile.c | 4 +++-
+ tools/gwenbuild/buildctx/buildctx_run.c     | 4 +++-
+ tools/gwenbuild/buildctx/buildctx_xml.c     | 4 +++-
+ tools/gwenbuild/c_clean.c                   | 4 +++-
+ tools/gwenbuild/c_dist.c                    | 4 +++-
+ tools/gwenbuild/c_setup.c                   | 4 +++-
+ tools/gwenbuild/main.c                      | 4 +++-
+ tools/gwenbuild/parser/p_dependencies.c     | 4 +++-
+ tools/gwenbuild/parser/p_project.c          | 4 +++-
+ tools/gwenbuild/parser/parser.c             | 8 ++++++--
+ tools/gwenbuild/tools/trycompile.c          | 4 +++-
+ tools/gwenbuild/tools/trylink.c             | 4 +++-
+ tools/gwenbuild/types/gwenbuild.c           | 4 +++-
+ tools/gwenbuild/utils.c                     | 4 +++-
+ 47 files changed, 144 insertions(+), 48 deletions(-)
+
+diff --git a/checks/syncio_http.c b/checks/syncio_http.c
+index 3ad79e1f..e30a7dbb 100644
+--- a/checks/syncio_http.c
++++ b/checks/syncio_http.c
+@@ -8,7 +8,9 @@
+ #include <gwenhywfar/syncio_buffered.h>
+ #include <gwenhywfar/buffer.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+diff --git a/checks/syncio_https.c b/checks/syncio_https.c
+index 827264b6..460b8795 100644
+--- a/checks/syncio_https.c
++++ b/checks/syncio_https.c
+@@ -9,7 +9,9 @@
+ #include <gwenhywfar/syncio_buffered.h>
+ #include <gwenhywfar/buffer.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+diff --git a/checks/syncio_tls.c b/checks/syncio_tls.c
+index 6ee1dabf..d3531462 100644
+--- a/checks/syncio_tls.c
++++ b/checks/syncio_tls.c
+@@ -7,7 +7,9 @@
+ #include <gwenhywfar/syncio_tls.h>
+ #include <gwenhywfar/buffer.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+diff --git a/doc/dialog/testdialog.c b/doc/dialog/testdialog.c
+index 3daa8563..43b782a2 100644
+--- a/doc/dialog/testdialog.c
++++ b/doc/dialog/testdialog.c
+@@ -17,7 +17,9 @@
+ #include <gwenhywfar/debug.h>
+ 
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/gui/cocoa/libtest.m b/gui/cocoa/libtest.m
+index 21ecda44..a3d96640 100644
+--- a/gui/cocoa/libtest.m
++++ b/gui/cocoa/libtest.m
+@@ -15,7 +15,9 @@
+ #include <gwenhywfar/debug.h>
+ 
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #import <Foundation/Foundation.h>
+ #import <AppKit/AppKit.h>
+diff --git a/gui/fox16/libtest.cpp b/gui/fox16/libtest.cpp
+index 1e4ef7fc..a201f955 100644
+--- a/gui/fox16/libtest.cpp
++++ b/gui/fox16/libtest.cpp
+@@ -24,7 +24,9 @@
+ #include <gwenhywfar/debug.h>
+ #include <gwenhywfar/passwdstore.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/gui/gtk2/libtest.c b/gui/gtk2/libtest.c
+index 8283249a..020a17f0 100644
+--- a/gui/gtk2/libtest.c
++++ b/gui/gtk2/libtest.c
+@@ -19,7 +19,9 @@
+ #include <gwenhywfar/dialog.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/gui/gtk3/libtest.c b/gui/gtk3/libtest.c
+index be0e90a5..4ed7da49 100644
+--- a/gui/gtk3/libtest.c
++++ b/gui/gtk3/libtest.c
+@@ -19,7 +19,9 @@
+ #include <gwenhywfar/dialog.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <locale.h>
+ 
+ 
+diff --git a/gui/qt4/libtest.cpp b/gui/qt4/libtest.cpp
+index 84a7301e..4d385ccd 100644
+--- a/gui/qt4/libtest.cpp
++++ b/gui/qt4/libtest.cpp
+@@ -11,7 +11,9 @@
+ 
+ #include <qapplication.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/gui/qt5/libtest.cpp b/gui/qt5/libtest.cpp
+index b0db5675..b3d808fe 100644
+--- a/gui/qt5/libtest.cpp
++++ b/gui/qt5/libtest.cpp
+@@ -11,7 +11,9 @@
+ 
+ #include <QApplication>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ int test1(int argc, char **argv) {
+   QApplication a(argc, argv);
+diff --git a/gui/testdialogs/dlg_test.c b/gui/testdialogs/dlg_test.c
+index 68ea0f2c..91c8dcb8 100644
+--- a/gui/testdialogs/dlg_test.c
++++ b/gui/testdialogs/dlg_test.c
+@@ -18,7 +18,9 @@
+ #include <gwenhywfar/pathmanager.h>
+ 
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/gui/testdialogs/dlg_test2.c b/gui/testdialogs/dlg_test2.c
+index b6da7769..fdaef9a2 100644
+--- a/gui/testdialogs/dlg_test2.c
++++ b/gui/testdialogs/dlg_test2.c
+@@ -18,7 +18,9 @@
+ #include <gwenhywfar/pathmanager.h>
+ 
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/plugins/configmgr/dir/cfgdir.c b/plugins/configmgr/dir/cfgdir.c
+index 1a4d9c39..0b079a77 100644
+--- a/plugins/configmgr/dir/cfgdir.c
++++ b/plugins/configmgr/dir/cfgdir.c
+@@ -35,7 +35,9 @@
+ #include <gwenhywfar/directory.h>
+ #include <gwenhywfar/urlfns.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <string.h>
+ #include <ctype.h>
+diff --git a/plugins/ct/ohbci/ohbci.c b/plugins/ct/ohbci/ohbci.c
+index a4b15701..8b790523 100644
+--- a/plugins/ct/ohbci/ohbci.c
++++ b/plugins/ct/ohbci/ohbci.c
+@@ -37,7 +37,9 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #ifdef OS_WIN32
+diff --git a/src/base/pathmanager.c b/src/base/pathmanager.c
+index 9b9192e5..b393c107 100644
+--- a/src/base/pathmanager.c
++++ b/src/base/pathmanager.c
+@@ -39,7 +39,9 @@
+ #include <stdio.h>
+ #include <assert.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #ifdef OS_WIN32
+diff --git a/src/binreloc.c b/src/binreloc.c
+index 18ef9563..0efa6175 100644
+--- a/src/binreloc.c
++++ b/src/binreloc.c
+@@ -21,7 +21,9 @@
+ #ifdef ENABLE_BINRELOC
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #endif /* ENABLE_BINRELOC */
+ #include <stdio.h>
+ #include <stdlib.h>
+diff --git a/src/crypttoken/ctfile.c b/src/crypttoken/ctfile.c
+index 097b5116..a309df55 100644
+--- a/src/crypttoken/ctfile.c
++++ b/src/crypttoken/ctfile.c
+@@ -29,7 +29,9 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdlib.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/src/gui/cgui.c b/src/gui/cgui.c
+index 475a9f43..cdd5744f 100644
+--- a/src/gui/cgui.c
++++ b/src/gui/cgui.c
+@@ -49,7 +49,9 @@
+ #ifdef HAVE_TERMIOS_H
+ # include <termios.h>
+ #endif
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <errno.h>
+diff --git a/src/gui/cprogress.c b/src/gui/cprogress.c
+index f3151a8e..a8e50e79 100644
+--- a/src/gui/cprogress.c
++++ b/src/gui/cprogress.c
+@@ -13,7 +13,9 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <string.h>
+diff --git a/src/os/posix/directory.c b/src/os/posix/directory.c
+index 2c233f77..ff208515 100644
+--- a/src/os/posix/directory.c
++++ b/src/os/posix/directory.c
+@@ -39,7 +39,9 @@
+ #include <string.h>
+ #include <pwd.h>
+ #include <sys/types.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+diff --git a/src/os/posix/fslock.c b/src/os/posix/fslock.c
+index 46328561..adc15708 100644
+--- a/src/os/posix/fslock.c
++++ b/src/os/posix/fslock.c
+@@ -42,7 +42,9 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <string.h>
+ 
+diff --git a/src/os/posix/inetsocket.c b/src/os/posix/inetsocket.c
+index 5d7ccf22..1ab3fd0e 100644
+--- a/src/os/posix/inetsocket.c
++++ b/src/os/posix/inetsocket.c
+@@ -34,7 +34,9 @@
+ #include <gwenhywfar/misc.h>
+ #include <gwenhywfar/debug.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <string.h>
+ #include <stdlib.h>
+diff --git a/src/os/posix/process.c b/src/os/posix/process.c
+index 2d2c4c2f..4327e9b0 100644
+--- a/src/os/posix/process.c
++++ b/src/os/posix/process.c
+@@ -42,7 +42,9 @@
+ #include <sys/time.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <string.h>
+ #include <ctype.h>
+ #include <errno.h>
+diff --git a/src/os/posix/syncio_file.c b/src/os/posix/syncio_file.c
+index ac7194a7..e9df56d9 100644
+--- a/src/os/posix/syncio_file.c
++++ b/src/os/posix/syncio_file.c
+@@ -37,7 +37,9 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <fcntl.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <string.h>
+ #include <stdio.h>
+diff --git a/src/os/process_all.c b/src/os/process_all.c
+index 7cdd5dfc..933b6cf7 100644
+--- a/src/os/process_all.c
++++ b/src/os/process_all.c
+@@ -22,7 +22,9 @@
+ #include <gwenhywfar/misc.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <time.h>
+ 
+ 
+diff --git a/src/os/windows/inetsocket.c b/src/os/windows/inetsocket.c
+index 7d36ab35..fadad75d 100644
+--- a/src/os/windows/inetsocket.c
++++ b/src/os/windows/inetsocket.c
+@@ -36,7 +36,9 @@
+ #include <gwenhywfar/debug.h>
+ 
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <string.h>
+ #include <stdlib.h>
+diff --git a/src/sar/sar.c b/src/sar/sar.c
+index 5d9fe774..d2b3f248 100644
+--- a/src/sar/sar.c
++++ b/src/sar/sar.c
+@@ -40,7 +40,9 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <errno.h>
+ #include <string.h>
+diff --git a/src/sio/httpsession.c b/src/sio/httpsession.c
+index 89bb22d4..59e393ed 100644
+--- a/src/sio/httpsession.c
++++ b/src/sio/httpsession.c
+@@ -30,7 +30,9 @@
+ #include <gwenhywfar/text.h>
+ 
+ #include <assert.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ GWEN_INHERIT_FUNCTIONS(GWEN_HTTP_SESSION)
+diff --git a/test/testthread.c b/test/testthread.c
+index 63d63530..4fd7894e 100644
+--- a/test/testthread.c
++++ b/test/testthread.c
+@@ -16,7 +16,9 @@
+ #include <gwenhywfar/nogui.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/tools/gsa/add.c b/tools/gsa/add.c
+index 6db4fbf0..fc66b4d3 100644
+--- a/tools/gsa/add.c
++++ b/tools/gsa/add.c
+@@ -19,7 +19,9 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #include <errno.h>
+ #include <string.h>
+diff --git a/tools/gwenbuild/buildctx/buildctx.c b/tools/gwenbuild/buildctx/buildctx.c
+index cf8a693d..77722f10 100644
+--- a/tools/gwenbuild/buildctx/buildctx.c
++++ b/tools/gwenbuild/buildctx/buildctx.c
+@@ -22,7 +22,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/buildctx/buildctx_bdeps.c b/tools/gwenbuild/buildctx/buildctx_bdeps.c
+index e38e44ff..25fd6f48 100644
+--- a/tools/gwenbuild/buildctx/buildctx_bdeps.c
++++ b/tools/gwenbuild/buildctx/buildctx_bdeps.c
+@@ -21,7 +21,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/buildctx/buildctx_depfile.c b/tools/gwenbuild/buildctx/buildctx_depfile.c
+index fc9003ae..645497dc 100644
+--- a/tools/gwenbuild/buildctx/buildctx_depfile.c
++++ b/tools/gwenbuild/buildctx/buildctx_depfile.c
+@@ -22,7 +22,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/buildctx/buildctx_run.c b/tools/gwenbuild/buildctx/buildctx_run.c
+index 607be56e..2b2953f8 100644
+--- a/tools/gwenbuild/buildctx/buildctx_run.c
++++ b/tools/gwenbuild/buildctx/buildctx_run.c
+@@ -23,7 +23,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/buildctx/buildctx_xml.c b/tools/gwenbuild/buildctx/buildctx_xml.c
+index b429d91d..de5d3ea4 100644
+--- a/tools/gwenbuild/buildctx/buildctx_xml.c
++++ b/tools/gwenbuild/buildctx/buildctx_xml.c
+@@ -21,7 +21,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/c_clean.c b/tools/gwenbuild/c_clean.c
+index 98dc3d6b..b2288174 100644
+--- a/tools/gwenbuild/c_clean.c
++++ b/tools/gwenbuild/c_clean.c
+@@ -19,7 +19,9 @@
+ #include <gwenhywfar/debug.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/tools/gwenbuild/c_dist.c b/tools/gwenbuild/c_dist.c
+index 357c54a4..7d6e0c75 100644
+--- a/tools/gwenbuild/c_dist.c
++++ b/tools/gwenbuild/c_dist.c
+@@ -19,7 +19,9 @@
+ #include <gwenhywfar/debug.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <time.h>
+diff --git a/tools/gwenbuild/c_setup.c b/tools/gwenbuild/c_setup.c
+index ab937861..5784cb24 100644
+--- a/tools/gwenbuild/c_setup.c
++++ b/tools/gwenbuild/c_setup.c
+@@ -24,7 +24,9 @@
+ 
+ #include <sys/stat.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/tools/gwenbuild/main.c b/tools/gwenbuild/main.c
+index 0e41b7ad..10b2705f 100644
+--- a/tools/gwenbuild/main.c
++++ b/tools/gwenbuild/main.c
+@@ -30,7 +30,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/directory.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ #ifdef HAVE_SIGNAL_H
+ # include <signal.h>
+diff --git a/tools/gwenbuild/parser/p_dependencies.c b/tools/gwenbuild/parser/p_dependencies.c
+index 0ca54171..e480fc04 100644
+--- a/tools/gwenbuild/parser/p_dependencies.c
++++ b/tools/gwenbuild/parser/p_dependencies.c
+@@ -20,7 +20,9 @@
+ #include <gwenhywfar/text.h>
+ #include <gwenhywfar/syncio.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <ctype.h>
+ 
+ 
+diff --git a/tools/gwenbuild/parser/p_project.c b/tools/gwenbuild/parser/p_project.c
+index 794421cb..2e0eb4d7 100644
+--- a/tools/gwenbuild/parser/p_project.c
++++ b/tools/gwenbuild/parser/p_project.c
+@@ -28,7 +28,9 @@
+ 
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/tools/gwenbuild/parser/parser.c b/tools/gwenbuild/parser/parser.c
+index 1a710531..ae8c928e 100644
+--- a/tools/gwenbuild/parser/parser.c
++++ b/tools/gwenbuild/parser/parser.c
+@@ -22,7 +22,9 @@
+ #include <gwenhywfar/directory.h>
+ #include <gwenhywfar/text.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <string.h>
+@@ -30,7 +32,9 @@
+ 
+ #include <sys/types.h> /* for stat, chmod */
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ 
+ 
+diff --git a/tools/gwenbuild/tools/trycompile.c b/tools/gwenbuild/tools/trycompile.c
+index 33ed3eb6..4b2be614 100644
+--- a/tools/gwenbuild/tools/trycompile.c
++++ b/tools/gwenbuild/tools/trycompile.c
+@@ -17,7 +17,9 @@
+ #include <gwenhywfar/process.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdlib.h>
+ 
+ 
+diff --git a/tools/gwenbuild/tools/trylink.c b/tools/gwenbuild/tools/trylink.c
+index 90a1169a..9e63c831 100644
+--- a/tools/gwenbuild/tools/trylink.c
++++ b/tools/gwenbuild/tools/trylink.c
+@@ -17,7 +17,9 @@
+ #include <gwenhywfar/process.h>
+ #include <gwenhywfar/debug.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <stdlib.h>
+ 
+ 
+diff --git a/tools/gwenbuild/types/gwenbuild.c b/tools/gwenbuild/types/gwenbuild.c
+index f11d3982..e7aa4780 100644
+--- a/tools/gwenbuild/types/gwenbuild.c
++++ b/tools/gwenbuild/types/gwenbuild.c
+@@ -24,7 +24,9 @@
+ /* for stat */
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ 
+ /* for strerror */
+ #include <errno.h>
+diff --git a/tools/gwenbuild/utils.c b/tools/gwenbuild/utils.c
+index 32def602..4acb5bcb 100644
+--- a/tools/gwenbuild/utils.c
++++ b/tools/gwenbuild/utils.c
+@@ -18,7 +18,9 @@
+ #include <gwenhywfar/directory.h>
+ #include <gwenhywfar/buffer.h>
+ 
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <time.h>
+-- 
+2.37.1
+
