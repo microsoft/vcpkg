@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Linux)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Linux AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES iOS)
     # The file guiddef.h is part of the Windows SDK,
     # we then remove the local copy shipped with jxrlib
     file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
