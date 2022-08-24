@@ -18,7 +18,7 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        --disable-binaries # no example programs (require libogg)
+        --disable-binaries # no example programs (GPL, require libogg)
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
