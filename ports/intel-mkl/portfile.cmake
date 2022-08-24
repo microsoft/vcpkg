@@ -19,8 +19,10 @@ else()
         "$ENV{MKLROOT}"
         "${INTEL_ROOT}/mkl"
         "${INTEL_ONEAPI_MKL_ROOT}"
+        "${ONEAPI_ROOT}/mkl"
         "/opt/intel/compilers_and_libraries_*.*.*"
         "/opt/intel/oneapi/mkl"
+        "/opt/intel/mkl"
     )
     foreach(MKL_PATH ${MKL_PATHS})
         get_filename_component(CURRENT_VERSION ${MKL_PATH} NAME)
