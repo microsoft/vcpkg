@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
-    REF v5.84.0
-    SHA512 39657ec545c1463cadec719e7c6dc546fb6d1804b5c2b86904bfffd01be173c3ead1533ec33f749343f5575785394fe659ca0be51af706911e5176d485ef7f20
+    REF v5.89.0
+    SHA512 6180089ff84456830ceddec564014c75127be1bcb996dd5458f86e5d1dfaa3e3b0267e0605dc8a799abe9aa3d3c0f48c805e5f58e754e19a44a20637dbb95044
     HEAD_REF master
-    PATCHES
-        remove_explicit_shared_argument.patch # https://invent.kde.org/frameworks/kxmlgui/-/commit/d12e8f6266188ce7e221dc014a56071b8a5ef706
-        add_support_for_static_builds.patch   # https://invent.kde.org/frameworks/kxmlgui/-/commit/2f1b948ad690942d4ec208c5676c11218f29181a
-        fix_static_resources.diff             # https://invent.kde.org/frameworks/kxmlgui/-/merge_requests/77
 )
 
 vcpkg_check_features(
@@ -17,11 +13,11 @@ vcpkg_check_features(
  )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
@@ -39,10 +35,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

@@ -1,28 +1,29 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kibaamor/knet
-    REF v1.0.2
-    SHA512 fb101d10d3bb08e565618923a10bc39586a934ae562ba7241c079f781baaafbc511e0bd2de13db6263246dede5e602d578e1fbdf45c84a6fecc4d3ddad4735e9
+    REF v1.1.0
+    SHA512 22f46c2626c60798a99d7fe3027b675d40584df141fc1131a0d737df28f3e633ec798567defd131b08c3b3ec81069648ed45c2e37eacf37dc15ead45ab24ee55
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DKNET_BUILD_EXAMPLE:BOOL=OFF
-        -DKNET_BUILD_TEST:BOOL=OFF
+        -DKNET_ENABLE_LOG=OFF
+        -DKNET_SOCKET_STAT=OFF
+        -DKNET_BUILD_EXAMPLE=OFF
+        -DKNET_BUILD_TEST=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/knet TARGET_PATH share/knet)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/knet)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

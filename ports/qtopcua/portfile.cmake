@@ -5,10 +5,11 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "open62541"      FEATURE_open62541
-    "open62541"      FEATURE_open62541-security
+#    "open62541"      FEATURE_open62541_security # requires vendored open62541
     "uacpp"          FEATURE_uacpp
     "ns0idnames"     FEATURE_ns0idnames
     "ns0idgenerator" FEATURE_ns0idgenerator
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     )

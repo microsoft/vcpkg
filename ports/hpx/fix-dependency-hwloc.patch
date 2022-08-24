@@ -1,0 +1,15 @@
+diff --git a/cmake/FindHwloc.cmake b/cmake/FindHwloc.cmake
+index cdede78..6967abf 100644
+--- a/cmake/FindHwloc.cmake
++++ b/cmake/FindHwloc.cmake
+@@ -71,6 +71,9 @@ if(NOT TARGET Hwloc::hwloc)
+   add_library(Hwloc::hwloc INTERFACE IMPORTED)
+   target_include_directories(Hwloc::hwloc SYSTEM INTERFACE ${HWLOC_INCLUDE_DIR})
+   target_link_libraries(Hwloc::hwloc INTERFACE ${HWLOC_LIBRARIES})
+-
++  if(APPLE)
++     target_link_libraries(Hwloc::hwloc INTERFACE  "-framework CoreFoundation" "-framework IOKit")
++  endif()
++  
+   mark_as_advanced(HWLOC_ROOT HWLOC_LIBRARY HWLOC_INCLUDE_DIR)
+ endif()

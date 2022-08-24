@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: glu
+Description: OpenGL Utility Library
+Version: @WINDOWS_SDK_SEMVER@
+Requires: opengl
+Libs: -L${libdir} -lGlU32
+Cflags: -I${includedir}

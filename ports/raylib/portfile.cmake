@@ -1,6 +1,3 @@
-# https://github.com/raysan5/raylib/issues/388
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:
@@ -13,12 +10,17 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+    set(patches fix-linkGlfw.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF b6c8d343dca2ef19c23c50975328a028124cf3cb # 3.7.0
-    SHA512 565854b00452ae4ae17129f6ced83d842b06ee51a2b254cf02c881c36f9133e5cd605c07585428a7ec4c4e556d8edea908f1c09cd2ef826c30be35c9e5c2d009
+    REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa #v4.2.0
+    SHA512 f6b1738d96fef89059062f570f67aaa8b143ccfbee78abfe5fbb25083371a4c432f3d1d0d357e4b475b4b72a6db7823c2341b70ac947759603b033c2b0acec47
     HEAD_REF master
+    PATCHES ${patches}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
@@ -36,12 +38,10 @@ else()
     set(DEBUG_ENABLE_SANITIZERS ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
@@ -56,17 +56,12 @@ vcpkg_configure_cmake(
         -DENABLE_MSAN=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake
-    @ONLY
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
@@ -81,7 +76,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-vcpkg_fixup_pkgconfig()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

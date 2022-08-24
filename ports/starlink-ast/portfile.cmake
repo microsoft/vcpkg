@@ -1,18 +1,17 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Starlink/ast/releases/download/v9.2.4/ast-9.2.4.tar.gz"
-    FILENAME "ast-9.2.4.tar.gz"
-    SHA512 84e6f243e6d9d77328b73b97355feb3990307fb9c8f9b2f30344d71e2f5e63a849cdce0090ff5b7cc16028e12d68516c885b13d76db841072c9d1d06a7742a9e
+    URLS "https://github.com/Starlink/ast/releases/download/v9.2.7/ast-9.2.7.tar.gz"
+    FILENAME "ast-9.2.7.tar.gz"
+    SHA512 4778658fe6b08af29b51807e2d988f8425d99d630a14d8fef9ca4ea43016d676df419a93c4b2fdecc0549c28c0665f61e366bd4e7aa896ebb8e47f56d5af1887
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}    
+    ARCHIVE ${ARCHIVE}
 )
 
 set(CONFIGURE_OPTIONS
     --without-fortran
+    --with-external-cminpack
     star_cv_cnf_trail_type=long
     star_cv_cnf_f2c_compatible=no
 )

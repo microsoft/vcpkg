@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "001-fix-corefoundation-link.patch"
+	"002-add-limits-header.patch"
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)

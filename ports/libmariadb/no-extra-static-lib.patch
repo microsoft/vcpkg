@@ -1,0 +1,20 @@
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index 4823858..018101f 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -471,10 +471,15 @@ IF(NOT WIN32)
+   SET_TARGET_PROPERTIES(mariadbclient PROPERTIES OUTPUT_NAME "${LIBMARIADB_STATIC_NAME}")
+ ENDIF()
+ 
++if(VCPKG_MARIADBCLIENT)
+ INSTALL(TARGETS mariadbclient
+           COMPONENT Development
+           EXPORT unofficial-libmariadb-targets
+           LIBRARY DESTINATION lib)
++else()
++  set_target_properties(mariadbclient PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
++          
+ IF(WIN32)
+ INSTALL(TARGETS libmariadb
+         COMPONENT SharedLibraries

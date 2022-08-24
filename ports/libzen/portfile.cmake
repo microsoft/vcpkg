@@ -5,21 +5,19 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/ZenLib
-    REF v0.4.38
-    SHA512 92c3fc3994bd7110021adbfa3ce48ed6e80f162946b912e9e06ed58edc224600e56e3aab3203ad3fa8759dab9790cb5536475f070f0c060b00585911a6cc0661
+    REF 13b9d3dbd2088390fbdccab32ae4560526389fbc # v0.4.39
+    SHA512 ec63af7ea60be2548d45702518a9b638b4f424044ecaebfbca97d9872b3ecafddc9c59aed4a5bae7bd5bbdffbd543c4ed9e106e5c406ec576a9c0970f0aadcac
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/Project/CMake
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/Project/CMake"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/zenlib TARGET_PATH share/zenlib)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME zenlib CONFIG_PATH share/zenlib)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libzen RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

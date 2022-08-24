@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
@@ -21,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         #png LIBIGL_WITH_PNG # Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
         xml    LIBIGL_WITH_XML
         #python LIBIGL_WITH_PYTHON # Python binding are in the process of being redone.
+        cgal   LIBIGL_WITH_CGAL
 )
 
 vcpkg_cmake_configure(

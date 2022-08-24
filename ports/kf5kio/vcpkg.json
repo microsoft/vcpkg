@@ -1,6 +1,7 @@
 {
   "name": "kf5kio",
-  "version": "5.84.0",
+  "version": "5.89.0",
+  "port-version": 1,
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
   "dependencies": [
@@ -15,7 +16,7 @@
     "kf5archive",
     {
       "name": "kf5auth",
-      "platform": "!windows"
+      "platform": "!(windows | android)"
     },
     "kf5bookmarks",
     "kf5completion",
@@ -23,7 +24,10 @@
     "kf5configwidgets",
     "kf5coreaddons",
     "kf5crash",
-    "kf5dbusaddons",
+    {
+      "name": "kf5dbusaddons",
+      "platform": "!android"
+    },
     "kf5guiaddons",
     "kf5i18n",
     "kf5iconthemes",
@@ -38,6 +42,10 @@
     {
       "name": "libiconv",
       "platform": "windows & static"
+    },
+    {
+      "name": "libmount",
+      "platform": "linux"
     },
     "qt5-base",
     {

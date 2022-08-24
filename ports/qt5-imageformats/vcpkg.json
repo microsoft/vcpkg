@@ -1,8 +1,9 @@
 {
   "name": "qt5-imageformats",
-  "version-string": "5.15.2",
+  "version": "5.15.5",
   "port-version": 1,
   "description": "Qt5 Image Formats Module - Plugins for additional image formats: TIFF, MNG, TGA, WBMP",
+  "license": null,
   "dependencies": [
     "jasper",
     "libwebp",

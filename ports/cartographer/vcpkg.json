@@ -1,7 +1,7 @@
 {
   "name": "cartographer",
   "version": "1.0.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Google 2D & 3D SLAM package",
   "homepage": "https://github.com/googlecartographer/cartographer",
   "dependencies": [
@@ -17,6 +17,14 @@
     "glog",
     "gtest",
     "lua",
-    "protobuf"
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

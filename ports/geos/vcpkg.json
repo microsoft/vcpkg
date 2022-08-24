@@ -1,9 +1,10 @@
 {
   "name": "geos",
-  "version": "3.9.1",
-  "port-version": 3,
+  "version": "3.11.0",
+  "port-version": 1,
   "description": "Geometry Engine Open Source",
-  "homepage": "https://www.osgeo.org/projects/geos/",
+  "homepage": "https://libgeos.org/",
+  "license": "LGPL-2.1-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

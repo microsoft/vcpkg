@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5453cd0..10c2ad4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,6 +58,8 @@ ign_find_package(CPPZMQ REQUIRED PRIVATE
+ # Find uuid
+ if (MSVC)
+   message (STATUS "UUID: Using Windows RPC UuidCreate function\n")
++elseif (APPLE)
++  message (STATUS "Use system uuid header")
+ else()
+   ign_find_package(UUID REQUIRED)
+ endif()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6683e64..33669ab 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -18,7 +18,7 @@ target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
+ )
+ 
+ # Windows system library provides UUID
+-if (NOT MSVC)
++if (NOT MSVC AND NOT APPLE)
+   target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
+     PUBLIC
+       UUID::UUID

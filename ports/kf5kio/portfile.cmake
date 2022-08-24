@@ -1,8 +1,3 @@
-set(PATCHES
-    fix_dbusmetatypes.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/563
-    fix_config_cmake.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/565
-)
-
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES fix_libiconv.patch)
 endif()
@@ -10,25 +5,27 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.84.0
-    SHA512 6c2d57a31e64ff1475b21d7fb2556d37b061dae319ddfe57a36f0bfc9627db624b1ac8fa4b2851681cb90d218255d0444c1403329d88f34a23e8ddffe99ca5b4
+    REF v5.89.0-rc2
+    SHA512 08df36c08b028998884983fa233aad5bfc05d4e9e5899ed85390015daa7e0703272edabc59189579957e9971435887c4486796061878ce0f252ac2259b78a799
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        ${PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "kf5notifications"  CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
-    "kf5wallet"         CMAKE_DISABLE_FIND_PACKAGE_KF5Wallet
+    INVERTED_FEATURES
+        "kf5notifications"  CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
+        "kf5wallet"         CMAKE_DISABLE_FIND_PACKAGE_KF5Wallet
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
         -DCMAKE_VERBOSE_MAKEFILE=ON
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DKDE_INSTALL_PLUGINDIR=plugins
@@ -65,4 +62,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" "OSX")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/winpcap")
     message(FATAL_ERROR "FATAL ERROR: winpcap and libpcap are incompatible.")
 endif()
@@ -12,8 +10,6 @@ if(VCPKG_TARGET_IS_LINUX)
 These can be installed on Ubuntu systems via sudo apt install flex libbison-dev"
     )
 endif()
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -72,13 +68,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 
 # Even if compiled with BUILD_SHARED_LIBS=ON, pcap also install a pcap_static library
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pcap_static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/pcap_static.lib")
 endif()
 
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/man")

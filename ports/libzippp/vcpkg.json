@@ -1,7 +1,6 @@
 {
   "name": "libzippp",
-  "version-string": "5.0-1.8.0",
-  "port-version": 1,
+  "version": "5.1-1.8.0",
   "description": "Simple basic C++ wrapper around the libzip library. It is meant to be a portable and easy-to-use library for ZIP handling",
   "homepage": "https://github.com/ctabin/libzippp",
   "dependencies": [
@@ -11,6 +10,14 @@
       "features": [
         "bzip2"
       ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     "zlib"
   ],

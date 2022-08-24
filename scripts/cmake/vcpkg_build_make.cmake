@@ -1,55 +1,3 @@
-#[===[.md:
-# vcpkg_build_make
-
-Build a linux makefile project.
-
-## Usage:
-```cmake
-vcpkg_build_make([BUILD_TARGET <target>]
-                 [ADD_BIN_TO_PATH]
-                 [ENABLE_INSTALL]
-                 [MAKEFILE <makefileName>]
-                 [LOGFILE_ROOT <logfileroot>])
-```
-
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
-be passed.
-
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
-
-### ENABLE_INSTALL
-IF the port supports the install target use vcpkg_install_make() instead of vcpkg_build_make()
-
-### MAKEFILE
-Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
-
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). Defaults to 'all'.
-
-### INSTALL_TARGET
-The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
-
-### DISABLE_PARALLEL
-The underlying buildsystem will be instructed to not parallelize
-
-### SUBPATH
-Additional subdir to invoke make in. Useful if only parts of a port should be built. 
-
-## Notes:
-This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
-"install" target
-
-## Examples
-
-* [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
-* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-* [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-#]===]
-
 function(vcpkg_build_make)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
@@ -104,6 +52,7 @@ function(vcpkg_build_make)
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
+
     else()
         if(VCPKG_HOST_IS_OPENBSD)
             find_program(Z_VCPKG_MAKE gmake REQUIRED)
@@ -117,9 +66,12 @@ function(vcpkg_build_make)
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
-    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 
     foreach(buildtype IN ITEMS "debug" "release")
+        if (buildtype STREQUAL "debug" AND _VCPKG_MAKE_NO_DEBUG)
+            continue()
+        endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
             if("${buildtype}" STREQUAL "debug")
                 set(short_buildtype "-dbg")
@@ -132,21 +84,27 @@ function(vcpkg_build_make)
                 set(path_suffix "")
             endif()
 
-            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}${arg_SUBPATH}")
+            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}/${arg_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
 
             z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
 
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
             else() # dynamic
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
+            endif()            
+            set(LDFLAGS_${cmake_buildtype} "")
+            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
+                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib")
+            endif()
+            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
+                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
             endif()
             if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-                set(LDFLAGS_${cmake_buildtype} "-L${Z_VCPKG_INSTALLED}${path_suffix}/lib -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
                 set(LINK_ENV_${cmake_buildtype} "$ENV{_LINK_} ${LINKER_FLAGS_${cmake_buildtype}}")
             else()
-                set(LDFLAGS_${cmake_buildtype} "-L${Z_VCPKG_INSTALLED}${path_suffix}/lib -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link ${LINKER_FLAGS_${cmake_buildtype}}")
+                string(APPEND LDFLAGS_${cmake_buildtype} " ${LINKER_FLAGS_${cmake_buildtype}}")
             endif()
             
             # Setup environment
@@ -155,14 +113,20 @@ function(vcpkg_build_make)
             set(ENV{CXXFLAGS} "${CXXFLAGS_${cmake_buildtype}}")
             set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${cmake_buildtype}}")
             set(ENV{LDFLAGS} "${LDFLAGS_${cmake_buildtype}}")
-            vcpkg_host_path_list(PREPEND ENV{LIB} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
-            vcpkg_host_path_list(PREPEND ENV{LIBPATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
-            vcpkg_host_path_list(PREPEND ENV{LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
-            #vcpkg_host_path_list(PREPEND ENV{LD_LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/manual-link/")
+            vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
+            foreach(lib_env_var IN LISTS lib_env_vars)
+                if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
+                    vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
+                endif()
+                if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
+                    vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
+                endif()
+            endforeach()
+            unset(lib_env_vars)
 
-            if(LINK_ENV_${_VAR_SUFFIX})
+            if(LINK_ENV_${cmake_buildtype})
                 set(config_link_backup "$ENV{_LINK_}")
-                set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+                set(ENV{_LINK_} "${LINK_ENV_${cmake_buildtype}}")
             endif()
 
             if(arg_ADD_BIN_TO_PATH)
@@ -212,6 +176,8 @@ function(vcpkg_build_make)
                 set(ENV{PATH} "${env_backup_path}")
             endif()
         endif()
+
+        vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
     endforeach()
 
     if (arg_ENABLE_INSTALL)
@@ -232,5 +198,6 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${path_backup}")
     endif()
 
-    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
+    unset(_VCPKG_MAKE_NO_DEBUG PARENT_SCOPE)
 endfunction()

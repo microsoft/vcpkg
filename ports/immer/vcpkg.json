@@ -1,6 +1,6 @@
 {
   "name": "immer",
-  "version-date": "2021-05-03",
+  "version-date": "2022-02-12",
   "description": "Postmodern immutable and persistent data structures for C++",
   "homepage": "https://sinusoid.es/immer/",
   "dependencies": [

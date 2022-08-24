@@ -1,9 +1,10 @@
 {
   "name": "qt5-base",
-  "version-semver": "5.15.2",
-  "port-version": 11,
+  "version": "5.15.5",
+  "port-version": 1,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "angle",
@@ -25,6 +26,11 @@
     "libpng",
     "openssl",
     "pcre2",
+    {
+      "name": "qt5-base",
+      "host": true,
+      "default-features": false
+    },
     "sqlite3",
     {
       "name": "vcpkg-pkgconfig-get-modules",
@@ -35,7 +41,7 @@
   ],
   "features": {
     "latest": {
-      "description": "Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)"
+      "description": "(deprecated)"
     },
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",

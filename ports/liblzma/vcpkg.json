@@ -1,9 +1,10 @@
 {
   "name": "liblzma",
   "version-semver": "5.2.5",
-  "port-version": 4,
+  "port-version": 6,
   "description": "Compression library with an API similar to that of zlib.",
-  "homepage": "hhttps://github.com/xz-mirror/xz",
+  "homepage": "https://github.com/xz-mirror/xz",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,5 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!windows, mingw"
+    }
+  }
 }

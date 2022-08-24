@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "OSX")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mutouyun/cpp-ipc
-    REF df3cf1b4c42143e6675c6fb0f33f85a48b7c7701 #v1.0.0
-    SHA512 de319d48ac396f567b2f5faae87a264b9ebfbaf0559a3e00de61facd6a3f2de1739e064c6e037ad694111ed211c0fb9ea6ec2db0259c100e2bafe553c15ed2f6
+    REF f2f1af8f8e7877a28deb2eacdc379a22a99e4c82 #v1.2.0
+    SHA512 e01fe5e2612141af64a9c44773a49c566b89ecf0a77164c6eb0a6d68bd7ff5830843ce42df5d53a863882b582a8d6a2e9f69026f244d8d1d96e83f0f4c9e8972
     HEAD_REF master
 )
 

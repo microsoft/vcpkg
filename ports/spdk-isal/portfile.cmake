@@ -1,21 +1,8 @@
-IF (NOT VCPKG_CMAKE_SYSTEM_NAME)
-    SET(EXEC_ENV "Windows")
-ELSE ()
-    SET(EXEC_ENV "${VCPKG_CMAKE_SYSTEM_NAME}")
-ENDIF ()
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/isal/copyright")
+    message(FATAL_ERROR "'${PORT}' conflicts with 'isal'. Please remove isal:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 
-IF (NOT EXEC_ENV STREQUAL "Linux")
-    MESSAGE(FATAL_ERROR "Intel(R) Intelligent Storage Acceleration Library currently only supports Linux platforms")
-    MESSAGE(STATUS "Well, it is not true, but I didnt manage to get it working on Windows")
-ENDIF ()
-
-IF (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    MESSAGE(FATAL_ERROR "Intel(R) Intelligent Storage Acceleration Library currently only supports x64 architecture")
-ELSEIF (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    MESSAGE(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-ENDIF ()
-
-VCPKG_FROM_GITHUB(
+vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO spdk/isa-l
         REF spdk
@@ -23,26 +10,20 @@ VCPKG_FROM_GITHUB(
         HEAD_REF master
 )
 
-VCPKG_FIND_ACQUIRE_PROGRAM(NASM)
-GET_FILENAME_COMPONENT(NASM_PATH ${NASM} DIRECTORY)
-SET(ENV{PATH} "$ENV{PATH};${NASM_PATH}")
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_PATH ${NASM} DIRECTORY)
+vcpkg_add_to_path("${NASM_PATH}")
 
-VCPKG_FIND_ACQUIRE_PROGRAM(YASM)
+vcpkg_find_acquire_program(YASM)
 
-VCPKG_CONFIGURE_CMAKE(
-        SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-        PREFER_NINJA
-        OPTIONS
-        -DSOURCE_PATH=${SOURCE_PATH}
-        -DEXEC_ENV:STRING=${EXEC_ENV}
-        -DLIBRARY_LINKAGE:STRING=${VCPKG_LIBRARY_LINKAGE}
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-VCPKG_INSTALL_CMAKE()
+vcpkg_install_make()
 
-FILE(INSTALL ${SOURCE_PATH}/Release/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/spdk)
-FILE(INSTALL ${SOURCE_PATH}/Debug/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/spdk)
-FILE(INSTALL ${SOURCE_PATH}/Release/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/spdk-isalConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-FILE(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/spdk-isalConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

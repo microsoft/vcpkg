@@ -1,4 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
+if (VCPKG_HOST_IS_WINDOWS)
+  set(USE_GLAD -DNANOGUI_USE_GLAD=ON)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+else()
+  set(USE_GLAD -DNANOGUI_USE_GLAD=OFF)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,18 +13,25 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
+        fix-glad-dependence.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "example"           NANOGUI_BUILD_EXAMPLE
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
         -DNANOGUI_EIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
         -DEIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
+        ${USE_GLAD}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

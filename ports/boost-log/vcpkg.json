@@ -1,16 +1,14 @@
 {
   "name": "boost-log",
-  "version": "1.77.0",
+  "version": "1.79.0",
   "description": "Boost log module",
   "homepage": "https://github.com/boostorg/log",
+  "license": "BSL-1.0",
   "supports": "!uwp & !emscripten",
   "dependencies": [
     "boost-align",
     "boost-array",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-atomic",
     "boost-bind",

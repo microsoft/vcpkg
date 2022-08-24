@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 808330e..de0e477 100644
+index 20441d1..d314abe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,7 +44,7 @@ include (CTest)
- include (DetermineGflagsNamespace)
- include (GNUInstallDirs)
+@@ -65,7 +65,7 @@ set (CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+ set (CMAKE_VISIBILITY_INLINES_HIDDEN ON)
  
 -set (CMAKE_DEBUG_POSTFIX d)
 +#set (CMAKE_DEBUG_POSTFIX d)
  set (CMAKE_THREAD_PREFER_PTHREAD 1)
  
- if (WITH_GFLAGS)
+ find_package (GTest NO_MODULE)

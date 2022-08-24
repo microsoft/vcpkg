@@ -1,0 +1,40 @@
+diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
+index d8eb93d..3e5c42a 100644
+--- a/cmake/urdfdom-config.cmake.in
++++ b/cmake/urdfdom-config.cmake.in
+@@ -3,8 +3,12 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
+ endif()
+ set(@PKG_NAME@_CONFIG_INCLUDED TRUE)
+ 
+-set(@PKG_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@" "@TinyXML_INCLUDE_DIRS@")
++get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++ 
++set(@PKG_NAME@_INCLUDE_DIRS "${_IMPORT_PREFIX}/include" "@TinyXML_INCLUDE_DIRS@")
+ 
++if (0)
+ foreach(lib @PKG_LIBRARIES@)
+   set(onelib "${lib}-NOTFOUND")
+   set(onelibd "${lib}-NOTFOUND")
+@@ -29,10 +33,14 @@ foreach(lib @PKG_LIBRARIES@)
+   endif()
+   list(APPEND @PKG_NAME@_TARGETS @PROJECT_NAME@::${lib})
+ endforeach()
++endif()
++
++include(CMakeFindDependencyMacro)
++find_dependency(console_bridge)
+ 
+ foreach(dep @PKG_DEPENDS@)
+   if(NOT ${dep}_FOUND)
+-    find_package(${dep})
++    find_dependency(${dep})
+   endif()
+   list(APPEND @PKG_NAME@_INCLUDE_DIRS ${${dep}_INCLUDE_DIRS})
+   list(APPEND @PKG_NAME@_LIBRARIES ${${dep}_LIBRARIES})
+@@ -41,3 +49,5 @@ endforeach()
+ foreach(exp @PKG_EXPORTS@)
+   include(${@PROJECT_NAME@_DIR}/${exp}Export.cmake)
+ endforeach()
++
++set(@PKG_NAME@_LIBRARIES urdfdom::urdfdom_model urdfdom::urdfdom_world urdfdom::urdfdom_sensor urdfdom::urdfdom_model_state)

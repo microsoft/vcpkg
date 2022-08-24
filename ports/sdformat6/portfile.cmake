@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/sdformat
@@ -8,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF sdf6
     PATCHES
         disable-unneeded-include-findboost.patch
+        fix-dependency-urdfdom.patch
+        disable-test.patch
 )
 
 # Ruby is required by the sdformat build process
@@ -16,41 +16,44 @@ get_filename_component(RUBY_PATH ${RUBY} DIRECTORY)
 set(_path $ENV{PATH})
 vcpkg_add_to_path(${RUBY_PATH})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DBUILD_TESTING=OFF
-            -DUSE_EXTERNAL_URDF=ON
-            -DUSE_EXTERNAL_TINYXML=ON
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DUSE_INTERNAL_URDF=OFF
+        -DUSE_EXTERNAL_TINYXML=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Restore original path
 set(ENV{PATH} ${_path})
 
 # Move location of sdformat.dll from lib to bin
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/sdformat.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sdformat.dll
-                ${CURRENT_PACKAGES_DIR}/bin/sdformat.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sdformat.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/sdformat.dll"
+                "${CURRENT_PACKAGES_DIR}/bin/sdformat.dll")
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/sdformat.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sdformat.dll
-                ${CURRENT_PACKAGES_DIR}/debug/bin/sdformat.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sdformat.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/sdformat.dll"
+                "${CURRENT_PACKAGES_DIR}/debug/bin/sdformat.dll")
 endif()
 
 # Fix cmake targets location
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/sdformat")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sdformat")
 
 # Remove debug files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ignition/sdformat6.yaml" "${CURRENT_PACKAGES_DIR}" "../..")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_SHARE_PATH \"${CURRENT_PACKAGES_DIR}/share/\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_VERSION_PATH \"${CURRENT_PACKAGES_DIR}/share/sdformat/\"" "")
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()

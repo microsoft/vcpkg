@@ -1,6 +1,6 @@
 {
   "name": "kf5service",
-  "version": "5.84.0",
+  "version": "5.89.0",
   "port-version": 1,
   "description": "Plugin framework for desktop services",
   "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
@@ -16,14 +16,11 @@
     "kf5config",
     "kf5coreaddons",
     {
-      "name": "kf5crash",
-      "platform": "!android"
-    },
-    {
       "name": "kf5dbusaddons",
       "platform": "!android"
     },
     "kf5i18n",
+    "libiconv",
     "qt5-base",
     "qt5-tools",
     {

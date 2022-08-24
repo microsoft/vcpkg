@@ -35,6 +35,7 @@ set(LIBBOINC_HEADERS_GENERIC
     lib/cal_boinc.h
     lib/cc_config.h
     lib/cert_sig.h
+    lib/cl_boinc.h
     lib/common_defs.h
     lib/coproc.h
     lib/crypt.h
@@ -221,6 +222,10 @@ target_include_directories(boincapi PUBLIC
 target_link_libraries(boinc PRIVATE
                         OpenSSL::SSL
                         OpenSSL::Crypto
+)
+
+target_link_libraries(boincapi PRIVATE
+                        boinc
 )
 
 install(TARGETS boinc boincapi EXPORT boinc-config

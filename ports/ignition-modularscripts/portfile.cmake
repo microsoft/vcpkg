@@ -1,8 +1,7 @@
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/ignition_modular_library.cmake
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/ignitionmodularscripts
-)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/ignitionmodularscripts/copyright "")
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "")
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

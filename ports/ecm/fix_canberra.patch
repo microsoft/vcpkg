@@ -22,7 +22,7 @@ index c54adf99..f9561118 100644
  
  find_package(PkgConfig QUIET)
 -pkg_check_modules(PC_Canberra libcanberra QUIET)
-+pkg_check_modules(PC_Canberra REQUIRED IMPORTED_TARGET libcanberra QUIET)
++pkg_check_modules(PC_Canberra IMPORTED_TARGET libcanberra QUIET)
  
  find_library(Canberra_LIBRARIES
      NAMES canberra

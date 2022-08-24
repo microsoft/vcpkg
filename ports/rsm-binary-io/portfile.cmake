@@ -1,10 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ryan-rsm-McKenzie/binary_io
-    REF 2.0.2
-    SHA512 4b7e725d9143d37481b4a7e4e101c88c3b73628dd2882fa23ef10a602f8a6ca79de111138237d4dd6fc09d1df863b91a949782961f5623fcac1e324b2e301121
+    REF 2.0.5
+    SHA512 787833487b9e2b64aeb73842024a52a6ad646d2609342983ebf1539878b96565bf329c8b05afca0fb35a1e40a91174131ad7a0bdc79b168a12bf02f3d6e0cd6d
     HEAD_REF main
 )
 

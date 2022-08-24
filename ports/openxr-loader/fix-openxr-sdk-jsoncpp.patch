@@ -2,7 +2,7 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index c75b145..386494c 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -66,7 +66,7 @@ if(NOT VULKAN_INCOMPATIBLE)
+@@ -89,7 +89,7 @@ if(NOT VULKAN_INCOMPATIBLE)
  endif()
  
  find_package(Threads REQUIRED)
@@ -15,7 +15,7 @@ diff --git a/src/loader/CMakeLists.txt b/src/loader/CMakeLists.txt
 index 6a88cf4..0821a3d 100644
 --- a/src/loader/CMakeLists.txt
 +++ b/src/loader/CMakeLists.txt
-@@ -67,7 +67,11 @@ add_library(openxr_loader ${LIBRARY_TYPE}
+@@ -68,7 +68,11 @@ add_library(openxr_loader ${LIBRARY_TYPE}
      ${openxr_loader_RESOURCE_FILE}
  )
  if(BUILD_WITH_SYSTEM_JSONCPP)

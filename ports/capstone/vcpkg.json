@@ -1,9 +1,19 @@
 {
   "name": "capstone",
-  "version": "4.0.2",
-  "port-version": 2,
+  "version": "5.0.0-rc2",
+  "port-version": 1,
   "description": "Multi-architecture disassembly framework",
-  "homepage": "https://github.com/aquynh/capstone",
+  "homepage": "https://github.com/capstone-engine/capstone",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "arm": {
       "description": "Capstone disassembly support for ARM"
@@ -27,7 +37,7 @@
       "description": "Capstone disassembly support for MIPS"
     },
     "osxkernel": {
-      "description": "Support for emedding Capstone into OSX Kernel extensions"
+      "description": "Support for embedding Capstone into OSX Kernel extensions"
     },
     "ppc": {
       "description": "Capstone disassembly support for PowerPC"

@@ -26,6 +26,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
+        0004-Fix-uwp-tools-build.patch
         rel_path.patch
         android.patch
         gettext-tools_woe32dll_gettextsrc-exports.c.patch
@@ -56,6 +57,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ac_cv_func_memset=yes             # not detected in release builds
         ac_cv_header_pthread_h=no
         ac_cv_header_dirent_h=no
+        ac_cv_header_getopt_h=no
     )
 endif()
 
@@ -156,4 +158,8 @@ if(NOT VCPKG_TARGET_IS_LINUX)
 endif()
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/gettext/user-email")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
 endif()

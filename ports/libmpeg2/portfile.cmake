@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Windows Desktop platform." ON_TARGET "Linux" "OSX" "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # There is archived version of releases available at https://github.com/janisozaur/libmpeg2

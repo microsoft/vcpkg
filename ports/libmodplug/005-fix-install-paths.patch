@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 468f1a3..b58b11e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,7 +119,10 @@ add_library(modplug ${LIB_TYPE}
+   )
+ 
+ # install the library:
+-install(TARGETS modplug DESTINATION lib)
++install(TARGETS modplug
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
+ 
+ # incstall the headers:
+ install(FILES

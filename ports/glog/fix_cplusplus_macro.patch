@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d145517..681b791 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -669,6 +669,10 @@ if (CYGWIN OR WIN32)
+   target_compile_definitions (glog PUBLIC GLOG_NO_ABBREVIATED_SEVERITIES)
+ endif (CYGWIN OR WIN32)
+ 
++if ((MSVC) AND (MSVC_VERSION GREATER_EQUAL 1914))
++    target_compile_options(glog INTERFACE "/Zc:__cplusplus")
++endif()
++
+ if (WITH_CUSTOM_PREFIX)
+   target_compile_definitions (glog PUBLIC GLOG_CUSTOM_PREFIX_SUPPORT)
+ endif (WITH_CUSTOM_PREFIX)

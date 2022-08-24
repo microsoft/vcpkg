@@ -1,8 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7465e46..9650a59 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -99,9 +99,9 @@ if (WIN32)
+@@ -120,9 +120,9 @@ if (WIN32)
          PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
  endif (WIN32)
  
@@ -12,9 +11,9 @@ index 7465e46..9650a59 100755
 -target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
 +target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
  
- if (NOT WIN32)
-     if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
-@@ -205,11 +205,10 @@ endif (NOT WIN32)
+ if(${CMAKE_SYSTEM_NAME} STREQUAL "Haiku")
+     target_link_libraries(${PROJECT_NAME} PRIVATE network)
+@@ -316,11 +316,10 @@ endif (NOT WIN32)
  
  if (BUILD_POSTGRESQL)
      # find postgres
@@ -27,15 +26,27 @@ index 7465e46..9650a59 100755
 +    if(PostgreSQL_FOUND)
 +      set(pg_FOUND true)
 +      target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
-         set(DROGON_SOURCES ${DROGON_SOURCES}
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
              orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
-         if (LIBPQ_BATCH_MODE)
-@@ -228,7 +227,7 @@ if (BUILD_POSTGRESQL)
-             set(DROGON_SOURCES ${DROGON_SOURCES}
-                 orm_lib/src/postgresql_impl/PgConnection.cc)
+@@ -348,7 +348,7 @@ if (BUILD_POSTGRESQL)
+                 ${private_headers}
+                 orm_lib/src/postgresql_impl/PgConnection.h)
          endif (libpq_supports_batch)
 -    endif (pg_FOUND)
 +    endif (PostgreSQL_FOUND)
  endif (BUILD_POSTGRESQL)
  
  if (BUILD_MYSQL)
+diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
+--- a/drogon_ctl/CMakeLists.txt
++++ b/drogon_ctl/CMakeLists.txt
+@@ -19,7 +19,7 @@ add_executable(_drogon_ctl
+ target_link_libraries(_drogon_ctl ${PROJECT_NAME})
+ if (WIN32 AND BUILD_DROGON_SHARED)
+   set(DROGON_FILE $<TARGET_FILE:drogon>)
+-  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
++  set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
+   add_custom_command(TARGET _drogon_ctl POST_BUILD
+           COMMAND ${CMAKE_COMMAND}
+           -DCTL_FILE=${DROGON_FILE}

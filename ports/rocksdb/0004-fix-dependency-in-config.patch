@@ -1,5 +1,5 @@
 diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
-index 0bd14be..f9f6aa8 100644
+index 0bd14be11..f9f6aa878 100644
 --- a/cmake/RocksDBConfig.cmake.in
 +++ b/cmake/RocksDBConfig.cmake.in
 @@ -37,7 +37,7 @@ if(@WITH_LZ4@)

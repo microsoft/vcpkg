@@ -2,12 +2,10 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
-                    FindGObject.patch
-                    FindGStreamer.patch
                     remove_unistd.patch
-                    3c74340.diff)
+)
 
-#Maybe TODO: ALSA + PulseAudio? (Missing Ports)
+#Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
 
 # qt_find_package(ALSA PROVIDED_TARGETS ALSA::ALSA MODULE_NAME multimedia QMAKE_LIB alsa)
 # qt_find_package(AVFoundation PROVIDED_TARGETS AVFoundation::AVFoundation MODULE_NAME multimedia QMAKE_LIB avfoundation)
@@ -25,6 +23,9 @@ set(${PORT}_PATCHES fix_windows_header_include.patch
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+    "widgets"       CMAKE_REQUIRE_FIND_PACKAGE_Qt6Widgets
+    #"gstreamer"     CMAKE_REQUIRE_FIND_PACKAGE_GStreamer
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
@@ -36,6 +37,9 @@ if("gstreamer" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
+
+# alsa is not ready
+list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}

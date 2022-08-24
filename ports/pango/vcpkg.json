@@ -1,9 +1,9 @@
 {
   "name": "pango",
-  "version": "1.48.4",
-  "port-version": 1,
+  "version": "1.50.9",
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
+  "license": "LGPL-2.0-only",
   "dependencies": [
     {
       "name": "cairo",
@@ -27,6 +27,10 @@
         "coretext"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     }
   ]
 }

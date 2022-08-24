@@ -1,9 +1,10 @@
 {
   "name": "opencv4",
-  "version": "4.5.3",
-  "port-version": 3,
+  "version": "4.6.0",
+  "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,15 +14,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
-    "dnn",
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp"
+    "default-features"
   ],
   "features": {
     "ade": {
@@ -69,6 +69,37 @@
         }
       ]
     },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
     "dnn": {
       "description": "Enable dnn module",
       "dependencies": [
@@ -96,10 +127,29 @@
         }
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
         "gdcm"
+      ]
+    },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "halide": {
@@ -175,6 +225,12 @@
       "description": "PNG support for opencv",
       "dependencies": [
         "libpng"
+      ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
       ]
     },
     "qt": {

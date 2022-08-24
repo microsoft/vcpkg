@@ -1,13 +1,14 @@
-vcpkg_fail_port_install(ON_TARGET "osx")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
-    REF af0e25cec567868a04eaacf6410c395712fe4b90 #1.18.1-so-3.11.14
-    SHA512 3dc6b75964d93af84921ee30a5b14e0ab84d16afa31f97a0fbf62e2006ace62f9c0366d1c3872cd678dab71eb23a422daeca0eb0b5db58e434f27657bbf9b5bc
+    REF 61b63d734a7b9df618f6b45dda2466aed442f7f0 # 1.19.0-rc2
+    SHA512 16661c012e18ac72b24c46caf5c02515c29a05e0a8dcf95076eff3a1f2e87c225245037480ed37068858fe6e04ff4a404f69877599b208ab9265d054ec117820
     HEAD_REF master
+    PATCHES
+        dont-generate-extract-3rd-party-things.patch
+        use-if-instead-of-ifdef-in-writer.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

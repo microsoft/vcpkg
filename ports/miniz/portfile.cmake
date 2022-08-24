@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 2.2.0
     SHA512 0bb2b0ac627715b90ff9fd69ca8958a0bea387bd7ddf5c200daba953b98ef788092e3009842f4f123234e85570159250c8897a30c1c1f2d4dea9bca9837f6111
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-location.patch
 )
 
 vcpkg_cmake_configure(

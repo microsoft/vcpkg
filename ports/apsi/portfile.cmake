@@ -1,14 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if("hexl" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/APSI
-    REF 7fbeefbd42f4884da95073d40de22ba46fc0f1f5
-    SHA512 dfa4b7571b355646004d5b8823f250b56cda6e84d348a6a013f45fbf5c119e49bda28ac8a75f8ec06738814c50e34e66805994c7bc780ddfd57cc2067ffa745a
+    REF ba71aeb28a9f21e4ad59c45aa88232b099ce0b87 #0.8.2
+    SHA512 810bcbe0afa3d1c9d299a85bc4266135bdf9adc33bfc754c59731f6cfa6a89d449fb134cef34c4614742bd50e9f8f3916e5b64998dcea69883ca27b7da3c5f04
     HEAD_REF main
 )
 
@@ -18,6 +14,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zeromq APSI_USE_ZMQ
 )
 
+set(CROSSCOMP_OPTIONS "")
+if (NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(CROSSCOMP_OPTIONS -DAPSI_FOURQ_ARM64_EXITCODE=0 -DAPSI_FOURQ_ARM64_EXITCODE__TRYRUN_OUTPUT="")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -25,11 +28,12 @@ vcpkg_cmake_configure(
         "-DAPSI_BUILD_TESTS=OFF"
         "-DAPSI_BUILD_CLI=OFF"
         ${FEATURE_OPTIONS}
+        ${CROSSCOMP_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "APSI" CONFIG_PATH "lib/cmake/APSI-0.3")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "APSI" CONFIG_PATH "lib/cmake/APSI-0.8")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

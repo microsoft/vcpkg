@@ -1,7 +1,16 @@
 {
   "name": "double-conversion",
-  "version-string": "3.1.5",
-  "port-version": 1,
+  "version": "3.2.0",
   "description": "Efficient binary-decimal and decimal-binary conversion routines for IEEE doubles.",
-  "homepage": "https://github.com/google/double-conversion"
+  "homepage": "https://github.com/google/double-conversion",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
