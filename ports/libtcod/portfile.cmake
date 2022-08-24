@@ -8,9 +8,11 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
+        "png" CMAKE_DISABLE_FIND_PACKAGE_lodepng-c
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_SDL2
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_GLAD
         "threads" CMAKE_DISABLE_FIND_PACKAGE_Threads
+        "zlib" CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(
