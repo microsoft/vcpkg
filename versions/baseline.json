@@ -2764,6 +2764,10 @@
       "baseline": "2020-09-14",
       "port-version": 2
     },
+    "guile": {
+      "baseline": "3.0.8",
+      "port-version": 0
+    },
     "guilite": {
       "baseline": "2022-05-05",
       "port-version": 0
