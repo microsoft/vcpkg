@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     0001-remove_find_package_macro.patch
     0002-fixup_cmake_exports_path.patch
+    0003-fix-arm-intrin-detection-pr-1216.patch
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
