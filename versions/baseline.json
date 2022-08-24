@@ -6838,7 +6838,7 @@
     },
     "speex": {
       "baseline": "1.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "speexdsp": {
       "baseline": "1.2.1",
