@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO openexr/openexr
-  REF ed64d5467dee9763f28baf300f7699e6288b9f5f
-  SHA512 549d37ed1ef4d1ff7e732d583f7213ee15c7f92625aea9fd65345e4c5b854902c02e5940d0692b1af5ae0a02abf46aaefea2662db2389d1b2fb4264a373baac2
+  REF 918b8f543e81b5a1e1aca494ab7352ca280afc9e
+  SHA512 7c4a22779718cb1a8962d53d0817a0b3cba90fc9ad4c6469e845bdfbf9ae8be8e43905ad8672955838976caeffd7dabcc6ea9c1f00babef0d5dfc8b5e058cce9
   HEAD_REF master
   PATCHES
     0001-remove_find_package_macro.patch
