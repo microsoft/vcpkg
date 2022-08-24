@@ -1330,7 +1330,7 @@
     },
     "ceres": {
       "baseline": "2.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1814,7 +1814,7 @@
     },
     "dartsim": {
       "baseline": "6.12.2",
-      "port-version": 0
+      "port-version": 1
     },
     "dataframe": {
       "baseline": "1.19.0",
@@ -1974,7 +1974,7 @@
     },
     "dpdk": {
       "baseline": "22.03",
-      "port-version": 2
+      "port-version": 3
     },
     "dpp": {
       "baseline": "10.0.16",
@@ -2071,6 +2071,10 @@
     "ecsutil": {
       "baseline": "1.0.7.15",
       "port-version": 2
+    },
+    "edflib": {
+      "baseline": "1.21",
+      "port-version": 0
     },
     "edlib": {
       "baseline": "1.2.7",
@@ -2394,7 +2398,7 @@
     },
     "freetype": {
       "baseline": "2.12.1",
-      "port-version": 1
+      "port-version": 2
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
@@ -2566,7 +2570,7 @@
     },
     "gklib": {
       "baseline": "2022-07-27",
-      "port-version": 1
+      "port-version": 2
     },
     "gl2ps": {
       "baseline": "1.4.2",
@@ -2650,7 +2654,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2759,6 +2763,10 @@
     "guetzli": {
       "baseline": "2020-09-14",
       "port-version": 2
+    },
+    "guile": {
+      "baseline": "3.0.8",
+      "port-version": 0
     },
     "guilite": {
       "baseline": "2022-05-05",
@@ -4122,7 +4130,7 @@
     },
     "libsrt": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libsrtp": {
       "baseline": "2.4.2",
@@ -4544,6 +4552,10 @@
       "baseline": "2.28.1",
       "port-version": 0
     },
+    "mchehab-zbar": {
+      "baseline": "0.23.90",
+      "port-version": 0
+    },
     "mcpp": {
       "baseline": "2.7.2.14",
       "port-version": 3
@@ -4945,7 +4957,7 @@
       "port-version": 3
     },
     "nghttp2": {
-      "baseline": "1.46.0",
+      "baseline": "1.49.0",
       "port-version": 0
     },
     "ngspice": {
@@ -5469,8 +5481,8 @@
       "port-version": 0
     },
     "pdal": {
-      "baseline": "2.4.0",
-      "port-version": 1
+      "baseline": "2.4.3",
+      "port-version": 0
     },
     "pdal-c": {
       "baseline": "2.1",
@@ -5641,8 +5653,8 @@
       "port-version": 4
     },
     "poppler": {
-      "baseline": "22.3.0",
-      "port-version": 1
+      "baseline": "22.8.0",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
@@ -6217,7 +6229,7 @@
       "port-version": 0
     },
     "rapidcsv": {
-      "baseline": "8.53",
+      "baseline": "8.64",
       "port-version": 0
     },
     "rapidjson": {
@@ -6729,7 +6741,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.4",
+      "baseline": "5.7.4.2",
       "port-version": 0
     },
     "soci": {
@@ -7541,8 +7553,8 @@
       "port-version": 0
     },
     "vectorclass": {
-      "baseline": "2.00.01",
-      "port-version": 2
+      "baseline": "2.02.00",
+      "port-version": 0
     },
     "visit-struct": {
       "baseline": "1.0",
