@@ -14,17 +14,16 @@ vcpkg_from_github(
     0003-fix-arm-intrin-detection-pr-1216.patch
 )
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=_d
     -DPYILMBASE_ENABLE=FALSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ilmbase TARGET_PATH share/ilmbase)
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ilmbase CONFIG_PATH share/ilmbase)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
