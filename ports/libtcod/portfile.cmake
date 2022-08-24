@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF 1.21.0
-    SHA512 1d18a49b0d66337e2b29ad6b9a4a412cc4d2fd723d9a3d3c983ff3ef2f5bee4422ea3469513e0fe3b2f885773fb5d70e17128bc473b952ab6e0de27f687c905e
+    REF 1.22.0
+    SHA512 b37de166ae60a49beddd8d49db1c38b6b9b7f0cbb86aaf3468499a8bcc58f22c81b154e805909d70b89f40a2527ba4b9cdc66fee1b4c203a2c512ff16364c09d
     HEAD_REF main
 )
 
