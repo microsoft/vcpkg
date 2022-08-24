@@ -1,0 +1,38 @@
+--- libassuan.orig/src/mkheader.c	2013-03-15 20:26:09.000000000 +0100
++++ libassuan/src/mkheader.c	2017-09-24 14:17:33.584583300 +0200
+@@ -99,7 +99,7 @@
+                "# include <unistd.h>\n"
+                "#endif\n", stdout);
+       else
+-        fputs ("#include <unistd.h>\n", stdout);
++        fputs ("#include <io.h>\n", stdout);
+     }
+   else if (!strcmp (tag, "include:types"))
+     {
+diff -ru libassuan.orig/src/Makefile.in libassuan/src/Makefile.in
+--- libassuan.orig/src/Makefile.in	2020-06-10 17:26:08.699728800 +0200
++++ libassuan/src/Makefile.in	2020-06-10 17:22:11.066865300 +0200
+diff -ru libassuan.orig/src/assuan-handler.c libassuan/src/assuan-handler.c
+--- libassuan.orig/src/assuan-handler.c 2016-06-25 16:27:49.000000000 +0200
++++ libassuan/src/assuan-handler.c      2017-09-24 15:32:51.200956200 +0200
+@@ -395,7 +395,7 @@
+
+   { "INPUT",  std_handler_input, std_help_input, 0 },
+   { "OUTPUT", std_handler_output, std_help_output, 0 },
+-  { } };
++};
+
+
+ /**
+diff -ru libassuan.orig/Makefile.am libassuan/Makefile.am
+--- libassuan.orig/Makefile.am	2016-07-14 10:09:22.000000000 +0200
++++ libassuan/Makefile.am	2017-09-25 21:20:19.928317500 +0200
+@@ -35,7 +35,7 @@
+ doc =
+ endif
+ 
+-SUBDIRS = m4 src $(doc) tests
++SUBDIRS = m4 src $(doc)
+ 
+ 
+ dist-hook: gen-ChangeLog

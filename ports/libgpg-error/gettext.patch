@@ -1,0 +1,10 @@
+--- configure.ac.orig	2022-04-19 19:15:47.000000000 +0200
++++ configure.ac	2022-04-19 19:15:49.000000000 +0200
+@@ -187,6 +187,7 @@
+ 
+ # Note, that autogen.sh greps for the next line.
+ AM_GNU_GETTEXT_VERSION([0.19.3])
++AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.3])
+ AM_GNU_GETTEXT([external])
+ 
+ # Checks for header files.

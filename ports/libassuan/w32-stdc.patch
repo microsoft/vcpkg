@@ -1,0 +1,74 @@
+--- libassuan/src/assuan-handler.c
++++ libassuan/src/assuan-handler.c
+@@ -938,7 +938,7 @@
+ #if defined(HAVE_W32CE_SYSTEM)
+         fdarray[n++] = (void*)fileno (ctx->outbound.data.fp);
+ #elif defined(HAVE_W32_SYSTEM)
+-        fdarray[n++] = (void*)_get_osfhandle (fileno (ctx->outbound.data.fp));
++        fdarray[n++] = (void*)_get_osfhandle (_fileno (ctx->outbound.data.fp));
+ #else
+         fdarray[n++] = fileno (ctx->outbound.data.fp);
+ #endif
+--- libassuan/src/assuan-logging.c
++++ libassuan/src/assuan-logging.c
+@@ -30,10 +30,15 @@
+ # ifdef HAVE_WINSOCK2_H
+ #  include <winsock2.h>
+ # endif
++# include <process.h>
++# define getpid _getpid
+ # include <windows.h>
+ #endif /*HAVE_W32_SYSTEM*/
+ #include <errno.h>
+ #include <ctype.h>
++#if defined HAVE_W32_SYSTEM
++#define isascii __isascii
++#endif
+ 
+ #include "assuan-defs.h"
+ 
+--- libassuan/src/assuan-pipe-connect.c
++++ libassuan/src/assuan-pipe-connect.c
+@@ -47,6 +47,8 @@
+ # ifdef HAVE_WINSOCK2_H
+ #  include <winsock2.h>
+ # endif
++# include <process.h>
++# define getpid _getpid
+ # include <windows.h>
+ #endif
+ 
+--- libassuan/src/assuan-socket.c
++++ libassuan/src/assuan-socket.c
+@@ -27,6 +27,8 @@
+ #include <stdlib.h>
+ #ifdef HAVE_W32_SYSTEM
+ # define WIN32_LEAN_AND_MEAN
++# include <process.h>
++# define getpid _getpid
+ # include <windows.h>
+ # include <wincrypt.h>
+ #ifndef HAVE_W32CE_SYSTEM
+--- libassuan/src/conversion.c
++++ libassuan/src/conversion.c
+@@ -27,6 +27,9 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <ctype.h>
++#if defined HAVE_W32_SYSTEM
++#define isascii __isascii
++#endif
+ 
+ #include "assuan-defs.h"
+ #include "debug.h"
+--- libassuan/src/system-w32.c
++++ libassuan/src/system-w32.c
+@@ -453,7 +453,7 @@
+ 
+   /* Dup stderr to /dev/null unless it is in the list of FDs to be
+      passed to the child. */
+-  fd = assuan_fd_from_posix_fd (fileno (stderr));
++  fd = assuan_fd_from_posix_fd (_fileno (stderr));
+   fdp = fd_child_list;
+   if (fdp)
+     {
