@@ -384,7 +384,7 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
-    elseif(NOT VCPKG_TARGET_IS_OSX)
+    elseif(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
         # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
         function(z_vcpkg_make_set_env envvar cmakevar)
             set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
