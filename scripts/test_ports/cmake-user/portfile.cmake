@@ -221,14 +221,10 @@ foreach(executable IN LISTS cmake_commands)
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Release"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=OFF"
     )
     test_cmake_project(NAME "debug"
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Debug"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=ON"
     )
 endforeach()

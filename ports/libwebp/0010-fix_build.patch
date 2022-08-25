@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 43742c7f7..44b035ebb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -248,6 +248,9 @@ ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h")
+ if(MSVC)
+   # avoid security warnings for e.g., fopen() used in the examples.
+   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++  if(BUILD_SHARED_LIBS)
++    add_definitions("-DWEBP_DLL")
++  endif()
+ else()
+   add_definitions(-Wall)
+ endif()
+@@ -635,8 +638,12 @@ if(WEBP_BUILD_EXTRAS)
+   # webp_quality
+   add_executable(webp_quality ${WEBP_QUALITY_SRCS})
+   target_link_libraries(webp_quality exampleutil imagedec extras)
++  if(BUILD_SHARED_LIBS)
++      target_link_libraries(webp_quality webpdspdecode)
++  endif()
+   target_include_directories(webp_quality
+                              PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++                                     ${CMAKE_CURRENT_SOURCE_DIR}/src
+                                      ${CMAKE_CURRENT_BINARY_DIR})
+ 
+   # vwebp_sdl
+@@ -651,6 +658,10 @@ if(WEBP_BUILD_EXTRAS)
+                                        ${SDL_INCLUDE_DIR})
+     set(WEBP_HAVE_SDL 1)
+     target_compile_definitions(vwebp_sdl PUBLIC WEBP_HAVE_SDL)
++    if (MSVC)
++        target_link_libraries(vwebp_sdl dxguid winmm)
++    endif()
++    target_compile_definitions(vwebp_sdl PRIVATE WEBP_HAVE_JUST_SDL_H)
+   endif()
+ endif()
+ 
+@@ -669,7 +680,7 @@ if(WEBP_BUILD_WEBP_JS)
+          -s EXPORTED_FUNCTIONS='[\"_WebpToSDL\"]' -s INVOKE_RUN=0 \
+          -s EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'")
+     set_target_properties(webp_js PROPERTIES OUTPUT_NAME webp)
+-    target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL)
++    target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL WEBP_HAVE_JUST_SDL_H)
+   endif()
+ 
+   # WASM version
+diff --git a/src/webp/types.h b/src/webp/types.h
+index 47f7f2b00..a7a706590 100644
+--- a/src/webp/types.h
++++ b/src/webp/types.h
+@@ -39,7 +39,9 @@ typedef long long int int64_t;
+ #ifndef WEBP_EXTERN
+ // This explicitly marks library functions and allows for changing the
+ // signature for e.g., Windows DLL builds.
+-# if defined(__GNUC__) && __GNUC__ >= 4
++# if defined(_MSC_VER) && defined(WEBP_DLL)
++#  define WEBP_EXTERN extern __declspec(dllexport)
++# elif defined(__GNUC__) && __GNUC__ >= 4
+ #  define WEBP_EXTERN extern __attribute__ ((visibility ("default")))
+ # else
+ #  define WEBP_EXTERN extern

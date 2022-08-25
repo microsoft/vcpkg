@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DENABLE_HIDDEN_SYMBOLS=${DENABLE_HIDDEN_SYMBOLS}
         -DENABLE_TARGET_EXPORT=ON # Export CMake config files
         -DENABLE_CJSON_TEST=OFF
+        -DENABLE_CUSTOM_COMPILER_FLAGS=OFF
         -DENABLE_FUZZING=OFF
         ${FEATURE_OPTIONS}
 )

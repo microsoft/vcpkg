@@ -564,7 +564,7 @@ function(vcpkg_find_acquire_program program)
         endif()
         set(version_command --version)
     else()
-        message(FATAL "unknown tool ${program} -- unable to acquire.")
+        message(FATAL_ERROR "unknown tool ${program} -- unable to acquire.")
     endif()
 
     if("${program_name}" STREQUAL "")
