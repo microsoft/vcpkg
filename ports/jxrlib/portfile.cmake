@@ -16,12 +16,11 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MA
     file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
