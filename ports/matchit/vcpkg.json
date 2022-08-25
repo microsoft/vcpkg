@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "matchit is a pattern matching library for C++17 with macro-free APIs",
   "homepage": "https://github.com/BowenFu/matchit.cpp",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

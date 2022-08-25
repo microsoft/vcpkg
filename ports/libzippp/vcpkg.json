@@ -3,7 +3,6 @@
   "version": "5.1-1.8.0",
   "description": "Simple basic C++ wrapper around the libzip library. It is meant to be a portable and easy-to-use library for ZIP handling",
   "homepage": "https://github.com/ctabin/libzippp",
-  "license": " Apache-2.0",
   "dependencies": [
     {
       "name": "libzip",
