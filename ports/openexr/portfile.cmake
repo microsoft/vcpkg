@@ -15,17 +15,15 @@ vcpkg_from_github(
     0004-Fix-pkg-config-lib-suffix-for-cmake-debug-builds.patch  # https://github.com/AcademySoftwareFoundation/openexr/pull/1032
 )
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=_d
     -DPYILMBASE_ENABLE=FALSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ilmbase TARGET_PATH share/ilmbase)
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(
