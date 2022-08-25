@@ -61,6 +61,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
+if(VCPKG_TARGET_IS_IOS)
+    list(APPEND OPTIONS
+        ac_cv_type_uid_t=yes # sys/types.h does indeed define uid_t
+    )
+endif()
+
 # These functions scope any changes to VCPKG_BUILD_TYPE
 function(build_libintl_and_tools)
     cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
