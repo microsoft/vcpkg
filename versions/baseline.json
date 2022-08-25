@@ -5242,7 +5242,7 @@
     },
     "openexr": {
       "baseline": "2.5.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opengl": {
       "baseline": "2022-03-14",
