@@ -16,15 +16,15 @@ index afb69c08..f32c7652 100644
  # Search for dlopen
  #
 -LIBS=""
-+#OLD_LIBS=$LIBS
-+#LIBS=
++OLD_LIBS=$LIBS
++LIBS=
  AC_SEARCH_LIBS(dlopen, c dl)
  if test "$LIBS" = "-lc"; then
      LIBS=""
  fi
  ld_library="$LIBS"
 -LIBS=""
-+#LIBS=$OLD_LIBS
++LIBS=$OLD_LIBS
  all_libraries="$all_libraries $ld_library"
  
  

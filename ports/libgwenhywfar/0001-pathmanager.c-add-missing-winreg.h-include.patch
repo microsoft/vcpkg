@@ -11,16 +11,13 @@ diff --git a/src/base/pathmanager.c b/src/base/pathmanager.c
 index b393c107..e5a7ffa4 100644
 --- a/src/base/pathmanager.c
 +++ b/src/base/pathmanager.c
-@@ -47,6 +47,9 @@
+@@ -47,6 +47,7 @@
+ 
  #ifdef OS_WIN32
  # include <windows.h>
++# include <winreg.h>
  #endif
-+#if defined(_WIN32)
-+#include <winreg.h>
-+#endif
 
-
- static GWEN_DB_NODE *gwen__paths=0;
 
 -- 
 2.37.1

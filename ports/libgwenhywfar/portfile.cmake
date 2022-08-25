@@ -1,3 +1,7 @@
+# workaround "Could not find proper second linker member"
+set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
+set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
+
 set(VERSION_MAJOR 5)
 set(VERSION_MINOR 10)
 set(VERSION_PATCH 1)
@@ -14,24 +18,24 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
     PATCHES
-        0001-Add-support-for-static-builds.patch
+        0001-Add-support-for-static-builds.patch                # https://www.aquamaniac.de/rdm/issues/283
         0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch
         0001-Fix-variadic-marco-usage.patch                     # https://www.aquamaniac.de/rdm/issues/267
         disable_gwenbuild_tool.patch
-        0001-Use-OS-agnostic-string-comparison-functions.patch
-        0001-Guard-unistd.h-includes.patch
+        0001-Use-OS-agnostic-string-comparison-functions.patch  # https://www.aquamaniac.de/rdm/issues/282
+        0001-Guard-unistd.h-includes.patch                      # https://www.aquamaniac.de/rdm/issues/278
         0001-sycio_tls-add-missing-windows.h-include.patch
-        0001-Guiard-sys-time.h-include-with-HAVE_SYS_TIME_H.patch
+        0001-Guiard-sys-time.h-include-with-HAVE_SYS_TIME_H.patch # https://www.aquamaniac.de/rdm/issues/279
         0001-Add-ssize_t-typdefs-on-Windows.patch
         0001-MSVC-add-missing-mode_t-typedefs.patch
         0001-MSVC-add-missing-permission-bits.patch
-        0001-directory_p.h-MSVC-fixes.patch
-        0001-pathmanager.c-add-missing-winreg.h-include.patch
-        0001-xmlcmd_lxml.c-use-GWEN_Text_strndup.patch
-        0001-Do-not-clear-the-LIBS-var.patch
+        0001-directory_p.h-MSVC-fixes.patch                     # https://www.aquamaniac.de/rdm/issues/280
+        0001-pathmanager.c-add-missing-winreg.h-include.patch   # https://www.aquamaniac.de/rdm/issues/286
+        0001-xmlcmd_lxml.c-use-GWEN_Text_strndup.patch          # https://www.aquamaniac.de/rdm/issues/277
+        0001-Do-not-clear-the-LIBS-var.patch                    # https://www.aquamaniac.de/rdm/issues/285
         0001-Disable-testlib.patch
         0001-ohbci.c-add-missing-flags.patch
-        0001-APIs-support-MSVC.patch
+        0001-APIs-support-MSVC.patch                            # # https://www.aquamaniac.de/rdm/issues/281
         0001-Disable-docs.patch
         0001-Disable-tests.patch
 )
@@ -55,12 +59,13 @@ endif()
 list(JOIN FEATURES_GUI " " GUIS)
 
 if(VCPKG_TARGET_IS_OSX)
-    list(APPEND VCPKG_LINKER_FLAGS "-framework CoreFoundation -framework Security")
+    list(APPEND VCPKG_LINKER_FLAGS "-framework CoreFoundation -framework Security") # libintl requirement
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND windows_defs "-D__STDC__=1 -D_CRT_INTERNAL_NONSTDC_NAMES -D_CRT_DECLARE_NONSTDC_NAMES")
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_C_COMPILER=clang-cl.exe" "-DCMAKE_CXX_COMPILER=clang-cl.exe" "-DCMAKE_LINKER=lld-link.exe" "-DCMAKE_AR=lib.exe")
-    string(APPEND VCPKG_C_FLAGS " ${windows_defs} -Xcompiler -fuse-ld=lld -std:c11")
-    string(APPEND VCPKG_CXX_FLAGS " ${windows_defs} -Xcompiler -fuse-ld=lld")
+
+    set(windows_defs "-D__STDC__=1 -D_CRT_INTERNAL_NONSTDC_NAMES -D_CRT_DECLARE_NONSTDC_NAMES")
+    list(APPEND VCPKG_C_FLAGS "${windows_defs} -Xcompiler -fuse-ld=lld -std:c11")
+    list(APPEND VCPKG_CXX_FLAGS "${windows_defs} -Xcompiler -fuse-ld=lld")
 endif()
 
 # AM_GNU_GETTEXT is required
@@ -86,12 +91,21 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 foreach(GUI IN LISTS FEATURES_GUI)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME gwengui-cpp CONFIG_PATH "lib/cmake/gwengui-${GUI}-${VERSION_MAJOR}.${VERSION_MINOR}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME gwengui-${GUI} CONFIG_PATH "lib/cmake/gwengui-${GUI}-${VERSION_MAJOR}.${VERSION_MINOR}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH "lib/cmake/gwenhywfar-${VERSION_MAJOR}.${VERSION_MINOR}")
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" TOOL_NAMES gct-tool gsa mklistdoc typemaker typemaker2 xmlmerge AUTO_CLEAN)
+endif()
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gwenhywfar" "${CURRENT_PACKAGES_DIR}/bin/gwenhywfar")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gwenhywfar" "${CURRENT_PACKAGES_DIR}/debug/bin/gwenhywfar")
+    endif()
 endif()
 
 # the `dir` variable is not used in the script
