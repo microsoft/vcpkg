@@ -18,6 +18,7 @@ vcpkg_extract_source_archive_ex(
         0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch
         0001-Fix-variadic-marco-usage.patch                     # https://www.aquamaniac.de/rdm/issues/267
         disable_docs.patch
+        disable_gwenbuild_tool.patch
 )
 
 if ("libxml2" IN_LIST FEATURES)

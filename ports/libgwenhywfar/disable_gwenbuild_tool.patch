@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 6c1b8bf..e5486eb 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -435,7 +435,7 @@ case "$OS_TYPE" in
+           fi
+         fi
+         
+-        gwenbuild_tool="gwenbuild"
++        gwenbuild_tool=""
+     	;;
+     windows)
+         gwenhywfar_sys_is_windows=1
