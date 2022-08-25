@@ -79,6 +79,11 @@ function(vcpkg_cmake_configure)
         if(DEFINED VCPKG_PLATFORM_TOOLSET)
             vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
+        if(NOT generator)
+            message(FATAL_ERROR "Unable to determine appropriate Visual Studio generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
+    VCPKG_TARGET_ARCHITECTURE: ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
     elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(ninja_host)
