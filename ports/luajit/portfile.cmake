@@ -13,6 +13,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set (LJIT_STATIC "")
 else()
     set (LJIT_STATIC "static")
+    vcpkg_replace_string("${SOURCE_PATH}/src/msvcbuild.bat" "/D_CRT_STDIO_INLINE=__declspec(dllexport)__inline" "/D_CRT_STDIO_INLINE=__inline")
 endif()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
