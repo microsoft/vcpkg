@@ -37,7 +37,7 @@ vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 # vcpkg backward compatibility
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CoinUtilsConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME CoinUtilsConfig.cmake)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CoinUtilsConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/coinutils/CoinUtilsConfig.cmake" @ONLY)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

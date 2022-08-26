@@ -6,6 +6,11 @@
   "dependencies": [
     "bzip2",
     {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
