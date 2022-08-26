@@ -1,6 +1,6 @@
 {
   "name": "boost-range",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost range module",
   "homepage": "https://github.com/boostorg/range",
   "license": "BSL-1.0",
