@@ -2,5 +2,13 @@
   "name": "coinutils",
   "version-string": "2.11.4",
   "port-version": 2,
-  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project"
+  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project",
+  "dependencies": [
+    "bzip2",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
+    "zlib"
+  ]
 }

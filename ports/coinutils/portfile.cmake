@@ -9,7 +9,14 @@ vcpkg_from_github(
     SHA512 1c2e7f796524d67d87253bc7938c1a6db3c8266acec6b6399aeb83c0fb253b77507e6b5e84f16b0b8e40098aef94676499f396d1c7f653b1e04cbadca7620185
     PATCHES
         autotools.patch
+        pkgconfig.patch
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lz" "")
+vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lbz2" "")
+
+x_vcpkg_pkgconfig_get_modules(PREFIX ZLIB MODULES zlib LIBRARIES)
+x_vcpkg_pkgconfig_get_modules(PREFIX BZIP MODULES bzip2 LIBRARIES)
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}/CoinUtils"
@@ -21,6 +28,10 @@ vcpkg_configure_make(
         --without-sample
         --without-netlib
         ac_cv_prog_coin_have_doxygen=no
+    OPTIONS_RELEASE
+        "LIBS=${BZIP_LIBRARIES_RELEASE} ${ZLIB_LIBRARIES_RELEASE}"
+    OPTIONS_DEBUG
+        "LIBS=${BZIP_LIBRARIES_DEBUG} ${ZLIB_LIBRARIES_DEBUG}"
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()

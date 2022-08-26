@@ -1,0 +1,9 @@
+diff --git a/CoinUtils/coinutils.pc.in b/CoinUtils/coinutils.pc.in
+index 235ffaf..b435640 100644
+--- a/CoinUtils/coinutils.pc.in
++++ b/CoinUtils/coinutils.pc.in
+@@ -10,3 +10,4 @@ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lCoinUtils @COINUTILSLIB_PCLIBS@
+ Cflags: -I${includedir}
+ Requires: @COINUTILSLIB_PCREQUIRES@
++Requires.private: bzip2 zlib
