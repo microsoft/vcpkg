@@ -4,7 +4,7 @@
   "description": "This is a release of MySQL Connector/C++, the C++ interface for communicating with MySQL servers.",
   "homepage": "https://github.com/mysql/mysql-connector-cpp",
   "license": null,
-  "supports": "!uwp",
+  "supports": "!uwp & !(windows & (arm | arm64))",
   "dependencies": [
     "openssl",
     {
