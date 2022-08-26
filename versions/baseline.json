@@ -4520,6 +4520,10 @@
       "baseline": "2022-03-02",
       "port-version": 0
     },
+    "matchit": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "materialx": {
       "baseline": "1.38.4",
       "port-version": 0
