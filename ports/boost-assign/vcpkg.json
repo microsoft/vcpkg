@@ -1,6 +1,6 @@
 {
   "name": "boost-assign",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost assign module",
   "homepage": "https://github.com/boostorg/assign",
   "license": "BSL-1.0",
@@ -9,7 +9,6 @@
     "boost-config",
     "boost-core",
     "boost-move",
-    "boost-mpl",
     "boost-preprocessor",
     "boost-ptr-container",
     "boost-range",
