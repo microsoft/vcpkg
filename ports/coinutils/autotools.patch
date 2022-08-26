@@ -1,0 +1,31 @@
+diff --git a/CoinUtils/Makefile.in b/CoinUtils/Makefile.in
+index 6b7ebf7..92551f3 100644
+--- a/CoinUtils/Makefile.in
++++ b/CoinUtils/Makefile.in
+@@ -354,7 +354,7 @@ CLEANFILES =
+ # Files that are generated and should be cleaned with make distclean
+ DISTCLEANFILES = $(am__append_3) $(VPATH_DISTCLEANFILES)
+ DocFiles = README AUTHORS LICENSE 
+-DocInstallDir = $(datadir)/coin/doc/$(PACKAGE_NAME)
++DocInstallDir = $(datadir)/coinutils
+ COIN_HAS_DOXYGEN = @COIN_HAS_DOXYGEN_TRUE@TRUE
+ COIN_HAS_LATEX = @COIN_HAS_LATEX_TRUE@TRUE
+ all: all-recursive
+@@ -709,7 +709,8 @@ installdirs-am:
+ 	for dir in "$(DESTDIR)$(pkgconfiglibdir)"; do \
+ 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
+ 	done
+-install: install-recursive
++install:
++	$(MAKE) -j 1 install-recursive
+ install-exec: install-exec-recursive
+ install-data: install-data-recursive
+ uninstall: uninstall-recursive
+@@ -841,6 +842,7 @@ uninstall-local: uninstall-doc
+ .PHONY: test unitTest doxydoc
+ 
+ install-data-hook:
++install-data-hook-vcpkg-skip:
+ 	@$(mkdir_p) "$(addlibsdir)"
+ @COIN_HAS_PKGCONFIG_TRUE@	PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir) \
+ @COIN_HAS_PKGCONFIG_TRUE@	"$(PKG_CONFIG)" --libs coinutils > $(addlibsdir)/coinutils_addlibs.txt
