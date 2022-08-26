@@ -26,6 +26,7 @@ vcpkg_configure_meson(
         -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Dintrospection=disabled    # Whether to generate the API introspection data (requires GObject-Introspection)
         -Drelocatable=true          # Whether to enable application bundle relocation support
+        -Dtests=false
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
