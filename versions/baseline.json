@@ -6892,6 +6892,10 @@
       "baseline": "0.4",
       "port-version": 0
     },
+    "spix-qt6": {
+      "baseline": "0.4",
+      "port-version": 0
+    },
     "sprout": {
       "baseline": "2019-06-20",
       "port-version": 1
