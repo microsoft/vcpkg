@@ -17,7 +17,7 @@ index 7031650..9355436 100644
  endif()
  
 -if(UNIX)
-+if(BUILD_SHARED_LIBS)
++if(0)
    add_library(cpuid SHARED ${cpuid_sources})
  else()
    add_library(cpuid ${cpuid_sources})
