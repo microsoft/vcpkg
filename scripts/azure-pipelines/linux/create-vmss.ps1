@@ -28,7 +28,7 @@ Param(
   [string]$ImageName
 )
 
-$Location = 'westus2'
+$Location = 'eastasia'
 $Prefix = 'PrLin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D32a_v4'
@@ -97,6 +97,10 @@ $Vmss = Set-AzVmssStorageProfile `
   -OsDiskCaching ReadOnly `
   -DiffDiskSetting Local `
   -ImageReferenceId $Image.Id
+
+$Vmss = Set-AzVmssBootDiagnostic `
+  -VirtualMachineScaleSet $Vmss `
+  -Enabled $true
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `

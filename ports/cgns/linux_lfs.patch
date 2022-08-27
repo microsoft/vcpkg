@@ -2,11 +2,11 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 46446da8a..a3d8cd98f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -82,6 +82,7 @@ if (CGNS_ENABLE_LFS)
-   else (WIN32)
+@@ -116,6 +116,7 @@ if (CGNS_ENABLE_LFS)
+   else ()
      check_symbol_exists(open64 "sys/types.h;sys/stat.h;unistd.h" HAVE_OPEN64)
      check_symbol_exists(lseek64 "sys/types.h;unistd.h" HAVE_LSEEK64)
 +    add_definitions(-D_FILE_OFFSET_BITS=64 -D__LARGEFILE64_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE)
-   endif (WIN32)
+   endif ()
    if (HAVE_OPEN64)
-     add_definitions(-DHAVE_OPEN64)
+     add_compile_definitions(HAVE_OPEN64)

@@ -9,6 +9,7 @@
       "name": "llvm",
       "default-features": false,
       "features": [
+        "bolt",
         "clang",
         "disable-assertions",
         "disable-clang-static-analyzer",
@@ -21,6 +22,7 @@
         "enable-zlib",
         "lld",
         "lldb",
+        "openmp",
         "polly",
         "target-aarch64",
         "target-amdgpu",

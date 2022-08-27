@@ -1,26 +1,35 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 085713d4d301aeb58e7d14f44cfac6ce35fe2e77 # 0.60
-    SHA512 835536482def61c9978cda58507a7f5983b99765f69e7865cf5597b06075dc3e7ad4a3be0b2de2e44e4a4c3a6998115bf567ff586fb656cf5d95a0a7465fb2fe
+    REF 2bc89b34ad3cc37b6bca9a44a3529ff2d8fe211f # 0.61
+    SHA512 6e2496959749422987aca21f333abb01648702b85e02acc711bbac398ca6a67d8be93a3d89fc1f8bad5446865725ff9bcc053e6229cb34627120b59469426266
     HEAD_REF master
     PATCHES
         ddl2cpp_path.patch
-        fix-dependency.patch
 )
 
-# Use sqlpp11's own build process, skipping tests
-vcpkg_configure_cmake(
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sqlite3  BUILD_SQLITE3_CONNECTOR
+        mariadb  BUILD_MARIADB_CONNECTOR
+        mysql    BUILD_MYSQL_CONNECTOR
+)
+
+# Use sqlpp11's own build process
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        -DENABLE_TESTS:BOOL=OFF
+        -DBUILD_TESTING:BOOL=OFF
+        # Use vcpkg as source for the date library
+        -DUSE_SYSTEM_DATE:BOOL=ON
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Sqlpp11 TARGET_PATH share/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Sqlpp11)
 
 # Delete redundant and unnecessary directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/include/date)

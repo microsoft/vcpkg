@@ -257,6 +257,12 @@ else() # VCPKG_TARGET_IS_WINDOWS
     include("${CURRENT_PORT_DIR}/prepare_for_build.cmake")
     prepare_for_build("${SOURCE_PATH}")
 
+    vcpkg_list(SET MSBUILD_OPTIONS
+        "/p:UseVcpkg=yes"
+        "/p:IceBuildingSrc=yes"
+        ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+    )
+
     # Build Ice
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
@@ -265,9 +271,7 @@ else() # VCPKG_TARGET_IS_WINDOWS
         TARGET "C++11\\ice++11"
         USE_VCPKG_INTEGRATION
         OPTIONS
-            /p:UseVcpkg=yes
-            /p:IceBuildingSrc=yes
-            ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+            ${MSBUILD_OPTIONS}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

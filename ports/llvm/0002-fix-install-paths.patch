@@ -1,18 +1,20 @@
- clang/cmake/modules/CMakeLists.txt | 4 ++--
- flang/cmake/modules/CMakeLists.txt | 4 ++--
- lld/cmake/modules/CMakeLists.txt   | 4 ++--
- llvm/cmake/modules/AddLLVM.cmake   | 2 +-
- llvm/cmake/modules/CMakeLists.txt  | 2 +-
- mlir/cmake/modules/CMakeLists.txt  | 4 ++--
- polly/cmake/CMakeLists.txt         | 4 ++--
- pstl/CMakeLists.txt                | 4 ++--
- 8 files changed, 14 insertions(+), 14 deletions(-)
+ clang/cmake/modules/CMakeLists.txt              | 4 ++--
+ compiler-rt/cmake/Modules/CompilerRTUtils.cmake | 2 +-
+ flang/cmake/modules/CMakeLists.txt              | 4 ++--
+ lld/cmake/modules/CMakeLists.txt                | 4 ++--
+ llvm/cmake/modules/AddLLVM.cmake                | 2 +-
+ llvm/cmake/modules/CMakeLists.txt               | 2 +-
+ mlir/cmake/modules/CMakeLists.txt               | 4 ++--
+ mlir/test/CMakeLists.txt                        | 2 +-
+ openmp/tools/Modules/CMakeLists.txt             | 2 +-
+ polly/cmake/CMakeLists.txt                      | 4 ++--
+ 10 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/clang/cmake/modules/CMakeLists.txt b/clang/cmake/modules/CMakeLists.txt
-index 561665d58cad..3c73878a4483 100644
+index c6f6ce9fe5d6..fc886b23a1a8 100644
 --- a/clang/cmake/modules/CMakeLists.txt
 +++ b/clang/cmake/modules/CMakeLists.txt
-@@ -3,11 +3,11 @@ include(LLVMDistributionSupport)
+@@ -5,11 +5,11 @@ include(FindPrefixFromConfig)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -26,11 +28,24 @@ index 561665d58cad..3c73878a4483 100644
  set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
  
  get_property(CLANG_EXPORTS GLOBAL PROPERTY CLANG_EXPORTS)
+diff --git a/compiler-rt/cmake/Modules/CompilerRTUtils.cmake b/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
+index 052095801aae..f3402793b60c 100644
+--- a/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
++++ b/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
+@@ -376,7 +376,7 @@ macro(load_llvm_config)
+       file(TO_CMAKE_PATH ${LLVM_CMAKE_DIR_FROM_LLVM_CONFIG} LLVM_CMAKE_DIR)
+     else()
+       file(TO_CMAKE_PATH ${LLVM_BINARY_DIR} LLVM_BINARY_DIR_CMAKE_STYLE)
+-      set(LLVM_CMAKE_DIR "${LLVM_BINARY_DIR_CMAKE_STYLE}/lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
++      set(LLVM_CMAKE_DIR "${LLVM_BINARY_DIR_CMAKE_STYLE}/share/llvm")
+     endif()
+ 
+     set(LLVM_CMAKE_INCLUDE_FILE "${LLVM_CMAKE_DIR}/LLVMConfig.cmake")
 diff --git a/flang/cmake/modules/CMakeLists.txt b/flang/cmake/modules/CMakeLists.txt
-index e46498a6bc35..2e922f8ca89d 100644
+index 170568c80dde..1bf6d6a829e2 100644
 --- a/flang/cmake/modules/CMakeLists.txt
 +++ b/flang/cmake/modules/CMakeLists.txt
-@@ -1,11 +1,11 @@
+@@ -4,11 +4,11 @@ include(FindPrefixFromConfig)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -45,10 +60,10 @@ index e46498a6bc35..2e922f8ca89d 100644
  
  get_property(FLANG_EXPORTS GLOBAL PROPERTY FLANG_EXPORTS)
 diff --git a/lld/cmake/modules/CMakeLists.txt b/lld/cmake/modules/CMakeLists.txt
-index 62d03fa901dd..09b0f54ee8c3 100644
+index 760c9d5f8d87..acd8a65808f5 100644
 --- a/lld/cmake/modules/CMakeLists.txt
 +++ b/lld/cmake/modules/CMakeLists.txt
-@@ -1,11 +1,11 @@
+@@ -4,11 +4,11 @@ include(FindPrefixFromConfig)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -63,10 +78,10 @@ index 62d03fa901dd..09b0f54ee8c3 100644
  
  get_property(LLD_EXPORTS GLOBAL PROPERTY LLD_EXPORTS)
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 29e40f45fef8..e9094e9b8eb2 100644
+index 37bc98f9e021..7cbfa2a9a577 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -1033,7 +1033,7 @@ function(process_llvm_pass_plugins)
+@@ -1049,7 +1049,7 @@ function(process_llvm_pass_plugins)
  
        ## Part 1: Extension header to be included whenever we need extension
        #  processing.
@@ -76,11 +91,12 @@ index 29e40f45fef8..e9094e9b8eb2 100644
        file(WRITE
            "${llvm_cmake_builddir}/LLVMConfigExtensions.cmake"
 diff --git a/llvm/cmake/modules/CMakeLists.txt b/llvm/cmake/modules/CMakeLists.txt
-index 51b6a4fdc284..a818de2e116c 100644
+index cea0c1df0a14..639c5422b04a 100644
 --- a/llvm/cmake/modules/CMakeLists.txt
 +++ b/llvm/cmake/modules/CMakeLists.txt
-@@ -1,6 +1,6 @@
+@@ -2,7 +2,7 @@ include(ExtendPath)
  include(LLVMDistributionSupport)
+ include(FindPrefixFromConfig)
  
 -set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
 +set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
@@ -88,10 +104,10 @@ index 51b6a4fdc284..a818de2e116c 100644
  
  # First for users who use an installed LLVM, create the LLVMExports.cmake file.
 diff --git a/mlir/cmake/modules/CMakeLists.txt b/mlir/cmake/modules/CMakeLists.txt
-index 65efc4a14987..7c3213ab0c2b 100644
+index d6703993bd74..e2f6cd3ea8cb 100644
 --- a/mlir/cmake/modules/CMakeLists.txt
 +++ b/mlir/cmake/modules/CMakeLists.txt
-@@ -3,11 +3,11 @@ include(LLVMDistributionSupport)
+@@ -5,11 +5,11 @@ include(FindPrefixFromConfig)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -105,34 +121,41 @@ index 65efc4a14987..7c3213ab0c2b 100644
  set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
  
  get_property(MLIR_EXPORTS GLOBAL PROPERTY MLIR_EXPORTS)
+diff --git a/mlir/test/CMakeLists.txt b/mlir/test/CMakeLists.txt
+index 8e44a9c37cf1..f6edc7d77ffd 100644
+--- a/mlir/test/CMakeLists.txt
++++ b/mlir/test/CMakeLists.txt
+@@ -8,7 +8,7 @@ endif()
+ # Passed to lit.site.cfg.py.so that the out of tree Standalone dialect test
+ # can find MLIR's CMake configuration
+ set(MLIR_CMAKE_DIR
+-  "${CMAKE_BINARY_DIR}/lib${LLVM_LIBDIR_SUFFIX}/cmake/mlir")
++  "${CMAKE_BINARY_DIR}/share/mlir")
+ 
+ # Passed to lit.site.cfg.py.in to set up the path where to find the libraries
+ # for linalg integration tests.
+diff --git a/openmp/tools/Modules/CMakeLists.txt b/openmp/tools/Modules/CMakeLists.txt
+index 22d818eea72d..75aacc4468d4 100644
+--- a/openmp/tools/Modules/CMakeLists.txt
++++ b/openmp/tools/Modules/CMakeLists.txt
+@@ -12,4 +12,4 @@
+ 
+ 
+ install(FILES "FindOpenMPTarget.cmake"
+-              DESTINATION "${OPENMP_INSTALL_LIBDIR}/cmake/openmp")
++              DESTINATION "share/openmp")
 diff --git a/polly/cmake/CMakeLists.txt b/polly/cmake/CMakeLists.txt
-index 7cc129ba2e90..9776391cd535 100644
+index 7a0190b69df6..cdd3b4f126bb 100644
 --- a/polly/cmake/CMakeLists.txt
 +++ b/polly/cmake/CMakeLists.txt
-@@ -1,7 +1,7 @@
- # Keep this in sync with llvm/cmake/CMakeLists.txt!
+@@ -3,8 +3,8 @@
+ include(ExtendPath)
+ include(FindPrefixFromConfig)
  
 -set(LLVM_INSTALL_PACKAGE_DIR "lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
 -set(POLLY_INSTALL_PACKAGE_DIR "lib${LLVM_LIBDIR_SUFFIX}/cmake/polly")
-+set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
-+set(POLLY_INSTALL_PACKAGE_DIR share/polly)
++set(LLVM_INSTALL_PACKAGE_DIR "share/llvm")
++set(POLLY_INSTALL_PACKAGE_DIR "share/polly")
  if (CMAKE_CONFIGURATION_TYPES)
    set(POLLY_EXPORTS_FILE_NAME "PollyExports-$<LOWER_CASE:$<CONFIG>>.cmake")
  else()
-diff --git a/pstl/CMakeLists.txt b/pstl/CMakeLists.txt
-index 8bea8843589b..3658c0a4414a 100644
---- a/pstl/CMakeLists.txt
-+++ b/pstl/CMakeLists.txt
-@@ -81,10 +81,10 @@ install(TARGETS ParallelSTL
- install(EXPORT ParallelSTLTargets
-         FILE ParallelSTLTargets.cmake
-         NAMESPACE pstl::
--        DESTINATION lib/cmake/ParallelSTL)
-+        DESTINATION share/ParallelSTL)
- install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ParallelSTLConfig.cmake"
-               "${CMAKE_CURRENT_BINARY_DIR}/ParallelSTLConfigVersion.cmake"
--        DESTINATION lib/cmake/ParallelSTL)
-+        DESTINATION share/ParallelSTL)
- install(DIRECTORY include/
-         DESTINATION include
-         PATTERN "*.in" EXCLUDE)

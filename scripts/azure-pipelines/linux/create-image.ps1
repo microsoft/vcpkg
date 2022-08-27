@@ -15,10 +15,10 @@ or are running from Azure Cloud Shell.
 This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
-$Location = 'westus2'
+$Location = 'eastasia'
 $Prefix = 'Lin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32as_v4'
+$VMSize = 'Standard_D8a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $ErrorActionPreference = 'Stop'
 
@@ -88,8 +88,8 @@ $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
   -VM $VM `
   -PublisherName 'Canonical' `
-  -Offer '0001-com-ubuntu-server-focal' `
-  -Skus '20_04-lts-gen2' `
+  -Offer '0001-com-ubuntu-server-jammy' `
+  -Skus '22_04-lts' `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
@@ -159,7 +159,7 @@ Set-AzVM `
   -Generalized
 
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID -HyperVGeneration 'V2'
+$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
 $ImageName = Find-ImageName -ResourceGroupName 'vcpkg-image-minting' -Prefix $Prefix
 New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName 'vcpkg-image-minting'
 

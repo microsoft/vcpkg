@@ -1,0 +1,24 @@
+diff --git a/tools/pybind11Tools.cmake b/tools/pybind11Tools.cmake
+index 5535e87..6576b2e 100644
+--- a/tools/pybind11Tools.cmake
++++ b/tools/pybind11Tools.cmake
+@@ -130,15 +130,16 @@ if(CMAKE_VERSION VERSION_LESS 3.11)
+     APPEND
+     PROPERTY INTERFACE_LINK_LIBRARIES pybind11::pybind11 $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
+ else()
++  add_library(pybind11::_ClassicPythonLibraries IMPORTED INTERFACE)
++  target_link_libraries(pybind11::_ClassicPythonLibraries INTERFACE ${PYTHON_LIBRARIES})
+   target_link_libraries(
+     pybind11::module
+     INTERFACE
+       pybind11::python_link_helper
+-      "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:$<BUILD_INTERFACE:${PYTHON_LIBRARIES}>>"
+-  )
++      "$<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Cygwin>>:pybind11::_ClassicPythonLibraries>")
+ 
+   target_link_libraries(pybind11::embed INTERFACE pybind11::pybind11
+-                                                  $<BUILD_INTERFACE:${PYTHON_LIBRARIES}>)
++                                                  pybind11::_ClassicPythonLibraries)
+ 
+ endif()
+ 

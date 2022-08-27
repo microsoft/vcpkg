@@ -1,87 +1,3 @@
-# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_configure
-#[===[.md:
-# vcpkg_configure_cmake
-
-Configure CMake for Debug and Release builds of a project.
-
-## Usage
-```cmake
-vcpkg_configure_cmake(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [PREFER_NINJA]
-    [DISABLE_PARALLEL_CONFIGURE]
-    [NO_CHARSET_FLAG]
-    [GENERATOR <"NMake Makefiles">]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [MAYBE_UNUSED_VARIABLES <OPTION_NAME>...]
-)
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `CMakeLists.txt`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### PREFER_NINJA
-Indicates that, when available, Vcpkg should use Ninja to perform the build.
-This should be specified unless the port is known to not work under Ninja.
-
-### DISABLE_PARALLEL_CONFIGURE
-Disables running the CMake configure step in parallel.
-This is needed for libraries which write back into their source directory during configure.
-
-This also disables CMAKE_DISABLE_SOURCE_CHANGES.
-
-### NO_CHARSET_FLAG
-Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
-
-This is needed for libraries that set their own source code's character set.
-
-### GENERATOR
-Specifies the precise generator to use.
-
-This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-If used for this purpose, it should be set to `"NMake Makefiles"`.
-
-### OPTIONS
-Additional options passed to CMake during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to CMake during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
-
-### MAYBE_UNUSED_VARIABLES
-Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
-For example:
-```cmake
-vcpkg_cmake_configure(
-    ...
-    OPTIONS
-        -DBUILD_EXAMPLE=OFF
-    ...
-    MAYBE_UNUSED_VARIABLES
-        BUILD_EXAMPLE
-)
-```
-
-### LOGNAME
-Name of the log to write the output of the configure call to.
-
-## Notes
-This command supplies many common arguments to CMake. To see the full list, examine the source.
-
-## Examples
-
-* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-* [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
-#]===]
-
 function(z_vcpkg_configure_cmake_both_or_neither_set var1 var2)
     if(DEFINED "${var1}" AND NOT DEFINED "${var2}")
         message(FATAL_ERROR "If ${var1} is set, ${var2} must be set.")
@@ -91,11 +7,12 @@ function(z_vcpkg_configure_cmake_both_or_neither_set var1 var2)
     endif()
 endfunction()
 function(z_vcpkg_configure_cmake_build_cmakecache out_var whereat build_type)
-    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ${whereat} &&")
+    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n")
+    string(APPEND line "  process = \"${CMAKE_COMMAND}\" -E chdir \"${whereat}\"")
     foreach(arg IN LISTS "${build_type}_command")
         string(APPEND line " \"${arg}\"")
     endforeach()
-    set("${out_var}" "${${out_var}}${line}\"\n\n" PARENT_SCOPE)
+    set("${out_var}" "${${out_var}}${line}\n\n" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_get_visual_studio_generator)
@@ -219,9 +136,6 @@ function(vcpkg_configure_cmake)
             # Prebuilt ninja binaries are only provided for x64 hosts
             set(ninja_can_be_used OFF)
             set(ninja_host OFF)
-        elseif(VCPKG_TARGET_IS_UWP)
-            # Ninja and MSBuild have many differences when targeting UWP, so use MSBuild to maximize existing compatibility
-            set(ninja_can_be_used OFF)
         endif()
     endif()
 
@@ -243,8 +157,8 @@ function(vcpkg_configure_cmake)
     # If we use Ninja, make sure it's on PATH
     if("${generator}" STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+        vcpkg_add_to_path("${ninja_path}")
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -331,23 +245,39 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG})
+    endif()
+
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Release
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
+        "-DCMAKE_BUILD_TYPE=Release"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Debug
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug")
+        "-DCMAKE_BUILD_TYPE=Debug"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        if(NOT DEFINED ninja_path)
+            # if ninja_path was defined above, we've already done this
+            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+            vcpkg_add_to_path("${ninja_path}")
+        endif()
 
         #parallelize the configure step
         set(ninja_configure_contents
@@ -368,9 +298,10 @@ function(vcpkg_configure_cmake)
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND ninja -v
+            COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
+            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
         )
         
         vcpkg_list(APPEND config_logs
@@ -384,6 +315,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                 LOGNAME "${arg_LOGNAME}-dbg"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log"
@@ -397,6 +329,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGNAME}-rel"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log"

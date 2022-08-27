@@ -1,7 +1,7 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.39.0",
-  "port-version": 1,
+  "version": "2.1.0",
+  "port-version": 2,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -100,6 +100,7 @@
     },
     "asset": {
       "description": "Cloud Asset API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -184,6 +185,7 @@
     },
     "channel": {
       "description": "Cloud Channel API C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -278,6 +280,18 @@
         }
       ]
     },
+    "dataplex": {
+      "description": "Cloud Dataplex API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dataproc": {
       "description": "Cloud Dataproc API C++ Client Library",
       "dependencies": [
@@ -292,6 +306,30 @@
     },
     "debugger": {
       "description": "Stackdriver Debugger API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dialogflow-cx": {
+      "description": "Cloud Dialogflow CX API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dialogflow-es": {
+      "description": "Cloud Dialogflow ES API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -476,6 +514,18 @@
     },
     "language": {
       "description": "Cloud Natural Language API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "logging": {
+      "description": "Google Cloud Logging C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -776,6 +826,18 @@
     },
     "spanner": {
       "description": "The Google Cloud Spanner C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "speech": {
+      "description": "The Google Cloud Speech-to-Text C++ client library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
