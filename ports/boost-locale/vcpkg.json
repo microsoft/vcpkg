@@ -1,6 +1,6 @@
 {
   "name": "boost-locale",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "license": "BSL-1.0",
@@ -12,12 +12,14 @@
       "host": true
     },
     "boost-config",
+    "boost-core",
     "boost-function",
     "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true
     },
+    "boost-predef",
     "boost-smart-ptr",
     "boost-static-assert",
     "boost-thread",

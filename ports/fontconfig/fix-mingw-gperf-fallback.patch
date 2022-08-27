@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index e5096bf..51c289f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -268,7 +268,7 @@ sh = find_program('sh', required : false)
+ 
+ if not sh.found() # host_machine.system() == 'windows' or not sh.found()
+   # TODO: This is not always correct
+-  if cc.get_id() == 'msvc'
++  if host_machine.system() == 'windows'
+     gperf_len_type = 'size_t'
+   else
+     gperf_len_type = 'unsigned'

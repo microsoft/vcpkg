@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index caef73840..caf7e61bf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -726,7 +726,7 @@ if(DBUS_ENABLE_PKGCONFIG)
+     set(PLATFORM_LIBS pthread ${LIBRT})
+     if(PKG_CONFIG_FOUND)
+         # convert lists of link libraries into -lstdc++ -lm etc..
+-        foreach(LIB ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${PLATFORM_LIBS})
++        foreach(LIB ${PLATFORM_LIBS})
+             set(LIBDBUS_LIBS "${LIBDBUS_LIBS} -l${LIB}")
+         endforeach()
+         set(original_prefix "${CMAKE_INSTALL_PREFIX}")
+diff --git a/dbus/CMakeLists.txt b/dbus/CMakeLists.txt
+index 63070b69b..5752b7492 100644
+--- a/dbus/CMakeLists.txt
++++ b/dbus/CMakeLists.txt
+@@ -253,6 +253,9 @@ endif()
+ 
+ # for clock_getres() on e.g. GNU/Linux (but not Android)
+ find_library(LIBRT rt)
++get_filename_component(LIBRT "${LIBRT}" NAME_WLE)
++string(REPLACE "lib" "" LIBRT "${LIBRT}")
++set(LIBRT "${LIBRT}" CACHE STRING "" FORCE)
+ 
+ # for socket() on QNX
+ find_library(LIBSOCKET socket)

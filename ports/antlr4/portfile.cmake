@@ -1,9 +1,9 @@
-set(VERSION 4.9.3)
+set(VERSION 4.10.1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 23995a6fa661ff038142fa7220a195db3a9a26744d516011dedc3192f152b06a8e31f6cc8f969f8927b86392a960d03e89572e753f033f950839a5bd38d4c722
+    SHA512 f4926987946d17bf51b2d8a31ac06cf16eea7fb49ce535abb2d4759c9e6113d173c4504ffe4c8d2f9a58d845507dfdedaaba3dde70cc09c03c6bd6a2afe892a6
 )
 
 # license not exist in antlr folder.
@@ -21,13 +21,14 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fixed_build.patch
         uuid_discovery_fix.patch
-        export_guid.patch
+        fix_LNK2001.patch #The related upstream issue https://github.com/antlr/antlr4/issues/3674 
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DANTLR4_INSTALL=ON
+        -DANTLR_BUILD_CPP_TESTS=OFF
     OPTIONS_DEBUG -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/dist
     OPTIONS_RELEASE -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dist
 )

@@ -118,14 +118,19 @@ while the remaining strings are treated as the full description.
 ### `"builtin-baseline"`
 
 This field indicates the commit of vcpkg which provides global minimum version
-information for your manifest. It is required for top-level manifest files using
-versioning.
+information for your manifest.
 
-This is a convenience field that has the same semantic as replacing your default
-registry in
-[`vcpkg-configuration.json`](registries.md#configuration-default-registry).
+It is required for top-level manifest files using versioning without a specified [`"default-registry"`](registries.md#configuration-default-registry). It has the same semantic as defining your default registry to be:
+```json
+{
+  "default-registry": {
+    "kind": "builtin",
+    "baseline": "<value>"
+  }
+}
+```
 
-See [versioning](versioning.md#builtin-baseline) for more semantic details.
+See [versioning](versioning.md#baselines) for more semantic details.
 
 <a id="dependencies"></a>
 

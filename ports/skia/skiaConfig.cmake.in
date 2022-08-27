@@ -13,8 +13,10 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-find_library(SKIA_LIB NAMES skia skia.dll)
-target_link_libraries(skia INTERFACE "${SKIA_LIB}")
+find_library(SKIA_LIB_DBG NAMES skia skia.dll PATHS ${_IMPORT_PREFIX}/debug/lib NO_DEFAULT_PATH)
+find_library(SKIA_LIB_REL NAMES skia skia.dll PATHS ${_IMPORT_PREFIX}/lib NO_DEFAULT_PATH)
+target_link_libraries(skia INTERFACE "$<$<CONFIG:Debug>:${SKIA_LIB_DBG}>")
+target_link_libraries(skia INTERFACE "$<$<CONFIG:Release>:${SKIA_LIB_REL}>")
 
 function(set_dependencies CONFIG LIBRARIES)
     foreach(LIB ${LIBRARIES})

@@ -17,8 +17,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 4.0.0
-    SHA512 e9ffab14ab902e3327202e68ca139209ff24100dab62eb03fef50adf363f81e2705d81e709c58cf1514e68e6061c8963555bd2d00744daacc3eb693825fc3417
+    REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa #v4.2.0
+    SHA512 f6b1738d96fef89059062f570f67aaa8b143ccfbee78abfe5fbb25083371a4c432f3d1d0d357e4b475b4b72a6db7823c2341b70ac947759603b033c2b0acec47
     HEAD_REF master
     PATCHES ${patches}
 )
@@ -42,7 +42,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows

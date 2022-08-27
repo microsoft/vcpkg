@@ -42,14 +42,14 @@ The following examples assume they are at the root of your repository with a sub
 **Example `Directory.Build.props`**:
 ```xml
 <Project>
- <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\vcpkg.props" />
+ <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\msbuild\vcpkg.props" />
 </Project>
 ```
 
 **Example `Directory.Build.targets`**:
 ```xml
 <Project>
- <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\vcpkg.targets" />
+ <Import Project="$(MSBuildThisFileDirectory)vcpkg\scripts\buildsystems\msbuild\vcpkg.targets" />
 </Project>
 ```
 
