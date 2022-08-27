@@ -4,6 +4,7 @@
   "description": "ncnn is a high-performance neural network inference computing framework.",
   "homepage": "https://github.com/Tencent/ncnn",
   "license": "BSD-3-Clause",
+  "supports": "!(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
