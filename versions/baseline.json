@@ -3902,7 +3902,7 @@
     },
     "libnice": {
       "baseline": "0.1.18",
-      "port-version": 0
+      "port-version": 1
     },
     "libnoise": {
       "baseline": "1.0.0",
