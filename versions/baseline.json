@@ -3430,7 +3430,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 3
+      "port-version": 4
     },
     "lcms": {
       "baseline": "2.12",
