@@ -6,8 +6,8 @@
   "dependencies": [
     "bzip2",
     "libx11",
-    "xext",
-    "xfixes",
+    "libxext",
+    "libxfixes",
     "xorg-macros",
     "xproto",
     "xrandr"

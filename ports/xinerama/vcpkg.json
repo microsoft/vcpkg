@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxinerama",
   "dependencies": [
     "libx11",
-    "xext",
+    "libxext",
     "xorg-macros"
   ]
 }

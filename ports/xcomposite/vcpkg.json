@@ -6,7 +6,7 @@
   "dependencies": [
     "bzip2",
     "libx11",
-    "xfixes",
+    "libxfixes",
     "xorg-macros",
     "xproto"
   ]

@@ -74,7 +74,7 @@
       "dependencies": [
         "libx11",
         "libxau",
-        "xext"
+        "libxext"
       ]
     },
     "xorg": {
@@ -97,7 +97,7 @@
       "dependencies": [
         "dirent",
         "xcb-wm",
-        "xfixes",
+        "libxfixes",
         {
           "name": "opengl-registry",
           "platform": "!windows"

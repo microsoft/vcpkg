@@ -8,7 +8,7 @@
     "bzip2",
     "libx11",
     "libxau",
-    "xext",
+    "libxext",
     "xorg-macros",
     "xproto"
   ]

@@ -4,7 +4,7 @@
   "description": "X Window System DMX (Distributed Multihead X) extension library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libdmx",
   "dependencies": [
-    "xext",
+    "libxext",
     "xorg-macros",
     "xproto"
   ]
