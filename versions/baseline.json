@@ -5214,7 +5214,7 @@
     },
     "opencensus-cpp": {
       "baseline": "2021-08-26",
-      "port-version": 1
+      "port-version": 2
     },
     "opencl": {
       "baseline": "2.2",
