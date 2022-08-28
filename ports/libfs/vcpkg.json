@@ -1,6 +1,6 @@
 {
   "name": "libfs",
-  "version-string": "1.0.8",
+  "version": "1.0.8",
   "description": "X Font Service client library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libfs",
   "license": null,
