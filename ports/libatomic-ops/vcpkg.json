@@ -1,7 +1,7 @@
 {
   "name": "libatomic-ops",
   "version": "7.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The atomic_ops project (Atomic memory update operations portable implementation)",
   "homepage": "https://github.com/ivmai/libatomic_ops",
   "license": null,
