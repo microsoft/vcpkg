@@ -2344,6 +2344,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "font-util": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "fontconfig": {
       "baseline": "2.14.0",
       "port-version": 4
@@ -3643,6 +3647,10 @@
     "libflac": {
       "baseline": "1.3.4",
       "port-version": 1
+    },
+    "libfontenc": {
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "libfort": {
       "baseline": "0.4.2",
