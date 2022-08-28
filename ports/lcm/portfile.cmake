@@ -8,6 +8,7 @@ vcpkg_from_github(
         only-install-one-flavor.patch
         fix-build-error.patch
         glib.link.patch
+        disable-docs.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,7 +17,9 @@ vcpkg_cmake_configure(
         -DLCM_ENABLE_JAVA=OFF
         -DLCM_ENABLE_LUA=OFF
         -DLCM_ENABLE_PYTHON=OFF
+        -DLCM_ENABLE_GO=OFF
         -DLCM_ENABLE_TESTS=OFF
+        -DLCM_ENABLE_EXAMPLES=OFF
         -DLCM_INSTALL_M4MACROS=OFF
         -DLCM_INSTALL_PKGCONFIG=OFF
 )
@@ -32,8 +35,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/aclocal")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/java")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/aclocal")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/java")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
 file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
@@ -52,6 +55,6 @@ endif()
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lcm)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
