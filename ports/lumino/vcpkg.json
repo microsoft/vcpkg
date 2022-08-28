@@ -1,0 +1,37 @@
+{
+  "name": "lumino",
+  "version-string": "0.10.0",
+  "description": "Lumino.",
+  "dependencies": [
+    "nanovg",
+    "yaml-cpp",
+    "toml11",
+    "zlib",
+    "libpng",
+    "libogg",
+    "libvorbis",
+    {
+      "name": "freetype",
+      "features": ["core", "png", "zlib"]
+    },
+    "pcre2",
+    "box2d",
+    "bullet3",
+    "stb",
+    "tinyobjloader",
+    "tinygltf",
+    {
+      "name": "imgui",
+      "features": ["docking-experimental"]
+    },
+
+
+    "gtest",
+    "glslang",
+    "spirv-cross",
+    "glfw3",
+    "vulkan-headers",
+    "glad",
+    "openal-soft"
+  ]
+}
