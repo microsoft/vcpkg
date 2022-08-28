@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.19.2",
-  "port-version": 6,
+  "port-version": 7,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0",
@@ -27,6 +27,10 @@
       "host": true
     },
     "libnice",
+    {
+      "name": "libx11",
+      "platform": "windows"
+    },
     "libxml2",
     {
       "name": "opengl-registry",
