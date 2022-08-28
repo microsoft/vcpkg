@@ -27,6 +27,10 @@
       "host": true
     },
     "libnice",
+    {
+      "name": "libx11",
+      "platform": "windows"
+    },
     "libxml2",
     {
       "name": "opengl-registry",
