@@ -3660,6 +3660,10 @@
       "baseline": "0.2.0",
       "port-version": 9
     },
+    "libfs": {
+      "baseline": "1.0.8",
+      "port-version": 0
+    },
     "libftdi": {
       "baseline": "0.20",
       "port-version": 3
