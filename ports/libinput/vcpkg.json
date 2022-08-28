@@ -1,0 +1,9 @@
+{
+  "name": "libinput",
+  "version-string": "1.15.5",
+  "description": "Input device management and event handling library",
+  "homepage": "https://gitlab.freedesktop.org/libinput/libinput",
+  "dependencies": [
+    "gtk"
+  ]
+}
