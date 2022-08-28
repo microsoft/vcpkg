@@ -25,7 +25,7 @@ Steps to reproduce the behavior:
 **Failure logs**
 
 - Cut and paste the appropriate build messages from the console output.
-- Attach ***every failure log files*** mentioned in the console output.
+- Attach ***every failure log file*** mentioned in the console output.
 
 **Additional context**
 
