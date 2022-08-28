@@ -18,11 +18,11 @@ Steps to reproduce the behavior:
 
 `./vcpkg install xxxx`
 
-**Failure logs**
-
 ‼ **Note that you also have to provide the contents of *all* log files mentioned in the console output.** ‼
 
 ‼ **The console output by itself is not enough to investigate a build failure.** ‼
+
+**Failure logs**
 
 - Cut and paste the appropriate build messages from the console output.
 - Please attach any additional failure logs mentioned in the console output.
