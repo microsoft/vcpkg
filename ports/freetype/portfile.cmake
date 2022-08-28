@@ -11,19 +11,21 @@ vcpkg_from_sourceforge(
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
+        error-strings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib        FT_REQUIRE_ZLIB
-        bzip2       FT_REQUIRE_BZIP2
-        png         FT_REQUIRE_PNG
-        brotli      FT_REQUIRE_BROTLI
+        zlib          FT_REQUIRE_ZLIB
+        bzip2         FT_REQUIRE_BZIP2
+        error-strings FT_ENABLE_ERROR_STRINGS
+        png           FT_REQUIRE_PNG
+        brotli        FT_REQUIRE_BROTLI
     INVERTED_FEATURES
-        zlib        FT_DISABLE_ZLIB
-        bzip2       FT_DISABLE_BZIP2
-        png         FT_DISABLE_PNG
-        brotli      FT_DISABLE_BROTLI
+        zlib          FT_DISABLE_ZLIB
+        bzip2         FT_DISABLE_BZIP2
+        png           FT_DISABLE_PNG
+        brotli        FT_DISABLE_BROTLI
 )
 
 vcpkg_cmake_configure(
