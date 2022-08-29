@@ -32,7 +32,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/gnulib")
-file(RENAME ${GNULIB_SOURCE_PATH} "${SOURCE_PATH}/gnulib")
+file(RENAME "${GNULIB_SOURCE_PATH}" "${SOURCE_PATH}/gnulib")
 
 include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
 yasm_tool_helper(OUT_VAR YASM)
