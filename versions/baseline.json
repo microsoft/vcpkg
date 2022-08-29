@@ -7770,7 +7770,7 @@
     },
     "x264": {
       "baseline": "0.164.3095",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.4",
