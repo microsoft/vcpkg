@@ -24,7 +24,7 @@
     },
     {
       "name": "vcpkg-gfortran",
-      "platform": "windows & !uwp"
+      "platform": "windows & !arm"
     }
   ],
   "features": {
