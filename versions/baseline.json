@@ -144,6 +144,10 @@
       "baseline": "1.3.2",
       "port-version": 0
     },
+    "argon2": {
+      "baseline": "20190702",
+      "port-version": 0
+    },
     "argparse": {
       "baseline": "2.2",
       "port-version": 0
