@@ -2014,7 +2014,7 @@
     },
     "dv-processing": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "dx": {
       "baseline": "1.0.1",
@@ -5250,7 +5250,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.1",
