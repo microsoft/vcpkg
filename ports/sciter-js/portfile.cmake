@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION d5a13ff197fed3af46d4bc931c158828eb61e357)
-set(SCITER_SHA 5be2db9d2e5caa19be158020a084a246acd6dad2047062f603b3af4f3cdbdd7f7750b263ad6dfaa6c3667de6c51084fc2df75cd3cb8cd60501550377dded1928)
+set(SCITER_REVISION 52bfe183983118c884294c864ee7b3d0dd199de6)
+set(SCITER_SHA d31ef2a07525bf1c91b9f36ee434db6227bead732f5779cb4ee28ab6d92957bfb3d4656a960d3c47e64f3efc207f78be64853a56b1e1a14f56fd3c829b022155)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -94,8 +94,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/scapp.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/usciter.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/window-mixin.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${SCITER_TOOLS})
 
     if ("windowless" IN_LIST FEATURES)
         set(SCITER_BIN ${SOURCE_PATH}/bin.lite/windows/${SCITER_ARCH})
@@ -104,8 +104,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
     message(WARNING "Sciter requires manual deployment of the correct DLL files.")
+	
 endif()

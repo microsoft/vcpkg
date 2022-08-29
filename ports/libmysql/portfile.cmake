@@ -2,10 +2,6 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
 
-if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} needs ncurses on LINUX, please install ncurses first.\nOn Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
@@ -18,16 +14,19 @@ vcpkg_from_github(
         rename-version.patch
         export-cmake-targets.patch
         004-added-limits-include.patch
+        openssl.patch
+        Add-target-include-directories.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
 
-set(STACK_DIRECTION)
+set(STACK_DIRECTION "")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(STACK_DIRECTION -DSTACK_DIRECTION=-1)
 endif()
 
 #Skip the version check for Visual Studio
+set(FORCE_UNSUPPORTED_COMPILER "")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(FORCE_UNSUPPORTED_COMPILER 1)
 endif()

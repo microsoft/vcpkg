@@ -1,0 +1,4 @@
+The package ztd-text is header only and can be used from CMake via:
+
+    find_path(ZTD_INCLUDE_DIRS ztd)
+    target_include_directories(main PRIVATE ${ZTD_INCLUDE_DIRS})

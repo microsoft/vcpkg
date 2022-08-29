@@ -1,5 +1,5 @@
 diff --git a/build/make/configure.sh b/build/make/configure.sh
-index 81d30a16c..d4f19cd97 100644
+index 81d30a1..325017e 100644
 --- a/build/make/configure.sh
 +++ b/build/make/configure.sh
 @@ -1370,12 +1370,14 @@ EOF

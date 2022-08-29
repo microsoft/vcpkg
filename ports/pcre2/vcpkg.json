@@ -1,9 +1,9 @@
 {
   "name": "pcre2",
-  "version": "10.39",
-  "port-version": 2,
+  "version": "10.40",
   "description": "Regular Expression pattern matching using the same syntax and semantics as Perl 5.",
-  "homepage": "https://github.com/PhilipHazel/pcre2",
+  "homepage": "https://github.com/PCRE2Project/pcre2",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,20 +1,20 @@
-diff -Naur a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2021-06-16 22:53:02.033465000 +0800
-+++ b/CMakeLists.txt	2021-06-16 23:01:31.542323600 +0800
-@@ -25,7 +25,9 @@
- # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- # DEALINGS IN THE SOFTWARE.
+diff --color -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2013-04-03 22:24:08.000000000 +0800
++++ b/CMakeLists.txt	2022-03-01 17:23:01.210728200 +0800
+@@ -36,8 +36,9 @@
+ # If you find any errors or have suggestion to improve the build script:
+ # patches are most welcome! Please send them to the development mailing list.
+ 
++cmake_minimum_required(VERSION 3.1)
  
 -cmake_minimum_required(VERSION 2.8.2)
-+cmake_minimum_required(VERSION 3.1)
-+
 +set(CMAKE_CXX_STANDARD 11)
  
  # Override flags to enable prepare for linking to static runtime
  set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
-diff -Naur a/src/tools/e57fields.cpp b/src/tools/e57fields.cpp
+diff --color -Naur a/src/tools/e57fields.cpp b/src/tools/e57fields.cpp
 --- a/src/tools/e57fields.cpp	2012-04-04 17:19:01.000000000 +0800
-+++ b/src/tools/e57fields.cpp	2021-06-16 22:55:02.789463000 +0800
++++ b/src/tools/e57fields.cpp	2022-03-01 17:24:17.904911600 +0800
 @@ -30,11 +30,7 @@
  #include <iomanip>
  #include <float.h>
@@ -49,10 +49,10 @@ diff -Naur a/src/tools/e57fields.cpp b/src/tools/e57fields.cpp
  
      /// The precalculated parts of the element path name.
      /// The only part that is missing is the record number which goes in between.
-diff -Naur a/src/tools/e57unpack.cpp b/src/tools/e57unpack.cpp
---- a/src/tools/e57unpack.cpp	2011-10-06 16:01:00.000000000 +0800
-+++ b/src/tools/e57unpack.cpp	2021-06-16 22:56:57.150323800 +0800
-@@ -41,12 +41,8 @@
+diff --color -Naur a/src/tools/e57unpack.cpp b/src/tools/e57unpack.cpp
+--- a/src/tools/e57unpack.cpp	2013-04-03 22:24:08.000000000 +0800
++++ b/src/tools/e57unpack.cpp	2022-03-01 17:25:15.206260200 +0800
+@@ -45,12 +45,8 @@
  #include <stdexcept>
  using std::runtime_error;
  
@@ -67,10 +67,10 @@ diff -Naur a/src/tools/e57unpack.cpp b/src/tools/e57unpack.cpp
  
  #include <string>
  using std::string;
-diff -Naur a/src/tools/e57validate.cpp b/src/tools/e57validate.cpp
+diff --color -Naur a/src/tools/e57validate.cpp b/src/tools/e57validate.cpp
 --- a/src/tools/e57validate.cpp	2011-10-06 16:01:00.000000000 +0800
-+++ b/src/tools/e57validate.cpp	2021-06-16 22:58:19.365323700 +0800
-@@ -66,11 +66,8 @@
++++ b/src/tools/e57validate.cpp	2022-03-01 17:25:46.220771800 +0800
+@@ -66,11 +66,7 @@
  
  
  ================================================================*/
@@ -79,13 +79,12 @@ diff -Naur a/src/tools/e57validate.cpp b/src/tools/e57validate.cpp
 -#else
 -#   include <tr1/unordered_map>
 -using std::tr1::unordered_map;
-+
+-#endif
 +#include <unordered_map>
 +using std::unordered_map;
--#endif
  #include <cstring>
  using std::strlen;
-@@ -694,7 +692,7 @@
+@@ -694,7 +691,7 @@
      void        dump(int indent = 0, std::ostream& os = std::cout);
  //================
  private:

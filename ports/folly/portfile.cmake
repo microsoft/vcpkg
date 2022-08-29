@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2022.01.31.00
-    SHA512 fef065c8a879e5b80eb521eaa09d2ac4eb22563e759834e60f665f07df5c2863c76217798680381bc51fad8c44f4b5d5abfb924a94c89635a41708abf6d70133
+    REF 46c03de426e26f4c5a92df37ab233c586fbe369a #v2022.08.15.00
+    SHA512 6798878d6892ed79d954fb5754ee102ea04868bce4be9be5dc7c6d6c7ddcbc5573719fe09470d89c385d9e487a75d1a9abc70c29c67698b957fc68b97a8bea32
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -56,8 +56,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
         -DLIBAIO_FOUND=OFF
-        -DLIBURCU_FOUND=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
@@ -65,6 +63,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 vcpkg_cmake_config_fixup()
 

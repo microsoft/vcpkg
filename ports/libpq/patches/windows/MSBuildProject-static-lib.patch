@@ -2,7 +2,7 @@ diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
 index 823357c02..e1dc59aa7 100644
 --- a/src/tools/msvc/MSBuildProject.pm
 +++ b/src/tools/msvc/MSBuildProject.pm
-@@ -262,7 +262,7 @@ sub WriteConfigurationPropertyGroup
+@@ -265,7 +265,7 @@ sub WriteConfigurationPropertyGroup
  	my $cfgtype =
  	  ($self->{type} eq "exe")
  	  ? 'Application'

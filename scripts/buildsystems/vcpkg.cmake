@@ -4,6 +4,8 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 # NOTE: to figure out what cmake versions are required for different things,
 # grep for `CMake 3`. All version requirement comments should follow that format.
 
+# Attention: Changes to this file do not affect ABI hashing.
+
 #[===[.md:
 # z_vcpkg_add_fatal_error
 Add a fatal error.
@@ -49,6 +51,9 @@ option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCP
 # requires CMake 3.14
 option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
 option(VCPKG_PREFER_SYSTEM_LIBS "Appends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found after toolchain/system libraries/packages." OFF)
+if(VCPKG_PREFER_SYSTEM_LIBS)
+    message(WARNING "VCPKG_PREFER_SYSTEM_LIBS has been deprecated. Use empty overlay ports instead.")
+endif()
 
 # Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
@@ -243,21 +248,21 @@ elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]$")
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$")
     set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
 else()
-    if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 Win64$")
+    if(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 Win64$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 17 2022$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
     else()
         find_program(Z_VCPKG_CL cl)
@@ -343,6 +348,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
 endif()
 
+if(EMSCRIPTEN)
+    set(Z_VCPKG_TARGET_TRIPLET_ARCH wasm32)
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT emscripten)
+endif()
+
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -404,6 +414,11 @@ z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_PREFIX_PATH "")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_FIND_ROOT_PATH "")
 
+if(NOT VCPKG_PREFER_SYSTEM_LIBS)
+    set(CMAKE_FIND_FRAMEWORK "LAST") # we assume that frameworks are usually system-wide libs, not vcpkg-built
+    set(CMAKE_FIND_APPBUNDLE "LAST") # we assume that appbundles are usually system-wide libs, not vcpkg-built
+endif()
+
 # If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 # and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
 # as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that
@@ -429,7 +444,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" Z_VCPKG_BOOTSTRAP_LOG)
+        set(Z_VCPKG_BOOTSTRAP_LOG "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_BOOTSTRAP_LOG}" Z_NATIVE_VCPKG_BOOTSTRAP_LOG)
         execute_process(
             COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
             OUTPUT_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
@@ -440,7 +456,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             message(STATUS "Bootstrapping vcpkg before install - done")
         else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_BOOTSTRAP_LOG}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_BOOTSTRAP_LOG}")
         endif()
     endif()
 
@@ -499,7 +515,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
         )
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
+        set(Z_VCPKG_MANIFEST_INSTALL_LOGFILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
         if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
@@ -512,13 +529,18 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             endif()
         else()
             message(STATUS "Running vcpkg install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE}")
         endif()
     endif()
 endif()
 
 option(VCPKG_SETUP_CMAKE_PROGRAM_PATH  "Enable the setup of CMAKE_PROGRAM_PATH to vcpkg paths" ON)
-cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools" ON "NOT VCPKG_HOST_TRIPLET STREQUAL \"\"" OFF)
+set(VCPKG_CAN_USE_HOST_TOOLS OFF)
+if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
+    set(VCPKG_CAN_USE_HOST_TOOLS ON)
+endif()
+cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+unset(VCPKG_CAN_USE_HOST_TOOLS)
 
 if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
     set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
@@ -526,15 +548,24 @@ if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
         set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools")
     endif()
     list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
-    file(GLOB_RECURSE Z_VCPKG_TOOLS_DIRS "${tools_base_path}/*")
-    file(GLOB_RECURSE Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES})
-    list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/debug/")
+    file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
+    file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
+    string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
+    list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
     foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
         list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
     endforeach()
-    unset(Z_VCPKG_TOOLS_DIRS)
     unset(Z_VCPKG_TOOLS_DIR)
+    unset(Z_VCPKG_TOOLS_DIRS)
+    unset(Z_VCPKG_TOOLS_FILES)
+    unset(Z_VCPKG_TOOLS_DIRS_BIN)
+    unset(Z_VCPKG_TOOLS_FILES_BIN)
+    unset(Z_VCPKG_TOOLS_DIRS_TO_REMOVE)
     unset(tools_base_path)
 endif()
 
@@ -563,14 +594,16 @@ function(add_executable)
                         -targetBinary "$<TARGET_FILE:${target_name}>"
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    VERBATIM
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
-                        "$<TARGET_FILE:${target_name}>"
-                        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                            "$<TARGET_FILE:${target_name}>"
+                            "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        VERBATIM
                     )
                 endif()
             endif()
@@ -597,6 +630,7 @@ function(add_library)
                     -targetBinary "$<TARGET_FILE:${target_name}>"
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    VERBATIM
             )
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)

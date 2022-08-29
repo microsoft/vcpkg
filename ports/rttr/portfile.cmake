@@ -10,44 +10,48 @@ vcpkg_from_github(
         remove-owner-read-perms.patch
 )
 
-#Handle static lib
-set(BUILD_STATIC_LIB OFF) 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	set(BUILD_STATIC_LIB ON) 
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+    set(BUILD_STATIC ON)
+    set(BUILD_RTTR_DYNAMIC OFF)
+    set(BUILD_WITH_STATIC_RUNTIME_LIBS OFF)
+elseif("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+    set(BUILD_STATIC OFF)
+    set(BUILD_RTTR_DYNAMIC OFF)
+    set(BUILD_WITH_STATIC_RUNTIME_LIBS ON)
+elseif("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "dynamic")
+    set(BUILD_STATIC OFF)
+    set(BUILD_RTTR_DYNAMIC ON)
+    set(BUILD_WITH_STATIC_RUNTIME_LIBS OFF)
 else()
-	set(BUILD_STATIC_LIB OFF) 
+    message(FATAL_ERROR "rttr's build system does not support this configuration: VCPKG_LIBRARY_LINKAGE: ${VCPKG_LIBRARY_LINKAGE} VCPKG_CRT_LINKAGE: ${VCPKG_CRT_LINKAGE}")
 endif()
-vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
-	OPTIONS
-		-DBUILD_BENCHMARKS=OFF
-		-DBUILD_UNIT_TESTS=OFF
-		-DBUILD_STATIC=${BUILD_STATIC_LIB}
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_BENCHMARKS=OFF
+        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_DOCUMENTATION=OFF
+        -DBUILD_STATIC=${BUILD_STATIC}
+        -DBUILD_RTTR_DYNAMIC=${BUILD_RTTR_DYNAMIC}
+        -DBUILD_WITH_STATIC_RUNTIME_LIBS=${BUILD_WITH_STATIC_RUNTIME_LIBS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-	vcpkg_fixup_cmake_targets(CONFIG_PATH share/rttr/cmake)
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-	message(FATAL_ERROR "RTTR does not support this platform")
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/rttr/cmake)
 endif()
 
-#Handle static lib
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-#Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/README.md
-    ${CURRENT_PACKAGES_DIR}/debug/LICENSE.txt
-    ${CURRENT_PACKAGES_DIR}/LICENSE.txt
-    ${CURRENT_PACKAGES_DIR}/README.md
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/README.md"
+    "${CURRENT_PACKAGES_DIR}/debug/LICENSE.txt"
+    "${CURRENT_PACKAGES_DIR}/LICENSE.txt"
+    "${CURRENT_PACKAGES_DIR}/README.md"
 )

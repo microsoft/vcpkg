@@ -1,0 +1,41 @@
+commit b3a77c3f0b7dd2e1405a781ac9a76f648779d7fa
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Nov 9 14:28:14 2021 +0800
+
+    Build: Support VS2022 builds
+    
+    Make these builds distinct from the Visual Studio 2019 builds.
+
+diff --git a/MSVC_NMake/detectenv-msvc.mak b/MSVC_NMake/detectenv-msvc.mak
+index 6933505d..16d57810 100644
+--- a/MSVC_NMake/detectenv-msvc.mak
++++ b/MSVC_NMake/detectenv-msvc.mak
+@@ -98,9 +98,12 @@ PDBVER = 14
+ !if $(VCVERSION) > 1909 && $(VCVERSION) < 1920
+ VSVER_SUFFIX = 1
+ VSVER = 15
+-!elseif $(VCVERSION) > 1919 && $(VCVERSION) < 2000
++!elseif $(VCVERSION) > 1919 && $(VCVERSION) < 1930
+ VSVER_SUFFIX = 2
+ VSVER = 16
++!elseif $(VCVERSION) > 1929 && $(VCVERSION) < 2000
++VSVER_SUFFIX = 3
++VSVER = 17
+ !else
+ VSVER = $(PDBVER)
+ !endif
+diff --git a/meson.build b/meson.build
+index b7c7f77e..a2ee5ef3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -231,7 +231,9 @@ if is_msvc
+   add_project_arguments(disabled_warnings, language: 'cpp')
+ 
+   if use_msvc14x_toolset_ver
+-    if cpp_compiler.version().version_compare('>=19.20')
++    if cpp_compiler.version().version_compare('>=19.30')
++      msvc14x_toolset_ver = '-vc143'
++    elif cpp_compiler.version().version_compare('>=19.20')
+       msvc14x_toolset_ver = '-vc142'
+     elif cpp_compiler.version().version_compare('>=19.10')
+       msvc14x_toolset_ver = '-vc141'

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/yap
-    REF boost-1.78.0
-    SHA512 7cb6c90ad0d7c1303dfaea14ddc6cafd3343b93d00f41ece57fbc38ae5ee923fc5f0abe51eb28d1b336b6f66a5b7778b063e5583738ef409acffb4253e831a8d
+    REF boost-1.80.0
+    SHA512 0ef945de4b32093d46975fb9366544fcdace51bd8137ff6ad2a2ba0d0a7a0c5e31dc7c3396ebf6de9b4fbdb6b6ee2000dae6c8c44f897ff6c832eae26b6a207a
     HEAD_REF master
 )
 

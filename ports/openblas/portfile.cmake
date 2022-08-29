@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 34ecd967a54f71cb10fb07bf321b2a7597db9d26    # v0.3.20-alpha
-    SHA512 23ca849014e82add10f21bd5e70e364732364eb2c0f898ca8ff721c1aef927764b0805687ce6bfe5dda440ec5d4f69a591a56bfaada8e82ecf13ef6e3b268236
+    REF b89fb708caa5a5a32de8f4306c4ff132e0228e9a # v0.3.21
+    SHA512 495e885409f0c6178332cddd685f3c002dc92e7af251c4e4eb3da6935ef6e81565c2505d436245b9bf53ce58649764e0471dc43b7f5f30b6ed092366cbbc2d5c
     HEAD_REF develop
     PATCHES
         uwp.patch
@@ -34,8 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(VCPKG_TARGET_IS_OSX)
     if("dynamic-arch" IN_LIST FEATURES)
-        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-        message(STATUS "Openblas with \"dynamic-arch\" option for OSX supports only dynamic linkage. It's not a bag of openblas but bug of combination cmake+ninja+osx. See: https://gitlab.kitware.com/cmake/cmake/-/issues/16731") 
+        set(conf_opts GENERATOR "Unix Makefiles")
     endif()
 endif()
 
@@ -53,11 +52,13 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     )
 endif()
 
-include(vcpkg_find_fortran)
-vcpkg_find_fortran(FORTRAN_CMAKE)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    ${conf_opts}
     OPTIONS
         ${FEATURE_OPTIONS}
         ${FORTRAN_CMAKE}
