@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 <!-- ⚠ Please use the generated issue template instead to report a port build failure. ⚠ -->
-<!-- ❓ You can find its location at the end of the console output. ❓ -->
+<!-- ⁉ You can find its location at the end of the console output. ⁉ -->
 
 **Host Environment**
 
