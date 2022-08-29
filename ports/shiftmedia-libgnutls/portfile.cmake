@@ -34,7 +34,7 @@ vcpkg_extract_source_archive_ex(
 file(REMOVE_RECURSE "${SOURCE_PATH}/gnulib")
 file(RENAME "${GNULIB_SOURCE_PATH}" "${SOURCE_PATH}/gnulib")
 
-include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
+include("${CURRENT_HOST_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
 yasm_tool_helper(OUT_VAR YASM)
 file(TO_NATIVE_PATH "${YASM}" YASM)
 
@@ -54,12 +54,12 @@ endif()
 set(_gnutlsproject "${SOURCE_PATH}/SMP/libgnutls.vcxproj")
 file(READ "${_gnutlsproject}" _contents)
 string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                    "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                    "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
                 _contents "${_contents}")
 string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                    "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                    "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                 _contents "${_contents}")
-string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
+string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_HOST_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
 file(WRITE "${_gnutlsproject}" "${_contents}")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

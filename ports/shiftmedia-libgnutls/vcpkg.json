@@ -11,8 +11,14 @@
     "libidn2",
     "libtasn1",
     "nettle",
-    "vs-yasm",
-    "yasm-tool-helper",
+    {
+      "name": "vs-yasm",
+      "host": true
+    },
+    {
+      "name": "yasm-tool-helper",
+      "host": true
+    },
     "zlib"
   ]
 }
