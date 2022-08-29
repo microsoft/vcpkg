@@ -22,29 +22,6 @@ index 70f7f50..13857be 100644
  foreach(_ADD_LLVM ${ADDITIONAL_LLVM_TARGETS})
      message(STATUS "setting flags for ${_ADD_LLVM}")
      llvm_target_setup(TARGET ${_ADD_LLVM})
-@@ -317,7 +322,7 @@ set(_LLVM_ADDITIONAL_TARGETS
- )
- 
- # exclude targets that are not required
--set(_LLVM_EXCLUDE 
-+set(_LLVM_EXCLUDE
-     # libs
-     LLVMCoroutines
-     LLVMCoverage
-@@ -344,10 +349,10 @@ set(_LLVM_EXCLUDE
-     ocaml_make_directory
-     srpm
-     # utils
--    count 
--    FileCheck 
-+    count
-+    FileCheck
-     llvm-PerfectShuffle
--    not 
-+    not
-     yaml-bench
- )
- 
 @@ -360,9 +365,10 @@ if(WINDOWS)
              )
      endif()
