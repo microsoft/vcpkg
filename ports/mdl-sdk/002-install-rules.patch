@@ -76,34 +76,22 @@ index 5e9774f..51dc65c 100644
  function(ADD_TARGET_INSTALL)
      set(options)
      set(oneValueArgs TARGET DESTINATION)
-@@ -1152,13 +1162,20 @@ function(ADD_TARGET_INSTALL)
+@@ -1152,6 +1162,14 @@ function(ADD_TARGET_INSTALL)
      # - ADD_TARGET_INSTALL_TARGET
      # - ADD_TARGET_INSTALL_DESTINATION
- 
--    install(DIRECTORY $<TARGET_FILE_DIR:${ADD_TARGET_INSTALL_TARGET}>/
--        DESTINATION ${ADD_TARGET_INSTALL_DESTINATION}
--        USE_SOURCE_PERMISSIONS
--        FILES_MATCHING
--        PATTERN "*"
--        PATTERN "*.d" EXCLUDE
--    )
+
 +    if(${ADD_TARGET_INSTALL_TARGET} IN_LIST _MDL_PROD_TARGETS)
 +        install(
 +            TARGETS ${ADD_TARGET_INSTALL_TARGET}
 +            EXPORT  unofficial-mdl-targets
 +        )
-+    else()
-+        install(DIRECTORY $<TARGET_FILE_DIR:${ADD_TARGET_INSTALL_TARGET}>/
-+            DESTINATION ${ADD_TARGET_INSTALL_DESTINATION}
-+            USE_SOURCE_PERMISSIONS
-+            FILES_MATCHING
-+            PATTERN "*"
-+            PATTERN "*.d" EXCLUDE
-+        )
++        return()
 +    endif()
- 
- endfunction()
- 
++
+     install(DIRECTORY $<TARGET_FILE_DIR:${ADD_TARGET_INSTALL_TARGET}>/
+         DESTINATION ${ADD_TARGET_INSTALL_DESTINATION}
+         USE_SOURCE_PERMISSIONS
+
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
 index 246303d..28934b4 100644
 --- a/include/CMakeLists.txt
