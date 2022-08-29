@@ -4940,6 +4940,10 @@
       "baseline": "2.4.6",
       "port-version": 2
     },
+    "ncnn": {
+      "baseline": "20220729",
+      "port-version": 0
+    },
     "ncurses": {
       "baseline": "6.3",
       "port-version": 1
