@@ -12,7 +12,7 @@
     "libvorbis",
     {
       "name": "freetype",
-      "features": ["core", "png", "zlib"]
+      "features": ["png", "zlib"]
     },
     "pcre2",
     "box2d",
