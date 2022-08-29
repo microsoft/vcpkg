@@ -2296,6 +2296,10 @@
       "baseline": "0.3",
       "port-version": 4
     },
+    "flat": {
+      "baseline": "2022-06-10",
+      "port-version": 0
+    },
     "flatbuffers": {
       "baseline": "2.0.6",
       "port-version": 0
