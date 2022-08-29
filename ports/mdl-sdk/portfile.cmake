@@ -1,5 +1,15 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+# Notes on Clang 7 binary download:
+# MDL-SDK requires Clang version 7.0.0 previsely as a *build tool* not as a *source compiler* as it is usually used.
+# This ports provides CMake instructions to fetch and use it to build this port - and only for this purpose:
+# it will not be installed and as such not be usable by any other ports. 
+# 
+# More details on the why below:
+# MDL-SDK supports its own source file format (NVIDIA MDL sources `.mdl`), and can codegen executable code at runtime using its own vendored and modified version of LLVM 7.0.0. 
+# Also, at buildtime MDL-SDK also "pre-compile" MDL core libraries as LLVM bitcode directly into its binaries (through generated c array in headers) using this very Clang 7.0.0.
+# To have everything working together, we have to use a Clang as build tool which match the vendored LLVM version so that LLVM bitcode can be loaded/linked properly as it is not compatible across MLLVM versions.
+
 # Clang 7 build tool
 
 set(LLVM_VERSION 7.0.0)
