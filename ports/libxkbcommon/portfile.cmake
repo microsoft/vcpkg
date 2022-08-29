@@ -3,6 +3,7 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
+set(PATCHES "")
 if(VCPKG_TARGET_IS_WINDOWS)
     #vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
     set(PATCHES fix_msvc_build.patch 
@@ -26,6 +27,7 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS -Denable-xkbregistry=false)
 endif()
