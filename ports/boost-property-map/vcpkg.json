@@ -1,6 +1,6 @@
 {
   "name": "boost-property-map",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost property_map module",
   "homepage": "https://github.com/boostorg/property_map",
   "license": "BSL-1.0",
@@ -17,6 +17,7 @@
     "boost-smart-ptr",
     "boost-static-assert",
     "boost-throw-exception",
+    "boost-type-index",
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers"

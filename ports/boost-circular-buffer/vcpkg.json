@@ -1,6 +1,6 @@
 {
   "name": "boost-circular-buffer",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost circular_buffer module",
   "homepage": "https://github.com/boostorg/circular_buffer",
   "license": "BSL-1.0",

@@ -1,7 +1,7 @@
 {
   "name": "wxwidgets",
   "version": "3.2.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -64,6 +64,12 @@
           "default-features": false,
           "platform": "!windows & !osx"
         }
+      ]
+    },
+    "webview": {
+      "description": "The Edge backend uses Microsoft's Edge WebView2",
+      "dependencies": [
+        "webview2"
       ]
     }
   }
