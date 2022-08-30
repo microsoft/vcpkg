@@ -10,7 +10,11 @@ vcpkg_from_git(
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
-vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python" "command = \"$shell '${PYTHON3}'")
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python3" "command = \"$shell '${PYTHON3}'")
+else()
+    vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python" "command = \"$shell '${PYTHON3}'")
+endif()
 
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
