@@ -10,6 +10,7 @@
       "name": "libuv",
       "version>=": "1.44.2"
     },
+    "lua-compat53",
     "luajit",
     {
       "name": "vcpkg-cmake",

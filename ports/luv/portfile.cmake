@@ -6,16 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES fix-find-libuv.patch
             fix-find-luajit.patch
+            fix-find-lua-compat53.patch
             fix-msvc-build.patch
-)
-
-# lunarmodules/lua-compat-5.3 needed as a submodule to configure cmake
-vcpkg_from_github(
-    OUT_SOURCE_PATH LUA_COMPAT53_DIR
-    REPO lunarmodules/lua-compat-5.3
-    REF 8f8e4c6adb43e107f5902e784ef207dc3c8ca06b
-    SHA512 dd8ec5bdc825261c3824ef58eaedbed40e026d30be339b1b9b72530a26882800b21812a92069887d22aa5bb63bf1d687e51b91beca5ae6b9d44a5fe7ff5360d1
-    HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
@@ -31,7 +23,6 @@ vcpkg_cmake_configure(
         -DWITH_LUA_ENGINE=LuaJIT
         -DUSE_LUAJIT=ON
         -DBUILD_MODULE=OFF
-        -DLUA_COMPAT53_DIR="${LUA_COMPAT53_DIR}"
 )
 
 vcpkg_cmake_install()

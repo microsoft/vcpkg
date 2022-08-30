@@ -4432,6 +4432,10 @@
       "baseline": "5.4.4",
       "port-version": 2
     },
+    "lua-compat53": {
+      "baseline": "0.10",
+      "port-version": 0
+    },
     "luabridge": {
       "baseline": "2.6",
       "port-version": 1
