@@ -8,6 +8,7 @@ vcpkg_from_github(
         only-install-one-flavor.patch
         fix-build-error.patch
         glib.link.patch
+        disable-docs.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,7 +17,9 @@ vcpkg_cmake_configure(
         -DLCM_ENABLE_JAVA=OFF
         -DLCM_ENABLE_LUA=OFF
         -DLCM_ENABLE_PYTHON=OFF
+        -DLCM_ENABLE_GO=OFF
         -DLCM_ENABLE_TESTS=OFF
+        -DLCM_ENABLE_EXAMPLES=OFF
         -DLCM_INSTALL_M4MACROS=OFF
         -DLCM_INSTALL_PKGCONFIG=OFF
 )
@@ -33,8 +36,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/aclocal")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/java")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
 set(LCM_TOOLS
