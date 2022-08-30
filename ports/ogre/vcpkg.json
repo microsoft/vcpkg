@@ -1,7 +1,7 @@
 {
   "name": "ogre",
   "version": "1.12.9",
-  "port-version": 9,
+  "port-version": 10,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
