@@ -49,15 +49,16 @@ else()
     endforeach()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/Installation/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/man")
 
-file(
-    COPY
+set(LICENSES
+    "${SOURCE_PATH}/Installation/LICENSE"
         "${SOURCE_PATH}/Installation/LICENSE.BSL"
         "${SOURCE_PATH}/Installation/LICENSE.RFL"
         "${SOURCE_PATH}/Installation/LICENSE.GPL"
         "${SOURCE_PATH}/Installation/LICENSE.LGPL"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+
+vcpkg_install_copyright(FILE_LIST ${LICENSES})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
