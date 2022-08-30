@@ -6630,7 +6630,7 @@
     },
     "shiftmedia-libgcrypt": {
       "baseline": "1.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "shiva": {
       "baseline": "1.0",
