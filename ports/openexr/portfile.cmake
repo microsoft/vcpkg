@@ -5,7 +5,7 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO openexr/openexr
-  REF 918b8f543e81b5a1e1aca494ab7352ca280afc9e
+  REF 918b8f543e81b5a1e1aca494ab7352ca280afc9e # v2.5.8
   SHA512 7c4a22779718cb1a8962d53d0817a0b3cba90fc9ad4c6469e845bdfbf9ae8be8e43905ad8672955838976caeffd7dabcc6ea9c1f00babef0d5dfc8b5e058cce9
   HEAD_REF master
   PATCHES
