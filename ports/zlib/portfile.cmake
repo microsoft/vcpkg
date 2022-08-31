@@ -17,6 +17,8 @@ file(REMOVE "${SOURCE_PATH}/zconf.h")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_C_FLAGS_INIT=-v
+        -DCMAKE_CXX_FLAGS_INIT=-v
         -DSKIP_INSTALL_FILES=ON
         -DSKIP_BUILD_EXAMPLES=ON
     OPTIONS_DEBUG
@@ -45,3 +47,7 @@ vcpkg_copy_pdbs()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_cmake_get_vars(somefile)
+
+message(FATAL_ERROR "Just get logs")
