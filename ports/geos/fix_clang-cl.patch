@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 074986f38..bb092ed13 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,12 +184,16 @@ target_compile_features(geos_cxx_flags INTERFACE cxx_std_11)
+ #   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98207
+ #-----------------------------------------------------------------------------
+ 
++if(MSVC)
++target_compile_options(geos_cxx_flags INTERFACE
++    /fp:precise /wd4996
++	)
++else()
+ target_compile_options(geos_cxx_flags INTERFACE
+ 	"$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-ffp-contract=off>"
+ 	"$<$<CXX_COMPILER_ID:GNU>:-ffp-contract=off>"
+-	$<$<CXX_COMPILER_ID:MSVC>:/fp:precise /wd4996>
+ 	)
+-
++endif()
+ # Use -ffloat-store for 32-bit builds (needed to make some tests pass)
+ target_compile_options(geos_cxx_flags INTERFACE
+   $<$<AND:$<CXX_COMPILER_ID:GNU>,$<EQUAL:4,${CMAKE_SIZEOF_VOID_P}>>:-ffloat-store>
+@@ -225,13 +229,14 @@ target_compile_definitions(geos_cxx_flags
+   INTERFACE
+     USE_UNSTABLE_GEOS_CPP_API)
+ 
++if(MSVC)
+ target_compile_definitions(geos_developer_cxx_flags
+   INTERFACE
+-    $<$<CXX_COMPILER_ID:MSVC>:_CRT_NONSTDC_NO_DEPRECATE>
+-    $<$<CXX_COMPILER_ID:MSVC>:_SCL_SECURE_NO_DEPRECATE>
+-    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+-    $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>)
+-
++    _CRT_NONSTDC_NO_DEPRECATE
++    _SCL_SECURE_NO_DEPRECATE
++    _CRT_SECURE_NO_WARNINGS
++    NOMINMAX)
++endif()
+ target_compile_options(geos_developer_cxx_flags
+   INTERFACE
+     $<$<CXX_COMPILER_ID:MSVC>:-W4>
+@@ -268,9 +273,10 @@ add_subdirectory(src)
+ option(VERSION_MINGW_SHARED_LIBS "Add version suffix to MinGW shared libraries" OFF)
+ 
+ if(BUILD_SHARED_LIBS)
+-  target_compile_definitions(geos
+-    PRIVATE $<IF:$<CXX_COMPILER_ID:MSVC>,GEOS_DLL_EXPORT,DLL_EXPORT>)
+-
++  if(MSVC)
++    target_compile_definitions(geos
++        PRIVATE GEOS_DLL_EXPORT DLL_EXPORT)
++  endif()
+   set_target_properties(geos PROPERTIES VERSION ${GEOS_VERSION_NOPATCH})
+   set_target_properties(geos PROPERTIES SOVERSION ${GEOS_VERSION_NOPATCH})
+   if(MINGW AND VERSION_MINGW_SHARED_LIBS)
+@@ -286,8 +292,10 @@ add_library(GEOS::geos_c ALIAS geos_c)
+ target_link_libraries(geos_c PRIVATE geos)
+ 
+ if(BUILD_SHARED_LIBS)
++  if(MSVC)
+   target_compile_definitions(geos_c
+-    PRIVATE $<IF:$<CXX_COMPILER_ID:MSVC>,GEOS_DLL_EXPORT,DLL_EXPORT>)
++    PRIVATE GEOS_DLL_EXPORT DLL_EXPORT)
++  endif()
+ 
+   set_target_properties(geos_c PROPERTIES VERSION ${CAPI_VERSION})
+   if(NOT WIN32 OR MINGW)
+diff --git a/include/geos/algorithm/locate/IndexedPointInAreaLocator.h b/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
+index 7a647e461..73da77942 100644
+--- a/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
++++ b/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
+@@ -119,7 +119,7 @@ public:
+      * @param p the point to test
+      * @return the location of the point in the geometry
+      */
+-    geom::Location locate(const geom::Coordinate* /*const*/ p) override;
++    GEOS_DLL geom::Location locate(const geom::Coordinate* /*const*/ p) override;
+ 
+ };
+ 
+diff --git a/include/geos/export.h b/include/geos/export.h
+index 1a26f8c7a..ba89e0f82 100644
+--- a/include/geos/export.h
++++ b/include/geos/export.h
+@@ -19,9 +19,9 @@
+ #  if defined(GEOS_DLL_EXPORT)
+ #    define GEOS_DLL   __declspec(dllexport)
+ #  elif defined(GEOS_DLL_IMPORT)
+-#    define GEOS_DLL   __declspec(dllimport)
++#    define GEOS_DLL   extern __declspec(dllimport)
+ #  else
+ #    define GEOS_DLL
+ #  endif
+ #else
+ #  define GEOS_DLL

@@ -1,0 +1,45 @@
+diff --git a/cmake/helpers/configure.cmake b/cmake/helpers/configure.cmake
+index 652edf1..0d1441b 100644
+--- a/cmake/helpers/configure.cmake
++++ b/cmake/helpers/configure.cmake
+@@ -42,6 +42,10 @@ check_type_size("int" SIZEOF_INT)
+ check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
+ check_type_size("void*" SIZEOF_VOIDP)
+ 
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++  set(CPL_DISABLE_DLL 1)
++endif()
++
+ if (MSVC)
+   set(HAVE_VSNPRINTF 1)
+ 
+diff --git a/cmake/template/cpl_config.h.in b/cmake/template/cpl_config.h.in
+index c85d3b0..19d3f0a 100644
+--- a/cmake/template/cpl_config.h.in
++++ b/cmake/template/cpl_config.h.in
+@@ -177,6 +177,9 @@
+ /* Define to 1 if the compiler supports -Wzero-as-null-pointer-constant */
+ #cmakedefine HAVE_GCC_WARNING_ZERO_AS_NULL_POINTER_CONSTANT @HAVE_GCC_WARNING_ZERO_AS_NULL_POINTER_CONSTANT@
+ 
++/* Define if building a static windows lib */
++#cmakedefine CPL_DISABLE_DLL @CPL_DISABLE_DLL@
++
+ /* Define to 1 if you have the <atlbase.h> header file. */
+ #cmakedefine HAVE_ATLBASE_H 1
+ 
+diff --git a/gdal.cmake b/gdal.cmake
+index ff1ca7e..7712f1d 100644
+--- a/gdal.cmake
++++ b/gdal.cmake
+@@ -336,11 +336,6 @@ if (MINGW AND BUILD_SHARED_LIBS)
+     set_target_properties(${GDAL_LIB_TARGET_NAME} PROPERTIES SUFFIX "-${GDAL_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ endif ()
+ 
+-
+-if (MSVC AND NOT BUILD_SHARED_LIBS)
+-  target_compile_definitions(${GDAL_LIB_TARGET_NAME} PUBLIC CPL_DISABLE_DLL=)
+-endif ()
+-
+ if (MINGW)
+   if (TARGET_CPU MATCHES "x86_64")
+     add_definitions(-m64)
