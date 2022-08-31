@@ -49,7 +49,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
-        unicode     ENABLE_UNICODE
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
@@ -72,6 +71,10 @@ if(VCPKG_TARGET_IS_UWP)
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -DENABLE_UNICODE=ON)
 endif()
 
 vcpkg_cmake_configure(
