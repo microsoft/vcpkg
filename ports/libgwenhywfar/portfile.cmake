@@ -19,7 +19,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         0001-Add-support-for-static-builds.patch                # https://www.aquamaniac.de/rdm/issues/283
-        0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch
+        0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch   # https://www.aquamaniac.de/rdm/issues/284
         0001-Fix-variadic-marco-usage.patch                     # https://www.aquamaniac.de/rdm/issues/267
         disable_gwenbuild_tool.patch
         0001-Use-OS-agnostic-string-comparison-functions.patch  # https://www.aquamaniac.de/rdm/issues/282
@@ -54,6 +54,7 @@ if ("cpp" IN_LIST FEATURES)
 endif()
 if ("qt5" IN_LIST FEATURES)
    list(APPEND FEATURES_GUI "qt5")
+   vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
 endif()
 
 list(JOIN FEATURES_GUI " " GUIS)
@@ -80,9 +81,6 @@ vcpkg_configure_make(
         --with-guis=${GUIS}
         --with-libgpg-error-prefix="${CURRENT_INSTALLED_DIR}/tools/libgpg-error"
         --with-libgcrypt-prefix="${CURRENT_INSTALLED_DIR}/tools/libgcrypt"
-        --with-qt5-qmake="${CURRENT_INSTALLED_DIR}/tools/qt5/bin/qmake"
-        --with-qt5-moc="${CURRENT_INSTALLED_DIR}/tools/qt5/bin/moc"
-        --with-qt5-uic="${CURRENT_INSTALLED_DIR}/tools/qt5/bin/uic"
         ${WITH_LIBXML2_CODE}
 )
 
