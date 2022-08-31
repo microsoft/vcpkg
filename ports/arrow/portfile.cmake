@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-8.0.1
-    SHA512 b32f5a3666de7d6d16ea828697bb42e1b6605f58719c42e670c9ec0a8782057dac933f6e14e97b46f82802fc38cc7f4cc825794a4a95ac641593c2ee26ac5bbe
+    REF apache-arrow-9.0.0
+    SHA512 1191793dd56471fb2b402afbe9b31cde4c5126785243e538e42ba95ccd31d523121f07b144461c99a4b7449e611aa5998bd0de95e8e4b0e3c80397499fe746f0
     HEAD_REF master
     PATCHES
-        vs-2022-fixes.patch
+        cuda-ptr.patch
         msvc-static-name.patch
         fix-ThirdPartyToolchain.patch
-        static-link-libs.patch # https://github.com/apache/arrow/pull/13707
+        static-link-libs.patch # https://github.com/apache/arrow/pull/13707 & pull/13863
 )
 file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
             "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
