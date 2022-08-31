@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
-    REF v5.4.0-stable
-    SHA512 e43560f83f6c62d78b10c4df7db21f02386f22b893688b98d2f3432e3b3946a4e80960c7402404a8c0486c87b1dde5b7a3827f9d4d3be13f87f370dfc1179c78
+    REF v5.5.0-stable
+    SHA512 1f9ffd8e83b26f97c3685315790f3f2b451a23e9dad9e2f09142a3e1e136012293ca2d04f46c267f8275ac9e60894c46c7875353765df6d4fdd93ba666228459
     HEAD_REF master
     PATCHES
-      wolfssl_pr5401.diff
+      wolfssl_pr5529.diff
     )
 
 vcpkg_cmake_configure(
