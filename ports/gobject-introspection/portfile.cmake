@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
+        0003-fix-paths.patch
         python.patch
 )
 
@@ -68,7 +69,8 @@ vcpkg_copy_tools(TOOL_NAMES ${GI_TOOLS} AUTO_CLEAN)
 foreach(script IN LISTS GI_SCRIPTS)
     file(READ "${CURRENT_PACKAGES_DIR}/bin/${script}" _contents)
     string(REPLACE "#!/usr/bin/env ${PYTHON3}" "#!/usr/bin/env python3" _contents "${_contents}")
-    string(REPLACE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_INSTALLED_DIR}/lib" _contents "${_contents}")
+    string(REPLACE "datadir = \"${CURRENT_PACKAGES_DIR}/share\"" "raise Exception('could not find right path') " _contents "${_contents}")
+    string(REPLACE "pylibdir = os.path.join('${CURRENT_PACKAGES_DIR}/lib', 'gobject-introspection')" "raise Exception('could not find right path') " _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "${_contents}")
 
     file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${script}")
