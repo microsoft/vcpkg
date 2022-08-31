@@ -1773,7 +1773,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "7.84.0",
+      "baseline": "7.85.0",
       "port-version": 1
     },
     "curlpp": {
