@@ -198,7 +198,7 @@
     },
     "asiosdk": {
       "baseline": "2.3.3",
-      "port-version": 4
+      "port-version": 5
     },
     "asmjit": {
       "baseline": "2021-10-26",
