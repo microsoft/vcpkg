@@ -29,7 +29,7 @@
     "libnice",
     {
       "name": "libx11",
-      "platform": "windows"
+      "platform": "windows | osx"
     },
     "libxml2",
     {
