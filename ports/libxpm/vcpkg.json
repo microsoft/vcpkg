@@ -6,12 +6,12 @@
   "license": "MIT",
   "supports": "windows",
   "dependencies": [
-    "xorg-macros",
-    "xproto",
     "libx11",
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "xorg-macros",
+    "xproto"
   ]
 }
