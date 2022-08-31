@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_84_0
-    SHA512 2a000c052c14ee9e6bed243e92699517889554bc0dc03e9f28d398ecf14b405c336f1303e6ed15ed30e88d5d00fefecdc189e83def3f0a5431f63e3be1c55c35
+    REF curl-7_85_0
+    SHA512 b91f8bdabebe1c723af56ea8d22641e20d8f75b5ed11f1d3c8a80865618feb410f027f9e0f9be26634a00a9a5c2c8a850d9c3d29406802f45ea3e39234bee21a
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
-        0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
@@ -75,7 +74,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
