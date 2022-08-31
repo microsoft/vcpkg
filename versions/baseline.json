@@ -5397,8 +5397,8 @@
       "port-version": 1
     },
     "orc": {
-      "baseline": "1.6.4",
-      "port-version": 4
+      "baseline": "1.7.6",
+      "port-version": 0
     },
     "orocos-kdl": {
       "baseline": "1.4",
