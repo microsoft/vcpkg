@@ -137,6 +137,12 @@ else()
     set(PLUGIN_GOOD_FLAC disabled)
 endif()
 
+if ("x11" IN_LIST FEATURES)
+    set(PLUGIN_BASE_X11 enabled)
+else()
+    set(PLUGIN_BASE_X11 disabled)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "shared")
 else()
@@ -189,6 +195,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
         -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
+        -Dgst-plugins-base:x11=enabled
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-good:qt5=disabled
