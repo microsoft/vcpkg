@@ -152,13 +152,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(PLUGIN_BASE_WIN
         -Dgst-plugins-base:x11=disabled
         -Dgst-plugins-base:xvideo=disabled
-        -Dgst-plugins-base:xshm=disabled)
-    
-    if(VCPKG_TARGET_IS_UWP)
-        list(APPEND PLUGIN_BASE_WIN -Dgst-plugins-base:gl_winsys=winrt)
-    else()
-        list(APPEND PLUGIN_BASE_WIN -Dgst-plugins-base:gl_winsys=win32)
-    endif()
+        -Dgst-plugins-base:xshm=disabled
+        -Dgst-plugins-base:gl_winsys=win32)
 endif()
 
 #
