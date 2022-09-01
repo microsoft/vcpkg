@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
         -DBUILD_DOCUMENTATION=OFF
         -DENABLE_GTEST=OFF
         -DUSE_SYSTEM_RAPIDJSON=ON
+        -DUSE_SYSTEM_TCLAP=ON
+        -DUSE_SYSTEM_DARTS=ON
 )
 
 vcpkg_cmake_install(

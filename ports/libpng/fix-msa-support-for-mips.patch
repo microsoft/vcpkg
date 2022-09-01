@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c1d632..a2a0d0d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -158,8 +158,8 @@ endif()
+ # set definitions and sources for MIPS
+ if(CMAKE_SYSTEM_PROCESSOR MATCHES "mipsel*" OR
+    CMAKE_SYSTEM_PROCESSOR MATCHES "mips64el*")
+-  set(PNG_MIPS_MSA_POSSIBLE_VALUES on off)
+-  set(PNG_MIPS_MSA "on" CACHE STRING "Enable MIPS_MSA optimizations:
++  set(PNG_MIPS_MSA_POSSIBLE_VALUES on off check)
++  set(PNG_MIPS_MSA "check" CACHE STRING "Enable MIPS_MSA optimizations:
+      off: disable the optimizations")
+   set_property(CACHE PNG_MIPS_MSA PROPERTY STRINGS
+      ${PNG_MIPS_MSA_POSSIBLE_VALUES})
+@@ -173,6 +173,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "mipsel*" OR
+       mips/filter_msa_intrinsics.c)
+     if(${PNG_MIPS_MSA} STREQUAL "on")
+       add_definitions(-DPNG_MIPS_MSA_OPT=2)
++    else()
++      add_definitions(-DPNG_MIPS_MSA_CHECK_SUPPORTED)
+     endif()
+   else()
+     add_definitions(-DPNG_MIPS_MSA_OPT=0)
+     

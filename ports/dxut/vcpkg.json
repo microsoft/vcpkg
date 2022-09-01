@@ -1,6 +1,6 @@
 {
   "name": "dxut",
-  "version": "11.27",
+  "version": "11.28",
   "description": "A \"GLUT\"-like framework for Direct3D 11.x Win32 desktop applications",
   "homepage": "https://github.com/Microsoft/DXUT",
   "documentation": "https://github.com/microsoft/DXUT/wiki",
@@ -16,5 +16,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "dxtk": {
+      "description": "Support integration with DirectX Tool Kit for DX11",
+      "dependencies": [
+        "directxtk"
+      ]
+    }
+  }
 }

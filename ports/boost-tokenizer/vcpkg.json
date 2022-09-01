@@ -1,6 +1,6 @@
 {
   "name": "boost-tokenizer",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost tokenizer module",
   "homepage": "https://github.com/boostorg/tokenizer",
   "license": "BSL-1.0",
@@ -9,7 +9,6 @@
     "boost-config",
     "boost-core",
     "boost-iterator",
-    "boost-mpl",
     "boost-throw-exception",
     "boost-type-traits",
     "boost-vcpkg-helpers"
