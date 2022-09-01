@@ -69,8 +69,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_acquire_msys(MSYS_ROOT
             DIRECT_PACKAGES
                 # Required for "cpp.exe" preprocessor
-                "https://repo.msys2.org/msys/x86_64/gcc-10.2.0-1-x86_64.pkg.tar.zst"
-                1bc697744222c1e438c12803aa6169be2388bf2685d36dccd310c7c9938134002dc4e5219cd07aefc46f7b233c234889e9e33047f39dd7dc757e7ca717c570a0
                 "https://repo.msys2.org/msys/x86_64/isl-0.22.1-1-x86_64.pkg.tar.xz"
                 f4db50d00bad0fa0abc6b9ad965b0262d936d437a9faa35308fa79a7ee500a474178120e487b2db2259caf51524320f619e18d92acf4f0b970b5cbe5cc0f63a2
                 "https://repo.msys2.org/msys/x86_64/zlib-1.2.11-1-x86_64.pkg.tar.xz"
