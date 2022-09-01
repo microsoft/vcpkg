@@ -41,12 +41,13 @@ else()
                         "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
 endif()
 
-find_path(MKL_ROOT include/mkl.h
+find_path(MKL_ROOT mkl.h
     PATHS
     $ENV{MKLROOT}
     ${INTEL_ROOT}/mkl
     $ENV{ONEAPI_ROOT}/mkl/latest
     ${ONEMKL_ROOT}
+    /usr/include/mkl
     DOC
     "Folder contains MKL"
 )
@@ -61,7 +62,7 @@ endif()
 # list(GET MKL_VERSION 1 MKL_VERSION_MINOR)
 # list(GET MKL_VERSION 2 MKL_VERSION_UPDATE)
 
-file(STRINGS ${MKL_ROOT}/include/mkl_version.h MKL_VERSION_DEFINITION REGEX "INTEL_MKL_VERSION")
+file(STRINGS "${MKL_ROOT}/mkl_version.h" MKL_VERSION_DEFINITION REGEX "INTEL_MKL_VERSION")
 string(REGEX MATCH "([0-9]+)" MKL_VERSION ${MKL_VERSION_DEFINITION})
 
 if (MKL_VERSION VERSION_LESS MKL_REQUIRED_VERSION)
