@@ -5,6 +5,13 @@
   "homepage": "https://github.com/z4kn4fein/cpp-semver",
   "license": "MIT",
   "dependencies": [
-    "vcpkg-cmake"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
