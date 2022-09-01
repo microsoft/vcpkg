@@ -5246,7 +5246,7 @@
     },
     "opencl2": {
       "baseline": "2.2",
-      "port-version": 8
+      "port-version": 0
     },
     "opencl3": {
       "baseline": "3.0.11",
