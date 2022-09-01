@@ -42,7 +42,7 @@ function(configure_qt)
         endif()
         unset(${qmake_var})
         unset(${qmake_var} CACHE)
-        set(${var} "${${var}}" PARENT_SCOPE) # Is this correct? Or is there a vcpkg_list command for that?
+        set(${var} "${${var}}" PARENT_SCOPE)
     endfunction()
     # Setup Build tools
     set(qmake_build_tools "")
