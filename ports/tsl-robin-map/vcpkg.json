@@ -1,5 +1,5 @@
 {
-  "name": "robin-map",
+  "name": "tsl-robin-map",
   "version-semver": "1.0.1",
   "description": "A C++ implementation of a fast hash map and hash set using robin hood hashing",
   "homepage": "https://github.com/Tessil/robin-map",
