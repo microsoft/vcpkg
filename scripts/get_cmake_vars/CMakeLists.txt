@@ -99,6 +99,7 @@ macro(_vcpkg_adjust_flags flag_var)
         endif()
     endif()
     if(APPLE)
+        list(APPEND VCPKG_LANG_FLAGS CMAKE_SHARED_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS)
         if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
