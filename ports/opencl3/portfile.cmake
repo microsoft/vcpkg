@@ -24,8 +24,6 @@ vcpkg_from_github(
     REF eaf36a67c0f4c496078e51097a40a01718198edc # OpenCL v3.0.11 | v2022.05.18
     SHA512 cc69edd00864b8c464eaebe4d8af21446f5cb39ffdeddc17266817ea8de5d14661ca6ffed20b87f06832134c40e9d53ef716cb2fd2cc807786a33b0a34c05f18
     HEAD_REF master
-    PATCHES
-        0001-include-unistd-for-gete-ug-id.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} dynamic USE_DYNAMIC_VCXX_RUNTIME)
