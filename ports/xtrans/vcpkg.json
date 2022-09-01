@@ -1,0 +1,10 @@
+{
+  "name": "xtrans",
+  "version": "1.4.0",
+  "description": "xtrans - X Network Transport layer shared code",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxtrans",
+  "license": null,
+  "dependencies": [
+    "xorg-macros"
+  ]
+}

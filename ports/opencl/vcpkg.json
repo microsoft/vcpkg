@@ -1,14 +1,11 @@
 {
   "name": "opencl",
-  "version": "3.0.11",
+  "version": "2.2",
+  "port-version": 9,
   "description": "C/C++ headers and ICD loader (Installable Client Driver) for OpenCL",
   "homepage": "https://github.com/KhronosGroup/OpenCL-Headers",
-  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    }
+    "opencl2"
   ]
 }
