@@ -5157,8 +5157,8 @@
       "port-version": 2
     },
     "octomap": {
-      "baseline": "1.9.5",
-      "port-version": 2
+      "baseline": "1.9.6",
+      "port-version": 0
     },
     "ode": {
       "baseline": "0.16.1",
