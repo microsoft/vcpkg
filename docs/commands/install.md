@@ -179,6 +179,10 @@ Writes out a NuGet `packages.config`-formatted file for use with [Binary Caching
 
 This option can be used in conjunction with `--dry-run` to obtain the list of NuGet packages required from [Binary Caching][] without building or installing any packages. This enables the NuGet command line to be invoked separately for advanced scenarios, such as using alternate protocols to acquire the `.nupkg` files.
 
+### `--no-print-usage`
+
+Suppress generation of usage text printed at the end of installation.
+
 [Asset Caching]: ../users/assetcaching.md
 [Binary Caching]: ../users/binarycaching.md
 [Manifest Mode]: ../users/manifests.md
