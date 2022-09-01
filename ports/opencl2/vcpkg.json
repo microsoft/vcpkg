@@ -1,11 +1,8 @@
 {
   "name": "opencl",
   "version-string": "2.2",
-  "port-version": 9,
+  "port-version": 8,
   "description": "C/C++ headers and ICD loader (Installable Client Driver) for OpenCL",
   "homepage": "https://github.com/KhronosGroup/OpenCL-Headers",
-  "supports": "!uwp",
-  "dependencies": [
-    "opencl2"
-  ]
+  "supports": "!uwp"
 }
