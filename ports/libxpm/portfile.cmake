@@ -16,14 +16,6 @@ vcpkg_configure_make(
      AUTOCONFIG
  )
 
-#vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.h"
-#        "#define STDC_HEADERS 1" "#define STDC_HEADERS 1\n\n#define FOR_MSW 1"
-# )
-
-#vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h"
-#        "#define STDC_HEADERS 1" "#define STDC_HEADERS 1\n\n#define FOR_MSW 1"
-# )
-
 vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
