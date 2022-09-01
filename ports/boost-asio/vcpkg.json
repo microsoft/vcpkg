@@ -1,6 +1,6 @@
 {
   "name": "boost-asio",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "license": "BSL-1.0",
@@ -11,12 +11,17 @@
     "boost-bind",
     "boost-chrono",
     "boost-config",
+    {
+      "name": "boost-context",
+      "platform": "!uwp & !emscripten"
+    },
     "boost-core",
     {
       "name": "boost-coroutine",
       "platform": "!arm & !uwp & !emscripten"
     },
     "boost-date-time",
+    "boost-exception",
     "boost-function",
     "boost-regex",
     "boost-smart-ptr",
