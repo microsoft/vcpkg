@@ -43,10 +43,10 @@ endif()
 
 find_path(MKL_ROOT mkl.h
     PATHS
-    $ENV{MKLROOT}
-    ${INTEL_ROOT}/mkl
-    $ENV{ONEAPI_ROOT}/mkl/latest
-    ${ONEMKL_ROOT}
+    $ENV{MKLROOT}/include
+    ${INTEL_ROOT}/mkl/include
+    $ENV{ONEAPI_ROOT}/mkl/latest/include
+    ${ONEMKL_ROOT}/include
     /usr/include/mkl
     DOC
     "Folder contains MKL"
