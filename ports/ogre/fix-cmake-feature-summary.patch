@@ -1,0 +1,14 @@
+diff --git a/CMake/FeatureSummary.cmake b/CMake/OgreFeatureSummary.cmake
+similarity index 100%
+rename from CMake/FeatureSummary.cmake
+rename to CMake/OgreFeatureSummary.cmake
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cb86305..abbd5c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -505,4 +505,4 @@ include(Packaging)
+ 
+ 
+ # Show feature summary
+-include(FeatureSummary)
++include(OgreFeatureSummary)
