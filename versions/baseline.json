@@ -198,7 +198,7 @@
     },
     "asiosdk": {
       "baseline": "2.3.3",
-      "port-version": 4
+      "port-version": 5
     },
     "asmjit": {
       "baseline": "2021-10-26",
@@ -1706,7 +1706,7 @@
     },
     "crashpad": {
       "baseline": "2022-04-16",
-      "port-version": 2
+      "port-version": 3
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2262,7 +2262,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 17
+      "port-version": 18
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2301,7 +2301,7 @@
       "port-version": 4
     },
     "flat": {
-      "baseline": "2022-06-10",
+      "baseline": "2022-08-30",
       "port-version": 0
     },
     "flatbuffers": {
@@ -2509,8 +2509,8 @@
       "port-version": 1
     },
     "gdk-pixbuf": {
-      "baseline": "2.42.8",
-      "port-version": 3
+      "baseline": "2.42.9",
+      "port-version": 0
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2746,7 +2746,7 @@
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 6
+      "port-version": 7
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -3266,7 +3266,7 @@
     },
     "kf5globalaccel": {
       "baseline": "5.89.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kf5guiaddons": {
       "baseline": "5.89.0",
@@ -4308,6 +4308,14 @@
       "baseline": "6.0.0",
       "port-version": 0
     },
+    "libxkbcommon": {
+      "baseline": "1.4.1",
+      "port-version": 0
+    },
+    "libxkbfile": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "libxlsxwriter": {
       "baseline": "1.1.4",
       "port-version": 0
@@ -4486,7 +4494,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 10
+      "port-version": 11
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -4990,7 +4998,7 @@
     },
     "nghttp3": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ngspice": {
       "baseline": "37",
@@ -5166,7 +5174,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 9
+      "port-version": 10
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -5273,8 +5281,8 @@
       "port-version": 1
     },
     "openexr": {
-      "baseline": "2.5.0",
-      "port-version": 4
+      "baseline": "2.5.8",
+      "port-version": 0
     },
     "opengl": {
       "baseline": "2022-03-14",
@@ -5397,8 +5405,8 @@
       "port-version": 1
     },
     "orc": {
-      "baseline": "1.6.4",
-      "port-version": 4
+      "baseline": "1.7.6",
+      "port-version": 0
     },
     "orocos-kdl": {
       "baseline": "1.4",
@@ -6573,8 +6581,8 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.0.22",
-      "port-version": 3
+      "baseline": "2.24.0",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -6729,8 +6737,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "2022-04-15",
-      "port-version": 1
+      "baseline": "0.36.0",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7786,7 +7794,7 @@
     },
     "x264": {
       "baseline": "0.164.3095",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.4",
@@ -7810,6 +7818,10 @@
     },
     "xcb-proto": {
       "baseline": "1.14.1",
+      "port-version": 0
+    },
+    "xcb-render-util": {
+      "baseline": "0.3.9",
       "port-version": 0
     },
     "xcb-util-m4": {
@@ -7970,7 +7982,7 @@
     },
     "zlib-ng": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "zookeeper": {
       "baseline": "3.5.6",
