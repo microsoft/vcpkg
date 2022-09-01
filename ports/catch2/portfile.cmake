@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
+        fix-uwp-build.patch
 )
 
 vcpkg_cmake_configure(
