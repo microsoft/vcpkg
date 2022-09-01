@@ -31,6 +31,7 @@ manifest mode.
     - [`"name"`](#dependencies-name)
     - [`"default-features"`](#dependencies-default-features)
     - [`"features"`](#dependencies-features)
+    - [`"host"`](#host)
     - [`"platform"`](#platform)
     - [`"version>="`](#version-gt)
   - [`"overrides"`](#overrides)
@@ -189,6 +190,14 @@ Then, you might just ask for:
   "features": [ "mp3lame" ]
 }
 ```
+
+<a id="host"></a>
+
+#### `"host"` Field
+
+A boolean indicating that the dependency must be built for the host triplet instead of the current target triplet. Defaults to `false`.
+
+Any dependency that provides tools or scripts which should be "executed" during a build (such as buildsystems, code generators, or helpers) should be marked as `"host": true`. This enables correct cross-compilation in cases that the target is not executable -- such as when compiling for `arm64-android`. vcpkg's model for cross compilation is that each dependency
 
 <a id="platform"></a>
 
