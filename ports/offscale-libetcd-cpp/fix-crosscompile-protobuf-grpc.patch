@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62ae7c4..45a4175 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,8 +4,9 @@ project(libetcd-cpp VERSION 0.0.1)
+ 
+ set(CMAKE_CXX_STANDARD 17)
+ 
+-find_package(gRPC REQUIRED)
+-find_package(protobuf REQUIRED)
++find_package(gRPC CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
++find_program(gRPC_CPP_PLUGIN grpc_cpp_plugin REQUIRED)
+ 
+ file(GLOB_RECURSE protos LIST_DIRECTORIES false "proto/*.proto")
+ file(GLOB main_proto LIST_DIRECTORIES false "proto/rpc.proto")
+@@ -28,17 +29,17 @@ endforeach()
+ 
+ add_custom_command(
+   OUTPUT  ${rpc_protofiles}
+-  COMMAND  protobuf::protoc
+-  ARGS --grpc_out=${generated_path} -I ${protodir_path} --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin> ${main_proto}
+-  DEPENDS  gRPC::grpc_cpp_plugin protobuf::protoc ${main_proto}
++  COMMAND  "${Protobuf_PROTOC_EXECUTABLE}"
++  ARGS --grpc_out=${generated_path} -I ${protodir_path} "--plugin=protoc-gen-grpc=${gRPC_CPP_PLUGIN}" ${main_proto}
++  DEPENDS   ${main_proto}
+   COMMENT   "Running grpc protocol buffer compiler on ${main_proto}"
+   VERBATIM )
+ 
+ add_custom_command(
+   OUTPUT ${common_protofiles}
+-  COMMAND  protobuf::protoc
++  COMMAND  "${Protobuf_PROTOC_EXECUTABLE}"
+   ARGS --cpp_out=${generated_path} -I ${protodir_path} ${protos}
+-  DEPENDS ${protos} protobuf::protoc
++  DEPENDS ${protos}
+   COMMENT "Running cpp protocol buffer compiler on ${protos}"
+   VERBATIM )
+ 

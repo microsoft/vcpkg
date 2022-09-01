@@ -1,12 +1,21 @@
 {
   "name": "srpc",
   "version-semver": "0.9.3",
+  "port-version": 1,
   "description": "RPC based on Sogou C++ Workflow",
   "homepage": "https://github.com/sogou/srpc",
+  "license": "Apache-2.0",
   "dependencies": [
     "lz4",
     "openssl",
     "protobuf",
+    {
+      "name": "protobuf",
+      "host": true,
+      "features": [
+        "codegen"
+      ]
+    },
     "snappy",
     {
       "name": "vcpkg-cmake",

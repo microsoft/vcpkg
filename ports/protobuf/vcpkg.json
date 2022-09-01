@@ -8,7 +8,10 @@
   "dependencies": [
     {
       "name": "protobuf",
-      "host": true
+      "host": true,
+      "features": [
+        "codegen"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -20,6 +23,10 @@
     }
   ],
   "features": {
+    "codegen": {
+      "description": "Build code generator machinery",
+      "supports": "!uwp"
+    },
     "zlib": {
       "description": "ZLib based features like Gzip streams",
       "dependencies": [

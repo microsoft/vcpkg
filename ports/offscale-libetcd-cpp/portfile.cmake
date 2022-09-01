@@ -7,11 +7,15 @@ vcpkg_from_github(
     PATCHES
         fix-dependency-grpc.patch
         install-debug.patch
+        fix-crosscompile-protobuf-grpc.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # see https://github.com/microsoft/vcpkg/pull/21168#issuecomment-961588989 why
+    OPTIONS
+        "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DgRPC_CPP_PLUGIN=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME etcdcpp)

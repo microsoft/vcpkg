@@ -415,6 +415,7 @@ vcpkg_cmake_configure(
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_dnn}
         -DUPDATE_PROTO_FILES=${BUILD_opencv_dnn}
+        "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
