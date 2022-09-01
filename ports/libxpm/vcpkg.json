@@ -4,7 +4,7 @@
   "description": "XPM format pixmap library",
   "homepage": "https://github.com/freedesktop/libXpm",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows | linux",
   "dependencies": [
     "libx11",
     {
