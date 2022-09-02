@@ -1,0 +1,8 @@
+{
+  "name": "robin-map",
+  "version": "0",
+  "description": "This port is the original version of the port tsl-robin-map",
+  "dependencies": [
+    "tsl-robin-map"
+  ]
+}
