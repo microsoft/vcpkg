@@ -10,7 +10,7 @@ vcpkg_from_github(
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 if(NOT VCPKG_TARGET_IS_LINUX)
-  list(APPEND KGLOBALACCEL_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON)
+  list(APPEND KGLOBALACCEL_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON -DCMAKE_DISABLE_FIND_PACKAGE_XCB=ON)
 endif()
 
 vcpkg_cmake_configure(
