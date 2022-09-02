@@ -26,11 +26,10 @@
   "features": {
     "x11extras": {
       "description": "Enable x11extras",
+      "supports": "linux",
       "dependencies": [
         "qt5-x11extras"
-      ],
-      "supports": "linux"
+      ]
     }
-  
   }
 }
