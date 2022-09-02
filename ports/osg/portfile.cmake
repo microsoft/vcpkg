@@ -15,6 +15,7 @@ vcpkg_from_github(
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         unofficial-export.patch
+        fix-cross-build.patch #https://github.com/openscenegraph/OpenSceneGraph/pull/1164
 )
 
 file(REMOVE
