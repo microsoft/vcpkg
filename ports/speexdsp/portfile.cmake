@@ -8,14 +8,14 @@ if(VCPKG_USE_HEAD_VERSION)
 else()
     # Since the github repo is out-dated, use official download URL for release builds to reduce traffic to the Gitlab host
     vcpkg_download_distfile(ARCHIVE
-        URLS "http://downloads.xiph.org/releases/speex/speexdsp-1.2.0.tar.gz"
-        FILENAME "speexdsp-1.2.0.tar.gz"
-        SHA512 e357cd5377415ea66c862302c7cf8bf6a10063cacd903f0846478975b87974cf5bdf00e2c6759d8f4f453c4c869cf284e9dc948a84a83d7b2ab96bd5405c05ec
+        URLS "http://downloads.xiph.org/releases/speex/speexdsp-1.2.1.tar.gz"
+        FILENAME "speexdsp-1.2.1.tar.gz"
+        SHA512 41b5f37b48db5cb8c5a0f6437a4a8266d2627a5b7c1088de8549fe0bf0bb3105b7df8024fe207eef194096e0726ea73e2b53e0a4293d8db8e133baa0f8a3bad3
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
-        REF "1.2.0"
+        REF "1.2.1"
         PATCHES
             jitter_ctl.patch
     )

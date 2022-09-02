@@ -48,8 +48,8 @@ At this time, the following helpers are deprecated:
 - `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
 - `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
 - `vcpkg_configure_cmake` should be replaced by [`vcpkg_cmake_configure()`](vcpkg_cmake_configure.md) after removing `PREFER_NINJA` (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
-- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](ports/vcpkg-cmake/vcpkg_cmake_build.md#vcpkg_cmake_build) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
-- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](ports/vcpkg-cmake/vcpkg_cmake_install.md#vcpkg_cmake_install) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](vcpkg_cmake_build.md) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](vcpkg_cmake_install.md) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
 - `vcpkg_fixup_cmake_targets` should be replaced by [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md#vcpkg_cmake_config_fixup) (from port [`vcpkg-cmake-config`](ports/vcpkg-cmake-config.md#vcpkg-cmake-config))
 
 Some of the replacement helper functions are in "tools ports" to allow consumers to pin their
@@ -108,6 +108,20 @@ This means that the user should see:
 
 Examples:
  * [`brotli`](https://github.com/microsoft/vcpkg/blob/4f0a640e4c5b74166b759a862d7527c930eff32e/ports/brotli/install.patch) creates the `unofficial-brotli` package, producing target `unofficial::brotli::brotli`.
+
+### Install copyright file
+
+Each port has to provide a file named `copyright` in the folder `${CURRENT_PACKAGES_DIR}/share/${PORT}`.
+
+Many ports are using this code to install a copyright file:
+
+```cmake
+file(INSTALL "${SOURCE_PATH}LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+```
+
+This is discouraged in favour of [`vcpkg_install_copyright()`](vcpkg_install_copyright.md). New ports should use `vcpkg_install_copyright()` instead. However, it is still valid for existing ports to use something like the code above. You may replace this with `vcpkg_install_copyright` but you don't have to.
+
+`vcpkg_install_copyright` also includes the functionallity to handle multiple copyright files. See its [documentation](vcpkg_install_copyright.md) for more info.
 
 ## Features
 

@@ -67,10 +67,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcre-config" "${CURRENT_PACKAGES_DIR}/debug/bin/pcre-config")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-else()
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcre-config" "${CURRENT_PACKAGES_DIR}/debug/bin/pcre-config")
 endif()
 
 vcpkg_copy_pdbs()

@@ -16,6 +16,8 @@ vcpkg_from_github(
         0013-define-WINVER.patch
         0015-Fix-xml2-detection.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        0020-fix-aarch64-libswscale.patch
+        0021-fix-sdl2-version-check.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -446,7 +448,7 @@ endif()
 set(OPTIONS_CROSS " --enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
-if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "(/.+)gcc$")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
     string(APPEND OPTIONS_CROSS " --cross-prefix=${CMAKE_MATCH_1}")
 endif()
 

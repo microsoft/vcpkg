@@ -1,0 +1,11 @@
+{
+  "name": "mchehab-zbar",
+  "version": "0.23.90",
+  "description": "ZBar is an open source software suite for reading bar codes from various sources, including webcams. This fork is actively maintained.",
+  "homepage": "https://github.com/mchehab/zbar",
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    "libiconv"
+  ]
+}

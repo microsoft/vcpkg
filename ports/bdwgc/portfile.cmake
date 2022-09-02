@@ -12,8 +12,6 @@ vcpkg_cmake_configure(
         -Denable_cplusplus=ON
         -Denable_docs=OFF
         -DCFLAGS_EXTRA=-I${CURRENT_INSTALLED_DIR}/include # for libatomic_ops
-    OPTIONS_DEBUG
-        -Dinstall_headers=OFF
 )
 
 vcpkg_cmake_install()
@@ -21,6 +19,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bdwgc)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 

@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c2f6ba5b..a5f7fe222 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -723,8 +723,10 @@ add_custom_target(help-options
+ # create pkgconfig file
+ #
+ if(DBUS_ENABLE_PKGCONFIG)
+-    set(PLATFORM_LIBS pthread ${LIBRT})
+-    if(PKG_CONFIG_FOUND)
++    if(NOT WIN32)
++    	set(PLATFORM_LIBS pthread ${LIBRT})
++    endif()
++    if(1)
+         # convert lists of link libraries into -lstdc++ -lm etc..
+         foreach(LIB ${PLATFORM_LIBS})
+             set(LIBDBUS_LIBS "${LIBDBUS_LIBS} -l${LIB}")
