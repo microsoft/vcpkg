@@ -754,10 +754,14 @@ function(vcpkg_configure_make)
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
+        set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
+        set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${current_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
+        #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${current_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${current_buildtype}}")
+        set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${current_buildtype}}")
         if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
@@ -767,6 +771,7 @@ function(vcpkg_configure_make)
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
         if(VCPKG_TARGET_IS_ANDROID)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
