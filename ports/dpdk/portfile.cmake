@@ -24,7 +24,7 @@ if(VCPKG_TARGET_IS_LINUX)
   endif()
 endif()
 
-set(PORT_VERSION 22.03)
+set(PORT_VERSION 22.07)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
