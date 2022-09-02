@@ -7122,7 +7122,7 @@
     },
     "tesseract": {
       "baseline": "5.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tfhe": {
       "baseline": "1.0.1",
