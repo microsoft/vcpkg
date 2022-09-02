@@ -69,3 +69,5 @@ if (MKL_VERSION VERSION_LESS MKL_REQUIRED_VERSION)
     message(FATAL_ERROR "MKL ${MKL_VERSION} is found but ${MKL_REQUIRED_VERSION} is required. Please download and install a more recent version of MKL from:"
                         "\n    https://software.intel.com/content/www/us/en/develop/tools/oneapi/base-toolkit.html\n")
 endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/mkl/vcpkg-cmake-wrapper.cmake" @ONLY)

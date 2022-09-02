@@ -1,0 +1,3 @@
+set(MKL_INCLUDE_DIR "@MKL_ROOT@")
+
+_find_package(MKL)
