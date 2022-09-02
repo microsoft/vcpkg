@@ -72,6 +72,9 @@ APT_PACKAGES="$APT_PACKAGES haskell-stack"
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
 
+# Additionally required by intel-mkl
+APT_PACKAGES="$APT_PACKAGES intel-mkl"
+
 apt-get -y install $APT_PACKAGES
 
 # Start up cudnn
