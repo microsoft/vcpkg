@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "kf5globalaccel",
   "version": "5.89.0",
   "port-version": 3,
@@ -15,6 +14,10 @@
     "qt5-base",
     "qt5-tools",
     {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -22,14 +25,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "x11extras": {
-      "description": "Enable x11extras",
-      "supports": "linux",
-      "dependencies": [
-        "qt5-x11extras"
-      ]
-    }
-  }
+  ]
 }
