@@ -372,7 +372,6 @@ ijg-libjpeg:x64-windows-static = skip
 ijg-libjpeg:x86-windows        = skip
 intel-mkl:arm64-windows=fail
 intel-mkl:arm-uwp=fail
-intel-mkl:x64-linux=fail
 intel-mkl:x64-osx=fail
 intel-mkl:arm64-osx=fail
 intel-mkl:x64-uwp=fail
