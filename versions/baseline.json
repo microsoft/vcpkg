@@ -1282,7 +1282,7 @@
     },
     "cartographer": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "casclib": {
       "baseline": "2021-11-16",
@@ -2662,7 +2662,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2722,7 +2722,7 @@
     },
     "grpc": {
       "baseline": "1.48.0",
-      "port-version": 1
+      "port-version": 2
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -5166,7 +5166,7 @@
     },
     "offscale-libetcd-cpp": {
       "baseline": "2019-07-10",
-      "port-version": 3
+      "port-version": 4
     },
     "ogdf": {
       "baseline": "2019-08-23",
@@ -5202,7 +5202,7 @@
     },
     "onnx": {
       "baseline": "1.10.2",
-      "port-version": 1
+      "port-version": 2
     },
     "onnx-optimizer": {
       "baseline": "0.2.6",
@@ -5274,7 +5274,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5754,7 +5754,7 @@
     },
     "protobuf": {
       "baseline": "3.21.4",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.4.0",
@@ -6970,7 +6970,7 @@
     },
     "srpc": {
       "baseline": "0.9.3",
-      "port-version": 0
+      "port-version": 1
     },
     "starlink-ast": {
       "baseline": "9.2.7",
@@ -7426,7 +7426,7 @@
     },
     "upb": {
       "baseline": "2022-04-04",
-      "port-version": 0
+      "port-version": 1
     },
     "urdfdom": {
       "baseline": "3.1.0",
