@@ -25,6 +25,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/coost)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
