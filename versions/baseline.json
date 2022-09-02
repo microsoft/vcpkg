@@ -4002,7 +4002,7 @@
     },
     "libpq": {
       "baseline": "14.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.7.3",
@@ -5414,7 +5414,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 15
+      "port-version": 16
     },
     "osg-qt": {
       "baseline": "Qt5",
