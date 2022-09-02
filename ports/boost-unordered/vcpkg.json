@@ -1,6 +1,6 @@
 {
   "name": "boost-unordered",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
   "license": "BSL-1.0",
@@ -9,8 +9,8 @@
     "boost-config",
     "boost-container-hash",
     "boost-core",
-    "boost-detail",
     "boost-move",
+    "boost-mp11",
     "boost-predef",
     "boost-preprocessor",
     "boost-throw-exception",
