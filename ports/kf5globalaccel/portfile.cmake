@@ -4,20 +4,21 @@ vcpkg_from_github(
     REF v5.89.0
     SHA512 824e4d6204189290dcc542ef3004ad2e2e2f83620dbf381ab78edbef996f412996709b9b49b72aad7c23deeeb6be274906b4cbbbd49498be081330e89c5674de
     HEAD_REF master
+    PATCHES "make_x11_required.patch"
 )
-
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+      xllextas ENABLE_X11EXTRAS
+)
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
-
-if(NOT VCPKG_TARGET_IS_LINUX)
-  list(APPEND KGLOBALACCEL_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        ${KGLOBALACCEL_OPTIONS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
