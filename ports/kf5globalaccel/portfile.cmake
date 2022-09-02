@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DENABLE_X11_EXTRAS=${VCPKG_TARGET_IS_LINUX}
+        -DENABLE_X11EXTRAS=${VCPKG_TARGET_IS_LINUX}
 )
 
 vcpkg_cmake_install()
