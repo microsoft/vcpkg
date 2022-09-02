@@ -3033,8 +3033,8 @@
       "port-version": 0
     },
     "influxdb-cxx": {
-      "baseline": "0.6.7",
-      "port-version": 1
+      "baseline": "2022-09-02",
+      "port-version": 0
     },
     "infoware": {
       "baseline": "2021-06-16",
