@@ -774,6 +774,11 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
         endif()
 
+        if(VCPKG_TARGET_IS_OSX) # This is so stupid but configure scripts are stupid and don't use all flags sometimes o.O
+            set(ENV{CC} "$ENV{CC} $(CPPFLAGS) $(CFLAGS)")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $(CPPFLAGS) $(CFLAGS)")
+        endif()
+
         if(LINK_ENV_${current_buildtype})
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
