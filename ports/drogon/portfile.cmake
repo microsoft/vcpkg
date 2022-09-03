@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         vcpkg.patch
         drogon_config.patch
+        redis.patch
 )
 
 vcpkg_check_features(
