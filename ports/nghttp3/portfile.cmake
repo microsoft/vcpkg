@@ -14,9 +14,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_LIB_ONLY=ON
+        -DBUILD_TESTING=OFF
         "-DENABLE_STATIC_CRT=${ENABLE_STATIC_CRT}"
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_CUnit=ON
+    MAYBE_UNUSED_VARIABLES
+        BUILD_TESTING
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
