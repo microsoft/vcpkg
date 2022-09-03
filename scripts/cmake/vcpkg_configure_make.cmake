@@ -775,8 +775,8 @@ function(vcpkg_configure_make)
         endif()
 
         if(VCPKG_TARGET_IS_OSX) # This is so stupid but configure scripts are stupid and don't use all flags sometimes o.O
-            set(ENV{CC} "$ENV{CC} $(CPPFLAGS) $(CFLAGS)")
-            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $(CPPFLAGS) $(CFLAGS)")
+            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
