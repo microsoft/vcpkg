@@ -8,7 +8,6 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     ignore-crt.patch
-    always-install-resource-limits.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -42,14 +41,5 @@ else()
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake")
-  message(FATAL_ERROR "glslang has been updated to provide a -config file -- please remove the vcpkg provided version from the portfile")
-endif()
-
-file(COPY
-  "${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
