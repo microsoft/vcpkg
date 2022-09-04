@@ -16,5 +16,7 @@ add_library(HLSL ALIAS glslang::HLSL)
 add_library(SPIRV ALIAS glslang::SPIRV)
 add_library(MachineIndependent ALIAS glslang::MachineIndependent)
 
+find_package(Threads REQUIRED)
+
 find_path(glslang_SOURCE_DIR glslang/Public/ShaderLang.h)
 set(glslang_SOURCE_DIR "${glslang_SOURCE_DIR}/glslang" "${glslang_SOURCE_DIR}" CACHE STRING "" FORCE)
