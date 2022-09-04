@@ -6666,7 +6666,7 @@
     },
     "shaderc": {
       "baseline": "2021.1",
-      "port-version": 2
+      "port-version": 3
     },
     "shaderwriter": {
       "baseline": "2.4.0",
