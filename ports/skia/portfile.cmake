@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/google/skia
-    REF 3aa7f602018816ab3f009f1b8d359ccde752e1de
+    REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
     PATCHES
         "use_vcpkg_fontconfig.patch"
 )
@@ -10,7 +10,11 @@ vcpkg_from_git(
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
-vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python" "command = \"$shell '${PYTHON3}'")
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python3" "command = \"$shell '${PYTHON3}'")
+else()
+    vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python" "command = \"$shell '${PYTHON3}'")
+endif()
 
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
@@ -173,17 +177,17 @@ if(CMAKE_HOST_WIN32)
 
        checkout_in_path("${EXTERNALS}/spirv-cross"
            "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-           "6a67891418a3f08be63f92726e049dc788e46f5b"
+           "61c603f3baa5270e04bcfb6acf83c654e3c57679"
        )
 
        checkout_in_path("${EXTERNALS}/spirv-headers"
            "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-           "82becc8a8a92e509d3d8d635889da0a3c17d0606"
+           "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
        )
 
        checkout_in_path("${EXTERNALS}/spirv-tools"
            "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-           "cb96abbf7affd986016f17dd09f9f971138a922b"
+           "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
        )
 
        checkout_in_path("${EXTERNALS}/d3d12allocator"
@@ -214,22 +218,22 @@ They can be installed on Debian based systems via
 
    checkout_in_path("${EXTERNALS}/spirv-cross"
        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-       "6a67891418a3f08be63f92726e049dc788e46f5b"
+       "61c603f3baa5270e04bcfb6acf83c654e3c57679"
    )
 
    checkout_in_path("${EXTERNALS}/spirv-headers"
        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-       "82becc8a8a92e509d3d8d635889da0a3c17d0606"
+       "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
    )
 
    checkout_in_path("${EXTERNALS}/spirv-tools"
        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-       "cb96abbf7affd986016f17dd09f9f971138a922b"
+       "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
    )
 
    checkout_in_path("${EXTERNALS}/tint"
          "https://dawn.googlesource.com/tint"
-         "b612c505939bf86c80a55c193b93c41ed0f252a1"
+         "200492e32b94f042d9942154fb4fa7f93bb8289a"
    )
 
    checkout_in_path("${EXTERNALS}/jinja2"
@@ -245,12 +249,12 @@ They can be installed on Debian based systems via
 ## Remove
    checkout_in_path("${EXTERNALS}/vulkan-headers"
        "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-       "76f00ef6cbb1886eb1162d1fa39bee8b51e22ee8"
+       "c896e2f920273bfee852da9cca2a356bc1c2031e"
    )
 
    checkout_in_path("${EXTERNALS}/vulkan-tools"
        "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
-       "ef20059aea7ec24d0842edca2f75255eaa33a7b0"
+       "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
    )
 
    checkout_in_path("${EXTERNALS}/abseil-cpp"
@@ -261,7 +265,7 @@ They can be installed on Debian based systems via
 ## REMOVE ^
    checkout_in_path("${EXTERNALS}/dawn"
        "https://dawn.googlesource.com/dawn.git"
-       "e6d4598d36157639606a780164c425c6bffb93f6"
+       "30fa0d8d2ced43e44baa522dd4bd4684b14a3099"
    )
 
    vcpkg_find_acquire_program(GIT)
