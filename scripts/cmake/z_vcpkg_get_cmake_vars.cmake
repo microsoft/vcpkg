@@ -17,7 +17,6 @@ function(z_vcpkg_get_cmake_vars out_file)
             CACHE PATH "The file to include to access the CMake variables from a generated project.")
         vcpkg_configure_cmake(
             SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
-            OPTIONS --trace-expand
             OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log"
             OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
             PREFER_NINJA
