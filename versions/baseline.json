@@ -5284,6 +5284,10 @@
       "baseline": "2.5.8",
       "port-version": 1
     },
+    "openfbx": {
+      "baseline": "2022-07-18",
+      "port-version": 0
+    },
     "opengl": {
       "baseline": "2022-03-14",
       "port-version": 1
