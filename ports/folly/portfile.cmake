@@ -21,7 +21,6 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
