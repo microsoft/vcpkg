@@ -5,6 +5,7 @@ ninja = ['@NINJA@']
 pkgconfig= ['@PKGCONFIG@']
 @MESON_MT@
 @MESON_AR@
+@MESON_RC@
 @MESON_C@
 @MESON_C_LD@
 @MESON_CXX@
