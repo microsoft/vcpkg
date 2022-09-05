@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 1689f9a..992b9cb 100644
+index 1689f9a..f4d8eef 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -28,10 +28,17 @@ endif()
+@@ -28,10 +28,20 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -11,6 +11,9 @@ index 1689f9a..992b9cb 100644
 +find_dependency(glog CONFIG REQUIRED)
 +find_dependency(gflags CONFIG)
 +find_dependency(Libevent CONFIG REQUIRED)
++find_dependency(lz4 CONFIG)
++find_dependency(zstd CONFIG)
++find_dependency(Snappy CONFIG)
 +find_dependency(ZLIB MODULE)
 +find_dependency(OpenSSL MODULE REQUIRED)
 +find_dependency(unofficial-sodium CONFIG)
@@ -23,7 +26,7 @@ index 1689f9a..992b9cb 100644
      context
      filesystem
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 4b78e9f..de086cc 100644
+index 4b78e9f..59a8a99 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -124,18 +127,9 @@ index 4b78e9f..de086cc 100644
  endif()
  
  find_package(LibDwarf)
-@@ -137,13 +136,16 @@ find_package(LibAIO)
- list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
- 
--find_package(LibUring)
--list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
--list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
-+find_package(PkgConfig)
-+pkg_check_modules(liburing IMPORTED_TARGET GLOBAL liburing>=2.0)
-+if(TARGET PkgConfig::liburing)
-+  list(APPEND FOLLY_LINK_LIBRARIES PkgConfig::liburing)
-+endif()
+@@ -141,9 +140,10 @@ find_package(LibUring)
+ list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
  
 -find_package(Libsodium)
 -list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
@@ -147,7 +141,7 @@ index 4b78e9f..de086cc 100644
  
  list(APPEND FOLLY_LINK_LIBRARIES ${CMAKE_DL_LIBS})
  list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-@@ -154,9 +156,9 @@ if (PYTHON_EXTENSIONS)
+@@ -154,9 +154,9 @@ if (PYTHON_EXTENSIONS)
  endif ()
  
  find_package(LibUnwind)
@@ -159,7 +153,7 @@ index 4b78e9f..de086cc 100644
    set(FOLLY_HAVE_LIBUNWIND ON)
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-@@ -299,11 +301,7 @@ endif()
+@@ -299,11 +299,7 @@ endif()
  
  add_library(folly_deps INTERFACE)
  
