@@ -1,6 +1,6 @@
 {
   "name": "mesa",
-  "version": "22.1.4",
+  "version": "22.1.7",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
@@ -54,6 +54,9 @@
           "platform": "x64"
         }
       ]
+    },
+    "offscreen": {
+      "description": "Build with support for offscreen rendering (OSMesa)"
     },
     "egl": {
       "description": "Build support for EGL platform",
