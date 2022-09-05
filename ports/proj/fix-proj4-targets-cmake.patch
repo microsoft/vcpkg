@@ -46,21 +46,17 @@ diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
 index 23f997abd..8baef00f0 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -7,6 +7,17 @@
- #  @PROJECT_VARIANT_NAME@_LIBRARY_DIRS = /usr/local/lib
- #  @PROJECT_VARIANT_NAME@_BINARY_DIRS = /usr/local/bin
+@@ -9,6 +9,13 @@
  #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
+ 
+ include(CMakeFindDependencyMacro)
 +cmake_policy(PUSH)
 +cmake_policy(SET CMP0012 NEW)
-+include(CMakeFindDependencyMacro)
 +find_dependency(unofficial-sqlite3 CONFIG)
 +if("@ENABLE_TIFF@")
 +    find_dependency(TIFF)
 +endif()
-+if("@ENABLE_CURL@")
-+    find_dependency(CURL CONFIG)
-+endif()
 +cmake_policy(POP)
- 
- # Tell the user project where to find our headers and libraries
- get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+ if("@CURL_ENABLED@" STREQUAL "TRUE")
+   # Chainload CURL usage requirements
+   find_dependency(CURL)

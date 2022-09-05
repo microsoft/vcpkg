@@ -1,6 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+#set(${PORT}_PATCHES 0ce5e91.diff) # ICE Workaround; Needs path adjustments
+
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -60,15 +62,8 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-if(NOT QT_IS_LATEST)
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
-    vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
-    list(APPEND FEATURE_OPTIONS "-DPython2_EXECUTABLE=${PYTHON2}")
-else()
-    vcpkg_find_acquire_program(PYTHON3)
-    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
-endif()
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -95,15 +90,6 @@ if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS)
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 endif()
 
-### Download third_party modules
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
-    URL git://code.qt.io/qt/qtwebengine-chromium.git
-    REF "${${PORT}_chromium_REF}"
-    PATCHES
-        0ce5e91.diff
-)
-
 ##### qt_install_submodule
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
@@ -112,19 +98,12 @@ qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
     return()
 endif()
-if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
-    file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
-endif()
-if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
-    file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
-endif()
 
 qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes. 
                     OPTIONS ${FEATURE_OPTIONS}
                         -DGPerf_EXECUTABLE=${GPERF}
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
-                        #-DGn_EXECUTABLE=${GN}
                         -DNodejs_EXECUTABLE=${NODEJS}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})

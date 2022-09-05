@@ -22,6 +22,8 @@ Build and install port packages.
 
 In Classic Mode, this verb adds port packages to the existing set in the [installed directory][] (defaults to `installed/` under the vcpkg root). This can require removing and rebuilding existing packages, which can fail.
 
+<a id="package-syntax"></a>
+
 **Package Syntax**
 ```
 portname[feature1,feature2]:triplet
@@ -80,6 +82,8 @@ The packages subfolder for the built package (for example, `packages/zlib_x64-wi
 Print the install plan, but do not remove or install any packages.
 
 The install plan lists all packages and features that will be installed, as well as any other packages that need to be removed and rebuilt.
+
+<a id="editable"></a>
 
 ### `--editable`
 
@@ -174,6 +178,10 @@ Use aria2 to perform download tasks.
 Writes out a NuGet `packages.config`-formatted file for use with [Binary Caching][].
 
 This option can be used in conjunction with `--dry-run` to obtain the list of NuGet packages required from [Binary Caching][] without building or installing any packages. This enables the NuGet command line to be invoked separately for advanced scenarios, such as using alternate protocols to acquire the `.nupkg` files.
+
+### `--no-print-usage`
+
+Suppress generation of usage text printed at the end of installation.
 
 [Asset Caching]: ../users/assetcaching.md
 [Binary Caching]: ../users/binarycaching.md

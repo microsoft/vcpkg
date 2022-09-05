@@ -1,4 +1,4 @@
-if (NOT "cxx20" IN_LIST FEATURES)
+if ("polyfill-cxx20" IN_LIST FEATURES)
     message(WARNING [=[
     LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's, Outcome's and LLFIO's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
     ]=])
@@ -15,6 +15,7 @@ vcpkg_from_github(
         # https://github.com/ned14/llfio/issues/83
         # To be removed on next update
         issue-83-fix-backport.patch
+        fix-vendored-status-code-include.patch
 )
 
 vcpkg_from_github(
@@ -70,7 +71,7 @@ vcpkg_cmake_configure(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_cmake_build(TARGET install.dl)
-else(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_cmake_build(TARGET install.sl)
 endif()
 

@@ -1,6 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.5.5",
+  "version": "4.6.0",
   "port-version": 4,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "name": "hdf5",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         },
         {
           "name": "tesseract",
@@ -67,6 +67,12 @@
             "cuda"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {
