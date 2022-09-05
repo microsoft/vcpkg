@@ -1,0 +1,11 @@
+{
+  "name": "libsm",
+  "version": "1.2.3",
+  "description": "X Session Management Library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libsm",
+  "dependencies": [
+    "bzip2",
+    "libice",
+    "xorg-macros"
+  ]
+}
