@@ -15,6 +15,7 @@ set(PATCHES
     0005-only-build-required-projects.patch
     0009-python.pc.patch
     0010-bz2d.patch
+    0011-dont-skip-rpath.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -189,7 +190,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
-    
+
     # Remove static library belonging to executable
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
@@ -204,6 +205,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         endif()
     endif()
 else()
+    # The Python Stable ABI, `libpython3.so` is not produced by the upstream build system with --with-pydebug option
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_BUILD_TYPE)
+        set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+    endif()
+
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--without-ensurepip"
@@ -244,6 +250,26 @@ else()
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 
     vcpkg_fixup_pkgconfig()
+
+    # Perform some post-build checks on modules
+    file(GLOB python_libs_dynload_debug LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    file(GLOB python_libs_dynload_release LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    set(python_libs_dynload_failed_debug ${python_libs_dynload_debug})
+    set(python_libs_dynload_failed_release ${python_libs_dynload_release})
+    list(FILTER python_libs_dynload_failed_debug INCLUDE REGEX ".*_failed\.so.*")
+    list(FILTER python_libs_dynload_failed_release INCLUDE REGEX ".*_failed\.so.*")
+    if(python_libs_dynload_failed_debug OR python_libs_dynload_failed_release)
+        list(JOIN python_libs_dynload_failed_debug "\n" python_libs_dynload_failed_debug_str)
+        list(JOIN python_libs_dynload_failed_release "\n" python_libs_dynload_failed_release_str)
+        message(FATAL_ERROR "There should be no modules with \"_failed\" suffix:\n${python_libs_dynload_failed_debug_str}\n${python_libs_dynload_failed_release_str}")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE)
+        list(LENGTH python_libs_dynload_release python_libs_dynload_release_length)
+        list(LENGTH python_libs_dynload_debug python_libs_dynload_debug_length)
+        if(NOT python_libs_dynload_release_length STREQUAL python_libs_dynload_debug_length)
+            message(FATAL_ERROR "Mismatched number of modules: ${python_libs_dynload_debug_length} in debug, ${python_libs_dynload_release_length} in release")
+        endif()
+    endif()
 endif()
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)

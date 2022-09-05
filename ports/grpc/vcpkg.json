@@ -1,6 +1,7 @@
 {
   "name": "grpc",
-  "version-semver": "1.46.3",
+  "version-semver": "1.48.0",
+  "port-version": 1,
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "license": "Apache-2.0",

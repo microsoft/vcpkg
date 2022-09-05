@@ -14,15 +14,15 @@ if ("python" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    docs ENABLE_DOCS
-    tests ENABLE_TESTS
-    util ENABLE_OSCAP_UTIL
-    python ENABLE_PYTHON3
+    FEATURES
+        docs    ENABLE_DOCS
+        tests   ENABLE_TESTS
+        util    ENABLE_OSCAP_UTIL
+        python  ENABLE_PYTHON3
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DENABLE_PERL=OFF
@@ -37,11 +37,12 @@ vcpkg_configure_cmake(
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 #Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

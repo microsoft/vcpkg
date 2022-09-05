@@ -2,11 +2,9 @@ vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.com/inivation
         OUT_SOURCE_PATH SOURCE_PATH
         REPO dv/dv-processing
-        REF rel_1.4
-        SHA512 c011ca0e6d9842913ff35b0a03f9053bfbc98c090b6936e01f6514b8a35d31ee6d0a821f491be96400113e93967aa2d3e8ab19e558f5c3e9f8eba9ad4e1fe013
-        HEAD_REF d4ffab46a2849372789c5a2084821011165086ab
-        PATCHES
-                vcpkg-build.patch
+        REF 6029bb4ecc06566b5f68375c68f00dfe78587baa
+        SHA512 9d0928e6ded1dab147814f380c57fb5b2c467c213c1fd12dddad9982e7d6a94a7bef526fcd248dd672b4b84753a44599b10d7794640ec63027152cd33b675787
+        HEAD_REF rel_1.5
 )
 
 vcpkg_from_gitlab(
@@ -27,6 +25,7 @@ vcpkg_cmake_configure(
 	        -DENABLE_TESTS=OFF
 		-DENABLE_SAMPLES=OFF
 		-DENABLE_PYTHON=OFF
+		-DENABLE_UTILITIES=OFF
 		-DBUILD_CONFIG_VCPKG=ON
 )
 
@@ -36,4 +35,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME "dv-processing" CONFIG_PATH "share/dv-proc
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

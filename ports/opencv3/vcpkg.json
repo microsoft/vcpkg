@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
-  "version": "3.4.16",
-  "port-version": 9,
+  "version": "3.4.18",
+  "port-version": 1,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -50,6 +50,7 @@
         "cudnn",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
@@ -125,6 +126,13 @@
         "protobuf"
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
@@ -196,12 +204,16 @@
         "opengl"
       ]
     },
+    "openmp": {
+      "description": "Enable openmp support for opencv"
+    },
     "ovis": {
       "description": "opencv_ovis module",
       "dependencies": [
         "ogre",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
@@ -215,7 +227,10 @@
       ]
     },
     "python": {
-      "description": "Python wrapper support for opencv"
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",
@@ -236,13 +251,20 @@
       "description": "opencv_sfm module",
       "dependencies": [
         "ceres",
-        "eigen3",
         "gflags",
         "glog",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "eigen"
           ]
         }
       ]
@@ -262,6 +284,12 @@
     "vtk": {
       "description": "vtk support for opencv",
       "dependencies": [
+        {
+          "name": "opencv3",
+          "features": [
+            "contrib"
+          ]
+        },
         "vtk"
       ]
     },
