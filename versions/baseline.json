@@ -2140,6 +2140,10 @@
       "baseline": "0.9.2",
       "port-version": 7
     },
+    "ereignis": {
+      "baseline": "1.1",
+      "port-version": 0
+    },
     "esaxx": {
       "baseline": "ca7cb332011ec37",
       "port-version": 1
