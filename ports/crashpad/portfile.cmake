@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 68aba08c48bb428b7b159b3371163f86e8d5a126
+    REF 261679b3d2f3336d8531ed38e110254c3e2d1c10
 )
 
 vcpkg_find_acquire_program(PYTHON3)
