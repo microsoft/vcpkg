@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
@@ -11,8 +11,8 @@ vcpkg_from_gitlab(
     REPO font/util
     REF  d45011b8324fecebb4fc79e57491d341dd96e325 #1.3.2
     SHA512 d783cbb5b8b0975891a247f98b78c2afadfd33e1d26ee8bcf7ab7ccc11615b0150d07345c719182b0929afc3c54dc3288a01a789b5374e18aff883ac23d15b04
-    HEAD_REF master # branch name
-    PATCHES build.patch #patch name
+    HEAD_REF master
+    PATCHES build.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

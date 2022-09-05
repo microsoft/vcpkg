@@ -15,10 +15,6 @@
       "name": "libxslt",
       "host": true
     },
-    {
-      "name": "libx11",
-      "host": true
-    },
     "xcb",
     "xproto",
     "xtrans"
