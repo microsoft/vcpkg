@@ -329,7 +329,7 @@
       "port-version": 3
     },
     "azure-core-cpp": {
-      "baseline": "1.7.1",
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -425,8 +425,8 @@
       "port-version": 5
     },
     "bdwgc": {
-      "baseline": "8.2.0",
-      "port-version": 4
+      "baseline": "8.2.2",
+      "port-version": 0
     },
     "beast": {
       "baseline": "0",
@@ -846,7 +846,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-move": {
       "baseline": "1.80.0",
@@ -1297,8 +1297,8 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "3.0.1",
-      "port-version": 2
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1774,7 +1774,7 @@
     },
     "curl": {
       "baseline": "7.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -1977,11 +1977,11 @@
       "port-version": 0
     },
     "dpdk": {
-      "baseline": "22.03",
-      "port-version": 3
+      "baseline": "22.07",
+      "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.16",
+      "baseline": "10.0.17",
       "port-version": 0
     },
     "draco": {
@@ -2209,7 +2209,7 @@
       "port-version": 1
     },
     "fast-float": {
-      "baseline": "3.2.0",
+      "baseline": "3.5.1",
       "port-version": 0
     },
     "fastcdr": {
@@ -3033,8 +3033,8 @@
       "port-version": 0
     },
     "influxdb-cxx": {
-      "baseline": "0.6.7",
-      "port-version": 1
+      "baseline": "2022-09-02",
+      "port-version": 0
     },
     "infoware": {
       "baseline": "2021-06-16",
@@ -3577,7 +3577,7 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.17.9",
+      "baseline": "0.17.10",
       "port-version": 0
     },
     "libdatrie": {
@@ -3785,7 +3785,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "1.0.3",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "libjxl": {
@@ -4390,7 +4390,7 @@
     },
     "llfio": {
       "baseline": "2.0-20220112",
-      "port-version": 2
+      "port-version": 3
     },
     "llgl": {
       "baseline": "2019-08-15",
@@ -4881,7 +4881,7 @@
       "port-version": 3
     },
     "mysql-connector-cpp": {
-      "baseline": "1.1.13",
+      "baseline": "8.0.30",
       "port-version": 0
     },
     "nameof": {
@@ -5157,8 +5157,8 @@
       "port-version": 2
     },
     "octomap": {
-      "baseline": "1.9.5",
-      "port-version": 2
+      "baseline": "1.9.6",
+      "port-version": 0
     },
     "ode": {
       "baseline": "0.16.1",
@@ -5274,7 +5274,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5282,7 +5282,7 @@
     },
     "openexr": {
       "baseline": "2.5.8",
-      "port-version": 0
+      "port-version": 1
     },
     "opengl": {
       "baseline": "2022-03-14",
@@ -5433,7 +5433,7 @@
       "port-version": 1
     },
     "outcome": {
-      "baseline": "2.2.2-20211208",
+      "baseline": "2.2.3",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -6680,6 +6680,10 @@
       "baseline": "1.10.1",
       "port-version": 0
     },
+    "shiftmedia-libgnutls": {
+      "baseline": "3.7.6",
+      "port-version": 0
+    },
     "shiva": {
       "baseline": "1.0",
       "port-version": 5
@@ -6977,8 +6981,8 @@
       "port-version": 1
     },
     "status-code": {
-      "baseline": "1.0.0-20211208",
-      "port-version": 1
+      "baseline": "1.0.0-20220104",
+      "port-version": 0
     },
     "status-value-lite": {
       "baseline": "1.1.0",
@@ -7122,7 +7126,7 @@
     },
     "tesseract": {
       "baseline": "5.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tfhe": {
       "baseline": "1.0.1",
@@ -7741,15 +7745,15 @@
       "port-version": 3
     },
     "wolfmqtt": {
-      "baseline": "1.14.0",
+      "baseline": "1.14.1",
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.4.0",
+      "baseline": "5.5.0",
       "port-version": 0
     },
     "wolftpm": {
-      "baseline": "2.5.0",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "wordnet": {
