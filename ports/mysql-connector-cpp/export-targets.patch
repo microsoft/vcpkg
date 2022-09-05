@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e734714..6f00595 100644
+index e734714..6f83631 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -397,7 +397,7 @@ add_subdirectory(devapi)
@@ -11,10 +11,11 @@ index e734714..6f00595 100644
  
  
  #
-@@ -473,31 +473,23 @@ set_target_properties(connector PROPERTIES
+@@ -472,32 +472,23 @@ set_target_properties(connector PROPERTIES
+   SOVERSION "${ABI_VERSION_MAJOR}"
  )
  
- 
+-
 -install(TARGETS connector
 -  CONFIGURATIONS Release RelWithDebInfo
 -  ARCHIVE DESTINATION "${INSTALL_LIB_DIR_STATIC}" COMPONENT XDevAPIDev
@@ -49,7 +50,7 @@ index e734714..6f00595 100644
      COMPONENT Debuginfo
    )
  
-@@ -604,3 +596,12 @@ endif()
+@@ -604,3 +595,15 @@ endif()
  
  
  show_config_options()
@@ -61,5 +62,8 @@ index e734714..6f00595 100644
 +  INSTALL_DESTINATION "share/unofficial-mysql-connector-cpp"
 +)
 +install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mysql-connector-cpp-config.cmake" DESTINATION "share/unofficial-mysql-connector-cpp")
-+install(EXPORT unofficial-mysql-connector-cpp-targets DESTINATION share/unofficial-mysql-connector-cpp)
++install(EXPORT unofficial-mysql-connector-cpp-targets
++    NAMESPACE unofficial::
++    DESTINATION share/unofficial-mysql-connector-cpp
++)
 \ No newline at end of file
