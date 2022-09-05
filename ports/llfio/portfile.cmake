@@ -15,6 +15,7 @@ vcpkg_from_github(
         # https://github.com/ned14/llfio/issues/83
         # To be removed on next update
         issue-83-fix-backport.patch
+        fix-vendored-status-code-include.patch
 )
 
 vcpkg_from_github(

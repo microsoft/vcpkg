@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf3e8c1..aa380ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,7 +108,6 @@ foreach(source
+   )
+   target_sources(status-code INTERFACE
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${source}>"
+-    "$<INSTALL_INTERFACE:${source}>"
+   )
+   get_filename_component(dir ${source} DIRECTORY)
+   install(FILES "${source}"
