@@ -5,8 +5,8 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxp",
   "dependencies": [
     "bzip2",
-    "fontenc",
     "freetype",
+    "libfontenc",
     "libx11",
     "libxext",
     "xorg-macros",

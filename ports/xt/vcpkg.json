@@ -6,9 +6,9 @@
   "dependencies": [
     "bzip2",
     "glib",
-    "ice",
+    "libice",
+    "libsm",
     "libx11",
-    "sm",
     "xorg-macros",
     "xproto"
   ]
