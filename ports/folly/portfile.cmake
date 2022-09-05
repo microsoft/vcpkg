@@ -19,19 +19,16 @@ vcpkg_from_github(
 	fix-deps.patch
 )
 
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
-    DESTINATION "${SOURCE_PATH}/CMake/"
-)
-file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindDoubleConversion.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibUnwind.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
