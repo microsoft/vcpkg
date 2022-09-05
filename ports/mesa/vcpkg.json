@@ -55,9 +55,6 @@
         }
       ]
     },
-    "offscreen": {
-      "description": "Build with support for offscreen rendering (OSMesa)"
-    },
     "egl": {
       "description": "Build support for EGL platform",
       "dependencies": [
@@ -121,6 +118,9 @@
           "platform": "x64 | x86"
         }
       ]
+    },
+    "offscreen": {
+      "description": "Build with support for offscreen rendering (OSMesa)"
     },
     "opengl": {
       "description": "Build support for OpenGL (all versions)",
