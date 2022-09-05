@@ -3,6 +3,7 @@
   "version": "1.0.10",
   "description": "Inter-Client Exchange Library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libice",
+  "license": "MIT-open-group",
   "dependencies": [
     "bzip2",
     "libx11",
