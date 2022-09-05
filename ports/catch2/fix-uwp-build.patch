@@ -1,0 +1,34 @@
+diff --git a/src/catch2/catch_config.cpp b/src/catch2/catch_config.cpp
+index 4465831d..7555a21f 100644
+--- a/src/catch2/catch_config.cpp
++++ b/src/catch2/catch_config.cpp
+@@ -26,7 +26,12 @@ namespace {
+ #        pragma warning( disable : 4996 )
+ #    endif
+ 
++#    if defined( WINAPI_FAMILY )
++        // UWP doesn't support environment variables.
++        return false;
++#    else
+         return std::getenv( "BAZEL_TEST" ) != nullptr;
++#    endif
+ 
+ #    if defined( _MSC_VER )
+ #        pragma warning( pop )
+@@ -81,6 +86,8 @@ namespace Catch {
+             } );
+         }
+ 
++#if !defined( WINAPI_FAMILY )
++    // UWP doesn't support environment variables.
+     if(provideBazelReporterOutput()){
+             // Register a JUnit reporter for Bazel. Bazel sets an environment
+             // variable with the path to XML output. If this file is written to
+@@ -102,6 +109,7 @@ namespace Catch {
+                     { "junit", std::string( bazelOutputFilePtr ), {}, {} } );
+             }
+     }
++#endif
+ 
+ 
+         // We now fixup the reporter specs to handle default output spec,
