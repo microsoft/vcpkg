@@ -7964,6 +7964,10 @@
       "baseline": "1.0",
       "port-version": 1
     },
+    "zarchive": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "zeroc-ice": {
       "baseline": "3.7.7",
       "port-version": 2
