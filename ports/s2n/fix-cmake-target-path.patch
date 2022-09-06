@@ -12,17 +12,22 @@ index d0626d0..c2141bd 100644
          COMPONENT Development)
  
 diff --git a/cmake/s2n-config.cmake b/cmake/s2n-config.cmake
-index 9370497..e7cbb88 100644
+index 9370497..d5e3a73 100644
 --- a/cmake/s2n-config.cmake
 +++ b/cmake/s2n-config.cmake
-@@ -8,9 +8,4 @@ endif()
- list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
- find_dependency(crypto)
+@@ -5,12 +5,6 @@ if (NOT MSVC)
+     find_package(Threads REQUIRED)
+ endif()
  
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
+-find_dependency(crypto)
+-
 -if (BUILD_SHARED_LIBS)
 -    include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
 -else()
 -    include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
 -endif()
--
++find_dependency(OpenSSL COMPONENTS Crypto)
+ 
 +include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
+\ No newline at end of file
