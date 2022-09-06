@@ -38,7 +38,7 @@ endif()
 set (ADDITIONAL_FLAGS "")
 
 if (VCPKG_TARGET_IS_UWP)
-    # Treat UWP as corss-compiling, as exectuables cannot be run.
+    # Treat UWP as cross-compiling, as exectuables cannot be run.
     list(APPEND ADDITIONAL_FLAGS "-DCMAKE_CROSSCOMPILING=ON")
 endif()
 
