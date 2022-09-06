@@ -1,7 +1,6 @@
 {
   "name": "gstreamer",
-  "version": "1.19.2",
-  "port-version": 11,
+  "version": "1.20.3",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -61,6 +60,10 @@
       "dependencies": [
         "graphene"
       ]
+    },
+    "gpl": {
+      "description": "Allow build of plugins that have (A)GPL-licensed dependencies",
+      "supports": "!arm"
     },
     "opus": {
       "description": "Opus de/encoding via libopus",
@@ -148,6 +151,14 @@
       "description": "Colon separated list of additional x264 library paths, e.g. for 10-bit version",
       "supports": "!arm",
       "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "gpl"
+          ],
+          "platform": "!arm"
+        },
         "x264"
       ]
     }

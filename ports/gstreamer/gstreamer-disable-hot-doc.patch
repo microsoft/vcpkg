@@ -30,5 +30,5 @@ index 4a2eb27..1316366 100644
 +  ['gstreamer-vaapi', { 'option': get_option('vaapi'), 'build-hotdoc': false}],
 +  ['gst-omx', { 'option': get_option('omx'), 'build-hotdoc': false}],
    ['gstreamer-sharp', { 'option': get_option('sharp') }],
-   ['pygobject', { 'option': get_option('python'), 'match_gst_version': false }],
+   ['pygobject', { 'option': get_option('python'), 'match_gst_version': false, 'sysdep': 'pygobject-3.0', 'sysdep_version': '>= 3.8' }],
    ['gst-python', { 'option': get_option('python')}],
