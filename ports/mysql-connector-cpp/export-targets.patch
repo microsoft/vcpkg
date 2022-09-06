@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e734714..6f83631 100644
+index e734714..6d665dc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -397,7 +397,7 @@ add_subdirectory(devapi)
@@ -63,7 +63,7 @@ index e734714..6f83631 100644
 +)
 +install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mysql-connector-cpp-config.cmake" DESTINATION "share/unofficial-mysql-connector-cpp")
 +install(EXPORT unofficial-mysql-connector-cpp-targets
-+    NAMESPACE unofficial::
++    NAMESPACE unofficial::mysql-connector-cpp::
 +    DESTINATION share/unofficial-mysql-connector-cpp
 +)
 \ No newline at end of file
