@@ -5602,7 +5602,7 @@
     },
     "pkgconf": {
       "baseline": "1.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "platform-folders": {
       "baseline": "4.1.0",
