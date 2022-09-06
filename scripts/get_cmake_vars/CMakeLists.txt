@@ -9,7 +9,7 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
 endif()
@@ -109,7 +109,9 @@ macro(_vcpkg_adjust_flags flag_var)
             endif()
             string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
             if (CMAKE_OSX_DEPLOYMENT_TARGET)
-                string(APPEND ${flag_var} " -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}") 
+                list(GET VCPKG_LANGUAGES 0 lang)
+                string(APPEND ${flag_var} " ${CMAKE_${lang}_OSX_DEPLOYMENT_TARGET_FLAG}${CMAKE_OSX_DEPLOYMENT_TARGET}")
+                unset(lang)
             endif()
         endif()
     endif()
