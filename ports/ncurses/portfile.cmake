@@ -38,6 +38,9 @@ if(VCPKG_TARGET_IS_MINGW)
     )
 endif()
 
+file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 set(OPTIONS_DEBUG
     "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
     --with-debug
