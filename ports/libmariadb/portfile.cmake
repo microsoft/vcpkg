@@ -25,8 +25,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        iconv WITH_ICONV
-        mariadbclient VCPKG_MARIADBCLIENT
+        iconv            WITH_ICONV
+        mariadbclient    VCPKG_MARIADBCLIENT
 )
 
 if("openssl" IN_LIST FEATURES)
@@ -56,7 +56,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmariadb.pc" " -lmariadb" " -llibmariadb")

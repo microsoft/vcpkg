@@ -1,20 +1,30 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 4823858..018101f 100644
+index 4823858..e42e32c 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -471,10 +471,15 @@ IF(NOT WIN32)
+@@ -461,7 +461,9 @@ IF(WITH_MYSQLCOMPAT)
+   ENDIF()
+ ENDIF()
+ 
++IF(VCPKG_MARIADBCLIENT)
+ create_symlink(libmariadb${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
++ENDIF()
+ 
+ SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
+  ${CPACK_PACKAGE_VERSION_MAJOR}
+@@ -471,10 +473,15 @@ IF(NOT WIN32)
    SET_TARGET_PROPERTIES(mariadbclient PROPERTIES OUTPUT_NAME "${LIBMARIADB_STATIC_NAME}")
  ENDIF()
  
-+if(VCPKG_MARIADBCLIENT)
++IF(VCPKG_MARIADBCLIENT)
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
            EXPORT unofficial-libmariadb-targets
            LIBRARY DESTINATION lib)
-+else()
++ELSE()
 +  set_target_properties(mariadbclient PROPERTIES EXCLUDE_FROM_ALL 1)
-+endif()
-+          
++ENDIF()
++
  IF(WIN32)
  INSTALL(TARGETS libmariadb
          COMPONENT SharedLibraries
