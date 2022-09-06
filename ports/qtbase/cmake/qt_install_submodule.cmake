@@ -211,15 +211,13 @@ function(qt_fixup_and_cleanup)
         vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}")
     endforeach()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
-        foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
-            # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
-            vcpkg_replace_string("${_plugin_target}" 
-                                 [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
-                                 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
-        endforeach()
-    endif()
+    file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
+    foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
+        # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
+        vcpkg_replace_string("${_plugin_target}" 
+                             [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
+                             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
+    endforeach()
 
     set(qt_tooldest "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
     set(qt_searchdir "${CURRENT_PACKAGES_DIR}/bin")
