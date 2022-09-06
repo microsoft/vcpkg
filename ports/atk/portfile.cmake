@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(ATK_VERSION 2.38.0)
 

@@ -218,7 +218,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 1
+      "port-version": 2
     },
     "atkmm": {
       "baseline": "2.36.1",
