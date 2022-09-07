@@ -1,6 +1,6 @@
 {
   "name": "openimageio",
-  "version": "2.3.10.1",
+  "version": "2.3.17.0",
   "port-version": 4,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
@@ -43,6 +43,7 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "avresample"
           ]
@@ -68,7 +69,10 @@
       ]
     },
     "opencolorio": {
-      "description": "Enable opencolorio support for openimageio",
+      "description": [
+        "Enable opencolorio support for openimageio.",
+        "This feature can only be used when openexr and opencolorio use the same version of Imath."
+      ],
       "dependencies": [
         "opencolorio"
       ]
@@ -76,7 +80,10 @@
     "opencv": {
       "description": "Enable opencv support for openimageio",
       "dependencies": [
-        "opencv"
+        {
+          "name": "opencv",
+          "default-features": false
+        }
       ]
     },
     "openjpeg": {
@@ -95,7 +102,10 @@
       "description": "Build openimageio tools",
       "dependencies": [
         "opengl",
-        "qt5-base"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
       ]
     },
     "webp": {

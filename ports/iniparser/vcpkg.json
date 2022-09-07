@@ -1,7 +1,8 @@
 {
   "name": "iniparser",
-  "version-string": "2020-04-06",
-  "port-version": 2,
+  "version-date": "2020-04-06",
+  "port-version": 3,
   "description": "C library for parsing INI-style files",
-  "homepage": "ndevilla.free.fr/iniparser"
+  "homepage": "https://github.com/ndevilla/iniparser",
+  "license": "MIT"
 }
