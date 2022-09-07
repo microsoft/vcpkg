@@ -6,6 +6,7 @@
   "license": "LGPL-2.1-only",
   "dependencies": [
     "libjuice",
+    "libnice",
     "openssl",
     "plog",
     "usrsctp",
@@ -33,6 +34,9 @@
     },
     "ws": {
       "description": "Web Socket support"
+    },
+    "nice": {
+      "description": "Use libnice instead of libjuice for underlying ICE communication"
     }
   }
 }

@@ -17,9 +17,11 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         stdcall CAPI_STDCALL
+        nice USE_NICE
     INVERTED_FEATURES
         ws NO_WEBSOCKET
         srtp NO_MEDIA
+
 )
 
 vcpkg_cmake_configure(
@@ -43,6 +45,7 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
+find_dependency(LibNice)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
