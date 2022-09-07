@@ -3582,7 +3582,7 @@
     },
     "libdatachannel": {
       "baseline": "0.17.10",
-      "port-version": 1
+      "port-version": 0
     },
     "libdatrie": {
       "baseline": "0.2.13",
