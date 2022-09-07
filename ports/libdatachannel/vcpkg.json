@@ -23,6 +23,9 @@
     "ws"
   ],
   "features": {
+    "nice": {
+      "description": "Use libnice instead of libjuice for underlying ICE communication"
+    },
     "srtp": {
       "description": "Use Cisco's libSRTP for media transport.",
       "dependencies": [
@@ -34,9 +37,6 @@
     },
     "ws": {
       "description": "Web Socket support"
-    },
-    "nice": {
-      "description": "Use libnice instead of libjuice for underlying ICE communication"
     }
   }
 }
