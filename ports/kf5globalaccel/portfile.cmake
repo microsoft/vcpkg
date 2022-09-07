@@ -9,10 +9,15 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
+if(NOT VCPKG_TARGET_IS_LINUX)
+  list(APPEND KGLOBALACCEL_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        ${KGLOBALACCEL_OPTIONS}
 )
 
 vcpkg_cmake_install()

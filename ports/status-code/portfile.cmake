@@ -1,24 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/status-code
-    REF 0cca391ad9168581641b569e031f25c7ee1673b3
-    SHA512 5fdf3e268d0a4a388202547ceac271832642648fdc50824a8f26d86bad1d45c93394ff6651e50232dde534e057dfadaf7a7436b893dd7b182a75bcd57e24fc9d
+    REF 60ec9e46916e5170051293e7925729ba88951934
+    SHA512 f7a9448419f8e9228cd29c3b2e9268712de985675acea3b51f742ce88e524e7f51ccea7e08c89bf4e6d38eb1131416af052192531c168eed1f45e7eeda20fed6
     HEAD_REF master
+    PATCHES
+        no-target-sources.patch # see https://github.com/ned14/status-code/issues/43
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/status-code)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/status-code)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")

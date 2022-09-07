@@ -1,6 +1,6 @@
 {
   "name": "boost-tti",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost tti module",
   "homepage": "https://github.com/boostorg/tti",
   "license": "BSL-1.0",
