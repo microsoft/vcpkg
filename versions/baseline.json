@@ -3270,7 +3270,7 @@
     },
     "kf5globalaccel": {
       "baseline": "5.89.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5guiaddons": {
       "baseline": "5.89.0",
