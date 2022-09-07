@@ -3,6 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
                     remove_unistd.patch
+                    remove_export_macro.patch
 )
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
