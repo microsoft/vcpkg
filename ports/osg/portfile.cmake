@@ -14,12 +14,15 @@ vcpkg_from_github(
         plugin-pdb-install.patch
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
+        use-openexr-config.patch
         unofficial-export.patch
 )
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindFontconfig.cmake"
     "${SOURCE_PATH}/CMakeModules/FindFreetype.cmake"
+    "${SOURCE_PATH}/CMakeModules/Findilmbase.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindOpenEXR.cmake"
     "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake"
 )
 
