@@ -7,7 +7,6 @@
   "license": "LGPL-2.1-only",
   "dependencies": [
     "libjuice",
-    "libnice",
     "openssl",
     "plog",
     "usrsctp",
@@ -25,7 +24,10 @@
   ],
   "features": {
     "nice": {
-      "description": "Use libnice instead of libjuice for underlying ICE communication"
+      "description": "Use libnice instead of libjuice for underlying ICE communication",
+      "dependencies": [
+        "libnice"
+      ]
     },
     "srtp": {
       "description": "Use Cisco's libSRTP for media transport.",
