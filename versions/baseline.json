@@ -6509,8 +6509,8 @@
       "port-version": 6
     },
     "s2geometry": {
-      "baseline": "0.9.0",
-      "port-version": 1
+      "baseline": "0.10.0",
+      "port-version": 0
     },
     "s2n": {
       "baseline": "1.3.5",

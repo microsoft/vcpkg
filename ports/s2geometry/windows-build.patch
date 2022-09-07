@@ -1,0 +1,16 @@
+diff --git a/src/s2/util/coding/coder.h b/src/s2/util/coding/coder.h
+index f655677..198f9b2 100644
+--- a/src/s2/util/coding/coder.h
++++ b/src/s2/util/coding/coder.h
+@@ -39,6 +39,10 @@
+ #include "s2/util/coding/varint.h"
+ #include "s2/util/endian/endian.h"
+
++#ifdef WIN32
++#define memccpy _memccpy
++#endif
++
+ /* Class for encoding data into a memory buffer */
+ class Decoder;
+ class Encoder {
+ 
