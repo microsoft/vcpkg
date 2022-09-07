@@ -31,7 +31,7 @@ function(qt_download_submodule_impl)
             vcpkg_from_github(
                 OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
                 REPO litehtml/litehtml
-                REF "${${PORT}_litehtml_REF}
+                REF "${${PORT}_litehtml_REF}"
                 SHA512 "${${PORT}_litehtml_HASH}"
                 HEAD_REF master
             )
