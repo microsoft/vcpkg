@@ -17,10 +17,9 @@ vcpkg_from_github(
         disable-test-build.patch
         fix-InstallPath.patch
         fix-iconv.patch
-        export-cmake-targets.patch
         pkgconfig.patch
-        no-extra-static-lib.patch
         fix-openssl.patch
+        fix-CMakeLists.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -56,9 +55,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
-endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmariadb.pc" " -lmariadb" " -llibmariadb")
