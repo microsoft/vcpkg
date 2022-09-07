@@ -17,6 +17,7 @@ set(${PORT}_PATCHES
         fix_egl.patch
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
+        cb2a812.diff
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

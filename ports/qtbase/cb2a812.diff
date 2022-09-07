@@ -1,0 +1,22 @@
+From cb2a81225f49dc7da511767e63d5a00b39438eb1 Mon Sep 17 00:00:00 2001
+From: Liang Qi <liang.qi@qt.io>
+Date: Wed, 07 Sep 2022 13:08:10 +0200
+Subject: [PATCH] xcb: fix the build of native painting
+
+Fixes: QTBUG-106374
+Pick-to: 6.4 6.3 6.2 5.15
+Change-Id: I91871078a0e09cdda8db4afd236a9746c72007f7
+---
+
+diff --git a/src/plugins/platforms/xcb/nativepainting/qtessellator.cpp b/src/plugins/platforms/xcb/nativepainting/qtessellator.cpp
+index ecc21eb..7b00940 100644
+--- a/src/plugins/platforms/xcb/nativepainting/qtessellator.cpp
++++ b/src/plugins/platforms/xcb/nativepainting/qtessellator.cpp
+@@ -5,6 +5,7 @@
+ 
+ #include <QRect>
+ #include <QList>
++#include <QMap>
+ #include <QDebug>
+ 
+ #include <qmath.h>
