@@ -1,6 +1,6 @@
 {
   "name": "umock-c",
-  "version-date": "2022-07-18",
+  "version-date": "2022-09-07",
   "description": "A pure C mocking library",
   "homepage": "https://github.com/Azure/umock-c",
   "license": "MIT",
