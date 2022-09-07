@@ -19,6 +19,25 @@ function(qt_download_submodule_impl)
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
+        if(PORT STREQUAL "qttools") # Leep this for beta & rc's
+            vcpkg_from_git(
+                OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
+                URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
+                REF "${${PORT}_qlitehtml_REF}"
+                FETCH_REF master
+                HEAD_REF master
+            )
+            # port 'litehtml' is not in vcpkg!
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
+                REPO litehtml/litehtml
+                REF "${${PORT}_litehtml_REF}
+                SHA512 "${${PORT}_litehtml_HASH}"
+                HEAD_REF master
+            )
+            file(COPY "${SOURCE_PATH_QLITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml")
+            file(COPY "${SOURCE_PATH_LITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml/src/3rdparty/litehtml")
+        endif()
     else()
         if(VCPKG_USE_HEAD_VERSION)
             set(sha512 SKIP_SHA512)

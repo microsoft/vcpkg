@@ -37,3 +37,7 @@ set(qtinterfaceframework_REF 175f7e213318a77763fbd5da1efc2780360363d3)
 set(qtapplicationmanager_REF fda5fd1f484c934fcf6808312dcd45caa989a35e)
 set(qthttpserver_REF 70dfa13e6b787ef0ec857c8a11079f7feaebcce2)
 set(qtquick3dphysics_REF 1571ff7ecbe65fb3f0d821eee072d060311835a0)
+
+set(qttools_qlitehtml_REF       076f57c9436b55921a6477bc81660c5564c117a9)
+set(qttools_litehtml_REF        e3f37e3d5a6931ddecf81a9d746fc3e9a3475998)
+set(qttools_litehtml_HASH       f96884cb146a9913ab6099f5429c66e972bddd7f886b80ace498b66b1b4cb99f2de14c294f94f26a21f547245a4288e8be3378bd0235185f9a2dcbe2b20e186c)
