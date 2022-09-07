@@ -37,6 +37,18 @@ function(qt_download_submodule_impl)
             )
             file(COPY "${SOURCE_PATH_QLITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml")
             file(COPY "${SOURCE_PATH_LITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml/src/3rdparty/litehtml")
+        elseif(PORT STREQUAL "qtwebengine")
+            vcpkg_from_git(
+                OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
+                URL git://code.qt.io/qt/qtwebengine-chromium.git
+                REF "${${PORT}_chromium_REF}"
+            )
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
+            endif()
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
+            endif()
         endif()
     else()
         if(VCPKG_USE_HEAD_VERSION)
