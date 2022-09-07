@@ -2,7 +2,7 @@
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO zserge/webview
+    REPO webview/webview
     REF 2ee04ccd0530e3928a872f5d508c114403803e61
     SHA512 c784635a0c0948d91fea12643b04f0125e0be64d34aeddafbd0240aa977e867fa74efaf4e5dea7fe207bc0d1461b544f483d6228bf92dade7dc0d5e2c5a585a6
     HEAD_REF master
