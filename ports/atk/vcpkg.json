@@ -5,7 +5,7 @@
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "license": "GPL-2.0-only",
-  "supports": "!arm & !staticcrt",
+  "supports": "!arm",
   "dependencies": [
     "gettext",
     "glib",
