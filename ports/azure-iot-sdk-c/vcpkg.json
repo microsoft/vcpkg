@@ -67,11 +67,5 @@
     "use-prov-client": {
       "description": "Enables device provisioning client for DPS"
     }
-  },
-  "overrides": [
-    {
-      "name": "openssl",
-      "version-string": "1.1.1n"
-    }
-  ]
+  }
 }
