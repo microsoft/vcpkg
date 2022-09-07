@@ -8013,8 +8013,8 @@
       "port-version": 0
     },
     "zserge-webview": {
-      "baseline": "2019-04-27",
-      "port-version": 3
+      "baseline": "2022-09-07",
+      "port-version": 0
     },
     "zstd": {
       "baseline": "1.5.2",
