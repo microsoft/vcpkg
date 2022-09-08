@@ -8,6 +8,7 @@
     "cpr",
     "hash-library",
     "nlohmann-json",
+    "z4kn4fein-semver",
     {
       "name": "vcpkg-cmake",
       "host": true

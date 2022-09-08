@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO configcat/cpp-sdk
     REF v0.1.0
-    SHA512 9ff25ce3d731305b6618e8d5837302db4048b3cd93e15624fbeecf052f8377ab88ff07f8f765fe64abc1a7cf1d25bd6d8dfd37955cdfaac0acee8d542e31562c
-    HEAD_REF semver
+    SHA512 56dee6fe7e54020610c273325d74184ddca7271b434d3527f35eabbdf657bf1c2c84913f4018397ad178f275772fe1207245239237efa95e5692c4845e9a6e7b
+    HEAD_REF master
 )
 
 vcpkg_cmake_configure(
