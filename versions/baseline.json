@@ -4629,7 +4629,7 @@
       "port-version": 2
     },
     "mesa": {
-      "baseline": "22.0.2",
+      "baseline": "22.1.7",
       "port-version": 0
     },
     "meschach": {
