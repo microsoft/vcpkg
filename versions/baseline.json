@@ -2878,7 +2878,7 @@
     },
     "hpx": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 0
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -3126,7 +3126,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 1
+      "port-version": 0
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
@@ -6786,7 +6786,7 @@
     },
     "snappy": {
       "baseline": "1.1.9",
-      "port-version": 3
+      "port-version": 2
     },
     "sndfile": {
       "baseline": "0",
