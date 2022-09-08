@@ -61,12 +61,6 @@
         "cuda"
       ]
     },
-    "jemalloc": {
-      "description": "Build with jemalloc instead of system malloc",
-      "dependencies": [
-        "jemalloc"
-      ]
-    },
     "mpi": {
       "description": "Build with MPI parcelport",
       "dependencies": [

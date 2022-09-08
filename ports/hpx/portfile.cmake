@@ -28,14 +28,6 @@ vcpkg_check_features(
     "mpi"               HPX_WITH_PARCELPORT_MPI_MULTITHREADED
 )
 
-if("jemalloc" IN_LIST FEATURES)
-    # jemalloc is preferred to tcmalloc according to the tutorial materials
-    # and it supports more architectures. Building without this feature will
-    # default to system for windows and tcmalloc for unix according to the defaults
-    # in the CMakeLists.txt
-    list(APPEND FEATURE_OPTIONS "-DHPX_WITH_MALLOC:STRING=jemalloc")
-endif()
-
 if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "(x64|x86)")
     list(APPEND FEATURE_OPTIONS "-DHPX_WITH_GENERIC_CONTEXT_COROUTINES=ON")
 endif()
