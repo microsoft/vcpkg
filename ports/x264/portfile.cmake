@@ -10,6 +10,9 @@ vcpkg_from_github(
         allow-clang-cl.patch
         configure-as.patch # Ignore ':' from `vcpkg_configure_make`
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/configure" [[/bin/bash]] [[/usr/bin/env bash]])
+
 # Note on x264 versioning:
 # The pc file exports "0.164.<N>" where is the number of commits.
 # This must be fixed here because vcpkg uses a GH tarball instead of cloning the source.

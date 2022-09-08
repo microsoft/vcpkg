@@ -1,10 +1,10 @@
 {
   "name": "gstreamer",
   "version": "1.19.2",
-  "port-version": 6,
+  "port-version": 7,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
-  "license": "LGPL-2.0",
+  "license": "LGPL-2.0-only",
   "supports": "!linux & !uwp",
   "dependencies": [
     {
@@ -129,6 +129,13 @@
       "supports": "!arm",
       "dependencies": [
         "libraw"
+      ]
+    },
+    "x11": {
+      "description": "Use x11 window system",
+      "supports": "!windows",
+      "dependencies": [
+        "libx11"
       ]
     },
     "x264": {

@@ -1,6 +1,6 @@
 {
   "name": "boost-graph",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "license": "BSL-1.0",
