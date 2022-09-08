@@ -8,8 +8,13 @@ on:
     types:
       - completed
 
+permissions:
+  contents: read
+
 jobs:
   comment:
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     if: >
       ${{ github.event.workflow_run.event == 'pull_request' &&
