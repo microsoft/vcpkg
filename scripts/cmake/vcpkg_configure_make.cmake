@@ -774,7 +774,7 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
         endif()
 
-        if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_IS_IOS)
+        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             # configure not using all flags to check if compiler works ...
             set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
             set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
