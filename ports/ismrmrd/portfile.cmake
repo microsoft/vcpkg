@@ -4,10 +4,10 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ismrmrd/ismrmrd
-    REF v1.5.0 
-    SHA512 96e24be75ecde8e56001d805ffaf4502d39c87e2c4fe01c84c90cb01d8bd49268c48440728de2ffb4c3efa75a029b3ffc0101b5841893685f82b4fafec9b1c73
-    HEAD_REF master
+    REPO dchansen/ismrmrd
+    REF 2325e0549af791b9bb6f8d33434097e3f75f1f26
+    SHA512 a9690daf479d052d25fdf13e1699ee6af9c05f24dcd7bf1202dc350008170e5becced3d53ae2f4ab21d63b9ef7f0a000f4ba00c4dd797e0a82553d8aae69fbda
+    HEAD_REF diffusion
     PATCHES
         ${WIN32_INCLUDE_STDDEF_PATCH}
         fix-depends-hdf5.patch
