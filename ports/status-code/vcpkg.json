@@ -1,6 +1,10 @@
 {
   "name": "status-code",
-  "version-string": "1.0.0-20220104",
+  "version-date": "2022-09-08",
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
   "description": "Proposed SG14 status_code for the C++ standard (https://wg21.link/P1028).",
   "homepage": "https://github.com/ned14/status-code",
   "license": "Apache-2.0 OR BSL-1.0",
