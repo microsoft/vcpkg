@@ -110,10 +110,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         string(REPLACE "perl" "\"${PERL}\"" _contents "${_contents}")
         file(WRITE "${MSPROJ_PERL}" "${_contents}")
 
-        set(VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG} advapi32.lib shell32.lib")
-        set(VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG} advapi32.lib shell32.lib")
-        set(VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE} advapi32.lib shell32.lib")
-        set(VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE} advapi32.lib shell32.lib")
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
 
