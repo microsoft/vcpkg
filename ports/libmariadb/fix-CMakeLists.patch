@@ -1,14 +1,14 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 7faf827..a0fe52d 100644
+index 7faf827..d7300b0 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -417,13 +417,14 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
+@@ -417,13 +417,13 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
  TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
  
  IF(UNIX)
 -  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} ${MARIADB_OBJECTS} ${EMPTY_FILE})
+-  SET_TARGET_PROPERTIES(libmariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
 +  ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} ${EMPTY_FILE})
-   SET_TARGET_PROPERTIES(libmariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
  ELSE()
 -  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
 +  ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
@@ -19,7 +19,7 @@ index 7faf827..a0fe52d 100644
  TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE ${SYSTEM_LIBS})
  
  SIGN_TARGET(libmariadb)
-@@ -460,7 +461,9 @@ IF(WITH_MYSQLCOMPAT)
+@@ -460,7 +460,9 @@ IF(WITH_MYSQLCOMPAT)
    ENDIF()
  ENDIF()
  
@@ -29,7 +29,7 @@ index 7faf827..a0fe52d 100644
  
  SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
   ${CPACK_PACKAGE_VERSION_MAJOR}
-@@ -470,13 +473,39 @@ IF(NOT WIN32)
+@@ -470,13 +472,39 @@ IF(NOT WIN32)
    SET_TARGET_PROPERTIES(mariadbclient PROPERTIES OUTPUT_NAME "${LIBMARIADB_STATIC_NAME}")
  ENDIF()
  
@@ -72,7 +72,7 @@ index 7faf827..a0fe52d 100644
  ELSE()
  # in cmake 3.12+ we can use
  #INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
-@@ -488,7 +517,7 @@ INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
+@@ -488,7 +516,7 @@ INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
          COMPONENT Development NAMELINK_ONLY)
  ENDIF()
  
