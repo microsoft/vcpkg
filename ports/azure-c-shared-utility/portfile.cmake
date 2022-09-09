@@ -21,7 +21,6 @@ else()
         SHA512 0ede2a30ed787028a48602111be7cebc65593a84a8b3dc94ed34917f44355a180d8b8acf2b6404e47428fe8f761c11485199e9bd2e9aa6628548c585357f63e8
         HEAD_REF master
         PATCHES
-            openssl.patch
             fix-install-location.patch
             fix-utilityFunctions-conditions.patch
             disable-error.patch
