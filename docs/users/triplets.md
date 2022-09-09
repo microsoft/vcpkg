@@ -100,6 +100,11 @@ This field is optional.
 
 Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
 
+### VCPKG_MESON_(CROSS|NATIVE)_FILE(_RELEASE|_DEBUG)
+Provide an additional (configuration dependent) file as a meson cross/native file. Can be used to override settings provided by vcpkg since it will be passed after vcpkg's generated cross/native files are passed.
+
+Especially usefull to provide your own build_machine and host_machine entries.
+
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
 Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 
