@@ -15,7 +15,6 @@ vcpkg_from_github(
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         unofficial-export.patch
-        fix-cross-build.patch #https://github.com/openscenegraph/OpenSceneGraph/pull/1164
 )
 
 file(REMOVE
@@ -97,6 +96,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
+        -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED_EXITCODE=""
+        -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED_EXITCODE__TRYRUN_OUTPUT=""
         ${OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_OSG_APPLICATIONS=OFF
