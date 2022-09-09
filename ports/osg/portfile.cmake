@@ -48,20 +48,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       BUILD_OSG_APPLICATIONS
         examples    BUILD_OSG_EXAMPLES
         plugins     BUILD_OSG_PLUGINS_BY_DEFAULT
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_CURL
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_Jasper
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_GDAL
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_GTA
         packages    BUILD_OSG_PACKAGES
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
         fontconfig  OSG_TEXT_USE_FONTCONFIG
         freetype    BUILD_OSG_PLUGIN_FREETYPE
+        freetype    CMAKE_REQUIRE_FIND_PACKAGE_Freetype
         collada     BUILD_OSG_PLUGIN_DAE
+        collada     CMAKE_REQUIRE_FIND_PACKAGE_COLLADA
         nvtt        BUILD_OSG_PLUGIN_NVTT
+        nvtt        CMAKE_REQUIRE_FIND_PACKAGE_NVTT
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
-        sdl         BUILD_OSG_PLUGIN_SDL
+        sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
-        sdl         CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
+        sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
