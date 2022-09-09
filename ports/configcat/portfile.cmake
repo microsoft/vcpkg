@@ -1,3 +1,5 @@
+set(VCPKG_LIBRARY_LINKAGE static)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO configcat/cpp-sdk
@@ -15,9 +17,5 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
-endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
