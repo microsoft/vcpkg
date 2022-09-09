@@ -8,10 +8,15 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+	set(ADDITIONAL_OPTIONS "-DENABLE_SSP=OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_cmake_install()
