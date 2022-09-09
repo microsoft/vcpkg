@@ -32,6 +32,16 @@ set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
 endif()
+# Skip try_run checks
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED=0 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS=1)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED=1 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS=0)
+elseif(VCPKG_TARGET_IS_IOS)
+    # handled by osg
+elseif(VCPKG_CROSSCOMPILING)
+    message(WARNING "Atomics detection may fail for cross builds. You can set osg cmake variables in a custom triplet.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
