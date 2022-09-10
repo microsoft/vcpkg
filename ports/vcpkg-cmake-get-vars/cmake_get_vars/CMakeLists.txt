@@ -10,6 +10,7 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR
                                         CMAKE_CXX_COMPILER_TARGET
+                                        CMAKE_C_COMPILER_TARGET
                                         CMAKE_SIZEOF_VOID_P
                                         MSVC
                                         MSVC_VERSION)
