@@ -100,6 +100,11 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     # just ignore them. 
     string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
     string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
+    if (VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES Clang AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET)
+      string(APPEND CXXFLAGS_${flag_suffix} " --target=${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET}")
+      string(APPEND CFLAGS_${flag_suffix} " --target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}")
+    endif()
+
     string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
     string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
     string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
