@@ -8,8 +8,6 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
-                                        CMAKE_CXX_COMPILER_TARGET
-                                        CMAKE_C_COMPILER_TARGET
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
@@ -32,6 +30,7 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
     
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
@@ -114,6 +113,15 @@ macro(_vcpkg_adjust_flags flag_var)
             endif()
         endif()
     endif()
+    foreach(lang IN LISTS VCPKG_LANGUAGES)
+        if(CMAKE_${lang}_COMPILER_TARGET AND "${flag_var}" STREQUAL "CMAKE_${lang}_FLAGS")
+            if (CMAKE_${lang}_COMPILER_ID STREQUAL Clang)
+                string(PREPEND ${flag_var} "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET}${CMAKE_${lang}_COMPILER_TARGET} ")
+            elseif(CMAKE_${lang}_COMPILE_OPTIONS_TARGET)
+                string(PREPEND ${flag_var} " ${CMAKE_${lang}_COMPILE_OPTIONS_TARGET} ${CMAKE_${lang}_COMPILER_TARGET}")
+            endif()
+        endif()
+    endforeach()
 endmacro()
 
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)

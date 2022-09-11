@@ -9,8 +9,6 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR
-                                        CMAKE_CXX_COMPILER_TARGET
-                                        CMAKE_C_COMPILER_TARGET
                                         CMAKE_SIZEOF_VOID_P
                                         MSVC
                                         MSVC_VERSION)
@@ -35,6 +33,7 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_STANDARD)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
@@ -117,6 +116,16 @@ if(CMAKE_CXX_COMPILER_TARGET)
         string(APPEND EXTRA_FLAGS " ${CMAKE_CXX_COMPILE_OPTIONS_TARGET} \"${CMAKE_CXX_COMPILER_TARGET}\"")
     endif()
 endif()
+
+foreach(lang IN_LIST VCPKG_LANGUAGES)
+    if(CMAKE_${lang}_COMPILER_TARGET)
+        if (CMAKE_${lang}_COMPILER_ID STREQUAL Clang)
+            string(PREPEND EXTRA_FLAGS "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET}${CMAKE_${lang}_COMPILER_TARGET} ")
+        elseif(CMAKE_${lang}_COMPILE_OPTIONS_TARGET)
+            string(PREPEND EXTRA_FLAGS " ${CMAKE_${lang}_COMPILE_OPTIONS_TARGET} ${CMAKE_${lang}_COMPILER_TARGET}")
+        endif()
+    endif()
+endforeach()
 if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         string(APPEND EXTRA_FLAGS " \"${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
