@@ -1,14 +1,13 @@
 function(sqlcipher_generate_amalgamation SOURCE_PATH)
-    vcpkg_find_acquire_program(TCL)
     file(TO_NATIVE_PATH "${SOURCE_PATH}" SOURCE_PATH_NAT)
-
+    file(GLOB TCLSH_CMD ${CURRENT_HOST_INSTALLED_DIR}/tools/tcl/bin/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX})
     message(STATUS "Generating amalgamation")
 
     if (CMAKE_HOST_WIN32)
         # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
         find_program(NMAKE nmake REQUIRED)
         list(APPEND NMAKE_OPTIONS
-            TCLSH_CMD="${TCL}"
+            TCLSH_CMD="${TCLSH_CMD}"
             ORIGINAL_SRC="${SOURCE_PATH_NAT}"
         )
         
@@ -20,7 +19,7 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
         )
     else()
         vcpkg_execute_required_process(
-            COMMAND ${SOURCE_PATH_NAT}/configure --with-crypto-lib=none
+            COMMAND ${SOURCE_PATH}/configure --with-crypto-lib=none
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-configure-${TARGET_TRIPLET}
         )

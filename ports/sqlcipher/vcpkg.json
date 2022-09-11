@@ -9,6 +9,10 @@
   "dependencies": [
     "openssl",
     {
+      "name": "tcl",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
