@@ -6,13 +6,10 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
     if (CMAKE_HOST_WIN32)
         # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
         find_program(NMAKE nmake REQUIRED)
-        list(APPEND NMAKE_OPTIONS
-            TCLSH_CMD="${TCLSH_CMD}"
-            ORIGINAL_SRC="${SOURCE_PATH_NAT}"
-        )
         vcpkg_execute_required_process(
             COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean sqlite3.c
-            ${NMAKE_OPTIONS}
+            TCLSH_CMD="${TCLSH_CMD}"
+            ORIGINAL_SRC="${SOURCE_PATH_NAT}"
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-${TARGET_TRIPLET}
         )
