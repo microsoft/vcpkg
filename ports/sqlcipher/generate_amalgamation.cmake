@@ -3,7 +3,12 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
     file(GLOB TCLSH_CMD ${CURRENT_HOST_INSTALLED_DIR}/tools/tcl/bin/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX})
     message(STATUS "Generating amalgamation")
 
-    if (CMAKE_HOST_WIN32)
+    #[[
+    Using target triplet check isn't ideal, since this would fail when cross
+    compiling to Linux from Windows for example, but that use case probably
+    isn't very common
+    ]]
+    if (CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW)
         # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
         find_program(NMAKE nmake REQUIRED)
         vcpkg_execute_required_process(
@@ -14,8 +19,14 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
             LOGNAME amalgamation-${TARGET_TRIPLET}
         )
     else()
+        if (CMAKE_HOST_WIN32)
+            vcpkg_acquire_msys(MSYS_ROOT)
+            set(SHELL "${MSYS_ROOT}/usr/bin/sh.exe")
+        else()
+            set(SHELL "sh")
+        endif()
         vcpkg_execute_required_process(
-            COMMAND ${SOURCE_PATH}/configure --with-crypto-lib=none TCLSH_CMD="${TCLSH_CMD}"
+            COMMAND ${SHELL} ${SOURCE_PATH}/configure --with-crypto-lib=none TCLSH_CMD="${TCLSH_CMD}"
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-configure-${TARGET_TRIPLET}
         )
