@@ -10,7 +10,6 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
             TCLSH_CMD="${TCLSH_CMD}"
             ORIGINAL_SRC="${SOURCE_PATH_NAT}"
         )
-        
         vcpkg_execute_required_process(
             COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean sqlite3.c
             ${NMAKE_OPTIONS}
@@ -19,11 +18,10 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
         )
     else()
         vcpkg_execute_required_process(
-            COMMAND ${SOURCE_PATH}/configure --with-crypto-lib=none
+            COMMAND ${SOURCE_PATH}/configure --with-crypto-lib=none TCLSH_CMD="${TCLSH_CMD}"
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-configure-${TARGET_TRIPLET}
         )
-
         vcpkg_execute_required_process(
             COMMAND make sqlite3.c
             WORKING_DIRECTORY "${SOURCE_PATH}"
