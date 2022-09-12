@@ -21,30 +21,30 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         ${PATCHES}
         tools.patch
+        arm64.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(asmflag win64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(asmflag win32)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
+        set(ENV{CCAS} "${CURRENT_BUILDTREES_DIR}/../../ports/gmp/gas2armasm64.sh")
+    else()
+        set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(asmflag win64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(asmflag win32)
+        endif()
+        set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
+        set(OPTIONS ac_cv_func_memset=yes
+                    "gmp_cv_asm_w32=.word"
+                    )
     endif()
-    set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-    set(OPTIONS ac_cv_func_memset=yes
-                "gmp_cv_asm_w32=.word"
-                )
-    
 endif()
 
 if(VCPKG_CROSSCOMPILING)
     # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
     set(ENV{CC_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
     set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
-    list(APPEND OPTIONS --enable-assembly=no)
 endif()
 
 vcpkg_configure_make(

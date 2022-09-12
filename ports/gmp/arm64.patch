@@ -1,0 +1,635 @@
+diff --git a/mpn/arm64/aors_n.asm b/mpn/arm64/aors_n.asm
+index b1f3bb9..22a9c2a 100644
+--- a/mpn/arm64/aors_n.asm
++++ b/mpn/arm64/aors_n.asm
+@@ -68,7 +68,7 @@ PROLOGUE(func_nc)
+ EPILOGUE()
+ PROLOGUE(func_n)
+ 	CLRCY
+-L(ent):	lsr	x18, n, #2
++L(ent):	lsr	x15, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x7, [up]
+@@ -77,7 +77,7 @@ L(bx1):	ldr	x7, [up]
+ 	str	x13, [rp],#8
+ 	tbnz	n, #1, L(b11)
+ 
+-L(b01):	cbz	x18, L(ret)
++L(b01):	cbz	x15, L(ret)
+ 	ldp	x4, x5, [up,#8]
+ 	ldp	x8, x9, [vp,#8]
+ 	sub	up, up, #8
+@@ -88,7 +88,7 @@ L(b11):	ldp	x6, x7, [up,#8]
+ 	ldp	x10, x11, [vp,#8]
+ 	add	up, up, #8
+ 	add	vp, vp, #8
+-	cbz	x18, L(end)
++	cbz	x15, L(end)
+ 	b	L(top)
+ 
+ L(bx0):	tbnz	n, #1, L(b10)
+@@ -101,7 +101,7 @@ L(b00):	ldp	x4, x5, [up]
+ 
+ L(b10):	ldp	x6, x7, [up]
+ 	ldp	x10, x11, [vp]
+-	cbz	x18, L(end)
++	cbz	x15, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	ldp	x4, x5, [up,#16]
+@@ -114,8 +114,8 @@ L(mid):	ldp	x6, x7, [up,#32]!
+ 	ADDSUBC	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+ 	stp	x12, x13, [rp],#16
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x15, x15, #1
++	cbnz	x15, L(top)
+ 
+ L(end):	ADDSUBC	x12, x6, x10
+ 	ADDSUBC	x13, x7, x11
+diff --git a/mpn/arm64/aorsorrlshC_n.asm b/mpn/arm64/aorsorrlshC_n.asm
+index 168caad..d22eb81 100644
+--- a/mpn/arm64/aorsorrlshC_n.asm
++++ b/mpn/arm64/aorsorrlshC_n.asm
+@@ -65,14 +65,14 @@ ifdef(`DO_rsb', `
+ 
+ ASM_START()
+ PROLOGUE(func_n)
+-	lsr	x18, n, #2
++	lsr	x7, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x5, [up]
+ 	tbnz	n, #1, L(b11)
+ 
+ L(b01):	ldr	x11, [vp]
+-	cbz	x18, L(1)
++	cbz	x7, L(1)
+ 	ldp	x8, x9, [vp,#8]
+ 	lsl	x13, x11, #LSH
+ 	ADDSUB(	x15, x13, x5)
+@@ -94,7 +94,7 @@ L(b11):	ldr	x9, [vp]
+ 	ADDSUB(	x17, x13, x5)
+ 	str	x17, [rp],#8
+ 	sub	up, up, #8
+-	cbz	x18, L(end)
++	cbz	x7, L(end)
+ 	b	L(top)
+ 
+ L(bx0):	tbnz	n, #1, L(b10)
+@@ -107,7 +107,7 @@ L(b00):	CLRRCY(	x11)
+ L(b10):	CLRRCY(	x9)
+ 	ldp	x10, x11, [vp]
+ 	sub	up, up, #16
+-	cbz	x18, L(end)
++	cbz	x7, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	ldp	x4, x5, [up,#16]
+@@ -124,8 +124,8 @@ L(mid):	ldp	x4, x5, [up,#32]!
+ 	ADDSUBC(x16, x12, x4)
+ 	ADDSUBC(x17, x13, x5)
+ 	stp	x16, x17, [rp],#16
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x7, x7, #1
++	cbnz	x7, L(top)
+ 
+ L(end):	ldp	x4, x5, [up,#16]
+ 	extr	x12, x10, x9, #RSH
+diff --git a/mpn/arm64/arm64-defs.m4 b/mpn/arm64/arm64-defs.m4
+index 46149f7..52fb91d 100644
+--- a/mpn/arm64/arm64-defs.m4
++++ b/mpn/arm64/arm64-defs.m4
+@@ -50,4 +50,6 @@ define(`LEA_HI', `adrp	$1, $2')dnl
+ define(`LEA_LO', `add	$1, $1, :lo12:$2')dnl
+ ')dnl
+ 
++define(`EXTERN', `  .extern $1')dnl
++
+ divert`'dnl
+diff --git a/mpn/arm64/bdiv_q_1.asm b/mpn/arm64/bdiv_q_1.asm
+index 7fffc93..fc0dacc 100644
+--- a/mpn/arm64/bdiv_q_1.asm
++++ b/mpn/arm64/bdiv_q_1.asm
+@@ -55,15 +55,17 @@ define(`cy',  `r7')
+ define(`tnc', `x8')
+ 
+ ASM_START()
++
++EXTERN(binvert_limb_table)
++
+ PROLOGUE(mpn_bdiv_q_1)
+ 
+ 	rbit	x6, d
+ 	clz	cnt, x6
+ 	lsr	d, d, cnt
+ 
+-	LEA_HI(	x7, binvert_limb_table)
++	ldr		x7, =binvert_limb_table
+ 	ubfx	x6, d, 1, 7
+-	LEA_LO(	x7, binvert_limb_table)
+ 	ldrb	w6, [x7, x6]
+ 	ubfiz	x7, x6, 1, 8
+ 	umull	x6, w6, w6
+diff --git a/mpn/arm64/cnd_aors_n.asm b/mpn/arm64/cnd_aors_n.asm
+index 39e6cd3..4960d3d 100644
+--- a/mpn/arm64/cnd_aors_n.asm
++++ b/mpn/arm64/cnd_aors_n.asm
+@@ -65,7 +65,7 @@ PROLOGUE(func)
+ 
+ 	CLRCY
+ 
+-	lsr	x18, n, #2
++	lsr	x15, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x13, [vp]
+@@ -75,7 +75,7 @@ L(bx1):	ldr	x13, [vp]
+ 	str	x9, [rp]
+ 	tbnz	n, #1, L(b11)
+ 
+-L(b01):	cbz	x18, L(rt)
++L(b01):	cbz	x15, L(rt)
+ 	ldp	x12, x13, [vp,#8]
+ 	ldp	x10, x11, [up,#8]
+ 	sub	up, up, #8
+@@ -86,7 +86,7 @@ L(b01):	cbz	x18, L(rt)
+ L(b11):	ldp	x12, x13, [vp,#8]!
+ 	ldp	x10, x11, [up,#8]!
+ 	sub	rp, rp, #8
+-	cbz	x18, L(end)
++	cbz	x15, L(end)
+ 	b	L(top)
+ 
+ L(bx0):	ldp	x12, x13, [vp]
+@@ -99,7 +99,7 @@ L(b00):	sub	up, up, #16
+ 	b	L(mid)
+ 
+ L(b10):	sub	rp, rp, #16
+-	cbz	x18, L(end)
++	cbz	x15, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	bic	x6, x12, cnd
+@@ -116,8 +116,8 @@ L(mid):	bic	x6, x12, cnd
+ 	ADDSUBC	x9, x11, x7
+ 	ldp	x10, x11, [up,#32]!
+ 	stp	x8, x9, [rp,#32]!
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x15, x15, #1
++	cbnz	x15, L(top)
+ 
+ L(end):	bic	x6, x12, cnd
+ 	bic	x7, x13, cnd
+diff --git a/mpn/arm64/hamdist.asm b/mpn/arm64/hamdist.asm
+index c72ca55..630cafa 100644
+--- a/mpn/arm64/hamdist.asm
++++ b/mpn/arm64/hamdist.asm
+@@ -160,7 +160,7 @@ L(gt8k):
+ 	mov	x9, #chunksize*8	C caller-saves reg not used above
+ 	mov	x10, #chunksize		C caller-saves reg not used above
+ 
+-1:	add	ap2, ap, x9		C point at subsequent block
++L(1):	add	ap2, ap, x9		C point at subsequent block
+ 	add	bp2, bp, x9		C point at subsequent block
+ 	mov	n, #chunksize-8		C count for this invocation, adjusted for entry pt
+ 	movi	v4.16b, #0		C clear chunk summation register
+@@ -171,7 +171,7 @@ L(gt8k):
+ 	mov	bp, bp2			C put chunk pointer in place for calls
+ 	sub	x7, x7, x10
+ 	cmp	x7, x11
+-	b.hi	1b
++	b.hi	L(1)
+ 
+ 	mov	n, x7			C count for final invocation
+ 	bl	L(lt8k)
+diff --git a/mpn/arm64/invert_limb.asm b/mpn/arm64/invert_limb.asm
+index 6a99bf0..770b48c 100644
+--- a/mpn/arm64/invert_limb.asm
++++ b/mpn/arm64/invert_limb.asm
+@@ -41,9 +41,8 @@ C Compiler generated, mildly edited.  Could surely be further optimised.
+ ASM_START()
+ PROLOGUE(mpn_invert_limb)
+ 	lsr	x2, x0, #54
+-	LEA_HI(	x1, approx_tab)
++	ldr		x1, =L(approx_tab)
+ 	and	x2, x2, #0x1fe
+-	LEA_LO(	x1, approx_tab)
+ 	ldrh	w3, [x1,x2]
+ 	lsr	x4, x0, #24
+ 	add	x4, x4, #1
+@@ -77,7 +76,7 @@ EPILOGUE()
+ 	ALIGN(2)
+ 	TYPE(   approx_tab, object)
+ 	SIZE(   approx_tab, 512)
+-approx_tab:
++L(approx_tab):
+ forloop(i,256,512-1,dnl
+ `	.hword	eval(0x7fd00/i)
+ ')dnl
+diff --git a/mpn/arm64/logops_n.asm b/mpn/arm64/logops_n.asm
+index ccaec9c..1d31dd5 100644
+--- a/mpn/arm64/logops_n.asm
++++ b/mpn/arm64/logops_n.asm
+@@ -78,7 +78,7 @@ MULFUNC_PROLOGUE(mpn_and_n mpn_andn_n mpn_nand_n mpn_ior_n mpn_iorn_n mpn_nior_n
+ 
+ ASM_START()
+ PROLOGUE(func)
+-	lsr	x18, n, #2
++	lsr	x14, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x7, [up]
+@@ -88,7 +88,7 @@ L(bx1):	ldr	x7, [up]
+ 	str	x15, [rp],#8
+ 	tbnz	n, #1, L(b11)
+ 
+-L(b01):	cbz	x18, L(ret)
++L(b01):	cbz	x14, L(ret)
+ 	ldp	x4, x5, [up,#8]
+ 	ldp	x8, x9, [vp,#8]
+ 	sub	up, up, #8
+@@ -99,7 +99,7 @@ L(b11):	ldp	x6, x7, [up,#8]
+ 	ldp	x10, x11, [vp,#8]
+ 	add	up, up, #8
+ 	add	vp, vp, #8
+-	cbz	x18, L(end)
++	cbz	x14, L(end)
+ 	b	L(top)
+ 
+ L(bx0):	tbnz	n, #1, L(b10)
+@@ -110,7 +110,7 @@ L(b00):	ldp	x4, x5, [up],#-16
+ 
+ L(b10):	ldp	x6, x7, [up]
+ 	ldp	x10, x11, [vp]
+-	cbz	x18, L(end)
++	cbz	x14, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	ldp	x4, x5, [up,#16]
+@@ -127,8 +127,8 @@ L(mid):	ldp	x6, x7, [up,#32]!
+ 	POSTOP(	x12)
+ 	POSTOP(	x13)
+ 	stp	x12, x13, [rp],#16
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x14, x14, #1
++	cbnz	x14, L(top)
+ 
+ L(end):	LOGOP(	x12, x6, x10)
+ 	LOGOP(	x13, x7, x11)
+diff --git a/mpn/arm64/lshift.asm b/mpn/arm64/lshift.asm
+index eaafaa4..5243608 100644
+--- a/mpn/arm64/lshift.asm
++++ b/mpn/arm64/lshift.asm
+@@ -61,7 +61,7 @@ PROLOGUE(mpn_lshift)
+ 	add	rp, rp_arg, n, lsl #3
+ 	add	up, up, n, lsl #3
+ 	sub	tnc, xzr, cnt
+-	lsr	x18, n, #2
++	lsr	x15, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x4, [up,#-8]
+@@ -69,7 +69,7 @@ L(bx1):	ldr	x4, [up,#-8]
+ 
+ L(b01):	NSHIFT	x0, x4, tnc
+ 	PSHIFT	x2, x4, cnt
+-	cbnz	x18, L(gt1)
++	cbnz	x15, L(gt1)
+ 	str	x2, [rp,#-8]
+ 	ret
+ L(gt1):	ldp	x4, x5, [up,#-24]
+@@ -89,7 +89,7 @@ L(b10):	NSHIFT	x0, x5, tnc
+ 	PSHIFT	x13, x5, cnt
+ 	NSHIFT	x10, x4, tnc
+ 	PSHIFT	x2, x4, cnt
+-	cbnz	x18, L(gt2)
++	cbnz	x15, L(gt2)
+ 	orr	x10, x10, x13
+ 	stp	x2, x10, [rp,#-16]
+ 	ret
+@@ -123,11 +123,11 @@ L(lo2):	NSHIFT	x10, x4, tnc
+ 	orr	x11, x12, x2
+ 	stp	x10, x11, [rp,#-32]!
+ 	PSHIFT	x2, x4, cnt
+-L(lo0):	sub	x18, x18, #1
++L(lo0):	sub	x15, x15, #1
+ L(lo3):	NSHIFT	x10, x6, tnc
+ 	PSHIFT	x13, x7, cnt
+ 	NSHIFT	x12, x7, tnc
+-	cbnz	x18, L(top)
++	cbnz	x15, L(top)
+ 
+ L(end):	orr	x10, x10, x13
+ 	orr	x11, x12, x2
+diff --git a/mpn/arm64/lshiftc.asm b/mpn/arm64/lshiftc.asm
+index 7c93a3d..7fc3442 100644
+--- a/mpn/arm64/lshiftc.asm
++++ b/mpn/arm64/lshiftc.asm
+@@ -61,7 +61,7 @@ PROLOGUE(mpn_lshiftc)
+ 	add	rp, rp_arg, n, lsl #3
+ 	add	up, up, n, lsl #3
+ 	sub	tnc, xzr, cnt
+-	lsr	x18, n, #2
++	lsr	x15, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x4, [up,#-8]
+@@ -69,7 +69,7 @@ L(bx1):	ldr	x4, [up,#-8]
+ 
+ L(b01):	NSHIFT	x0, x4, tnc
+ 	PSHIFT	x2, x4, cnt
+-	cbnz	x18, L(gt1)
++	cbnz	x15, L(gt1)
+ 	mvn	x2, x2
+ 	str	x2, [rp,#-8]
+ 	ret
+@@ -90,7 +90,7 @@ L(b10):	NSHIFT	x0, x5, tnc
+ 	PSHIFT	x13, x5, cnt
+ 	NSHIFT	x10, x4, tnc
+ 	PSHIFT	x2, x4, cnt
+-	cbnz	x18, L(gt2)
++	cbnz	x15, L(gt2)
+ 	eon	x10, x10, x13
+ 	mvn	x2, x2
+ 	stp	x2, x10, [rp,#-16]
+@@ -125,11 +125,11 @@ L(lo2):	NSHIFT	x10, x4, tnc
+ 	eon	x11, x12, x2
+ 	stp	x10, x11, [rp,#-32]!
+ 	PSHIFT	x2, x4, cnt
+-L(lo0):	sub	x18, x18, #1
++L(lo0):	sub	x15, x15, #1
+ L(lo3):	NSHIFT	x10, x6, tnc
+ 	PSHIFT	x13, x7, cnt
+ 	NSHIFT	x12, x7, tnc
+-	cbnz	x18, L(top)
++	cbnz	x15, L(top)
+ 
+ L(end):	eon	x10, x10, x13
+ 	eon	x11, x12, x2
+diff --git a/mpn/arm64/mod_34lsub1.asm b/mpn/arm64/mod_34lsub1.asm
+index 7945fe7..165ef72 100644
+--- a/mpn/arm64/mod_34lsub1.asm
++++ b/mpn/arm64/mod_34lsub1.asm
+@@ -86,12 +86,12 @@ L(top):	ldp	x5, x6, [ap, #0]
+ 
+ L(sum):	cmn	n, #2
+ 	mov	x5, #0
+-	b.lo	1f
++	b.lo	L(skip_ldr1)
+ 	ldr	x5, [ap], #8
+-1:	mov	x6, #0
+-	b.ls	1f
++L(skip_ldr1):	mov	x6, #0
++	b.ls	L(skip_ldr2)
+ 	ldr	x6, [ap], #8
+-1:	adds	x2, x2, x5
++L(skip_ldr2):	adds	x2, x2, x5
+ 	adcs	x3, x3, x6
+ 	adcs	x4, x4, xzr
+ 	adc	x8, x8, xzr		C x8 <= 2
+diff --git a/mpn/arm64/mul_1.asm b/mpn/arm64/mul_1.asm
+index d1d3394..db26304 100644
+--- a/mpn/arm64/mul_1.asm
++++ b/mpn/arm64/mul_1.asm
+@@ -56,7 +56,7 @@ EPILOGUE()
+ 
+ PROLOGUE(mpn_mul_1)
+ 	adds	x4, xzr, xzr		C clear register and cy flag
+-L(com):	lsr	x18, n, #2
++L(com):	lsr	x15, n, #2
+ 	tbnz	n, #0, L(bx1)
+ 
+ L(bx0):	mov	x11, x4
+@@ -65,7 +65,7 @@ L(bx0):	mov	x11, x4
+ L(b10):	ldp	x4, x5, [up]
+ 	mul	x8, x4, v0
+ 	umulh	x10, x4, v0
+-	cbz	x18, L(2)
++	cbz	x15, L(2)
+ 	ldp	x6, x7, [up,#16]!
+ 	mul	x9, x5, v0
+ 	b	L(mid)-8
+@@ -80,7 +80,7 @@ L(bx1):	ldr	x7, [up],#8
+ 	str	x9, [rp],#8
+ 	tbnz	n, #1, L(b10)
+ 
+-L(b01):	cbz	x18, L(1)
++L(b01):	cbz	x15, L(1)
+ 
+ L(b00):	ldp	x6, x7, [up]
+ 	mul	x8, x6, v0
+@@ -90,8 +90,8 @@ L(b00):	ldp	x6, x7, [up]
+ 	adcs	x12, x8, x11
+ 	umulh	x11, x7, v0
+ 	add	rp, rp, #16
+-	sub	x18, x18, #1
+-	cbz	x18, L(end)
++	sub	x15, x15, #1
++	cbz	x15, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	mul	x8, x4, v0
+@@ -110,8 +110,8 @@ L(mid):	mul	x8, x6, v0
+ 	stp	x12, x13, [rp],#32
+ 	adcs	x12, x8, x11
+ 	umulh	x11, x7, v0
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x15, x15, #1
++	cbnz	x15, L(top)
+ 
+ L(end):	mul	x8, x4, v0
+ 	adcs	x13, x9, x10
+diff --git a/mpn/arm64/popcount.asm b/mpn/arm64/popcount.asm
+index 74de3fc..cdd16d0 100644
+--- a/mpn/arm64/popcount.asm
++++ b/mpn/arm64/popcount.asm
+@@ -138,7 +138,7 @@ L(gt8k):
+ 	mov	x9, #chunksize*8	C caller-saves reg not used above
+ 	mov	x10, #chunksize		C caller-saves reg not used above
+ 
+-1:	add	ap2, ap, x9		C point at subsequent block
++L(1):	add	ap2, ap, x9		C point at subsequent block
+ 	mov	n, #chunksize-8		C count for this invocation, adjusted for entry pt
+ 	movi	v4.16b, #0		C clear chunk summation register
+ 	movi	v5.16b, #0		C clear chunk summation register
+@@ -147,7 +147,7 @@ L(gt8k):
+ 	mov	ap, ap2			C put chunk pointer in place for calls
+ 	sub	x7, x7, x10
+ 	cmp	x7, x11
+-	b.hi	1b
++	b.hi	L(1)
+ 
+ 	mov	n, x7			C count for final invocation
+ 	bl	L(lt8k)
+diff --git a/mpn/arm64/rsh1aors_n.asm b/mpn/arm64/rsh1aors_n.asm
+index e0b760b..20eeb38 100644
+--- a/mpn/arm64/rsh1aors_n.asm
++++ b/mpn/arm64/rsh1aors_n.asm
+@@ -59,7 +59,7 @@ MULFUNC_PROLOGUE(mpn_rsh1add_n mpn_rsh1sub_n)
+ 
+ ASM_START()
+ PROLOGUE(func_n)
+-	lsr	x18, n, #2
++	lsr	x11, n, #2
+ 
+ 	tbz	n, #0, L(bx0)
+ 
+@@ -69,7 +69,7 @@ L(bx1):	ldr	x5, [up],#8
+ 
+ L(b01):	ADDSUB	x13, x5, x9
+ 	and	x10, x13, #1
+-	cbz	x18, L(1)
++	cbz	x11, L(1)
+ 	ldp	x4, x5, [up],#48
+ 	ldp	x8, x9, [vp],#48
+ 	ADDSUBC	x14, x4, x8
+@@ -80,8 +80,8 @@ L(b01):	ADDSUB	x13, x5, x9
+ 	ADDSUBC	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+ 	str	x17, [rp], #24
+-	sub	x18, x18, #1
+-	cbz	x18, L(end)
++	sub	x11, x11, #1
++	cbz	x11, L(end)
+ 	b	L(top)
+ 
+ L(1):	cset	x14, COND
+@@ -97,7 +97,7 @@ L(b11):	ADDSUB	x15, x5, x9
+ 	ldp	x8, x9, [vp],#32
+ 	ADDSUBC	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+-	cbz	x18, L(3)
++	cbz	x11, L(3)
+ 	ldp	x4, x5, [up,#-16]
+ 	ldp	x8, x9, [vp,#-16]
+ 	extr	x17, x12, x15, #1
+@@ -117,7 +117,7 @@ L(b10):	ldp	x4, x5, [up],#32
+ 	ADDSUB	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+ 	and	x10, x12, #1
+-	cbz	x18, L(2)
++	cbz	x11, L(2)
+ 	ldp	x4, x5, [up,#-16]
+ 	ldp	x8, x9, [vp,#-16]
+ 	ADDSUBC	x14, x4, x8
+@@ -134,8 +134,8 @@ L(b00):	ldp	x4, x5, [up],#48
+ 	ADDSUBC	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+ 	add	rp, rp, #16
+-	sub	x18, x18, #1
+-	cbz	x18, L(end)
++	sub	x11, x11, #1
++	cbz	x11, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	ldp	x4, x5, [up,#-16]
+@@ -152,8 +152,8 @@ L(mid):	ldp	x4, x5, [up],#32
+ 	ADDSUBC	x12, x4, x8
+ 	ADDSUBC	x13, x5, x9
+ 	stp	x16, x17, [rp],#32
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x11, x11, #1
++	cbnz	x11, L(top)
+ 
+ L(end):	extr	x16, x15, x14, #1
+ 	extr	x17, x12, x15, #1
+diff --git a/mpn/arm64/rshift.asm b/mpn/arm64/rshift.asm
+index acee714..81b75fc 100644
+--- a/mpn/arm64/rshift.asm
++++ b/mpn/arm64/rshift.asm
+@@ -60,7 +60,7 @@ ASM_START()
+ PROLOGUE(mpn_rshift)
+ 	mov	rp, rp_arg
+ 	sub	tnc, xzr, cnt
+-	lsr	x18, n, #2
++	lsr	x15, n, #2
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	ldr	x5, [up]
+@@ -68,7 +68,7 @@ L(bx1):	ldr	x5, [up]
+ 
+ L(b01):	NSHIFT	x0, x5, tnc
+ 	PSHIFT	x2, x5, cnt
+-	cbnz	x18, L(gt1)
++	cbnz	x15, L(gt1)
+ 	str	x2, [rp]
+ 	ret
+ L(gt1):	ldp	x4, x5, [up,#8]
+@@ -89,7 +89,7 @@ L(b10):	NSHIFT	x0, x4, tnc
+ 	PSHIFT	x13, x4, cnt
+ 	NSHIFT	x10, x5, tnc
+ 	PSHIFT	x2, x5, cnt
+-	cbnz	x18, L(gt2)
++	cbnz	x15, L(gt2)
+ 	orr	x10, x10, x13
+ 	stp	x10, x2, [rp]
+ 	ret
+@@ -121,11 +121,11 @@ L(lo2):	NSHIFT	x10, x5, tnc
+ 	orr	x11, x12, x2
+ 	stp	x11, x10, [rp,#32]!
+ 	PSHIFT	x2, x5, cnt
+-L(lo0):	sub	x18, x18, #1
++L(lo0):	sub	x15, x15, #1
+ L(lo3):	NSHIFT	x10, x7, tnc
+ 	NSHIFT	x12, x6, tnc
+ 	PSHIFT	x13, x6, cnt
+-	cbnz	x18, L(top)
++	cbnz	x15, L(top)
+ 
+ L(end):	orr	x10, x10, x13
+ 	orr	x11, x12, x2
+diff --git a/mpn/arm64/sqr_diag_addlsh1.asm b/mpn/arm64/sqr_diag_addlsh1.asm
+index 55b5ac7..39f1cb1 100644
+--- a/mpn/arm64/sqr_diag_addlsh1.asm
++++ b/mpn/arm64/sqr_diag_addlsh1.asm
+@@ -47,7 +47,7 @@ define(`n',  `x3')
+ ASM_START()
+ PROLOGUE(mpn_sqr_diag_addlsh1)
+ 	ldr	x15, [up],#8
+-	lsr	x18, n, #1
++	lsr	x14, n, #1
+ 	tbz	n, #0, L(bx0)
+ 
+ L(bx1):	adds	x7, xzr, xzr
+@@ -62,8 +62,8 @@ L(bx0):	adds	x5, xzr, xzr
+ 	ldr	x17, [up],#16
+ 	ldp	x6, x7, [tp],#32
+ 	umulh	x11, x15, x15
+-	sub	x18, x18, #1
+-	cbz	x18, L(end)
++	sub	x14, x14, #1
++	cbz	x14, L(end)
+ 
+ 	ALIGN(16)
+ L(top):	extr	x9, x6, x5, #63
+@@ -84,8 +84,8 @@ L(mid):	extr	x9, x4, x7, #63
+ 	extr	x8, x5, x4, #63
+ 	stp	x12, x13, [rp],#16
+ 	adcs	x12, x8, x10
+-	sub	x18, x18, #1
+-	cbnz	x18, L(top)
++	sub	x14, x14, #1
++	cbnz	x14, L(top)
+ 
+ L(end):	extr	x9, x6, x5, #63
+ 	mul	x10, x17, x17
+diff --git a/nextprime.c b/nextprime.c
+index e8e60dd..6e80281 100644
+--- a/nextprime.c
++++ b/nextprime.c
+@@ -53,7 +53,6 @@ see https://www.gnu.org/licenses/.  */
+ */
+ 
+ #include "gmp-impl.h"
+-#include <string.h>		/* for memset */
+ 
+ 
+ unsigned long int
