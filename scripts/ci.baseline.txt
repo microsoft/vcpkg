@@ -277,6 +277,9 @@ functions-framework-cpp:x64-uwp=fail
 # VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
 gazebo:x64-windows=fail
 gazebo:x64-linux=fail
+
+gdk-pixbuf:x64-windows-static=fail
+gdk-pixbuf:x64-windows-static-md=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
@@ -806,7 +809,6 @@ opencv3:x64-windows-static-md = skip
 opencv3:x86-windows           = skip
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
-openexr:arm64-windows=fail
 openexr:arm-uwp=fail
 openexr:x64-uwp=fail
 opengl:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599

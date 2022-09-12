@@ -1,0 +1,34 @@
+diff --git a/src/error.c b/src/error.c
+index 055452ec3..0ce530a96 100644
+--- a/src/error.c
++++ b/src/error.c
+@@ -32,7 +32,11 @@ Author: Ralph Mor, X Consortium
+ #include <X11/ICE/ICElib.h>
+ #include "ICElibint.h"
+ #include <stdio.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#elif _MSC_VER
++#include <process.h>
++#endif
+ #include <errno.h>
+ 
+ void
+diff --git a/src/iceauth.c b/src/iceauth.c
+index 147efc76c..ea6d1a67b 100644
+--- a/src/iceauth.c
++++ b/src/iceauth.c
+@@ -38,8 +38,12 @@ Author: Ralph Mor, X Consortium
+ #ifdef HAVE_LIBBSD
+ #include <bsd/stdlib.h>	/* for arc4random_buf() */
+ #endif
+-
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#elif _MSC_VER
++#include <process.h>
++#define ITIMER_REAL
++#endif
+ 
+ static int was_called_state;
+ 
