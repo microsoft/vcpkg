@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "cmake-js-fetch": "cmake-js configure --directory cmake-js-fetch"
+  }
+}

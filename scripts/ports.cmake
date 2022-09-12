@@ -56,6 +56,7 @@ include("${SCRIPTS}/cmake/vcpkg_list.cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
+include("${SCRIPTS}/cmake/vcpkg_execute_npm_command.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
