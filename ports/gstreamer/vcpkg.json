@@ -25,7 +25,6 @@
       "name": "glib",
       "host": true
     },
-    "libnice",
     "libxml2",
     {
       "name": "opengl",
@@ -58,7 +57,15 @@
       "description": "Use Graphene in OpenGL plugin",
       "supports": "!arm",
       "dependencies": [
-        "graphene"
+        "graphene",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ],
+          "platform": "!arm"
+        }
       ]
     },
     "gpl": {
@@ -74,14 +81,7 @@
     "plugins-bad": {
       "description": "'Bad' GStreamer plugins and helper libraries",
       "dependencies": [
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "rawparse"
-          ],
-          "platform": "!arm"
-        },
+        "libnice",
         "openh264"
       ]
     },
@@ -91,10 +91,6 @@
         {
           "name": "gstreamer",
           "default-features": false,
-          "features": [
-            "gl-graphene",
-            "rawparse"
-          ],
           "platform": "!arm"
         }
       ]
@@ -116,7 +112,6 @@
         "libpng",
         "libvpx",
         "mpg123",
-        "speex",
         "taglib"
       ]
     },
@@ -137,7 +132,41 @@
       "description": "Build with libraw support",
       "supports": "!arm",
       "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ],
+          "platform": "!arm"
+        },
         "libraw"
+      ]
+    },
+    "videoparsers": {
+      "description": "'Bad' GStreamer videoparsersbad plugins. https://gstreamer.freedesktop.org/documentation/videoparsersbad/index.html",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ],
+          "platform": "!arm"
+        }
+      ]
+    },
+    "webrtc": {
+      "description": "'Bad' GStreamer WebRTC plugin. https://gstreamer.freedesktop.org/documentation/webrtc/index.html",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ],
+          "platform": "!arm"
+        }
       ]
     },
     "x11": {
