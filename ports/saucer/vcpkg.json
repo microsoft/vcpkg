@@ -1,11 +1,12 @@
 {
   "name": "saucer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "ereignis",
     "fmt",
     "lockpp",
     "nlohmann-json",
