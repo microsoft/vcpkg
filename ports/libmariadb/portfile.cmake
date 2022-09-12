@@ -17,16 +17,15 @@ vcpkg_from_github(
         disable-test-build.patch
         fix-InstallPath.patch
         fix-iconv.patch
-        export-cmake-targets.patch
         pkgconfig.patch
-        no-extra-static-lib.patch
         fix-openssl.patch
+        fix-CMakeLists.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        iconv WITH_ICONV
-        mariadbclient VCPKG_MARIADBCLIENT
+        iconv            WITH_ICONV
+        mariadbclient    VCPKG_MARIADBCLIENT
 )
 
 if("openssl" IN_LIST FEATURES)
