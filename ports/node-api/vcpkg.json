@@ -3,19 +3,19 @@
   "version-semver": "14.17.4",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
-  "supports": "windows | linux | osx",
   "license": "MIT",
+  "supports": "windows | linux | osx",
   "dependencies": [
-    {
-      "name": "vcpkg-tool-nodejs",
-      "host": true
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
       "host": true
     }
   ]
