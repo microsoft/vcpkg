@@ -10,7 +10,6 @@ function(vcpkg_execute_npm_command)
     message(FATAL_ERROR "Expected WORKING_DIRECTORY to be an absolute path, but got: ${A_WORKING_DIRECTORY}")
   endif()
 
-  #message(FATAL_ERROR "!!!!!!!!!!!${A_NPM_COMMAND}")
   execute_process(COMMAND "${A_NPM_COMMAND}" ${A_COMMAND}
     WORKING_DIRECTORY ${A_WORKING_DIRECTORY}
     RESULT_VARIABLE npm_result
