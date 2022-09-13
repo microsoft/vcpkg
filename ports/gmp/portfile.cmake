@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
     endif()
 
-    set(OPTIONS ac_cv_func_memset=yes
+    list(APPEND OPTIONS ac_cv_func_memset=yes
                 "gmp_cv_asm_w32=.word"
                 )
 endif()
