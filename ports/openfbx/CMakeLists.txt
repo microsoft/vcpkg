@@ -8,18 +8,18 @@ include(GNUInstallDirs)
 
 find_package(miniz REQUIRED)
 
-add_library(unofficial-openfbx src/ofbx.cpp)
-target_link_libraries(unofficial-openfbx PRIVATE miniz::miniz)
+add_library(openfbx src/ofbx.cpp)
+target_link_libraries(openfbx PRIVATE miniz::miniz)
 
-target_include_directories(unofficial-openfbx
+target_include_directories(openfbx
         PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/>)
 
-target_compile_definitions(unofficial-openfbx PRIVATE _LARGEFILE64_SOURCE)
-set_target_properties(unofficial-openfbx PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+target_compile_definitions(openfbx PRIVATE _LARGEFILE64_SOURCE)
+set_target_properties(openfbx PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-install(TARGETS unofficial-openfbx EXPORT openfbxTargets
+install(TARGETS openfbx EXPORT unofficial-openfbxTargets
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
@@ -29,13 +29,13 @@ install(TARGETS unofficial-openfbx EXPORT openfbxTargets
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
         openfbxConfig.cmake.in
-        "${CMAKE_CURRENT_BINARY_DIR}/openfbxConfig.cmake"
-        INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/openfbx"
+        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfbxConfig.cmake"
+        INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-openfbx"
 )
 
 install(
-        FILES "${CMAKE_CURRENT_BINARY_DIR}/openfbxConfig.cmake"
-        DESTINATION "${CMAKE_INSTALL_DATADIR}/openfbx"
+        FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfbxConfig.cmake"
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-openfbx"
 )
 
 install(FILES ${CMAKE_SOURCE_DIR}/src/ofbx.h
@@ -43,7 +43,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/ofbx.h
 )
 
 install(
-    EXPORT openfbxTargets
+    EXPORT unofficial-openfbxTargets
     NAMESPACE unoffical::
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/openfbx
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-openfbx
 )
