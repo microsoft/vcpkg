@@ -4358,7 +4358,7 @@
     },
     "libxpm": {
       "baseline": "3.5.11",
-      "port-version": 0
+      "port-version": 1
     },
     "libxslt": {
       "baseline": "1.1.37",
@@ -4989,7 +4989,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2022-09-08",
+      "baseline": "2022-09-13",
       "port-version": 0
     },
     "neon2sse": {
