@@ -28,7 +28,7 @@ install(TARGETS openfbx EXPORT unofficial-openfbxTargets
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-        openfbxConfig.cmake.in
+        unofficial-openfbxConfig.cmake.in
         "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfbxConfig.cmake"
         INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-openfbx"
 )
@@ -44,6 +44,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/ofbx.h
 
 install(
     EXPORT unofficial-openfbxTargets
-    NAMESPACE unoffical::
+    NAMESPACE unoffical::openfbx::
     DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-openfbx
 )
