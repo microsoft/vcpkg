@@ -17,11 +17,17 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+if ("gettext" IN_LIST FEATURES)
+    set(EXTRA_OPTIONS --with-gettext=yes)
+else()
+    set(EXTRA_OPTIONS --with-gettext=np)
+endif()
+
 vcpkg_configure_make(
      SOURCE_PATH "${SOURCE_PATH}"
      AUTOCONFIG
      OPTIONS
-        --with-gettext=no
+        ${EXTRA_OPTIONS}
  )
 
 vcpkg_install_make()
