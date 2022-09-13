@@ -4,7 +4,6 @@
   "description": "Lightweight open source FBX importer",
   "homepage": "https://github.com/nem0/OpenFBX",
   "license": "MIT",
-  "supports": "!osx",
   "dependencies": [
     "miniz",
     {
