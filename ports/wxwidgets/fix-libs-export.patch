@@ -1,5 +1,5 @@
 diff --git a/build/cmake/config.cmake b/build/cmake/config.cmake
-index 52ae69d3f6..f261d5d262 100644
+index b359560..7504458 100644
 --- a/build/cmake/config.cmake
 +++ b/build/cmake/config.cmake
 @@ -39,8 +39,14 @@ macro(wx_get_dependencies var lib)
