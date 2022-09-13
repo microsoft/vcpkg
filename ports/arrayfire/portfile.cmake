@@ -7,7 +7,8 @@ vcpkg_from_github(
   PATCHES
     build.patch
     Fix-constexpr-error-with-vs2019-with-half.patch
-  )
+    fix-dependency-clfft.patch
+)
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
 vcpkg_from_github(
@@ -16,7 +17,7 @@ vcpkg_from_github(
   REF b666773940269179f19ef11c8f1eb77005e85d9a
   SHA512 b3e8b54acf3a588b1f821c2774d5da2d8f8441962c6d99808d513f7117278b9066eb050b8b501bddbd3882e68eb5cc5da0b2fca54e15ab1923fe068a3fe834f5
   HEAD_REF master
-  )
+)
 
 # Get forge. We only need headers and aren't actually linking.
 # We don't want to use the vcpkg dependency since it is broken in many
@@ -45,7 +46,7 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DAF_FORGE_PATH=${FORGE_PATH} # forge headers for building the graphics lib
   -DAF_BUILD_FORGE=OFF
   -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
-  )
+)
 
 # bin/dll directory for Windows non-static builds for the unified backend dll
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -73,7 +74,9 @@ vcpkg_cmake_configure(
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
-  )
+  MAYBE_UNUSED_VARIABLES
+    AF_CPU_THREAD_PATH
+)
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
