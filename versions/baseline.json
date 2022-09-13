@@ -7514,7 +7514,7 @@
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
