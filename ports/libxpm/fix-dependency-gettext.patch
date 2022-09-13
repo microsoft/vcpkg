@@ -1,0 +1,18 @@
+diff --git a/configure.ac b/configure.ac
+index 365544b..997f3d7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -30,7 +30,12 @@ PKG_CHECK_MODULES(SXPM, [x11 xt xext xextproto xproto >= 7.0.17],
+ AM_CONDITIONAL(BUILD_SXPM, test x$build_sxpm = xtrue)
+ 
+ # Internationalization & localization support
+-AC_SEARCH_LIBS([gettext], [intl], [USE_GETTEXT="yes"], [USE_GETTEXT="no"])
++AC_ARG_WITH([gettext], AC_HELP_STRING([--with-gettext],
++    [Use gettext, default is no]),
++    [USE_GETTEXT=${withval}])
++if test "x$USE_GETTEXT" == "xyes"; then
++    AC_SEARCH_LIBS([gettext], [intl], [USE_GETTEXT="yes"], [USE_GETTEXT="no"])
++fi
+ AC_MSG_CHECKING([where to install localized messages])
+ AC_ARG_WITH([localedir], AS_HELP_STRING([--with-localedir=<path>],
+ 	[Path to install message files in (default: datadir/locale)]),
