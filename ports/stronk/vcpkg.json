@@ -4,7 +4,6 @@
   "description": "An easy to customize, strong type library with built in support for unit-like behavior",
   "homepage": "https://github.com/twig-energy/stronk",
   "license": "MIT",
-  "builtin-baseline": "acc3bcf76b84ae5041c86ab55fe138ae7b8255c7",
   "dependencies": [
     {
       "name": "boost-type-index",
