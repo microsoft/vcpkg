@@ -6993,7 +6993,7 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "starlink-ast": {
