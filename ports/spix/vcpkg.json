@@ -6,13 +6,33 @@
   "dependencies": [
     "anyrpc",
     {
-      "name": "qt5-base",
-      "default-features": false
-    },
-    "qt5-declarative",
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "qt5"
+  ],
+  "features": {
+    "qt5": {
+      "description": "Build with Qt6 instead of Qt5",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        "qt5-declarative"
+      ]
+    },
+    "qt6": {
+      "description": "Build with Qt6 instead of Qt5",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false
+        },
+        "qtdeclarative"
+      ]
+    }
+  }
 }
