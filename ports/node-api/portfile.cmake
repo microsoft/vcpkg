@@ -30,9 +30,21 @@ file(READ "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" environment_j
 string(REPLACE "process.env[(os.platform() === \"win32\") ? \"USERPROFILE\" : \"HOME\"]" "\"${DOWNLOADS}/tmp-cmakejs-home\"" environment_js "${environment_js}")
 file(WRITE "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" "${environment_js}")
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(cmake_js_arch "x64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(cmake_js_arch "ia32")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(cmake_js_arch "arm64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(cmake_js_arch "arm")
+else()
+    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 vcpkg_execute_npm_command(
     NPM_COMMAND ${npm_command}
-    COMMAND run cmake-js-fetch --scripts-prepend-node-path -- --out "${DOWNLOADS}/tmp-cmakejs-output"
+    COMMAND run cmake-js-fetch --scripts-prepend-node-path -- --out "${DOWNLOADS}/tmp-cmakejs-output" --arch "${cmake_js_arch}"
     WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}" 
 )
 
