@@ -2,7 +2,7 @@
 name: Report package build failure
 about: Let us know about build failures in ports.
 title: "[<port name>] build failure"
-labels: ''
+labels: category:port-bug
 assignees: ''
 
 ---
