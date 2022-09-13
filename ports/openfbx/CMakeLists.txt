@@ -8,21 +8,22 @@ include(GNUInstallDirs)
 
 find_package(miniz REQUIRED)
 
-add_library(OpenFBX src/ofbx.cpp)
-target_link_libraries(OpenFBX PRIVATE miniz::miniz)
+add_library(unofficial-openfbx src/ofbx.cpp)
+target_link_libraries(unofficial-openfbx PRIVATE miniz::miniz)
 
-target_include_directories(OpenFBX
+target_include_directories(unofficial-openfbx
         PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/>)
 
-target_compile_definitions(OpenFBX PRIVATE _LARGEFILE64_SOURCE)
-set_target_properties(OpenFBX PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+target_compile_definitions(unofficial-openfbx PRIVATE _LARGEFILE64_SOURCE)
+set_target_properties(unofficial-openfbx PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-install(TARGETS OpenFBX EXPORT openfbxTargets
+install(TARGETS unofficial-openfbx EXPORT openfbxTargets
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
+        PUBLIC_HEADER DESTINATION include
         INCLUDES DESTINATION include)
 
 include(CMakePackageConfigHelpers)
@@ -37,12 +38,12 @@ install(
         DESTINATION "${CMAKE_INSTALL_DATADIR}/openfbx"
 )
 
-install(
-        EXPORT openfbxTargets
-        FILE openfbxTargets.cmake
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/openfbx
-)
-
 install(FILES ${CMAKE_SOURCE_DIR}/src/ofbx.h
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    EXPORT openfbxTargets
+    NAMESPACE unoffical::
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/openfbx
 )
