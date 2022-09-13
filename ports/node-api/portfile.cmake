@@ -56,11 +56,14 @@ file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 # Non-empty only for Windows at the current version of NodeJS
 if(CMAKE_JS_SRC)
-    file(COPY "${CMAKE_JS_SRC}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node")
+    file(COPY "${CMAKE_JS_SRC}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
 
 # Handle copyright
 file(INSTALL "${NODEJS_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# copy ./node-api-config.cmake to ${CURRENT_PACKAGES_DIR}/share/node-api
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/node-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # vcpkg remove doesn't remove cmake-js, so we need to remove it manually right now
 file(GLOB cmakejs_files "${NODEJS_DIR}/cmake-js*")
