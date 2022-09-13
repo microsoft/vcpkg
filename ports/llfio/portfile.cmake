@@ -8,13 +8,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF 4a117d683b82a2e3e456c2ecc47a99c8406280fa
-    SHA512 7880356dbff10664a146a09558ba15f95cf6883ebe8e0af3d392fbd6f86f3455b9b5c8b6c5c1281c8fca93c358fcafd3468ab575eee0b483ec5b136ca59eef04
+    REF ae7f9c5a92879285ad5100c89efc47ce1cb0031b
+    SHA512 aa8563e4e78e4355ae1041bd8d2984e33e8c8b7634a6eac029e4716dff564a9616ba1826504709f428f789103e8f4ab90447208e66583536ad692400e51eec60
     HEAD_REF develop
     PATCHES
-        # https://github.com/ned14/llfio/issues/83
-        # To be removed on next update
-        issue-83-fix-backport.patch
 )
 
 vcpkg_from_github(
@@ -87,4 +84,4 @@ if("status-code" IN_LIST FEATURES)
 else()
     file(INSTALL "${CURRENT_PORT_DIR}/usage-error-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
-file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Licence.txt")
