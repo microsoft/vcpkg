@@ -6,7 +6,13 @@ set(PROG_VERSION 14.17.4)
 set(BREW_PACKAGE_NAME "${PROGNAME}")
 set(APT_PACKAGE_NAME "${PROGNAME}")
 
-if(VCPKG_CROSSCOMPILING)
+set(RELAX_CROSSCOMPILING_CHECK OFF)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
+    # it's ok to "cross-compile" from windows to windows in case of this port
+    set(RELAX_CROSSCOMPILING_CHECK ON)
+endif()
+
+if(VCPKG_CROSSCOMPILING AND NOT RELAX_CROSSCOMPILING_CHECK)
     message(FATAL_ERROR "This is a host only port!")
 endif()
 

@@ -14,21 +14,29 @@ else()
     set(npm_command "${NODEJS_DIR}/npm")
 endif()
 
-file(REMOVE_RECURSE "${DOWNLOADS}/npm-temp")
+file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-output")
+file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
+file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-output")
+file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
 vcpkg_execute_npm_command(
     NPM_COMMAND ${npm_command}
     COMMAND install cmake-js@7.0.0-3
-    WORKING_DIRECTORY "${NODEJS_DIR}" 
+    WORKING_DIRECTORY "${NODEJS_DIR}"
 )
+
+# Precent pollution of user home directory
+file(READ "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
+string(REPLACE "process.env[(os.platform() === \"win32\") ? \"USERPROFILE\" : \"HOME\"]" "\"${DOWNLOADS}/tmp-cmakejs-home\"" environment_js "${environment_js}")
+file(WRITE "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" "${environment_js}")
 
 vcpkg_execute_npm_command(
     NPM_COMMAND ${npm_command}
-    COMMAND run cmake-js-fetch --scripts-prepend-node-path -- --out "${DOWNLOADS}/npm-temp"
+    COMMAND run cmake-js-fetch --scripts-prepend-node-path -- --out "${DOWNLOADS}/tmp-cmakejs-output"
     WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}" 
 )
 
-include("${DOWNLOADS}/npm-temp/node.cmake")
+include("${DOWNLOADS}/tmp-cmakejs-output/node.cmake")
 
 file(COPY "${CMAKE_JS_INC}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -41,3 +49,8 @@ endif()
 
 # Handle copyright
 file(INSTALL "${NODEJS_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# vcpkg remove doesn't remove cmake-js, so we need to remove it manually right now
+file(GLOB cmakejs_files "${NODEJS_DIR}/cmake-js*")
+file(REMOVE ${cmakejs_files})
+file(REMOVE_RECURSE "${NODEJS_DIR}/node_modules/cmake-js")
