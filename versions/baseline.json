@@ -7813,8 +7813,8 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.2.0",
-      "port-version": 2
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "x-plane": {
       "baseline": "3.0.3",
