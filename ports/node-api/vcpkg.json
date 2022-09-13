@@ -6,7 +6,6 @@
   "license": "MIT",
   "supports": "windows | linux | osx",
   "dependencies": [
-    "vcpkg-tool-nodejs",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,6 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "vcpkg-tool-nodejs"
   ]
 }
