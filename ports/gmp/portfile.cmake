@@ -26,7 +26,8 @@ vcpkg_extract_source_archive_ex(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
-        set(ENV{CCAS} "${CURRENT_BUILDTREES_DIR}/../../ports/gmp/gas2armasm64.sh")
+#        set(ENV{CCAS} "${CMAKE_CURRENT_LIST_DIR}/gas2armasm64.sh")
+        set(ENV{CCAS} "clang-cl --target=arm64-pc-win32 -c")
     else()
         set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -35,10 +36,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             set(asmflag win32)
         endif()
         set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-        set(OPTIONS ac_cv_func_memset=yes
-                    "gmp_cv_asm_w32=.word"
-                    )
     endif()
+
+    set(OPTIONS ac_cv_func_memset=yes
+                "gmp_cv_asm_w32=.word"
+                )
 endif()
 
 if(VCPKG_CROSSCOMPILING)

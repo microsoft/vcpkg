@@ -100,40 +100,18 @@ index 168caad..d22eb81 100644
  L(end):	ldp	x4, x5, [up,#16]
  	extr	x12, x10, x9, #RSH
 diff --git a/mpn/arm64/arm64-defs.m4 b/mpn/arm64/arm64-defs.m4
-index 46149f7..52fb91d 100644
+index 46149f7..ccf9186 100644
 --- a/mpn/arm64/arm64-defs.m4
 +++ b/mpn/arm64/arm64-defs.m4
-@@ -50,4 +50,6 @@ define(`LEA_HI', `adrp	$1, $2')dnl
+@@ -50,4 +50,8 @@ define(`LEA_HI', `adrp	$1, $2')dnl
  define(`LEA_LO', `add	$1, $1, :lo12:$2')dnl
  ')dnl
  
-+define(`EXTERN', `  .extern $1')dnl
++define(`LEA_HI', `ldr	$1, =$2')dnl
++define(`LEA_LO')dnl
++define(`ALIGN', `  .align 8')dnl
 +
  divert`'dnl
-diff --git a/mpn/arm64/bdiv_q_1.asm b/mpn/arm64/bdiv_q_1.asm
-index 7fffc93..fc0dacc 100644
---- a/mpn/arm64/bdiv_q_1.asm
-+++ b/mpn/arm64/bdiv_q_1.asm
-@@ -55,15 +55,17 @@ define(`cy',  `r7')
- define(`tnc', `x8')
- 
- ASM_START()
-+
-+EXTERN(binvert_limb_table)
-+
- PROLOGUE(mpn_bdiv_q_1)
- 
- 	rbit	x6, d
- 	clz	cnt, x6
- 	lsr	d, d, cnt
- 
--	LEA_HI(	x7, binvert_limb_table)
-+	ldr		x7, =binvert_limb_table
- 	ubfx	x6, d, 1, 7
--	LEA_LO(	x7, binvert_limb_table)
- 	ldrb	w6, [x7, x6]
- 	ubfiz	x7, x6, 1, 8
- 	umull	x6, w6, w6
 diff --git a/mpn/arm64/cnd_aors_n.asm b/mpn/arm64/cnd_aors_n.asm
 index 39e6cd3..4960d3d 100644
 --- a/mpn/arm64/cnd_aors_n.asm
@@ -185,52 +163,32 @@ index 39e6cd3..4960d3d 100644
  
  L(end):	bic	x6, x12, cnd
  	bic	x7, x13, cnd
-diff --git a/mpn/arm64/hamdist.asm b/mpn/arm64/hamdist.asm
-index c72ca55..630cafa 100644
---- a/mpn/arm64/hamdist.asm
-+++ b/mpn/arm64/hamdist.asm
-@@ -160,7 +160,7 @@ L(gt8k):
- 	mov	x9, #chunksize*8	C caller-saves reg not used above
- 	mov	x10, #chunksize		C caller-saves reg not used above
+diff --git a/mpn/arm64/copyd.asm b/mpn/arm64/copyd.asm
+index c8001a3..39dd61a 100644
+--- a/mpn/arm64/copyd.asm
++++ b/mpn/arm64/copyd.asm
+@@ -65,7 +65,7 @@ L(al2):	sub	up, up, #16
+ 	sub	up, up, #16			C offset up for loop
+ 	mov	x12, #-16
  
--1:	add	ap2, ap, x9		C point at subsequent block
-+L(1):	add	ap2, ap, x9		C point at subsequent block
- 	add	bp2, bp, x9		C point at subsequent block
- 	mov	n, #chunksize-8		C count for this invocation, adjusted for entry pt
- 	movi	v4.16b, #0		C clear chunk summation register
-@@ -171,7 +171,7 @@ L(gt8k):
- 	mov	bp, bp2			C put chunk pointer in place for calls
- 	sub	x7, x7, x10
- 	cmp	x7, x11
--	b.hi	1b
-+	b.hi	L(1)
+-	ALIGN(16)
++	ALIGN(8)
+ L(top):	ld1	{v22.2d}, [up], x12
+ 	st1	{v26.2d}, [rp], x12
+ 	ld1	{v26.2d}, [up], x12
+diff --git a/mpn/arm64/copyi.asm b/mpn/arm64/copyi.asm
+index cfb90c7..f15c5b0 100644
+--- a/mpn/arm64/copyi.asm
++++ b/mpn/arm64/copyi.asm
+@@ -56,7 +56,7 @@ L(al2):	ld1	{v26.2d}, [up], #16
+ 	sub	n, n, #6
+ 	tbnz	n, #63, L(end)
  
- 	mov	n, x7			C count for final invocation
- 	bl	L(lt8k)
-diff --git a/mpn/arm64/invert_limb.asm b/mpn/arm64/invert_limb.asm
-index 6a99bf0..770b48c 100644
---- a/mpn/arm64/invert_limb.asm
-+++ b/mpn/arm64/invert_limb.asm
-@@ -41,9 +41,8 @@ C Compiler generated, mildly edited.  Could surely be further optimised.
- ASM_START()
- PROLOGUE(mpn_invert_limb)
- 	lsr	x2, x0, #54
--	LEA_HI(	x1, approx_tab)
-+	ldr		x1, =L(approx_tab)
- 	and	x2, x2, #0x1fe
--	LEA_LO(	x1, approx_tab)
- 	ldrh	w3, [x1,x2]
- 	lsr	x4, x0, #24
- 	add	x4, x4, #1
-@@ -77,7 +76,7 @@ EPILOGUE()
- 	ALIGN(2)
- 	TYPE(   approx_tab, object)
- 	SIZE(   approx_tab, 512)
--approx_tab:
-+L(approx_tab):
- forloop(i,256,512-1,dnl
- `	.hword	eval(0x7fd00/i)
- ')dnl
+-	ALIGN(16)
++	ALIGN(8)
+ L(top):	ld1	{v22.2d}, [up], #16
+ 	st1	{v26.2d}, [rp], #16
+ 	ld1	{v26.2d}, [up], #16
 diff --git a/mpn/arm64/logops_n.asm b/mpn/arm64/logops_n.asm
 index ccaec9c..1d31dd5 100644
 --- a/mpn/arm64/logops_n.asm
@@ -373,26 +331,18 @@ index 7c93a3d..7fc3442 100644
  L(end):	eon	x10, x10, x13
  	eon	x11, x12, x2
 diff --git a/mpn/arm64/mod_34lsub1.asm b/mpn/arm64/mod_34lsub1.asm
-index 7945fe7..165ef72 100644
+index 7945fe7..7a36d03 100644
 --- a/mpn/arm64/mod_34lsub1.asm
 +++ b/mpn/arm64/mod_34lsub1.asm
-@@ -86,12 +86,12 @@ L(top):	ldp	x5, x6, [ap, #0]
+@@ -60,7 +60,7 @@ C	tbz	n, #63, L(top)
  
- L(sum):	cmn	n, #2
- 	mov	x5, #0
--	b.lo	1f
-+	b.lo	L(skip_ldr1)
- 	ldr	x5, [ap], #8
--1:	mov	x6, #0
--	b.ls	1f
-+L(skip_ldr1):	mov	x6, #0
-+	b.ls	L(skip_ldr2)
- 	ldr	x6, [ap], #8
--1:	adds	x2, x2, x5
-+L(skip_ldr2):	adds	x2, x2, x5
- 	adcs	x3, x3, x6
- 	adcs	x4, x4, xzr
- 	adc	x8, x8, xzr		C x8 <= 2
+ ASM_START()
+ 	TEXT
+-	ALIGN(32)
++	ALIGN(16)
+ PROLOGUE(mpn_mod_34lsub1)
+ 	subs	n, n, #3
+ 	mov	x8, #0
 diff --git a/mpn/arm64/mul_1.asm b/mpn/arm64/mul_1.asm
 index d1d3394..db26304 100644
 --- a/mpn/arm64/mul_1.asm
@@ -446,28 +396,6 @@ index d1d3394..db26304 100644
  
  L(end):	mul	x8, x4, v0
  	adcs	x13, x9, x10
-diff --git a/mpn/arm64/popcount.asm b/mpn/arm64/popcount.asm
-index 74de3fc..cdd16d0 100644
---- a/mpn/arm64/popcount.asm
-+++ b/mpn/arm64/popcount.asm
-@@ -138,7 +138,7 @@ L(gt8k):
- 	mov	x9, #chunksize*8	C caller-saves reg not used above
- 	mov	x10, #chunksize		C caller-saves reg not used above
- 
--1:	add	ap2, ap, x9		C point at subsequent block
-+L(1):	add	ap2, ap, x9		C point at subsequent block
- 	mov	n, #chunksize-8		C count for this invocation, adjusted for entry pt
- 	movi	v4.16b, #0		C clear chunk summation register
- 	movi	v5.16b, #0		C clear chunk summation register
-@@ -147,7 +147,7 @@ L(gt8k):
- 	mov	ap, ap2			C put chunk pointer in place for calls
- 	sub	x7, x7, x10
- 	cmp	x7, x11
--	b.hi	1b
-+	b.hi	L(1)
- 
- 	mov	n, x7			C count for final invocation
- 	bl	L(lt8k)
 diff --git a/mpn/arm64/rsh1aors_n.asm b/mpn/arm64/rsh1aors_n.asm
 index e0b760b..20eeb38 100644
 --- a/mpn/arm64/rsh1aors_n.asm
@@ -586,6 +514,28 @@ index acee714..81b75fc 100644
  
  L(end):	orr	x10, x10, x13
  	orr	x11, x12, x2
+diff --git a/mpn/arm64/sec_tabselect.asm b/mpn/arm64/sec_tabselect.asm
+index 18a268a..95bc02e 100644
+--- a/mpn/arm64/sec_tabselect.asm
++++ b/mpn/arm64/sec_tabselect.asm
+@@ -91,7 +91,7 @@ L(outer_end):
+ 	mov	x12, tp
+ 	movi	v5.16b, #0			C zero 2 counter copies
+ 	movi	v2.16b, #0
+-	ALIGN(16)
++	ALIGN(8)
+ L(tp2):	cmeq	maskq.2d, v5.2d, v7.2d
+ 	ld1	{v0.2d}, [tp]
+ 	add	v5.2d, v5.2d, v6.2d
+@@ -107,7 +107,7 @@ L(b0x):	tbz	n, #0, L(b00)
+ 	mov	x12, tp
+ 	movi	v5.16b, #0			C zero 2 counter copies
+ 	movi	v2.16b, #0
+-	ALIGN(16)
++	ALIGN(8)
+ L(tp1):	cmeq	maskq.2d, v5.2d, v7.2d
+ 	ld1	{v0.1d}, [tp]
+ 	add	v5.2d, v5.2d, v6.2d		C FIXME size should be `1d'
 diff --git a/mpn/arm64/sqr_diag_addlsh1.asm b/mpn/arm64/sqr_diag_addlsh1.asm
 index 55b5ac7..39f1cb1 100644
 --- a/mpn/arm64/sqr_diag_addlsh1.asm
@@ -621,15 +571,3 @@ index 55b5ac7..39f1cb1 100644
  
  L(end):	extr	x9, x6, x5, #63
  	mul	x10, x17, x17
-diff --git a/nextprime.c b/nextprime.c
-index e8e60dd..6e80281 100644
---- a/nextprime.c
-+++ b/nextprime.c
-@@ -53,7 +53,6 @@ see https://www.gnu.org/licenses/.  */
- */
- 
- #include "gmp-impl.h"
--#include <string.h>		/* for memset */
- 
- 
- unsigned long int
