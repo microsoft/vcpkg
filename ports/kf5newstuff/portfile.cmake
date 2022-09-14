@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.89.0
-    SHA512 e031fc985ad29be177b438667c624c6706a45edd7029b8144d712e04b9b3f5c8bc7aebea9e2a09afe2a2f28db078f58969cb63bf7dccd5d2e1e05dcbc456766b
+    REF v5.98.0
+    SHA512 dadbd4bcd6408e6b8afba4155a164563b2f3303162edd2f9cd193ab6e6677ce857e4455ccffee8ee289b1c8e634d7b3e5fe1e842efc4c89e67bd25ea103a9f50
     HEAD_REF master
+    PATCHES
+        0001-Fix-KF5NewStuffWidgets_EXPORTS-is-not-defined-on-cla.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -39,3 +41,4 @@ endif()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+
