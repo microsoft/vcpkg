@@ -1,4 +1,5 @@
-find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" "bin" NO_DEFAULT_PATHS)
+set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
+find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS)
 
 if(NOT NODEJS)
   # get parent dir of CURRENT_HOST_INSTALLED_DIR
