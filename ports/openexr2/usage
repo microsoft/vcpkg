@@ -1,0 +1,9 @@
+openexr2 provides CMake targets:
+    
+    find_package(OpenEXR 2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE OpenEXR::IlmImf IlmBase::Iex IlmBase::Half IlmBase::Imath IlmBase::IexMath)
+
+    find_package(IlmBase 2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE IlmBase::Iex IlmBase::Half IlmBase::Imath IlmBase::IexMath)
+
+openexr2 provides a pkg-config module named "OpenEXR2".
