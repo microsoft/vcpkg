@@ -34,7 +34,7 @@ file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-output")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
-set(npm_args install cmake-js@7.0.0-3)
+set(npm_args --prefix "${NODEJS_DIR}" install cmake-js@7.0.0-3)
 execute_process(COMMAND "${npm_command}" ${npm_args}
   WORKING_DIRECTORY ${NODEJS_DIR}
   RESULT_VARIABLE npm_result
@@ -72,8 +72,8 @@ else()
 endif()
 
 set(npm_args
-
   # npm arguments:
+  --prefix "${CMAKE_CURRENT_LIST_DIR}"
   run cmake-js-fetch
   --scripts-prepend-node-path
 
