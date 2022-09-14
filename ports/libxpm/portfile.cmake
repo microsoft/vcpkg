@@ -20,7 +20,7 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 if ("gettext" IN_LIST FEATURES)
     set(EXTRA_OPTIONS --with-gettext=yes)
 else()
-    set(EXTRA_OPTIONS --with-gettext=np)
+    set(EXTRA_OPTIONS --with-gettext=no)
 endif()
 
 vcpkg_configure_make(
