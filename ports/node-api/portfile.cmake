@@ -21,6 +21,7 @@ if(VCPKG_HOST_IS_WINDOWS)
 else()
   set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin")
 endif()
+vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
 if(VCPKG_HOST_IS_WINDOWS)
   set(npm_command "${NODEJS_DIR}/npm.cmd")
