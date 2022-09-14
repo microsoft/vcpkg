@@ -1,7 +1,19 @@
 find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" "bin" NO_DEFAULT_PATHS)
 
 if(NOT NODEJS)
-  message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'")
+  # get parent dir of CURRENT_HOST_INSTALLED_DIR
+  get_filename_component(PARENT_DIR "${CURRENT_HOST_INSTALLED_DIR}" DIRECTORY)
+
+  file(GLOB_RECURSE v "${PARENT_DIR}/*/tools/*")
+
+  set(str "")
+
+  foreach(i ${v})
+    # append to string
+    set(str "${str} ${i}\n")
+  endforeach()
+
+  message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'\nFound tools:\n${str}")
 endif()
 
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
