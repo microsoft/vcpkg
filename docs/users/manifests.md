@@ -68,7 +68,7 @@ Manifests follow strict JSON: they can't contain C++-style comments (`//`) nor t
 you can use field names that start with `$` to write your comments in any object that has a well-defined set of keys.
 These comment fields are not allowed in any objects which permit user-defined keys (such as `"features"`).
 
-The latest JSON Schema is available at https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json. IDEs with JSON Schema support such as Visual Studio and Visual Studio Code can use this file to provide intellisense and syntax checking. For most IDEs, you should set `"$schema"` in your `vcpkg.json` to this URL (like the above example).
+The latest JSON Schema is available at https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json. IDEs with JSON Schema support such as Visual Studio and Visual Studio Code can use this file to provide IntelliSense and syntax checking. For most IDEs, you should set `"$schema"` in your `vcpkg.json` to this URL (like the above example).
 
 Each manifest contains a top level object with the following fields:
 
