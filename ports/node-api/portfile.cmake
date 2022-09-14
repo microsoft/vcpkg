@@ -14,7 +14,13 @@ if(NOT NODEJS)
   message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'\nFound tools:\n${str}")
 endif()
 
-get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
+#get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
+
+if(VCPKG_HOST_IS_WINDOWS)
+  set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
+else()
+  set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin")
+endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
   set(npm_command "${NODEJS_DIR}/npm.cmd")
