@@ -1,4 +1,10 @@
+set(z_vcpkg_openexr_order "${CMAKE_FIND_PACKAGE_SORT_ORDER}")
+set(z_vcpkg_openexr_direction "${CMAKE_FIND_PACKAGE_SORT_DIRECTION}")
+set(CMAKE_FIND_PACKAGE_SORT_ORDER NATURAL)
+set(CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
 _find_package(${ARGS})
+set(CMAKE_FIND_PACKAGE_SORT_DIRECTION ${z_vcpkg_openexr_direction})
+set(CMAKE_FIND_PACKAGE_SORT_ORDER ${z_vcpkg_openexr_order})
 
 if(OpenEXR_FOUND AND OpenEXR_VERSION STREQUAL "2.5.8")
 
