@@ -5,7 +5,6 @@ endif()
 
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
 
-# check if vcpkg host is windows
 if(VCPKG_HOST_IS_WINDOWS)
     set(npm_command "${NODEJS_DIR}/npm.cmd")
 else()
