@@ -20,15 +20,26 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    geopoly WITH_GEOPOLY
-    json1 WITH_JSON1
-    commoncrypto WITH_COMMONCRYPTO
-    libtomcrypt WITH_LIBTOMCRYPT
-    nss WITH_NSS
-    openssl WITH_OPENSSL
+        fts3                ENABLE_FTS3
+        fts4                ENABLE_FTS4
+        fts5                ENABLE_FTS5
+        memsys3             ENABLE_MEMSYS3
+        memsys5             ENABLE_MEMSYS5
+        math                ENABLE_MATH_FUNCTION
+        limit               ENABLE_LIMIT
+        rtree               ENABLE_RTREE
+        session             ENABLE_SESSION
+        omit-load-extension ENABLE_OMIT_LOAD_EXT
+        geopoly             WITH_GEOPOLY
+        json1               WITH_JSON1
+
+        commoncrypto        WITH_COMMONCRYPTO
+        libtomcrypt         WITH_LIBTOMCRYPT
+        nss                 WITH_NSS
+        openssl             WITH_OPENSSL
 
     INVERTED_FEATURES
-    tool SQLITE3_SKIP_TOOLS
+        tool SQLITE3_SKIP_TOOLS
 )
 
 set(ENCRYPTION_BACKENDS 0)

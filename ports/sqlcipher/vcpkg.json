@@ -27,11 +27,20 @@
     "commoncrypto": {
       "description": "Use the commoncrypto encryption backend"
     },
+    "fts3": {
+      "description": "Enable the FTS3 extension"
+    },
+    "fts4": {
+      "description": "Enable the FTS4 extension"
+    },
+    "fts5": {
+      "description": "Enable the FTS5 extension"
+    },
     "geopoly": {
-      "description": "enable geopoly functionality for sqlite3"
+      "description": "Enable geopoly functionality for sqlcipher"
     },
     "json1": {
-      "description": "enable JSON functionality for sqlite3"
+      "description": "Enable JSON functionality for sqlcipher"
     },
     "libtomcrypt": {
       "description": "Use the libtomcrypt encryption backend",
@@ -39,11 +48,26 @@
         "libtomcrypt"
       ]
     },
+    "limit": {
+      "description": "Enable the UPDATE/DELETE LIMIT clause"
+    },
+    "math": {
+      "description": "Enable math functions"
+    },
+    "memsys3": {
+      "description": "Enable MEMSYS3"
+    },
+    "memsys5": {
+      "description": "Enable MEMSYS5"
+    },
     "nss": {
       "description": "Use the nss encryption backend",
       "dependencies": [
         "nss"
       ]
+    },
+    "omit-load-extension": {
+      "description": "Enable loading of external extensions"
     },
     "openssl": {
       "description": "Use the openssl encryption backend",
@@ -51,8 +75,20 @@
         "openssl"
       ]
     },
+    "rtree": {
+      "description": "Enable the RTREE extension"
+    },
+    "session": {
+      "description": "Enable the SESSION extension"
+    },
     "tool": {
-      "description": "sqlite3 executable"
+      "description": "sqlcipher executable"
+    },
+    "zlib": {
+      "description": "Build sqlcipher with zlib support",
+      "dependencies": [
+        "zlib"
+      ]
     }
   }
 }
