@@ -7,7 +7,6 @@
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "openssl",
     {
       "name": "tcl",
       "host": true
@@ -30,6 +29,24 @@
     },
     "tool": {
       "description": "sqlite3 executable"
+    },
+    "commoncrypto": {
+      "description": "Use the commoncrypto encryption backend"
+    },
+    "libtomcrypt": {
+      "description": "Use the libtomcrypt encryption backend",
+      "dependencies": ["libtomcrypt"]
+    },
+    "nss": {
+      "description": "Use the nss encryption backend",
+      "dependencies": ["nss"]
+    },
+    "openssl": {
+      "description": "Use the openssl encryption backend",
+      "dependencies": ["openssl"]
     }
-  }
+  },
+  "default-features": [
+    "openssl"
+  ]
 }
