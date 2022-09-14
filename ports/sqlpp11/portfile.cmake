@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 648183fd64070185019f9237481b888173abfaf2 # 0.61
+    REF 648183fd64070185019f9237481b888173abfaf2 # 2022-09-14
     SHA512 0429c5972ef111a41422ebd3ca259bc7f2cca126b0abd526270e7c8553fbc9d22ee584c526340a7f3c667143a16b961c222687806641b6ddfe9a258bd5e1ccc8
     HEAD_REF master
     PATCHES
@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING:BOOL=OFF
         # Use vcpkg as source for the date library
         -DUSE_SYSTEM_DATE:BOOL=ON
-        "${FEATURE_OPTIONS}"
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
