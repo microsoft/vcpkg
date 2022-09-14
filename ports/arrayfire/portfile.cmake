@@ -74,9 +74,9 @@ vcpkg_cmake_configure(
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
   OPTIONS_DEBUG
-    -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT} # for CMake configs/targets
+    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/debug/share/${PORT}" # for CMake configs/targets
   OPTIONS_RELEASE
-    -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
+    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/share/${PORT}" # for CMake configs/targets
   MAYBE_UNUSED_VARIABLES
     AF_CPU_THREAD_PATH
 )
