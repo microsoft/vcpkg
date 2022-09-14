@@ -20,33 +20,39 @@
       "host": true
     }
   ],
+  "default-features": [
+    "openssl"
+  ],
   "features": {
+    "commoncrypto": {
+      "description": "Use the commoncrypto encryption backend"
+    },
     "geopoly": {
       "description": "enable geopoly functionality for sqlite3"
     },
     "json1": {
       "description": "enable JSON functionality for sqlite3"
     },
-    "tool": {
-      "description": "sqlite3 executable"
-    },
-    "commoncrypto": {
-      "description": "Use the commoncrypto encryption backend"
-    },
     "libtomcrypt": {
       "description": "Use the libtomcrypt encryption backend",
-      "dependencies": ["libtomcrypt"]
+      "dependencies": [
+        "libtomcrypt"
+      ]
     },
     "nss": {
       "description": "Use the nss encryption backend",
-      "dependencies": ["nss"]
+      "dependencies": [
+        "nss"
+      ]
     },
     "openssl": {
       "description": "Use the openssl encryption backend",
-      "dependencies": ["openssl"]
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tool": {
+      "description": "sqlite3 executable"
     }
-  },
-  "default-features": [
-    "openssl"
-  ]
+  }
 }
