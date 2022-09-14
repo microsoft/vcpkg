@@ -11,7 +11,7 @@ diff --git a/KF5CoreAddonsConfig.cmake.in b/KF5CoreAddonsConfig.cmake.in
 index f86b69ff..f9e0d31f 100644
 --- a/KF5CoreAddonsConfig.cmake.in
 +++ b/KF5CoreAddonsConfig.cmake.in
-@@ -18,6 +18,21 @@ else()
+@@ -18,6 +18,25 @@ else()
          set_target_properties(KF5::desktoptojson PROPERTIES IMPORTED_LOCATION ${DESKTOPTOJSON_EXECUTABLE})
      endif()
  endif()
@@ -27,6 +27,10 @@ index f86b69ff..f9e0d31f 100644
 +
 +    if(@Procstat_FOUND@)
 +        find_dependency(Procstat)
++    endif()
++ 
++    if(@HAVE_QTDBUS@)
++        find_dependency(Qt@QT_MAJOR_VERSION@Dbus)
 +    endif()
 +endif()
 +

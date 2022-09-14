@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcmutils
-    REF v5.89.0
-    SHA512 9f12e906d9bd763906d6c9a0ebbefec1b7d1e958a217de5ed7ea418c8fcda1dbaccd8df89a849019aa81303fc4540b26872d205e7215285c4f312e8bbfcb97d0
+    REF v5.98.0
+    SHA512 959901d7ba447eff13e4c1341c5530fccecf42f7f5e4dc69bee669c9e22770f5af57ed2f08979aac5fd2e1015f2bbadf5d302d99e1e0031c20927d833e6a3cea
     HEAD_REF master
+    PATCHES
+        fix_static_compilation.patch   # https://invent.kde.org/frameworks/kcmutils/-/merge_requests/104
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -29,3 +31,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+
