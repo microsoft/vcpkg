@@ -19,11 +19,16 @@ file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-output")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
-vcpkg_execute_npm_command(
-    NPM_COMMAND ${npm_command}
-    COMMAND install cmake-js@7.0.0-3
-    WORKING_DIRECTORY "${NODEJS_DIR}"
+set(npm_args install cmake-js@7.0.0-3)
+execute_process(COMMAND "${npm_command}" ${npm_args}
+    WORKING_DIRECTORY ${NODEJS_DIR}
+    RESULT_VARIABLE npm_result
+    OUTPUT_VARIABLE npm_output
 )
+
+if(NOT "${npm_result}" STREQUAL "0")
+    message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}")
+endif()
 
 # Precent pollution of user home directory
 file(READ "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
@@ -42,11 +47,22 @@ else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-vcpkg_execute_npm_command(
-    NPM_COMMAND ${npm_command}
-    COMMAND run cmake-js-fetch --scripts-prepend-node-path -- --out "${DOWNLOADS}/tmp-cmakejs-output" --arch "${cmake_js_arch}"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}" 
+set(npm_args
+    # npm arguments:
+    run cmake-js-fetch
+    --scripts-prepend-node-path
+    # cmake-js arguments:
+    -- --out "${DOWNLOADS}/tmp-cmakejs-output" --arch "${cmake_js_arch}"
 )
+execute_process(COMMAND "${npm_command}" ${npm_args}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    RESULT_VARIABLE npm_result
+    OUTPUT_VARIABLE npm_output
+)
+
+if(NOT "${npm_result}" STREQUAL "0")
+    message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}")
+endif()
 
 include("${DOWNLOADS}/tmp-cmakejs-output/node.cmake")
 
