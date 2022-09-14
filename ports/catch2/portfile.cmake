@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF v3.0.1
-    SHA512 065094c19cdf98b40f96a390e887542f895495562a91cdc28d68ce03690866d846ec87d320405312a2b97eacaa5351d3e55f0012bb9de40073c8d4444d82b0a1
+    REF v3.1.0
+    SHA512 49e5339263190a6ef15284ef2dcc9e727ce0659cb750d4078024ccf6c6f339740a3a662273718ea73adfbc5928c3ef7268175ebda5ee9ec97ca58fed98747b44
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
+        fix-uwp-build.patch
 )
 
 vcpkg_cmake_configure(

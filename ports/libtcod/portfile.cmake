@@ -1,16 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF 1.21.0
-    SHA512 1d18a49b0d66337e2b29ad6b9a4a412cc4d2fd723d9a3d3c983ff3ef2f5bee4422ea3469513e0fe3b2f885773fb5d70e17128bc473b952ab6e0de27f687c905e
+    REF 1.22.3
+    SHA512 350b741f8738f5ba3c6f282e76c1124326144111eb2444b17b1126e8ddead52cff1dba1d0ed80e6fefbb0db8f032b95d08292d73746eec149e191a8fa78651d7
     HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
+        "png" CMAKE_DISABLE_FIND_PACKAGE_lodepng-c
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_SDL2
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_GLAD
         "threads" CMAKE_DISABLE_FIND_PACKAGE_Threads
+        "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
+        "unicode" CMAKE_DISABLE_FIND_PACKAGE_unofficial-utf8proc
+        "zlib" CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(

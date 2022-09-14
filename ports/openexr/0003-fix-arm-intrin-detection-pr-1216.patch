@@ -1,0 +1,13 @@
+diff --git a/src/lib/OpenEXR/ImfSimd.h b/src/lib/OpenEXR/ImfSimd.h
+index 810e7ccc3..9bb4e11ae 100644
+--- a/OpenEXR/IlmImf/ImfSimd.h
++++ b/OpenEXR/IlmImf/ImfSimd.h
+@@ -14,7 +14,7 @@
+ 
+ 
+ // GCC and Visual Studio SSE2 compiler flags
+-#if defined __SSE2__ || (_MSC_VER >= 1300 && !_M_CEE_PURE)
++#if defined __SSE2__ || (_MSC_VER >= 1300 && (_M_IX86 || _M_X64))
+     #define IMF_HAVE_SSE2 1
+ #endif
+ 
