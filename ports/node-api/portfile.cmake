@@ -62,10 +62,10 @@ endif()
 # Handle copyright
 file(INSTALL "${NODEJS_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# copy ./node-api-config.cmake to ${CURRENT_PACKAGES_DIR}/share/node-api
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/node-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# Copy ./unofficial-node-api-config.cmake to ${CURRENT_PACKAGES_DIR}/share/node-api
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 
-# vcpkg remove doesn't remove cmake-js, so we need to remove it manually right now
+# Vcpkg remove doesn't remove cmake-js, so we need to remove it manually right now
 file(GLOB cmakejs_files "${NODEJS_DIR}/cmake-js*")
 file(REMOVE ${cmakejs_files})
 file(REMOVE_RECURSE "${NODEJS_DIR}/node_modules/cmake-js")
