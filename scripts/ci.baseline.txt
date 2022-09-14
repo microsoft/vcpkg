@@ -36,7 +36,6 @@
 
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-atk:x64-windows-static=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
 bitserializer:x64-osx=fail
@@ -576,8 +575,6 @@ live555:arm-uwp=fail
 live555:x64-osx=fail
 live555:arm64-osx=fail
 live555:x64-uwp=fail
-# fails due to an upstream bug
-llfio:arm64-windows=fail
 # fails due to an outdated gcc version
 llfio:x64-linux=fail
 llgl:arm-uwp=fail
