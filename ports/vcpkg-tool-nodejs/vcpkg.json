@@ -1,7 +1,5 @@
 {
   "name": "vcpkg-tool-nodejs",
   "version-semver": "14.17.4",
-  "port-version": 1,
-  "license": "MIT",
-  "supports": "windows | linux | osx"
+  "supports": "native"
 }

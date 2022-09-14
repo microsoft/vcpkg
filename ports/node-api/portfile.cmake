@@ -1,6 +1,7 @@
-find_program(NODEJS NAMES node PATHS "${CURRENT_INSTALLED_DIR}/tools/node" "bin" NO_DEFAULT_PATHS)
+find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" "bin" NO_DEFAULT_PATHS)
+find_program(NODEJS NAMES node)
 if(NOT NODEJS)
-    message(FATAL_ERROR "node not found, it seems vcpkg failed to install vcpkg-tool-nodejs")
+    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
 
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
