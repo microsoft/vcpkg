@@ -12,21 +12,10 @@ vcpkg_download_distfile(
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(PATCHES yasm.patch
                 msvc_symbol.patch)
-endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    REF gmp-6.2.1
-    PATCHES
-        ${PATCHES}
-        tools.patch
-        arm64.patch
-)
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(ENV{CCAS} "clang-cl --target=arm64-pc-win32 -c")
+        list(APPEND PATCHES arm64.patch)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         list(APPEND OPTIONS --enable-assembly=no)
     else()
@@ -43,6 +32,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 "gmp_cv_asm_w32=.word"
                 )
 endif()
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    REF gmp-6.2.1
+    PATCHES
+        ${PATCHES}
+        tools.patch
+)
 
 if(VCPKG_CROSSCOMPILING)
     # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 

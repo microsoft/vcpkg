@@ -163,32 +163,6 @@ index 39e6cd3..4960d3d 100644
  
  L(end):	bic	x6, x12, cnd
  	bic	x7, x13, cnd
-diff --git a/mpn/arm64/copyd.asm b/mpn/arm64/copyd.asm
-index c8001a3..39dd61a 100644
---- a/mpn/arm64/copyd.asm
-+++ b/mpn/arm64/copyd.asm
-@@ -65,7 +65,7 @@ L(al2):	sub	up, up, #16
- 	sub	up, up, #16			C offset up for loop
- 	mov	x12, #-16
- 
--	ALIGN(16)
-+	ALIGN(8)
- L(top):	ld1	{v22.2d}, [up], x12
- 	st1	{v26.2d}, [rp], x12
- 	ld1	{v26.2d}, [up], x12
-diff --git a/mpn/arm64/copyi.asm b/mpn/arm64/copyi.asm
-index cfb90c7..f15c5b0 100644
---- a/mpn/arm64/copyi.asm
-+++ b/mpn/arm64/copyi.asm
-@@ -56,7 +56,7 @@ L(al2):	ld1	{v26.2d}, [up], #16
- 	sub	n, n, #6
- 	tbnz	n, #63, L(end)
- 
--	ALIGN(16)
-+	ALIGN(8)
- L(top):	ld1	{v22.2d}, [up], #16
- 	st1	{v26.2d}, [rp], #16
- 	ld1	{v26.2d}, [up], #16
 diff --git a/mpn/arm64/logops_n.asm b/mpn/arm64/logops_n.asm
 index ccaec9c..1d31dd5 100644
 --- a/mpn/arm64/logops_n.asm
@@ -330,19 +304,6 @@ index 7c93a3d..7fc3442 100644
  
  L(end):	eon	x10, x10, x13
  	eon	x11, x12, x2
-diff --git a/mpn/arm64/mod_34lsub1.asm b/mpn/arm64/mod_34lsub1.asm
-index 7945fe7..7a36d03 100644
---- a/mpn/arm64/mod_34lsub1.asm
-+++ b/mpn/arm64/mod_34lsub1.asm
-@@ -60,7 +60,7 @@ C	tbz	n, #63, L(top)
- 
- ASM_START()
- 	TEXT
--	ALIGN(32)
-+	ALIGN(16)
- PROLOGUE(mpn_mod_34lsub1)
- 	subs	n, n, #3
- 	mov	x8, #0
 diff --git a/mpn/arm64/mul_1.asm b/mpn/arm64/mul_1.asm
 index d1d3394..db26304 100644
 --- a/mpn/arm64/mul_1.asm
@@ -514,28 +475,6 @@ index acee714..81b75fc 100644
  
  L(end):	orr	x10, x10, x13
  	orr	x11, x12, x2
-diff --git a/mpn/arm64/sec_tabselect.asm b/mpn/arm64/sec_tabselect.asm
-index 18a268a..95bc02e 100644
---- a/mpn/arm64/sec_tabselect.asm
-+++ b/mpn/arm64/sec_tabselect.asm
-@@ -91,7 +91,7 @@ L(outer_end):
- 	mov	x12, tp
- 	movi	v5.16b, #0			C zero 2 counter copies
- 	movi	v2.16b, #0
--	ALIGN(16)
-+	ALIGN(8)
- L(tp2):	cmeq	maskq.2d, v5.2d, v7.2d
- 	ld1	{v0.2d}, [tp]
- 	add	v5.2d, v5.2d, v6.2d
-@@ -107,7 +107,7 @@ L(b0x):	tbz	n, #0, L(b00)
- 	mov	x12, tp
- 	movi	v5.16b, #0			C zero 2 counter copies
- 	movi	v2.16b, #0
--	ALIGN(16)
-+	ALIGN(8)
- L(tp1):	cmeq	maskq.2d, v5.2d, v7.2d
- 	ld1	{v0.1d}, [tp]
- 	add	v5.2d, v5.2d, v6.2d		C FIXME size should be `1d'
 diff --git a/mpn/arm64/sqr_diag_addlsh1.asm b/mpn/arm64/sqr_diag_addlsh1.asm
 index 55b5ac7..39f1cb1 100644
 --- a/mpn/arm64/sqr_diag_addlsh1.asm
