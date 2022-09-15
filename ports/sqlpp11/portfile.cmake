@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 2bc89b34ad3cc37b6bca9a44a3529ff2d8fe211f # 0.61
-    SHA512 6e2496959749422987aca21f333abb01648702b85e02acc711bbac398ca6a67d8be93a3d89fc1f8bad5446865725ff9bcc053e6229cb34627120b59469426266
+    REF 648183fd64070185019f9237481b888173abfaf2 # 2022-09-14
+    SHA512 0429c5972ef111a41422ebd3ca259bc7f2cca126b0abd526270e7c8553fbc9d22ee584c526340a7f3c667143a16b961c222687806641b6ddfe9a258bd5e1ccc8
     HEAD_REF master
     PATCHES
         ddl2cpp_path.patch
@@ -18,7 +18,7 @@ vcpkg_check_features(
 
 # Use sqlpp11's own build process
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING:BOOL=OFF
         # Use vcpkg as source for the date library
@@ -32,11 +32,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Sqlpp11)
 
 # Delete redundant and unnecessary directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/include/date)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/include/date")
 
 # Move python script from bin directory
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp DESTINATION ${CURRENT_PACKAGES_DIR}/scripts)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
+file(COPY "${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/scripts")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
