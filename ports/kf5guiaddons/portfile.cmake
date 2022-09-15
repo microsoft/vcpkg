@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         wayland WITH_WAYLAND
+        x11     WITH_X11
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
