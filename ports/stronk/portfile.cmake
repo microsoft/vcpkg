@@ -3,12 +3,12 @@ vcpkg_from_git(
     URL https://github.com/twig-energy/stronk
     REF f298bca3102b48ada516b0b42f2d5e6899cbbc44
     HEAD_REF main
-    PATCHES
-        fix-wrong-include.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_INSTALL_INCLUDEDIR="${CURRENT_PACKAGES_DIR}/include"
 )
 
 vcpkg_cmake_install()
