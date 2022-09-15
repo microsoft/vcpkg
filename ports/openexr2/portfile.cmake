@@ -23,6 +23,13 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME openexr2 CONFIG_PATH share/openexr)
 vcpkg_cmake_config_fixup(PACKAGE_NAME ilmbase2 CONFIG_PATH share/ilmbase)
 vcpkg_fixup_pkgconfig()
+# OpenEXR.pc is to be used by port openexr3
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OpenEXR.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OpenEXR.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/OpenEXR2.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OpenEXR.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/OpenEXR2.pc")
+    endif()
+endif()
 
 vcpkg_copy_tools(
     TOOL_NAMES exrenvmap exrheader exrmakepreview exrmaketiled exrmultipart exrmultiview exrstdattr exr2aces
