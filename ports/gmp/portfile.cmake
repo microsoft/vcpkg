@@ -14,6 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 msvc_symbol.patch)
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        vcpkg_find_acquire_program(CLANG)
         set(ENV{CCAS} "clang-cl --target=arm64-pc-win32 -c")
         list(APPEND PATCHES arm64.patch)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
