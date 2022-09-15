@@ -1,0 +1,14 @@
+diff --git a/src/backend/opencl/CMakeLists.txt b/src/backend/opencl/CMakeLists.txt
+index f970da0..b543433 100644
+--- a/src/backend/opencl/CMakeLists.txt
++++ b/src/backend/opencl/CMakeLists.txt
+@@ -12,7 +12,8 @@ set_property(CACHE AF_OPENCL_BLAS_LIBRARY PROPERTY STRINGS "clBLAS" "CLBlast")
+ 
+ af_deprecate(OPENCL_BLAS_LIBRARY AF_OPENCL_BLAS_LIBRARY)
+ 
+-include(build_clFFT)
++find_package(clFFT CONFIG REQUIRED)
++add_library(clFFT::clFFT ALIAS clFFT)
+ 
+ file(GLOB kernel_src kernel/*.cl kernel/KParam.hpp)
+ 

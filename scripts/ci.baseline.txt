@@ -36,7 +36,6 @@
 
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-atk:x64-windows-static=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
 bitserializer:x64-osx=fail
@@ -576,8 +575,6 @@ live555:arm-uwp=fail
 live555:x64-osx=fail
 live555:arm64-osx=fail
 live555:x64-uwp=fail
-# fails due to an upstream bug
-llfio:arm64-windows=fail
 # fails due to an outdated gcc version
 llfio:x64-linux=fail
 llgl:arm-uwp=fail
@@ -809,9 +806,6 @@ opencv3:x64-windows-static-md = skip
 opencv3:x86-windows           = skip
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
-openexr:arm64-windows=fail
-openexr:arm-uwp=fail
-openexr:x64-uwp=fail
 opengl:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599
 openmama:x64-windows-static-md=fail
 openmesh:arm64-windows=fail
@@ -911,7 +905,6 @@ qt5-x11extras:x64-windows-static-md=fail
 qwt:x64-osx=fail
 qwt:arm64-osx=fail
 qwt-qt6:x64-osx=fail
-qwtw:x64-windows=fail
 rabit:x64-osx=fail
 rabit:arm64-osx=fail
 range-v3-vs2015:arm64-windows      = skip
