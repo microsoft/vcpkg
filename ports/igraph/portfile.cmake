@@ -34,14 +34,6 @@ elseif (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 endif()
 
-# Extra flags that are set only on some platforms go here:
-set (ADDITIONAL_FLAGS "")
-
-if (VCPKG_TARGET_IS_UWP)
-    # Treat UWP as cross-compiling, as exectuables cannot be run.
-    list(APPEND ADDITIONAL_FLAGS "-DCMAKE_CROSSCOMPILING=ON")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -58,7 +50,6 @@ vcpkg_cmake_configure(
         -DIGRAPH_USE_INTERNAL_BLAS=OFF
         -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
-        ${ADDITIONAL_FLAGS}
         ${FEATURE_OPTIONS}
 )
 
