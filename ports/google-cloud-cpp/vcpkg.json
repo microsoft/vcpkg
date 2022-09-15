@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.1.0",
-  "port-version": 2,
+  "version": "2.2.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -125,6 +124,30 @@
     },
     "automl": {
       "description": "Cloud AutoML API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "baremetalsolution": {
+      "description": "Bare Metal Solution API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "beyondcorp": {
+      "description": "BeyondCorp API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -596,6 +619,18 @@
         }
       ]
     },
+    "optimization": {
+      "description": "Cloud Optimization API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "orgpolicy": {
       "description": "Organization Policy API C++ Client Library",
       "dependencies": [
@@ -718,6 +753,18 @@
     },
     "retail": {
       "description": "Retail API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "run": {
+      "description": "Cloud Run Admin API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -935,6 +982,18 @@
     },
     "translate": {
       "description": "Cloud Translation API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "video": {
+      "description": "Video Services C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
