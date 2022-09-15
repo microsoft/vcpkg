@@ -1,0 +1,39 @@
+From bb358dd98fc84998222be485ab1d8ea6117165f4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Fri, 16 Sep 2022 00:39:30 +0200
+Subject: [PATCH] Config.cmake.in: declare static dependencies
+
+---
+ KF5AuthConfig.cmake.in | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/KF5AuthConfig.cmake.in b/KF5AuthConfig.cmake.in
+index e461162..7297123 100644
+--- a/KF5AuthConfig.cmake.in
++++ b/KF5AuthConfig.cmake.in
+@@ -9,7 +9,21 @@ set(KAUTH_HELPER_INSTALL_DIR "@KAUTH_HELPER_INSTALL_DIR@")
+ set(KAUTH_HELPER_INSTALL_ABSOLUTE_DIR "@KAUTH_HELPER_INSTALL_ABSOLUTE_DIR@")
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(KF5CoreAddons "@KF_DEP_VERSION@")
++find_dependency(KF5CoreAddons)
++
++find_dependency(Qt@QT_MAJOR_VERSION@DBus)
++
++if(NOT @KAUTH_BUILD_CODEGENERATOR_ONLY@)
++    find_dependency(Qt@QT_MAJOR_VERSION@Widgets)
++endif()
++
++if(NOT KAUTH_BACKEND_NAME AND @UNIX@ AND NOT @APPLE@)
++    find_dependency(PolkitQt@QT_MAJOR_VERSION@)
++endif()
++
++if(KAUTH_BACKEND_NAME AND NOT @KAUTH_BUILD_CODEGENERATOR_ONLY@ AND "${KAUTH_BACKEND_NAME}" STREQUAL "POLKITQT@QT_MAJOR_VERSION@-1")
++    find_dependency(PolkitQt@QT_MAJOR_VERSION@)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5AuthTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+2.37.1
+
