@@ -1970,7 +1970,7 @@
     },
     "dlib": {
       "baseline": "19.24",
-      "port-version": 1
+      "port-version": 2
     },
     "dmlc": {
       "baseline": "2019-08-12",
