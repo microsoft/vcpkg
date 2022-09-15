@@ -45,7 +45,6 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
   -DAF_FORGE_PATH=${FORGE_PATH} # forge headers for building the graphics lib
   -DAF_BUILD_FORGE=OFF
-  -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
 )
 
 # bin/dll directory for Windows non-static builds for the unified backend dll
@@ -74,12 +73,18 @@ vcpkg_cmake_configure(
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
+  OPTIONS_DEBUG
+    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/debug/share/${PORT}" # for CMake configs/targets
+  OPTIONS_RELEASE
+    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/share/${PORT}" # for CMake configs/targets
   MAYBE_UNUSED_VARIABLES
     AF_CPU_THREAD_PATH
 )
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/examples")
