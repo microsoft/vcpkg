@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.79.0",
+    $version = "1.80.0",
     $portsDir = $null
 )
 
@@ -171,10 +171,10 @@ function GeneratePortManifest() {
         $Dependencies = @()
     )
     $manifest = @{
-        "name"        = $PortName
-        "version"     = $version
-        "homepage"    = $Homepage
-        "description" = $Description
+        "name"          = $PortName
+        "version"       = $version
+        "homepage"      = $Homepage
+        "description"   = $Description
     }
     if ($License) {
         $manifest["license"] += $License
@@ -591,7 +591,7 @@ if ($updateServicePorts) {
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
         -License "MIT" `
-        -Dependencies @("boost-uninstall", "vcpkg-cmake")
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
@@ -612,7 +612,7 @@ if ($updateServicePorts) {
             -Encoding UTF8 `
             -Raw
         $content = $content -replace `
-            "set\(BOOST_VERSION [0-9\.]+\)", `
+            "set\(BOOST_VERSION [0-9\.a-zA-Z]+\)", `
             "set(BOOST_VERSION $version)"
 
         Set-Content -LiteralPath $_ `

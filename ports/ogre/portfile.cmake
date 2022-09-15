@@ -17,6 +17,7 @@ vcpkg_from_github(
         fix-dependency.patch
         disable-dependency-qt.patch
         fix-pkgconfig.patch
+        fix-cmake-feature-summary.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
