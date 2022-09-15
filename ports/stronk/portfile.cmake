@@ -8,7 +8,7 @@ vcpkg_from_git(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_INSTALL_INCLUDEDIR="${CURRENT_PACKAGES_DIR}/include"
+        "-DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include"
 )
 
 vcpkg_cmake_install()
