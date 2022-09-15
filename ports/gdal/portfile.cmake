@@ -82,6 +82,9 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
+        -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
+        -DMYSQL_LIBRARIES=unofficial::libmariadb
         -DGDAL_CHECK_PACKAGE_NetCDF_NAMES=netCDF
         -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
