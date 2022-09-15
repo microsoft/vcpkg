@@ -1,0 +1,37 @@
+From f757ef1df4e9ea0a55093d355f78019f5a3bbaba Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Fri, 16 Sep 2022 00:39:30 +0200
+Subject: [PATCH] Config.cmake.in: declare static dependencies
+
+---
+ KF5AuthConfig.cmake.in | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/KF5AuthConfig.cmake.in b/KF5AuthConfig.cmake.in
+index e461162..0d1dc9f 100644
+--- a/KF5AuthConfig.cmake.in
++++ b/KF5AuthConfig.cmake.in
+@@ -11,6 +11,20 @@ set(KAUTH_HELPER_INSTALL_ABSOLUTE_DIR "@KAUTH_HELPER_INSTALL_ABSOLUTE_DIR@")
+ include(CMakeFindDependencyMacro)
+ find_dependency(KF5CoreAddons "@KF_DEP_VERSION@")
+ 
++find_dependency(Qt@QT_MAJOR_VERSION@DBus)
++
++if(NOT @KAUTH_BUILD_CODEGENERATOR_ONLY@)
++    find_dependency(Qt@QT_MAJOR_VERSION@Widgets)
++endif()
++
++if(NOT @KAUTH_BACKEND@ AND @UNIX@)
++    find_dependency(PolkitQt@QT_MAJOR_VERSION@)
++endif()
++
++if(@KAUTH_BACKEND@ AND NOT @KAUTH_BUILD_CODEGENERATOR_ONLY@ AND @KAUTH_BACKEND@ STREQUAL "POLKITQT@QT_MAJOR_VERSION@-1")
++    find_dependency(PolkitQt@QT_MAJOR_VERSION@)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5AuthTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5AuthMacros.cmake")
+-- 
+2.37.1
+
