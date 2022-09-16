@@ -200,7 +200,6 @@ discord-rpc:x64-uwp=fail
 # requires g++11
 discordcoreapi:x64-linux=fail
 dlib:arm-uwp=fail
-dlib:arm64-windows=fail
 dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
