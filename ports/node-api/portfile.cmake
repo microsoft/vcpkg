@@ -64,7 +64,7 @@ set(npm_args
   --scripts-prepend-node-path
 
   # cmake-js arguments:
-  -- --out "${DOWNLOADS}/tmp-cmakejs-output" --arch "${cmake_js_arch}"
+  -- --out "${DOWNLOADS}/tmp-cmakejs-output" --arch "${cmake_js_arch}" --cmake-path "${CMAKE_COMMAND}"
 )
 execute_process(COMMAND "${npm_command}" ${npm_args}
   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
