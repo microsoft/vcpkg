@@ -49,15 +49,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         default-features GDAL_USE_WEBP
         core             GDAL_USE_ZLIB
         default-features GDAL_USE_ZSTD
+        tools            BUILD_APPS
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
 endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
-    FEATURES
-        tools           BUILD_APPS
-)
 
 # Compatibility with older Android versions https://github.com/OSGeo/gdal/pull/5941
 if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
@@ -91,8 +87,6 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
-    OPTIONS_RELEASE
-        ${FEATURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
 )
