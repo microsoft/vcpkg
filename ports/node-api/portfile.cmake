@@ -14,8 +14,6 @@ if(NOT NODEJS)
   message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'\nFound tools:\n${str}")
 endif()
 
-#get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
-
 if(VCPKG_HOST_IS_WINDOWS)
   set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
 else()
@@ -71,9 +69,12 @@ else()
   message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/package.json" DESTINATION "${NODEJS_DIR}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake-js-fetch" DESTINATION "${NODEJS_DIR}")
+
 set(npm_args
   # npm arguments:
-  --prefix "${CMAKE_CURRENT_LIST_DIR}"
+  --prefix "${NODEJS_DIR}"
   run cmake-js-fetch
   --scripts-prepend-node-path
 
@@ -111,3 +112,5 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-api-config.cmake" DESTINATI
 file(GLOB cmakejs_files "${NODEJS_DIR}/cmake-js*")
 file(REMOVE ${cmakejs_files})
 file(REMOVE_RECURSE "${NODEJS_DIR}/node_modules/cmake-js")
+file(REMOVE_RECURSE "${NODEJS_DIR}/cmake-js-fetch")
+file(REMOVE "${NODEJS_DIR}/package.json")
