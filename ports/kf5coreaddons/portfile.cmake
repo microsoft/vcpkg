@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF v5.98.0
     SHA512 99c86e7931d62b7af6f631103b5d6ea75d70d2977842d4e3962dbc22bbdcfe398484d74d7c58a90bd9e86c738d632a3fd68da8ece42841559e7cc48ee1431ab6
     PATCHES
-        fix_cmake_config.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
+        0001-Add-support-for-static-builds.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
