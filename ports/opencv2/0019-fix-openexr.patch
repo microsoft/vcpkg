@@ -1,0 +1,17 @@
+diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
+index 9b43066..c1cc11f 100644
+--- a/cmake/OpenCVFindLibsGrfmt.cmake
++++ b/cmake/OpenCVFindLibsGrfmt.cmake
+@@ -151,7 +151,11 @@ if(WITH_OPENEXR)
+   if(BUILD_OPENEXR)
+     ocv_clear_vars(OPENEXR_FOUND)
+   else()
+-    find_package(OpenEXR REQUIRED)
++    find_package(OpenEXR 2 CONFIG REQUIRED)
++    set(OPENEXR_LIBRARIES OpenEXR::IlmImfUtil OpenEXR::IlmImf)
++    set(OPENEXR_INCLUDE_PATHS "")
++    set(OPENEXR_VERSION "${OpenEXR_VERSION}")
++    set(OPENEXR_FOUND 1)
+   endif()
+ 
+   if(NOT OPENEXR_FOUND)
