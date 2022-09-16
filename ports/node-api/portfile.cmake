@@ -56,7 +56,7 @@ if(NOT "${npm_result}" STREQUAL "0")
   message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}\nSearch path:\n${str}")
 endif()
 
-# Precent pollution of user home directory
+# Prevent pollution of user home directory
 file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
 string(REPLACE "process.env[(os.platform() === \"win32\") ? \"USERPROFILE\" : \"HOME\"]" "\"${DOWNLOADS}/tmp-cmakejs-home\"" environment_js "${environment_js}")
 file(WRITE "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" "${environment_js}")
@@ -77,7 +77,6 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/package.json" DESTINATION "${NODEJS_BIN_DIR
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake-js-fetch" DESTINATION "${NODEJS_BIN_DIR}")
 
 set(npm_args
-
   # npm arguments:
   --prefix "${NODEJS_BIN_DIR}"
   run cmake-js-fetch
