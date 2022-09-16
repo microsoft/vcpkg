@@ -94,10 +94,12 @@ endif()
 include("${DOWNLOADS}/tmp-cmakejs-output/node.cmake")
 
 file(COPY "${CMAKE_JS_INC}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-# Non-empty only for Windows at the current version of NodeJS
+# Emptyness of the variables depends on the platform
+if(CMAKE_JS_LIB)
+  file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 if(CMAKE_JS_SRC)
   file(COPY "${CMAKE_JS_SRC}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
