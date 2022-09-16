@@ -6,12 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS KANGARU_FEATURES
+    INVERTED_FEATURES
+        hashtypeid KANGARU_HASH_TYPE_ID
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DKANGARU_EXPORT=OFF
         -DKANGARU_TEST=OFF
         -DKANGARU_REVERSE_DESTRUCTION=ON
+        ${KANGARU_FEATURES}
 )
 
 vcpkg_cmake_install()
