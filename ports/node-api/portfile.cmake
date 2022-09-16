@@ -15,16 +15,19 @@ if(NOT NODEJS)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
+  set(NODEJS_BIN_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
   set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
 else()
-  set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin")
+  set(NODEJS_BIN_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin")
+  set(NODEJS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
 endif()
-vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
+
+vcpkg_add_to_path(PREPEND "${NODEJS_BIN_DIR}")
 
 if(VCPKG_HOST_IS_WINDOWS)
-  set(npm_command "${NODEJS_DIR}/npm.cmd")
+  set(npm_command "${NODEJS_BIN_DIR}/npm.cmd")
 else()
-  set(npm_command "${NODEJS_DIR}/npm")
+  set(npm_command "${NODEJS_BIN_DIR}/npm")
 endif()
 
 file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-output")
@@ -32,9 +35,9 @@ file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-output")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
-set(npm_args --prefix "${NODEJS_DIR}" install cmake-js@7.0.0-3)
+set(npm_args --prefix "${NODEJS_BIN_DIR}" install cmake-js@7.0.0-3)
 execute_process(COMMAND "${npm_command}" ${npm_args}
-  WORKING_DIRECTORY ${NODEJS_DIR}
+  WORKING_DIRECTORY ${NODEJS_BIN_DIR}
   RESULT_VARIABLE npm_result
   OUTPUT_VARIABLE npm_output
 )
@@ -45,6 +48,7 @@ if(NOT "${npm_result}" STREQUAL "0")
   get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
   file(GLOB_RECURSE v "${PARENT_DIR}/*")
   set(str "")
+
   foreach(i ${v})
     set(str "${str} ${i}\n")
   endforeach()
@@ -53,9 +57,9 @@ if(NOT "${npm_result}" STREQUAL "0")
 endif()
 
 # Precent pollution of user home directory
-file(READ "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
+file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
 string(REPLACE "process.env[(os.platform() === \"win32\") ? \"USERPROFILE\" : \"HOME\"]" "\"${DOWNLOADS}/tmp-cmakejs-home\"" environment_js "${environment_js}")
-file(WRITE "${NODEJS_DIR}/node_modules/cmake-js/lib/environment.js" "${environment_js}")
+file(WRITE "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" "${environment_js}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(cmake_js_arch "x64")
@@ -69,12 +73,13 @@ else()
   message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/package.json" DESTINATION "${NODEJS_DIR}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake-js-fetch" DESTINATION "${NODEJS_DIR}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/package.json" DESTINATION "${NODEJS_BIN_DIR}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake-js-fetch" DESTINATION "${NODEJS_BIN_DIR}")
 
 set(npm_args
+
   # npm arguments:
-  --prefix "${NODEJS_DIR}"
+  --prefix "${NODEJS_BIN_DIR}"
   run cmake-js-fetch
   --scripts-prepend-node-path
 
@@ -100,6 +105,7 @@ if(CMAKE_JS_LIB)
   file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   file(COPY "${CMAKE_JS_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
+
 if(CMAKE_JS_SRC)
   file(COPY "${CMAKE_JS_SRC}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
@@ -111,8 +117,8 @@ file(INSTALL "${NODEJS_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 
 # Vcpkg remove doesn't remove cmake-js, so we need to remove it manually right now
-file(GLOB cmakejs_files "${NODEJS_DIR}/cmake-js*")
+file(GLOB cmakejs_files "${NODEJS_BIN_DIR}/cmake-js*")
 file(REMOVE ${cmakejs_files})
-file(REMOVE_RECURSE "${NODEJS_DIR}/node_modules/cmake-js")
-file(REMOVE_RECURSE "${NODEJS_DIR}/cmake-js-fetch")
-file(REMOVE "${NODEJS_DIR}/package.json")
+file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/node_modules/cmake-js")
+file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/cmake-js-fetch")
+file(REMOVE "${NODEJS_BIN_DIR}/package.json")
