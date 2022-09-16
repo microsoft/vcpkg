@@ -2,16 +2,7 @@ set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
 find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS)
 
 if(NOT NODEJS)
-  # TODO: remove debug messages
-  get_filename_component(PARENT_DIR "${CURRENT_HOST_INSTALLED_DIR}" DIRECTORY)
-  file(GLOB_RECURSE v "${PARENT_DIR}/*/tools/*")
-  set(str "")
-
-  foreach(i ${v})
-    set(str "${str} ${i}\n")
-  endforeach()
-
-  message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'\nFound tools:\n${str}")
+  message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'")
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -43,17 +34,7 @@ execute_process(COMMAND "${npm_command}" ${npm_args}
 )
 
 if(NOT "${npm_result}" STREQUAL "0")
-  # TODO: remove debug messages
-  get_filename_component(PARENT_DIR "${npm_command}" DIRECTORY)
-  get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
-  file(GLOB_RECURSE v "${PARENT_DIR}/*")
-  set(str "")
-
-  foreach(i ${v})
-    set(str "${str} ${i}\n")
-  endforeach()
-
-  message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}\nSearch path:\n${str}")
+  message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}")
 endif()
 
 # Prevent pollution of user home directory
