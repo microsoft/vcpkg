@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3800146..6200c78 100644
+index 3800146..61a9e60 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -80,7 +80,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE "include/saucer")
@@ -7,7 +7,7 @@ index 3800146..6200c78 100644
  
  string(TOLOWER ${saucer_backend} saucer_backed_lower)
 -configure_file("constants.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/include/saucer/constants.hpp")
-+configure_file("constants.hpp.in" "${CMAKE_CURRENT_BINARY}/include/saucer/constants.hpp")
++configure_file("constants.hpp.in" "${CMAKE_BINARY_DIR}/include/saucer/constants.hpp")
  
  # --------------------------------------------------------------------------------------------------------
  # Configure Library depending on options
@@ -15,7 +15,7 @@ index 3800146..6200c78 100644
  if (saucer_backend STREQUAL "Qt")
      target_sources(${PROJECT_NAME} PRIVATE "src/webview.qt5.cpp" "src/window.qt5.cpp")
      target_sources(${PROJECT_NAME} PRIVATE "src/webview.qt5.impl.hpp" "src/window.qt5.impl.hpp")
-+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_BINARY}/include/saucer/constants.hpp")
++    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include/saucer/constants.hpp")
  
      find_package(Qt5 COMPONENTS Widgets WebEngineWidgets WebChannel REQUIRED)
      target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets Qt5::WebEngineWidgets Qt5::WebChannel)
