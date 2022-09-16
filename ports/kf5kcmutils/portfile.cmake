@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
