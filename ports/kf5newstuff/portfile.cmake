@@ -17,6 +17,8 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
         -DBUNDLE_INSTALL_DIR=bin
+    MAYBE_UNUSED_VARIABLES
+        BUNDLE_INSTALL_DIR
 )
 
 vcpkg_cmake_install()
