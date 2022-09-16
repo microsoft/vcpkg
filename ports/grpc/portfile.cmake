@@ -5,7 +5,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.48.0
+    REF v1.49.0
     SHA512 558c659b325eb2f64f6caf78c0701eaaf3d9ae35f6d25ccd69b8995d5b82b98ca1a7ef9f497a0a1dab5914d2328c044c108373152426a15045d0c978b27f3503
     HEAD_REF master
     PATCHES
