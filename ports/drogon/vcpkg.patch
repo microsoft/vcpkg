@@ -39,11 +39,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  if (BUILD_MYSQL)
 diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
+index 9f2f1e7..09871f8 100755
 --- a/drogon_ctl/CMakeLists.txt
 +++ b/drogon_ctl/CMakeLists.txt
 @@ -19,7 +19,7 @@ add_executable(_drogon_ctl
  target_link_libraries(_drogon_ctl ${PROJECT_NAME})
- if (WIN32 AND BUILD_DROGON_SHARED)
+ if (WIN32 AND BUILD_SHARED_LIBS)
    set(DROGON_FILE $<TARGET_FILE:drogon>)
 -  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
 +  set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)

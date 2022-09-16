@@ -80,9 +80,6 @@ endforeach()
 #########################
 ## Setup Configure options
 
-# This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
-set(ENV{_CL_} "/utf-8")
-
 set(CORE_OPTIONS
     -confirm-license
     -opensource
