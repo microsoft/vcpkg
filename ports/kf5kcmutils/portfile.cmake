@@ -20,8 +20,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5KCMUtils CONFIG_PATH lib/cmake/KF5KCMUtils)
-
 vcpkg_copy_pdbs()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(LIBEXEC_FOLDER "lib/libexec")
+    set(LIBEXEC_SUBFOLDER "kf5/")
+else()
+    set(LIBEXEC_FOLDER "bin")
+    set(LIBEXEC_SUBFOLDER "")
+endif()
+
+vcpkg_copy_tools(
+    TOOL_NAMES kcmdesktopfilegenerator
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/${LIBEXEC_FOLDER}/${LIBEXEC_SUBFOLDER}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${LIBEXEC_SUBFOLDER}"
+    AUTO_CLEAN
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
