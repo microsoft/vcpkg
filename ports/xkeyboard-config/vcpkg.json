@@ -7,6 +7,6 @@
     "libx11",
     "libxslt",
     "tool-meson",
-    "xkbcommon"
+    "libxkbcommon"
   ]
 }
