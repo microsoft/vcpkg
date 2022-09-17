@@ -17,7 +17,7 @@ find_package(OpenJPEG       REQUIRED)
 find_package(WebP CONFIG    REQUIRED)
 find_package(JXR            REQUIRED)
 find_package(LibRaw         REQUIRED)
-find_package(OpenEXR 2 CONFIG REQUIRED)
+find_package(OpenEXR        REQUIRED)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(INSTALL_HEADERS "Install the development headers" ON)
@@ -107,7 +107,8 @@ target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
                                 WebP::webp WebP::webpdemux WebP::libwebpmux WebP::webpdecoder
                                 ${JXR_LIBRARIES}
                                 ${LibRaw_LIBRARIES}
-                                OpenEXR::IlmImf)
+                                OpenEXR::OpenEXR
+                                Imath::Imath)
 
 target_compile_definitions(FreeImage PRIVATE ${PNG_DEFINITIONS})
 
@@ -152,7 +153,8 @@ find_dependency(OpenJPEG)
 find_dependency(WebP CONFIG)
 find_dependency(JXR)
 find_dependency(LibRaw)
-find_dependency(OpenEXR 2 CONFIG)
+find_dependency(OpenEXR)
+find_dependency(Imath)
 include(\"\${CMAKE_CURRENT_LIST_DIR}/freeimage-targets.cmake\")
 ")
 
