@@ -6,6 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n   libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev\n\nThese can be installed on Ubuntu systems via apt-get install llibxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev")
+endif()
+
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
