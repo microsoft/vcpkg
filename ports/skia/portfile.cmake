@@ -170,6 +170,11 @@ if("vulkan" IN_LIST FEATURES)
      list(APPEND SKIA_PUBLIC_DEFINITIONS SK_VULKAN)
  endif()
 
+checkout_in_path("${EXTERNALS}/vulkanmemoryallocator"
+    "https://chromium.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator"
+    "7de5cc00de50e71a3aab22dea52fbb7ff4efceb6"
+)
+
 if(CMAKE_HOST_WIN32)
    if("direct3d" IN_LIST FEATURES)
        set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
