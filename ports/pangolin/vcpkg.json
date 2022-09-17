@@ -21,6 +21,7 @@
     "ffmpeg",
     "gui",
     "jpeg",
+    "openexr",
     "png",
     "vars",
     "video"

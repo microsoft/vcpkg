@@ -21,6 +21,8 @@
     "ktximageconverter",
     "ktximporter",
     "miniexrimageconverter",
+    "openexrimageconverter",
+    "openexrimporter",
     "opengeximporter",
     "stanfordimporter",
     "stanfordsceneconverter",

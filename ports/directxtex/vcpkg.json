@@ -18,6 +18,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "openexr"
+  ],
   "features": {
     "dx12": {
       "description": "Build with DirectX12 support for Windows 10"
