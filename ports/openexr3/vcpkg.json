@@ -18,7 +18,7 @@
     "zlib"
   ],
   "features": {
-    "tools" : {
+    "tools": {
       "description": "Build tools"
     }
   }
