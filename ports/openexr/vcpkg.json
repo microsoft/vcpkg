@@ -4,7 +4,6 @@
   "description": "A stub package that pulls in the latest ported version of openexr. Do not depend on this package.",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "openexr2",
     "openexr3"
   ]
 }
