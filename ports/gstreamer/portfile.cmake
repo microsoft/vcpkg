@@ -143,6 +143,12 @@ else()
     set(PLUGIN_BASE_X11 disabled)
 endif()
 
+if ("opus" IN_LIST FEATURES)
+    set(PLUGIN_BASE_OPUS enabled)
+else()
+    set(PLUGIN_BASE_OPUS disabled)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "shared")
 else()
@@ -203,6 +209,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:pango=disabled
         -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
         -Dgst-plugins-base:x11=${PLUGIN_BASE_X11}
+        -Dgst-plugins-base:opus=${PLUGIN_BASE_OPUS}
         ${PLUGIN_BASE_WIN}
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
