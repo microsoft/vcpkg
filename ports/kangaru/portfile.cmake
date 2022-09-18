@@ -8,7 +8,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS KANGARU_FEATURES
     INVERTED_FEATURES
-        hashtypeid KANGARU_HASH_TYPE_ID
+        globaltypeid KANGARU_HASH_TYPE_ID
 )
 
 vcpkg_cmake_configure(
