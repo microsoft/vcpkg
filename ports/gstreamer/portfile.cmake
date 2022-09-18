@@ -15,7 +15,7 @@ vcpkg_from_github(
     PATCHES gstreamer-disable-no-unused.patch fix-clang-cl-gstreamer.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch)
+    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch plugins-base-x11.patch)
     list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
     list(APPEND PLUGIN_UGLY_PATCHES plugins-ugly-disable-doc.patch)
 endif()
@@ -137,6 +137,18 @@ else()
     set(PLUGIN_GOOD_FLAC disabled)
 endif()
 
+if ("x11" IN_LIST FEATURES)
+    set(PLUGIN_BASE_X11 enabled)
+else()
+    set(PLUGIN_BASE_X11 disabled)
+endif()
+
+if ("opus" IN_LIST FEATURES)
+    set(PLUGIN_BASE_OPUS enabled)
+else()
+    set(PLUGIN_BASE_OPUS disabled)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "shared")
 else()
@@ -147,6 +159,13 @@ endif()
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path("${GIT_DIR}")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BASE_WIN
+        -Dgst-plugins-base:xvideo=disabled
+        -Dgst-plugins-base:xshm=disabled
+        -Dgst-plugins-base:gl_winsys=win32)
+endif()
 
 #
 # check scripts/cmake/vcpkg_configure_meson.cmake
@@ -189,6 +208,9 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
         -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
+        -Dgst-plugins-base:x11=${PLUGIN_BASE_X11}
+        -Dgst-plugins-base:opus=${PLUGIN_BASE_OPUS}
+        ${PLUGIN_BASE_WIN}
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-good:qt5=disabled

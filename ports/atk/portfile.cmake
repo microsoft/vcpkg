@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 set(ATK_VERSION 2.38.0)
 
 vcpkg_from_gitlab(

@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF v2.0.5
-    SHA512 65d982d7fe532a61335613f414f3b8fa5333747bdf7aefc2c2d52022d227594ade827639049b97e3c4ffae9f38f32cb15f1a17b1780fb0a943e1a3af05e2b576
+    REF 633f265f67f322cbe2c5fd11d3e46d968ac220f7  #2022-08-11
+    SHA512 0a1d79ab7d2de6894bcff33309e015fdba0ea67cf0425d75b9301a30006039e81b527178dbb3485e1adea177ffe062e6fcef74307f8e725678e70562d57d1a5b
     HEAD_REF master
     PATCHES
-        001-fix-build-path.patch
-        002-fix-crt-linkage.patch
         003-do-not-set-macosx-deployment-target.patch
+        004-fix-build-path-and-crt-linkage.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -29,6 +28,10 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
 
+        # Note that luajit's build system responds to failure by producing no output; in particular a likely outcome is
+        # only 'minilua.exe' being produced. This reuslted in:
+        # https://github.com/microsoft/vcpkg/pull/25856#issuecomment-1214285736
+        # Please ensure luajit.exe is actually produced when making future changes.
         file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/luajit.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools")
         file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
