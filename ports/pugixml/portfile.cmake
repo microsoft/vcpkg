@@ -8,10 +8,20 @@ vcpkg_from_github(
         dllexport.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        wchar       PUGIXML_WCHAR_MODE
+)
+
+if("wchar" IN_LIST FEATURES)
+    vcpkg_replace_string("${SOURCE_PATH}/src/pugiconfig.hpp" "// #define PUGIXML_WCHAR_MODE" "#define PUGIXML_WCHAR_MODE")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPUGIXML_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
