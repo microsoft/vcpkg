@@ -12,7 +12,7 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SIZEOF_VOID_P
                                         MSVC
                                         MSVC_VERSION)
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
 endif()
