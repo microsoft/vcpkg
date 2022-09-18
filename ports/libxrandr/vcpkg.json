@@ -10,6 +10,6 @@
     "libxext",
     "xorg-macros",
     "xproto",
-    "xrender"
+    "libxrender"
   ]
 }
