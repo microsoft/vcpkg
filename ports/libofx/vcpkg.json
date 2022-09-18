@@ -1,0 +1,37 @@
+{
+  "name": "libofx",
+  "version": "0.10.7",
+  "description": "OFX banking protocol abstraction library",
+  "homepage": "http://libofx.sourceforge.net",
+  "dependencies": [
+    "libopensp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "iconv"
+  ],
+  "features": {
+    "iconv": {
+      "description": "Enables ICONV support for encoding conversion",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
+    "ofx2qif": {
+      "description": "Enables OFX file to QIF (Quicken Interchange Format) file converter"
+    },
+    "ofxconnect": {
+      "description": "Enables ofxconnect utility which allows to test OFX Direct Connect"
+    },
+    "ofxdump": {
+      "description": "Enables ofxdump utility which prints, in human readable form, everything the library understands about a file"
+    }
+  }
+}
