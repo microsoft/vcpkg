@@ -14,9 +14,14 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+if (VCPKG_CROSSCOMPILING)
+    list(APPEND OPTIONS ac_cv_func_malloc_0_nonnull=yes)
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_make()
