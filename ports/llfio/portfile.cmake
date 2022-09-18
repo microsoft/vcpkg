@@ -63,6 +63,8 @@ vcpkg_cmake_configure(
         -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCXX_CONCEPTS_FLAGS=
+        -DCXX_COROUTINES_FLAGS=
         ${extra_config}
 )
 
