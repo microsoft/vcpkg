@@ -1,10 +1,10 @@
 # Be sure to update both of these versions together.
-set(SQLITE_VERSION 3370100)
-set(PKGCONFIG_VERSION 3.37.1)
-set(SQLITE_HASH b59343772dc4c6bb8e05fff6206eeb44861efa52c120c789ce6b733e974cf950657b6ab369aa405d75f45ed9cf1cb8128a76447bc63e9ce9822578d71581a7a3)
+set(SQLITE_VERSION 3390200)
+set(PKGCONFIG_VERSION 3.39.2)
+set(SQLITE_HASH a8fb7903cdc985d17b421035d6affe16795382085d7eb70428bdbbb4abc7ea6674aa251d4e532b531733c195e8867bfbd3c5556824c76cf321f8bc617bad6a32)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2021/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
     SHA512 ${SQLITE_HASH}
 )
@@ -69,4 +69,4 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sqlite3.h" "# define SQLITE_API\n" "# define SQLITE_API __declspec(dllimport)\n")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")

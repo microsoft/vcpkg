@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
+        cpl-disable-dll.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -64,6 +65,8 @@ if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGE
     list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
 endif()
 
+string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -82,6 +85,9 @@ vcpkg_cmake_configure(
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
         -DGDAL_CHECK_PACKAGE_NetCDF_NAMES=netCDF
         -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
+        -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
+        "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
+        "-DQHULL_LIBRARY=${qhull_target}"
     OPTIONS_RELEASE
         ${FEATURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG
@@ -138,14 +144,18 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-list(REMOVE_ITEM bin_files "${CURRENT_PACKAGES_DIR}/bin/gdal-config")
 if(NOT bin_files)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

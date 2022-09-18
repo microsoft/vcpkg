@@ -1,10 +1,8 @@
 # vcpkg_cmake_configure
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_cmake_configure.md).
+**The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_cmake_configure.md).**
 
 Configure a CMake-based project.
-
-This command replaces [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 
 ## Usage
 
@@ -55,16 +53,17 @@ Disables passing `/utf-8` when using the [built-in Windows toolchain][VCPKG_CHAI
 This is needed for libraries that set their own source code's character set when targeting MSVC. See the [MSVC documentation for `/utf-8`](https://docs.microsoft.com/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8) for more information.
 
 ### WINDOWS_USE_MSBUILD
-Use MSBuild instead of [Ninja][ninja] when targeting a Windows platform.
+Use MSBuild instead of another generator when targeting a Windows platform.
 
 By default vcpkg prefers to use Ninja as the CMake Generator for all platforms. However, there are edge cases where MSBuild has different behavior than Ninja. This flag should only be passed if the project requires MSBuild to build correctly.
+This flag has no effect for MinGW targets.
 
 ### GENERATOR
 Specifies the Generator to use.
 
-This is useful if the project-specific buildsystem has been wrapped in a CMake script that won't perform an actual build. If used for this purpose, it should be set to `"Ninja"`.
-
-This should not be passed alongside [`WINDOWS_USE_MSBUILD`](#windows_use_msbuild).
+By default vcpkg prefers to use Ninja as the CMake Generator for all platforms,
+or "Unix Makefiles" for non-Windows platforms when Ninja is not available.
+This parameter can be used for edge cases where project-specific buildsystems depend on a particular generator.
 
 ### LOGFILE_BASE
 An alternate root name for the configure logs.
@@ -126,6 +125,10 @@ vcpkg_cmake_install()
 ```
 
 [Search microsoft/vcpkg for Examples](https://github.com/microsoft/vcpkg/search?q=vcpkg_cmake_configure+path%3A%2Fports)
+
+## Remarks
+
+This command replaces [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 
 ## Source
 [ports/vcpkg-cmake/vcpkg\_cmake\_configure.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_configure.cmake)

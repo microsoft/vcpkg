@@ -3,9 +3,9 @@
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md).**
 
 Versioning allows you to deterministically control the precise revisions of dependencies used by
-your project from within your manifest file.
+your project from within your manifest file. Versioning only applies to [Manifest Mode](manifests.md).
 
-See our guide to [getting started with versioning](../examples/versioning.getting-started.md).
+For an example with context, see our guide to [getting started with versioning](../examples/versioning.getting-started.md).
 
 ## Contents
 
@@ -17,6 +17,7 @@ See our guide to [getting started with versioning](../examples/versioning.gettin
 * [Version constraints](#version-constraints)
   * [Baselines](#baselines)
   * [`version>=`](#version-gte)
+  * [`overrides`](#overrides)
 
 ## Version schemes
 Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
@@ -141,6 +142,7 @@ Example:
 
 As part of a version constraint declaration, a port version can be specified by adding the suffix `#<port-version>`, in the previous example `1.2.11#9` refers to version `1.2.11` port version `9`.
 
+<a id="overrides"></a>
 ### `overrides`
 Declaring an override forces vcpkg to ignore all other version constraints and use the version specified in the override. This is useful for pinning exact versions and for resolving version conflicts.
 

@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c07732..54b4b23 100644
+index 25990a5d8a..ba8df92858 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -321,6 +321,11 @@ include(cmake/ssl.cmake)
- include(cmake/upb.cmake)
- include(cmake/xxhash.cmake)
+@@ -326,6 +326,11 @@ include(cmake/xxhash.cmake)
  include(cmake/zlib.cmake)
-+ 
+ include(cmake/download_archive.cmake)
+ 
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)
 +endif()
- 
- if(WIN32)
-   set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32 gdi32)
++
+ # Setup external proto library at third_party/envoy-api with 2 download URLs
+ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/envoy-api)
+   # Download the archive via HTTP, validate the checksum, and extract to third_party/envoy-api.

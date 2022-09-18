@@ -1,6 +1,6 @@
 {
   "name": "ogre-next",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
   "license": "MIT",

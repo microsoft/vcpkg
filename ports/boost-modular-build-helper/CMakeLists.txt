@@ -9,7 +9,7 @@ set(USER_CONFIG_TOOLSET_OPTIONS "")
 set(USER_CONFIG_EXTRA_LINES "")
 set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS)
+set(B2_OPTIONS "")
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -40,6 +40,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
     list(APPEND B2_OPTIONS architecture=power)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
     list(APPEND B2_OPTIONS architecture=loongarch)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
+    list(APPEND B2_OPTIONS architecture=mips64)
 elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
     list(APPEND B2_OPTIONS architecture=arm+x86)
 else()
@@ -77,6 +79,8 @@ elseif(APPLE)
     endif()
 elseif(ANDROID)
     list(APPEND B2_OPTIONS target-os=android)
+elseif(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    list(APPEND B2_OPTIONS target-os=freebsd)
 else()
     list(APPEND B2_OPTIONS target-os=linux)
 endif()
@@ -106,7 +110,7 @@ if(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(JOIN libpath_args " " libpath_arg)
     string(APPEND COMPILEFLAGS " ${libpath_arg} /D_WIN32_WINNT=0x0A00")
     list(APPEND B2_OPTIONS windows-api=store)
-    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib) # TODO: Fix this; Probably should use a VCPKG_DETECTED_ variable and also be applied in the !store case
 endif()
 
 set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
@@ -117,9 +121,22 @@ string(APPEND CFLAGS "${COMPILEFLAGS}")
 foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
     string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
     string(REPLACE [["]] [[\"]] ${var} "${${var}}")
+    if(WIN32)
+        # env variables need extra %%var%% to be not expanded early
+        string(REGEX REPLACE [[(%[^%]+%)]] [[%\1%]] ${var} "${${var}}")
+        # remove PDB flag, until the pdb install rule of boost-build can be deactivated. 
+        string(REGEX REPLACE "-PDB:[^ ]+" "" ${var} "${${var}}") 
+    endif()
     string(REGEX REPLACE "[ \t\r\n]+" " " ${var} "${${var}}")
     string(STRIP "${${var}}" ${var})
 endforeach()
+
+if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
+    list(APPEND B2_OPTIONS
+            debug-store=database
+            pch=off
+        )
+endif()
 
 if(USER_CONFIG_TOOLSET STREQUAL "msvc")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
@@ -210,6 +227,15 @@ if(WITH_PYTHON3)
     list(APPEND python_versions "${python3_version}")
 endif()
 
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        list(APPEND B2_OPTIONS "python-debugging=on")
+    endif()
+endif()
+
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
@@ -224,11 +250,6 @@ if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
             "   <find-shared-library>openmpi ;\n"
         )
     endif()
-endif()
-
-if(NOT python_versions STREQUAL "")
-    list(JOIN python_versions "," python_versions)
-    list(APPEND B2_OPTIONS "python=${python_versions}")
 endif()
 
 # Include port specific CMake fragment

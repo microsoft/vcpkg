@@ -1,6 +1,6 @@
 {
   "name": "qt5-script",
-  "version": "5.15.5",
+  "version": "5.15.6",
   "description": "Qt5 Script Module.",
   "license": null,
   "dependencies": [

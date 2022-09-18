@@ -1,6 +1,7 @@
 {
   "name": "kf5diagram",
   "version": "2.8.0",
+  "port-version": 1,
   "description": "Powerful libraries (KChart, KGantt) for creating business diagrams",
   "homepage": "https://api.kde.org/kdiagram/index.html",
   "dependencies": [
