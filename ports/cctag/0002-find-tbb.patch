@@ -1,17 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 95821ac..a5f30e1 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -238,8 +238,7 @@ endif()
- 
- # FIND Intel TBB
- # With MVSC, CMAKE_BUILD_TYPE will always be None, so TBB_USE_DEBUG_BUILD will always be false.
--string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" Debug TBB_USE_DEBUG_BUILD)
--find_package(TBB REQUIRED)
-+find_package(TBB CONFIG REQUIRED)
- 
- add_subdirectory(src)
- 
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index c5a82c0..3ce4719 100644
 --- a/cmake/Config.cmake.in
@@ -25,18 +11,10 @@ index c5a82c0..3ce4719 100644
  find_dependency(Eigen3 @CCTAG_EIGEN_REQUIRED_VERSION@)
  find_dependency(Boost 1.66 REQUIRED COMPONENTS @BOOST_REQUIRED_COMPONENTS@)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7b64b83..e72647a 100644
+index 7b64b83..5398ed4 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -166,7 +166,6 @@ if(CCTAG_WITH_CUDA)
-   # INCLUDE_DIRECTORIES -- "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
-   include_directories(${CMAKE_CURRENT_LIST_DIR}
-           ${OpenCV_INCLUDE_DIRS} ${Eigen_INCLUDE_DIR}
--          ${TBB_INCLUDE_DIRS}
-           "${CMAKE_SOURCE_DIR}/src")
- 
-   CUDA_ADD_LIBRARY(CCTag ${CUDA_cpp} ${CUDA_cu} ${CCTag_cpp})
-@@ -176,15 +175,15 @@ if(CCTAG_WITH_CUDA)
+@@ -176,7 +176,8 @@ if(CCTAG_WITH_CUDA)
                         ${OpenCV_LIBS}
                         Boost::date_time Boost::chrono Boost::thread Boost::serialization Boost::system Boost::filesystem Boost::atomic Boost::program_options Boost::timer Boost::math_c99
                         Eigen3::Eigen
@@ -46,24 +24,16 @@ index 7b64b83..e72647a 100644
  
    if(NOT MSVC)
     target_link_libraries(CCTag pthread dl)
-   endif()
+@@ -184,7 +185,7 @@ if(CCTAG_WITH_CUDA)
  
    target_compile_definitions(CCTag
--                         PUBLIC -DCCTAG_WITH_CUDA
+                          PUBLIC -DCCTAG_WITH_CUDA
 -                         PRIVATE ${TBB_DEFINITIONS})
-+                         PUBLIC -DCCTAG_WITH_CUDA)
++)
  
    if(CCTAG_HAVE_SHFL_DOWN_SYNC)
      target_compile_definitions(CCTag PRIVATE "-DCCTAG_HAVE_SHFL_DOWN_SYNC")
-@@ -213,23 +212,20 @@ else() # without CUDA
-                            PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
-                                   "$<BUILD_INTERFACE:${generated_dir}>"
-                                   "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>"
--                           PUBLIC ${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
--                           PRIVATE ${TBB_INCLUDE_DIRS})
-+                           PUBLIC ${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
- 
-   # just for testing
+@@ -220,16 +221,13 @@ else() # without CUDA
  #  get_target_property(testprop CCTag INTERFACE_INCLUDE_DIRECTORIES )
  #  message(STATUS "testprop: ${testprop}")
  
@@ -77,30 +47,15 @@ index 7b64b83..e72647a 100644
                            Boost::atomic Boost::chrono Boost::date_time Boost::filesystem Boost::serialization Boost::system Boost::thread Boost::timer Boost::math_c99
 -                        PRIVATE
 -                          ${TBB_LIBRARIES})
-+                          TBB::tbb
-+                          )
++                          TBB::tbb)
  
    if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
      target_link_libraries(CCTag PRIVATE pthread dl)
 diff --git a/src/applications/CMakeLists.txt b/src/applications/CMakeLists.txt
-index 506d19b..aba3e1d 100644
+index 506d19b..c7154fc 100644
 --- a/src/applications/CMakeLists.txt
 +++ b/src/applications/CMakeLists.txt
-@@ -59,8 +59,7 @@ find_package(OpenCV REQUIRED core videoio imgproc imgcodecs highgui)
- 
- # TBB
- if(NOT TBB_FOUND)
--  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
--  find_package(TBB REQUIRED)
-+  find_package(TBB CONFIG REQUIRED)
- else()
-   message(STATUS "TBB already there")
- endif()
-@@ -82,11 +81,10 @@ find_package(DevIL COMPONENTS IL ILU) # yields IL_FOUND, IL_LIBRARIES, IL_INCLUD
- 
- target_include_directories(detection PUBLIC
-   ${OpenCV_INCLUDE_DIRS}
--  ${TBB_INCLUDE_DIRS}
+@@ -86,7 +86,7 @@ target_include_directories(detection PUBLIC
    )
  target_link_libraries(detection PUBLIC
    CCTag::CCTag
