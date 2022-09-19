@@ -13,11 +13,17 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
+vcpkg_find_acquire_program(PYTHON3)
+
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
     PACKAGES typing-extensions pyyaml
     OUT_PYTHON_VAR PYTHON3
 )
+# Make the configure step use same Python executable
+get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
+vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SOURCE_PATH}/cmake")
@@ -105,6 +111,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DPython3_EXECUTABLE="${PYTHON3}"
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
