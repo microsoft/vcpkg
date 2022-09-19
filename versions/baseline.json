@@ -209,7 +209,7 @@
       "port-version": 1
     },
     "assimp": {
-      "baseline": "5.2.4",
+      "baseline": "5.2.5",
       "port-version": 0
     },
     "asynch": {
