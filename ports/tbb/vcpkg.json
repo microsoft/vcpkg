@@ -4,7 +4,7 @@
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/01org/tbb",
   "license": "Apache-2.0",
-  "supports": "!(windows & uwp) | linux | osx",
+  "supports": "(windows & !uwp) | linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
