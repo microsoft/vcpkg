@@ -6441,8 +6441,8 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "2019-03-05",
-      "port-version": 3
+      "baseline": "0.7.1",
+      "port-version": 0
     },
     "robin-hood-hashing": {
       "baseline": "3.11.5",
