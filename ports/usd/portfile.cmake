@@ -3,7 +3,8 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 message(STATUS [=[
 The usd port does not work the the version of Threading Building Blocks (tbb) currently chosen by vcpkg's baselines,
-and does not expect to be updated to work with current versions soon.
+and does not expect to be updated to work with current versions soon. See
+https://github.com/PixarAnimationStudios/USD/issues/1600
 
 If you must use this port in your project, pin a version of tbb of 2020_U3 or older via a manifest file.
 See https://vcpkg.io/en/docs/examples/versioning.getting-started.html for instructions.
