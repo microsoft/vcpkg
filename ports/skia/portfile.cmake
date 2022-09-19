@@ -355,17 +355,24 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
     "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false
     "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
+
+message(STATUS "Installing HACK: ${CURRENT_PACKAGES_DIR}/include/${PORT}/modules")
+file(COPY "${SOURCE_PATH}/modules/skcms/skcms.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/modules/skcms")
+
 foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
+    vcpkg_replace_string("${file_}" "#include \"modules/" "#include \"${PORT}/modules/")
 endforeach()
 
 # get a list of library dependencies for TARGET
 function(gn_desc_target_libs OUTPUT BUILD_DIR TARGET)
-    z_vcpkg_install_gn_get_desc("${OUTPUT}"
+    z_vcpkg_install_gn_get_desc(OUTPUT_
         SOURCE_PATH "${SOURCE_PATH}"
         BUILD_DIR "${BUILD_DIR}"
         TARGET "${TARGET}"
         WHAT_TO_DISPLAY libs)
+    set(${OUTPUT} ${OUTPUT_} PARENT_SCOPE)
 endfunction()
 
 function(gn_desc_target_defines OUTPUT BUILD_DIR TARGET)
