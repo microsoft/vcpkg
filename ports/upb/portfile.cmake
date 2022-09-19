@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-make-cmakelists-py.patch
         0002-fix-uwp.patch
+		0003-fix-pointer-alignment.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
