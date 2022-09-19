@@ -284,7 +284,6 @@ gsoap:x86-windows        = skip
 gsoap:x64-windows-static = skip
 gsoap:x64-windows-static-md = skip
 
-geogram:arm64-windows=fail
 # Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
 geotrans:x64-linux           = skip
