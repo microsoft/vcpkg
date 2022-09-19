@@ -3013,7 +3013,7 @@
       "port-version": 4
     },
     "igraph": {
-      "baseline": "0.9.10",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "iir1": {
