@@ -1,12 +1,12 @@
 set(GDK_PIXBUF_VERSION 2.42)
-set(GDK_PIXBUF_PATCH 8)
+set(GDK_PIXBUF_PATCH 9)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gdk-pixbuf
     REF "${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}"
-    SHA512 ea3b7d47f2ef3dbb88f640629e03eb4fab4a371da2545c199274d75b993b176af0c69ea72b46d5fadf58f82dff9a809fe1e0a4802ad1f1f13eaa9d757ebfeb4c
+    SHA512 3406f47b413fe3860df410a0cc0076ce47d10605b39347105690c85616739e67e5dfd0804efcad758614b0c8d1369e410b9efaa704a234bfd19686b82595b9e1
     HEAD_REF master
     PATCHES
         fix_build_error_windows.patch
@@ -26,6 +26,7 @@ vcpkg_configure_meson(
         -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Dintrospection=disabled    # Whether to generate the API introspection data (requires GObject-Introspection)
         -Drelocatable=true          # Whether to enable application bundle relocation support
+        -Dtests=false
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
@@ -43,15 +44,13 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc")
 if(EXISTS "${_file}")
     file(READ "${_file}" _contents)
-    string(REPLACE [[${bindir}]] "\${bindir}/../../tools/${PORT}" _contents "${_contents}")
-    string(REPLACE [[gdk_pixbuf_binarydir=${libdir}/gdk-pixbuf-2.0/2.10.0]] "gdk_pixbuf_binarydir=\${libdir}/../gdk-pixbuf-2.0/2.10.0" _contents "${_contents}")
+    string(REPLACE [[${bindir}]] "\${prefix}/../tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdk-pixbuf-2.0.pc")
 if(EXISTS "${_file}")
     file(READ "${_file}" _contents)
-    string(REPLACE [[${bindir}]] "\${bindir}/../tools/${PORT}" _contents "${_contents}")
-    string(REPLACE [[gdk_pixbuf_binarydir=${libdir}/gdk-pixbuf-2.0/2.10.0]] "gdk_pixbuf_binarydir=\${libdir}/../gdk-pixbuf-2.0/2.10.0" _contents "${_contents}")
+    string(REPLACE [[${bindir}]] "\${prefix}/tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
 

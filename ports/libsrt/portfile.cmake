@@ -14,14 +14,15 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tool ENABLE_APPS
+        bonding ENABLE_BONDING
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DENABLE_CXX11=ON
-        -DENABLE_SHARED=${KEYSTONE_BUILD_STATIC}
-        -DENABLE_STATIC=${KEYSTONE_BUILD_SHARED}
+        -DENABLE_STATIC=${KEYSTONE_BUILD_STATIC}
+        -DENABLE_SHARED=${KEYSTONE_BUILD_SHARED}
         -DENABLE_UNITTESTS=OFF
         -DUSE_OPENSSL_PC=OFF
 )
@@ -30,7 +31,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
