@@ -1,6 +1,6 @@
 {
   "name": "coost",
-  "version-semver": "3.0.0",
+  "version": "3.0.0",
   "description": "A tiny boost library in C++11.",
   "homepage": "https://github.com/idealvin/coost",
   "license": "MIT",
