@@ -4417,7 +4417,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2022-09-08",
+      "baseline": "2022-09-18",
       "port-version": 0
     },
     "llgl": {
@@ -4994,7 +4994,7 @@
     },
     "ned14-internal-quickcpplib": {
       "baseline": "2022-09-08",
-      "port-version": 0
+      "port-version": 1
     },
     "neon2sse": {
       "baseline": "2021-09-16",
@@ -5466,7 +5466,7 @@
     },
     "outcome": {
       "baseline": "2.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
