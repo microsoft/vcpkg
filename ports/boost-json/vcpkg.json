@@ -1,6 +1,6 @@
 {
   "name": "boost-json",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost json module",
   "homepage": "https://github.com/boostorg/json",
   "license": "BSL-1.0",
@@ -14,7 +14,6 @@
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-exception",
     {
       "name": "boost-modular-build-helper",
       "host": true
