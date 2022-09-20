@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.3.0)
 
 project(Vlpp VERSION 0.10.0.0 LANGUAGES CXX)
 
+option(SKIP_HEADERS "Skip header installation" OFF)
+
 # Sources
 set(SRCS
   Import/Vlpp.cpp
@@ -18,23 +20,29 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 # Create and configure the target
-add_library(Vlpp ${SRCS})
+add_library(Vlpp INTERFACE ${SRCS})
 
 # target_compile_definitions
-target_compile_definitions(Vlpp PRIVATE UNICODE)
-target_compile_definitions(Vlpp PRIVATE _UNICODE)
+target_compile_definitions(Vlpp INTERFACE UNICODE)
+target_compile_definitions(Vlpp INTERFACE _UNICODE)
 
-target_include_directories(Vlpp PRIVATE ${PROJECT_SOURCE_DIR}/Import)
+target_include_directories(Vlpp INTERFACE $<INSTALL_INTERFACE:Import>)
 
 # Install
 install(
   TARGETS Vlpp
+  EXPORT unofficial-vlpp
   RUNTIME DESTINATION "bin"
   LIBRARY DESTINATION "lib"
   ARCHIVE DESTINATION "lib"
-  )
+)
 
-if (NOT DEFINED SKIP_HEADERS)
+install(EXPORT unofficial-vlpp
+    NAMESPACE unofficial::vlpp::
+    DESTINATION share/unofficial-vlpp
+)
+
+if (NOT SKIP_HEADERS)
   install(
       FILES
         Import/Vlpp.h
