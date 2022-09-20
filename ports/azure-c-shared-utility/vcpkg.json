@@ -6,7 +6,6 @@
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "license": "MIT",
   "supports": "!uwp",
-  "builtin-baseline": "e0c6c99ce8ed8bdfb77dc3d316c80d2a2d9f0d02",
   "dependencies": [
     "azure-macro-utils-c",
     {

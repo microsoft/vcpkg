@@ -4,7 +4,6 @@
   "description": "A C99 SDK for connecting devices to Microsoft Azure IoT services",
   "homepage": "https://github.com/Azure/azure-iot-sdk-c",
   "license": "MIT",
-  "builtin-baseline": "925f9f413df132b876639d7abdaa599806e5b039",
   "dependencies": [
     "azure-c-shared-utility",
     "azure-macro-utils-c",
