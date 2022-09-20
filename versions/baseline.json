@@ -7068,6 +7068,10 @@
       "baseline": "1.6.0",
       "port-version": 0
     },
+    "stronk": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "strtk": {
       "baseline": "2020-09-14",
       "port-version": 1
