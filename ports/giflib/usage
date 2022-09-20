@@ -1,0 +1,4 @@
+giflib provides CMake targets:
+
+    find_package(GIF REQUIRED)
+    target_link_libraries(main PRIVATE GIF::GIF)
