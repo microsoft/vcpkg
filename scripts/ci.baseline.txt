@@ -145,13 +145,6 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-
-# there is an ICE in VS2022 with colmap in release mode
-colmap:x86-windows=fail
-colmap:x64-windows=fail
-colmap:x64-windows-static=fail
-colmap:x64-windows-static-md=fail
-
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -329,11 +322,6 @@ gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
 graphicsmagick:arm-uwp=fail
 graphicsmagick:x64-uwp=fail
-# graphicsmagick non-uwp trigger an ICE in VS 2022 17.3 https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1557251
-graphicsmagick:x86-windows=fail
-graphicsmagick:x64-windows=fail
-graphicsmagick:x64-windows-static=fail
-graphicsmagick:x64-windows-static-md=fail
 gstreamer:x64-osx=fail
 gstreamer:arm64-osx=fail
 gtk:x64-windows-static=fail
@@ -613,9 +601,6 @@ mesa:x64-windows-static=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-# Triggers an ICE
-mfl:x64-windows-static=fail
-mfl:x64-windows-static-md=fail
 mfl:x64-linux=skip
 mfl:x64-osx=skip
 mfl:arm64-osx=skip
