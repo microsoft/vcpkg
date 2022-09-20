@@ -8,11 +8,11 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
     compiling to Linux from Windows for example, but that use case probably
     isn't very common
     ]]
-    if (CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW)
+    if (CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
         find_program(NMAKE nmake REQUIRED)
         vcpkg_execute_required_process(
-            COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean sqlite3.c
+            COMMAND "${NMAKE}" -f Makefile.msc /A /NOLOGO clean sqlite3.c
             TCLSH_CMD="${TCLSH_CMD}"
             ORIGINAL_SRC="${SOURCE_PATH_NAT}"
             WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -26,12 +26,20 @@ function(sqlcipher_generate_amalgamation SOURCE_PATH)
             set(SHELL "sh")
         endif()
         vcpkg_execute_required_process(
-            COMMAND ${SHELL} ${SOURCE_PATH}/configure --with-crypto-lib=none TCLSH_CMD="${TCLSH_CMD}"
+            COMMAND "${SHELL}" "${SOURCE_PATH}/configure" --with-crypto-lib=none TCLSH_CMD="${TCLSH_CMD}"
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-configure-${TARGET_TRIPLET}
         )
+
+        find_program(MAKE gmake)
+        if (NOT MAKE)
+            find_program(MAKE make)
+        endif()
+        if (NOT MAKE)
+            message(FATAL_ERROR "Cannot find make or gmake, please install it from your package manager")
+        endif()
         vcpkg_execute_required_process(
-            COMMAND make sqlite3.c
+            COMMAND "${MAKE}" sqlite3.c
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME amalgamation-make-${TARGET_TRIPLET}
         )
