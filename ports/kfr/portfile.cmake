@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DREGENERATE_TESTS=OFF
         -DKFR_EXTENDED_TESTS=OFF
         -DSKIP_TESTS=ON
+        -DCPU_ARCH=generic
         ${FEATURE_OPTIONS}
 )
 
