@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS KANGARU_FEATURES
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         globaltypeid KANGARU_HASH_TYPE_ID
 )
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
         -DKANGARU_EXPORT=OFF
         -DKANGARU_TEST=OFF
         -DKANGARU_REVERSE_DESTRUCTION=ON
-        ${KANGARU_FEATURES}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
