@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
         fix-clang-cl-bad.patch
         fix-clang-cl-ugly.patch
         gstreamer-disable-no-unused.patch
+        srtp_fix.patch
         ${PATCHES}
 )
 
@@ -160,6 +161,7 @@ vcpkg_configure_meson(
         -Dgstreamer:doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
+        -Dgstreamer:gst_debug=true
         # gst-plugins-base
         -Dbase=${PLUGIN_BASE_SUPPORT}
         -Dgst-plugins-base:default_library=${LIBRARY_LINKAGE}
@@ -202,6 +204,8 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:introspection=disabled
         -Dgst-plugins-bad:nls=disabled
         -Dgst-plugins-bad:orc=disabled
+        -Dgst-plugins-bad:dtls=enabled
+        -Dgst-plugins-bad:srtp=enabled
         # gst-plugins-ugly
         -Dugly=${PLUGIN_UGLY_SUPPORT}
         -Dgst-plugins-ugly:default_library=${LIBRARY_LINKAGE}
@@ -232,10 +236,7 @@ vcpkg_configure_meson(
         -Ddoc=disabled
         -Dgtk_doc=disabled
         -Ddevtools=disabled
-    OPTIONS_DEBUG
-        -Dgstreamer:gst_debug=true # plugins will reference this value
     OPTIONS_RELEASE
-        -Dgstreamer:gst_debug=false
         -Dgstreamer:gobject-cast-checks=disabled
         -Dgstreamer:glib-asserts=disabled
         -Dgstreamer:glib-checks=disabled
@@ -280,20 +281,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
     )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if (NOT VCPKG_BUILD_TYPE)
-        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
-                           "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
-        )
-        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
-    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
-                       "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
-    )
-    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
 
 # vcpkg errors if pkgconfig files aren't in the standard directory, so we move them to keep it happy.

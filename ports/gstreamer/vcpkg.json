@@ -82,6 +82,7 @@
       "description": "'Bad' GStreamer plugins and helper libraries",
       "dependencies": [
         "libnice",
+        "libsrtp",
         "openh264"
       ]
     },
