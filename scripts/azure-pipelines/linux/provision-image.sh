@@ -66,6 +66,9 @@ APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 # Additionally required by bond
 APT_PACKAGES="$APT_PACKAGES haskell-stack"
 
+# Additionally required by intel-mkl
+APT_PACKAGES="$APT_PACKAGES intel-mkl"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
 
