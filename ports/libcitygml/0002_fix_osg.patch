@@ -1,0 +1,13 @@
+diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
+--- a/osgplugin/CMakeLists.txt	2022-09-20 20:32:38.436875800 +0800
++++ b/osgplugin/CMakeLists.txt	2022-09-20 20:56:48.175829800 +0800
+@@ -1,7 +1,8 @@
+ set(target osgdb_citygml)
+ 
+ set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS ON)
+-find_package( OpenSceneGraph REQUIRED osgDB osgViewer osgGA osgUtil osgText)
++find_package(OPENSCENEGRAPH NAMES unofficial-osg) 
++set(OPENSCENEGRAPH_LIBRARIES unofficial::osg::osg unofficial::osg::osgDB unofficial::osg::osgViewer unofficial::osg::osgUtil unofficial::osg::osgText)
+ 
+ include_directories(
+   ${OPENSCENEGRAPH_INCLUDE_DIRS}
