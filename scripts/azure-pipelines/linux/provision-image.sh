@@ -70,7 +70,7 @@ APT_PACKAGES="$APT_PACKAGES haskell-stack"
 APT_PACKAGES="$APT_PACKAGES intel-mkl"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu66"
 
 apt-get -y install $APT_PACKAGES
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
