@@ -25,7 +25,8 @@
   ],
   "features": {
     "commoncrypto": {
-      "description": "Use the commoncrypto encryption backend"
+      "description": "Use the commoncrypto encryption backend",
+      "supports": "osx"
     },
     "fts3": {
       "description": "Enable the FTS3 extension"
@@ -64,7 +65,8 @@
       "description": "Use the nss encryption backend",
       "dependencies": [
         "nss"
-      ]
+      ],
+      "support": "!windows"
     },
     "omit-load-extension": {
       "description": "Enable loading of external extensions"

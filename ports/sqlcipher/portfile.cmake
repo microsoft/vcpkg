@@ -55,10 +55,6 @@ elseif (ENCRYPTION_BACKENDS GREATER 1)
     message(FATAL_ERROR "Cannot specify multiple encryption backends")
 endif()
 
-if (WITH_COMMONCRYPTO AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
-    message(FATAL_ERROR "The CommonCrypto backend can only be used on Apple targets")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
