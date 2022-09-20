@@ -7478,7 +7478,7 @@
     },
     "upb": {
       "baseline": "2022-04-04",
-      "port-version": 0
+      "port-version": 1
     },
     "urdfdom": {
       "baseline": "3.1.0",
