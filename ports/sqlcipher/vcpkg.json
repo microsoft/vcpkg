@@ -66,7 +66,7 @@
       "dependencies": [
         "nss"
       ],
-      "support": "!windows"
+      "supports": "!windows"
     },
     "omit-load-extension": {
       "description": "Enable loading of external extensions"
