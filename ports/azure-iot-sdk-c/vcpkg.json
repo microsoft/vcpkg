@@ -1,6 +1,6 @@
 {
   "name": "azure-iot-sdk-c",
-  "version-date": "2022-07-18",
+  "version-date": "2022-09-15",
   "description": "A C99 SDK for connecting devices to Microsoft Azure IoT services",
   "homepage": "https://github.com/Azure/azure-iot-sdk-c",
   "license": "MIT",
@@ -67,11 +67,5 @@
     "use-prov-client": {
       "description": "Enables device provisioning client for DPS"
     }
-  },
-  "overrides": [
-    {
-      "name": "openssl",
-      "version-string": "1.1.1n"
-    }
-  ]
+  }
 }

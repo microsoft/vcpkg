@@ -1,6 +1,6 @@
 {
   "name": "azure-c-shared-utility",
-  "version-date": "2022-07-18",
+  "version-date": "2022-09-15",
   "port-version": 3,
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
@@ -53,11 +53,5 @@
         }
       ]
     }
-  },
-  "overrides": [
-    {
-      "name": "openssl",
-      "version-string": "1.1.1n"
-    }
-  ]
+  }
 }

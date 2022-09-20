@@ -14,8 +14,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF f07e04f3ae007bd90b51cb8a931bacaa8590ab43
-        SHA512 308bda3b9c965be40d1c2dbe5c94fc2d4ae5b0b60b30eb693f9a5dd8b8be2ba0991e8e6fda4b42b0b535cf735ef6e1d5b97e4db95d06df54aa50c756232576af
+        REF 2b86b92628e55c9597aef8b96b0a73048ef072b3
+        SHA512 bc4cadaf4f64ffff4d8839fe8f604b77d6a912ab28b6100df93f4c7fbc96fa68a4e09b4670d27d078aac32a2d7792c408aa78a580328c02759c7a1c04d82d721
         HEAD_REF master
     )
 endif()
