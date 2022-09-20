@@ -3,12 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v2.0.6
-    SHA512 be631f34064c28d81876bf137c796e9736623cf2cc4f2a05dd45372e7195729c99fad1fa795f8ce71a408756a842edbdc0c3bc714a7cf63203a1de8681d86fb6
+    REF v2.0.8
+    SHA512 005066ec08691fcc49e398ce29e07b3a92f12482d79933e027ab343ca44bc2ea9a0fd69690e98414363c1290640fe97c2a64fd98611464ac3fb62912fb91ce1b
     HEAD_REF master
     PATCHES
-        ignore_use_of_cmake_toolchain_file.patch
-        no-werror.patch
         fix-uwp-build.patch
 )
 
