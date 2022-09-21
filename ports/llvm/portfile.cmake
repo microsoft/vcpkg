@@ -1,4 +1,4 @@
-set(LLVM_VERSION "14.0.4")
+set(LLVM_VERSION "15.0.1")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,16 +6,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${LLVM_VERSION}
-    SHA512 e14e6c3a1915a96e9ddc609f16ca3a398ca6f7fd0a691dadaa24490078a661340e845cb2d18f3679de4f47300bb822c33ae69548af6a0370d55737831a28b959
+    SHA512 d518de4860bd953c4728f00cb52aba37e1e8c2a0825b0a6cc046494f2ad4d1e1d07d36524c2aca87c7f27a5c07c21cdcf18ac73a03c2eed813ca46d24f31f445
     HEAD_REF main
     PATCHES
-        0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0004-fix-dr-1734.patch
-        0005-fix-tools-path.patch
-        0007-fix-compiler-rt-install-path.patch
-        0009-fix-tools-install-path.patch
-        0010-fix-libffi.patch
-        0011-fix-install-bolt.patch
+        0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
+        0002-Fix-DR-1734.patch
+        0003-Fix-tools-path.patch
+        0004-Fix-compiler-rt-install-path.patch
+        0005-Fix-tools-install-path.patch
+        0006-Fix-libffi.patch
+        0007-Fix-install-bolt.patch
 )
 
 vcpkg_check_features(
