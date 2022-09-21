@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b45edd..8af193f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,6 +76,17 @@ endif ()
+ 
+ if (CPU_ARCH STREQUAL "detect" AND X86)
+     message(STATUS "Detecting native cpu...")
++    if (NOT detect_cpu_info)
++        add_executable(detect_cpu_info "${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_cpu.cpp")
++        target_include_directories(detect_cpu_info PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
++        if (MSVC)
++            target_compile_options(detect_cpu_info PRIVATE /stdc++=17)
++        else()
++            target_compile_options(detect_cpu_info PRIVATE -std=cxx17)
++        endif()
++        
++        install(TARGETS detect_cpu_info RUNTIME DESTINATION bin)
++
+     try_run(
+         RUN_RESULT COMPILE_RESULT "${CMAKE_CURRENT_BINARY_DIR}/tmpdir"
+         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_cpu.cpp
+@@ -85,6 +96,11 @@ if (CPU_ARCH STREQUAL "detect" AND X86)
+             -DCMAKE_CXX_EXTENSIONS=ON
+         COMPILE_OUTPUT_VARIABLE COMPILE_OUT
+         RUN_OUTPUT_VARIABLE RUN_OUT)
++    else()
++        set(COMPILE_RESULT 0)
++        execute_process(COMMAND "${detect_cpu_info}" RESULT_VARIABLE RUN_RESULT OUTPUT_VARIABLE RUN_OUT)
++    endif()
++    
+     if (COMPILE_RESULT AND RUN_RESULT EQUAL 0)
+         message(STATUS DETECTED_CPU = ${RUN_OUT})
+         set(CPU_ARCH

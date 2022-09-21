@@ -8,6 +8,10 @@
   "supports": "!(arm | linux)",
   "dependencies": [
     {
+      "name": "kfr",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     }
