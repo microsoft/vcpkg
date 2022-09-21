@@ -30,6 +30,7 @@ vcpkg_check_features(
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
         enable-threads LLVM_ENABLE_THREADS
+        enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
 )

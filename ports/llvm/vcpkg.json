@@ -152,6 +152,12 @@
         "libffi"
       ]
     },
+    "enable-ios": {
+      "description": "Build compiler-rt for iOS SDK.",
+      "dependencies": [
+        "target-arm"
+      ]
+    },
     "enable-libxml2": {
       "description": "Build with LibXml2.",
       "dependencies": [
