@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 005066ec08691fcc49e398ce29e07b3a92f12482d79933e027ab343ca44bc2ea9a0fd69690e98414363c1290640fe97c2a64fd98611464ac3fb62912fb91ce1b
     HEAD_REF master
     PATCHES
+        CMake-fix-breaking-find_package-change.patch # remove with 2.0.9. Backport of https://github.com/google/flatbuffers/pull/7502 
         fix-uwp-build.patch
 )
 

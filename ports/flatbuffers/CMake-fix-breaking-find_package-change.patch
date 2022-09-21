@@ -1,0 +1,72 @@
+From d465b39c3e0bf84384a0cc0e979a9b431e29c537 Mon Sep 17 00:00:00 2001
+From: Chris Langhans <chris@langhans.dev>
+Date: Thu, 1 Sep 2022 19:28:59 +0200
+Subject: [PATCH] [CMake]: fix breaking find_package change (#7499) (#7502)
+
+Co-authored-by: Derek Bailey <derekbailey@google.com>
+---
+ .gitignore                                                    | 2 +-
+ CMake/CMakeLists_legacy.cmake.in                              | 4 ++--
+ ...igVersion.cmake.in => flatbuffers-config-version.cmake.in} | 0
+ CMake/{FlatBuffersConfig.cmake => flatbuffers-config.cmake}   | 0
+ CMakeLists.txt                                                | 4 ++--
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+ rename CMake/{FlatBuffersConfigVersion.cmake.in => flatbuffers-config-version.cmake.in} (100%)
+ rename CMake/{FlatBuffersConfig.cmake => flatbuffers-config.cmake} (100%)
+
+diff --git a/.gitignore b/.gitignore
+index ebd610bc..03a1889b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -78,7 +78,7 @@ tests/php/
+ CMakeLists.txt.user
+ CMakeScripts/**
+ CTestTestfile.cmake
+-FlatBuffersConfigVersion.cmake
++flatbuffers-config-version.cmake
+ FlatBuffers.cbp
+ build/Xcode/FlatBuffers.xcodeproj/project.xcworkspace/**
+ build/Xcode/FlatBuffers.xcodeproj/xcuserdata/**
+diff --git a/CMake/CMakeLists_legacy.cmake.in b/CMake/CMakeLists_legacy.cmake.in
+index 8ca0f879..9e1af2bf 100644
+--- a/CMake/CMakeLists_legacy.cmake.in
++++ b/CMake/CMakeLists_legacy.cmake.in
+@@ -654,9 +654,9 @@ if(FLATBUFFERS_INSTALL)
+ 
+   set(FB_CMAKE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/flatbuffers")
+ 
+-  configure_file(CMake/FlatBuffersConfigVersion.cmake.in FlatBuffersConfigVersion.cmake @ONLY)
++  configure_file(CMake/flatbuffers-config-version.cmake.in flatbuffers-config-version.cmake @ONLY)
+   install(
+-      FILES "CMake/FlatBuffersConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/FlatBuffersConfigVersion.cmake"
++      FILES "CMake/flatbuffers-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-config-version.cmake"
+       DESTINATION ${FB_CMAKE_DIR}
+   )
+ 
+diff --git a/CMake/FlatBuffersConfigVersion.cmake.in b/CMake/flatbuffers-config-version.cmake.in
+similarity index 100%
+rename from CMake/FlatBuffersConfigVersion.cmake.in
+rename to CMake/flatbuffers-config-version.cmake.in
+diff --git a/CMake/FlatBuffersConfig.cmake b/CMake/flatbuffers-config.cmake
+similarity index 100%
+rename from CMake/FlatBuffersConfig.cmake
+rename to CMake/flatbuffers-config.cmake
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 456d9fbe..129eb7bb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -699,9 +699,9 @@ if(FLATBUFFERS_INSTALL)
+ 
+   set(FB_CMAKE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/flatbuffers")
+ 
+-  configure_file(CMake/FlatBuffersConfigVersion.cmake.in FlatBuffersConfigVersion.cmake @ONLY)
++  configure_file(CMake/flatbuffers-config-version.cmake.in flatbuffers-config-version.cmake @ONLY)
+   install(
+-      FILES "CMake/FlatBuffersConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/FlatBuffersConfigVersion.cmake"
++      FILES "CMake/flatbuffers-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-config-version.cmake"
+       DESTINATION ${FB_CMAKE_DIR}
+   )
+ 
+-- 
+2.34.1
+
