@@ -157,7 +157,7 @@
       "port-version": 0
     },
     "argparse": {
-      "baseline": "2.2",
+      "baseline": "2.8",
       "port-version": 0
     },
     "args": {
