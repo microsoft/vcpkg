@@ -4441,7 +4441,7 @@
       "port-version": 2
     },
     "llvm": {
-      "baseline": "14.0.4",
+      "baseline": "15.0.1",
       "port-version": 0
     },
     "lmdb": {
