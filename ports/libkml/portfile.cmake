@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         patch_empty_literal_on_vc.patch
         fix-mingw.patch
+        fix-minizip.patch
 )
 
 file(REMOVE
@@ -15,6 +16,7 @@ file(REMOVE
     "${SOURCE_PATH}/cmake/External_minizip.cmake"
     "${SOURCE_PATH}/cmake/External_uriparser.cmake"
     "${SOURCE_PATH}/cmake/External_zlib.cmake"
+    "${SOURCE_PATH}/src/kml/base/contrib/minizip/ioapi.h"
 )
 
 vcpkg_cmake_configure(

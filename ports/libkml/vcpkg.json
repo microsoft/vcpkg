@@ -8,12 +8,7 @@
   "dependencies": [
     "boost-smart-ptr",
     "expat",
-    {
-      "name": "minizip",
-      "features": [
-        "bzip2"
-      ]
-    },
+    "minizip",
     "uriparser",
     {
       "name": "vcpkg-cmake",
