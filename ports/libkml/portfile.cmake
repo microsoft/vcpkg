@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         patch_empty_literal_on_vc.patch
+        fix-mingw.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/External_boost.cmake)
