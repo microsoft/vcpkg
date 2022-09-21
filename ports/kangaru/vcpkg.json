@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hashtypeid": {
+      "description": "Enable hash based type id"
+    }
+  }
 }
