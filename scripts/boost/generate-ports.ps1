@@ -24,6 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-fiber" = 1;
 }
 
 $portData = @{
