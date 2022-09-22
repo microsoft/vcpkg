@@ -18,48 +18,51 @@
     }
   ],
   "default-features": [
+    "animation",
     "assimp",
-    "render",
+    "extras",
     "input",
     "logic",
-    "extras",
-    "animation"
+    "render"
   ],
   "features": {
+    "animation": {
+      "description": "Use the 3D Animation Aspect library",
+      "dependencies": [
+        {
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "render"
+          ]
+        }
+      ]
+    },
     "assimp": {
       "description": "Build with assimp",
       "dependencies": [
         "assimp"
       ]
     },
-    "render": {
-      "description": "Use the 3D Render Aspect library",
-    },
-    "input": {
-      "description": "Use the 3D Input Aspect library",
-    },
-    "logic": {
-      "description": "Use the 3D Logic Aspect library",
-    },
     "extras": {
       "description": "Use the 3D Extra library",
-        "dependencies": [
+      "dependencies": [
         {
-            "name": "qt3d",
-            "default-features" : false,
-            "features": ["render","input","logic"]
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "input",
+            "logic",
+            "render"
+          ]
         }
       ]
     },
-    "animation": {
-      "description": "Use the 3D Animation Aspect library",
-        "dependencies": [
-        {
-            "name": "qt3d",
-            "default-features" : false,
-            "features": ["render"]
-        }
-      ]
+    "input": {
+      "description": "Use the 3D Input Aspect library"
+    },
+    "logic": {
+      "description": "Use the 3D Logic Aspect library"
     },
     "qml": {
       "description": "Build QML imports",
@@ -77,15 +80,20 @@
         }
       ]
     },
+    "render": {
+      "description": "Use the 3D Render Aspect library"
+    },
     "rhi": {
       "description": "Enable RHI renderer",
       "dependencies": [
-        "qtshadertools"
         {
-            "name": "qt3d",
-            "default-features" : false,
-            "features": ["vulkan"]
-        }
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
+        "qtshadertools"
       ]
     },
     "vulkan": {
