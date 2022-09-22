@@ -3,7 +3,6 @@
   "version-date": "2022-01-21",
   "description": "A pure C mocking library",
   "homepage": "https://github.com/Azure/umock-c",
-  "license": "MIT",
   "dependencies": [
     "azure-macro-utils-c"
   ],
