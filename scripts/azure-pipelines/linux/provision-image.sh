@@ -86,6 +86,9 @@ APT_PACKAGES="$APT_PACKAGES haskell-stack"
 ## required by intel-mkl
 APT_PACKAGES="$APT_PACKAGES intel-mkl"
 
+## required by duktape
+APT_PACKAGES="$APT_PACKAGES python-yaml"
+
 ## CUDA
 APT_PACKAGES="$APT_PACKAGES cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
   cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 cuda-nvml-dev-11-6 libcudnn8-dev libnccl2 \
