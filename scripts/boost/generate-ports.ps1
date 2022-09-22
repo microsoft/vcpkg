@@ -45,7 +45,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!osx & !uwp & !arm & !emscripten";
+        "supports" = "!uwp & !arm & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";
