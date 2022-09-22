@@ -84,12 +84,6 @@ add_library(Vlpp STATIC ${CORE_SRCS})
 target_compile_definitions(Vlpp PRIVATE UNICODE)
 target_compile_definitions(Vlpp PRIVATE _UNICODE)
 
-if (MSVC)
-    target_compile_definitions(Vlpp PUBLIC VCZH_MSVC)
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_definitions(Vlpp PUBLIC VCZH_GCC)
-endif()
-
 if (EXTRA_DEFINES)
     target_compile_definitions(Vlpp PUBLIC ${EXTRA_DEFINES})
 endif()

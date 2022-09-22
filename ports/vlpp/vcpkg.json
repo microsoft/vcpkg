@@ -4,7 +4,7 @@
   "description": "Common C++ construction, including string operation / generic container / linq / General-LR parser generator / multithreading / reflection for C++ / etc",
   "homepage": "https://github.com/vczh-libraries/Release",
   "license": null,
-  "supports": "!(uwp | osx)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
