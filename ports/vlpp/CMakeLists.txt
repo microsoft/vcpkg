@@ -23,7 +23,7 @@ set(CORE_HDRS
     Import/VlppRegex.h
 )
 set(CORE_SRCS
-    Import/Vlpp.Linux.cpp
+    Import/Vlpp.cpp
     Import/VlppOS.cpp
     Import/VlppGlrParser.cpp
     Import/VlppRegex.cpp
