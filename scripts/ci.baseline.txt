@@ -885,6 +885,8 @@ qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
 # Post build checks fail
 qtwebengine:arm64-windows=fail
+
+
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -1249,6 +1251,13 @@ zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
 zeroc-ice:x64-uwp=fail
 
+# Ports which needs to pass in CI
+cmake:x64-windows=pass
+cmake:x64-windows-static=pass
+cmake:x64-windows-static-md=pass
+cmake:arm64-windows=pass
+cmake:x64-linux=pass
+cmake:x64-osx=pass
 cmake-user:arm-uwp=pass
 cmake-user:arm64-windows=pass
 cmake-user:x64-linux=pass
@@ -1257,6 +1266,12 @@ cmake-user:x64-windows-static-md=pass
 cmake-user:x64-windows-static=pass
 cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
+qt:x64-windows=pass
+qt:x64-windows-static=pass
+qt:x64-windows-static-md=pass
+qt:arm64-windows=pass
+qt:x64-linux=pass
+qt:x64-osx=pass
 vcpkg-ci-arrow:x64-windows=pass
 vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
