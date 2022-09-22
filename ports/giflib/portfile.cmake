@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-giflib CONFIG_PATH share/unofficial-giflib)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-GIF CONFIG_PATH share/unofficial-GIF)
 vcpkg_copy_pdbs()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/GIF")

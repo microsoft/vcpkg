@@ -26,10 +26,10 @@ if(HAVE_REALLOCARRAY)
 	add_definitions(-DHAVE_REALLOCARRAY)
 endif()
 
-add_library(gif ${GIFLIB_SOURCES})
-target_include_directories(gif INTERFACE $<INSTALL_INTERFACE:include>)
+add_library(GIF ${GIFLIB_SOURCES})
+target_include_directories(GIF INTERFACE $<INSTALL_INTERFACE:include>)
 if(BUILD_SHARED_LIBS AND WIN32)
-    target_sources(gif PRIVATE "${GIFLIB_EXPORTS}")
+    target_sources(GIF PRIVATE "${GIFLIB_EXPORTS}")
 else()
     set(UNUSED "${GIFLIB_EXPORTS}")
 endif()
@@ -38,14 +38,14 @@ if (NOT GIFLIB_SKIP_HEADERS)
     install(FILES ${GIFLIB_HEADERS} DESTINATION include)
 endif ()
 
-install(TARGETS gif EXPORT unofficial-giflib-config
+install(TARGETS GIF EXPORT unofficial-GIF-config
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-install(EXPORT unofficial-giflib-config
-    NAMESPACE unofficial::giflib::
-    DESTINATION share/unofficial-giflib
-    FILE unofficial-giflib-config.cmake
+install(EXPORT unofficial-GIF-config
+    NAMESPACE GIF::
+    DESTINATION share/unofficial-GIF
+    FILE unofficial-GIF-config.cmake
 )
