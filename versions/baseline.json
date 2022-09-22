@@ -6742,7 +6742,7 @@
     },
     "shogun": {
       "baseline": "6.1.4",
-      "port-version": 7
+      "port-version": 8
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",

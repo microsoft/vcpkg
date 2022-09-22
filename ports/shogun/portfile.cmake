@@ -44,6 +44,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
+        -DBLA_VENDOR=OpenBLAS
         -DINSTALL_TARGETS=shogun-static
 )
 

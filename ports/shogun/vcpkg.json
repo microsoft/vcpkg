@@ -1,9 +1,10 @@
 {
   "name": "shogun",
-  "version-string": "6.1.4",
-  "port-version": 7,
+  "version": "6.1.4",
+  "port-version": 8,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "blas",
     "bzip2",
