@@ -1,9 +1,11 @@
+diff --git a/Import/Vlpp.h b/Import/Vlpp.h
+index cf59b80..b00c9b8 100644
 --- a/Import/Vlpp.h
 +++ b/Import/Vlpp.h
-@@ -50,13 +50,12 @@
- #define abstract
+@@ -49,10 +49,10 @@ static_assert(sizeof(wchar_t) == sizeof(char32_t), "wchar_t is not UTF-32.");
+ static_assert(false, "wchar_t configuration is not right.");
  #endif
--
+ 
 +#include <stdlib.h>
  #if defined VCZH_MSVC
  #include <intrin.h>
@@ -12,23 +14,14 @@
  #include <stdint.h>
  #include <stddef.h>
  #include <wchar.h>
- #define abstract
- #define __thiscall
- #define __forceinline inline
-@@ -160,14 +159,14 @@
- #define UI64TOA_S	_ui64toa_s
- #define UI64TOW_S	_ui64tow_s
- #if defined VCZH_MSVC
- #define INCRC(x)	(_InterlockedIncrement((volatile long*)(x)))
- #define DECRC(x)	(_InterlockedDecrement((volatile long*)(x)))
+@@ -149,8 +149,8 @@ x86 and x64 Compatbility
+ #define INCRC(x)	(_InterlockedIncrement64(x))
+ #define DECRC(x)	(_InterlockedDecrement64(x))
  #elif defined VCZH_GCC
 -#define INCRC(x)	(__sync_add_and_fetch(x, 1))
 -#define DECRC(x)	(__sync_sub_and_fetch(x, 1))
 +#define INCRC(x)	(__atomic_add_fetch(x, 1, __ATOMIC_SEQ_CST))
 +#define DECRC(x)	(__atomic_sub_fetch(x, 1, __ATOMIC_SEQ_CST))
  #endif
- #endif
- 
- 	/***********************************************************************
- 	Basic Types
- 	***********************************************************************/
+ #else
+ #define ITOA_S		_itoa_s
