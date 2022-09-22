@@ -4741,8 +4741,8 @@
       "port-version": 1
     },
     "minizip": {
-      "baseline": "1.2.11",
-      "port-version": 11
+      "baseline": "1.2.12",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "3.0.5",
