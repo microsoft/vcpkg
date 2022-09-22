@@ -38,19 +38,16 @@ endif()
 if (WORKFLOW_LIBRARY)
     list(APPEND CORE_HDRS Import/VlppWorkflowLibrary.h)
     list(APPEND CORE_SRCS Import/VlppWorkflowLibrary.cpp)
-    source_group("Vlpp workflow files" FILES Import/VlppWorkflowLibrary.cpp)
 endif()
 
 if (WORKFLOW_RUNTIME)
     list(APPEND CORE_HDRS Import/VlppWorkflowRuntime.h)
     list(APPEND CORE_SRCS Import/VlppWorkflowRuntime.cpp)
-    source_group("Vlpp workflow runtime files" FILES Import/VlppWorkflowRuntime.cpp)
 endif()
 
 if (WORKFLOW_COMPILER)
     list(APPEND CORE_HDRS Import/VlppWorkflowCompiler.h)
     list(APPEND CORE_SRCS Import/VlppWorkflowCompiler.cpp)
-    source_group("Vlpp workflow compiler files" FILES Import/VlppWorkflowCompiler.cpp)
 endif()
 
 if (GACUI)
@@ -63,7 +60,6 @@ if (GACUI)
         list(APPEND EXTRA_DEFINES VCZH_DEBUG_NO_REFLECTION)
     endif()
     list(APPEND CORE_SRCS ${GACUI_SRCS})
-    source_group("Vlpp Gac UI files" FILES ${GACUI_SRCS})
 endif()
 
 if (DARK_SKIN)
@@ -77,15 +73,12 @@ if (DARK_SKIN)
         list(APPEND EXTRA_DEFINES VCZH_DEBUG_NO_REFLECTION)
     endif()
     list(APPEND CORE_SRCS ${DARK_SKIN_SRCS})
-    source_group("Vlpp Dark Skin files" FILES ${DARK_SKIN_SRCS})
 endif()
 
 list(REMOVE_DUPLICATES CORE_HDRS)
 list(REMOVE_DUPLICATES CORE_SRCS)
 
 add_library(Vlpp STATIC ${CORE_SRCS})
-
-source_group("Vlpp core files" FILES ${CORE_SRCS})
 
 # target_compile_definitions
 target_compile_definitions(Vlpp PRIVATE UNICODE)

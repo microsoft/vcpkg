@@ -37,7 +37,7 @@ if (BUILD_GACUI_COMPILER)
     vcpkg_copy_tools(TOOL_NAMES GacGen)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Tools
 file(INSTALL "${SOURCE_PATH}/Tools/CppMerge.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
