@@ -9,7 +9,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 ## CUDA
 apt-key del 7fa2af80
-if [[ $(grep Microsoft /proc/version) ]]; then
+if [[ $(grep microsoft /proc/version) ]]; then
 ### WSL Ubuntu
 https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
 mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -104,7 +104,7 @@ APT_PACKAGES="$APT_PACKAGES cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driv
 APT_PACKAGES="$APT_PACKAGES powershell"
 
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
-if [[ $(grep Microsoft /proc/version) ]]; then
+if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu66"
