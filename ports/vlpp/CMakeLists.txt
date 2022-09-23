@@ -126,5 +126,5 @@ install(EXPORT unofficial-vlpp
 )
 
 if (NOT SKIP_HEADERS)
-    install(FILES "${CORE_HDRS}" DESTINATION "include")
+    install(FILES ${CORE_HDRS} DESTINATION "include")
 endif()
