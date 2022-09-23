@@ -1,10 +1,10 @@
 {
   "name": "libmodman",
-  "version-string": "2.0.1",
-  "port-version": 4,
+  "version": "2.0.1",
+  "port-version": 5,
   "description": "a simple library for managing modules",
   "homepage": "https://code.google.com/p/libmodman",
-  "supports": "!uwp",
+  "supports": "!uwp & !(windows & staticcrt)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
