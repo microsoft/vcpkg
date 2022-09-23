@@ -4,6 +4,7 @@
   "description": "Data interchange format and capability-based RPC system",
   "homepage": "https://capnproto.org/",
   "supports": "!windows | (!uwp & !arm)",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
