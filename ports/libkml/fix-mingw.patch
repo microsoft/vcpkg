@@ -1,8 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 028f50a..bb63ffb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,9 @@ set(LIBKML_DATA_DIR  ${CMAKE_SOURCE_DIR}/testdata CACHE "Directory containing te
+ if(CMAKE_COMPILER_IS_GNUCXX)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -pedantic -fno-rtti")
+ set(TEST_FLAGS "-Wall -Wextra -Wno-unused-parameter -fno-rtti -DGTEST_HAS_RTTI=0")
++if(WIN32)
++  add_definitions(-DUNICODE -D_UNICODE)
++endif()
+ 
+ else()
+  if(MSVC)
 diff --git a/src/kml/base/file_win32.cc b/src/kml/base/file_win32.cc
-index 28ccb36..794f2bb 100644
+index 28ccb36..6ba79cd 100644
 --- a/src/kml/base/file_win32.cc
 +++ b/src/kml/base/file_win32.cc
-@@ -34,11 +34,14 @@
+@@ -34,7 +34,9 @@
  #include "kml/base/file.h"
  #include <windows.h>
  #include <tchar.h>
@@ -12,53 +26,6 @@ index 28ccb36..794f2bb 100644
  #include <algorithm>
  
  namespace kmlbase {
- 
-+#ifndef __MINGW32__
- // Internal to the win32 file class. We need a conversion from string to
- // LPCWSTR.
- static std::wstring Str2Wstr(const string& str) {
-@@ -56,12 +59,17 @@ string Wstr2Str(const std::wstring& wstr) {
-                       static_cast<int>(s), NULL, NULL);
-   return str;
- }
-+#endif
- 
- bool File::Exists(const string& full_path) {
-   if (full_path.empty()) {
-     return false;
-   }
-+#ifndef __MINGW32__
-   std::wstring wstr = Str2Wstr(full_path);
-+#else
-+  auto wstr = full_path;
-+#endif
-   DWORD attrs = ::GetFileAttributes(wstr.c_str());
-   return (attrs != INVALID_FILE_ATTRIBUTES) &&
-     ((attrs & FILE_ATTRIBUTE_DIRECTORY) == 0);
-@@ -71,7 +79,11 @@ bool File::Delete(const string& filepath) {
-   if (filepath.empty()) {
-     return false;
-   }
-+#ifndef __MINGW32__
-   std::wstring wstr = Str2Wstr(filepath);
-+#else
-+  auto wstr = filepath;
-+#endif
-   return ::DeleteFile(wstr.c_str()) ? true : false;
- }
- 
-@@ -97,7 +109,11 @@ bool File::CreateNewTempFile(string* path) {
-   if (uRetVal == 0) {
-     return false;
-   }
-+#ifndef __MINGW32__
-   string str = Wstr2Str(szTempName);
-+#else
-+  auto str = std::string(szTempName);
-+#endif
-   path->assign(str.c_str(), strlen(str.c_str()));
-   return true;
- }
 diff --git a/src/kml/base/string_util.cc b/src/kml/base/string_util.cc
 index b3a9654..842f1cd 100644
 --- a/src/kml/base/string_util.cc
