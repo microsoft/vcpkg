@@ -7525,8 +7525,8 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "20.08",
-      "port-version": 2
+      "baseline": "22.08",
+      "port-version": 0
     },
     "usockets": {
       "baseline": "0.8.1",
