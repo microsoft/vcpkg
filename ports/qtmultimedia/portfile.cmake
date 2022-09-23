@@ -38,8 +38,12 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
-# alsa is not ready
-list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON")
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_ALSA=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
+endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}

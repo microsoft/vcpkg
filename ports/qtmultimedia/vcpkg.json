@@ -6,6 +6,10 @@
   "license": null,
   "dependencies": [
     {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
       "name": "qtbase",
       "default-features": false,
       "features": [
