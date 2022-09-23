@@ -78,6 +78,8 @@ if (GACUI_CORE)
         list(APPEND GACUI_CORE_HDRS Import/GacUICompiler.h)
         list(APPEND GACUI_CORE_SRCS Import/GacUICompiler.cpp)
     endif()
+    
+    list(APPEND EXTRA_INCLUDES Skins/DarkSkin)
 
     list(APPEND CORE_HDRS ${GACUI_CORE_HDRS})
     list(APPEND CORE_SRCS ${GACUI_CORE_SRCS})
@@ -102,12 +104,12 @@ endif()
 
 if (EXTRA_INCLUDES)
     foreach(EXTRA_INCLUDE_DIR IN LISTS EXTRA_INCLUDES)
-        target_include_directories(Vlpp PUBLIC $<BUILD_INTERFACE:"${CMAKE_SOURCE_DIR}/${EXTRA_INCLUDE_DIR}">
+        target_include_directories(Vlpp PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/${EXTRA_INCLUDE_DIR}>
             $<INSTALL_INTERFACE:${EXTRA_INCLUDE_DIR}>
         )
     endforeach()
 endif()
-target_include_directories(Vlpp PUBLIC $<BUILD_INTERFACE:"${CMAKE_SOURCE_DIR}/Import"> $<INSTALL_INTERFACE:Import>)
+target_include_directories(Vlpp PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Import> $<INSTALL_INTERFACE:Import>)
 
 # Install
 install(
