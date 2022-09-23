@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_config_fixup(PACKAGE_NAME utf8cpp CONFIG_PATH cmake)
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME utf8cpp CONFIG_PATH lib/cmake/utf8cpp)
