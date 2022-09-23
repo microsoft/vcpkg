@@ -1,6 +1,7 @@
 {
   "name": "vlpp",
   "version": "1.1.0.0",
+  "maintainers": "vczh <>",
   "description": "Common C++ construction, including string operation / generic container / linq / General-LR parser generator / multithreading / reflection for C++ / etc",
   "homepage": "https://github.com/vczh-libraries/Release",
   "license": null,
@@ -16,26 +17,91 @@
     }
   ],
   "features": {
-    "darkskin": {
-      "description": "Use DarkSkin"
+    "gacuicore": {
+      "description": "Enable GacUI Core",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "glrparser",
+            "workflowlibrary"
+          ]
+        }
+      ]
     },
-    "gacui": {
-      "description": "Use GacUI"
+    "gacuirecompiler": {
+      "description": "Enable GacUI Compiler",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "gacuireflection",
+            "workflowcompiler"
+          ]
+        }
+      ]
+    },
+    "gacuireflection": {
+      "description": "Enable GacUI Reflection",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "gacuicore",
+            "workflowruntime"
+          ]
+        }
+      ]
+    },
+    "glrparser": {
+      "description": "Enable GlrParser",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "reflection"
+          ]
+        }
+      ]
     },
     "reflection": {
-      "description": "Use GacUIReflection or DarkSkinReflection"
+      "description": "Enable Reflection"
     },
     "tool": {
-      "description": "Build GacUICompiler"
+      "description": "Build tools"
     },
     "workflowcompiler": {
-      "description": "Use VlppWorkflowCompiler"
+      "description": "Enable VlppWorkflow Compiler",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "workflowruntime"
+          ]
+        }
+      ]
     },
     "workflowlibrary": {
-      "description": "Use VlppWorkflowLibrary"
+      "description": "Enable VlppWorkflow Library",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "reflection"
+          ]
+        }
+      ]
     },
     "workflowruntime": {
-      "description": "Use VlppWorkflowRuntime"
+      "description": "Enable VlppWorkflow Runtime",
+      "dependencies": [
+        {
+          "name": "vlpp",
+          "features": [
+            "workflowlibrary"
+          ]
+        }
+      ]
     }
   }
 }
