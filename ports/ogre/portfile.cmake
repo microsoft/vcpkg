@@ -70,7 +70,6 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DFREETYPE_FOUND=ON
-        -DOGRE_CMAKE_DIR=share/ogre
     MAYBE_UNUSED_VARIABLES
         OGRE_BUILD_RENDERSYSTEM_GLES
 )
@@ -80,7 +79,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup()
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/OGRE/cmake)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
