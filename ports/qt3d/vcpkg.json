@@ -86,19 +86,19 @@
     "rhi": {
       "description": "Enable RHI renderer",
       "dependencies": [
-        {
-          "name": "qt3d",
-          "default-features": false,
-          "features": [
-            "vulkan"
-          ]
-        },
         "qtshadertools"
       ]
     },
     "vulkan": {
       "description": "Build with vulkan support",
       "dependencies": [
+        {
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "rhi"
+          ]
+        },
         "vulkan"
       ]
     }
