@@ -3194,7 +3194,7 @@
     },
     "jsonnet": {
       "baseline": "0.18.0",
-      "port-version": 0
+      "port-version": 1
     },
     "jwt-cpp": {
       "baseline": "0.6.0",
@@ -5426,7 +5426,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentracing": {
       "baseline": "1.6.0",
