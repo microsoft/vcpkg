@@ -32,7 +32,7 @@ else()
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" OR NOT VCPKG_TARGET_IS_WINDOWS)
     set(BUILD_SHARED ON)
     set(BUILD_STATIC OFF)
 else()
