@@ -38,3 +38,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools/alsa/debug")
 
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/ALSAConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/ALSAConfig.cmake" COPYONLY)
