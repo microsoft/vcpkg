@@ -2633,8 +2633,8 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.72.3",
-      "port-version": 3
+      "baseline": "2.74.0",
+      "port-version": 0
     },
     "glibmm": {
       "baseline": "2.70.0",
@@ -3462,7 +3462,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lcms": {
       "baseline": "2.12",

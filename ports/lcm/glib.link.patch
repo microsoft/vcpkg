@@ -15,7 +15,7 @@ index 2f1a8be45..db823b953 100644
  
  endforeach()
  
-+find_library(PCRE_LIBRARY pcre)
++find_library(PCRE_LIBRARY pcre2-8)
 +set_property(TARGET GLib2::glib APPEND PROPERTY
 +    INTERFACE_LINK_LIBRARIES ${PCRE_LIBRARY}
 +)
