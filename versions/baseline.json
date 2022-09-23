@@ -1278,7 +1278,7 @@
     },
     "capnproto": {
       "baseline": "0.10.2",
-      "port-version": 0
+      "port-version": 2
     },
     "capstone": {
       "baseline": "5.0.0-rc2",
