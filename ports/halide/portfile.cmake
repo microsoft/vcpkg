@@ -1,9 +1,12 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+# Needed in usage.in
+set(HALIDE_VERSION_TAG v14.0.0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF v14.0.0
+    REF ${HALIDE_VERSION_TAG}
     SHA512 c7b1186cca545f30d038f1e9bb28ca7231023869d191c50722213da4c7e9adfd4a53129fe395cd7938cb7cb3fb1bf80f9cd3b4b8473a0246f15b9ad8d3e40fe2
     HEAD_REF release/14.x
 )
