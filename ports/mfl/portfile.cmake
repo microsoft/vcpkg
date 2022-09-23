@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF v0.0.1
     SHA512 a609b4ff23a01e9f9d9bf60bfa6e0b2346b054cf0c27e74e6da574dcfd2a6ead30dcb8464cf03cae2bb9995f15f01ffda5f862c0ec2744a9ad38b856ff27f073
     HEAD_REF master
+    PATCHES
+        disable-tests.patch
 )
 
 vcpkg_configure_cmake(
