@@ -262,6 +262,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
                 ${headers_param}
                 --debug
                 --feature-flags=-manifests # there's a bug in vcpkg x-download when it finds a manifest-root
+                --github-mirror=${GITHUB_MIRROR}
             OUTPUT_VARIABLE output
             ERROR_VARIABLE output
             RESULT_VARIABLE error_code
