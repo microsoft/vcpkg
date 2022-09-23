@@ -2770,7 +2770,7 @@
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 8
+      "port-version": 9
     },
     "gtest": {
       "baseline": "1.12.1",
