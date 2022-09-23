@@ -27,7 +27,7 @@
     },
     "etw": {
       "description": "Whether to include the ETW Exporter in the SDK",
-      "supports": "!linux & !osx"
+      "supports": "windows"
     },
     "jaeger": {
       "description": "Whether to include the Jaeger exporter",
