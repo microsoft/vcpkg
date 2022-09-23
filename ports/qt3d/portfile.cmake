@@ -19,9 +19,9 @@ INVERTED_FEATURES
     )
 
 if("assimp" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_qt3d_assimp=system)
+    list(APPEND FEATURE_OPTIONS -DINPUT_assimp=system)
 else()
-    list(APPEND FEATURE_OPTIONS -DINPUT_qt3d_assimp=no)
+    list(APPEND FEATURE_OPTIONS -DINPUT_assimp=no)
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -29,6 +29,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         ${FEATURE_OPTIONS}
                         #-DINPUT_fbxsdk=no
                         -DFEATURE_qt3d_fbxsdk=OFF # OpenFBX? Probably not!
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
