@@ -66,4 +66,4 @@ foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL} ${RELEASE_PDB} ${DEBUG_PDB})
     file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
 endforeach()
 
-file_replace_regex("${CURRENT_PACKAGES_DIR}/share/pxr/pxrConfig.cmake" "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pxr/pxrConfig.cmake" "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
