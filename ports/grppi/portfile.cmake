@@ -10,7 +10,7 @@ vcpkg_from_github(
         tbb.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake-modules/FindTBB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake.modules/FindTBB.cmake")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
