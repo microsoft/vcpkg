@@ -20,7 +20,7 @@ index 73606c9..540ac6e 100644
    else ()
      configure_file(${OGRE_TEMPLATES_DIR}/OGRE.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE.pc @ONLY)
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 2ae0b66..283a475 100644
+index 2ae0b66..1954a3f 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
 @@ -233,16 +233,19 @@ macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://ww
@@ -76,7 +76,7 @@ index 2ae0b66..283a475 100644
  
  # Assimp
 -find_package(ASSIMP QUIET)
-+find_package(ASSIMP NAMES assimp REQUIRED)
++find_package(ASSIMP NAMES assimp)
  macro_log_feature(ASSIMP_FOUND "Assimp" "Needed for the AssimpLoader Plugin" "https://www.assimp.org/" FALSE "" "")
  
  if(ASSIMP_FOUND)
@@ -98,7 +98,7 @@ diff --git a/CMake/Templates/OGREConfig.cmake.in b/CMake/Templates/OGREConfig.cm
 index 392c89c..266ba3a 100644
 --- a/CMake/Templates/OGREConfig.cmake.in
 +++ b/CMake/Templates/OGREConfig.cmake.in
-@@ -32,6 +32,27 @@ get_filename_component(OGRE_LIBRARY_DIRS "${OGRE_PREFIX_DIR}/lib" ABSOLUTE)
+@@ -32,6 +32,29 @@ get_filename_component(OGRE_LIBRARY_DIRS "${OGRE_PREFIX_DIR}/lib" ABSOLUTE)
  get_filename_component(OGRE_INCLUDE_DIRS "${OGRE_PREFIX_DIR}/include/OGRE" ABSOLUTE)
  set(OGRE_LIBRARIES)
  
@@ -107,7 +107,6 @@ index 392c89c..266ba3a 100644
 +find_dependency(pugixml CONFIG)
 +find_dependency(SDL2 CONFIG)
 +find_dependency(ZLIB)
-+find_dependency(assimp CONFIG)
 +find_dependency(freetype CONFIG)
 +
 +if(@OGRE_CONFIG_ENABLE_ZIP@)
@@ -115,6 +114,9 @@ index 392c89c..266ba3a 100644
 +endif()
 +if (@OGRE_BUILD_COMPONENT_OVERLAY_IMGUI@)
 +    find_dependency(imgui CONFIG)
++endif()
++if(@OGRE_BUILD_PLUGIN_ASSIMP@)
++    find_dependency(assimp CONFIG)
 +endif()
 +if(@OGRE_BUILD_PLUGIN_FREEIMAGE@)
 +    find_dependency(freeimage CONFIG)

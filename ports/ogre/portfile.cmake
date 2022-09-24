@@ -30,6 +30,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
+    assimp   OGRE_BUILD_PLUGIN_ASSIMP
+    assimp   CMAKE_REQUIRE_FIND_PACKAGE_ASSIMP
     d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
     freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
     freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
@@ -113,7 +115,10 @@ if(DBG_CFGS)
   file(REMOVE ${DBG_CFGS})
 endif()
 
-set(tools OgreAssimpConverter OgreMeshUpgrader OgreXMLConverter VRMLConverter)
+set(tools OgreMeshUpgrader OgreXMLConverter VRMLConverter)
+if(OGRE_BUILD_PLUGIN_ASSIMP)
+    list(APPEND tools OgreAssimpConverter)
+endif()
 if(OGRE_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
