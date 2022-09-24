@@ -13,10 +13,8 @@ vcpkg_from_github(
     SHA512 f223075f49a2465cd5070f5efa796aa715f3ea2fefd578e4ec0a11be2fd3330922849ed804e1df004209abafaa7b24ff42432dd79f336a56063e3cf38ae0e8c9
     HEAD_REF master
     PATCHES
-        toolchain_fixes.patch
-        fix-dependency.patch
+        fix-dependencies.patch
         disable-dependency-qt.patch
-        fix-pkgconfig.patch
         fix-cmake-feature-summary.patch
 )
 
@@ -33,11 +31,15 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
+    freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
+    freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
     java     OGRE_BUILD_COMPONENT_JAVA
     python   OGRE_BUILD_COMPONENT_PYTHON
     csharp   OGRE_BUILD_COMPONENT_CSHARP
     overlay  OGRE_BUILD_COMPONENT_OVERLAY
+    overlay  CMAKE_REQUIRE_FIND_PACKAGE_FREETYPE
     zziplib  OGRE_CONFIG_ENABLE_ZIP
+    zziplib  CMAKE_REQUIRE_FIND_PACKAGE_ZZip
     strict   OGRE_RESOURCEMANAGER_STRICT
 )
 
@@ -69,7 +71,8 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
-        -DFREETYPE_FOUND=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
     MAYBE_UNUSED_VARIABLES
         OGRE_BUILD_MSVC_MP
         OGRE_BUILD_MSVC_ZM

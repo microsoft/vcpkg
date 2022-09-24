@@ -47,7 +47,10 @@
     "overlay": {
       "description": "Build overlay component",
       "dependencies": [
-        "freetype",
+        {
+          "name": "freetype",
+          "default-features": false
+        },
         {
           "name": "imgui",
           "features": [
@@ -66,9 +69,12 @@
       "description": "Force Ogre resource manager to be strict with group names and resource names"
     },
     "zziplib": {
-      "description": "Build with zziplib support (GPL)",
+      "description": "Build with zziplib support",
       "dependencies": [
-        "zziplib"
+        {
+          "name": "zziplib",
+          "default-features": false
+        }
       ]
     }
   }
