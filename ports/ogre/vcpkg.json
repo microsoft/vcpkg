@@ -74,6 +74,9 @@
     "strict": {
       "description": "Force Ogre resource manager to be strict with group names and resource names"
     },
+    "tools": {
+      "description": "Build tools"
+    },
     "zziplib": {
       "description": "Build with zziplib support",
       "dependencies": [

@@ -43,6 +43,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zziplib  OGRE_CONFIG_ENABLE_ZIP
     zziplib  CMAKE_REQUIRE_FIND_PACKAGE_ZZip
     strict   OGRE_RESOURCEMANAGER_STRICT
+    tools    OGRE_BUILD_TOOLS
+    tools    OGRE_INSTALL_TOOLS
 )
 
 # OGRE_RESOURCEMANAGER_STRICT need to be 0 for OFF and 1 for ON, because it is used 'as is' in sources
@@ -56,14 +58,12 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
         -DOGRE_BUILD_TESTS=OFF
-        -DOGRE_BUILD_TOOLS=OFF
         -DOGRE_BUILD_MSVC_MP=ON
         -DOGRE_BUILD_MSVC_ZM=ON
         -DOGRE_INSTALL_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DOCS=OFF
         -DOGRE_INSTALL_PDB=OFF
         -DOGRE_INSTALL_SAMPLES=OFF
-        -DOGRE_INSTALL_TOOLS=OFF
         -DOGRE_INSTALL_CMAKE=ON
         -DOGRE_INSTALL_VSPROPS=OFF
         -DOGRE_STATIC=${OGRE_STATIC}
@@ -75,6 +75,9 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+    OPTIONS_DEBUG
+        -DOGRE_BUILD_TOOLS=OFF
+        -DOGRE_INSTALL_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         OGRE_BUILD_MSVC_MP
@@ -110,8 +113,9 @@ if(DBG_CFGS)
   file(REMOVE ${DBG_CFGS})
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+set(tools OgreAssimpConverter OgreMeshUpgrader OgreXMLConverter VRMLConverter)
+if(OGRE_BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
