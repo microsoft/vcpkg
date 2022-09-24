@@ -83,9 +83,6 @@ APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 ## required by bond
 APT_PACKAGES="$APT_PACKAGES haskell-stack"
 
-## required by intel-mkl
-APT_PACKAGES="$APT_PACKAGES intel-mkl"
-
 ## required by duktape
 APT_PACKAGES="$APT_PACKAGES python-yaml"
 
