@@ -44,6 +44,12 @@
     "java": {
       "description": "Build Java (JNI) bindings"
     },
+    "openexr": {
+      "description": "Build with OpenEXR support",
+      "dependencies": [
+        "openexr"
+      ]
+    },
     "overlay": {
       "description": "Build overlay component",
       "dependencies": [

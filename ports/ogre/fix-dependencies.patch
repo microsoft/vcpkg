@@ -95,10 +95,10 @@ index 2ae0b66..283a475 100644
    if(SDL2_FOUND AND NOT TARGET SDL2::SDL2)
      add_library(SDL2::SDL2 INTERFACE IMPORTED)
 diff --git a/CMake/Templates/OGREConfig.cmake.in b/CMake/Templates/OGREConfig.cmake.in
-index 392c89c..9195d27 100644
+index 392c89c..266ba3a 100644
 --- a/CMake/Templates/OGREConfig.cmake.in
 +++ b/CMake/Templates/OGREConfig.cmake.in
-@@ -32,6 +32,24 @@ get_filename_component(OGRE_LIBRARY_DIRS "${OGRE_PREFIX_DIR}/lib" ABSOLUTE)
+@@ -32,6 +32,27 @@ get_filename_component(OGRE_LIBRARY_DIRS "${OGRE_PREFIX_DIR}/lib" ABSOLUTE)
  get_filename_component(OGRE_INCLUDE_DIRS "${OGRE_PREFIX_DIR}/include/OGRE" ABSOLUTE)
  set(OGRE_LIBRARIES)
  
@@ -118,6 +118,9 @@ index 392c89c..9195d27 100644
 +endif()
 +if(@OGRE_BUILD_PLUGIN_FREEIMAGE@)
 +    find_dependency(freeimage CONFIG)
++endif()
++if(@OGRE_BUILD_PLUGIN_EXRCODEC@)
++    find_dependency(OpenEXR CONFIG)
 +endif()
 +
  cmake_policy(PUSH)
