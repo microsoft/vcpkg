@@ -378,6 +378,10 @@ if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
+file(REMOVE_RECURSE "${Z_VCPKG_ROOT_DIR}/downloads/tools/cmake-3.24.0-windows/cmake-3.24.0-windows-i386/share/cmake-3.24/Modules/FetchContent")
+file(REMOVE_RECURSE "${Z_VCPKG_ROOT_DIR}/downloads/tools/cmake-3.24.0-macos/cmake-3.24.0-macos-universal/share/cmake-3.24/Modules/FetchContent")
+file(REMOVE_RECURSE "${Z_VCPKG_ROOT_DIR}/downloads/tools/cmake-3.24.0-linux/cmake-3.24.0-linux-x86_64/share/cmake-3.24/Modules/FetchContent")
+
 if(DEFINED VCPKG_INSTALLED_DIR)
     # do nothing
 elseif(DEFINED _VCPKG_INSTALLED_DIR)
