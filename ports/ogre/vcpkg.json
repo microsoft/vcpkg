@@ -7,7 +7,10 @@
   "license": "MIT",
   "dependencies": [
     "pugixml",
-    "sdl2",
+    {
+      "name": "sdl2",
+      "platform": "!android"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -32,19 +35,22 @@
       ]
     },
     "csharp": {
-      "description": "Build csharp bindings"
+      "description": "Build csharp bindings",
+      "supports": "!static & !android & !ios & !emscripten"
     },
     "d3d9": {
-      "description": "Build Direct3D9 RenderSystem"
+      "description": "Build Direct3D9 RenderSystem",
+      "supports": "windows"
     },
     "freeimage": {
-      "description": "Build with FreeImage support",
+      "description": "Build with FreeImage support (no effect for Emscripten)",
       "dependencies": [
         "freeimage"
       ]
     },
     "java": {
-      "description": "Build Java (JNI) bindings"
+      "description": "Build Java (JNI) bindings",
+      "supports": "!static & !android & !ios & !emscripten"
     },
     "openexr": {
       "description": "Build with OpenEXR support",
@@ -69,6 +75,7 @@
     },
     "python": {
       "description": "Build Python bindings",
+      "supports": "!static & !android & !ios & !emscripten",
       "dependencies": [
         "python3"
       ]
@@ -77,7 +84,8 @@
       "description": "Force Ogre resource manager to be strict with group names and resource names"
     },
     "tools": {
-      "description": "Build tools"
+      "description": "Build tools",
+      "supports": "!android & !emscripten"
     },
     "zziplib": {
       "description": "Build with zziplib support",

@@ -6,6 +6,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
@@ -21,13 +25,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(OGRE_STATIC ON)
-else()
-    set(OGRE_STATIC OFF)
-endif()
-
-# Configure features
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
@@ -37,10 +35,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
     freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
     java     OGRE_BUILD_COMPONENT_JAVA
+    java     CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     openexr  OGRE_BUILD_PLUGIN_EXRCODEC
     openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
     python   OGRE_BUILD_COMPONENT_PYTHON
+    python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
+    python   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     csharp   OGRE_BUILD_COMPONENT_CSHARP
+    csharp   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     overlay  OGRE_BUILD_COMPONENT_OVERLAY
     overlay  CMAKE_REQUIRE_FIND_PACKAGE_FREETYPE
     zziplib  OGRE_CONFIG_ENABLE_ZIP
