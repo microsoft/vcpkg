@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(
     COPY ${SOURCE_PATH}/Source/LuaBridge
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/{PORT}
 )
 
 # Handle copyright
