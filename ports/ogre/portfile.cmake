@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         disable-dependency-qt.patch
+        swig-python-polyfill.patch
         fix-cmake-feature-summary.patch
 )
 
