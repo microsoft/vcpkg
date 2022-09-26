@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d5d1f8d..6bec5ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -270,6 +270,7 @@ elseif(EMSCRIPTEN)
+   set(OGRE_CONFIG_THREADS "0" CACHE STRING "Threading is unstable on Emscripten" FORCE)
+ elseif (APPLE AND NOT APPLE_IOS)
+ 
++elseif(0)
+   set(XCODE_ATTRIBUTE_SDKROOT macosx)
+   if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+     execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
