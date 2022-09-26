@@ -6,11 +6,11 @@
   "homepage": "https://sourceware.org/bzip2/",
   "documentation": "https://sourceware.org/bzip2/docs.html",
   "default-features": [
-      "tool"
+    "tool"
   ],
   "features": {
-      "tool": {
-          "description": "Builds bzip2 executable"
-      }
+    "tool": {
+      "description": "Builds bzip2 executable"
+    }
   }
 }
