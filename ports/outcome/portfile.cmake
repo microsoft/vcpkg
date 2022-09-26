@@ -45,6 +45,7 @@ vcpkg_cmake_configure(
         -Dstatus-code_DIR=${CURRENT_INSTALLED_DIR}/share/status-code
         -DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCXX_CONCEPTS_FLAGS=
 )
 
 if("run-tests" IN_LIST FEATURES)
