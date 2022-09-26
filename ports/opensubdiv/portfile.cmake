@@ -5,9 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenSubdiv
-    REF 82ab1b9f54c87fdd7e989a3470d53e137b8ca270 # 3.4.3
-    SHA512 607cb9aa05d83a24bc2102bfd28abfec58f5723b1c56f6f431111ebf98f105ff7ca2a77610953acd21f73cb74d8d8ec68db3aeb11be1f9ca56d87c36c58dd095
-    HEAD_REF master
+    REF ff76e0f2dc9c9202b7d2f965f264bfd6f41866d5 # 3.4.4
+    SHA512 8839f29259664279b372bba21fcb925b01910631ed265fc20201beef6584c1f064134bf107dfc66709a3cd19e083f108e842ffbfff3f435ec8c7af2cd17d43e5
+    HEAD_REF release
     PATCHES
         fix_compile-option.patch
         fix-version-search.patch
@@ -24,9 +24,9 @@ if(VCPKG_TARGET_IS_LINUX)
 These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxxf86vm-dev")
 endif()
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     set(STATIC_CRT_LNK ON)
@@ -46,9 +46,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "true-deriv-eval"   OPENSUBDIV_GREGORY_EVAL_TRUE_DERIVATIVES
     INVERTED_FEATURES
+        "opengl"    NO_OPENGL
         "cuda"      NO_CUDA
         "dx"        NO_DX
-        "examples"  NO_EXAMPLES
         "glew"      NO_GLEW
         "glfw"      NO_GLFW
         "glfw"      NO_GLFW_X11
@@ -56,8 +56,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "opencl"    NO_OPENCL
         "ptex"      NO_PTEX
         "tbb"       NO_TBB
-        "tutorials" NO_TUTORIALS
-        "opengl"    NO_OPENGL
 )
 
 set(OSD_EXTRA_OPTS)
@@ -85,6 +83,8 @@ vcpkg_cmake_configure(
         -DNO_GLTESTS=ON
         -DNO_CLEW=ON
         -DNO_METAL=ON
+        -DNO_EXAMPLES=ON
+        -DNO_TUTORIALS=ON
         ${FEATURE_OPTIONS}
         ${OSD_EXTRA_OPTS}
     MAYBE_UNUSED_VARIABLES
