@@ -31,14 +31,13 @@ manifest mode.
     - [`"name"`](#dependencies-name)
     - [`"default-features"`](#dependencies-default-features)
     - [`"features"`](#dependencies-features)
+    - [`"host"`](#host)
     - [`"platform"`](#platform)
     - [`"version>="`](#version-gt)
   - [`"overrides"`](#overrides)
   - [`"supports"`](#supports)
   - [`"features"`](#features)
   - [`"default-features"`](#default-features)
-
-See also [the original specification](../specifications/manifests.md) for more low-level details.
 
 ## Simple Example Manifest
 
@@ -69,8 +68,9 @@ Manifests follow strict JSON: they can't contain C++-style comments (`//`) nor t
 you can use field names that start with `$` to write your comments in any object that has a well-defined set of keys.
 These comment fields are not allowed in any objects which permit user-defined keys (such as `"features"`).
 
-Each manifest contains a top level object with the fields documented below; the most important ones are
-[`"name"`](#name), the [version fields](#version-fields), and [`"dependencies"`](#dependencies):
+The latest JSON Schema is available at https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json. IDEs with JSON Schema support such as Visual Studio and Visual Studio Code can use this file to provide IntelliSense and syntax checking. For most IDEs, you should set `"$schema"` in your `vcpkg.json` to this URL (like the above example).
+
+Each manifest contains a top level object with the following fields:
 
 <a id="name"></a>
 
@@ -79,8 +79,6 @@ Each manifest contains a top level object with the fields documented below; the 
 This is the name of your project! It must be formatted in a way that vcpkg understands - in other words,
 it must be lowercase alphabetic characters, digits, and hyphens, and it must not start nor end with a hyphen.
 For example, `Boost.Asio` might be given the name `boost-asio`.
-
-This is a required field.
 
 ### Version Fields
 
@@ -189,6 +187,16 @@ Then, you might just ask for:
   "features": [ "mp3lame" ]
 }
 ```
+
+<a id="host"></a>
+
+#### `"host"` Field
+
+A boolean indicating that the dependency must be built for the [host triplet](host-dependencies.md) instead of the current port's triplet. Defaults to `false`.
+
+Any dependency that provides tools or scripts which should be "executed" during a build (such as buildsystems, code generators, or helpers) should be marked as `"host": true`. This enables correct cross-compilation in cases that the target is not executable -- such as when compiling for `arm64-android`.
+
+See [Host Dependencies](host-dependencies.md) for more information.
 
 <a id="platform"></a>
 
