@@ -7542,7 +7542,7 @@
     },
     "utfcpp": {
       "baseline": "3.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "utfz": {
       "baseline": "1.2",
