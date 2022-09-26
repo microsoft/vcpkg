@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF jul2022
     SHA512 fe857766d598c73badba6eda3128775f9195d0a1a7658e9b48a77dd631da4bbd31ab946bc98f8e9b229a6bc99a785ac3da693cb655be0f6a1393ad176e26b688
     HEAD_REF main
+    PATCHES
+        openexr.patch
 )
 
 if (VCPKG_HOST_IS_LINUX)

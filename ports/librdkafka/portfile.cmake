@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.9.0
-    SHA512 d7bff9ef29befa2cb35b52003f7b7da4425f284600dd268b268a36fb1b915917b26cb1a3e78da40eec78cbb12e2f745d2c1e88ac82f19d2beb38aa20b511438f
+    REF v1.9.2
+    SHA512 f067b227bc784e1dee61261d540632e54a4e5849934d1f55571979fea6b3c6858c27bcd397cf33fbee2409df12b149bb78f201f33646d14b5288a33147a9c9dc
     HEAD_REF master
     PATCHES
         lz4.patch

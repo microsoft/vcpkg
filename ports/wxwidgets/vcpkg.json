@@ -1,6 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -42,6 +42,19 @@
     "example": {
       "description": "Example source code and CMake project"
     },
+    "fonts": {
+      "description": "Enable to use the font functionality of wxWidgets",
+      "dependencies": [
+        {
+          "name": "fontconfig",
+          "platform": "!windows & !osx"
+        },
+        {
+          "name": "pango",
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
     "sound": {
       "description": "Build wxSound support",
       "dependencies": [
@@ -50,6 +63,12 @@
           "default-features": false,
           "platform": "!windows & !osx"
         }
+      ]
+    },
+    "webview": {
+      "description": "The Edge backend uses Microsoft's Edge WebView2",
+      "dependencies": [
+        "webview2"
       ]
     }
   }

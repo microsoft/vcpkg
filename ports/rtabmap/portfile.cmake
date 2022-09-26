@@ -7,8 +7,9 @@ vcpkg_from_github(
     SHA512 7787d5f927f53554cec3044221011cbc78b654c504d96af29947266e25058194923c5463aefde73b93dcfb3930eedf731f6af4d0c311d8f2f0d7be2114393e05
     HEAD_REF master
     PATCHES
-        fix-qt.patch
         0001-add-bigobj-for-msvc.patch
+        0002-fix-opencv46.patch
+        0003-fix-qt.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -90,7 +91,7 @@ if("tools" IN_LIST FEATURES)
   )
 endif()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
