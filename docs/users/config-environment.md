@@ -99,3 +99,7 @@ This environment variable allows using NuGet's cache for every nuget-based binar
 > Note: This is an experimental feature and may change or be removed at any time
 
 This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.
+
+#### VCPKG_NO_CI
+
+Setting `VCPKG_NO_CI` disables vcpkg's CI environment detection heuristics.
