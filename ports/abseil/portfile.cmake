@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 215105818dfde3174fe799600bb0f3cae233d0bf #LTS 20211102, Patch 1
-    SHA512 75d234eac76be8790cf09e3e1144e4b4cf5cacb61e46961a9e4a35b37d0fa85243afdd5de5f47a006ef96af6fc91ecc0c233297c4c32258c08d46304b3361330
+    REF 8c0b94e793a66495e0b1f34a5eb26bd7dc672db0 # LTS 20220623.1
+    SHA512 a076c198103dc5cf22ac978fe7754dd34cb2e782d7db1c2c98393c94639e461bfe31b10c0663f750f743bc1c0c245fd4b6115356f136fe14bd036d267caf2a8b
     HEAD_REF master
     PATCHES
         # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
