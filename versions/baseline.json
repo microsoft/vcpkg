@@ -1930,7 +1930,7 @@
     },
     "directxtex": {
       "baseline": "2022-07-29",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtk": {
       "baseline": "2022-07-29",
@@ -2410,7 +2410,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 23
+      "port-version": 24
     },
     "freeopcua": {
       "baseline": "20190125",
@@ -3021,8 +3021,8 @@
       "port-version": 0
     },
     "ilmbase": {
-      "baseline": "2.3.0",
-      "port-version": 1
+      "baseline": "3",
+      "port-version": 0
     },
     "imath": {
       "baseline": "3.1.5",
@@ -5322,23 +5322,23 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 14
+      "port-version": 15
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 1
+      "port-version": 2
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.1",
       "port-version": 1
     },
     "openexr": {
-      "baseline": "2.5.8",
-      "port-version": 1
+      "baseline": "3.1.5",
+      "port-version": 0
     },
     "openfbx": {
       "baseline": "2022-07-18",
@@ -5430,7 +5430,7 @@
     },
     "openvdb": {
       "baseline": "9.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -5474,7 +5474,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 16
+      "port-version": 17
     },
     "osg-qt": {
       "baseline": "Qt5",
@@ -5526,7 +5526,7 @@
     },
     "pangolin": {
       "baseline": "0.6",
-      "port-version": 2
+      "port-version": 3
     },
     "pangomm": {
       "baseline": "2.50.0",
@@ -7214,7 +7214,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 6
+      "port-version": 7
     },
     "think-cell-range": {
       "baseline": "498839d",
@@ -7558,7 +7558,7 @@
     },
     "uvatlas": {
       "baseline": "2022-07-30",
-      "port-version": 0
+      "port-version": 1
     },
     "uvw": {
       "baseline": "2.12.1",
