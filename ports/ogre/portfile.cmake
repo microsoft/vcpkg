@@ -17,6 +17,7 @@ vcpkg_from_github(
     SHA512 f223075f49a2465cd5070f5efa796aa715f3ea2fefd578e4ec0a11be2fd3330922849ed804e1df004209abafaa7b24ff42432dd79f336a56063e3cf38ae0e8c9
     HEAD_REF master
     PATCHES
+        install-layout.patch
         fix-dependencies.patch
         disable-dependency-qt.patch
         osx-sysroot.patch
@@ -68,6 +69,7 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_TESTS=OFF
         -DOGRE_BUILD_MSVC_MP=ON
         -DOGRE_BUILD_MSVC_ZM=ON
+        -DOGRE_COPY_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DOCS=OFF
         -DOGRE_INSTALL_PDB=OFF
@@ -89,6 +91,7 @@ vcpkg_cmake_configure(
         -DOGRE_INSTALL_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
+        OGRE_COPY_DEPENDENCIES
         OGRE_BUILD_MSVC_MP
         OGRE_BUILD_MSVC_ZM
         OGRE_BUILD_RENDERSYSTEM_GLES
@@ -99,28 +102,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/OGRE/cmake)
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
-if(REL_CFGS)
-  file(COPY ${REL_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(REMOVE ${REL_CFGS})
-endif()
-
-file(GLOB DBG_CFGS "${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg")
-if(DBG_CFGS)
-  file(COPY ${DBG_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  file(REMOVE ${DBG_CFGS})
-endif()
 
 set(tools OgreMeshUpgrader OgreXMLConverter VRMLConverter)
 if(OGRE_BUILD_PLUGIN_ASSIMP)
@@ -156,10 +142,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
-file(GLOB share_cfgs "${CURRENT_PACKAGES_DIR}/share/OGRE/*.cfg")
+file(GLOB share_cfgs "${CURRENT_PACKAGES_DIR}/etc/ogre/*.cfg")
 foreach(file ${share_cfgs})
     vcpkg_replace_string("${file}" "${CURRENT_PACKAGES_DIR}" "../..")
 endforeach()
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/ogre/plugins.cfg" "${CURRENT_PACKAGES_DIR}/debug" "../..")
+    file(GLOB share_cfgs "${CURRENT_PACKAGES_DIR}/debug/etc/ogre/*.cfg")
+    foreach(file ${share_cfgs})
+        vcpkg_replace_string("${file}" "${CURRENT_PACKAGES_DIR}/debug" "../../..")
+    endforeach()
+endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

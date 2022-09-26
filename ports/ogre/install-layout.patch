@@ -1,0 +1,48 @@
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index a7a3796..a44e3f0 100755
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -18,6 +18,7 @@ if(WIN32 OR APPLE)
+ else()
+ 	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
+ endif()
++set(OGRE_CMAKE_DIR "share/ogre")
+ 
+ set(INST_FILES Utils/FindPkgMacros.cmake) 
+ 
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index 92b7115..b24bdf0 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -39,6 +39,9 @@ elseif (UNIX)
+   set(OGRE_SAMPLES_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_LIB_DIRECTORY}/OGRE/Samples")
+   set(OGRE_CFG_INSTALL_PATH "share/OGRE")
+ endif ()
++set(OGRE_MEDIA_PATH "share/ogre/Media")
++set(OGRE_CFG_INSTALL_PATH "etc/ogre")
++set(OGRE_PLUGIN_DIR_ORIG "${OGRE_PLUGIN_DIR_REL}")
+ 
+ # generate OgreConfigPaths.h
+ configure_file(${OGRE_TEMPLATES_DIR}/OgreConfigPaths.h.in ${PROJECT_BINARY_DIR}/include/OgreConfigPaths.h @ONLY)
+@@ -158,10 +161,10 @@ endif ()
+ if (WIN32)
+   set(OGRE_PLUGIN_DIR_REL ".")
+   set(OGRE_SAMPLES_DIR_REL ".")
+-elseif (APPLE)
++elseif (APPLE AND OGRE_BUILD_LIBS_AS_FRAMEWORKS)
+   set(OGRE_PLUGIN_DIR_REL "Contents/Frameworks/")
+   set(OGRE_SAMPLES_DIR_REL "Contents/Plugins/")
+-elseif (UNIX)
++else ()
+   set(OGRE_PLUGIN_DIR_REL "${PROJECT_BINARY_DIR}/lib")
+   set(OGRE_SAMPLES_DIR_REL "${PROJECT_BINARY_DIR}/lib")
+ endif ()
+@@ -214,6 +217,8 @@ if(WIN32)
+ else()
+   set(OGRE_PLUGIN_DIR_CMAKE "lib/OGRE")
+ endif()
++set(OGRE_CMAKE_DIR "share/ogre")
++cmake_path(RELATIVE_PATH OGRE_PLUGIN_DIR_ORIG BASE_DIRECTORY "${CMAKE_INSTALL_PREFIX}" OUTPUT_VARIABLE OGRE_PLUGIN_DIR_CMAKE)
+ configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
+     INSTALL_DESTINATION ${OGRE_CMAKE_DIR}
+     PATH_VARS CMAKE_INSTALL_PREFIX)
