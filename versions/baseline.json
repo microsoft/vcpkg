@@ -3961,7 +3961,7 @@
       "port-version": 9
     },
     "libofx": {
-      "baseline": "0.10.7",
+      "baseline": "0.10.8",
       "port-version": 0
     },
     "libogg": {
