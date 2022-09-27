@@ -18,9 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
@@ -28,7 +27,7 @@ vcpkg_configure_cmake(
         -DBZIP2_SKIP_TOOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/bzlib.h" BZLIB_H)
