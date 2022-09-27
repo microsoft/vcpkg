@@ -97,8 +97,8 @@
       "port-version": 8
     },
     "angelscript": {
-      "baseline": "2.35.1",
-      "port-version": 1
+      "baseline": "2.36.0",
+      "port-version": 0
     },
     "angle": {
       "baseline": "chromium_4472",
