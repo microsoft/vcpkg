@@ -3,6 +3,7 @@
   "version": "0.10.8",
   "description": "OFX banking protocol abstraction library",
   "homepage": "https://github.com/libofx/libofx",
+  "license": "GPL-2.0-only",
   "supports": "!uwp",
   "dependencies": [
     "libopensp",
