@@ -3,28 +3,25 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vczh-libraries/Release
-    REF 0a7bf9b4f7e705f17efc2ada5aa2b089147234d4 # 1.1.0.0
-    SHA512 b70081495f2843a45ea2aea37a2d00327e336a3313acfa20421de4748c880905279353c03ecc50f45e9cda0aae34aad69ba44de81fa2fd4d4855be6002dd068f
+    REF d0630ae6461f890ac0a0fa09edd263c3f5abb10c # 1.1.0.0
+    SHA512 8da6af0f6b283cff0f6dc38c36c4ea789a58dfa8c298557d9ecb0b7b423d4e5876ceeb1d16dccbf4b8da4a0f4adccbd1e89119b75dbb361bd2b4f092fda93c39
     HEAD_REF master
-    PATCHES fix-arm.patch
 )
 
 if ("tool" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH GACGEN_SOURCE_PATH
         REPO vczh-libraries/GacUI
-        REF 83501365b241fb77b6c08693a001bf16510dcb8c
-        SHA512 db51341647139fec133ae19c122bd1ee3a4d07ddb822a7c156d24f2960279bfd6dd87b20a9d60fe1c2ce43c5dc8188830aea58c08a7382bc69fc0f3bed86524a
+        REF ea3bfe53ecb15861af8433d5ffc3d89a619830c1
+        SHA512 bce8d767b2b02c6743892acd8b64dcd98c8d468d40d04c2af598b0cccb6d6a497a9424155ba7b153bb88c310541b3a26406f6f91b7265e6476033f09b736a7c1
         HEAD_REF master
-        PATCHES fix-arm.patch
     )
     vcpkg_from_github(
         OUT_SOURCE_PATH CPPMERGE_SOURCE_PATH
         REPO vczh-libraries/Workflow
-        REF 8bce9694692ba0da93a10d29224943656b02e573
-        SHA512 ee17e2a99c78a5abb62708719989e9ae224bcec7a78cb08882870d0e21f2017d24d02c1c4c75d0ac89549478d49679681b3d11d76f408988306c85b1d3ab28ae
+        REF 2235f913c6ed112c8019c6115a11734eb63899b6
+        SHA512 87da1ab837f6653de4394ff1f5e1800d0a457c728be93a414a1b7def392c5866792cb75aa0aef118565340c287e2b084a439592aea603b7967e3b3488e519006
         HEAD_REF master
-        PATCHES fix-arm.patch
     )
 endif()
 
