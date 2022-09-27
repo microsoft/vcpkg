@@ -706,7 +706,7 @@
     },
     "boost-fiber": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-filesystem": {
       "baseline": "1.80.0",
