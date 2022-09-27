@@ -1,10 +1,10 @@
 {
   "name": "eve",
-  "version-date": "2022-03-15",
+  "version-date": "2022-09-20",
   "description": "EVE - the Expressive Vector Engine",
   "homepage": "https://github.com/jfalcou/eve",
   "documentation": "https://jfalcou.github.io/eve/",
-  "license": "MIT",
+  "license": "BSL-1.0",
   "supports": "!windows",
   "dependencies": [
     {

@@ -14,16 +14,16 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF 09558f380a314ea89b28f406cc810f47718cea49
-        SHA512 7fc1b3d4ed6bd7401b764e27755270dd97caeb09f3bdede90e2e8c554acd13b5c24f9c7343e642bcb62d2937b8169d900fa46a1b97a8c439733c8cdcac19d548
+        REF 566127ad605172735b9ac5cc6797261f3dd6c45c
+        SHA512 19e997e1dd7ecfbf5e8f11f44daa89cee7aa793f95aaed4bdaf792f5443173e0ca434d69f68a6633ee7cdc504d03a42f4b4e8aeec549c7ffdbd5e03db8cce6b5
         HEAD_REF master
     )
 endif()
 
-file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake" DESTINATION "${SOURCE_PATH}/deps/c-utility/configs/")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
