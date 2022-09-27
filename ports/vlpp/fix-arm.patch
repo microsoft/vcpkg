@@ -1,27 +1,18 @@
-diff --git a/Import/Vlpp.h b/Import/Vlpp.h
-index cf59b80..b00c9b8 100644
---- a/Import/Vlpp.h
-+++ b/Import/Vlpp.h
-@@ -49,10 +49,10 @@ static_assert(sizeof(wchar_t) == sizeof(char32_t), "wchar_t is not UTF-32.");
- static_assert(false, "wchar_t configuration is not right.");
- #endif
+diff --git a/Import/VlppOS.Windows.cpp b/Import/VlppOS.Windows.cpp
+index 5bcb304..54c84cf 100644
+--- a/Import/VlppOS.Windows.cpp
++++ b/Import/VlppOS.Windows.cpp
+@@ -1779,7 +1779,12 @@ SpinLock
+ 	{
+ 		while(_InterlockedCompareExchange(&token, 1, 0)!=0)
+ 		{
+-			while(token!=0) _mm_pause();
++            while (token != 0)
++#if defined(__arm__) || defined(_M_ARM) || defined(_M_ARM64)
++              __yield();
++#else
++              _mm_pause();
++#endif
+ 		}
+ 	}
  
-+#include <stdlib.h>
- #if defined VCZH_MSVC
- #include <intrin.h>
- #elif defined VCZH_GCC
--#include <x86intrin.h>
- #include <stdint.h>
- #include <stddef.h>
- #include <wchar.h>
-@@ -149,8 +149,8 @@ x86 and x64 Compatbility
- #define INCRC(x)	(_InterlockedIncrement64(x))
- #define DECRC(x)	(_InterlockedDecrement64(x))
- #elif defined VCZH_GCC
--#define INCRC(x)	(__sync_add_and_fetch(x, 1))
--#define DECRC(x)	(__sync_sub_and_fetch(x, 1))
-+#define INCRC(x)	(__atomic_add_fetch(x, 1, __ATOMIC_SEQ_CST))
-+#define DECRC(x)	(__atomic_sub_fetch(x, 1, __ATOMIC_SEQ_CST))
- #endif
- #else
- #define ITOA_S		_itoa_s
