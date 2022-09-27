@@ -2,7 +2,7 @@
   "name": "libofx",
   "version": "0.10.8",
   "description": "OFX banking protocol abstraction library",
-  "homepage": "http://libofx.sourceforge.net",
+  "homepage": "https://github.com/libofx/libofx",
   "supports": "!uwp",
   "dependencies": [
     "libopensp",
