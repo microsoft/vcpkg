@@ -96,14 +96,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 1aeb5fc..0a9ffb7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,8 +11,8 @@ if(MSVC)
+@@ -11,8 +11,6 @@ if(MSVC)
  	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
  	set (CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS}")
  else()
 -	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wunused-value -Wno-c++11-long-long -Wno-variadic-macros -Werror -Wextra -pedantic -Wnonportable-include-path -Wshadow -std=c89")
 -	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wunused-value -Wno-c++11-long-long -Wno-variadic-macros -Werror -Wextra -Wnon-virtual-dtor -pedantic -Wnonportable-include-path -Wshadow -std=c++11 -fno-exceptions -fno-rtti")
-+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wunused-value -Wno-c++11-long-long -Wno-variadic-macros -Wextra -pedantic -Wnonportable-include-path -Wshadow -std=c89")
-+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wunused-value -Wno-c++11-long-long -Wno-variadic-macros -Wextra -Wnon-virtual-dtor -pedantic -Wnonportable-include-path -Wshadow -std=c++11 -fno-exceptions -fno-rtti")
  
  	if (${SPINE_SANITIZE})
  		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize=undefined")
