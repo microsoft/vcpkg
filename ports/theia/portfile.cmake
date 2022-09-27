@@ -13,6 +13,7 @@ vcpkg_from_github(
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenImageIO.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)

@@ -8,7 +8,6 @@
   ],
   "homepage": "https://github.com/open-telemetry/opentelemetry-cpp",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static)",
   "dependencies": [
     "curl",
     "nlohmann-json",
@@ -26,7 +25,8 @@
       "description": "Whether to include the Elasticsearch Client in the SDK"
     },
     "etw": {
-      "description": "Whether to include the ETW Exporter in the SDK"
+      "description": "Whether to include the ETW Exporter in the SDK",
+      "supports": "windows"
     },
     "jaeger": {
       "description": "Whether to include the Jaeger exporter",

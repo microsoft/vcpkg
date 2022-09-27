@@ -2,12 +2,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if ("etw" IN_LIST FEATURES)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "linux" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "OSX") 
-	    message(FATAL_ERROR "Feature 'etw' does not support 'linux & osx'")
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
@@ -38,7 +32,7 @@ if(WITH_OTLP)
         SHA512 5176e93ddbb92d10b5900f42bb7b98cd718488fb261ad204e73127e1bf1feb6a20cf17d5c7d4fbdd89575cef6c7fa98127a28d83e50ffba61da01a73659ddae6
     )
 
-    vcpkg_extract_source_archive(src ARCHIVE ${ARCHIVE})
+    vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/opentelemetry-proto")
     file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
