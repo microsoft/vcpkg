@@ -5,9 +5,9 @@ vcpkg_from_github(
     REPO EsotericSoftware/spine-runtimes
     REF 4.1.00
     SHA512 40a352a1f5e9939802667f330c9de2f0b03bf63834d1c20514a6cecb35c1a9915fb13588ee92cbaba9effbd2205c25851cca58d2ec7f90ce9b974252bd168425
+    HEAD_REF 4.1
     PATCHES
         fix-cmake.patch
-    HEAD_REF 4.1
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
