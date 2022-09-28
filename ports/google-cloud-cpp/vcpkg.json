@@ -660,6 +660,18 @@
         }
       ]
     },
+    "osconfig": {
+      "description": "Cloud OS Config API C++ Client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "oslogin": {
       "description": "Cloud OS Login API C++ Client Library",
       "dependencies": [
