@@ -1,3 +1,8 @@
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND PATCHES build-static-lib.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
@@ -7,6 +12,7 @@ vcpkg_from_github(
     PATCHES
         fix-install-path.patch
         fix-uwp-build.patch
+        ${PATCHES}
 )
 
 vcpkg_cmake_configure(
