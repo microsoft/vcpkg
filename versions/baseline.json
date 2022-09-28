@@ -3852,6 +3852,10 @@
       "baseline": "0.31",
       "port-version": 2
     },
+    "liblrc": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "liblsl": {
       "baseline": "1.16.0",
       "port-version": 0
