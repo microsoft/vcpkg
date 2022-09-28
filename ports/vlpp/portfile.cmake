@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vczh-libraries/Release
-    REF d0630ae6461f890ac0a0fa09edd263c3f5abb10c # 1.1.0.0
-    SHA512 8da6af0f6b283cff0f6dc38c36c4ea789a58dfa8c298557d9ecb0b7b423d4e5876ceeb1d16dccbf4b8da4a0f4adccbd1e89119b75dbb361bd2b4f092fda93c39
+    REF 103ac4c2a5f665190db49d5bd557b5eaa6abd638 # 1.1.0.0
+    SHA512 e11e5b8ac8e3d736a7c79356ef180daac3e701246d6cb37182aa810dc5f7507d630a62118c03ef1f7eb2f70590178c1cf2a1e1b88222f9fd49cf07db1a10274d
     HEAD_REF master
 )
 
@@ -12,15 +12,15 @@ if ("tool" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH GACGEN_SOURCE_PATH
         REPO vczh-libraries/GacUI
-        REF ea3bfe53ecb15861af8433d5ffc3d89a619830c1
-        SHA512 bce8d767b2b02c6743892acd8b64dcd98c8d468d40d04c2af598b0cccb6d6a497a9424155ba7b153bb88c310541b3a26406f6f91b7265e6476033f09b736a7c1
+        REF 24e525948b54a08ec2cd5075033e7b167084de3a
+        SHA512 f8055c4f738de8a9f8c76d73e6ffd576c03e3f9c5c7a0c23cf0adb3128bb3f2cb7fb174bdbadee460d4e2833b9f7c29706101691dcb61e705d59e19fc5961e2f
         HEAD_REF master
     )
     vcpkg_from_github(
         OUT_SOURCE_PATH CPPMERGE_SOURCE_PATH
         REPO vczh-libraries/Workflow
-        REF 2235f913c6ed112c8019c6115a11734eb63899b6
-        SHA512 87da1ab837f6653de4394ff1f5e1800d0a457c728be93a414a1b7def392c5866792cb75aa0aef118565340c287e2b084a439592aea603b7967e3b3488e519006
+        REF 72fcc5e120450874de259c1be2fdfd86bc656182
+        SHA512 ec4429708a755430b37050a78bea915230cb7a2a0c64681313f6875b6ad1ef17867d72d2a009d531d6c8778621b5d93634eef7d53af3c19be414bd0e19b9d828
         HEAD_REF master
     )
 endif()
@@ -54,12 +54,14 @@ if ("tool" IN_LIST FEATURES)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.gacgen.txt" "${GACGEN_SOURCE_PATH}/CMakeLists.txt" COPYONLY)
     vcpkg_cmake_configure(
         SOURCE_PATH "${GACGEN_SOURCE_PATH}"
+        LOGFILE_BASE "vlpp-gacgen"
     )
     vcpkg_cmake_install()
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.cppmerge.txt" "${CPPMERGE_SOURCE_PATH}/CMakeLists.txt" COPYONLY)
     vcpkg_cmake_configure(
         SOURCE_PATH "${CPPMERGE_SOURCE_PATH}"
+        LOGFILE_BASE "vlpp-cppmerge"
     )
     vcpkg_cmake_install()
     
