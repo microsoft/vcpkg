@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2aa6642..e74f93c 100644
+index 458a328..b8c2fc6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -56,7 +56,7 @@ IF(ASSIMP_HUNTER_ENABLED)
    add_definitions(-DASSIMP_USE_HUNTER)
  ENDIF()
  
--PROJECT(Assimp VERSION 5.2.0)
-+PROJECT(Assimp VERSION 5.2.4)
+-PROJECT(Assimp VERSION 5.2.4)
++PROJECT(Assimp VERSION 5.2.5)
  
  # All supported options ###############################################
  
@@ -16,10 +16,10 @@ index 2aa6642..e74f93c 100644
    # enable multi-core compilation with MSVC
    IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang" ) # clang-cl
 -    ADD_COMPILE_OPTIONS(/bigobj /W4 /WX )
-+    ADD_COMPILE_OPTIONS(/bigobj)
++    ADD_COMPILE_OPTIONS(/bigobj )
    ELSE() # msvc
 -    ADD_COMPILE_OPTIONS(/MP /bigobj /W4 /WX)
-+    ADD_COMPILE_OPTIONS(/MP /bigobj)
++    ADD_COMPILE_OPTIONS(/MP /bigobj )
    ENDIF()
    # disable "elements of array '' will be default initialized" warning on MSVC2013
    IF(MSVC12)
@@ -29,13 +29,13 @@ index 2aa6642..e74f93c 100644
 -  SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
 -  SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
 -  SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
-+  #SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
-+  #SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
-+  #SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
++  # SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
++  # SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
++  # SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
  ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
    IF(NOT ASSIMP_HUNTER_ENABLED)
-     SET(CMAKE_CXX_STANDARD 11)
-@@ -414,7 +414,7 @@ ENDIF()
+     SET(CMAKE_CXX_STANDARD 17)
+@@ -418,7 +418,7 @@ ENDIF()
  
  set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
  
@@ -44,7 +44,7 @@ index 2aa6642..e74f93c 100644
    set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
    set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-hunter-config.cmake.in")
    set(NAMESPACE "${PROJECT_NAME}::")
-@@ -422,7 +422,7 @@ IF(ASSIMP_HUNTER_ENABLED)
+@@ -426,7 +426,7 @@ IF(ASSIMP_HUNTER_ENABLED)
    set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
    set(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
  ELSE()
@@ -53,7 +53,7 @@ index 2aa6642..e74f93c 100644
    set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
    set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
-@@ -464,14 +464,14 @@ ENDIF()
+@@ -468,14 +468,14 @@ ENDIF()
  
  # Search for external dependencies, and build them from source if not found
  # Search for zlib
@@ -61,7 +61,7 @@ index 2aa6642..e74f93c 100644
 -  hunter_add_package(ZLIB)
 -  find_package(ZLIB CONFIG REQUIRED)
 +IF(1)
-+  #hunter_add_package(ZLIB)
++  # hunter_add_package(ZLIB)
 +  find_package(ZLIB REQUIRED)
  
    add_definitions(-DASSIMP_BUILD_NO_OWN_ZLIB)
@@ -73,7 +73,7 @@ index 2aa6642..e74f93c 100644
  ELSE()
    # If the zlib is already found outside, add an export in case assimpTargets can't find it.
    IF( ZLIB_FOUND )
-@@ -512,12 +512,12 @@ ELSE()
+@@ -516,12 +516,12 @@ ELSE()
  ENDIF()
  
  IF( NOT IOS )
@@ -468,19 +468,19 @@ index 5339454..45e07c0 100644
  ENDIF ()
  
  
-diff --git a/code/Common/Assimp.cpp b/code/Common/Assimp.cpp
-index 71e312c..fa7fc36 100644
---- a/code/Common/Assimp.cpp
-+++ b/code/Common/Assimp.cpp
-@@ -1290,7 +1290,7 @@ ASSIMP_API void aiQuaternionInterpolate(
- #   endif
+diff --git a/code/Common/StbCommon.h b/code/Common/StbCommon.h
+index 1265d25..18f4564 100644
+--- a/code/Common/StbCommon.h
++++ b/code/Common/StbCommon.h
+@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma GCC diagnostic ignored "-Wunused-function"
+ #endif
  
- #   define STB_IMAGE_IMPLEMENTATION
--#   include "stb/stb_image.h"
-+#   include <stb_image.h>
+-#include "stb/stb_image.h"
++#include <stb_image.h>
  
- #   if _MSC_VER
- #       pragma warning(pop)
+ #if _MSC_VER
+ #pragma warning(pop)
 diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
 index 383300e..03fdd9a 100644
 --- a/code/Common/BaseImporter.cpp
@@ -495,7 +495,7 @@ index 383300e..03fdd9a 100644
  
  // ------------------------------------------------------------------------------------------------
 diff --git a/code/Common/ZipArchiveIOSystem.cpp b/code/Common/ZipArchiveIOSystem.cpp
-index e0c9883..78b522a 100644
+index 3d5c72e..770cb9d 100644
 --- a/code/Common/ZipArchiveIOSystem.cpp
 +++ b/code/Common/ZipArchiveIOSystem.cpp
 @@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -507,26 +507,3 @@ index e0c9883..78b522a 100644
  #endif
  
  namespace Assimp {
-@@ -196,7 +196,9 @@ zlib_filefunc_def IOSystem2Unzip::get(IOSystem *pIOHandler) {
-     zlib_filefunc_def mapping;
- 
-     mapping.zopen_file = (open_file_func)open;
-+#ifdef ZOPENDISK64
-     mapping.zopendisk_file = (opendisk_file_func)opendisk;
-+#endif
-     mapping.zread_file = (read_file_func)read;
-     mapping.zwrite_file = (write_file_func)write;
-     mapping.ztell_file = (tell_file_func)tell;
-diff --git a/code/Pbrt/PbrtExporter.cpp b/code/Pbrt/PbrtExporter.cpp
-index 9590c49..e23b9b1 100644
---- a/code/Pbrt/PbrtExporter.cpp
-+++ b/code/Pbrt/PbrtExporter.cpp
-@@ -83,7 +83,7 @@ Other:
- #include <sstream>
- #include <string>
- 
--#include "stb/stb_image.h"
-+#include <stb_image.h>
- 
- using namespace Assimp;
- 
