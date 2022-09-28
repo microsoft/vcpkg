@@ -10,6 +10,11 @@
   "dependencies": [
     "egl-registry",
     "opengl-registry",
-    "zlib"
+    "zlib",
+    "xxhash",
+    {
+        "name": "libxnvctrl",
+        "platform": "linux"
+    }
   ]
 }

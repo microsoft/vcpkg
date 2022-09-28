@@ -1,0 +1,12 @@
+{
+  "name": "libxnvctrl",
+  "version": "515.76",
+  "description": "A tool for configuring the NVIDIA X driver on Unix and Linux systems.",
+  "homepage": "https://github.com/NVIDIA/nvidia-settings/",
+  "license": "GPL-2.0",
+  "supports": "!windows",
+  "dependencies": [
+    "libx11",
+    "libxext"
+  ]
+}
