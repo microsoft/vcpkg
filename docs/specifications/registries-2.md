@@ -123,18 +123,20 @@ This example is of `ogre`, since this port has both features and dependencies;
 remember that this file would be `port_versions/o-/ogre.json`.
 
 ```json
-[
-  {
-    "version-string": "1.12.7",
-    "git-tree": "466e96fd2e17dd2453aa31dc0bc61bdcf53e7f61",
-  },
-  {
-    "version-string": "1.12.1",
-    "port-version": 1,
-    "git-tree": "0de81b4f7e0ec24966e929c2ea64e16c15e71d5e",
-  },
-  ...
-]
+{
+  "versions": [
+    {
+      "version-string": "1.12.7",
+      "git-tree": "466e96fd2e17dd2453aa31dc0bc61bdcf53e7f61",
+    },
+    {
+      "version-string": "1.12.1",
+      "port-version": 1,
+      "git-tree": "0de81b4f7e0ec24966e929c2ea64e16c15e71d5e",
+    },
+    ...
+  ]
+}
 ```
 
 #### Filesystem Registry Databases
