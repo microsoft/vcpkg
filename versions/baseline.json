@@ -2894,7 +2894,7 @@
     },
     "hpx": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "http-parser": {
       "baseline": "2.9.4",
