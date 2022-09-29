@@ -1,6 +1,6 @@
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PATCHES build-static-lib.patch)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
@@ -12,7 +12,6 @@ vcpkg_from_github(
     PATCHES
         fix-install-path.patch
         fix-uwp-build.patch
-        ${PATCHES}
 )
 
 vcpkg_cmake_configure(
