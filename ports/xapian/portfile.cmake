@@ -34,5 +34,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Handle copyright
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup()
+# vcpkg_cmake_config_fixup()
 # vcpkg_copy_pdbs()
