@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF f7521879862b9085318e814c6157490dd9dbbdb4
     SHA512 f5617cbe73b6b905cc6bba181e6a3efedd59584f7a8c90e0f34db580cfdad4239a2ab753df4e221f26a5c0db51475b021052e3b9e3ab3673573573b1d57f3fdb
     HEAD_REF master
+    PATCHES
+        fix-mingw.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION ${SOURCE_PATH})
