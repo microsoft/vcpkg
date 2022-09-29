@@ -4508,6 +4508,10 @@
       "baseline": "2.6",
       "port-version": 1
     },
+    "luabridge3": {
+      "baseline": "3.0-beta4",
+      "port-version": 0
+    },
     "luafilesystem": {
       "baseline": "1.8.0",
       "port-version": 2
