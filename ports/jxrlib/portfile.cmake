@@ -10,7 +10,7 @@ vcpkg_from_github(
         fix-mingw.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Linux AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES iOS)
     # The file guiddef.h is part of the Windows SDK,
@@ -19,18 +19,16 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MA
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-#install FindJXR.cmake file
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/FindJXR.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jxr")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jxr")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jxr")
 
-# Handle copyright
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jxr")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
