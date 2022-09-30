@@ -5,7 +5,10 @@ vcpkg_from_github(
     REPO treehopper-electronics/treehopper-sdk
     REF 1.11.3
     SHA512 65b748375b798787c8b59f9657151f340920c939c3f079105b9b78f4e3b775125598106c6dfa4feba111a64d30f007003a70110ac767802a7dd1127a25c9fb14
-    HEAD_REF master)
+    HEAD_REF master
+    PATCHES
+        libusb.patch
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/C++/API"

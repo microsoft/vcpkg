@@ -4,9 +4,13 @@
   "port-version": 6,
   "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
   "homepage": "https://treehopper.io",
+  "license": "MIT",
   "supports": "!staticcrt",
   "dependencies": [
-    "libusb",
+    {
+      "name": "libusb",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1128,7 +1128,6 @@ tmxparser:x86-windows=fail
 torch-th:arm64-windows=fail
 torch-th:arm-uwp=fail
 torch-th:x64-uwp=fail
-treehopper:x64-linux=fail
 unicorn-lib:arm-uwp=fail
 unicorn-lib:x64-uwp=fail
 unittest-cpp:arm64-windows=fail
