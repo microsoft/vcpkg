@@ -24,6 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-fiber" = 1;
 }
 
 $portData = @{
@@ -45,7 +46,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!osx & !uwp & !arm & !emscripten";
+        "supports" = "!uwp & !arm & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";
