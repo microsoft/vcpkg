@@ -2,7 +2,7 @@
   "default": {
     "3fd": {
       "baseline": "2.6.3",
-      "port-version": 2
+      "port-version": 3
     },
     "7zip": {
       "baseline": "22.0",
@@ -3194,7 +3194,7 @@
     },
     "jsonnet": {
       "baseline": "0.18.0",
-      "port-version": 0
+      "port-version": 1
     },
     "jwt-cpp": {
       "baseline": "0.6.0",
