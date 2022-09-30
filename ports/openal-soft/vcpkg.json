@@ -1,7 +1,7 @@
 {
   "name": "openal-soft",
   "version-semver": "1.22.2",
-  "port-version": 1,
+  "port-version": 4,
   "description": "OpenAL Soft is an LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.",
   "homepage": "https://github.com/kcat/openal-soft",
   "license": "GPL-2.0-or-later",
@@ -19,5 +19,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "pipewire": {
+      "description": "Native support for Pipewire",
+      "supports": "linux",
+      "dependencies": [
+        "pipewire"
+      ]
+    }
+  }
 }

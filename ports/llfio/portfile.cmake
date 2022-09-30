@@ -8,13 +8,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF 4a117d683b82a2e3e456c2ecc47a99c8406280fa
-    SHA512 7880356dbff10664a146a09558ba15f95cf6883ebe8e0af3d392fbd6f86f3455b9b5c8b6c5c1281c8fca93c358fcafd3468ab575eee0b483ec5b136ca59eef04
+    REF 6c8e3e10a2919b4da754d0f3db54b3c616e1dd56
+    SHA512 9265d722a6d9e4a9a0605fc071c5053bd71188f6d5500cfa4e64ef9ee33be364d3a1289d011863b64a4f3bdfc3a54fa9bfc6ee69ff1a93995584605c58e79f62
     HEAD_REF develop
     PATCHES
-        # https://github.com/ned14/llfio/issues/83
-        # To be removed on next update
-        issue-83-fix-backport.patch
 )
 
 vcpkg_from_github(
@@ -63,8 +60,11 @@ vcpkg_cmake_configure(
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib
         ${LLFIO_FEATURE_OPTIONS}
+        -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCXX_CONCEPTS_FLAGS=
+        -DCXX_COROUTINES_FLAGS=
         ${extra_config}
 )
 
@@ -87,4 +87,4 @@ if("status-code" IN_LIST FEATURES)
 else()
     file(INSTALL "${CURRENT_PORT_DIR}/usage-error-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
-file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Licence.txt")
