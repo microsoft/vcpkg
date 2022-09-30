@@ -1,11 +1,11 @@
 {
   "name": "gstreamer",
   "version": "1.19.2",
-  "port-version": 8,
+  "port-version": 9,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
-  "supports": "!linux & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "cairo",
