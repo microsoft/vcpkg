@@ -9,7 +9,7 @@ index 85373058..10c40d0d 100644
 -    target_link_libraries(treehopper usb-1.0 pthread)
 +    find_package(libusb CONFIG REQUIRED)
 +    target_include_directories(treehopper PRIVATE ${LIBUSB_INCLUDE_DIRS})
-+    target_link_libraries(treehopper ${LIBUSB_LIBRARIES} pthread)
++    target_link_libraries(treehopper PRIVATE ${LIBUSB_LIBRARIES} pthread)
  elseif(WIN32)
      target_link_libraries(treehopper winusb setupapi)
  endif(APPLE)
