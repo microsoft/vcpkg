@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
