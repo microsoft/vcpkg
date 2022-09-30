@@ -872,10 +872,6 @@ qt5-canvas3d:x86-windows=skip
 qt5-wayland:x64-osx=fail
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
-# Post build checks fail
-qtwebengine:arm64-windows=fail
-
-
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -1266,7 +1262,7 @@ cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
 qt:x64-windows=pass
 qt:x64-windows-static=pass
-qt:x64-windows-static-md=pass
+# qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass. 
 qt:arm64-windows=pass
 qt:x64-linux=pass
 qt:x64-osx=pass
