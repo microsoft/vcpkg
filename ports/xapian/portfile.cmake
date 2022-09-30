@@ -9,9 +9,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 if(WIN32)
-vcpkg_replace_string("${SOURCE_PATH}/configure.ac"
-"z zlib zdll" "z zlib zdll zlibd"
-)
+    vcpkg_replace_string("${SOURCE_PATH}/configure.ac" "z zlib zdll" "z zlib zdll zlibd")
+
 endif()
 
 vcpkg_configure_make(
