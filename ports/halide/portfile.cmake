@@ -1,6 +1,5 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-# Needed in usage.in
 set(HALIDE_VERSION_TAG v14.0.0)
 
 vcpkg_from_github(
@@ -29,9 +28,8 @@ vcpkg_check_features(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
         -DWITH_DOCS=NO
         -DWITH_PYTHON_BINDINGS=NO
         -DWITH_TESTS=NO
@@ -68,9 +66,9 @@ vcpkg_copy_pdbs(
 vcpkg_cmake_config_fixup()
 vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)

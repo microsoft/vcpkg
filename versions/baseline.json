@@ -2826,7 +2826,7 @@
     },
     "halide": {
       "baseline": "14.0.0",
-      "port-version": 1
+      "port-version": 0
     },
     "happly": {
       "baseline": "2021-03-19",
@@ -2898,7 +2898,7 @@
     },
     "hpx": {
       "baseline": "1.8.0",
-      "port-version": 2
+      "port-version": 1
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -3646,7 +3646,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.9",
-      "port-version": 2
+      "port-version": 1
     },
     "libevent": {
       "baseline": "2.1.12",
@@ -3910,7 +3910,7 @@
     },
     "libmodman": {
       "baseline": "2.0.1",
-      "port-version": 5
+      "port-version": 4
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
@@ -4714,7 +4714,7 @@
     },
     "milerius-sfml-imgui": {
       "baseline": "1.1",
-      "port-version": 6
+      "port-version": 5
     },
     "mimalloc": {
       "baseline": "2.0.6",
@@ -5062,7 +5062,7 @@
     },
     "ngspice": {
       "baseline": "37",
-      "port-version": 1
+      "port-version": 0
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -5442,7 +5442,7 @@
     },
     "openvr": {
       "baseline": "1.16.8",
-      "port-version": 3
+      "port-version": 2
     },
     "openxr-loader": {
       "baseline": "1.0.22",
@@ -5910,7 +5910,7 @@
     },
     "qpid-proton": {
       "baseline": "0.37.0",
-      "port-version": 4
+      "port-version": 3
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -7878,7 +7878,7 @@
     },
     "xalan-c": {
       "baseline": "1.12",
-      "port-version": 2
+      "port-version": 1
     },
     "xaudio2redist": {
       "baseline": "1.2.9",
