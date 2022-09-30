@@ -2934,7 +2934,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 3
+      "port-version": 4
     },
     "idevicerestore": {
       "baseline": "1.0.12",
@@ -3814,7 +3814,7 @@
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 4
+      "port-version": 5
     },
     "libjpeg-turbo": {
       "baseline": "2.1.4",
