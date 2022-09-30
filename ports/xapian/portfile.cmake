@@ -1,11 +1,3 @@
-
-# vcpkg_from_github(
-#     OUT_SOURCE_PATH SOURCE_PATH
-#     REPO xapian/xapian
-#     REF ac70c200019231fd00beeba6908b558dfa4ec62f
-#     SHA512 7cabd69f1ea4a978a3f5248b6730cea5b9cd833d26b125823369b2013a7a38331cafe6e038998166aed28ea8944a0f8d83d9d8c3432c919b1093852a86a28563
-#     HEAD_REF master
-# )
 vcpkg_download_distfile(ARCHIVE
     URLS https://oligarchy.co.uk/xapian/1.4.21/xapian-core-1.4.21.tar.xz
     FILENAME xapian-core-1.4.21.tar.xz
