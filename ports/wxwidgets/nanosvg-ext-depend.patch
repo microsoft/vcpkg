@@ -15,14 +15,14 @@ index 401bf48..b9e4b57 100644
              continue()
          endif()
 diff --git a/build/cmake/options.cmake b/build/cmake/options.cmake
-index 49c536a..5630526 100644
+index 2b120e5..26651f9 100644
 --- a/build/cmake/options.cmake
 +++ b/build/cmake/options.cmake
 @@ -114,7 +114,7 @@ wx_add_thirdparty_library(wxUSE_EXPAT EXPAT "use expat for XML parsing" DEFAULT_
  wx_add_thirdparty_library(wxUSE_LIBJPEG JPEG "use libjpeg (JPEG file format)")
  wx_add_thirdparty_library(wxUSE_LIBPNG PNG "use libpng (PNG image format)")
  wx_add_thirdparty_library(wxUSE_LIBTIFF TIFF "use libtiff (TIFF file format)")
--wx_add_thirdparty_library(wxUSE_NANOSVG NanoSVG "use NanoSVG for rasterizing SVG")
+-wx_add_thirdparty_library(wxUSE_NANOSVG NanoSVG "use NanoSVG for rasterizing SVG" DEFAULT builtin)
 +wx_add_thirdparty_library(wxUSE_NANOSVG unofficial-nanosvg "use NanoSVG for rasterizing SVG")
  
  wx_option(wxUSE_LIBLZMA "use LZMA compression" OFF)

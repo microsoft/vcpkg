@@ -1,15 +1,13 @@
 {
   "name": "libtcod",
-  "version": "1.21.0",
+  "version": "1.22.3",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
   "documentation": "https://libtcod.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "lodepng",
     "stb",
-    "utf8proc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,10 +15,21 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
+    }
+  ],
+  "default-features": [
+    "png",
+    "sdl",
+    "unicode",
     "zlib"
   ],
   "features": {
+    "png": {
+      "description": "Support for reading and writing PNG files.  Required to save screenshots and to load tilesets from files.",
+      "dependencies": [
+        "lodepng"
+      ]
+    },
     "sdl": {
       "description": "Support for SDL2 windows and events including OpenGL support and the libtcod context.",
       "dependencies": [
@@ -30,6 +39,18 @@
     },
     "threads": {
       "description": "Support for deprecated threading functions.  If in doubt then leave this disabled."
+    },
+    "unicode": {
+      "description": "Support for non-ASCII characters.  Required for text printing functions",
+      "dependencies": [
+        "utf8proc"
+      ]
+    },
+    "zlib": {
+      "description": "Support for REXPaint files and TCODZip archives.",
+      "dependencies": [
+        "zlib"
+      ]
     }
   }
 }

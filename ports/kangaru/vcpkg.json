@@ -1,6 +1,6 @@
 {
   "name": "kangaru",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "A dependency injection container for C++11, C++14 and later",
   "homepage": "https://github.com/gracicot/kangaru",
   "license": "MIT",
@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hashtypeid": {
+      "description": "Enable hash based type id"
+    }
+  }
 }
