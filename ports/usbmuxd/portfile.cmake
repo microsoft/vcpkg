@@ -10,7 +10,7 @@ vcpkg_from_github(
 )
 
 vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH usbmuxd.vcxproj
     LICENSE_SUBPATH COPYING.GPLv2
     USE_VCPKG_INTEGRATION
