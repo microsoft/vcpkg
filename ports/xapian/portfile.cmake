@@ -21,12 +21,7 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/xapian")
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/xapian)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/xapian")
-    vcpkg_cmake_config_fixup(CONFIG_PATH debug/lib/cmake/xapian)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/xapian)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Handle copyright
