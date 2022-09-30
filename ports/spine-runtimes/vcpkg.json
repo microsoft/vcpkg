@@ -9,13 +9,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "features": {
-    "sfml": {
-      "description": "Support https://www.sfml-dev.org/",
-      "dependencies": [
-        "sfml"
-      ]
-    }
-  }
+  ]
 }

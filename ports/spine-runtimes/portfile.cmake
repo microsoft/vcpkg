@@ -10,16 +10,7 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        sfml SPINE_SFML
-)
-
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${FEATURE_OPTIONS}
-)
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_build(TARGET spine-c    LOGFILE_BASE build-c)
 vcpkg_cmake_build(TARGET spine-cpp  LOGFILE_BASE build-cpp)
 vcpkg_cmake_install()
