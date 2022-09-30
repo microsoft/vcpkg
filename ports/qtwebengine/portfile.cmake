@@ -79,7 +79,7 @@ endif()
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length)
 # We know that C:/buildrees/${PORT} is to long to build Release. Debug works however. Means 24 length is too much but 23 might work. 
-if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS)
+if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     message(WARNING "Buildtree path '${CURRENT_BUILDTREES_DIR}' is too long.\nConsider passing --x-buildtrees-root=<shortpath> to vcpkg!\nTrying to use '${CURRENT_BUILDTREES_DIR}/../tmp'")
     set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # activly avoid long path issues in CI. -> Means CI will not return logs
     cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
