@@ -29,7 +29,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
