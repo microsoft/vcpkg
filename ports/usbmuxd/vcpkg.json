@@ -6,14 +6,8 @@
   "homepage": "http://www.libimobiledevice.org",
   "dependencies": [
     "libimobiledevice",
-    {
-      "name": "libusb",
-      "platform": "!windows"
-    },
-    {
-      "name": "libusb-win32",
-      "platform": "windows"
-    },
+    "libusb",
+    "libusb-win32",
     "pthreads"
   ]
 }
