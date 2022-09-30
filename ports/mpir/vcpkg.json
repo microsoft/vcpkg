@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "Multiple Precision Integers and Rationals",
   "homepage": "https://github.com/wbhart/mpir",
-  "license": "GPL-3.0-only",
+  "license": null,
   "supports": "!(uwp | arm)",
   "dependencies": [
     {

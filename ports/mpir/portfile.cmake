@@ -48,7 +48,7 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     endif()
 
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v14(1|2|3)")
         set(MSVC_VERSION 15)
     else()
         set(MSVC_VERSION 14)
@@ -60,75 +60,38 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         set(DLL_OR_LIB lib)
     endif()
 
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(RuntimeLibraryExt "")
-    else()
-        set(RuntimeLibraryExt "DLL")
-    endif()
-
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     file(GLOB FILES "${SOURCE_PATH}/*")
     file(COPY ${FILES} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_gc/${DLL_OR_LIB}_mpir_gc.vcxproj"
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
+    # Note: Could probably be moved to use vcpkg_configure_make on windows
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_gc/${DLL_OR_LIB}_mpir_gc.vcxproj"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_build_msbuild(
-            PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_cxx/${DLL_OR_LIB}_mpir_cxx.vcxproj"
-            OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-            OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
+        vcpkg_msbuild_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PROJECT_SUBPATH "build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_cxx/${DLL_OR_LIB}_mpir_cxx.vcxproj"
         )
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(GLOB REL_LIBS_CXX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib")
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(GLOB DBG_LIBS_CXX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib")
-        endif()
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB HEADERS
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h"
-        )
-        file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(GLOB HEADERS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/*/Release/gmp.h"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/*/Release/gmpxx.h"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/*/Release/mpir.h"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/*/Release/mpirxx.h"
+    )
+    file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-        file(GLOB REL_DLLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll")
-        file(GLOB REL_LIBS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib")
-        list(APPEND REL_LIBS ${REL_LIBS_CXX})
-
-        file(INSTALL ${REL_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(INSTALL ${REL_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB HEADERS
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmp.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmpxx.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.h"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.h"
-        )
-        file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
-        file(GLOB DBG_DLLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll")
-        file(GLOB DBG_LIBS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib")
-        list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
-
-        file(INSTALL ${DBG_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(INSTALL ${DBG_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-        endif()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
-    vcpkg_copy_pdbs()
+    # Remove file automatically copied by vcpkg_msbuild_install
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING.LIB")
