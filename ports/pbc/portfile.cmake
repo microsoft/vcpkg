@@ -110,4 +110,5 @@ else()
 
     # clean up mpir stuff
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/mpir.lib ${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/pbc-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/pbc-config.cmake" @ONLY)
 endif()

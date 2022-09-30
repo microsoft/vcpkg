@@ -1,7 +1,7 @@
 {
   "name": "pbc",
   "version": "0.5.14",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Pairing-Based Crypto library provides low-level routines for pairing-based cryptosystems.",
   "homepage": "https://crypto.stanford.edu/pbc",
   "supports": "!uwp & !arm",
