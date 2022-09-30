@@ -98,4 +98,4 @@ foreach(_file ${_double_files})
     endif()
 endforeach()
 
-
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/egl/vcpkg-cmake-wrapper.cmake" @ONLY)
