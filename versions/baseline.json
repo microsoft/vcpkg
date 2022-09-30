@@ -7522,7 +7522,7 @@
     },
     "usbmuxd": {
       "baseline": "1.2.235",
-      "port-version": 1
+      "port-version": 2
     },
     "usd": {
       "baseline": "20.08",
