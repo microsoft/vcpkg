@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/ideviceinstaller
@@ -7,7 +9,7 @@ vcpkg_from_github(
 )
 
 vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ideviceinstaller.vcxproj
     LICENSE_SUBPATH COPYING
     USE_VCPKG_INTEGRATION

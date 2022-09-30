@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "A socket daemon to multiplex connections from and to iOS devices",
   "homepage": "http://www.libimobiledevice.org",
+  "supports": "!staticcrt",
   "dependencies": [
     "libimobiledevice",
     "libusb",
