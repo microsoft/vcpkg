@@ -2550,7 +2550,7 @@
     },
     "geogram": {
       "baseline": "1.7.6",
-      "port-version": 2
+      "port-version": 3
     },
     "geographiclib": {
       "baseline": "2.1.1",
