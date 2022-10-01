@@ -4806,15 +4806,15 @@
     },
     "moos-core": {
       "baseline": "10.4.0",
-      "port-version": 7
+      "port-version": 8
     },
     "moos-essential": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "moos-ui": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "morton-nd": {
       "baseline": "4.0.0",
