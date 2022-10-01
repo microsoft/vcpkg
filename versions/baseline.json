@@ -3838,7 +3838,7 @@
     },
     "libkml": {
       "baseline": "1.3.0",
-      "port-version": 8
+      "port-version": 9
     },
     "liblas": {
       "baseline": "1.8.1",
@@ -4769,8 +4769,8 @@
       "port-version": 1
     },
     "minizip": {
-      "baseline": "1.2.11",
-      "port-version": 11
+      "baseline": "1.2.12",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "3.0.5",
@@ -8070,7 +8070,7 @@
     },
     "zlib": {
       "baseline": "1.2.12",
-      "port-version": 2
+      "port-version": 3
     },
     "zlib-ng": {
       "baseline": "2.0.6",
