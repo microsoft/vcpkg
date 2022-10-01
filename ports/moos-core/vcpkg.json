@@ -1,11 +1,10 @@
 {
   "name": "moos-core",
   "version": "10.4.0",
-  "port-version": 8,
+  "port-version": 7,
   "description": "A very light weight, easy to use middleware.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "license": null,
-  "supports": "!staticcrt",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

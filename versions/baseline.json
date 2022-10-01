@@ -4810,7 +4810,7 @@
     },
     "moos-core": {
       "baseline": "10.4.0",
-      "port-version": 8
+      "port-version": 7
     },
     "moos-essential": {
       "baseline": "10.0.1",

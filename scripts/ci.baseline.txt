@@ -666,6 +666,7 @@ monkeys-audio:x64-osx=fail
 monkeys-audio:x64-uwp=fail
 moos-core:arm-uwp=fail
 moos-core:x64-uwp=fail
+moos-core:x64-windows-static=fail
 moos-essential:arm64-windows=fail
 moos-essential:x64-windows-static-md=fail
 moos-essential:x64-windows=fail
