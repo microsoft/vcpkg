@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 0ec0deded92c8d5d100b6e77f8cfbbbaf7b744c230e10abd0b86861960cda9713ff65209575fdc09034afcb0e9137428a20c00d399c09fd58ce541fed2105a2d
     PATCHES
         fix-vcpkg-install.patch
+        use-arm64-intrinsics.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)

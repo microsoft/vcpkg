@@ -45,7 +45,7 @@ All vcpkg commands support a set of [common options](common-options.md).
 
 Instead of stopping on an unsupported port, continue with a warning.
 
-By default, vcpkg refuses to execute an install plan containing a port installation for a triplet outside its [`"supports"`][] clause. The [`"supports"`][] clause of a package describes the full set of platforms a package is expected to be buildable on. This flag instructs vcpkg to warn that the build is expected to fail instead of stopping.
+By default, vcpkg refuses to execute an install plan containing a port installation for a triplet outside its [`"supports"`][supports] clause. The [`"supports"`][supports] clause of a package describes the full set of platforms a package is expected to be buildable on. This flag instructs vcpkg to warn that the build is expected to fail instead of stopping.
 
 ### `--clean-after-build`
 
@@ -103,6 +103,8 @@ Fail install if a port has detected problems or attempts to use a deprecated fea
 
 By default, vcpkg will run several checks on built packages and emit warnings if any issues are detected. This flag upgrades those warnings to an error.
 
+<a name="feature"></a>
+
 ### `--x-feature=<feature>`
 
 **Experimental and may change or be removed at any time**
@@ -111,7 +113,7 @@ By default, vcpkg will run several checks on built packages and emit warnings if
 
 Specify an additional [feature](../users/manifests.md#features) from the `vcpkg.json` to install dependencies for.
 
-By default, only [`"dependencies"`](../users/manifests.md#dependencies) and the dependencies of the [`"default-features"`](../users/manifests.md#default-features) will be installed.
+By default, only [`"dependencies"`][dependencies] and the dependencies of the [`"default-features"`][default-features] will be installed.
 
 ### `--head`
 
@@ -135,7 +137,7 @@ By default, vcpkg will stop at the first package build failure. This flag instru
 
 Don't install the default features from the top-level manifest.
 
-When using `install` in Manifest Mode, by default all dependencies of the features listed in [`"default-features"`][] will be installed. This flag disables that behavior so (without any `TODO` flags) only the dependencies listed in [`"dependencies"`][] will be installed.
+When using `install` in Manifest Mode, by default all dependencies of the features listed in [`"default-features"`][default-features] will be installed. This flag disables that behavior so only features explicitly enabled by [`--x-feature`](#feature) will be installed.
 
 ### `--no-downloads`
 
@@ -186,6 +188,6 @@ Suppress generation of usage text printed at the end of installation.
 [Asset Caching]: ../users/assetcaching.md
 [Binary Caching]: ../users/binarycaching.md
 [Manifest Mode]: ../users/manifests.md
-[`"supports"`]: ../users/manifests.md#supports
-[`"default-features"`]: ../users/manifests.md#default-features
-[`"dependencies"`]: ../users/manifests.md#dependencies
+[supports]: ../users/manifests.md#supports
+[default-features]: ../users/manifests.md#default-features
+[dependencies]: ../users/manifests.md#dependencies

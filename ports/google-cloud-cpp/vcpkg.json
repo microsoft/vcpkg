@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
   "version": "2.2.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -105,7 +106,9 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "grpc-common"
+            "accesscontextmanager",
+            "grpc-common",
+            "osconfig"
           ]
         }
       ]
@@ -201,6 +204,7 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
+            "grafeas",
             "grpc-common"
           ]
         }
@@ -274,6 +278,7 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
+            "grafeas",
             "grpc-common"
           ]
         }
@@ -460,6 +465,18 @@
         }
       ]
     },
+    "grafeas": {
+      "description": "Protocol buffers implementing the 'Grafeas API' (metadata about software artifacts)",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "grpc-common": {
       "description": "Dependencies used by all gRPC-based libraries",
       "dependencies": [
@@ -633,6 +650,18 @@
     },
     "orgpolicy": {
       "description": "Organization Policy API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "osconfig": {
+      "description": "Cloud OS Config API C++ Client library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
