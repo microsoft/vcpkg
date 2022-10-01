@@ -1314,7 +1314,7 @@
     },
     "catch2": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -2005,7 +2005,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.19",
+      "baseline": "10.0.20",
       "port-version": 0
     },
     "draco": {
@@ -2550,7 +2550,7 @@
     },
     "geogram": {
       "baseline": "1.7.6",
-      "port-version": 2
+      "port-version": 3
     },
     "geographiclib": {
       "baseline": "2.1.1",
@@ -2802,7 +2802,7 @@
     },
     "guile": {
       "baseline": "3.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "guilite": {
       "baseline": "2022-05-05",
@@ -2902,7 +2902,7 @@
     },
     "hpx": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -3206,7 +3206,7 @@
     },
     "jxrlib": {
       "baseline": "2019.10.9",
-      "port-version": 4
+      "port-version": 5
     },
     "kangaru": {
       "baseline": "4.3.1",
@@ -3757,7 +3757,7 @@
       "port-version": 1
     },
     "libharu": {
-      "baseline": "2.4.0-rc1",
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "libhdfs3": {
@@ -4730,7 +4730,7 @@
     },
     "mimalloc": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "minc": {
       "baseline": "2.4.03",
@@ -5161,7 +5161,7 @@
       "port-version": 0
     },
     "nuspell": {
-      "baseline": "5.1.1",
+      "baseline": "5.1.2",
       "port-version": 0
     },
     "nvtt": {
@@ -6486,7 +6486,7 @@
     },
     "roaring": {
       "baseline": "0.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "robin-hood-hashing": {
       "baseline": "3.11.5",
@@ -7714,7 +7714,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 11
+      "port-version": 12
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
@@ -7857,7 +7857,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.7.1",
+      "baseline": "4.8.1",
       "port-version": 0
     },
     "wtl": {
