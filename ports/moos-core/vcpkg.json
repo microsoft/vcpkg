@@ -1,7 +1,7 @@
 {
   "name": "moos-core",
   "version": "10.4.0",
-  "port-version": 7,
+  "port-version": 8,
   "description": "A very light weight, easy to use middleware.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "license": null,
@@ -14,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "db": {
+      "description": "Build MOOSDB"
+    },
+    "tools": {
+      "description": "Build MOOS tools"
+    }
+  }
 }

@@ -1,8 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..6ef3dc2 100644
+index 75f367f..29f9b82 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -190,7 +190,7 @@ add_subdirectory(Core)
+@@ -74,6 +74,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
+ # Turn on all compiler warnings
+ include(EnableAllWarnings)
+ 
++option(ENABLE_TOOLS OFF)
++option(ENABLE_DB OFF)
++
+ # Figure out our git version
+ option(UPDATE_GIT_VERSION_INFO "update git version info in source tree" ON)
+ mark_as_advanced(UPDATE_GIT_VERSION_INFO)
+@@ -190,7 +193,7 @@ add_subdirectory(Core)
  export(
      TARGETS MOOS
      NAMESPACE MOOS::
@@ -11,7 +21,7 @@ index 75f367f..6ef3dc2 100644
  )
  
  # Support existing projects that expect to find MOOS_LIBRARIES and
-@@ -222,7 +222,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
+@@ -222,7 +225,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
  install(
      EXPORT MOOS
      NAMESPACE MOOS::
@@ -20,8 +30,32 @@ index 75f367f..6ef3dc2 100644
      DESTINATION ${PROJECT_CONFIG_PATH}
  )
  
+diff --git a/Core/CMakeLists.txt b/Core/CMakeLists.txt
+index 4cbe7cb..cd09f21 100644
+--- a/Core/CMakeLists.txt
++++ b/Core/CMakeLists.txt
+@@ -1,3 +1,7 @@
+ add_subdirectory(libMOOS)
+-add_subdirectory(tools)
+-add_subdirectory(MOOSDB)
++if(ENABLE_TOOLS)
++  add_subdirectory(tools)
++endif()
++if(ENABLE_DB)
++  add_subdirectory(MOOSDB)
++endif()
+diff --git a/Core/MOOSDB/CMakeLists.txt b/Core/MOOSDB/CMakeLists.txt
+index 7b1a903..975dacd 100644
+--- a/Core/MOOSDB/CMakeLists.txt
++++ b/Core/MOOSDB/CMakeLists.txt
+@@ -27,5 +27,4 @@ install(TARGETS ${EXECNAME}
+   ARCHIVE DESTINATION lib
+ )
+ 
+-add_subdirectory(testing)
+ 
 diff --git a/Core/libMOOS/CMakeLists.txt b/Core/libMOOS/CMakeLists.txt
-index b74a30f..492df50 100644
+index b74a30f..1c6bc1f 100644
 --- a/Core/libMOOS/CMakeLists.txt
 +++ b/Core/libMOOS/CMakeLists.txt
 @@ -196,7 +196,7 @@ mark_as_advanced(TIME_WARP_AGGLOMERATION_CONSTANT)
@@ -33,6 +67,12 @@ index b74a30f..492df50 100644
  )
  
  # install libraries
+@@ -206,5 +206,4 @@ install(TARGETS MOOS
+   ARCHIVE DESTINATION lib
+ )
+ 
+-add_subdirectory(testing)
+ 
 diff --git a/MOOSConfig.cmake.in b/MOOSConfig.cmake.in
 index 10af599..dff769a 100644
 --- a/MOOSConfig.cmake.in
