@@ -1,19 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..74da20b 100644
+index 75f367f..29f9b82 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -74,6 +74,10 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
+@@ -74,6 +74,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
  # Turn on all compiler warnings
  include(EnableAllWarnings)
  
-+set(MOOS_VERSION "10.4.0" CACHE STRING "MOOS version")
 +option(ENABLE_TOOLS OFF)
 +option(ENABLE_DB OFF)
 +
  # Figure out our git version
  option(UPDATE_GIT_VERSION_INFO "update git version info in source tree" ON)
  mark_as_advanced(UPDATE_GIT_VERSION_INFO)
-@@ -190,7 +194,7 @@ add_subdirectory(Core)
+@@ -190,7 +193,7 @@ add_subdirectory(Core)
  export(
      TARGETS MOOS
      NAMESPACE MOOS::
@@ -22,7 +21,7 @@ index 75f367f..74da20b 100644
  )
  
  # Support existing projects that expect to find MOOS_LIBRARIES and
-@@ -222,7 +226,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
+@@ -222,7 +225,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
  install(
      EXPORT MOOS
      NAMESPACE MOOS::
@@ -68,14 +67,14 @@ index c446ea2..e0b22f7 100644
  #include <cmath>
  #include <iostream>
 diff --git a/Core/libMOOS/CMakeLists.txt b/Core/libMOOS/CMakeLists.txt
-index b74a30f..f93ca8a 100644
+index b74a30f..4c3cff4 100644
 --- a/Core/libMOOS/CMakeLists.txt
 +++ b/Core/libMOOS/CMakeLists.txt
 @@ -122,6 +122,8 @@ add_library(MOOS
      ${DB_SOURCES}
  )
  
-+add_compile_definitions(MOOS_GIT_VERSION="${MOOS_GIT_VERSION}")
++add_compile_definitions(MOOS_GIT_VERSION="${PACKAGE_VERSION}")
 +
  foreach(INCLUDE_ROOT IN LISTS INCLUDE_ROOTS)
      target_include_directories(MOOS PUBLIC
