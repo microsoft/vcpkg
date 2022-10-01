@@ -1,8 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..29f9b82 100644
+index 75f367f..e144343 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -74,6 +74,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
+@@ -26,16 +26,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
+     set(CMAKE_BUILD_TYPE Release CACHE STRING "")
+ endif()
+ 
+-if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+-endif()
+-if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+-endif()
+-if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+-endif()
+-
+ ##############################
+ # Set up RPATH for executables
+ ##############################
+@@ -74,6 +64,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
  # Turn on all compiler warnings
  include(EnableAllWarnings)
  
@@ -12,7 +29,7 @@ index 75f367f..29f9b82 100644
  # Figure out our git version
  option(UPDATE_GIT_VERSION_INFO "update git version info in source tree" ON)
  mark_as_advanced(UPDATE_GIT_VERSION_INFO)
-@@ -190,7 +193,7 @@ add_subdirectory(Core)
+@@ -190,7 +183,7 @@ add_subdirectory(Core)
  export(
      TARGETS MOOS
      NAMESPACE MOOS::
@@ -21,7 +38,7 @@ index 75f367f..29f9b82 100644
  )
  
  # Support existing projects that expect to find MOOS_LIBRARIES and
-@@ -222,7 +225,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
+@@ -222,7 +215,7 @@ set(PROJECT_CONFIG_PATH "lib/cmake/MOOS")
  install(
      EXPORT MOOS
      NAMESPACE MOOS::
@@ -148,3 +165,14 @@ index 10af599..dff769a 100644
  include(${exports_file})
  
  include(FindPackageHandleStandardArgs)
+diff --git a/cmake/ClientDefines.h.in b/cmake/ClientDefines.h.in
+index a196e5c..c2942eb 100644
+--- a/cmake/ClientDefines.h.in
++++ b/cmake/ClientDefines.h.in
+@@ -1,4 +1,4 @@
+ //this file is auto generated and defines various preprocessor macros needed by the CMOOSApp
+ #ifndef ASYNCHRONOUS_CLIENT
+ @ASYNCHRONOUS_CLIENT_DEFINE@
+-#endif
+\ No newline at end of file
++#endif
