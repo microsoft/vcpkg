@@ -102,7 +102,7 @@
     },
     "angle": {
       "baseline": "chromium_4472",
-      "port-version": 3
+      "port-version": 4
     },
     "antlr4": {
       "baseline": "4.10.1",
@@ -223,6 +223,14 @@
     "asyncplusplus": {
       "baseline": "1.1",
       "port-version": 1
+    },
+    "at-spi2-atk": {
+      "baseline": "2.38.0",
+      "port-version": 0
+    },
+    "at-spi2-core": {
+      "baseline": "2.44.1",
+      "port-version": 0
     },
     "atk": {
       "baseline": "2.38.0",
@@ -1230,7 +1238,7 @@
     },
     "bzip2": {
       "baseline": "1.0.8",
-      "port-version": 2
+      "port-version": 3
     },
     "c-ares": {
       "baseline": "1.18.1",
@@ -1306,7 +1314,7 @@
     },
     "catch2": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1561,7 +1569,7 @@
       "port-version": 0
     },
     "configcat": {
-      "baseline": "0.1.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "console-bridge": {
@@ -1601,7 +1609,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.10.7",
+      "baseline": "0.11.2",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -1997,7 +2005,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.19",
+      "baseline": "10.0.20",
       "port-version": 0
     },
     "draco": {
@@ -2542,7 +2550,7 @@
     },
     "geogram": {
       "baseline": "1.7.6",
-      "port-version": 2
+      "port-version": 3
     },
     "geographiclib": {
       "baseline": "2.1.1",
@@ -2682,7 +2690,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2794,7 +2802,7 @@
     },
     "guile": {
       "baseline": "3.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "guilite": {
       "baseline": "2022-05-05",
@@ -2822,7 +2830,7 @@
     },
     "halide": {
       "baseline": "14.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "2021-03-19",
@@ -2894,7 +2902,7 @@
     },
     "hpx": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -3198,7 +3206,7 @@
     },
     "jxrlib": {
       "baseline": "2019.10.9",
-      "port-version": 4
+      "port-version": 5
     },
     "kangaru": {
       "baseline": "4.3.1",
@@ -3749,7 +3757,7 @@
       "port-version": 1
     },
     "libharu": {
-      "baseline": "2.4.0-rc1",
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "libhdfs3": {
@@ -3971,6 +3979,10 @@
     "libodb-sqlite": {
       "baseline": "2.4.0",
       "port-version": 9
+    },
+    "libofx": {
+      "baseline": "0.10.8",
+      "port-version": 0
     },
     "libogg": {
       "baseline": "1.3.5",
@@ -4500,6 +4512,10 @@
       "baseline": "2.6",
       "port-version": 1
     },
+    "luabridge3": {
+      "baseline": "3.0-beta4",
+      "port-version": 0
+    },
     "luafilesystem": {
       "baseline": "1.8.0",
       "port-version": 2
@@ -4714,7 +4730,7 @@
     },
     "mimalloc": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "minc": {
       "baseline": "2.4.03",
@@ -5053,8 +5069,8 @@
       "port-version": 0
     },
     "nghttp3": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.7.1",
+      "port-version": 0
     },
     "ngspice": {
       "baseline": "37",
@@ -5145,7 +5161,7 @@
       "port-version": 0
     },
     "nuspell": {
-      "baseline": "5.1.1",
+      "baseline": "5.1.2",
       "port-version": 0
     },
     "nvtt": {
@@ -5829,7 +5845,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "proxygen": {
@@ -5882,7 +5898,7 @@
     },
     "python3": {
       "baseline": "3.10.5",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6470,7 +6486,7 @@
     },
     "roaring": {
       "baseline": "0.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "robin-hood-hashing": {
       "baseline": "3.11.5",
@@ -7698,7 +7714,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 11
+      "port-version": 12
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
@@ -7841,7 +7857,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.7.1",
+      "baseline": "4.8.1",
       "port-version": 0
     },
     "wtl": {
