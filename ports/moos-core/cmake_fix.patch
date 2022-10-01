@@ -66,11 +66,40 @@ index c446ea2..e0b22f7 100644
  
  #include <cmath>
  #include <iostream>
+diff --git a/Core/libMOOS/App/include/MOOS/libMOOS/App/MOOSApp.h b/Core/libMOOS/App/include/MOOS/libMOOS/App/MOOSApp.h
+index 06e22e5..feb0304 100644
+--- a/Core/libMOOS/App/include/MOOS/libMOOS/App/MOOSApp.h
++++ b/Core/libMOOS/App/include/MOOS/libMOOS/App/MOOSApp.h
+@@ -41,7 +41,6 @@
+ #include "MOOS/libMOOS/Comms/MOOSCommClient.h"
+ #include "MOOS/libMOOS/Comms/MOOSVariable.h"
+ 
+-#include "MOOS/libMOOS/App/ClientDefines.h"
+ 
+ #include <set>
+ #include <map>
 diff --git a/Core/libMOOS/CMakeLists.txt b/Core/libMOOS/CMakeLists.txt
-index b74a30f..4c3cff4 100644
+index b74a30f..51e4b8b 100644
 --- a/Core/libMOOS/CMakeLists.txt
 +++ b/Core/libMOOS/CMakeLists.txt
-@@ -122,6 +122,8 @@ add_library(MOOS
+@@ -81,14 +81,10 @@ set(DB_SOURCES
+ #do we want to use the new fast asynchronous client architecture?
+ option(USE_ASYNC_COMMS  "enable fast asynchronous comms architecture" ON)
+ if(USE_ASYNC_COMMS)
+-  set(ASYNCHRONOUS_CLIENT_DEFINE "#define ASYNCHRONOUS_CLIENT")
++    add_compile_definitions(ASYNCHRONOUS_CLIENT)
+ endif()
+ 
+-# Configure step picks up the ASYNCHRONOUS_CLIENT_DEFINE variable
+-configure_file(${CMAKE_MODULE_PATH}/ClientDefines.h.in
+-    ${CMAKE_CURRENT_SOURCE_DIR}/App/include/MOOS/libMOOS/App/ClientDefines.h
+-    @ONLY
+-)
++
+ 
+ 
+ 
+@@ -122,6 +118,8 @@ add_library(MOOS
      ${DB_SOURCES}
  )
  
@@ -79,7 +108,7 @@ index b74a30f..4c3cff4 100644
  foreach(INCLUDE_ROOT IN LISTS INCLUDE_ROOTS)
      target_include_directories(MOOS PUBLIC
          "$<BUILD_INTERFACE:${INCLUDE_ROOT}>"
-@@ -196,7 +198,7 @@ mark_as_advanced(TIME_WARP_AGGLOMERATION_CONSTANT)
+@@ -196,7 +194,7 @@ mark_as_advanced(TIME_WARP_AGGLOMERATION_CONSTANT)
  install(
      DIRECTORY ${INCLUDE_ROOTS}
      DESTINATION .
@@ -88,7 +117,7 @@ index b74a30f..4c3cff4 100644
  )
  
  # install libraries
-@@ -206,5 +208,4 @@ install(TARGETS MOOS
+@@ -206,5 +204,4 @@ install(TARGETS MOOS
    ARCHIVE DESTINATION lib
  )
  
