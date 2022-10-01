@@ -27,7 +27,10 @@
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
-        "angle",
+        {
+          "name": "angle",
+          "platform": "windows"
+        }
         "gstreamer"
       ]
     },

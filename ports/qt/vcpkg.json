@@ -157,7 +157,7 @@
         "spellchecker",
         "webchannel"
       ],
-      "platform": "!static"
+      "platform": "!static & !(windows & arm)"
     },
     {
       "name": "qtwebsockets",
@@ -179,7 +179,7 @@
       "features": [
         "webengine"
       ],
-      "platform": "!static"
+      "platform": "!static & !(windows & arm)"
     }
   ],
   "default-features": [
