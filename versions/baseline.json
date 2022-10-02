@@ -4249,8 +4249,8 @@
       "port-version": 4
     },
     "libudis86": {
-      "baseline": "2018-01-28-56ff6c87",
-      "port-version": 2
+      "baseline": "2018-01-28",
+      "port-version": 3
     },
     "libudns": {
       "baseline": "0.4",
