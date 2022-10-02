@@ -1,10 +1,17 @@
 
-set(VCPKG_FIRST_EGL_CALL OFF)
-if(NOT TARGET EGL::EGL)
-    set(VCPKG_FIRST_EGL_CALL ON)
-endif()
+#set(VCPKG_FIRST_EGL_CALL OFF)
+#if(NOT TARGET EGL::EGL)
+#    set(VCPKG_FIRST_EGL_CALL ON)
+#endif()
 
-set(HAVE_EGL ON CACHE INTERNAL "")
+#set(HAVE_EGL ON CACHE INTERNAL "")
+if(UNIX)
+    _find_package(OpenGL COMPONENTS EGL REQUIRED)
+    if(OPENGL_egl_LIBRARY) # Only defined for Linux with GLVND
+        set(EGL_LIBRARY "${OPENGL_egl_LIBRARY}" CACHE STRING "")
+        set(EGL_INCLUDE_DIR "${OPENGL_EGL_INCLUDE_DIRS}" CACHE STRING "")
+    endif()
+endif()
 _find_package(${ARGS})
 
 # TODO: FindEGL.cmake will need more love to find release/debug correctly.
