@@ -30,7 +30,7 @@
         {
           "name": "angle",
           "platform": "windows"
-        }
+        },
         "gstreamer"
       ]
     },
