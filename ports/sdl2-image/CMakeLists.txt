@@ -42,6 +42,13 @@ if (APPLE)
     target_compile_options(SDL2_image BEFORE PRIVATE
         "-x" "objective-c"
     )
+    target_link_libraries(SDL2_image PRIVATE
+        "-framework CoreFoundation"
+        "-framework CoreGraphics"
+        "-framework CoreServices"
+        "-framework Foundation"
+        "-framework ImageIO"
+    )
 endif()
 
 set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
@@ -68,9 +75,9 @@ if(USE_WEBP)
 endif()
 
 if(USE_PNG)
-    find_package(libpng REQUIRED)
+    find_package(PNG REQUIRED)
     add_definitions(-DLOAD_PNG)
-    target_link_libraries(SDL2_image PRIVATE png)
+    target_link_libraries(SDL2_image PRIVATE PNG::PNG)
 endif()
 
 if(USE_JPEG)

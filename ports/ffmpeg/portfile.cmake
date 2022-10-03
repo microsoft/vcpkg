@@ -24,6 +24,8 @@ vcpkg_from_github(
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        0020-fix-aarch64-libswscale.patch
+        0021-fix-sdl2-version-check.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -96,6 +98,8 @@ if(VCPKG_TARGET_IS_MINGW)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
+elseif(VCPKG_TARGET_IS_LINUX)
+    string(APPEND OPTIONS " --target-os=linux")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND OPTIONS " --target-os=win32")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -260,9 +264,7 @@ else()
 endif()
 
 if("dav1d" IN_LIST FEATURES)
-	if(NOT VCPKG_TARGET_IS_OSX)
-		set(OPTIONS "${OPTIONS} --enable-libdav1d")
-	endif()
+    set(OPTIONS "${OPTIONS} --enable-libdav1d")
 else()
     set(OPTIONS "${OPTIONS} --disable-libdav1d")
 endif()
@@ -365,9 +367,7 @@ else()
 endif()
 
 if("sdl2" IN_LIST FEATURES)
-	if(NOT VCPKG_TARGET_IS_OSX)
-		set(OPTIONS "${OPTIONS} --enable-sdl2")
-	endif()
+    set(OPTIONS "${OPTIONS} --enable-sdl2")
 else()
     set(OPTIONS "${OPTIONS} --disable-sdl2")
 endif()
@@ -460,7 +460,16 @@ if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
 
+if(VCPKG_TARGET_IS_IOS)
+    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
+endif()
+
 set(OPTIONS_CROSS " --enable-cross-compile")
+
+# ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
+if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
+    string(APPEND OPTIONS_CROSS " --cross-prefix=${CMAKE_MATCH_1}")
+endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     string(APPEND OPTIONS_CROSS " --arch=x86_64")
@@ -483,14 +492,6 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --disable-programs")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
-endif()
-
-if (VCPKG_TARGET_IS_WINDOWS)
-	# Don't link to avicap
-    set(OPTIONS "${OPTIONS} --disable-indev=vfwcap")
-
-	# Don't link to mfplat
-    set(OPTIONS "${OPTIONS} --disable-mediafoundation")
 endif()
 
 # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html

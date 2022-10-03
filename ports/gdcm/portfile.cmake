@@ -1,31 +1,16 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if (WIN32)
-	vcpkg_from_github(
-		OUT_SOURCE_PATH SOURCE_PATH
-		REPO malaterre/GDCM
-		REF c0824c0ae66e9f9e3c8bddba8b65238c1c28481d # v3.0.7
-		SHA512 1889f18f7164e1395e2cf5fe29b6ccd615f9a31433d1a7bda19cac472b20bc52018ef45bd9d9ca72ecb248c9fd5d895b94bfd111157693f70e0b90cf7b582edd
-		HEAD_REF master
-		PATCHES
-			use-openjpeg-config.patch
-			fix-share-path.patch
-			Fix-Cmake_DIR.patch
-	)
-else()
-	vcpkg_from_github(
-		OUT_SOURCE_PATH SOURCE_PATH
-		REPO malaterre/GDCM
-		REF c0824c0ae66e9f9e3c8bddba8b65238c1c28481d # v3.0.7
-		SHA512 1889f18f7164e1395e2cf5fe29b6ccd615f9a31433d1a7bda19cac472b20bc52018ef45bd9d9ca72ecb248c9fd5d895b94bfd111157693f70e0b90cf7b582edd
-		HEAD_REF master
-		PATCHES
-			use-openjpeg-config.patch
-			fix-share-path.patch
-			fix-numeric-limits.patch
-			Fix-Cmake_DIR.patch
-	)
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO malaterre/GDCM
+    REF 1f94bafc929db3648612848836f7899f101d6641 # v3.0.12
+    SHA512 cec050c61d9880880b8b72234f8b0824a1f1fa8f9b2419fec85a0f27fe3bca4f9f80aa735b35775ac098f5827fde454aba700ebea17f5f8657894d26f5140f4a
+    HEAD_REF master
+    PATCHES
+        use-openjpeg-config.patch
+        fix-share-path.patch
+        Fix-Cmake_DIR.patch
+)
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake")
 
@@ -41,7 +26,6 @@ vcpkg_cmake_configure(
         -DGDCM_BUILD_DOCBOOK_MANPAGES=OFF
         -DGDCM_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
         -DGDCM_INSTALL_INCLUDE_DIR=include
-		-DGDCM_BUILD_APPLICATIONS=ON
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
         -DGDCM_USE_SYSTEM_OPENJPEG=ON
@@ -71,20 +55,8 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set( GDCM_INCLUDE_DIRS \"${SOURCE_PATH}/Source/Common;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Source/Common;${SOURCE_PATH}/Source/DataStructureAndEncodingDefinition;${SOURCE_PATH}/Source/MediaStorageAndFileFormat;${SOURCE_PATH}/Source/MessageExchangeDefinition;${SOURCE_PATH}/Source/DataDictionary;${SOURCE_PATH}/Source/InformationObjectDefinition\")" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set(GDCM_LIBRARY_DIRS \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/.\")" "")
 
-vcpkg_copy_tools(TOOL_NAMES gdcmanon AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmdiff AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmgendir AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcminfo AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmraw AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmscu AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmxml AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmconv AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmdump AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmimg AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmpap3 AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmscanner AUTO_CLEAN)
-vcpkg_copy_tools(TOOL_NAMES gdcmtar AUTO_CLEAN)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

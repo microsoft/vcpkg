@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 #Could probably be the beginning of a vcpkg_install_copyright?
 function(qt_install_copyright SOURCE_PATH)
     #Find the relevant license file and install it

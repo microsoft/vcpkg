@@ -3,15 +3,12 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 26fa78673ec93dc703e80b741d8b437237798297 # 1.9.160
-    SHA512 dfc6c1017dd1e76196861f0bd7e270736c2e74d55da1e394f7d64d8b1e2d978ad21f273ba4cd5d476d5f7dbe21eb0e3f170017dff97d3c3cca951f3ac68cf6f8
+    REF a72b841c91bd421fbb6deb516400b51c06bc596c # 1.9.220
+    SHA512 9b7fa80ee155fa3c15e3e86c30b75c6019dc1672df711c4f656133fe005f104e4a30f5a99f1c0a0c6dab42007b5695169cd312bd0938b272c4c7b05765ce3421
     PATCHES
-        fix-config.patch
         patch-relocatable-rpath.patch
         fix-aws-root.patch
-        patch-string.patch
-		fix-openssl3.patch
-		fix-curl-redirect.patch
+        fix-openssl3.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -31,6 +28,7 @@ elseif (VCPKG_TARGET_IS_ANDROID)
 else()
     set(rpath "\$ORIGIN")
 endif()
+
 set(BUILD_ONLY core)
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 vcpkg_cmake_configure(
@@ -43,8 +41,6 @@ vcpkg_cmake_configure(
         "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
         "-DBUILD_ONLY=${BUILD_ONLY}"
         "-DBUILD_DEPS=OFF"
-		"-DFORCE_CURL=ON"
-		"-DCPP_STANDARD=17"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DCMAKE_INSTALL_RPATH=${rpath}"
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
@@ -53,7 +49,7 @@ vcpkg_cmake_install()
 
 foreach(TARGET IN LISTS BUILD_ONLY)
     vcpkg_cmake_config_fixup(PACKAGE_NAME "aws-cpp-sdk-${TARGET}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endforeach()
+endforeach() 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
 
 vcpkg_copy_pdbs()

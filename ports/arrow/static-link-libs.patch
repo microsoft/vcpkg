@@ -1,0 +1,127 @@
+diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
+index 93dd1297b..6b04f7d46 100644
+--- a/cpp/src/arrow/CMakeLists.txt
++++ b/cpp/src/arrow/CMakeLists.txt
+@@ -581,6 +581,7 @@ add_arrow_lib(arrow
+               ${ARROW_SHARED_PRIVATE_LINK_LIBS}
+               STATIC_LINK_LIBS
+               ${ARROW_STATIC_LINK_LIBS}
++              STATIC_INSTALL_INTERFACE_LIBS
+               ${ARROW_STATIC_INSTALL_INTERFACE_LIBS}
+               SHARED_INSTALL_INTERFACE_LIBS
+               ${ARROW_SHARED_INSTALL_INTERFACE_LIBS})
+ 
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 9e732db80afb..f0c3f30ef3d8 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -822,6 +822,17 @@ if(ARROW_WITH_OPENTELEMETRY)
+        opentelemetry-cpp::trace
+        opentelemetry-cpp::ostream_span_exporter
+        opentelemetry-cpp::otlp_http_exporter)
++  if(opentelemetry_SOURCE STREQUAL "SYSTEM")
++    list(APPEND
++         ARROW_STATIC_INSTALL_INTERFACE_LIBS
++         opentelemetry-cpp::trace
++         opentelemetry-cpp::ostream_span_exporter
++         opentelemetry-cpp::otlp_http_exporter)
++  endif()
++  if(Protobuf_SOURCE STREQUAL "SYSTEM")
++    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS ${ARROW_PROTOBUF_LIBPROTOBUF})
++  endif()
++  list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS CURL::libcurl)
+ endif()
+ 
+ if(ARROW_WITH_UTF8PROC)
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index ad8351f9cc6e..5c1dd9d34d12 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -1083,6 +1083,7 @@ endif()
+ macro(find_curl)
+   if(NOT TARGET CURL::libcurl)
+     find_package(CURL REQUIRED)
++    list(APPEND ARROW_SYSTEM_DEPENDENCIES CURL)
+     if(NOT TARGET CURL::libcurl)
+       # For CMake 3.11 or older
+       add_library(CURL::libcurl UNKNOWN IMPORTED)
+@@ -4540,11 +4541,11 @@ macro(build_opentelemetry)
+ 
+   foreach(_OPENTELEMETRY_LIB ${_OPENTELEMETRY_LIBS})
+     add_dependencies(opentelemetry-cpp::${_OPENTELEMETRY_LIB} opentelemetry_ep)
++    list(APPEND ARROW_BUNDLED_STATIC_LIBS opentelemetry-cpp::${_OPENTELEMETRY_LIB})
+   endforeach()
+ 
+   # Work around https://gitlab.kitware.com/cmake/cmake/issues/15052
+   file(MAKE_DIRECTORY ${OPENTELEMETRY_INCLUDE_DIR})
+-
+ endmacro()
+ 
+ if(ARROW_WITH_OPENTELEMETRY)
+diff --git a/cpp/examples/parquet/parquet_arrow/CMakeLists.txt b/cpp/examples/parquet/parquet_arrow/CMakeLists.txt
+index 32f980060c95..c89751731575 100644
+--- a/cpp/examples/parquet/parquet_arrow/CMakeLists.txt
++++ b/cpp/examples/parquet/parquet_arrow/CMakeLists.txt
+@@ -24,7 +24,7 @@ include(ExternalProject)
+ include(FindPkgConfig)
+ include(GNUInstallDirs)
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
++option(PARQUET_LINK_SHARED "Link to the Parquet shared library" ON)
+ 
+ # This ensures that things like gnu++11 get passed correctly
+ if(NOT DEFINED CMAKE_CXX_STANDARD)
+@@ -39,4 +39,8 @@ find_package(Arrow REQUIRED)
+ find_package(Parquet REQUIRED)
+ 
+ add_executable(parquet-arrow-example reader_writer.cc)
+-target_link_libraries(parquet-arrow-example parquet_shared arrow_shared)
++if(PARQUET_LINK_SHARED)
++  target_link_libraries(parquet-arrow-example parquet_shared)
++else()
++  target_link_libraries(parquet-arrow-example parquet_static)
++endif()
+diff --git a/cpp/src/parquet/CMakeLists.txt b/cpp/src/parquet/CMakeLists.txt
+index 542fa5bc083b..caed26173428 100644
+--- a/cpp/src/parquet/CMakeLists.txt
++++ b/cpp/src/parquet/CMakeLists.txt
+@@ -106,9 +106,11 @@ endfunction()
+ 
+ if(ARROW_BUILD_STATIC)
+   set(PARQUET_STATIC_LINK_LIBS arrow_static ${ARROW_STATIC_LINK_LIBS})
++  set(PARQUET_STATIC_INTERFACE_INSTALL_LIBS arrow_static)
+   set(ARROW_LIBRARIES_FOR_STATIC_TESTS arrow_testing_static arrow_static
+                                        ${ARROW_STATIC_LINK_LIBS})
+ else()
++  set(PARQUET_STATIC_INTERFACE_INSTALL_LIBS)
+   set(ARROW_LIBRARIES_FOR_STATIC_TESTS arrow_testing_shared arrow_shared)
+ endif()
+ 
+@@ -218,8 +220,9 @@ if(NOT PARQUET_MINIMAL_DEPENDENCY)
+ 
+   # Link publicly with parquet_static (because internal users need to
+   # transitively link all dependencies)
+-  set(PARQUET_STATIC_LINK_LIBS ${PARQUET_STATIC_LINK_LIBS} thrift::thrift)
+-endif(NOT PARQUET_MINIMAL_DEPENDENCY)
++  list(APPEND PARQUET_STATIC_LINK_LIBS thrift::thrift)
++  list(APPEND PARQUET_STATIC_INTERFACE_INSTALL_LIBS thrift::thrift)
++endif()
+ 
+ if(CXX_LINKER_SUPPORTS_VERSION_SCRIPT)
+   set(PARQUET_SHARED_LINK_FLAGS
+@@ -243,8 +246,12 @@ add_arrow_lib(parquet
+               ${PARQUET_SHARED_LINK_LIBS}
+               SHARED_PRIVATE_LINK_LIBS
+               ${PARQUET_SHARED_PRIVATE_LINK_LIBS}
++              SHARED_INSTALL_INTERFACE_LIBS
++              arrow_shared
+               STATIC_LINK_LIBS
+-              ${PARQUET_STATIC_LINK_LIBS})
++              ${PARQUET_STATIC_LINK_LIBS}
++              STATIC_INSTALL_INTERFACE_LIBS
++              ${PARQUET_STATIC_INTERFACE_INSTALL_LIBS})
+ 
+ if(WIN32 AND NOT (ARROW_TEST_LINKAGE STREQUAL "static"))
+   add_library(parquet_test_support STATIC
+
+ 

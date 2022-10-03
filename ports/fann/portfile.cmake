@@ -1,6 +1,3 @@
-# Official design
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libfann/fann
@@ -12,12 +9,11 @@ vcpkg_from_github(
         fix-uwp-build.patch
 )
 
-set(INSTALL_BASE_DIR_DBG ${CURRENT_PACKAGES_DIR}/debug)
-set(INSTALL_BASE_DIR_REL ${CURRENT_PACKAGES_DIR})
+set(INSTALL_BASE_DIR_DBG "${CURRENT_PACKAGES_DIR}/debug")
+set(INSTALL_BASE_DIR_REL "${CURRENT_PACKAGES_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DBIN_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/bin
         -DSBIN_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/sbin
@@ -50,12 +46,16 @@ vcpkg_configure_cmake(
         -DINFO_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/share/${PORT}/info
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

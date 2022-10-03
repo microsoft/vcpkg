@@ -13,12 +13,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-		string(FIND ${CMAKE_OSX_SYSROOT} "iPhoneSimulator" RESULT)
-		if (RESULT STREQUAL "-1")
-			set(PLATFORM ios64-xcrun)
-		else()
-			set(PLATFORM iossimulator-xcrun)
-		endif()
+        set(PLATFORM ios64-xcrun)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
         set(PLATFORM ios-xcrun)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" OR
@@ -28,7 +23,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         message(FATAL_ERROR "Unknown iOS target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
     # disable that makes linkage error (e.g. require stderr usage)
-    list(APPEND DISABLES no-stdio no-ui no-asm)
+    list(APPEND DISABLES no-ui no-asm)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(PLATFORM darwin64-arm64-cc)
@@ -65,9 +60,10 @@ message("CMAKE_C_FLAGS_DEBUG=${CMAKE_C_FLAGS_DEBUG}")
 message("CMAKE_INCLUDE_SYSTEM_FLAG_C=${CMAKE_INCLUDE_SYSTEM_FLAG_C}")
 message("CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG=${CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG}")
 
-set(CFLAGS "${CMAKE_C_FLAGS}")
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CFLAGS "-Wno-error=unused-command-line-argument ${CMAKE_C_FLAGS}")
+string(TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE)
+set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${BUILD_TYPE}}")
+if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    set(CFLAGS "${CFLAGS} -Wno-error=unused-command-line-argument")
 endif()
 if(CMAKE_C_COMPILER_TARGET AND CMAKE_C_COMPILE_OPTIONS_TARGET)
     set(CFLAGS "${CFLAGS} ${CMAKE_C_COMPILE_OPTIONS_TARGET}${CMAKE_C_COMPILER_TARGET}")
@@ -88,18 +84,11 @@ endif()
 
 string(REGEX REPLACE "^ " "" CFLAGS "${CFLAGS}")
 
-if(CMAKE_HOST_WIN32)
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT};$ENV{PATH}")
-else()
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT}:$ENV{PATH}")
-endif()
 set(ENV{ANDROID_DEV} "${CMAKE_SYSROOT}/usr")
 
 if(NOT IOS)
     set(ENV{CC} "${CMAKE_C_COMPILER}")
 endif()
-
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0")
 
 message("ENV{ANDROID_DEV}=$ENV{ANDROID_DEV}")
 
@@ -114,10 +103,11 @@ get_filename_component(MSYS_BIN_DIR "${MAKE}" DIRECTORY)
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
-    file(STRINGS "${BUILDDIR}/include/openssl/opensslv.h" SHLIB_VERSION
-        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
-    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
+    file(STRINGS "${BUILDDIR}/VERSION.dat" SHLIB_VERSION
+        REGEX "^SHLIB_VERSION=.*")
+    string(REGEX REPLACE "^(SHLIB_VERSION=)(.*)$" "\\2"
         SHLIB_VERSION "${SHLIB_VERSION}")
+
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
         set(LIB_EXT dylib)
         set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
@@ -132,7 +122,7 @@ if(BUILD_SHARED_LIBS)
     list(APPEND BIN_EXTS ${BIN_EXT})
     list(APPEND LIB_EXTS ${LIB_EXT})
 else()
-    set(SHARED no-shared)
+    set(SHARED no-shared no-module)
     set(LIB_EXTS a)
 endif()
 set(INSTALL_PKG_CONFIGS "${BUILDDIR}/openssl.pc")
@@ -232,6 +222,7 @@ else()
             ${DISABLES}
             ${PLATFORM}
             "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--libdir=${CMAKE_INSTALL_PREFIX}/lib"
             "--openssldir=/etc/ssl"
             ${CFLAGS}
             VERBATIM
@@ -268,7 +259,7 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libssl.${SHLIB_VERSION}.dylib"
                                                "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
-                                               "${BUILDDIR}/libcrypto.1.1.dylib"
+                                               "${BUILDDIR}/libcrypto.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -change "${CMAKE_INSTALL_PREFIX}/lib/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"

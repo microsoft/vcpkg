@@ -1,14 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/efsw
-    REF 6fb0c9ccd284445330723914249b7be46798ee76
-    SHA512 5f31d8e52f3a4fc351ccf4ab6388ca347fb66694e280a3cee7eeef4ae4723cdca9cd2dbd65605cc2371b73e0c4e44bfaf70c6d18d33cd7b1a8a92721fa177113
+    REF b62d04829bb0a6f3cacc7859e0b046a3c053bc50
+    SHA512 fc16ef6ad330941dc0a1112ce645b57bd126d353556d50f45fadf150f25edd42c1d4946bc54d629d94c208d67d4ce17dbf5d1079cbeed51f0f6b1ccbe2199132
     HEAD_REF master
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/thread_sync.patch
-        ${CMAKE_CURRENT_LIST_DIR}/reproc_fork_interaction.patch
 )
 
 vcpkg_configure_cmake(
@@ -17,7 +12,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DVERBOSE=OFF
         -DBUILD_TEST_APP=OFF
-		-DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_install_cmake()

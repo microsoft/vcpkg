@@ -4,30 +4,15 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 54ee5fcbcd58cb70d7acc55a91ef6eb19751321b35d8fd3b0173fe52b1034023dbeb5c891554615b1277e1a1644b25c28ba0c4712839765dd790e3055ab0e79c
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-	vcpkg_extract_source_archive_ex(
-		OUT_SOURCE_PATH SOURCE_PATH
-		ARCHIVE ${ARCHIVE}
-		NO_REMOVE_ONE_LEVEL
-		PATCHES
-			fix-warningC5105.patch
-			fix-config-cmake.patch
-			use-zlib-target.patch
-	)
-else()
-	vcpkg_extract_source_archive_ex(
-		OUT_SOURCE_PATH SOURCE_PATH
-		ARCHIVE ${ARCHIVE}
-		NO_REMOVE_ONE_LEVEL
-		PATCHES
-			fix-warningC5105.patch
-			fix-config-cmake.patch
-			use-zlib-target.patch
-			remove-pthread_create-linux.patch
-	)
-endif()
-
-set(SENTRY_BACKEND "crashpad")
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    NO_REMOVE_ONE_LEVEL
+    PATCHES
+        fix-warningC5105.patch
+        fix-config-cmake.patch
+        use-zlib-target.patch
+)
 
 if (NOT DEFINED SENTRY_BACKEND)
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
@@ -53,6 +38,8 @@ vcpkg_cmake_configure(
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
         -DCRASHPAD_ZLIB_SYSTEM=ON
+    MAYBE_UNUSED_VARIABLES
+        CRASHPAD_ZLIB_SYSTEM
 )
 
 vcpkg_cmake_install()
@@ -61,7 +48,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sentry)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(

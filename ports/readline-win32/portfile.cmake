@@ -6,21 +6,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Copy headers
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/readline)
-file(GLOB headers "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/*.h")
-file(COPY ${headers} DESTINATION ${CURRENT_PACKAGES_DIR}/include/readline)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-readline-win32)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

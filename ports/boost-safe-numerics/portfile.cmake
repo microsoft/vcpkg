@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/safe_numerics
-    REF boost-1.78.0
-    SHA512 750b3e6abbc13b23d08bc2ce3397809ca7fd769aad7e366b50df6d9a4f40e78d7f852f7a79cec8d31872b83d6f3d9c0c30196b8b426f116714e178f3b8f76aeb
+    REF boost-1.80.0
+    SHA512 ee70b13590bfdedeb756f42d566a414fc05d5b079876f514daba4bddfa9420420f720f7bdba5006327766e3d7840c82f74a2cab0b35971f98c571f4aaf06dc11
     HEAD_REF master
 )
 

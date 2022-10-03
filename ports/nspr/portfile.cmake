@@ -52,7 +52,7 @@ vcpkg_configure_make(
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
-    DISABLE_VERBOSE_FLAGS true
+    DISABLE_VERBOSE_FLAGS
 )
 vcpkg_install_make()
 vcpkg_copy_pdbs()
@@ -90,5 +90,11 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     endif()
 endif()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/nspr-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/nspr-config" "${CURRENT_INSTALLED_DIR}/debug" "`dirname $0`/../../../..")
+endif()
+
 # Copy license
-file(INSTALL "${SOURCE_PATH}/nspr/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nspr" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/nspr/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
