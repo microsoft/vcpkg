@@ -5,7 +5,7 @@
   "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
   "homepage": "https://treehopper.io",
   "license": "MIT",
-  "supports": "!staticcrt & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "libusb",
