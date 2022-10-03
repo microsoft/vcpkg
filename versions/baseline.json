@@ -2770,11 +2770,11 @@
     },
     "gst-rtsp-server": {
       "baseline": "1.19.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 8
+      "port-version": 9
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -7894,7 +7894,7 @@
     },
     "x264": {
       "baseline": "0.164.3095",
-      "port-version": 1
+      "port-version": 2
     },
     "x265": {
       "baseline": "3.4",
