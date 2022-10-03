@@ -3874,7 +3874,7 @@
     },
     "liblsquic": {
       "baseline": "3.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "liblzma": {
       "baseline": "5.2.5",
