@@ -2784,6 +2784,10 @@
       "baseline": "4.6.2",
       "port-version": 2
     },
+    "gtk3": {
+      "baseline": "3.24.34",
+      "port-version": 0
+    },
     "gtkmm": {
       "baseline": "4.6.0",
       "port-version": 0
@@ -3479,6 +3483,10 @@
     "lemon": {
       "baseline": "0",
       "port-version": 1
+    },
+    "lemon-parser-generator": {
+      "baseline": "3.39.3",
+      "port-version": 0
     },
     "leptonica": {
       "baseline": "1.82.0",
