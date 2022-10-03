@@ -17,6 +17,14 @@
       "platform": "!windows & !osx"
     },
     "expat",
+    {
+      "name": "gtk3",
+      "platform": "!windows & !osx & !ios"
+    },
+    {
+      "name": "libiconv",
+      "platform": "!windows"
+    },
     "libjpeg-turbo",
     "libpng",
     "nanosvg",
@@ -53,6 +61,16 @@
         {
           "name": "pango",
           "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "media": {
+      "description": "Build wxMediaCtrl support",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "platform": "!windows & !osx & !ios"
         }
       ]
     },

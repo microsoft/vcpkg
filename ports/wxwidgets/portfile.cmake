@@ -13,28 +13,11 @@ vcpkg_from_github(
         gtk3-link-libraries.patch
 )
 
-if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING [[
-Port wxwidgets currently requires the following packages from the system package manager:
-    pkg-config
-    GTK 3
-    libsecret
-    libgcrypt
-    libsystemd
-These development packages can be installed on Ubuntu systems via
-    sudo apt-get install pkg-config libgtk-3-dev libsecret-1-dev libgcrypt20-dev libsystemd-dev
-]])
-    foreach(conflicting_port IN ITEMS freetype glib)
-        if(EXISTS "${CURRENT_INSTALLED_DIR}/share/${conflicting_port}/copyright")
-            message(FATAL_ERROR "Port ${conflicting_port} must not be installed when building ${PORT}:${TARGET_TRIPLET}.")
-        endif()
-    endforeach()
-endif()
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         fonts   wxUSE_PRIVATE_FONTS
+        media   wxUSE_MEDIACTRL
         sound   wxUSE_SOUND
         webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
@@ -59,19 +42,6 @@ else()
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
 endif()
 
-if(DEFINED ENV{PKG_CONFIG})
-    set(PKGCONFIG "$ENV{PKG_CONFIG}")
-elseif(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING)
-    # wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
-    # vcpkg's port pkgconf would prevent this lookup.
-    find_program(system_pkg_config NAMES pkg-config)
-    if(system_pkg_config)
-        set(PKGCONFIG "${system_pkg_config}")
-    endif()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND OPTIONS -DPKG_CONFIG_ARGN=--static)
-    endif()
-endif()
 vcpkg_find_acquire_program(PKGCONFIG)
 
 # This may be set to ON by users in a custom triplet.
@@ -96,9 +66,14 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
         -DwxUSE_NANOSVG=sys
-        -DwxUSE_SECRETSTORE=FALSE
+        -DwxUSE_LIBGNOMEVFS=OFF
+        -DwxUSE_LIBNOTIFY=OFF
+        -DwxUSE_SECRETSTORE=OFF
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
+        -DwxUSE_UIACTIONSIMULATOR=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_GSPELL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_MSPACK=ON
         ${OPTIONS}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         # The minimum cmake version requirement for Cotire is 2.8.12.
