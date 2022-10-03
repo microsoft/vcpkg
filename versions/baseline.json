@@ -4681,7 +4681,7 @@
       "port-version": 2
     },
     "mdspan": {
-      "baseline": "2021-11-03",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "mecab": {
