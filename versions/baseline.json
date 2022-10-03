@@ -3004,6 +3004,10 @@
       "baseline": "1.1.0",
       "port-version": 2
     },
+    "ignition-tools": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
     "ignition-transport4": {
       "baseline": "4.0.0",
       "port-version": 6
