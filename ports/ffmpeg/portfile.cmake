@@ -260,7 +260,9 @@ else()
 endif()
 
 if("dav1d" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libdav1d")
+	if(NOT VCPKG_TARGET_IS_OSX)
+		set(OPTIONS "${OPTIONS} --enable-libdav1d")
+	endif()
 else()
     set(OPTIONS "${OPTIONS} --disable-libdav1d")
 endif()
@@ -363,7 +365,9 @@ else()
 endif()
 
 if("sdl2" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-sdl2")
+	if(NOT VCPKG_TARGET_IS_OSX)
+		set(OPTIONS "${OPTIONS} --enable-sdl2")
+	endif()
 else()
     set(OPTIONS "${OPTIONS} --disable-sdl2")
 endif()
@@ -479,6 +483,14 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --disable-programs")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
+endif()
+
+if (VCPKG_TARGET_IS_WINDOWS)
+	# Don't link to avicap
+    set(OPTIONS "${OPTIONS} --disable-indev=vfwcap")
+
+	# Don't link to mfplat
+    set(OPTIONS "${OPTIONS} --disable-mediafoundation")
 endif()
 
 # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html

@@ -5,10 +5,7 @@ vcpkg_from_github(
     SHA512 303444695600b70ce59708e06bf21647d9b8dd33d772c53bbe49320f2f8f95ca8a7d6df2d29b7f36ff99001967e2d28380e0e305d778031940a3a5c6585f9a4f
     HEAD_REF master
     PATCHES
-        install.patch
-        fix-arm-uwp.patch
-        pkgconfig.patch
-        fix-ios.patch
+        all.patch
 )
 
 vcpkg_configure_cmake(

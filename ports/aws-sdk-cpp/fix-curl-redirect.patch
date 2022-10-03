@@ -1,0 +1,17 @@
+diff --git a/aws-cpp-sdk-core/source/http/curl/CurlHttpClient.cpp b/aws-cpp-sdk-core/source/http/curl/CurlHttpClient.cpp
+index 09b624c7dd..322999864f 100644
+--- a/aws-cpp-sdk-core/source/http/curl/CurlHttpClient.cpp
++++ b/aws-cpp-sdk-core/source/http/curl/CurlHttpClient.cpp
+@@ -714,12 +714,6 @@ std::shared_ptr<HttpResponse> CurlHttpClient::MakeRequest(const std::shared_ptr<
+                 int64_t numBytesResponseReceived = writeContext.m_numBytesResponseReceived;
+                 AWS_LOGSTREAM_TRACE(CURL_HTTP_CLIENT_TAG, "Response content-length header: " << contentLength);
+                 AWS_LOGSTREAM_TRACE(CURL_HTTP_CLIENT_TAG, "Response body length: " << numBytesResponseReceived);
+-                if (StringUtils::ConvertToInt64(contentLength.c_str()) != numBytesResponseReceived)
+-                {
+-                    response->SetClientErrorType(CoreErrors::NETWORK_CONNECTION);
+-                    response->SetClientErrorMessage("Response body length doesn't match the content-length header.");
+-                    AWS_LOGSTREAM_ERROR(CURL_HTTP_CLIENT_TAG, "Response body length doesn't match the content-length header.");
+-                }
+             }
+ 
+             AWS_LOGSTREAM_DEBUG(CURL_HTTP_CLIENT_TAG, "Releasing curl handle " << connectionHandle);

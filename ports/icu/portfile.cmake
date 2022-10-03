@@ -1,4 +1,6 @@
-set(ICU_VERSION_MAJOR 70)
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
+set(ICU_VERSION_MAJOR 69)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
 set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
@@ -8,9 +10,8 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 0b26ae7207155cb65a8fdb25f7b2fa4431e74b12bccbed0884a17feaae3c96833d12451064dd152197fd6ea5fd3adfd95594284a463e66c82e0d860f645880c9
+    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7
 )
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -21,15 +22,10 @@ vcpkg_extract_source_archive_ex(
         fix-extra.patch
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
-        fix-win-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
-endif()
 
 list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
 
@@ -39,6 +35,9 @@ list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
+message("Icu: SourcePath: ${SOURCE_PATH}")
+message("Icu: ToolPath: ${CURRENT_HOST_INSTALLED_DIR}")
+
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_MINGW AND NOT HOST_TRIPLET MATCHES "mingw")
     # Assuming no cross compiling because the host (windows) pkgdata tool doesn't
     # use the '/' path separator when creating compiler commands for mingw bash.
@@ -46,14 +45,46 @@ elseif(VCPKG_CROSSCOMPILING)
     set(TOOL_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
     # convert to unix path
     string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" _VCPKG_TOOL_PATH "${TOOL_PATH}")
+	message("Converted ${TOOL_PATH} to unix form ${_VCPKG_TOOL_PATH}")
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
+	if (VCPKG_TARGET_IS_IOS)
+		message("Cross compiling for ios arch ${VCPKG_TARGET_ARCHITECTURE}")
+		if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+			list(APPEND CONFIGURE_OPTIONS "--host=aarch64-apple-darwin")
+			list(APPEND CONFIGURE_OPTIONS "--disable-tools")
+			message("Cross compiling host --host=aarch64-apple-darwin --disable-tools")
+		elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+			list(APPEND CONFIGURE_OPTIONS "--host=x86_64-apple-darwin")
+			list(APPEND CONFIGURE_OPTIONS "--disable-tools")
+			message("Cross compiling host --host=x86_64-apple-darwin --disable-tools")
+		endif()
+	elseif(VCPKG_TARGET_IS_OSX)
+		message("Cross compiling for osx arch ${VCPKG_TARGET_ARCHITECTURE}")
+		if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+			list(APPEND CONFIGURE_OPTIONS "--host=aarch64-apple-darwin")
+			message("Cross compiling host --host=aarch64-apple-darwin --disable-tools")
+		elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+			list(APPEND CONFIGURE_OPTIONS "--host=x86_64-apple-darwin")
+			message("Cross compiling host --host=x86_64-apple-darwin")
+		endif()
+	endif()
+else()
+	message("Not cross compiling")
+	if (APPLE)
+		# Force the osx sdk thats the only possible one when not cross compiling
+		set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
+		set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
+		if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+			message("Forcing arm64")
+			set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -arch arm64")
+			set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -arch arm64")
+		endif()
+	endif()
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
     PROJECT_SUBPATH source
-    ADDITIONAL_MSYS_PACKAGES autoconf-archive
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
@@ -197,5 +228,6 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

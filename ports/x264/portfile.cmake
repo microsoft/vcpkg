@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF 5db6aa6cab1b146e07b60cc1736a01f21da01154
     SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
     HEAD_REF stable
-    PATCHES
-        "uwp-cflags.patch"
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -32,21 +30,59 @@ if(VCPKG_TARGET_IS_LINUX)
     list(APPEND OPTIONS --enable-pic)
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    NO_ADDITIONAL_PATHS
-    OPTIONS
-        ${OPTIONS}
-        --enable-strip
-        --disable-lavf
-        --disable-swscale
-        --disable-avs
-        --disable-ffms
-        --disable-gpac
-        --disable-lsmash
-        --enable-debug
-
-)
+if (VCPKG_TARGET_IS_OSX)
+	message("Cross compiling for osx arch ${VCPKG_TARGET_ARCHITECTURE}")
+	if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		vcpkg_configure_make(
+			SOURCE_PATH ${SOURCE_PATH}
+			NO_ADDITIONAL_PATHS
+			OPTIONS
+				${OPTIONS}
+				--enable-strip
+				--disable-lavf
+				--disable-swscale
+				--disable-avs
+				--disable-ffms
+				--disable-gpac
+				--disable-lsmash
+				--enable-debug
+				--disable-asm
+				--host=aarch64-apple-darwin 
+		)
+	else()
+		vcpkg_configure_make(
+			SOURCE_PATH ${SOURCE_PATH}
+			NO_ADDITIONAL_PATHS
+			OPTIONS
+				${OPTIONS}
+				--enable-strip
+				--disable-lavf
+				--disable-swscale
+				--disable-avs
+				--disable-ffms
+				--disable-gpac
+				--disable-lsmash
+				--enable-debug
+				--disable-asm
+				--host=x86_64-apple-darwin
+		)
+	endif()
+else()
+	vcpkg_configure_make(
+		SOURCE_PATH ${SOURCE_PATH}
+		NO_ADDITIONAL_PATHS
+		OPTIONS
+			${OPTIONS}
+			--enable-strip
+			--disable-lavf
+			--disable-swscale
+			--disable-avs
+			--disable-ffms
+			--disable-gpac
+			--disable-lsmash
+			--enable-debug
+	)
+endif()
 
 vcpkg_install_make()
 

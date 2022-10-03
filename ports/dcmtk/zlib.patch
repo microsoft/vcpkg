@@ -1,0 +1,15 @@
+diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
+index 43aa282ef..4ccf93b53 100644
+--- a/CMake/3rdparty.cmake
++++ b/CMake/3rdparty.cmake
+@@ -310,8 +310,8 @@ else()
+   if(DCMTK_WITH_ZLIB)
+     if(WITH_ZLIBINC)
+       set(ZLIB_INCDIR "${WITH_ZLIBINC}/include")
+-      set(ZLIB_LIBDIR "${WITH_ZLIBINC}/lib")
+-      set(ZLIB_LIBS debug "${ZLIB_LIBDIR}/zlib_d.lib" optimized "${ZLIB_LIBDIR}/zlib_o.lib")
++      set(ZLIB_LIBS debug "${WITH_ZLIBINC}/debug/lib/zlibd.lib" optimized "${WITH_ZLIBINC}/lib/zlib.lib")
++
+       message(STATUS "Info: DCMTK ZLIB support will be enabled")
+       set(WITH_ZLIB 1)
+     else() # turn off library if library path not set

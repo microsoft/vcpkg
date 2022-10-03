@@ -1,0 +1,105 @@
+diff --git a/cmake/ports/aws-sdk-cpp/patch-string.patch b/cmake/ports/aws-sdk-cpp/patch-string.patch
+index 1f16b3e9..e69de29b 100644
+--- a/cmake/ports/aws-sdk-cpp/patch-string.patch
++++ b/cmake/ports/aws-sdk-cpp/patch-string.patch
+@@ -1,100 +0,0 @@
+-diff --git a/aws-cpp-sdk-core/include/aws/core/http/URI.h b/aws-cpp-sdk-core/include/aws/core/http/URI.h
+-index 4cff72d4a8..7eace18b9d 100644
+---- a/aws-cpp-sdk-core/include/aws/core/http/URI.h
+-+++ b/aws-cpp-sdk-core/include/aws/core/http/URI.h
+-@@ -39,6 +39,7 @@ namespace Aws
+-               * Parses string and sets uri fields
+-               */
+-             URI(const Aws::String&);
+-+
+-             /**
+-               * Parses string and sets uri fields
+-               */
+-diff --git a/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h b/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
+-index 3cd013e3f8..28af4ffc90 100644
+---- a/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
+-+++ b/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
+-@@ -83,7 +83,7 @@ class String : public AndroidBasicString
+-         String(std::initializer_list<char> __l) : Base(__l) {}
+- 
+-         template<class _InputIterator>
+--	String(_InputIterator __beg, _InputIterator __end) : Base(__beg, __end) {}
+-+		String(_InputIterator __beg, _InputIterator __end) : Base(__beg, __end) {}
+- 
+- 	String& operator=(const String& rhs) { Base::operator=(rhs); return *this; }
+- 	String& operator=(String&& rhs) { Base::operator=(rhs); return *this; } // might be ok to use std::move (base class uses swap) but let's be safe
+-@@ -94,10 +94,59 @@ class String : public AndroidBasicString
+- 
+- #else
+- 
+--using String = std::basic_string< char, std::char_traits< char >, Aws::Allocator< char > >;
+-+using StringBase = std::basic_string< char, std::char_traits< char >, Aws::Allocator< char > >;
+-+
+-+class String : public StringBase
+-+{
+-+    public:
+-+        using Base = StringBase;
+-+		using Base::Base;
+-+		using Base::operator =;
+-+
+-+		String(String &&) = default;
+-+		String(const String &) = default;
+-+
+-+		String & operator = (String &&) = default;
+-+		String & operator = (const String &) = default;
+-+
+-+		String(std::basic_string_view<char> str) noexcept :
+-+			Base(str.data(), str.size()) {
+-+		}
+-+
+-+		String(const std::basic_string<char> &str) noexcept :
+-+			Base(str.data(), str.size()) {
+-+		}
+-+
+-+		String(const std::basic_string<char, std::char_traits<char>, Crt::StlAllocator<char>> &str) noexcept :
+-+			Base(str.data(), str.size()) {
+-+		}
+-+
+-+        template<typename TraitsT, typename AllocT>
+-+		String(const std::basic_string<char, TraitsT, AllocT> &str) noexcept :
+-+			Base(str.data(), str.size()) {
+-+		}
+-+
+-+        template<typename TraitsT>
+-+		String(std::basic_string_view<char, TraitsT> str) noexcept :
+-+			Base(str.data(), str.size()) {
+-+		}
+-+
+-+        template<typename TraitsT, typename AllocT>
+-+		String & operator = (const std::basic_string<char, TraitsT, AllocT> &str) noexcept {
+-+			Base::operator = (Base{str.data(), str.size()});
+-+			return *this;
+-+		}
+-+
+-+        template<typename TraitsT>
+-+		String & operator = (std::basic_string_view<char, TraitsT> str) noexcept {
+-+			Base::operator = (Base{str.data(), str.size()});
+-+			return *this;
+-+		}
+-+};
+- 
+- #ifdef _WIN32
+--using WString = std::basic_string< wchar_t, std::char_traits< wchar_t >, Aws::Allocator< wchar_t > >;
+-+using WStringBase = std::basic_string< wchar_t, std::char_traits< wchar_t >, Aws::Allocator< wchar_t > >;
+-+
+- #endif
+- 
+- #endif // __ANDROID
+-diff --git a/aws-cpp-sdk-s3/source/S3Client.cpp b/aws-cpp-sdk-s3/source/S3Client.cpp
+-index d8250b3d53..db9fdcaad2 100644
+---- a/aws-cpp-sdk-s3/source/S3Client.cpp
+-+++ b/aws-cpp-sdk-s3/source/S3Client.cpp
+-@@ -2390,7 +2390,7 @@ ListBucketsOutcome S3Client::ListBuckets() const
+-     return ListBucketsOutcome(computeEndpointOutcome.GetError());
+-   }
+-   ss << computeEndpointOutcome.GetResult().endpoint;
+--  return ListBucketsOutcome(MakeRequest(ss.str(), Aws::Http::HttpMethod::HTTP_GET, Aws::Auth::SIGV4_SIGNER, "ListBuckets", computeEndpointOutcome.GetResult().signerRegion.c_str() /*signerRegionOverride*/, computeEndpointOutcome.GetResult().signerServiceName.c_str() /*signerServiceNameOverride*/));
+-+  return ListBucketsOutcome(MakeRequest(ss.str().c_str(), Aws::Http::HttpMethod::HTTP_GET, Aws::Auth::SIGV4_SIGNER, "ListBuckets", computeEndpointOutcome.GetResult().signerRegion.c_str() /*signerRegionOverride*/, computeEndpointOutcome.GetResult().signerServiceName.c_str() /*signerServiceNameOverride*/));
+- }
+- 
+- ListBucketsOutcomeCallable S3Client::ListBucketsCallable() const

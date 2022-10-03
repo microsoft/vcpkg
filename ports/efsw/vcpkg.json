@@ -1,8 +1,0 @@
-{
-  "name": "efsw",
-  "version-date": "2020-06-08",
-  "port-version": 3,
-  "description": "efsw is a C++ cross-platform file system watcher and notifier.",
-  "homepage": "https://github.com/SpartanJ/efsw",
-  "supports": "!uwp"
-}

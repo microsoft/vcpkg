@@ -1,0 +1,65 @@
+diff --git a/src/efsw/FileWatcherFSEvents.cpp b/src/efsw/FileWatcherFSEvents.cpp
+index 5aac142..fa47882 100644
+--- a/src/efsw/FileWatcherFSEvents.cpp
++++ b/src/efsw/FileWatcherFSEvents.cpp
+@@ -86,6 +86,9 @@ FileWatcherFSEvents::~FileWatcherFSEvents()
+ {
+ 	mInitOK = false;
+ 
++	if (mThread)
++		mThread->wait();
++
+ 	efSAFE_DELETE( mThread );
+ 
+ 	WatchMap::iterator iter = mWatches.begin();
+diff --git a/src/efsw/FileWatcherGeneric.cpp b/src/efsw/FileWatcherGeneric.cpp
+index fd423b1..276924d 100644
+--- a/src/efsw/FileWatcherGeneric.cpp
++++ b/src/efsw/FileWatcherGeneric.cpp
+@@ -19,6 +19,9 @@ FileWatcherGeneric::~FileWatcherGeneric()
+ {
+ 	mInitOK = false;
+ 
++	if (mThread)
++		mThread->wait();
++
+ 	efSAFE_DELETE( mThread );
+ 
+ 	/// Delete the watches
+diff --git a/src/efsw/FileWatcherInotify.cpp b/src/efsw/FileWatcherInotify.cpp
+index d1652f8..da1a772 100644
+--- a/src/efsw/FileWatcherInotify.cpp
++++ b/src/efsw/FileWatcherInotify.cpp
+@@ -47,6 +47,9 @@ FileWatcherInotify::~FileWatcherInotify()
+ {
+ 	mInitOK = false;
+ 
++	if (mThread)
++		mThread->wait();
++
+ 	efSAFE_DELETE( mThread );
+ 	
+ 	WatchMap::iterator iter = mWatches.begin();
+diff --git a/src/efsw/FileWatcherWin32.cpp b/src/efsw/FileWatcherWin32.cpp
+index 8746a69..92966ef 100644
+--- a/src/efsw/FileWatcherWin32.cpp
++++ b/src/efsw/FileWatcherWin32.cpp
+@@ -23,13 +23,16 @@ FileWatcherWin32::~FileWatcherWin32()
+ {
+ 	mInitOK = false;
+ 
+-	removeAllWatches();
+-
+ 	if (mIOCP && mIOCP != INVALID_HANDLE_VALUE)
+ 	{
+ 		PostQueuedCompletionStatus(mIOCP, 0, reinterpret_cast<ULONG_PTR>(this), NULL);
+ 	}
+ 
++	if (mThread)
++		mThread->wait();
++
++	removeAllWatches();
++
+ 	CloseHandle(mIOCP);
+ 
+ 	efSAFE_DELETE( mThread );

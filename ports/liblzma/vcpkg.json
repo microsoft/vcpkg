@@ -4,7 +4,6 @@
   "port-version": 5,
   "description": "Compression library with an API similar to that of zlib.",
   "homepage": "https://github.com/xz-mirror/xz",
-  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",

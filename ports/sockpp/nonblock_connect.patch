@@ -1,0 +1,113 @@
+diff --git a/include/sockpp/connector.h b/include/sockpp/connector.h
+index ca857be..a73c952 100644
+--- a/include/sockpp/connector.h
++++ b/include/sockpp/connector.h
+@@ -112,6 +112,16 @@ public:
+ 	 * @return @em true on success, @em false on error
+ 	 */
+ 	bool connect(const sock_address& addr);
++
++	/**
++     * The start of a non blocking connect call, establishes the initial
++	 * connection and will not close it on error, sets non blocking to true
++	 * up to caller to manage the api in non blocking form.
++	 * @param addr The remote server address.
++	 * @return @em if false and last error is EWOULDBLOCK, continue to retry with
++	 * a select
++	 */
++	bool connect_nb_begin(const sock_address& addr);
+ };
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -188,6 +198,7 @@ public:
+ 	 * @return @em true on success, @em false on error
+ 	 */
+ 	bool connect(const addr_t& addr) { return base::connect(addr); }
++	bool connect_nb_begin(const addr_t& addr) { return base::connect_nb_begin(addr); }
+ };
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/include/sockpp/socket.h b/include/sockpp/socket.h
+index f1a2a82..5e239be 100644
+--- a/include/sockpp/socket.h
++++ b/include/sockpp/socket.h
+@@ -48,6 +48,7 @@
+ #define __sockpp_socket_h
+ 
+ #include "sockpp/sock_address.h"
++#include <system_error>
+ #include <chrono>
+ #include <string>
+ #include <tuple>
+@@ -145,6 +146,24 @@ protected:
+ 		close(release());
+ 		return false;
+ 	}
++public:
++	/**
++	 * DWORD windows, int *nix, last_error
++	 * @ref check_ret.
++	 */
++	auto last_error_plat(bool force = false) const {
++		#if _WIN32
++			auto err = static_cast<DWORD>(last_error());
++			if (force && !err)
++				err = WSA_INVALID_PARAMETER;
++		#else
++			auto err = static_cast<int>(last_error());
++			if (force && !err)
++				err = EINVAL;
++		#endif
++		return err;
++	}
++protected:
+ 	/**
+ 	 * OS-specific means to retrieve the last error from an operation.
+ 	 * This should be called after a failed system call to set the
+@@ -172,7 +191,7 @@ protected:
+ 		return ret;
+ 	}
+ 	/**
+-     * Checks the value and if less than zero, sets last error. 
++     * Checks the value and if less than zero, sets last error.
+      * @tparam T A signed integer type of any size
+ 	 * @param ret The return value from a library or system call.
+ 	 * @return @em true if the value is a typical system success value (>=0)
+@@ -196,7 +215,7 @@ protected:
+ 		return ret;
+ 	}
+     /**
+-     * Checks the value and if it is INVALID_SOCKET, sets last error. 
++     * Checks the value and if it is INVALID_SOCKET, sets last error.
+ 	 * This is specifically required for Windows which uses an unsigned type
+ 	 * for its SOCKET.
+ 	 * @param ret The return value from a library or system call that returns
+diff --git a/src/connector.cpp b/src/connector.cpp
+index 0ebcfe4..77c1d90 100644
+--- a/src/connector.cpp
++++ b/src/connector.cpp
+@@ -39,6 +39,24 @@
+ namespace sockpp {
+ 
+ /////////////////////////////////////////////////////////////////////////////
++bool connector::connect_nb_begin(const sock_address& addr)
++{
++    sa_family_t domain = addr.family();
++	socket_t h = create_handle(domain);
++
++	if (!check_ret_bool(h))
++		return false;
++
++	// This will close the old connection, if any.
++	reset(h);
++
++	if (!set_non_blocking(true))
++		return close_on_err();
++
++	if (!check_ret_bool(::connect(h, addr.sockaddr_ptr(), addr.size())))
++		return false;
++	return true;
++}
+ 
+ bool connector::connect(const sock_address& addr)
+ {

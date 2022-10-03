@@ -1,0 +1,37 @@
+diff --git a/CMake/dcmtkPrepare.cmake b/CMake/dcmtkPrepare.cmake
+index 23a9278cb..fc852e090 100644
+--- a/CMake/dcmtkPrepare.cmake
++++ b/CMake/dcmtkPrepare.cmake
+@@ -377,8 +377,12 @@ if(WIN32)   # special handling for Windows systems
+ 
+ else()   # ... for non-Windows systems
+ 
++  # Compiler flags for iOS
++  if(CMAKE_SYSTEM_NAME MATCHES "iOS")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_XOPEN_SOURCE_EXTENDED -D_BSD_SOURCE -D_BSD_COMPAT -D_OSF_SOURCE -D_DARWIN_C_SOURCE")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE_EXTENDED -D_BSD_SOURCE -D_BSD_COMPAT -D_OSF_SOURCE -D_DARWIN_C_SOURCE")
+   # Compiler flags for Mac OS X
+-  if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
++  elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_XOPEN_SOURCE_EXTENDED -D_BSD_SOURCE -D_BSD_COMPAT -D_OSF_SOURCE -D_DARWIN_C_SOURCE")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE_EXTENDED -D_BSD_SOURCE -D_BSD_COMPAT -D_OSF_SOURCE -D_DARWIN_C_SOURCE")
+   # Compiler flags for NetBSD
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 028e1d171..56c49c323 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,8 +54,12 @@ configure_file("${DCMTK_SOURCE_DIR}/CMake/osconfig.h.in"
+ #-----------------------------------------------------------------------------
+ # Prepare arith.h
+ #-----------------------------------------------------------------------------
+-
+-INSPECT_FUNDAMENTAL_ARITHMETIC_TYPES()
++if (NOT CROSS_ARITH_H)
++	INSPECT_FUNDAMENTAL_ARITHMETIC_TYPES()
++else()
++	message("Copying ${CROSS_ARITH_H} => ${DCMTK_BINARY_DIR}/config/include/dcmtk/config/arith.h")
++	file(COPY_FILE "${CROSS_ARITH_H}" "${DCMTK_BINARY_DIR}/config/include/dcmtk/config/arith.h")
++endif()
+ 
+ # ----------------------------------------------------------------------------
+ # Unit test related configuration/setup

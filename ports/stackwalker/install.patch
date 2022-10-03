@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c9138ca..dc97ba8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ project(StackWalker-project)
+ 
++include(GNUInstallDirs)
++
+ cmake_minimum_required(VERSION 3.5)
+ 
+ if(NOT CMAKE_BUILD_TYPE)
+@@ -91,6 +93,14 @@ install(TARGETS "${TARGET_StackWalker}"
+ install(FILES "${CMAKE_SOURCE_DIR}/Main/StackWalker/StackWalker.h"
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
++# Install Package Configuration
++install(TARGETS StackWalker EXPORT ${PROJECT_NAME_LOWER}_targets)
++install(EXPORT ${PROJECT_NAME_LOWER}_targets
++	NAMESPACE StackWalker::
++	FILE StackWalkerConfig.cmake
++	DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/StackWalker"
++)
++
+ if (MSVC_VERSION GREATER_EQUAL 1900)
+     set(PDB_StackWalker "${TARGET_StackWalker}.pdb")
+ else()

@@ -1,0 +1,349 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c81dd72..618aa37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,25 +42,13 @@ cmake_minimum_required(VERSION 3.5)
+ ## project
+ project(sockpp VERSION "0.7.1")
+ 
+-## library name
+-set(SOCKPP sockpp)
+-set(SOCKPP_STATIC ${SOCKPP}-static)
+-
+-# --- Build Options ---
+-
+-if(WIN32)
+-	option(SOCKPP_BUILD_STATIC "Build static library" ON)
+-	option(SOCKPP_BUILD_SHARED "Build shared library (DLL)" OFF)
+-else()
+-	option(SOCKPP_BUILD_STATIC "Build static library" OFF)
+-	option(SOCKPP_BUILD_SHARED "Build shared library" ON)
+-endif()
+-
+ option(SOCKPP_BUILD_EXAMPLES "Build example applications" OFF)
+ option(SOCKPP_BUILD_TESTS "Build unit tests" OFF)
+ option(SOCKPP_BUILD_DOCUMENTATION "Create Doxygen reference documentation" OFF)
+ option(SOCKPP_BUILD_CAN "Build the Linux SocketCAN components" OFF)
+ 
++set(CMAKE_DEBUG_POSTFIX d)
++
+ # --- C++14 build flags ---
+ 
+ set(CMAKE_CXX_STANDARD 14)
+@@ -71,142 +59,100 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ configure_file(
+ 	${CMAKE_CURRENT_SOURCE_DIR}/version.h.in  
+-	generated/${SOCKPP}/version.h
++	generated/sockpp/version.h
+ 	@ONLY
+ )
+ 
+-# --- Common Library Sources, etc ---
+-
+-add_subdirectory(src)
+-
+-# --- Header Locations ---
+-
+-target_include_directories(sockpp-objs 
+-	PUBLIC
+-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-		$<INSTALL_INTERFACE:include>
+-	PRIVATE 
+-		${CMAKE_CURRENT_BINARY_DIR}/generated
+-		src
+-)
+-
+-# --- System libraries ---
+-
+-include(GNUInstallDirs)
+-
+-if(WIN32)
+-	set(LIBS_SYSTEM ws2_32)
+-elseif(UNIX)
+-	set(LIBS_SYSTEM c stdc++)
++if(UNIX)
++	add_library(sockpp STATIC
++		src/acceptor.cpp
++		src/connector.cpp
++		src/datagram_socket.cpp
++		src/exception.cpp
++		src/inet_address.cpp
++		src/inet6_address.cpp
++		src/socket.cpp
++		src/stream_socket.cpp
++		src/unix/unix_address.cpp
++	)
++else()
++	add_library(sockpp STATIC
++		src/acceptor.cpp
++		src/connector.cpp
++		src/datagram_socket.cpp
++		src/exception.cpp
++		src/inet_address.cpp
++		src/inet6_address.cpp
++		src/socket.cpp
++		src/stream_socket.cpp
++	)
+ endif()
+ 
++# This is only necessary for older compilers, but doesn't hurt
++set_target_properties(sockpp PROPERTIES POSITION_INDEPENDENT_CODE 1)
+ 
+-## --- create the shared library ---
++# --- Warnings ---
+ 
+-if(SOCKPP_BUILD_SHARED)
+-	message(STATUS "Creating shared library: ${SOCKPP}")
++if(NOT MSVC)
++	# Maybe set '-Werror' for Release builds?
++	if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
++		target_compile_options(sockpp PRIVATE -Wall -Wextra -pedantic -Wdocumentation)
++	else()
++		target_compile_options(sockpp PRIVATE -Wall -Wextra -pedantic)
++	endif()
++endif()
+ 
+-	add_library(${SOCKPP} SHARED $<TARGET_OBJECTS:sockpp-objs>)
++## add dependencies to the static library
++target_link_libraries(sockpp ${LIBS_SYSTEM})
+ 
+-	## add dependencies to the shared library
+-	target_link_libraries(${SOCKPP} ${LIBS_SYSTEM})
++target_include_directories(sockpp
++	PRIVATE
++		${CMAKE_CURRENT_BINARY_DIR}/generated
++	PUBLIC
++		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
++		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
+ 
+-	target_include_directories(${SOCKPP} 
+-		PUBLIC 
+-			$<TARGET_PROPERTY:sockpp-objs,INCLUDE_DIRECTORIES>
+-		PRIVATE
+-			${CMAKE_CURRENT_BINARY_DIR}/generated
++target_compile_options(sockpp PRIVATE
++	$<$<CXX_COMPILER_ID:MSVC>:/W3>
++	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+ 	)
+ 
+-	target_compile_options(${SOCKPP} PRIVATE
+-		$<$<CXX_COMPILER_ID:MSVC>:/W3>
+-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+-	 )
++install(TARGETS sockpp EXPORT sockppExport
++	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+-	set_target_properties(${SOCKPP} PROPERTIES
+-		VERSION ${PROJECT_VERSION}
+-		SOVERSION ${PROJECT_VERSION_MAJOR})
++include(CMakePackageConfigHelpers)
+ 
+-	install(TARGETS ${SOCKPP}
+-		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++set(packageDestDir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+ 
+-endif()
+-
+-# --- Create the static library ---
+-
+-if(SOCKPP_BUILD_STATIC)
+-	message(STATUS "Creating static library: ${SOCKPP_STATIC}")
+-
+-	add_library(${SOCKPP_STATIC} STATIC $<TARGET_OBJECTS:sockpp-objs>)
++configure_package_config_file(
++	${CMAKE_CURRENT_SOURCE_DIR}/sockppConfig.cmake.in
++	${CMAKE_CURRENT_BINARY_DIR}/cmake/sockppConfig.cmake
++	INSTALL_DESTINATION "${packageDestDir}"
++	NO_SET_AND_CHECK_MACRO
++	NO_CHECK_REQUIRED_COMPONENTS_MACRO
++)
+ 
+-	## add dependencies to the static library
+-	target_link_libraries(${SOCKPP_STATIC} ${LIBS_SYSTEM})
++export(TARGETS sockpp NAMESPACE sockpp:: FILE ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake)
+ 
+-	target_include_directories(${SOCKPP_STATIC} 
+-		PUBLIC 
+-			$<TARGET_PROPERTY:sockpp-objs,INCLUDE_DIRECTORIES>
+-		PRIVATE
+-			${CMAKE_CURRENT_BINARY_DIR}/generated
+-	)
++install(EXPORT sockppExport NAMESPACE sockpp:: DESTINATION "${packageDestDir}" FILE ${PROJECT_NAME}Targets.cmake)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/sockppConfig.cmake DESTINATION "${packageDestDir}")
+ 
+-	target_compile_options(${SOCKPP_STATIC} PRIVATE
+-		$<$<CXX_COMPILER_ID:MSVC>:/W3>
+-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+-	 )
++#if(MSVC)
++#  target_compile_options(sockpp PRIVATE /W4 /WX)
++#else()
++#  target_compile_options(sockpp PRIVATE -Wall -Wextra -pedantic)	# -Werror)
++#endif()
+ 
+-	install(TARGETS ${SOCKPP}-static
+-		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-
+-	# Let the archive use the same name as the shared library
+-	if(UNIX)
+-		set_target_properties(${SOCKPP_STATIC} PROPERTIES OUTPUT_NAME ${SOCKPP})
+-	endif()
+-endif()
+ 
+ # --- Install the library ---
+ 
+-install(DIRECTORY include/${SOCKPP}/
+-	DESTINATION include/${SOCKPP}
++install(DIRECTORY include/sockpp/
++	DESTINATION include/sockpp
+ 	FILES_MATCHING PATTERN "*.h*")
+ 
+-install(DIRECTORY ${CMAKE_BINARY_DIR}/generated/${SOCKPP}/
+-	DESTINATION include/${SOCKPP}
++install(DIRECTORY ${CMAKE_BINARY_DIR}/generated/sockpp/
++	DESTINATION include/sockpp
+ 	FILES_MATCHING PATTERN "*.h*")
+-
+-# --- Documentation ---
+-
+-if(SOCKPP_BUILD_DOCUMENTATION)
+-	add_subdirectory(doc)
+-endif()
+-
+-# --- Default library for examples and unit tests ---
+-
+-if(SOCKPP_BUILD_SHARED)
+-	set(SOCKPP_LIB ${SOCKPP})
+-else()
+-	set(SOCKPP_LIB ${SOCKPP_STATIC})
+-endif()
+-
+-
+-# --- Examples Applications ---
+-
+-if(SOCKPP_BUILD_EXAMPLES)
+-	add_subdirectory(examples/tcp)
+-	add_subdirectory(examples/udp)
+-	if(UNIX)
+-		add_subdirectory(examples/unix)
+-		if(SOCKPP_BUILD_CAN)
+-			add_subdirectory(examples/linux)
+-		endif()
+-	endif()
+-endif()
+-
+-# --- Unit Tests ---
+-
+-if(SOCKPP_BUILD_TESTS)
+-	add_subdirectory(tests/unit)
+-endif()
+-
+diff --git a/sockppConfig.cmake.in b/sockppConfig.cmake.in
+new file mode 100644
+index 0000000..9e08e72
+--- /dev/null
++++ b/sockppConfig.cmake.in
+@@ -0,0 +1,7 @@
++# - Config file for the @CMAKE_PROJECT_NAME@ package
++
++@PACKAGE_INIT@
++
++@DEPENDENCIES_SECTION@
++
++include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+deleted file mode 100644
+index a2b1caf..0000000
+--- a/src/CMakeLists.txt
++++ /dev/null
+@@ -1,83 +0,0 @@
+-# CMakeLists.txt
+-#
+-# Source CMake build file (src/) for the 'sockpp' library.
+-#
+-# ---------------------------------------------------------------------------
+-# This file is part of the "sockpp" C++ socket library.
+-#
+-# Copyright (c) 2017-2018 Frank Pagliughi
+-# All rights reserved.
+-#
+-# Redistribution and use in source and binary forms, with or without
+-# modification, are permitted provided that the following conditions are
+-# met:
+-#
+-# 1. Redistributions of source code must retain the above copyright notice,
+-# this list of conditions and the following disclaimer.
+-#
+-# 2. Redistributions in binary form must reproduce the above copyright
+-# notice, this list of conditions and the following disclaimer in the
+-# documentation and/or other materials provided with the distribution.
+-#
+-# 3. Neither the name of the copyright holder nor the names of its
+-# contributors may be used to endorse or promote products derived from this
+-# software without specific prior written permission.
+-#
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+-# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+-# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+-# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+-# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+-# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+-# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+-# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+-# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-# ---------------------------------------------------------------------------
+-
+-add_library(sockpp-objs OBJECT
+-	acceptor.cpp
+-	connector.cpp
+-	datagram_socket.cpp
+-	exception.cpp
+-	inet_address.cpp
+-	inet6_address.cpp
+-	socket.cpp
+-	stream_socket.cpp
+-)
+-
+-if(UNIX)
+-	target_sources(sockpp-objs PUBLIC
+-		${CMAKE_CURRENT_SOURCE_DIR}/unix/unix_address.cpp
+-	)
+-	if(SOCKPP_BUILD_CAN)
+-		target_sources(sockpp-objs PUBLIC
+-      ${CMAKE_CURRENT_SOURCE_DIR}/linux/can_address.cpp
+-      ${CMAKE_CURRENT_SOURCE_DIR}/linux/can_socket.cpp
+-		)
+-	endif()
+-endif()
+-
+-# This is only necessary for older compilers, but doesn't hurt
+-set_target_properties(sockpp-objs PROPERTIES POSITION_INDEPENDENT_CODE 1)
+-
+-
+-# --- Warnings ---
+-
+-if(NOT MSVC)
+-	# Maybe set '-Werror' for Release builds?
+-	if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+-		target_compile_options(sockpp-objs PRIVATE -Wall -Wextra -pedantic -Wdocumentation)
+-	else()
+-		target_compile_options(sockpp-objs PRIVATE -Wall -Wextra -pedantic)
+-	endif()
+-endif()
+-
+-#if(MSVC)
+-#  target_compile_options(sockpp-objs PRIVATE /W4 /WX)
+-#else()
+-#  target_compile_options(sockpp-objs PRIVATE -Wall -Wextra -pedantic)	# -Werror)
+-#endif()
+-
+-

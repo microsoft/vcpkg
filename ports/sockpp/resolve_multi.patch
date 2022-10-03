@@ -1,0 +1,93 @@
+diff --git a/include/sockpp/inet_address.h b/include/sockpp/inet_address.h
+index 602f665..60a2d63 100644
+--- a/include/sockpp/inet_address.h
++++ b/include/sockpp/inet_address.h
+@@ -52,6 +52,7 @@
+ #include <string>
+ #include <cstring>
+ #include <algorithm>
++#include <vector>
+ 
+ namespace sockpp {
+ 
+@@ -143,6 +144,13 @@ public:
+      * @throw sys_error, getaddrinfo_error
+ 	 */
+ 	static in_addr_t resolve_name(const std::string& saddr);
++	/**
++	 * Attempts to resolve the host name into a one or more 32-bit internet addresses.
++	 * @param saddr The string host name.
++	 * @return An array of internet addresses in network byte order.
++     * @throw sys_error, getaddrinfo_error
++	 */
++	static std::vector<in_addr_t> resolve_names(const std::string& saddr);
+ 	/**
+ 	 * Creates the socket address using the specified host address and port
+ 	 * number.
+@@ -214,9 +222,9 @@ public:
+ 	}
+ 	/**
+ 	 * Gets a printable string for the address.
+-	 * This gets the simple dot notation of the address as returned from 
++	 * This gets the simple dot notation of the address as returned from
+ 	 * inet_ntop(). It does not attempt a host lookup.
+-	 * @return A string representation of the address in the form 
++	 * @return A string representation of the address in the form
+ 	 *  	   'address:port'
+ 	 */
+ 	std::string to_string() const;
+@@ -225,8 +233,8 @@ public:
+ // --------------------------------------------------------------------------
+ 
+ /**
+- * Stream inserter for the address. 
+- * This uses the simple dot notation of the address as returned from 
++ * Stream inserter for the address.
++ * This uses the simple dot notation of the address as returned from
+  * inet_ntop(). It does not attempt a host lookup.
+  * @param os The output stream
+  * @param addr The address
+diff --git a/src/inet_address.cpp b/src/inet_address.cpp
+index ea133a7..2af299c 100644
+--- a/src/inet_address.cpp
++++ b/src/inet_address.cpp
+@@ -51,12 +51,12 @@ bool inet_address::is_set() const
+ 
+ // --------------------------------------------------------------------------
+ 
+-in_addr_t inet_address::resolve_name(const std::string& saddr)
++std::vector<in_addr_t> inet_address::resolve_names(const std::string& saddr)
+ {
+ 	#if !defined(_WIN32)
+ 		in_addr ia;
+ 		if (::inet_pton(ADDRESS_FAMILY, saddr.c_str(), &ia) == 1)
+-			return ia.s_addr;
++			return {ia.s_addr};
+ 	#endif
+ 
+     addrinfo *res, hints = addrinfo{};
+@@ -73,10 +73,21 @@ in_addr_t inet_address::resolve_name(const std::string& saddr)
+     if (gai_err != 0)
+         throw getaddrinfo_error(gai_err, saddr);
+ 
+-    auto ipv4 = reinterpret_cast<sockaddr_in*>(res->ai_addr);
+-    auto addr = ipv4->sin_addr.s_addr;
++	std::vector<in_addr_t> addresses;
++	for (auto rp = res; rp != NULL; rp = rp->ai_next) {
++		auto ipv4 = reinterpret_cast<struct sockaddr_in *>(rp->ai_addr);
++		auto addr = ipv4->sin_addr.s_addr;
++		addresses.push_back(addr);
++	}
++
+     freeaddrinfo(res);
+-    return addr;
++	return addresses;
++}
++
++in_addr_t inet_address::resolve_name(const std::string& saddr)
++{
++	auto names = resolve_names(saddr);
++	return names.at(0);
+ }
+ 
+ // --------------------------------------------------------------------------
