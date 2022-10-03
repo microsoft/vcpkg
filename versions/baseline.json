@@ -558,7 +558,7 @@
     },
     "boost": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-accumulators": {
       "baseline": "1.80.0",
@@ -582,7 +582,7 @@
     },
     "boost-asio": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-assert": {
       "baseline": "1.80.0",
@@ -670,7 +670,7 @@
     },
     "boost-coroutine": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-coroutine2": {
       "baseline": "1.80.0",

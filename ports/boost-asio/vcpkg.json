@@ -1,6 +1,7 @@
 {
   "name": "boost-asio",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "license": "BSL-1.0",
@@ -18,7 +19,7 @@
     "boost-core",
     {
       "name": "boost-coroutine",
-      "platform": "!arm & !uwp & !emscripten"
+      "platform": "!(arm & windows) & !uwp & !emscripten"
     },
     "boost-date-time",
     "boost-exception",
