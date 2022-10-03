@@ -34,8 +34,9 @@ endif()
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sound   wxUSE_SOUND
         fonts   wxUSE_PRIVATE_FONTS
+        sound   wxUSE_SOUND
+        webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
 )
 
