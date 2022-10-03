@@ -1,0 +1,30 @@
+From 5698ab6de0720f4da078423aa1676ad6a1c6d7ff Mon Sep 17 00:00:00 2001
+From: Ryan Pavlik <ryan.pavlik@collabora.com>
+Date: Mon, 3 Oct 2022 09:31:10 -0500
+Subject: [PATCH] cmake: Fix Android build.
+
+Android/Bionic C library needs no special flags to have threading support.
+Found when trying to build with vcpkg.
+---
+ CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20bdc92e..4efe834e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -556,6 +556,11 @@ endif()
+ if (NOT EVENT__DISABLE_THREAD_SUPPORT)
+     if (WIN32)
+         list(APPEND SRC_CORE evthread_win32.c)
++    elseif(ANDROID)
++        # pthreads is built in to bionic
++        set(EVENT__HAVE_PTHREADS 1)
++        CHECK_TYPE_SIZE(pthread_t EVENT__SIZEOF_PTHREAD_T)
++        list(APPEND SYMBOLS_TO_CHECK pthread_mutexattr_setprotocol)
+     else()
+         find_package(Threads REQUIRED)
+         if (NOT CMAKE_USE_PTHREADS_INIT)
+-- 
+2.34.1
+
