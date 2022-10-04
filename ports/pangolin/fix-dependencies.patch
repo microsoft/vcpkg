@@ -52,7 +52,7 @@ index ddeb144..ee27d57 100644
      list(APPEND HEADERS ${INCDIR}/video/drivers/uvc.h )
      list(APPEND SOURCES video/drivers/uvc.cpp)
      list(APPEND VIDEO_FACTORY_REG RegisterUvcVideoFactory )
-@@ -584,11 +590,10 @@ endif()
+@@ -584,11 +590,14 @@ endif()
  
  option(BUILD_PANGOLIN_LIBOPENEXR "Build support for libopenexr image input" ON)
  if(BUILD_PANGOLIN_LIBOPENEXR)
@@ -62,7 +62,11 @@ index ddeb144..ee27d57 100644
      set(HAVE_OPENEXR 1)
 -    list(APPEND INTERNAL_INC ${OpenEXR_INCLUDE_DIR} )
 -    list(APPEND LINK_LIBS ${OpenEXR_LIBRARY} )
-+    list(APPEND LINK_LIBS OpenEXR::IlmImf OpenEXR::IlmImfUtil OpenEXR::IlmImfConfig )
++    list(APPEND LINK_LIBS OpenEXR::OpenEXR)
++    string(APPEND ExternConfig "
++  include(CMakeFindDependencyMacro)
++  find_dependency(OpenEXR CONFIG)
++")
      message(STATUS "libopenexr Found and Enabled")
    endif()
  endif()
@@ -95,3 +99,31 @@ index ddeb144..ee27d57 100644
      target_link_libraries(pypangolin PRIVATE ${LIBRARY_NAME})
      target_include_directories(pypangolin PRIVATE "${USER_INC}")
  endif()
+diff --git a/src/image/image_io_exr.cpp b/src/image/image_io_exr.cpp
+index 52c0078..1bd6c55 100644
+--- a/src/image/image_io_exr.cpp
++++ b/src/image/image_io_exr.cpp
+@@ -4,6 +4,8 @@
+ #include <pangolin/image/typed_image.h>
+ 
+ #ifdef HAVE_OPENEXR
++#include <ImfFrameBuffer.h>
++#include <ImfHeader.h>
+ #include <ImfChannelList.h>
+ #include <ImfInputFile.h>
+ #include <ImfOutputFile.h>
+@@ -54,12 +56,12 @@ class StdIStream: public Imf::IStream
+         return true;
+     }
+ 
+-    virtual Imf::Int64 tellg ()
++    virtual uint64_t tellg ()
+     {
+         return std::streamoff (_is->tellg());
+     }
+ 
+-    virtual void seekg (Imf::Int64 pos)
++    virtual void seekg (uint64_t pos)
+     {
+         _is->seekg (pos);
+     }
