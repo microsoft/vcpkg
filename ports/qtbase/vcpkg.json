@@ -268,27 +268,27 @@
     "sql-mysql": {
       "description": "Enable SQL Driver MySQL",
       "dependencies": [
+        "libmysql",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "sql"
           ]
-        },
-        "libmysql"
+        }
       ]
     },
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
+        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "sql"
           ]
-        },
-        "ocilib"
+        }
       ]
     },
     "sql-odbc": {

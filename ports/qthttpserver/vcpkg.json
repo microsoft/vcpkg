@@ -9,8 +9,8 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "network",
-        "concurrent"
+        "concurrent",
+        "network"
       ]
     }
   ]
