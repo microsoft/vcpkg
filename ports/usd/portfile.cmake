@@ -29,9 +29,8 @@ ELSE()
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
 ENDIF()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
@@ -46,14 +45,14 @@ vcpkg_configure_cmake(
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(
     RENAME
         "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
         "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/pxr)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME pxr)
 
 vcpkg_copy_pdbs()
 
