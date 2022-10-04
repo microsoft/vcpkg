@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-libs-export.patch
         fix-pcre2.patch
         gtk3-link-libraries.patch
+        sdl2.patch
 )
 
 vcpkg_check_features(
