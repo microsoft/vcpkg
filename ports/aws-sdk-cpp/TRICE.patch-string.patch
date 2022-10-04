@@ -1,30 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5cc7790523..058c510323 100644
+index 42f32e8bc3..cbb8d94ba0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -61,7 +61,7 @@ option(ENABLE_VIRTUAL_OPERATIONS "This option usually works with REGENERATE_CLIE
-                                 You can utilize this feature to work with your linker to reduce binary size of your application on Unix platforms when doing static linking in Release mode." ON)
+@@ -62,7 +62,7 @@ option(ENABLE_VIRTUAL_OPERATIONS "This option usually works with REGENERATE_CLIE
+ option(REGENERATE_DEFAULTS "If set to ON, defaults mode configuration will be regenerated from the JSON definitions, this option involves some setup of python, java 8+, and maven" OFF)
  
  set(BUILD_ONLY "" CACHE STRING "A semi-colon delimited list of the projects to build")
 -set(CPP_STANDARD "11" CACHE STRING "Flag to upgrade the C++ standard used. The default is 11. The minimum is 11.")
-+set(CPP_STANDARD "17" CACHE STRING "Flag to upgrade the C++ standard used. The default is 17. The minimum is 11.")
++set(CPP_STANDARD "17" CACHE STRING "Flag to upgrade the C++ standard used. The default is 11. The minimum is 11.")
  
  get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
  if (NOT ${is_multi_config})
-diff --git a/aws-cpp-sdk-core/include/aws/core/http/URI.h b/aws-cpp-sdk-core/include/aws/core/http/URI.h
-index 4cff72d4a8..7eace18b9d 100644
---- a/aws-cpp-sdk-core/include/aws/core/http/URI.h
-+++ b/aws-cpp-sdk-core/include/aws/core/http/URI.h
-@@ -39,6 +39,7 @@ namespace Aws
-               * Parses string and sets uri fields
-               */
-             URI(const Aws::String&);
-+
-             /**
-               * Parses string and sets uri fields
-               */
 diff --git a/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h b/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
-index 3cd013e3f8..a4ceba099d 100644
+index 3cd013e3f8..54580070ab 100644
 --- a/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
 +++ b/aws-cpp-sdk-core/include/aws/core/utils/memory/stl/AWSString.h
 @@ -11,6 +11,7 @@
@@ -35,16 +23,7 @@ index 3cd013e3f8..a4ceba099d 100644
  
  namespace Aws
  {
-@@ -83,7 +84,7 @@ class String : public AndroidBasicString
-         String(std::initializer_list<char> __l) : Base(__l) {}
- 
-         template<class _InputIterator>
--	String(_InputIterator __beg, _InputIterator __end) : Base(__beg, __end) {}
-+		String(_InputIterator __beg, _InputIterator __end) : Base(__beg, __end) {}
- 
- 	String& operator=(const String& rhs) { Base::operator=(rhs); return *this; }
- 	String& operator=(String&& rhs) { Base::operator=(rhs); return *this; } // might be ok to use std::move (base class uses swap) but let's be safe
-@@ -94,10 +95,61 @@ class String : public AndroidBasicString
+@@ -94,7 +95,58 @@ class String : public AndroidBasicString
  
  #else
  
@@ -100,18 +79,36 @@ index 3cd013e3f8..a4ceba099d 100644
 +			return *this;
 +		}
 +};
++
  
  #ifdef _WIN32
  using WString = std::basic_string< wchar_t, std::char_traits< wchar_t >, Aws::Allocator< wchar_t > >;
-+
- #endif
+@@ -104,5 +156,20 @@ using WString = std::basic_string< wchar_t, std::char_traits< wchar_t >, Aws::Al
  
- #endif // __ANDROID
+ } // namespace Aws
+ 
++namespace std {
++	// Specialization for std::hash<Guid> -- this implementation
++	// uses std::hash<std::string> on the stringification of the guid
++	// to calculate the hash
++	template <>
++	struct hash<::Aws::String> {
++		typedef ::Aws::String argument_type;
++		typedef std::size_t result_type;
++
++		result_type operator()(argument_type const &str) const {
++			std::hash<std::string> hasher;
++			return static_cast<result_type>(hasher(str.c_str()));
++		}
++	};
++}   // namespace STD
+ 
+ 
 diff --git a/aws-cpp-sdk-s3/source/S3Client.cpp b/aws-cpp-sdk-s3/source/S3Client.cpp
-index d8250b3d53..db9fdcaad2 100644
+index c307c89a94..3d969e3769 100644
 --- a/aws-cpp-sdk-s3/source/S3Client.cpp
 +++ b/aws-cpp-sdk-s3/source/S3Client.cpp
-@@ -2390,7 +2390,7 @@ ListBucketsOutcome S3Client::ListBuckets() const
+@@ -2439,7 +2439,7 @@ ListBucketsOutcome S3Client::ListBuckets() const
      return ListBucketsOutcome(computeEndpointOutcome.GetError());
    }
    ss << computeEndpointOutcome.GetResult().endpoint;
@@ -121,14 +118,15 @@ index d8250b3d53..db9fdcaad2 100644
  
  ListBucketsOutcomeCallable S3Client::ListBucketsCallable() const
 diff --git a/cmake/platform/windows.cmake b/cmake/platform/windows.cmake
-index 9b91570eaa..8e4c3609c5 100644
+index 9b91570eaa..cf48ef7110 100644
 --- a/cmake/platform/windows.cmake
 +++ b/cmake/platform/windows.cmake
-@@ -14,6 +14,7 @@ macro(apply_post_project_platform_settings)
+@@ -14,6 +14,8 @@ macro(apply_post_project_platform_settings)
          # Put all runtime outputs, including DLLs, executables into one directory, so as to avoid copying DLLs.
          set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
      endif()
-+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++${CPP_STANDARD}" CACHE STRING "" FORCE)
++    # TRICE enforce setting of standard properly
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++${CPP_STANDARD}" CACHE STRING "" FORCE)
      if(CMAKE_SIZEOF_VOID_P EQUAL 8)
          set(SDK_INSTALL_BINARY_PREFIX "${SDK_INSTALL_BINARY_PREFIX}/intel64")
      else()

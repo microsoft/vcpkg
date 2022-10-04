@@ -1,5 +1,3 @@
-vcpkg_buildpath_length_warning(37)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
@@ -9,6 +7,8 @@ vcpkg_from_github(
         patch-relocatable-rpath.patch
         fix-aws-root.patch
         fix-openssl3.patch
+		TRICE.fix-curl-redirect.patch
+		TRICE.patch-string.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -40,6 +40,8 @@ vcpkg_cmake_configure(
         "-DENABLE_TESTING=OFF"
         "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
         "-DBUILD_ONLY=${BUILD_ONLY}"
+		"-DFORCE_CURL=ON"		# TRICE - use curl on all platforms 
+		"-DCPP_STANDARD=17"		# TRICE - use c++17 for string_view 
         "-DBUILD_DEPS=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DCMAKE_INSTALL_RPATH=${rpath}"
