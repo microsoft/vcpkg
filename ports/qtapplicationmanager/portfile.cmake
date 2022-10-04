@@ -29,7 +29,6 @@ qt_cmake_configure(${_opt}
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
                         -DFEATURE_am_system_libarchive=ON
-                        --trace-expand
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 
