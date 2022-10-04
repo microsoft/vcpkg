@@ -869,8 +869,6 @@ qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
 # Missing system libraries
 qt5-wayland:x64-osx=fail
-# qtmultimedia needs an EGL fix
-qtmultimedia:x64-linux=fail
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
 # Missing prerequisites for CI success
