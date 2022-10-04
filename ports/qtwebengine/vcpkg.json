@@ -87,10 +87,6 @@
       "default-features": false
     },
     {
-      "name": "qtdeclarative",
-      "default-features": false
-    },
-    {
       "name": "qttools",
       "default-features": false
     },
