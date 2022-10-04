@@ -44,7 +44,6 @@ list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
                                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
-                                       --trace-expand
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
