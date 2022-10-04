@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         avoid-cpm.patch
+        pr-521.patch # See https://github.com/boost-ext/ut/pull/521
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +15,7 @@ vcpkg_cmake_configure(
         -DBOOST_UT_BUILD_BENCHMARKS=OFF
         -DBOOST_UT_BUILD_EXAMPLES=OFF
         -DBOOST_UT_BUILD_TESTS=OFF
+        -DINCLUDE_INSTALL_DIR=include
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

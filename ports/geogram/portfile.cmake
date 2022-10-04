@@ -8,7 +8,7 @@ vcpkg_from_github(
         use-arm64-intrinsics.patch
 )
 
-file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
+file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -48,10 +48,10 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     # Geogram cannot be built with ninja because it embeds $(Configuration) in some of the generated paths. These require MSBuild in order to be evaluated.
-    #PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DVORPALINE_BUILD_DYNAMIC=${VORPALINE_BUILD_DYNAMIC}
         -DGEOGRAM_LIB_ONLY=ON
@@ -61,22 +61,22 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake
+    "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
     [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
     [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]]
     )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/doc/devkit/license.dox" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
