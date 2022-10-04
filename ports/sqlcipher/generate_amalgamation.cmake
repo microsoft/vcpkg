@@ -1,6 +1,7 @@
 function(sqlcipher_generate_amalgamation SOURCE_PATH)
     file(TO_NATIVE_PATH "${SOURCE_PATH}" SOURCE_PATH_NAT)
     file(GLOB TCLSH_CMD ${CURRENT_HOST_INSTALLED_DIR}/tools/tcl/bin/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/lemon")
     message(STATUS "Generating amalgamation")
 
     #[[

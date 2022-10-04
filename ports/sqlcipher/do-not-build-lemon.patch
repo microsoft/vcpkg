@@ -1,0 +1,66 @@
+diff --git a/Makefile.in b/Makefile.in
+index e685d64..0f27b92 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -805,9 +805,7 @@ sqlite3.lo:	sqlite3.c
+ 
+ # Rules to build the LEMON compiler generator
+ #
+-lemon$(BEXE):	$(TOP)/tool/lemon.c $(TOP)/tool/lempar.c
+-	$(BCC) -o $@ $(TOP)/tool/lemon.c
+-	cp $(TOP)/tool/lempar.c .
++lemon$(BEXE): ;
+ 
+ # Rules to build the program that generates the source-id
+ #
+@@ -1107,7 +1105,7 @@ parse.h:	parse.c
+ 
+ parse.c:	$(TOP)/src/parse.y lemon$(BEXE)
+ 	cp $(TOP)/src/parse.y .
+-	./lemon$(BEXE) $(OPT_FEATURE_FLAGS) $(OPTS) -S parse.y
++	lemon$(BEXE) $(OPT_FEATURE_FLAGS) $(OPTS) -S parse.y
+ 
+ sqlite3.h:	$(TOP)/src/sqlite.h.in $(TOP)/manifest mksourceid$(BEXE) $(TOP)/VERSION
+ 	$(TCLSH_CMD) $(TOP)/tool/mksqlite3h.tcl $(TOP) >sqlite3.h
+@@ -1243,7 +1241,7 @@ FTS5_SRC = \
+ fts5parse.c:	$(TOP)/ext/fts5/fts5parse.y lemon$(BEXE)
+ 	cp $(TOP)/ext/fts5/fts5parse.y .
+ 	rm -f fts5parse.h
+-	./lemon$(BEXE) $(OPTS) -S fts5parse.y
++	lemon$(BEXE) $(OPTS) -S fts5parse.y
+ 
+ fts5parse.h: fts5parse.c
+ 
+diff --git a/Makefile.msc b/Makefile.msc
+index 4771dc4..736fcd8 100644
+--- a/Makefile.msc
++++ b/Makefile.msc
+@@ -1888,9 +1888,7 @@ lempar.c:	$(TOP)\tool\lempar.c
+ 	copy /Y $(TOP)\tool\lempar.c .
+ 	copy /B lempar.c +,,
+ 
+-lemon.exe:	$(TOP)\tool\lemon.c lempar.c
+-	$(BCC) $(NO_WARN) -Daccess=_access \
+-		-Fe$@ $(TOP)\tool\lemon.c /link $(LDFLAGS) $(NLTLINKOPTS) $(NLTLIBPATHS)
++lemon.exe: ;
+ 
+ # <<mark>>
+ # Rules to build the source-id generator tool
+@@ -2191,7 +2189,7 @@ parse.c:	$(TOP)\src\parse.y lemon.exe
+ 	del /Q parse.y parse.h parse.h.temp 2>NUL
+ 	copy /Y $(TOP)\src\parse.y .
+ 	copy /B parse.y +,,
+-	.\lemon.exe $(REQ_FEATURE_FLAGS) $(OPT_FEATURE_FLAGS) $(EXT_FEATURE_FLAGS) $(OPTS) -S parse.y
++	lemon.exe $(REQ_FEATURE_FLAGS) $(OPT_FEATURE_FLAGS) $(EXT_FEATURE_FLAGS) $(OPTS) -S parse.y
+ 
+ $(SQLITE3H):	$(TOP)\src\sqlite.h.in $(TOP)\manifest mksourceid.exe $(TOP)\VERSION
+ 	$(TCLSH_CMD) $(TOP)\tool\mksqlite3h.tcl $(TOP:\=/) > $(SQLITE3H) $(MKSQLITE3H_ARGS)
+@@ -2359,7 +2357,7 @@ fts5parse.c:	$(TOP)\ext\fts5\fts5parse.y lemon.exe
+ 	copy /Y $(TOP)\ext\fts5\fts5parse.y .
+ 	copy /B fts5parse.y +,,
+ 	del /Q fts5parse.h 2>NUL
+-	.\lemon.exe $(REQ_FEATURE_FLAGS) $(OPT_FEATURE_FLAGS) $(EXT_FEATURE_FLAGS) $(OPTS) -S fts5parse.y
++	lemon.exe $(REQ_FEATURE_FLAGS) $(OPT_FEATURE_FLAGS) $(EXT_FEATURE_FLAGS) $(OPTS) -S fts5parse.y
+ 
+ fts5parse.h:	fts5parse.c
+ 

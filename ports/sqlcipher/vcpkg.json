@@ -8,6 +8,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "lemon-parser-generator",
+      "host": true
+    },
+    {
       "name": "openssl",
       "platform": "!osx"
     },

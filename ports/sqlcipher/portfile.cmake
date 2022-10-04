@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v4.5.2
     SHA512 1de5b219392bb976631857e32b4523258fd660fedb558d478e536b7e10c711c72c7e7c9062e45bd8a5ceaecbc1fee717935d2357f6811c3ddf76702167f4601b
     HEAD_REF master
+    PATCHES
+        do-not-build-lemon.patch
 )
 
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
