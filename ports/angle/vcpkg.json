@@ -14,11 +14,11 @@
       "platform": "linux"
     },
     {
-      "name": "libxi",
+      "name": "libxext",
       "platform": "linux"
     },
     {
-      "name": "libxext",
+      "name": "libxi",
       "platform": "linux"
     },
     "opengl-registry",
