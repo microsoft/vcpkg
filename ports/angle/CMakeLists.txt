@@ -98,7 +98,8 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/xxhash/*.h"
     "src/common/third_party/xxhash/*.c"
     "src/common/third_party/smhasher/src/*.h"
-    "src/common/third_party/smhasher/src/*.cpp")
+    "src/common/third_party/smhasher/src/*.cpp"
+    )
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common OBJECT ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base>")
@@ -469,6 +470,7 @@ elseif(APPLE)
 	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
 elseif(LINUX)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
+    target_sources(angle_gpu_info_util PRIVATE "src/third_party/libXNVCtrl/NVCtrl.c")
     target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
     target_link_libraries(angle_gpu_info_util PRIVATE X11::X11 X11::Xi X11::Xext)
 elseif(ANDROID)
