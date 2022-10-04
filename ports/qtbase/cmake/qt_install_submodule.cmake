@@ -19,7 +19,7 @@ function(qt_download_submodule_impl)
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
-        if(PORT STREQUAL "qttools") # Leep this for beta & rc's
+        if(PORT STREQUAL "qttools") # Keep this for beta & rc's
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
                 URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
