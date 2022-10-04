@@ -8,6 +8,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "openssl",
+      "platform": "!osx"
+    },
+    {
       "name": "tcl",
       "host": true
     },
@@ -20,14 +24,7 @@
       "host": true
     }
   ],
-  "default-features": [
-    "openssl"
-  ],
   "features": {
-    "commoncrypto": {
-      "description": "Use the commoncrypto encryption backend",
-      "supports": "osx"
-    },
     "fts3": {
       "description": "Enable the FTS3 extension"
     },
@@ -43,12 +40,6 @@
     "json1": {
       "description": "Enable JSON functionality for sqlcipher"
     },
-    "libtomcrypt": {
-      "description": "Use the libtomcrypt encryption backend",
-      "dependencies": [
-        "libtomcrypt"
-      ]
-    },
     "limit": {
       "description": "Enable the UPDATE/DELETE LIMIT clause"
     },
@@ -61,21 +52,8 @@
     "memsys5": {
       "description": "Enable MEMSYS5"
     },
-    "nss": {
-      "description": "Use the nss encryption backend",
-      "dependencies": [
-        "nss"
-      ],
-      "supports": "!windows"
-    },
     "omit-load-extension": {
       "description": "Enable loading of external extensions"
-    },
-    "openssl": {
-      "description": "Use the openssl encryption backend",
-      "dependencies": [
-        "openssl"
-      ]
     },
     "rtree": {
       "description": "Enable the RTREE extension"

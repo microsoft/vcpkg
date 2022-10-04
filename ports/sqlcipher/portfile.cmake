@@ -33,26 +33,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         geopoly             WITH_GEOPOLY
         json1               WITH_JSON1
 
-        commoncrypto        WITH_COMMONCRYPTO
-        libtomcrypt         WITH_LIBTOMCRYPT
-        nss                 WITH_NSS
-        openssl             WITH_OPENSSL
-
     INVERTED_FEATURES
         tool SQLITE3_SKIP_TOOLS
 )
 
-set(ENCRYPTION_BACKENDS 0)
-foreach(lib IN ITEMS COMMONCRYPTO LIBTOMCRYPT NSS OPENSSL)
-    if (WITH_${lib})
-        math(EXPR ENCRYPTION_BACKENDS "${ENCRYPTION_BACKENDS} + 1")
-    endif()
-endforeach()
-
-if (ENCRYPTION_BACKENDS EQUAL 0)
-    message(FATAL_ERROR "Need to specify an encryption backend (commoncrypto, libtomcrypt, nss, openssl)")
-elseif (ENCRYPTION_BACKENDS GREATER 1)
-    message(FATAL_ERROR "Cannot specify multiple encryption backends")
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS WITH_COMMONCRYPTO)
+else()
+    list(APPEND FEATURE_OPTIONS WITH_OPENSSL)
 endif()
 
 vcpkg_cmake_configure(
