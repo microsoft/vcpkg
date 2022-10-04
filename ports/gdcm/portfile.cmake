@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         -DGDCM_BUILD_DOCBOOK_MANPAGES=OFF
         -DGDCM_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
         -DGDCM_INSTALL_INCLUDE_DIR=include
+		-DGDCM_BUILD_APPLICATIONS=ON  # TRICE addition to have gdcm anon reside in tools dir
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
         -DGDCM_USE_SYSTEM_OPENJPEG=ON
@@ -54,6 +55,21 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define 
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set( GDCM_INCLUDE_DIRS \"${SOURCE_PATH}/Source/Common;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Source/Common;${SOURCE_PATH}/Source/DataStructureAndEncodingDefinition;${SOURCE_PATH}/Source/MediaStorageAndFileFormat;${SOURCE_PATH}/Source/MessageExchangeDefinition;${SOURCE_PATH}/Source/DataDictionary;${SOURCE_PATH}/Source/InformationObjectDefinition\")" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set(GDCM_LIBRARY_DIRS \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/.\")" "")
+
+# TRICE added tool copy calls
+vcpkg_copy_tools(TOOL_NAMES gdcmanon AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmdiff AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmgendir AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcminfo AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmraw AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmscu AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmxml AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmconv AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmdump AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmimg AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmpap3 AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmscanner AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gdcmtar AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
