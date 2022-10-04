@@ -474,7 +474,7 @@
     },
     "bext-ut": {
       "baseline": "1.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "bext-wintls": {
       "baseline": "0.9.5",
@@ -498,7 +498,7 @@
     },
     "bitserializer": {
       "baseline": "0.44",
-      "port-version": 1
+      "port-version": 2
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -514,7 +514,7 @@
     },
     "bitserializer-rapidyaml": {
       "baseline": "alias",
-      "port-version": 2
+      "port-version": 3
     },
     "bitsery": {
       "baseline": "5.2.2",
@@ -1250,7 +1250,7 @@
     },
     "c4core": {
       "baseline": "0.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "c89stringutils": {
       "baseline": "0.0.1",
@@ -1693,7 +1693,7 @@
       "port-version": 2
     },
     "cppwinrt": {
-      "baseline": "2.0.220418.1",
+      "baseline": "2.0.220929.3",
       "port-version": 0
     },
     "cppxaml": {
@@ -1921,7 +1921,7 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.606.3",
+      "baseline": "1.606.4",
       "port-version": 0
     },
     "directxmath": {
@@ -2550,7 +2550,7 @@
     },
     "geogram": {
       "baseline": "1.7.6",
-      "port-version": 3
+      "port-version": 4
     },
     "geographiclib": {
       "baseline": "2.1.1",
@@ -2689,8 +2689,8 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "2.2.0",
-      "port-version": 1
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2770,11 +2770,11 @@
     },
     "gst-rtsp-server": {
       "baseline": "1.19.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 8
+      "port-version": 9
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -2784,12 +2784,16 @@
       "baseline": "4.6.2",
       "port-version": 2
     },
+    "gtk3": {
+      "baseline": "3.24.34",
+      "port-version": 0
+    },
     "gtkmm": {
       "baseline": "4.6.0",
       "port-version": 0
     },
     "gtl": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "gts": {
@@ -3015,6 +3019,10 @@
     "ignition-transport9": {
       "baseline": "9.0.0",
       "port-version": 4
+    },
+    "ignition-utils1": {
+      "baseline": "1.4.0",
+      "port-version": 0
     },
     "igraph": {
       "baseline": "0.10.1",
@@ -3480,6 +3488,10 @@
       "baseline": "0",
       "port-version": 1
     },
+    "lemon-parser-generator": {
+      "baseline": "3.39.3",
+      "port-version": 0
+    },
     "leptonica": {
       "baseline": "1.82.0",
       "port-version": 0
@@ -3866,7 +3878,7 @@
     },
     "liblsquic": {
       "baseline": "3.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "liblzma": {
       "baseline": "5.2.5",
@@ -4249,8 +4261,8 @@
       "port-version": 4
     },
     "libudis86": {
-      "baseline": "2018-01-28-56ff6c87",
-      "port-version": 2
+      "baseline": "2018-01-28",
+      "port-version": 3
     },
     "libudns": {
       "baseline": "0.4",
@@ -4673,7 +4685,7 @@
       "port-version": 2
     },
     "mdspan": {
-      "baseline": "2021-11-03",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "mecab": {
@@ -5549,7 +5561,7 @@
       "port-version": 2
     },
     "parallel-hashmap": {
-      "baseline": "1.36",
+      "baseline": "1.3.8",
       "port-version": 0
     },
     "parallelstl": {
@@ -6294,7 +6306,7 @@
     },
     "quickfix": {
       "baseline": "1.15.1",
-      "port-version": 7
+      "port-version": 8
     },
     "quill": {
       "baseline": "2.1.0",
@@ -6558,7 +6570,7 @@
     },
     "rxcpp": {
       "baseline": "4.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rxqt": {
       "baseline": "bb2138c",
@@ -6698,7 +6710,7 @@
     },
     "selene": {
       "baseline": "0.3.1",
-      "port-version": 5
+      "port-version": 6
     },
     "sentencepiece": {
       "baseline": "0.1.96",
@@ -6725,7 +6737,7 @@
       "port-version": 0
     },
     "serdepp": {
-      "baseline": "0.1.4",
+      "baseline": "0.1.4.1",
       "port-version": 0
     },
     "sf2cute": {
@@ -7214,7 +7226,7 @@
     },
     "tfhe": {
       "baseline": "1.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "tgbot-cpp": {
       "baseline": "1.3",
@@ -7882,7 +7894,7 @@
     },
     "x264": {
       "baseline": "0.164.3095",
-      "port-version": 1
+      "port-version": 2
     },
     "x265": {
       "baseline": "3.4",
