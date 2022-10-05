@@ -12,6 +12,8 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "Cannot write file"
     # Multiple threads caused the wrong order of creating folders and creating files in folders
     "Can't open"
+    # `make install` may stumble over concurrency, in particular with `mkdir` on osx.
+    "mkdir [^:]*: File exists"
 )
 list(JOIN Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES "|" Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES)
 
