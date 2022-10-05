@@ -1,0 +1,15 @@
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index cfe7db3..9a92608 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -162,6 +162,10 @@ if(NOT OGRE_BUILD_TESTS)
+ endif()
+ 
+ 
++set(OGRE_PLUGIN_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_PLUGINS_PATH}")
++cmake_path(RELATIVE_PATH OGRE_PLUGIN_DIR_REL BASE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${OGRE_CFG_INSTALL_PATH}")
++set(OGRE_MEDIA_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_MEDIA_PATH}")
++cmake_path(RELATIVE_PATH OGRE_MEDIA_DIR_REL BASE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${OGRE_CFG_INSTALL_PATH}")
+ set(OGRE_CORE_MEDIA_DIR "${OGRE_MEDIA_DIR_REL}")
+ # CREATE CONFIG FILES - INSTALL VERSIONS
+ configure_file(${OGRE_TEMPLATES_DIR}/resources.cfg.in ${PROJECT_BINARY_DIR}/inst/bin/resources.cfg)

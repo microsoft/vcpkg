@@ -736,7 +736,6 @@ ogdf:x64-windows-static-md=skip
 ogdf:x86-windows        = skip
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18936
 ogdf:x64-linux=fail
-ogre:x64-osx=fail
 ogre:arm64-osx=fail
 # Conflicts with ogre
 ogre-next:arm64-windows      = skip
