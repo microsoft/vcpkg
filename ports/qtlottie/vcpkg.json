@@ -11,17 +11,15 @@
       "features": [
         "gui"
       ]
+    },
+    {
+          "name": "qtdeclarative",
+          "default-features": false
     }
   ],
   "features": {
     "qml": {
-      "description": "Build QML imports",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
+      "description": "(deprecated since Qt 6.4)"
     }
   }
 }

@@ -42,11 +42,16 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
+endif()
+
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
     if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
     else()
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='yes'")
@@ -54,7 +59,6 @@ if("ffmpeg" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")
     list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 endif()
 
 # alsa is not ready

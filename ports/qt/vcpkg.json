@@ -94,7 +94,7 @@
         "gstreamer"
       ],
       "platform": "!windows"
-    }
+    },
     "qtnetworkauth",
     {
       "name": "qtopcua",
