@@ -5742,7 +5742,7 @@
     },
     "pngpp": {
       "baseline": "0.2.10",
-      "port-version": 0
+      "port-version": 1
     },
     "pngwriter": {
       "baseline": "0.7.0",
