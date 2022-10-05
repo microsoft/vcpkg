@@ -13,3 +13,16 @@ index cfe7db3..9a92608 100644
  set(OGRE_CORE_MEDIA_DIR "${OGRE_MEDIA_DIR_REL}")
  # CREATE CONFIG FILES - INSTALL VERSIONS
  configure_file(${OGRE_TEMPLATES_DIR}/resources.cfg.in ${PROJECT_BINARY_DIR}/inst/bin/resources.cfg)
+diff --git a/Components/Bites/CMakeLists.txt b/Components/Bites/CMakeLists.txt
+index 045e288..50c9956 100644
+--- a/Components/Bites/CMakeLists.txt
++++ b/Components/Bites/CMakeLists.txt
+@@ -135,7 +135,7 @@ elseif(UNIX)
+     set_source_files_properties(src/OgreBitesConfigDialog.cpp PROPERTIES COMPILE_DEFINITIONS HAVE_XAW)
+     list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGLXConfigDialog.cpp")
+     list(APPEND DEPENDENCIES ${X11_Xt_LIB} ${XAW_LIBRARY})
+-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/misc/GLX_backdrop.png" DESTINATION "share/OGRE/")
++    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/misc/GLX_backdrop.png" DESTINATION "${OGRE_MEDIA_PATH}/..")
+   endif()
+ endif()
+ 
