@@ -8,14 +8,24 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
+
 if(WIN32)
     vcpkg_replace_string("${SOURCE_PATH}/configure.ac" "z zlib zdll" "z zlib zdll zlibd")
 
+    # xapian does not support debug lib on Windows
+    # if use `set(VCPKG_BUILD_TYPE release)` ，the vcpkg post check can not passed，
+    # it will throw exception "Mismatching number of debug and release binaries. Found 0 for debug but 1 for release."
+    # that means the `set(VCPKG_BUILD_TYPE release)` can not be used in the WIN32 environment.
+    if(VCPKG_BUILD_TYPE STREQUAL "release")
+        set(OPTIONS "CXXFLAGS=-EHsc")
+    endif()
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    USE_WRAPPERS
+    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_make()
@@ -24,6 +34,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/xapian)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-# Handle copyright
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
-# vcpkg_copy_pdbs()
