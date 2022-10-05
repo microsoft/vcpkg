@@ -2,7 +2,7 @@ The package dcmtk provides CMake targets:
 
     find_package(DCMTK CONFIG REQUIRED)
     # Note: 23 target(s) were omitted.
-    target_link_libraries(main PRIVATE cmr i2d ijg8 dcmfg)
+    target_link_libraries(main PRIVATE DCMTK::cmr DCMTK::i2d DCMTK::ijg8 DCMTK::dcmfg)
 
 Add the following cmake code to your CMakeLists.txt to create definitions for DCMTK
     if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
