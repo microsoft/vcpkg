@@ -82,10 +82,19 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "gstreamer",
+        "ffmpeg"
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
         "gstreamer"
       ],
-      "platform": "!(static & windows)"
-    },
+      "platform": "!windows"
+    }
     "qtnetworkauth",
     {
       "name": "qtopcua",

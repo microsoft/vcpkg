@@ -26,7 +26,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_REQUIRE_FIND_PACKAGE_Qt6Widgets
-    #"gstreamer"     CMAKE_REQUIRE_FIND_PACKAGE_GStreamer
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
@@ -34,7 +33,6 @@ INVERTED_FEATURES
     "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
     # Features not yet added in the manifest:
     "avfoundation"  CMAKE_DISABLE_FIND_PACKAGE_AVFoundation # not in vcpkg
-    #"wmf"           CMAKE_DISABLE_FIND_PACKAGE_WMF # not in vcpkg
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
 
@@ -45,14 +43,22 @@ else()
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
+    # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
+        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
+    else()
+        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='yes'")
+    endif()
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")
+    list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 endif()
 
 # alsa is not ready
 list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
-#list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
