@@ -1450,7 +1450,7 @@
     },
     "clfft": {
       "baseline": "2.12.2",
-      "port-version": 5
+      "port-version": 6
     },
     "cli": {
       "baseline": "2.0.2",
