@@ -12,6 +12,11 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "cairo",
+      "default-features": false,
+      "platform": "!windows & !osx & !ios"
+    },
+    {
       "name": "curl",
       "default-features": false,
       "platform": "!windows & !osx"
