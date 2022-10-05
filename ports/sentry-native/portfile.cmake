@@ -14,6 +14,9 @@ vcpkg_extract_source_archive_ex(
         use-zlib-target.patch
 )
 
+# Force crashpad TRICE
+set(SENTRY_BACKEND "crashpad")
+
 if (NOT DEFINED SENTRY_BACKEND)
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
         set(SENTRY_BACKEND "breakpad")
