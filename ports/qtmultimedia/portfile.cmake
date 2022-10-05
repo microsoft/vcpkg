@@ -34,7 +34,7 @@ INVERTED_FEATURES
     "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
     # Features not yet added in the manifest:
     "avfoundation"  CMAKE_DISABLE_FIND_PACKAGE_AVFoundation # not in vcpkg
-    "wmf"           CMAKE_DISABLE_FIND_PACKAGE_WMF # not in vcpkg
+    #"wmf"           CMAKE_DISABLE_FIND_PACKAGE_WMF # not in vcpkg
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
 
@@ -52,7 +52,7 @@ endif()
 
 # alsa is not ready
 list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
-list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
+#list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
