@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF b62d04829bb0a6f3cacc7859e0b046a3c053bc50
     SHA512 fc16ef6ad330941dc0a1112ce645b57bd126d353556d50f45fadf150f25edd42c1d4946bc54d629d94c208d67d4ce17dbf5d1079cbeed51f0f6b1ccbe2199132
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/TRICE.reproc_fork_interaction.patch
 )
 
 vcpkg_configure_cmake(

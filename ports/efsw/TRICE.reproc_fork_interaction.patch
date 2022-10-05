@@ -1,0 +1,15 @@
+diff --git a/src/efsw/platform/posix/SystemImpl.cpp b/src/efsw/platform/posix/SystemImpl.cpp
+index 22e3709..2b1df1d 100644
+--- a/src/efsw/platform/posix/SystemImpl.cpp
++++ b/src/efsw/platform/posix/SystemImpl.cpp
+@@ -150,7 +150,9 @@ void System::maxFD()
+ 	{
+ 		struct rlimit limit;
+ 		getrlimit( RLIMIT_NOFILE, &limit );
+-		limit.rlim_cur = limit.rlim_max;
++		// 1024 * 1024 is the limit for the 'reproc++' library to work
++		limit.rlim_cur = std::min<decltype(limit.rlim_max)>(1024 * 1024, limit.rlim_max);
++
+ 		setrlimit( RLIMIT_NOFILE, &limit );
+ 
+ 		getrlimit( RLIMIT_NOFILE, &limit );
