@@ -20,9 +20,26 @@
     }
   ],
   "default-features": [
+    "ffmpeg",
     "widgets"
   ],
   "features": {
+    "ffmpeg": {
+      "description": "Build with ffmpeg",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avdevice",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [

@@ -31,6 +31,11 @@ INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
     "gstreamer"     CMAKE_DISABLE_FIND_PACKAGE_GStreamer
+    "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
+    # Features not yet added in the manifest:
+    "avfoundation"  CMAKE_DISABLE_FIND_PACKAGE_AVFoundation # not in vcpkg
+    "wmf"           CMAKE_DISABLE_FIND_PACKAGE_WMF # not in vcpkg
+    "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
 
 if("gstreamer" IN_LIST FEATURES)
@@ -39,8 +44,15 @@ else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
 
+if("ffmpeg" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
+else()
+    list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")
+endif()
+
 # alsa is not ready
 list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}

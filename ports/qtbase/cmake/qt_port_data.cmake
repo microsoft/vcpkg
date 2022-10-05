@@ -36,7 +36,7 @@ set(qtwebview_HASH "af103e2c768aff78d01a941c71c981129fc6b8fb0b4cdbd3e64c6c09b718
 set(qtinterfaceframework_REF 6a3f50b461b07930aa9e81608393436cdbc87c4a)
 set(qtapplicationmanager_HASH "dc67c87b23ade43d4410cfe9c251361215060bb177fa833a5e37ff6ab51d1f0c60e1c78b70f4c7bb75fc3630d9f30c3b16e0e64c7e0cc623287b97172bc3de70")
 set(qthttpserver_REF 447ca05990419474d77dde91c8694add2c69b242)
-set(qthttpserver_HASH "0") # get hash from CI
+set(qthttpserver_HASH "6aa703a135e75a9a33c22ed7d689e3fe7ecfd6242737f61f65c91b8cd704772d3c4495de8bc5387c77a2176e121bad355a5554bcdf93e29f270944a0774da96c ") # get hash from CI
 set(qtquick3dphysics_REF ebedcefad484f995a060afd0068539900f341ca6)
 
 # Not in newer releases
