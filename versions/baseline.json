@@ -1442,7 +1442,7 @@
     },
     "clblas": {
       "baseline": "2.12",
-      "port-version": 6
+      "port-version": 7
     },
     "clblast": {
       "baseline": "1.5.2",

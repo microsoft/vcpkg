@@ -131,7 +131,6 @@ civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
-clblas:arm64-windows=fail
 clockutils:x64-linux=fail
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
