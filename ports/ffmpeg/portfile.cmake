@@ -494,6 +494,15 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
+# TRICE - Remove requirement of ffmpeg on avi and mfplat dlls not available on server systems 
+if (VCPKG_TARGET_IS_WINDOWS)
+	# Don't link to avicap
+    set(OPTIONS "${OPTIONS} --disable-indev=vfwcap")
+
+	# Don't link to mfplat
+    set(OPTIONS "${OPTIONS} --disable-mediafoundation")
+endif()
+
 # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_DEBUG "--debug")
 set(OPTIONS_RELEASE "")
