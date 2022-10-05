@@ -10,11 +10,12 @@
     "aws-crt-cpp",
     {
       "name": "curl",
-      "platform": "!uwp & !windows"
+      "platform": "!uwp",
+	  "features": ["openssl"]
     },
     {
       "name": "openssl",
-      "platform": "!uwp & !windows"
+      "platform": "!uwp"
     },
     {
       "name": "vcpkg-cmake",
