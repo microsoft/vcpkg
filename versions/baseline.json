@@ -4,8 +4,8 @@
       "baseline": "2.6.3",
       "port-version": 2
     },
-	{
-		"name": "stackwalker",
+	"stackwalker": {
+		"baseline": "1.20.0",
 		"port-version": 1
 	},
     "7zip": {
