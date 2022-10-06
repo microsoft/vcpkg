@@ -493,7 +493,7 @@
       "port-version": 1
     },
     "bitmagic": {
-      "baseline": "7.11.2",
+      "baseline": "7.12.3",
       "port-version": 0
     },
     "bitserializer": {
