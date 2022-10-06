@@ -7,6 +7,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
@@ -15,39 +19,38 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
-        fix_find_package_sdl2.patch
+        fix-dependencies.patch
         fix-cmake-feature-summary.patch # ogre-next/cmake conflict hit by SDL2 config
+        #fix-sources.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(OGRE_STATIC ON)
-else()
-    set(OGRE_STATIC OFF)
-endif()
-
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
-        java    OGRE_BUILD_COMPONENT_JAVA
-        python  OGRE_BUILD_COMPONENT_PYTHON
-        csharp  OGRE_BUILD_COMPONENT_CSHARP
+file(REMOVE
+    "${SOURCE_PATH}/CMake/Packages/FindFreeImage.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindFreetype.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindSDL2.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindZLIB.cmake"
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DCMAKE_CXX_STANDARD=17
-        -DOGRE_BUILD_DEPENDENCIES=OFF
+        -DOGRE_CMAKE_DIR=share/ogre-next
         -DOGRE_COPY_DEPENDENCIES=OFF
-        -DOGRE_BUILD_SAMPLES=OFF
-        -DOGRE_BUILD_TESTS=OFF
-        -DOGRE_BUILD_TOOLS=OFF
+        -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
         -DOGRE_BUILD_MSVC_MP=ON
         -DOGRE_BUILD_MSVC_ZM=ON
+        -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GL=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
+        -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+        -DOGRE_BUILD_SAMPLES2=OFF
+        -DOGRE_BUILD_TESTS=OFF
+        -DOGRE_BUILD_TOOLS=OFF
+        -DOGRE_CONFIG_THREAD_PROVIDER=boost
         -DOGRE_INSTALL_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DOCS=OFF
         -DOGRE_INSTALL_PDB=OFF
@@ -55,21 +58,27 @@ vcpkg_cmake_configure(
         -DOGRE_INSTALL_TOOLS=OFF
         -DOGRE_INSTALL_VSPROPS=OFF
         -DOGRE_STATIC=${OGRE_STATIC}
-        -DOGRE_CONFIG_THREAD_PROVIDER=std
-        -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
-        -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GL=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
-        -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
-        -DOGRE_CMAKE_DIR=share/ogre-next
+        -DOpenVR_FOUND=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_CppUnit=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_POCO=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_RenderDoc=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TBB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TinyXML=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenVR=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Rapidjson=ON
+    MAYBE_UNUSED_VARIABLES
+        OGRE_BUILD_MSVC_MP
+        OGRE_BUILD_MSVC_ZM
+        OGRE_COPY_DEPENDENCIES
+        OGRE_INSTALL_DEPENDENCIES
+        OGRE_INSTALL_VSPROPS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup()
-
-
 
 file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
 if(REL_CFGS)
