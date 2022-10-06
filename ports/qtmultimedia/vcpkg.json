@@ -10,7 +10,8 @@
       "default-features": false,
       "features": [
         "gui",
-        "network"
+        "network",
+        "concurrent"
       ]
     },
     {
