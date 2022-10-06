@@ -1,8 +1,16 @@
 diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
-index cfe7db3..9a92608 100644
+index cfe7db3..5d15212 100644
 --- a/CMake/InstallResources.cmake
 +++ b/CMake/InstallResources.cmake
-@@ -162,6 +162,10 @@ if(NOT OGRE_BUILD_TESTS)
+@@ -61,7 +61,6 @@ elseif (APPLE)
+   endif()
+   # these are resolved relative to the app bundle
+   set(OGRE_SAMPLES_DIR_REL "Contents/Plugins/")
+-  set(OGRE_CFG_INSTALL_PATH "bin")
+ elseif (UNIX)
+   set(OGRE_TEST_MEDIA_DIR_REL "${CMAKE_INSTALL_PREFIX}/Tests/Media")
+   set(OGRE_SAMPLES_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_LIB_DIRECTORY}/OGRE/Samples")
+@@ -162,6 +161,10 @@ if(NOT OGRE_BUILD_TESTS)
  endif()
  
  
