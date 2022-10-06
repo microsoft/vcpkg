@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 project(easyexif CXX)
 include(GNUInstallDirs)
 
-add_library(easyexif
+add_library(easyexif STATIC
     exif.h
     exif.cpp
 )
@@ -15,7 +15,6 @@ PROPERTIES
 
 install(TARGETS easyexif
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/easyexif
