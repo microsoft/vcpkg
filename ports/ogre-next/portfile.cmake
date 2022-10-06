@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
         fix_find_package_sdl2.patch
+        fix-cmake-feature-summary.patch # ogre-next/cmake conflict hit by SDL2 config
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
