@@ -5,6 +5,7 @@
   "description": "A library to support the benchmarking of functions, similar to unit-tests.",
   "homepage": "https://github.com/google/benchmark",
   "supports": "!uwp",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
