@@ -299,8 +299,11 @@ else()
         DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${BUILD_OPTS}
+        OPTIONS_RELEASE
+            "DYLD_FALLBACK_LIBRARY_PATH=${CURRENT_INSTALLED_DIR}/lib:${CURRENT_INSTALLED_DIR}/debug/lib"
         OPTIONS_DEBUG
             --enable-debug
+            "DYLD_FALLBACK_LIBRARY_PATH=${CURRENT_INSTALLED_DIR}/debug/lib:${CURRENT_INSTALLED_DIR}/lib"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
