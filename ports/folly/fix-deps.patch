@@ -7,15 +7,15 @@ index 1689f9a..9adf390 100644
  
  # Find folly's dependencies
 -find_dependency(fmt)
-+find_dependency(double-conversion CONFIG REQUIRED)
-+find_dependency(glog CONFIG REQUIRED)
++find_dependency(double-conversion CONFIG)
++find_dependency(glog CONFIG)
 +find_dependency(gflags CONFIG)
-+find_dependency(Libevent CONFIG REQUIRED)
++find_dependency(Libevent CONFIG)
 +find_dependency(zstd CONFIG)
 +find_dependency(ZLIB MODULE)
-+find_dependency(OpenSSL MODULE REQUIRED)
++find_dependency(OpenSSL MODULE)
 +find_dependency(unofficial-sodium CONFIG)
-+find_dependency(fmt CONFIG REQUIRED)
++find_dependency(fmt CONFIG)
  
  set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
 -find_dependency(Boost 1.51.0 MODULE
