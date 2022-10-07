@@ -15,11 +15,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib",
-    {
-      "name": "zstd",
-      "platform": "osx"
-    }
+    "zlib"
   ],
   "default-features": [
     "ssl"
@@ -67,6 +63,12 @@
     },
     "zlib": {
       "description": "Obsolete. zlib is always used. This feature is left for compatibility."
+    },
+    "zstd": {
+      "description": "Build zstd compression plugin.",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }
