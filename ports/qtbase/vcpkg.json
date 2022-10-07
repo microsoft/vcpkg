@@ -130,10 +130,10 @@
     },
     "egl": {
       "description": "EGL",
+      "supports": "linux",
       "dependencies": [
         "egl-registry"
-      ],
-      "supports": "linux"
+      ]
     },
     "fontconfig": {
       "description": "Use fontconfig",

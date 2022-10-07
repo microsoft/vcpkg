@@ -82,18 +82,18 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "ffmpeg",
         "gstreamer"
       ],
-      "platform": "windows"
+      "platform": "!windows"
     },
     {
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "ffmpeg",
         "gstreamer"
       ],
-      "platform": "!windows"
+      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {

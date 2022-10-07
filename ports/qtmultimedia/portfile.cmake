@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES
                     remove_unistd.patch
                     remove_export_macro.patch
+                    static_find_modules.patch
 )
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
@@ -35,6 +36,13 @@ INVERTED_FEATURES
     "avfoundation"  CMAKE_DISABLE_FIND_PACKAGE_AVFoundation # not in vcpkg
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if("gstreamer" IN_LIST FEATURES AND "ffmpeg" IN_LIST FEATURES)
+        message(FATAL_ERROR "Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports!\n 
+As such in static builds only one backend is allowed by default.\n If you plan to manually link the plugins feel free to remove this error in an overlay.")
+    endif()
+endif()
 
 if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
@@ -71,3 +79,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
+
+if("gstreamer" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Multimedia/Qt6QGstreamerMediaPluginDependencies.cmake" "GStreamer\;FALSE\;\;\;;GStreamer\;FALSE\;\;App\;;GStreamer\;FALSE\;\;\;Gl" "GStreamer\;FALSE\;\;\;;GStreamer\;FALSE\;\;App\;;GStreamer\;FALSE\;\;\;Gl;EGL\;FALSE\;\;\;" )
+endif()

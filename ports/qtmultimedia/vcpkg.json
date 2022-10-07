@@ -26,6 +26,7 @@
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -42,6 +43,7 @@
     },
     "gstreamer": {
       "description": "Build with gstreamer",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "angle",
