@@ -33,6 +33,7 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS ${FEATURE_OPTIONS}
                         "-DPython3_EXECUTABLE=${PYTHON3}" # Otherwise a VS installation might be found. 
+                        --trace-expand
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 

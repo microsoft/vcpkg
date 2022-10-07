@@ -131,12 +131,9 @@
     "egl": {
       "description": "EGL",
       "dependencies": [
-        {
-          "name": "angle",
-          "platform": "windows"
-        },
         "egl-registry"
-      ]
+      ],
+      "supports": "linux"
     },
     "fontconfig": {
       "description": "Use fontconfig",

@@ -43,14 +43,11 @@
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
-        "gstreamer",
         {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "egl"
-          ]
-        }
+          "name": "angle",
+          "platform": "windows"
+        },
+        "gstreamer"
       ]
     },
     "qml": {
