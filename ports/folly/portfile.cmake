@@ -52,6 +52,7 @@ feature(lzma LibLZMA)
 feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
+feature(libsodium unofficial-sodium)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
