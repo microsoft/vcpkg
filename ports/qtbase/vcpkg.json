@@ -131,6 +131,10 @@
     "egl": {
       "description": "EGL",
       "dependencies": [
+        {
+          "name": "angle",
+          "platform": "windows"
+        },
         "egl-registry"
       ]
     },

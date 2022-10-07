@@ -13,8 +13,8 @@
       ]
     },
     {
-          "name": "qtdeclarative",
-          "default-features": false
+      "name": "qtdeclarative",
+      "default-features": false
     }
   ],
   "features": {

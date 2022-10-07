@@ -149,7 +149,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
     #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
-    #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
+    "egl"                 FEATURE_egl
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
     #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
