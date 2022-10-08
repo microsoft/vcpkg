@@ -38,7 +38,6 @@
 apr:arm64-windows=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
-bitserializer:x64-osx=fail
 bitserializer:arm64-osx=fail
 blitz:x64-uwp=fail
 blitz:arm64-windows=fail
@@ -1079,9 +1078,6 @@ symengine:arm-uwp=fail
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
-tbb:arm64-windows=fail
-tbb:arm-uwp=fail
-tbb:x64-uwp=fail
 tcl:arm-uwp=fail
 tcl:arm64-windows=fail
 tcl:x64-uwp=fail
