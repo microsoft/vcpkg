@@ -1,0 +1,17 @@
+{
+  "name": "at-spi2-atk",
+  "version": "2.38.0",
+  "description": "Implementation of the ATK interfaces in terms of the libatspi2 API.",
+  "homepage": "https://www.gtk.org/",
+  "license": null,
+  "supports": "linux",
+  "dependencies": [
+    "at-spi2-core",
+    "atk",
+    "libxml2",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
