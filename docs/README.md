@@ -18,11 +18,18 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 ### Command Line Reference
 
 - [Common Options](commands/common-options.md)
+- [Artifacts Context Options](commands/artifacts-context-options.md)
 - Commands
+  - [vcpkg acquire](commands/acquire.md)
+  - [vcpkg acquire-project](commands/acquire-project.md)
+  - [vcpkg activate](commands/activate.md)
+  - [vcpkg add](commands/add.md)
+  - [vcpkg deactivate](commands/deactivate.md)
   - [vcpkg install](commands/install.md)
   - [vcpkg integrate](commands/integrate.md)
   - [vcpkg remove](commands/remove.md)
   - [vcpkg search](commands/search.md)
+  - [vcpkg use](commands/use.md)
 
 ### User Help
 
