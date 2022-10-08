@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF ae7f9c5a92879285ad5100c89efc47ce1cb0031b
-    SHA512 aa8563e4e78e4355ae1041bd8d2984e33e8c8b7634a6eac029e4716dff564a9616ba1826504709f428f789103e8f4ab90447208e66583536ad692400e51eec60
+    REF 6c8e3e10a2919b4da754d0f3db54b3c616e1dd56
+    SHA512 9265d722a6d9e4a9a0605fc071c5053bd71188f6d5500cfa4e64ef9ee33be364d3a1289d011863b64a4f3bdfc3a54fa9bfc6ee69ff1a93995584605c58e79f62
     HEAD_REF develop
     PATCHES
 )
@@ -60,8 +60,11 @@ vcpkg_cmake_configure(
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib
         ${LLFIO_FEATURE_OPTIONS}
+        -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCXX_CONCEPTS_FLAGS=
+        -DCXX_COROUTINES_FLAGS=
         ${extra_config}
 )
 

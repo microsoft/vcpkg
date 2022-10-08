@@ -10,14 +10,24 @@ vcpkg_from_gitlab(
     REPO lib/libxpm
     REF libXpm-3.5.13
     SHA512 250c8bf672789a81cfa258a516d40936f48a56cfaee94bf3f628e3f4a462bdd90eaaea787d66daf09ce4809b89c3eaea1e0771de03a6d7f1a59b31cc82be1c44
-    PATCHES remove_strings_h.patch
+    PATCHES
+        remove_strings_h.patch
+        fix-dependency-gettext.patch
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+if ("gettext" IN_LIST FEATURES)
+    set(EXTRA_OPTIONS --with-gettext=yes)
+else()
+    set(EXTRA_OPTIONS --with-gettext=no)
+endif()
+
 vcpkg_configure_make(
      SOURCE_PATH "${SOURCE_PATH}"
      AUTOCONFIG
+     OPTIONS
+        ${EXTRA_OPTIONS}
  )
 
 vcpkg_install_make()
