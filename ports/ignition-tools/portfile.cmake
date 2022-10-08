@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gazebosim/gz-tools
@@ -18,18 +20,24 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ignition-tools")
 vcpkg_fixup_pkgconfig()
 
-# Remove debug files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB DEBUG_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
+    file(COPY ${DEBUG_TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+endif()
+
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB RELEASE_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
+    file(COPY ${RELEASE_TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE 
-        "${CURRENT_PACKAGES_DIR}/bin" 
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/bin" 
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
-endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
