@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.9.0
     SHA512 ed4a6e79bb5a07753d73f85eecee042a7c34a110a32a27d5af730dc115df7a8ae861ecef969e391d512681326e8e560fbe4f30bf3f3ceb745b980f1d33076bba
     HEAD_REF master
+    PATCHES
+      export-unofficical-target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)

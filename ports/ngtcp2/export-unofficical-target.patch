@@ -1,0 +1,57 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index d98747f..e9dc1e6 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -80,12 +80,17 @@ if(ENABLE_SHARED_LIB)
+     C_VISIBILITY_PRESET hidden
+     POSITION_INDEPENDENT_CODE ON
+   )
+-  target_include_directories(ngtcp2 PUBLIC ${ngtcp2_INCLUDE_DIRS})
++  target_include_directories(ngtcp2 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> $<INSTALL_INTERFACE:include>)
+ 
+-  install(TARGETS ngtcp2
++  install(TARGETS ngtcp2 EXPORT unofficial-ngtcp2-config
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
++  install(
++    EXPORT unofficial-ngtcp2-config
++    FILE unofficial-ngtcp2-config.cmake
++    NAMESPACE unofficial::
++    DESTINATION share/unofficial-ngtcp2)
+ endif()
+ 
+ if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
+@@ -97,12 +102,18 @@ if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
+     C_VISIBILITY_PRESET hidden
+   )
+   target_compile_definitions(ngtcp2_static PUBLIC "-DNGTCP2_STATICLIB")
+-  target_include_directories(ngtcp2_static PUBLIC ${ngtcp2_INCLUDE_DIRS})
++  target_include_directories(ngtcp2_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> $<INSTALL_INTERFACE:include>)
+   if(ENABLE_STATIC_LIB)
+-    install(TARGETS ngtcp2_static
++  
++    install(TARGETS ngtcp2_static EXPORT unofficial-ngtcp2_static-config
+       DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++    install(
++      EXPORT unofficial-ngtcp2_static-config
++      FILE unofficial-ngtcp2_static-config.cmake
++      NAMESPACE unofficial::
++      DESTINATION share/unofficial-ngtcp2_static)
+   endif()
+ endif()
+ 
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libngtcp2.pc"
+-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
++  DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+\ No newline at end of file
+diff --git a/lib/includes/CMakeLists.txt b/lib/includes/CMakeLists.txt
+index 5eabf73..7a11b5f 100644
+--- a/lib/includes/CMakeLists.txt
++++ b/lib/includes/CMakeLists.txt
+@@ -1,3 +1,5 @@
++configure_file("${CMAKE_CURRENT_LIST_DIR}/ngtcp2/version.h.in" "${CMAKE_CURRENT_LIST_DIR}/ngtcp2/version.h")
++
+ install(FILES
+     ngtcp2/ngtcp2.h
+     "${CMAKE_CURRENT_BINARY_DIR}/ngtcp2/version.h"
