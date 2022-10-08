@@ -1,8 +1,9 @@
 {
   "name": "boost-vcpkg-helpers",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Internal vcpkg port used to modularize Boost",
-  "license": "MIT",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-uninstall"
   ]
