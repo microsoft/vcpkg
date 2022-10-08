@@ -1,11 +1,21 @@
 {
   "name": "embree3",
   "version-semver": "3.12.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/embree/embree",
+  "license": "Apache-2.0",
+  "supports": "!arm",
   "dependencies": [
-    "tbb"
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "avx",

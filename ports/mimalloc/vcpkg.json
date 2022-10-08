@@ -1,10 +1,11 @@
 {
   "name": "mimalloc",
   "version": "2.0.6",
+  "port-version": 1,
   "description": "Compact general purpose allocator with excellent performance",
   "homepage": "https://github.com/microsoft/mimalloc",
   "license": "MIT",
-  "supports": "!(arm | uwp)",
+  "supports": "!((arm & windows) | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
