@@ -1138,7 +1138,7 @@
     },
     "boost-vcpkg-helpers": {
       "baseline": "1.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-vmd": {
       "baseline": "1.80.0",
