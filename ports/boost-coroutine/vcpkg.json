@@ -1,10 +1,11 @@
 {
   "name": "boost-coroutine",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
   "license": "BSL-1.0",
-  "supports": "!arm & !uwp & !emscripten",
+  "supports": "!(arm & windows) & !uwp & !emscripten",
   "dependencies": [
     "boost-assert",
     {

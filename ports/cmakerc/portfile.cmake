@@ -9,6 +9,5 @@ vcpkg_from_github(
 )
 
 file(INSTALL "${SOURCE_PATH}/CMakeRC.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME cmakerc-config.cmake)
-
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

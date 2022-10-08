@@ -8,6 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix-stderror-win.patch
 )
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.hpp)

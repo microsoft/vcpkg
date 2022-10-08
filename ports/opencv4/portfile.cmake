@@ -25,6 +25,8 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-mingw-strsafe-no-deprecate.patch
 )
+# Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)

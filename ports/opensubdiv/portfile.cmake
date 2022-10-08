@@ -57,6 +57,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "ptex"      NO_PTEX
         "tbb"       NO_TBB
         "tutorials" NO_TUTORIALS
+        "opengl"    NO_OPENGL
 )
 
 set(OSD_EXTRA_OPTS)
@@ -84,7 +85,6 @@ vcpkg_cmake_configure(
         -DNO_GLTESTS=ON
         -DNO_CLEW=ON
         -DNO_METAL=ON
-        -DNO_OPENGL=ON # missing glloader
         ${FEATURE_OPTIONS}
         ${OSD_EXTRA_OPTS}
     MAYBE_UNUSED_VARIABLES
