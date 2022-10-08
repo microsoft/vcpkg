@@ -4274,7 +4274,7 @@
     },
     "libui": {
       "baseline": "2018-11-03",
-      "port-version": 2
+      "port-version": 3
     },
     "libunibreak": {
       "baseline": "5.0",
