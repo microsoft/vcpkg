@@ -141,7 +141,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
-    #"opengl"              INPUT_opengl=something
+    "opengl"              FEATURE_opengl
     "xlib"                FEATURE_xlib
     "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
@@ -163,6 +163,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated

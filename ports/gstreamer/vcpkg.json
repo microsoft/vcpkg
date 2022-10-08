@@ -29,7 +29,7 @@
     "libnice",
     "libxml2",
     {
-      "name": "opengl-registry",
+      "name": "opengl",
       "platform": "windows | osx"
     },
     "openssl",

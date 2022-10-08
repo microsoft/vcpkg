@@ -1,4 +1,4 @@
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_get_windows_sdk(WINDOWS_SDK)
 
     if (WINDOWS_SDK MATCHES "10.")
@@ -62,3 +62,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 else()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/opengl/vcpkg-cmake-wrapper.cmake" @ONLY)

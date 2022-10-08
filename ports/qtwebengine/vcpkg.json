@@ -63,7 +63,7 @@
       "name": "minizip",
       "platform": "!windows"
     },
-    "opengl-registry",
+    "opengl",
     {
       "name": "opus",
       "platform": "!windows"

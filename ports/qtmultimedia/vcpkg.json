@@ -45,10 +45,7 @@
       "description": "Build with gstreamer",
       "supports": "!(windows & static)",
       "dependencies": [
-        {
-          "name": "angle",
-          "platform": "windows"
-        },
+        "egl",
         "gstreamer"
       ]
     },
