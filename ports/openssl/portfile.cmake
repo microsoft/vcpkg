@@ -12,26 +12,21 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
-    set(OPENSSL_PATCHES "${CMAKE_CURRENT_LIST_DIR}/windows/flags.patch")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF openssl-${VERSION}
     SHA512 27dd3ef0c1827a74ec880d20232acb818c7d05e004ad7389c355e200a01e899f1b1ba5c34dcce44ecf7c8767c5e1bfbb2c795e3fa5461346087e7e3b95c8a51f
-    PATCHES ${OPENSSL_PATCHES}
+    PATCHES
+        windows/install-layout.patch
+        windows/install-pdbs.patch
 )
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
-if(VCPKG_TARGET_IS_UWP)
-    include("${CMAKE_CURRENT_LIST_DIR}/uwp/portfile.cmake")
-    include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
-elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     include("${CMAKE_CURRENT_LIST_DIR}/windows/portfile.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
 else()
