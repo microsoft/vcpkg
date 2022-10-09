@@ -16,14 +16,19 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
+	fix-deps.patch
 )
 
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
-    DESTINATION "${SOURCE_PATH}/CMake/"
-)
-file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -47,6 +52,7 @@ feature(lzma LibLZMA)
 feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
+feature(libsodium unofficial-sodium)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -77,14 +83,6 @@ STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CON
 STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
-FILE(READ "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake" _contents)
-FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-find_dependency(glog CONFIG)
-find_dependency(gflags CONFIG REQUIRED)
-find_dependency(ZLIB)
-${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
