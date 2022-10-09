@@ -14,11 +14,23 @@ vcpkg_extract_source_archive_ex(
         mingw-lib-names.patch
 )
 
+if (VCPKG_TARGET_IS_IOS)
+    # when cross-compiling, try_run will not work.
+    # LFS "large file support" is keyed on 
+    # 1) 64-bit off_t (https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/64bitPorting/transition/transition.html table 2-1)
+    # 2) stat works properly, which is true
+    set(extra_opts 
+        -DTEST_LFS_WORKS_RUN=TRUE
+        -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=""
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
+        ${extra_opts}
 )
 
 vcpkg_cmake_install()

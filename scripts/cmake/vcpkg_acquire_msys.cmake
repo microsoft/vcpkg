@@ -36,8 +36,10 @@ endfunction()
 #   - Z_VCPKG_MSYS_ARCHIVES
 #   - Z_VCPKG_MSYS_TOTAL_HASH
 #   - Z_VCPKG_MSYS_PACKAGES
+#   - Z_VCPKG_MSYS_${arg_NAME}_ARCHIVE
+#   - Z_VCPKG_MSYS_${arg_NAME}_PATCHES
 function(z_vcpkg_acquire_msys_declare_package)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "NAME;URL;SHA512" "DEPS")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "NAME;URL;SHA512" "DEPS;PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "internal error: z_vcpkg_acquire_msys_declare_package passed extra args: ${arg_UNPARSED_ARGUMENTS}")
@@ -68,9 +70,15 @@ function(z_vcpkg_acquire_msys_declare_package)
             FILENAME "${filename}"
         )
 
-        list(APPEND Z_VCPKG_MSYS_ARCHIVES "${archive}")
+        list(APPEND Z_VCPKG_MSYS_ARCHIVES "${arg_NAME}")
         set(Z_VCPKG_MSYS_ARCHIVES "${Z_VCPKG_MSYS_ARCHIVES}" PARENT_SCOPE)
+        set(Z_VCPKG_MSYS_${arg_NAME}_ARCHIVE "${archive}" PARENT_SCOPE)
+        set(Z_VCPKG_MSYS_${arg_NAME}_PATCHES "${arg_PATCHES}" PARENT_SCOPE)
         string(APPEND Z_VCPKG_MSYS_TOTAL_HASH "${arg_SHA512}")
+        foreach(patch IN LISTS arg_PATCHES)
+            file(SHA512 "${patch}" patch_sha)
+            string(APPEND Z_VCPKG_MSYS_TOTAL_HASH "${patch_sha}")
+        endforeach()
         set(Z_VCPKG_MSYS_TOTAL_HASH "${Z_VCPKG_MSYS_TOTAL_HASH}" PARENT_SCOPE)
     endif()
 endfunction()
@@ -86,8 +94,8 @@ function(vcpkg_acquire_msys out_msys_root)
         message(WARNING "vcpkg_acquire_msys was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(Z_VCPKG_MSYS_TOTAL_HASH)
-    set(Z_VCPKG_MSYS_ARCHIVES)
+    set(Z_VCPKG_MSYS_TOTAL_HASH "")
+    set(Z_VCPKG_MSYS_ARCHIVES "")
 
     set(Z_VCPKG_MSYS_PACKAGES "${arg_PACKAGES}")
 
@@ -118,7 +126,10 @@ function(vcpkg_acquire_msys out_msys_root)
                 SHA512 "${sha512}"
                 FILENAME "${filename}"
             )
-            list(APPEND Z_VCPKG_MSYS_ARCHIVES "${archive}")
+            string(REGEX MATCH "^(([^-]+(-[^0-9][^-]*)*)-.+\.pkg\.tar\.(xz|zst))$" pkg_name "${filename}")
+            set(pkg_name "${CMAKE_MATCH_2}")
+            list(APPEND Z_VCPKG_MSYS_ARCHIVES "${pkg_name}")
+            set(Z_VCPKG_MSYS_${pkg_name}_ARCHIVE "${archive}")
             string(APPEND Z_VCPKG_MSYS_TOTAL_HASH "${sha512}")
         endforeach()
     endif()
@@ -264,6 +275,7 @@ function(vcpkg_acquire_msys out_msys_root)
         URL "https://repo.msys2.org/msys/x86_64/automake1.16-1.16.3-3-any.pkg.tar.zst"
         SHA512 77a195a9fe8680bee55c04b8ecc0e9ee43e2d89607c745098dfac4687f4f853885cabbb005202d70e9a9cdf9facf6849cc47c6b2f25573b5af8201696d926c72
         DEPS perl
+        PATCHES "${SCRIPTS}/msys/compile_wrapper_consider_clang-cl.patch"
     )
     z_vcpkg_acquire_msys_declare_package(
         URL "https://repo.msys2.org/msys/x86_64/perl-5.32.1-2-x86_64.pkg.tar.zst"
@@ -333,6 +345,10 @@ function(vcpkg_acquire_msys out_msys_root)
     z_vcpkg_acquire_msys_declare_package(
         URL "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.2.0-8-x86_64.pkg.tar.zst"
         SHA512 fdd86f4ffa6e274d6fef1676a4987971b1f2e1ec556eee947adcb4240dc562180afc4914c2bdecba284012967d3d3cf4d1a392f798a3b32a3668d6678a86e8d3
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://repo.msys2.org/msys/x86_64/which-2.21-4-x86_64.pkg.tar.zst"
+        SHA512 5323fd6635093adf67c24889f469e1ca8ac969188c7f087244a43b3afa0bf8f14579bd87d9d7beb16a7cd61a5ca1108515a46b331868b4817b35cebcb4eba1d1
     )
 
     z_vcpkg_acquire_msys_declare_package(
@@ -492,11 +508,17 @@ This can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
         foreach(archive IN LISTS Z_VCPKG_MSYS_ARCHIVES)
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
-                COMMAND "${CMAKE_COMMAND}" -E tar xzf "${archive}"
+                COMMAND "${CMAKE_COMMAND}" -E tar xzf "${Z_VCPKG_MSYS_${archive}_ARCHIVE}"
                 LOGNAME "msys-${TARGET_TRIPLET}-${index}"
                 WORKING_DIRECTORY "${path_to_root}.tmp"
             )
             math(EXPR index "${index} + 1")
+            if(Z_VCPKG_MSYS_${archive}_PATCHES)
+                z_vcpkg_apply_patches(
+                    SOURCE_PATH "${path_to_root}.tmp"
+                    PATCHES ${Z_VCPKG_MSYS_${archive}_PATCHES}
+                )
+            endif()
         endforeach()
         file(RENAME "${path_to_root}.tmp" "${path_to_root}")
     endif()

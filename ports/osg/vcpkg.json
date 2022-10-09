@@ -1,9 +1,10 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 15,
+  "port-version": 18,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
-  "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "homepage": "https://www.openscenegraph.com/",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,6 +14,7 @@
     "opengl-registry",
     {
       "name": "openimageio",
+      "default-features": false,
       "platform": "osx"
     },
     {
@@ -125,7 +127,6 @@
     "openexr": {
       "description": "Build the exr plugin",
       "dependencies": [
-        "ilmbase",
         "openexr"
       ]
     },
@@ -135,8 +136,14 @@
     "plugins": {
       "description": "Build most OSG Plugins",
       "dependencies": [
-        "curl",
-        "gdal",
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        {
+          "name": "gdal",
+          "default-features": false
+        },
         {
           "name": "giflib",
           "platform": "windows"
@@ -156,7 +163,10 @@
           "name": "libxml2",
           "platform": "windows"
         },
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "rest-http-device": {
@@ -182,7 +192,10 @@
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
       "dependencies": [
-        "curl",
+        {
+          "name": "curl",
+          "default-features": false
+        },
         {
           "name": "libiconv",
           "platform": "windows"

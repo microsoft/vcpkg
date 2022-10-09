@@ -161,7 +161,7 @@ To select the precise combination of Visual Studio instance and toolset version,
 1. Determine the setting for `VCPKG_VISUAL_STUDIO_PATH` from the triplet, or the environment variable `VCPKG_VISUAL_STUDIO_PATH`, or consider it unset
 2. Determine the setting for `VCPKG_PLATFORM_TOOLSET` from the triplet or consider it unset
 3. Gather a list of all pairs of Visual Studio Instances with all toolsets available in those instances
-    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v142, v141, v140)
+    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v143, v142, v141, v140)
 4. Filter the list based on the settings for `VCPKG_VISUAL_STUDIO_PATH` and `VCPKG_PLATFORM_TOOLSET`.
 5. Select the best remaining option
 
@@ -176,6 +176,7 @@ Specifies the VS-based C/C++ compiler toolchain to use.
 See [`VCPKG_VISUAL_STUDIO_PATH`](#VCPKG_VISUAL_STUDIO_PATH) for the full selection algorithm.
 
 Valid settings:
+* The Visual Studio 2022 platform toolset is `v143`.
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.

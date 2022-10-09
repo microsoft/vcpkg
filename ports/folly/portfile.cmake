@@ -8,22 +8,27 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 4ba3bfed38ad14d0951d82b154c44235d380f59b #v2022.07.11.00
-    SHA512 d2dd31a42475e564d01a0e7d99b59382f0afd56d89beb189e580b654650d2f9316cbeb459a038f9534881f22efd1571494926c1ea88b827de6ac56317d3c135b
+    REF 46c03de426e26f4c5a92df37ab233c586fbe369a #v2022.08.15.00
+    SHA512 6798878d6892ed79d954fb5754ee102ea04868bce4be9be5dc7c6d6c7ddcbc5573719fe09470d89c385d9e487a75d1a9abc70c29c67698b957fc68b97a8bea32
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
+	fix-deps.patch
 )
 
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
-    DESTINATION "${SOURCE_PATH}/CMake/"
-)
-file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -47,6 +52,7 @@ feature(lzma LibLZMA)
 feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
+feature(libsodium unofficial-sodium)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -56,8 +62,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
         -DLIBAIO_FOUND=OFF
-        -DLIBURCU_FOUND=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
@@ -79,14 +83,6 @@ STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CON
 STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
-FILE(READ "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake" _contents)
-FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-find_dependency(glog CONFIG)
-find_dependency(gflags CONFIG REQUIRED)
-find_dependency(ZLIB)
-${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

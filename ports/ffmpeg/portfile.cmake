@@ -24,6 +24,8 @@ vcpkg_from_github(
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        0020-fix-aarch64-libswscale.patch
+        0021-fix-sdl2-version-check.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -454,8 +456,18 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
+if ("srt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsrt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsrt")
+endif()
+
 if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+endif()
+
+if(VCPKG_TARGET_IS_IOS)
+    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
 endif()
 
 set(OPTIONS_CROSS " --enable-cross-compile")
