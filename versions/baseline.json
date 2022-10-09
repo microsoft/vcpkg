@@ -6368,6 +6368,10 @@
       "baseline": "8.64",
       "port-version": 0
     },
+    "rapidfuzz": {
+      "baseline": "1.8.0",
+      "port-version": 0
+    },
     "rapidjson": {
       "baseline": "2022-06-28",
       "port-version": 3
