@@ -22,14 +22,15 @@ add_library(liblrc
 target_include_directories(liblrc
 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 install(
     FILES ${LRCTOOLS_HEADERS}
     DESTINATION include)
 
 install(TARGETS liblrc
-    EXPORT unofficial-liblrc
+    EXPORT unofficial-liblrcConfig
+    NAMESPACE unofficial::liblrc::
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
