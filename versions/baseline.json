@@ -7645,8 +7645,8 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2022-05-10",
-      "port-version": 1
+      "baseline": "2022-09-04",
+      "port-version": 0
     },
     "vcpkg-get-python-packages": {
       "baseline": "2022-06-30",
