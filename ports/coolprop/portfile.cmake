@@ -13,9 +13,9 @@ vcpkg_from_github(
         fix-install.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
-vcpkg_add_to_path(${PYTHON2_DIR})
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_DIR})
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
 
@@ -73,9 +73,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" COOLPROP_MSVC_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCOOLPROP_SHARED_LIBRARY=${COOLPROP_SHARED_LIBRARY}
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
@@ -87,7 +86,7 @@ vcpkg_configure_cmake(
         -DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS AND COOLPROP_SHARED_LIBRARY)
