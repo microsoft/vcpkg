@@ -2894,7 +2894,7 @@
     },
     "hikogui": {
       "baseline": "0.7.0",
-      "port-version": 2
+      "port-version": 0
     },
     "hiredis": {
       "baseline": "1.0.2",
