@@ -4,6 +4,7 @@
   "description": "Tools for parsing and playing back LRC lyrics.",
   "homepage": "https://github.com/ywh233/LRC-Tools",
   "license": null,
+  "supports": "!osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
