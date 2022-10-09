@@ -14,10 +14,6 @@ set(LRCTOOLS_HEADERS
     ${CMAKE_SOURCE_DIR}/liblrc/lyrics.h
     ${CMAKE_SOURCE_DIR}/liblrc/utils.h
 )
-file(COPY 
-    ${LRCTOOLS_HEADERS} DESTINATION  
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
 
 add_library(liblrc
     ${LRCTOOLS_SRC}
