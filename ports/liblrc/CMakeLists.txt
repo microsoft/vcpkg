@@ -30,8 +30,13 @@ install(
 
 install(TARGETS liblrc
     EXPORT unofficial-liblrcConfig
-    NAMESPACE unofficial::liblrc::
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+install(
+    EXPORT unofficial-liblrcConfig
+    NAMESPACE unofficial::
+    DESTINATION share/unofficial-liblrcConfig
 )

@@ -18,5 +18,11 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH  share/unofficial-liblrcConfig
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
