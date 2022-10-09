@@ -6813,7 +6813,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "2.2.2",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "simdutf": {
