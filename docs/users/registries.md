@@ -87,13 +87,24 @@ the specific packages named by the `"packages"` field.
 
 The `"packages"` fields of all the package registries must be disjoint.
 
+### Configuration: `"overlay-ports"`
+
+The `"overlay-ports"` field must contain a path or array of paths, which point
+to a particular port or a directory containing ports to overlay.
+
+### Configuration: `"overlay-triplets"`
+
+The `"overlay-triplets"` field must contain a path or array of paths, which point
+to a directory containing triplets to overlay.
+
 ### Example Configuration File
 
 Let's assume that you have mirrored <https://github.com/microsoft/vcpkg> at
 <https://git.example.com/vcpkg>: this will be your default registry.
 Additionally, you want to use North Wind Trader's registry for their
-beison and beicode libraries. The following `vcpkg-configuration.json`
-will work:
+beison and beicode libraries, as well as configure overlay ports and 
+overlay triplets from your custom directories. The following
+`vcpkg-configuration.json` will work:
 
 ```json
 {
@@ -109,7 +120,12 @@ will work:
       "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
       "packages": [ "beicode", "beison" ]
     }
-  ]
+  ],
+  "overlay-ports": [ "/team-ports",
+                     "c:project/my-ports/fmt",
+                     "/custom-ports"
+   ],
+  "overlay-triplets": [ /my-triplets ]
 }
 ```
 
@@ -128,6 +144,15 @@ The name resolution algorithm is as follows:
 - If there is a default registry defined, use that registry; otherwise
 - If the default registry is set to `null`, error out; otherwise
 - use the built-in registry.
+
+## Overlays Resolution
+
+Overlay ports and overlay triplets will be resolved in sequential order, 
+and if configured in multiple places will follow the following priority:
+
+- Overlays configured through the command line
+- Overlays configured in the manifest
+- Overlays configured via environment variables
 
 ### Versioning Support
 
