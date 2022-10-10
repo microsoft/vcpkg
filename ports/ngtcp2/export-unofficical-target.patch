@@ -1,13 +1,16 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index d98747f..e9dc1e6 100644
+index d98747f..f7e3385 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -80,12 +80,17 @@ if(ENABLE_SHARED_LIB)
+@@ -80,12 +80,20 @@ if(ENABLE_SHARED_LIB)
      C_VISIBILITY_PRESET hidden
      POSITION_INDEPENDENT_CODE ON
    )
 -  target_include_directories(ngtcp2 PUBLIC ${ngtcp2_INCLUDE_DIRS})
-+  target_include_directories(ngtcp2 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> $<INSTALL_INTERFACE:include>)
++  target_include_directories(ngtcp2 PUBLIC 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes> 
++    $<INSTALL_INTERFACE:include>)
  
 -  install(TARGETS ngtcp2
 +  install(TARGETS ngtcp2 EXPORT unofficial-ngtcp2-config
@@ -17,17 +20,20 @@ index d98747f..e9dc1e6 100644
 +  install(
 +    EXPORT unofficial-ngtcp2-config
 +    FILE unofficial-ngtcp2-config.cmake
-+    NAMESPACE unofficial::
++    NAMESPACE unofficial::ngtcp2::
 +    DESTINATION share/unofficial-ngtcp2)
  endif()
  
  if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
-@@ -97,12 +102,18 @@ if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
+@@ -97,12 +105,21 @@ if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
      C_VISIBILITY_PRESET hidden
    )
    target_compile_definitions(ngtcp2_static PUBLIC "-DNGTCP2_STATICLIB")
 -  target_include_directories(ngtcp2_static PUBLIC ${ngtcp2_INCLUDE_DIRS})
-+  target_include_directories(ngtcp2_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> $<INSTALL_INTERFACE:include>)
++  target_include_directories(ngtcp2_static PUBLIC 
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes> 
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>
++  $<INSTALL_INTERFACE:include>)
    if(ENABLE_STATIC_LIB)
 -    install(TARGETS ngtcp2_static
 +  
@@ -36,7 +42,7 @@ index d98747f..e9dc1e6 100644
 +    install(
 +      EXPORT unofficial-ngtcp2_static-config
 +      FILE unofficial-ngtcp2_static-config.cmake
-+      NAMESPACE unofficial::
++      NAMESPACE unofficial::ngtcp2::
 +      DESTINATION share/unofficial-ngtcp2_static)
    endif()
  endif()
