@@ -35,6 +35,6 @@ index 6b2175e..2aa699b 100644
 +)
 +# share/liblrc will be fixed in portfile.cmake
 +install(EXPORT unofficial-liblrcConfig
-+    NAMESPACE unofficial::
++    NAMESPACE unofficial::liblrc::
 +     DESTINATION share/unofficial-liblrc
 +)
