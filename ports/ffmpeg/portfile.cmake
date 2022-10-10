@@ -456,6 +456,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
+if ("srt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsrt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsrt")
+endif()
+
 if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
