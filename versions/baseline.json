@@ -66,7 +66,7 @@
     },
     "allegro5": {
       "baseline": "5.2.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "alpaca": {
       "baseline": "0.2.0",
@@ -2124,9 +2124,13 @@
       "baseline": "2020-06-08",
       "port-version": 3
     },
+    "egl": {
+      "baseline": "2022-09-20",
+      "port-version": 0
+    },
     "egl-registry": {
-      "baseline": "2021-11-23",
-      "port-version": 1
+      "baseline": "2022-09-20",
+      "port-version": 0
     },
     "eigen3": {
       "baseline": "3.4.0",
@@ -2778,7 +2782,7 @@
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 9
+      "port-version": 10
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -5381,11 +5385,11 @@
       "port-version": 0
     },
     "opengl": {
-      "baseline": "2022-03-14",
-      "port-version": 1
+      "baseline": "2022-10-08",
+      "port-version": 0
     },
     "opengl-registry": {
-      "baseline": "2021-11-17",
+      "baseline": "2022-09-29",
       "port-version": 0
     },
     "openh264": {
@@ -5949,15 +5953,15 @@
       "port-version": 1
     },
     "qt": {
-      "baseline": "6.3.2",
-      "port-version": 1
+      "baseline": "6.4.0",
+      "port-version": 0
     },
     "qt-advanced-docking-system": {
       "baseline": "3.8.2",
       "port-version": 0
     },
     "qt3d": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qt5": {
@@ -6133,7 +6137,7 @@
       "port-version": 0
     },
     "qt5compat": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qt6betablock": {
@@ -6141,52 +6145,56 @@
       "port-version": 0
     },
     "qtactiveqt": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtapplicationmanager": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtbase": {
-      "baseline": "6.3.2",
-      "port-version": 1
+      "baseline": "6.4.0",
+      "port-version": 0
     },
     "qtcharts": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtcoap": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtconnectivity": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtdatavis3d": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtdeclarative": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtdeviceutilities": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtdoc": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
+      "port-version": 0
+    },
+    "qthttpserver": {
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtimageformats": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtinterfaceframework": {
-      "baseline": "6.3.2",
-      "port-version": 1
+      "baseline": "6.4.0",
+      "port-version": 0
     },
     "qtkeychain": {
       "baseline": "0.13.2",
@@ -6197,35 +6205,39 @@
       "port-version": 1
     },
     "qtlocation": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtlottie": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtmqtt": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtmultimedia": {
-      "baseline": "6.3.2",
-      "port-version": 1
+      "baseline": "6.4.0",
+      "port-version": 0
     },
     "qtnetworkauth": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtopcua": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtpositioning": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtquick3d": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
+      "port-version": 0
+    },
+    "qtquick3dphysics": {
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtquickcontrols2": {
@@ -6233,67 +6245,67 @@
       "port-version": 0
     },
     "qtquicktimeline": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtremoteobjects": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtscxml": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtsensors": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtserialbus": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtserialport": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtshadertools": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtsvg": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qttools": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qttranslations": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtvirtualkeyboard": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtwayland": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtwebchannel": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.3.2",
-      "port-version": 1
+      "baseline": "6.4.0",
+      "port-version": 0
     },
     "qtwebsockets": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "qtwebview": {
-      "baseline": "6.3.2",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "quadtree": {
