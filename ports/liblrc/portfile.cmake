@@ -5,22 +5,13 @@ vcpkg_from_github(
     REF 1fc3872320cd449933bffefc6527928262ee0629
     SHA512 5b0a52a557ffb28554b33e77efb3832944facfd4e039d8afe60c322d56872eb12cb93f3974d17f083c659dcddf9c63075d3b09ba6abd3adba7b40b2ffb615f1c
     PATCHES
-    set_up_compile_error.patch
+        set_up_compile_error.patch
+        fix-cmake.patch
 )
 
-file(COPY 
-    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION  
-    "${SOURCE_PATH}"
-)
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-)
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(
-    CONFIG_PATH  share/unofficial-liblrcConfig
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/liblrc PACKAGE_NAME unofficial-liblrc)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
