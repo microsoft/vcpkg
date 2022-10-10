@@ -17,7 +17,7 @@
     }
   ],
   "default-features": [
-    "all"
+    "high-priority"
   ],
   "features": {
     "all": {
@@ -60,6 +60,22 @@
         "giflib"
       ]
     },
+    "high-priority": {
+      "description": "Build with high priority codecs such as JPEG or PNG",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "bmp",
+            "gif",
+            "jpeg",
+            "png",
+            "svg",
+            "tiff"
+          ]
+        }
+      ]
+    },
     "ico": {
       "description": "Enable ICO codec"
     },
@@ -73,6 +89,45 @@
       "description": "Enable JPEG2000 codec",
       "dependencies": [
         "jasper"
+      ]
+    },
+    "low-priority": {
+      "description": "Build with low priority codecs such as TGA",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "ico",
+            "pcx",
+            "qoi",
+            "tga"
+          ]
+        }
+      ]
+    },
+    "lowest-priority": {
+      "description": "Build with lowest priority codecs such as XBM",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "wal",
+            "xbm"
+          ]
+        }
+      ]
+    },
+    "medium-priority": {
+      "description": "Build with medium priority codecs such as AVIF",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "avif",
+            "jpeg2000",
+            "webp"
+          ]
+        }
       ]
     },
     "pcx": {
