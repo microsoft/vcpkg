@@ -2369,7 +2369,7 @@
       "port-version": 4
     },
     "fmt": {
-      "baseline": "9.0.0",
+      "baseline": "9.1.0",
       "port-version": 0
     },
     "folly": {
