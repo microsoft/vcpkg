@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
 
     OPTIONS
         -DSAIL_COMBINE_CODECS=ON
+        -DSAIL_ENABLE_CODECS="${FEATURES}"
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         -DSAIL_BUILD_TESTS=OFF
