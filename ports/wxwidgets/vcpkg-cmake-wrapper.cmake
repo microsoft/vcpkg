@@ -7,7 +7,7 @@ set(wxWidgets_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 set(WX_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 unset(_vcpkg_wx_root)
 
-if(WIN32 AND CMAKE_HOST_WIN32)
+if(WIN32)
     # Find all libs with "32" infix which is unknown to FindwxWidgets.cmake
     function(z_vcpkg_wxwidgets_find_base_library BASENAME)
         find_library(WX_${BASENAME}d wx${BASENAME}32ud NAMES wx${BASENAME}d PATHS "${wxWidgets_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -31,11 +31,6 @@ if(WIN32 AND CMAKE_HOST_WIN32)
     set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/lib" CACHE INTERNAL "")
 else()
     # FindwxWidgets.cmake unix mode, single-config
-    if(MINGW)
-        # Force FindwxWidgets.cmake unix mode for mingw cross builds
-        set(_vcpkg_wxwidgets_backup_crosscompiling "${CMAKE_CROSSCOMPILING}")
-        set(CMAKE_CROSSCOMPILING 1)
-    endif()
     set(_vcpkg_wxconfig "")
     if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR "Debug" IN_LIST MAP_IMPORTED_CONFIG_${CMAKE_BUILD_TYPE})
         # Debug
@@ -59,7 +54,7 @@ if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     unset(_vcpkg_wxwidgets_backup_crosscompiling)
 endif()
 
-if(WIN32 AND CMAKE_HOST_WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_LIST wxWidgets_LIBRARIES)
+if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_LIST wxWidgets_LIBRARIES)
     find_package(EXPAT QUIET)
     find_package(JPEG QUIET)
     find_package(PNG QUIET)

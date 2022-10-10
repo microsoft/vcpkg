@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "pkgconfig_fix.patch" # https://github.com/libexpat/libexpat/pull/656
+        "mingw_static_fix.patch" # https://github.com/libexpat/libexpat/pull/658
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
