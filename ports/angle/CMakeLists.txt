@@ -710,10 +710,17 @@ set_target_properties(libANGLE PROPERTIES PREFIX "")
 set_target_properties(libGLESv2 PROPERTIES PREFIX "" IMPORT_PREFIX "")
 set_target_properties(libEGL PROPERTIES PREFIX "" IMPORT_PREFIX "")
 
+set(LIB_INSTALL_SUFFIX "")
+set(INCLUDE_INSTALL_SUFFIX "")
+if(NOT WIN32)
+ set(LIB_INSTALL_SUFFIX "/angle")
+ set(INCLUDE_INSTALL_SUFFIX "/angle")
+endif()
+
 install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_compression_utils angle_image_util angle_gpu_info_util angle_translator angle_preprocessor GL_VISIBILITY EXPORT ANGLEExport
     RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib${LIB_INSTALL_SUFFIX}
+    ARCHIVE DESTINATION lib${LIB_INSTALL_SUFFIX}
 )
 
 if(WINDOWS_DESKTOP)
@@ -731,8 +738,8 @@ elseif(WINDOWS_STORE)
 else()
     install(TARGETS angle_renderer_opengl EXPORT ANGLEExport
         RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib${LIB_INSTALL_SUFFIX}
+        ARCHIVE DESTINATION lib${LIB_INSTALL_SUFFIX}
     )
 endif()
 
@@ -741,7 +748,7 @@ install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unoffici
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
         DIRECTORY include/
-        DESTINATION include
+        DESTINATION include${INCLUDE_INSTALL_SUFFIX}
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.inc"
