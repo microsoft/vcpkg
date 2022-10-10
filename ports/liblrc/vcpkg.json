@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tools for parsing and playing back LRC lyrics.",
   "homepage": "https://github.com/ywh233/LRC-Tools",
-  "license": null,
+  "license": "MIT",
   "supports": "!osx",
   "dependencies": [
     {
