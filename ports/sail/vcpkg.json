@@ -24,7 +24,7 @@
       "description": "Build with all codecs",
       "dependencies": [
         {
-          "name": "all",
+          "name": "sail",
           "features": [
             "avif",
             "bmp",
