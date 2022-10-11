@@ -122,7 +122,7 @@ overlay triplets from your custom directories. The following
     }
   ],
   "overlay-ports": [ "/team-ports",
-                     "c:project/my-ports/fmt",
+                     "c:/project/my-ports/fmt",
                      "/custom-ports"
    ],
   "overlay-triplets": [ "/my-triplets" ]
