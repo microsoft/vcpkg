@@ -89,12 +89,12 @@ The `"packages"` fields of all the package registries must be disjoint.
 
 ### Configuration: `"overlay-ports"`
 
-The `"overlay-ports"` field must contain a path or array of paths, which point
+The `"overlay-ports"` field must contain an array of paths, which point
 to a particular port or a directory containing ports to overlay.
 
 ### Configuration: `"overlay-triplets"`
 
-The `"overlay-triplets"` field must contain a path or array of paths, which point
+The `"overlay-triplets"` field must contain an array of paths, which point
 to a directory containing triplets to overlay.
 
 ### Example Configuration File
@@ -147,8 +147,9 @@ The name resolution algorithm is as follows:
 
 ## Overlays Resolution
 
-Overlay ports and overlay triplets will be resolved in sequential order, 
-and if configured in multiple places will follow the following priority:
+Overlay ports and overlay triplets will be resolved in sequential order
+(see [port overlays](../specifications/ports-overlay.md)), and if configured
+in multiple places will follow the following priority:
 
 - Overlays configured through the command line
 - Overlays configured in the manifest
