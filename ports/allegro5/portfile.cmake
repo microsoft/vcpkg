@@ -10,11 +10,6 @@ vcpkg_from_github(
         export-targets.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    set(ENV{_CL_} "$ENV{_CL_} /Gy")
-    string(APPEND VCPKG_C_FLAGS " /Gy")
-    string(APPEND VCPKG_CXX_FLAGS " /Gy")
-endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
 
