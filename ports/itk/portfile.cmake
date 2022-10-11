@@ -14,6 +14,7 @@ vcpkg_from_github(
         wrapping.patch
         opencl.patch
         use-the-lrintf-intrinsic.patch
+        dont-build-gtest.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
