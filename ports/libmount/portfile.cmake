@@ -14,6 +14,8 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
 )
 
+set(ENV{GTKDOCIZE} true)
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
