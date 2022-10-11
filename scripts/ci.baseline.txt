@@ -34,6 +34,7 @@
 
 # Add new items alphabetically
 
+allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
