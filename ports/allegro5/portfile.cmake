@@ -11,8 +11,7 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "ARM")
-    string(APPEND VCPKG_C_FLAGS " /Gy")
-    string(APPEND VCPKG_CXX_FLAGS " /Gy")
+    set(ENV{_CL_} "$ENV{_CL_} /Gy")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
