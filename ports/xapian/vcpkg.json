@@ -7,7 +7,6 @@
   "supports": "!(arm | uwp)",
   "dependencies": [
     {
-    {
       "name": "vcpkg-cmake-config",
       "host": true
     },
