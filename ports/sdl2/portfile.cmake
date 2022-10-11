@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_HIDAPI_JOYSTICK=ON
         -DSDL_TEST=OFF
+        -DSDL_WAYLAND_LIBDECOR=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
