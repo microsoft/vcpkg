@@ -7,20 +7,22 @@ vcpkg_from_github(
 )
 
 # Enable selected codecs
-set(ENABLED_CODECS "")
+set(ONLY_CODECS "")
 
 foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png qoi svg tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
-        list(APPEND ENABLED_CODECS ${CODEC})
+        list(APPEND ONLY_CODECS ${CODEC})
     endif()
 endforeach()
+
+list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 
     OPTIONS
         -DSAIL_COMBINE_CODECS=ON
-        -DSAIL_ONLY_CODECS="${ENABLED_CODECS}"
+        -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         -DSAIL_BUILD_TESTS=OFF
