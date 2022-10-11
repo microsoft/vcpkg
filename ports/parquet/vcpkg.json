@@ -1,0 +1,9 @@
+{
+  "name": "parquet",
+  "version-string": "0",
+  "port-version": 1,
+  "description": "Parquet-cpp is a C++ library to read and write the Apache Parquet columnar data format.  It is now part of the arrow library.",
+  "dependencies": [
+    "arrow"
+  ]
+}

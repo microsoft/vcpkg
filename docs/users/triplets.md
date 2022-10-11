@@ -1,4 +1,4 @@
-# Triplet files
+# Triplet Files
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
 
@@ -6,9 +6,9 @@ Triplet is a standard term used in cross compiling as a way to completely captur
 
 In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
-We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use overlay triplets (such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake Manifest Mode](manifests.md#vcpkg_overlay_triplets), or [MSBuild Manifest Mode](manifests.md#vcpkgadditionalinstalloptions-additional-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
+We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use `--overlay-triplets=` (or equivalent such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake `VCPKG_OVERLAY_TRIPLETS`](buildsystems/cmake-integration.md#vcpkg_overlay_triplets), or [MSBuild Additional Options](buildsystems/msbuild-integration.md#vcpkg-additional-install-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project away from the default, see our [Integration Document](integration.md#triplet-selection).
+To change the triplet used by your project, you can pass `--triplet=<triplet>` on the command line or see our [Buildsystem-Specific Documentation](buildsystems/integration.md).
 
 ## Community triplets
 
@@ -43,6 +43,9 @@ Specifies the preferred library linkage.
 
 Valid options are `dynamic` and `static`. Note that libraries can ignore this setting if they do not support the preferred linkage type.
 
+### VCPKG_BUILD_TYPE
+You can set this value to `release` to only build release versions of the ports. By default this value is empty and release and debug versions of a port are built.
+
 ### VCPKG_CMAKE_SYSTEM_NAME
 Specifies the target platform.
 
@@ -62,6 +65,7 @@ This field is optional and, if present, will be passed into the build as `CMAKE_
 
 See also the CMake documentation for `CMAKE_SYSTEM_VERSION`: https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_VERSION.html.
 
+<a name="VCPKG_CHAINLOAD_TOOLCHAIN_FILE"></a>
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 
@@ -89,6 +93,32 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
+### VCPKG_MESON_CONFIGURE_OPTIONS
+Set additional Meson configure options that are appended to the configure command (in [`vcpkg_configure_meson`](../maintainers/vcpkg_configure_meson.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
+
+### VCPKG_CMAKE_CONFIGURE_OPTIONS
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE` variables.
+
+### VCPKG_MAKE_CONFIGURE_OPTIONS
+Set additional automake / autoconf configure options that are appended to the configure command (in [`vcpkg_configure_make`](../maintainers/vcpkg_configure_make.md)).
+
+This field is optional.
+
+For example, to skip certain libtool checks that may errantly fail:
+```cmake
+set(VCPKG_MAKE_CONFIGURE_OPTIONS "lt_cv_deplibs_check_method=pass_all")
+```
+
+Also available as build-type specific `VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE` variables.
+
 <a name="VCPKG_DEP_INFO_OVERRIDE_VARS"></a>
 ### VCPKG_DEP_INFO_OVERRIDE_VARS
 Replaces the default computed list of triplet "Supports" terms.
@@ -99,8 +129,13 @@ See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file 
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
 
+### VCPKG_DISABLE_COMPILER_TRACKING
+
+When this option is set to (true|1|on), the compiler is ignored in the abi tracking.
+
 ## Windows Variables
 
+<a name="VCPKG_ENV_PASSTHROUGH"></a>
 ### VCPKG_ENV_PASSTHROUGH
 Instructs vcpkg to allow additional environment variables into the build process.
 
@@ -126,7 +161,7 @@ To select the precise combination of Visual Studio instance and toolset version,
 1. Determine the setting for `VCPKG_VISUAL_STUDIO_PATH` from the triplet, or the environment variable `VCPKG_VISUAL_STUDIO_PATH`, or consider it unset
 2. Determine the setting for `VCPKG_PLATFORM_TOOLSET` from the triplet or consider it unset
 3. Gather a list of all pairs of Visual Studio Instances with all toolsets available in those instances
-    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v142, v141, v140)
+    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v143, v142, v141, v140)
 4. Filter the list based on the settings for `VCPKG_VISUAL_STUDIO_PATH` and `VCPKG_PLATFORM_TOOLSET`.
 5. Select the best remaining option
 
@@ -141,13 +176,26 @@ Specifies the VS-based C/C++ compiler toolchain to use.
 See [`VCPKG_VISUAL_STUDIO_PATH`](#VCPKG_VISUAL_STUDIO_PATH) for the full selection algorithm.
 
 Valid settings:
+* The Visual Studio 2022 platform toolset is `v143`.
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
 
+### VCPKG_PLATFORM_TOOLSET_VERSION
+Specifies the detailed MSVC C/C++ compiler toolchain to use.
+
+By default, [`VCPKG_PLATFORM_TOOLSET`] always chooses the latest installed minor version of the selected toolset.
+If you need more granularity, you can use this variable.
+Valid values are, for example, `14.25` or `14.27.29110`.
+
 ### VCPKG_LOAD_VCVARS_ENV
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
 Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
+
+## Linux Variables
+
+### VCPKG_FIXUP_ELF_RPATH
+When this option is set to (true|1|on), vcpkg will add `$ORIGIN` and `$ORIGIN/<path_relative_to_lib>` to the `RUNPATH` header of executables and shared libraries. This allows packages to be relocated on Linux.
 
 ## MacOS Variables
 

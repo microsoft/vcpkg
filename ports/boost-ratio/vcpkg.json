@@ -1,8 +1,9 @@
 {
   "name": "boost-ratio",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost ratio module",
   "homepage": "https://github.com/boostorg/ratio",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

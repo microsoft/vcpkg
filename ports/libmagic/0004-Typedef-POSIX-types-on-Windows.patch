@@ -1,0 +1,29 @@
+From eb3dde2954dacd86ec7490540eb9b7e3530b917b Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sat, 8 May 2021 20:12:55 +0700
+Subject: [PATCH 04/14] Typedef POSIX types on Windows
+
+---
+ src/file.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/file.h b/src/file.h
+index 2c365a6..0332506 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -425,6 +425,12 @@ struct cont {
+ 
+ #define MAGIC_SETS	2
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++typedef int mode_t;
++typedef SSIZE_T ssize_t;
++#endif
++
+ struct magic_set {
+ 	struct mlist *mlist[MAGIC_SETS];	/* list of regular entries */
+ 	struct cont c;
+-- 
+2.29.2.windows.2
+

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Unix" ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tfhe/tfhe
@@ -9,6 +7,9 @@ vcpkg_from_github(
     PATCHES
         mac-fix.patch
 )
+
+# Workaround for https://github.com/tfhe/tfhe/issues/246
+vcpkg_replace_string("${SOURCE_PATH}/src/CMakeLists.txt" "-Wall -Werror" "")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src

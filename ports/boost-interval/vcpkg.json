@@ -1,10 +1,10 @@
 {
   "name": "boost-interval",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost interval module",
   "homepage": "https://github.com/boostorg/interval",
+  "license": "BSL-1.0",
   "dependencies": [
-    "boost-compatibility",
     "boost-config",
     "boost-detail",
     "boost-logic",

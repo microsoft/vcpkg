@@ -1,9 +1,9 @@
 {
   "name": "boost-concept-check",
-  "version-string": "1.75.0",
-  "port-version": 2,
+  "version": "1.80.0",
   "description": "Boost concept_check module",
   "homepage": "https://github.com/boostorg/concept_check",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-preprocessor",

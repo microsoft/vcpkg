@@ -1,6 +1,0 @@
-Source: assimp
-Version: 5.0.1
-Port-Version: 4
-Homepage: https://github.com/assimp/assimp
-Description: The Open Asset import library
-Build-Depends: zlib, rapidjson, minizip, stb, kubazip, irrlicht, polyclipping, utfcpp, poly2tri

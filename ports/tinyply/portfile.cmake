@@ -32,3 +32,5 @@ file(READ "${SOURCE_PATH}/readme.md" readme_contents)
 string(FIND "${readme_contents}" "License" license_line_pos)
 string(SUBSTRING "${readme_contents}" ${license_line_pos} -1 license_contents)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${license_contents}")
+
+vcpkg_fixup_pkgconfig()

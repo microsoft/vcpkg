@@ -1,5 +1,0 @@
-Source: libhdfs3
-Version: 2019-11-05
-Homepage: https://github.com/erikmuttersbach/libhdfs3
-Description: Native Hadoop RPC protocol and HDFS data transfer protocol implementation
-Build-Depends: libxml2, protobuf, libuuid, boost

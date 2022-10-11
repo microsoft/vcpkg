@@ -1,9 +1,9 @@
 {
   "name": "boost-serialization",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost serialization module",
   "homepage": "https://github.com/boostorg/serialization",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",
@@ -11,7 +11,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",
@@ -35,6 +34,10 @@
     "boost-unordered",
     "boost-utility",
     "boost-variant",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -1,0 +1,244 @@
+diff --git a/SMP/smp.props b/SMP/smp.props
+index fc70bd8..d515523 100644
+--- a/SMP/smp.props
++++ b/SMP/smp.props
+@@ -86,7 +86,7 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <TargetName>lib$(RootNamespace)d</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -94,7 +94,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+-    <TargetName>lib$(RootNamespace)d</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -118,7 +118,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+-    <TargetName>lib$(RootNamespace)</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -126,7 +126,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+-    <TargetName>lib$(RootNamespace)</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -159,6 +159,7 @@
+       <ProgramDataBaseFileName>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDataBaseFileName>
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -177,6 +178,7 @@
+       <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -196,6 +198,7 @@
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -219,6 +222,7 @@
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -248,6 +252,7 @@
+       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
+       <ProgramDataBaseFileName>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -273,6 +278,7 @@
+       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
+       <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -297,6 +303,7 @@
+       <AdditionalIncludeDirectories>$(OutDir)\include;$(ProjectDir)\..\..\prebuilt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -328,6 +335,7 @@
+       <AdditionalIncludeDirectories>$(OutDir)\include;$(ProjectDir)\..\..\prebuilt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+diff --git a/SMP/smp_winrt.props b/SMP/smp_winrt.props
+index cb5f090..f7d8e23 100644
+--- a/SMP/smp_winrt.props
++++ b/SMP/smp_winrt.props
+@@ -97,7 +97,7 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|Win32'">
+-    <TargetName>lib$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -105,7 +105,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|x64'">
+-    <TargetName>lib$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -113,7 +113,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|Win32'">
+-    <TargetName>$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -121,7 +121,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|x64'">
+-    <TargetName>$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -129,7 +129,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|Win32'">
+-    <TargetName>lib$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -137,7 +137,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|x64'">
+-    <TargetName>lib$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -145,7 +145,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|Win32'">
+-    <TargetName>$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -153,7 +153,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|x64'">
+-    <TargetName>$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -172,6 +172,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -192,6 +193,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -213,6 +215,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -240,6 +243,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -273,6 +277,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
+@@ -301,6 +306,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -327,6 +333,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -362,6 +369,7 @@
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>

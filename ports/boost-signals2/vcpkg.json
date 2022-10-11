@@ -1,14 +1,14 @@
 {
   "name": "boost-signals2",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost signals2 module",
   "homepage": "https://github.com/boostorg/signals2",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-function",
     "boost-iterator",
     "boost-mpl",
@@ -20,7 +20,6 @@
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-variant",
     "boost-vcpkg-helpers"
   ]

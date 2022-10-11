@@ -1,0 +1,9 @@
+{
+  "name": "libodb-boost",
+  "version-string": "2.4.0",
+  "port-version": 5,
+  "description": "Description: Boost support for the ODB ORM library",
+  "dependencies": [
+    "libodb"
+  ]
+}

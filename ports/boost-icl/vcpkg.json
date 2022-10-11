@@ -1,13 +1,15 @@
 {
   "name": "boost-icl",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost icl module",
   "homepage": "https://github.com/boostorg/icl",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-concept-check",
     "boost-config",
     "boost-container",
+    "boost-core",
     "boost-date-time",
     "boost-detail",
     "boost-iterator",

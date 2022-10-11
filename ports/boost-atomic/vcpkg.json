@@ -1,9 +1,9 @@
 {
   "name": "boost-atomic",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost atomic module",
   "homepage": "https://github.com/boostorg/atomic",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-assert",
@@ -12,7 +12,6 @@
       "host": true
     },
     "boost-config",
-    "boost-integer",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -22,6 +21,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

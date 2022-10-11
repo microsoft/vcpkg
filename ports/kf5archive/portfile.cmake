@@ -1,32 +1,41 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
-    REF v5.75.0
-    SHA512 4a909626f776cc9ebf9acd0e16bcda9e2e0e5dd29bd52b27140baa9905758a028f542ccd40e98c5432a4d9eac2908e36e1f9329e40cc4cf835e15557c96175f1
+    REF v5.89.0
+    SHA512 e77d5233b6549332f180be3dcf0459688d6565c24e1af409814aab92d415ebb2b8a04ad720dfa9ed6f017f3ab86fab766b909e30a860bb83c5ddd51def7c3e5f
     HEAD_REF master
+    PATCHES
+        control-dependencies.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "bzip2" VCPKG_USE_BZIP2
+        "lzma"  VCPKG_USE_LIBLZMA
+        "zstd"  VCPKG_USE_ZSTD
+)
+
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Archive)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Archive CONFIG_PATH lib/cmake/KF5Archive)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

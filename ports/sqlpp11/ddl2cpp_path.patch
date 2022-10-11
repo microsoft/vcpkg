@@ -1,8 +1,8 @@
-diff --git a/cmake/Sqlpp11Config.cmake b/cmake/Sqlpp11Config.cmake
-index 18ea9b1..730bce1 100644
---- a/cmake/Sqlpp11Config.cmake
-+++ b/cmake/Sqlpp11Config.cmake
-@@ -32,7 +32,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/Sqlpp11Targets.cmake")
+diff --git a/cmake/configs/Sqlpp11Config.cmake b/cmake/configs/Sqlpp11Config.cmake
+index 5c5926f..c25da97 100644
+--- a/cmake/configs/Sqlpp11Config.cmake
++++ b/cmake/configs/Sqlpp11Config.cmake
+@@ -55,7 +55,7 @@ endforeach()
  
  # Import "ddl2cpp" script
  if(NOT TARGET sqlpp11::ddl2cpp)

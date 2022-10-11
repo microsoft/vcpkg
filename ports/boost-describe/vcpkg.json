@@ -1,0 +1,11 @@
+{
+  "name": "boost-describe",
+  "version": "1.80.0",
+  "description": "Boost describe module",
+  "homepage": "https://github.com/boostorg/describe",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost-mp11",
+    "boost-vcpkg-helpers"
+  ]
+}

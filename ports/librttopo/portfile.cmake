@@ -1,54 +1,76 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 # NOTE: update the version and checksum for new LIBRTTOPO release
-set(LIBRTTOPO_VERSION_STR "1.1.0-2")
-set(LIBRTTOPO_PACKAGE_SUM "cc2f646dd9ac3099c77e621984cdd2baa676ed1d8e6aaa9642afe2855e6fdef585603cc052ca09084204a1325e38bb626133072fbb5080e8adc369cc4854c40e")
+set(LIBRTTOPO_VERSION_STR "1.1.0")
+set(LIBRTTOPO_PACKAGE_SUM "d9c2f4db1261cc942152d348abb7f03e6053a63b6966e081c5381d40bbebd3c7ca1963224487355f384d7562a90287fb24d7af9e7eda4a1e230ee6441cef5de9")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://salsa.debian.org/debian-gis-team/librttopo/-/archive/debian/${LIBRTTOPO_VERSION_STR}/librttopo-debian-${LIBRTTOPO_VERSION_STR}.tar.gz"
-    FILENAME "librttopo${LIBRTTOPO_VERSION_STR}.zip"
+    URLS "https://download.osgeo.org/librttopo/src/librttopo-${LIBRTTOPO_VERSION_STR}.tar.gz"
+    FILENAME "librttopo-${LIBRTTOPO_VERSION_STR}.tar.gz"
     SHA512 ${LIBRTTOPO_PACKAGE_SUM}
 )
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-makefiles.patch
-        fix-geoconfig.patch
+        geos-config.patch
+        fix-pc-file.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-  set(SRID_MAX 999999)
-  set(SRID_USR_MAX 998999)
-  configure_file(${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in ${SOURCE_PATH}/src/rttopo_config.h @ONLY)
-  configure_file(${SOURCE_PATH}/headers/librttopo_geom.h.in ${SOURCE_PATH}/headers/librttopo_geom.h @ONLY)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-  vcpkg_build_nmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      TARGET librttopo.lib
-  )
+    file(REMOVE "${SOURCE_PATH}/src/rttopo_config.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
 
-  file(GLOB LIBRTTOPO_INCLUDE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h)
-  file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    set(OPTFLAGS "/nologo /fp:precise /W4 /D_CRT_SECURE_NO_WARNINGS /DDLL_EXPORT")
+    vcpkg_build_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        TARGET librttopo.lib
+        OPTIONS
+            "OPTFLAGS=${OPTFLAGS}"
+            "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
+    )
 
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
-  vcpkg_configure_make(
-      SOURCE_PATH ${SOURCE_PATH}
-      AUTOCONFIG
-      OPTIONS
-          "GEOS_MAJOR_VERSION=3"
-          "GEOS_MINOR_VERSION=8"
-      OPTIONS_DEBUG
-          "GEOS_LDFLAGS=-lgeos_cd -lgeosd -lm"
-      OPTIONS_RELEASE
-          "GEOS_LDFLAGS=-lgeos_c -lgeos -lm"
-  )
+    file(GLOB LIBRTTOPO_INCLUDE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h")
+    file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-  vcpkg_install_make()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
+
+    set(VERSION "${LIBRTTOPO_VERSION_STR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/rttopo.pc")
+        configure_file("${SOURCE_PATH}/rttopo.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lrttopo -lm" " -llibrttopo")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/rttopo.pc")
+        configure_file("${SOURCE_PATH}/rttopo.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lrttopo -lm" " -llibrttopo")
+    endif()
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS_DEBUG
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
+        OPTIONS_RELEASE
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
+    )
+    vcpkg_install_make()
 endif()
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

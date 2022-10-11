@@ -1,23 +1,20 @@
 {
   "name": "boost-interprocess",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost interprocess module",
   "homepage": "https://github.com/boostorg/interprocess",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-date-time",
-    "boost-detail",
     "boost-integer",
     "boost-intrusive",
     "boost-move",
     "boost-static-assert",
     "boost-type-traits",
     "boost-unordered",
-    "boost-utility",
     "boost-vcpkg-helpers",
     "boost-winapi"
   ]

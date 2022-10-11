@@ -1,6 +1,0 @@
-Source: spdk
-Version: 19.01.1
-Port-Version: 1
-Description: Storage Performance Development Kit
-Build-Depends: spdk-dpdk, spdk-ipsec, spdk-isal
-Supports: linux

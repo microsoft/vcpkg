@@ -1,4 +1,0 @@
-Source: septag-sx
-Version: 2019-05-07-2
-Description: Portable base library for C programmers, designed for performance and simplicity.
-Supports: !(uwp|arm)

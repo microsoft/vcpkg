@@ -1,6 +1,0 @@
-Source: libmodplug
-Version: 0.8.9.0
-Port-Version: 7
-Homepage: https://github.com/Konstanty/libmodplug
-Description: The ModPlug mod file playing library.
-Supports: !uwp

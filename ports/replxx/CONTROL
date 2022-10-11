@@ -1,5 +1,0 @@
-Source: replxx
-Version: 0.0.2-2
-Homepage: https://github.com/AmokHuginnsson/replxx
-Description: A small, portable GNU readline replacement for Linux, Windows and MacOS which is capable of handling UTF-8 characters.
-Supports: !uwp

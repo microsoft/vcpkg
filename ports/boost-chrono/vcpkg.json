@@ -1,9 +1,9 @@
 {
   "name": "boost-chrono",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost chrono module",
   "homepage": "https://github.com/boostorg/chrono",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     {
@@ -11,7 +11,7 @@
       "host": true
     },
     "boost-config",
-    "boost-detail",
+    "boost-core",
     "boost-integer",
     {
       "name": "boost-modular-build-helper",
@@ -28,6 +28,10 @@
     "boost-typeof",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

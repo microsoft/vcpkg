@@ -1,5 +1,0 @@
-Source: cli
-Version: 1.2.1
-Homepage: https://github.com/daniele77/cli
-Description: A library for interactive command line interfaces in modern C++
-Build-Depends: boost-asio

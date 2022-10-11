@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ulfjack/ryu
@@ -26,9 +24,9 @@ vcpkg_execute_build_process(
 
 if (CMAKE_HOST_WIN32)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)    
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)    
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 else()
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)

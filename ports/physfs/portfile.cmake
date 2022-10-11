@@ -1,35 +1,32 @@
-set(PHYSFS_VERSION 3.0.2)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2"
-    "https://hg.icculus.org/icculus/physfs/archive/release-${PHYSFS_VERSION}.tar.bz2"
-    FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
-    SHA512 4024b6c3348e0b6fc1036aac330192112dfe17de3e3d14773be9f06e9a062df5a1006869f21162b4e0b584989f463788a35e64186b1913225c073fea62754472
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${PHYSFS_VERSION}
-    PATCHES
-        "fix-lzmasdk-arm64-windows.patch"
+    REPO icculus/physfs
+    REF eb3383b532c5f74bfeb42ec306ba2cf80eed988c # release-3.2.0
+    SHA512 4231b379107a8dbacad18d98c0800bad4a3aae1bdd1db0bd4cf0c89c69bb7590ed14422c77671c28bd7556f606d3ff155ad8432940ce6222340f647f9e73ae8e
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_TARGET_IS_UWP)
+    set(configure_opts WINDOWS_USE_MSBUILD)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    ${configure_opts}
     OPTIONS
         -DPHYSFS_BUILD_STATIC=${PHYSFS_STATIC}
         -DPHYSFS_BUILD_SHARED=${PHYSFS_SHARED}
         -DPHYSFS_BUILD_TEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PhysFS)
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ReneNyffenegger/cpp-base64
-    REF a8aae956a2f07df9aac25b064cf4cd92d56aac45 #Commits on Jun 19, 2019
-    SHA512 cb8d8991b87bd70f6287fb2abe20cb2156a511fdccd42bb3fc441d81cccd55755a44579227d326585b8c7a514d9cfebda98a72801ea2a3019a935d52cb14fc90
+    REF V2.rc.08 # V2.rc.08
+    SHA512 8d115c3341bee31c3d83f5ad07d457a507f42d58bb5db8d9ead213494f7f25065eeeac06226f9cc34235c0360eb893e7bc66a95aa3bfbc9ea0d179f5a0b7af0a
     HEAD_REF master
 )
 

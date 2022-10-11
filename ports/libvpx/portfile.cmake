@@ -1,17 +1,16 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.9.0)
+set(LIBVPX_VERSION 1.12.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF v${LIBVPX_VERSION}
-    SHA512 8d544552b35000ea5712aec220b78bb5f7dc210704b2f609365214cb95a4f5a0e343b362723d829cb4a9ac203b10d5443700ba84b28fd6b2fefbabb40663e298
+    SHA512 dc059bc3102b75524ae29989372334b3e0f2acf1520e5a4daa4073831bb55949d82897c498fb9d2d38b59f1a66bb0ad24407d0d086b1e3a8394a4933f04f2ed0
     HEAD_REF master
     PATCHES
-        0001-vcxproj-nasm.patch
         0002-Fix-nasm-debug-format-flag.patch
-        0003-add-uwp-and-v142-support.patch
+        0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
 )
 
@@ -20,12 +19,12 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 else()
-	set(BASH /bin/bash)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+    set(BASH /bin/bash)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
 
 vcpkg_find_acquire_program(NASM)
@@ -34,7 +33,7 @@ vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -43,7 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_CRT_SUFFIX md)
     endif()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND (VCPKG_PLATFORM_TOOLSET STREQUAL v142 OR VCPKG_PLATFORM_TOOLSET STREQUAL v143))
         set(LIBVPX_TARGET_OS "uwp")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_TARGET_OS "win32")
@@ -65,23 +64,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_ARCH_DIR "ARM")
     endif()
 
-    if(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL v143)
+        set(LIBVPX_TARGET_VS "vs17")
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
         set(LIBVPX_TARGET_VS "vs16")
     else()
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
     message(STATUS "Generating makefile")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
             --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
             ${LIBVPX_CRT_LINKAGE}
-            --disable-examples
-            --disable-tools
-            --disable-docs
+            ${OPTIONS}
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME configure-${TARGET_TRIPLET})
@@ -127,15 +136,24 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     file(
         INSTALL
-            ${LIBVPX_INCLUDE_DIR}
+            "${LIBVPX_INCLUDE_DIR}"
         DESTINATION
             "${CURRENT_PACKAGES_DIR}/include"
         RENAME
             "vpx")
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
+
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
 
 else()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests")
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
 
     set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
@@ -144,6 +162,14 @@ else()
         set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
+    endif()
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -165,7 +191,11 @@ else()
 	elseif(VCPKG_TARGET_IS_LINUX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
     elseif(VCPKG_TARGET_IS_OSX)
-        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(LIBVPX_TARGET "arm64-darwin20-gcc")
+        else()
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        endif()
     else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
@@ -174,7 +204,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -207,7 +237,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Configuring libvpx for Debug")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -235,10 +265,12 @@ else()
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
 
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
     endif()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(LIBVPX_CONFIG_DEBUG ON)
@@ -246,6 +278,6 @@ else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake" @ONLY)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,27 @@
+{
+  "name": "minizip",
+  "version-semver": "1.2.11",
+  "port-version": 11,
+  "description": "Zip compression library",
+  "homepage": "https://github.com/madler/zlib",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support compression using bzip2 library",
+      "dependencies": [
+        "bzip2"
+      ]
+    }
+  }
+}

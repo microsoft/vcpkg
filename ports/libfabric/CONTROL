@@ -1,6 +1,0 @@
-Source: libfabric
-Version: 1.8.1-1
-Description: The OpenFabrics Interfaces Working Group (OFIWG) and the Libfabric open-source community are pleased to announce the release of version v1.6.2 of libfabric. See NEWS.md for the list of features and enhancements that have been added since the last release.
-Homepage: https://github.com/ofiwg/libfabric
-Build-Depends: networkdirect-sdk (windows)
-Supports: windows&x64&(!static)

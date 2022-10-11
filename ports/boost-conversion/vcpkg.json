@@ -1,8 +1,9 @@
 {
   "name": "boost-conversion",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost conversion module",
   "homepage": "https://github.com/boostorg/conversion",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",
@@ -11,7 +12,6 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -1,21 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danielaparker/jsoncons
-    REF 06d10fbca36b049fc7592cce0e80e91c0db4bce9 # v0.163.3
-    SHA512 195ff127a7ce30de794c56646986c85513fda611e69c0e4031492d670de2b4c0cf3f7928a7e1452f9fb959ec7692c98dffda68a529f84daa46a994e8c22c2883
+    REF dff2d7d64ca03de27e79347d6473483f95c066d3 # v0.168.7
+    SHA512 e388dbc5f9ee0f8fc36bda46f9a68210c2467a8e3f91ae6b57b0e0bc78b732287cb3e36ffa5ee5147f434deeabf3ea4456897a89b868befeb757df88297ec002
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DJSONCONS_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

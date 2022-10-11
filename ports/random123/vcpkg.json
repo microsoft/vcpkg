@@ -1,0 +1,7 @@
+{
+  "name": "random123",
+  "version": "1.14.0",
+  "description": "Random123 is a library of 'counter-based' random number generators (CBRNGs), in which the Nth random number can be obtained by applying a stateless mixing function to N instead of the conventional approach of using N iterations of a stateful transformation.",
+  "homepage": "http://www.deshawresearch.com/resources_random123.html",
+  "license": "BSD-3-Clause"
+}

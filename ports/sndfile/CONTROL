@@ -1,9 +1,0 @@
-Source: sndfile
-Version: 0
-Description:x Library to read, write and manipulate many soundfile types.
-Build-Depends: libsndfile
-Default-Features: external-libs
-
-Feature: external-libs
-Description: Support Ogg Vorbis and FLAC audio files
-Build-Depends: libsndfile[external-libs]

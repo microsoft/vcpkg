@@ -1,6 +1,0 @@
-Source: pixel
-Version: 0.3-1
-Description: Simple 2D Graphics based on standard and portable OpenGL.
-Build-Depends: glew, opengl, sdl2
-Homepage: https://github.com/dascandy/pixel
-Supports: !windows

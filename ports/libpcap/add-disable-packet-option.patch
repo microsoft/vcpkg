@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3fe9979..23783d3 100644
+index 2f675d1..e9d6d96 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -161,6 +161,7 @@ set(SEPTEL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../septel" CACHE PATH "Path to dire
+@@ -244,6 +244,7 @@ set(SEPTEL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../septel" CACHE PATH "Path to dire
  option(DISABLE_SNF "Disable Myricom SNF support" OFF)
  
  option(DISABLE_TC "Disable Riverbed TurboCap support" OFF)
@@ -10,38 +10,22 @@ index 3fe9979..23783d3 100644
  
  #
  # Debugging options.
-@@ -220,19 +221,21 @@ if(WIN32)
+@@ -302,7 +303,7 @@ if(WIN32)
+     if(IS_DIRECTORY ${CMAKE_HOME_DIRECTORY}/../../Common)
          include_directories(${CMAKE_HOME_DIRECTORY}/../../Common)
      endif(IS_DIRECTORY ${CMAKE_HOME_DIRECTORY}/../../Common)
- 
--    find_package(Packet)
--    if(PACKET_FOUND)
--        set(HAVE_PACKET32 TRUE)
--        include_directories(${PACKET_INCLUDE_DIRS})
--        #
--        # Check whether we have the NPcap PacketIsLoopbackAdapter()
--        # function.
--        #
--        cmake_push_check_state()
--        set(CMAKE_REQUIRED_LIBRARIES ${PACKET_LIBRARIES})
--        check_function_exists(PacketIsLoopbackAdapter HAVE_PACKET_IS_LOOPBACK_ADAPTER)
--        cmake_pop_check_state()
--    endif(PACKET_FOUND)
+-
 +    if(NOT DISABLE_PACKET)
-+        find_package(Packet)
-+        if(PACKET_FOUND)
-+            set(HAVE_PACKET32 TRUE)
-+            include_directories(${PACKET_INCLUDE_DIRS})
-+            #
-+            # Check whether we have the NPcap PacketIsLoopbackAdapter()
-+            # function.
-+            #
-+            cmake_push_check_state()
-+            set(CMAKE_REQUIRED_LIBRARIES ${PACKET_LIBRARIES})
-+            check_function_exists(PacketIsLoopbackAdapter HAVE_PACKET_IS_LOOPBACK_ADAPTER)
-+            cmake_pop_check_state()
-+        endif(PACKET_FOUND)
+     find_package(Packet)
+     if(PACKET_FOUND)
+         set(HAVE_PACKET32 TRUE)
+@@ -317,7 +318,8 @@ if(WIN32)
+         check_function_exists(PacketGetTimestampModes HAVE_PACKET_GET_TIMESTAMP_MODES)
+         cmake_pop_check_state()
+     endif(PACKET_FOUND)
+-
 +    endif()
- 
++    
      message(STATUS "checking for Npcap's version.h")
-     check_symbol_exists(WINPCAP_PRODUCT_NAME "../../version.h" HAVE_VERSION_H)
+     check_symbol_exists(WINPCAP_PRODUCT_NAME "${CMAKE_SOURCE_DIR}/../../version.h" HAVE_VERSION_H)
+     if(HAVE_VERSION_H)

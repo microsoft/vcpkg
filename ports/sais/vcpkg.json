@@ -1,0 +1,6 @@
+{
+  "name": "sais",
+  "version-string": "2.4.1",
+  "port-version": 3,
+  "description": "An implementation of the induced sorting algorithm"
+}

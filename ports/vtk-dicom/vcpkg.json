@@ -1,0 +1,22 @@
+{
+  "name": "vtk-dicom",
+  "version-string": "0.8.12",
+  "port-version": 2,
+  "description": "DICOM for VTK",
+  "homepage": "https://github.com/dgobbi/vtk-dicom",
+  "dependencies": [
+    {
+      "name": "vtk",
+      "default-features": false
+    },
+    "zlib"
+  ],
+  "features": {
+    "gdcm": {
+      "description": "Use gdcm for decompressing DICOM files.",
+      "dependencies": [
+        "gdcm"
+      ]
+    }
+  }
+}

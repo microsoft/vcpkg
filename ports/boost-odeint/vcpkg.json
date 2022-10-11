@@ -1,8 +1,9 @@
 {
   "name": "boost-odeint",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",
@@ -21,8 +22,17 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
+    "boost-ublas",
     "boost-units",
     "boost-utility",
     "boost-vcpkg-helpers"
-  ]
+  ],
+  "features": {
+    "mpi": {
+      "description": "Support parallelization with MPI",
+      "dependencies": [
+        "boost-mpi"
+      ]
+    }
+  }
 }

@@ -1,0 +1,11 @@
+diff --git a/lib/tls/CMakeLists.txt b/lib/tls/CMakeLists.txt
+--- a/lib/tls/CMakeLists.txt	(revision a5aae049b2a386712e1be3b417915c0d44c7e675)
++++ b/lib/tls/CMakeLists.txt	(date 1642427956730)
+@@ -257,7 +257,6 @@
+ 				find_package(PkgConfig QUIET)
+ 				pkg_check_modules(PC_OPENSSL openssl QUIET)
+ 				find_package(OpenSSL REQUIRED)
+-				list(APPEND OPENSSL_LIBRARIES ${PC_OPENSSL_LIBRARIES})
+ 				set(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} PARENT_SCOPE)
+ 			endif()
+ 			set(OPENSSL_INCLUDE_DIRS "${OPENSSL_INCLUDE_DIR}")

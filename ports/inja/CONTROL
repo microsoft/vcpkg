@@ -1,5 +1,0 @@
-Source: inja
-Version: 3.2.0
-Homepage: https://github.com/pantor/inja
-Description: Inja - A Template Engine for Modern C++
-Build-Depends: nlohmann-json

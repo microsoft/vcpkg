@@ -1,44 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO argtable/argtable3
-    REF 1c1bb23b305c8cf349328fc0cacd7beb7a575ff4 # v3.1.5
-    SHA512 13150c8adc1eda107b6df65a2e276510a66bd912f6067d7cc72951735a4c20307144b04cda959cdd24f160da3810ba8bb35e48992ff4281e44ed2331d030fb1d
+    REF 7704006f3cbb556e11da80a5b97469075a32892e # 3.2.1 + minor patches including ARGTABLE3_ENABLE_EXAMPLES support
+    SHA512 c51aa0a33a247c3801e36ca5d9523acefa31f21a34c1e86965a39290c1b437785e4d7e0ae80a65d811803b8fcbbc3a96ba3d6aefaea9bda15abc0f38bd1f45cc
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DARGTABLE3_ENABLE_CONAN=OFF
         -DARGTABLE3_ENABLE_TESTS=OFF
-        -DARGTABLE3_BUILD_STATIC_EXAMPLES=OFF
+        -DARGTABLE3_ENABLE_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/argtable3.h"
-        "defined(argtable3_IMPORTS)"
-        "1 // defined(argtable3_IMPORTS)"
-    )
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

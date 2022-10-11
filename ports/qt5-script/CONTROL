@@ -1,4 +1,0 @@
-Source: qt5-script
-Version: 5.15.2
-Build-Depends: qt5-base[core], qt5-tools
-Description:Qt5 Script Module.

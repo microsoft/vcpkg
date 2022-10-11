@@ -1,15 +1,17 @@
-
-set(GTK_VERSION 4.3.0)
+set(GTK_VERSION 4.6.2)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  40ebed3a03aef096addc0af09fec4ec529d882a0 #v4.3.0
-    SHA512 6f68e1e2f18a4bf0299f0563ccf091cbee3a1dc1db0819565216d50f98f3f3ad4904eef746357d9bc2fdac8a5e29c5cbed5d4df5dd0f89bb941f7438ae3cd096
+    REF  aec7ca82007dbe07faee6be084d20758ebac2b91 #v4.6.2
+    SHA512 05ebba53e71a997b4dc04bc018f420f62d569cb66a2f3e713bd2b48abd7c0051f67939e42c812388bd0565d12a3f82b45731a086d3ab0e75d16eee200a3be95f
     HEAD_REF master # branch name
-    PATCHES build.patch
-) 
+    PATCHES
+        0001-build.patch
+        0002-windows-build.patch
+        0004-macos-build.patch
+)
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
@@ -21,7 +23,7 @@ set(win32 false)
 set(osx false)
 if(VCPKG_TARGET_IS_LINUX)
     set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
-    set(x11 true)    
+    set(x11 true)
     # Enable the wayland gdk backend (only when building on Unix except for macOS)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     set(win32 true)
@@ -45,13 +47,10 @@ vcpkg_configure_meson(
         -Dgtk_doc=false
         -Dman-pages=false
         -Dintrospection=disabled
-        -Dsassc=enabled             # Rebuild themes using sassc
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
-        -Dprint-cloudprint=disabled # Build the cloudprint print backend
         -Dvulkan=disabled           # Enable support for the Vulkan graphics API
-        -Dxinerama=disabled         # Enable support for the X11 Xinerama extension
         -Dcloudproviders=disabled   # Enable the cloudproviders support
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search
@@ -61,20 +60,20 @@ vcpkg_configure_meson(
                                glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
                                gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
                                glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${CURRENT_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
                                glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
                                gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
                                glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${CURRENT_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
 )
 
 vcpkg_install_meson()
 
 # If somebody finds out how to access and forward env variables to
 # the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case. 
+# needs manual execution in the crosscompiling case.
 vcpkg_find_acquire_program(PYTHON3)
 foreach(_config release debug)
     if(_config STREQUAL "release")
@@ -110,11 +109,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-set(TOOL_NAMES gtk4-builder-tool 
-               gtk4-encode-symbolic-svg 
-               gtk4-query-settings 
+set(TOOL_NAMES gtk4-builder-tool
+               gtk4-encode-symbolic-svg
+               gtk4-query-settings
                gtk4-update-icon-cache)
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)

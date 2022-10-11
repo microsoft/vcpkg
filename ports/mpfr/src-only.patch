@@ -1,0 +1,20 @@
+diff --git a/Makefile.am b/Makefile.am
+index 89242c6..662ce24 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -24,12 +24,14 @@ AUTOMAKE_OPTIONS = gnu
+ # old Automake version.
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = doc src tests tune tools/bench
++SUBDIRS = src # Skipping: doc tests tune tools/bench
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = mpfr.pc
+ 
+ nobase_dist_doc_DATA = AUTHORS BUGS COPYING COPYING.LESSER NEWS TODO \
++  # BREAK
++VCPKG_SKIP_EXAMPLES = \
+   examples/ReadMe examples/can_round.c examples/divworst.c \
+   examples/rndo-add.c examples/sample.c examples/threads.c \
+   examples/version.c

@@ -1,37 +1,36 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF 9d00f7d10f2507f68f9ab5fea8b842735d9c6cfe # REL_2_0_5
-    SHA512 b64a1d3a60584b2ba3a58470a0b0ec4c22eb0c054c0ef8ef3808fcba5604860fbd5b2d96148939ea15d3bf2ff1e40e684710dc81b57b73232851a486251f648d
+    REF REL_2_0_7
+    SHA512 FE5FCEB346AC19A6D953661A20E8AA02AB48E872F427D958EA99C62F534DDF1FA4511FFD67A662605B1F225E3A6C06B0EE2C1B0EB62DE3AA0316F47F778DF06D
     HEAD_REF master
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH THREADPOOL_SOURCE_PATH
     REPO log4cplus/ThreadPool
-    REF cc0b6371d3963f7028c2da5fc007733f9f3bf205
-    SHA512 ad4d287c1f83acac4c127136bc92489c43bb5293613dc54b878b8e75a8583f7eefda6434d09789dad47b87a5d38f10a07a746d42d299410c11f2dbcce8af3012
+    REF 3507796e172d36555b47d6191f170823d9f6b12c
+    SHA512 6b46ce287d68fd0cda0c69fda739eaeda89e1ed4f086e28a591f4e50aaf80ee2defc28ee14a5bf65be005c1a6ec4f2848d5723740726c54d5cc1d20f8e98aa0c
     HEAD_REF master
 )
 
 file(
     COPY
-        ${THREADPOOL_SOURCE_PATH}/COPYING
-        ${THREADPOOL_SOURCE_PATH}/example.cpp
-        ${THREADPOOL_SOURCE_PATH}/README.md
-        ${THREADPOOL_SOURCE_PATH}/ThreadPool.h
-    DESTINATION ${SOURCE_PATH}/threadpool
+        "${THREADPOOL_SOURCE_PATH}/COPYING"
+        "${THREADPOOL_SOURCE_PATH}/example.cpp"
+        "${THREADPOOL_SOURCE_PATH}/README.md"
+        "${THREADPOOL_SOURCE_PATH}/ThreadPool.h"
+    DESTINATION "${SOURCE_PATH}/threadpool"
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    unicode     UNICODE
+        unicode UNICODE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLOG4CPLUS_BUILD_TESTING=OFF
         -DLOG4CPLUS_BUILD_LOGGINGSERVER=OFF
@@ -40,14 +39,14 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/log4cplus)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cplus)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

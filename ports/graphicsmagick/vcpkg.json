@@ -1,0 +1,16 @@
+{
+  "name": "graphicsmagick",
+  "version": "1.3.37",
+  "port-version": 1,
+  "description": "Image processing library",
+  "homepage": "https://sourceforge.net/projects/graphicsmagick/",
+  "dependencies": [
+    "bzip2",
+    "freetype",
+    "libjpeg-turbo",
+    "libpng",
+    "libwebp",
+    "tiff",
+    "zlib"
+  ]
+}

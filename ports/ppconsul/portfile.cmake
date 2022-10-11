@@ -25,3 +25,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

@@ -1,0 +1,13 @@
+diff --git a/google/compression_utils_portable.h b/google/compression_utils_portable.h
+--- a/google/compression_utils_portable.h
++++ b/google/compression_utils_portable.h
+@@ -13,6 +13,9 @@
+  * zlib.
+  */
+ #if defined(USE_SYSTEM_ZLIB)
++#    if defined(WIN32) && defined(FAR)
++#        undef FAR
++#    endif
+ #include <zlib.h>
+ /* AOSP build requires relative paths. */
+ #else

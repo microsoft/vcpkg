@@ -1,0 +1,43 @@
+{
+  "name": "qtremoteobjects",
+  "version": "6.3.2",
+  "description": "Qt distributed object system",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtremoteobjects",
+      "host": true,
+      "default-features": false
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

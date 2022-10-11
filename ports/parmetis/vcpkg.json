@@ -1,0 +1,19 @@
+{
+  "name": "parmetis",
+  "version-date": "2022-07-27",
+  "description": "Parallel Graph Partitioning and Fill-reducing Matrix Ordering",
+  "homepage": "https://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview",
+  "license": null,
+  "dependencies": [
+    "metis",
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

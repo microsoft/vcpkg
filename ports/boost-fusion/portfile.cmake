@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/fusion
-    REF boost-1.75.0
-    SHA512 13c0dcd2b0c9466f240843c5edaef7e292c118f26e598595b9fe30d3ae5952c0617b3c7786e93cf1589e419444d87f1bb2fa5254878c89e422497d86fb25428d
+    REF boost-1.80.0
+    SHA512 77121dc0bf188b530d2d7e2ab6ab5c6d3e8c01f9a063e581187bd3cce5ab35002c08f47dc5bce03487344b50c1fc1817f9cf4e1daeece9ce96ae5a2a99ac632e
     HEAD_REF master
 )
 

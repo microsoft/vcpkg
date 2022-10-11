@@ -1,3 +1,0 @@
-Source: minitrace
-Version: 2019.02.06
-Description: Simple C/C++ library for producing JSON traces suitable for Chrome's built-in trace viewer.

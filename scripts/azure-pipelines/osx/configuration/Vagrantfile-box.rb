@@ -3,8 +3,7 @@ require 'json'
 configuration = JSON.parse(File.read("#{__dir__}/vagrant-box-configuration.json"))
 
 Vagrant.configure('2') do |config|
-  config.vm.box = 'vcpkg/macos-ci-base'
-  config.vm.box_version = configuration['box_version']
+  config.vm.box = 'vcpkg/macos-base'
   config.vm.synced_folder '.', '/Users/vagrant/shared'
 
   config.vm.provision 'shell',

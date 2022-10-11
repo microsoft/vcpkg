@@ -1,5 +1,0 @@
-Source: libp7client
-Version: 5.6
-Homepage: https://baical.net/
-Description: Open source, cross-platform, fastest library for sending logs, telemetry & trace data from your application.
-Supports: !(arm|uwp|osx)

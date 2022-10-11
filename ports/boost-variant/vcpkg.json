@@ -1,15 +1,16 @@
 {
   "name": "boost-variant",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost variant module",
   "homepage": "https://github.com/boostorg/variant",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-detail",
-    "boost-functional",
     "boost-integer",
     "boost-move",
     "boost-mpl",

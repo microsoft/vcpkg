@@ -1,21 +1,27 @@
 {
   "name": "boost-system",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost system module",
   "homepage": "https://github.com/boostorg/system",
+  "license": "BSL-1.0",
   "dependencies": [
+    "boost-assert",
     {
       "name": "boost-build",
       "host": true
     },
     "boost-config",
-    "boost-integer",
     {
       "name": "boost-modular-build-helper",
       "host": true
     },
+    "boost-throw-exception",
+    "boost-variant2",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

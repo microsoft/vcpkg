@@ -5,18 +5,17 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 10ba6ed3365615ed5c2995fe2d240cb2d5000173 # 2.0.6
-    SHA512 219d01907e66dd0fc20ea13cfa51a8efee305810f1245d0648b6ad8ee3cf11bf0bbd43b1ceeeb142a6ebbbfa281ec6a3b4e283b2fc343c360cd3ad29e9d42528
+    REF 2.1.4
+    SHA512 d3e92d614168355827e0ed884ff847cc7df8f6f1fb7b673c6c99afdf61fdfc0372afe5d30fdbf5e743335e2a7a27ca9f510c67d213e5cb2315a8d946e9414575
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
-        #workaround for vcpkg bug see #5697 on github for more information
+        # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
-        fix-incompatibility-for-c11-c17.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
-    set(LIBJPEGTURBO_SIMD -DWITH_SIMD=OFF)
+    set(LIBJPEGTURBO_SIMD -DWITH_SIMD=ON -DNEON_INTRINSICS=ON)
 else()
     set(LIBJPEGTURBO_SIMD -DWITH_SIMD=ON)
     vcpkg_find_acquire_program(NASM)
@@ -33,13 +32,13 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_CRT_DLL)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    jpeg7 WITH_JPEG7
-    jpeg8 WITH_JPEG8
+    FEATURES
+        jpeg7 WITH_JPEG7
+        jpeg8 WITH_JPEG8
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
@@ -48,10 +47,17 @@ vcpkg_configure_cmake(
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
+    MAYBE_UNUSED_VARIABLES
+        WITH_CRT_DLL
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libjpeg-turbo)
 
 # Rename libraries for static builds
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -60,32 +66,32 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
     endif()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
     endif()
-else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
+    
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    
+    if (EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-debug.cmake")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-debug.cmake"
+            "jpeg-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "jpeg${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-debug.cmake"
+            "turbojpeg-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "turbojpeg${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    endif()
+    if (EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-release.cmake")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-release.cmake"
+            "jpeg-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "jpeg${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-release.cmake"
+            "turbojpeg-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "turbojpeg${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     endif()
 endif()
 
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libjpeg.pc")
-if(EXISTS "${_file}" AND VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${_file}" "-ljpeg" "-ljpegd")
-endif() 
+file(REMOVE_RECURSE
+     "${CURRENT_PACKAGES_DIR}/debug/share"
+     "${CURRENT_PACKAGES_DIR}/debug/include"
+     "${CURRENT_PACKAGES_DIR}/share/man")
 
-vcpkg_fixup_pkgconfig()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/jpeg")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jpeg)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.md  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

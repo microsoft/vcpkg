@@ -1,9 +1,9 @@
 {
   "name": "boost-stacktrace",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost stacktrace module",
   "homepage": "https://github.com/boostorg/stacktrace",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-array",
@@ -22,6 +22,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

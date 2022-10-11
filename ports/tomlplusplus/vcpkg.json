@@ -1,0 +1,18 @@
+{
+  "name": "tomlplusplus",
+  "version": "3.1.0",
+  "description": "Header-only TOML config file parser and serializer for modern C++.",
+  "homepage": "https://marzer.github.io/tomlplusplus/",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

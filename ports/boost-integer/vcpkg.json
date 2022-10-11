@@ -1,16 +1,16 @@
 {
   "name": "boost-integer",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost integer module",
   "homepage": "https://github.com/boostorg/integer",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-static-assert",
     "boost-throw-exception",
+    "boost-type-traits",
     "boost-vcpkg-helpers"
   ]
 }

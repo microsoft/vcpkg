@@ -9,7 +9,6 @@
   },
   "required": [
     "Applications",
-    "Brew",
     "VagrantPlugins"
   ],
   "properties": {
@@ -44,22 +43,6 @@
           },
           "InstallerPath": {
             "type": "string"
-          }
-        }
-      }
-    },
-    "Brew": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [ "Name" ],
-        "properties": {
-          "Name": {
-            "type": "string"
-          },
-          "Kind": {
-            "type": "string",
-            "enum": [ "cask" ]
           }
         }
       }

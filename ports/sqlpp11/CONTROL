@@ -1,5 +1,0 @@
-Source: sqlpp11
-Version: 0.60
-Homepage: https://github.com/rbock/sqlpp11
-Description: A type safe embedded domain specific language for SQL queries and results in C++.
-Build-Depends: date

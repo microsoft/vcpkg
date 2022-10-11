@@ -1,13 +1,14 @@
-# libgit2 uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF 7f4fa178629d559c037a1f72f79f79af9c1ef8ce#version 1.1.0
-    SHA512 2fdbbb263fe71dc6d04b64c2967e7acff1a5b6102e62d69c9a7ea1b6777ab74a1625e798438ea239d8b489648a9335833f937f893f73a66e16c658eae453ab62
-    HEAD_REF master
+    REF v1.4.2
+    SHA512 144bec7f8e66d97b20335d87d1eb68d522f5e59064b0c557505c088d3c486d45704f023d701f51de572efa8e2eb111e3136eb5d23c035e29d16698206b5ec277
+    HEAD_REF maint/v1.4
+    PATCHES
+        fix-configcmake.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
@@ -63,11 +64,10 @@ vcpkg_check_features(
         ssh USE_SSH
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_CLAR=OFF
+        -DBUILD_TESTS=OFF
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
@@ -75,8 +75,10 @@ vcpkg_configure_cmake(
         ${GIT2_FEATURES}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-git2 CONFIG_PATH share/unofficial-git2)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

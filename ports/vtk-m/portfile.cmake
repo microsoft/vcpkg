@@ -40,23 +40,20 @@ list(APPEND OPTIONS -DBUILD_TESTING=OFF)
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
-                  REF f2aa6ad5be1a97e3fb41ef4680ee2c76c3434ac0 # v1.5.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
-                  SHA512 35e8a2c0ad6cd3c1f02a71a50d781c89f93909ad27030b406fd69f4fea5c1862c48a6e541fd07562947322c3a69bdfdb54206ae51bb86ef7a710f9e9898e9638
+                  REF 13a117e0e8935eef3f320b5a1cd71d9911ad9853 # v1.6.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
+                  SHA512 54f7f52ab4ee7954b6a303ffd3b8bcb18105b5d2fd8ed54b4e487fce2ebfbc51507e632189f775c79eea22ad24bd56bca401ddd679fc03d787342dd33d2ba18b
                   FILE_DISAMBIGUATOR 1)
-                  # For people only wanting vtk-m and not VTK 
-                  #REF 74ffad9bd0679d061bc87e544a728f1c3c926269 # v1.5.1
-                  #SHA512 c9e1c18432b6c11ae086445255acf9477fe4c888122a2b2a9713dc63a40d2e4c2375742157526b5f0869f14c62a4ad66d81ee58d6cc75a1d53a1d615525a03c9)
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} 
-                      PREFER_NINJA 
-                      OPTIONS ${OPTIONS})
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtkm-1.5 TARGET_PATH share/vtkm)
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS ${OPTIONS}
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtkm-1.6 PACKAGE_NAME vtkm)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake _contents)
-string(REPLACE [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-1.5")]] [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]] _contents ${_contents})
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake ${_contents})
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake" [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-1.6")]] [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "not/existing/buildtree")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

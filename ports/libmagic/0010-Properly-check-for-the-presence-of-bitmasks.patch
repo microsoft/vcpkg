@@ -1,0 +1,118 @@
+From a6bc98ce25cd9d9dba896e93ed441ff162f6793b Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sun, 9 May 2021 17:43:20 +0700
+Subject: [PATCH 10/14] Properly check for the presence of bitmasks
+
+---
+ src/fsmagic.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/src/fsmagic.c b/src/fsmagic.c
+index 5204f20..7244841 100644
+--- a/src/fsmagic.c
++++ b/src/fsmagic.c
+@@ -66,7 +66,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $")
+ # define minor(dev)  ((dev) & 0xff)
+ #endif
+ #undef HAVE_MAJOR
+-#ifdef	S_IFLNK
++#if S_IFLNK != 0
+ private int
+ bad_link(struct magic_set *ms, int err, char *buf)
+ {
+@@ -108,7 +108,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 	int ret, did = 0;
+ 	int mime = ms->flags & MAGIC_MIME;
+ 	int silent = ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION);
+-#ifdef	S_IFLNK
++#if S_IFLNK != 0
+ 	char buf[BUFSIZ+4];
+ 	ssize_t nch;
+ 	struct stat tstatbuf;
+@@ -122,7 +122,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 	 * Fstat is cheaper but fails for files you don't have read perms on.
+ 	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
+ 	 */
+-#ifdef	S_IFLNK
++#if S_IFLNK != 0
+ 	if ((ms->flags & MAGIC_SYMLINK) == 0)
+ 		ret = lstat(fn, sb);
+ 	else
+@@ -171,17 +171,17 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 
+ 	ret = 1;
+ 	if (!mime && !silent) {
+-#ifdef S_ISUID
++#if S_ISUID != 0
+ 		if (sb->st_mode & S_ISUID)
+ 			if (file_printf(ms, "%ssetuid", COMMA) == -1)
+ 				return -1;
+ #endif
+-#ifdef S_ISGID
++#if S_ISGID != 0
+ 		if (sb->st_mode & S_ISGID)
+ 			if (file_printf(ms, "%ssetgid", COMMA) == -1)
+ 				return -1;
+ #endif
+-#ifdef S_ISVTX
++#if S_ISVTX != 0
+ 		if (sb->st_mode & S_ISVTX)
+ 			if (file_printf(ms, "%ssticky", COMMA) == -1)
+ 				return -1;
+@@ -197,7 +197,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 		} else if (file_printf(ms, "%sdirectory", COMMA) == -1)
+ 			return -1;
+ 		break;
+-#ifdef S_IFCHR
++#if S_IFCHR != 0
+ 	case S_IFCHR:
+ 		/*
+ 		 * If -s has been specified, treat character special files
+@@ -232,7 +232,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 		}
+ 		break;
+ #endif
+-#ifdef S_IFBLK
++#if S_IFBLK != 0
+ 	case S_IFBLK:
+ 		/*
+ 		 * If -s has been specified, treat block special files
+@@ -268,7 +268,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 		break;
+ #endif
+ 	/* TODO add code to handle V7 MUX and Blit MUX files */
+-#ifdef	S_IFIFO
++#if S_IFIFO != 0
+ 	case S_IFIFO:
+ 		if((ms->flags & MAGIC_DEVICES) != 0)
+ 			break;
+@@ -280,7 +280,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 			return -1;
+ 		break;
+ #endif
+-#ifdef	S_IFDOOR
++#if S_IFDOOR != 0
+ 	case S_IFDOOR:
+ 		if (mime) {
+ 			if (handle_mime(ms, mime, "door") == -1)
+@@ -290,7 +290,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 			return -1;
+ 		break;
+ #endif
+-#ifdef	S_IFLNK
++#if S_IFLNK != 0
+ 	case S_IFLNK:
+ 		if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
+ 			if (ms->flags & MAGIC_ERROR) {
+@@ -378,7 +378,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 		}
+ 		break;
+ #endif
+-#ifdef	S_IFSOCK
++#if S_IFSOCK != 0
+ #ifndef __COHERENT__
+ 	case S_IFSOCK:
+ 		if (mime) {
+-- 
+2.29.2.windows.2
+

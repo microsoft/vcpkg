@@ -1,0 +1,129 @@
+diff --git a/include/pangolin/gl/colour.h b/include/pangolin/gl/colour.h
+index 92bedf4..8c3e542 100644
+--- a/include/pangolin/gl/colour.h
++++ b/include/pangolin/gl/colour.h
+@@ -28,6 +28,7 @@
+ #pragma once
+ 
+ #include <cmath>
++#include <limits>
+ 
+ #include <stdexcept>
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ddeb144..ee27d57 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -299,7 +299,9 @@ if(BUILD_PANGOLIN_PYTHON AND BUILD_PANGOLIN_GUI AND BUILD_PANGOLIN_VARS AND NOT
+ 
+   if(pybind11_FOUND)
+     set(HAVE_PYTHON 1)
+-
++  if (UNIX)
++    set(PYTHON_LIBRARY ${PYTHON_LIBRARY} dl util)
++  endif()
+     file(GLOB pypangolin_SRC "python/pypangolin/*.cpp" )
+     file(GLOB pypangolin_HDR "python/pypangolin/*.hpp" )
+     list(APPEND HEADERS
+@@ -382,6 +384,7 @@ endif()
+ 
+ option(BUILD_PANGOLIN_FFMPEG "Build support for ffmpeg video input" ON)
+ if(BUILD_PANGOLIN_FFMPEG AND BUILD_PANGOLIN_VIDEO)
++  add_definitions(-DHAVE_FFMPEG_AVPIXELFORMAT)
+   find_package(FFMPEG QUIET)
+   if(FFMPEG_FOUND)
+     set(HAVE_FFMPEG 1)
+@@ -464,11 +467,14 @@ endif()
+ 
+ option(BUILD_PANGOLIN_LIBUVC "Build support for libuvc video input" ON)
+ if(BUILD_PANGOLIN_LIBUVC AND BUILD_PANGOLIN_VIDEO)
+-  find_package(uvc QUIET)
+-  if(uvc_FOUND)
++  find_package(libuvc CONFIG QUIET)
++  if(libuvc_FOUND)
+     set(HAVE_UVC 1)
+-    list(APPEND INTERNAL_INC  ${uvc_INCLUDE_DIRS} )
+-    list(APPEND LINK_LIBS ${uvc_LIBRARIES} )
++    if (TARGET LibUVC::UVCShared)
++        list(APPEND LINK_LIBS LibUVC::UVCShared )
++    else()
++        list(APPEND LINK_LIBS LibUVC::UVCStatic )
++    endif()
+     list(APPEND HEADERS ${INCDIR}/video/drivers/uvc.h )
+     list(APPEND SOURCES video/drivers/uvc.cpp)
+     list(APPEND VIDEO_FACTORY_REG RegisterUvcVideoFactory )
+@@ -584,11 +590,14 @@ endif()
+ 
+ option(BUILD_PANGOLIN_LIBOPENEXR "Build support for libopenexr image input" ON)
+ if(BUILD_PANGOLIN_LIBOPENEXR)
+-  find_package(OpenEXR QUIET)
++  find_package(OpenEXR CONFIG QUIET)
+   if(OpenEXR_FOUND)
+     set(HAVE_OPENEXR 1)
+-    list(APPEND INTERNAL_INC ${OpenEXR_INCLUDE_DIR} )
+-    list(APPEND LINK_LIBS ${OpenEXR_LIBRARY} )
++    list(APPEND LINK_LIBS OpenEXR::OpenEXR)
++    string(APPEND ExternConfig "
++  include(CMakeFindDependencyMacro)
++  find_dependency(OpenEXR CONFIG)
++")
+     message(STATUS "libopenexr Found and Enabled")
+   endif()
+ endif()
+@@ -630,6 +635,13 @@ endif()
+ 
+ set(INSTALL_INCLUDE_DIR "include")
+ 
++# Required by geometry
++if(NOT BUILD_EXTERN_GLEW)
++    find_package(GLEW REQUIRED)
++endif()
++list(APPEND USER_INC  ${GLEW_INCLUDE_DIR})
++list(APPEND LINK_LIBS ${GLEW_LIBRARY})
++
+ add_library(${LIBRARY_NAME} ${SOURCES} ${HEADERS})
+ # 'System' includes shield us from warnings in those includes.
+ target_include_directories(${LIBRARY_NAME} SYSTEM PUBLIC ${USER_INC} PRIVATE ${INTERNAL_INC})
+@@ -692,7 +704,13 @@ CreateMethodCallFile(
+ option(BUILD_PYPANGOLIN_MODULE "Python wrapper for Pangolin" ON)
+ if(BUILD_PYPANGOLIN_MODULE AND HAVE_PYTHON )
+     file(GLOB pypangolin_SRC "python/pypangolin/*.hpp" "python/pypangolin/*.cpp" "python/pypangolin_module.cpp")
+-    pybind11_add_module(pypangolin ${pypangolin_SRC})
++    if (BUILD_SHARED_LIBS)
++        set(PYBIND11_MODULE_TYPE SHARED)
++    else()
++        set(PYBIND11_MODULE_TYPE STATIC)
++    endif()
++
++    pybind11_add_module(pypangolin ${PYBIND11_MODULE_TYPE} ${pypangolin_SRC})
+     target_link_libraries(pypangolin PRIVATE ${LIBRARY_NAME})
+     target_include_directories(pypangolin PRIVATE "${USER_INC}")
+ endif()
+diff --git a/src/image/image_io_exr.cpp b/src/image/image_io_exr.cpp
+index 52c0078..1bd6c55 100644
+--- a/src/image/image_io_exr.cpp
++++ b/src/image/image_io_exr.cpp
+@@ -4,6 +4,8 @@
+ #include <pangolin/image/typed_image.h>
+ 
+ #ifdef HAVE_OPENEXR
++#include <ImfFrameBuffer.h>
++#include <ImfHeader.h>
+ #include <ImfChannelList.h>
+ #include <ImfInputFile.h>
+ #include <ImfOutputFile.h>
+@@ -54,12 +56,12 @@ class StdIStream: public Imf::IStream
+         return true;
+     }
+ 
+-    virtual Imf::Int64 tellg ()
++    virtual uint64_t tellg ()
+     {
+         return std::streamoff (_is->tellg());
+     }
+ 
+-    virtual void seekg (Imf::Int64 pos)
++    virtual void seekg (uint64_t pos)
+     {
+         _is->seekg (pos);
+     }

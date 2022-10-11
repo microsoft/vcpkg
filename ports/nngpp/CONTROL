@@ -1,6 +1,0 @@
-Source: nngpp
-Version: 1.3.0
-Homepage: https://github.com/cwzx/nngpp
-Description: C++ wrapper around the nanomsg NNG API.
-Build-Depends: nng
-

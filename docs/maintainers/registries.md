@@ -14,6 +14,7 @@ have created, please read [this documentation](../users/registries.md).
       - [Adding a New Version](#adding-a-new-version)
     - [Filesystem Registries](#filesystem-registries)
       - [Adding a New Version](#adding-a-new-version-1)
+    - [Builtin Registries](#builtin-registries)
 
 ## Overview
 
@@ -122,6 +123,10 @@ baseline to a commit ID, that commit ID must always exist, and be accessible
 from your HEAD commit, which is what is actually fetched. This means that your
 HEAD commit should be a child of all previous HEAD commits.
 
+### Builtin Registries
+
+Builtin registries are treated as special [Git registries](#git-registries). Instead of fetching from a remote url, builtin registries consult the `$VCPKG_ROOT/.git` directory of the vcpkg clone. They use the currently checked out `$VCPKG_ROOT/versions` directory as the source for versioning information.
+
 #### Adding a New Version
 
 There is some git trickery involved in creating a new version of a port. The
@@ -208,9 +213,7 @@ registries, which have the implicit versioning scheme of refs, filesystem
 registries can't rely on the version control system here. One possible option
 is to do a daily release, and have your "versions" be dates.
 
-_WARNING_: A baseline must always refer to the same set of versions. If you
-want to add new versions, you need to create a new version of the registry in
-the `baseline.json` file.
+_WARNING_: A baseline must not be modified once published. If you want to change or update versions, you need to create a new baseline in the `baseline.json` file.
 
 Here's an example of a valid `baseline.json`, for a registry that has decided
 upon dates for their versions:
@@ -282,7 +285,7 @@ version:
     {
       "version": "2.6.2",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.2_0"
+      "path": "$/ports/kitten/2.6.2_0"
     }
   ]
 }
@@ -305,12 +308,12 @@ your `versions/k-/kitten.json`:
     {
       "version": "2.6.3",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.3_0"
+      "path": "$/ports/kitten/2.6.3_0"
     },
     {
       "version": "2.6.2",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.2_0"
+      "path": "$/ports/kitten/2.6.2_0"
     }
   ]
 }

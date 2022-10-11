@@ -1,7 +1,0 @@
-Source: nvtt
-Version: 2.1.2
-Port-Version: 1
-Homepage: https://github.com/castano/nvidia-texture-tools
-Description: Texture processing tools with support for Direct3D 10 and 11 formats.
-Supports: !x86
-Build-Depends: libsquish

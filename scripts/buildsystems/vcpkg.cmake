@@ -4,6 +4,8 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 # NOTE: to figure out what cmake versions are required for different things,
 # grep for `CMake 3`. All version requirement comments should follow that format.
 
+# Attention: Changes to this file do not affect ABI hashing.
+
 #[===[.md:
 # z_vcpkg_add_fatal_error
 Add a fatal error.
@@ -107,13 +109,13 @@ function(z_vcpkg_find_library basename)
     set(${basename}_LIBRARY ${${basename}_LIBRARY} PARENT_SCOPE)
 endfunction()
 
-set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
+set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.7.2")
+
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
-# this policy is required for this file; thus, CMake 3.1 is required.
 cmake_policy(PUSH)
-cmake_policy(SET CMP0054 NEW)
+cmake_policy(VERSION 3.7.2)
 
 include(CMakeDependentOption)
 
@@ -123,7 +125,13 @@ mark_as_advanced(VCPKG_VERBOSE)
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
-option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables." OFF)
+
+# requires CMake 3.14
+option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
+option(VCPKG_PREFER_SYSTEM_LIBS "Appends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found after toolchain/system libraries/packages." OFF)
+if(VCPKG_PREFER_SYSTEM_LIBS)
+    message(WARNING "VCPKG_PREFER_SYSTEM_LIBS has been deprecated. Use empty overlay ports instead.")
+endif()
 
 # Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
@@ -227,7 +235,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
         message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
     endif()
 
-    set("${OUT_VAR}")
+    set("${OUT_VAR}" "")
 
     # this allows us to get the value of the enclosing function's ARGC
     set(z_vcpkg_function_arguments_ARGC_NAME "ARGC")
@@ -238,8 +246,11 @@ macro(z_vcpkg_function_arguments OUT_VAR)
     if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
-            list(APPEND "${OUT_VAR}" "${z_vcpkg_function_arguments_ESCAPED_ARG}")
+            # adds an extra `;` on the first time through
+            set("${OUT_VAR}" "${${OUT_VAR}};${z_vcpkg_function_arguments_ESCAPED_ARG}")
         endforeach()
+        # remove leading `;`
+        string(SUBSTRING "${${OUT_VAR}}" 1 -1 "${OUT_VAR}")
     endif()
 endmacro()
 
@@ -271,16 +282,6 @@ endfunction()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
-
-if(CMAKE_VERSION VERSION_LESS "3.6.0")
-    set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES ON)
-else()
-    set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES OFF)
-endif()
-
-if(Z_VCPKG_CMAKE_IN_TRY_COMPILE AND Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
-    include("${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL)
-endif()
 
 if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
@@ -325,19 +326,25 @@ elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]$")
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$")
     set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
 else()
-    if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 Win64$")
+    if(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 14 2015")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 Win64$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 Win64")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 ARM$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017 ARM")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 15 2017")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019$")
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019" AND CMAKE_VS_PLATFORM_NAME_DEFAULT STREQUAL "ARM64")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022" AND CMAKE_VS_PLATFORM_NAME_DEFAULT STREQUAL "ARM64")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
     else()
         find_program(Z_VCPKG_CL cl)
@@ -382,7 +389,9 @@ else()
                 cmake_policy(POP)
                 return()
             endif()
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "amd64")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH s390x)
@@ -413,69 +422,83 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_H
     set(Z_VCPKG_TARGET_TRIPLET_PLAT osx)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT ios)
+elseif(MINGW)
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
 endif()
 
+if(EMSCRIPTEN)
+    set(Z_VCPKG_TARGET_TRIPLET_ARCH wasm32)
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT emscripten)
+endif()
+
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-if(NOT DEFINED Z_VCPKG_ROOT_DIR)
-    # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-    set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
-    while(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}" AND NOT EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+# Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
+while(NOT DEFINED Z_VCPKG_ROOT_DIR)
+    if(EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+        set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
+    elseif(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}")
         get_filename_component(Z_VCPKG_ROOT_DIR_TEMP "${Z_VCPKG_ROOT_DIR_CANDIDATE}" DIRECTORY)
-        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        else()
-            SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE)
+            break() # If unchanged, we have reached the root of the drive without finding vcpkg.
         endif()
-    endwhile()
-    set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
-endif()
+        SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        unset(Z_VCPKG_ROOT_DIR_TEMP)
+    else()
+        break()
+    endif()
+endwhile()
+unset(Z_VCPKG_ROOT_DIR_CANDIDATE)
 
 if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-if(NOT DEFINED _VCPKG_INSTALLED_DIR)
-    if(VCPKG_MANIFEST_MODE)
-        set(_VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
-    else()
-        set(_VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
-    endif()
-set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
-    CACHE PATH
-    "The directory which contains the installed libraries for each triplet" FORCE)
+if(DEFINED VCPKG_INSTALLED_DIR)
+    # do nothing
+elseif(DEFINED _VCPKG_INSTALLED_DIR)
+    set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+elseif(VCPKG_MANIFEST_MODE)
+    set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+else()
+    set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
-    list(APPEND CMAKE_PREFIX_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+    CACHE PATH
+    "The directory which contains the installed libraries for each triplet" FORCE)
+set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+    CACHE PATH
+    "The directory which contains the installed libraries for each triplet" FORCE)
+
+function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
+    set(vcpkg_paths
+        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}${suffix}"
+        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug${suffix}"
     )
-    list(APPEND CMAKE_LIBRARY_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link"
-    )
-    list(APPEND CMAKE_FIND_ROOT_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-    )
-else() #Release build: Put Release paths before Debug paths. Debug Paths are required so that CMake generates correct info in autogenerated target files.
-    list(APPEND CMAKE_PREFIX_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-    )
-    list(APPEND CMAKE_LIBRARY_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link"
-    )
-    list(APPEND CMAKE_FIND_ROOT_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-    )
+    if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
+        list(REVERSE vcpkg_paths) # Debug build: Put Debug paths before Release paths.
+    endif()
+    if(VCPKG_PREFER_SYSTEM_LIBS)
+        list(APPEND "${list}" "${vcpkg_paths}")
+    else()
+        list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
+    endif()
+    set("${list}" "${${list}}" PARENT_SCOPE)
+endfunction()
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_PREFIX_PATH "")
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_FIND_ROOT_PATH "")
+
+if(NOT VCPKG_PREFER_SYSTEM_LIBS)
+    set(CMAKE_FIND_FRAMEWORK "LAST") # we assume that frameworks are usually system-wide libs, not vcpkg-built
+    set(CMAKE_FIND_APPBUNDLE "LAST") # we assume that appbundles are usually system-wide libs, not vcpkg-built
 endif()
 
 # If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
@@ -490,33 +513,6 @@ endif()
 
 set(VCPKG_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
 
-file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" Z_VCPKG_PROGRAMFILES)
-set(Z_VCPKG_PROGRAMFILESX86_NAME "PROGRAMFILES(x86)")
-file(TO_CMAKE_PATH "$ENV{${Z_VCPKG_PROGRAMFILESX86_NAME}}" Z_VCPKG_PROGRAMFILESX86)
-set(CMAKE_SYSTEM_IGNORE_PATH
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC/static"
-    "C:/OpenSSL/"
-    "C:/OpenSSL-Win32/"
-    "C:/OpenSSL-Win64/"
-    "C:/OpenSSL-Win32/lib/VC"
-    "C:/OpenSSL-Win64/lib/VC"
-    "C:/OpenSSL-Win32/lib/VC/static"
-    "C:/OpenSSL-Win64/lib/VC/static"
-)
-
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg.exe")
@@ -530,7 +526,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" Z_VCPKG_BOOTSTRAP_LOG)
+        set(Z_VCPKG_BOOTSTRAP_LOG "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_BOOTSTRAP_LOG}" Z_NATIVE_VCPKG_BOOTSTRAP_LOG)
         execute_process(
             COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
             OUTPUT_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
@@ -541,7 +538,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             message(STATUS "Bootstrapping vcpkg before install - done")
         else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_BOOTSTRAP_LOG}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_BOOTSTRAP_LOG}")
         endif()
     endif()
 
@@ -600,35 +597,63 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
         )
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
+        set(Z_VCPKG_MANIFEST_INSTALL_LOGFILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log")
+        file(TO_NATIVE_PATH "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
         if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
-
-            # file(TOUCH) added in CMake 3.12
-            file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                "${VCPKG_MANIFEST_DIR}/vcpkg.json"
-                "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
+                "${VCPKG_MANIFEST_DIR}/vcpkg.json")
             if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                     "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
             endif()
         else()
             message(STATUS "Running vcpkg install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
+            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE}")
         endif()
     endif()
 endif()
 
-list(APPEND CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
-file(GLOB Z_VCPKG_TOOLS_DIRS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*")
-foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
-    if(IS_DIRECTORY "${Z_VCPKG_TOOLS_DIR}")
-        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+option(VCPKG_SETUP_CMAKE_PROGRAM_PATH  "Enable the setup of CMAKE_PROGRAM_PATH to vcpkg paths" ON)
+set(VCPKG_CAN_USE_HOST_TOOLS OFF)
+if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
+    set(VCPKG_CAN_USE_HOST_TOOLS ON)
+endif()
+cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+unset(VCPKG_CAN_USE_HOST_TOOLS)
+
+if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
+    set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
+    if(VCPKG_USE_HOST_TOOLS)
+        set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools")
     endif()
-endforeach()
+    list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
+    file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
+    file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
+    string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
+    list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
+    foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
+        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+    endforeach()
+    unset(Z_VCPKG_TOOLS_DIR)
+    unset(Z_VCPKG_TOOLS_DIRS)
+    unset(Z_VCPKG_TOOLS_FILES)
+    unset(Z_VCPKG_TOOLS_DIRS_BIN)
+    unset(Z_VCPKG_TOOLS_FILES_BIN)
+    unset(Z_VCPKG_TOOLS_DIRS_TO_REMOVE)
+    unset(tools_base_path)
+endif()
+
+cmake_policy(POP)
+
+# Any policies applied to the below macros and functions appear to leak into consumers
 
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
@@ -651,14 +676,16 @@ function(add_executable)
                         -targetBinary "$<TARGET_FILE:${target_name}>"
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    VERBATIM
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
-                        "$<TARGET_FILE:${target_name}>"
-                        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                            "$<TARGET_FILE:${target_name}>"
+                            "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        VERBATIM
                     )
                 endif()
             endif()
@@ -685,6 +712,7 @@ function(add_library)
                     -targetBinary "$<TARGET_FILE:${target_name}>"
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    VERBATIM
             )
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
@@ -696,27 +724,52 @@ endfunction()
 # Arguments:
 #   TARGETS - a list of installed targets to have dependencies copied for
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
+#   COMPONENT - the component this install command belongs to (optional)
 #
 # Note that this function requires CMake 3.14 for policy CMP0087
 function(x_vcpkg_install_local_dependencies)
-    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+    if(CMAKE_VERSION VERSION_LESS "3.14")
+        message(FATAL_ERROR "x_vcpkg_install_local_dependencies and X_VCPKG_APPLOCAL_DEPS_INSTALL require at least CMake 3.14
+(current version: ${CMAKE_VERSION})"
+        )
+    endif()
+
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        ""
+        "DESTINATION;COMPONENT"
+        "TARGETS"
+    )
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    if(NOT DEFINED arg_DESTINATION)
+        message(FATAL_ERROR "DESTINATION must be specified")
+    endif()
+
+    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
+        # Install CODE|SCRIPT allow the use of generator expressions
+        cmake_policy(SET CMP0087 NEW) # CMake 3.14
+
         z_vcpkg_set_powershell_path()
-        if(NOT IS_ABSOLUTE "${__VCPKG_APPINSTALL_DESTINATION}")
-            set(__VCPKG_APPINSTALL_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}")
+        if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
+            set(arg_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${arg_DESTINATION}")
         endif()
-        foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
-            get_target_property(TARGETTYPE "${TARGET}" TYPE)
-            if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
-                # Install CODE|SCRIPT allow the use of generator expressions
-                if(POLICY CMP0087)
-                    cmake_policy(SET CMP0087 NEW)
-                endif()
-                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+
+        set(component_param "")
+        if(DEFINED arg_COMPONENT)
+            set(component_param COMPONENT "${arg_COMPONENT}")
+        endif()
+
+        foreach(target IN LISTS arg_TARGETS)
+            get_target_property(target_type "${target}" TYPE)
+            if(NOT target_type STREQUAL "INTERFACE_LIBRARY")
+                install(CODE "message(\"-- Installing app dependencies for ${target}...\")
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
                         -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)")
+                        -OutVariable out)"
+                    ${component_param}
+                )
             endif()
         endforeach()
     endif()
@@ -729,34 +782,43 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
 
         if(ARGV0 STREQUAL "TARGETS")
             # Will contain the list of targets
-            set(PARSED_TARGETS "")
+            set(parsed_targets "")
 
             # Destination - [RUNTIME] DESTINATION argument overrides this
-            set(DESTINATION "bin")
+            set(destination "bin")
+
+            set(component_param "")
 
             # Parse arguments given to the install function to find targets and (runtime) destination
-            set(MODIFIER "") # Modifier for the command in the argument
-            set(LAST_COMMAND "") # Last command we found to process
-            foreach(ARG IN LISTS ARGS)
-                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES")
-                    set(MODIFIER "${ARG}")
+            set(modifier "") # Modifier for the command in the argument
+            set(last_command "") # Last command we found to process
+            foreach(arg IN LISTS ARGS)
+                if(arg MATCHES "^(ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES)$")
+                    set(modifier "${arg}")
                     continue()
                 endif()
-                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT")
-                    set(LAST_COMMAND "${ARG}")
+                if(arg MATCHES "^(TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT)$")
+                    set(last_command "${arg}")
                     continue()
                 endif()
 
-                if(LAST_COMMAND STREQUAL "TARGETS")
-                    list(APPEND PARSED_TARGETS "${ARG}")
+                if(last_command STREQUAL "TARGETS")
+                    list(APPEND parsed_targets "${arg}")
                 endif()
 
-                if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
-                    set(DESTINATION "${ARG}")
+                if(last_command STREQUAL "DESTINATION" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
+                    set(destination "${arg}")
+                endif()
+                if(last_command STREQUAL "COMPONENT")
+                    set(component_param "COMPONENT" "${arg}")
                 endif()
             endforeach()
 
-            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}")
+            x_vcpkg_install_local_dependencies(
+                TARGETS ${parsed_targets}
+                DESTINATION "${destination}"
+                ${component_param}
+            )
         endif()
     endfunction()
 endif()
@@ -764,49 +826,66 @@ endif()
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
-function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
-    # these variables, as well as any variables matching `z_vcpkg_fp_*`,
-    # are not reexported to parent scope
-    set(z_vcpkg_fp_ignored_variables
-        "^(ARGS|z_vcpkg_fp_.*|CMAKE_FIND_ROOT_PATH|Boost_USE_STATIC_LIBS|Boost_USE_MULTITHREADED|Boost_USE_STATIC_RUNTIME|Boost_NO_BOOST_CMAKE|Boost_COMPILER)$")
+# NOTE: this is not a function, which means that arguments _are not_ perfectly forwarded
+# this is fine for `find_package`, since there are no usecases for `;` in arguments,
+# so perfect forwarding is not important
+macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
+    set(z_vcpkg_find_package_package_name "${z_vcpkg_find_package_package_name}")
+    set(z_vcpkg_find_package_ARGN "${ARGN}")
+    set(z_vcpkg_find_package_backup_vars)
 
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
     # Fixed in CMake 3.15
     if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        list(APPEND z_vcpkg_find_package_backup_vars "CMAKE_FIND_ROOT_PATH")
+        if(DEFINED CMAKE_FIND_ROOT_PATH)
+            set(z_vcpkg_find_package_backup_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
+        else()
+            set(z_vcpkg_find_package_backup_CMAKE_FIND_ROOT_PATH)
+        endif()
+
         list(APPEND CMAKE_FIND_ROOT_PATH "${VCPKG_CMAKE_FIND_ROOT_PATH}")
     endif()
-    z_vcpkg_function_arguments(z_vcpkg_fp_ARGS 1)
-    string(TOLOWER "${z_vcpkg_fp_package_name}" z_vcpkg_fp_lowercase_package_name)
+    string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_lowercase_package_name)
 
-    set(z_vcpkg_fp_vcpkg_cmake_wrapper_path "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_fp_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
+    set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
+        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
 
-    if(EXISTS "${z_vcpkg_fp_vcpkg_cmake_wrapper_path}")
-        set(ARGS "${z_vcpkg_fp_package_name};${z_vcpkg_fp_ARGS}")
-        include("${z_vcpkg_fp_vcpkg_cmake_wrapper_path}")
-    elseif(z_vcpkg_fp_package_name STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
+    if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+        list(APPEND z_vcpkg_find_package_backup_vars "ARGS")
+        if(DEFINED ARGS)
+            set(z_vcpkg_find_package_backup_ARGS "${ARGS}")
+        else()
+            set(z_vcpkg_find_package_backup_ARGS)
+        endif()
+
+        set(ARGS "${z_vcpkg_find_package_package_name};${z_vcpkg_find_package_ARGN}")
+        include("${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+    elseif(z_vcpkg_find_package_package_name STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
         # Checking for the boost headers disables this wrapper unless the user has installed at least one boost library
+        # these intentionally are not backed up
         set(Boost_USE_STATIC_LIBS OFF)
         set(Boost_USE_MULTITHREADED ON)
-        unset(Boost_USE_STATIC_RUNTIME)
         set(Boost_NO_BOOST_CMAKE ON)
+        set(Boost_USE_STATIC_RUNTIME)
         unset(Boost_USE_STATIC_RUNTIME CACHE)
         if(CMAKE_VS_PLATFORM_TOOLSET STREQUAL "v120")
             set(Boost_COMPILER "-vc120")
         else()
             set(Boost_COMPILER "-vc140")
         endif()
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
-    elseif(z_vcpkg_fp_package_name STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
-        list(FIND z_vcpkg_fp_ARGS "COMPONENTS" z_vcpkg_fp_COMPONENTS_IDX)
-        if(NOT z_vcpkg_fp_COMPONENTS_IDX EQUAL -1)
-            _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS} COMPONENTS data)
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
+    elseif(z_vcpkg_find_package_package_name STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
+        list(FIND z_vcpkg_find_package_ARGN "COMPONENTS" z_vcpkg_find_package_COMPONENTS_IDX)
+        if(NOT z_vcpkg_find_package_COMPONENTS_IDX EQUAL -1)
+            _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN} COMPONENTS data)
         else()
-            _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+            _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
         endif()
-    elseif(z_vcpkg_fp_package_name STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+    elseif(z_vcpkg_find_package_package_name STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
         if(GSL_FOUND AND TARGET GSL::gsl)
             set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
             set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
@@ -817,8 +896,8 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
                 set_target_properties( GSL::gslcblas PROPERTIES IMPORTED_LOCATION_DEBUG "${GSL_CBLAS_LIBRARY_DEBUG}" )
             endif()
         endif()
-    elseif("${z_vcpkg_fp_package_name}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+    elseif("${z_vcpkg_find_package_package_name}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
         if(CURL_FOUND)
             if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
                 list(APPEND CURL_LIBRARIES
@@ -826,31 +905,23 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
                     "optimized" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
             endif()
         endif()
-    elseif("${z_vcpkg_fp_lowercase_package_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
-        _find_package(gRPC ${z_vcpkg_fp_ARGS})
+    elseif("${z_vcpkg_find_package_lowercase_package_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
+        _find_package(gRPC ${z_vcpkg_find_package_ARGN})
     else()
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
     endif()
 
-    get_property(z_vcpkg_fp_variable_list
-        DIRECTORY PROPERTY "VARIABLES")
-    # this backfills to CMake 3.1, and past CMake 3.9 you'll get a trace that is about halved.
-    if(CMAKE_MAJOR_VERSION LESS "3.9")
-        foreach(z_vcpkg_fp_variable IN LISTS z_vcpkg_fp_variable_list)
-            # IN_LIST added in CMake 3.3
-            # list(FILTER) added in CMake 3.9
-            if(z_vcpkg_fp_variable MATCHES "${z_vcpkg_fp_ignored_variables}")
-                continue()
-            endif()
-            set("${z_vcpkg_fp_variable}" "${${z_vcpkg_fp_variable}}" PARENT_SCOPE)
-        endforeach()
-    else()
-        list(FILTER z_vcpkg_fp_variable_list EXCLUDE "${z_vcpkg_fp_ignored_variables}")
-        foreach(z_vcpkg_fp_variable IN LISTS z_vcpkg_fp_variable_list)
-            set("${z_vcpkg_fp_variable}" "${${z_vcpkg_fp_variable}}" PARENT_SCOPE)
-        endforeach()
-    endif()
-endfunction()
+    foreach(z_vcpkg_find_package_backup_var IN LISTS z_vcpkg_find_package_backup_vars)
+        if(DEFINED z_vcpkg_find_package_backup_${z_vcpkg_find_package_backup_var})
+            set("${z_vcpkg_find_package_backup_var}" "${z_vcpkg_find_package_backup_${z_vcpkg_find_package_backup_var}}")
+        else()
+            set("${z_vcpkg_find_package_backup_var}")
+        endif()
+    endforeach()
+endmacro()
+
+cmake_policy(PUSH)
+cmake_policy(VERSION 3.7.2)
 
 set(VCPKG_TOOLCHAIN ON)
 set(Z_VCPKG_UNUSED "${CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION}")
@@ -861,25 +932,13 @@ set(Z_VCPKG_UNUSED "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP}")
 
 # Propogate these values to try-compile configurations so the triplet and toolchain load
 if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
-    if(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
-        file(TO_CMAKE_PATH "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" Z_VCPKG_CHAINLOAD_FILE_CMAKE)
-        file(TO_CMAKE_PATH "${Z_VCPKG_ROOT_DIR}" Z_VCPKG_ROOT_DIR_CMAKE)
-        file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
-            "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
-            "set(VCPKG_TARGET_ARCHITECTURE \"${VCPKG_TARGET_ARCHITECTURE}\" CACHE STRING \"\")\n"
-            "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
-            "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${Z_VCPKG_CHAINLOAD_FILE_CMAKE}\" CACHE STRING \"\")\n"
-            "set(Z_VCPKG_ROOT_DIR \"${Z_VCPKG_ROOT_DIR_CMAKE}\" CACHE STRING \"\")\n"
-        )
-    else()
-        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
-            VCPKG_TARGET_TRIPLET
-            VCPKG_TARGET_ARCHITECTURE
-            VCPKG_APPLOCAL_DEPS
-            VCPKG_CHAINLOAD_TOOLCHAIN_FILE
-            Z_VCPKG_ROOT_DIR
-        )
-    endif()
+    list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+        VCPKG_TARGET_TRIPLET
+        VCPKG_TARGET_ARCHITECTURE
+        VCPKG_APPLOCAL_DEPS
+        VCPKG_CHAINLOAD_TOOLCHAIN_FILE
+        Z_VCPKG_ROOT_DIR
+    )
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)

@@ -12,30 +12,30 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF c88abeab27ece7f13911d73202f44212c3e08953
-        SHA512 befb7ad72ea61713b043a4a4bdf70f454aac5f4590ca84aa7f4d9b7c8447b643fb37028173774451cfbe00119937f857680cd827d90e676ee558a18a1b6442bb
+        REF 117c8378b80fdafec639dafb6693b7c044281abc
+        SHA512 6726cfb3ecb42d42957b5df94d0b173b566fdd6961814e2b10882e32ae26387a36b05d77c59efbb008b7ed37e276c35128ab4e4adf0739cbf37f5f234626481a
         HEAD_REF master
     )
 endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Dbuild_as_dynamic=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uamqp)
+vcpkg_cmake_config_fixup(PACKAGE_NAME uamqp CONFIG_PATH "cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()
-

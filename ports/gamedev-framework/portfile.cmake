@@ -2,23 +2,17 @@ if (VCPKG_HOST_IS_LINUX)
     message(WARNING "gamedev-framework requires gcc version 8.3 or later.")
 endif()
 
-vcpkg_fail_port_install(
-    ON_ARCH "arm"
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GamedevFramework/gf
     HEAD_REF master
-    REF v0.20.0
-    SHA512 57b0e87f8713268d7bd4e68fb65f57715af6617582e3ce342a10a66f2ebfeeacdd11e1df0abbd13a2d1d9e6222def94bcf7b522ef5411043668e4c6f0fea1dd7
+    REF v1.0.0
+    SHA512 daa6808500e4259152b8173d6f289964d2e0807f434ec25a378575a0160de7c739ce8f483b157b734a1d5726720db6a22212ec2ef803ff567a51ed8a6822cfd7
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DGF_VCPKG=ON
         -DGF_USE_EMBEDDED_LIBS=OFF
         -DGF_BUILD_GAMES=OFF
         -DGF_BUILD_EXAMPLES=OFF
@@ -30,8 +24,11 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DGF_DEBUG=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gf TARGET_PATH share/gf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME gf
+    CONFIG_PATH lib/cmake/gf
+)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

@@ -1,12 +1,16 @@
 {
   "name": "yasm-tool-helper",
-  "version-string": "2020-10-12",
-  "description": "This port provides helper functions for ports needing to consume YASM",
+  "version-date": "2020-03-11",
+  "port-version": 1,
+  "description": "Backfill that depends on yasm:host",
   "homepage": "https://github.com/Microsoft/vcpkg",
   "dependencies": [
     {
-      "name": "yasm-tool",
-      "platform": "x86 & windows"
+      "name": "yasm",
+      "host": true,
+      "features": [
+        "tools"
+      ]
     }
   ]
 }

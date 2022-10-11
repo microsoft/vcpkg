@@ -1,14 +1,15 @@
 {
   "name": "boost-sort",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost sort module",
   "homepage": "https://github.com/boostorg/sort",
+  "license": "BSL-1.0",
   "dependencies": [
-    "boost-integer",
+    "boost-config",
+    "boost-core",
     "boost-range",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

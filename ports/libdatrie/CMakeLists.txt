@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.22)
 project(libdatrie LANGUAGES C)
 
 option(SKIP_HEADERS "Skip headers" OFF)
@@ -49,30 +49,23 @@ check_function_exists(malloc HAVE_MALLOC)
 
 configure_file(config.h.cmake config.h)
 
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 add_library(libdatrie ${LIB_SRCS})
-target_include_directories(libdatrie PRIVATE ".")
-target_include_directories(libdatrie PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-set_target_properties(libdatrie PROPERTIES PREFIX "")
-set_target_properties(libdatrie PROPERTIES DEBUG_POSTFIX "d")
+set_target_properties(libdatrie PROPERTIES OUTPUT_NAME "datrie")
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-
 if (NOT SKIP_TOOL)
     add_executable(trietool "tools/trietool.c" )
-    target_include_directories(trietool PRIVATE ".")
-    target_include_directories(trietool PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-    target_link_libraries(trietool libdatrie)
-
-    find_path(ICONV_INCLUDE_DIR iconv.h)
-    find_library(ICONV_LIBRARY NAMES iconv libiconv)
-    find_library(CHARSET_LIBRARY NAMES charset libcharset)
-    target_include_directories(trietool PRIVATE ${ICONV_INCLUDE_DIR})
-    target_link_libraries(trietool ${ICONV_LIBRARY} ${CHARSET_LIBRARY})
-
+    find_package(Iconv REQUIRED)
+    target_link_libraries(trietool PRIVATE libdatrie Iconv::Iconv)
     install(
         TARGETS trietool
         RUNTIME DESTINATION bin
@@ -92,3 +85,13 @@ if (NOT SKIP_HEADERS)
         DESTINATION "include/datrie"
     )
 endif()
+
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+configure_file(datrie-0.2.pc.in datrie-0.2.pc)
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/datrie-0.2.pc"
+    DESTINATION "lib/pkgconfig"
+)

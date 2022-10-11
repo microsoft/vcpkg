@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 91efb7c7f6c00a4616ed58735f7c670908d0a849
-  SHA512 7f6187f8ccc89295daf7b15288bae0bf53638970422ced80a4a755e2b4765cda36f532ebc5c32a28804a2ed0ac6375e9a8f7449a9002e1b373378635a54f2c96
+  REF 8a0bf84c19e38214219dbd3345f04ce778426c57
+  SHA512 6253d5b498f4f6eba7fc539d5a4b4e163139f4841623f11d84760bcf1ffabe6519f85e98e3d4aeac6846313fea3b98451407134b6b6f5b91137c62d1647109d9
   HEAD_REF master
 )
 
@@ -14,13 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 #do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
 set(ENABLE_OPENCV FALSE)
-set(ENABLE_OPENCV_WITH_CUDA FALSE)
-if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES)
+if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
-endif()
-if ("opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV TRUE)
-  set(ENABLE_OPENCV_WITH_CUDA TRUE)
 endif()
 
 if ("cuda" IN_LIST FEATURES)
@@ -31,40 +26,36 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 #make sure we don't use any integrated pre-built library nor any unnecessary CMake module
-file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindStb.cmake)
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
-  PREFER_NINJA
   OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_OPENCV:BOOL=${ENABLE_OPENCV}
-    -DENABLE_OPENCV_WITH_CUDA:BOOL=${ENABLE_OPENCV_WITH_CUDA}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
 endif()
 
-file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(COPY "${SOURCE_PATH}/data" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/scripts/download_weights.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts)
+file(INSTALL "${SOURCE_PATH}/scripts/download_weights.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts")
 message(STATUS "To download weight files, please go to ${CURRENT_INSTALLED_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

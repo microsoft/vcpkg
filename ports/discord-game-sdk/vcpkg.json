@@ -1,0 +1,8 @@
+{
+  "name": "discord-game-sdk",
+  "version": "2.5.6",
+  "port-version": 4,
+  "description": "The Discord GameSDK is an easy drop-in SDK to help you manage all the hard things that come with making a game.",
+  "homepage": "https://discord.com/developers/docs/game-sdk/sdk-starter-guide",
+  "supports": "((x64 & (windows | osx | linux)) | (x86 & windows)) & !uwp & !static"
+}

@@ -1,9 +1,9 @@
 {
   "name": "boost-exception",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost exception module",
   "homepage": "https://github.com/boostorg/exception",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     {
@@ -17,8 +17,13 @@
       "host": true
     },
     "boost-smart-ptr",
+    "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "name": "croncpp",
+  "version-date": "2020-09-04",
+  "port-version": 3,
+  "description": "croncpp is a C++17 header-only cross-platform library for handling CRON expressions.",
+  "homepage": "https://github.com/mariusbancila/croncpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

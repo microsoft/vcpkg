@@ -1,0 +1,13 @@
+diff --git a/cmake/Common.cmake b/cmake/Common.cmake
+index 86c194f..74edef8 100644
+--- a/cmake/Common.cmake
++++ b/cmake/Common.cmake
+@@ -227,7 +227,7 @@ function(install_our_library target filename)
+             # Doesn't work, see below.
+             # PUBLIC_HEADER DESTINATION "include"
+             )
+-    if(MSVC AND BUILD_SHARED_LIBS)
++    if(0)
+         install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+             DESTINATION lib
+             CONFIGURATIONS Debug RelWithDebInfo

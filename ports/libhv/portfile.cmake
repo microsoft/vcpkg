@@ -1,29 +1,35 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ithewei/libhv
-    REF v1.0.0
-    SHA512 49d9e93444667ff143048abc05f88aab23ec5c543c58d0494bac9c29ac8216760220f19828bde6b84a5864bc8c5ec280ee4a72cc5ba888a4f02734240243cb07
+    REF 8d14d1a6cd4accbda9e081716a59395b523303f6 #v1.2.6
+    SHA512 d40063f2b2f8191965fd4434b80a17f505819a20fd63aefa63c08663d0acc82d086338f0382ab70289dff0417a8ec922f993d36c4007a1a13c7ce34d71018f83
     HEAD_REF master
+    PATCHES
+        fix-include_header.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ssl WITH_OPENSSL
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_UNITTEST=OFF
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libhv)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,8 @@
+{
+  "name": "winsock2",
+  "version": "0.0",
+  "port-version": 5,
+  "description": "Windows Sockets.",
+  "license": null,
+  "supports": "windows"
+}

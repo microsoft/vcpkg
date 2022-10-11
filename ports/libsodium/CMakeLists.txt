@@ -132,7 +132,6 @@ else ()
         INTERFACE
             -flax-vector-conversions
             -fvisibility=hidden
-            -fPIC
             -fwrapv
             -Wall
             -Wextra
@@ -162,10 +161,30 @@ else ()
             -Wswitch-enum
             #-Wvariable-decl
             -Wwrite-strings
-            -Wl,-z,relro
-            -Wl,-z,now
-            -Wl,-z,noexecstack
     )
+
+    if (NOT MINGW)
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -fPIC
+                -Wl,-z,relro
+                -Wl,-z,now
+                -Wl,-z,noexecstack
+        )
+    endif()
+
+    if (MINGW)
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -fno-asynchronous-unwind-tables
+        )
+        target_link_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -Wl,--dynamicbase
+                -Wl,--high-entropy-va
+                -Wl,--nxcompat
+        )
+    endif()
 
     if (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
         CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
@@ -187,11 +206,11 @@ else ()
         target_compile_options(${PROJECT_NAME}_config_public INTERFACE -pthread)
     endif ()
 
-    if (ENABLE_SSP)
+    if (ENABLE_SSP AND NOT MINGW)
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fstack-protector-all)
     endif ()
 
-    if (ENABLE_PIE)
+    if (ENABLE_PIE AND NOT MINGW)
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fPIE)
     endif ()
 
@@ -238,7 +257,7 @@ else ()
     sodium_check_func(getpid HAVE_GETPID)
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #pragma GCC target(\"mmx\")
             #include <mmintrin.h>
@@ -255,7 +274,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_mmx_config INTERFACE -mmmx)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #pragma GCC target(\"sse2\")
             #ifndef __SSE2__
@@ -276,7 +295,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_sse2_config INTERFACE -msse2)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #pragma GCC target(\"sse3\")
             #include <pmmintrin.h>
@@ -292,7 +311,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_sse3_config INTERFACE -msse3)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #pragma GCC target(\"ssse3\")
             #include <tmmintrin.h>
@@ -308,7 +327,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_ssse3_config INTERFACE -mssse3)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #pragma GCC target(\"sse4.1\")
             #include <smmintrin.h>
@@ -324,7 +343,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_sse41_config INTERFACE -msse4.1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX opcodes
@@ -343,7 +362,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_avx_config INTERFACE -mavx)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX2 opcodes
@@ -363,7 +382,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX2INTRIN_H=1)
             target_compile_options(${PROJECT_NAME}_avx2_config INTERFACE -mavx2)
 
-            check_c_source_runs(
+            check_c_source_compiles(
                 "
                 #ifdef __native_client__
                 # error NativeClient detected - Avoiding AVX2 opcodes
@@ -385,7 +404,7 @@ else ()
             endif ()
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX512F opcodes
@@ -418,7 +437,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_avx512f_config INTERFACE -mavx512f)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AESNI opcodes
@@ -441,7 +460,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_pclmul_config INTERFACE -mpclmul)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding RDRAND opcodes
@@ -462,7 +481,7 @@ else ()
             target_compile_options(${PROJECT_NAME}_rdrand_config INTERFACE -mrdrnd)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #include <intrin.h>
 
@@ -477,7 +496,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE__XGETBV=1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             int main(void) {
             int a = 42;
@@ -492,7 +511,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_INLINE_ASM=1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             int main(void) {
             #if defined(__amd64) || defined(__amd64__) || defined(__x86_64__)
@@ -519,7 +538,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AMD64_ASM=1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             int main(void) {
             #if defined(__amd64) || defined(__amd64__) || defined(__x86_64__)
@@ -540,7 +559,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX_ASM=1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             #if !defined(__clang__) && !defined(__GNUC__) && !defined(__SIZEOF_INT128__)
             # error mode(TI) is a gcc extension, and __int128 is not available
@@ -578,7 +597,7 @@ else ()
             target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_TI_MODE=1)
         endif ()
 
-        check_c_source_runs(
+        check_c_source_compiles(
             "
             int main(void) {
             unsigned int cpu_info[4];
@@ -596,7 +615,7 @@ else ()
         endif ()
     endif ()
 
-    check_c_source_runs(
+    check_c_source_compiles(
         "
         #if !defined(__ELF__) && !defined(__APPLE_CC__)
         # error Support for weak symbols may not be available
@@ -612,7 +631,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_WEAK_SYMBOLS=1)
     endif ()
 
-    check_c_source_runs(
+    check_c_source_compiles(
         "
         int main(void) {
         static volatile int _sodium_lock;
@@ -627,7 +646,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_ATOMIC_OPS=1)
     endif ()
 
-    check_c_source_runs(
+    check_c_source_compiles(
         "
         #include <limits.h>
         #include <stdint.h>

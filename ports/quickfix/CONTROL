@@ -1,5 +1,0 @@
-Source: quickfix
-Version: 1.15.1-4
-Build-Depends: openssl
-Homepage: https://github.com/quickfix/quickfix
-Description: QuickFIX is a free and open source implementation of the FIX protocol.

@@ -6,21 +6,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_build_cmake(TARGET libdshowcapture)
+vcpkg_cmake_build(TARGET libdshowcapture)
 
 # Copy files
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libdshowcapture RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libdshowcapture" RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libdshowcapture.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdshowcapture.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libdshowcapture.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdshowcapture.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 endif()
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libdshowcapture.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdshowcapture.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${SOURCE_PATH}/dshowcapture.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libdshowcapture.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdshowcapture.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/dshowcapture.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_copy_pdbs()

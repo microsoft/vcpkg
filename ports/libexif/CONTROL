@@ -1,5 +1,0 @@
-Source: libexif
-Version: 0.6.22
-Homepage: https://libexif.github.io/
-Description: a library for parsing, editing, and saving EXIF data
-Supports: !uwp

@@ -1,4 +1,0 @@
-Source: brynet
-Version: 1.11.0
-Homepage: https://github.com/IronsDu/brynet
-Description: A C++ header only cross platform high performance tcp network library, and support SSL/HTTP/Websocket.

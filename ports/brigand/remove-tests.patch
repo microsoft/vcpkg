@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 13ea689..e723f85 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,11 +24,6 @@ else()
+ endif()
+ 
+ # Install pre-commit git hook
+-execute_process(COMMAND ${CMAKE_COMMAND} -E copy
+-                ${PROJECT_SOURCE_DIR}/script/pre-commit
+-                ${PROJECT_SOURCE_DIR}/.git/hooks
+-               )
+-
+ set ( STANDALONE_GROUP
+     script/embed.py
+ )
+@@ -204,17 +199,6 @@ source_group(brigand\\sequences FILES ${SEQUENCES_GROUP})
+ source_group(brigand\\types FILES ${TYPES_GROUP})
+ source_group(placeholder FILES ${PLACEHOLDER_GROUP})
+ 
+-add_library(brigand
+-    ${BRIGAND_GROUP}
+-    ${ADAPTED_GROUP}
+-    ${ALGORITHMS_GROUP}
+-    ${ALGORITHMS_DETAIL_GROUP}
+-    ${FUNCTIONS_GROUPS}
+-    ${SEQUENCES_GROUP}
+-    ${TYPES_GROUP}
+-    ${PLACEHOLDER_GROUP}
+-)
+-
+ set(test_files
+     test/always.cpp
+     test/apply.cpp
+@@ -276,10 +260,6 @@ endif()
+ 
+ source_group(tests FILES ${test_files})
+ 
+-add_executable(brigand_test ${test_files})
+-
+-add_test(brigand brigand_test)
+-
+ configure_file(libbrigand.pc.in
+     libbrigand.pc
+     @ONLY
+diff --git a/libbrigand.pc.in b/libbrigand.pc.in
+index 2ed570e..218215b 100644
+--- a/libbrigand.pc.in
++++ b/libbrigand.pc.in
+@@ -6,5 +6,4 @@ Name: Brigand
+ Description: Light-weight, fully functional, instant-compile time C++ 11 meta-programming library
+ URL: https://github.com/edouarda/brigand
+ Version: 1.2.0
+-Libs:
+ Cflags: -I${includedir}

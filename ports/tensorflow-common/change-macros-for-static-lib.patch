@@ -103,9 +103,38 @@ diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
 diff --git a/tensorflow/c/kernels.h b/tensorflow/c/kernels.h
 --- a/tensorflow/c/kernels.h
 +++ b/tensorflow/c/kernels.h
-@@ -23,24 +23,7 @@
+@@ -24,24 +24,7 @@
  #include "tensorflow/c/tf_status.h"
  #include "tensorflow/c/tf_tensor.h"
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/kernels_experimental.h b/tensorflow/c/kernels_experimental.h
+--- a/tensorflow/c/kernels_experimental.h
++++ b/tensorflow/c/kernels_experimental.h
+@@ -25,24 +25,7 @@
+ // The API here is subject to changes in the future.
+ // --------------------------------------------------------------------------
  
 -// Macro to control visibility of exported symbols in the shared library (.so,
 -// .dylib, .dll).
@@ -212,7 +241,7 @@ diff --git a/tensorflow/c/tf_tensor.h b/tensorflow/c/tf_tensor.h
 @@ -23,24 +23,7 @@
  #include "tensorflow/c/tf_datatype.h"
  #include "tensorflow/c/tf_status.h"
-
+ 
 -// Macro to control visibility of exported symbols in the shared library (.so,
 -// .dylib, .dll).
 -// This duplicates the TF_EXPORT macro definition in
@@ -231,7 +260,31 @@ diff --git a/tensorflow/c/tf_tensor.h b/tensorflow/c/tf_tensor.h
 -#define TF_CAPI_EXPORT __attribute__((visibility("default")))
 -#endif  // _WIN32
 -#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
 
+diff --git a/tensorflow/c/tf_tstring.h b/tensorflow/c/tf_tstring.h
+--- a/tensorflow/c/tf_tstring.h
++++ b/tensorflow/c/tf_tstring.h
+@@ -18,19 +18,7 @@
+ #include "tensorflow/c/tf_tensor.h"
+ #include "tensorflow/core/platform/ctstring.h"
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
  #ifdef __cplusplus
  extern "C" {
 

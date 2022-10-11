@@ -1,0 +1,13 @@
+{
+  "name": "gtl",
+  "version": "1.1.5",
+  "description": "Greg's Template Library of useful classes.",
+  "homepage": "https://github.com/greg7mdp/gtl",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

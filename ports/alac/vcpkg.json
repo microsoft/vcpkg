@@ -1,0 +1,8 @@
+{
+  "name": "alac",
+  "version-string": "2017-11-03-c38887c5",
+  "port-version": 2,
+  "description": "The Apple Lossless Audio Codec (ALAC) is a lossless audio codec developed by Apple and deployed on all of its platforms and devices.",
+  "homepage": "https://github.com/macosforge/alac",
+  "supports": "!uwp"
+}

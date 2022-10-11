@@ -1,0 +1,18 @@
+{
+  "name": "pfultz2-linq",
+  "version-string": "2019-05-14",
+  "port-version": 1,
+  "description": "Linq for list comprehension in C++",
+  "dependencies": [
+    "boost-fusion",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-optional",
+    "boost-preprocessor",
+    "boost-range",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility"
+  ]
+}

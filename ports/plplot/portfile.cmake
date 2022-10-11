@@ -15,54 +15,57 @@ vcpkg_from_sourceforge(
       fix-pkg-config.patch
 )
 
-set(BUILD_with_wxwidgets OFF)
-if("wxwidgets" IN_LIST FEATURES)
-  set(BUILD_with_wxwidgets ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        wxwidgets PLD_wxwidgets
+        wxwidgets ENABLE_wxwidgets
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_tcl=OFF
+        -DDEFAULT_NO_BINDINGS=ON
+        -DENABLE_cxx=ON
         -DPL_HAVE_QHULL=OFF
-        -DENABLE_qt=OFF
         -DPLPLOT_USE_QT5=OFF
-        -DENABLE_ocaml=OFF
         -DPL_DOUBLE=ON
-        -DPLD_wxwidgets=${BUILD_with_wxwidgets}
         -DENABLE_DYNDRIVERS=OFF
         -DDATA_DIR=${CURRENT_PACKAGES_DIR}/share/plplot
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DDRV_DIR=${CURRENT_PACKAGES_DIR}/debug/bin
     OPTIONS_RELEASE
         -DDRV_DIR=${CURRENT_PACKAGES_DIR}/bin
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/plplot)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plplot)
 
 # Remove unnecessary tool
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe
-    ${CURRENT_PACKAGES_DIR}/bin/pltek.exe
-    ${CURRENT_PACKAGES_DIR}/debug/bin/wxPLViewer.exe
-    ${CURRENT_PACKAGES_DIR}/bin/wxPLViewer.exe
+    "${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe"
+    "${CURRENT_PACKAGES_DIR}/bin/pltek.exe"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/wxPLViewer.exe"
+    "${CURRENT_PACKAGES_DIR}/bin/wxPLViewer.exe"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(STATUS "Static build: Removing the full bin directory.")
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-        ${CURRENT_PACKAGES_DIR}/bin
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/bin"
     )
 endif()
 
 # Remove unwanted and duplicate directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/plplot/examples")
 
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

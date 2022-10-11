@@ -1,0 +1,13 @@
+diff --git a/src/tools/clang-linux.jam b/src/tools/clang-linux.jam
+index 949e277..8934787 100644
+--- a/src/tools/clang-linux.jam
++++ b/src/tools/clang-linux.jam
+@@ -97,7 +97,7 @@ rule init ( version ? :  command * : options * ) {
+ 
+ rule get-full-version ( command-string )
+ {
+-    return [ common.match-command-output version : "version ([0-9.]+)"
++    return [ common.match-command-output version : "([0-9]+.[0-9]+.[0-9]+)"
+            : "$(command-string) --version" ] ;
+ }
+ 

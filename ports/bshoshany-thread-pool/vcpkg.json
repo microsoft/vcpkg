@@ -1,0 +1,9 @@
+{
+  "name": "bshoshany-thread-pool",
+  "version": "3.3.0",
+  "maintainers": "Barak Shoshany <baraksh@gmail.com>",
+  "description": "BS::thread_pool: a fast, lightweight, and easy-to-use C++17 thread pool library",
+  "homepage": "https://github.com/bshoshany/thread-pool",
+  "documentation": "https://github.com/bshoshany/thread-pool/blob/master/README.md",
+  "license": "MIT"
+}

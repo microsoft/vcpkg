@@ -2,7 +2,11 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_pkgconfig.md).
 
-Fix common paths in *.pc files and make everything relative to $(prefix)
+Fix common paths in *.pc files and make everything relative to $(prefix).
+Additionally, on static triplets, private entries are merged with their non-private counterparts,
+allowing pkg-config to be called without the ``--static`` flag.
+Note that vcpkg is designed to never have to call pkg-config with the ``--static`` flag,
+since a consumer cannot know if a dependent library has been built statically or not.
 
 ## Usage
 ```cmake

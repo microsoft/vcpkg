@@ -26,3 +26,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/json11)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/json11/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/json11/copyright)
+
+vcpkg_fixup_pkgconfig()

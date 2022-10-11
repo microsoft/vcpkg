@@ -1,0 +1,17 @@
+{
+  "name": "effolkronium-random",
+  "version": "1.4.1",
+  "description": "Random with a modern C++ API",
+  "homepage": "https://github.com/effolkronium/random",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

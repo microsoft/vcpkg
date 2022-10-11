@@ -1,4 +1,0 @@
-Source: cutelyst2
-Version: 2.12.0
-Description: A C++ Web Framework built on top of Qt, using the simple approach of Catalyst (Perl) framework
-Build-Depends: qt5-base[core]

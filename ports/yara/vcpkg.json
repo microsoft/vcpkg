@@ -1,0 +1,15 @@
+{
+  "name": "yara",
+  "version": "4.2.3",
+  "description": "The pattern matching swiss knife",
+  "homepage": "https://github.com/VirusTotal/yara",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "jansson",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

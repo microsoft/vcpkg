@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 385ea82..ebd12b6 100644
+index 5df20ca..23a8114 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,6 +2,8 @@
@@ -40,7 +40,7 @@ index c032f02..d80d2a0 100644
 +	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
  endif()
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index d277872..bbf67f7 100644
+index e62a858..3b7afda 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,7 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -50,7 +50,7 @@ index d277872..bbf67f7 100644
 -add_library(libjsonnet SHARED ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
 +add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
  add_dependencies(libjsonnet md5 stdlib)
- target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json)
+ target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json ryml)
  
 @@ -46,7 +46,7 @@ set_target_properties(libjsonnet PROPERTIES OUTPUT_NAME jsonnet
  	PUBLIC_HEADER "${LIB_HEADER}")
@@ -59,8 +59,8 @@ index d277872..bbf67f7 100644
 -	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 +	ARCHIVE DESTINATION "${CMAKE_INSTALL_BINDIR}"
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
- 
- if (BUILD_STATIC_LIBS)
+ target_include_directories(libjsonnet INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
 index a481d9f..2f58d2f 100644
 --- a/stdlib/CMakeLists.txt

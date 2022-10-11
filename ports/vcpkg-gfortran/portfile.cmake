@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "linux" "osx")
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 if(VCPKG_USE_INTERNAL_Fortran)

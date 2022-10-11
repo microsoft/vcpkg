@@ -1,0 +1,22 @@
+{
+  "name": "cryptopp",
+  "version": "8.6.0",
+  "port-version": 1,
+  "description": "Crypto++ is a free C++ class library of cryptographic schemes.",
+  "homepage": "https://github.com/weidai11/cryptopp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "pem-pack": {
+      "description": "Crypto++ with PEM pack"
+    }
+  }
+}

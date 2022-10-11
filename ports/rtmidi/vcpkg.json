@@ -1,0 +1,28 @@
+{
+  "name": "rtmidi",
+  "version": "5.0.0",
+  "port-version": 2,
+  "description": "A set of C++ classes that provide a common API for realtime MIDI input/output across Linux (ALSA & JACK), Macintosh OS X (CoreMidi & JACK) and Windows (Multimedia)",
+  "homepage": "https://github.com/thestk/rtmidi",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "alsa": {
+      "description": "Build ALSA API",
+      "supports": "linux",
+      "dependencies": [
+        "alsa"
+      ]
+    }
+  }
+}

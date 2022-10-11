@@ -1,4 +1,0 @@
-Source: libudns
-Version: 0.4-2
-Homepage: https://github.com/ortclib/udns
-Description: The DNS library, udns, implements thread-safe stub DNS resolver functionality, which may be used both traditional, syncronous way and asyncronously, with application-supplied event loop.

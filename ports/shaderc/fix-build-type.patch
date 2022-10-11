@@ -1,85 +1,67 @@
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index 0ffa06f..3476170 100644
+index 3ada419..f3277f0 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
-@@ -10,10 +10,11 @@ set(SHADERC_SOURCES
+@@ -24,13 +24,16 @@ set(SHADERC_SOURCES
    src/shaderc_private.h
  )
  
 +if (NOT BUILD_SHARED_LIBS)
  add_library(shaderc STATIC ${SHADERC_SOURCES})
  shaderc_default_compile_options(shaderc)
- target_include_directories(shaderc PUBLIC include PRIVATE ${glslang_SOURCE_DIR})
--
+ target_include_directories(shaderc
+     PUBLIC include
+     PRIVATE ${glslang_SOURCE_DIR}
+             ${SPIRV-Headers_SOURCE_DIR}/include)
++set(shaderc_install_target shaderc)
+ 
 +else()
  add_library(shaderc_shared SHARED ${SHADERC_SOURCES})
  shaderc_default_compile_options(shaderc_shared)
- target_include_directories(shaderc_shared PUBLIC include PRIVATE ${glslang_SOURCE_DIR})
-@@ -22,6 +23,7 @@ target_compile_definitions(shaderc_shared
+ target_include_directories(shaderc_shared
+@@ -42,6 +45,8 @@ target_compile_definitions(shaderc_shared
      PUBLIC SHADERC_SHAREDLIB
  )
  set_target_properties(shaderc_shared PROPERTIES SOVERSION 1)
++set(shaderc_install_target shaderc_shared)
 +endif()
  
  if(SHADERC_ENABLE_INSTALL)
    install(
-@@ -34,10 +36,17 @@ if(SHADERC_ENABLE_INSTALL)
+@@ -54,7 +59,7 @@ if(SHADERC_ENABLE_INSTALL)
      DESTINATION
        ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
  
 -  install(TARGETS shaderc shaderc_shared
-+  if (NOT BUILD_SHARED_LIBS)
-+  install(TARGETS shaderc
-+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  else()
-+  install(TARGETS shaderc_shared
++  install(TARGETS ${shaderc_install_target}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  endif()  
- endif(SHADERC_ENABLE_INSTALL)
- 
- find_package(Threads)
-@@ -47,10 +56,13 @@ set(SHADERC_LIBS
-   SPIRV # from glslang
+@@ -68,8 +73,11 @@ set(SHADERC_LIBS
    SPIRV-Tools
  )
--
-+if (NOT BUILD_SHARED_LIBS)
+ 
++if(NOT BUILD_SHARED_LIBS)
  target_link_libraries(shaderc PRIVATE ${SHADERC_LIBS})
 +else()
  target_link_libraries(shaderc_shared PRIVATE ${SHADERC_LIBS})
 +endif()
  
-+if (NOT BUILD_SHARED_LIBS)
  shaderc_add_tests(
    TEST_PREFIX shaderc
-   LINK_LIBS shaderc
-@@ -60,7 +72,7 @@ shaderc_add_tests(
-     shaderc
+@@ -93,6 +101,7 @@ shaderc_add_tests(
      shaderc_cpp
      shaderc_private)
--
-+else()
- shaderc_add_tests(
-   TEST_PREFIX shaderc_shared
-   LINK_LIBS shaderc_shared SPIRV-Tools
-@@ -70,7 +82,9 @@ shaderc_add_tests(
-     shaderc
-     shaderc_cpp
-     shaderc_private)
--
-+endif()
-+# Do not combine all dependencies to static library
-+if (0)
+ 
++if(0)
  shaderc_combine_static_lib(shaderc_combined shaderc)
  
  if(SHADERC_ENABLE_INSTALL)
-@@ -106,3 +120,4 @@ if(${SHADERC_ENABLE_TESTS})
-   target_link_libraries(shaderc_c_smoke_test PRIVATE shaderc)
-   add_test(NAME shaderc_c_smoke_test COMMAND shaderc_c_smoke_test)
- endif()
+@@ -121,6 +130,7 @@ shaderc_add_tests(
+   TEST_NAMES
+     shaderc
+     shaderc_cpp)
 +endif()
-\ No newline at end of file
+ 
+ if(${SHADERC_ENABLE_TESTS})
+   add_executable(shaderc_c_smoke_test ./src/shaderc_c_smoke_test.c)

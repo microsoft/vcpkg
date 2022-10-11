@@ -3,9 +3,9 @@
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md).**
 
 Versioning allows you to deterministically control the precise revisions of dependencies used by
-your project from within your manifest file.
+your project from within your manifest file. Versioning only applies to [Manifest Mode](manifests.md).
 
-See our guide to [getting started with versioning](../examples/versioning.getting-started.md).
+For an example with context, see our guide to [getting started with versioning](../examples/versioning.getting-started.md).
 
 ## Contents
 
@@ -15,7 +15,9 @@ See our guide to [getting started with versioning](../examples/versioning.gettin
   * [`version-date`](#version-date)
   * [`version-string`](#version-string)
 * [Version constraints](#version-constraints)
-* [Version files](#version-files)
+  * [Baselines](#baselines)
+  * [`version>=`](#version-gte)
+  * [`overrides`](#overrides)
 
 ## Version schemes
 Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
@@ -31,7 +33,11 @@ Manifest property | Versioning scheme
 `version-date`    | For dates in the format YYYY-MM-DD
 `version-string`  | For arbitrary strings
 
-A manifest must contain only one version declaration.
+A manifest must contain only one version declaration. 
+
+_NOTE: By design, vcpkg does not compare versions that use different schemes. For example, a package
+that has a `version-string: 7.1.3` cannot be compared with the same package using `version: 7.1.4`, even if the
+conversion seems obvious._
 
 #### `version`
 Accepts version strings that follow a relaxed, dot-separated-, semver-like scheme.
@@ -76,7 +82,7 @@ Examples:
 * `watermelon#0`< `watermelon#1`
 
 #### `port-version`
-A positive integer value that increases each time a vcpkg-specific change is made to the port.
+A positive integer value that increases each time the port changes without updating the sources.
 
 The rules for port versions are:
 * Start at 0 for the original version of the port,
@@ -94,12 +100,15 @@ Examples:
 
 ## Version constraints
 
-### `builtin-baseline`
-Accepts a Git commit ID. Vcpkg will try to find a baseline file in the given commit ID and use that to set the baseline versions (lower bounds) of all dependencies.
+### Baselines
 
-Baselines provide stability and ease of development for top-level manifest files. They are not considered from ports consumed as a dependency. If a minimum version constraint is required during transitive version resolution, the port should use `version>=`.
+Baselines define a global version floor for what versions will be considered. This enables top-level manifests to keep the entire graph of dependencies up-to-date without needing to individually specify direct [`"version>="`][version-gte] constraints.
 
-Example:
+Every configured registry has an associated baseline. For manifests that don't configure any registries, the [`"builtin-baseline"`][builtin-baseline] field defines the baseline for the built-in registry. If a manifest does not configure any registries and does not have a [`"builtin-baseline"`][builtin-baseline], the install operates according to the Classic Mode algorithm and ignores all versioning information.
+
+Baselines, like other registry settings, are ignored from ports consumed as a dependency. If a minimum version is required during transitive version resolution the port should use [`"version>="`][version-gte].
+
+**Example**
 ```json
 {
   "name": "project",
@@ -109,14 +118,9 @@ Example:
 }
 ```
 
-You can get the current commit of your vcpkg instance either by adding an empty `"builtin-baseline"` field, installing, and examining the error message or by running `git rev-parse HEAD` in the root of the vcpkg instance.
+To add an initial `"builtin-baseline"`, use [`vcpkg x-update-baseline --add-initial-baseline`](../commands/update-baseline.md#add-initial-baseline). To update baselines in a manifest, use [`vcpkg x-update-baseline`](../commands/update-baseline.md).
 
-When resolving version constraints for a package, vcpkg will look for a baseline version:
-* First by looking at the baseline file in the given commit ID.
-* If the given commit ID does not contain a baseline file, vcpkg will fallback to use the local baseline file instead.
-* If there's no local baseline file, vcpkg will use the version currently available in the ports directory.
-
-_NOTE: If a baseline file is found, but it does not contain an entry for the package, the vcpkg invocation will fail._
+<a id="version-gte"></a>
 
 ### `version>=`
 Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.
@@ -130,14 +134,15 @@ Example:
   "version-semver": "1.0.0",
   "dependencies": [
     { "name": "zlib", "version>=": "1.2.11#9" },
-    { "name": "fmt", "version>=": "7.1.3" }
+    { "name": "fmt", "version>=": "7.1.3#1" }
   ],
-  "builtin-baseline":"9fd3bd594f41afb8747e20f6ac9619f26f333cbe"
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc"
 }
 ```
 
 As part of a version constraint declaration, a port version can be specified by adding the suffix `#<port-version>`, in the previous example `1.2.11#9` refers to version `1.2.11` port version `9`.
 
+<a id="overrides"></a>
 ### `overrides`
 Declaring an override forces vcpkg to ignore all other version constraints and use the version specified in the override. This is useful for pinning exact versions and for resolving version conflicts.
 
@@ -153,104 +158,17 @@ For an override to take effect, the overridden package must form part of the dep
     { "name": "zlib", "version>=": "1.2.11#9" },
     "fmt"
   ],
-  "builtin-baseline":"9fd3bd594f41afb8747e20f6ac9619f26f333cbe",
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc",
   "overrides": [
     { "name": "fmt", "version": "6.0.0" }
   ]
 }
 ```
 
-## Version files
-Vcpkg uses a set of metadata files to power its versioning feature.
-
-These files are located in the following locations:
-* `${VCPKG_ROOT}/versions/baseline.json`, (this file is common to all ports) and
-* `${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json` (one per port).
-
-For example, for `zlib` the relevant files are:
-* `${VCPKG_ROOT}/versions/baseline.json`
-* `${VCPKG_ROOT}/versions/z-/zlib.json`
-
-The vcpkg public CI checks validate that each time a port is added or updated its respective version files are also updated.
-
-### Baseline file
-The baseline file located in `${VCPKG_ROOT}/versions/baseline.json` is used to declared the current baseline versions of all packages.
-
-For example:
-```json
-{
-  "default": {
-    "3fd": { "baseline": "2.6.3", "port-version": 0 },
-    "7zip": { "baseline": "19.00", "port-version": 2 },
-    "abseil": { "baseline": "2020-09-23", "port-version": 1 }
-  }
-}
-```
-
-Provided that there are no local modifications to the ports, the versions of all packages in the baseline file should map to the version of their corresponding portfiles in the `ports/` directory.
-
-### Versions file
-Each port in vcpkg has a corresponding versions file, the location of a port's versions file follows the pattern:
-
-```sh
-${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json
-```
-
-For example, for `zlib` the corresponding versions file is:
-
-```sh
-${VCPKG_ROOT}/versions/z-/zlib.json
-```
-
-These files contain an array of all the versions available for a given port.
-For example, the contents of `versions/z-/zlib.json` declare the following versions:
-```json
-{
-  "versions": [
-    {
-      "git-tree": "827111046e37c98153d9d82bb6fa4183b6d728e4",
-      "version-string": "1.2.11",
-      "port-version": 9
-    },
-    {
-      "git-tree": "068430e3e24fa228c302c808ba99f8a48d126557",
-      "version-string": "1.2.11",
-      "port-version": 8
-    },
-    ...
-  ]
-}
-```
-Each version declared in this file uses the same syntax used in manifest files, but adds an extra `git-tree` property. The value of `git-tree` is the SHA hash, as calculated by Git, of the directory containing the portfiles for the declared version. You can ask Git for the object SHA via the syntax:
-```
-git rev-parse <commit>:<path>
-```
-For example,
-```
-git rev-parse HEAD:ports/zlib
-```
-
-### Updating the version files
-The recommended method to update these files is to run the `x-add-version` command.
-
-For example, if you have made changes to `zlib`:
-
-```
-vcpkg x-add-version zlib
-```
-
-If you're updating multiple ports at the same time, instead you can run:
-
-```
-vcpkg x-add-version --all
-```
-
-To update the files for all modified ports at once.
-
-_NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
-
 ## See Also
 
 * The [implementation details](versioning.implementation-details.md)
 * The [original specification](../specifications/versioning.md)
 
+[version-gte]: #version-gte
+[builtin-baseline]: manifests.md#builtin-baseline

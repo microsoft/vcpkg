@@ -1,10 +1,10 @@
-set(VERSION 2.12)
+set(VERSION 2.36)
 
 vcpkg_download_distfile(
     ARCHIVE_FILE
     URLS "http://www.naughter.com/download/aaplus_v${VERSION}.zip"
     FILENAME "aaplus_v${VERSION}.zip"
-    SHA512 ec3a3d1346637fbed3ec5093ded821c6d80950a6432378d9826ed842571d8670cd5d2a1c9ff58a18f308e18669d786f72d24961e26bd8e070ee35674688a39e7
+    SHA512 a7abf20feb49df00b95be987809a3dc8df3e9ff706dd5a873ecfdd695af125f858264e092b6b856e83685e9eb46fd46520cf09dfae892c32cbb71f925ba17b86
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,25 +12,26 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE_FILE}
     REF ${VERSION}
     NO_REMOVE_ONE_LEVEL
+    PATCHES
+        fix-cmakelists.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools BUILD_TOOLS
+    FEATURES
+        tools BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/libaaplus)
+vcpkg_cmake_config_fixup(PACKAGE_NAME aaplus CONFIG_PATH share/aaplus)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/AA+.htm DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/AA+.htm" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,9 +1,11 @@
 {
-  "$schema": "./vagrant-vm-configuration.schema.json",
+  "$schema": "./vagrant-box-configuration.schema.json",
   "brew": [
+    "autoconf-archive",
     "autoconf",
     "automake",
     "bison",
+    "cmake",
     "gettext",
     "gfortran",
     "gperf",
@@ -12,7 +14,9 @@
     "meson",
     "mono",
     "nasm",
+    "ninja",
     "pkg-config",
+    "texinfo",
     "yasm"
   ],
   "brew-cask": [

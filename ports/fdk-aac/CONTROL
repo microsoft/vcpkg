@@ -1,6 +1,0 @@
-Source: fdk-aac
-Version: 2018-07-08
-Port-Version: 3
-Homepage: https://github.com/mstorsjo/fdk-aac
-Description: A standalone library of the Fraunhofer FDK AAC code
-Supports: !(uwp | arm)

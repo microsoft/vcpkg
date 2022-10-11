@@ -1,8 +1,9 @@
 {
   "name": "boost-range",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost range module",
   "homepage": "https://github.com/boostorg/range",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",
@@ -12,10 +13,8 @@
     "boost-conversion",
     "boost-core",
     "boost-detail",
-    "boost-integer",
     "boost-iterator",
     "boost-mpl",
-    "boost-numeric-conversion",
     "boost-optional",
     "boost-preprocessor",
     "boost-regex",

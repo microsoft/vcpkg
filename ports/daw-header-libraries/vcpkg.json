@@ -1,0 +1,17 @@
+{
+  "name": "daw-header-libraries",
+  "version": "2.68.1",
+  "description": "Set of header-only algorithms used in daw-utf8-range and daw-json-link.",
+  "homepage": "https://github.com/beached/header_libraries",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

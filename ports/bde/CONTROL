@@ -1,5 +1,0 @@
-Source: bde
-Version: 3.2.0.0
-Port-Version: 2
-Description: Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.
-Supports: !windows

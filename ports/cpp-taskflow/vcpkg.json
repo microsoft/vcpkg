@@ -1,0 +1,10 @@
+{
+  "name": "cpp-taskflow",
+  "version-string": "2.6.0",
+  "port-version": 1,
+  "description": "Fast Parallel Tasking Programming Library using Modern C++.",
+  "homepage": "https://github.com/taskflow/taskflow",
+  "dependencies": [
+    "taskflow"
+  ]
+}

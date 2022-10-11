@@ -1,6 +1,0 @@
-Source: sdformat10
-Version: 10.0.0
-Homepage: http://sdformat.org/
-Build-Depends: ignition-math6, urdfdom, tinyxml2
-Description: Simulation Description Format (SDF) parser and description files.
-Supports: !(uwp)

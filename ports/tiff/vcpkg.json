@@ -1,0 +1,62 @@
+{
+  "name": "tiff",
+  "version": "4.4.0",
+  "port-version": 1,
+  "description": "A library that supports the manipulation of TIFF image files",
+  "homepage": "https://libtiff.gitlab.io/libtiff/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "jpeg",
+    "lzma",
+    "zip"
+  ],
+  "features": {
+    "cxx": {
+      "description": "Build C++ libtiffxx library",
+      "supports": "!arm"
+    },
+    "jpeg": {
+      "description": "Support JPEG compression in TIFF image files",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lzma": {
+      "description": "Support LZMA compression in TIFF image files",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "tools": {
+      "description": "Build tools"
+    },
+    "webp": {
+      "description": "Support WEBP compression in TIFF image files",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "zip": {
+      "description": "Support ZIP/deflate compression in TIFF image files",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support ZSTD compression in TIFF image files",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

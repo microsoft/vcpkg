@@ -1,13 +1,12 @@
 {
   "name": "boost-pool",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost pool module",
   "homepage": "https://github.com/boostorg/pool",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
-    "boost-detail",
     "boost-integer",
     "boost-throw-exception",
     "boost-type-traits",

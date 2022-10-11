@@ -1,5 +1,0 @@
-Source: cgl
-Version: 0.60.2-2
-Homepage: https://github.com/coin-or/Cgl
-Description: The COIN-OR Cut Generation Library (Cgl) is a collection of cut generators that can be used with other COIN-OR packages that make use of cuts, such as, among others, the linear solver Clp or the mixed integer linear programming solvers Cbc or BCP.
-Build-Depends: coinutils, osi, clp

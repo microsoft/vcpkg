@@ -1,7 +1,0 @@
-Source: cpp-netlib
-Version: 0.13.0
-Port-Version: 4
-Homepage: https://cpp-netlib.org/
-Build-Depends: boost-spirit, boost-smart-ptr, boost-asio, boost-program-options, boost-assign, boost-logic, boost-scope-exit
-Description: A collection of network-related routines/implementations geared towards providing a robust cross-platform networking library
-Supports: !uwp

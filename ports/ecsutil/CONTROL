@@ -1,6 +1,0 @@
-Source: ecsutil
-Version: 1.0.7.15
-Homepage: https://github.com/EMCECS/ecs-object-client-windows-cpp
-Description: Native Windows SDK for accessing ECS via the S3 HTTP protocol.
-Build-Depends: atlmfc (windows)
-Supports: windows&(x64|x86)

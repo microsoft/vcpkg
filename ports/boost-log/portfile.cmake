@@ -3,27 +3,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/log
-    REF boost-1.75.0
-    SHA512 4c500217aa8ba0fe88afdff5f901da2a8977f7825a37fcc0de4a46a723dbfc3be8a25a712e4e49cf2ae4a95432dc80d66b5e8860815f320b7cb90d66592dc6bf
+    REF boost-1.80.0
+    SHA512 1538ce8d2a37b93d4d091b5da3a6937ac47fca084132d622d06938157b5d9f6b6ecf877677145531855b76479643b33a3401a1f15723aa85fda71543451d0c4b
     HEAD_REF master
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
+string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
 string(REPLACE " <conditional>@select-arch-specific-sources" "#<conditional>@select-arch-specific-sources" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-
-file(READ ${SOURCE_PATH}/build/log-arch-config.jam _contents)
-string(REPLACE
+vcpkg_replace_string("${SOURCE_PATH}/build/log-arch-config.jam"
     "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
-    "project.load [ path.join [ path.make $(here:D) ] config/checks/architecture ]"
-    _contents "${_contents}")
-file(WRITE ${SOURCE_PATH}/build/log-arch-config.jam "${_contents}")
-
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-log requires a newer version of vcpkg in order to build.")
-endif()
+    "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

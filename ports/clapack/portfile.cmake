@@ -5,7 +5,7 @@ endif()
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "http://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz"
+  URLS "https://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz"
   FILENAME "clapack-3.2.1.tgz"
   SHA512 cf19c710291ddff3f6ead7d86bdfdeaebca21291d9df094bf0a8ef599546b007757fb2dbb19b56511bb53ef7456eac0c73973b9627bf4d02982c856124428b49
 )
@@ -20,10 +20,27 @@ vcpkg_extract_source_archive_ex(
       support-uwp.patch
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-  set(ARITHCHK_PATH ${CURRENT_HOST_INSTALLED_DIR}/tools/clapack/arithchk${VCPKG_HOST_EXECUTABLE_SUFFIX})
-  if(NOT EXISTS "${ARITHCHK_PATH}")
-    message(FATAL_ERROR "Expected ${ARITHCHK_PATH} to exist.")
+set(ARITH_PATH)
+if(DEFINED CLAPACK_ARITH_PATH)
+  set(ARITH_PATH "-DARITH_PATH=${CLAPACK_ARITH_PATH}")
+elseif(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+  if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^x64$|^arm64$")
+      set(ARITH_PATH "-DARITH_PATH=${CMAKE_CURRENT_LIST_DIR}/arith_win64.h")
+    else()
+      set(ARITH_PATH "-DARITH_PATH=${CMAKE_CURRENT_LIST_DIR}/arith_win32.h")
+    endif()
+  elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(ARITH_PATH "-DARITH_PATH=${CMAKE_CURRENT_LIST_DIR}/arith_osx.h")
+  elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(ARITH_PATH "-DARITH_PATH=${CMAKE_CURRENT_LIST_DIR}/arith_linux64.h")
+  else()
+    message(WARNING
+"Unable to cross-compile clapack for ${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_CMAKE_SYSTEM_NAME}.
+No arith.h is available and arithchk must be executed for the target.
+To fix this issue, define CLAPACK_ARITH_PATH in your triplet to the location of a pre-generated arith.h file.
+
+Continuing with trying to run arithchk anyway.")
   endif()
 endif()
 
@@ -32,7 +49,7 @@ vcpkg_configure_cmake(
   PREFER_NINJA
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=d
-    -DARITHCHK_PATH=${ARITHCHK_PATH}
+    ${ARITH_PATH}
 )
 
 vcpkg_install_cmake()

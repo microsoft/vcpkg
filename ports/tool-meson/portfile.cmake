@@ -1,7 +1,4 @@
-# This port represents a dependency on the Meson build system.
-# In the future, it is expected that this port acquires and installs Meson.
-# Currently is used in ports that call vcpkg_find_acquire_program(MESON) in order to force rebuilds.
-
+#deprecated port. -> new port "vcpkg-tool-meson" for better grouping with other vcpkg tools 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_find_acquire_program(MESON)
 message(STATUS "Using meson: ${MESON}")

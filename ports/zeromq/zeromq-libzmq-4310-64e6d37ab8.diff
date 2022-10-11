@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c983c6698..21bcd414a0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,6 +15,7 @@ include(CheckCSourceCompiles)
+ include(CheckCSourceRuns)
+ include(CMakeDependentOption)
+ include(CheckCXXSymbolExists)
++include(CheckStructHasMember)
+ include(CheckTypeSize)
+ include(FindThreads)
+ include(GNUInstallDirs)
+@@ -495,8 +496,12 @@ endif()
+ 
+ if(NOT WIN32)
+   set(ZMQ_HAVE_IPC 1)
++  set(ZMQ_HAVE_STRUCT_SOCKADDR_UN 1)
+ else()
+   check_include_files("winsock2.h;afunix.h" ZMQ_HAVE_IPC)
++  if(ZMQ_HAVE_IPC)
++    check_struct_has_member("struct sockaddr_un" sun_path "winsock2.h;afunix.h" ZMQ_HAVE_STRUCT_SOCKADDR_UN)
++  endif()
+ endif()
+ 
+ # ##################### BEGIN condition_variable_t selection
+diff --git a/builds/cmake/platform.hpp.in b/builds/cmake/platform.hpp.in
+index 2d23e8b288..18064362fe 100644
+--- a/builds/cmake/platform.hpp.in
++++ b/builds/cmake/platform.hpp.in
+@@ -59,6 +59,7 @@
+ #cmakedefine ZMQ_HAVE_LIBBSD
+ 
+ #cmakedefine ZMQ_HAVE_IPC
++#cmakedefine ZMQ_HAVE_STRUCT_SOCKADDR_UN
+ 
+ #cmakedefine ZMQ_USE_BUILTIN_SHA1
+ #cmakedefine ZMQ_USE_NSS
+diff --git a/src/windows.hpp b/src/windows.hpp
+index 11c7581dee..24cce83d11 100644
+--- a/src/windows.hpp
++++ b/src/windows.hpp
+@@ -98,3 +98,13 @@ static inline int poll (struct pollfd *pfd, unsigned long nfds, int timeout)
+ #define snprintf(buffer_, count_, format_, ...)                                \
+     _snprintf_s (buffer_, count_, _TRUNCATE, format_, __VA_ARGS__)
+ #endif
++
++//  Workaround missing struct sockaddr_un in afunix.h.
++//  Fix #3949.
++#if defined(ZMQ_HAVE_IPC) && !defined(ZMQ_HAVE_STRUCT_SOCKADDR_UN)
++struct sockaddr_un
++{
++    ADDRESS_FAMILY sun_family; /* AF_UNIX */
++    char sun_path[108];        /* pathname */
++};
++#endif

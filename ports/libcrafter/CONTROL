@@ -1,6 +1,0 @@
-Source: libcrafter
-Version: 0.3
-Port-Version: 2
-Homepage: https://github.com/pellegre/libcrafter
-Description: Libcrafter is a high level library for C++ designed to create and decode network packets.
-Build-Depends: libpcap

@@ -1,13 +1,13 @@
-set(BOTAN_VERSION 2.16.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 82a20c67bd54b8c6c75f32bd31dea5b12f3d7e67 # 2.16.0
-    SHA512 42b8dac0a6b44afee14e8ba928b323790b8d90395ba70b4919b3d033e5b9073706355c2263c2a9e66357fa6d4af4c85430c93a65cfdaa79f1c83c89940619a66
+    REF fe62c1f5ce6c4379a52bd018c2ff68bed3024c4d # 2.19.1
+    SHA512 09c5fdb3a05978373fb1512a7a9b5c3d89e6e103d7fe86a0e126c417117950c2a63559dc06e8a9c895c892e9fc3888d7ed97686e15d8c2fd941ddb629af0e5a0
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
+        embed-debug-info.patch
+        arm64-windows.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -51,28 +51,30 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    amalgamation BOTAN_AMALGAMATION
+    FEATURES
+        amalgamation BOTAN_AMALGAMATION
+        zlib BOTAN_WITH_ZLIB
 )
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
-        set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR}/debug)
+        set(BOTAN_FLAG_PREFIX "${CURRENT_PACKAGES_DIR}/debug")
         set(BOTAN_FLAG_DEBUGMODE --debug-mode)
         set(BOTAN_DEBUG_SUFFIX "")
         set(BOTAN_MSVC_RUNTIME_SUFFIX "d")
     else()
         set(BOTAN_FLAG_DEBUGMODE)
-        set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(BOTAN_FLAG_PREFIX "${CURRENT_PACKAGES_DIR}")
         set(BOTAN_MSVC_RUNTIME_SUFFIX "")
     endif()
 
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
 
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     endif()
-    make_directory(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+    make_directory("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
 
     set(configure_arguments --cpu=${BOTAN_FLAG_CPU}
                             ${BOTAN_FLAG_SHARED}
@@ -81,13 +83,23 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
                             --with-pkg-config
-                            --link-method=copy)
+                            --link-method=copy
+                            --with-debug-info)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
     endif()
 
+    if(VCPKG_CXX_FLAGS)
+      list(APPEND configure_arguments --extra-cxxflags ${VCPKG_CXX_FLAGS})
+    endif()
+
     if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
         list(APPEND configure_arguments --amalgamation)
+    endif()
+    if("-DBOTAN_WITH_ZLIB=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --with-zlib)
+        list(APPEND configure_arguments --with-external-includedir="${CURRENT_INSTALLED_DIR}/include")
+        list(APPEND configure_arguments --with-external-libdir="${CURRENT_INSTALLED_DIR}/lib")
     endif()
 
     vcpkg_execute_required_process(
@@ -112,41 +124,73 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --libdir=${BOTAN_FLAG_PREFIX}/lib
             --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
             --includedir=${BOTAN_FLAG_PREFIX}/include
-            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 endfunction()
 
-BOTAN_BUILD(rel)
-BOTAN_BUILD(dbg)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/botan)
-
-set(cli_exe_name "botan")
-if(CMAKE_HOST_WIN32)
-    set(cli_exe_name "botan-cli.exe")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    BOTAN_BUILD(rel)
 endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${cli_exe_name} ${CURRENT_PACKAGES_DIR}/tools/botan/${cli_exe_name})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${cli_exe_name})
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
-
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/include/botan-2
-    ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/manual)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    BOTAN_BUILD(dbg)
 endif()
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc")
+    if (VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc"
+            [[\lib]]
+            [[/lib]]
+        )
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc"
+        [[${prefix}/include/botan-2]]
+        [[${prefix}/include]]
+    )
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc")
+    if (VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc"
+            [[\lib]]
+            [[/lib]]
+        )
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc"
+        [[${prefix}/include/botan-2]]
+        [[${prefix}/include]]
+    )
+endif()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/botan)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/ ${CURRENT_PACKAGES_DIR}/share/botan/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan/license.txt ${CURRENT_PACKAGES_DIR}/share/botan/copyright)
+if(CMAKE_HOST_WIN32)
+    vcpkg_copy_tools(TOOL_NAMES botan-cli AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/botan-2"
+    "${CURRENT_PACKAGES_DIR}/share/doc")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
+
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

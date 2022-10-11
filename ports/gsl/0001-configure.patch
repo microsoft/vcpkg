@@ -1,16 +1,9 @@
 ---
- config.h.in => config.h | 50 ++++++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
- rename config.h.in => config.h (92%)
-
 diff --git a/config.h.in b/config.h
-similarity index 92%
-rename from config.h.in
-rename to config.h
-index d39c766..c650f5b 100644
+index adab7a58d..f6dc2278e 100644
 --- a/config.h.in
 +++ b/config.h
-@@ -8,19 +8,19 @@
+@@ -11,19 +11,19 @@
  
  /* Define to 1 if you have the declaration of `acosh', and to 0 if you don't.
     */
@@ -34,7 +27,7 @@ index d39c766..c650f5b 100644
  
  /* Define to 1 if you have the declaration of `feenableexcept', and to 0 if
     you don't. */
-@@ -40,31 +40,31 @@
+@@ -43,31 +43,31 @@
  
  /* Define to 1 if you have the declaration of `frexp', and to 0 if you don't.
     */
@@ -73,7 +66,7 @@ index d39c766..c650f5b 100644
  
  /* Define to 1 if you have the <dlfcn.h> header file. */
  #undef HAVE_DLFCN_H
-@@ -73,13 +73,13 @@
+@@ -76,13 +76,13 @@
  #undef HAVE_DOPRNT
  
  /* Defined if you have ansi EXIT_SUCCESS and EXIT_FAILURE in stdlib.h */
@@ -89,7 +82,7 @@ index d39c766..c650f5b 100644
  
  /* Define to 1 if you have the <ieeefp.h> header file. */
  #undef HAVE_IEEEFP_H
-@@ -94,43 +94,43 @@
+@@ -97,43 +97,43 @@
  #undef HAVE_INLINE
  
  /* Define to 1 if you have the <inttypes.h> header file. */
@@ -107,16 +100,16 @@ index d39c766..c650f5b 100644
 -#undef HAVE_MEMMOVE
 +#define HAVE_MEMMOVE 1
  
- /* Define to 1 if you have the <memory.h> header file. */
--#undef HAVE_MEMORY_H
-+#define HAVE_MEMORY_H 1
- 
  /* Define this if printf can handle %Lf for long double */
  #undef HAVE_PRINTF_LONGDOUBLE
  
  /* Define to 1 if you have the <stdint.h> header file. */
 -#undef HAVE_STDINT_H
 +#define HAVE_STDINT_H 1
+ 
+ /* Define to 1 if you have the <stdio.h> header file. */
+-#undef HAVE_STDIO_H
++#define HAVE_STDIO_H 1
  
  /* Define to 1 if you have the <stdlib.h> header file. */
 -#undef HAVE_STDLIB_H
@@ -143,7 +136,7 @@ index d39c766..c650f5b 100644
  
  /* Define to 1 if you have the <sys/stat.h> header file. */
  #undef HAVE_SYS_STAT_H
-@@ -142,7 +142,7 @@
+@@ -145,7 +145,7 @@
  #undef HAVE_UNISTD_H
  
  /* Define to 1 if you have the `vprintf' function. */
@@ -152,14 +145,14 @@ index d39c766..c650f5b 100644
  
  /* Define if you need to hide the static definitions of inline functions */
  #undef HIDE_INLINE_STATIC
-@@ -176,7 +176,7 @@
- #undef RELEASED
- 
- /* Define to 1 if you have the ANSI C header files. */
+@@ -180,7 +180,7 @@
+ /* Define to 1 if all of the C90 standard headers exist (not just the ones
+    required in a freestanding environment). This macro is provided for
+    backward compatibility; new code need not use it. */
 -#undef STDC_HEADERS
 +#define STDC_HEADERS 1
  
  /* Version number of package */
  #undef VERSION
--- 
+---
 

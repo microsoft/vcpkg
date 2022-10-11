@@ -1,8 +1,9 @@
 {
   "name": "boost-compute",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost compute module",
   "homepage": "https://github.com/boostorg/compute",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-array",
@@ -19,7 +20,6 @@
     "boost-fusion",
     "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
     "boost-mpl",
     "boost-optional",
     "boost-preprocessor",

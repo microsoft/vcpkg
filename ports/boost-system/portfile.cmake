@@ -5,14 +5,11 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/system
-    REF boost-1.75.0
-    SHA512 8d079906e513605d9c372fc42dcc29e0e537ef690ecd2140040bd8c40619a218e61950d6a59074d11db910f6a68e8306633b5bc2b6190813fcd47c7aacbdb0ad
+    REF boost-1.80.0
+    SHA512 9f3365e993d27c6ca46015ee3111ea2a8962d6de0bb2b45652a6bf26e5be025d70f427ec92ebecb3ce1980220e4540d2dca4180a3dcdd1ca4006161cc1bf5402
     HEAD_REF master
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-system requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

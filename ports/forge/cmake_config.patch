@@ -1,40 +1,8 @@
 diff --git a/CMakeModules/ForgeConfig.cmake.in b/CMakeModules/ForgeConfig.cmake.in
-index e4c7737..5a3b000 100644
+index 6fb18ac..5a3b000 100644
 --- a/CMakeModules/ForgeConfig.cmake.in
 +++ b/CMakeModules/ForgeConfig.cmake.in
-@@ -57,16 +57,24 @@ if (NOT TARGET Forge::forge AND
- endif ()
- 
- if (TARGET Forge::forge)
--    get_property(config TARGET Forge::forge PROPERTY IMPORTED_CONFIGURATIONS)
--    if(NOT config)
--      set(config "NOCONFIG")
-+    get_property(configs TARGET Forge::forge PROPERTY IMPORTED_CONFIGURATIONS)
-+    if(NOT configs)
-+        set(configs "NOCONFIG")
-     endif()
--    get_property(loc TARGET Forge::forge PROPERTY IMPORTED_LOCATION_${config})
-+    foreach(config IN LISTS configs)
-+        get_property(loc TARGET Forge::forge PROPERTY IMPORTED_LOCATION_${config})
-+
-+        # break if any of the imported configurations exist. All configs write to the same
-+        # location so they are not working as CMake intended. Its fine for single config
-+        # installers like ours.
-+        if(EXISTS ${loc})
-+            set(Forge_BINARY_EXISTS TRUE)
-+            break()
-+        endif()
-+    endforeach()
- endif ()
- 
--if ((TARGET Forge::forge AND EXISTS ${loc})
--    OR
--    TARGET forge)
-+if ((TARGET Forge::forge AND Forge_BINARY_EXISTS) OR TARGET forge)
-     set(Forge_FOUND ON)
-     if (TARGET forge AND NOT TARGET Forge::forge)
-         add_library(Forge::forge ALIAS forge)
-@@ -75,3 +83,22 @@ if ((TARGET Forge::forge AND EXISTS ${loc})
+@@ -83,3 +83,22 @@ if ((TARGET Forge::forge AND Forge_BINARY_EXISTS) OR TARGET forge)
  else ()
      set(Forge_FOUND OFF)
  endif ()

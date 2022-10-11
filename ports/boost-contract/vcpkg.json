@@ -1,9 +1,9 @@
 {
   "name": "boost-contract",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost contract module",
   "homepage": "https://github.com/boostorg/contract",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-assert",
@@ -13,7 +13,6 @@
     },
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-exception",
     "boost-function",
     "boost-function-types",
@@ -30,6 +29,10 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

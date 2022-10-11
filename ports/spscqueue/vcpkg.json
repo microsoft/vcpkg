@@ -1,0 +1,7 @@
+{
+  "name": "spscqueue",
+  "version-string": "1.1",
+  "port-version": 1,
+  "description": "A bounded single-producer single-consumer wait-free and lock-free queue written in C++11",
+  "homepage": "https://github.com/rigtorp/SPSCQueue"
+}

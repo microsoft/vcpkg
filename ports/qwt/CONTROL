@@ -1,5 +1,0 @@
-Source: qwt
-Version: 6.1.5
-Homepage: https://sourceforge.net/projects/qwt
-Description: Qt widgets library for technical applications
-Build-Depends: qt5-base[core], qt5-svg, qt5-tools

@@ -1,0 +1,6 @@
+{
+  "name": "compoundfilereader",
+  "version": "0.1.0",
+  "description": "Simple standalone c++ header file to read compound file (Structured Storage File) content.",
+  "homepage": "https://github.com/microsoft/compoundfilereader"
+}

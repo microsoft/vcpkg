@@ -1,33 +1,29 @@
-set(ILBC_VERSION 3.0.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/TimothyGu/libilbc/releases/download/v${ILBC_VERSION}/libilbc-${ILBC_VERSION}.zip"
-    FILENAME "libilbc-${ILBC_VERSION}.zip"
-    SHA512 a5755db093529f6a3fd8fd47da63b57cffff1d3babef443d92f7c5a250ce8d1585adfba525c4037b142d9f00f1675a5054c172bf936be280dfcc22ed553c94c6
-)
-
-vcpkg_extract_source_archive_ex(
+set(ILBC_VERSION 3.0.4)
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${ILBC_VERSION}
-    PATCHES do-not-build-ilbc_test.patch
+    REPO TimothyGu/libilbc
+    REF cd064edf2c6c104a4e1fd87b34fd24cfa6dbe401
+    SHA512 323d32dbd54d5ef624940432bf19c29f5ead6f40bc84aba4261f067dfdc40cf4000e383f4dca65cd3b745a354a119a9e515949a1466af89c300cd7bf95991675
+    PATCHES
+        do-not-build-ilbc_test.patch
+        absl.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_INSTALL_DOCDIR=share/${PORT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/ilbc_export.h "#ifdef ILBC_STATIC_DEFINE" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ilbc_export.h" "#ifdef ILBC_STATIC_DEFINE" "#if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

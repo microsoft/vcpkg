@@ -1,0 +1,16 @@
+{
+  "name": "ignition-math6",
+  "version": "6.6.0",
+  "port-version": 3,
+  "description": "Math API for robotic applications",
+  "homepage": "https://ignitionrobotics.org/libs/math",
+  "license": null,
+  "dependencies": [
+    "eigen3",
+    "ignition-cmake2",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
+  ]
+}

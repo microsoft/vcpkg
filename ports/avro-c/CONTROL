@@ -1,6 +1,0 @@
-Source: avro-c
-Version: 1.9.2-1
-Supports: !(uwp|osx)
-Homepage: https://github.com/apache/avro
-Description: Apache Avro is a data serialization system
-Build-Depends: jansson, liblzma, zlib, snappy

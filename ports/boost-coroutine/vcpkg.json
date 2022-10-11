@@ -1,10 +1,11 @@
 {
   "name": "boost-coroutine",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "port-version": 1,
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
-  "supports": "!arm & !uwp & !emscripten",
+  "license": "BSL-1.0",
+  "supports": "!(arm & windows) & !uwp & !emscripten",
   "dependencies": [
     "boost-assert",
     {
@@ -17,19 +18,20 @@
       "platform": "!uwp & !emscripten"
     },
     "boost-core",
-    "boost-detail",
     "boost-exception",
-    "boost-integer",
     {
       "name": "boost-modular-build-helper",
       "host": true
     },
     "boost-move",
     "boost-system",
-    "boost-thread",
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -1,8 +1,0 @@
-{
-    "name": "default-baseline-test",
-    "version-string": "0",
-    "builtin-baseline": "fca18ba3572f8aebe3b8158c359db62a7e26134e",
-    "dependencies": [
-        "zlib"
-    ]
-}

@@ -4,45 +4,7 @@
 
 Vcpkg lets you take control of which version of packages to install in your projects using manifests. 
 
-## Enabling versions
-
-To start using [versioning](../users/versioning.md), first you need to enable the `versions` feature flag in any of the following manners:
-
-* Setting the `VCPKG_FEATURE_FLAGS` environment variable
-
-```PowerShell
-# Example for PowerShell
-$env:VCPKG_FEATURE_FLAGS="versions"
-```
-```bash
-# Example for bash
-export VCPKG_FEATURE_FLAGS=versions
-```
-```cmd
-REM Example for cmd
-SET VCPKG_FEATURE_FLAGS=versions
-```
-
-* Passing the feature flags in the vcpkg command line
-```bash
-./vcpkg install --feature-flags=versions
-```
-
-* Setting `VCPKG_FEATURE_FLAGS` before your `project()` CMake directive
-```cmake
-set(VCPKG_FEATURE_FLAGS versions)
-project(myapp)
-```
-* Setting `VcpkgAdditionalInstallOptions` (Project Properties -> Vcpkg -> Additional Options) in your MSBuild project
-```xml
-<PropertyGroup>
-  <VcpkgAdditionalInstallOptions>--feature-flags=versions</VcpkgAdditionalInstallOptions>
-</PropertyGroup>
-```
-
 ## Using versions with manifests
-
-With the `versions` feature flag enabled you can start adding version constraints to your dependencies.
 
 Let's start with creating a simple CMake project that depends on `fmt` and `zlib`.
 
@@ -56,11 +18,11 @@ Create a folder with the following files:
     "dependencies": [
         {
             "name": "fmt",
-            "version>=": "7.1.3"
+            "version>=": "7.1.3#1"
         }, 
         "zlib"
     ],
-    "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61"
+    "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc"
 }
 ```
 
@@ -105,8 +67,10 @@ PS D:\versions-test\build> cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=D:/vcpkg/script
 -- Running vcpkg install
 Detecting compiler hash for triplet x86-windows...
 The following packages will be built and installed:
-    fmt[core]:x86-windows -> 7.1.3 -- D:\vcpkg\buildtrees\versioning\versions\fmt\dd8cf5e1a2dce2680189a0744102d4b0f1cfb8b6
-    zlib[core]:x86-windows -> 1.2.11#9 -- D:\vcpkg\buildtrees\versioning\versions\zlib\827111046e37c98153d9d82bb6fa4183b6d728e4
+    fmt[core]:x64-windows -> 7.1.3#1 -- D:\Work\viromer\vcpkg\buildtrees\versioning\versions\fmt\4f8427eb0bd40da1856d4e67bde39a4fda689d72
+    vcpkg-cmake[core]:x64-windows -> 2021-02-26 -- D:\Work\viromer\vcpkg\buildtrees\versioning\versions\vcpkg-cmake\51896aa8073adb5c8450daa423d03eedf0dfc61f
+    vcpkg-cmake-config[core]:x64-windows -> 2021-02-26 -- D:\Work\viromer\vcpkg\buildtrees\versioning\versions\vcpkg-cmake-config\d255b3d566a8861dcc99a958240463e678528066
+    zlib[core]:x64-windows -> 1.2.11#9 -- D:\Work\viromer\vcpkg\buildtrees\versioning\versions\zlib\827111046e37c98153d9d82bb6fa4183b6d728e4
 ...
 ```
 
@@ -126,11 +90,12 @@ zlib version is 1.2.11
 Take a look at the output:
 
 ```
-fmt[core]:x86-windows -> 7.1.3 -- D:\vcpkg\buildtrees\versioning\versions\fmt\dd8cf5e1a2dce2680189a0744102d4b0f1cfb8b6
+fmt[core]:x86-windows -> 7.1.3#1 -- D:\vcpkg\buildtrees\versioning\versions\fmt\4f8427eb0bd40da1856d4e67bde39a4fda689d72
+...
 zlib[core]:x86-windows -> 1.2.11#9 -- D:\vcpkg\buildtrees\versioning\versions\zlib\827111046e37c98153d9d82bb6fa4183b6d728e4
 ```
 
-Instead of using the portfiles in `ports/`, vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`. The files in `ports/` are still used when running vcpkg in classic mode or when the `versions` feature flag is disabled. 
+Instead of using the portfiles in `ports/`, vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`. The files in `ports/` are still used when running vcpkg in classic mode.
 
 _NOTE: Output from vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
 
@@ -166,23 +131,23 @@ Version scheme   | Description
 }
 ```
 
-This property is used to express minimum version constraints, it is allowed only as part of the `"dependencies"` declarations. In our example we set an explicit constraint on version `7.1.3` of `fmt`. 
+This property is used to express minimum version constraints, it is allowed only as part of the `"dependencies"` declarations. In our example we set an explicit constraint on version `7.1.3#1` of `fmt`. 
 
 Vcpkg is allowed to upgrade this constraint if a transitive dependency requires a newer version. For example, if `zlib` were to declare a dependency on `fmt` version `7.1.4` then vcpkg would install `7.1.4` instead.
 
-Vcpkg uses a minimum version approach, in our example, even if `fmt` version `8.0.0` were to be released, vcpkg would still install version `7.1.3` as that is the minimum version that satisfies the constraint. The advantages of this approach are that you don't get unexpected dependency upgrades when you update vcpkg and you get reproducible builds (in terms of version used) as long as you use the same manifest. 
+Vcpkg uses a minimum version approach, in our example, even if `fmt` version `8.0.0` were to be released, vcpkg would still install version `7.1.3#1` as that is the minimum version that satisfies the constraint. The advantages of this approach are that you don't get unexpected dependency upgrades when you update vcpkg and you get reproducible builds (in terms of version used) as long as you use the same manifest. 
 
 If you want to upgrade your dependencies, you can bump the minimum version constraint or use a newer baseline.
 
 #### **`builtin-baseline`**
 
 ```json
-{ "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61" }
+{ "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc" }
 ```
 
-This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. See the [`builtin-baseline` documentation](../users/versioning.md#builtin-baseline) for more information.
+This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. See the [`builtin-baseline` documentation](../users/manifests.md#builtin-baseline) for more information.
 
-In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `b60f003ccf5fe8613d029f49f835c8929a66eb61` to find out what version of `zlib` was the latest at that point in time (in our case it was `1.2.11#9`).
+In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `3426db05b996481ca31e95fff3734cf23e0f51bc` to find out what version of `zlib` was the latest at that point in time (in our case it was `1.2.11#9`).
 
 During version resolution, baseline versions are treated as minimum version constraints. If you declare an explicit constraint that is lower than a baseline version, the explicit constraint will be upgraded to the baseline version. 
 
@@ -191,7 +156,7 @@ For example, if we modified our dependencies like this:
 { "dependencies": [
     {
         "name": "fmt",
-        "version>=": "7.1.3"
+        "version>=": "7.1.3#1"
     },
     {
         "name": "zlib",
@@ -223,14 +188,14 @@ Let's modify our example once more, this time to force vcpkg to use version `6.0
     "dependencies": [
         {
             "name": "fmt",
-            "version>=": "7.1.3"
+            "version>=": "7.1.3#1"
         },
         {
             "name": "zlib",
             "version>=": "1.2.11#7"
         }
     ],
-    "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61",
+    "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc",
     "overrides": [
         {
             "name": "fmt",
@@ -267,11 +232,11 @@ Notice how the `fmt` is now at version `6.0.0` just like we wanted.
 
 ## Versions and custom ports
 
-The last thing to discuss is how overlay ports interact with versioning resolution. The answer is: they don't. 
+The last thing to discuss is how overlay ports interact with versioning resolution. The answer is: they don't.
 
 Going into more detail, when you provide an overlay for a port, vcpkg will always use the overlay port without caring what version is contained in it. The reasons are two-fold: (1) it is consistent with the existing behavior of overlay ports of completely masking the existing port, and (2) overlay ports do not (and are not expected to) provide enough information to power vcpkg's versioning feature.
 
-If you want to have flexible port customization along with versioning features, you should consider making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
+If you want to have flexible port customization along with versioning, you should consider making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
 
 ## Further reading
 

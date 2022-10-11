@@ -1,0 +1,155 @@
+{
+  "name": "gstreamer",
+  "version": "1.19.2",
+  "port-version": 9,
+  "description": "GStreamer open-source multimedia framework core library",
+  "homepage": "https://gstreamer.freedesktop.org/",
+  "license": "LGPL-2.0-only",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "cairo",
+      "features": [
+        "gobject"
+      ],
+      "platform": "windows | osx"
+    },
+    {
+      "name": "freetype",
+      "features": [
+        "brotli",
+        "png",
+        "zlib"
+      ]
+    },
+    {
+      "name": "glib",
+      "host": true
+    },
+    "libnice",
+    "libxml2",
+    {
+      "name": "opengl-registry",
+      "platform": "windows | osx"
+    },
+    "openssl",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    {
+      "name": "yasm-tool-helper",
+      "platform": "windows"
+    }
+  ],
+  "default-features": [
+    "plugins-base",
+    "plugins-good",
+    "plugins-ugly"
+  ],
+  "features": {
+    "flac": {
+      "description": "FLAC audio codec plugin",
+      "supports": "!arm",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "gl-graphene": {
+      "description": "Use Graphene in OpenGL plugin",
+      "supports": "!arm",
+      "dependencies": [
+        "graphene"
+      ]
+    },
+    "opus": {
+      "description": "Opus de/encoding via libopus",
+      "dependencies": [
+        "opus"
+      ]
+    },
+    "plugins-bad": {
+      "description": "'Bad' GStreamer plugins and helper libraries",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "rawparse"
+          ],
+          "platform": "!arm"
+        },
+        "openh264"
+      ]
+    },
+    "plugins-base": {
+      "description": "'Base' GStreamer plugins and helper libraries",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "gl-graphene",
+            "rawparse"
+          ],
+          "platform": "!arm"
+        }
+      ]
+    },
+    "plugins-good": {
+      "description": "'Good' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "flac"
+          ],
+          "platform": "!arm"
+        },
+        "jack2",
+        "libjpeg-turbo",
+        "libpng",
+        "libvpx",
+        "mpg123",
+        "speex",
+        "taglib"
+      ]
+    },
+    "plugins-ugly": {
+      "description": "'Ugly' GStreamer plugins and helper libraries",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "x264"
+          ],
+          "platform": "!arm"
+        }
+      ]
+    },
+    "rawparse": {
+      "description": "Build with libraw support",
+      "supports": "!arm",
+      "dependencies": [
+        "libraw"
+      ]
+    },
+    "x11": {
+      "description": "Use x11 window system",
+      "supports": "!windows",
+      "dependencies": [
+        "libx11"
+      ]
+    },
+    "x264": {
+      "description": "Colon separated list of additional x264 library paths, e.g. for 10-bit version",
+      "supports": "!arm",
+      "dependencies": [
+        "x264"
+      ]
+    }
+  }
+}

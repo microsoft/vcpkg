@@ -1,0 +1,7 @@
+{
+  "name": "p-ranav-csv",
+  "version-string": "2019-07-11",
+  "port-version": 1,
+  "description": "[deprecated] CSV for modern C++",
+  "homepage": "https://github.com/p-ranav/csv"
+}

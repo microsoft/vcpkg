@@ -1,12 +1,5 @@
 vcpkg_buildpath_length_warning(37)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(QT_OPENSSL_LINK_DEFAULT ON)
-else()
-    set(QT_OPENSSL_LINK_DEFAULT OFF)
-endif()
-option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ${QT_OPENSSL_LINK_DEFAULT})
-
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
     message(WARNING 
@@ -20,21 +13,6 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-
-if("latest" IN_LIST FEATURES) # latest = core currently
-    set(QT_BUILD_LATEST ON)
-    set(PATCHES
-        patches/Qt5BasicConfig.patch
-        patches/Qt5PluginTarget.patch
-        patches/create_cmake.patch
-        )
-else()
-    set(PATCHES
-        patches/Qt5BasicConfig.patch
-        patches/Qt5PluginTarget.patch
-        patches/create_cmake.patch
-    )
-endif()
 
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
@@ -78,15 +56,17 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
-                            patches/zstdd.patch                #Fix detection of zstd in debug builds
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
+                            patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
-                            #CMake fixes
-                            ${PATCHES}
-                            patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
+                            # CMake fixes
+                            patches/Qt5BasicConfig.patch
+                            patches/Qt5PluginTarget.patch
+                            patches/create_cmake.patch
+                            patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -99,9 +79,6 @@ endforeach()
 
 #########################
 ## Setup Configure options
-
-# This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
-set(ENV{_CL_} "/utf-8")
 
 set(CORE_OPTIONS
     -confirm-license
@@ -126,14 +103,10 @@ list(APPEND CORE_OPTIONS
     -system-sqlite
     -system-harfbuzz
     -icu
-    -no-vulkan
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
+    -openssl-linked
     )
-
-if(QT_OPENSSL_LINK)
-    list(APPEND CORE_OPTIONS -openssl-linked)
-endif()
 
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
@@ -170,8 +143,8 @@ endif()
 find_library(MYSQL_RELEASE NAMES libmysql mysqlclient PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(MYSQL_DEBUG NAMES libmysql libmysqld mysqlclient mysqlclientd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-find_library(PCRE2_RELEASE NAMES pcre2-16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_RELEASE NAMES pcre2-16 pcre2-16-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16-static pcre2-16d pcre2-16-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
 find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -214,8 +187,8 @@ find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_D
 find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 #Dependent libraries
-find_library(ZSTD_RELEASE NAMES zstd zstd_static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZSTD_DEBUG NAMES zstdd zstd_staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -279,8 +252,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
     endif()
     if (WITH_MYSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE}")
-        list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG}")
+        list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ZLIB_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
+        list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ZLIB_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
     endif(WITH_MYSQL_PLUGIN)
 
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -306,16 +279,30 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND CORE_OPTIONS -fontconfig)
+    if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
+        FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
+        string(REPLACE "QMAKE_APPLE_DEVICE_ARCHS = x86_64" "QMAKE_APPLE_DEVICE_ARCHS = arm64" _tmp_contents ${_tmp_contents})
+        FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
+    endif()
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
         execute_process(COMMAND xcrun --show-sdk-version
                             OUTPUT_FILE OSX_SDK_VER.txt
                             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
-        message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" OSX_SDK_VERSION REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+        message(STATUS "Detected OSX SDK Version: ${OSX_SDK_VERSION}")
+        string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" OSX_SDK_VERSION ${OSX_SDK_VERSION})
+        message(STATUS "Major.Minor OSX SDK Version: ${OSX_SDK_VERSION}")
+
+        execute_process(COMMAND sw_vers -productVersion
+                            OUTPUT_FILE OSX_SYS_VER.txt
+                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
+        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SYS_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+        message(STATUS "Detected OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        message(STATUS "Major.Minor OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.15") # Max Version supported by QT. This version is defined in mkspecs/common/macx.conf as QT_MAC_SDK_VERSION_MAX
             message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.15")
@@ -480,14 +467,18 @@ if(VCPKG_TARGET_IS_LINUX)
     file(WRITE "${_file}" "${_contents}")
 endif()
 
-if(QT_BUILD_LATEST)
-    file(COPY
-        ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/share/qt5
-    )
-endif()
+vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_OSX)
+    file(GLOB _debug_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*_debug.pc")
+    foreach(_file ${_debug_files})
+        string(REGEX REPLACE "_debug\\.pc$" ".pc" _new_filename "${_file}")
+        string(REGEX MATCH "(Qt5[a-zA-Z]+)_debug\\.pc$" _not_used "${_file}")
+        set(_name ${CMAKE_MATCH_1})
+        file(STRINGS "${_file}" _version REGEX "^(Version):.+$")
+        file(WRITE "${_new_filename}" "Name: ${_name}\nDescription: Forwarding to the _debug version by vcpkg\n${_version}\nRequires: ${_name}_debug\n")
+    endforeach()
+endif()
 # #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 # file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )

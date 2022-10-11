@@ -1,6 +1,0 @@
-Source: ctbignum
-Version: 2019-08-02
-Homepage: https://github.com/niekbouman/ctbignum
-Description: This is a header-only template library for fixed-width "small big-integer" computations, for use during run-time as well as compile-time.
-Build-Depends: boost
-

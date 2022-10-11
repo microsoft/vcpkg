@@ -1,9 +1,9 @@
 {
   "name": "boost-program-options",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.80.0",
   "description": "Boost program_options module",
   "homepage": "https://github.com/boostorg/program_options",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-bind",
@@ -11,14 +11,12 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-function",
     "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -28,6 +26,10 @@
     "boost-throw-exception",
     "boost-tokenizer",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

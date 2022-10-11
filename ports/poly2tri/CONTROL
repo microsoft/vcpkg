@@ -1,5 +1,0 @@
-Source: poly2tri
-Version: 2020-07-21
-Homepage: https://github.com/greenm01/poly2tri
-Description: The Clipper library performs clipping and offsetting for both lines and polygons. All four boolean clipping operations are supported - intersection, union, difference and exclusive-or. Polygons can be of any shape including self-intersecting polygons.
-Supports: !uwp

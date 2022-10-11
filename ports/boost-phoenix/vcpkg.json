@@ -1,14 +1,14 @@
 {
   "name": "boost-phoenix",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost phoenix module",
   "homepage": "https://github.com/boostorg/phoenix",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-function",
     "boost-fusion",
     "boost-mpl",

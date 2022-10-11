@@ -1,9 +1,9 @@
 find_path(
-    UUID_INCLUDE_DIRS
+    UUID_INCLUDE_DIR
     NAMES uuid/uuid.h
 )
 
-get_filename_component(_prefix_path ${UUID_INCLUDE_DIRS} PATH)
+get_filename_component(_prefix_path ${UUID_INCLUDE_DIR} PATH)
 
 find_library(
     UUID_LIBRARY_DEBUG
@@ -27,5 +27,9 @@ select_library_configurations(UUID)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
     UUID
-    REQUIRED_VARS UUID_LIBRARIES UUID_INCLUDE_DIRS
+    REQUIRED_VARS UUID_LIBRARY UUID_INCLUDE_DIR
 )
+
+if(UUID_FOUND)
+    set(UUID_INCLUDE_DIRS ${UUID_INCLUDE_DIR})
+endif()

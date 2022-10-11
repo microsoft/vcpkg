@@ -1,5 +1,0 @@
-Source: libssh2
-Version: 1.9.0
-Build-Depends: zlib, openssl
-Homepage: https://www.libssh2.org
-Description: The SSH library

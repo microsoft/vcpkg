@@ -1,18 +1,27 @@
 {
   "name": "opencv3",
-  "version": "3.4.13",
-  "description": "computer vision library",
+  "version": "3.4.18",
+  "port-version": 2,
+  "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "BSD-3-Clause",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
-    "dnn",
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp"
+    "default-features"
   ],
   "features": {
     "contrib": {
@@ -41,9 +50,41 @@
         "cudnn",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
+        }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
         }
       ]
     },
@@ -67,7 +108,16 @@
     "ffmpeg": {
       "description": "ffmpeg support for opencv",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
       ]
     },
     "flann": {
@@ -76,10 +126,29 @@
         "protobuf"
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
         "gdcm"
+      ]
+    },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "halide": {
@@ -135,12 +204,16 @@
         "opengl"
       ]
     },
+    "openmp": {
+      "description": "Enable openmp support for opencv"
+    },
     "ovis": {
       "description": "opencv_ovis module",
       "dependencies": [
         "ogre",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
@@ -151,6 +224,12 @@
       "description": "PNG support for opencv",
       "dependencies": [
         "libpng"
+      ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
       ]
     },
     "qt": {
@@ -172,13 +251,20 @@
       "description": "opencv_sfm module",
       "dependencies": [
         "ceres",
-        "eigen3",
         "gflags",
         "glog",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "eigen"
           ]
         }
       ]
@@ -198,6 +284,12 @@
     "vtk": {
       "description": "vtk support for opencv",
       "dependencies": [
+        {
+          "name": "opencv3",
+          "features": [
+            "contrib"
+          ]
+        },
         "vtk"
       ]
     },

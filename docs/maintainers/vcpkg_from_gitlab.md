@@ -42,7 +42,7 @@ If `REF` is specified, `SHA512` must also be specified.
 The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
 The REPO_NAME variable is parsed from the value of REPO.
 
-This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
 ### HEAD_REF
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
@@ -63,7 +63,7 @@ At least one of `REF` and `HEAD_REF` must be specified, however it is preferable
 This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 ## Examples:
-* [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+* [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75)
 * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
 * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 

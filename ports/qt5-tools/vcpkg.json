@@ -1,0 +1,17 @@
+{
+  "name": "qt5-tools",
+  "version": "5.15.6",
+  "description": "Qt5 Tools Module; Includes deployment tools and helpers, Qt Designer, Assistant, and other applications",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-activeqt",
+      "platform": "windows"
+    },
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

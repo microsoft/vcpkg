@@ -1,0 +1,86 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 628dcaa..300e4ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,8 +111,8 @@ endif()
+ # find_package Python has replaced PythonInterp and PythonLibs since cmake 3.12
+ # Use the following command in the future; now this is only compatible with the latest pybind11
+ # find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
+-find_package(PythonInterp ${PY_VERSION} REQUIRED)
+-find_package(PythonLibs ${PY_VERSION})
++find_package(Python3 ${PY_VERSION} COMPONENTS Interpreter REQUIRED)
++set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+ 
+ if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
+   set(CMAKE_NO_SYSTEM_FROM_IMPORTED 1)
+@@ -422,6 +422,7 @@ target_link_libraries(onnx PUBLIC onnx_proto)
+ add_onnx_global_defines(onnx)
+ 
+ if(BUILD_ONNX_PYTHON)
++  find_package(Python3 ${PY_VERSION} COMPONENTS Development REQUIRED)
+   if("${PY_EXT_SUFFIX}" STREQUAL "")
+     if(MSVC)
+       set(PY_EXT_SUFFIX ".pyd")
+@@ -441,10 +442,13 @@ if(BUILD_ONNX_PYTHON)
+                              $<BUILD_INTERFACE:${ONNX_ROOT}>
+                              $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+                              $<INSTALL_INTERFACE:include>
+-                             ${PYTHON_INCLUDE_DIR})
+-
++                             ${Python3_INCLUDE_DIRS})
++  target_link_directories(onnx_cpp2py_export PRIVATE
++                          ${Python3_LIBRARY_DIRS})
++  target_link_libraries(onnx_cpp2py_export PRIVATE
++                        ${Python3_LIBRARIES})
+   # pybind11 is a header only lib
+-  find_package(pybind11 2.2)
++  find_package(pybind11 2.2 CONFIG REQUIRED)
+   if(pybind11_FOUND)
+     target_include_directories(onnx_cpp2py_export PUBLIC
+       ${pybind11_INCLUDE_DIRS})
+@@ -687,6 +691,27 @@ endif()
+ 
+ include(GNUInstallDirs)
+ 
++# install protobuf files
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-data.proto
++              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-data.proto3
++              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-ml.proto
++              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-ml.proto3
++              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-operators-ml.proto
++              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-operators-ml.proto3
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnx
++)
++# install python files
++if(BUILD_ONNX_PYTHON)
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_data_pb.py
++                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_data_pb2.py
++                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_ml_pb2.py
++                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_operators_ml_pb2.py
++                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_operators_pb.py
++                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_pb.py
++          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnx
++  )
++endif()
++
+ install(DIRECTORY ${ONNX_ROOT}/onnx
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+         FILES_MATCHING
+@@ -639,7 +639,7 @@ endif()
+ 
+ if (NOT ANDROID AND NOT IOS)
+   # ---[ ONNXIFI wrapper
+-  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
++  add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
+   if(MSVC)
+     add_msvc_runtime_flag(onnxifi_wrapper)
+   endif()
+@@ -669,7 +669,7 @@ if (NOT ANDROID AND NOT IOS)
+ endif()
+ 
+ # ---[ ONNXIFI dummy backend
+-add_library(onnxifi_dummy SHARED onnx/onnxifi_dummy.c)
++add_library(onnxifi_dummy onnx/onnxifi_dummy.c)
+ 
+ if(ONNXIFI_ENABLE_EXT)
+   add_definitions(-DONNXIFI_ENABLE_EXT=ON)

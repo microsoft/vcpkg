@@ -1,0 +1,42 @@
+From 3f10c7d31627b64b068b84ba72e706991f672560 Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Fri, 14 May 2021 08:14:05 +0700
+Subject: [PATCH 13/14] Check for backslash in argv[0] on Windows
+
+---
+ magic/Makefile.am | 2 +-
+ src/file.c        | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/magic/Makefile.am b/magic/Makefile.am
+index 0eb5865..170bbab 100644
+--- a/magic/Makefile.am
++++ b/magic/Makefile.am
+@@ -353,7 +353,7 @@ ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
+ 	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null; then \
+ 	    echo "Using ${FILE_COMPILE} to generate ${MAGIC}" > /dev/null; \
+ 	  else \
+-	    v=$$(${FILE_COMPILE} --version | sed -e s/file-// -e q); \
++	    v=$$(${FILE_COMPILE} --version | sed -e s/file${EXEEXT}-// -e q); \
+ 	    if [ "$$v" != "${PACKAGE_VERSION}" ]; then \
+ 		echo "Cannot use the installed version of file ($$v) to"; \
+ 		echo "cross-compile file ${PACKAGE_VERSION}"; \
+diff --git a/src/file.c b/src/file.c
+index 2889f8a..12a604b 100644
+--- a/src/file.c
++++ b/src/file.c
+@@ -200,6 +200,11 @@ main(int argc, char *argv[])
+ 	_wildcard(&argc, &argv);
+ #endif
+ 
++#ifdef _WIN32
++	if ((progname = strrchr(argv[0], '\\')) != NULL)
++		progname++;
++	else
++#endif
+ 	if ((progname = strrchr(argv[0], '/')) != NULL)
+ 		progname++;
+ 	else
+-- 
+2.29.2.windows.2
+

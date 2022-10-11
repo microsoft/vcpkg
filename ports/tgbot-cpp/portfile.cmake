@@ -1,17 +1,16 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO reo7sp/tgbot-cpp
-  REF v1.2.1
-  SHA512 b094f9c80dd15b7930b7d7250169b3199d9c84b84826adececa8237111f5ba384ec790dbe969999f362ca2fb35b93950d053777ce5f167007e33c3e4eb133453
+  REF v1.3
+  SHA512 1b992c7705a5f7bb081df3eb032feb78b2b5eb2e73a7be822cd12552702a4d18ac9eecbd0c842f2d6c48757e91d3f8ceb5965237264b9ec18657e51c3bde7f79
   HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

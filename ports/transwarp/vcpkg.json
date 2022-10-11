@@ -1,0 +1,13 @@
+{
+  "name": "transwarp",
+  "version": "2.2.2",
+  "description": "A header-only C++ library for task concurrency",
+  "homepage": "https://github.com/bloomen/transwarp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ctbignum",
+  "version-string": "2019-08-02",
+  "port-version": 1,
+  "description": "This is a header-only template library for fixed-width \"small big-integer\" computations, for use during run-time as well as compile-time.",
+  "homepage": "https://github.com/niekbouman/ctbignum",
+  "dependencies": [
+    "boost"
+  ]
+}

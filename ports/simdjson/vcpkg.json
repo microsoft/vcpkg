@@ -1,6 +1,6 @@
 {
   "name": "simdjson",
-  "version": "0.9.2",
+  "version": "3.0.0",
   "description": "A extremely fast JSON library that can parse gigabytes of JSON per second",
   "homepage": "https://simdjson.org/",
   "license": "Apache-2.0",
@@ -13,5 +13,21 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "deprecated",
+    "exceptions",
+    "threads"
+  ],
+  "features": {
+    "deprecated": {
+      "description": "Enable deprecated APIs"
+    },
+    "exceptions": {
+      "description": "Enable exception-throwing interface"
+    },
+    "threads": {
+      "description": "Link with thread support"
+    }
+  }
 }

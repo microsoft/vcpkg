@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(aubio C)
 
 option(WITH_DEPENDENCIES "Adds extra dependencies" ON)
+option(BUILD_TOOLS "Build and install tools" ON)
 
 add_definitions(
     -DHAVE_STDLIB_H=1
@@ -12,18 +13,23 @@ add_definitions(
     -DHAVE_STDARG_H=1
     -DHAVE_ERRNO_H=1
     -DHAVE_C99_VARARGS_MACROS=1
-
     -D_CRT_SECURE_NO_WARNINGS=1
 )
 
-set(CMAKE_DEBUG_POSTFIX d)
-
-option(BUILD_TOOLS "Build and install tools" ON)
+if(WITH_DEPENDENCIES)
+    add_definitions(
+        -DHAVE_SNDFILE=1
+        -DHAVE_WAVWRITE=1
+        -DHAVE_WAVREAD=1
+        -DHAVE_LIBAV=1
+        -DHAVE_SWRESAMPLE=1
+    )
+endif()
 
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
 if(WITH_DEPENDENCIES)
-    find_package(FFMPEG COMPONENTS avcodec avutil avdevice avfilter avformat swresample REQUIRED)
+    find_package(FFMPEG COMPONENTS avcodec avutil avformat swresample REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(LibLZMA REQUIRED)
     find_package(SndFile REQUIRED)
@@ -49,6 +55,10 @@ if(WITH_DEPENDENCIES)
     )
 endif()
 
+if(WIN32)
+    target_link_libraries(aubio PUBLIC ws2_32)
+endif()
+
 if(BUILD_TOOLS AND WITH_DEPENDENCIES)
     set(EXAMPLE_EXECS aubiomfcc aubionotes aubioonset aubiopitch aubioquiet aubiotrack)
     foreach(EXAMPLE_EXEC ${EXAMPLE_EXECS})
@@ -56,6 +66,7 @@ if(BUILD_TOOLS AND WITH_DEPENDENCIES)
         target_link_libraries(${EXAMPLE_EXEC} PRIVATE aubio)
         if(WIN32)
             target_compile_definitions(${EXAMPLE_EXEC} PRIVATE -DHAVE_WIN_HACKS=1)
+            target_link_libraries(${EXAMPLE_EXEC} PUBLIC ws2_32)
         else()
             target_compile_definitions(${EXAMPLE_EXEC} PRIVATE -DHAVE_UNISTD_H=1)
         endif()
@@ -72,19 +83,47 @@ if(BUILD_TOOLS AND WITH_DEPENDENCIES)
 endif()
 
 install(
-    TARGETS aubio
+    TARGETS aubio EXPORT AubioTargets
+    INCLUDES DESTINATION include
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-if(NOT DISABLE_INSTALL_HEADERS)
-    install(
-        DIRECTORY src/
-        DESTINATION include/aubio
-        FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*_priv.h" EXCLUDE
-        PATTERN "config.h" EXCLUDE
-    )
+install(EXPORT AubioTargets NAMESPACE Aubio:: DESTINATION share/aubio)
+
+install(
+    DIRECTORY src/
+    DESTINATION include/aubio
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*_priv.h" EXCLUDE
+    PATTERN "config.h" EXCLUDE
+)
+
+# Create CMake configuration export file.
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "@PACKAGE_INIT@\n")
+if(WITH_DEPENDENCIES)
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "
+    include(CMakeFindDependencyMacro)
+    find_dependency(FFMPEG COMPONENTS avcodec avutil avformat swresample REQUIRED)
+    find_dependency(BZip2 REQUIRED)
+    find_dependency(LibLZMA REQUIRED)
+    find_dependency(SndFile REQUIRED)
+    ")
 endif()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "include(\${CMAKE_CURRENT_LIST_DIR}/AubioTargets.cmake)")
+
+# Install CMake configuration export file.
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake
+  INSTALL_DESTINATION share/aubio
+)
+install(
+  FILES
+    ${CMAKE_BINARY_DIR}/AubioConfig.cmake
+  DESTINATION
+    share/aubio
+)

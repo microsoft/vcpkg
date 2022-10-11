@@ -1,0 +1,39 @@
+{
+  "name": "magnum-integration",
+  "version-string": "2020.06",
+  "port-version": 1,
+  "description": "Integrations for magnum, C++11/C++14 graphics middleware for games and data visualization",
+  "homepage": "https://magnum.graphics/",
+  "dependencies": [
+    {
+      "name": "magnum",
+      "default-features": false
+    }
+  ],
+  "features": {
+    "bullet": {
+      "description": "BulletIntegration library",
+      "dependencies": [
+        "bullet3"
+      ]
+    },
+    "eigen": {
+      "description": "EigenIntegration library",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "glm": {
+      "description": "GlmIntegration library",
+      "dependencies": [
+        "glm"
+      ]
+    },
+    "imgui": {
+      "description": "ImGuiIntegration library",
+      "dependencies": [
+        "imgui"
+      ]
+    }
+  }
+}

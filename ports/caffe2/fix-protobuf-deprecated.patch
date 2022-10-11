@@ -1,0 +1,26 @@
+diff --git a/caffe2/utils/proto_utils.cc b/caffe2/utils/proto_utils.cc
+index ab2d756..2c36ec4 100644
+--- a/caffe2/utils/proto_utils.cc
++++ b/caffe2/utils/proto_utils.cc
+@@ -102,10 +102,9 @@ bool ReadProtoFromBinaryFile(const char* filename, MessageLite* proto) {
+   ::google::protobuf::io::CopyingInputStreamAdaptor stream(
+       new IfstreamInputStream(filename));
+   stream.SetOwnsCopyingStream(true);
+-  // Total bytes hard limit / warning limit are set to 1GB and 512MB
+-  // respectively.
++  // Total bytes hard limit is set to 1GB.
+   ::google::protobuf::io::CodedInputStream coded_stream(&stream);
+-  coded_stream.SetTotalBytesLimit(1024LL << 20, 512LL << 20);
++  coded_stream.SetTotalBytesLimit(1024LL << 20);
+   return proto->ParseFromCodedStream(&coded_stream);
+ }
+ 
+@@ -155,7 +154,7 @@ bool ReadProtoFromBinaryFile(const char* filename, MessageLite* proto) {
+   std::unique_ptr<CodedInputStream> coded_input(
+       new CodedInputStream(raw_input.get()));
+   // A hack to manually allow using very large protocol buffers.
+-  coded_input->SetTotalBytesLimit(1073741824, 536870912);
++  coded_input->SetTotalBytesLimit(1073741824);
+   bool success = proto->ParseFromCodedStream(coded_input.get());
+   coded_input.reset();
+   raw_input.reset();

@@ -1,0 +1,35 @@
+{
+  "name": "kf5service",
+  "version": "5.89.0",
+  "port-version": 1,
+  "description": "Plugin framework for desktop services",
+  "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5config",
+    "kf5coreaddons",
+    {
+      "name": "kf5dbusaddons",
+      "platform": "!android"
+    },
+    "kf5i18n",
+    "libiconv",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

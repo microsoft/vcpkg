@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1f30a5b3..7b62e003 100644
+index 682f416..a8cbec8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -104,8 +104,6 @@ mark_as_advanced(
@@ -34,7 +34,7 @@ index 1f30a5b3..7b62e003 100644
      DESTINATION LICENSES
      COMPONENT licenses)
 diff --git a/CMakeModules/AFInstallDirs.cmake b/CMakeModules/AFInstallDirs.cmake
-index 2c7b96ea..b5006ee0 100644
+index 2c7b96e..b5006ee 100644
 --- a/CMakeModules/AFInstallDirs.cmake
 +++ b/CMakeModules/AFInstallDirs.cmake
 @@ -7,8 +7,12 @@ include(GNUInstallDirs)
@@ -53,7 +53,7 @@ index 2c7b96ea..b5006ee0 100644
  
  # Libraries
 diff --git a/CMakeModules/AFconfigure_forge_submodule.cmake b/CMakeModules/AFconfigure_forge_submodule.cmake
-index d16849f0..36ab01b6 100644
+index d16849f..36ab01b 100644
 --- a/CMakeModules/AFconfigure_forge_submodule.cmake
 +++ b/CMakeModules/AFconfigure_forge_submodule.cmake
 @@ -39,13 +39,13 @@ if(AF_BUILD_FORGE)
@@ -75,20 +75,21 @@ index d16849f0..36ab01b6 100644
      )
  endif(AF_BUILD_FORGE)
 diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
-index 967eaa63..ff04392c 100644
+index 967eaa6..16bb633 100644
 --- a/src/api/unified/CMakeLists.txt
 +++ b/src/api/unified/CMakeLists.txt
-@@ -96,7 +96,7 @@ target_include_directories(af
+@@ -96,7 +96,8 @@ target_include_directories(af
  target_link_libraries(af
    PRIVATE
      cpp_api_interface
 -    spdlog
-+    spdlog::spdlog spdlog::spdlog_header_only
++    spdlog::spdlog
++    spdlog::spdlog_header_only
      Threads::Threads
      Boost::boost
      ${CMAKE_DL_LIBS}
 diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
-index c9fe0889..f97bf0e8 100644
+index c9fe088..8c128fa 100644
 --- a/src/backend/common/CMakeLists.txt
 +++ b/src/backend/common/CMakeLists.txt
 @@ -77,12 +77,15 @@ else()
@@ -100,8 +101,8 @@ index c9fe0889..f97bf0e8 100644
  target_link_libraries(afcommon_interface
    INTERFACE
 -    spdlog
-+  spdlog::spdlog
-+  spdlog::spdlog_header_only
++    spdlog::spdlog
++    spdlog::spdlog_header_only
      Boost::boost
 -    af_glad_interface
      ${CMAKE_DL_LIBS}
@@ -122,7 +123,7 @@ index c9fe0889..f97bf0e8 100644
  
  if(APPLE AND NOT USE_MKL)
 diff --git a/src/backend/cpu/CMakeLists.txt b/src/backend/cpu/CMakeLists.txt
-index 170bb0f3..c6e20177 100644
+index 170bb0f..c6e2017 100644
 --- a/src/backend/cpu/CMakeLists.txt
 +++ b/src/backend/cpu/CMakeLists.txt
 @@ -266,9 +266,10 @@ endif(AF_WITH_CPUID)
@@ -139,7 +140,7 @@ index 170bb0f3..c6e20177 100644
  arrayfire_set_default_cxx_flags(afcpu)
  
 diff --git a/src/backend/cuda/CMakeLists.txt b/src/backend/cuda/CMakeLists.txt
-index 7e3e4089..a3a53087 100644
+index 7e3e408..2edaacd 100644
 --- a/src/backend/cuda/CMakeLists.txt
 +++ b/src/backend/cuda/CMakeLists.txt
 @@ -110,7 +110,11 @@ cuda_include_directories(
@@ -155,15 +156,8 @@ index 7e3e4089..a3a53087 100644
  endif()
  
  file(GLOB jit_src "kernel/jit.cuh")
-@@ -240,9 +244,14 @@ if(AF_WITH_NONFREE)
-   set(cxx_definitions -DAF_WITH_NONFREE_SIFT)
- endif()
+@@ -242,7 +246,7 @@ endif()
  
-+# New API of cuSparse was introduced in 10.1.168 for Linux and the older
-+# 10.1.105 fix version doesn't it. Unfortunately, the new API was introduced in
-+# in a fix release of CUDA - unconventionally. As CMake's FindCUDA module
-+# doesn't provide patch/fix version number, we use 10.2 as the minimum
-+# CUDA version to enable this new cuSparse API.
  if(CUDA_VERSION_MAJOR VERSION_GREATER 10 OR
     (UNIX AND
 -    CUDA_VERSION_MAJOR VERSION_EQUAL 10 AND CUDA_VERSION_MINOR VERSION_GREATER 0))
@@ -171,7 +165,7 @@ index 7e3e4089..a3a53087 100644
    list(APPEND cxx_definitions -DAF_USE_NEW_CUSPARSE_API)
  endif()
  
-@@ -301,7 +310,7 @@ set_target_properties(af_cuda_static_cuda_library
+@@ -301,7 +305,7 @@ set_target_properties(af_cuda_static_cuda_library
  
  if(CUDA_VERSION_MAJOR VERSION_GREATER 10 OR
     (UNIX AND
@@ -181,7 +175,7 @@ index 7e3e4089..a3a53087 100644
  endif()
  
 diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
-index 9a796c9e..d9864b00 100644
+index 9a796c9..d9864b0 100644
 --- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 @@ -27,6 +27,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
@@ -204,7 +198,7 @@ index 9a796c9e..d9864b00 100644
  
      set_target_properties(opencl_scan_by_key_${SBK_BINARY_OP}
 diff --git a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
-index d618ff2f..9f517398 100644
+index d618ff2..9f51739 100644
 --- a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
 @@ -32,14 +32,13 @@ foreach(SBK_TYPE ${SBK_TYPES})

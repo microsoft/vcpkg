@@ -1,9 +1,0 @@
-Source: opencensus-cpp
-Version: 0.4.0-1
-Homepage: https://github.com/census-instrumentation/opencensus-cpp
-Description: OpenCensus is a toolkit for collecting application performance and behavior data. It currently includes an API for tracing and stats.
-Build-Depends: abseil
-Supports: !windows
-
-Feature: test
-Description: Build test
