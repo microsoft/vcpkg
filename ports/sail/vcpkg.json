@@ -21,7 +21,7 @@
   ],
   "features": {
     "all": {
-      "description": "Build with all codecs",
+      "description": "Enable all codecs",
       "dependencies": [
         {
           "name": "sail",
@@ -61,7 +61,7 @@
       ]
     },
     "high-priority": {
-      "description": "Build with high priority codecs such as JPEG or PNG",
+      "description": "Enable high priority codecs such as JPEG or PNG",
       "dependencies": [
         {
           "name": "sail",
@@ -92,7 +92,7 @@
       ]
     },
     "low-priority": {
-      "description": "Build with low priority codecs such as TGA",
+      "description": "Enable low priority codecs such as TGA",
       "dependencies": [
         {
           "name": "sail",
@@ -106,7 +106,7 @@
       ]
     },
     "lowest-priority": {
-      "description": "Build with lowest priority codecs such as XBM",
+      "description": "Enable lowest priority codecs such as XBM",
       "dependencies": [
         {
           "name": "sail",
@@ -118,7 +118,7 @@
       ]
     },
     "medium-priority": {
-      "description": "Build with medium priority codecs such as AVIF",
+      "description": "Enable medium priority codecs such as AVIF",
       "dependencies": [
         {
           "name": "sail",
