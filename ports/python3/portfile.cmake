@@ -20,6 +20,10 @@ set(PATCHES
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
 endif()
+# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND PATCHES 0012-gcc-ldflags-fix.patch)
+endif()
 
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
 # required to build this port on Windows 7 itself due to Python using itself in its own build system.
