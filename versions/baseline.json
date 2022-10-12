@@ -7916,6 +7916,10 @@
       "baseline": "3.2.1",
       "port-version": 1
     },
+    "wyhash": {
+      "baseline": "2022-10-12",
+      "port-version": 0
+    },
     "x-plane": {
       "baseline": "3.0.3",
       "port-version": 1
