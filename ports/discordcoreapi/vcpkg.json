@@ -1,6 +1,6 @@
 {
   "name": "discordcoreapi",
-  "version-date": "2022-09-25",
+  "version-date": "2022-10-12",
   "description": "A Discord bot library written in C++ using custom asynchronous coroutines.",
   "homepage": "https://discordcoreapi.com",
   "license": "LGPL-2.1-or-later",
