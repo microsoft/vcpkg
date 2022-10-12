@@ -23,8 +23,8 @@ This environment variable can be set to the full path of an executable to be use
 
 #### VCPKG_ROOT
 
-This environment variable can be set to a directory to use as the root of the vcpkg instance. This will be used if
-the vcpkg executable is not located within a valid root and the command line switch `--vcpkg_root` is unused.
+This environment variable can be set to a directory to use as the root of the vcpkg instance. This will only be used if
+the vcpkg executable is not located within a valid root and the command line switch `--vcpkg-root` is unused.
 
 #### VCPKG_VISUAL_STUDIO_PATH
 
