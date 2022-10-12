@@ -1,7 +1,7 @@
 {
   "name": "zycore",
   "version": "1.3.0",
-  "description": "Internal library of Zydis",
+  "description": "Provides platform independent types, macros and a fallback for environments without LibC.",
   "homepage": "https://github.com/zyantific/zycore-c",
   "license": "MIT",
   "dependencies": [
