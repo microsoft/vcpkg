@@ -1,0 +1,14 @@
+{
+  "name": "libdecor",
+  "version": "0.1.0",
+  "description": "Library to help Wayland clients draw window decorations.",
+  "homepage": "https://gitlab.gnome.org/jadahl/libdecor",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

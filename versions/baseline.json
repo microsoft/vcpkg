@@ -3648,6 +3648,10 @@
       "baseline": "1.0.8",
       "port-version": 5
     },
+    "libdecor": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libdisasm": {
       "baseline": "0.23",
       "port-version": 9
