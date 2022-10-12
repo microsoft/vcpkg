@@ -149,7 +149,7 @@ The name resolution algorithm is as follows:
 
 Overlay ports and overlay triplets will be resolved in the order in which
 additional paths are specified, with the first match being selected for installation,
-and falling back to `/ports` if the port is not found in any of the additional paths.
+and falling back to `{vcpkg root}/ports` (or as specified by `--x-builtin-ports-root`) if the port is not found in any of the additional paths.
 
 If configured in multiple places, overlays will follow the following priority:
 
