@@ -1,7 +1,7 @@
 function(vcpkg_build_nmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
-        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
+        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT;CL_LANGUAGE"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;TARGET"
     )
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -32,6 +32,10 @@ function(vcpkg_build_nmake)
         vcpkg_list(SET arg_TARGET all)
     endif()
 
+    if(NOT DEFINED arg_CL_LANGUAGE)
+        vcpkg_list(SET arg_CL_LANGUAGE CXX)
+    endif()
+
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Load toolchains
@@ -56,7 +60,7 @@ function(vcpkg_build_nmake)
         set(project_subpath "")
     endif()
 
-    vcpkg_backup_env_variables(VARS CL LINK)
+    vcpkg_backup_env_variables(VARS _CL_ LINK)
     cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR NORMALIZE install_dir_native)
     foreach(build_type IN ITEMS debug release)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL build_type)
@@ -69,7 +73,9 @@ function(vcpkg_build_nmake)
                     vcpkg_list(APPEND make_opts "INSTALLDIR=${install_dir_native}\\debug")
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
-                set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+                if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
+                    set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_DEBUG}")
+                endif()
                 set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
                 set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
@@ -82,7 +88,9 @@ function(vcpkg_build_nmake)
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
 
-                set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
+                if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
+                    set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_RELEASE}")
+                endif()
                 set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
                 set(prerun_variable_name arg_PRERUN_SHELL_RELEASE)
             endif()
@@ -122,7 +130,7 @@ function(vcpkg_build_nmake)
                 LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}"
             )
 
-            vcpkg_restore_env_variables(VARS CL)
+            vcpkg_restore_env_variables(VARS _CL_ LINK)
         endif()
     endforeach()
 endfunction()
