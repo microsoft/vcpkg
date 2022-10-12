@@ -1,6 +1,6 @@
 function(vcpkg_build_nmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG;PREFER_JOM"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT;CL_LANGUAGE"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;TARGET"
     )
@@ -37,7 +37,7 @@ function(vcpkg_build_nmake)
     endif()
 
     find_program(NMAKE nmake REQUIRED)
-    get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+    get_filename_component(NMAKE_EXE_PATH "${NMAKE}" DIRECTORY)
     # Load toolchains
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
@@ -45,13 +45,23 @@ function(vcpkg_build_nmake)
     # Set needed env
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-    # Set make command and install command
-    vcpkg_list(SET make_command ${NMAKE} /NOLOGO /G /U)
-    vcpkg_list(SET make_opts_base -f "${arg_PROJECT_NAME}" ${arg_TARGET})
+    # Set make options
+    vcpkg_list(SET make_opts_base /NOLOGO /G /U /F "${arg_PROJECT_NAME}" ${arg_TARGET})
     if(arg_ENABLE_INSTALL)
         vcpkg_list(APPEND make_opts_base install)
     endif()
 
+    if(arg_PREFER_JOM AND VCPKG_CONCURRENCY GREATER "1")
+        vcpkg_find_acquire_program(JOM)
+        get_filename_component(JOM_EXE_PATH "${JOM}" DIRECTORY)
+        vcpkg_add_to_path("${JOM_EXE_PATH}")
+        if(arg_CL_LANGUAGE AND "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_COMPILER_ID}" STREQUAL "MSVC")
+            string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_DEBUG " ${VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_DEBUG} /FS")
+            string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_RELEASE " ${VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_RELEASE} /FS")
+        endif()
+    else()
+        set(arg_PREFER_JOM FALSE)
+    endif()
 
     # Add subpath to work directory
     if(DEFINED arg_PROJECT_SUBPATH)
@@ -124,11 +134,30 @@ function(vcpkg_build_nmake)
                 message(STATUS "Building and installing ${triplet_and_build_type}")
             endif()
 
-            vcpkg_execute_build_process(
-                COMMAND ${make_command} ${make_opts}
-                WORKING_DIRECTORY "${object_dir}${project_subpath}"
-                LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}"
-            )
+            set(run_nmake TRUE)
+            set(tool_suffix "")
+            if(arg_PREFER_JOM)
+                execute_process(
+                    COMMAND "${JOM}" /K /J ${VCPKG_CONCURRENCY} ${make_opts}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${triplet_and_build_type}-jom-out.log"
+                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${triplet_and_build_type}-jom-err.log"
+                    RESULT_VARIABLE error_code
+                )
+                if(error_code EQUAL "0")
+                    set(run_nmake FALSE)
+                else()
+                    message(STATUS "Restarting build without parallelism")
+                    set(tool_suffix "-nmake")
+                endif()
+            endif()
+            if(run_nmake)
+                vcpkg_execute_build_process(
+                    COMMAND "${NMAKE}" ${make_opts}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}${tool_suffix}"
+                )
+            endif()
 
             vcpkg_restore_env_variables(VARS _CL_ LINK)
         endif()
