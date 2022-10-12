@@ -12,7 +12,7 @@ index cafdb3c..8fd002c 100644
  	      GMP_INCLUDE_MPN(arm64/arm64-defs.m4) ;;
            esac
 diff --git a/mpn/arm64/aors_n.asm b/mpn/arm64/aors_n.asm
-index b1f3bb9..22a9c2a 100644
+index b1f3bb9..b4a6da6 100644
 --- a/mpn/arm64/aors_n.asm
 +++ b/mpn/arm64/aors_n.asm
 @@ -68,7 +68,7 @@ PROLOGUE(func_nc)
@@ -20,7 +20,7 @@ index b1f3bb9..22a9c2a 100644
  PROLOGUE(func_n)
  	CLRCY
 -L(ent):	lsr	x18, n, #2
-+L(ent):	lsr	x15, n, #2
++L(ent):	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x7, [up]
@@ -29,7 +29,7 @@ index b1f3bb9..22a9c2a 100644
  	tbnz	n, #1, L(b11)
  
 -L(b01):	cbz	x18, L(ret)
-+L(b01):	cbz	x15, L(ret)
++L(b01):	cbz	x17, L(ret)
  	ldp	x4, x5, [up,#8]
  	ldp	x8, x9, [vp,#8]
  	sub	up, up, #8
@@ -38,7 +38,7 @@ index b1f3bb9..22a9c2a 100644
  	add	up, up, #8
  	add	vp, vp, #8
 -	cbz	x18, L(end)
-+	cbz	x15, L(end)
++	cbz	x17, L(end)
  	b	L(top)
  
  L(bx0):	tbnz	n, #1, L(b10)
@@ -47,7 +47,7 @@ index b1f3bb9..22a9c2a 100644
  L(b10):	ldp	x6, x7, [up]
  	ldp	x10, x11, [vp]
 -	cbz	x18, L(end)
-+	cbz	x15, L(end)
++	cbz	x17, L(end)
  
  	ALIGN(16)
  L(top):	ldp	x4, x5, [up,#16]
@@ -57,13 +57,37 @@ index b1f3bb9..22a9c2a 100644
  	stp	x12, x13, [rp],#16
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x15, x15, #1
-+	cbnz	x15, L(top)
++	sub	x17, x17, #1
++	cbnz	x17, L(top)
  
  L(end):	ADDSUBC	x12, x6, x10
  	ADDSUBC	x13, x7, x11
+diff --git a/mpn/arm64/aorsmul_1.asm b/mpn/arm64/aorsmul_1.asm
+index fd3c36e..81ec1da 100644
+--- a/mpn/arm64/aorsmul_1.asm
++++ b/mpn/arm64/aorsmul_1.asm
+@@ -32,10 +32,15 @@ dnl  see https://www.gnu.org/licenses/.
+ 
+ include(`../config.m4')
+ 
+-C	     cycles/limb
+-C Cortex-A53	9.3-9.8
+-C Cortex-A57	 7.0
+-C X-Gene	 5.0
++C	       addmul_1        submul_1
++C	     cycles/limb     cycles/limb
++C Cortex-A53	9.3-9.8		9.3-9.8
++C Cortex-A55    9.0-9.5		9.3-9.8
++C Cortex-A57	 7		 7
++C Cortex-A72
++C Cortex-A73	 6		 6
++C X-Gene	 5		 5
++C Apple M1	 1.75		 1.75
+ 
+ C NOTES
+ C  * It is possible to keep the carry chain alive between the addition blocks
 diff --git a/mpn/arm64/aorsorrlshC_n.asm b/mpn/arm64/aorsorrlshC_n.asm
-index 168caad..d22eb81 100644
+index 168caad..1718b77 100644
 --- a/mpn/arm64/aorsorrlshC_n.asm
 +++ b/mpn/arm64/aorsorrlshC_n.asm
 @@ -65,14 +65,14 @@ ifdef(`DO_rsb', `
@@ -71,7 +95,7 @@ index 168caad..d22eb81 100644
  ASM_START()
  PROLOGUE(func_n)
 -	lsr	x18, n, #2
-+	lsr	x7, n, #2
++	lsr	x6, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x5, [up]
@@ -79,7 +103,7 @@ index 168caad..d22eb81 100644
  
  L(b01):	ldr	x11, [vp]
 -	cbz	x18, L(1)
-+	cbz	x7, L(1)
++	cbz	x6, L(1)
  	ldp	x8, x9, [vp,#8]
  	lsl	x13, x11, #LSH
  	ADDSUB(	x15, x13, x5)
@@ -88,7 +112,7 @@ index 168caad..d22eb81 100644
  	str	x17, [rp],#8
  	sub	up, up, #8
 -	cbz	x18, L(end)
-+	cbz	x7, L(end)
++	cbz	x6, L(end)
  	b	L(top)
  
  L(bx0):	tbnz	n, #1, L(b10)
@@ -97,7 +121,7 @@ index 168caad..d22eb81 100644
  	ldp	x10, x11, [vp]
  	sub	up, up, #16
 -	cbz	x18, L(end)
-+	cbz	x7, L(end)
++	cbz	x6, L(end)
  
  	ALIGN(16)
  L(top):	ldp	x4, x5, [up,#16]
@@ -107,13 +131,13 @@ index 168caad..d22eb81 100644
  	stp	x16, x17, [rp],#16
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x7, x7, #1
-+	cbnz	x7, L(top)
++	sub	x6, x6, #1
++	cbnz	x6, L(top)
  
  L(end):	ldp	x4, x5, [up,#16]
  	extr	x12, x10, x9, #RSH
 diff --git a/mpn/arm64/cnd_aors_n.asm b/mpn/arm64/cnd_aors_n.asm
-index 39e6cd3..4960d3d 100644
+index 39e6cd3..397aa51 100644
 --- a/mpn/arm64/cnd_aors_n.asm
 +++ b/mpn/arm64/cnd_aors_n.asm
 @@ -65,7 +65,7 @@ PROLOGUE(func)
@@ -121,7 +145,7 @@ index 39e6cd3..4960d3d 100644
  	CLRCY
  
 -	lsr	x18, n, #2
-+	lsr	x15, n, #2
++	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x13, [vp]
@@ -130,7 +154,7 @@ index 39e6cd3..4960d3d 100644
  	tbnz	n, #1, L(b11)
  
 -L(b01):	cbz	x18, L(rt)
-+L(b01):	cbz	x15, L(rt)
++L(b01):	cbz	x17, L(rt)
  	ldp	x12, x13, [vp,#8]
  	ldp	x10, x11, [up,#8]
  	sub	up, up, #8
@@ -139,7 +163,7 @@ index 39e6cd3..4960d3d 100644
  	ldp	x10, x11, [up,#8]!
  	sub	rp, rp, #8
 -	cbz	x18, L(end)
-+	cbz	x15, L(end)
++	cbz	x17, L(end)
  	b	L(top)
  
  L(bx0):	ldp	x12, x13, [vp]
@@ -148,7 +172,7 @@ index 39e6cd3..4960d3d 100644
  
  L(b10):	sub	rp, rp, #16
 -	cbz	x18, L(end)
-+	cbz	x15, L(end)
++	cbz	x17, L(end)
  
  	ALIGN(16)
  L(top):	bic	x6, x12, cnd
@@ -158,8 +182,8 @@ index 39e6cd3..4960d3d 100644
  	stp	x8, x9, [rp,#32]!
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x15, x15, #1
-+	cbnz	x15, L(top)
++	sub	x17, x17, #1
++	cbnz	x17, L(top)
  
  L(end):	bic	x6, x12, cnd
  	bic	x7, x13, cnd
@@ -224,7 +248,7 @@ index 0000000..88605b3
 +
 +divert`'dnl
 diff --git a/mpn/arm64/logops_n.asm b/mpn/arm64/logops_n.asm
-index ccaec9c..1d31dd5 100644
+index ccaec9c..e959abc 100644
 --- a/mpn/arm64/logops_n.asm
 +++ b/mpn/arm64/logops_n.asm
 @@ -78,7 +78,7 @@ MULFUNC_PROLOGUE(mpn_and_n mpn_andn_n mpn_nand_n mpn_ior_n mpn_iorn_n mpn_nior_n
@@ -232,7 +256,7 @@ index ccaec9c..1d31dd5 100644
  ASM_START()
  PROLOGUE(func)
 -	lsr	x18, n, #2
-+	lsr	x14, n, #2
++	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x7, [up]
@@ -241,7 +265,7 @@ index ccaec9c..1d31dd5 100644
  	tbnz	n, #1, L(b11)
  
 -L(b01):	cbz	x18, L(ret)
-+L(b01):	cbz	x14, L(ret)
++L(b01):	cbz	x17, L(ret)
  	ldp	x4, x5, [up,#8]
  	ldp	x8, x9, [vp,#8]
  	sub	up, up, #8
@@ -250,7 +274,7 @@ index ccaec9c..1d31dd5 100644
  	add	up, up, #8
  	add	vp, vp, #8
 -	cbz	x18, L(end)
-+	cbz	x14, L(end)
++	cbz	x17, L(end)
  	b	L(top)
  
  L(bx0):	tbnz	n, #1, L(b10)
@@ -259,7 +283,7 @@ index ccaec9c..1d31dd5 100644
  L(b10):	ldp	x6, x7, [up]
  	ldp	x10, x11, [vp]
 -	cbz	x18, L(end)
-+	cbz	x14, L(end)
++	cbz	x17, L(end)
  
  	ALIGN(16)
  L(top):	ldp	x4, x5, [up,#16]
@@ -269,13 +293,13 @@ index ccaec9c..1d31dd5 100644
  	stp	x12, x13, [rp],#16
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x14, x14, #1
-+	cbnz	x14, L(top)
++	sub	x17, x17, #1
++	cbnz	x17, L(top)
  
  L(end):	LOGOP(	x12, x6, x10)
  	LOGOP(	x13, x7, x11)
 diff --git a/mpn/arm64/lshift.asm b/mpn/arm64/lshift.asm
-index eaafaa4..5243608 100644
+index eaafaa4..fe8a1aa 100644
 --- a/mpn/arm64/lshift.asm
 +++ b/mpn/arm64/lshift.asm
 @@ -61,7 +61,7 @@ PROLOGUE(mpn_lshift)
@@ -283,7 +307,7 @@ index eaafaa4..5243608 100644
  	add	up, up, n, lsl #3
  	sub	tnc, xzr, cnt
 -	lsr	x18, n, #2
-+	lsr	x15, n, #2
++	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x4, [up,#-8]
@@ -292,7 +316,7 @@ index eaafaa4..5243608 100644
  L(b01):	NSHIFT	x0, x4, tnc
  	PSHIFT	x2, x4, cnt
 -	cbnz	x18, L(gt1)
-+	cbnz	x15, L(gt1)
++	cbnz	x17, L(gt1)
  	str	x2, [rp,#-8]
  	ret
  L(gt1):	ldp	x4, x5, [up,#-24]
@@ -301,7 +325,7 @@ index eaafaa4..5243608 100644
  	NSHIFT	x10, x4, tnc
  	PSHIFT	x2, x4, cnt
 -	cbnz	x18, L(gt2)
-+	cbnz	x15, L(gt2)
++	cbnz	x17, L(gt2)
  	orr	x10, x10, x13
  	stp	x2, x10, [rp,#-16]
  	ret
@@ -310,17 +334,17 @@ index eaafaa4..5243608 100644
  	stp	x10, x11, [rp,#-32]!
  	PSHIFT	x2, x4, cnt
 -L(lo0):	sub	x18, x18, #1
-+L(lo0):	sub	x15, x15, #1
++L(lo0):	sub	x17, x17, #1
  L(lo3):	NSHIFT	x10, x6, tnc
  	PSHIFT	x13, x7, cnt
  	NSHIFT	x12, x7, tnc
 -	cbnz	x18, L(top)
-+	cbnz	x15, L(top)
++	cbnz	x17, L(top)
  
  L(end):	orr	x10, x10, x13
  	orr	x11, x12, x2
 diff --git a/mpn/arm64/lshiftc.asm b/mpn/arm64/lshiftc.asm
-index 7c93a3d..7fc3442 100644
+index 7c93a3d..6bf5844 100644
 --- a/mpn/arm64/lshiftc.asm
 +++ b/mpn/arm64/lshiftc.asm
 @@ -61,7 +61,7 @@ PROLOGUE(mpn_lshiftc)
@@ -328,7 +352,7 @@ index 7c93a3d..7fc3442 100644
  	add	up, up, n, lsl #3
  	sub	tnc, xzr, cnt
 -	lsr	x18, n, #2
-+	lsr	x15, n, #2
++	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x4, [up,#-8]
@@ -337,7 +361,7 @@ index 7c93a3d..7fc3442 100644
  L(b01):	NSHIFT	x0, x4, tnc
  	PSHIFT	x2, x4, cnt
 -	cbnz	x18, L(gt1)
-+	cbnz	x15, L(gt1)
++	cbnz	x17, L(gt1)
  	mvn	x2, x2
  	str	x2, [rp,#-8]
  	ret
@@ -346,7 +370,7 @@ index 7c93a3d..7fc3442 100644
  	NSHIFT	x10, x4, tnc
  	PSHIFT	x2, x4, cnt
 -	cbnz	x18, L(gt2)
-+	cbnz	x15, L(gt2)
++	cbnz	x17, L(gt2)
  	eon	x10, x10, x13
  	mvn	x2, x2
  	stp	x2, x10, [rp,#-16]
@@ -355,17 +379,17 @@ index 7c93a3d..7fc3442 100644
  	stp	x10, x11, [rp,#-32]!
  	PSHIFT	x2, x4, cnt
 -L(lo0):	sub	x18, x18, #1
-+L(lo0):	sub	x15, x15, #1
++L(lo0):	sub	x17, x17, #1
  L(lo3):	NSHIFT	x10, x6, tnc
  	PSHIFT	x13, x7, cnt
  	NSHIFT	x12, x7, tnc
 -	cbnz	x18, L(top)
-+	cbnz	x15, L(top)
++	cbnz	x17, L(top)
  
  L(end):	eon	x10, x10, x13
  	eon	x11, x12, x2
 diff --git a/mpn/arm64/mul_1.asm b/mpn/arm64/mul_1.asm
-index d1d3394..db26304 100644
+index d1d3394..15178ab 100644
 --- a/mpn/arm64/mul_1.asm
 +++ b/mpn/arm64/mul_1.asm
 @@ -56,7 +56,7 @@ EPILOGUE()
@@ -373,7 +397,7 @@ index d1d3394..db26304 100644
  PROLOGUE(mpn_mul_1)
  	adds	x4, xzr, xzr		C clear register and cy flag
 -L(com):	lsr	x18, n, #2
-+L(com):	lsr	x15, n, #2
++L(com):	lsr	x17, n, #2
  	tbnz	n, #0, L(bx1)
  
  L(bx0):	mov	x11, x4
@@ -382,7 +406,7 @@ index d1d3394..db26304 100644
  	mul	x8, x4, v0
  	umulh	x10, x4, v0
 -	cbz	x18, L(2)
-+	cbz	x15, L(2)
++	cbz	x17, L(2)
  	ldp	x6, x7, [up,#16]!
  	mul	x9, x5, v0
  	b	L(mid)-8
@@ -391,7 +415,7 @@ index d1d3394..db26304 100644
  	tbnz	n, #1, L(b10)
  
 -L(b01):	cbz	x18, L(1)
-+L(b01):	cbz	x15, L(1)
++L(b01):	cbz	x17, L(1)
  
  L(b00):	ldp	x6, x7, [up]
  	mul	x8, x6, v0
@@ -401,8 +425,8 @@ index d1d3394..db26304 100644
  	add	rp, rp, #16
 -	sub	x18, x18, #1
 -	cbz	x18, L(end)
-+	sub	x15, x15, #1
-+	cbz	x15, L(end)
++	sub	x17, x17, #1
++	cbz	x17, L(end)
  
  	ALIGN(16)
  L(top):	mul	x8, x4, v0
@@ -412,13 +436,13 @@ index d1d3394..db26304 100644
  	umulh	x11, x7, v0
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x15, x15, #1
-+	cbnz	x15, L(top)
++	sub	x17, x17, #1
++	cbnz	x17, L(top)
  
  L(end):	mul	x8, x4, v0
  	adcs	x13, x9, x10
 diff --git a/mpn/arm64/rsh1aors_n.asm b/mpn/arm64/rsh1aors_n.asm
-index e0b760b..20eeb38 100644
+index e0b760b..afd3d5b 100644
 --- a/mpn/arm64/rsh1aors_n.asm
 +++ b/mpn/arm64/rsh1aors_n.asm
 @@ -59,7 +59,7 @@ MULFUNC_PROLOGUE(mpn_rsh1add_n mpn_rsh1sub_n)
@@ -426,7 +450,7 @@ index e0b760b..20eeb38 100644
  ASM_START()
  PROLOGUE(func_n)
 -	lsr	x18, n, #2
-+	lsr	x11, n, #2
++	lsr	x6, n, #2
  
  	tbz	n, #0, L(bx0)
  
@@ -435,7 +459,7 @@ index e0b760b..20eeb38 100644
  L(b01):	ADDSUB	x13, x5, x9
  	and	x10, x13, #1
 -	cbz	x18, L(1)
-+	cbz	x11, L(1)
++	cbz	x6, L(1)
  	ldp	x4, x5, [up],#48
  	ldp	x8, x9, [vp],#48
  	ADDSUBC	x14, x4, x8
@@ -445,8 +469,8 @@ index e0b760b..20eeb38 100644
  	str	x17, [rp], #24
 -	sub	x18, x18, #1
 -	cbz	x18, L(end)
-+	sub	x11, x11, #1
-+	cbz	x11, L(end)
++	sub	x6, x6, #1
++	cbz	x6, L(end)
  	b	L(top)
  
  L(1):	cset	x14, COND
@@ -455,7 +479,7 @@ index e0b760b..20eeb38 100644
  	ADDSUBC	x12, x4, x8
  	ADDSUBC	x13, x5, x9
 -	cbz	x18, L(3)
-+	cbz	x11, L(3)
++	cbz	x6, L(3)
  	ldp	x4, x5, [up,#-16]
  	ldp	x8, x9, [vp,#-16]
  	extr	x17, x12, x15, #1
@@ -464,7 +488,7 @@ index e0b760b..20eeb38 100644
  	ADDSUBC	x13, x5, x9
  	and	x10, x12, #1
 -	cbz	x18, L(2)
-+	cbz	x11, L(2)
++	cbz	x6, L(2)
  	ldp	x4, x5, [up,#-16]
  	ldp	x8, x9, [vp,#-16]
  	ADDSUBC	x14, x4, x8
@@ -474,8 +498,8 @@ index e0b760b..20eeb38 100644
  	add	rp, rp, #16
 -	sub	x18, x18, #1
 -	cbz	x18, L(end)
-+	sub	x11, x11, #1
-+	cbz	x11, L(end)
++	sub	x6, x6, #1
++	cbz	x6, L(end)
  
  	ALIGN(16)
  L(top):	ldp	x4, x5, [up,#-16]
@@ -485,13 +509,13 @@ index e0b760b..20eeb38 100644
  	stp	x16, x17, [rp],#32
 -	sub	x18, x18, #1
 -	cbnz	x18, L(top)
-+	sub	x11, x11, #1
-+	cbnz	x11, L(top)
++	sub	x6, x6, #1
++	cbnz	x6, L(top)
  
  L(end):	extr	x16, x15, x14, #1
  	extr	x17, x12, x15, #1
 diff --git a/mpn/arm64/rshift.asm b/mpn/arm64/rshift.asm
-index acee714..81b75fc 100644
+index acee714..90187ad 100644
 --- a/mpn/arm64/rshift.asm
 +++ b/mpn/arm64/rshift.asm
 @@ -60,7 +60,7 @@ ASM_START()
@@ -499,7 +523,7 @@ index acee714..81b75fc 100644
  	mov	rp, rp_arg
  	sub	tnc, xzr, cnt
 -	lsr	x18, n, #2
-+	lsr	x15, n, #2
++	lsr	x17, n, #2
  	tbz	n, #0, L(bx0)
  
  L(bx1):	ldr	x5, [up]
@@ -508,7 +532,7 @@ index acee714..81b75fc 100644
  L(b01):	NSHIFT	x0, x5, tnc
  	PSHIFT	x2, x5, cnt
 -	cbnz	x18, L(gt1)
-+	cbnz	x15, L(gt1)
++	cbnz	x17, L(gt1)
  	str	x2, [rp]
  	ret
  L(gt1):	ldp	x4, x5, [up,#8]
@@ -517,7 +541,7 @@ index acee714..81b75fc 100644
  	NSHIFT	x10, x5, tnc
  	PSHIFT	x2, x5, cnt
 -	cbnz	x18, L(gt2)
-+	cbnz	x15, L(gt2)
++	cbnz	x17, L(gt2)
  	orr	x10, x10, x13
  	stp	x10, x2, [rp]
  	ret
@@ -526,12 +550,12 @@ index acee714..81b75fc 100644
  	stp	x11, x10, [rp,#32]!
  	PSHIFT	x2, x5, cnt
 -L(lo0):	sub	x18, x18, #1
-+L(lo0):	sub	x15, x15, #1
++L(lo0):	sub	x17, x17, #1
  L(lo3):	NSHIFT	x10, x7, tnc
  	NSHIFT	x12, x6, tnc
  	PSHIFT	x13, x6, cnt
 -	cbnz	x18, L(top)
-+	cbnz	x15, L(top)
++	cbnz	x17, L(top)
  
  L(end):	orr	x10, x10, x13
  	orr	x11, x12, x2
