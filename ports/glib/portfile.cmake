@@ -17,7 +17,7 @@ vcpkg_extract_source_archive(
 
 if (selinux IN_LIST FEATURES)
     if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
-        message("Selinux was not found in its typical system location. Your build may fail. You can install Selinux with \"apt-get install selinux\".")
+        message("Selinux was not found in its typical system location. Your build may fail. You can install Selinux with \"apt-get install selinux libselinux1-dev\".")
     endif()
     list(APPEND OPTIONS -Dselinux=enabled)
 else()
