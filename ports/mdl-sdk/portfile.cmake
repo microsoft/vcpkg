@@ -116,6 +116,9 @@ vcpkg_cmake_configure(
         -Dpython_PATH:PATH=${PYTHON3}
         -Dclang_PATH:PATH=${LLVM_CLANG7}
 
+        ${FEATURE_OPTIONS}
+
+    MAYBE_UNUSED_VARIABLES
         -DCMAKE_DISABLE_FIND_PACKAGE_GLEW=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_glfw3=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibXml2=ON
@@ -123,8 +126,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt5=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Subversion=ON
-
-        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
