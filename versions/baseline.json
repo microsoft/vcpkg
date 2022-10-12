@@ -2252,6 +2252,10 @@
       "baseline": "391d5e9",
       "port-version": 2
     },
+    "fastgltf": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "fastlz": {
       "baseline": "2021-05-10",
       "port-version": 0
