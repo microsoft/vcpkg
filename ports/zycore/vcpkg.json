@@ -3,6 +3,7 @@
   "version": "1.3.0",
   "description": "Internal library of Zydis",
   "homepage": "https://github.com/zyantific/zycore-c",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
