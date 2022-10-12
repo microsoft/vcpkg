@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
     PATCHES
         00001-msvc-upgrade-solution-up-to-vc11.patch
         remove_lame_init_old_from_symbol_list.patch # deprecated https://github.com/zlargon/lame/blob/master/include/lame.h#L169
+        add-macos-universal-config.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
