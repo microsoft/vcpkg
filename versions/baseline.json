@@ -385,7 +385,7 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.6.1",
+      "baseline": "12.6.2",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
@@ -401,7 +401,7 @@
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.2.1",
+      "baseline": "12.3.0",
       "port-version": 0
     },
     "azure-storage-queues-cpp": {

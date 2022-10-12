@@ -1,6 +1,6 @@
 {
   "name": "azure-storage-blobs-cpp",
-  "version-semver": "12.6.1",
+  "version-semver": "12.6.2",
   "description": [
     "Microsoft Azure Storage Blobs SDK for C++",
     "This library provides Azure Storage Blobs SDK."
