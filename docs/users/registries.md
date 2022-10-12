@@ -154,7 +154,7 @@ and falling back to `/ports` if the port is not found in any of the additional p
 If configured in multiple places, overlays will follow the following priority:
 
 - Overlays configured through the command line
-- Overlays configured in the manifest
+- Overlays configured in `vcpkg-configuration.json`
 - Overlays configured via environment variables
 
 ### Versioning Support
