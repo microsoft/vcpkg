@@ -147,9 +147,11 @@ The name resolution algorithm is as follows:
 
 ## Overlays Resolution
 
-Overlay ports and overlay triplets will be resolved in sequential order
-(see [port overlays](../specifications/ports-overlay.md)), and if configured
-in multiple places will follow the following priority:
+Overlay ports and overlay triplets will be resolved in the order in which
+additional paths are specified, with the first match being selected for installation,
+and falling back to `/ports` if the port is not found in any of the additional paths.
+
+If configured in multiple places, overlays will follow the following priority:
 
 - Overlays configured through the command line
 - Overlays configured in the manifest
