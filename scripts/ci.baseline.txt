@@ -785,7 +785,6 @@ opencv3:x64-windows-static-md = skip
 opencv3:x86-windows           = skip
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
-opengl:arm64-windows=skip # https://github.com/microsoft/vcpkg-tool/pull/599
 openmama:x64-windows-static-md=fail
 openmesh:arm64-windows=fail
 openmesh:arm-uwp=fail
@@ -863,12 +862,8 @@ qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
 # Missing system libraries
 qt5-wayland:x64-osx=fail
-# qtmultimedia needs an EGL fix
-qtmultimedia:x64-linux=fail
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
-# Post build checks fail
-qtwebengine:arm64-windows=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -1238,6 +1233,13 @@ zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
 zeroc-ice:x64-uwp=fail
 
+# Ports which needs to pass in CI
+cmake:x64-windows=pass
+cmake:x64-windows-static=pass
+cmake:x64-windows-static-md=pass
+cmake:arm64-windows=pass
+cmake:x64-linux=pass
+cmake:x64-osx=pass
 cmake-user:arm-uwp=pass
 cmake-user:arm64-windows=pass
 cmake-user:x64-linux=pass
@@ -1246,6 +1248,12 @@ cmake-user:x64-windows-static-md=pass
 cmake-user:x64-windows-static=pass
 cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
+qt:x64-windows=pass
+qt:x64-windows-static=pass
+# qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass. 
+qt:arm64-windows=pass
+qt:x64-linux=pass
+# qt:x64-osx=pass # gstreamer issues preventing qtmultimedia
 vcpkg-ci-arrow:x64-windows=pass
 vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass

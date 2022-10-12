@@ -1,6 +1,7 @@
 {
   "name": "qtmultimedia",
   "version": "6.3.2",
+  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -26,7 +27,10 @@
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
-        "angle",
+        {
+          "name": "angle",
+          "platform": "windows"
+        },
         "gstreamer"
       ]
     },

@@ -102,7 +102,7 @@
     },
     "angle": {
       "baseline": "chromium_4472",
-      "port-version": 4
+      "port-version": 5
     },
     "antlr4": {
       "baseline": "4.10.1",
@@ -2126,7 +2126,7 @@
     },
     "egl-registry": {
       "baseline": "2021-11-23",
-      "port-version": 0
+      "port-version": 1
     },
     "eigen3": {
       "baseline": "3.4.0",
@@ -5950,10 +5950,14 @@
     },
     "qt": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.8.2",
+      "port-version": 0
+    },
+    "qt3d": {
+      "baseline": "6.3.2",
       "port-version": 0
     },
     "qt5": {
@@ -6146,7 +6150,7 @@
     },
     "qtbase": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.3.2",
@@ -6182,7 +6186,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.13.2",
@@ -6206,7 +6210,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.3.2",
@@ -6282,7 +6286,7 @@
     },
     "qtwebengine": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.3.2",

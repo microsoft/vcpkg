@@ -27,9 +27,9 @@ vcpkg_from_github(
         003-fix-mingw.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/angle_commit.h DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/angle_commit.h DESTINATION ${SOURCE_PATH}/src/common)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/angle_commit.h" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/angle_commit.h" DESTINATION "${SOURCE_PATH}/src/common")
 
 function(checkout_in_path_with_patches PATH URL REF PATCHES)
     if(EXISTS "${PATH}")
@@ -53,21 +53,20 @@ checkout_in_path_with_patches(
     "third-party-zlib-far-undef.patch"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
         -D${ANGLE_CPU_BITNESS}=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/unofficial-angle)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-angle PACKAGE_NAME unofficial-angle)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # File conflict with opengl-registry! Make sure headers are similar on Update!
 # angle defines some additional entrypoints. 
@@ -95,5 +94,3 @@ foreach(_file ${_double_files})
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
     endif()
 endforeach()
-
-
