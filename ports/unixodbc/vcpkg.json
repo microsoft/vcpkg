@@ -5,5 +5,8 @@
   "description": "unixODBC is an Open Source ODBC sub-system and an ODBC SDK for Linux, Mac OSX, and UNIX",
   "homepage": "https://github.com/lurcher/unixODBC",
   "license": "LGPL-2.1-only",
-  "supports": "osx | linux"
+  "supports": "osx | linux",
+  "dependencies": [
+    "libltdl"
+  ]
 }

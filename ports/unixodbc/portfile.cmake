@@ -9,7 +9,7 @@ vcpkg_from_github(
 set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --with-included-ltdl)
+    #list(APPEND OPTIONS --with-included-ltdl)
 endif()
 
 vcpkg_configure_make(
