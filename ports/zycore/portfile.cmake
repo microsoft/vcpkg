@@ -19,9 +19,10 @@ vcpkg_cmake_install()
 
 
 vcpkg_cmake_config_fixup(
-    CONFIG_PATH lib/cmake/${PORT}
+    CONFIG_PATH lib/cmake/zycore
 )
     
-configure_file(${SOURCE_PATH}/LICENSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
