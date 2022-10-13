@@ -595,12 +595,6 @@ mesa:x64-windows-static=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-# Triggers an ICE
-mfl:x64-windows-static=fail
-mfl:x64-windows-static-md=fail
-mfl:x64-linux=skip
-mfl:x64-osx=skip
-mfl:arm64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-uwp=fail
 minifb:x64-uwp=fail
