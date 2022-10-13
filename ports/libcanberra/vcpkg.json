@@ -13,7 +13,10 @@
   ],
   "features": {
     "alsa": {
-      "description": "Enable optional ALSA support"
+      "description": "Enable optional ALSA support",
+      "dependencies": [
+        "alsa"
+      ]
     },
     "defaults": {
       "description": "Default features",
@@ -21,23 +24,35 @@
         {
           "name": "libcanberra",
           "features": [
-            "null"
+            "alsa"
           ],
-          "platform": "osx"
+          "platform": "linux"
         },
         {
           "name": "libcanberra",
           "features": [
-            "alsa"
+            "null"
           ],
-          "platform": "linux"
+          "platform": "!linux"
         }
       ]
     },
     "gstreamer": {
       "description": "Enable optional GStreamer support",
       "dependencies": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false
+        }
+      ]
+    },
+    "gtk3": {
+      "description": "Enable optional GTK3 support",
+      "dependencies": [
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
       ]
     },
     "null": {
