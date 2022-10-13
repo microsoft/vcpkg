@@ -67,7 +67,7 @@
     "reflection": {
       "description": "Enable Reflection"
     },
-    "tool": {
+    "tools": {
       "description": "Build tools"
     },
     "workflowcompiler": {
