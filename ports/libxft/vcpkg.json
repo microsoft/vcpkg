@@ -9,8 +9,8 @@
     "fontconfig",
     "freetype",
     "libx11",
+    "libxrender",
     "xorg-macros",
-    "xproto",
-    "xrender"
+    "xproto"
   ]
 }
