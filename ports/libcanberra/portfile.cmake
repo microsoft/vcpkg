@@ -1,13 +1,4 @@
 set(VERSION 0.30)
-set(PATCHES
-    undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
-    gtk_dont_assume_x11.patch # likewise
-    03_onlyshowin_unity.patch # likewise
-)
-
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHES macos_fix.patch)
-endif()
 
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with brew install automake libtool")
@@ -26,8 +17,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
     PATCHES
-        ${PATCHES}
         ltdl-dlopen.patch
+        03_onlyshowin_unity.patch
 )
 
 if (NOT "alsa" IN_LIST FEATURES)
@@ -46,17 +37,28 @@ if (NOT "pulse" IN_LIST FEATURES)
    list(APPEND FEATURES_BACKENDS "--disable-pulse")
 endif()
 
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_OSX)
+    vcpkg_list(APPEND options
+        cc_cv_LDFLAGS__Wl___as_needed=no
+        cc_cv_LDFLAGS__Wl___gc_sections=no
+    )
+endif()
 
 set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --disable-gtk
+        --disable-gtk3
         --disable-gtk-doc
         --disable-lynx
         --disable-silent-rules
         --disable-tdb
+        --disable-udev
         ${FEATURES_BACKENDS}
+
 )
 
 vcpkg_install_make()
