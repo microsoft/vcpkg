@@ -1,20 +1,8 @@
-set(PHYSFS_VERSION 3.0.2)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2"
-    "https://hg.icculus.org/icculus/physfs/archive/release-${PHYSFS_VERSION}.tar.bz2"
-    FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
-    SHA512 4024b6c3348e0b6fc1036aac330192112dfe17de3e3d14773be9f06e9a062df5a1006869f21162b4e0b584989f463788a35e64186b1913225c073fea62754472
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    REF ${PHYSFS_VERSION}
-    PATCHES
-        "001-fix-lzmasdk-arm64-windows.patch"
-        "002-fix-posix-eintr.patch" # Remove this patch in the next update
-        "003-fix-posix-cloexec.patch" # Remove this patch in the next update
+    REPO icculus/physfs
+    REF eb3383b532c5f74bfeb42ec306ba2cf80eed988c # release-3.2.0
+    SHA512 4231b379107a8dbacad18d98c0800bad4a3aae1bdd1db0bd4cf0c89c69bb7590ed14422c77671c28bd7556f606d3ff155ad8432940ce6222340f647f9e73ae8e
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
@@ -36,6 +24,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PhysFS)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

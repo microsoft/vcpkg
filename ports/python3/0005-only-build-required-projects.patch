@@ -26,12 +26,7 @@ diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
 index 4d416c589e..ede9868a8f 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
-@@ -45,21 +45,21 @@
-       <BuildInParallel>false</BuildInParallel>
-     </Projects>
-     <!-- python3.dll -->
--    <Projects Include="python3dll.vcxproj" />
-+    <Projects Include="python3dll.vcxproj" Condition="false" />
+@@ -49,17 +49,17 @@
      <!-- py[w].exe -->
 -    <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" />
 +    <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" Condition="false" />
