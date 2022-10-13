@@ -4878,7 +4878,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 9
+      "port-version": 10
     },
     "mpark-variant": {
       "baseline": "1.4.0",
@@ -5126,7 +5126,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 6
+      "port-version": 7
     },
     "nmslib": {
       "baseline": "2.1.1",
