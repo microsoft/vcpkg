@@ -138,18 +138,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
-# Move all osg plugins to [/debug]/plugins/osgPlugins-${OSG_VER},
-# as a staging area for later deployment.
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}")
-    endif()
-endif()
-
 if("tools" IN_LIST FEATURES)
     set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
     file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
