@@ -15,15 +15,6 @@ if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
 elseif(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with apt-get install libtool")
-else()
-    vcpkg_download_distfile(
-        LTDL_H_PATH
-        URLS "https://gitlab.com/graphviz/graphviz-windows-dependencies/-/raw/141d3a21be904fa8dc2ae3ed01d36684db07a35d/${VCPKG_TARGET_ARCHITECTURE}/include/ltdl.h"
-        FILENAME ltdl.h
-        SHA512 f2d20e849e35060536265f47014c40eb70e57dacd600a9db112fc465fbfa6a66217b44a8c3dc33039c260a27f09d9034b329b03cc28c32a22ec503fcd17b78cd
-    )
-    file(COPY ${LTDL_H_PATH} DESTINATION ${SOURCE_PATH}/lib/common)
-    set(EXTRA_CMAKE_OPTION "-DLTDL_INCLUDE_DIR=${SOURCE_PATH}/lib/common")
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
