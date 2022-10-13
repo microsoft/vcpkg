@@ -1961,7 +1961,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-09-25",
+      "baseline": "2022-10-12",
       "port-version": 0
     },
     "discount": {
@@ -2649,8 +2649,8 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.72.3",
-      "port-version": 3
+      "baseline": "2.74.0",
+      "port-version": 0
     },
     "glibmm": {
       "baseline": "2.70.0",
@@ -3494,7 +3494,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lcms": {
       "baseline": "2.12",
@@ -3892,6 +3892,10 @@
       "baseline": "0.31",
       "port-version": 2
     },
+    "liblrc": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "liblsl": {
       "baseline": "1.16.0",
       "port-version": 0
@@ -3958,7 +3962,7 @@
     },
     "libmount": {
       "baseline": "2.38",
-      "port-version": 0
+      "port-version": 1
     },
     "libmpeg2": {
       "baseline": "0.5.1",
@@ -4696,6 +4700,10 @@
       "baseline": "2.7.2.14",
       "port-version": 3
     },
+    "mdl-sdk": {
+      "baseline": "2021.1.2",
+      "port-version": 0
+    },
     "mdns": {
       "baseline": "1.4.2",
       "port-version": 0
@@ -5277,8 +5285,8 @@
       "port-version": 2
     },
     "ogre": {
-      "baseline": "1.12.9",
-      "port-version": 10
+      "baseline": "13.4.4",
+      "port-version": 0
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -6638,7 +6646,7 @@
     },
     "sail": {
       "baseline": "0.9.0-rc1",
-      "port-version": 0
+      "port-version": 1
     },
     "sais": {
       "baseline": "2.4.1",
@@ -7669,7 +7677,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2022-09-13",
+      "baseline": "2022-09-26",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7677,8 +7685,8 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2022-05-10",
-      "port-version": 1
+      "baseline": "2022-09-04",
+      "port-version": 0
     },
     "vcpkg-get-python-packages": {
       "baseline": "2022-06-30",
