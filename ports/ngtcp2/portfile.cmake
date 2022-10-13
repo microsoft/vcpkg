@@ -20,16 +20,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-ngtcp2")
 
 # Clean
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-ngtcp2")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-ngtcp2_static")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")

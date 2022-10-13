@@ -1,5 +1,5 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index d98747f..7a590ef 100644
+index d98747f..2bc20d0 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -80,12 +80,15 @@ if(ENABLE_SHARED_LIB)
@@ -34,7 +34,7 @@ index d98747f..7a590ef 100644
 +    install(
 +      EXPORT unofficial-ngtcp2_static-config
 +      NAMESPACE unofficial::ngtcp2_static::
-+      DESTINATION share/unofficial-ngtcp2_static)
++      DESTINATION share/unofficial-ngtcp2)
    endif()
  endif()
  
