@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 6ae482092cca4d4a408e6bdf24714153d9203797
     SHA512 1865f6178b2885483f0b43c1641e602f957d4e64e77b802e64a64038b709dbf63fa2dd6037720e7180434e91341f2e1a0eb86424c1ee1556db5971cba3434bb0
     HEAD_REF dev
-    PATCHES "unofficial-webview2.patch"
+    PATCHES
+        unofficial-webview2.patch
+        fix-source-generation.patch
 )
 
 vcpkg_cmake_configure(
