@@ -17,12 +17,12 @@
     }
   ],
   "features": {
+    "customprefix": {
+      "description": "Enable support for user-generated message prefixes"
+    },
     "unwind": {
       "description": "Enable libunwind support",
       "supports": "linux"
-    },
-    "customprefix": {
-      "description": "Enable support for user-generated message prefixes"
     }
   }
 }
