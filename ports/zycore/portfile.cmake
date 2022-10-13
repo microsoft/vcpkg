@@ -8,11 +8,11 @@ vcpkg_from_github(
         fix-install.patch
 )
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic ZYCORE_BUILD_STATIC)
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic ZYCORE_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DZYCORE_BUILD_SHARED_LIB=${ZYCORE_BUILD_STATIC}
+    OPTIONS -DZYCORE_BUILD_SHARED_LIB=${ZYCORE_BUILD_SHARED}
 )
 
 vcpkg_cmake_install()
