@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.3.1)
+set(QT_VERSION 6.3.2)
 set(QT_UPDATE_VERSION 0)
 
 if(PORT MATCHES "(qtquickcontrols2)")
@@ -37,7 +37,8 @@ set(QT_PORTS qt
              qtopcua
              qtimageformats
              qtmqtt
-             qtnetworkauth)
+             qtnetworkauth
+             qt3d)
              # qtquickcontrols2 -> moved into qtdeclarative
 if(QT_VERSION VERSION_GREATER_EQUAL 6.1)
     list(APPEND QT_PORTS

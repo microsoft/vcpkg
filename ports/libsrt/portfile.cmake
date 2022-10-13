@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF v1.5.0
     SHA512 68ab5fe316cfbbbba31b5b2354f657e23c90e14674f8dac01df2bf98c4776a7fafcd690a4dfad3a340e6be577a22360ca04ef2397c8a0dd507adebdd54dc22fb
     HEAD_REF master
-    PATCHES fix-dependency-install.patch
+    PATCHES
+        fix-dependency-install.patch
+        fix-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
@@ -14,6 +16,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tool ENABLE_APPS
+        bonding ENABLE_BONDING
 )
 
 vcpkg_cmake_configure(
@@ -30,7 +33,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

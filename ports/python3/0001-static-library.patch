@@ -72,6 +72,19 @@ index ac49f7867a..f3583345ff 100644
  #endif
  #ifdef ABIFLAGS
      SET_SYS_FROM_STRING("abiflags", ABIFLAGS);
+diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
+index 70c336a9d3..ba797e8afd 100644
+--- a/PCbuild/pcbuild.proj
++++ b/PCbuild/pcbuild.proj
+@@ -45,7 +45,7 @@
+       <BuildInParallel>false</BuildInParallel>
+     </Projects>
+     <!-- python3.dll -->
+-    <Projects Include="python3dll.vcxproj" />
++    <Projects Include="python3dll.vcxproj" Condition="false" />
+     <!-- py[w].exe -->
+     <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" />
+     <!-- pyshellext.dll -->
 -- 
 2.28.0.windows.1
 

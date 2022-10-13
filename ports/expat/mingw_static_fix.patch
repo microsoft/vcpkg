@@ -1,0 +1,11 @@
+--- a/expat/CMakeLists.txt
++++ b/expat/CMakeLists.txt
+@@ -459,7 +459,7 @@ if(NOT WIN32)
+     endif()
+ endif()
+ 
+-if(MINGW)
++if(MINGW AND EXPAT_SHARED_LIBS)
+     set_target_properties(expat PROPERTIES SUFFIX "-${LIBCURRENT_MINUS_AGE}.dll")
+ endif()
+ 
