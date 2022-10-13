@@ -1,11 +1,12 @@
 {
   "name": "libcanberra",
   "version": "0.30",
-  "port-version": 2,
+  "port-version": 3,
   "description": "An implementation of the XDG Sound Theme and Name Specifications, for generating event sounds on free desktops",
   "homepage": "http://0pointer.de/lennart/projects/libcanberra/",
   "supports": "!(windows | uwp)",
   "dependencies": [
+    "libltdl",
     "libvorbis"
   ],
   "default-features": [

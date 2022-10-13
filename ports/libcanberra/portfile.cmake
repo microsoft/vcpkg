@@ -1,6 +1,5 @@
 set(VERSION 0.30)
 set(PATCHES
-    pkgconfig.patch
     undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
     gtk_dont_assume_x11.patch # likewise
     03_onlyshowin_unity.patch # likewise
@@ -26,27 +25,10 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
-    PATCHES ${PATCHES}
+    PATCHES
+        ${PATCHES}
+        ltdl-dlopen.patch
 )
-
-set(EXTRA_CPPFLAGS)
-set(EXTRA_LDFLAGS)
-
-#libltdl fixes
-if(VCPKG_TARGET_IS_OSX)
-    execute_process(
-         COMMAND brew --prefix libtool
-         OUTPUT_VARIABLE BREW_LIBTOOL_PATH
-    )
-    string(STRIP ${BREW_LIBTOOL_PATH} BREW_LIBTOOL_PATH)
-
-    set(LIBS_PRIVATE "-L${BREW_LIBTOOL_PATH}/lib -lltdl")
-    set(CFLAGS_PRIVATE "-I${BREW_LIBTOOL_PATH}/include")
-    set(EXTRA_LDFLAGS "LDFLAGS=${LIBS_PRIVATE}")
-    set(EXTRA_CPPFLAGS "CPPFLAGS=${CFLAGS_PRIVATE}")
-else()
-    set(LIBS_PRIVATE "-lltdl")
-endif()
 
 if (NOT "alsa" IN_LIST FEATURES)
    list(APPEND FEATURES_BACKENDS "--disable-alsa")
@@ -75,15 +57,9 @@ vcpkg_configure_make(
         --disable-silent-rules
         --disable-tdb
         ${FEATURES_BACKENDS}
-        ${EXTRA_CPPFLAGS}
-        ${EXTRA_LDFLAGS}
 )
 
 vcpkg_install_make()
-
-configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
-configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
