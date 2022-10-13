@@ -1,27 +1,28 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2d241fe..b79454d 100644
+index 9e2ec99..542e641 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -244,7 +244,7 @@ else (CUDA)
- endif (CUDA)
- 
+@@ -253,7 +253,7 @@ else (USE_CUDA)
+   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_CUDA)
+ endif (USE_CUDA)
  if (LAPACK)
 -  find_package(LAPACK QUIET)
 +  find_package(LAPACK REQUIRED)
    if (LAPACK_FOUND)
      message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
    else (LAPACK_FOUND)
-@@ -266,7 +266,8 @@ if (SUITESPARSE)
+@@ -275,8 +275,8 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
--  find_package(SuiteSparse 4.0 COMPONENTS CHOLMOD SPQR)
+-  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
+-    OPTIONAL_COMPONENTS Partition)
 +  find_package(suitesparse CONFIG REQUIRED)
 +  set(SuiteSparse_FOUND 1)
    if (SuiteSparse_FOUND)
      set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
      # By default, if all of SuiteSparse's dependencies are found, Ceres is
-@@ -274,11 +275,11 @@ if (SUITESPARSE)
+@@ -284,11 +284,11 @@ if (SUITESPARSE)
      message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
              "building with SuiteSparse.")
  
@@ -35,29 +36,16 @@ index 2d241fe..b79454d 100644
    else (SuiteSparse_FOUND)
      # Disable use of SuiteSparse if it cannot be found and continue.
      message("-- Did not find all SuiteSparse dependencies, disabling "
-@@ -294,7 +295,7 @@ endif (SUITESPARSE)
- # CXSparse.
- if (CXSPARSE)
-   # Don't search with REQUIRED as we can continue without CXSparse.
--  find_package(CXSparse)
-+  find_package(CXSparse REQUIRED)
-   if (CXSparse_FOUND)
-     set(CXSparse_DEPENDENCY "find_dependency(CXSparse ${CXSparse_VERSION})")
-     # By default, if CXSparse and all dependencies are found, Ceres is
-@@ -302,10 +303,10 @@ if (CXSPARSE)
-     message("-- Found CXSparse version: ${CXSparse_VERSION}, "
-       "building with CXSparse.")
+@@ -306,7 +306,7 @@ if (NOT SuiteSparse_Partition_FOUND)
+ endif (NOT SuiteSparse_Partition_FOUND)
  
--    if (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
-+    if (0)
-       install(FILES ${Ceres_SOURCE_DIR}/cmake/FindCXSparse.cmake
-               DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
--    endif (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
-+    endif ()
-   else (CXSparse_FOUND)
-     # Disable use of CXSparse if it cannot be found and continue.
-     message("-- Did not find CXSparse, Building without CXSparse.")
-@@ -367,9 +368,10 @@ endif()
+ if (EIGENMETIS)
+-  find_package (METIS)
++  find_package (METIS CONFIG REQUIRED)
+   if (METIS_FOUND)
+     # Since METIS is a private dependency of Ceres, it requires access to the
+     # link-only METIS::METIS target to avoid undefined linker errors in projects
+@@ -378,9 +378,10 @@ endif()
  # GFlags.
  if (GFLAGS)
    # Don't search with REQUIRED as we can continue without gflags.
@@ -70,7 +58,7 @@ index 2d241fe..b79454d 100644
        message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
      else()
        message("-- Detected version of gflags: ${gflags_VERSION} does not define "
-@@ -420,7 +422,7 @@ set_ceres_threading_model("${CERES_THREADING_MODEL}")
+@@ -431,7 +432,7 @@ set_ceres_threading_model("${CERES_THREADING_MODEL}")
  
  if (BUILD_BENCHMARKS)
    # Version 1.3 was first to provide import targets
@@ -79,7 +67,7 @@ index 2d241fe..b79454d 100644
    if (benchmark_FOUND)
       message("-- Found Google benchmark library. Building Ceres benchmarks.")
    else()
-@@ -611,7 +613,7 @@ create_ceres_config("${CERES_COMPILE_OPTIONS}"
+@@ -616,7 +617,7 @@ create_ceres_config("${CERES_COMPILE_OPTIONS}"
  add_subdirectory(internal/ceres)
  
  if (BUILD_DOCUMENTATION)
@@ -89,10 +77,10 @@ index 2d241fe..b79454d 100644
      message("-- Failed to find Sphinx and/or its dependencies, disabling build of documentation.")
      update_cache_variable(BUILD_DOCUMENTATION OFF)
 diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
-index 299b373..33d41d8 100644
+index 350b3b5..ae8dc2d 100644
 --- a/internal/ceres/CMakeLists.txt
 +++ b/internal/ceres/CMakeLists.txt
-@@ -108,14 +108,14 @@ endif (NOT MINIGLOG)
+@@ -121,18 +121,18 @@ endif (NOT MINIGLOG AND GLOG_FOUND)
  if (SUITESPARSE AND SuiteSparse_FOUND)
    # Define version information for use in Solver::FullReport.
    add_definitions(-DCERES_SUITESPARSE_VERSION="${SuiteSparse_VERSION}")
@@ -100,13 +88,18 @@ index 299b373..33d41d8 100644
 -    SuiteSparse::SPQR)
 +  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::cholmod
 +    SuiteSparse::spqr)
+ 
+   if (SuiteSparse_Partition_FOUND)
+-    list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::Partition)
++    list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::partition)
+   endif (SuiteSparse_Partition_FOUND)
  endif (SUITESPARSE AND SuiteSparse_FOUND)
  
- if (CXSPARSE AND CXSparse_FOUND)
+ if (SuiteSparse_Partition_FOUND OR EIGENMETIS)
    # Define version information for use in Solver::FullReport.
-   add_definitions(-DCERES_CXSPARSE_VERSION="${CXSparse_VERSION}")
--  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES CXSparse::CXSparse)
-+  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES ${CXSparse_LIBRARIES})
- endif (CXSPARSE AND CXSparse_FOUND)
+   add_definitions(-DCERES_METIS_VERSION="${METIS_VERSION}")
+-  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES METIS::METIS)
++  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES metis)
+ endif (SuiteSparse_Partition_FOUND OR EIGENMETIS)
  
  if (ACCELERATESPARSE AND AccelerateSparse_FOUND)

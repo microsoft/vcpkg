@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF f68321e7de8929fbcdb95dd42877531e64f72f66 #2.1.0
-    SHA512 67bbd8a9385a40fe69d118fbc84da0fcc9aa1fbe14dd52f5403ed09686504213a1d931e95a1a0148d293b27ab5ce7c1d618fbf2e8fed95f2bbafab851a1ef449
+    REF 9893c534c0f748277542479e6771c46490d8b6db #2.1.0
+    SHA512 a1da1297fc28c84e45fa218e48eba8ff3ad53c8eb4eb1a98858b3343592e23ede5770c5880460a30c46707afdcb1e740b79afa9150f5f952089f1189627fa4e9
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch
@@ -29,11 +29,10 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "suitesparse"       SUITESPARSE
-        "cxsparse"          CXSPARSE
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
         "tools"             GFLAGS
-        "cuda"              CUDA
+        "cuda"              USE_CUDA
 )
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
@@ -66,4 +65,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
