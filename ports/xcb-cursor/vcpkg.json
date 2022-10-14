@@ -1,0 +1,13 @@
+{
+  "name": "xcb-cursor",
+  "version": "0.1.3",
+  "description": "XCB port of libXcursor",
+  "homepage": "https://xcb.freedesktop.org/",
+  "license": null,
+  "dependencies": [
+    "xcb",
+    "xcb-image",
+    "xcb-render-util",
+    "xcb-util"
+  ]
+}
