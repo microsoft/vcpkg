@@ -38,7 +38,7 @@ index 24a194c..91c8e41 100644
                          INTERFACE_LINK_LIBRARIES "${GTHREAD2_LIBRARIES}"
                          INTERFACE_INCLUDE_DIRECTORIES "${GLIB2_INCLUDE_DIRS}")
 +                        #vcpkg specific
-+    find_package(FindWrapPCRE2)
++    find_package(WrapPCRE2)
 +    target_link_libraries(GLIB2::GLIB2 INTERFACE WrapPCRE2::WrapPCRE2)
 +    find_package(Iconv)
 +    find_package(Intl)
