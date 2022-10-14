@@ -1,6 +1,7 @@
 {
 	"name": "stackwalker",
 	"version-semver": "1.20.0",
+	"port-version": 1,
 	"description": "StackWalker - An alternative to boost",
 	"homepage": "https://github.com/JochenKalmbach/StackWalker",
 	"supports": "windows",
