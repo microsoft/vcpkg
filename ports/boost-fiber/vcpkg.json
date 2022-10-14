@@ -1,10 +1,11 @@
 {
   "name": "boost-fiber",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost fiber module",
   "homepage": "https://github.com/boostorg/fiber",
   "license": "BSL-1.0",
-  "supports": "!osx & !uwp & !arm & !emscripten",
+  "supports": "!uwp & !arm & !emscripten",
   "dependencies": [
     "boost-algorithm",
     "boost-assert",
