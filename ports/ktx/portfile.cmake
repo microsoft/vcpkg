@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
+        0003-libtool.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
