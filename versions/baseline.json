@@ -3056,6 +3056,10 @@
       "baseline": "3",
       "port-version": 0
     },
+    "im3d": {
+      "baseline": "2022-10-11",
+      "port-version": 0
+    },
     "imath": {
       "baseline": "3.1.5",
       "port-version": 0
