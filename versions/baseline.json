@@ -4540,6 +4540,10 @@
       "baseline": "5.4.4",
       "port-version": 2
     },
+    "lua-compat53": {
+      "baseline": "0.10",
+      "port-version": 0
+    },
     "luabridge": {
       "baseline": "2.6",
       "port-version": 1
@@ -4566,6 +4570,10 @@
     },
     "lunasvg": {
       "baseline": "2.3.1",
+      "port-version": 0
+    },
+    "luv": {
+      "baseline": "1.44.2",
       "port-version": 0
     },
     "lv2": {
