@@ -164,7 +164,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(PLUGIN_BASE_WIN
         -Dgst-plugins-base:xvideo=disabled
         -Dgst-plugins-base:xshm=disabled
-        -Dgst-plugins-base:gl_winsys=win32)
+        -Dgst-plugins-base:gl_winsys=win32
+        -Dgst-plugins-base:gl_platform=wgl)
+    # TODO: gstreamer has a lot of 'auto' options which probably should be controlled by vcpkg!
 endif()
 
 #
