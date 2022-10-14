@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
+        disable-tests-and-examples.patch
 )
 
 # note: check ${SOURCE_PATH}/liburing.spec before updating configure options

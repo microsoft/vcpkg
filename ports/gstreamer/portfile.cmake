@@ -49,7 +49,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 70dcd4a36d3bd35f680eaa3c980842fbb57f55f17d1453c6a95640709b1b33a263689bf54caa367154267d281e5474686fedaa980de24094de91886a57b6547a
     HEAD_REF master
-    PATCHES ${PLUGIN_UGLY_PATCHES} fix-clang-cl-ugly.patch
+    PATCHES ${PLUGIN_UGLY_PATCHES} fix-clang-cl-ugly.patch remove_x264_define.patch
 )
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -290,9 +290,12 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
-            "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
-)
+if(NOT VCPKG_TARGET_IS_LINUX)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
+                "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/libexec"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include"
@@ -301,6 +304,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Move plugin pkg-config files
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/*")
+    file(COPY ${pc_files} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    file(GLOB pc_files_dbg "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/*")
+    file(COPY ${pc_files_dbg} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/"
+                        "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/")
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
                         "${CURRENT_PACKAGES_DIR}/bin"
     )

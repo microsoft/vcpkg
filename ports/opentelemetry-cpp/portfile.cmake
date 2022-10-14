@@ -2,12 +2,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if ("etw" IN_LIST FEATURES)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "linux" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "OSX") 
-	    message(FATAL_ERROR "Feature 'ewt' does not support 'linux & osx'")
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
@@ -36,9 +30,9 @@ if(WITH_OTLP)
         SHA512 b61d7fe7d6e1b5943d45ab9d17c22fe36c0f7a8312f668aea2b6685aa0f5c98aaa41e76659057310ec1f061d36ad9e66993be177039121f62f73858a6749d3d9
     )
 
-    vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party)
-    file(REMOVE_RECURSE ${SOURCE_PATH}/third_party/opentelemetry-proto)
-    file(RENAME ${SOURCE_PATH}/third_party/opentelemetry-proto-${OTEL_PROTO_VERSION} ${SOURCE_PATH}/third_party/opentelemetry-proto)
+    vcpkg_extract_source_archive("${ARCHIVE}" "${SOURCE_PATH}/third_party")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/opentelemetry-proto")
+    file(RENAME "${SOURCE_PATH}/third_party/opentelemetry-proto-${OTEL_PROTO_VERSION}" "${SOURCE_PATH}/third_party/opentelemetry-proto")
 endif()
 
 vcpkg_cmake_configure(
@@ -52,7 +46,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opentelemetry-cpp)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
