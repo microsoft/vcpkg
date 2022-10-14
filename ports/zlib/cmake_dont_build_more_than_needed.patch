@@ -1,16 +1,15 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0fe939d..a1291d5 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -7,6 +7,7 @@ set(VERSION "1.2.12")
+--- a/CMakeLists.txt	2022-10-14 22:12:45.630242122 +0200
++++ b/CMakeLists.txt	2022-10-14 22:17:52.141615108 +0200
+@@ -5,6 +5,8 @@
  
- option(ASM686 "Enable building i686 assembly implementation")
- option(AMD64 "Enable building amd64 assembly implementation")
+ set(VERSION "1.2.13")
+ 
 +option(SKIP_BUILD_EXAMPLES "Skip build of the examples" OFF)
- 
++
  set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
  set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
-@@ -124,9 +125,11 @@ set(ZLIB_SRCS
+ set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation directory for headers")
+@@ -121,9 +123,11 @@
  )
  
  if(NOT MINGW)
@@ -24,8 +23,8 @@ index 0fe939d..a1291d5 100644
 +    endif()
  endif()
  
- if(CMAKE_COMPILER_IS_GNUCC)
-@@ -180,11 +183,12 @@ if(MINGW)
+ # parse the full version number from zlib.h and include in ZLIB_FULL_VERSION
+@@ -144,11 +148,12 @@
                              -I ${CMAKE_CURRENT_BINARY_DIR}
                              -o ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj
                              -i ${CMAKE_CURRENT_SOURCE_DIR}/win32/zlib1.rc)
@@ -35,13 +34,13 @@ index 0fe939d..a1291d5 100644
 +    endif()
  endif(MINGW)
  
--add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
--add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+-add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+-add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 +add_library(zlib ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
  set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
  set_target_properties(zlib PROPERTIES SOVERSION 1)
  
-@@ -201,7 +205,7 @@ endif()
+@@ -165,7 +170,7 @@
  
  if(UNIX)
      # On unix-like platforms the library is almost always called libz
@@ -50,7 +49,7 @@ index 0fe939d..a1291d5 100644
     if(NOT APPLE)
       set_target_properties(zlib PROPERTIES LINK_FLAGS "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\"")
     endif()
-@@ -211,7 +215,7 @@ elseif(BUILD_SHARED_LIBS AND WIN32)
+@@ -175,7 +180,7 @@
  endif()
  
  if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
@@ -59,7 +58,7 @@ index 0fe939d..a1291d5 100644
          RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
          ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
          LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
-@@ -230,6 +234,7 @@ endif()
+@@ -194,6 +199,7 @@
  # Example binaries
  #============================================================================
  
@@ -67,7 +66,7 @@ index 0fe939d..a1291d5 100644
  add_executable(example test/example.c)
  target_link_libraries(example zlib)
  add_test(example example)
-@@ -247,3 +252,4 @@ if(HAVE_OFF64_T)
+@@ -211,3 +217,4 @@
      target_link_libraries(minigzip64 zlib)
      set_target_properties(minigzip64 PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64")
  endif()

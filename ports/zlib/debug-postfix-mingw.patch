@@ -1,8 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0fe939d..e4fc213 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -59,7 +59,7 @@ endif()
+--- a/CMakeLists.txt	2022-10-14 22:23:08.949148901 +0200
++++ b/CMakeLists.txt	2022-10-14 22:25:13.556996198 +0200
+@@ -58,7 +58,7 @@
  #
  check_include_file(unistd.h Z_HAVE_UNISTD_H)
  
