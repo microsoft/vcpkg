@@ -1,6 +1,7 @@
 {
   "name": "boost-modular-build-helper",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Internal vcpkg port used to build Boost libraries",
   "license": "MIT",
   "dependencies": [

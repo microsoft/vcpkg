@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libical/libical
-    REF v3.0.11
-    SHA512 cdee86c50edc2373ab2024d7d4ae26dd4b9a728dbc13083472c4923c67f61ff3cef7d43edca762c6a11979d2040fc1576a033eaa23a19e58af8f14a7d67fc139
+    REF 408c598eea3d40c728df4e7dfd78dcdcc132c377 #v3.0.15
+    SHA512 7b25f3eab1b81621eb4704943bf9c69f5bb37a3d1489f84e95febb69073fa583877649a3d1109679962175f57f953547601e02349f034eb95b5eda8cfcec6f71
 )
 
 vcpkg_find_acquire_program(PERL)
