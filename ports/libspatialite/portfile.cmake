@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         fix-makefiles.patch
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
+        fix-mingw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -177,6 +178,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}

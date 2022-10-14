@@ -3,11 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
-    REF db351ffbbadc6c4e9239daaa26e9aefa9f0ec82d #v1.8.3
-    SHA512 4ce4e791c5a29584eaf147b2efc4e5c0fb363cf254e6ec0c66734f7ec8da538b5b295300fee3de218da6daf4107fc11e0eac695885a3380e03a72720d328c3db
+    REF f88fd7737de3e640c61703eb57a0fa0ce00c60cd #v1.9.2
+    SHA512 9c336663c2128f3aa17db2c8fb221ef31b53e9cc4b0e1ed55c9b17e865216372410218499ae76261774997b7ba83812034a70c198a9d59bc6e025a3d8c74b74c
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
+        disable_werror.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

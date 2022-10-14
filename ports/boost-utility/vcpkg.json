@@ -1,10 +1,11 @@
 {
   "name": "boost-utility",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost utility module",
   "homepage": "https://github.com/boostorg/utility",
   "license": "BSL-1.0",
   "dependencies": [
+    "boost-assert",
     "boost-config",
     "boost-core",
     "boost-io",

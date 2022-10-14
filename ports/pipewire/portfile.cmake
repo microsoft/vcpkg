@@ -81,3 +81,13 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+# remove absolute paths
+file(GLOB config_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.conf")
+foreach(file ${config_files})
+    vcpkg_replace_string("${file}" "in ${CURRENT_PACKAGES_DIR}/etc/pipewire for system-wide changes\n# or" "")
+    cmake_path(GET file FILENAME filename)
+    vcpkg_replace_string("${file}" "# ${CURRENT_PACKAGES_DIR}/etc/pipewire/${filename}.d/ for system-wide changes or in" "")
+endforeach()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/pipewire.conf" "${CURRENT_PACKAGES_DIR}/bin" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/minimal.conf" "${CURRENT_PACKAGES_DIR}/bin" "")

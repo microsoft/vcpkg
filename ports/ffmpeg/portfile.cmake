@@ -24,6 +24,8 @@ vcpkg_from_github(
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
+        0020-fix-aarch64-libswscale.patch
+        0021-fix-sdl2-version-check.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -68,8 +70,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_acquire_msys(MSYS_ROOT
             DIRECT_PACKAGES
                 # Required for "cpp.exe" preprocessor
-                "https://repo.msys2.org/msys/x86_64/gcc-9.3.0-1-x86_64.pkg.tar.xz"
-                76af0192a092278e6b26814b2d92815a2c519902a3fec056b057faec19623b1770ac928a59a39402db23cfc23b0d7601b7f88b367b27269361748c69d08654b2
+                "https://repo.msys2.org/msys/x86_64/gcc-11.3.0-2-x86_64.pkg.tar.zst"
+                1efc34aa8312eb5a8fef02c7c903d9ed98c4d50b13b8cf9679df1d545847eb9e0e9a42a810b2e085c6f938796a2a9846cb8b515e9380fdd6bec8ae4a1a131d9e
                 "https://repo.msys2.org/msys/x86_64/isl-0.22.1-1-x86_64.pkg.tar.xz"
                 f4db50d00bad0fa0abc6b9ad965b0262d936d437a9faa35308fa79a7ee500a474178120e487b2db2259caf51524320f619e18d92acf4f0b970b5cbe5cc0f63a2
                 "https://repo.msys2.org/msys/x86_64/zlib-1.2.11-1-x86_64.pkg.tar.xz"
@@ -96,6 +98,8 @@ if(VCPKG_TARGET_IS_MINGW)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
+elseif(VCPKG_TARGET_IS_LINUX)
+    string(APPEND OPTIONS " --target-os=linux")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND OPTIONS " --target-os=win32")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -452,11 +456,26 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
+if ("srt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsrt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsrt")
+endif()
+
 if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
 
+if(VCPKG_TARGET_IS_IOS)
+    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
+endif()
+
 set(OPTIONS_CROSS " --enable-cross-compile")
+
+# ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
+if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
+    string(APPEND OPTIONS_CROSS " --cross-prefix=${CMAKE_MATCH_1}")
+endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     string(APPEND OPTIONS_CROSS " --arch=x86_64")

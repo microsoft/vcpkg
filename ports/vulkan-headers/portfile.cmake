@@ -2,9 +2,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
-    REF 52a76fd0a693708eb8c25bd0ab7a1008091f64d4 #v1.2.203
-    SHA512 e3a337f0f1d0d003db522385b40ed187416e2246e64718b7d980ecdd92ac400a9e96b06dbb52c6f09cf7725772b5772727efb61c0e2f3a67989fe693fa569d38
-    HEAD_REF master
+    REF 2b55157592bf4c639b76cc16d64acaef565cc4b5
+    SHA512 f1ea894ebc16d05d03addacba1e4dbd67fb5963d0fc4c084725bca5fb4e944eb7c46ef54febca8dd1530d36e9c8633001ba37ba3c24023a8d0391d030ca66ebe
+    HEAD_REF v1.3.224
 )
 
 # This must be vulkan as other vulkan packages expect it there.

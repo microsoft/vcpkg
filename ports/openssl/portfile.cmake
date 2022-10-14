@@ -11,13 +11,18 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-set(OPENSSL_VERSION 3.0.3)
+set(OPENSSL_VERSION 3.0.5)
 
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
-    FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 949472025211fabdaf2564122f0a9a3baef0facb6373e90cf6c4485164a50898050b179722d0b358c4d8cf1787384ea30d5fd03b98757634631d3e8978509b1a
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+    set(OPENSSL_PATCHES "${CMAKE_CURRENT_LIST_DIR}/windows/flags.patch")
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO openssl/openssl
+    REF openssl-${OPENSSL_VERSION}
+    SHA512 e426f2d48dcd87ad938b246cea69988710198c3ed2f5bb9065aa9e74492161b056336f5b1f29be64e70dfd86a77808fe727ebb46eae10331c76f1ff08e341133
+    PATCHES ${OPENSSL_PATCHES}
 )
 
 vcpkg_find_acquire_program(PERL)

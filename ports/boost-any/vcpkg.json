@@ -1,6 +1,6 @@
 {
   "name": "boost-any",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost any module",
   "homepage": "https://github.com/boostorg/any",
   "license": "BSL-1.0",

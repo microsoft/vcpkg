@@ -104,7 +104,7 @@ function(vcpkg_fixup_pkgconfig)
             string(REPLACE "${unix_packages_dir}" [[${prefix}]] contents "${contents}")
             string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
 
-            string(REGEX REPLACE "(^|\n)prefix[\t ]*=[^\n]*" "" contents "${contents}")
+            string(REGEX REPLACE "(^|\n) *prefix[\t ]*=[^\n]*" "" contents "${contents}")
             if("${config}" STREQUAL "DEBUG")
                 # prefix points at the debug subfolder
                 string(REPLACE [[${prefix}/debug]] [[${prefix}]] contents "${contents}")

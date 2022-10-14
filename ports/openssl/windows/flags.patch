@@ -1,8 +1,21 @@
+diff --git a/Configurations/10-main.conf b/Configurations/10-main.conf
+index 66bc81d..2364633 100644
+--- a/Configurations/10-main.conf
++++ b/Configurations/10-main.conf
+@@ -1302,7 +1302,7 @@ my %targets = (
+         inherit_from     => [ "BASE_Windows" ],
+         template         => 1,
+         CC               => "cl",
+-        CPP              => '"$(CC)" /EP /C',
++        CPP              => '$(CC) /EP /C',
+         CFLAGS           => "/W3 /wd4090 /nologo",
+         coutflag         => "/Fo",
+         LD               => "link",
 diff --git a/Configure b/Configure
-index faf57b1..690a9b8 100644
+index 8b234f6..e031768 100644
 --- a/Configure
 +++ b/Configure
-@@ -556,7 +556,7 @@ my $list_separator_re =
+@@ -680,7 +680,7 @@ my $list_separator_re =
  # (we supported those before the change to "make variable" support.
  my %user = (
      AR          => env('AR'),
@@ -11,7 +24,7 @@ index faf57b1..690a9b8 100644
      AS          => undef,
      ASFLAGS     => [],
      CC          => env('CC'),
-@@ -569,7 +569,7 @@ my %user = (
+@@ -693,7 +693,7 @@ my %user = (
      CPPINCLUDES => [],  # Alternative for -I
      CROSS_COMPILE => env('CROSS_COMPILE'),
      HASHBANGPERL=> env('HASHBANGPERL') || env('PERL'),

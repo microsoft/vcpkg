@@ -1,4 +1,5 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 3b7afda..a152fa9 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,6 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -8,8 +9,8 @@ diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
 +if (BUILD_SHARED_BINARIES)
  add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
  add_dependencies(libjsonnet md5 stdlib)
- target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json)
-@@ -48,6 +49,7 @@ install(TARGETS libjsonnet
+ target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json ryml)
+@@ -50,6 +51,7 @@ install(TARGETS libjsonnet
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  target_include_directories(libjsonnet INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
@@ -17,13 +18,14 @@ diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
-@@ -102,3 +104,5 @@ if (BUILD_TESTS)
+@@ -106,3 +108,5 @@ if (BUILD_TESTS)
      add_test(jsonnet_test_snippet
          ${GLOBAL_OUTPUT_PATH}/jsonnet -e ${TEST_SNIPPET})
  endif()
 +
 +install(FILES ${LIB_HEADER} DESTINATION include)
 diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index eb7686c..326125c 100644
 --- a/cpp/CMakeLists.txt
 +++ b/cpp/CMakeLists.txt
 @@ -8,9 +8,9 @@ set(LIBJSONNETPP_SOURCE
@@ -46,7 +48,7 @@ diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
-@@ -38,6 +39,7 @@ else()
+@@ -42,6 +43,7 @@ else()
      add_library(libjsonnet++_for_binaries ALIAS libjsonnet++_static)
  endif()
  

@@ -1,7 +1,7 @@
 {
   "name": "zlib",
   "version": "1.2.12",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A compression library",
   "homepage": "https://www.zlib.net/",
   "license": "Zlib",

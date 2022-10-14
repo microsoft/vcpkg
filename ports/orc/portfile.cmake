@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/orc
-    REF 23ecc03e87548f6d6783c2d8af2b46672c52214c  # rel/release-1.6.4
-    SHA512 907984c7e036ddaa90e7cbfabb9af4f6fd3520820b9a8732b304f2213030f7d67cef89ad87d50e028a51bff06f68ff359345ad6894850e299b2fca343d7c0c3e
+    REF 7ff749a4234c3db58d272a8fc1c7cc1860245692  # rel/release-1.7.6
+    SHA512 1e7f0366530b691d7ea7ce671aa1e1a655cde2feb0fb0c3639da36ef565aceaf6f05e49a39c3c0ab7417dc324dc2cbb6e8babbf21f899ccb4cf5f0e63217afbf
     HEAD_REF master
     PATCHES
         0003-dependencies-from-vcpkg.patch
-        0005-disable-tzdata.patch
+        fix-linux-error.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")

@@ -43,6 +43,7 @@ vcpkg_from_github(
         fix-export-targets.patch
         pkgconfig.patch
         macos-arch-fix.patch
+        fix-msa-support-for-mips.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)

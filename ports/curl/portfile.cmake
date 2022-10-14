@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_83_1
-    SHA512 f4ede3c829aaa1142358d956cba4b33f06d3f0319c9f1cd65b63413de60a8690165e10fcb876fc413a20fcfa53bba2a064bb4b8c3070dbf474c2f2288eeab019
+    REF curl-7_84_0
+    SHA512 2a000c052c14ee9e6bed243e92699517889554bc0dc03e9f28d398ecf14b405c336f1303e6ed15ed30e88d5d00fefecdc189e83def3f0a5431f63e3be1c55c35
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -13,10 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        wolfssl-ntlm.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
 foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
@@ -25,7 +22,7 @@ foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
     endif()
 endforeach()
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+if("sectransp" IN_LIST FEATURES AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
@@ -58,15 +55,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(OPTIONS "")
-set(OPTIONS_RELEASE "")
-set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 if("sectransp" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
 endif()
 
 # UWP targets
@@ -78,6 +73,10 @@ if(VCPKG_TARGET_IS_UWP)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -DENABLE_UNICODE=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
@@ -86,14 +85,10 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-        -DENABLE_DEBUG=ON
         -DCURL_CA_FALLBACK=ON
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
+        -DCURL_USE_LIBPSL=OFF
     OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
+        -DENABLE_DEBUG=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

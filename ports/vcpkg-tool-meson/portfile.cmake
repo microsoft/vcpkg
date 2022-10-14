@@ -5,7 +5,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program MESON)
-set(program_version 0.62.1)
+set(program_version 0.63.0)
 set(program_name meson)
 set(search_names meson meson.py)
 set(interpreter PYTHON3)

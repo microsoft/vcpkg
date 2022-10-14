@@ -1,6 +1,7 @@
 {
   "name": "openvdb",
   "version": "9.0.0",
+  "port-version": 1,
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "license": "MPL-2.0",
@@ -14,7 +15,7 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "ilmbase",
+    "imath",
     "openexr",
     "tbb",
     {

@@ -14,22 +14,3 @@ diff -urN a/CMakeLists.txt b/CMakeLists.txt
  endif()
  if(APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
-diff --git a/runtime/src/support/Guid.cpp b/runtime/src/support/Guid.cpp
---- a/runtime/src/support/Guid.cpp
-+++ b/runtime/src/support/Guid.cpp
-@@ -24,6 +24,7 @@
- 
- #include <algorithm>
- 
-+#include "antlr4-common.h"
- #include "Guid.h"
- 
- #ifdef GUID_LIBUUID
-@@ -35,6 +36,7 @@
- #endif
- 
- #ifdef GUID_WINDOWS
-+#define NOMINMAX
- #include <objbase.h>
- #endif
- 

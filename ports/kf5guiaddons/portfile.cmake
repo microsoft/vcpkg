@@ -10,12 +10,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wayland   WITH_WAYLAND
+        wayland WITH_WAYLAND
 )
-
-if("wayland" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
-    message(FATAL_ERROR "Feature wayland is only supported on Linux.")
-endif()
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
@@ -41,4 +37,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

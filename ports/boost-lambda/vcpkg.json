@@ -1,6 +1,6 @@
 {
   "name": "boost-lambda",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost lambda module",
   "homepage": "https://github.com/boostorg/lambda",
   "license": "BSL-1.0",

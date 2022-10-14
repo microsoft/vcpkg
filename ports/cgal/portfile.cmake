@@ -4,10 +4,9 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v5.4.1
-    SHA512 2ec6167d8ebf1df121f1ac372d01862f7f3acb043deea4a334e0329976306f9c9e917cdc66b355728d3f99fdb76f5491d96f10fff660716ce27bfd3793380875
+    REF v5.5
+    SHA512 d689b0d4e04ff0a4297939dc0d4c001de88e811583b73fe6173f46b38d51f31f336a09a66c47cf79a1511942a4f5cf4df5d57871deec926bec71183c63b3d2f1
     HEAD_REF master
-    PATCHES fix-incorrect-warning.patch # https://github.com/CGAL/cgal/pull/6649
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -50,15 +49,16 @@ else()
     endforeach()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/Installation/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/man")
 
-file(
-    COPY
+set(LICENSES
+    "${SOURCE_PATH}/Installation/LICENSE"
         "${SOURCE_PATH}/Installation/LICENSE.BSL"
         "${SOURCE_PATH}/Installation/LICENSE.RFL"
         "${SOURCE_PATH}/Installation/LICENSE.GPL"
         "${SOURCE_PATH}/Installation/LICENSE.LGPL"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+
+vcpkg_install_copyright(FILE_LIST ${LICENSES})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

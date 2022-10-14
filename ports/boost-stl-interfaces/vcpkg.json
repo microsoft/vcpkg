@@ -1,12 +1,13 @@
 {
   "name": "boost-stl-interfaces",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost stl_interfaces module",
   "homepage": "https://github.com/boostorg/stl_interfaces",
   "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",
+    "boost-type-traits",
     "boost-vcpkg-helpers"
   ]
 }

@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
+        stack-walker-arm64.patch
     )
 
 set(TOOL_NAMES appman

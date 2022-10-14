@@ -1,10 +1,18 @@
 
-function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME IML_DISABLE_PKGCONFIG_INSTALL)
+function(ignition_modular_build_library)
+    set(options DISABLE_PKGCONFIG_INSTALL)
+    set(oneValueArgs NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME)
+    set(multiValueArgs OPTIONS)
+    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    vcpkg_find_acquire_program(PKGCONFIG)
     vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH ${IML_SOURCE_PATH}
         PREFER_NINJA
         DISABLE_PARALLEL_CONFIGURE
-        OPTIONS -DBUILD_TESTING=OFF
+        OPTIONS
+            -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+            -DBUILD_TESTING=OFF
+            ${IML_OPTIONS}
     )
 
     vcpkg_install_cmake(ADD_BIN_TO_PATH)
@@ -12,7 +20,7 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
         # Some ignition libraries install library subcomponents, that are effectively additional cmake packages
-        # with name ${CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_fixup_cmake_targets for them as well
+        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_fixup_cmake_targets for them as well
         file(GLOB COMPONENTS_CMAKE_PACKAGE_NAMES
              LIST_DIRECTORIES TRUE
              RELATIVE "${CURRENT_PACKAGES_DIR}/lib/cmake/"
@@ -25,10 +33,10 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
         endforeach()
 
         file(GLOB_RECURSE CMAKE_RELEASE_FILES
-                          "${CURRENT_PACKAGES_DIR}/lib/cmake/${CMAKE_PACKAGE_NAME}/*")
+                          "${CURRENT_PACKAGES_DIR}/lib/cmake/${IML_CMAKE_PACKAGE_NAME}/*")
 
         file(COPY ${CMAKE_RELEASE_FILES} DESTINATION
-                  "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
+                  "${CURRENT_PACKAGES_DIR}/share/${IML_CMAKE_PACKAGE_NAME}/")
     endif()
 
     # Remove unused files files
@@ -111,7 +119,7 @@ endfunction()
 function(ignition_modular_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
     set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
-	set(multiValueArgs PATCHES)
+    set(multiValueArgs PATCHES OPTIONS)
     cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
@@ -144,6 +152,18 @@ function(ignition_modular_library)
         FILE_DISAMBIGUATOR 1
     )
 
+    if (IML_DISABLE_PKGCONFIG_INSTALL)
+        set(EXTRA_OPTIONS DISABLE_PKGCONFIG_INSTALL)
+    endif()
+
     # Build library
-    ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME} ${IML_DISABLE_PKGCONFIG_INSTALL})
+    ignition_modular_build_library(
+        NAME ${IML_NAME}
+        MAJOR_VERSION ${IML_MAJOR_VERSION}
+        SOURCE_PATH ${SOURCE_PATH}
+        CMAKE_PACKAGE_NAME ${IML_CMAKE_PACKAGE_NAME}
+        DEFAULT_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME}
+        ${EXTRA_OPTIONS}
+        OPTIONS ${IML_OPTIONS}
+    )
 endfunction()

@@ -3,9 +3,9 @@
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md).**
 
 Versioning allows you to deterministically control the precise revisions of dependencies used by
-your project from within your manifest file.
+your project from within your manifest file. Versioning only applies to [Manifest Mode](manifests.md).
 
-See our guide to [getting started with versioning](../examples/versioning.getting-started.md).
+For an example with context, see our guide to [getting started with versioning](../examples/versioning.getting-started.md).
 
 ## Contents
 
@@ -15,6 +15,9 @@ See our guide to [getting started with versioning](../examples/versioning.gettin
   * [`version-date`](#version-date)
   * [`version-string`](#version-string)
 * [Version constraints](#version-constraints)
+  * [Baselines](#baselines)
+  * [`version>=`](#version-gte)
+  * [`overrides`](#overrides)
 
 ## Version schemes
 Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
@@ -79,7 +82,7 @@ Examples:
 * `watermelon#0`< `watermelon#1`
 
 #### `port-version`
-A positive integer value that increases each time a vcpkg-specific change is made to the port.
+A positive integer value that increases each time the port changes without updating the sources.
 
 The rules for port versions are:
 * Start at 0 for the original version of the port,
@@ -97,17 +100,15 @@ Examples:
 
 ## Version constraints
 
-### `builtin-baseline`
-Accepts a Git commit ID. vcpkg will try to find a baseline file in the given
-commit ID and use that to set the baseline versions (lower bounds) of all
-dependencies.
+### Baselines
 
-Baselines provide stability and ease of development for top-level manifest
-files. They are not considered from ports consumed as a dependency. If a minimum
-version constraint is required during transitive version resolution, the port
-should use `version>=`.
+Baselines define a global version floor for what versions will be considered. This enables top-level manifests to keep the entire graph of dependencies up-to-date without needing to individually specify direct [`"version>="`][version-gte] constraints.
 
-Example:
+Every configured registry has an associated baseline. For manifests that don't configure any registries, the [`"builtin-baseline"`][builtin-baseline] field defines the baseline for the built-in registry. If a manifest does not configure any registries and does not have a [`"builtin-baseline"`][builtin-baseline], the install operates according to the Classic Mode algorithm and ignores all versioning information.
+
+Baselines, like other registry settings, are ignored from ports consumed as a dependency. If a minimum version is required during transitive version resolution the port should use [`"version>="`][version-gte].
+
+**Example**
 ```json
 {
   "name": "project",
@@ -117,27 +118,9 @@ Example:
 }
 ```
 
-You can get the current commit of your vcpkg instance either by adding an empty
-`"builtin-baseline"` field, installing, and examining the error message or by
-running `git rev-parse HEAD` in the root of the vcpkg instance.
+To add an initial `"builtin-baseline"`, use [`vcpkg x-update-baseline --add-initial-baseline`](../commands/update-baseline.md#add-initial-baseline). To update baselines in a manifest, use [`vcpkg x-update-baseline`](../commands/update-baseline.md).
 
-When resolving version constraints for a package, vcpkg will look for a baseline
-version by looking at the baseline file in the given commit ID. If the given
-commit ID doesn't have a `versions/baseline.json` file or if the baseline file
-exists but it does not declare a baseline version for the package the invocation
-will fail.
-
-This field is a convenience field that has the same semantic as replacing your
-default registry in
-[`vcpkg-configuration.json`](registries.md#configuration-default-registry).
-```json
-{
-  "default-registry": {
-    "kind": "builtin",
-    "baseline": "<baseline>"
-  }
-}
-```
+<a id="version-gte"></a>
 
 ### `version>=`
 Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.
@@ -159,6 +142,7 @@ Example:
 
 As part of a version constraint declaration, a port version can be specified by adding the suffix `#<port-version>`, in the previous example `1.2.11#9` refers to version `1.2.11` port version `9`.
 
+<a id="overrides"></a>
 ### `overrides`
 Declaring an override forces vcpkg to ignore all other version constraints and use the version specified in the override. This is useful for pinning exact versions and for resolving version conflicts.
 
@@ -186,3 +170,5 @@ For an override to take effect, the overridden package must form part of the dep
 * The [implementation details](versioning.implementation-details.md)
 * The [original specification](../specifications/versioning.md)
 
+[version-gte]: #version-gte
+[builtin-baseline]: manifests.md#builtin-baseline

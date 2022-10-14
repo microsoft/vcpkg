@@ -39,7 +39,7 @@ index 8787b87..f953ceb 100644
  
      set(OCIO_HALF_LIB IlmBase::Half CACHE STRING "Half library target" FORCE)
      set(OCIO_USE_IMATH_HALF "0" CACHE STRING "Whether 'half' type will be sourced from the Imath library (>=v3.0)" FORCE)
-@@ -65,13 +65,13 @@ if(OCIO_BUILD_APPS)
+@@ -65,7 +65,7 @@ if(OCIO_BUILD_APPS)
  
      # lcms2
      # https://github.com/mm2/Little-CMS
@@ -48,21 +48,6 @@ index 8787b87..f953ceb 100644
  endif()
  
  if(OCIO_BUILD_OPENFX)
-     # openfx
-     # https://github.com/ofxa/openfx
--    find_package(openfx 1.4 REQUIRED)
-+    find_package(openfx CONFIG REQUIRED)
- endif()
- 
- if (OCIO_PYTHON_VERSION AND NOT OCIO_BUILD_PYTHON)
-@@ -100,6 +100,6 @@ if(OCIO_BUILD_PYTHON OR OCIO_BUILD_DOCS)
-     if(OCIO_BUILD_PYTHON)
-         # pybind11
-         # https://github.com/pybind/pybind11
--        find_package(pybind11 2.6.1 REQUIRED)
-+        find_package(pybind11 CONFIG REQUIRED)
-     endif()
- endif()
 diff --git a/src/OpenColorIO/CMakeLists.txt b/src/OpenColorIO/CMakeLists.txt
 index 034185d..b992bbc 100755
 --- a/src/OpenColorIO/CMakeLists.txt
@@ -80,38 +65,17 @@ index 034185d..b992bbc 100755
          yaml-cpp
  )
  
-@@ -242,13 +242,13 @@ endif()
- 
- if(NOT BUILD_SHARED_LIBS)
-     target_compile_definitions(OpenColorIO
--        PRIVATE
-+        PUBLIC
-             OpenColorIO_SKIP_IMPORTS
-     )
- else()
-     # Only exports selected symbols.
-     target_compile_definitions(OpenColorIO
--        PRIVATE
-+        PUBLIC
-             OpenColorIO_EXPORTS
-     )
- endif()
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index eebb2c1..7147dc3 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -2,4 +2,14 @@
+@@ -2,4 +2,9 @@
  
  include(CMakeFindDependencyMacro)
  
-+find_dependency(expat CONFIG REQUIRED)
-+find_dependency(imath CONFIG REQUIRED)
-+find_dependency(pystring CONFIG REQUIRED)
-+find_dependency(yaml-cpp CONFIG REQUIRED)
-+
-+if(@OCIO_BUILD_APPS@)
-+    find_dependency(lcms2 CONFIG REQUIRED)
-+    find_dependency(GLEW)
-+endif()
++find_dependency(expat CONFIG)
++find_dependency(Imath CONFIG)
++find_dependency(pystring CONFIG)
++find_dependency(yaml-cpp CONFIG)
 +
  include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)

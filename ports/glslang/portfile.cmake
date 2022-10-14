@@ -3,12 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF 11.8.0
-  SHA512 b60d328fab6d5319e49fbf8aeb86c31a7c8dfb4bc75d39c081cbb72f90750fd98f2a4f3ab091614187ad9e0d2e27471f9dab7ca5547cabb856d17bff694f8c98
+  REF 11.11.0
+  SHA512 c018271d499efff03540e4572a9c2f1f752c81c87efe7f2e63c2631ac47cecfedffdcfee68eddaf9187603eaae8ccd9a3e5640a022ba9fd7d05950f7827bf8cd
   HEAD_REF master
   PATCHES
     ignore-crt.patch
-    always-install-resource-limits.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -43,13 +42,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake")
-  message(FATAL_ERROR "glslang has been updated to provide a -config file -- please remove the vcpkg provided version from the portfile")
-endif()
-
-file(COPY
-  "${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
+# Install custom usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

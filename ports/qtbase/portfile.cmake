@@ -4,9 +4,6 @@
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
 set(QT_IS_LATEST ON)
-if("latest" IN_LIST FEATURES)
-    set(QT_IS_LATEST ON)
-endif()
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
@@ -18,21 +15,17 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
+        clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
+        installed_dir.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
 
-if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
-    list(APPEND ${PORT}_PATCHES 
-            dont_force_cmakecache.patch
-        )
-else()
-    list(APPEND ${PORT}_PATCHES 
-            dont_force_cmakecache_latest.patch
-        )
-endif()
+list(APPEND ${PORT}_PATCHES 
+        dont_force_cmakecache_latest.patch
+    )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
@@ -207,19 +200,20 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
     "sql-sqlite"          FEATURE_system_sqlite
+    "sql-odbc"            FEATURE_sql_odbc
     #"sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
     #"sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
+    "sql-odbc"            CMAKE_DISABLE_FIND_PACKAGE_ODBC
     # "sql-db2"             FEATURE_sql-db2
     # "sql-ibase"           FEATURE_sql-ibase
     # "sql-mysql"           FEATURE_sql-mysql
     # "sql-oci"             FEATURE_sql-oci
-    # "sql-odbc"            FEATURE_sql-odbc
     )
 
-set(DB_LIST DB2 MySQL Oracle ODBC)
+set(DB_LIST DB2 MySQL Oracle)
 foreach(_db IN LISTS DB_LIST)
     list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
 endforeach()
@@ -283,41 +277,35 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
 
 # Install CMake helper scripts
-if(QT_IS_LATEST)
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake")
-else()
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake")
-endif()
-file(INSTALL
-    "${port_details}"
-    DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME
-        "qt_port_details.cmake"
-    )
 file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/"
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 
-qt_stop_on_update()
-
-set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
+set(other_files qt-cmake
+                 qt-cmake-private
+                 qt-cmake-standalone-test
+                 qt-configure-module
+                 qt-internal-configure-tests
+                 )
 if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
 endif()
-set(other_files
-        target_qt.conf
-        qt-cmake-private-install.cmake
-        syncqt.pl
-        android_cmakelist_patcher.sh
-        android_emulator_launcher.sh
-        ensure_pro_file.cmake
-        )
+list(TRANSFORM other_files APPEND "${script_suffix}")
+
+list(APPEND other_files 
+                android_cmakelist_patcher.sh
+                android_emulator_launcher.sh
+                ensure_pro_file.cmake
+                syncqt.pl
+                target_qt.conf
+                qt-cmake-private-install.cmake
+                qt-testrunner.py
+                )
+
 foreach(_config debug release)
     if(_config MATCHES "debug")
         set(path_suffix debug/)
@@ -328,33 +316,44 @@ foreach(_config debug release)
         continue()
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}")
-    foreach(script IN LISTS script_files)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
-            set(target_script "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${script}${script_suffix}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
-            file(READ "${target_script}" _contents)
+    foreach(other_file IN LISTS other_files)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other_file}")
+            set(target_file "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${other_file}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other_file}" "${target_file}")
+            file(READ "${target_file}" _contents)
             if(_config MATCHES "debug")
-                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "..\\share\\" "..\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "../share/" "../../../../share/" _contents "${_contents}")
             else()
-                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "..\\share\\" "..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "../share/" "../../../share/" _contents "${_contents}")
             endif()
-            file(WRITE "${target_script}" "${_contents}")
-        endif()
-    endforeach()
-    foreach(other IN LISTS other_files)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${other}")
+            string(REGEX REPLACE "set cmake_path=[^\n]+\n" "set cmake_path=cmake\n" _contents "${_contents}")
+            file(WRITE "${target_file}" "${_contents}")
         endif()
     endforeach()
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+# Fixup qt.toolchain.cmake
+set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
+file(READ "${qttoolchain}" toolchain_contents)
+string(REGEX REPLACE "set\\\(__qt_initially_configured_toolchain_file [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\")" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${vcpkg_installed_dir}/${HOST_TRIPLET}" toolchain_contents "${toolchain_contents}")
+file(WRITE "${qttoolchain}" "${toolchain_contents}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_CROSSCOMPILING)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
     endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error.
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
+    else()
+        message(STATUS "Files in '/bin':${_bin_files}")
     endif()
 endif()
 
@@ -395,7 +394,7 @@ configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONL
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
-    set(DLLS_TO_COPY)
+    set(DLLS_TO_COPY "")
     foreach(_file IN LISTS _DLL_FILES)
         if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/${_file}.dll")
             list(APPEND DLLS_TO_COPY "${CURRENT_INSTALLED_DIR}/bin/${_file}.dll")
@@ -410,29 +409,21 @@ string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEX
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
 
-if(QT_IS_LATEST)
-    set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
-    if(EXISTS "${configfile}")
-        file(READ "${configfile}" _contents)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.exe")
-            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
-        endif()
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qtpaths.exe")
-            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qtpaths.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.debug.bat"]] _contents "${_contents}")
-        endif()
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
-            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-            string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat"]] _contents "${_contents}")
-        endif()
-        file(WRITE "${configfile}" "${_contents}")
-    endif()
-else()
-    set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
-    if(EXISTS "${coretools}")
-        file(READ "${coretools}" _contents)
+set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
+if(EXISTS "${configfile}")
+    file(READ "${configfile}" _contents)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
         string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
-        file(WRITE "${coretools}" "${_contents}")
     endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qtpaths.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qtpaths.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.debug.bat"]] _contents "${_contents}")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat"]] _contents "${_contents}")
+    endif()
+    file(WRITE "${configfile}" "${_contents}")
 endif()
+

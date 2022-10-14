@@ -69,8 +69,6 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 endif()
@@ -91,5 +89,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xml2Conf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xml2Conf.sh")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

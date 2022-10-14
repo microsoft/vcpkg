@@ -1,6 +1,7 @@
 {
   "name": "libflac",
   "version": "1.3.4",
+  "port-version": 1,
   "description": "Library for manipulating FLAC files",
   "homepage": "https://xiph.org/flac/",
   "license": "GFDL-1.2-or-later",
@@ -17,7 +18,8 @@
   ],
   "features": {
     "asm": {
-      "description": "Use any assembly optimization routines"
+      "description": "Use any assembly optimization routines",
+      "supports": "x86"
     }
   }
 }

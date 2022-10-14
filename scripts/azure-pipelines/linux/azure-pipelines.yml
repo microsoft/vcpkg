@@ -67,3 +67,12 @@ jobs:
     inputs:
       PathtoPublish: scripts/list_files
       ArtifactName: 'file lists for x64-linux'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    condition: ne(variables['XML_RESULTS_FILE'], '')
+    inputs:
+      testRunTitle: x64-linux
+      testResultsFormat: xUnit
+      testResultsFiles: $(XML_RESULTS_FILE)
+      platform: x64-linux
+      configuration: static
