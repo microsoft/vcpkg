@@ -1,0 +1,19 @@
+diff --git a/src/event.c b/src/event.c
+index 88058c4e7..3bc0d635f 100644
+--- a/src/event.c
++++ b/src/event.c
+@@ -38,6 +38,14 @@
+ 
+ #include <sys/types.h>
+ 
++#ifndef ssize_t
++    #ifdef _WIN64
++    #define ssize_t __int64
++    #else
++    #define ssize_t long
++    #endif
++#endif
++
+ #define ssizeof(foo)            (ssize_t)sizeof(foo)
+ #define countof(foo)            (ssizeof(foo) / ssizeof(foo[0]))
+ 
