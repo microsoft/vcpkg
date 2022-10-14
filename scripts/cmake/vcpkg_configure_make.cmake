@@ -74,8 +74,8 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
 endmacro()
 
 macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
     list(JOIN CXXPPFLAGS_${flag_suffix} "|" CXXREGEX)
     if(CXXREGEX)
         list(FILTER CPPFLAGS_${flag_suffix} INCLUDE REGEX "(${CXXREGEX})")
@@ -384,7 +384,7 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
-    elseif(NOT VCPKG_TARGET_IS_OSX)
+    else()
         # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
         function(z_vcpkg_make_set_env envvar cmakevar)
             set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
@@ -432,7 +432,7 @@ function(vcpkg_configure_make)
     endif()
 
     # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -441,7 +441,7 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
                 set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
@@ -754,10 +754,14 @@ function(vcpkg_configure_make)
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
+        set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
+        set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${current_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
+        #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${current_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${current_buildtype}}")
+        set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${current_buildtype}}")
         if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
@@ -767,6 +771,13 @@ function(vcpkg_configure_make)
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
         if(VCPKG_TARGET_IS_ANDROID)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
+        endif()
+
+        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # configure not using all flags to check if compiler works ...
+            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
