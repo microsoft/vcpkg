@@ -118,7 +118,7 @@
             "fontconfig",
             "xcb",
             "xcb-xlib",
-            "xrender"
+            "libxrender"
           ],
           "platform": "linux"
         }

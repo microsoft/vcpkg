@@ -9,6 +9,6 @@
     "libxfixes",
     "xorg-macros",
     "xproto",
-    "xrender"
+    "libxrender"
   ]
 }
