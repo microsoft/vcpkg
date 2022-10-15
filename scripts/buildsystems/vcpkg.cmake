@@ -603,8 +603,9 @@ function(add_executable)
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
+                    find_package(Python COMPONENTS Interpreter)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                        COMMAND "${Python_EXECUTABLE}" "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
                             "$<TARGET_FILE:${target_name}>"
                             "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
                         VERBATIM
