@@ -26,10 +26,10 @@
     "xcb-util-m4",
     "xcb-wm",
     "libxdmcp",
-    "xfont",
+    "libxfont",
     "libxkbcommon",
     "xkbcomp",
-    "xkbfile",
+    "libxkbfile",
     "xorg-macros",
     "xproto",
     {
