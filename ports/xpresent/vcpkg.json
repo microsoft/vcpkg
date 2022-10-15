@@ -10,6 +10,6 @@
     "libxfixes",
     "xorg-macros",
     "xproto",
-    "xrandr"
+    "libxrandr"
   ]
 }
