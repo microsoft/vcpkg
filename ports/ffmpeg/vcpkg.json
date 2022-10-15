@@ -125,6 +125,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "srt"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "ilbc"
           ],
           "platform": "!(arm & uwp)"
@@ -544,6 +552,13 @@
       "description": "Speex de/encoding via libspeex",
       "dependencies": [
         "speex"
+      ]
+    },
+    "srt": {
+      "description": "Haivision SRT protocol",
+      "supports": "!uwp",
+      "dependencies": [
+        "libsrt"
       ]
     },
     "ssh": {

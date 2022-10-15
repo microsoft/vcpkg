@@ -51,6 +51,7 @@ function(vcpkg_build_make)
         string(REPLACE " " [[\ ]] vcpkg_package_prefix "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
+        vcpkg_list(SET no_parallel_install_opts -j 1 --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
 
     else()
@@ -63,6 +64,7 @@ function(vcpkg_build_make)
         vcpkg_list(SET make_opts ${arg_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
         vcpkg_list(SET no_parallel_make_opts ${arg_MAKE_OPTIONS} V=1 -j 1 -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
+        vcpkg_list(SET no_parallel_install_opts -j 1 -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
@@ -160,8 +162,10 @@ function(vcpkg_build_make)
             if (arg_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
                 vcpkg_list(SET make_cmd_line ${make_command} ${install_opts})
+                vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_install_opts})
                 vcpkg_execute_build_process(
                     COMMAND ${make_cmd_line}
+                    NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "install-${TARGET_TRIPLET}${short_buildtype}"
                 )

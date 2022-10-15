@@ -1,6 +1,6 @@
 {
   "name": "libtcod",
-  "version": "1.22.2",
+  "version": "1.22.3",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
@@ -8,7 +8,6 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "stb",
-    "utf8proc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -21,6 +20,7 @@
   "default-features": [
     "png",
     "sdl",
+    "unicode",
     "zlib"
   ],
   "features": {
@@ -39,6 +39,12 @@
     },
     "threads": {
       "description": "Support for deprecated threading functions.  If in doubt then leave this disabled."
+    },
+    "unicode": {
+      "description": "Support for non-ASCII characters.  Required for text printing functions",
+      "dependencies": [
+        "utf8proc"
+      ]
     },
     "zlib": {
       "description": "Support for REXPaint files and TCODZip archives.",

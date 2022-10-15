@@ -1,7 +1,10 @@
 {
   "name": "llfio",
-  "version": "2.0-20220112",
-  "port-version": 2,
+  "version-date": "2022-09-18",
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
   "description": "P1031 low level file i/o and filesystem library for the C++ standard",
   "homepage": "https://github.com/ned14/llfio",
   "license": "Apache-2.0 OR BSL-1.0",
@@ -34,6 +37,13 @@
           "features": [
             "polyfill-cxx17"
           ]
+        },
+        {
+          "name": "outcome",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx17"
+          ]
         }
       ]
     },
@@ -42,6 +52,13 @@
       "dependencies": [
         {
           "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        },
+        {
+          "name": "outcome",
           "default-features": false,
           "features": [
             "polyfill-cxx20"

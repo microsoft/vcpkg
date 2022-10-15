@@ -5,8 +5,6 @@
 set(PATCHES
     # Fix symbols exporting for MinGW GCC x86
     def-fixes.patch
-    # Fix MinGW clang build
-    clang.patch
     # Clover build on Windows
     clover.patch
 )
@@ -20,8 +18,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.0.2
-    SHA512 1139bae1fa9f9b49727c5aaddad9b2908c7643d7c6c435544e8322c84d17c012f04aa73876bef8cab9b517e36957eb2a678b3001da2d69a32497ef4569f6172e
+    REF mesa-22.1.7
+    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
@@ -63,7 +61,12 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dglvnd=false)
 list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
-list(APPEND MESA_OPTIONS -Dosmesa=true)
+
+if("offscreen" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dosmesa=true)
+else()
+    list(APPEND MESA_OPTIONS -Dosmesa=false)
+endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
