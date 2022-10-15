@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-wxwidgets",
-  "version-date": "2022-04-05",
+  "version-date": "2022-10-15",
   "description": "Builds a GUI app in order to validate the wxwidgets port.",
   "dependencies": [
     {
