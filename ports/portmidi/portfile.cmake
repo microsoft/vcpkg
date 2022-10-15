@@ -6,7 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    SET(PM_USE_STATIC_RUNTIME ON)
+else()
+    SET(PM_USE_STATIC_RUNTIME OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+    -DPM_USE_STATIC_RUNTIME="${PM_USE_STATIC_RUNTIME}"
+)
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
