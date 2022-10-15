@@ -18,6 +18,7 @@ vcpkg_from_github(
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
         0021-fix-sdl2-version-check.patch
+        0022-fix-iconv.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -45,7 +46,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
@@ -91,9 +92,9 @@ if(VCPKG_TARGET_IS_MINGW)
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
-    string(APPEND OPTIONS " --target-os=linux")
+    string(APPEND OPTIONS " --target-os=linux --enable-pthread --enable-vaapi --enable-vdpau")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -343,6 +344,11 @@ if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND OPTIONS " --enable-schannel")
+    elseif(VCPKG_TARGET_IS_OSX)
+        string(APPEND OPTIONS " --enable-securetransport")
+    endif()
 endif()
 
 if("opus" IN_LIST FEATURES)
@@ -445,14 +451,6 @@ if ("srt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsrt")
 else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
-endif()
-
-if (VCPKG_TARGET_IS_OSX)
-    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
-endif()
-
-if(VCPKG_TARGET_IS_IOS)
-    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
 endif()
 
 set(OPTIONS_CROSS " --enable-cross-compile")
