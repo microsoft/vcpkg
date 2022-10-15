@@ -50,7 +50,7 @@ index d96ff88..8f91dd9 100644
 +    set(LIB_NAME "clickhouse-cpp-lib-static")
 +endif()
 +
-+TARGET_LINK_LIBRARIES (${LIB_NAME} PRIVATE
++TARGET_LINK_LIBRARIES (${LIB_NAME}
 +    absl
 +    cityhash
 +    lz4

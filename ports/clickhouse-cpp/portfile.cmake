@@ -10,8 +10,14 @@ vcpkg_from_github(
         #fix-error-C4996.patch  #fix x64-uwp error:std::uncaught_exception() is deprecated in C++17
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
