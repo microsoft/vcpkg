@@ -5,7 +5,7 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/app/xkbcomp",
   "dependencies": [
     "libx11",
-    "xkbfile",
+    "libxkbfile",
     "xproto"
   ]
 }
