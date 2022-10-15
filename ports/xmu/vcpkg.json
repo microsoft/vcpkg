@@ -1,0 +1,11 @@
+{
+  "name": "xmu",
+  "version": "1.1.3",
+  "description": "X miscellaneous utility routines library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxmu",
+  "dependencies": [
+    "bzip2",
+    "xorg-macros",
+    "xt"
+  ]
+}

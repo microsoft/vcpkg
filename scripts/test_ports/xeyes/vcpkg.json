@@ -1,0 +1,13 @@
+{
+  "name": "xeyes",
+  "version": "1.2.0",
+  "description": "A 'follow the mouse' X demo, using the X SHAPE extension",
+  "homepage": "https://gitlab.freedesktop.org/xorg/app/xeyes",
+  "dependencies": [
+    "libx11",
+    "libxi",
+    "libxext",
+    "libxrender",
+    "xmu"
+  ]
+}
