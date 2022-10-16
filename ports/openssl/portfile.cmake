@@ -18,8 +18,10 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 27dd3ef0c1827a74ec880d20232acb818c7d05e004ad7389c355e200a01e899f1b1ba5c34dcce44ecf7c8767c5e1bfbb2c795e3fa5461346087e7e3b95c8a51f
     PATCHES
+        disable-install-docs.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
+        unix/no-empty-dirs.patch
 )
 
 vcpkg_find_acquire_program(PERL)
