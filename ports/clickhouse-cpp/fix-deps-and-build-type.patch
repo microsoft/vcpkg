@@ -51,7 +51,7 @@ index d96ff88..ad1cb0d 100644
 +endif()
 +
 +TARGET_LINK_LIBRARIES ("${LIB_NAME}"
-+    absl::base absl::int128
++    absl::base absl::numeric
 +    cityhash
 +    lz4::lz4
  )

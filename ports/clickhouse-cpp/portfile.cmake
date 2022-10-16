@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
@@ -6,8 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-deps-and-build-type.patch
-        #fix-error-c2668.patch
-        #fix-error-C4996.patch  #fix x64-uwp error:std::uncaught_exception() is deprecated in C++17
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
