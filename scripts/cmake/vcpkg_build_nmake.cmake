@@ -28,8 +28,12 @@ function(vcpkg_build_nmake)
     if(NOT DEFINED arg_PROJECT_NAME)
         set(arg_PROJECT_NAME makefile.vc)
     endif()
+
     if(NOT DEFINED arg_TARGET)
         vcpkg_list(SET arg_TARGET all)
+    endif()
+    if(arg_ENABLE_INSTALL)
+        vcpkg_list(APPEND arg_TARGET install)
     endif()
 
     if(NOT DEFINED arg_CL_LANGUAGE)
@@ -47,9 +51,6 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make options
     vcpkg_list(SET make_opts_base /NOLOGO /G /U /F "${arg_PROJECT_NAME}" ${arg_TARGET})
-    if(arg_ENABLE_INSTALL)
-        vcpkg_list(APPEND make_opts_base install)
-    endif()
 
     if(arg_PREFER_JOM AND VCPKG_CONCURRENCY GREATER "1")
         vcpkg_find_acquire_program(JOM)
