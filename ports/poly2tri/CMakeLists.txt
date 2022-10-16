@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
+if(POLICY CMP0063)
+  cmake_policy(SET CMP0063 NEW)
+endif()
+
 project(poly2tri LANGUAGES C CXX)
 
 set(INSTALL_BIN_DIR      "bin"                     CACHE PATH "Path where exe and dll will be installed")

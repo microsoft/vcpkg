@@ -5798,7 +5798,7 @@
     },
     "poly2tri": {
       "baseline": "2020-07-21",
-      "port-version": 2
+      "port-version": 3
     },
     "polyclipping": {
       "baseline": "6.4.2",
