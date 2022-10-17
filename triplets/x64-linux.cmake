@@ -4,3 +4,5 @@ set(VCPKG_LIBRARY_LINKAGE static)
 
 set(VCPKG_CMAKE_SYSTEM_NAME Linux)
 
+set(VCPKG_BUILD_TYPE release) # save time by only building release libs
+set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES ON)
