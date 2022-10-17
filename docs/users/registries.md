@@ -18,6 +18,8 @@ use, please read [this documentation](../maintainers/registries.md).
       - [Registry Objects: `"path"`](#registry-objects-path)
     - [Configuration: `"default-registry"`](#configuration-default-registry)
     - [Configuration: `"registries"`](#configuration-registries)
+    - [Configuration: `"overlay-ports"`](#configuration-overlay-ports)
+    - [Configuration: `"overlay-triplets"`](#configuration-overlay-triplets)
     - [Example Configuration File](#example-configuration-file)
   - [Package Name Resolution](#package-name-resolution)
   - [Overlays Resolution](#overlays-resolution)
@@ -91,12 +93,14 @@ The `"packages"` fields of all the package registries must be disjoint.
 ### Configuration: `"overlay-ports"`
 
 The `"overlay-ports"` field must contain an array of paths, which point
-to a particular port or a directory containing ports to overlay.
+to a particular port or a directory containing ports to overlay. Paths should be
+absolute or relative to `vcpkg-configuration.json`.
 
 ### Configuration: `"overlay-triplets"`
 
 The `"overlay-triplets"` field must contain an array of paths, which point
-to a directory containing triplets to overlay.
+to a directory containing triplets to overlay. Paths should be absolute
+or relative to `vcpkg-configuration.json`.
 
 ### Example Configuration File
 
