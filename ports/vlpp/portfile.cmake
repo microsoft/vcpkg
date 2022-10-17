@@ -59,7 +59,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-vlpp)
+vcpkg_cmake_config_fixup()
 
 if (BUILD_TOOLS)
     file(GLOB TOOL_GACGEN "${CURRENT_PACKAGES_DIR}/bin/GacGen*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
