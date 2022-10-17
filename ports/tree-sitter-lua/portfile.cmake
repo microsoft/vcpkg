@@ -8,11 +8,10 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-file(TOUCH "${SOURCE_PATH}/LICENSE") # currently missing from upstream
-
-vcpkg_ts_parser_add(
+vcpkg_add_ts_parser(
   LANGUAGE lua
   SOURCE_PATH "${SOURCE_PATH}"
   MIN_ABI_VERSION 13
+  LICENSE_FILE "${SOURCE_PATH}/LICENSE.md"
 )
 

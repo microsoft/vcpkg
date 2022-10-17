@@ -1,6 +1,6 @@
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/vcpkg_ts_parser_add.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg_add_ts_parser.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

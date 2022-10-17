@@ -1,7 +1,7 @@
 # This include guard ensures the file will be loaded only once
 include_guard(GLOBAL)
 
-function(vcpkg_ts_parser_add)
+function(vcpkg_add_ts_parser)
   cmake_parse_arguments(PARSER
     ""
     ""

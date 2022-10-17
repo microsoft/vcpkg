@@ -8,7 +8,7 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-vcpkg_ts_parser_add(
+vcpkg_add_ts_parser(
   LANGUAGE c
   SOURCE_PATH "${SOURCE_PATH}"
   MIN_ABI_VERSION 13
