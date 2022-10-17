@@ -11,6 +11,6 @@ vcpkg_from_github(
 vcpkg_add_ts_parser(
   LANGUAGE cpp
   SOURCE_PATH "${SOURCE_PATH}"
-  MIN_ABI_VERSION 13
+  MIN_ABI_VERSION 14
 )
 
