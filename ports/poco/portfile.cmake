@@ -43,7 +43,7 @@ else()
     set(POCO_USE_MYSQL OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         # force to use dependencies as external
