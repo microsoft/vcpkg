@@ -1,9 +1,0 @@
-{
-  "name": "portable-snippets",
-  "version-date": "2019-09-20",
-  "port-version": 2,
-  "description": "Collection of miscellaneous portable C snippets",
-  "homepage": "https://github.com/nemequ/portable-snippets",
-  "license": null,
-  "supports": "!(arm & osx)"
-}

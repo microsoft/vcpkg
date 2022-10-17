@@ -1,9 +1,0 @@
-The package lodepng provides CMake targets:
-
-    # C API
-    find_package(lodepng-c CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE lodepng-c)
-
-    # C++ API
-    find_package(lodepng CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE lodepng)

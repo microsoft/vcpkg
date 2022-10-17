@@ -1,6 +1,0 @@
-list(FIND ARGS "COMPONENTS" COMPONENTS_IDX)
-if(COMPONENTS_IDX EQUAL -1)
-    _find_package(${ARGS} COMPONENTS data)
-else()
-    _find_package(${ARGS})
-endif()

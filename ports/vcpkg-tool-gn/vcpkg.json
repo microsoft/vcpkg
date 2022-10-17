@@ -1,8 +1,0 @@
-{
-  "name": "vcpkg-tool-gn",
-  "version-date": "2022-04-16",
-  "description": "GN build system",
-  "homepage": "https://gn.googlesource.com/gn/",
-  "license": null,
-  "supports": "native"
-}

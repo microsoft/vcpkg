@@ -1,7 +1,0 @@
-{
-  "name": "libmaxminddb",
-  "version-string": "1.4.3",
-  "port-version": 1,
-  "description": "C library for the MaxMind DB file format",
-  "homepage": "https://github.com/maxmind/libmaxminddb"
-}

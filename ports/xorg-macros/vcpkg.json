@@ -1,8 +1,0 @@
-{
-  "name": "xorg-macros",
-  "version": "1.19.3",
-  "description": "X.org macros utilities.",
-  "homepage": "https://xcb.freedesktop.org/",
-  "license": null,
-  "supports": "!uwp"
-}

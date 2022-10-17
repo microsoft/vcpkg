@@ -1,8 +1,0 @@
-{
-  "name": "box2d",
-  "version-semver": "2.4.1",
-  "port-version": 2,
-  "description": "An open source C++ engine for simulating rigid bodies in 2D",
-  "homepage": "https://box2d.org",
-  "supports": "!uwp"
-}

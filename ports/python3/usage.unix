@@ -1,9 +1,0 @@
-The package python3 provides a python interpreter that supports virtual environments:
-
-    $ tools/python3/python3.10 -m venv /path/to/venv
-    $ export VIRTUAL_ENV=/path/to/venv
-    $ export PATH=/path/to/venv/bin:$PATH
-    $ export -n PYTHONHOME
-    $ unset PYTHONHOME
-
-    See https://docs.python.org/3/library/venv.html for more details.

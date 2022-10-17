@@ -1,7 +1,0 @@
-{
-  "name": "fluidlite",
-  "version-string": "2020-08-27",
-  "port-version": 2,
-  "description": "FluidLite is a very light version of FluidSynth designed to be hardware, platform and external dependency independant.",
-  "homepage": "https://github.com/divideconcept/FluidLite"
-}

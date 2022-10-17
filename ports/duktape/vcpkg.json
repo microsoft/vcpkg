@@ -1,7 +1,0 @@
-{
-  "name": "duktape",
-  "version-string": "2.5.0",
-  "port-version": 2,
-  "description": "Embeddable Javascript engine with a focus on portability and compact footprint.",
-  "homepage": "https://github.com/svaarala/duktape"
-}

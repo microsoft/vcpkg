@@ -1,9 +1,0 @@
-{
-  "name": "blas",
-  "version-string": "1",
-  "port-version": 1,
-  "description": "Metapackage for packages which provide BLAS",
-  "dependencies": [
-    "openblas"
-  ]
-}

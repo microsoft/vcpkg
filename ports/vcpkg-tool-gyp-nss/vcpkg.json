@@ -1,6 +1,0 @@
-{
-  "name": "vcpkg-tool-gyp-nss",
-  "version-date": "2022-03-04",
-  "description": "https://github.com/plq/gyp-nss",
-  "supports": "native"
-}

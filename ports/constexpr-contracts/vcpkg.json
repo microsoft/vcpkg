@@ -1,7 +1,0 @@
-{
-  "name": "constexpr-contracts",
-  "version-string": "2020-08-09",
-  "port-version": 1,
-  "description": "A constexpr-friendly, optimisation-friendly contracts library.",
-  "homepage": "https://github.com/cjdb/constexpr-contracts"
-}

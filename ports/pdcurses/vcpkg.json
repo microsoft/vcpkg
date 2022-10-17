@@ -1,8 +1,0 @@
-{
-  "name": "pdcurses",
-  "version-string": "3.9",
-  "port-version": 3,
-  "description": "Public Domain Curses - a curses library for environments that don't fit the termcap/terminfo model.",
-  "homepage": "https://pdcurses.org/",
-  "supports": "windows & !uwp & !mingw"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "kuku",
-  "version-string": "2.1",
-  "port-version": 1,
-  "description": "Kuku is a simple open-source (MIT licensed) cuckoo hashing library developed by the Cryptography and Privacy Research group at Microsoft.",
-  "homepage": "https://github.com/microsoft/Kuku"
-}

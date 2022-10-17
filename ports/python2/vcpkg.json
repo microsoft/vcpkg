@@ -1,9 +1,0 @@
-{
-  "name": "python2",
-  "version": "2.7.18",
-  "port-version": 5,
-  "description": "The Python programming language as an embeddable library",
-  "homepage": "https://www.python.org",
-  "license": "Python-2.0",
-  "supports": "!(arm & osx) & !(arm & windows) & !uwp"
-}

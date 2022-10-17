@@ -1,4 +1,0 @@
-The package hfsm2 is header only and can be used from CMake via:
-
-    find_path(HFSM2_INCLUDE_DIRS "hfsm2/machine.hpp")
-    target_include_directories(main PRIVATE ${HFSM2_INCLUDE_DIRS})

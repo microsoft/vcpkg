@@ -1,4 +1,0 @@
-The package glslang provides CMake targets:
-
-    find_package(glslang CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::OGLCompiler glslang::glslangValidator glslang::spirv-remap glslang::glslang-default-resource-limits glslang::SPVRemapper glslang::SPIRV glslang::HLSL)

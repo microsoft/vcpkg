@@ -1,6 +1,0 @@
-{
-  "name": "libstk",
-  "version-string": "4.6.1",
-  "port-version": 1,
-  "description": "The Synthesis ToolKit in C++ (STK) is a set of open source audio signal processing and algorithmic synthesis classes written in the C++ programming language."
-}

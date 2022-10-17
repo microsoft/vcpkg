@@ -1,7 +1,0 @@
-{
-  "name": "libstemmer",
-  "version-string": "2017-9",
-  "port-version": 6,
-  "description": "Snowball is a small string processing language designed for creating stemming algorithms for use in Information Retrieval",
-  "homepage": "https://snowball.tartarus.org/"
-}

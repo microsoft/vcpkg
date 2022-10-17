@@ -1,6 +1,0 @@
-{
-  "name": "fmem",
-  "version-string": "c-libs-2ccee3d2fb",
-  "port-version": 1,
-  "description": "A cross-platform library for opening memory-backed libc streams."
-}

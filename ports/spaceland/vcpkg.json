@@ -1,9 +1,0 @@
-{
-  "name": "spaceland",
-  "version-string": "7.8.2",
-  "port-version": 5,
-  "description": "Spaceland Lib (sl) is a suite for geometric computation, specifically adapted to OpenGL.",
-  "dependencies": [
-    "zlib"
-  ]
-}

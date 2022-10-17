@@ -1,5 +1,0 @@
-{
-  "name": "valijson",
-  "version": "0.6",
-  "description": "Header-only C++ library for JSON Schema validation"
-}

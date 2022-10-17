@@ -1,6 +1,0 @@
-{
-  "name": "approval-tests-cpp",
-  "version": "10.12.2",
-  "description": "Approval Tests allow you to verify a chunk of output (such as a file) in one operation as opposed to writing test assertions for each element.",
-  "homepage": "https://github.com/approvals/ApprovalTests.cpp"
-}

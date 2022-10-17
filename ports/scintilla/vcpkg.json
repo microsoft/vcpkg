@@ -1,8 +1,0 @@
-{
-  "name": "scintilla",
-  "version": "4.4.6",
-  "port-version": 1,
-  "description": "A free source code editing component for Win32, GTK+, and OS X",
-  "homepage": "https://www.scintilla.org/",
-  "supports": "!(uwp | linux | osx)"
-}

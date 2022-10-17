@@ -1,4 +1,0 @@
-The package osg can be configured to use different OpenGL profiles via a custom triplet file.
-Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3 and GLES2+GLES3.
-The default value is GL3.
-set(osg_OPENGL_PROFILE GL2)

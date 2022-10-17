@@ -1,6 +1,0 @@
-{
-  "name": "lazy-importer",
-  "version-date": "2022-02-09",
-  "description": "Library for importing functions from dlls in a hidden, reverse engineer unfriendly way",
-  "homepage": "https://github.com/JustasMasiulis/lazy_importer"
-}

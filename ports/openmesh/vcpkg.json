@@ -1,6 +1,0 @@
-{
-  "name": "openmesh",
-  "version-string": "8.1",
-  "port-version": 3,
-  "description": "A generic and efficient polygon mesh data structure"
-}

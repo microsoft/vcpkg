@@ -1,7 +1,0 @@
-{
-  "name": "bigint",
-  "version-string": "2010.04.30",
-  "port-version": 7,
-  "description": "C++ Big Integer Library",
-  "homepage": "https://mattmccutchen.net/bigint"
-}

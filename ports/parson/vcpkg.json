@@ -1,6 +1,0 @@
-{
-  "name": "parson",
-  "version-string": "2020-09-14",
-  "port-version": 1,
-  "description": "a lighweight json library written in C"
-}

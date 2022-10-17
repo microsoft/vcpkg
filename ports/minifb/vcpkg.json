@@ -1,8 +1,0 @@
-{
-  "name": "minifb",
-  "version-string": "2019-08-20",
-  "port-version": 2,
-  "description": "MiniFB (Mini FrameBuffer) is a small cross platform library that makes it easy to render (32-bit) pixels in a window.",
-  "homepage": "https://github.com/emoon/minifb",
-  "supports": "!uwp"
-}

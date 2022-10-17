@@ -1,7 +1,0 @@
-{
-  "name": "sokol",
-  "version-string": "2019-09-09",
-  "port-version": 1,
-  "description": "Minimal cross-platform standalone C headers",
-  "homepage": "https://github.com/floooh/sokol"
-}

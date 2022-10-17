@@ -1,6 +1,0 @@
-{
-  "name": "sajson",
-  "version-string": "2018-09-21",
-  "port-version": 1,
-  "description": "Lightweight, extremely high-performance JSON parser for C++11"
-}

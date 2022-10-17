@@ -1,6 +1,0 @@
-{
-  "name": "z85",
-  "version-string": "1.0",
-  "port-version": 1,
-  "description": "Z85 is a binary-to-text encoding library. It implements ZeroMQ Base-85 Encoding Algorithm and provides custom padding."
-}

@@ -1,7 +1,0 @@
-{
-  "name": "jbig2dec",
-  "version-string": "0.19",
-  "port-version": 1,
-  "description": "a decoder library and example utility implementing the JBIG2 bi-level image compression spec. Also known as ITU T.88 and ISO IEC 14492, and included by reference in Adobe's PDF version 1.4 and later.",
-  "homepage": "https://github.com/ArtifexSoftware/jbig2dec"
-}

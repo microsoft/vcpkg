@@ -1,7 +1,0 @@
-{
-  "name": "liblo",
-  "version-string": "0.31",
-  "port-version": 2,
-  "description": "liblo is an implementation of the Open Sound Control protocol for POSIX systems",
-  "homepage": "https://github.com/radarsat1/liblo"
-}

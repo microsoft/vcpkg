@@ -1,6 +1,0 @@
-{
-  "name": "vulkan",
-  "version-string": "1.1.82.1",
-  "port-version": 2,
-  "description": "A graphics and compute API that provides high-efficiency, cross-platform access to modern GPUs on a wide variety of devices."
-}

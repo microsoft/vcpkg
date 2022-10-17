@@ -1,6 +1,0 @@
-{
-  "name": "concurrentqueue",
-  "version": "1.0.3",
-  "description": "A fast multi-producer, multi-consumer lock-free concurrent queue for C++11",
-  "homepage": "https://github.com/cameron314/concurrentqueue"
-}

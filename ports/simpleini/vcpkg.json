@@ -1,7 +1,0 @@
-{
-  "name": "simpleini",
-  "version": "4.19",
-  "description": "Cross-platform C++ library providing a simple API to read and write INI-style configuration files",
-  "homepage": "https://github.com/brofield/simpleini",
-  "license": "MIT"
-}

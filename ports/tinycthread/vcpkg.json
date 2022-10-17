@@ -1,7 +1,0 @@
-{
-  "name": "tinycthread",
-  "version-string": "2019-08-06",
-  "port-version": 1,
-  "description": "Small, portable implementation of the C11 threads API",
-  "homepage": "https://tinycthread.github.io/"
-}

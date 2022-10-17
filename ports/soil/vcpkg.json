@@ -1,8 +1,0 @@
-{
-  "name": "soil",
-  "version-date": "2021-04-22",
-  "port-version": 1,
-  "description": "SOIL is a tiny C library used primarily for uploading textures into OpenGL.",
-  "homepage": "https://github.com/paralin/soil",
-  "supports": "!uwp"
-}

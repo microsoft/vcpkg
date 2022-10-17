@@ -1,6 +1,0 @@
-{
-  "name": "gettimeofday",
-  "version-string": "2017-10-14",
-  "port-version": 4,
-  "description": "An implementation of gettimeofday for WIN32"
-}

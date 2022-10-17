@@ -1,9 +1,0 @@
-{
-  "name": "calceph",
-  "version": "3.5.1",
-  "description": "C library to access the binary planetary ephemeris files.",
-  "homepage": "https://www.imcce.fr/inpop/calceph/",
-  "documentation": "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/html/c/index.html",
-  "license": "CECILL-2.1 OR CECILL-B OR CECILL-C",
-  "supports": "!uwp"
-}

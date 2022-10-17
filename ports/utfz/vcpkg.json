@@ -1,7 +1,0 @@
-{
-  "name": "utfz",
-  "version-string": "1.2",
-  "port-version": 2,
-  "description": "A tiny C++ library for parsing and encoding utf-8",
-  "homepage": "https://github.com/IMQS/utfz"
-}

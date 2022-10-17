@@ -1,4 +1,0 @@
-The package hps is header only and can be used from CMake via:
-
-    find_path(HPS_INCLUDE_DIRS "hps/hps.h")
-    target_include_directories(main PRIVATE ${HPS_INCLUDE_DIRS})

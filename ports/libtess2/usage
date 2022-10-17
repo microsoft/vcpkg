@@ -1,4 +1,0 @@
-The package libtess2 provides CMake targets:
-
-find_package(unofficial-libtess2 CONFIG REQUIRED)
-target_link_libraries(main PUBLIC unofficial::libtess2::libtess2)

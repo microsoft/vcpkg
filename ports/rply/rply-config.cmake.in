@@ -1,8 +1,0 @@
-get_filename_component(_RPLY_PREFIX_DIR "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
-set (_TARGET_NAME "rply")
-
-# IMPORTED targets
-include("${_RPLY_PREFIX_DIR}/${_TARGET_NAME}-targets.cmake")
-
-set(_RPLY_PREFIX_DIR)
-set(_TARGET_NAME)

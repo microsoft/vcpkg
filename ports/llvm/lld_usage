@@ -1,5 +1,0 @@
-The package lld provides CMake targets:
-
-    find_package(LLD CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${LLD_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE lldCommon lldCore lldDriver ...)

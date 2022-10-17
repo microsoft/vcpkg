@@ -1,4 +1,0 @@
-sdl2-ttf provides CMake targets:
-
-    find_package(SDL2_ttf CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)

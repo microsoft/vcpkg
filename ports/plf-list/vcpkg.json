@@ -1,7 +1,0 @@
-{
-  "name": "plf-list",
-  "version-string": "2019-08-10",
-  "port-version": 1,
-  "description": "A drop-in replacement for std::list with 293% faster insertion, 57% faster erasure, 17% faster iteration and 77% faster sorting on average",
-  "homepage": "https://www.plflib.org/"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "riffcpp",
-  "version-string": "2.2.4",
-  "port-version": 1,
-  "description": "Simple library for reading RIFF files",
-  "homepage": "https://github.com/libdmusic/riffcpp"
-}

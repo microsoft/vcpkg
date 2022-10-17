@@ -1,6 +1,0 @@
-{
-  "name": "mapbox-geometry",
-  "version-semver": "2.0.3",
-  "description": "C++ geometry types",
-  "homepage": "https://github.com/mapbox/geometry.hpp"
-}

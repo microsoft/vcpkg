@@ -1,7 +1,0 @@
-{
-  "name": "mcpp",
-  "version-string": "2.7.2.14",
-  "port-version": 3,
-  "description": "Fork of mcpp, a C/C++ preprocessor",
-  "homepage": "https://github.com/zeroc-ice/mcpp"
-}

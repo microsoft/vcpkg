@@ -1,9 +1,0 @@
-prefix=${pcfiledir}/../..
-libdir=${prefix}/lib
-includedir=${prefix}/include
-
-Name: OpenGL
-Description: OpenGL library and headers.
-Version: @WINDOWS_SDK_SEMVER@
-Libs: -L${libdir} -lOpenGL32
-Cflags: -I${includedir}

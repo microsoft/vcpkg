@@ -1,8 +1,0 @@
-{
-  "name": "libudns",
-  "version-string": "0.4",
-  "port-version": 4,
-  "description": "The DNS library, udns, implements thread-safe stub DNS resolver functionality, which may be used both traditional, syncronous way and asyncronously, with application-supplied event loop.",
-  "homepage": "https://github.com/ortclib/udns",
-  "supports": "!windows & !osx"
-}

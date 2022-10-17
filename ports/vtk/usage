@@ -1,5 +1,0 @@
-The package vtk provides CMake targets:
-
-    find_package(VTK REQUIRED)
-    include("${VTK_USE_FILE}")
-    target_link_libraries(main PRIVATE ${VTK_LIBRARIES})

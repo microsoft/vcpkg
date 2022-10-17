@@ -1,8 +1,0 @@
-{
-  "name": "libmodbus",
-  "version": "3.1.6",
-  "port-version": 2,
-  "description": "libmodbus is a free software library to send/receive data with a device which respects the Modbus protocol",
-  "homepage": "https://github.com/stephane/libmodbus",
-  "supports": "!uwp"
-}

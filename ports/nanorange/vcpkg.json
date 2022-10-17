@@ -1,7 +1,0 @@
-{
-  "name": "nanorange",
-  "version-date": "2020-07-06",
-  "description": "NanoRange is a C++14 implementation of the C++20 Ranges proposals.",
-  "homepage": "https://github.com/tcbrindle/NanoRange",
-  "license": "BSL-1.0"
-}

@@ -1,6 +1,0 @@
-{
-  "name": "cpp-base64",
-  "version-string": "V2.rc.08",
-  "description": "Base64 encoding and decoding with c++.",
-  "homepage": "https://github.com/ReneNyffenegger/cpp-base64/"
-}

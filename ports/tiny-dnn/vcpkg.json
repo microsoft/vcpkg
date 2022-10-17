@@ -1,7 +1,0 @@
-{
-  "name": "tiny-dnn",
-  "version-string": "2018-10-25",
-  "port-version": 1,
-  "description": "A C++14 implementation of deep learning. It is suitable for deep learning on limited computational resource.",
-  "homepage": "https://github.com/tiny-dnn/tiny-dnn"
-}

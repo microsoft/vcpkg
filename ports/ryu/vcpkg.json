@@ -1,8 +1,0 @@
-{
-  "name": "ryu",
-  "version": "2.0",
-  "port-version": 6,
-  "description": "Ryu generates the shortest decimal representation of a floating point number that maintains round-trip safety.",
-  "homepage": "https://github.com/ulfjack/ryu",
-  "supports": "!(uwp | arm | x86)"
-}

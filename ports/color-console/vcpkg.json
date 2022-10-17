@@ -1,7 +1,0 @@
-{
-  "name": "color-console",
-  "version-date": "2022-03-20",
-  "description": "A lightweight header-only C++ library to bring colors to your Windows console with a very-easy-to-use API.",
-  "homepage": "https://github.com/imfl/color-console",
-  "license": "MIT"
-}

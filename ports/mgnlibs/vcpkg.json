@@ -1,8 +1,0 @@
-{
-  "name": "mgnlibs",
-  "version-date": "2019-09-29",
-  "port-version": 2,
-  "description": "Single-file public domain libraries for C/C++",
-  "homepage": "https://github.com/mattiasgustavsson/libs",
-  "license": "MIT"
-}

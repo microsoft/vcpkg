@@ -1,6 +1,0 @@
-{
-  "name": "d3dx12",
-  "version-string": "may2021",
-  "description": "The D3D12 Helper Library",
-  "homepage": "https://docs.microsoft.com/en-us/windows/win32/direct3d12/helper-structures-and-functions-for-d3d12"
-}

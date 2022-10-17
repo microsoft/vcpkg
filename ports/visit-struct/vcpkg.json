@@ -1,6 +1,0 @@
-{
-  "name": "visit-struct",
-  "version-string": "1.0",
-  "port-version": 2,
-  "description": "A header-only library providing structure visitors for C++11 and C++14"
-}

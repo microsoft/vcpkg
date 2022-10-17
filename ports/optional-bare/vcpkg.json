@@ -1,6 +1,0 @@
-{
-  "name": "optional-bare",
-  "version-string": "1.1.0",
-  "port-version": 1,
-  "description": "A simple version of a C++17-like optional for default-constructible, copyable types, for C++98 and later in a single-file header-only library"
-}

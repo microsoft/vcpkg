@@ -1,8 +1,0 @@
-{
-  "name": "libebur128",
-  "version-string": "1.2.6",
-  "description": "A library implementing the EBU R128 audio loudness standard",
-  "homepage": "https://github.com/jiixyj/libebur128",
-  "license": "MIT",
-  "supports": "!(arm & windows)"
-}

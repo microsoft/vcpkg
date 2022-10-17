@@ -1,6 +1,0 @@
-{
-  "name": "cpptoml",
-  "version-string": "v0.1.1",
-  "port-version": 1,
-  "description": "A header-only library for parsing TOML configuration files."
-}

@@ -1,6 +1,0 @@
-{
-  "name": "observer-ptr-lite",
-  "version-string": "0.4.0",
-  "port-version": 1,
-  "description": "A C++17-like observer_ptr for C++98 and later in a single-file header-only library"
-}

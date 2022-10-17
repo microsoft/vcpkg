@@ -1,7 +1,0 @@
-{
-  "name": "cnl",
-  "version-string": "1.1.7",
-  "port-version": 1,
-  "description": "A Compositional Numeric Library for C++",
-  "homepage": "https://github.com/johnmcfarlane/cnl"
-}

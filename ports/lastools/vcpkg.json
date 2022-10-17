@@ -1,8 +1,0 @@
-{
-  "name": "lastools",
-  "version-string": "2020-05-09",
-  "port-version": 1,
-  "description": "LAStools: award-winning software for efficient LiDAR processing (with LASzip)",
-  "homepage": "https://github.com/LAStools/LAStools",
-  "supports": "!uwp"
-}

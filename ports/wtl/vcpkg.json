@@ -1,8 +1,0 @@
-{
-  "name": "wtl",
-  "version": "10.0.10320",
-  "port-version": 4,
-  "description": "Windows Template Library (WTL) is a C++ library for developing Windows applications and UI components.",
-  "homepage": "https://sourceforge.net/projects/wtl/",
-  "license": "MS-PL"
-}

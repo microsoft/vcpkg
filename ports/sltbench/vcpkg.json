@@ -1,6 +1,0 @@
-{
-  "name": "sltbench",
-  "version-string": "2.4.0",
-  "description": "C++ benchmark tool. Practical, stable and fast performance testing framework.",
-  "homepage": "https://github.com/ivafanas/sltbench"
-}

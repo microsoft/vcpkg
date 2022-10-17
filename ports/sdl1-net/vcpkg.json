@@ -1,9 +1,0 @@
-{
-  "name": "sdl1-net",
-  "version-string": "1.2.8",
-  "port-version": 4,
-  "description": "Networking library for SDL",
-  "dependencies": [
-    "sdl1"
-  ]
-}

@@ -1,7 +1,0 @@
-detours can be used from CMake via:
-
-    find_path(DETOURS_INCLUDE_DIRS "detours/detours.h")
-    find_library(DETOURS_LIBRARY detours REQUIRED)
-
-    target_include_directories(main PRIVATE ${DETOURS_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${DETOURS_LIBRARY})

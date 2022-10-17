@@ -1,7 +1,0 @@
-{
-  "name": "simple-fft",
-  "version-string": "2020-06-14",
-  "port-version": 1,
-  "description": "Header-only C++ library implementing fast Fourier transform of 1D, 2D and 3D data",
-  "homepage": "https://github.com/d1vanov/Simple-FFT"
-}

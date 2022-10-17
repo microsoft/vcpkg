@@ -1,6 +1,0 @@
-{
-  "name": "strict-variant",
-  "version-string": "0.5",
-  "port-version": 1,
-  "description": "Tagged union implementation that will never throw an exception or make a dynamic allocation in the effort of supporting types that have throwing moves."
-}

@@ -1,7 +1,0 @@
-{
-  "name": "tinyexr",
-  "version-string": "1.0.0",
-  "port-version": 1,
-  "description": "Library to load and save OpenEXR(.exr) images",
-  "homepage": "https://github.com/syoyo/tinyexr"
-}

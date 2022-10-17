@@ -1,7 +1,0 @@
-{
-  "name": "ragel",
-  "version-string": "6.10",
-  "port-version": 4,
-  "description": "Ragel State Machine Compiler",
-  "homepage": "https://www.colm.net/files/ragel"
-}

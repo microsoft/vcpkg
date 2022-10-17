@@ -1,7 +1,0 @@
-{
-  "name": "vulkan-memory-allocator",
-  "version": "3.0.0",
-  "description": "Easy to integrate Vulkan memory allocation library from GPUOpen",
-  "homepage": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator",
-  "license": "MIT"
-}

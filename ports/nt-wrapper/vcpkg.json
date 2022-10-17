@@ -1,7 +1,0 @@
-{
-  "name": "nt-wrapper",
-  "version-string": "2019-08-10",
-  "port-version": 1,
-  "description": "A header only wrapper library around native windows system APIs",
-  "homepage": "https://github.com/JustasMasiulis/nt_wrapper"
-}

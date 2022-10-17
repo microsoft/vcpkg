@@ -1,9 +1,0 @@
-{
-  "name": "xproperty",
-  "version-string": "0.8.1",
-  "port-version": 1,
-  "description": "Traitlets-like C++ properties and implementation of the observer pattern",
-  "dependencies": [
-    "xtl"
-  ]
-}

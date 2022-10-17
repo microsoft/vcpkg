@@ -1,7 +1,0 @@
-{
-  "name": "matplotlib-cpp",
-  "version-string": "2020-08-27",
-  "port-version": 1,
-  "description": "Extremely simple yet powerful header-only C++ plotting library built on the popular matplotlib",
-  "homepage": "https://github.com/lava/matplotlib-cpp"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "libodb",
-  "version": "2.4.0",
-  "port-version": 8,
-  "description": "ODB library, base runtime for the ODB ORM solution",
-  "homepage": "https://www.codesynthesis.com/products/odb/"
-}

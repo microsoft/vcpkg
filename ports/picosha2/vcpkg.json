@@ -1,7 +1,0 @@
-{
-  "name": "picosha2",
-  "version-string": "2018-07-30",
-  "port-version": 1,
-  "description": "PicoSHA2 - a C++ SHA256 hash generator",
-  "homepage": "https://github.com/okdshin/PicoSHA2"
-}

@@ -1,6 +1,0 @@
-{
-  "name": "tsl-sparse-map",
-  "version-string": "0.6.2",
-  "port-version": 1,
-  "description": "C++ implementation of a memory efficient hash map and hash set"
-}

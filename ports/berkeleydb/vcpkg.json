@@ -1,8 +1,0 @@
-{
-  "name": "berkeleydb",
-  "version": "4.8.30",
-  "port-version": 8,
-  "description": "BDB - A high-performance embedded database for key/value data.",
-  "homepage": "https://download.oracle.com/",
-  "supports": "!(uwp | linux | osx)"
-}

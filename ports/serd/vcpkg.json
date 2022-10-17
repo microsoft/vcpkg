@@ -1,7 +1,0 @@
-{
-  "name": "serd",
-  "version-string": "0.30.4",
-  "description": "Serd is a lightweight C library for RDF syntax which supports reading and writing Turtle, TRiG, NTriples, and NQuads.",
-  "homepage": "https://drobilla.net/software/serd",
-  "license": "ISC"
-}

@@ -1,6 +1,0 @@
-{
-  "name": "atomic-queue",
-  "version-date": "2021-05-03",
-  "description": "Minimalistic header-only thread-safe ultra-low-latency multiple-producer-multiple-consumer lockless queues based on circular buffer with std::atomic.",
-  "homepage": "https://github.com/max0x7ba/atomic_queue"
-}

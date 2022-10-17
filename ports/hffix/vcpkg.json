@@ -1,7 +1,0 @@
-{
-  "name": "hffix",
-  "version-string": "1.0.0",
-  "port-version": 1,
-  "description": "Financial Information Exchange Protocol C++ Library",
-  "homepage": "https://jamesdbrock.github.io/hffix"
-}

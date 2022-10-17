@@ -1,9 +1,0 @@
-liblas provides CMake targets:
-
-    # C API
-    find_package(libLAS CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<$<PLATFORM_ID:Windows>:lib>las_c)
-
-    # C++ API
-    find_package(libLAS CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<$<PLATFORM_ID:Windows>:lib>las)

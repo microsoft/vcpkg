@@ -1,5 +1,0 @@
-{
-  "name": "decimal-for-cpp",
-  "version-string": "1.18",
-  "description": "Decimal data type support, for COBOL-like fixed-point operations on currency values."
-}
