@@ -1,4 +1,7 @@
 if(NOT _VCPKG_LINUX_TOOLCHAIN)
+
+cmake_minimum_required(VESION 3.24)
+
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
                                                  VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
