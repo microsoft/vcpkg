@@ -5469,16 +5469,16 @@
       "port-version": 5
     },
     "openssl-unix": {
-      "baseline": "1.1.1h",
-      "port-version": 2
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "openssl-uwp": {
-      "baseline": "1.1.1h",
-      "port-version": 2
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "openssl-windows": {
-      "baseline": "1.1.1h",
-      "port-version": 2
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "opensubdiv": {
       "baseline": "3.4.4",
