@@ -1,24 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 9d1c428c861f2e5ccf09149bbe8d2149720c5896 # poco-1.11.2-release
-    SHA512 b812bb194783c94e2a048daf6659e0f0fa5e9040ebd49342a5d39636cee600754d0465f8b28725d76dcb2681d1b64dfd8b08ac9c85b95b4ac8edf9b53d68feb1
+    REF be19dc4a2f30eb97cc9bdd7551460db11cc27353 # poco-1.12.2-release
+    SHA512 09226ce06cd8ebd756149f0bb84b3eb252cd32ee4425f6076fc74433b1542607911caf674f3bb568a0418ca78daa72e4160c7544144519e49898c8a1a5a03806
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
-        static_pcre.patch
+        # static_pcre.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
         fix_dependency.patch
         fix-feature-sqlite3.patch
         fix-error-c3861.patch
         fix-InstallDataMysql.patch
+        find_pcre2.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
+file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
 file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE2.cmake")
 file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
@@ -42,7 +43,7 @@ else()
     set(POCO_USE_MYSQL OFF)
 endif()
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         # force to use dependencies as external
@@ -72,6 +73,9 @@ vcpkg_cmake_configure(
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
+    MAYBE_UNSUED_VARIABLES # these are only used when if(MSVC)
+        POCO_DISABLE_INTERNAL_OPENSSL
+        POCO_MT
 )
 
 vcpkg_cmake_install()
@@ -80,6 +84,10 @@ vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
 vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 # Copy additional include files not part of any libraries
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")

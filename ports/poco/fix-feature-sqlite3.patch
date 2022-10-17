@@ -1,5 +1,5 @@
-diff --git a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
-index 5478bab..c5d6d6d 100644
+Index: b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
+===================================================================
 --- a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
 +++ b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
 @@ -5,7 +5,7 @@ if(@POCO_UNBUNDLED@)

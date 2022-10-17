@@ -1,5 +1,5 @@
-diff --git a/XML/include/Poco/XML/ParserEngine.h b/XML/include/Poco/XML/ParserEngine.h
-index e0c8455..363654c 100644
+Index: b/XML/include/Poco/XML/ParserEngine.h
+===================================================================
 --- a/XML/include/Poco/XML/ParserEngine.h
 +++ b/XML/include/Poco/XML/ParserEngine.h
 @@ -19,6 +19,7 @@

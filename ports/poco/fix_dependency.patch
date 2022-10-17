@@ -1,8 +1,48 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e05272..44dd7cb 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -82,8 +82,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
+Index: b11cc27353-54c7d38923/cmake/PocoConfig.cmake.in
+===================================================================
+--- b11cc27353-54c7d38923.orig/cmake/PocoConfig.cmake.in
++++ b11cc27353-54c7d38923/cmake/PocoConfig.cmake.in
+@@ -8,6 +8,13 @@ if (NOT Poco_FIND_COMPONENTS)
+     return()
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(ZLIB REQUIRED)
++#find_dependency(unofficial-pcre REQUIRED)
++if(Poco_FIND_REQUIRED_XML)
++    find_dependency(expat CONFIG REQUIRED)
++endif()
++
+ set(_Poco_FIND_PARTS_REQUIRED)
+ if (Poco_FIND_REQUIRED)
+     set(_Poco_FIND_PARTS_REQUIRED REQUIRED)
+@@ -23,7 +30,7 @@ set(_Poco_NOTFOUND_MESSAGE)
+ 
+ # Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
+ set(_Poco_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
+-set(CMAKE_PREFIX_PATH ${_Poco_install_prefix})
++set(CMAKE_PREFIX_PATH ${_Poco_install_prefix} ${CMAKE_PREFIX_PATH})
+ 
+ foreach(module ${Poco_FIND_COMPONENTS})
+     find_package(Poco${module}
+Index: b11cc27353-54c7d38923/XML/cmake/PocoXMLConfig.cmake
+===================================================================
+--- b11cc27353-54c7d38923.orig/XML/cmake/PocoXMLConfig.cmake
++++ b11cc27353-54c7d38923/XML/cmake/PocoXMLConfig.cmake
+@@ -4,7 +4,7 @@ if(@POCO_UNBUNDLED@)
+ 	if(CMAKE_VERSION VERSION_LESS "3.10")
+ 		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/V39")
+ 	endif()
+-	find_dependency(EXPAT REQUIRED)
++	find_dependency(expat CONFIG REQUIRED)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoXMLTargets.cmake")
+Index: b11cc27353-54c7d38923/CMakeLists.txt
+===================================================================
+--- b11cc27353-54c7d38923.orig/CMakeLists.txt
++++ b11cc27353-54c7d38923/CMakeLists.txt
+@@ -90,8 +90,6 @@ option(FORCE_OPENSSL "Force usage of Ope
  
  if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
  	find_package(OpenSSL REQUIRED)
@@ -11,15 +51,13 @@ index 4e05272..44dd7cb 100644
  endif()
  
  if(OPENSSL_FOUND)
-@@ -113,24 +111,19 @@ else()
- 	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
- endif()
+@@ -123,22 +121,20 @@ endif()
  
--if(ENABLE_DATA_MYSQL)
--	find_package(MySQL REQUIRED)
+ if(ENABLE_DATA_MYSQL)
+ 	find_package(MySQL REQUIRED)
 -else()
 -	find_package(MySQL)
--endif()
+ endif()
 +option(ENABLE_DATA "Enable Data" OFF)
 +option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" OFF)
  
@@ -44,7 +82,7 @@ index 4e05272..44dd7cb 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -207,6 +200,9 @@ include(DefinePlatformSpecifc)
+@@ -223,6 +219,9 @@ include(DefinePlatformSpecifc)
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
  
@@ -54,8 +92,8 @@ index 4e05272..44dd7cb 100644
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -339,8 +335,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Redis AND ENABLE_REDIS)
- 	list(APPEND Poco_COMPONENTS "Redis")
+@@ -351,8 +350,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Promethe
+ 	list(APPEND Poco_COMPONENTS "Prometheus")
  endif()
  
 -if(EXISTS ${PROJECT_SOURCE_DIR}/PDF AND ENABLE_PDF)
@@ -68,12 +106,12 @@ index 4e05272..44dd7cb 100644
  	list(APPEND Poco_COMPONENTS "PDF")
  endif()
  
-@@ -478,15 +477,6 @@ install(
+@@ -492,15 +494,6 @@ install(
  		Devel
  )
  
 -if(POCO_UNBUNDLED)
--	install(FILES cmake/FindPCRE.cmake
+-	install(FILES cmake/FindPCRE2.cmake
 -			DESTINATION "${PocoConfigPackageLocation}")
 -	install(FILES cmake/V39/FindEXPAT.cmake
 -			DESTINATION "${PocoConfigPackageLocation}/V39")
@@ -84,10 +122,10 @@ index 4e05272..44dd7cb 100644
  message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
  message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
  if(BUILD_SHARED_LIBS)
-diff --git a/Data/CMakeLists.txt b/Data/CMakeLists.txt
-index 7d1e99e..9d0a85c 100644
---- a/Data/CMakeLists.txt
-+++ b/Data/CMakeLists.txt
+Index: b11cc27353-54c7d38923/Data/CMakeLists.txt
+===================================================================
+--- b11cc27353-54c7d38923.orig/Data/CMakeLists.txt
++++ b11cc27353-54c7d38923/Data/CMakeLists.txt
 @@ -45,7 +45,7 @@ else(ENABLE_DATA_SQLITE)
  	message(STATUS "SQLite Support Disabled")
  endif()
@@ -97,12 +135,16 @@ index 7d1e99e..9d0a85c 100644
  	message(STATUS "MySQL Support Enabled")
  	add_subdirectory(MySQL)
  else()
-diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
-index f71b145..7034974 100644
---- a/Data/MySQL/CMakeLists.txt
-+++ b/Data/MySQL/CMakeLists.txt
-@@ -21,7 +21,7 @@ set_target_properties(DataMySQL
- 	DEFINE_SYMBOL MySQL_EXPORTS
+Index: b11cc27353-54c7d38923/Data/MySQL/CMakeLists.txt
+===================================================================
+--- b11cc27353-54c7d38923.orig/Data/MySQL/CMakeLists.txt
++++ b11cc27353-54c7d38923/Data/MySQL/CMakeLists.txt
+@@ -18,10 +18,10 @@ set_target_properties(DataMySQL
+ 	PROPERTIES
+ 	VERSION ${SHARED_LIBRARY_VERSION} SOVERSION ${SHARED_LIBRARY_VERSION}
+ 	OUTPUT_NAME PocoDataMySQL
+-	DEFINE_SYMBOL MySQL_EXPORTS
++	DEFINE_SYMBOL MySQL_EXPORT
  )
  
 -target_link_libraries(DataMySQL PUBLIC Poco::Data MySQL::client)
@@ -110,10 +152,10 @@ index f71b145..7034974 100644
  target_include_directories(DataMySQL
  	PUBLIC
  		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-diff --git a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
-index 6ddcd39..9e50803 100644
---- a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
-+++ b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+Index: b11cc27353-54c7d38923/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+===================================================================
+--- b11cc27353-54c7d38923.orig/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
++++ b11cc27353-54c7d38923/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
 @@ -57,8 +57,6 @@
  	#endif
  	#if defined(LIBMARIADB)
@@ -123,10 +165,10 @@ index 6ddcd39..9e50803 100644
  	#endif
  #endif
  
-diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
-index b52e2c5..0dcfae2 100644
---- a/Data/SQLite/CMakeLists.txt
-+++ b/Data/SQLite/CMakeLists.txt
+Index: b11cc27353-54c7d38923/Data/SQLite/CMakeLists.txt
+===================================================================
+--- b11cc27353-54c7d38923.orig/Data/SQLite/CMakeLists.txt
++++ b11cc27353-54c7d38923/Data/SQLite/CMakeLists.txt
 @@ -7,7 +7,7 @@ file(GLOB_RECURSE HDRS_G "include/*.h")
  POCO_HEADERS_AUTO(SQLITE_SRCS ${HDRS_G})
  
@@ -141,104 +183,7 @@ index b52e2c5..0dcfae2 100644
  
  if(POCO_UNBUNDLED)
 -		target_link_libraries(DataSQLite PUBLIC SQLite::SQLite3)
-+		target_link_libraries(DataSQLite PUBLIC unofficial::sqlite3::sqlite3)
++	target_link_libraries(DataSQLite PUBLIC unofficial::sqlite3::sqlite3)
  	target_compile_definitions(DataSQLite PUBLIC
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
-diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 6f5100f..c9fa2e5 100644
---- a/Foundation/CMakeLists.txt
-+++ b/Foundation/CMakeLists.txt
-@@ -35,7 +35,7 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
- # If POCO_UNBUNDLED is enabled we try to find the required packages
- # The configuration will fail if the packages are not found
- if(POCO_UNBUNDLED)
--	find_package(PCRE REQUIRED)
-+	find_package(unofficial-pcre CONFIG REQUIRED)
- 	find_package(ZLIB REQUIRED)
- 
- 	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
-@@ -101,7 +101,7 @@ set_target_properties(Foundation
- )
- 
- if(POCO_UNBUNDLED)
--	target_link_libraries(Foundation PUBLIC Pcre::Pcre ZLIB::ZLIB)
-+	target_link_libraries(Foundation PUBLIC unofficial::pcre::pcre ZLIB::ZLIB)
- 	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
-     add_definitions(
-         -D_pcre_utf8_table1=_poco_pcre_utf8_table1
-diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
-index 46c2d3f..af2e78c 100644
---- a/Foundation/cmake/PocoFoundationConfig.cmake
-+++ b/Foundation/cmake/PocoFoundationConfig.cmake
-@@ -2,7 +2,7 @@ if(@POCO_UNBUNDLED@)
- 	include(CMakeFindDependencyMacro)
- 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
- 	find_dependency(ZLIB REQUIRED)
--	find_dependency(PCRE REQUIRED)
-+	find_dependency(unofficial-pcre REQUIRED)
- endif()
- 
- include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")
-diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
-index 4fbf06f..793285a 100644
---- a/XML/CMakeLists.txt
-+++ b/XML/CMakeLists.txt
-@@ -20,7 +20,7 @@ endif()
- # If POCO_UNBUNDLED is enabled we try to find the required packages
- # The configuration will fail if the packages are not found
- if(POCO_UNBUNDLED)
--	find_package(EXPAT REQUIRED)
-+	find_package(expat CONFIG REQUIRED)
- else()
- 	POCO_SOURCES(SRCS expat
- 		src/xmlparse.cpp
-@@ -50,7 +50,7 @@ target_include_directories(XML
- )
- 
- if(POCO_UNBUNDLED)
--	target_link_libraries(XML PUBLIC EXPAT::EXPAT)
-+	target_link_libraries(XML PUBLIC expat::expat)
- 	target_compile_definitions(XML PUBLIC POCO_UNBUNDLED)
- else()
- 	if(WIN32)
-diff --git a/XML/cmake/PocoXMLConfig.cmake b/XML/cmake/PocoXMLConfig.cmake
-index ef58207..4ed94ec 100644
---- a/XML/cmake/PocoXMLConfig.cmake
-+++ b/XML/cmake/PocoXMLConfig.cmake
-@@ -4,7 +4,7 @@ if(@POCO_UNBUNDLED@)
- 	if(CMAKE_VERSION VERSION_LESS "3.10")
- 		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/V39")
- 	endif()
--	find_dependency(EXPAT REQUIRED)
-+	find_dependency(expat CONFIG REQUIRED)
- endif()
- 
- include("${CMAKE_CURRENT_LIST_DIR}/PocoXMLTargets.cmake")
-diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
-index 173eacd..936edf4 100644
---- a/cmake/PocoConfig.cmake.in
-+++ b/cmake/PocoConfig.cmake.in
-@@ -8,6 +8,13 @@ if (NOT Poco_FIND_COMPONENTS)
-     return()
- endif()
- 
-+include(CMakeFindDependencyMacro)
-+find_dependency(ZLIB REQUIRED)
-+find_dependency(unofficial-pcre REQUIRED)
-+if(Poco_FIND_REQUIRED_XML)
-+    find_dependency(expat CONFIG REQUIRED)
-+endif()
-+
- set(_Poco_FIND_PARTS_REQUIRED)
- if (Poco_FIND_REQUIRED)
-     set(_Poco_FIND_PARTS_REQUIRED REQUIRED)
-@@ -23,7 +30,7 @@ set(_Poco_NOTFOUND_MESSAGE)
- 
- # Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
- set(_Poco_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
--set(CMAKE_PREFIX_PATH ${_Poco_install_prefix})
-+set(CMAKE_PREFIX_PATH ${_Poco_install_prefix} ${CMAKE_PREFIX_PATH})
- 
- foreach(module ${Poco_FIND_COMPONENTS})
-     find_package(Poco${module}

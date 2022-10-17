@@ -1,0 +1,26 @@
+Index: b11cc27353-54c7d38923/Foundation/CMakeLists.txt
+===================================================================
+--- b11cc27353-54c7d38923.orig/Foundation/CMakeLists.txt
++++ b11cc27353-54c7d38923/Foundation/CMakeLists.txt
+@@ -35,7 +35,11 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.m
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
+-	find_package(PCRE2 REQUIRED)
++	include(SelectLibraryConfigurations)
++	find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-8d pcre2-8-staticd HINTS ${INSTALLED_LIB_PATH})
++	find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-8 pcre2-8-static HINTS ${INSTALLED_LIB_PATH})
++	select_library_configurations(PCRE2)
++
+ 	find_package(ZLIB REQUIRED)
+ 
+ 	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
+@@ -107,7 +111,7 @@ set_target_properties(Foundation
+ )
+ 
+ if(POCO_UNBUNDLED)
+-	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB)
++	target_link_libraries(Foundation PUBLIC ZLIB::ZLIB ${PCRE2_LIBRARY})
+ 	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
+ endif(POCO_UNBUNDLED)
+ 

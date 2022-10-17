@@ -1,5 +1,5 @@
-diff --git a/Data/CMakeLists.txt b/Data/CMakeLists.txt
-index 9d0a85c..4f1ae21 100644
+Index: b/Data/CMakeLists.txt
+===================================================================
 --- a/Data/CMakeLists.txt
 +++ b/Data/CMakeLists.txt
 @@ -45,7 +45,7 @@ else(ENABLE_DATA_SQLITE)
