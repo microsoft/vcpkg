@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-lua",
-  "version-date": "2022-08-10",
+  "version-date": "2022-10-17",
   "description": "Lua grammar for tree-sitter.",
   "homepage": "https://github.com/MunifTanjim/tree-sitter-lua",
   "license": "MIT",

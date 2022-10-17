@@ -7513,11 +7513,11 @@
       "port-version": 0
     },
     "tree-sitter-bash": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-c": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-common": {
@@ -7525,39 +7525,39 @@
       "port-version": 0
     },
     "tree-sitter-cpp": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-css": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-javascript": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-json": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-lua": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-python": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-rust": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-typescript": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "tree-sitter-yaml": {
-      "baseline": "2022-08-10",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "treehh": {

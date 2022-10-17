@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-json",
-  "version-date": "2022-08-10",
+  "version-date": "2022-10-17",
   "description": "JSON grammar for tree-sitter",
   "homepage": "https://github.com/tree-sitter/tree-sitter-json",
   "license": "MIT",

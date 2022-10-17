@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-yaml",
-  "version-date": "2022-08-10",
+  "version-date": "2022-10-17",
   "description": "YAML grammar for tree-sitter",
   "homepage": "https://github.com/ikatyang/tree-sitter-yaml",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-python",
-  "version-date": "2022-08-10",
+  "version-date": "2022-10-17",
   "description": "Python grammar for tree-sitter",
   "homepage": "https://github.com/tree-sitter/tree-sitter-python",
   "license": "MIT",
