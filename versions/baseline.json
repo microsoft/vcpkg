@@ -4392,6 +4392,14 @@
       "baseline": "6.0.0",
       "port-version": 0
     },
+    "libxfont": {
+      "baseline": "2.0.5",
+      "port-version": 0
+    },
+    "libxft": {
+      "baseline": "2.3.4",
+      "port-version": 0
+    },
     "libxi": {
       "baseline": "1.8",
       "port-version": 0
