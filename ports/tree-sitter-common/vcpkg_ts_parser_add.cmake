@@ -5,7 +5,9 @@ function(vcpkg_ts_parser_add)
   cmake_parse_arguments(PARSER
     ""
     ""
-    "LANGUAGE;MIN_ABI_VERSION;SOURCE_PATH" ${ARGN})
+    "LANGUAGE;MIN_ABI_VERSION;SOURCE_PATH;LICENSE_FILE" ${ARGN})
+
+  set(PARSER_NAME tree-sitter-${PARSER_LANGUAGE})
 
   if(EXISTS "${PARSER_SOURCE_PATH}/src/parser.c")
     set(_abi_version_re "#define LANGUAGE_VERSION ([0-9]+)")
@@ -26,10 +28,11 @@ function(vcpkg_ts_parser_add)
     message(FATAL_ERROR "ABI mismatch with ${PARSER_NAME}, expected ${PARSER_MIN_ABI_VERSION}.")
   endif()
 
+  if(NOT PARSER_LICENSE_FILE)
+    set(PARSER_LICENSE_FILE "${PARSER_SOURCE_PATH}/LICENSE")
   endif()
 
-  set(PARSER_NAME tree-sitter-${PARSER_LANGUAGE})
-  configure_file(${CURRENT_HOST_INSTALLED_DIR}/share/tree-sitter-common/CMakeLists.txt.in ${PARSER_SOURCE_PATH}/CMakeLists.txt @ONLY)
+  configure_file("${CURRENT_HOST_INSTALLED_DIR}/share/tree-sitter-common/CMakeLists.txt.in" "${PARSER_SOURCE_PATH}/CMakeLists.txt" @ONLY)
 
   vcpkg_cmake_configure(
     SOURCE_PATH "${PARSER_SOURCE_PATH}"
@@ -44,7 +47,7 @@ function(vcpkg_ts_parser_add)
   endif()
 
   # Handle copyright
-  file(INSTALL ${PARSER_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+  file(INSTALL "${PARSER_LICENSE_FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
   vcpkg_fixup_pkgconfig()
   vcpkg_copy_pdbs()

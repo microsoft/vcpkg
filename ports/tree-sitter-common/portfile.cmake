@@ -4,6 +4,6 @@ file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/tree-sitter/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

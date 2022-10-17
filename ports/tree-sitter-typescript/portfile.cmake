@@ -8,11 +8,10 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${SOURCE_PATH}/typescript)
-
 vcpkg_ts_parser_add(
   LANGUAGE typescript
   SOURCE_PATH "${SOURCE_PATH}/typescript"
   MIN_ABI_VERSION 13
+  LICENSE_FILE "${SOURCE_PATH}/LICENSE"
 )
 
