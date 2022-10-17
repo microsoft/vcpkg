@@ -22,6 +22,7 @@ vcpkg_from_github(
         windows/install-layout.patch
         windows/install-pdbs.patch
         unix/no-empty-dirs.patch
+        unix/no-static-libs-for-shared.patch
 )
 
 vcpkg_find_acquire_program(PERL)
