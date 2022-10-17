@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/bitserializer)
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug")
 

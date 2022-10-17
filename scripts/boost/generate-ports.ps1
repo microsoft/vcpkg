@@ -24,6 +24,12 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-fiber" = 1;
+    "boost-coroutine" = 1;
+    "boost" = 1;
+    "boost-asio" = 1;
+    "boost-build" = 1;
+    "boost-modular-build-helper" = 1;
 }
 
 $portData = @{
@@ -45,7 +51,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!osx & !uwp & !arm & !emscripten";
+        "supports" = "!uwp & !arm & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";
@@ -77,7 +83,7 @@ $portData = @{
     };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-stacktrace"       = @{ "supports" = "!uwp" };
-    "boost-coroutine"        = @{ "supports" = "!arm & !uwp & !emscripten" };
+    "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
     "boost-test"             = @{ "supports" = "!uwp" };
     "boost-wave"             = @{ "supports" = "!uwp" };

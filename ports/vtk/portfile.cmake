@@ -31,6 +31,7 @@ vcpkg_from_github(
         missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
         UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
         fix-find-libharu.patch
+        fix-libharu2.4-compat.patch
 )
 
 # =============================================================================

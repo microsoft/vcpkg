@@ -1,0 +1,22 @@
+--- a/expat/CMakeLists.txt
++++ b/expat/CMakeLists.txt
+@@ -469,7 +469,7 @@ if(WIN32 AND NOT MINGW)
+     #       Everything but MSVC is already adding prefix "lib", automatically.
+     # NOTE: "set_property(TARGET expat PROPERTY PREFIX lib)" would only affect *.dll
+     #       files but not *.lib files, so we have to rely on property OUTPUT_NAME, instead.
+-    #       Property CMAKE_*_POSTFIX still applies.
++    #       Property EXPAT_*_POSTFIX still applies.
+     set(_EXPAT_OUTPUT_NAME libexpat)
+     set_property(TARGET expat PROPERTY OUTPUT_NAME ${_EXPAT_OUTPUT_NAME})
+ else()
+@@ -520,8 +520,8 @@ if(EXPAT_BUILD_PKGCONFIG)
+     foreach(_build_type ${CMAKE_BUILD_TYPE} Debug Release RelWithDebInfo MinSizeRel)
+         string(TOLOWER "${_build_type}" _build_type_lower)
+         string(TOUPPER "${_build_type}" _build_type_upper)
+-        set_property(TARGET expat PROPERTY "pkgconfig_${_build_type_lower}_name" "expat${CMAKE_${_build_type_upper}_POSTFIX}")
+-        set_property(TARGET expat PROPERTY "pkgconfig_${_build_type_lower}_output_name" "${_EXPAT_OUTPUT_NAME}${CMAKE_${_build_type_upper}_POSTFIX}")
++        set_property(TARGET expat PROPERTY "pkgconfig_${_build_type_lower}_name" "expat${EXPAT_${_build_type_upper}_POSTFIX}")
++        set_property(TARGET expat PROPERTY "pkgconfig_${_build_type_lower}_output_name" "${_EXPAT_OUTPUT_NAME}${EXPAT_${_build_type_upper}_POSTFIX}")
+         if(_EXPAT_LIBM_FOUND)
+             set_property(TARGET expat PROPERTY "pkgconfig_libm" "-lm")
+         else()
