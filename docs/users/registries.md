@@ -31,6 +31,8 @@ the file must exist next to the project's `vcpkg.json` file.
 This file is named `vcpkg-configuration.json`, and it's a simple top-level
 object file.
 
+
+
 ### Registry Objects
 
 Registries are defined in JSON as objects. They must contain at least the
@@ -121,11 +123,11 @@ overlay triplets from your custom directories. The following
       "packages": [ "beicode", "beison" ]
     }
   ],
-  "overlay-ports": [ "/team-ports",
+  "overlay-ports": [ "./team-ports",
                      "c:/project/my-ports/fmt",
-                     "/custom-ports"
+                     "./custom-ports"
    ],
-  "overlay-triplets": [ "/my-triplets" ]
+  "overlay-triplets": [ "./my-triplets" ]
 }
 ```
 
