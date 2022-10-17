@@ -20,6 +20,7 @@ use, please read [this documentation](../maintainers/registries.md).
     - [Configuration: `"registries"`](#configuration-registries)
     - [Example Configuration File](#example-configuration-file)
   - [Package Name Resolution](#package-name-resolution)
+  - [Overlays Resolution](#overlays-resolution)
     - [Versioning Support](#versioning-support)
 
 ## `vcpkg-configuration.json`
@@ -30,8 +31,6 @@ mode, the configuration file lies in the vcpkg root; for manifest mode,
 the file must exist next to the project's `vcpkg.json` file.
 This file is named `vcpkg-configuration.json`, and it's a simple top-level
 object file.
-
-
 
 ### Registry Objects
 
