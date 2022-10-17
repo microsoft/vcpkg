@@ -4,6 +4,7 @@
   "description": "This meta package holds common files for installing tree-sitter parsers, but is not installable on its own.",
   "homepage": "https://github.com/tree-sitter/tree-sitter",
   "dependencies": [
+    "tree-sitter",
     {
       "name": "vcpkg-cmake",
       "host": true
