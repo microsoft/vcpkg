@@ -1,6 +1,6 @@
 {
   "name": "boost-process",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost process module",
   "homepage": "https://github.com/boostorg/process",
   "license": "BSL-1.0",
@@ -15,12 +15,15 @@
       "platform": "!uwp"
     },
     "boost-fusion",
+    "boost-io",
     "boost-iterator",
     "boost-move",
     "boost-optional",
     "boost-system",
+    "boost-throw-exception",
     "boost-tokenizer",
     "boost-type-index",
+    "boost-utility",
     "boost-vcpkg-helpers",
     "boost-winapi"
   ]

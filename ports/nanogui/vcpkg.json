@@ -1,13 +1,24 @@
 {
   "name": "nanogui",
   "version-date": "2019-09-23",
-  "port-version": 3,
+  "port-version": 5,
   "description": "NanoGUI is a minimalistic cross-platform widget library for OpenGL 3.x or higher.",
   "homepage": "https://github.com/wjakob/nanogui",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     "eigen3",
+    "glad",
     "glfw3",
-    "nanovg"
-  ]
+    "nanovg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "example": {
+      "description": "Build NanoGUI example application"
+    }
+  }
 }

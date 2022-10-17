@@ -1,13 +1,19 @@
 {
   "name": "rbdl",
-  "version": "2.6.0",
-  "port-version": 2,
+  "version": "3.2.0",
+  "port-version": 4,
   "description": "Rigid Body Dynamics Library",
   "homepage": "https://github.com/rbdl/rbdl",
   "dependencies": [
+    "boost",
     "eigen3",
+    "lua",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

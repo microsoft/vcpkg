@@ -1,6 +1,6 @@
 {
   "name": "boost-bimap",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost bimap module",
   "homepage": "https://github.com/boostorg/bimap",
   "license": "BSL-1.0",

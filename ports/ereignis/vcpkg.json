@@ -1,0 +1,13 @@
+{
+  "name": "ereignis",
+  "version": "1.1",
+  "description": "A thread-safe C++17 Event Library",
+  "homepage": "https://github.com/Soundux/ereignis",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 {
   "name": "7zip",
-  "version-string": "21.07",
-  "port-version": 1,
+  "version": "22.0",
   "description": "Library for archiving file with a high compression ratio.",
   "homepage": "https://www.7-zip.org",
   "license": "LGPL-2.1-or-later",

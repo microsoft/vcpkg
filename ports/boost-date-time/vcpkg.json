@@ -1,6 +1,6 @@
 {
   "name": "boost-date-time",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost date_time module",
   "homepage": "https://github.com/boostorg/date_time",
   "license": "BSL-1.0",

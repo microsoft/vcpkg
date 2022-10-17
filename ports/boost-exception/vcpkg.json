@@ -1,6 +1,6 @@
 {
   "name": "boost-exception",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost exception module",
   "homepage": "https://github.com/boostorg/exception",
   "license": "BSL-1.0",

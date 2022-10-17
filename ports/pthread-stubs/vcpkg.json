@@ -1,0 +1,10 @@
+{
+  "name": "pthread-stubs",
+  "version": "0.4",
+  "description": "Stub replacements for POSIX Threads functions.",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/pthread-stubs",
+  "license": "X11-distribute-modifications-variant",
+  "dependencies": [
+    "pthread"
+  ]
+}

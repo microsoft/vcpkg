@@ -1,6 +1,7 @@
 {
   "name": "akali",
   "version": "1.43",
+  "port-version": 1,
   "description": "C++ Common Library.",
   "homepage": "https://github.com/winsoft666/akali",
   "license": "MIT",

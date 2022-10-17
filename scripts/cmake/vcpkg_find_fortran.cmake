@@ -1,26 +1,3 @@
-#[===[.md:
-# vcpkg_find_fortran
-
-Checks if a Fortran compiler can be found.
-Windows(x86/x64) Only: If not it will switch/enable MinGW gfortran 
-                       and return required cmake args for building. 
-
-## Usage
-```cmake
-vcpkg_find_fortran(<out_var>)
-```
-
-## Example
-```cmake
-vcpkg_find_fortran(fortran_args)
-# ...
-vcpkg_cmake_configure(...
-    OPTIONS
-        ${fortran_args}
-)
-```
-#]===]
-
 function(vcpkg_find_fortran out_var)
     if("${ARGC}" GREATER "1")
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra args: ${ARGN}")

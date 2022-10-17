@@ -1,6 +1,6 @@
 {
   "name": "boost-throw-exception",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost throw_exception module",
   "homepage": "https://github.com/boostorg/throw_exception",
   "license": "BSL-1.0",

@@ -52,7 +52,7 @@ vcpkg_configure_make(
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
-    DISABLE_VERBOSE_FLAGS true
+    DISABLE_VERBOSE_FLAGS
 )
 vcpkg_install_make()
 vcpkg_copy_pdbs()
@@ -97,4 +97,4 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 # Copy license
-file(INSTALL "${SOURCE_PATH}/nspr/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nspr" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/nspr/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

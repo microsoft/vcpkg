@@ -1,0 +1,158 @@
+diff --git a/setup.py b/setup.py
+index 61b3266..4c2cfb4 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1153,6 +1153,7 @@ def detect_readline_curses(self):
+             self.add(Extension('readline', ['readline.c'],
+                                library_dirs=['/usr/lib/termcap'],
+                                extra_link_args=readline_extra_link_args,
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=readline_libs))
+         else:
+             self.missing.append('readline')
+@@ -1189,6 +1190,7 @@ def detect_readline_curses(self):
+                                extra_compile_args=['-DPy_BUILD_CORE_MODULE'],
+                                include_dirs=curses_includes,
+                                define_macros=curses_defines,
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=curses_libs))
+         elif curses_library == 'curses' and not MACOS:
+                 # OSX has an old Berkeley curses, not good enough for
+@@ -1203,6 +1205,7 @@ def detect_readline_curses(self):
+             self.add(Extension('_curses', ['_cursesmodule.c'],
+                                extra_compile_args=['-DPy_BUILD_CORE_MODULE'],
+                                define_macros=curses_defines,
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=curses_libs))
+         else:
+             curses_enabled = False
+@@ -1216,6 +1219,7 @@ def detect_readline_curses(self):
+             self.add(Extension('_curses_panel', ['_curses_panel.c'],
+                            include_dirs=curses_includes,
+                            define_macros=curses_defines,
++                           runtime_library_dirs=self.lib_dirs,
+                            libraries=[panel_library, *curses_libs]))
+         elif not skip_curses_panel:
+             self.missing.append('_curses_panel')
+@@ -1234,7 +1238,7 @@ def detect_crypt(self):
+         else:
+             libs = []
+ 
+-        self.add(Extension('_crypt', ['_cryptmodule.c'], libraries=libs))
++        self.add(Extension('_crypt', ['_cryptmodule.c'], runtime_library_dirs=self.lib_dirs, libraries=libs))
+ 
+     def detect_socket(self):
+         # socket(2)
+@@ -1525,6 +1529,7 @@ class db_found(Exception): pass
+                                            libraries=dblibs)
+                         break
+             if dbmext is not None:
++                dbmext.runtime_library_dirs = self.lib_dirs
+                 self.add(dbmext)
+             else:
+                 self.missing.append('_dbm')
+@@ -1533,6 +1538,7 @@ class db_found(Exception): pass
+         if ('gdbm' in dbm_order and
+             self.compiler.find_library_file(self.lib_dirs, 'gdbm')):
+             self.add(Extension('_gdbm', ['_gdbmmodule.c'],
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=['gdbm']))
+         else:
+             self.missing.append('_gdbm')
+@@ -1645,6 +1651,7 @@ def detect_sqlite(self):
+                                define_macros=sqlite_defines,
+                                include_dirs=include_dirs,
+                                library_dirs=sqlite_libdir,
++                               runtime_library_dirs=self.lib_dirs,
+                                extra_link_args=sqlite_extra_link_args,
+                                libraries=["sqlite3",]))
+         else:
+@@ -1710,6 +1717,7 @@ def detect_compress_exts(self):
+                         zlib_extra_link_args = ()
+                     self.add(Extension('zlib', ['zlibmodule.c'],
+                                        libraries=['z'],
++                                       runtime_library_dirs=self.lib_dirs,
+                                        extra_link_args=zlib_extra_link_args))
+                     have_zlib = True
+                 else:
+@@ -1732,6 +1740,7 @@ def detect_compress_exts(self):
+         self.add(Extension('binascii', ['binascii.c'],
+                            extra_compile_args=extra_compile_args,
+                            libraries=libraries,
++                           runtime_library_dirs=self.lib_dirs,
+                            extra_link_args=extra_link_args))
+ 
+         # Gustavo Niemeyer's bz2 module.
+@@ -1742,6 +1751,7 @@ def detect_compress_exts(self):
+                 bz2_extra_link_args = ()
+             self.add(Extension('_bz2', ['_bz2module.c'],
+                                libraries=['bz2'],
++                               runtime_library_dirs=self.lib_dirs,
+                                extra_link_args=bz2_extra_link_args))
+         elif (self.compiler.find_library_file(self.lib_dirs, 'bz2d')):
+             if MACOS:
+@@ -1750,6 +1760,7 @@ def detect_compress_exts(self):
+                 bz2_extra_link_args = ()
+             self.add(Extension('_bz2', ['_bz2module.c'],
+                                libraries=['bz2d'],
++                               runtime_library_dirs=self.lib_dirs,
+                                extra_link_args=bz2_extra_link_args))
+         else:
+             self.missing.append('_bz2')
+@@ -1757,6 +1768,7 @@ def detect_compress_exts(self):
+         # LZMA compression support.
+         if self.compiler.find_library_file(self.lib_dirs, 'lzma'):
+             self.add(Extension('_lzma', ['_lzmamodule.c'],
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=['lzma']))
+         else:
+             self.missing.append('_lzma')
+@@ -1819,6 +1831,7 @@ def detect_expat_elementtree(self):
+                            extra_compile_args=extra_compile_args,
+                            include_dirs=expat_inc,
+                            libraries=expat_lib,
++                           runtime_library_dirs=self.lib_dirs,
+                            sources=['pyexpat.c'] + expat_sources,
+                            depends=expat_depends))
+ 
+@@ -1831,6 +1844,7 @@ def detect_expat_elementtree(self):
+                                define_macros=define_macros,
+                                include_dirs=expat_inc,
+                                libraries=expat_lib,
++                               runtime_library_dirs=self.lib_dirs,
+                                sources=['_elementtree.c'],
+                                depends=['pyexpat.c', *expat_sources,
+                                         *expat_depends]))
+@@ -1883,6 +1897,7 @@ def detect_uuid(self):
+             else:
+                 uuid_libs = []
+             self.add(Extension('_uuid', ['_uuidmodule.c'],
++                               runtime_library_dirs=self.lib_dirs,
+                                libraries=uuid_libs))
+         else:
+             self.missing.append('_uuid')
+@@ -2319,6 +2334,7 @@ def detect_ctypes(self):
+                 ext.extra_compile_args.append("-DHAVE_FFI_CLOSURE_ALLOC=1")
+ 
+             ext.include_dirs.append(ffi_inc)
++            ext.runtime_library_dirs = self.lib_dirs
+             ext.libraries.append(ffi_lib)
+             self.use_system_libffi = True
+ 
+@@ -2485,7 +2501,7 @@ def split_var(name, sep):
+             include_dirs=openssl_includes,
+             library_dirs=openssl_libdirs,
+             libraries=openssl_libs,
+-            runtime_library_dirs=runtime_library_dirs,
++            runtime_library_dirs=self.lib_dirs,
+         )
+ 
+         # This static linking is NOT OFFICIALLY SUPPORTED.
+@@ -2639,6 +2655,7 @@ def detect_nis(self):
+         self.add(Extension('nis', ['nismodule.c'],
+                            libraries=libs,
+                            library_dirs=library_dirs,
++                           runtime_library_dirs=self.lib_dirs,
+                            include_dirs=includes_dirs))
+ 
+ 

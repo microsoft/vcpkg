@@ -1,6 +1,6 @@
 {
   "name": "boost-parameter-python",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost parameter_python module",
   "homepage": "https://github.com/boostorg/parameter_python",
   "license": "BSL-1.0",

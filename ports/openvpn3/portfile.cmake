@@ -29,6 +29,9 @@ foreach(HEADER IN LISTS HEADERS)
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-openvpn CONFIG_PATH share/unofficial-openvpn)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL
     "${SOURCE_PATH}/COPYRIGHT.AGPLV3"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

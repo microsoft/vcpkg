@@ -1,13 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(LIB_VERSION 20180714)
-set(LIB_FILENAME libpff-experimental-${LIB_VERSION}.tar.gz)
+set(LIB_VERSION 20211114)
+set(LIB_FILENAME libpff-alpha-${LIB_VERSION}.tar.gz)
 
 # Release distribution file contains configured sources, while the source code in the repository does not.
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libyal/libpff/releases/download/${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 7207ba87607ea2fd4609a081c2f4b061344a783e188605e88df99fd473f2a8da1269b065e57b054f4622888d40aa8f2b8272dc4748334ddfe358b28d443d6ad1
+    SHA512 ad2cf4b0841c448b60738cd2f340868c0f11eb34167bfe5b093645a2a080d694e199afe4fef5eeea1016487820132be33f8e51910d2142ff032320ad2dbeb59d
 )
 
 vcpkg_extract_source_archive_ex(

@@ -14,7 +14,7 @@ Vcpkg는 Windows, Linux 및 MacOS에서 C 및 C++ 라이브러리를 관리하�
 Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령어에 대한 간단한 설명을 볼 수 있습니다.
 `vcpkg help [command]` 명령어로는 각 명령어별 도움말을 볼 수 있습니다.
 
-* Github: port는 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)에, 관련 프로그램은 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)에 있습니다.
+* GitHub: port는 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)에, 관련 프로그램은 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)에 있습니다.
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
 * Discord: [\#include \<C++\>](https://www.includecpp.org), #🌏vcpkg 채널
 * 도움말: [Documentation](docs/README.md)
@@ -262,7 +262,7 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 vcpkg를 사용하지 않을 수 있습니다.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools

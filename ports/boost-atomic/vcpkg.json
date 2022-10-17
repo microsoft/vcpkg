@@ -1,6 +1,6 @@
 {
   "name": "boost-atomic",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "Boost atomic module",
   "homepage": "https://github.com/boostorg/atomic",
   "license": "BSL-1.0",

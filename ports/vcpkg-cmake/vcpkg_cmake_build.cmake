@@ -1,42 +1,4 @@
-#[===[.md:
-# vcpkg_cmake_build
-
-Build a cmake project.
-
-```cmake
-vcpkg_cmake_build(
-    [TARGET <target>]
-    [LOGFILE_BASE <base>]
-    [DISABLE_PARALLEL]
-    [ADD_BIN_TO_PATH]
-)
-```
-
-`vcpkg_cmake_build` builds an already-configured cmake project.
-You can use the alias [`vcpkg_cmake_install()`] function
-if your CMake build system supports the `install` TARGET,
-and this is something we recommend doing whenever possible.
-Otherwise, you can use `TARGET` to set the target to build.
-This function defaults to not passing a target to cmake.
-
-[`vcpkg_cmake_install()`]: vcpkg_cmake_install.md
-
-`LOGFILE_BASE` is used to set the base of the logfile names;
-by default, this is `build`, and thus the logfiles end up being something like
-`build-x86-windows-dbg.log`; if you use `vcpkg_cmake_install`,
-this is set to `install`, so you'll get log names like `install-x86-windows-dbg.log`.
-
-For build systems that are buggy when run in parallel,
-using `DISABLE_PARALLEL` will run the build with only one job.
-
-Finally, `ADD_BIN_TO_PATH` adds the appropriate (either release or debug)
-`bin/` directories to the path during the build,
-such that executables run during the build will be able to access those DLLs.
-#]===]
-if(Z_VCPKG_CMAKE_BUILD_GUARD)
-    return()
-endif()
-set(Z_VCPKG_CMAKE_BUILD_GUARD ON CACHE INTERNAL "guard variable")
+include_guard(GLOBAL)
 
 function(vcpkg_cmake_build)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_BASE" "")
@@ -64,12 +26,12 @@ function(vcpkg_cmake_build)
     elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-        vcpkg_list(SET build_args "VERBOSE=1")
-        vcpkg_list(SET parallel_args "-j${VCPKG_CONCURRENCY}")
-        vcpkg_list(SET no_parallel_args "")
+        vcpkg_list(SET build_param "VERBOSE=1")
+        vcpkg_list(SET parallel_param "-j${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_param "")
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Xcode")
-        vcpkg_list(SET parallel_args -jobs "${VCPKG_CONCURRENCY}")
-        vcpkg_list(SET no_parallel_args -jobs 1)
+        vcpkg_list(SET parallel_param -jobs "${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_param -jobs 1)
     else()
         message(WARNING "Unrecognized GENERATOR setting from vcpkg_cmake_configure().")
     endif()

@@ -1,5 +1,5 @@
 diff --git a/cmake/headers.cmake b/cmake/headers.cmake
-index 1aad359..e5053ed 100644
+index 3924a2a..f1e32d9 100644
 --- a/cmake/headers.cmake
 +++ b/cmake/headers.cmake
 @@ -15,8 +15,6 @@ set(quickcpplib_HEADERS
@@ -11,19 +11,15 @@ index 1aad359..e5053ed 100644
    "include/quickcpplib/config.hpp"
    "include/quickcpplib/console_colours.hpp"
    "include/quickcpplib/cpp_feature.h"
-@@ -27,15 +25,8 @@ set(quickcpplib_HEADERS
-   "include/quickcpplib/erasure_cast.hpp"
-   "include/quickcpplib/execinfo_win64.h"
-   "include/quickcpplib/function_ptr.hpp"
--  "include/quickcpplib/gsl-lite/gsl-lite.natvis"
-   "include/quickcpplib/gsl-lite/include/gsl-lite/gsl-lite.hpp"
--  "include/quickcpplib/gsl-lite/include/gsl.h"
--  "include/quickcpplib/gsl-lite/include/gsl.hpp"
--  "include/quickcpplib/gsl-lite/include/gsl/gsl-lite-vc6.hpp"
--  "include/quickcpplib/gsl-lite/include/gsl/gsl-lite.h"
-   "include/quickcpplib/gsl-lite/include/gsl/gsl-lite.hpp"
--  "include/quickcpplib/gsl-lite/test/gsl-lite.t.hpp"
--  "include/quickcpplib/gsl-lite/test/lest_cpp03.hpp"
-   "include/quickcpplib/import.h"
-   "include/quickcpplib/in_place_detach_attach.hpp"
-   "include/quickcpplib/mem_flush_loads_stores.hpp"
+@@ -40,11 +38,7 @@ set(quickcpplib_HEADERS
+   "include/quickcpplib/ringbuffer_log.hpp"
+   "include/quickcpplib/scope.hpp"
+   "include/quickcpplib/signal_guard.hpp"
+-  "include/quickcpplib/span-lite/example/nonstd/span.tweak.hpp"
+   "include/quickcpplib/span-lite/include/nonstd/span.hpp"
+-  "include/quickcpplib/span-lite/test/lest/lest_cpp03.hpp"
+-  "include/quickcpplib/span-lite/test/nonstd/span.tweak.hpp"
+-  "include/quickcpplib/span-lite/test/span-main.t.hpp"
+   "include/quickcpplib/span.hpp"
+   "include/quickcpplib/spinlock.hpp"
+   "include/quickcpplib/spinlock.natvis"

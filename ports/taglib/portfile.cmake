@@ -13,7 +13,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS ${WINRT_OPTIONS}
 )
 vcpkg_cmake_install()
@@ -32,12 +31,6 @@ endif()
 
 # remove the debug/include files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# copyright file
-file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
-file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/taglib/COPYING.LGPL" "${CURRENT_PACKAGES_DIR}/share/taglib/copyright")
-
 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/taglib-config.cmd" "${CURRENT_PACKAGES_DIR}/debug/bin/taglib-config.cmd") # Contains absolute paths
 
 # remove bin directory for static builds (taglib creates a cmake batch file there)
@@ -48,3 +41,7 @@ endif()
 
 vcpkg_copy_pdbs()
 
+# copyright file
+file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
+file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/taglib/COPYING.LGPL" "${CURRENT_PACKAGES_DIR}/share/taglib/copyright")

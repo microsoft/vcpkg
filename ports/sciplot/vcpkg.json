@@ -1,7 +1,19 @@
 {
   "name": "sciplot",
-  "version": "0.2.2",
+  "version": "0.3.1",
+  "port-version": 1,
   "description": "A modern c++ scientific plotting library powered by gnuplot",
   "homepage": "https://github.com/sciplot/sciplot",
-  "supports": "!uwp"
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

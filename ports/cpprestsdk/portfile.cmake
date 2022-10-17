@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 122d09549201da5383321d870bed45ecb9e168c5
     SHA512 c9ded33d3c67880e2471e479a38b40a14a9ff45d241e928b6339eca697b06ad621846260eca47b6b1b8a2bc9ab7bf4fea8d3e8e795cd430d8839beb530e16dd7
     HEAD_REF master
-    PATCHES fix-find-openssl.patch
+    PATCHES 
+        fix-find-openssl.patch
+        fix_narrowing.patch
 )
 
 set(OPTIONS)

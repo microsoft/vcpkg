@@ -28,6 +28,8 @@ target_sources(
         ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
     find_path(ALLEGRO5_INCLUDE_DIRS allegro5/allegro.h)
     target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO5_INCLUDE_DIRS})

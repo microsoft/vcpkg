@@ -8,18 +8,29 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF szip-${SZIP_VERSION}
+    REF "szip-${SZIP_VERSION}"
     PATCHES
         fix-linkage-config.patch
         mingw-lib-names.patch
 )
 
+if (VCPKG_TARGET_IS_IOS)
+    # when cross-compiling, try_run will not work.
+    # LFS "large file support" is keyed on 
+    # 1) 64-bit off_t (https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/64bitPorting/transition/transition.html table 2-1)
+    # 2) stat works properly, which is true
+    set(extra_opts 
+        -DTEST_LFS_WORKS_RUN=TRUE
+        -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=""
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
+        ${extra_opts}
 )
 
 vcpkg_cmake_install()
@@ -62,7 +73,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 vcpkg_fixup_pkgconfig()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/szip/copyright")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/szip/data")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
