@@ -263,7 +263,11 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
-### Vcpkg via FetchContent
+<a name="vcpkg-via-fetchcontent"></a>
+
+### Vcpkg via FetchContent (experimental)
+
+**Acquiring vcpkg via CMake's FetchContent is not officially supported and make break at any time. It is documented here for experimentation purposes only -- do not use it in production.**
 
 You can also grab vcpkg with CMake's built-in [FetchContent](https://cmake.org/cmake/help/v3.24/module/FetchContent.html) module.
 
