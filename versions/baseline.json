@@ -2337,7 +2337,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "2.0.6",
+      "baseline": "22.9.29",
       "port-version": 0
     },
     "flecs": {
