@@ -21,6 +21,7 @@ vcpkg_from_github(
         disable-install-docs.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
+        unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
 )

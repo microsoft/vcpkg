@@ -127,7 +127,11 @@ foreach(script IN ITEMS "bin/c_rehash") # "misc/CA" "misc/tsget")
 endforeach()
 vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
 
+file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
+
 file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/etc"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
