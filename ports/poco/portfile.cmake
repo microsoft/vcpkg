@@ -6,26 +6,33 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
-        # static_pcre.patch
+        0001-static-pcre.patch
         # Add the support of arm64-windows
-        arm64_pcre.patch
-        fix_dependency.patch
-        fix-feature-sqlite3.patch
-        fix-error-c3861.patch
-        fix-InstallDataMysql.patch
-        find_pcre2.patch
+        0002-arm64-pcre.patch
+        0003-fix-dependency.patch
+        0004-fix-feature-sqlite3.patch
+        0005-fix-error-c3861.patch
+        0006-fix-install-data-mysql.patch
+        0007-find-pcre2.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
 file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE2.cmake")
+# vcpkg's PCRE2 does not provide a FindPCRE2, and the bundled one seems to work fine
+# file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE2.cmake")
 file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
 # define Poco linkage type
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
+
+if (POCO_STATIC)
+    set(POCO_SHARED OFF)
+else()
+    set(POCO_SHARED ON)
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -49,7 +56,7 @@ vcpkg_cmake_configure(
         # force to use dependencies as external
         -DPOCO_UNBUNDLED=ON
         # Define linking feature
-        -DPOCO_STATIC=${POCO_STATIC}
+        -DBUILD_SHARED_LIBS=${POCO_SHARED}
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components
@@ -73,7 +80,7 @@ vcpkg_cmake_configure(
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
-    MAYBE_UNSUED_VARIABLES # these are only used when if(MSVC)
+    MAYBE_UNUSED_VARIABLES # these are only used when if(MSVC)
         POCO_DISABLE_INTERNAL_OPENSSL
         POCO_MT
 )

@@ -1,5 +1,17 @@
-Index: b/Foundation/src/EventLogChannel.cpp
-===================================================================
+From 57f05c9b12008e468506ff7e88c58e609bffe0fc Mon Sep 17 00:00:00 2001
+From: Russell Greene <russell@shotover.com>
+Date: Tue, 18 Oct 2022 09:06:07 -0500
+Subject: [PATCH 2/7] arm64-pcre
+
+---
+ Foundation/src/EventLogChannel.cpp | 1 +
+ Foundation/src/utils.h             | 2 +-
+ Net/src/Net.cpp                    | 1 +
+ Util/src/WinRegistryKey.cpp        | 1 +
+ 4 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Foundation/src/EventLogChannel.cpp b/Foundation/src/EventLogChannel.cpp
+index f9a9fb1..b032f9d 100644
 --- a/Foundation/src/EventLogChannel.cpp
 +++ b/Foundation/src/EventLogChannel.cpp
 @@ -11,6 +11,7 @@
@@ -10,8 +22,8 @@ Index: b/Foundation/src/EventLogChannel.cpp
  
  #include "Poco/EventLogChannel.h"
  #include "Poco/Message.h"
-Index: b/Foundation/src/utils.h
-===================================================================
+diff --git a/Foundation/src/utils.h b/Foundation/src/utils.h
+index c9b6c00..710c199 100644
 --- a/Foundation/src/utils.h
 +++ b/Foundation/src/utils.h
 @@ -129,7 +129,7 @@ int main(int argc, char** argv) {
@@ -23,8 +35,8 @@ Index: b/Foundation/src/utils.h
      defined(__hppa__) || defined(__ia64__) || \
      defined(__mips__) || \
      defined(__loongarch__) || \
-Index: b/Net/src/Net.cpp
-===================================================================
+diff --git a/Net/src/Net.cpp b/Net/src/Net.cpp
+index 1a75379..b4081fd 100644
 --- a/Net/src/Net.cpp
 +++ b/Net/src/Net.cpp
 @@ -11,6 +11,7 @@
@@ -35,8 +47,8 @@ Index: b/Net/src/Net.cpp
  
  #include "Poco/Net/Net.h"
  
-Index: b/Util/src/WinRegistryKey.cpp
-===================================================================
+diff --git a/Util/src/WinRegistryKey.cpp b/Util/src/WinRegistryKey.cpp
+index 7fd1a28..a07c5d2 100644
 --- a/Util/src/WinRegistryKey.cpp
 +++ b/Util/src/WinRegistryKey.cpp
 @@ -11,6 +11,7 @@

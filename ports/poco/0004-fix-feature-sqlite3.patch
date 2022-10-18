@@ -1,0 +1,22 @@
+From 22f73d2955601d5d450d82f6d0a742b4063bf49c Mon Sep 17 00:00:00 2001
+From: Russell Greene <russell@shotover.com>
+Date: Tue, 18 Oct 2022 09:06:32 -0500
+Subject: [PATCH 4/7] fix-feature-sqlite3
+
+---
+ Data/SQLite/cmake/PocoDataSQLiteConfig.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
+index 5478bab..c5d6d6d 100644
+--- a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
++++ b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
+@@ -5,7 +5,7 @@ if(@POCO_UNBUNDLED@)
+ 	if(CMAKE_VERSION VERSION_LESS "3.14")
+ 		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/V313")
+ 	endif()
+-	find_dependency(SQLite3 REQUIRED)
++	find_dependency(unofficial-sqlite3 REQUIRED)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoDataSQLiteTargets.cmake")
