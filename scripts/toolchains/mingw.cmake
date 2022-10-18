@@ -1,6 +1,6 @@
 if(NOT _VCPKG_MINGW_TOOLCHAIN)
 
-cmake_minimum_required(VESION 3.24)
+cmake_minimum_required(VERSION 3.24)
 
 set(_VCPKG_MINGW_TOOLCHAIN 1)
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
