@@ -269,7 +269,7 @@ You can also grab vcpkg with CMake's built-in [FetchContent](https://cmake.org/c
 
 Don't worry about the bootstrap scripts, since `vcpkg.cmake` will run them for you!
 
-```
+```cmake
 cmake_minimum_required(VERSION 3.14)
 
 include(FetchContent)
