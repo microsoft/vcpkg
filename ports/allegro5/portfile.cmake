@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 d590c1a00d1b314c6946e0f6ad3e3a8b6e6309bada2ec38857186f817147ac99dae8a1c4412abe701af88da5dca3dd8f989a1da66630192643d3c08c0146b603
     HEAD_REF master
     PATCHES
-        fix-pdb-install.patch
         do-not-copy-pdbs-to-lib.patch
         export-targets.patch
 )
@@ -20,6 +19,7 @@ vcpkg_cmake_configure(
         -DALLEGRO_SDL=OFF
         -DWANT_DEMO=OFF
         -DSHARED=${VCPKG_BUILD_SHARED_LIBS}
+        -DINSTALL_PKG_CONFIG_FILES=true
         -DWANT_EXAMPLES=OFF
         -DWANT_TESTS=OFF
         -DWANT_AUDIO=ON
