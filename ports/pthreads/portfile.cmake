@@ -26,6 +26,7 @@ vcpkg_from_sourceforge(
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
     PATCHES
         fix-arm-macro.patch
+        fix-arm64-version_rc.patch
         ${PATCH_FILES}
 )
 
