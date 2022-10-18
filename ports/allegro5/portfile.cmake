@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
         -DWANT_DEMO=OFF
         -DSHARED=${VCPKG_BUILD_SHARED_LIBS}
         -DWANT_EXAMPLES=OFF
-        -DWANT_CURL_EXAMPLE=OFF
         -DWANT_TESTS=OFF
         -DWANT_AUDIO=ON
         -DWANT_COLOR=ON
@@ -30,7 +29,6 @@ vcpkg_cmake_configure(
         -DWANT_DSOUND=ON
         -DWANT_FLAC=ON
         -DWANT_FONT=ON
-        -DWANT_GLES2=ON
         -DWANT_GLES3=ON
         -DWANT_IMAGE=ON
         -DWANT_IMAGE_JPG=ON
@@ -54,8 +52,6 @@ vcpkg_cmake_configure(
         -DWANT_TTF=ON
         -DWANT_VIDEO=ON
         -DWANT_VORBIS=ON
-        -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/AL
-        -DZLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     OPTIONS_RELEASE -DWANT_ALLOW_SSE=ON
     OPTIONS_DEBUG -DWANT_ALLOW_SSE=OFF
 )
