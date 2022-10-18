@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         do-not-copy-pdbs-to-lib.patch
         export-targets.patch
+        msvc-arm64-atomic.patch
 )
 
 
