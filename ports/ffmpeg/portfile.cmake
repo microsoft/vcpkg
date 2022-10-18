@@ -70,8 +70,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_acquire_msys(MSYS_ROOT
             DIRECT_PACKAGES
                 # Required for "cpp.exe" preprocessor
-                "https://repo.msys2.org/msys/x86_64/gcc-9.3.0-1-x86_64.pkg.tar.xz"
-                76af0192a092278e6b26814b2d92815a2c519902a3fec056b057faec19623b1770ac928a59a39402db23cfc23b0d7601b7f88b367b27269361748c69d08654b2
+                "https://repo.msys2.org/msys/x86_64/gcc-11.3.0-2-x86_64.pkg.tar.zst"
+                1efc34aa8312eb5a8fef02c7c903d9ed98c4d50b13b8cf9679df1d545847eb9e0e9a42a810b2e085c6f938796a2a9846cb8b515e9380fdd6bec8ae4a1a131d9e
                 "https://repo.msys2.org/msys/x86_64/isl-0.22.1-1-x86_64.pkg.tar.xz"
                 f4db50d00bad0fa0abc6b9ad965b0262d936d437a9faa35308fa79a7ee500a474178120e487b2db2259caf51524320f619e18d92acf4f0b970b5cbe5cc0f63a2
                 "https://repo.msys2.org/msys/x86_64/zlib-1.2.11-1-x86_64.pkg.tar.xz"
@@ -454,6 +454,12 @@ if("zlib" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-zlib")
 else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
+endif()
+
+if ("srt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsrt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsrt")
 endif()
 
 if (VCPKG_TARGET_IS_OSX)

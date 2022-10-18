@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.2.0",
-  "port-version": 1,
+  "version": "2.3.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -392,6 +391,18 @@
         }
       ]
     },
+    "edgecontainer": {
+      "description": "Distributed Cloud Edge Container API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "eventarc": {
       "description": "Eventarc API C++ Client Library",
       "dependencies": [
@@ -602,6 +613,18 @@
     },
     "monitoring": {
       "description": "Cloud Monitoring API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "networkconnectivity": {
+      "description": "Network Connectivity API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
