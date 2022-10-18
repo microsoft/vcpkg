@@ -14,7 +14,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWANT_DOCS=OFF
         -DALLEGRO_SDL=OFF
@@ -52,8 +52,10 @@ vcpkg_cmake_configure(
         -DWANT_TTF=ON
         -DWANT_VIDEO=ON
         -DWANT_VORBIS=ON
-    OPTIONS_RELEASE -DWANT_ALLOW_SSE=ON
-    OPTIONS_DEBUG -DWANT_ALLOW_SSE=OFF
+    OPTIONS_RELEASE
+        -DWANT_ALLOW_SSE=ON
+    OPTIONS_DEBUG
+        -DWANT_ALLOW_SSE=OFF
 )
 
 vcpkg_cmake_install()
