@@ -3,12 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v2.0.6
-    SHA512 be631f34064c28d81876bf137c796e9736623cf2cc4f2a05dd45372e7195729c99fad1fa795f8ce71a408756a842edbdc0c3bc714a7cf63203a1de8681d86fb6
+    REF c92e78a9f841a6110ec27180d68d1f7f2afda21d #v2.9.29
+    SHA512 b49b9f706a1a763011cc13e42d61c2c36bad7791c5cb7f1fa410e4a5a6fa83a5890cbdb711beff4d88bad06abbc2277f7b940eb1dcf2748873f9f4fb5d9be624
     HEAD_REF master
     PATCHES
-        ignore_use_of_cmake_toolchain_file.patch
-        no-werror.patch
         fix-uwp-build.patch
 )
 
@@ -45,6 +43,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Handle copyright
