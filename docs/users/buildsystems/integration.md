@@ -7,4 +7,4 @@ vcpkg supports use from any buildsystem and has specific native integration into
 - [MSBuild Integration (Visual Studio)](msbuild-integration.md)
 - [CMake Integration](cmake-integration.md)
 - [Manual Integration](manual-integration.md)
-- [`export` Command](export-command.md)
+- [`export` Command](../../commands/export.md)

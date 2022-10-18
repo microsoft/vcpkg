@@ -19,6 +19,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [Common Options](commands/common-options.md)
 - Commands
+  - [vcpkg export](commands/export.md)
   - [vcpkg install](commands/install.md)
   - [vcpkg integrate](commands/integrate.md)
   - [vcpkg remove](commands/remove.md)

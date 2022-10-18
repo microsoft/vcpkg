@@ -6,7 +6,7 @@ If you want to contribute but don't have a particular library in mind then take 
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can vcpkg create pre-built binary packages? What is the binary format used by vcpkg?
-Yes! See the [`export` command](../users/buildsystems/export-command.md) if you wish to produce binaries for exporting into other environments.
+Yes! See the [`export` command](../commands/export.md) if you wish to produce binaries for exporting into other environments.
 
 Alternatively, if your goal is to preserve binaries produced by `vcpkg install` operations for later re-use, see the [Binary Caching feature](../users/binarycaching.md)
 
