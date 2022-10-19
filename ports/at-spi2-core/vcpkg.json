@@ -6,6 +6,7 @@
   "license": null,
   "supports": "linux",
   "dependencies": [
+    "dbus",
     "glib",
     {
       "name": "glib",
