@@ -1,14 +1,5 @@
-From b4b26e94920a3c6000277d16ddb6911ec3ca641e Mon Sep 17 00:00:00 2001
-From: Russell Greene <russell@shotover.com>
-Date: Tue, 18 Oct 2022 09:07:27 -0500
-Subject: [PATCH 6/7] fix-install-data-mysql
-
----
- Data/CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/Data/CMakeLists.txt b/Data/CMakeLists.txt
-index 692fd2f..ec82d76 100644
+index 9d0a85c..4f1ae21 100644
 --- a/Data/CMakeLists.txt
 +++ b/Data/CMakeLists.txt
 @@ -45,7 +45,7 @@ else(ENABLE_DATA_SQLITE)

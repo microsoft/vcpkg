@@ -1,15 +1,3 @@
-From 57f05c9b12008e468506ff7e88c58e609bffe0fc Mon Sep 17 00:00:00 2001
-From: Russell Greene <russell@shotover.com>
-Date: Tue, 18 Oct 2022 09:06:07 -0500
-Subject: [PATCH 2/7] arm64-pcre
-
----
- Foundation/src/EventLogChannel.cpp | 1 +
- Foundation/src/utils.h             | 2 +-
- Net/src/Net.cpp                    | 1 +
- Util/src/WinRegistryKey.cpp        | 1 +
- 4 files changed, 4 insertions(+), 1 deletion(-)
-
 diff --git a/Foundation/src/EventLogChannel.cpp b/Foundation/src/EventLogChannel.cpp
 index f9a9fb1..b032f9d 100644
 --- a/Foundation/src/EventLogChannel.cpp

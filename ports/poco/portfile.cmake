@@ -25,14 +25,7 @@ file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
 # define Poco linkage type
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
-
-if (POCO_STATIC)
-    set(POCO_SHARED OFF)
-else()
-    set(POCO_SHARED ON)
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -56,7 +49,6 @@ vcpkg_cmake_configure(
         # force to use dependencies as external
         -DPOCO_UNBUNDLED=ON
         # Define linking feature
-        -DBUILD_SHARED_LIBS=${POCO_SHARED}
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components

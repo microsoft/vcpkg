@@ -1,15 +1,3 @@
-From 49c6ef451c34269116a2c949d6a0831605392118 Mon Sep 17 00:00:00 2001
-From: Russell Greene <russell@shotover.com>
-Date: Tue, 18 Oct 2022 09:10:17 -0500
-Subject: [PATCH 7/7] find-pcre2
-
----
- CMakeLists.txt            |  5 +++++
- Foundation/CMakeLists.txt |  7 +++++--
- cmake/FindPCRE2.cmake     | 20 ++++++++++++++++----
- cmake/PocoConfig.cmake.in |  1 -
- 4 files changed, 26 insertions(+), 7 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index f05f50c..bb7a94c 100644
 --- a/CMakeLists.txt
