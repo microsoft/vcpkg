@@ -29,7 +29,7 @@ Param(
 )
 
 $Location = 'eastasia'
-$Prefix = 'PrLin-'
+$Prefix = 'PrLinNoX-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D32a_v4'
 $LiveVMPrefix = 'BUILD'
