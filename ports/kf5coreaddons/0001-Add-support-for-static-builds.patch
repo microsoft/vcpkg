@@ -12,7 +12,7 @@ index 711b8d41..2523da18 100644
 +    endif()
 +
 +    if(@Inotify_FOUND@)
-+        find_dependency(Inotify)
++        find_package(Inotify)
 +    endif()
 +
 +    if(@Procstat_FOUND@)
