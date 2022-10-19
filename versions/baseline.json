@@ -1929,7 +1929,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "directxsdk": {
@@ -1937,15 +1937,15 @@
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2022-07-29",
-      "port-version": 1
+      "baseline": "2022-10-17",
+      "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "dirent": {
@@ -7641,7 +7641,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-07-30",
+      "baseline": "2022-10-17",
       "port-version": 1
     },
     "uvw": {
