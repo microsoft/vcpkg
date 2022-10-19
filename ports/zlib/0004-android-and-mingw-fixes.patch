@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 29508ae..4223676 100644
+index 6fa5575..7c345db 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -56,7 +56,7 @@ endif()
@@ -20,13 +20,12 @@ index 29508ae..4223676 100644
      # This gets us DLL resource information when compiling on MinGW.
      if(NOT CMAKE_RC_COMPILER)
          set(CMAKE_RC_COMPILER windres.exe)
-@@ -148,8 +148,8 @@ if(MINGW)
-                             -i ${CMAKE_CURRENT_SOURCE_DIR}/win32/zlib1.rc)
+@@ -149,7 +149,7 @@ if(MINGW)
      if(BUILD_SHARED_LIBS)
      set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
--endif(MINGW)
      endif()
+-endif(MINGW)
 +endif(MINGW AND NOT ANDROID)
  
  add_library(zlib ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
- set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
+ if (BUILD_SHARED_LIBS)
