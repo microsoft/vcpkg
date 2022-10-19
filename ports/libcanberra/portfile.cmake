@@ -19,6 +19,7 @@ vcpkg_extract_source_archive_ex(
         undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
         gtk_dont_assume_x11.patch # likewise
         03_onlyshowin_unity.patch # likewise
+        lc-messages.patch
 )
 
 foreach(backend in oss pulse)
