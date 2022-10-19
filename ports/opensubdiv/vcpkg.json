@@ -1,7 +1,6 @@
 {
   "name": "opensubdiv",
-  "version-semver": "3.4.3",
-  "port-version": 5,
+  "version-semver": "3.4.4",
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
   "license": "Apache-2.0",
@@ -30,9 +29,6 @@
         }
       ]
     },
-    "examples": {
-      "description": "Enable examples build"
-    },
     "glew": {
       "description": "Path to glew",
       "dependencies": [
@@ -55,7 +51,10 @@
       ]
     },
     "opengl": {
-      "description": "Enable OpenGL support"
+      "description": "Enable OpenGL",
+      "dependencies": [
+        "opengl"
+      ]
     },
     "ptex": {
       "description": "Path to Ptex",
@@ -71,9 +70,6 @@
     },
     "true-deriv-eval": {
       "description": "Enable true derivative evaluation for Gregory basis patches"
-    },
-    "tutorials": {
-      "description": "Enable tutorials build"
     }
   }
 }
