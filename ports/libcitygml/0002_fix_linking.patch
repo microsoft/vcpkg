@@ -1,0 +1,67 @@
+diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
+--- a/osgplugin/CMakeLists.txt	2022-09-20 20:32:38.436875800 +0800
++++ b/osgplugin/CMakeLists.txt	2022-09-20 20:56:48.175829800 +0800
+@@ -1,7 +1,8 @@
+ set(target osgdb_citygml)
+ 
+ set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS ON)
+-find_package( OpenSceneGraph REQUIRED osgDB osgViewer osgGA osgUtil osgText)
++find_package(OPENSCENEGRAPH NAMES unofficial-osg) 
++set(OPENSCENEGRAPH_LIBRARIES unofficial::osg::osg unofficial::osg::osgDB unofficial::osg::osgViewer unofficial::osg::osgUtil unofficial::osg::osgText)
+ 
+ include_directories(
+   ${OPENSCENEGRAPH_INCLUDE_DIRS}
+diff -Naur a/sources/CMakeLists.txt b/sources/CMakeLists.txt
+--- a/sources/CMakeLists.txt	2022-06-27 16:20:42.000000000 +0800
++++ b/sources/CMakeLists.txt	2022-10-19 07:56:24.146244100 +0800
+@@ -17,7 +17,7 @@
+   ADD_DEFINITIONS( -DUSE_GDAL )
+ ELSE( LIBCITYGML_USE_GDAL )
+   SET( GDAL_INCLUDE_DIR "" )
+-  SET( GDAL_LIBRARY "" )
++  SET( GDAL_LIBRARIES "" )
+ ENDIF( LIBCITYGML_USE_GDAL )
+ 
+ OPTION(LIBCITYGML_DEBUG_POSTFIX "Set to on to add \"d\" postfix to targets" ON)
+@@ -7,7 +7,7 @@
+ SET( target citygml )
+ 
+ FIND_PACKAGE( OpenGL REQUIRED )
+-FIND_PACKAGE( Xerces REQUIRED )
++FIND_PACKAGE( XercesC REQUIRED )
+ 
+ # gdal library
+ OPTION(LIBCITYGML_USE_GDAL "Set to ON to build libcitygml with GDAL library so that it supports coordinates transformations." ON)
+@@ -205,9 +205,9 @@
+                        EXPORT_MACRO_NAME LIBCITYGML_EXPORT
+                        EXPORT_FILE_NAME ${EXPORT_HEADER_FILE_NAME})
+ 
+-TARGET_LINK_LIBRARIES( ${target} PUBLIC ${XERCESC_LIBRARIES} ${OPENGL_LIBRARIES} )
++TARGET_LINK_LIBRARIES( ${target} PUBLIC XercesC::XercesC ${OPENGL_LIBRARIES} )
+ if(LIBCITYGML_USE_GDAL)
+-    TARGET_LINK_LIBRARIES( ${target} PUBLIC ${GDAL_LIBRARY} )
++    TARGET_LINK_LIBRARIES( ${target} PUBLIC GDAL::GDAL )
+ endif(LIBCITYGML_USE_GDAL)
+ 
+ set_target_properties( ${target} PROPERTIES
+diff -Naur a/test/CMakeLists.txt b/test/CMakeLists.txt
+--- a/test/CMakeLists.txt	2022-06-27 16:20:42.000000000 +0800
++++ b/test/CMakeLists.txt	2022-10-19 08:09:45.011996000 +0800
+@@ -3,7 +3,7 @@
+ ENDIF()
+ 
+ FIND_PACKAGE( OpenGL REQUIRED )
+-FIND_PACKAGE( Xerces REQUIRED )
++FIND_PACKAGE( XercesC REQUIRED )
+ 
+ IF( LIBCITYGML_DYNAMIC )
+   ADD_DEFINITIONS( -DLIBCITYGML_DYNAMIC )
+@@ -18,7 +18,7 @@
+ 
+ ADD_EXECUTABLE( citygmltest ${PRG_SRCS} )
+ 
+-TARGET_LINK_LIBRARIES( citygmltest citygml ${XERCESC_LIBRARY} ${OPENGL_LIBRARIES} )
++TARGET_LINK_LIBRARIES( citygmltest citygml XercesC::XercesC ${OPENGL_LIBRARIES} )
+ 
+ if(NOT DEFINED BIN_INSTALL_DIR)
+     set(BIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/bin")

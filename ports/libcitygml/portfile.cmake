@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_fix_tools.patch
-        0002_fix_osg.patch
+        0002_fix_linking.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,6 +28,8 @@ if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CITYGML_CRT_STATIC)
     list(APPEND ADDITIONAL_OPTIONS -DLIBCITYGML_STATIC_CRT=${CITYGML_CRT_STATIC})
 endif()
+
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindXerces.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
