@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
+        0001-Add-misisng-find_dependency-s-for-static-builds.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
