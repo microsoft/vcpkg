@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(minizip VERSION 1.2.12 LANGUAGES C)
+project(minizip VERSION 1.2.13 LANGUAGES C)
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
