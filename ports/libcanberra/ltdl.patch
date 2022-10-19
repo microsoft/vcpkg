@@ -2,14 +2,17 @@ diff --git a/configure.ac b/configure.ac
 index f68602d..a4e24b3 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -140,8 +140,9 @@ dnl We don't need any special variable for this though, since the user
+@@ -140,8 +140,12 @@ dnl We don't need any special variable for this though, since the user
  dnl can give the proper place to find libltdl through the standard
  dnl variables like LDFLAGS and CPPFLAGS.
  
-+AC_LIBTOOL_DLOPEN
++LTDL_INIT
++if test -n "$LTDL_LDFLAGS"; then
++    LDFLAGS="$LDFLAGS $LTDL_LDFLAGS"
++fi
  AC_CHECK_HEADER([ltdl.h],
 -    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL=-lltdl], [LIBLTDL=])],
-+    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL="-lltdl $lt_cv_dlopen_libs"], [LIBLTDL=], [$lt_cv_dlopen_libs])],
++    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL="-lltdl $LTDL_LDFLAGS $lt_cv_dlopen_libs"], [LIBLTDL=])],
      [LIBLTDL=])
  
  AS_IF([test "x$LIBLTDL" = "x"],

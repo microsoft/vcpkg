@@ -38,7 +38,14 @@ foreach(feature IN ITEMS alsa gstreamer gtk3 null oss pulse)
 endforeach()
 
 if(VCPKG_TARGET_IS_OSX)
+    execute_process(
+         COMMAND brew --prefix libtool
+         OUTPUT_VARIABLE BREW_LIBTOOL_PATH
+         OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
     vcpkg_list(APPEND OPTIONS
+        "CPPFLAGS=-I${BREW_LIBTOOL_PATH}/include"
+        "LTDL_LDFLAGS=-L${BREW_LIBTOOL_PATH}/lib"
         cc_cv_LDFLAGS__Wl___as_needed=no
         cc_cv_LDFLAGS__Wl___gc_sections=no
     )
