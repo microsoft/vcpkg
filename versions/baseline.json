@@ -3817,7 +3817,7 @@
       "port-version": 0
     },
     "libical": {
-      "baseline": "3.0.15",
+      "baseline": "3.0.16",
       "port-version": 0
     },
     "libice": {
