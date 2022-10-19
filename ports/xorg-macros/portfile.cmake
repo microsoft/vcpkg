@@ -64,4 +64,5 @@ vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+message(FATAL_ERROR "Just error to make sure all of x is deactivated for the first run!")
 endif()
