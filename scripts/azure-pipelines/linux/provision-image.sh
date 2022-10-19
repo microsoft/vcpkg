@@ -29,29 +29,14 @@ apt-get -y dist-upgrade
 APT_PACKAGES="git curl zip unzip tar"
 
 ## common build dependencies
-APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
-  build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
-  libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin \
-  flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
-  xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
+APT_PACKAGES="$APT_PACKAGES at gperf cifs-utils \
+  build-essential g++ gfortran yasm libnuma1 libnuma-dev libtool-bin \
+  flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool \
+  dh-autoreconf autoconf-archive ruby-full \
   pkg-config meson nasm cmake ninja-build"
-
-## required by qt5-base
-APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
-  libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxcb-util0-dev"
-
-## required by qt5-base for qt5-x11extras
-APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
-  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
-  libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
-  libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
 ## required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
-
-## required by kf5windowsystem
-APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 
 ## required by mesa
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
@@ -62,23 +47,11 @@ APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
 ## required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
 
-## required by qtwayland
-APT_PACKAGES="$APT_PACKAGES libwayland-dev"
-
 ## required by all GN projects
 APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
 
 ## required by libctl
 APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
-
-## required by gtk
-APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
-
-## required by gtk3 and at-spi2-atk
-APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
-
-## required by at-spi2-atk
-APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
 ## required by bond
 APT_PACKAGES="$APT_PACKAGES haskell-stack"
