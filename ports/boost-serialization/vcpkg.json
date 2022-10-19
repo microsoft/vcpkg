@@ -1,40 +1,110 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-serialization",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost serialization module",
   "homepage": "https://github.com/boostorg/serialization",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-array",
-    "boost-assert",
+    {
+      "name": "boost-array",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-assert",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-build",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-config",
-    "boost-core",
-    "boost-detail",
-    "boost-function",
-    "boost-integer",
-    "boost-io",
-    "boost-iterator",
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-detail",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-function",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-io",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-modular-build-helper",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-move",
-    "boost-mpl",
-    "boost-optional",
-    "boost-predef",
-    "boost-preprocessor",
-    "boost-smart-ptr",
-    "boost-spirit",
-    "boost-static-assert",
-    "boost-type-traits",
-    "boost-unordered",
-    "boost-utility",
-    "boost-variant",
-    "boost-vcpkg-helpers",
+    {
+      "name": "boost-move",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-optional",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-spirit",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-unordered",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-variant",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

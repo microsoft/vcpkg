@@ -16,7 +16,7 @@ This script assumes you have installed the OpenSSH Client optional Windows compo
 #>
 
 $Location = 'eastasia'
-$Prefix = 'Lin-'
+$Prefix = 'LinNoX-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D8a_v4'
 $ProtoVMName = 'PROTOTYPE'
