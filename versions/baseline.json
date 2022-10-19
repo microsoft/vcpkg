@@ -7777,7 +7777,7 @@
       "port-version": 1
     },
     "vowpalwabbit": {
-      "baseline": "9.3.0",
+      "baseline": "9.5.0",
       "port-version": 0
     },
     "vs-yasm": {
