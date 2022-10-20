@@ -1,10 +1,10 @@
-set(VERSION 8.1)
+set(VERSION 9.0)
 
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
     FILENAME "OpenMesh-${VERSION}.tar.gz"
-    SHA512 c146e6b21d709a31772621a6a913def93a51460c4abb950c2eb64eea4528c7efd4c86166ba56ae0bc8090cc5878dd9328b570e094e61c1b64d6d298de05aca61
+    SHA512 d4d1872204595c8ccdf1fd09b2e923b7fc5e71e95958cbee52aeca0c1a3de0e648e4fa4913aca14acee30a000ef54b5abd92a30db8cef310e87bfbfe26726afc
 )
 
 vcpkg_extract_source_archive_ex(
