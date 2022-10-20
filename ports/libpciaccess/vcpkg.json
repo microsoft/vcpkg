@@ -1,0 +1,12 @@
+{
+  "name": "libpciaccess",
+  "version": "0.16",
+  "description": "Generic PCI access library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libpciaccess",
+  "license": null,
+  "supports": "!(windows | osx)",
+  "dependencies": [
+    "xorg-macros",
+    "zlib"
+  ]
+}
