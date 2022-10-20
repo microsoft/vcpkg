@@ -53,4 +53,7 @@ minc: hdf5
 netcdf-c: hdf5
 shogun: hdf5
 
+TODOS:
 libX11.a needs fixing of hardcoding absolute paths. 
+libinput?
+libudev?

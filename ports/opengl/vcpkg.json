@@ -7,7 +7,13 @@
   "dependencies": [
     {
       "name": "libglvnd",
-      "platform": "!windows"
+      "platform": "linux"
+      "$comment": "on osx framework opengl will be found!"
+    },
+    {
+      "name": "libglu",
+      "platform": "linux"
     }
+   
   ]
 }

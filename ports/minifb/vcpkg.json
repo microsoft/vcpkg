@@ -6,9 +6,6 @@
   "homepage": "https://github.com/emoon/minifb",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "libx11",
-      "platform": "!windows"
-    }
+    "opengl"
   ]
 }
