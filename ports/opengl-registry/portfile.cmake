@@ -1,3 +1,4 @@
+if(0)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/OpenGL-Registry
@@ -25,7 +26,7 @@ file(
   DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   RENAME copyright
 )
-
+endif()
 # pc layout from cygwin (consumed in xserver!)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/khronos-opengl-registry.pc" [=[
 prefix=${pcfiledir}/../..
