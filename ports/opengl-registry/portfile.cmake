@@ -36,3 +36,4 @@ Name: khronos-opengl-registry
 Description: Khronos OpenGL registry
 Version: git4594c03239fb76580bc5d5a13acb2a8f563f0158
 ]=])
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
