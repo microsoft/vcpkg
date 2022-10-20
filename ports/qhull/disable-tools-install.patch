@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f50b187..ff654c3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -342,7 +342,7 @@ set(qhull_SHAREDR qhull_r)
+ set(qhull_SHARED libqhull)  # Temporarily avoid name conflict with qhull executable
+ set(qhull_SHAREDP qhull_p)  # libqhull and qhull_p are deprecated, use qhull_r instead
+ 
+-set(qhull_TARGETS_APPLICATIONS qhull rbox qconvex qdelaunay qvoronoi qhalf)
++set(qhull_TARGETS_APPLICATIONS )
+ set(qhull_TARGETS_STATIC ${qhull_CPP} ${qhull_STATIC} ${qhull_STATICR})
+ set(qhull_TARGETS_SHARED ${qhull_CPP} ${qhull_SHAREDR})
+ 
