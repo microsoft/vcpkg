@@ -2,7 +2,7 @@
 +++ b/modules/freetype/CMakeLists.txt
 @@ -9,20 +9,20 @@ find_package(harfbuzz CONFIG REQUIRED)
  endif()
-
+ 
  if(OPENCV_INITIAL_PASS)
 -  if(NOT FREETYPE_FOUND)
 +  if(NOT freetype_FOUND)
@@ -11,7 +11,7 @@
 -    message(STATUS "freetype2:   YES (ver ${FREETYPE_VERSION})")
 +    message(STATUS "freetype2:   YES (ver ${freetype_VERSION})")
    endif()
-
+ 
 -  if(NOT HARFBUZZ_FOUND)
 +  if(NOT harfbuzz_FOUND)
      message(STATUS "harfbuzz:    NO")
@@ -20,7 +20,7 @@
 +    message(STATUS "harfbuzz:    YES (ver ${harfbuzz_VERSION})")
    endif()
  endif()
-
+ 
 -if(FREETYPE_FOUND AND HARFBUZZ_FOUND)
 +if(freetype_FOUND AND harfbuzz_FOUND)
    ocv_define_module(freetype opencv_core opencv_imgproc WRAP python)
