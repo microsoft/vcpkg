@@ -15,7 +15,7 @@ if(WIN32)
 	target_compile_definitions(crashpad INTERFACE NOMINMAX)
 elseif(APPLE)
 	list(APPEND CRASHPAD_LIBRARIES ApplicationServices
-        CoreFoundation Foundation IOKit Security bsm)
+        CoreFoundation Foundation IOKit Security bsm mig_output)
 endif()
 
 foreach(LIB_NAME ${CRASHPAD_LIBRARIES})

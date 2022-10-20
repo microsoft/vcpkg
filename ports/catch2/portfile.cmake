@@ -1,8 +1,12 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF v3.0.1
-    SHA512 065094c19cdf98b40f96a390e887542f895495562a91cdc28d68ce03690866d846ec87d320405312a2b97eacaa5351d3e55f0012bb9de40073c8d4444d82b0a1
+    REF v3.1.1
+    SHA512 b6deae2e87ae301bb3de9e378297a3f20333bb5f233fd9ef81f8c4f10fe0c4ad5de9174b850da8064607b9c56c68c7a0815e2bac80108e6db905bc660def7d57
     HEAD_REF devel
     PATCHES
         fix-install-path.patch

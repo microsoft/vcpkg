@@ -9,6 +9,7 @@ vcpkg_from_github(
         0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
         debug-postfix-mingw.patch
         0002-android-build-mingw.patch
+        CVE-2022-37434.patch
 )
 
 # This is generated during the cmake build

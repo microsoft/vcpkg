@@ -15,7 +15,10 @@ vcpkg_from_github(
       0005-fix-cuda.patch
       0006-fix-jasper.patch
       0007-fix-config.patch
+      0019-fix-openexr.patch
 )
+# Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
@@ -126,7 +129,7 @@ find_dependency(Threads)")
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
   if("openexr" IN_LIST FEATURES)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+    string(APPEND DEPS_STRING "\nfind_dependency(Imath CONFIG)\nfind_dependency(OpenEXR CONFIG)")
   endif()
   if("png" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(PNG)")

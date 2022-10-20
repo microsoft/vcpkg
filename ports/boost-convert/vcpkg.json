@@ -1,21 +1,59 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-convert",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost convert module",
   "homepage": "https://github.com/boostorg/convert",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-config",
-    "boost-core",
-    "boost-function-types",
-    "boost-lexical-cast",
-    "boost-math",
-    "boost-mpl",
-    "boost-optional",
-    "boost-parameter",
-    "boost-range",
-    "boost-spirit",
-    "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-function-types",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-math",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-optional",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-parameter",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-range",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-spirit",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    }
   ]
 }

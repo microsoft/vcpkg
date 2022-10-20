@@ -14,7 +14,7 @@ index 4c9744e6..a6d5e4eb 100644
  
 -set(docfiles COPYING NEWS AUTHORS)
 -install(FILES ${docfiles}
--        DESTINATION "${DOCDIR}")
+-        DESTINATION ${CMAKE_INSTALL_DOCDIR})
 +
  
  ################################################################################
