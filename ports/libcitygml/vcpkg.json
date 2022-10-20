@@ -4,7 +4,6 @@
   "description": "C++ Library for CityGML Parsing and Visualization",
   "homepage": "https://github.com/jklimke/libcitygml",
   "license": "LGPL-2.1-only",
-  "supports": "windows",
   "dependencies": [
     "opengl",
     {
@@ -16,6 +15,10 @@
       "host": true
     },
     "xerces-c"
+  ],
+  "default-features": [
+    "gdal",
+    "osg"
   ],
   "features": {
     "gdal": {

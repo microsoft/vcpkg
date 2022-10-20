@@ -49,15 +49,16 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if ("tests" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES citygmltest
-        AUTO_CLEAN
-    )
+    list(APPEND LIBCITYGML_TOOLS_LIST citygmltest)
 endif()
 
 if ("tools" IN_LIST FEATURES AND "osg" IN_LIST FEATURES)
+    list(APPEND LIBCITYGML_TOOLS_LIST citygmlOsgViewer)
+endif()
+
+if(LIBCITYGML_TOOLS_LIST)
     vcpkg_copy_tools(
-        TOOL_NAMES citygmlOsgViewer
+        TOOL_NAMES ${LIBCITYGML_TOOLS_LIST}
         AUTO_CLEAN
     )
 endif()
