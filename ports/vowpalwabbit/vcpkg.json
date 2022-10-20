@@ -4,6 +4,7 @@
   "description": "Reduction based online learning framework with a focus on contextual bandits and reinforcement learning.",
   "homepage": "https://github.com/vowpalwabbit/vowpal_wabbit",
   "license": "BSD-3-Clause",
+  "supports": "!x86 & !uwp & !(windows & arm)",
   "dependencies": [
     "boost-math",
     "flatbuffers",
