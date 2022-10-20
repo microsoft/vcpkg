@@ -6,14 +6,13 @@
   "license": null,
   "dependencies": [
     {
-      "name": "libglvnd",
-      "platform": "linux"
-      "$comment": "on osx framework opengl will be found!"
-    },
-    {
       "name": "libglu",
       "platform": "linux"
+    },
+    {
+      "$comment": "on osx framework opengl will be found!",
+      "name": "libglvnd",
+      "platform": "linux"
     }
-   
   ]
 }
