@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb-wm
-    REF  24eb17df2e1245885e72c9d4bbb0a0f69f0700f2 #v 0.4.1
+    REF  0c6681e465c9cc7b1fbb60778ba1eaa61ab01a14 #v 0.4.2
     SHA512 6af514465eaa98d5417de352bd3e4f3880180f886dc1202c64496cb5a07c82c377afeb9396acf57e20caa73e858fe7e6309f3ed7a74e88eb58e1da1f31ac0bd8
     HEAD_REF master
     PATCHES build.patch

@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb-errors
-    REF  332f357aa662ad61625ee804f93c5503b2a0c3ec #1.0
-    SHA512 e2b1ad74434760b94035ba91a2f43012523f007e82a1c99380be9f08ca8545f31dcfd772cef593c709cef941ff6d8ab421f47b2f3f01ba956cbaa15e4b928b8b
+    REF  517dd82c079de762a7426f20166a44f11e8d38c5 #1.0.1
+    SHA512 391f6bc9452bf4d6a3f1fa69232cdbef43f9fcd339b8d1965132a3b227ed7ebcbaad553fe64d42bc525811caedf3ff9d5bec108f6ac2efd5a014f75fb35cbf85
     HEAD_REF master
     PATCHES fix_python.patch
 ) 

@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb-keysyms
-    REF  439be15cde3c7b5ba07b175dcf7b724d155d30aa #v 0.4.0
-    SHA512 1bd5002d669c4b31b200bdaba9a620c87dcab712a895c70851bdc33651c098e12f62cc20428a0b09e8e9d937939e2d92704e1df551bcb9b460596fa53a8a956c
+    REF  85e093f14b0ade2956e0a5d1c37cfde06d8b1ba6 #v 0.4.1
+    SHA512 cee1224ba673c637d20387d22d445be92970dd1b169247550befe64908e1b7f8cc4311018b7e7854e46ccaa62b8c6258293dcb144a94e320bee5a1e060b194f1
     HEAD_REF master
 ) 
 file(TOUCH "${SOURCE_PATH}/m4/dummy")
