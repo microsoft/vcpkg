@@ -155,7 +155,10 @@
     "gtk": {
       "description": "GTK support for opencv",
       "dependencies": [
-        "gtk"
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
       ]
     },
     "halide": {

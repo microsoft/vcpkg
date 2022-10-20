@@ -56,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "freetype"  WITH_FREETYPE
  "gdcm"      WITH_GDCM
  "gstreamer" WITH_GSTREAMER
+ "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
  "jpeg"      WITH_JPEG
@@ -80,15 +81,6 @@ if("dnn" IN_LIST FEATURES)
     set(BUILD_opencv_dnn ON)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
-  endif()
-endif()
-
-set(WITH_GTK OFF)
-if("gtk" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_LINUX)
-    set(WITH_GTK ON)
-  else()
-    message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
 endif()
 
