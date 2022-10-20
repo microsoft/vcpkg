@@ -22,10 +22,6 @@
       ],
       "platform": "linux"
     },
-    {
-      "name": "libxrandr",
-      "platform": "linux"
-    },
     "gdk-pixbuf",
     "gettext",
     {
@@ -43,6 +39,10 @@
     },
     "graphene",
     "libepoxy",
+    {
+      "name": "libxrandr",
+      "platform": "linux"
+    },
     "pango",
     {
       "name": "sassc",

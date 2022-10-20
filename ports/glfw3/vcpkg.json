@@ -7,19 +7,19 @@
   "dependencies": [
     {
       "name": "libx11",
-      "platform": "linux
-    },
-    {
-      "name": "libxrandr",
-      "platform": "linux
-    },
-    {
-      "name": "libxinerama",
-      "platform": "linux
+      "platform": "linux"
     },
     {
       "name": "libxi",
-      "platform": "linux
+      "platform": "linux"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "linux"
     },
     {
       "name": "vcpkg-cmake",
