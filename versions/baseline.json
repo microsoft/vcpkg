@@ -2390,7 +2390,7 @@
     },
     "font-util": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "fontconfig": {
       "baseline": "2.14.0",
@@ -3674,7 +3674,7 @@
     },
     "libe57": {
       "baseline": "1.1.332",
-      "port-version": 2
+      "port-version": 3
     },
     "libe57format": {
       "baseline": "2.2.0",
@@ -8094,7 +8094,7 @@
     },
     "xtrans": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "xxhash": {
       "baseline": "0.8.1",
