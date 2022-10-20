@@ -28,8 +28,6 @@ soil: opengl
 soil2: opengl
 urho3d: x11
 
-
-
 Single Config issues: 
 skia: single config; opengl; xcb?
 freerdp: single config
@@ -54,3 +52,5 @@ matio: hdf5?
 minc: hdf5
 netcdf-c: hdf5
 shogun: hdf5
+
+libX11.a needs fixing of hardcoding absolute paths. 
