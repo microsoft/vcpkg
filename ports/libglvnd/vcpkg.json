@@ -1,0 +1,15 @@
+{
+  "name": "libglvnd",
+  "version": "1.5.0",
+  "description": "libglvnd is a vendor-neutral dispatch layer for arbitrating OpenGL API calls between multiple vendors. It allows multiple drivers from different vendors to coexist on the same filesystem, and determines which vendor to dispatch each API call to at runtime.",
+  "homepage": "https://gitlab.freedesktop.org/glvnd/libglvnd",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "libx11",
+    "libxext"
+  ]
+}
