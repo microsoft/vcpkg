@@ -1,31 +1,31 @@
 allegro5: OpenGL GLES1 GLES2; X11 (GLX); Xcursor Xpm XInput2(Xi) (XF86VIDMOD;XINERAMA;XRANDR;XSCREENSAVER)
-cairo: GL;GLES;(EGL;GLX);x11;xext;xrender;(xcb;xcb-render;x11-xcb;xcb-shm)
-coin: OpenGL; X11 (Opt on mac?) 
-ffmpeg: OpenGL;
-fltk: X11;
+#cairo: GL;GLES;(EGL;GLX);x11;xext;xrender;(xcb;xcb-render;x11-xcb;xcb-shm)
+~coin: OpenGL; X11 (Opt on mac?) 
+~ffmpeg: OpenGL;
+~fltk: X11;
 freeglut: Opengl (+ext); x11  ;Xinput; Xxf86vm_libs xrandr (wayland-client wayland-cursor -lwayland-egl xkbcommon)
-ftgl: opengl
-gainput: x11
-gl3w: opengl
-glew: opengl
-glfw3: X11
+~ftgl: opengl
+~gainput: x11, xinput?
+~gl3w: opengl
+~glew: opengl
+~glfw3: X11
 hpx: MPI ?
-irrlicht: opengl;
-libepoxy: x11
-libspnav: x11
-llgl: x11
-magnum: OpenGL
-mathgl: OpenGL
-minifb: x11
-OIS: X11
-opencascada: x11
+#irrlicht: opengl;
+#libepoxy: x11
+#libspnav: x11
+#llgl: x11
+~magnum: OpenGL
+~mathgl: OpenGL
+~minifb: x11
+~OIS: X11
+~opencascada: x11
 openexr-loader: x11: xcb xcb-glx; wayland-client;probably more?
-plib: opengl
+~plib: opengl
 qtbase: a lot of extra deps.
 sfml: x11
 skia: single config; opengl; xcb?
-soil: opengl
-soil2: opengl
+~soil: opengl
+~soil2: opengl
 urho3d: x11
 
 Single Config issues: 

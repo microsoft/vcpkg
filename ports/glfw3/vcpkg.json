@@ -5,6 +5,7 @@
   "homepage": "https://github.com/glfw/glfw",
   "license": "Zlib",
   "dependencies": [
+    "libx11",
     {
       "name": "vcpkg-cmake",
       "host": true

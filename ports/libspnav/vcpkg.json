@@ -4,5 +4,8 @@
   "port-version": 2,
   "description": "Library for communicating with spacenavd or 3dxsrv to get input from 6-dof devices.",
   "homepage": "https://github.com/FreeSpacenav/libspnav",
-  "supports": "linux"
+  "supports": "linux",
+  "dependencies": [
+    "libx11"
+  ]
 }

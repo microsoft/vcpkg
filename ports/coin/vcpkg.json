@@ -12,7 +12,7 @@
     "boost-math",
     "boost-smart-ptr",
     "boost-static-assert",
-    "opengl-registry"
+    "opengl"
   ],
   "default-features": [
     "simage",

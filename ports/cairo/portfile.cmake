@@ -17,6 +17,8 @@ vcpkg_from_gitlab(
         ${PATCHES}
 )
 
+#TODO . Add xcb, xlib-xcb feature?
+
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dfontconfig=enabled)
 else()

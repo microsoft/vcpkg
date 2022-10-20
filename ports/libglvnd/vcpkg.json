@@ -5,11 +5,11 @@
   "homepage": "https://gitlab.freedesktop.org/glvnd/libglvnd",
   "license": null,
   "dependencies": [
+    "libx11",
+    "libxext",
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
-    "libx11",
-    "libxext"
+    }
   ]
 }
