@@ -15,11 +15,11 @@
     }
   ],
   "default-features": [
-    "binaries"
+    "tools"
   ],
   "features": {
-    "binaries": {
-      "description": "Build the glslangValidator and spv-remap binaries"
+    "tools": {
+      "description": "Build the glslangValidator and spirv-remap binaries"
     }
   }
 }
