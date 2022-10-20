@@ -350,7 +350,7 @@ file is not allowed and will result in the vcpkg command terminating with an err
       }
     ],
     "overlay-ports": [ "./my-ports/fmt", 
-                       "c:/project/team-ports"
+                       "./team-ports"
     ]
   }
 ```
