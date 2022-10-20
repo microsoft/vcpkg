@@ -1057,6 +1057,7 @@ slang:arm64-windows=fail
 slang:arm-uwp=fail
 slang:x64-osx=fail
 slang:x64-uwp=fail
+slang:x64-windows-static=fail
 stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
