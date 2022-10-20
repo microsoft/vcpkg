@@ -5,7 +5,22 @@
   "homepage": "https://github.com/glfw/glfw",
   "license": "Zlib",
   "dependencies": [
-    "libx11",
+    {
+      "name": "libx11",
+      "platform": "linux
+    },
+    {
+      "name": "libxrandr",
+      "platform": "linux
+    },
+    {
+      "name": "libxinerama",
+      "platform": "linux
+    },
+    {
+      "name": "libxi",
+      "platform": "linux
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

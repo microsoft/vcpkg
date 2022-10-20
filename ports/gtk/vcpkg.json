@@ -22,6 +22,10 @@
       ],
       "platform": "linux"
     },
+    {
+      "name": "libxrandr",
+      "platform": "linux"
+    },
     "gdk-pixbuf",
     "gettext",
     {
