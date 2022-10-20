@@ -13,12 +13,12 @@
     "libzip",
     "openssl",
     "pcre",
-    "xmlsec",
     "pthread",
     {
       "name": "vcpkg-cmake",
       "host": true
     },
+    "xmlsec",
     "zlib"
   ],
   "features": {
