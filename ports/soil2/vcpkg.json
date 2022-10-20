@@ -5,6 +5,7 @@
   "homepage": "https://github.com/SpartanJ/SOIL2",
   "license": "MIT-0",
   "dependencies": [
+    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true

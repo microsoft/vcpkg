@@ -82,8 +82,9 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
-configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
-
+if(NOT VCPKG_BUILD_TYPE)
+    configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

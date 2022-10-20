@@ -1,0 +1,10 @@
+{
+  "name": "libglu",
+  "version": "9.0.2",
+  "description": "Mesa OpenGL Utility library",
+  "homepage": "https://gitlab.freedesktop.org/mesa/glu",
+  "license": "SGI-B-1.1 AND SGI-B-2.0 AND MIT",
+  "dependencies": [
+    "libglvnd"
+  ]
+}

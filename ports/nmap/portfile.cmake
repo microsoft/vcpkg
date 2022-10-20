@@ -83,7 +83,7 @@ else()
         )
         
         message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(INSTALL "${source_path_release}/nmap" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
     endif()
     
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
@@ -111,10 +111,10 @@ else()
         file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
     
-    set(SOURCE_PATH "${source_path_release}")
+    set(SOURCE_PATH "${source_path_release}") ## TODO: vcpkg_configure_make?
 endif()
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -5,6 +5,7 @@
   "homepage": "https://sourceforge.net/projects/freeglut/",
   "license": null,
   "dependencies": [
+    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -39,6 +39,10 @@
     },
     "graphene",
     "libepoxy",
+    {
+      "name": "libxrandr",
+      "platform": "linux"
+    },
     "pango",
     {
       "name": "sassc",

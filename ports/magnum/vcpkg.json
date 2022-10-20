@@ -12,6 +12,7 @@
         "utility"
       ]
     },
+    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true

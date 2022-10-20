@@ -9,6 +9,7 @@
     "bzip2",
     "libjpeg-turbo",
     "libpng",
+    "opengl",
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"
