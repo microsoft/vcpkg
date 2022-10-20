@@ -13,6 +13,12 @@
     "libjpeg-turbo",
     "libpng",
     "libx11",
+    "libxcursor",
+    "libxext",
+    "libxfixes",
+    "libxft",
+    "libxinerama",
+    "libxrender",
     {
       "name": "vcpkg-cmake",
       "host": true
