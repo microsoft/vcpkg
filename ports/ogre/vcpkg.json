@@ -6,6 +6,7 @@
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
   "dependencies": [
+    "opengl",
     "pugixml",
     {
       "name": "sdl2",
