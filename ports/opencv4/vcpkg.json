@@ -154,6 +154,7 @@
     },
     "gtk": {
       "description": "GTK support for opencv",
+      "supports": "!windows & !osx & !ios & !android",
       "dependencies": [
         {
           "name": "gtk3",
