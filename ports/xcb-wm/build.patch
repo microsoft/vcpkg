@@ -7,7 +7,7 @@ index b986105f6..a0ce37c2a 100644
  #include <sys/types.h>
  
 -#define ssizeof(foo)            (ssize_t)sizeof(foo)
-+#define ssizeof(foo)            (size_t)sizeof(foo)
++#define ssizeof(foo)            (ptrdiff_t)sizeof(foo)
  #define countof(foo)            (ssizeof(foo) / ssizeof(foo[0]))
  
  /**

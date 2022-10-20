@@ -6,6 +6,7 @@ index a6872a1f3..bf6fdc179 100644
        return XCB_IMAGE_ORDER_LSB_FIRST;
    }
    assert(0);
++  exit(EXIT_FAILURE);
 +  return -1;
  }
  

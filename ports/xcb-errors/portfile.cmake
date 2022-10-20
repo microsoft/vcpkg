@@ -31,7 +31,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
- configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/xcb-errors/copyright" COPYONLY)
+file(INSTALL "${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
 
