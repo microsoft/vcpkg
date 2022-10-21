@@ -3,6 +3,7 @@
   "version-semver": "0.20.6",
   "description": "This meta package holds common files for installing tree-sitter parsers, but is not installable on its own.",
   "homepage": "https://github.com/tree-sitter/tree-sitter",
+  "license": "MIT",
   "dependencies": [
     "tree-sitter",
     {
