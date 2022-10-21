@@ -1,11 +1,15 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-modular-build-helper",
   "version": "1.80.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Internal vcpkg port used to build Boost libraries",
   "license": "MIT",
   "dependencies": [
-    "boost-uninstall",
+    {
+      "name": "boost-uninstall",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
