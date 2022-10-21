@@ -121,7 +121,6 @@ function(configure_qt)
         else()
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
         endif()
-        MESSAGE(STATUS "$ENV{PKG_CONFIG_PATH}")
 
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
         message(STATUS "Configuring ${_build_triplet}")

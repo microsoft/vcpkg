@@ -1,0 +1,102 @@
+diff --git a/CMake/options.cmake b/CMake/options.cmake
+index ddd650f0a..d678b270e 100644
+--- a/CMake/options.cmake
++++ b/CMake/options.cmake
+@@ -63,10 +63,11 @@ endif (APPLE)
+ # find X11 libraries and headers
+ set (PATH_TO_XLIBS)
+ if ((NOT APPLE OR OPTION_APPLE_X11) AND NOT WIN32)
+-  include (FindX11)
++  #include (FindX11)
++  find_package(X11 REQUIRED)
+   if (X11_FOUND)
+     set (USE_X11 1)
+-    list (APPEND FLTK_LDLIBS -lX11)
++    list (APPEND FLTK_LDLIBS -lX11 -lxcb -lxau -lxdmcp)
+     if (X11_Xext_FOUND)
+       list (APPEND FLTK_LDLIBS -lXext)
+     endif (X11_Xext_FOUND)
+@@ -463,7 +464,8 @@ if (OPTION_USE_XFT)
+   list (APPEND FLTK_LDLIBS -lXft)
+   set (FLTK_XFT_FOUND TRUE)
+   if (APPLE AND OPTION_APPLE_X11)
+-    find_library(LIB_fontconfig fontconfig "/opt/X11/lib")
++    find_package(Fontconfig)
++    set(LIB_fontconfig Fontconfig::Fontconfig)
+   endif (APPLE AND OPTION_APPLE_X11)
+ else()
+   set (FLTK_XFT_FOUND FALSE)
+diff --git a/CMake/resources.cmake b/CMake/resources.cmake
+index 149aa62e4..5e35f9f1c 100644
+--- a/CMake/resources.cmake
++++ b/CMake/resources.cmake
+@@ -173,13 +173,18 @@ mark_as_advanced (FREETYPE_PATH)
+ # libraries
+ find_library (LIB_dl dl)
+ if ((NOT APPLE) OR OPTION_APPLE_X11)
+-  find_library (LIB_fontconfig fontconfig)
++    find_package(Fontconfig)
++  set (LIB_fontconfig Fontconfig::Fontconfig)
+ endif ((NOT APPLE) OR OPTION_APPLE_X11)
+-find_library (LIB_freetype freetype)
+-find_library (LIB_GL GL)
+-find_library (LIB_MesaGL MesaGL)
+-find_library (LIB_GLEW GLEW)
+-find_library (LIB_jpeg jpeg)
++find_package(Freetype)
++set (LIB_freetype Freetype::Freetype)
++find_package(OpenGL)
++set (LIB_GL OpenGL::GL)
++#find_library (LIB_MesaGL MesaGL)
++find_package(GLEW)
++set (LIB_GLEW GLEW::GLEW)
++find_package(JPEG)
++set (LIB_jpeg JPEG::JPEG)
+ 
+ mark_as_advanced (LIB_dl LIB_fontconfig LIB_freetype)
+ mark_as_advanced (LIB_GL LIB_MesaGL LIB_GLEW)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d153b1cd7..6023ef039 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -269,7 +269,7 @@ if (USE_THREADS)
+ endif (USE_THREADS)
+ 
+ if (USE_X11)
+-  list (APPEND OPTIONAL_LIBS ${X11_LIBRARIES})
++  list (APPEND OPTIONAL_LIBS X11::X11)
+ endif (USE_X11)
+ 
+ if (WIN32)
+@@ -281,25 +281,25 @@ if (FLTK_HAVE_CAIRO)
+ endif (FLTK_HAVE_CAIRO)
+ 
+ if (HAVE_XINERAMA)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xinerama_LIB})
++  list (APPEND OPTIONAL_LIBS X11::Xinerama)
+ endif (HAVE_XINERAMA)
+ 
+ if (HAVE_XFIXES)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xfixes_LIB})
++  list (APPEND OPTIONAL_LIBS X11::Xfixes)
+ endif (HAVE_XFIXES)
+ 
+ if (HAVE_XCURSOR)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xcursor_LIB})
++  list (APPEND OPTIONAL_LIBS X11::Xcursor)
+ endif (HAVE_XCURSOR)
+ 
+ if (HAVE_XRENDER)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xrender_LIB})
++  list (APPEND OPTIONAL_LIBS X11::Xrender)
+ endif (HAVE_XRENDER)
+ 
+ if (USE_XFT)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xft_LIB})
++  list (APPEND OPTIONAL_LIBS X11::Xft)
+   if (LIB_fontconfig)
+-    list (APPEND OPTIONAL_LIBS ${LIB_fontconfig})
++    list (APPEND OPTIONAL_LIBS Fontconfig::Fontconfig)
+   endif (LIB_fontconfig)
+ endif (USE_XFT)
+ 

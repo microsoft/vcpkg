@@ -11,6 +11,7 @@ vcpkg_from_github(
         config-path.patch
         include.patch
         fix-system-link.patch
+        x11.patch
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
