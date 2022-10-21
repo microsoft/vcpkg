@@ -13,6 +13,9 @@
       "name": "glib",
       "host": true
     },
+    "libx11",
+    "libxi",
+    "libxtst",
     {
       "name": "vcpkg-tool-meson",
       "host": true
