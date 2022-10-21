@@ -24,6 +24,7 @@
     },
     "libjpeg-turbo",
     "libpng",
+    "opengl",
     "openssl",
     "pcre2",
     {

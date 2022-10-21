@@ -355,7 +355,7 @@
         "xcb-cursor",
         "xcb-image",
         "xcb-keysyms",
-        "xcb-renderutil",
+        "xcb-render-util",
         "xcb-util-wm"
       ]
     },
