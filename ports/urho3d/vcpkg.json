@@ -12,7 +12,7 @@
       "platform": "!windows"
     },
     {
-      "name": "libxcurser",
+      "name": "libxcursor",
       "platform": "!windows"
     },
     {

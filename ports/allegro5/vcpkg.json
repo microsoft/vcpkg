@@ -14,7 +14,7 @@
     "libtheora",
     "libvorbis",
     {
-      "name": "libxcurser",
+      "name": "libxcursor",
       "platform": "!windows"
     },
     "openal-soft",
