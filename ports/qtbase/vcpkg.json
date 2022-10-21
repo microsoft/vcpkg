@@ -97,7 +97,10 @@
       ]
     },
     "dbus": {
-      "description": "Qt D-Bus"
+      "description": "Qt D-Bus",
+      "dependencies": [
+        "dbus"
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features",
@@ -133,7 +136,8 @@
     "egl": {
       "description": "EGL",
       "dependencies": [
-        "egl-registry"
+        "egl-registry",
+        "opengl"
       ]
     },
     "fontconfig": {
@@ -171,6 +175,14 @@
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
+        {
+          "name": "libdrm",
+          "platform": "!windows"
+        },
+        "libice",
+        "libsm",
+        "libx11",
+        "opengl",
         {
           "name": "qtbase",
           "default-features": false,
@@ -338,7 +350,13 @@
             "xkbcommon-x11",
             "xlib"
           ]
-        }
+        },
+        "xcb",
+        "xcb-cursor",
+        "xcb-image",
+        "xcb-keysyms",
+        "xcb-renderutil",
+        "xcb-util-wm"
       ]
     },
     "xcb-xlib": {
@@ -354,7 +372,16 @@
       ]
     },
     "xkb": {
-      "description": "XKB"
+      "description": "XKB",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "xkbcommon"
+          ]
+        }
+      ]
     },
     "xkbcommon-x11": {
       "description": "xkbcommon_x11",
@@ -374,6 +401,7 @@
     "xrender": {
       "description": "XRender for native painting",
       "dependencies": [
+        "libxrender",
         {
           "name": "qtbase",
           "default-features": false,
