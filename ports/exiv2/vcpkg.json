@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Image metadata library and tools",
   "homepage": "https://www.exiv2.org",
+  "license": "GPL-2.0",
   "supports": "!uwp",
   "dependencies": [
     {
