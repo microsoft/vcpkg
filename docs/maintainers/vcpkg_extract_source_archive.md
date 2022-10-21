@@ -12,7 +12,6 @@ vcpkg_extract_source_archive(
     [NO_REMOVE_ONE_LEVEL]
     [SKIP_PATCH_CHECK]
     [PATCHES <patch>...]
-    [REF <ref>]
     [SOURCE_BASE <base>]
     [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
 )
@@ -79,14 +78,6 @@ vcpkg_extract_source_archive(src
         ${patches}
 )
 ```
-
-### REF
-
-Pretty name for the extracted directory.
-
-Forward slashes (`/`) will be replaced with `-`. Otherwise identical to [`SOURCE_BASE`](#source_base).
-
-See [`WORKING_DIRECTORY`](#working_directory) for more details.
 
 ### SOURCE_BASE
 
