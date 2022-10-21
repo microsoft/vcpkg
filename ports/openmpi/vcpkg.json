@@ -5,6 +5,9 @@
   "homepage": "https://www.open-mpi.org/",
   "supports": "!(windows | uwp)",
   "dependencies": [
-  { "name": "libpciaccess", "platform": "!windows | !osx"}
+    {
+      "name": "libpciaccess",
+      "platform": "!windows | !osx"
+    }
   ]
 }
