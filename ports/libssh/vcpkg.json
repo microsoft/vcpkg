@@ -3,7 +3,7 @@
   "version": "0.10.4",
   "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
   "homepage": "https://www.libssh.org/",
-  "license": "GPL-2.1",
+  "license": "LGPL-2.1-only",
   "supports": "!(uwp | arm)",
   "dependencies": [
     {
