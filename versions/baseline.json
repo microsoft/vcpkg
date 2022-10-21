@@ -3641,7 +3641,7 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.17.10",
+      "baseline": "0.17.11",
       "port-version": 0
     },
     "libdatrie": {
@@ -7740,6 +7740,10 @@
       "baseline": "2022-05-10",
       "port-version": 1
     },
+    "vcpkg-tool-bazel": {
+      "baseline": "5.2.0",
+      "port-version": 0
+    },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
       "port-version": 0
@@ -7770,10 +7774,6 @@
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
-      "port-version": 0
-    },
-    "vcpkg-tool-bazel": {
-      "baseline": "5.2.0",
       "port-version": 0
     },
     "vectorclass": {
