@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} currently doesn't supports UWP.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emoon/minifb
@@ -14,6 +10,7 @@ vcpkg_from_github(
         fix-install-error.patch
         fix-build-error.patch
         fix-arm-build-error.patch
+        x11.patch
 )
 
 vcpkg_configure_cmake(

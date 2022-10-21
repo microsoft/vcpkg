@@ -1,6 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} currently doesn't supports UWP.")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,6 +8,8 @@ vcpkg_from_github(
     PATCHES 
         fix-install-error.patch
         fix-arm64-build-error.patch
+        opengl.patch
+        x11.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

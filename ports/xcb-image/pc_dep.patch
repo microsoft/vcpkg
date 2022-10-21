@@ -1,0 +1,12 @@
+diff --git a/image/xcb-image.pc.in b/image/xcb-image.pc.in
+index 403fdd05b..de92afa65 100644
+--- a/image/xcb-image.pc.in	
++++ b/image/xcb-image.pc.in
+@@ -6,6 +6,7 @@ includedir=@includedir@
+ Name: XCB Image library
+ Description: XCB image convenience library
+ Version: @PACKAGE_VERSION@
++Requires.private: xcb-util
+ Requires: xcb xcb-shm
+ Libs: -L${libdir} -lxcb-image @LIBS@
+ Cflags: -I${includedir}

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57882aa3e..7626f10c3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -558,7 +558,9 @@ if(APPLE)
+         target_link_libraries(LLGL ${COCOA_LIBRARY})
+     endif()
+ elseif(UNIX)
+-    target_link_libraries(LLGL X11 pthread Xxf86vm Xrandr)
++    find_package(X11)
++    find_package(Threads)
++    target_link_libraries(LLGL X11::X11 X11::Xrandr X11::Xxf86vm Threads::Threads)
+ elseif(WIN32)
+     target_link_libraries(LLGL gdi32 shell32)
+ endif()

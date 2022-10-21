@@ -1,4 +1,4 @@
-if(0)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/EGL-Registry
@@ -7,13 +7,14 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
+if(0)
 file(
   COPY
     "${SOURCE_PATH}/api/KHR"
     "${SOURCE_PATH}/api/EGL"
   DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
-
+endif()
 file(
   COPY
     "${SOURCE_PATH}/api/egl.xml"
@@ -27,5 +28,5 @@ file(
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/egl/vcpkg-cmake-wrapper.cmake" @ONLY)
-endif()
+
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

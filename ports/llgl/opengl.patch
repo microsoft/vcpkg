@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57882aa3e..37a7b3597 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -613,7 +613,7 @@ if(LLGL_BUILD_RENDERER_OPENGL)
+         endif()
+         
+         set_target_properties(LLGL_OpenGL PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+-        target_link_libraries(LLGL_OpenGL LLGL ${OPENGL_LIBRARIES})
++        target_link_libraries(LLGL_OpenGL LLGL OpenGL::OpenGL)
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_OPENGL)
+         
+diff --git a/cmake/FindOpenGLES.cmake b/cmake/FindOpenGLES.cmake
+index 78cbd5e5a..d7c898b3d 100644
+--- a/cmake/FindOpenGLES.cmake
++++ b/cmake/FindOpenGLES.cmake
+@@ -230,10 +230,10 @@ ELSE (WIN32)
+ 
+     IF (OPENGLES_gl_LIBRARY)
+       IF(NOT X11_FOUND)
+-        INCLUDE(FindX11)
++        find_package(X11)
+       ENDIF(NOT X11_FOUND)
+       IF (X11_FOUND)
+-        SET (OPENGLES_LIBRARIES ${X11_LIBRARIES})
++        SET (OPENGLES_LIBRARIES X11::X11)
+       ENDIF (X11_FOUND)
+     ENDIF (OPENGLES_gl_LIBRARY)
+ 
