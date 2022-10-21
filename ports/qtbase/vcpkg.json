@@ -405,6 +405,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "fontconfig",
             "xcb"
           ]
         }

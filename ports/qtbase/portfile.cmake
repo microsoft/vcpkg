@@ -165,7 +165,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
-    "png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG
+    #"png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG # Required by Freetype
     "xlib"                CMAKE_DISABLE_FIND_PACKAGE_X11
     "xkb"                 CMAKE_DISABLE_FIND_PACKAGE_XKB
     "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB

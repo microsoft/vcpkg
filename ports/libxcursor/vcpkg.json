@@ -7,8 +7,8 @@
     "bzip2",
     "libx11",
     "libxfixes",
+    "libxrender",
     "xorg-macros",
-    "xproto",
-    "libxrender"
+    "xproto"
   ]
 }
