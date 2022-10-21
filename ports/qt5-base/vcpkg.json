@@ -51,7 +51,7 @@
     "xcb-keysyms",
     "xcb-render-util",
     "xcb-util-wm",
-    "xkbcommon",
+    "libxkbcommon",
     "zlib",
     "zstd"
   ],
