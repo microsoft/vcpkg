@@ -352,7 +352,6 @@
           ]
         },
         "xcb",
-        "xcb-cursor",
         "xcb-image",
         "xcb-keysyms",
         "xcb-render-util",
