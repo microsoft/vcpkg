@@ -1,7 +1,7 @@
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with brew install automake libtool")
 else()
-    message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with apt-get install automake libtool")
+    message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n    ltdl-dev\n\nThey can be installed with apt-get install automake libtool ltdl-dev")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
