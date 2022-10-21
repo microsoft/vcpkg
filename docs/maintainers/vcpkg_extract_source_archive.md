@@ -107,6 +107,10 @@ In [`--editable`](../commands/install.md#editable) mode:
 1. No `.clean` suffix is added to the extracted folder
 2. The extracted folder is not deleted. If it exists, `vcpkg_extract_source_archive` does nothing.
 
+`<short-hash>` unambiguously identifies a particular set of archive and patch file contents.
+Any modifications to the contents of the working directory after calling this function should be applied unconditionally
+in order to avoid unexpected behavior in editable mode.
+
 ## Examples
 
 ```cmake
