@@ -12,7 +12,8 @@ vcpkg_from_github(
         x11.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
+  FEATURES
     opengl     LLGL_BUILD_RENDERER_OPENGL
     direct3d11 LLGL_BUILD_RENDERER_DIRECT3D11 
 )

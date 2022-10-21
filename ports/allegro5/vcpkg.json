@@ -13,7 +13,10 @@
     "libpng",
     "libtheora",
     "libvorbis",
-    "libxcursor",
+    {
+      "name": "libxcurser",
+      "platform": "!windows"
+    },
     "openal-soft",
     "opengl",
     "opus",

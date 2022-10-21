@@ -28,6 +28,7 @@
     "libxext",
     "libxfixes",
     "libxi",
+    "libxkbcommon",
     "libxrender",
     "opengl",
     "openssl",
@@ -51,7 +52,6 @@
     "xcb-keysyms",
     "xcb-render-util",
     "xcb-util-wm",
-    "libxkbcommon",
     "zlib",
     "zstd"
   ],

@@ -25,10 +25,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(NOT VCPKG_BUILD_TYPE)
-file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_sqliteConfig-debug.cmake" LIBODB_DEBUG_TARGETS)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/odb/odb_sqliteConfig-debug.cmake" "${LIBODB_DEBUG_TARGETS}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_sqliteConfig-debug.cmake" LIBODB_DEBUG_TARGETS)
+    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/odb/odb_sqliteConfig-debug.cmake" "${LIBODB_DEBUG_TARGETS}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
 
 vcpkg_copy_pdbs()
 

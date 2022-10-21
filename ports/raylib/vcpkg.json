@@ -11,6 +11,30 @@
       "platform": "!windows"
     },
     {
+      "name": "glfw3",
+      "platform": "!windows"
+    },
+    {
+      "name": "libx11",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxcurser",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    },
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

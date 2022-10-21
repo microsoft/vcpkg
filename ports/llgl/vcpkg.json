@@ -9,6 +9,10 @@
     {
       "name": "libx11",
       "platform": "linux"
+    },
+    {
+      "name": "libxxf86vm",
+      "platform": "linux"
     }
   ],
   "features": {

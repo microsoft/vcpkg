@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 03b5e5994..192720fac 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -137,12 +137,13 @@ elseif (UNIX)
+@@ -137,12 +137,14 @@ elseif (UNIX)
  
          target_link_libraries(multiple_windows -lwayland-client -lwayland-cursor)
      else()
@@ -17,6 +17,7 @@ index 03b5e5994..192720fac 100644
  
 -        target_link_libraries(multiple_windows -lX11)
 +        target_link_libraries(multiple_windows X11::X11)
++        target_link_libraries(minifb X11::X11)
      endif()
  endif()
  

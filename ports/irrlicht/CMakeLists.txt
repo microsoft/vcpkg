@@ -220,10 +220,13 @@ elseif(UNIX)
 
     # X11 and OpenGL
     if(NOT APPLE)
+        find_package(X11 REQUIRED)
+        find_package(OpenGL REQUIRED)
+        
         target_link_libraries(Irrlicht
-            PRIVATE X11
-            PRIVATE GL
-            PRIVATE Xxf86vm)
+            PRIVATE X11::X11
+            PRIVATE OpenGL::GL
+            PRIVATE X11::Xxf86vm)
     endif()
 endif()
 
