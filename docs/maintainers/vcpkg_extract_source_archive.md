@@ -123,8 +123,9 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     src # "src" is set to the path to the extracted files
     ARCHIVE "${archive}"
-    REF 7.70
-    PATCHES 0001-disable-werror.patch
+    SOURCE_BASE nmap.org-nmap-7.70
+    PATCHES
+        0001-disable-werror.patch
 )
 vcpkg_cmake_configure(SOURCE_PATH "${src}")
 ```
