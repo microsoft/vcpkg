@@ -1,5 +1,5 @@
-set(CAIROMM_VERSION 1.16.1)
-set(CAIROMM_HASH 2dbdd41f712d43573ad3118f37d443d2b9ae98737c240d5db8d830ef38f2b4a95182b2fc857577c7564eb94649e629f70380f16ee84f4978759f40e19d802757)
+set(CAIROMM_VERSION 1.16.2)
+set(CAIROMM_HASH 61dc639eabe8502e1262c53c92fe57c5647e5ab9931f86ed51e657df1b7d0e3e58c2571910a05236cc0dca8d52f1f693aed99a553430f14d0fb87be1832a6b62)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/cairomm-${CAIROMM_VERSION}.tar.xz"
@@ -10,8 +10,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        build-support-msvc2022.diff
 )
 
 vcpkg_configure_meson(
