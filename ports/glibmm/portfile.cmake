@@ -8,15 +8,16 @@ vcpkg_download_distfile(GLIBMM_ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${GLIBMM_ARCHIVE}
+    ARCHIVE "${GLIBMM_ARCHIVE}"
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false
 )
+
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
