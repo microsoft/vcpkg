@@ -6,8 +6,8 @@
   "license": null,
   "dependencies": [
     "libx11",
-    "libxi",
     "libxext",
+    "libxi",
     "xproto"
   ]
 }
