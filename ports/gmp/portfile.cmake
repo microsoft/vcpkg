@@ -20,7 +20,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_download_distfile(
             ARM64PATCH
             URLS https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
-            FILENAME 5f32dbc41afc.patch
+            FILENAME gmp-arm64-asm-fix-5f32dbc41afc.patch
             SHA512 4a7c50dc0a78e6c297c0ac53129ed367dbf669100a613653987d0eddf175376296254ed26ecce15d02b0544b99e44719af49635e54982b22e745f22e2f8d1eda
         )
 
