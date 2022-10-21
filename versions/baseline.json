@@ -5493,13 +5493,8 @@
       "port-version": 14
     },
     "openscap": {
-<<<<<<< HEAD
       "baseline": "1.3.6",
       "port-version": 0
-=======
-      "baseline": "1.3.1",
-      "port-version": 4
->>>>>>> 5251291e1623eabf5c8f275f456bc95f983cd8eb
     },
     "openssl": {
       "baseline": "3.0.5",
