@@ -377,7 +377,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "xkbcommon"
+            "xkbcommon-x11"
           ]
         }
       ]
