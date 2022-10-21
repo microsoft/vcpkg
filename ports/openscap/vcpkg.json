@@ -13,7 +13,7 @@
     "libzip",
     "openssl",
     "pcre",
-    "pthread",
+    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true

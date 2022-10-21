@@ -1470,7 +1470,7 @@
     },
     "clipp": {
       "baseline": "2019-04-30",
-      "port-version": 1
+      "port-version": 2
     },
     "clockutils": {
       "baseline": "1.1.1",
@@ -2390,7 +2390,7 @@
     },
     "font-util": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "fontconfig": {
       "baseline": "2.14.0",
@@ -2642,7 +2642,7 @@
     },
     "glfw3": {
       "baseline": "3.3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "gli": {
       "baseline": "2021-07-06",
@@ -2674,7 +2674,7 @@
     },
     "glslang": {
       "baseline": "11.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -3674,7 +3674,7 @@
     },
     "libe57": {
       "baseline": "1.1.332",
-      "port-version": 2
+      "port-version": 3
     },
     "libe57format": {
       "baseline": "2.2.0",
@@ -3861,7 +3861,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "libjxl": {
@@ -5326,7 +5326,7 @@
     },
     "ogre": {
       "baseline": "13.4.4",
-      "port-version": 1
+      "port-version": 2
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -5482,7 +5482,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openmvs": {
       "baseline": "2.0.1",
@@ -5493,8 +5493,13 @@
       "port-version": 14
     },
     "openscap": {
+<<<<<<< HEAD
       "baseline": "1.3.6",
       "port-version": 0
+=======
+      "baseline": "1.3.1",
+      "port-version": 4
+>>>>>>> 5251291e1623eabf5c8f275f456bc95f983cd8eb
     },
     "openssl": {
       "baseline": "3.0.5",
@@ -6793,7 +6798,7 @@
       "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.5.1",
+      "baseline": "0.5.2",
       "port-version": 0
     },
     "septag-dmon": {
@@ -8094,7 +8099,7 @@
     },
     "xtrans": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "xxhash": {
       "baseline": "0.8.1",
@@ -8218,7 +8223,7 @@
     },
     "zydis": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "zyre": {
       "baseline": "2019-07-07",
