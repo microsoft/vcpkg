@@ -16,7 +16,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         vcpkg_add_to_path("$ENV{VCINSTALLDIR}/Tools/Llvm/bin")
         set(ENV{CCAS} "clang-cl --target=arm64-pc-win32 -c")
-        list(APPEND PATCHES arm64.patch)
+        # Avoid the x18 register since it is reserved on Darwin.
+        vcpkg_download_distfile(
+            ARM64PATCH
+            URLS https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
+            FILENAME 5f32dbc41afc.patch
+            SHA512 4a7c50dc0a78e6c297c0ac53129ed367dbf669100a613653987d0eddf175376296254ed26ecce15d02b0544b99e44719af49635e54982b22e745f22e2f8d1eda
+        )
+
+        list(APPEND PATCHES "${ARM64PATCH}" arm64-coff.patch)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         list(APPEND OPTIONS --enable-assembly=no)
     else()
@@ -44,7 +52,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_CROSSCOMPILING)
-    # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
+    # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated.
     set(ENV{CC_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
     set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
 endif()
