@@ -3,24 +3,30 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PATCHES fix_python.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxcursor
-    REF b84b5d100f193fda0630c4d6fa889cd3e05ca033
-    SHA512  b260aed8ae833cbbdef1e7f027d92c3705d60fc6a1174f6ee1fe5b6374ba2c90145f90ed687ad57daf229231b0e0548cb2773c418bdca85b55bee8bc3a803cce
+    REPO lib/libxcb-errors
+    REF  517dd82c079de762a7426f20166a44f11e8d38c5 #1.0.1
+    SHA512 391f6bc9452bf4d6a3f1fa69232cdbef43f9fcd339b8d1965132a3b227ed7ebcbaad553fe64d42bc525811caedf3ff9d5bec108f6ac2efd5a014f75fb35cbf85
     HEAD_REF master
+    PATCHES ${PATCHES}
 ) 
-
+file(TOUCH "${SOURCE_PATH}/m4/dummy")
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{LIBS} "$ENV{LIBS} -lm")
-endif()
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    COPY_SOURCE
 )
 
 vcpkg_install_make()
@@ -31,3 +37,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+

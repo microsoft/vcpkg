@@ -6,17 +6,14 @@ else()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxcursor
-    REF b84b5d100f193fda0630c4d6fa889cd3e05ca033
-    SHA512  b260aed8ae833cbbdef1e7f027d92c3705d60fc6a1174f6ee1fe5b6374ba2c90145f90ed687ad57daf229231b0e0548cb2773c418bdca85b55bee8bc3a803cce
+    REPO lib/libxcb-image
+    REF  525ce59fe2329d4b23fc0c52ed9dd92daac8ac2a #v 0.4.1
+    SHA512 e91471c45983bb3a56fb96a9ab627a5b65fcbc21424f62bed10dba283c97fdd6475d4f380d268a30a99b6544bc804f8263e7b945a4c4d22c79535e3c3b1e10db
     HEAD_REF master
+    PATCHES add_return_value.patch
 ) 
-
+file(TOUCH "${SOURCE_PATH}/m4/dummy")
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{LIBS} "$ENV{LIBS} -lm")
-endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"

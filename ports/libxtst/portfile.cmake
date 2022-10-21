@@ -6,17 +6,13 @@ else()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxcursor
-    REF b84b5d100f193fda0630c4d6fa889cd3e05ca033
-    SHA512  b260aed8ae833cbbdef1e7f027d92c3705d60fc6a1174f6ee1fe5b6374ba2c90145f90ed687ad57daf229231b0e0548cb2773c418bdca85b55bee8bc3a803cce
+    REPO lib/libxtst
+    REF 99b89c3bcb0ebb0b6dd86bfdc9d276715eaea889 
+    SHA512  6479294057c73e91a086891e461e98d2717ae1fbe746cd74c9d13036a59bce931b8b0d5293d3c5ab4feeea426f2297647335179997e06a040b847697c7557199
     HEAD_REF master
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{LIBS} "$ENV{LIBS} -lm")
-endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,5 +25,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
