@@ -6,6 +6,14 @@
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
   "dependencies": [
+    {
+      "name": "libxaw",
+      "platform": "linux"
+    },
+    {
+      "name": "libxt",
+      "platform": "linux"
+    },
     "opengl",
     "pugixml",
     {

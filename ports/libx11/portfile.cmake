@@ -5,6 +5,8 @@ else()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PATCHES dllimport.patch)
+else()
+    #set(OPTIONS --disable-loadable-xcursor)
 endif()
 
 vcpkg_from_gitlab(
@@ -18,26 +20,31 @@ vcpkg_from_gitlab(
             io_include.patch
             ${PATCHES}
             vcxserver.patch
+            add_dl_pc.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
+    list(APPEND OPTIONS 
+                --enable-loadable-i18n=no #Pointer conversion errors
+                --enable-unix-transport=no
+    )
 endif()
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS 
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
-        --enable-loadable-i18n=no           #Pointer conversion errors
         --enable-ipv6
         --enable-hyperv
         --enable-tcp-transport
         --with-launchd=no
         --with-lint=no
         --disable-selective-werror
-        --enable-unix-transport=no)
+        ${OPTIONS}
+        )
 endif()
 if(NOT XLSTPROC)
     find_program(XLSTPROC NAMES "xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX}" PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt" PATH_SUFFIXES "bin")

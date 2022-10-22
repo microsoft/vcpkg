@@ -12,11 +12,11 @@
       "platform": "!windows"
     },
     {
-      "name": "libxext",
+      "name": "libxcursor",
       "platform": "!windows"
     },
     {
-      "name": "libxcursor",
+      "name": "libxext",
       "platform": "!windows"
     },
     {
