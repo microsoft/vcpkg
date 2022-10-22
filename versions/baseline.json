@@ -7993,8 +7993,8 @@
       "port-version": 7
     },
     "xalan-c": {
-      "baseline": "1.12",
-      "port-version": 1
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "xapian": {
       "baseline": "1.4.21",
