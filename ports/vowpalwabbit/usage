@@ -1,0 +1,5 @@
+vowpalwabbit provides CMake targets:
+
+    find_package(VowpalWabbit CONFIG REQUIRED)
+    # note: 4 additional targets are not displayed.
+    target_link_libraries(main PRIVATE VowpalWabbit::vw_io VowpalWabbit::vw_core VowpalWabbit::vw_common VowpalWabbit::vw_config)
