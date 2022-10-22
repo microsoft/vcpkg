@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxaw
     REF 9cfeba9db7f3ac4e0b351969c9ff5ab8f58ec7ef
-    SHA512  15b7afc706fe50c55391846892961e3286165e43513009664cfca7c443f9f9eafa32e17e8ba8089a0ae2d568aab4117f7e5ff696052ee58f6da78e3d9ad7e721
+    SHA512  52c6e390aa90190ca528716eaa164ae2d79dd3345372ccc263ad1cfd2f1f49edc67df6ac34f2b9847bc099a3188d7d7161d7038565aae008cc12da373b0fc3b2
     HEAD_REF master
     PATCHES getpagesize.patch
 ) 
