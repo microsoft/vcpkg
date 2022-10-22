@@ -201,7 +201,7 @@
       "port-version": 0
     },
     "asio-grpc": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "asiosdk": {
@@ -1470,7 +1470,7 @@
     },
     "clipp": {
       "baseline": "2019-04-30",
-      "port-version": 1
+      "port-version": 2
     },
     "clockutils": {
       "baseline": "1.1.1",
@@ -1754,7 +1754,7 @@
     },
     "cryptopp": {
       "baseline": "8.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cserialport": {
       "baseline": "4.1.1",
@@ -2642,7 +2642,7 @@
     },
     "glfw3": {
       "baseline": "3.3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "gli": {
       "baseline": "2021-07-06",
@@ -2653,8 +2653,8 @@
       "port-version": 0
     },
     "glibmm": {
-      "baseline": "2.70.0",
-      "port-version": 1
+      "baseline": "2.74.0",
+      "port-version": 0
     },
     "glm": {
       "baseline": "0.9.9.8",
@@ -2674,7 +2674,7 @@
     },
     "glslang": {
       "baseline": "11.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2874,7 +2874,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 1
+      "port-version": 2
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -3641,7 +3641,7 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.17.10",
+      "baseline": "0.17.11",
       "port-version": 0
     },
     "libdatrie": {
@@ -3822,7 +3822,7 @@
     },
     "libical": {
       "baseline": "3.0.16",
-      "port-version": 0
+      "port-version": 1
     },
     "libice": {
       "baseline": "1.0.10",
@@ -3865,7 +3865,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "libjxl": {
@@ -5258,7 +5258,7 @@
     },
     "nvtt": {
       "baseline": "2.1.2",
-      "port-version": 6
+      "port-version": 7
     },
     "oatpp": {
       "baseline": "1.3.0",
@@ -5338,7 +5338,7 @@
     },
     "ogre": {
       "baseline": "13.4.4",
-      "port-version": 1
+      "port-version": 2
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -5494,7 +5494,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openmvs": {
       "baseline": "2.0.1",
@@ -5506,7 +5506,7 @@
     },
     "openscap": {
       "baseline": "1.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl": {
       "baseline": "3.0.5",
@@ -5525,7 +5525,7 @@
       "port-version": 2
     },
     "opensubdiv": {
-      "baseline": "3.4.4",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "opentelemetry-cpp": {
@@ -5921,8 +5921,8 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.21.6",
-      "port-version": 1
+      "baseline": "3.21.8",
+      "port-version": 0
     },
     "protobuf-c": {
       "baseline": "1.4.0",
@@ -6805,7 +6805,7 @@
       "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.5.1",
+      "baseline": "0.5.2",
       "port-version": 0
     },
     "septag-dmon": {
@@ -7270,7 +7270,7 @@
     },
     "tbb": {
       "baseline": "2021.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tcb-span": {
       "baseline": "2021-12-15",
@@ -7293,16 +7293,16 @@
       "port-version": 1
     },
     "tensorflow": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorflow-cc": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorflow-common": {
-      "baseline": "2.7.0",
-      "port-version": 2
+      "baseline": "2.10.0",
+      "port-version": 0
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
@@ -7751,6 +7751,10 @@
     "vcpkg-qmake": {
       "baseline": "2022-05-10",
       "port-version": 1
+    },
+    "vcpkg-tool-bazel": {
+      "baseline": "5.2.0",
+      "port-version": 0
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
@@ -8250,7 +8254,7 @@
     },
     "zydis": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "zyre": {
       "baseline": "2019-07-07",

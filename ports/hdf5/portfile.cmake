@@ -104,9 +104,10 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch h5import
+    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
+        h5format_convert h5jam h5unjam h5mkgrp h5repack h5repart h5watch h5import
     )
+
     if("parallel" IN_LIST FEATURES)
         list(APPEND HDF5_TOOLS ph5diff)
     endif()
@@ -115,8 +116,15 @@ if("tools" IN_LIST FEATURES)
         list(TRANSFORM HDF5_TOOLS REPLACE  "^(.+)$" "\\1-shared")
     endif()
 
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++)
+    endif()
+
     if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS h5perf)
+        list(APPEND HDF5_TOOLS h5perf )
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
+            list(APPEND HDF5_TOOLS h5pcc)
+        endif()
     else()
         list(APPEND HDF5_TOOLS h5perf_serial)
     endif()
