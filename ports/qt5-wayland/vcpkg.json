@@ -8,6 +8,8 @@
     {
       "name": "qt5-base",
       "default-features": false
-    }
+    },
+    "wayland",
+    "wayland-protocols"
   ]
 }
