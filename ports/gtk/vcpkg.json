@@ -40,7 +40,47 @@
     "graphene",
     "libepoxy",
     {
+      "name": "libx11",
+      "platform": "linux"
+    },
+    {
+      "name": "libxcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "libxcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "libxdamage",
+      "platform": "linux"
+    },
+    {
+      "name": "libxext",
+      "platform": "linux"
+    },
+    {
+      "name": "libxfixes",
+      "platform": "linux"
+    },
+    {
+      "name": "libxi",
+      "platform": "linux"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "libxkbcommon",
+      "platform": "linux"
+    },
+    {
       "name": "libxrandr",
+      "platform": "linux"
+    },
+    {
+      "name": "libxrender",
       "platform": "linux"
     },
     "pango",

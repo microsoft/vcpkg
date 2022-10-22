@@ -7,8 +7,14 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    "libx11",
-    "libxi",
+    {
+      "name": "libx11",
+      "platform": "linux"
+    },
+    {
+      "name": "libxi",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
