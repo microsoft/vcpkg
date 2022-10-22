@@ -12,4 +12,4 @@ if(TARGET XCB::IMAGE)
     if(TARGET XCB::UTIL)
         target_link_libraries(XCB::IMAGE INTERFACE XCB::UTIL)
     endif()
-endif
+endif()
