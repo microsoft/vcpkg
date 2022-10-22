@@ -320,6 +320,26 @@ See our [versioning specification](../specifications/versioning.md) and [registr
 
 ## Patching
 
+vcpkg is a packaging solution, not the ultimate owners of the components that we deploy. We do need to apply patches in some cases to improve compatibility of components with platforms, or compatibility of components with each other.
+
+* We want to avoid patches that:
+  * upstream would disagree with
+  * cause vulnerabilities or crashes
+  * we are incapable of maintaining across upstream version updates
+  * are large enough to cause license entanglement with the vcpkg repository itself
+
+### Notify upstream owners for upstream relevant patches
+
+If a patch could possibly be useful by upstream, upstream must be notified of the patch's content. (Patches that apply vcpkg-specific behavior unrelated to upstream, such as devendoring a dependency, don't require notification.)
+
+To avoid situations where upstream disagrees with the patch, we will wait at least 30 days to apply such patches.
+
+We will skip this waiting period if we have high confidence that the change is correct. Examples of high confidence patches include, but are not limited to:
+
+* Upstream's acceptance as a patch (for example, backporting a specific change from a pull request upstream has merged).
+* Adding missing `#include`s.
+* Small and obvious product code fixes (for example, initializing an uninitialized variable).
+
 ### Prefer options over patching
 
 It is preferable to set options in a call to `vcpkg_configure_xyz()` over patching the settings directly.
