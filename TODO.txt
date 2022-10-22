@@ -42,17 +42,6 @@ spdk-ipsec: single config
 zeroc-ice: single config
 zopfli: single config
 
-hdf5 issues: 
-cgns: h5diff ?
-h5py-lzf: h5diff ?
-highfive: h5diff ?
-ismrmrd: h5diff ?
-kealib: h5diff ?
-matio: hdf5?
-minc: hdf5
-netcdf-c: hdf5
-shogun: hdf5
-
 TODOS:
 libX11.a needs fixing of hardcoding absolute paths. 
 libinput?
