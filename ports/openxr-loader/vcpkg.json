@@ -15,7 +15,20 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    {
+      "name": "libx11",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxxf86vm",
+      "platform": "!windows"
+    },
+    "opengl"
   ],
   "features": {
     "vulkan": {

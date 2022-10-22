@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
+        fix-x11-include.patch
 )
 
 vcpkg_from_github(

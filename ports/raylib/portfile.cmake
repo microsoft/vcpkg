@@ -44,7 +44,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
-        -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        -DUSE_EXTERNAL_GLFW=ON
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}

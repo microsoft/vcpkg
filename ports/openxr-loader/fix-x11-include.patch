@@ -1,0 +1,15 @@
+diff --git a/src/loader/CMakeLists.txt b/src/loader/CMakeLists.txt
+index b02cd4f45..c6ad5cb7c 100644
+--- a/src/loader/CMakeLists.txt
++++ b/src/loader/CMakeLists.txt
+@@ -165,7 +165,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+     endif()
+ 
+     set_target_properties(openxr_loader PROPERTIES SOVERSION "${MAJOR}" VERSION "${MAJOR}.${MINOR}.${PATCH}")
+-
++    if(BUILD_WITH_XLIB_HEADERS)
++        target_link_libraries(openxr_loader PRIVATE X11:X11)
++    endif()
+     add_custom_target(
+         libopenxr_loader.so.${MAJOR}.${MINOR} ALL
+         COMMAND ${CMAKE_COMMAND} -E create_symlink libopenxr_loader.so.${MAJOR}.${MINOR}.${PATCH}

@@ -12,6 +12,10 @@
       "platform": "!windows"
     },
     {
+      "name": "libxext",
+      "platform": "!windows"
+    },
+    {
       "name": "libxcursor",
       "platform": "!windows"
     },
