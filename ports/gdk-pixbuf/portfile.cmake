@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         fix_build_error_windows.patch
+        loaders-cache.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
