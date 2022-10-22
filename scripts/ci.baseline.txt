@@ -34,6 +34,8 @@
 
 # Add new items alphabetically
 
+# Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
+allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
@@ -266,8 +268,6 @@ functions-framework-cpp:x64-uwp=fail
 gazebo:x64-windows=fail
 gazebo:x64-linux=fail
 
-gdk-pixbuf:x64-windows-static=fail
-gdk-pixbuf:x64-windows-static-md=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
@@ -1246,7 +1246,7 @@ cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
 qt:x64-windows=pass
 qt:x64-windows-static=pass
-# qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass. 
+# qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass.
 qt:arm64-windows=pass
 qt:x64-linux=pass
 # qt:x64-osx=pass # gstreamer issues preventing qtmultimedia
