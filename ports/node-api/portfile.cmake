@@ -1,3 +1,13 @@
+# NodeJS has native modules API called node-api.
+# This port uses cmake-js to download and build node-api for you.
+# NPM is required to run cmake-js.
+
+# Nor NPM output nor cmake-js output is left after portfile.cmake execution like npm packages or any other files.
+# ${DOWNLOADS} and ${NODEJS_BIN_DIR} folders are used in process, but they are cleaned at the end.
+
+# As a normal port, this port leaves some includes and libraries in ${CURRENT_PACKAGES_DIR}.
+# So it doesn't break binary caching or any other vcpkg features.
+
 set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
 find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS)
 
@@ -102,3 +112,5 @@ file(REMOVE ${cmakejs_files})
 file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/node_modules/cmake-js")
 file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/cmake-js-fetch")
 file(REMOVE "${NODEJS_BIN_DIR}/package.json")
+file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-output")
+file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")

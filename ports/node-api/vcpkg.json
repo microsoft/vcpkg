@@ -3,7 +3,6 @@
   "version-semver": "14.17.4",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
-  "license": "MIT",
   "supports": "(windows | linux | osx) & !arm",
   "dependencies": [
     {
