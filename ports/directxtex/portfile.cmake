@@ -1,5 +1,4 @@
 set(DIRECTXTEX_TAG oct2022)
-set(DIRECTXTEX_HASH e90f7b18cf088a090f33f95759367d96e7b13e52f8db0688422d924405c4cada6a8d230fe829f832886f9ce85eb068d1c187f212a36f47d90f4fb3e171c55607)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -7,24 +6,13 @@ if(VCPKG_TARGET_IS_MINGW)
     message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
 endif()
 
-if("openexr" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO Microsoft/DirectXTex
-        REF ${DIRECTXTEX_TAG}
-        SHA512 ${DIRECTXTEX_HASH}
-        HEAD_REF main
-        PATCHES enable_openexr_support.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/DirectXTex
+    REF oct2022b
+    SHA512 48db2d88f84cda0692e887d5b26fb6051649eae2f9699803170926a9660abaf836f567b2dacdf4900a7a041c22e936d612615247825e256f840808e5ae497e4d
+    HEAD_REF main
     )
-else()
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO Microsoft/DirectXTex
-        REF ${DIRECTXTEX_TAG}
-        SHA512 ${DIRECTXTEX_HASH}
-        HEAD_REF main
-    )
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
