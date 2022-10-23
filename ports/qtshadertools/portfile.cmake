@@ -8,6 +8,7 @@ set(TOOL_NAMES qsb)
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
