@@ -1,14 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..67de2ce 100644
+index 75f367f..5c5e1a2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,17 +23,7 @@ message(STATUS "+++  This is MOOS version ${PACKAGE_VERSION} +++")
+@@ -26,16 +26,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
+     set(CMAKE_BUILD_TYPE Release CACHE STRING "")
+ endif()
  
- # If user specifies the build type, use theirs, otherwise use Release
- if(NOT DEFINED CMAKE_BUILD_TYPE)
--    set(CMAKE_BUILD_TYPE Release CACHE STRING "")
--endif()
--
 -if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 -    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 -endif()
@@ -17,9 +14,10 @@ index 75f367f..67de2ce 100644
 -endif()
 -if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
 -    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
-+    #set(CMAKE_BUILD_TYPE Release CACHE STRING "")
- endif()
- 
+-endif()
+-
+ ##############################
+ # Set up RPATH for executables
  ##############################
 @@ -45,15 +35,15 @@ endif()
  set(CMAKE_MACOSX_RPATH TRUE)
