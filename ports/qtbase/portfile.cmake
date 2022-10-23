@@ -31,6 +31,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
 endif()
 
+if(VCPKG_TARGET_IS_LINUX AND NOT ANDROID_SDK_ROOT)
+    message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
+endif()
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_cmake_configure
@@ -274,6 +277,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore_compliant # only used for android/ios
+                        -DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}
                     )
 
 # Install CMake helper scripts
