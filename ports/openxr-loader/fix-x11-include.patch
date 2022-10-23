@@ -8,7 +8,7 @@ index b02cd4f45..c6ad5cb7c 100644
      set_target_properties(openxr_loader PROPERTIES SOVERSION "${MAJOR}" VERSION "${MAJOR}.${MINOR}.${PATCH}")
 -
 +    if(BUILD_WITH_XLIB_HEADERS)
-+        target_link_libraries(openxr_loader PRIVATE X11:X11)
++        target_link_libraries(openxr_loader PRIVATE X11::X11)
 +    endif()
      add_custom_target(
          libopenxr_loader.so.${MAJOR}.${MINOR} ALL
