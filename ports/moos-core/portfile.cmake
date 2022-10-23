@@ -45,7 +45,7 @@ endif()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_TARGET_IS_WINDOWS)
+if(0)
     file(GLOB "${CURRENT_PACKAGES_DIR}/lib/*")
     list(LENGTH RESULT RES_LEN)
     if(RES_LEN EQUAL 0)
@@ -55,5 +55,3 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/Core/GPLCore.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-message(FATAL_ERROR "exit")
