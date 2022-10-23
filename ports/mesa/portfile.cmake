@@ -103,7 +103,8 @@ endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dglvnd=true)
     list(APPEND MESA_OPTIONS #-Degl-lib-suffix=_mesa
-                             -Dgles-lib-suffix=_mesa)
+                             -Dgles-lib-suffix=_mesa
+                             -Dshared-llvm=disabled)
     
 endif()
 

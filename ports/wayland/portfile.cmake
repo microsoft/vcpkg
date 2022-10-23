@@ -8,9 +8,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland
     REF  8135e856ebd79872f886466e9cee39affb7d9ee8
-    SHA512 f2f7dd9ff71e99cf3621ab45160f59b679de763e3fdef6fcef7e14947ad43ed7a86845a213c75bb7117fdda11a51035566225a12d3eb33e8c3fe2e4456eb801d
+    SHA512 c4115187826083e5f01a24dad0c4377458b7ca22973ea161ec9d4aeeb21869bdb9acd7ba7e89aba964571ce2fde319cb01808e94e502ff09061bf5fbd3a60079
     HEAD_REF master
-    PATCHES tests.patch
+    PATCHES #tests.patch
 ) 
 
 vcpkg_configure_meson(
@@ -18,6 +18,7 @@ vcpkg_configure_meson(
     OPTIONS -Ddtd_validation=false
             -Ddocumentation=false
             -Dtests=false
+            -Dscanner=true
 )
 vcpkg_install_meson()
 

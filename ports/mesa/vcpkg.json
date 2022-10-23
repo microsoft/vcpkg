@@ -23,6 +23,18 @@
     {
       "name": "libxrandr",
       "platform": "!windows"
+    },
+    {
+      "name": "elfutils",
+      "platform": "!windows"
+    },
+    {
+      "name": "wayland",
+      "platform": "!windows"
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "!windows"
     }
   ],
   "default-features": [
