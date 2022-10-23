@@ -55,3 +55,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/Core/GPLCore.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+message(FATAL_ERROR "exit")
