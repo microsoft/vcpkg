@@ -14,7 +14,7 @@ vcpkg_from_gitlab(
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS -Dvalgrind=disabled
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()

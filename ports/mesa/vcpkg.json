@@ -35,6 +35,10 @@
     {
       "name": "wayland-protocols",
       "platform": "!windows"
+    },
+      {
+      "name": "libdrm",
+      "platform": "!windows"
     }
   ],
   "default-features": [
