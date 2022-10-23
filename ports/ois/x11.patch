@@ -9,7 +9,7 @@ index f65b86000..fece41e9c 100644
 -        add_dependencies(OIS X11)
 -        target_link_libraries(OIS X11)
 +        find_package(X11)
-+        target_link_libraries(OIS X11::X11)
++        target_link_libraries(OIS X11::X11 dl)
 +        set(OIS_REQUIRES x11)
      endif()
  

@@ -1,0 +1,13 @@
+diff --git a/CMake/Packages/FindOpenGLES2.cmake b/CMake/Packages/FindOpenGLES2.cmake
+index 1ad144d41..e417f8136 100644
+--- a/CMake/Packages/FindOpenGLES2.cmake	
++++ b/CMake/Packages/FindOpenGLES2.cmake
+@@ -84,7 +84,7 @@ IF(OPENGLES2_gl_LIBRARY)
+ ENDIF(OPENGLES2_gl_LIBRARY)
+ 
+ IF(OPENGL_egl_LIBRARY)
+-  SET( EGL_LIBRARIES ${OPENGL_egl_LIBRARY})
++  SET( EGL_LIBRARIES OpenGL::EGL)
+   SET( EGL_FOUND TRUE )
+ ELSEIF(EGL_egl_LIBRARY)
+   SET( EGL_LIBRARIES ${EGL_egl_LIBRARY})
