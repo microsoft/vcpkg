@@ -53,6 +53,7 @@ endfunction()
 
 
 function(qt_cmake_configure)
+    set(VCPKG_FIXUP_ELF_RPATH ON)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA;DISABLE_PARALLEL_CONFIGURE"
                       ""
                       "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
@@ -110,6 +111,7 @@ function(qt_cmake_configure)
         ${ninja_option}
         ${disable_parallel}
         OPTIONS 
+            #-DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt is annoying. 
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings. 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
