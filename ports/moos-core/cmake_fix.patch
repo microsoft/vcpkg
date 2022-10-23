@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..5c5e1a2 100644
+index 75f367f..e144343 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -26,16 +26,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
@@ -19,25 +19,6 @@ index 75f367f..5c5e1a2 100644
  ##############################
  # Set up RPATH for executables
  ##############################
-@@ -45,15 +35,15 @@ endif()
- set(CMAKE_MACOSX_RPATH TRUE)
- 
- # Use (don't skip) RPATH for binaries in the build tree
--set(CMAKE_SKIP_BUILD_RPATH FALSE)
-+#set(CMAKE_SKIP_BUILD_RPATH FALSE)
- 
- # Don't append external paths to the RPATH
- # They're not needed, because MOOS has no dependencies
--set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
-+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
- 
- # Don't use the install RPATH for a normal build.
- # Only use it when the binaries are installed.
--set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-+#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
- 
- # Set RPATH value for installed executables. This should point
- # at the directory containing the MOOS library. Relative paths used to allow
 @@ -74,6 +64,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
  # Turn on all compiler warnings
  include(EnableAllWarnings)
@@ -115,10 +96,10 @@ index 06e22e5..feb0304 100644
  #include <set>
  #include <map>
 diff --git a/Core/libMOOS/CMakeLists.txt b/Core/libMOOS/CMakeLists.txt
-index b74a30f..9e0afc0 100644
+index b74a30f..6a964db 100644
 --- a/Core/libMOOS/CMakeLists.txt
 +++ b/Core/libMOOS/CMakeLists.txt
-@@ -81,14 +81,10 @@ set(DB_SOURCES
+@@ -81,14 +81,9 @@ set(DB_SOURCES
  #do we want to use the new fast asynchronous client architecture?
  option(USE_ASYNC_COMMS  "enable fast asynchronous comms architecture" ON)
  if(USE_ASYNC_COMMS)
@@ -131,11 +112,10 @@ index b74a30f..9e0afc0 100644
 -    ${CMAKE_CURRENT_SOURCE_DIR}/App/include/MOOS/libMOOS/App/ClientDefines.h
 -    @ONLY
 -)
-+
  
  
  
-@@ -122,6 +118,8 @@ add_library(MOOS
+@@ -122,6 +117,8 @@ add_library(MOOS
      ${DB_SOURCES}
  )
  
@@ -144,7 +124,7 @@ index b74a30f..9e0afc0 100644
  foreach(INCLUDE_ROOT IN LISTS INCLUDE_ROOTS)
      target_include_directories(MOOS PUBLIC
          "$<BUILD_INTERFACE:${INCLUDE_ROOT}>"
-@@ -196,7 +194,7 @@ mark_as_advanced(TIME_WARP_AGGLOMERATION_CONSTANT)
+@@ -196,7 +193,7 @@ mark_as_advanced(TIME_WARP_AGGLOMERATION_CONSTANT)
  install(
      DIRECTORY ${INCLUDE_ROOTS}
      DESTINATION .
@@ -153,7 +133,7 @@ index b74a30f..9e0afc0 100644
  )
  
  # install libraries
-@@ -204,7 +202,7 @@ install(TARGETS MOOS
+@@ -204,7 +201,7 @@ install(TARGETS MOOS
    EXPORT MOOS
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
@@ -187,14 +167,3 @@ index 10af599..dff769a 100644
  include(${exports_file})
  
  include(FindPackageHandleStandardArgs)
-diff --git a/cmake/ClientDefines.h.in b/cmake/ClientDefines.h.in
-index a196e5c..c2942eb 100644
---- a/cmake/ClientDefines.h.in
-+++ b/cmake/ClientDefines.h.in
-@@ -1,4 +1,4 @@
- //this file is auto generated and defines various preprocessor macros needed by the CMOOSApp
- #ifndef ASYNCHRONOUS_CLIENT
- @ASYNCHRONOUS_CLIENT_DEFINE@
--#endif
-\ No newline at end of file
-+#endif
