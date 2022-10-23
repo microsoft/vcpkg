@@ -1,11 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f367f..11c7632 100644
+index 75f367f..67de2ce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,16 +26,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
-     set(CMAKE_BUILD_TYPE Release CACHE STRING "")
- endif()
+@@ -23,17 +23,7 @@ message(STATUS "+++  This is MOOS version ${PACKAGE_VERSION} +++")
  
+ # If user specifies the build type, use theirs, otherwise use Release
+ if(NOT DEFINED CMAKE_BUILD_TYPE)
+-    set(CMAKE_BUILD_TYPE Release CACHE STRING "")
+-endif()
+-
 -if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 -    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 -endif()
@@ -14,11 +17,29 @@ index 75f367f..11c7632 100644
 -endif()
 -if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
 -    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
--endif()
--
++    #set(CMAKE_BUILD_TYPE Release CACHE STRING "")
+ endif()
+ 
  ##############################
- # Set up RPATH for executables
- ##############################
+@@ -45,15 +35,15 @@ endif()
+ set(CMAKE_MACOSX_RPATH TRUE)
+ 
+ # Use (don't skip) RPATH for binaries in the build tree
+-set(CMAKE_SKIP_BUILD_RPATH FALSE)
++#set(CMAKE_SKIP_BUILD_RPATH FALSE)
+ 
+ # Don't append external paths to the RPATH
+ # They're not needed, because MOOS has no dependencies
+-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
++#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+ 
+ # Don't use the install RPATH for a normal build.
+ # Only use it when the binaries are installed.
+-set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
++#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+ 
+ # Set RPATH value for installed executables. This should point
+ # at the directory containing the MOOS library. Relative paths used to allow
 @@ -74,6 +64,9 @@ set(CMAKE_MODULE_PATH ${CMakeScripts_MODULE_DIR})
  # Turn on all compiler warnings
  include(EnableAllWarnings)
