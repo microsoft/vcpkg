@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DENABLE_DOXYGEN=OFF
-        -DENABLE_EXPORT=ON
+        -DENABLE_EXPORT=OFF
         -DUPDATE_GIT_VERSION_INFO=OFF
     OPTIONS_RELEASE
         ${FEATURE_OPTIONS}
@@ -39,16 +39,7 @@ endif()
 if("db" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES MOOSDB AUTO_CLEAN)
 endif()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(0)
-    file(GLOB "${CURRENT_PACKAGES_DIR}/lib/*")
-    list(LENGTH RESULT RES_LEN)
-    if(RES_LEN EQUAL 0)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
-        
-    endif()
-endif()
 
 file(INSTALL "${SOURCE_PATH}/Core/GPLCore.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
