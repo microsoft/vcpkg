@@ -110,9 +110,20 @@ function(test_cmake_project)
         message(FATAL_ERROR "Unable to determine version for '${arg_CMAKE_COMMAND}'.")
     endif()
 
+    vcpkg_list(SET base_options)
+    vcpkg_list(SET build_options)
+    if(VCPKG_BUILD_TYPE OR cmake_version VERSION_LESS "3.10")
+        vcpkg_list(APPEND base_options -G "Ninja")
+    else()
+        vcpkg_list(APPEND base_options -G "Ninja Multi-Config" "-DCMAKE_CONFIGURATION_TYPES=Debug;Release")
+        # Make the CMAKE_DEFAULT_BUILD_TYPE differ from the effective build type
+        # in order to detect debug config items in release builds and vice versa.
+        string(REGEX REPLACE "-DCMAKE_BUILD_TYPE=([^ ;]*)" "-DCMAKE_DEFAULT_BUILD_TYPE=\\1" arg_OPTIONS "${arg_OPTIONS}")
+        vcpkg_list(APPEND build_options --config "${CMAKE_MATCH_1}")
+    endif()
+
     set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}")
-    set(base_options
-        -G "Ninja"
+    vcpkg_list(APPEND base_options
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
@@ -130,17 +141,17 @@ function(test_cmake_project)
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         list(APPEND base_options "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-            list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+            vcpkg_list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
         endif()
         if(DEFINED VCPKG_PLATFORM_TOOLSET)
-            list(APPEND base_options "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
+        vcpkg_list(APPEND base_options "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND base_options -DBUILD_SHARED_LIBS=ON)
+        vcpkg_list(APPEND base_options -DBUILD_SHARED_LIBS=ON)
     else()
-        list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
+        vcpkg_list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
     endif()
 
     message(STATUS "Running tests with CMake ${cmake_version} for '${arg_NAME}'")
@@ -202,6 +213,7 @@ function(test_cmake_project)
             execute_process(
                 COMMAND
                     "${arg_CMAKE_COMMAND}" --build .
+                    ${build_options}
                 OUTPUT_FILE "${log_out}"
                 ERROR_FILE "${log_err}"
                 RESULT_VARIABLE package_result
@@ -222,9 +234,11 @@ foreach(executable IN LISTS cmake_commands)
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Release"
     )
-    test_cmake_project(NAME "debug"
-        CMAKE_COMMAND "${executable}"
-        OPTIONS
-            "-DCMAKE_BUILD_TYPE=Debug"
-    )
+    if(NOT VCPKG_BUILD_TYPE)
+        test_cmake_project(NAME "debug"
+            CMAKE_COMMAND "${executable}"
+            OPTIONS
+                "-DCMAKE_BUILD_TYPE=Debug"
+        )
+    endif()
 endforeach()
