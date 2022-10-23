@@ -14,6 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         db    ENABLE_DB
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MOOS_BUILD)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -21,6 +23,7 @@ vcpkg_cmake_configure(
         -DENABLE_DOXYGEN=OFF
         -DENABLE_EXPORT=ON
         -DUPDATE_GIT_VERSION_INFO=OFF
+        -DBUILD_SHARED_LIBS=${MOOS_BUILD}
     OPTIONS_RELEASE
         ${FEATURE_OPTIONS}
 )
@@ -35,6 +38,7 @@ endif()
 if("db" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES MOOSDB AUTO_CLEAN)
 endif()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_TARGET_IS_WINDOWS)
