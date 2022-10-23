@@ -8,16 +8,16 @@ index 03b5e5994..192720fac 100644
      else()
 -        target_link_libraries(noise -lX11)
 +        find_package(X11 REQUIRED)
-+        target_link_libraries(noise X11::X11)
++        target_link_libraries(noise X11::X11 -ldl)
  
 -        target_link_libraries(input_events -lX11)
 -        target_link_libraries(input_events_cpp -lX11)
-+        target_link_libraries(input_events X11::X11)
-+        target_link_libraries(input_events_cpp X11::X11)
++        target_link_libraries(input_events X11::X11 -ldl)
++        target_link_libraries(input_events_cpp X11::X11 -ldl)
  
 -        target_link_libraries(multiple_windows -lX11)
-+        target_link_libraries(multiple_windows X11::X11)
-+        target_link_libraries(minifb X11::X11)
++        target_link_libraries(multiple_windows X11::X11 -ldl)
++        target_link_libraries(minifb X11::X11 -ldl)
      endif()
  endif()
  
