@@ -15,7 +15,15 @@
       "host": true
     },
     "zlib",
-    "zstd"
+    "zstd",
+    {
+      "name": "libxshmfence",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    }
   ],
   "default-features": [
     "default-features"
@@ -62,6 +70,15 @@
           "name": "mesa",
           "default-features": false
         }
+      ]
+    },
+    "glx": {
+      "description": "Build support for GLX platform",
+      "dependencies": [
+        "libx11",
+        "libxext",
+        "libxfixes",
+        "libxxf86vm"
       ]
     },
     "gles1": {
@@ -116,6 +133,15 @@
             "target-x86"
           ],
           "platform": "x64 | x86"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "libclc",
+            "target-amdgpu"
+          ],
+          "platform": "!windows"
         }
       ]
     },

@@ -58,8 +58,8 @@ list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
 list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dglvnd=false)
-list(APPEND MESA_OPTIONS -Dglx=disabled)
+
+
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
 
 if("offscreen" IN_LIST FEATURES)
@@ -93,6 +93,18 @@ if("egl" IN_LIST FEATURES) # EGL feature only works on Linux
     list(APPEND MESA_OPTIONS -Degl=enabled)
 else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
+endif()
+if("glx" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dglx=dri)
+else()
+    list(APPEND MESA_OPTIONS -Dglx=disabled)
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND MESA_OPTIONS -Dglvnd=true)
+    list(APPEND MESA_OPTIONS #-Degl-lib-suffix=_mesa
+                             -Dgles-lib-suffix=_mesa)
+    
 endif()
 
 list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2

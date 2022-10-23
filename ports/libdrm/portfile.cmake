@@ -7,9 +7,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/drm
-    REF  d76c387125c7ad336f39121b9c3148361731bdad #v2.4.108
-    SHA512  cefa58f0f04d96c3b9c4540ab94863c0781d46e7ef0e23a03b35d4e4033231a79f692eb601bbbba730f731a629336484df5d39c8dc0e4550e3db1634f4c2dbf2 
-    HEAD_REF master # branch name
+    REF fb5c0c301aa9b6d984ffee522775ca19ea7c7be6
+    SHA512 1df9b6e965d276066bbd3a0d733b17bdc86ba47c0bbe3fe247f569fe0e81e2901fb167920d22169b91ada87d0c1c54e3261e891328fb8bc22f780024185322d1
+    HEAD_REF master
 ) 
 
 vcpkg_configure_meson(
