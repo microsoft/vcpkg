@@ -39,6 +39,10 @@
       {
       "name": "libdrm",
       "platform": "!windows"
+    },
+    {
+      "name": "libglvnd",
+      "platform": "!windows"
     }
   ],
   "default-features": [
