@@ -14,7 +14,7 @@ index 2e4c7bee2..0fbc9a74d 100644
  #include <X11/Xutil.h>
  
 +#if !defined(Status)
-+typedef int Status
++typedef int Status;
 +#endif
 +
  namespace Ogre
