@@ -1604,6 +1604,10 @@
       "baseline": "2020.06",
       "port-version": 4
     },
+    "corrosion": {
+      "baseline": "0.2.2",
+      "port-version": 0
+    },
     "cpp-base64": {
       "baseline": "V2.rc.08",
       "port-version": 0
