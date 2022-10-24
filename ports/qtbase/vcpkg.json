@@ -126,6 +126,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "gles",
             "fontconfig",
             "xcb",
             "xcb-xlib",
@@ -146,6 +147,9 @@
       "dependencies": [
         "egl-registry"
       ]
+    },
+    "gles": {
+      "description": "GLES"
     },
     "fontconfig": {
       "description": "Use fontconfig",
