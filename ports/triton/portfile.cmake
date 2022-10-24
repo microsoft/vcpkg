@@ -4,10 +4,6 @@ vcpkg_from_github(
   REF 2b655f20528065cf70e0fa95e2d01b34a8ef6a17
   SHA512 819c0c6eb9e5609240fe4be47c1f4584d2979e3b54f34c2978989ad9b3b10f73dc65ac87fca88fbfc26767f7a4df5b3a2ae70bcbda43ec89eef4c456a37bd884
   HEAD_REF master
-  #PATCHES
-  #  001-fix-dependency-z3.patch
-  #  002-fix-capstone-5.patch
-  #  003-fix-python.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
