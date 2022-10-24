@@ -74,8 +74,8 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
 endmacro()
 
 macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
     list(JOIN CXXPPFLAGS_${flag_suffix} "|" CXXREGEX)
     if(CXXREGEX)
         list(FILTER CPPFLAGS_${flag_suffix} INCLUDE REGEX "(${CXXREGEX})")
@@ -124,13 +124,17 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;NO_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(arg_USE_WRAPPERS AND arg_NO_WRAPPERS)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed conflicting options USE_WRAPPERS and NO_WRAPPERS. Please remove one of them!")
     endif()
 
     z_vcpkg_get_cmake_vars(cmake_vars_file)
@@ -145,12 +149,9 @@ function(vcpkg_configure_make)
 
     set(requires_autogen OFF) # use autogen.sh
     set(requires_autoconfig OFF) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac") # remove configure; rerun autoconf
-        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
-            set(requires_autoconfig ON)
-            file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
-            set(arg_AUTOCONFIG ON)
-        endif()
+    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
+        set(requires_autoconfig ON)
+        file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
     elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
@@ -175,10 +176,13 @@ function(vcpkg_configure_make)
     else()
         set(arg_USE_WRAPPERS OFF)
     endif()
+    if(arg_NO_WRAPPERS)
+        set(arg_USE_WRAPPERS OFF)
+    endif()
 
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS})
 
@@ -204,7 +208,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         if(CMAKE_HOST_WIN32)
-            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
+            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4 which)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
         endif()
         if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
@@ -229,15 +233,43 @@ function(vcpkg_configure_make)
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
         if(CMAKE_HOST_WIN32)
-            set(append_env)
+            vcpkg_list(SET add_to_env)
             if(arg_USE_WRAPPERS)
-                set(append_env ";${MSYS_ROOT}/usr/share/automake-1.16")
-                string(APPEND append_env ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+                vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
             endif()
-            # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-            string(REPLACE ";$ENV{SystemRoot}\\System32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-            string(REPLACE ";$ENV{SystemRoot}\\system32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-            set(ENV{PATH} "${NEWPATH}")
+            cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+            cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+            file(REAL_PATH "${system_root}" system_root)
+
+            message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
+
+            set(find_system_dirs 
+                    "${system_root}/system32"
+                    "${system_root}/System32"
+                    "${system_root}/system32/"
+                    "${system_root}/System32/")
+
+            string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
+
+            set(index "-1")
+            foreach(system_dir IN LISTS find_system_dirs find_system_dirs_upper)
+                list(FIND path_list "${system_dir}" index)
+                if(NOT index EQUAL "-1")
+                    break()
+                endif()
+            endforeach()
+
+            if(index GREATER_EQUAL "0")
+                vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            else()
+                message(WARNING "Unable to find system32 dir in the PATH variable! Appending required msys paths!")
+                vcpkg_list(APPEND path_list ${add_to_env} "${MSYS_ROOT}/usr/bin")
+            endif()
+
+            cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+            set(ENV{PATH} "${native_path_list}")
+
             set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
 
@@ -261,7 +293,16 @@ function(vcpkg_configure_make)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
 
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+            if(NOT VCPKG_CROSSCOMPILING)
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+            else()
+                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+            endif()
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env RC "windres-rc ${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env WINDRES "windres-rc ${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
@@ -273,7 +314,15 @@ function(vcpkg_configure_make)
         else()
             z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+            if(NOT VCPKG_CROSSCOMPILING)
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+            else()
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+            endif()
             z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env RC "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env WINDRES "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
@@ -335,6 +384,39 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
+    else()
+        # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
+        function(z_vcpkg_make_set_env envvar cmakevar)
+            set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
+            string(STRIP "${prog}" prog)
+            if(DEFINED ENV{${envvar}})
+                return()
+            endif()
+            if(VCPKG_DETECTED_CMAKE_${cmakevar})
+                set(ENV{${envvar}} "${prog}")
+            endif()
+        endfunction()
+        z_vcpkg_make_set_env(CC C_COMPILER)
+        if(NOT VCPKG_CROSSCOMPILING)
+            z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER)
+            z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E")
+            z_vcpkg_make_set_env(CXX_FOR_BUILD C_COMPILER)
+        else()
+            set(ENV{CC_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+            set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+            set(ENV{CXX_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+        endif()
+        z_vcpkg_make_set_env(CXX CXX_COMPILER)
+        z_vcpkg_make_set_env(NM NM)
+        z_vcpkg_make_set_env(RC RC)
+        z_vcpkg_make_set_env(WINDRES RC)
+        z_vcpkg_make_set_env(DLLTOOL DLLTOOL)
+        z_vcpkg_make_set_env(STRIP STRIP)
+        z_vcpkg_make_set_env(OBJDUMP OBJDUMP)
+        z_vcpkg_make_set_env(RANLIB RANLIB)
+        z_vcpkg_make_set_env(AR AR)
+        z_vcpkg_make_set_env(LD LINKER)
+        unset(z_vcpkg_make_set_env)
     endif()
 
     # Some PATH handling for dealing with spaces....some tools will still fail with that!
@@ -350,7 +432,7 @@ function(vcpkg_configure_make)
     endif()
 
     # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -359,7 +441,7 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
                 set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
@@ -509,7 +591,7 @@ function(vcpkg_configure_make)
     debug_message("ENV{LIBS}:$ENV{LIBS}")
 
     # Run autoconf if necessary
-    if (arg_AUTOCONFIG OR requires_autoconfig)
+    if (arg_AUTOCONFIG OR requires_autoconfig AND NOT arg_NO_AUTOCONFIG)
         find_program(AUTORECONF autoreconf)
         if(NOT AUTORECONF)
             message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
@@ -565,53 +647,17 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
-        set(var_suffix DEBUG)
-        set(path_suffix_${var_suffix} "/debug")
-        set(short_name_${var_suffix} "dbg")
-        list(APPEND all_buildtypes ${var_suffix})
+    macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
         else() # dynamic
             set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
         endif()
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
+        set(ARFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+        set(LDFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
+        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES [[cl\.exe$]])
             if(NOT vcm_paths_with_spaces)
-                set(LDFLAGS_${var_suffix} "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
-            endif()
-            if(DEFINED ENV{_LINK_})
-                set(LINK_ENV_${var_suffix} "$ENV{_LINK_} ${LINKER_FLAGS_${var_suffix}}")
-            else()
-                set(LINK_ENV_${var_suffix} "${LINKER_FLAGS_${var_suffix}}")
-            endif()
-        else()
-            set(link_required_dirs)
-            if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-                set(link_required_dirs "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
-            endif()
-            if(EXISTS "{CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-                set(link_required_dirs "${link_required_dirs} -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
-            endif()
-            string(STRIP "${link_required_dirs}" link_required_dirs)
-            set(LDFLAGS_${var_suffix} "${link_required_dirs} ${LINKER_FLAGS_${var_suffix}}")
-        endif()
-        unset(var_suffix)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(var_suffix RELEASE)
-        set(path_suffix_${var_suffix} "")
-        set(short_name_${var_suffix} "rel")
-        list(APPEND all_buildtypes ${var_suffix})
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-        else() # dynamic
-            set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-        endif()
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-            if(NOT vcm_paths_with_spaces)
-                set(LDFLAGS_${var_suffix} "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
+                string(APPEND LDFLAGS_${var_suffix} " -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
             endif()
             if(DEFINED ENV{_LINK_})
                 set(LINK_ENV_${var_suffix} "$ENV{_LINK_} ${LINKER_FLAGS_${var_suffix}}")
@@ -623,12 +669,53 @@ function(vcpkg_configure_make)
             if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
                 set(link_required_dirs "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
             endif()
-            if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
+            if(EXISTS "{CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
                 set(link_required_dirs "${link_required_dirs} -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
             endif()
             string(STRIP "${link_required_dirs}" link_required_dirs)
-            set(LDFLAGS_${var_suffix} "${link_required_dirs} ${LINKER_FLAGS_${var_suffix}}")
+            if(link_required_dirs)
+                string(PREPEND LDFLAGS_${var_suffix} "${link_required_dirs} ")
+                # ARFLAGS doesn't need -L search paths since it just bundles object files
+            endif()
+            if(ARFLAGS_${var_suffix})
+                # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
+                # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
+                # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
+                string(PREPEND ARFLAGS_${var_suffix} "cr ")
+            endif()
+            string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
+            string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
+            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
+                # Do not touch autotools quirks incoming!
+                # -Xlinker is repeated three times because:
+                # - libtool script eats -Xlinker
+                # - the compile wrapper eats -Xlinker
+                # - passing through both tools requires 3 -Xlinker; two being eaten in the first script.
+                # passing only through one script will keep one -Xlinker (done in configure)
+                # but cl will just ignore those with a warning. (Just like -Xcompiler)
+                separate_arguments(LDFLAGS_LIST NATIVE_COMMAND "${LDFLAGS_${var_suffix}}")
+                list(JOIN LDFLAGS_LIST " -Xlinker -Xlinker -Xlinker " LDFLAGS_${var_suffix})
+                string(PREPEND LDFLAGS_${var_suffix} "-Xlinker -Xlinker -Xlinker ")
+            endif()
         endif()
+    endmacro()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
+        set(var_suffix DEBUG)
+        set(path_suffix_${var_suffix} "/debug")
+        set(short_name_${var_suffix} "dbg")
+        list(APPEND all_buildtypes ${var_suffix})
+        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
+        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
+        unset(var_suffix)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(var_suffix RELEASE)
+        set(path_suffix_${var_suffix} "")
+        set(short_name_${var_suffix} "rel")
+        list(APPEND all_buildtypes ${var_suffix})
+        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
+        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
         unset(var_suffix)
     endif()
 
@@ -667,16 +754,30 @@ function(vcpkg_configure_make)
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
+        set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
+        set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${current_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
+        #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${current_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${current_buildtype}}")
-
+        set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${current_buildtype}}")
+        if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
+            # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
+            set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
+        endif()
         # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
         # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
         if(VCPKG_TARGET_IS_ANDROID)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
+        endif()
+
+        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # configure not using all flags to check if compiler works ...
+            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
@@ -708,6 +809,7 @@ function(vcpkg_configure_make)
                 COMMAND ${command}
                 WORKING_DIRECTORY "${target_dir}"
                 LOGNAME "config-${TARGET_TRIPLET}-${short_name_${current_buildtype}}"
+                SAVE_LOG_FILES config.log
             )
             if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE libtool_files "${target_dir}*/libtool")
@@ -716,10 +818,6 @@ function(vcpkg_configure_make)
                     string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
                     file(WRITE "${lt_file}" "${_contents}")
                 endforeach()
-            endif()
-            
-            if(EXISTS "${target_dir}/config.log")
-                file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
         z_vcpkg_restore_pkgconfig_path()

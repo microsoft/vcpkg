@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.79.0",
+    $version = "1.80.0",
     $portsDir = $null
 )
 
@@ -24,6 +24,156 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost" = 2;
+    "boost-accumulators" = 1;
+    "boost-algorithm" = 1;
+    "boost-align" = 1;
+    "boost-any" = 1;
+    "boost-array" = 1;
+    "boost-asio" = 2;
+    "boost-assert" = 1;
+    "boost-assign" = 1;
+    "boost-atomic" = 1;
+    "boost-beast" = 1;
+    "boost-bimap" = 1;
+    "boost-bind" = 1;
+    "boost-build" = 2;
+    "boost-callable-traits" = 1;
+    "boost-chrono" = 1;
+    "boost-circular-buffer" = 1;
+    "boost-compatibility" = 1;
+    "boost-compute" = 1;
+    "boost-concept-check" = 1;
+    "boost-config" = 1;
+    "boost-container" = 1;
+    "boost-container-hash" = 1;
+    "boost-context" = 1;
+    "boost-contract" = 1;
+    "boost-conversion" = 1;
+    "boost-convert" = 1;
+    "boost-core" = 1;
+    "boost-coroutine" = 2;
+    "boost-coroutine2" = 1;
+    "boost-crc" = 1;
+    "boost-date-time" = 1;
+    "boost-describe" = 1;
+    "boost-detail" = 1;
+    "boost-dll" = 1;
+    "boost-dynamic-bitset" = 1;
+    "boost-endian" = 1;
+    "boost-exception" = 1;
+    "boost-fiber" = 2;
+    "boost-filesystem" = 1;
+    "boost-flyweight" = 1;
+    "boost-foreach" = 1;
+    "boost-format" = 1;
+    "boost-function" = 1;
+    "boost-functional" = 1;
+    "boost-function-types" = 1;
+    "boost-fusion" = 1;
+    "boost-geometry" = 1;
+    "boost-gil" = 1;
+    "boost-graph" = 1;
+    "boost-graph-parallel" = 1;
+    "boost-hana" = 1;
+    "boost-heap" = 1;
+    "boost-histogram" = 1;
+    "boost-hof" = 1;
+    "boost-icl" = 1;
+    "boost-integer" = 1;
+    "boost-interprocess" = 1;
+    "boost-interval" = 1;
+    "boost-intrusive" = 1;
+    "boost-io" = 1;
+    "boost-iostreams" = 1;
+    "boost-iterator" = 1;
+    "boost-json" = 1;
+    "boost-lambda" = 1;
+    "boost-lambda2" = 1;
+    "boost-leaf" = 1;
+    "boost-lexical-cast" = 1;
+    "boost-locale" = 1;
+    "boost-local-function" = 1;
+    "boost-lockfree" = 1;
+    "boost-log" = 1;
+    "boost-logic" = 1;
+    "boost-math" = 1;
+    "boost-metaparse" = 1;
+    "boost-modular-build-helper" = 2;
+    "boost-move" = 1;
+    "boost-mp11" = 1;
+    "boost-mpi" = 1;
+    "boost-mpl" = 1;
+    "boost-msm" = 1;
+    "boost-multi-array" = 1;
+    "boost-multi-index" = 1;
+    "boost-multiprecision" = 1;
+    "boost-nowide" = 1;
+    "boost-numeric-conversion" = 1;
+    "boost-odeint" = 1;
+    "boost-optional" = 1;
+    "boost-outcome" = 1;
+    "boost-parameter" = 1;
+    "boost-parameter-python" = 1;
+    "boost-pfr" = 1;
+    "boost-phoenix" = 1;
+    "boost-poly-collection" = 1;
+    "boost-polygon" = 1;
+    "boost-pool" = 1;
+    "boost-predef" = 1;
+    "boost-preprocessor" = 1;
+    "boost-process" = 1;
+    "boost-program-options" = 1;
+    "boost-property-map" = 1;
+    "boost-property-map-parallel" = 1;
+    "boost-property-tree" = 1;
+    "boost-proto" = 1;
+    "boost-ptr-container" = 1;
+    "boost-python" = 1;
+    "boost-qvm" = 1;
+    "boost-random" = 1;
+    "boost-range" = 1;
+    "boost-ratio" = 1;
+    "boost-rational" = 1;
+    "boost-regex" = 1;
+    "boost-safe-numerics" = 1;
+    "boost-scope-exit" = 1;
+    "boost-serialization" = 1;
+    "boost-signals2" = 1;
+    "boost-smart-ptr" = 1;
+    "boost-sort" = 1;
+    "boost-spirit" = 1;
+    "boost-stacktrace" = 1;
+    "boost-statechart" = 1;
+    "boost-static-assert" = 1;
+    "boost-static-string" = 1;
+    "boost-stl-interfaces" = 1;
+    "boost-system" = 1;
+    "boost-test" = 1;
+    "boost-thread" = 1;
+    "boost-throw-exception" = 1;
+    "boost-timer" = 1;
+    "boost-tokenizer" = 1;
+    "boost-tti" = 1;
+    "boost-tuple" = 1;
+    "boost-type-erasure" = 1;
+    "boost-type-index" = 1;
+    "boost-typeof" = 1;
+    "boost-type-traits" = 1;
+    "boost-ublas" = 1;
+    "boost-uninstall" = 1;
+    "boost-units" = 1;
+    "boost-unordered" = 1;
+    "boost-utility" = 1;
+    "boost-uuid" = 1;
+    "boost-variant" = 1;
+    "boost-variant2" = 1;
+    "boost-vcpkg-helpers" = 1;
+    "boost-vmd" = 1;
+    "boost-wave" = 1;
+    "boost-winapi" = 1;
+    "boost-xpressive" = 1;
+    "boost-yap" = 1;
 }
 
 $portData = @{
@@ -45,7 +195,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!osx & !uwp & !arm & !emscripten";
+        "supports" = "!uwp & !arm & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";
@@ -77,7 +227,7 @@ $portData = @{
     };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-stacktrace"       = @{ "supports" = "!uwp" };
-    "boost-coroutine"        = @{ "supports" = "!arm & !uwp & !emscripten" };
+    "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
     "boost-test"             = @{ "supports" = "!uwp" };
     "boost-wave"             = @{ "supports" = "!uwp" };
@@ -162,6 +312,41 @@ function GeneratePortDependency() {
     }
 }
 
+function MakePortVersionString() {
+    param (
+        [string]$PortName
+    )
+    if ($portVersions.Contains($PortName)) {
+        return $version + '#' + $portVersions[$PortName]
+    }
+    return $version
+}
+
+function AddBoostVersionConstraints() {
+    param (
+        $Dependencies = @()
+    )
+
+    $updated_dependencies = @()
+    foreach ($dependency in $Dependencies) {
+        if ($dependency.Contains("name")) {
+            if ($dependency.name.StartsWith("boost")) {
+                $dependency["version>="] = MakePortVersionString $dependency.name
+            }
+        }
+        else {
+            if ($dependency.StartsWith("boost")) {
+                $dependency = @{
+                    "name"       = $dependency
+                    "version>="  = MakePortVersionString $dependency
+                }
+            }
+        }
+        $updated_dependencies += $dependency
+    }
+    $updated_dependencies
+}
+
 function GeneratePortManifest() {
     param (
         [string]$PortName,
@@ -171,10 +356,11 @@ function GeneratePortManifest() {
         $Dependencies = @()
     )
     $manifest = @{
-        "name"        = $PortName
-        "version"     = $version
-        "homepage"    = $Homepage
-        "description" = $Description
+        "`$comment"     = "When changing this file also update and run scripts/boost/generate-ports.ps1"
+        "name"          = $PortName
+        "version"       = $version
+        "homepage"      = $Homepage
+        "description"   = $Description
     }
     if ($License) {
         $manifest["license"] += $License
@@ -209,6 +395,12 @@ function GeneratePortManifest() {
                 }
             }
         }
+    }
+
+    # Add version constraints to boost dependencies
+    $manifest["dependencies"] = @(AddBoostVersionConstraints $manifest["dependencies"])
+    foreach ($feature in $manifest.features.Keys) {
+        $manifest.features.$feature["dependencies"] = @(AddBoostVersionConstraints $manifest.features.$feature["dependencies"])
     }
 
     $manifest | ConvertTo-Json -Depth 10 -Compress `
@@ -591,7 +783,7 @@ if ($updateServicePorts) {
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
         -License "MIT" `
-        -Dependencies @("boost-uninstall", "vcpkg-cmake")
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
@@ -612,7 +804,7 @@ if ($updateServicePorts) {
             -Encoding UTF8 `
             -Raw
         $content = $content -replace `
-            "set\(BOOST_VERSION [0-9\.]+\)", `
+            "set\(BOOST_VERSION [0-9\.a-zA-Z]+\)", `
             "set(BOOST_VERSION $version)"
 
         Set-Content -LiteralPath $_ `

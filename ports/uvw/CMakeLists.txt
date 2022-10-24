@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.8)
 project(uvw)
 
-find_package(unofficial-libuv CONFIG REQUIRED)
+find_package(libuv CONFIG REQUIRED)
 
 add_library(uvw INTERFACE)
-target_link_libraries(uvw INTERFACE unofficial::libuv::libuv)
+if (TARGET uv)
+    target_link_libraries(uvw INTERFACE uv)
+else()
+    target_link_libraries(uvw INTERFACE uv_a)
+endif()
 
 install(TARGETS uvw
     EXPORT uvw

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.9.3
     SHA512 c246b0bda881ee9399fa1be490fa39f43b291bb1d9db72dba8a85db1a50aad416a97e9b300eee3d2a4203c2bd88bda2762e81bc229c3aa409ad217eb306a454c
     HEAD_REF dev
+    PATCHES
+        0001-Fix-potential-memory-corruption-with-negative-memmov.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

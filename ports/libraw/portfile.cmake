@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
     SHA512 5794521f535163afd7815ad005295301c5e0e2f8b2f34ef0a911d9dd1572c1f456b292777548203f9767957a55782b5bc9041c033190d25d1e9b4240d7df32b9
     HEAD_REF master
+    PATCHES
+        remove_register_cpp.patch
 )
 
 vcpkg_from_github(

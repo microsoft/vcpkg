@@ -12,6 +12,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES
             use-vcpkg-expat.patch
             apr.patch
+            unglue.patch
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

@@ -15,25 +15,25 @@
         <archiveName>python-3.10.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-windows-i386.zip</url>
-        <sha512>969d3d58d56d8fa3cc3acae2b949bf58abab945f70ae292ff20c9060d845dfc094c613c367a924abff47f307cc33af1467cdb9b75bb857868e38b2c7cdc72f79</sha512>
-        <archiveName>cmake-3.22.2-windows-i386.zip</archiveName>
+        <version>3.24.0</version>
+        <exeRelativePath>cmake-3.24.0-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-windows-i386.zip</url>
+        <sha512>0188bed2fea4b40b88c63cd4edbfa1e71f26518286c66ab8719435c6fc0a5d7582a94cdf348c4026bd619292c70247437ff84093abd396d749d438b732b4c6bb</sha512>
+        <archiveName>cmake-3.24.0-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-macos-universal.tar.gz</url>
-        <sha512>08104f608ecb9a5cfef38e79f0957d21e425616c0677781445492f82cbfec805113e3b5eb4bc737b707bb26a00678e7bd55e17555a5611c08b0b9b44ac5136ac</sha512>
-        <archiveName>cmake-3.22.2-macos-universal.tar.gz</archiveName>
+        <version>3.24.0</version>
+        <exeRelativePath>cmake-3.24.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-macos-universal.tar.gz</url>
+        <sha512>c1480fdc1c28a61ea3979c0a5e58a7cf77ecb8f4797d8b2e605883612fb9681943e3490ebb38b0808e4480c33529e1d8628e7bf860e24874d4e41919cc078ad2</sha512>
+        <archiveName>cmake-3.24.0-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.22.2</version>
-        <exeRelativePath>cmake-3.22.2-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-linux-x86_64.tar.gz</url>
-        <sha512>579e08b086f6903ef063697fca1dc2692f68a7341dd35998990b772b4221cdb5b1deecfa73bad9d46817ef09e58882b2adff9d64f959c01002c11448a878746b</sha512>
-        <archiveName>cmake-3.22.2linux-x86_64.tar.gz</archiveName>
+        <version>3.24.0</version>
+        <exeRelativePath>cmake-3.24.0-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-linux-x86_64.tar.gz</url>
+        <sha512>8eb604b80ee6c771d43cc3e430b2a1065319167cb4913258147482d6ef8d6b83ff4451e3173b0ce6e0546a35d6731f334a72479855abe1958b25678cafda21d0</sha512>
+        <archiveName>cmake-3.24.0-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
@@ -95,22 +95,22 @@
         <sha512>1a98beebd1bb6929cbe98b86a3b77fb1ae4508b86cdcb64696b20c3a3336a2b5c8518e19a21092f1c98a46202c048dba819dc52bef122485ac34b888b77e59b2</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.11.0</version>
+        <version>6.2.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
-        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
+        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.11.0</version>
+        <version>6.2.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
-        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
+        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.11.0</version>
+        <version>6.2.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
-        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
+        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
     </tool>
     <tool name="coscli" os="windows">
         <version>0.11.0</version>
@@ -194,31 +194,31 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.3</version>
+        <version>7.2.6</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.3/PowerShell-7.2.3-win-x86.zip</url>
-        <sha512>4b275fd1dc6430e0d7b77d4c34ec54ad47502602592ebc1ec99c88610ec24d3adca27a41896dc4767ac820ad7e000f9c2b1d678b05e9dd76086ff52a11976f80</sha512>
-        <archiveName>PowerShell-7.2.3-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/PowerShell-7.2.6-win-x86.zip</url>
+        <sha512>4b444e0d5de22380e47701c190cb8ec9464a14a7ca566bcb8a936f723d58571af537d0d872f788dac99e67b27a047ce53de3fe1a986967799c10ea6784dbd6b2</sha512>
+        <archiveName>PowerShell-7.2.6-win-x86.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
-        <version>16.12.0</version>
-        <exeRelativePath>node-v16.12.0-win-x64\node.exe</exeRelativePath>
-        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-win-x64.7z</url>
-        <sha512>0bb793fce8140bd59c17f3ac9661b062eac0f611d704117774f5cb2453d717da94b1e8b17d021d47baff598dc023fb7068ed1f8a7678e446260c3db3537fa888</sha512>
-        <archiveName>node-v16.12.0-win-x64.7z</archiveName>
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-win-x64\node.exe</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-win-x64.7z</url>
+        <sha512>7ec4bfe2ea6034e1461e306b6372d62c0c5d1060c453ba76a73a5cec38ac26b5952a744caa9071455329caa58eb0a96d26c68854c8915c17610ff27b0cf2c1cf</sha512>
+        <archiveName>node-v16.15.1-win-x64.7z</archiveName>
     </tool>
     <tool name="node" os="linux">
-        <version>16.12.0</version>
-        <exeRelativePath>node-v16.12.0-linux-x64/bin/node</exeRelativePath>
-        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-linux-x64.tar.gz</url>
-        <sha512>45658083c35c13f2bc4b88d68a12c76213bdaf2235776e041c9937ce912a83cb49d655965568c99a5e139ff5c03b1e460c13ad8ab7f0c5570b531907715f6e0f</sha512>
-        <archiveName>node-v16.12.0-linux-x64.tar.gz</archiveName>
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-linux-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-linux-x64.tar.gz</url>
+        <sha512>5ad3b4b9caeaa8d31503efa99f5a593118a267dec9d4181d019732126ba248ce9a901207115b3f6b899eb5b3f0373c7f77ea95cc92ac625cddf437ee9b8b8919</sha512>
+        <archiveName>node-v16.15.1-linux-x64.tar.gz</archiveName>
     </tool>
     <tool name="node" os="osx">
-        <version>16.12.0</version>
-        <exeRelativePath>node-v16.12.0-darwin-x64/bin/node</exeRelativePath>
-        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-darwin-x64.tar.gz</url>
-        <sha512>f758a90d3dcc3adf296abbed01b69a3a27e63c2085b7f604d83550714b1ac374f36e73fc02dd31bf60e532205d92e1605a05b35642142d20ac07c4bb98c69f70</sha512>
-        <archiveName>node-v16.12.0-darwin-x64.tar.gz</archiveName>
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-darwin-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-darwin-x64.tar.gz</url>
+        <sha512>90d0612bbe5467b6cf385c91a68b8daad0057e3e0ccacea44567f5b95b14f7481cb79784185ab1463b4bd990e092ff0f9109576d1a1934b84e1c816582929611</sha512>
+        <archiveName>node-v16.15.1-darwin-x64.tar.gz</archiveName>
     </tool>
 </tools>

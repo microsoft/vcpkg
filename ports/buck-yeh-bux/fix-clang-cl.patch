@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 306074e50..a032ab09e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,13 +5,13 @@ project(bux)
+ set(GNU_LIKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -g3 -Og -std=c++20")
+ #string(APPEND CMAKE_CXX_FLAGS " -g3")
+ 
+-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT MSVC)
+     message("Clang")
+     string(APPEND CMAKE_CXX_FLAGS "${GNU_LIKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
+ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+     message("GNU")
+     string(APPEND CMAKE_CXX_FLAGS "${GNU_LIKE_CXX_FLAGS}")
+-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++elseif(MSVC)
+     message("MSVC")
+     string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /std:c++latest /MP")
+ else()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 093a1da8d..8de40efa4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(bux STATIC
+         XConsole.cpp XException.cpp
+         )
+ target_include_directories(bux PRIVATE ../include/bux)
+-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++if(MSVC)
+ target_link_libraries(bux PRIVATE fmt::fmt)
+ endif()
+ 

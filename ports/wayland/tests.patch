@@ -1,0 +1,30 @@
+diff --git a/meson.build b/meson.build
+index 11c35fa67..26d69ade5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -91,7 +91,9 @@ subdir('src')
+ if get_option('libraries')
+ 	subdir('cursor')
+ 	subdir('egl')
+-	subdir('tests')
++	if get_option('tests')
++		subdir('tests')
++	endif
+ 	if get_option('documentation')
+ 		subdir('doc')
+ 	endif
+diff --git a/meson_options.txt b/meson_options.txt
+index de588d137..dc6ea1d8a 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -10,6 +10,10 @@ option('documentation',
+   description: 'Build the documentation (requires Doxygen, dot, xmlto, xsltproc)',
+   type: 'boolean',
+   value: 'true')
++option('tests',
++  description: 'Build the tests',
++  type: 'boolean',
++  value: 'true')
+ option('dtd_validation',
+   description: 'Validate the protocol DTD (requires libxml2)',
+   type: 'boolean',

@@ -1,0 +1,22 @@
+diff --git a/meson.build b/meson.build
+index 64705379f..0c55b9732 100644
+--- a/meson.build
++++ b/meson.build
+@@ -30,7 +30,7 @@ plugins = []
+ cc = meson.get_compiler('c')
+ host_system = host_machine.system()
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+@@ -183,7 +183,7 @@ cdata.set('SIZEOF_OFF_T', cc.sizeof('off_t'))
+ # Here be fixmes.
+ # FIXME: check if this is correct
+ cdata.set('HAVE_CPU_X86_64', host_machine.cpu() == 'amd64')
+-cdata.set('HAVE_GCC_ASM', cc.get_id() != 'msvc')
++cdata.set('HAVE_GCC_ASM', cc.get_argument_syntax() != 'msvc')
+ cdata.set_quoted('VERSION', gst_version)
+ cdata.set_quoted('PACKAGE_VERSION', gst_version)
+ cdata.set_quoted('GST_LICENSE', 'LGPL')

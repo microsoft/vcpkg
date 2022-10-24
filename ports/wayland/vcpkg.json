@@ -1,0 +1,17 @@
+{
+  "name": "wayland",
+  "version": "1.19.0",
+  "description": "Core Wayland window system code and protocol",
+  "homepage": "https://wayland.freedesktop.org",
+  "license": "MIT",
+  "supports": "!(windows | osx)",
+  "dependencies": [
+    "expat",
+    "libffi",
+    "libxml2",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-generate-build-path.patch
         embed-debug-info.patch
+        arm64-windows.patch
 )
 
 if(CMAKE_HOST_WIN32)

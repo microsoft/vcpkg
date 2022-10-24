@@ -85,6 +85,9 @@ function(get_packages out_packages cmake_version)
             endforeach()
         endif()
     endif()
+    if("pkg-check-modules" IN_LIST FEATURES)
+        list(APPEND packages "ZLIBviaPkgConfig")
+    endif()
     set("${out_packages}" "${packages}" PARENT_SCOPE)
 endfunction()
 
@@ -218,14 +221,10 @@ foreach(executable IN LISTS cmake_commands)
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Release"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=OFF"
     )
     test_cmake_project(NAME "debug"
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Debug"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=ON"
     )
 endforeach()

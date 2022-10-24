@@ -1,28 +1,87 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-multi-index",
-  "version": "1.79.0",
+  "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost multi_index module",
   "homepage": "https://github.com/boostorg/multi_index",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-assert",
-    "boost-bind",
-    "boost-config",
-    "boost-container-hash",
-    "boost-core",
-    "boost-foreach",
-    "boost-integer",
-    "boost-iterator",
-    "boost-move",
-    "boost-mpl",
-    "boost-preprocessor",
-    "boost-serialization",
-    "boost-smart-ptr",
-    "boost-static-assert",
-    "boost-throw-exception",
-    "boost-tuple",
-    "boost-type-traits",
-    "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "boost-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-bind",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-container-hash",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-foreach",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-move",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-serialization",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-tuple",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    }
   ]
 }

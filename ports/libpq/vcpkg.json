@@ -1,6 +1,6 @@
 {
   "name": "libpq",
-  "version": "14.1",
+  "version": "14.4",
   "port-version": 2,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
@@ -14,6 +14,10 @@
         "bonjour"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ],
   "default-features": [

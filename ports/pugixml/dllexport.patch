@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 17f67d1f7..9acaf856f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -110,8 +110,12 @@ if (BUILD_SHARED_LIBS)
+     PUBLIC
+       ${PUGIXML_BUILD_DEFINES}
+       ${PUGIXML_PUBLIC_DEFINITIONS}
++  )
++  if(WIN32)
++    target_compile_definitions(pugixml-shared
+     PRIVATE
+-      $<$<CXX_COMPILER_ID:MSVC>:PUGIXML_API=__declspec\(dllexport\)>)
++      PUGIXML_API=__declspec\(dllexport\))
++  endif()
+   target_compile_options(pugixml-shared
+     PRIVATE
+       ${msvc-rt-mtd-shared}

@@ -20,9 +20,9 @@ vcpkg_check_features(
         websockets-sha1 ENABLE_WS
 )
 
-set(PLATFORM_OPTIONS)
+set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
-    set(PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0")
+    set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
 endif()
 
 vcpkg_cmake_configure(
@@ -39,6 +39,8 @@ vcpkg_cmake_configure(
         ${PLATFORM_OPTIONS}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    MAYBE_UNUSED_VARIABLES
+        USE_PERF_TOOLS
 )
 
 vcpkg_cmake_install()

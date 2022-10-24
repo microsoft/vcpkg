@@ -1,7 +1,7 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(patches fix-dllexport.patch)
-else()
-    set(patches "")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(patches fix-dllexport_2.patch fix_missing_extern.patch)
 endif()
 
 vcpkg_from_sourceforge(

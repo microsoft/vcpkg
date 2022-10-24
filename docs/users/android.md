@@ -216,6 +216,6 @@ endif()
 cmake .. -DVCPKG_TARGET_ANDROID=ON -DANDROID_ABI=armeabi-v7a
 ````
 
-## Consume libraries using vpckg, and Android prefab Archives (AAR files)
+## Consume libraries using vcpkg, and Android prefab Archives (AAR files)
 
 See [prefab.md](../specifications/prefab.md)

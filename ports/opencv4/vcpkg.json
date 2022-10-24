@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
-  "version": "4.5.5",
-  "port-version": 5,
+  "version": "4.6.0",
+  "port-version": 6,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -35,11 +35,11 @@
       "dependencies": [
         {
           "name": "hdf5",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         },
         {
           "name": "tesseract",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         }
       ]
     },
