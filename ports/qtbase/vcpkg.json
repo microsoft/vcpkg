@@ -121,6 +121,17 @@
             "xrender"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "fontconfig",
+            "xcb",
+            "xcb-xlib",
+            "xrender"
+          ],
+          "platform": "android"
         }
       ]
     },
