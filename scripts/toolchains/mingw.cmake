@@ -1,6 +1,17 @@
 if(NOT _VCPKG_MINGW_TOOLCHAIN)
 
-cmake_minimum_required(VERSION 3.24)
+if(POLICY CMP0056)
+    cmake_policy(SET CMP0056 NEW)
+endif()
+if(POLICY CMP0066)
+    cmake_policy(SET CMP0066 NEW)
+endif()
+if(POLICY CMP0067)
+    cmake_policy(SET CMP0067 NEW)
+endif()
+if(POLICY CMP0137)
+    cmake_policy(SET CMP0137 NEW)
+endif()
 
 set(_VCPKG_MINGW_TOOLCHAIN 1)
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
