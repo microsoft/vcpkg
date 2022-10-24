@@ -43,7 +43,7 @@
       "description": "Direct3D support for skia"
     },
     "gl": {
-      "description": "OpenGL support for skia"
+      "description": "OpenGL support for skia",
       "dependencies" : [ "opengl"]
     },
     "metal": {
