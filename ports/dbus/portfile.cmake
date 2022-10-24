@@ -7,7 +7,6 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES 
         cmake.dep.patch
-        rt_pc_link.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
         rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
@@ -25,6 +24,7 @@ vcpkg_cmake_configure(
         -DDBUS_WITH_GLIB=ON
         -DXSLTPROC_EXECUTABLE=FALSE
         -DENABLE_SYSTEMD=ON
+        -DTHREADS_PREFER_PTHREAD_FLAG=ON
         -DDBUS_ENABLE_PKGCONFIG=ON
         -DPKG_CONFIG_FOUND=TRUE
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
