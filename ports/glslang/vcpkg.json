@@ -1,6 +1,7 @@
 {
   "name": "glslang",
   "version": "11.11.0",
+  "port-version": 1,
   "description": "Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator",
   "homepage": "https://github.com/KhronosGroup/glslang",
   "dependencies": [
@@ -12,5 +13,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "tools"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the glslangValidator and spirv-remap binaries"
+    }
+  }
 }
