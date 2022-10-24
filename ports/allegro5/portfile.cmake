@@ -8,6 +8,7 @@ vcpkg_from_github(
         do-not-copy-pdbs-to-lib.patch
         export-targets.patch
         msvc-arm64-atomic.patch
+        x11.patch
 )
 
 
