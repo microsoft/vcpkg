@@ -25,6 +25,8 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-mingw-strsafe-no-deprecate.patch
 )
+# Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -157,11 +159,11 @@ endif()
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
-  if (VCPKG_TARGET_IS_UWP)
+  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
     set(BUILD_opencv_quality OFF)
-    message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
+    message(WARNING "The image quality module (quality) does not build for UWP or iOS, the module has been disabled.")
     # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
-    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
+    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP or iOS, the module has been disabled.")
   else()
     set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
   endif()
