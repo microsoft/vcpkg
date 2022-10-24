@@ -100,7 +100,8 @@ Relative paths are resolved relative to the `vcpkg-configuration.json` file. Abs
 
 ### Configuration: `"overlay-triplets"`
 
-The `"overlay-triplets"` field must contain an array of paths. Each path in the array must point to a directory of triplet files ([see triplets documentation](../triplets.md)).
+The `"overlay-triplets"` field must contain an array of paths. Each path in the array 
+must point to a directory of triplet files ([see triplets documentation](triplets.md)).
 Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
 
 ### Example Configuration File
