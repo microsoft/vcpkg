@@ -22,6 +22,7 @@ vcpkg_from_github(
         swig-python-polyfill.patch
         pkgconfig.patch
         egl.patch
+        x11.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")

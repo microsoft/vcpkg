@@ -1,0 +1,22 @@
+diff --git a/RenderSystems/GLSupport/src/X11/OgreX11.h b/RenderSystems/GLSupport/src/X11/OgreX11.h
+index 2e4c7bee2..0fbc9a74d 100644
+--- a/RenderSystems/GLSupport/src/X11/OgreX11.h
++++ b/RenderSystems/GLSupport/src/X11/OgreX11.h
+@@ -9,13 +9,13 @@
+ #include <OgrePrerequisites.h>
+ #include <OgreGLNativeSupport.h>
+ 
+-#ifndef Status
+-#define Status int
+-#endif
+-
+ #include <X11/Xlib.h>
+ #include <X11/Xutil.h>
+ 
++#if !defined(Status)
++typedef int Status
++#endif
++
+ namespace Ogre
+ {
+ Display* getXDisplay(Display* glDisplay, Atom& deleteWindow, Atom& fullScreen, Atom& state);
