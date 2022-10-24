@@ -4734,7 +4734,7 @@
     },
     "mchehab-zbar": {
       "baseline": "0.23.90",
-      "port-version": 0
+      "port-version": 1
     },
     "mcpp": {
       "baseline": "2.7.2.14",
