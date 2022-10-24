@@ -126,8 +126,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "gles",
-            "egl"
+            "egl",
+            "gles"
           ],
           "platform": "android"
         }
@@ -144,9 +144,6 @@
       "dependencies": [
         "egl-registry"
       ]
-    },
-    "gles": {
-      "description": "GLES"
     },
     "fontconfig": {
       "description": "Use fontconfig",
@@ -173,6 +170,9 @@
           "default-features": false
         }
       ]
+    },
+    "gles": {
+      "description": "GLES"
     },
     "glib": {
       "description": "GLib",
