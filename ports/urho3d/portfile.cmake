@@ -27,6 +27,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         examples    URHO3D_BUILD_SAMPLES
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND VCPKG_C_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
+    string(APPEND VCPKG_CXX_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
