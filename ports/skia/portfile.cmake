@@ -281,38 +281,38 @@ endif()
 if("gl" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_gl=true")
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
+    string(APPEND VCPKG_C_FLAGS   " -I${CURRENT_INSTALLED_DIR}/include")
+    string(APPEND VCPKG_CXX_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
 endif()
 
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 
-if(CMAKE_HOST_WIN32)
-    # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+# Load toolchains
+vcpkg_cmake_get_vars(vars_file)
+include(${vars_file})
 
-    # turn a space delimited string into a gn list:
-    # "a b c" -> ["a","b","c"]
-    function(to_gn_list OUTPUT_ INPUT_)
-        string(STRIP "${INPUT_}" TEMP)
-        string(REPLACE "  " " " TEMP "${TEMP}")
-        string(REPLACE " " "\",\"" TEMP "${TEMP}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
-    endfunction()
+# turn a space delimited string into a gn list:
+# "a b c" -> ["a","b","c"]
+function(to_gn_list OUTPUT_ INPUT_)
+    string(STRIP "${INPUT_}" TEMP)
+    string(REPLACE "  " " " TEMP "${TEMP}")
+    string(REPLACE " " "\",\"" TEMP "${TEMP}")
+    set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
+endfunction()
 
-    to_gn_list(SKIA_C_FLAGS_DBG "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-    to_gn_list(SKIA_C_FLAGS_REL "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+to_gn_list(SKIA_C_FLAGS_DBG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+to_gn_list(SKIA_C_FLAGS_REL "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
 
-    to_gn_list(SKIA_CXX_FLAGS_DBG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-    to_gn_list(SKIA_CXX_FLAGS_REL "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
 
-    string(APPEND OPTIONS_DBG " extra_cflags_c=${SKIA_C_FLAGS_DBG} \
-        extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
-    string(APPEND OPTIONS_REL " extra_cflags_c=${SKIA_C_FLAGS_REL} \
-        extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
+string(APPEND OPTIONS_DBG " extra_cflags_c=${SKIA_C_FLAGS_DBG} \
+    extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
+string(APPEND OPTIONS_REL " extra_cflags_c=${SKIA_C_FLAGS_REL} \
+    extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
 
+if(VCPKG_TARGET_IS_WINDOWS)
     set(WIN_VC "$ENV{VCINSTALLDIR}")
     string(REPLACE "\\VC\\" "\\VC" WIN_VC "${WIN_VC}")
     string(APPEND OPTIONS_DBG " win_vc=\"${WIN_VC}\"")
