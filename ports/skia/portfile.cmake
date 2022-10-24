@@ -108,6 +108,8 @@ function(replace_skia_dep NAME INCLUDES LIBS_DBG LIBS_REL DEFINITIONS)
     if(NOT VCPKG_BUILD_TYPE)
         find_libraries(_LIBS_DBG "${LIBS_DBG}" "${CURRENT_INSTALLED_DIR}/debug/lib")
         cmake_to_gn_list(_LIBS_DBG "${_LIBS_DBG}")
+    else()
+        set(_LIBS_DBG "[]")
     endif()
 
     find_libraries(_LIBS_REL "${LIBS_REL}" "${CURRENT_INSTALLED_DIR}/lib")
