@@ -1,0 +1,70 @@
+From 9477dbdaf4d125059b0bc6abc6586afeb99f2069 Mon Sep 17 00:00:00 2001
+From: Nico Sonack <nsonack@herrhotzenplotz.de>
+Date: Fri, 8 Jul 2022 13:55:26 +0200
+Subject: [PATCH] (#5236) Portability: Remove usage of pipe2
+
+Use pipe() instead and mark as non-blocking explicitly by calling
+fcntl().
+---
+ arch/eventloop_posix_interrupt.c | 34 +++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/arch/eventloop_posix_interrupt.c b/arch/eventloop_posix_interrupt.c
+index 6850bb3ba8..badc0e8699 100644
+--- a/arch/eventloop_posix_interrupt.c
++++ b/arch/eventloop_posix_interrupt.c
+@@ -330,6 +330,23 @@ pair(SOCKET fds[2]) {
+ }
+ #endif
+ 
++#if !defined(UA_HAVE_EPOLL) && !defined(_WIN32)
++/* mark fd as non-blocking */
++static int
++markNonBlock(int fd)
++{
++    int flags;
++
++    flags = fcntl(fd, F_GETFL);
++    if (flags < 0)
++        return flags;
++
++    flags |= O_NONBLOCK;
++
++    return fcntl(fd, F_SETFL, flags);
++}
++#endif
++
+ static UA_StatusCode
+ startPOSIXInterruptManager(UA_EventSource *es) {
+     /* Check the state */
+@@ -361,7 +378,7 @@ startPOSIXInterruptManager(UA_EventSource *es) {
+ #ifdef _WIN32
+     int err = pair(pipefd);
+ #else
+-    int err = pipe2(pipefd, O_NONBLOCK);
++    int err = pipe(pipefd);
+ #endif
+     if(err != 0) {
+         UA_LOG_SOCKET_ERRNO_WRAP(
+@@ -371,6 +388,21 @@ startPOSIXInterruptManager(UA_EventSource *es) {
+         return UA_STATUSCODE_BADINTERNALERROR;
+     }
+ 
++#ifndef _WIN32
++    /* Mark pipes as non-blocking */
++    for (size_t i = 0; i < (sizeof(pipefd) / sizeof(*pipefd)); ++i) {
++        err = markNonBlock(pipefd[i]);
++        if (err != 0) {
++            UA_LOG_SOCKET_ERRNO_WRAP(
++                UA_LOG_WARNING(el->eventLoop.logger, UA_LOGCATEGORY_NETWORK,
++                               "Interrupt\t| Could mark pipe for "
++                               "self-signaling as non-blocking(%s)",
++                               errno_str));
++            return UA_STATUSCODE_BADINTERNALERROR;
++        }
++    }
++#endif
++
+     UA_LOG_DEBUG(es->eventLoop->logger, UA_LOGCATEGORY_EVENTLOOP,
+                  "Interrupt\t| Socket pair for the self-pipe: %u,%u",
+                  (unsigned)pipefd[0], (unsigned)pipefd[1]);
