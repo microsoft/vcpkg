@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
