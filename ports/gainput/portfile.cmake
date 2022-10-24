@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES 
         install_as_cmake_package.patch
         fix-build.patch
+        fix_x11.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" GAINPUT_BUILD_STATIC)
