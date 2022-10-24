@@ -37,7 +37,8 @@ set(QT_PORTS qt
              qtopcua
              qtimageformats
              qtmqtt
-             qtnetworkauth)
+             qtnetworkauth
+             qt3d)
              # qtquickcontrols2 -> moved into qtdeclarative
 if(QT_VERSION VERSION_GREATER_EQUAL 6.1)
     list(APPEND QT_PORTS

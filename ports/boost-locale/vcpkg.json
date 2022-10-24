@@ -1,31 +1,71 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-locale",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
-    "boost-assert",
+    {
+      "name": "boost-assert",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-build",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-config",
-    "boost-core",
-    "boost-function",
-    "boost-iterator",
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-function",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-modular-build-helper",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-predef",
-    "boost-smart-ptr",
-    "boost-static-assert",
-    "boost-thread",
-    "boost-type-traits",
-    "boost-unordered",
-    "boost-vcpkg-helpers",
+    {
+      "name": "boost-predef",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-thread",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-unordered",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "libiconv",
       "platform": "!uwp & !windows & !mingw"
