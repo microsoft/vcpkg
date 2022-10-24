@@ -7804,7 +7804,7 @@
       "baseline": "1.3.204",
       "port-version": 1
     },
-    "vowpalwabbit": {
+    "vowpal-wabbit": {
       "baseline": "9.5.0",
       "port-version": 0
     },
