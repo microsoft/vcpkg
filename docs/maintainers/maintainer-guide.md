@@ -339,6 +339,7 @@ We will skip this waiting period if we have high confidence that the change is c
 * Upstream's acceptance as a patch (for example, backporting a specific change from a pull request upstream has merged).
 * Adding missing `#include`s.
 * Small and obvious product code fixes (for example, initializing an uninitialized variable).
+* Disabling irrelevant-in-vcpkg components of the build such as tests or examples.
 
 ### Prefer options over patching
 
