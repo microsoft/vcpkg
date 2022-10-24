@@ -70,6 +70,12 @@ endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
+    find_library(LLVMCore_LIBRARY NAMES LLVMCore PATHS "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    if(LLVMCore_LIBRARY MATCHES ".so|.dll")
+        list(APPEND MESA_OPTIONS -Dshared-llvm=enabled)
+    else()
+        list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
+    endif()
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
@@ -100,14 +106,11 @@ else()
     list(APPEND MESA_OPTIONS -Dglx=disabled)
 endif()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if("egl" IN_LIST FEATURES OR "glx" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dglvnd=true)
-    list(APPEND MESA_OPTIONS #-Degl-lib-suffix=_mesa
-                             -Dgles-lib-suffix=_mesa
-                             -Dshared-llvm=disabled
-                             -Dvalgrind=disabled)
-    
+    list(APPEND MESA_OPTIONS -Dgles-lib-suffix=_mesa)
 endif()
+
 
 list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 
