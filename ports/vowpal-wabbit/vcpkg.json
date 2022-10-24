@@ -1,5 +1,5 @@
 {
-  "name": "vowpalwabbit",
+  "name": "vowpal-wabbit",
   "version": "9.5.0",
   "description": "Reduction based online learning framework with a focus on contextual bandits and reinforcement learning.",
   "homepage": "https://github.com/vowpalwabbit/vowpal_wabbit",

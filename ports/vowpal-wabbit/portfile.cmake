@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF 9496a6dd5610910a495ca004a93c8ab6913293e4
     SHA512 df4da3f3ab763dbd113b0ace0552d676ec905a6ff0d942d9fc1828e36fb8440d1b75a61c1ea6de09879e0f52547366936d02a77dba2bac89503a075da12414db
     HEAD_REF master
+    PATCHES cmake_remove_bin_targets.patch
 )
 
 vcpkg_cmake_configure(
@@ -27,7 +28,3 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/VowpalWabbit)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
