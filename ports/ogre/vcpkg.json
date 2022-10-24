@@ -1,6 +1,7 @@
 {
   "name": "ogre",
   "version": "13.4.4",
+  "port-version": 2,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
@@ -32,6 +33,12 @@
       "description": "Build with assimp support",
       "dependencies": [
         "assimp"
+      ]
+    },
+    "bullet": {
+      "description": "Build with bullet physics support",
+      "dependencies": [
+        "bullet3"
       ]
     },
     "csharp": {
