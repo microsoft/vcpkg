@@ -7,17 +7,15 @@
   "supports": "!(windows & arm)",
   "dependencies": [
     {
-      "name": "vcpkg-get-python-packages",
-      "host": true
+      "name": "elfutils",
+      "platform": "!windows"
     },
     {
-      "name": "vcpkg-tool-meson",
-      "host": true
+      "name": "libdrm",
+      "platform": "!windows"
     },
-    "zlib",
-    "zstd",
     {
-      "name": "libxshmfence",
+      "name": "libglvnd",
       "platform": "!windows"
     },
     {
@@ -25,8 +23,16 @@
       "platform": "!windows"
     },
     {
-      "name": "elfutils",
+      "name": "libxshmfence",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     },
     {
       "name": "wayland",
@@ -36,14 +42,8 @@
       "name": "wayland-protocols",
       "platform": "!windows"
     },
-      {
-      "name": "libdrm",
-      "platform": "!windows"
-    },
-    {
-      "name": "libglvnd",
-      "platform": "!windows"
-    }
+    "zlib",
+    "zstd"
   ],
   "default-features": [
     "default-features"
@@ -92,15 +92,6 @@
         }
       ]
     },
-    "glx": {
-      "description": "Build support for GLX platform",
-      "dependencies": [
-        "libx11",
-        "libxext",
-        "libxfixes",
-        "libxxf86vm"
-      ]
-    },
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
       "dependencies": [
@@ -117,6 +108,15 @@
           "name": "mesa",
           "default-features": false
         }
+      ]
+    },
+    "glx": {
+      "description": "Build support for GLX platform",
+      "dependencies": [
+        "libx11",
+        "libxext",
+        "libxfixes",
+        "libxxf86vm"
       ]
     },
     "llvm": {
@@ -150,18 +150,18 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "target-x86"
+            "libclc",
+            "target-amdgpu"
           ],
-          "platform": "x64 | x86"
+          "platform": "!windows"
         },
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libclc",
-            "target-amdgpu"
+            "target-x86"
           ],
-          "platform": "!windows"
+          "platform": "x64 | x86"
         }
       ]
     },

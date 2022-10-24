@@ -44,7 +44,9 @@
     },
     "gl": {
       "description": "OpenGL support for skia",
-      "dependencies" : [ "opengl"]
+      "dependencies": [
+        "opengl"
+      ]
     },
     "metal": {
       "description": "Metal support for skia"
