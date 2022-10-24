@@ -6,10 +6,6 @@ connection.c:(.text+0x265a): undefined reference to `ffi_type_pointer'
 /usr/bin/ld: connection.c:(.text+0x2723): undefined reference to `ffi_type_sint32'
 Missing libffi linkage -> check cmake module. 
 
-urho3d: x11
-/mnt/vcpkg-ci/buildtrees/urho3d/src/3eb4f765c8-59caa317dd.clean/Source/ThirdParty/GLEW/./glxew.h:98:10: fatal error: X11/Xlib.h: No such file or directory
-   98 | #include <X11/Xlib.h>
-
 TODOS:
 libX11.a needs fixing of hardcoding absolute paths. 
 libinput?
