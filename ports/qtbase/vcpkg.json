@@ -127,7 +127,7 @@
           "default-features": false,
           "features": [
             "egl",
-            "gles"
+            "gles2"
           ],
           "platform": "android"
         }
@@ -171,8 +171,8 @@
         }
       ]
     },
-    "gles": {
-      "description": "GLES"
+    "gles2": {
+      "description": "OpenGL ES 2.0"
     },
     "glib": {
       "description": "GLib",

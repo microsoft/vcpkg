@@ -146,6 +146,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
+    "gles2"               FEATURE_opengles2
     #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
     #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
@@ -161,7 +162,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
-    "gles"                CMAKE_DISABLE_FIND_PACKAGE_GLESv2
+    "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
