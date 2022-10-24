@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
         -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF
-        -DENABLE_TEST=OFF  
+        -DENABLE_TEST=OFF
         ${ADDITIONAL_OPTIONS}
 )
 

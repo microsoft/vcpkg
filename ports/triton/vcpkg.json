@@ -27,6 +27,13 @@
     "z3"
   ],
   "features": {
+    "boost": {
+      "description": "Use Boost as multiprecision library",
+      "dependencies": [
+        "boost-multiprecision",
+        "boost-numeric-conversion"
+      ]
+    },
     "python": {
       "description": "Build Triton with Python bindings",
       "dependencies": [
