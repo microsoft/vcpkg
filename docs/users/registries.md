@@ -92,15 +92,16 @@ The `"packages"` fields of all the package registries must be disjoint.
 
 ### Configuration: `"overlay-ports"`
 
-The `"overlay-ports"` field must contain an array of paths, which point
-to a particular port or a directory containing ports to overlay. Paths should be
-absolute or relative to `vcpkg-configuration.json`.
+The `"overlay-ports"` field must contain an array of paths. Each path in the array must point
+to either: 
+* a particular port directory (a directory containing `vcpkg.json` and `portfile.cmake`), or
+* a directory containing port directories.
+Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
 
 ### Configuration: `"overlay-triplets"`
 
-The `"overlay-triplets"` field must contain an array of paths, which point
-to a directory containing triplets to overlay. Paths should be absolute
-or relative to `vcpkg-configuration.json`.
+The `"overlay-triplets"` field must contain an array of paths. Each path in the array must point to a directory of triplet files ([see triplets documentation](../triplets.md)).
+Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
 
 ### Example Configuration File
 
@@ -152,15 +153,17 @@ The name resolution algorithm is as follows:
 
 ## Overlays Resolution
 
-Overlay ports and overlay triplets will be resolved in the order in which
-additional paths are specified, with the first match being selected for installation,
-and falling back to `{vcpkg root}/ports` (or as specified by `--x-builtin-ports-root`) if the port is not found in any of the additional paths.
+Overlay ports and triplets are evaluated in this order:
 
-If configured in multiple places, overlays will follow the following priority:
+1. Overlays from the command line
+2. Overlays from `vcpkg-configuration.json`
+3. Overlays from the `VCPKG_OVERLAY_[PORTS|TRIPLETS]` environment variable.
 
-- Overlays configured through the command line
-- Overlays configured in `vcpkg-configuration.json`
-- Overlays configured via environment variables
+Additionaly, each method has its own evaluation order:
+
+* Overlays from the command line are evaluated from left-to-right in the order each argument is passed, with each `--overlay-[ports|triplets]` argument adding a new overlay location.
+* Overlays from `vcpkg-configuration.json` are evaluated in the order of the `"overlay-[ports|triplets]"` array.
+* Overlays set by `VCPKG_OVERLAY_[PORTS|TRIPLETS]` are evaluated from left-to-right. Overlay locations are separated by an OS-specific path separator (`;` on Windows and `:` on non-Windows).
 
 ### Versioning Support
 
