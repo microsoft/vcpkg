@@ -3,13 +3,17 @@
   "version": "5.15.6",
   "description": "Qt5 wayland Module;",
   "license": null,
-  "supports": "linux",
+  "supports": "!windows",
   "dependencies": [
     {
       "name": "qt5-base",
       "default-features": false
     },
     "wayland",
+    {
+      "name": "wayland",
+      "host": true
+    },
     "wayland-protocols"
   ]
 }

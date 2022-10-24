@@ -4,5 +4,8 @@ message(WARNING "This port is just a placeholder until the required wayland libr
 message(WARNING "qtwayland requires libwayland-dev from your system package manager. You can install it with
 sudo apt install libwayland-dev
 on Ubuntu systems.")
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/wayland")
+
+include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 qt_submodule_installation()
