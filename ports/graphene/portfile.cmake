@@ -1,6 +1,3 @@
-
-set(VERSION 1.10.8)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/graphene/1.10/graphene-${VERSION}.tar.xz"
     FILENAME "graphene-${VERSION}.tar.xz"
@@ -9,13 +6,13 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_clang-cl.patch
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dgtk_doc=false #Enable generating the API reference (depends on GTK-Doc)
         -Dgobject_types=true #Enable GObject types (depends on GObject)
@@ -34,4 +31,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
