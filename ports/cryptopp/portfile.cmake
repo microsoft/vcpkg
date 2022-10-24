@@ -41,7 +41,7 @@ endif()
 # disable assembly on ARM Windows to fix broken build
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     set(CRYPTOPP_DISABLE_ASM "ON")
-else()
+elseif(NOT DEFINED CRYPTOPP_DISABLE_ASM) # Allow disabling using a triplet file
     set(CRYPTOPP_DISABLE_ASM "OFF")
 endif()
 
@@ -59,6 +59,8 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_DOCUMENTATION=OFF
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
+        -DUSE_INTERMEDIATE_OBJECTS_TARGET=OFF # Not required when we build static only
+        -DCMAKE_POLICY_DEFAULT_CMP0063=NEW # Honor "<LANG>_VISIBILITY_PRESET" properties
 )
 
 vcpkg_cmake_install ()

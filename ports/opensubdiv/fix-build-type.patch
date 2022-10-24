@@ -1,20 +1,36 @@
 diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
-index 72c5b7e..ca24488 100644
+index f01a8a0..e1c24eb 100644
 --- a/opensubdiv/CMakeLists.txt
 +++ b/opensubdiv/CMakeLists.txt
-@@ -124,6 +124,7 @@ if (NOT NO_LIB)
+@@ -122,6 +122,7 @@ if (NOT NO_LIB)
  
      #---------------------------------------------------------------------------
  
-+    if (NOT BUILD_SHARED_LIBS)
++    if(NOT BUILD_SHARED_LIBS)
      # Build static libs ------------------------------------
      add_library(osd_static_cpu
          STATIC
-@@ -146,6 +147,7 @@ if (NOT NO_LIB)
-     )
+@@ -169,6 +170,7 @@ if (NOT NO_LIB)
  
-     install( TARGETS osd_static_cpu DESTINATION "${CMAKE_LIBDIR_BASE}" )
+         install( TARGETS osd_static_gpu EXPORT opensubdiv-targets DESTINATION "${CMAKE_LIBDIR_BASE}" )
+     endif()
 +    endif()
  
-     if( OSD_GPU )
-         # this macro uses FindCUDA.cmake to compile .cu kernel files
+ 
+     # Build dynamic libs  ----------------------------------
+@@ -284,6 +286,7 @@ if (NOT NO_LIB)
+         list(APPEND PUBLIC_HEADER_FILES "version.h")
+ 
+         #static framework
++        if(NOT BUILD_SHARED_LIBS)
+         add_library(osd_static_framework
+             STATIC
+             version.cpp
+@@ -330,6 +333,7 @@ if (NOT NO_LIB)
+             "Versions/Current/Headers"
+             "$<TARGET_FILE_DIR:osd_static_framework>/../../Headers"
+         )
++        endif()
+ 
+         #shared framework
+         if (BUILD_SHARED_LIBS)
