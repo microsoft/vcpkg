@@ -14,7 +14,7 @@ vcpkg_from_gitlab(
         remove_strings_h.patch
         fix-dependency-gettext.patch
         strcasecmp.patch
-        tools.patch
+        tools.patch # will look for libxt otherwise
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -43,7 +43,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES SXPM AUTOCLEAN)
+#vcpkg_copy_tools(TOOL_NAMES sxpm cxpm AUTOCLEAN)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
