@@ -47,6 +47,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPTIONS --disable-selective-werror)
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
@@ -70,8 +74,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/X11/Shell.h" "#define _XtShell_h" "#define _XtShell_h\n#define XTSTRINGDEFINES")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xt.pc" " -lXt" " -lXt -lws2_32")
+    if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xt.pc" " -lXt" " -lXt -lws2_32")
+    endif()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(NOT VCPKG_CROSSCOMPILING)
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET-TRIPLET}-rel/util/makestrs${VCPKG_TARGET_EXECUTABLE_SUFFIX}" 
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
