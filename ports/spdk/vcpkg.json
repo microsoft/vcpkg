@@ -5,6 +5,7 @@
   "description": "Storage Performance Development Kit",
   "supports": "linux",
   "dependencies": [
+    "libnuma",
     "spdk-dpdk",
     "spdk-ipsec",
     "spdk-isal"

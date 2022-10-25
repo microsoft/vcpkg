@@ -13,7 +13,7 @@
       "default-features": false
     },
     {
-      "name": "numactl",
+      "name": "libnuma",
       "platform": "linux"
     },
     "python3",
