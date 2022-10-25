@@ -37,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     file(READ ${CURRENT_PACKAGES_DIR}/include/apu.h  APU_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      string(REPLACE "defined(APU_DECLARE_EXPORT)" "1" APU_H "${APU_H}")
+      string(REPLACE "defined(APU_DECLARE_STATIC)" "0" APU_H "${APU_H}")
     else()
       string(REPLACE "defined(APU_DECLARE_STATIC)" "1" APU_H "${APU_H}")
     endif()
