@@ -4004,6 +4004,10 @@
       "baseline": "2021-03-01",
       "port-version": 0
     },
+    "libnuma": {
+      "baseline": "2.0.16",
+      "port-version": 0
+    },
     "libodb": {
       "baseline": "2.4.0",
       "port-version": 8
