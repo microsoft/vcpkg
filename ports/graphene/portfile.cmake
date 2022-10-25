@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 c56dab6712cf58387d0512a213cd0cd456679e46a495ee5cfd9bc25440cda2d72d56974af4e462f3c863869a1e2e506b702f468933045609d35fdf006212c67d
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_clang-cl.patch
