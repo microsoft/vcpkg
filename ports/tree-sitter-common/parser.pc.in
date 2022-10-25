@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib/tree-sitter/parser
+includedir=${prefix}/include
+additionallibs=@ADDITIONALLIBS@
+
+Name: @PROJECT_NAME@
+Description: A tree-sitter grammar for the @PARSER_LANGUAGE@ programming language.
+Libs: -L${libdir} ${additionallibs} -l@PARSER_LANGUAGE@
+Cflags: -I${includedir}
+Version: @PARSER_VERSION@

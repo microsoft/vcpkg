@@ -11,19 +11,37 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/src/scanner.c)
   set(PARSER_SOURCES ${PARSER_SOURCES} ${PROJECT_SOURCE_DIR}/src/scanner.c)
 elseif(EXISTS ${PROJECT_SOURCE_DIR}/src/scanner.cc)
   set(PARSER_SOURCES ${PARSER_SOURCES} ${PROJECT_SOURCE_DIR}/src/scanner.cc)
+  set(ADDITIONALLIBS "-lc++")
 endif()
 
 add_library(@PARSER_NAME@ ${PARSER_SOURCES})
 
 target_include_directories(@PARSER_NAME@ PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
+if(BUILD_SHARED_LIBS)
+  set(LIB_PREFIX "")
+else()
+  set(LIB_PREFIX lib)
+endif()
+
 set_target_properties(
   @PARSER_NAME@
   PROPERTIES
     POSITION_INDEPENDENT_CODE ON
     OUTPUT_NAME @PARSER_LANGUAGE@
-    PREFIX ""
+    PREFIX "${LIB_PREFIX}"
 )
+
+set(PARSER_VERSION @PARSER_VERSION@)
+set(PARSER_LANGUAGE @PARSER_LANGUAGE@)
+string(TOUPPER "${PROJECT_NAME}" PROJECT_NAME_UPPER)
+string(REPLACE "-" "_" PROJECT_NAME_UPPER "${PROJECT_NAME_UPPER}")
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/@PARSER_NAME@.pc.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/@PARSER_NAME@.pc" @ONLY)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/@PARSER_NAME@.h.in"
+              "${CMAKE_CURRENT_BINARY_DIR}/generated/include/tree_sitter/@PARSER_LANGUAGE@.h" @ONLY)
 
 include(GNUInstallDirs)
 install(
@@ -31,3 +49,9 @@ install(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/tree-sitter/parser
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/tree-sitter/parser
 )
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/generated/include/tree_sitter/@PARSER_LANGUAGE@.h"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tree_sitter")
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/@PARSER_NAME@.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

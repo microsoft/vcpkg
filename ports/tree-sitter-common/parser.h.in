@@ -1,0 +1,16 @@
+#ifndef @PROJECT_NAME_UPPER@_H_
+#define @PROJECT_NAME_UPPER@_H_
+
+#include <tree_sitter/parser.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern TSLanguage *tree_sitter_@PARSER_LANGUAGE@();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // @PROJECT_NAME_UPPER@_H_

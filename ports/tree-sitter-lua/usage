@@ -1,0 +1,7 @@
+The package tree-sitter-lua can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig)
+    pkg_check_modules(ts_lua REQUIRED IMPORTED_TARGET tree-sitter-lua)
+
+    target_link_libraries(main PRIVATE PkgConfig::ts_lua)
+
