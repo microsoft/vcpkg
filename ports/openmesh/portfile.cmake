@@ -1,5 +1,3 @@
-set(VERSION 9.0)
-
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
@@ -59,5 +57,4 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/OpenMesh/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenMesh")
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
