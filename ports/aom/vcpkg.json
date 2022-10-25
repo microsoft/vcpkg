@@ -4,6 +4,7 @@
   "description": "AV1 codec library",
   "homepage": "https://aomedia.googlesource.com/aom",
   "supports": "!(windows & arm & !uwp)",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
