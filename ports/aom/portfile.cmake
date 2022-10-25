@@ -19,9 +19,16 @@ vcpkg_from_git(
         aom-install.diff
 )
 
+set(aom_target_cpu "")
+if(VCPKG_TARGET_IS_UWP)
+    # UWP + aom's assembler files result in weirdness and build failures
+    set(aom_target_cpu "-DAOM_TARGET_CPU=generic")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${aom_target_cpu}
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF
