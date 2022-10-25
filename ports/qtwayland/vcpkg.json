@@ -12,7 +12,8 @@
       "features": [
         "gui"
       ]
-    }
+    },
+    "wayland"
   ],
   "features": {
     "qml": {

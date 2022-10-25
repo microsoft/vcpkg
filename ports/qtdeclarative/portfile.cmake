@@ -19,8 +19,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
         qmltc
     )
 
-set(ENV{LD_DEBUG} all)
-file(INSTALL "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qsb" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME qsb.log)
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS

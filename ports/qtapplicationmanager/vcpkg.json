@@ -23,6 +23,9 @@
     {
       "name": "qtwayland",
       "default-features": false,
+      "features": [
+        "qml"
+      ],
       "platform": "!windows"
     }
   ]

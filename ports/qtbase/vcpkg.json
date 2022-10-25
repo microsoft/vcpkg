@@ -373,6 +373,7 @@
     "xkb": {
       "description": "XKB",
       "dependencies": [
+        "libxkbcommon",
         {
           "name": "qtbase",
           "default-features": false,
