@@ -15,10 +15,6 @@
       "platform": "!windows"
     },
     {
-      "name": "libglvnd",
-      "platform": "!windows"
-    },
-    {
       "name": "libxrandr",
       "platform": "!windows"
     },
@@ -87,8 +83,8 @@
       "description": "Build support for EGL platform",
       "dependencies": [
         {
-          "name": "mesa",
-          "default-features": false
+          "name": "libglvnd",
+          "platform": "!windows"
         }
       ]
     },
@@ -112,7 +108,9 @@
     },
     "glx": {
       "description": "Build support for GLX platform",
+      "supports": "!windows",
       "dependencies": [
+        "libglvnd",
         "libx11",
         "libxext",
         "libxfixes",
