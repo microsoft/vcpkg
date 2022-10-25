@@ -3,8 +3,8 @@
   "version-semver": "3.5.0",
   "description": "AV1 codec library",
   "homepage": "https://aomedia.googlesource.com/aom",
-  "supports": "!(windows & arm & !uwp)",
   "license": "BSD-2-Clause",
+  "supports": "!(windows & arm & !uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
