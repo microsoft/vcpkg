@@ -12,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "python" PYTHON_BINDINGS
-        "boost" BOOST_INTERFACE
+        "boost"  BOOST_INTERFACE
 )
 
 set(ADDITIONAL_OPTIONS "")
