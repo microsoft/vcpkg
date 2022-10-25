@@ -30,10 +30,15 @@ APT_PACKAGES="git curl zip unzip tar"
 
 ## common build dependencies
 APT_PACKAGES="$APT_PACKAGES at gperf cifs-utils \
-  build-essential g++ gfortran yasm libnuma1 libnuma-dev libtool-bin \
-  flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool \
+  build-essential g++ gfortran yasm libtool-bin \
+  flex bison libbison-dev autoconf libudev-dev libtool \
   dh-autoreconf autoconf-archive ruby-full \
   pkg-config meson nasm cmake ninja-build"
+
+# Questions:
+# Why/Where to get libbison-dev ?
+# Where to get libudev-dev ?
+# Why/Where to get libncurses5-dev ?
 
 ## required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
