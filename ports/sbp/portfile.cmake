@@ -1,7 +1,5 @@
 # Windows shared libraries are not supported yet
 # See https://github.com/swift-nav/libsbp/issues/1062
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()

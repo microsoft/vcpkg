@@ -1,13 +1,11 @@
 # FLTK has many improperly shared global variables that get duplicated into every DLL
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
-    REF release-1.3.7
-    SHA512 aad131027e88fac3fe73d7e0abfc2602cdc195388f14b29b58d654cb49b780e6ff2ef4270935730b45cd3d366f9e8c8fa3c27a4f17b1f6e8c8fd1f9a0a73c308
+    REF release-1.3.8
+    SHA512 197848d3b80a65cca936daf4f0b74609f0fe8332a4cd11af53385fb2aa45ad698b1e239a48732b118cd3cb189bc531711b72fb2eeeb85be887dc6c5a558fa4b3
     PATCHES
         findlibsfix.patch
         config-path.patch
@@ -15,14 +13,15 @@ vcpkg_from_github(
         fix-system-link.patch
 )
 
-# Remove these 2 lines when the next update
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/fltk_version.dat DESTINATION ${SOURCE_PATH})
-file(REMOVE ${SOURCE_PATH}/VERSION)
-
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
 else()
     set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
+endif()
+
+set(fluid_path_param "")
+if(VCPKG_CROSSCOMPILING)
+    set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 vcpkg_cmake_configure(
@@ -36,6 +35,7 @@ vcpkg_cmake_configure(
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
         -DFLTK_CONFIG_PATH=share/fltk
+        ${fluid_path_param}
         ${OPTION_USE_GL}
 )
 
@@ -45,7 +45,12 @@ vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_OSX)
+# don't install fluid
+if(VCPKG_CROSSCOMPILING)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES fltk-config AUTO_CLEAN)
+    endif()
+elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_copy_tools(TOOL_NAMES fluid.app fltk-config AUTO_CLEAN)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config")

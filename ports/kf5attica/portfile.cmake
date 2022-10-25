@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/attica
-    REF v5.88.0
-    SHA512 09c04ae1572a165c8208c09db9bc3591584b7f327b56f78fcd7f9beb088a13ae69e41c593d4903b539ae52739a1c649359b668cfe8775bb2c61210152cb7be3f
+    REF v5.89.0
+    SHA512 46f4cb550a13032da2e48861916356f3dfa47de0e1c0672ffeea19bad813dfb5cdf1b45b1a25ff35adc07e622486b37d7a65ddf3d39c2b214114d916f09577bb
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -26,6 +26,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_fixup_pkgconfig()
 
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

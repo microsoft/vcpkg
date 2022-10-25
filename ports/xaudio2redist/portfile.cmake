@@ -1,15 +1,15 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Linux" "OSX")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+set(XAUDIO2REDIST_VERSION 1.2.9)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/1.2.8"
-    FILENAME "xaudio2redist.1.2.8.zip"
-    SHA512 509b2783457b86ed1878fd4e14a01fa7288591925a2bb3cad4d68afd597fbff1f1349b619dad628b5d685169825a775120e1611559e9097837cff0fb6d39acf0
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/${XAUDIO2REDIST_VERSION}"
+    FILENAME "xaudio2redist.${XAUDIO2REDIST_VERSION}.zip"
+    SHA512 c3b37640fb871523a63cd227653d8d972dd95d6e12ccf2f28c434f51bb77011c821a0cd5ae2a9fa311f005a0083798a3218a98c0a9db5db094a5ef54bb960675
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH PACKAGE_PATH
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )
@@ -33,5 +33,4 @@ file(COPY "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/x
 
 file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/Findxaudio2redist.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/xaudio2redist-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

@@ -91,11 +91,11 @@ OSX_ARCH_COUNT=0@OSX_ARCH_COUNT@
 build_ffmpeg() {
     echo "=== CONFIGURING ==="
 
-    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ $@
+    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" "--cc=$CC" @CONFIGURE_OPTIONS@ $@
 
     echo "=== BUILDING ==="
 
-    make -j${JOBS}
+    make -j${JOBS} V=1
 
     echo "=== INSTALLING ==="
 

@@ -1,10 +1,10 @@
-set(IDN2_VERSION 2.3.0)
+set(IDN2_VERSION 2.3.1)
 set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 a2bf6d2249948bce14fbbc802f8af1c9b427fc9bf64203a2f3d7239d8e6061d0a8e7970a23e8e5889110a654a321e0504c7a6d049bb501e7f6a23d42b50b6187
+    SHA512 4d77a4a79e08a05e46fc14827f987b9e7645ebf5d0c0869eb96f9902c2f6b73ea69fd6f9f97b80a9f07cce84f7aa299834df91485d4e7c16500d31a4b9865fe4
 )
 
 vcpkg_extract_source_archive_ex(
@@ -20,10 +20,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set(HAVE_ALLOCA_H 0)
     
     configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h" "${SOURCE_PATH}")
+    configure_file("${SOURCE_PATH}/gl/alloca.in.h" "${SOURCE_PATH}/gl/alloca.h")
     
     function(simple_copy_template_header FILE_PATH BASE_NAME)
         if(NOT EXISTS "${FILE_PATH}/${BASE_NAME}.h" AND EXISTS "${FILE_PATH}/${BASE_NAME}.in.h")
-            configure_file("${FILE_PATH}/${BASE_NAME}.in.h" "${FILE_PATH}/${BASE_NAME}.h")
+            configure_file("${FILE_PATH}/${BASE_NAME}.in.h" "${FILE_PATH}/${BASE_NAME}.h" @ONLY)
         endif()
     endfunction()
     

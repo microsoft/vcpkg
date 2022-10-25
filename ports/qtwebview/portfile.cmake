@@ -6,6 +6,9 @@ set(${PORT}_PATCHES)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6WebEngineQuick
+    "webengine"     CMAKE_REQUIRE_FIND_PACKAGE_WebEngineCore
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6WebEngineQuick

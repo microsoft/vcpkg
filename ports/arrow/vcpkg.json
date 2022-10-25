@@ -1,8 +1,9 @@
 {
   "name": "arrow",
-  "version": "6.0.0",
+  "version": "9.0.0",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
+  "license": "Apache-2.0",
   "supports": "x64 | (arm64 & !windows)",
   "dependencies": [
     "boost-filesystem",
@@ -11,7 +12,6 @@
     "brotli",
     "bzip2",
     "gflags",
-    "glog",
     "lz4",
     "openssl",
     "re2",
@@ -26,6 +26,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "xsimd",
     "zlib",
     "zstd"
   ],
@@ -39,8 +40,17 @@
     "csv": {
       "description": "CSV support"
     },
+    "cuda": {
+      "description": "cuda support",
+      "dependencies": [
+        "cuda"
+      ]
+    },
     "dataset": {
       "description": "Dataset support"
+    },
+    "example": {
+      "description": "Install the minimal example (source code)"
     },
     "filesystem": {
       "description": "Filesystem support"
@@ -55,7 +65,8 @@
       ]
     },
     "jemalloc": {
-      "description": "jemalloc allocator"
+      "description": "jemalloc allocator",
+      "supports": "!windows"
     },
     "json": {
       "description": "JSON support",
@@ -64,7 +75,8 @@
       ]
     },
     "mimalloc": {
-      "description": "mimalloc allocator"
+      "description": "mimalloc allocator",
+      "supports": "windows"
     },
     "orc": {
       "description": "ORC support",
@@ -73,7 +85,14 @@
       ]
     },
     "parquet": {
-      "description": "Parquet support"
+      "description": "Parquet support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "plasma": {
+      "description": "Plasma support",
+      "supports": "!windows"
     },
     "s3": {
       "description": "S3 support",

@@ -4,20 +4,22 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.9.5/igraph-0.9.5.tar.gz"
-    FILENAME "igraph-0.9.5.tar.gz"
-    SHA512 2eb562bb898ff19f8e4ebb2d9f3393000b66154cb87318999bbb920793657e4e3a0b52d10bc8cbe4d2c3a5d27258fd8156df97f778065a92b969bfcb7d9fc28c
+    URLS "https://github.com/igraph/igraph/releases/download/0.10.2/igraph-0.10.2.tar.gz"
+    FILENAME "igraph-0.10.2.tar.gz"
+    SHA512 28b0d53b846af070e1512663a55ed9c8ff57bf57d1c1b548e1970f365e16f771fc0dad3c55717be9fe0c0948aa930fa12d0e1aac1398800e9e43215c128de17f
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+      "glpk-uwp.patch" # patch GLPK for UWP compatibility
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    graphml   IGRAPH_GRAPHML_SUPPORT
-    openmp    IGRAPH_OPENMP_SUPPORT
+        graphml         IGRAPH_GRAPHML_SUPPORT
+        openmp          IGRAPH_OPENMP_SUPPORT
 )
 
 # Allow cross-compilation. See https://igraph.org/c/html/latest/igraph-Installation.html#igraph-Installation-cross-compiling
@@ -38,15 +40,15 @@ vcpkg_cmake_configure(
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        # OpenBLAS provides BLAS/LAPACK but some tests fail with OpenBLAS on Windows.
-        # See https://github.com/igraph/igraph/issues/1491
-        -DIGRAPH_USE_INTERNAL_BLAS=ON
-        -DIGRAPH_USE_INTERNAL_LAPACK=ON
-        -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
         # Currently, external GMP provides no performance or functionality benefits.
         -DIGRAPH_USE_INTERNAL_GMP=ON
+        # PLFIT is not yet available in vcpkg.
+        -DIGRAPH_USE_INTERNAL_PLFIT=ON
+        # Use BLAS and LAPACK from vcpkg
+        -DIGRAPH_USE_INTERNAL_BLAS=OFF
+        -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )

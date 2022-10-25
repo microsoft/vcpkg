@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 3.3.5
-    SHA512 cbb8ebf25d3d826eb1daeff3ad2e0e965ce9def3352955f297743d918f625d96bc05bf87c90f7b57ec53376a0f2f6ce62f80b57fac4e81e023400de275e97beb
+    REF 7482de6071d21db77a7236155da44c172a7f6c9e     #v3.3.8
+    SHA512 ec45b620338cf36a8dbdf7aaf54d7c3a49a1be4ae1a1ef95f1531094fec670870713969bbc23476769d374c7a71d93f6540ab64c46fb5f66f4402bb2d15c7d87
     HEAD_REF master
 )
 
@@ -13,8 +13,19 @@ if(VCPKG_TARGET_IS_LINUX)
     xcursor
     xorg
     libglu1-mesa
+    pkg-config
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
+else(VCPKG_TARGET_IS_OSX)
+    message(
+"GLFW3 currently requires the following libraries from the system package manager:
+    xinerama
+    xcursor
+    xorg
+    libglu1-mesa
+    pkg-config
+
+These can be installed via brew install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
 endif()
 
 vcpkg_cmake_configure(

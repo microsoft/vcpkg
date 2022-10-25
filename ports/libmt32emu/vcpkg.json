@@ -1,9 +1,9 @@
 {
   "name": "libmt32emu",
-  "version": "2.5.3",
-  "port-version": 1,
+  "version": "2.7.0",
   "description": "A MT-32 emulator",
   "homepage": "https://github.com/munt/munt/tree/master/mt32emu",
+  "license": "GPL-2.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

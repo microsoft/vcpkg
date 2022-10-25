@@ -3,9 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libhydrogen
-    REF 01c32862f6f6e864c113efc3f0142e05ea3531fe #2021-12-02
-    SHA512 016181db4573a1ab31547fbfb51e19fa09e4ee4e0e788434a7654921956a02547b55eda14ccfea98425f4f615fb90e0534c5e1010d5320c1958b65b0489a2931 
+    REF 9f9d504bb5a97bc98ee52529726d41c027df76ad #2022-06-21
+    SHA512 f4dabc0b399c8850563c8a967209db537fdf787deaef46899a5484bc89bffb31581312940549784defe4c42d057309aaabd402831a7c3a94b04a00d47a07736c 
     HEAD_REF master
+    PATCHES
+        remove-tests.patch
+        no-arch.patch
 )
 
 vcpkg_cmake_configure(

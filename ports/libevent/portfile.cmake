@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
@@ -9,6 +7,7 @@ vcpkg_from_github(
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
         fix-usage.patch
+        fix-android-threads.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -63,6 +62,7 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_t
     "${CURRENT_PACKAGES_DIR}"
     "${CURRENT_INSTALLED_DIR}"
 )
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventConfig.cmake "${SOURCE_PATH}/include;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" "")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

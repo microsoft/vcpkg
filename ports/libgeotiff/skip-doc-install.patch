@@ -1,16 +1,16 @@
 diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
-index b4a3cee..f838a36 100644
+index 54779a5..30ff29f 100644
 --- a/libgeotiff/CMakeLists.txt
 +++ b/libgeotiff/CMakeLists.txt
-@@ -286,6 +286,7 @@ SET(GEOTIFF_LIB_DIR ${GEOTIFF_LIB_SUBDIR})
+@@ -262,6 +262,7 @@ SET(GEOTIFF_BIN_DIR ${GEOTIFF_BIN_SUBDIR})
+ SET(GEOTIFF_LIB_DIR ${GEOTIFF_LIB_SUBDIR})
  SET(GEOTIFF_INCLUDE_DIR ${GEOTIFF_INCLUDE_SUBDIR})
- SET(GEOTIFF_DATA_DIR ${GEOTIFF_DATA_SUBDIR})
  
 +if(0)
  # Install doc files
  INSTALL(FILES
      AUTHORS ChangeLog COPYING INSTALL LICENSE README README_BIN README.WIN
-@@ -294,6 +295,7 @@ INSTALL(FILES
+@@ -269,6 +270,7 @@ INSTALL(FILES
  
  # Install man pages
  INSTALL(FILES ${GEOTIFF_MAN_PAGES} DESTINATION share/man/man1)

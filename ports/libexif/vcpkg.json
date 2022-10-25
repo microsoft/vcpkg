@@ -1,7 +1,7 @@
 {
   "name": "libexif",
-  "version-string": "0.6.22",
-  "port-version": 1,
+  "version": "0.6.22",
+  "port-version": 2,
   "description": "a library for parsing, editing, and saving EXIF data",
   "homepage": "https://libexif.github.io/",
   "supports": "!uwp"

@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF f81a38057f1d240fe7b7a069612776f788bc88ea # poco-1.11.0-release
-    SHA512 c5f39aca8b5464959b9337b0cbd8ee86d81f195f5a5ba864692c71b2bdbffdecef0537b6e6a2d9f41829bcd58f78825b10565d0c4ee7b3c856a4886a9e328118
+    REF 9d1c428c861f2e5ccf09149bbe8d2149720c5896 # poco-1.11.2-release
+    SHA512 b812bb194783c94e2a048daf6659e0f0fa5e9040ebd49342a5d39636cee600754d0465f8b28725d76dcb2681d1b64dfd8b08ac9c85b95b4ac8edf9b53d68feb1
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -14,6 +12,7 @@ vcpkg_from_github(
         fix_dependency.patch
         fix-feature-sqlite3.patch
         fix-error-c3861.patch
+        fix-InstallDataMysql.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
@@ -84,20 +83,20 @@ vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
 
 # Copy additional include files not part of any libraries
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")
-    file(COPY ${SOURCE_PATH}/Data/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/MySQL")
-    file(COPY ${SOURCE_PATH}/Data/MySQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/MySQL/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/ODBC")
-    file(COPY ${SOURCE_PATH}/Data/ODBC/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/ODBC/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/PostgreSQL")
-    file(COPY ${SOURCE_PATH}/Data/PostgreSQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libpq)
+    file(COPY "${SOURCE_PATH}/Data/PostgreSQL/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libpq")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
-    file(COPY ${SOURCE_PATH}/Data/SQLite/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

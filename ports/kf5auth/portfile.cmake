@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.88.0
-    SHA512 f4db5c5ff1f1f72c27fd80ed4f2206fc9f17ac1eaff2486530884be989eaeaae77eff6f536909d961060ee4bed33498ef49ca22b5b22f90cc0bf6c5b8cb5bed0
+    REF v5.89.0
+    SHA512 815672fc572b22c51761476da9c82bc128a6a66ede39b5b9e09592c415908064d2b2f0c39674b702f503eeb48f33d0d4443d200bc2830b63b5f4468db66b0d8f
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,6 +27,6 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
-
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

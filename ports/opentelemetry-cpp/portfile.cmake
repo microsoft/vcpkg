@@ -2,18 +2,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if ("etw" IN_LIST FEATURES)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "linux" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "OSX") 
-	    message(FATAL_ERROR "Feature 'ewt' does not support 'linux & osx'")
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
-    REF v1.0.1
-    SHA512 ddaf5f52f5c100f385e09a6eb69f08fced2e890145939d35f969b05743733409e43f4747713259b68641511401c2c1e01a498b9b7a20fab0f52ee6f4b5d3c77c
+    REF v1.6.0
+    SHA512 ae0777451a3d2d676afd9f3142ab78c7afb08474f6038bd810ff0ee30fee6695e10100c901e7ffadf3faf16c7d19622acdea414cd720be8572f7720f2d528628
     HEAD_REF main
+    PATCHES
+        support_absl_cxx17.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,16 +25,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP)
-    set(OTEL_PROTO_VERSION "0.11.0")
+    set(OTEL_PROTO_VERSION "0.18.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 ff6c207fe9cc2b6a344439ab5323b3225cf532358d52caf0afee27d9b4cd89195f6da6b6e383fe94de52f60c772df8b477c1ea943db67a217063c71587b7bb92
+        SHA512 5176e93ddbb92d10b5900f42bb7b98cd718488fb261ad204e73127e1bf1feb6a20cf17d5c7d4fbdd89575cef6c7fa98127a28d83e50ffba61da01a73659ddae6
     )
 
-    vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party)
-    file(REMOVE_RECURSE ${SOURCE_PATH}/third_party/opentelemetry-proto)
-    file(RENAME ${SOURCE_PATH}/third_party/opentelemetry-proto-${OTEL_PROTO_VERSION} ${SOURCE_PATH}/third_party/opentelemetry-proto)
+    vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/opentelemetry-proto")
+    file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
+    # Create empty .git directory to prevent opentelemetry from cloning it during build time
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
 endif()
 
 vcpkg_cmake_configure(
@@ -46,6 +44,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
+        -DWITH_METRICS_PREVIEW=ON
+        -DWITH_LOGS_PREVIEW=ON
         ${FEATURE_OPTIONS}
 )
 

@@ -1,0 +1,21 @@
+diff --git a/wincon/Makefile.vc b/wincon/Makefile.vc
+index 80c4689..1bae388 100644
+--- a/wincon/Makefile.vc
++++ b/wincon/Makefile.vc
+@@ -118,3 +118,16 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
+ 
+ tuidemo.obj: $(demodir)\tuidemo.c
+ 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
++
++install: all
++	-mkdir $(INSTALLDIR)\lib
++	copy pdcurses.lib $(INSTALLDIR)\lib
++!ifdef DLL
++	-mkdir $(INSTALLDIR)\bin
++	copy pdcurses.dll $(INSTALLDIR)\bin
++!endif
++!ifndef SKIP_HEADERS
++	-mkdir $(INSTALLDIR)\include
++	copy $(PDCURSES_SRCDIR)\curses.h $(INSTALLDIR)\include
++	copy $(PDCURSES_SRCDIR)\panel.h $(INSTALLDIR)\include
++!endif

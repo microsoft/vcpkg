@@ -1,100 +1,123 @@
-include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
+include_guard(GLOBAL)
 
-if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
-    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details-latest.cmake")
-else()
-    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
-endif()
-#set(PORT_DEBUG ON)
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake/vcpkg-port-config.cmake")
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-config/vcpkg-port-config.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
 
 if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
-macro(qt_stop_on_update)
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        return()
+function(qt_download_submodule_impl)
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
+
+    if("${_qarg_SUBMODULE}" IN_LIST QT_FROM_QT_GIT)
+        # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
+        vcpkg_from_git(
+            OUT_SOURCE_PATH SOURCE_PATH
+            URL "https://code.qt.io/qt/${_qarg_SUBMODULE}.git"
+            REF "${${_qarg_SUBMODULE}_REF}"
+            PATCHES ${_qarg_PATCHES}
+        )
+    else()
+        if(VCPKG_USE_HEAD_VERSION)
+            set(sha512 SKIP_SHA512)
+        elseif(NOT DEFINED "${_qarg_SUBMODULE}_HASH")
+            message(FATAL_ERROR "No information for ${_qarg_SUBMODULE} -- add it to QT_PORTS and run qtbase in QT_UPDATE_VERSION mode first")
+        else()
+            set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
+        endif()
+
+        qt_get_url_filename("${_qarg_SUBMODULE}" url filename)
+        vcpkg_download_distfile(archive
+            URLS "${url}"
+            FILENAME "${filename}"
+            ${sha512}
+        )
+        vcpkg_extract_source_archive(
+            SOURCE_PATH
+            ARCHIVE "${archive}"
+            PATCHES ${_qarg_PATCHES}
+        )
     endif()
-endmacro()
+    set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
+endfunction()
 
 function(qt_download_submodule)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" ""
-                      ""
-                      "PATCHES")
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "" "PATCHES")
 
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_USE_HEAD_VERSION ON)
-        set(UPDATE_PORT_GIT_OPTIONS
-                HEAD_REF "${QT_GIT_TAG}")
-    endif()
+    qt_download_submodule_impl(SUBMODULE "${PORT}" PATCHES ${_qarg_PATCHES})
 
-    vcpkg_from_git(
-        OUT_SOURCE_PATH SOURCE_PATH
-        URL "https://code.qt.io/qt/${PORT}.git"
-        REF "${${PORT}_REF}"
-        ${UPDATE_PORT_GIT_OPTIONS}
-        ${QT_FETCH_REF}
-        PATCHES ${_qarg_PATCHES}
-    )
-
-    if(QT_UPDATE_VERSION)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        message(STATUS "VCPKG_HEAD_VERSION:${VCPKG_HEAD_VERSION}")
-        file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${VCPKG_HEAD_VERSION})\n")
-    endif()
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
 
 
 function(qt_cmake_configure)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA"
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA;DISABLE_PARALLEL_CONFIGURE"
                       ""
-                      "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE")
+                      "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
     
     vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
-    if(NOT PORT STREQUAL "qtwebengine") # qtwebengine requires python2
+    if(NOT PORT STREQUAL "qtwebengine" OR QT_IS_LATEST) # qtwebengine requires python2; since 6.3 python3
         vcpkg_find_acquire_program(PYTHON3) # Python is required by some qt ports
         get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()
 
-    if(CMAKE_HOST_WIN32)
-        if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
-        endif()
-        set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
-    else()
-        if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl)
-        endif()
-        set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
+    if(NOT PORT MATCHES "^qtbase")
+        list(APPEND _qarg_OPTIONS "-DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
     endif()
+    set(PERL_OPTION "-DHOST_PERL:PATH=${PERL}")
 
-    if(NOT _qarg_DISABLE_NINJA)
-        set(NINJA_OPTION PREFER_NINJA)
+    set(ninja_option "")
+    if(_qarg_DISABLE_NINJA)
+        set(ninja_option WINDOWS_USE_MSBUILD)
+    endif()
+    
+    set(disable_parallel "")
+    if(_qarg_DISABLE_PARALLEL_CONFIGURE)
+        set(disable_parallel DISABLE_PARALLEL_CONFIGURE)
     endif()
 
     if(VCPKG_CROSSCOMPILING)
-        list(APPEND _qarg_OPTIONS -DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR})
-        list(APPEND _qarg_OPTIONS -DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 AND VCPKG_TARGET_IS_WINDOWS) # Remove if PR #16111 is merged
-            list(APPEND _qarg_OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
-        endif()
+        list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR}")
+        list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share")
     endif()
 
-    vcpkg_configure_cmake(
+    # Disable warning for CMAKE_(REQUIRE|DISABLE)_FIND_PACKAGE_<packagename>
+    string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^:=]+" disabled_find_package "${_qarg_OPTIONS}")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
+
+    string(REGEX MATCHALL "CMAKE_REQUIRE_FIND_PACKAGE_[^:=]+(:BOOL)?=OFF" require_find_package "${_qarg_OPTIONS}")
+    list(TRANSFORM require_find_package REPLACE "(:BOOL)?=OFF" "")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${require_find_package})
+    
+    # Disable unused warnings for disabled features. Qt might decide to not emit the feature variables if other features are deactivated. 
+    string(REGEX MATCHALL "(QT_)?FEATURE_[^:=]+(:BOOL)?=OFF" disabled_features "${_qarg_OPTIONS}")
+    list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
+
+    list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
+
+    if(NOT PORT MATCHES "qtbase")
+        list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
+    endif()
+
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        ${NINJA_OPTION}
+        ${ninja_option}
+        ${disable_parallel}
         OPTIONS 
+            -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings. 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
             #-DQT_USE_CCACHE
-            -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
-            -DQT_NO_MAKE_TESTS:BOOL=TRUE
+            -DQT_BUILD_EXAMPLES:BOOL=OFF
+            -DQT_BUILD_TESTS:BOOL=OFF
+            -DQT_BUILD_BENCHMARKS:BOOL=OFF
             ${PERL_OPTION}
             -DINSTALL_BINDIR:STRING=bin
             -DINSTALL_LIBEXECDIR:STRING=bin
@@ -109,13 +132,26 @@ function(qt_cmake_configure)
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
         OPTIONS_DEBUG
-            -DINPUT_debug:BOOL=ON
+            # -DFEATURE_debug:BOOL=ON only needed by qtbase and auto detected?
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=../include/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
-            ${_qis_CONFIGURE_OPTIONS_DEBUG}
+            ${_qarg_OPTIONS_DEBUG}
+        MAYBE_UNUSED_VARIABLES
+            INSTALL_BINDIR
+            INSTALL_DOCDIR
+            INSTALL_LIBEXECDIR
+            INSTALL_QMLDIR  # No qml files
+            INSTALL_TRANSLATIONSDIR # No translations
+            INSTALL_PLUGINSDIR # No plugins
+            INSTALL_DESCRIPTIONSDIR
+            INSTALL_INCLUDEDIR
+            HOST_PERL
+            QT_SYNCQT
+            QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
+            ${_qarg_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
@@ -132,6 +168,7 @@ function(qt_fix_prl_files)
         string(REPLACE "${include_path}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
         string(REPLACE "${install_prefix}" "\$\$[QT_INSTALL_PREFIX]" _contents "${_contents}")
         string(REPLACE "[QT_INSTALL_PREFIX]/lib/objects-Debug" "[QT_INSTALL_LIBS]/objects-Debug" _contents "${_contents}")
+        string(REPLACE "[QT_INSTALL_PREFIX]/Qt6/qml" "[QT_INSTALL_QML]" _contents "${_contents}")
         #Note: This only works without an extra if case since QT_INSTALL_PREFIX is the same for debug and release
         file(WRITE "${prl_file}" "${_contents}")
     endforeach()
@@ -160,13 +197,13 @@ function(qt_fixup_and_cleanup)
 
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
-            vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp} TOOLS_PATH "tools/Qt6/bin")
-            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_fixup_cmake_targets is working against that. 
+            vcpkg_cmake_config_fixup(PACKAGE_NAME "Qt6${_comp}" CONFIG_PATH "share/Qt6${_comp}" TOOLS_PATH "tools/Qt6/bin")
+            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_cmake_config_fixup is working against that. 
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
         endif()
     endforeach()
-    #fix debug plugin paths (should probably be fixed in vcpkg_fixup_pkgconfig)
+    #fix debug plugin paths (should probably be fixed in vcpkg_cmake_config_fixup)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     debug_message("DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
     foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
@@ -177,7 +214,7 @@ function(qt_fixup_and_cleanup)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
         foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
-            # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
+            # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
             vcpkg_replace_string("${_plugin_target}" 
                                  [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
                                  "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
@@ -226,12 +263,14 @@ function(qt_fixup_and_cleanup)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/share"
                         "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+                        "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-        debug_message("Files in bin: '${_bin_files}'")
-        if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
+        if(NOT _bin_files STREQUAL "")
+            message(STATUS "Remaining files in bin: '${_bin_files}'")
+        else() # Only clean if empty otherwise let vcpkg throw and error. 
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
@@ -241,15 +280,12 @@ endfunction()
 function(qt_install_submodule)
     cmake_parse_arguments(PARSE_ARGV 0 "_qis" "DISABLE_NINJA"
                           ""
-                          "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE")
+                          "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE;CONFIGURE_OPTIONS_MAYBE_UNUSED")
 
     set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
     qt_download_submodule(PATCHES ${_qis_PATCHES})
-    if(QT_UPDATE_VERSION)
-        return()
-    endif()
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
@@ -257,12 +293,16 @@ function(qt_install_submodule)
     qt_cmake_configure(${_opt} 
                        OPTIONS ${_qis_CONFIGURE_OPTIONS}
                        OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
-                       OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
+                       OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE}
+                       OPTIONS_MAYBE_UNUSED ${_qis_CONFIGURE_OPTIONS_MAYBE_UNUSED}
+                       )
 
-    vcpkg_install_cmake(ADD_BIN_TO_PATH)
+    vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
     qt_fixup_and_cleanup(TOOL_NAMES ${_qis_TOOL_NAMES})
 
     qt_install_copyright("${SOURCE_PATH}")
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
+
+include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")

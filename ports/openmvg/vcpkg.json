@@ -1,8 +1,10 @@
 {
   "name": "openmvg",
-  "version": "1.6",
-  "port-version": 3,
+  "version": "2.0",
+  "port-version": 5,
   "description": "open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.",
+  "license": "MPL-2.0-no-copyleft-exception",
+  "supports": "!(osx & arm64)",
   "dependencies": [
     "cereal",
     {
@@ -21,6 +23,14 @@
     "libpng",
     "osi",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "vlfeat",
     "zlib"
   ],

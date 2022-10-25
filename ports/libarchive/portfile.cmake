@@ -1,27 +1,30 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF 1b2c437b99b361c7692538fa373e99955e9b93ae      #v3.5.2
-    SHA512 df527dd333b01ed85f07831ba0bd4b1d0b5384fe12cfa53474ad39c04509105a3c8574a2d21a430e3584a931c8f6ae923bca95df83945f0c593c1ffaed3f62da
+    REF 6c3301111caa75c76e1b2acb1afb2d71341932ef      #v3.6.1
+    SHA512 2fd56ac20e4249807174a2ae29de1cbca55c8f8f247500845f56fd1fd9ebf48c17b8a25a93156df71df9526c0061415ec7d72a6b46bbaca776047e381a2321a7
     HEAD_REF master
-    PATCHES 
+    PATCHES
         disable-warnings.patch
         fix-buildsystem.patch
         fix-cpu-set.patch
-        fix-dependencies.patch
+        fix-deps.patch
         pkgconfig-modules.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2   ENABLE_BZip2
+        bzip2   CMAKE_REQUIRE_FIND_PACKAGE_BZip2
         libxml2 ENABLE_LIBXML2
+        libxml2 CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         lz4     ENABLE_LZ4
+        lz4     CMAKE_REQUIRE_FIND_PACKAGE_lz4
         lzma    ENABLE_LZMA
+        lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
         openssl ENABLE_OPENSSL
+        openssl CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         zstd    ENABLE_ZSTD
 )
 

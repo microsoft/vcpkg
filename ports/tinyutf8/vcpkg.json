@@ -1,6 +1,12 @@
 {
   "name": "tinyutf8",
-  "version-string": "4.0.2",
-  "port-version": 1,
-  "description": "TINYUTF8 is a library for extremely easy integration of Unicode into an arbitrary C++11 project."
+  "version": "4.4.3",
+  "description": "TINYUTF8 is a library for extremely easy integration of Unicode into an arbitrary C++11 project.",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

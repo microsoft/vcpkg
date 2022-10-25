@@ -1,9 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
-# Enable static build in UNIX
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -35,17 +30,22 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
+    MAYBE_UNUSED_VARIABLES
+        WITH_DOTNET
+        WITH_PERL
+        WITH_PYTHON2
+        WITH_PYTHON3
+        WITH_VALA
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Modules)
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
           "${CMAKE_CURRENT_LIST_DIR}/usage"
           DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(REMOVE_RECURSE "${LIBPROXY_TOOLS}" "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()

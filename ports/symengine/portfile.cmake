@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF v0.7.0
-    SHA512 fd3198bc4a05ca2b9b8a58039cc21af65b44457f295362a1a9b8dbf9c6e3df5186c0c84b289bc9fe85d9efd5ac1a683f6b7ba9a661fb6d913d6ceefb14ee2348
+    REF 7b1880824c2cce98787ae29a317682ba6c294484 #v0.9.0
+    SHA512 745b2616b88032ff047a28e46b703bc1912d109524f8aa411a5b7a650a6d89d3f16dc92812381e95b13bc5cf61218d2ff3db9d3809443264340eae180968cbcf
     HEAD_REF master
-    PATCHES
-        fix-build.patch
 )
 
 vcpkg_check_features(

@@ -9,9 +9,17 @@ vcpkg_from_sourceforge(
         export-target.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sse2 BUILD_SQUISH_WITH_SSE2
+)
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_SQUISH_WITH_OPENMP=OFF
 )
 
 vcpkg_cmake_install()

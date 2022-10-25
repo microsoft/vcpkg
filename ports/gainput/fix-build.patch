@@ -1,0 +1,47 @@
+set(XINPUT, "xinput") sets the variable "XINPUT," to "xinput",
+so this variable is never used anyways
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a443b66..61ff7b8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,11 +9,11 @@ option(GAINPUT_TESTS "Build Tests for Gainput" ON)
+ option(GAINPUT_BUILD_SHARED "BUILD_SHARED" ON)
+ option(GAINPUT_BUILD_STATIC "BUILD_STATIC" ON)
+ 
+-if(!WIN32)
++if(NOT WIN32)
+ 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
+ else()
+ 	set(XINPUT "Xinput9_1_0")
+-	if ( ${CMAKE_SYSTEM_VERSION} LESS 6.1 )
++	if ( 0 )
+ 		set(XINPUT, "xinput")
+ 	endif()
+ endif()
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index cb7232f..a6ae3d9 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -55,15 +55,21 @@ elseif(APPLE)
+ 	find_library(FOUNDATION Foundation)
+ 	find_library(IOKIT IOKit)
+   find_library(GAME_CONTROLLER GameController)
++	if (GAINPUT_BUILD_SHARED)
+ 	target_link_libraries(gainput ${FOUNDATION} ${IOKIT} ${GAME_CONTROLLER})
++	endif()
+   if(IOS)
+       find_library(UIKIT UIKit)
+       find_library(COREMOTION CoreMotion)
+       find_library(QUARTZCORE QuartzCore)
++      if (GAINPUT_BUILD_SHARED)
+       target_link_libraries(gainput ${UIKIT} ${COREMOTION})
++      endif()
+   else()
+       find_library(APPKIT AppKit)
++      if (GAINPUT_BUILD_SHARED)
+       target_link_libraries(gainput ${APPKIT})
++      endif()
+   endif()
+ endif()
+ 

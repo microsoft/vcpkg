@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cddbccb..63c8f3d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -492,6 +492,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/liblzmaConfig.cmake"
+         COMPONENT liblzma_Development)
+ 
+ 
++if(BUILD_TOOLS)
+ #############################################################################
+ # getopt_long
+ #############################################################################
+@@ -663,3 +664,4 @@ if(NOT MSVC AND HAVE_GETOPT_LONG)
+             DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+             COMPONENT xz)
+ endif()
++endif()
+\ No newline at end of file

@@ -1,10 +1,13 @@
-vcpkg_from_git(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://gitlab.freedesktop.org/uchardet/uchardet
+    REPO uchardet/uchardet
     REF 6f38ab95f55afd45ee6ccefcb92d21034b4a2521
-    PATCHES
-        fix-uwp-build.patch
+    SHA512 a2e655d6e1eb6934cf93d99d27dfebc382eb01b6e62021f56b3fa71d269a851e7d68fe57536d40470e0329b3aa035467a9cdd9e11698f8ff76f06611ea7a58d1
+    HEAD_REF master
+    PATCHES fix-uwp-build.patch
 )
+
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS

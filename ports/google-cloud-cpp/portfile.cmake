@@ -1,23 +1,37 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.34.1
-    SHA512 2a11fb5f4ee620312575281e7ee0b1caa1c110c411b623d7ae4e9bb87c5f34dcf4c63fcb238e5e943deb02e7fcbb8b0e294ec966b98aecd164dc40cf6b6ecc1b
+    REF v2.3.0
+    SHA512 094b8607aab0fc69a0999f63c4f4ed0d23a3658215192229968dfcf24ae3c9610821dc0e9b0da61edf192fcbf554e23cd4f9979c57ff6103011251012fb28596
     HEAD_REF main
+    PATCHES
+        support_absl_cxx17.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+# This feature does not exist, but allows us to simplify the vcpkg.json file.
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
+# google-cloud-cpp uses dialogflow_cx and dialogflow_es. Underscores
+# are invalid in `vcpkg` features, we use dashes (`-`) as a separator
+# for the `vcpkg` feature name, and convert it here to something that
+# `google-cloud-cpp` would like.
+if ("dialogflow-cx" IN_LIST FEATURES)
+    list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "dialogflow-cx")
+    list(APPEND GOOGLE_CLOUD_CPP_ENABLE "dialogflow_cx")
+endif ()
+if ("dialogflow-es" IN_LIST FEATURES)
+    list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "dialogflow-es")
+    list(APPEND GOOGLE_CLOUD_CPP_ENABLE "dialogflow_es")
+endif ()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DGOOGLE_CLOUD_CPP_ENABLE=${GOOGLE_CLOUD_CPP_ENABLE}"
@@ -30,7 +44,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 foreach(feature IN LISTS FEATURES)
     set(config_path "lib/cmake/google_cloud_cpp_${feature}")
     # Most features get their own package in `google-cloud-cpp`.
@@ -45,7 +59,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils)
+foreach(suffix common googleapis grpc_utils rest_internal dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
@@ -55,26 +69,9 @@ foreach(suffix common googleapis grpc_utils)
                              DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
 
-# These packages are only for backwards compability. The google-cloud-cpp team
-# is planning to remove them around 2022-02-15.
-foreach(package
-        googleapis
-        bigtable_client
-        pubsub_client
-        spanner_client
-        storage_client)
-    set(config_path "lib/cmake/${package}")
-    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
-        continue()
-    endif()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}"
-                             CONFIG_PATH "${config_path}"
-                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endforeach()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/debug/share") 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
-    REF 5e185ccfff2728fa351cea41f6d9fefebfb88078 # hwloc-2.5.0
-    SHA512 96f6421c40eede3a3c273a1ffa06accc43767421d5fb7b402a83caea1ef1a3bb8282c08ed94bc696296f37f3df80cd86403dac1012f2218b674569c8afcf3de9
-    PATCHES fix_wrong_ifdef.patch
-            fix_shared_win_build.patch
+    REF 3cf146011de099c53efee163ea7d3a059fd7bd60 # hwloc-2.7.1
+    SHA512 c6c4fbd3a1bea2bd1df65b7512748cd10944a255b145effe6f75d5fa2c5b1da32d344f2cbff3062391d47230e84361620c69f87500113b45992282a512be90b4
+    PATCHES
+        fix_shared_win_build.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -14,6 +14,8 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS "HWLOC_LDFLAGS=-no-undefined")
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "HWLOC_LDFLAGS=-framework CoreFoundation")
 endif()
 
 vcpkg_configure_make(
@@ -45,7 +47,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/hwloc/bin/hwloc-compress-dir")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/bin/hwloc-compress-dir" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-compress-dir")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-compress-dir" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-compress-dir" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/hwloc/bin/hwloc-gather-topology")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/bin/hwloc-gather-topology" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-gather-topology")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-gather-topology" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 endif()
 
 # Handle copyright

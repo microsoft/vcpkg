@@ -12,7 +12,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 target_compile_options(lcms2 PRIVATE -DUNICODE -D_UNICODE)
 
-target_include_directories(lcms2 PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+target_include_directories(lcms2 PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 set_target_properties(lcms2 PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/include/lcms2.h;${CMAKE_CURRENT_LIST_DIR}/include/lcms2_plugin.h")
 
 # Generate pkg-config file

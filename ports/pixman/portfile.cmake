@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
-endif()
-
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
             -Dmmx=disabled
@@ -21,12 +17,16 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             -Dsse2=enabled
             -Dssse3=enabled)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-   list(APPEND OPTIONS
-               #-Darm-simd=enabled does not work with arm64-windows
-               -Dmmx=disabled
-               -Dsse2=disabled
-               -Dssse3=disabled
-       )
+    list(APPEND OPTIONS
+            #-Darm-simd=enabled does not work with arm64-windows
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
 endif()
 
 set(PIXMAN_VERSION 0.40.0)
@@ -39,7 +39,11 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PIXMAN_VERSION}
-    PATCHES remove_test_demos.patch
+    PATCHES
+        remove_test_demos.patch
+        no-host-cpu-checks.patch
+        fix_clang-cl.patch
+        missing_intrin_include.patch
 )
 # Meson install wrongly pkgconfig file!
 vcpkg_configure_meson(

@@ -1,37 +1,5 @@
-#[===[.md:
-# vcpkg_qmake_configure
-
-Configure a qmake-based project.
-
-###User setable triplet variables:
-VCPKG_OSX_DEPLOYMENT_TARGET: Determines QMAKE_MACOSX_DEPLOYMENT_TARGET
-VCPKG_QMAKE_COMMAND: Path to qmake. (default: "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-VCPKG_QT_CONF_(RELEASE|DEBUG): Path to qt.config being used for RELEASE/DEBUG. (default: "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_(release|debug).conf")
-VCPKG_QMAKE_OPTIONS(_RELEASE|_DEBUG)?: Extra options to pass to QMake
-
-```cmake
-vcpkg_qmake_configure(
-    SOURCE_PATH <pro_file_path>
-    [QMAKE_OPTIONS arg1 [arg2 ...]]
-    [QMAKE_OPTIONS_RELEASE arg1 [arg2 ...]]
-    [QMAKE_OPTIONS_DEBUG arg1 [arg2 ...]]
-    [OPTIONS arg1 [arg2 ...]]
-    [OPTIONS_RELEASE arg1 [arg2 ...]]
-    [OPTIONS_DEBUG arg1 [arg2 ...]]
-)
-```
-
-### SOURCE_PATH
-The path to the *.pro qmake project file.
-
-### QMAKE_OPTIONS, QMAKE_OPTIONS\_RELEASE, QMAKE_OPTIONS\_DEBUG
-options directly passed to qmake with the form QMAKE_X=something or CONFIG=something 
-
-### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
-The options passed after -- to qmake.
-
-#]===]
 include_guard(GLOBAL)
+
 function(vcpkg_qmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "QMAKE_OPTIONS;QMAKE_OPTIONS_RELEASE;QMAKE_OPTIONS_DEBUG;OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG")
 
@@ -131,12 +99,12 @@ function(vcpkg_qmake_configure)
         set(qmake_comp_flags "")
         # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
         vcpkg_list(APPEND qmake_comp_flags "QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
-                                           "QMAKE_RC+=${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}"
-                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}"
-                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS*=${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_DLL*=${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_EXE*=${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}"
+                                           "QMAKE_RC+=${VCPKG_COMBINED_RC_FLAGS_${buildtype}}"
+                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_COMBINED_C_FLAGS_${buildtype}}"
+                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_COMBINED_CXX_FLAGS_${buildtype}}"
+                                           "QMAKE_LFLAGS*=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}"
+                                           "QMAKE_LIBFLAGS*=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}"
+                                           "QMAKE_LFLAGS_EXE*=${VCPKG_COMBINED_EXE_LINKER_FLAGS_${buildtype}}"
                                            )
 
         message(STATUS "Configuring ${config_triplet}")

@@ -24,13 +24,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
-elseif(VCPKG_TARGET_IS_WINDOWS)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static))
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
 endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/doc/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+file(INSTALL "${SOURCE_PATH}/doc/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

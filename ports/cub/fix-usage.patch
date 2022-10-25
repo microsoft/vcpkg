@@ -1,0 +1,24 @@
+diff --git a/cub/cmake/cub-config.cmake b/cub/cmake/cub-config.cmake
+index 3d7f64b..213a95e 100644
+--- a/cub/cmake/cub-config.cmake
++++ b/cub/cmake/cub-config.cmake
+@@ -8,6 +8,7 @@ if (TARGET CUB::CUB)
+   return()
+ endif()
+ 
++include("${CMAKE_CURRENT_LIST_DIR}/cub-header-search.cmake")
+ function(_cub_declare_interface_alias alias_name ugly_name)
+   # 1) Only IMPORTED and ALIAS targets can be placed in a namespace.
+   # 2) When an IMPORTED library is linked to another target, its include
+diff --git a/cub/cmake/cub-header-search.cmake.in b/cub/cmake/cub-header-search.cmake.in
+index 2a46606..d2c38ef 100644
+--- a/cub/cmake/cub-header-search.cmake.in
++++ b/cub/cmake/cub-header-search.cmake.in
+@@ -3,6 +3,6 @@ unset(_CUB_VERSION_INCLUDE_DIR CACHE) # Clear old result to force search
+ find_path(_CUB_VERSION_INCLUDE_DIR cub/version.cuh
+   NO_DEFAULT_PATH # Only search explicit paths below:
+   PATHS
+-    "${CMAKE_CURRENT_LIST_DIR}/../../../@CMAKE_INSTALL_INCLUDEDIR@" # Install tree
++    "${CMAKE_CURRENT_LIST_DIR}/../../@CMAKE_INSTALL_INCLUDEDIR@" # Install tree
+ )
+ set_property(CACHE _CUB_VERSION_INCLUDE_DIR PROPERTY TYPE INTERNAL)

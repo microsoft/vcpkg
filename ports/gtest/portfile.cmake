@@ -5,33 +5,32 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF release-1.11.0
-    SHA512 6fcc7827e4c4d95e3ae643dd65e6c4fc0e3d04e1778b84f6e06e390410fe3d18026c131d828d949d2f20dde6327d30ecee24dcd3ef919e21c91e010d149f3a28
+    REF release-1.12.1
+    SHA512 a9104dc6c53747e36e7dd7bb93dfce51a558bd31b487a9ef08def095518e1296da140e0db263e0644d9055dbd903c0cb69380cb2322941dbfb04780ef247df9c
     HEAD_REF main
     PATCHES
+        clang-tidy-no-lint.patch
         fix-main-lib-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_GMOCK=ON
-        -DBUILD_GTEST=ON
-        -DCMAKE_DEBUG_POSTFIX=d
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest TARGET_PATH share/GTest)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GTest)
 
 file(
     INSTALL
         "${SOURCE_PATH}/googletest/src/gtest.cc"
         "${SOURCE_PATH}/googletest/src/gtest_main.cc"
         "${SOURCE_PATH}/googletest/src/gtest-all.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-assertion-result.cc"
         "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
         "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
         "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"

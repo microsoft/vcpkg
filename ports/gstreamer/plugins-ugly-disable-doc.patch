@@ -1,0 +1,16 @@
+diff --git a/meson.build b/meson.build
+index c5c78fc..14be48c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -281,7 +281,11 @@ if find_program('xgettext', required : get_option('nls')).found()
+   cdata.set('ENABLE_NLS', 1)
+   subdir('po')
+ endif
++
++enable_doc = get_option('doc')
++if enable_doc.enabled()
+ subdir('docs')
++endif
+ subdir('scripts')
+ 
+ # Set release date

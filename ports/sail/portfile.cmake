@@ -1,21 +1,28 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-pre18
-    SHA512 711dd34617982427155eaa4cb39d0d0004ef6bb31ac29ee07899ac0b132ed868ea30d39f424dffd8dd0e1ad8bc1c733dd1ab9e3713b5772100ae1953b4ce6e08
+    REF v0.9.0-rc1
+    SHA512 c9b04bdf92600c0b1d38e00b31ec28f841b76fa41c50524199665de3e97a74b2633b8e9dc4bce1820521245b9d3bf04788eb1b5de9e3516e421927205d09ac47
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SAIL_STATIC)
+# Enable selected codecs
+set(ONLY_CODECS "")
+
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png qoi svg tga tiff wal webp xbm)
+    if (${CODEC} IN_LIST FEATURES)
+        list(APPEND ONLY_CODECS ${CODEC})
+    endif()
+endforeach()
+
+list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 
     OPTIONS
-        -DSAIL_STATIC=${SAIL_STATIC}
         -DSAIL_COMBINE_CODECS=ON
+        -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         -DSAIL_BUILD_TESTS=OFF
@@ -26,8 +33,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Remove duplicate files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Move cmake configs
 vcpkg_cmake_config_fixup(PACKAGE_NAME sail       CONFIG_PATH lib/cmake/sail       DO_NOT_DELETE_PARENT_CONFIG_PATH)
@@ -43,9 +50,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
+# Unused because SAIL_COMBINE_CODECS is On
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
+
 # Handle usage
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

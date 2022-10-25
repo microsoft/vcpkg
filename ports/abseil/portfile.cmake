@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 278e0a071885a22dcd2fd1b5576cc44757299343 #LTS 20210324, Patch 2
-    SHA512 a9e8e9169ebcfb8bc2eca28152ad2f655f48e6281ea932eb712333f3d0aa0b6fa1a9b184f3e2ddd75d932a54b501cc5c7bb29a1c9de5d2146f82fc5754653895
+    REF 8c0b94e793a66495e0b1f34a5eb26bd7dc672db0 # LTS 20220623.1
+    SHA512 a076c198103dc5cf22ac978fe7754dd34cb2e782d7db1c2c98393c94639e461bfe31b10c0663f750f743bc1c0c245fd4b6115356f136fe14bd036d267caf2a8b
     HEAD_REF master
     PATCHES
         # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
@@ -14,8 +14,7 @@ vcpkg_from_github(
         # in C++11 mode, force use of library replacement types, otherwise the automatic
         # detection can cause ABI issues depending on which compiler options
         # are enabled for consuming user code
-        fix-cxx-standard.patch
-        fix-32-bit-arm.patch
+	    fix-cxx-standard.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

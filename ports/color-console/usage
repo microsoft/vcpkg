@@ -1,0 +1,4 @@
+The package zstr is header only and can be used from CMake via:
+
+    find_path(COLORCONSOLE_INCLUDE_DIRS "colorconsole.hpp")
+    target_include_directories(main PRIVATE ${COLORCONSOLE_INCLUDE_DIRS})

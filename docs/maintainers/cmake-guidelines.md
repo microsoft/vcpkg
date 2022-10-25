@@ -138,7 +138,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   - This `cmake_minimum_required` should be bumped every time a new version
     of CMake is added to `vcpkgTools.xml`, as should the
     `cmake_minimum_required` in all of the helper `CMakeLists.txt` files.
-- `vcpkg.cmake` must assume a version of CMake back to 3.1 in general
+- `vcpkg.cmake` must assume a version of CMake back to 3.7.2 in general
   - Specific functions and options may assume a greater CMake version;
     if they do, make sure to comment that function or option
     with the required CMake version.

@@ -1,3 +1,8 @@
+if(VCPKG_TARGET_IS_MINGW)
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    return()
+endif()
+
 vcpkg_get_windows_sdk(WINDOWS_SDK)
 
 if (WINDOWS_SDK MATCHES "10.")

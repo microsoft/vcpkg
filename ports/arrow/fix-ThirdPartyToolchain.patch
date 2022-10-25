@@ -1,0 +1,121 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index bca86d4c1..52f87aa97 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -737,7 +737,7 @@ endif()
+ 
+ if(ARROW_WITH_BROTLI)
+   # Order is important for static linking
+-  set(ARROW_BROTLI_LIBS Brotli::brotlienc Brotli::brotlidec Brotli::brotlicommon)
++  set(ARROW_BROTLI_LIBS unofficial::brotli::brotlienc unofficial::brotli::brotlidec unofficial::brotli::brotlicommon)
+   list(APPEND ARROW_LINK_LIBS ${ARROW_BROTLI_LIBS})
+   list(APPEND ARROW_STATIC_LINK_LIBS ${ARROW_BROTLI_LIBS})
+   if(Brotli_SOURCE STREQUAL "SYSTEM")
+@@ -825,10 +825,10 @@ if(ARROW_WITH_OPENTELEMETRY)
+ endif()
+ 
+ if(ARROW_WITH_UTF8PROC)
+-  list(APPEND ARROW_LINK_LIBS utf8proc::utf8proc)
+-  list(APPEND ARROW_STATIC_LINK_LIBS utf8proc::utf8proc)
++  list(APPEND ARROW_LINK_LIBS utf8proc)
++  list(APPEND ARROW_STATIC_LINK_LIBS utf8proc)
+   if(utf8proc_SOURCE STREQUAL "SYSTEM")
+-    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS utf8proc::utf8proc)
++    list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS utf8proc)
+   endif()
+ endif()
+ 
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index 5d1da18b7..9c5adf47d 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -53,7 +53,7 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
+     AWSSDK
+     benchmark
+     Boost
+-    Brotli
++    unofficial-brotli
+     BZip2
+     c-ares
+     gflags
+@@ -74,7 +74,7 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
+     Substrait
+     Thrift
+     ucx
+-    utf8proc
++    unofficial-utf8proc
+     xsimd
+     ZLIB
+     zstd)
+@@ -152,6 +152,7 @@ foreach(DEPENDENCY ${ARROW_THIRDPARTY_DEPENDENCIES})
+ endforeach()
+ 
+ macro(build_dependency DEPENDENCY_NAME)
++  message(FATAL_ERROR "dependencies should never be built in vcpkg")
+   if("${DEPENDENCY_NAME}" STREQUAL "AWSSDK")
+     build_awssdk()
+   elseif("${DEPENDENCY_NAME}" STREQUAL "benchmark")
+@@ -239,7 +240,7 @@ macro(resolve_dependency DEPENDENCY_NAME)
+   endif()
+ 
+   if(ARG_HAVE_ALT)
+-    set(PACKAGE_NAME "${DEPENDENCY_NAME}Alt")
++    set(PACKAGE_NAME "${DEPENDENCY_NAME}")
+   else()
+     set(PACKAGE_NAME ${DEPENDENCY_NAME})
+   endif()
+@@ -1138,8 +1139,23 @@ if(ARROW_WITH_SNAPPY)
+                      TRUE
+                      PC_PACKAGE_NAMES
+                      snappy)
++  set(Snappy_TARGET "Snappy::snappy")
+   if(${Snappy_SOURCE} STREQUAL "SYSTEM" AND NOT snappy_PC_FOUND)
++    get_target_property(SNAPPY_IMPLIB_DEBUG Snappy::snappy IMPORTED_IMPLIB_DEBUG)
++    get_target_property(SNAPPY_LIB_DEBUG Snappy::snappy IMPORTED_LOCATION_DEBUG)
++    get_target_property(SNAPPY_IMPLIB_RELEASE Snappy::snappy IMPORTED_IMPLIB_RELEASE)
++    get_target_property(SNAPPY_LIB_RELEASE Snappy::snappy IMPORTED_LOCATION_RELEASE)
++    if(CMAKE_BUILD_TYPE STREQUAL "DEBUG" AND SNAPPY_IMPLIB_DEBUG)
++      set(SNAPPY_LIB "${SNAPPY_IMPLIB_DEBUG}")
++    elseif(CMAKE_BUILD_TYPE STREQUAL "DEBUG" AND SNAPPY_LIB_DEBUG)
++      set(SNAPPY_LIB "${SNAPPY_LIB_DEBUG}")
++    elseif(CMAKE_BUILD_TYPE STREQUAL "RELEASE" AND SNAPPY_IMPLIB_RELEASE)
++      set(SNAPPY_LIB "${SNAPPY_IMPLIB_RELEASE}")
++    elseif(CMAKE_BUILD_TYPE STREQUAL "RELEASE" AND SNAPPY_LIB_RELEASE)
++      set(SNAPPY_LIB "${SNAPPY_LIB_RELEASE}")
++    else()
+     get_target_property(SNAPPY_TYPE ${Snappy_TARGET} TYPE)
++    endif()
+     if(NOT SNAPPY_TYPE STREQUAL "INTERFACE_LIBRARY")
+       get_target_property(SNAPPY_LIB ${Snappy_TARGET}
+                           IMPORTED_LOCATION_${UPPERCASE_BUILD_TYPE})
+@@ -1214,7 +1230,8 @@ macro(build_brotli)
+ endmacro()
+ 
+ if(ARROW_WITH_BROTLI)
+-  resolve_dependency(Brotli PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
++  set(Brotli_SOURCE SYSTEM)
++  resolve_dependency(unofficial-brotli USE_CONFIG TRUE PC_PACKAGE_NAMES libbrotlidec libbrotlienc)
+ endif()
+ 
+ if(PARQUET_REQUIRE_ENCRYPTION AND NOT ARROW_PARQUET)
+@@ -1646,7 +1663,8 @@ if(ARROW_WITH_PROTOBUF)
+                      ${ARROW_PROTOBUF_REQUIRED_VERSION}
+                      PC_PACKAGE_NAMES
+                      protobuf)
+-
++  get_target_property(PROTOBUF_INCLUDE_DIR protobuf::libprotobuf
++                      INTERFACE_INCLUDE_DIRECTORIES)
+   if(NOT Protobuf_USE_STATIC_LIBS AND MSVC_TOOLCHAIN)
+     add_definitions(-DPROTOBUF_USE_DLLS)
+   endif()
+@@ -2599,9 +2617,7 @@ macro(build_utf8proc)
+ endmacro()
+ 
+ if(ARROW_WITH_UTF8PROC)
+-  resolve_dependency(utf8proc
+-                     REQUIRED_VERSION
+-                     "2.2.0"
++  resolve_dependency(unofficial-utf8proc
+                      PC_PACKAGE_NAMES
+                      libutf8proc)
+   add_definitions(-DARROW_WITH_UTF8PROC)

@@ -28,6 +28,8 @@ target_sources(
         ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
     find_path(ALLEGRO5_INCLUDE_DIRS allegro5/allegro.h)
     target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO5_INCLUDE_DIRS})
@@ -170,11 +172,6 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_GLUT_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glut.h DESTINATION include)
-    endif()
-
-    if(IMGUI_COPY_MARMALADE_BINDING)
-        file(GLOB MARMALADE_BINDING_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_marmalade.*)
-        install(FILES ${MARMALADE_BINDING_SRCS} DESTINATION include/bindings)
     endif()
 
     if(IMGUI_BUILD_METAL_BINDING)

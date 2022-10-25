@@ -6,6 +6,15 @@ vcpkg_from_github(
     REF 79234726053c45eede688400aa219fdec0810bd8
     SHA512 634ad75d70f04cce220bfa9f6d13e8ddb293e8403ebd195e2c8b522b751a1a268021feea7843038037ed6d1b354b2e470ad565966a117613cf5371073afda9a4
     HEAD_REF main
+    PATCHES
+        gsl.patch
+        shared-zstd.patch
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cmake/CheckCXXIntrinsicsSpecific.cmake"
+    "check_cxx_source_runs"
+    "check_cxx_source_compiles"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

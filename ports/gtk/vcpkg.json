@@ -1,9 +1,10 @@
 {
   "name": "gtk",
-  "version": "4.4.0",
-  "port-version": 1,
+  "version": "4.6.2",
+  "port-version": 2,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
+  "license": "LGPL-2.0-only",
   "dependencies": [
     "atk",
     {
@@ -23,6 +24,14 @@
     },
     "gdk-pixbuf",
     "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
     "glib",
     {
       "name": "glib",
@@ -31,7 +40,10 @@
     "graphene",
     "libepoxy",
     "pango",
-    "sassc",
+    {
+      "name": "sassc",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

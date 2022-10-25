@@ -1,0 +1,81 @@
+diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/FindExtPackages.cmake
+index 8787b87..f953ceb 100644
+--- a/share/cmake/modules/FindExtPackages.cmake
++++ b/share/cmake/modules/FindExtPackages.cmake
+@@ -26,15 +26,15 @@ set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON CACHE BOOL
+ 
+ # expat
+ # https://github.com/libexpat/libexpat
+-find_package(expat 2.2.8 REQUIRED)
++find_package(expat CONFIG REQUIRED)
+ 
+ # yaml-cpp
+ # https://github.com/jbeder/yaml-cpp
+-find_package(yaml-cpp 0.6.3 REQUIRED)
++find_package(yaml-cpp CONFIG REQUIRED)
+ 
+ # pystring
+ # https://github.com/imageworks/pystring
+-find_package(pystring 1.1.3 REQUIRED)
++find_package(pystring CONFIG REQUIRED)
+ 
+ # Half
+ # NOTE: OCIO_USE_IMATH_HALF needs to be an integer for use in utils/Half.h.in
+@@ -42,7 +42,7 @@ if(NOT OCIO_USE_OPENEXR_HALF)
+ 
+     # Imath (>=3.0)
+     # https://github.com/AcademySoftwareFoundation/Imath
+-    find_package(Imath 3.1.2 REQUIRED)
++    find_package(Imath CONFIG REQUIRED)
+     
+     set(OCIO_HALF_LIB Imath::Imath CACHE STRING "Half library target" FORCE)
+     set(OCIO_USE_IMATH_HALF "1" CACHE STRING "Whether 'half' type will be sourced from the Imath library (>=v3.0)" FORCE)
+@@ -50,7 +50,7 @@ else()
+ 
+     # OpenEXR/IlmBase (<=2.5)
+     # https://github.com/AcademySoftwareFoundation/openexr
+-    find_package(Half 2.4.0 REQUIRED)
++    find_package(Half CONFIG REQUIRED)
+ 
+     set(OCIO_HALF_LIB IlmBase::Half CACHE STRING "Half library target" FORCE)
+     set(OCIO_USE_IMATH_HALF "0" CACHE STRING "Whether 'half' type will be sourced from the Imath library (>=v3.0)" FORCE)
+@@ -65,7 +65,7 @@ if(OCIO_BUILD_APPS)
+ 
+     # lcms2
+     # https://github.com/mm2/Little-CMS
+-    find_package(lcms2 2.2 REQUIRED)
++    find_package(lcms2 CONFIG REQUIRED)
+ endif()
+ 
+ if(OCIO_BUILD_OPENFX)
+diff --git a/src/OpenColorIO/CMakeLists.txt b/src/OpenColorIO/CMakeLists.txt
+index 034185d..b992bbc 100755
+--- a/src/OpenColorIO/CMakeLists.txt
++++ b/src/OpenColorIO/CMakeLists.txt
+@@ -226,9 +226,9 @@ target_link_libraries(OpenColorIO
+         expat::expat
+         ${OCIO_HALF_LIB}
+         pystring::pystring
+-        sampleicc::sampleicc
+-        utils::from_chars
+-        utils::strings
++        "$<BUILD_INTERFACE:sampleicc::sampleicc>"
++        "$<BUILD_INTERFACE:utils::from_chars>"
++        "$<BUILD_INTERFACE:utils::strings>"
+         yaml-cpp
+ )
+ 
+diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
+index eebb2c1..7147dc3 100644
+--- a/src/cmake/Config.cmake.in
++++ b/src/cmake/Config.cmake.in
+@@ -2,4 +2,9 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
++find_dependency(expat CONFIG)
++find_dependency(Imath CONFIG)
++find_dependency(pystring CONFIG)
++find_dependency(yaml-cpp CONFIG)
++
+ include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)

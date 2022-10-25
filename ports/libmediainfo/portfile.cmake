@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
-    REF d5fb067e1539aa7a74c491e8262c81214f9c8bcb #v21.03
-    SHA512 6d49c8187dca264b4d9fb1f93a82cb65435e81a2540cfb84f885d53737560f7e8e60c8209e7d184cb191f298495db90ffb3185481e3ed44bf5a1f5131f671d89
+    REF v21.03
+    SHA512 1317b27dc3ac1ad224ef9b7ca7c08a8f55983ac6984b5e8daf6309fa33094fbad8a0a5fbe0cff086b7a5c9233b3e24e26995b037d16adf83f63877f2c753f811
     HEAD_REF master
     PATCHES vcpkg_support_in_cmakelists.patch
 )
@@ -24,7 +24,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib" "${CURRENT_PACKAGES_DIR}/debug/share/MediaInfoLib")
 endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME MediaInfoLib CONFIG_PATH share/MediaInfoLib)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,18 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO berndporr/iir1
-    REF 1.9.0
-    SHA512 9dced1610fbbfd7194874e984f969880dc76df3562df575c07d022b9ac96c67334b542acea395531423dfb5b8d692b14abdaff0235f048ab6ca7221bfc57fdba
+    REF 1.9.1
+    SHA512 115692fb82637d21c2cbff974d931ef12a5c7fd8502560e2b807ceed69b1a6a4e05898aff37b089ccda7c4aa32e97e71f7e6007998ec52f6122da33eb222112e
     HEAD_REF master
+    PATCHES
+        fix-shared-static.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(PACKAGE_NAME iir CONFIG_PATH lib/cmake/iir)
 
 vcpkg_copy_pdbs()
 
