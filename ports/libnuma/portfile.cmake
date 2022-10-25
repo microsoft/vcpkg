@@ -17,3 +17,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.GPL2" "${SOURCE_PATH}/LICENSE.LGPL2.1")
+
+message(FATAL_ERROR "break libnuma!")
