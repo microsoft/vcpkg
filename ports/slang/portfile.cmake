@@ -47,8 +47,8 @@ else()
 	message(FATAL_ERROR "Unsupported platform. Please implement me!")
 endif()
 
-vcpkg_extract_source_archive_ex(
-	OUT_SOURCE_PATH BINDIST_PATH
+vcpkg_extract_source_archive(
+	BINDIST_PATH
 	ARCHIVE "${ARCHIVE}"
 	NO_REMOVE_ONE_LEVEL
 )
