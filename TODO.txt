@@ -1,11 +1,5 @@
 #cairo: GL;GLES;(EGL;GLX);x11;xext;xrender;(xcb;xcb-render;x11-xcb;xcb-shm)
 
-qtapplicationmanager:
-/usr/bin/ld: /mnt/vcpkg-ci/installed/x64-linux/lib/libwayland-client.a(connection.c.o): in function `wl_closure_invoke':
-connection.c:(.text+0x265a): undefined reference to `ffi_type_pointer'
-/usr/bin/ld: connection.c:(.text+0x2723): undefined reference to `ffi_type_sint32'
-Missing libffi linkage -> check cmake module. 
-
 TODOS:
 libX11.a needs fixing of hardcoding absolute paths. 
 libinput?
