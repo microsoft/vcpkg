@@ -12,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "python" PYTHON_BINDINGS
-        "boost" WITH_BOOST
+        "boost" BOOST_INTERFACE
 )
 
 set(ADDITIONAL_OPTIONS "")
@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DZ3_INTERFACE=ON
-        -DBOOST_INTERFACE=${WITH_BOOST}
+        -DBOOST_INTERFACE=${BOOST_INTERFACE}
         -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF
