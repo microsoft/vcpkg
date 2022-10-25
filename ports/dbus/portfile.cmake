@@ -14,12 +14,13 @@ vcpkg_from_gitlab(
         rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
 ) 
 
+unset(ENV{DBUSDIR})
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DDBUS_BUILD_TESTS=OFF
         -DDBUS_ENABLE_DOXYGEN_DOCS=OFF
-        -DDBUS_ENABLE_PKGCONFIG=ON
         -DDBUS_ENABLE_XML_DOCS=OFF
         -DDBUS_INSTALL_SYSTEM_LIBS=OFF
         #-DDBUS_SERVICE=ON
@@ -30,6 +31,10 @@ vcpkg_cmake_configure(
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
         "-DWITH_SYSTEMD_SYSTEMUNITDIR=lib/systemd/system"
         "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
+    OPTIONS_RELEASE
+        -DDBUS_DISABLE_ASSERT=OFF
+        -DDBUS_ENABLE_STATS=OFF
+        -DDBUS_ENABLE_VERBOSE_MODE=OFF
     MAYBE_UNUSED_VARIABLES
         DBUS_WITH_GLIB
         ENABLE_SYSTEMD
