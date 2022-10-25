@@ -11,25 +11,17 @@ vcpkg_add_to_path(${PERL_PATH})
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 6bbe6ae701d65bdf36bb72053db9b71f9739a083
-    FETCH_REF v3.2.0
+    REF 9a83c6a5a55c176adbce740e47d3512edfc9ae71 # v3.5.0
     PATCHES
         aom-rename-static.diff
+        aom-uninitialized-pointer.diff
         # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream
         aom-install.diff
-        aom-uninitialized-pointer.diff
 )
-
-set(aom_target_cpu "")
-if(VCPKG_TARGET_IS_UWP)
-    # UWP + aom's assembler files result in weirdness and build failures
-    set(aom_target_cpu "-DAOM_TARGET_CPU=generic")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        ${aom_target_cpu}
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF
