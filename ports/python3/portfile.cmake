@@ -13,16 +13,16 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
-    0009-python.pc.patch
-    0010-bz2d.patch
-    0011-dont-skip-rpath.patch
+    0008-python.pc.patch
+    0009-bz2d.patch
+    0010-dont-skip-rpath.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
 endif()
 # Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    list(APPEND PATCHES 0012-gcc-ldflags-fix.patch)
+    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
