@@ -23,7 +23,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_BDB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BerkeleyDB=ON
         -DUSE_BUILTIN_TZDATA=ON
         -DICAL_GLIB=OFF
         -DICAL_BUILD_DOCS=OFF
