@@ -1,0 +1,23 @@
+From 0e051ebb92b8aec588faab37db55fe2844c4092f Mon Sep 17 00:00:00 2001
+From: akoww <42697142+akoww@users.noreply.github.com>
+Date: Mon, 29 Aug 2022 14:08:58 +0200
+Subject: [PATCH] Update open62541Config.cmake.in
+
+forced cmake to use python3 for the node compiler
+---
+ tools/cmake/open62541Config.cmake.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/cmake/open62541Config.cmake.in b/tools/cmake/open62541Config.cmake.in
+index 8dfcebd4b8..664ada54fe 100644
+--- a/tools/cmake/open62541Config.cmake.in
++++ b/tools/cmake/open62541Config.cmake.in
+@@ -6,7 +6,7 @@ set (open62541_TOOLS_DIR @PACKAGE_open62541_install_tools_dir@ CACHE PATH "Path
+ set (UA_NODESET_DIR @PACKAGE_open62541_install_nodeset_dir@ CACHE PATH "Path to the directory that contains the OPC UA schema repository")
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(PythonInterp REQUIRED)
++find_dependency(PythonInterp 3 REQUIRED)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/open62541Macros.cmake")
+ 

@@ -12,7 +12,6 @@ vcpkg_extract_source_archive(
     [NO_REMOVE_ONE_LEVEL]
     [SKIP_PATCH_CHECK]
     [PATCHES <patch>...]
-    [REF <ref>]
     [SOURCE_BASE <base>]
     [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
 )
@@ -80,14 +79,6 @@ vcpkg_extract_source_archive(src
 )
 ```
 
-### REF
-
-Pretty name for the extracted directory.
-
-Forward slashes (`/`) will be replaced with `-`. Otherwise identical to [`SOURCE_BASE`](#source_base).
-
-See [`WORKING_DIRECTORY`](#working_directory) for more details.
-
 ### SOURCE_BASE
 
 Pretty name for the extracted directory.
@@ -110,11 +101,15 @@ Root folder for the extracted directory.
 
 Defaults to `${CURRENT_BUILDTREES_DIR}/<BASE_DIRECTORY>`. Must be an absolute path.
 
-`vcpkg_extract_source_archive` extracts the archive into `<WORKING_DIRECTORY>/<SOURCE_BASE>-<short-hash>.clean`. If the folder exists, it is deleted before extraction. Without specifying `REF`, `SOURCE_BASE`, `BASE_DIRECTORY`, or `WORKING_DIRECTORY`, this will default to `${CURRENT_BUILDTREES_DIR}/src/<archive-stem>-<short-hash>.clean`.
+`vcpkg_extract_source_archive` extracts the archive into `<WORKING_DIRECTORY>/<SOURCE_BASE>-<short-hash>.clean`. If the folder exists, it is deleted before extraction. Without specifying `SOURCE_BASE`, `BASE_DIRECTORY`, or `WORKING_DIRECTORY`, this will default to `${CURRENT_BUILDTREES_DIR}/src/<archive-stem>-<short-hash>.clean`.
 
 In [`--editable`](../commands/install.md#editable) mode:
 1. No `.clean` suffix is added to the extracted folder
 2. The extracted folder is not deleted. If it exists, `vcpkg_extract_source_archive` does nothing.
+
+`<short-hash>` unambiguously identifies a particular set of archive and patch file contents.
+Any modifications to the contents of the working directory after calling this function should be applied unconditionally
+in order to avoid unexpected behavior in editable mode.
 
 ## Examples
 
@@ -128,8 +123,9 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     src # "src" is set to the path to the extracted files
     ARCHIVE "${archive}"
-    REF 7.70
-    PATCHES 0001-disable-werror.patch
+    SOURCE_BASE nmap.org-nmap-7.70
+    PATCHES
+        0001-disable-werror.patch
 )
 vcpkg_cmake_configure(SOURCE_PATH "${src}")
 ```
