@@ -1,0 +1,10 @@
+diff --git a/cmake/FindLTDL.cmake b/cmake/FindLTDL.cmake
+index 0623f89..0918ae9 100644
+--- a/cmake/FindLTDL.cmake
++++ b/cmake/FindLTDL.cmake
+@@ -15,4 +15,4 @@ endif()
+ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
+ 
+ set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
+-set(LTDL_LIBRARIES ${LTDL_LIBRARY})
++set(LTDL_LIBRARIES ${LTDL_LIBRARY} ${CMAKE_DL_LIBS})
