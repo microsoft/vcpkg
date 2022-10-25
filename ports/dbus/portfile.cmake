@@ -14,6 +14,12 @@ vcpkg_from_gitlab(
         rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
 ) 
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        x11     DBUS_BUILD_X11
+        x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
+)
+
 unset(ENV{DBUSDIR})
 
 vcpkg_cmake_configure(
@@ -36,6 +42,7 @@ vcpkg_cmake_configure(
         -DDBUS_ENABLE_STATS=OFF
         -DDBUS_ENABLE_VERBOSE_MODE=OFF
     MAYBE_UNUSED_VARIABLES
+        DBUS_BUILD_X11
         DBUS_WITH_GLIB
         ENABLE_SYSTEMD
         THREADS_PREFER_PTHREAD_FLAG
