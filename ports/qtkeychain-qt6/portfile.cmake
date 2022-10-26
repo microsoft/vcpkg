@@ -3,9 +3,9 @@ message(WARNING "qtkeychain is a third-party extension to Qt and is not affiliat
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
-    # 0.13.2 plus three commits, for a CMake export target fix
-    REF cd4d73299b144d11c310f6ca9a6ab1ef50c45431
-    SHA512 a1af668bec23df5d696ad49129ec2aa6d332f043b43bb9875c2b025007452571bfd9431fd37c72189e957329491c04703e8c6d1104c7a117ebf28cb91249b639
+    # 0.13.2 plus some commits, for a CMake export target fix and Android support
+    REF 8506d57e5df5ae2419a711f93bf93793776e5a11
+    SHA512 22e8efe326613eaa8d7cb80aaa92739416f64d6559a48240ad5eb7dea42078d4bfef5ff64c99b294b339e5f36571b15ce8f456e4f6cf20e9ce213abdfa463d77
     HEAD_REF master
 )
 
@@ -19,13 +19,6 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TEST_APPLICATION:BOOL=OFF)
-
-# FIXME: Why does build translations fail on arm64-windows?
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-     list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=OFF)
-else()
-     list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=ON)
-endif()
 
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
