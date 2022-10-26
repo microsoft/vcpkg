@@ -4,11 +4,15 @@ vcpkg_from_bitbucket(
     REF 0.16.1
     SHA512 04429cae1b8fc703e53880c5de78293cee46fe4855c96ca7006bd5848255a0df004b75716a6b30ff5176df004e2bec29b2a31d4af8e7ac59da18f0af2eed8396
     HEAD_REF master
+    PATCHES
+        fix-error-C3861.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DODE_WITH_DEMOS=0 -DODE_WITH_TESTS=0
+    OPTIONS
+        -DODE_WITH_DEMOS=0
+        -DODE_WITH_TESTS=0
 )
 
 vcpkg_cmake_install()
