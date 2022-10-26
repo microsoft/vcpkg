@@ -1,7 +1,7 @@
 {
   "name": "bitserializer",
   "version": "0.44",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ 17 library for serialization to JSON, XML, YAML",
   "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
   "license": "MIT",
@@ -37,10 +37,7 @@
     "rapidyaml-archive": {
       "description": "Module for support YAML (implementation based on the RapidYaml library)",
       "dependencies": [
-        {
-          "name": "ryml",
-          "platform": "!osx"
-        }
+        "ryml"
       ]
     }
   }

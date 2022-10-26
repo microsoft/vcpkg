@@ -1,6 +1,6 @@
 {
   "name": "wayland",
-  "version": "1.19.0",
+  "version": "1.21.0",
   "description": "Core Wayland window system code and protocol",
   "homepage": "https://wayland.freedesktop.org",
   "license": "MIT",

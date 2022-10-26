@@ -1,29 +1,66 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-math",
   "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost math module",
   "homepage": "https://github.com/boostorg/math",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-assert",
+    {
+      "name": "boost-assert",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-build",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-concept-check",
-    "boost-config",
-    "boost-core",
-    "boost-integer",
-    "boost-lexical-cast",
+    {
+      "name": "boost-concept-check",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-modular-build-helper",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-predef",
-    "boost-random",
-    "boost-static-assert",
-    "boost-throw-exception",
-    "boost-vcpkg-helpers",
+    {
+      "name": "boost-predef",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-random",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

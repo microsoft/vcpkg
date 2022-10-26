@@ -69,8 +69,6 @@ vcpkg_install_copyright(FILE_LIST
   "${SOURCE_PATH}/LICENSE.chrome"
 )
 
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 # Remove duplicated include directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
