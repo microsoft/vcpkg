@@ -321,6 +321,7 @@ graphicsmagick:x86-windows=fail
 graphicsmagick:x64-windows=fail
 graphicsmagick:x64-windows-static=fail
 graphicsmagick:x64-windows-static-md=fail
+graphqlparser:arm64-osx=fail # python2 required
 gstreamer:x64-osx=fail
 gstreamer:arm64-osx=fail
 gtk:x64-windows-static=fail

@@ -117,8 +117,8 @@
       "port-version": 1
     },
     "aom": {
-      "baseline": "3.2.0",
-      "port-version": 3
+      "baseline": "3.5.0",
+      "port-version": 0
     },
     "approval-tests-cpp": {
       "baseline": "10.12.2",
@@ -2057,7 +2057,7 @@
       "port-version": 4
     },
     "dxut": {
-      "baseline": "11.28",
+      "baseline": "11.29",
       "port-version": 0
     },
     "eabase": {
@@ -2737,8 +2737,8 @@
       "port-version": 2
     },
     "graphene": {
-      "baseline": "1.10.2",
-      "port-version": 3
+      "baseline": "1.10.8",
+      "port-version": 0
     },
     "graphicsmagick": {
       "baseline": "1.3.37",
@@ -3530,7 +3530,7 @@
     },
     "leveldb": {
       "baseline": "1.22",
-      "port-version": 5
+      "port-version": 6
     },
     "levmar": {
       "baseline": "2.6",
@@ -3878,7 +3878,7 @@
     },
     "libkml": {
       "baseline": "1.3.0",
-      "port-version": 8
+      "port-version": 9
     },
     "liblas": {
       "baseline": "1.8.1",
@@ -4245,8 +4245,8 @@
       "port-version": 2
     },
     "libssh": {
-      "baseline": "0.9.6",
-      "port-version": 2
+      "baseline": "0.10.4",
+      "port-version": 0
     },
     "libssh2": {
       "baseline": "1.10.0",
@@ -4865,8 +4865,8 @@
       "port-version": 1
     },
     "minizip": {
-      "baseline": "1.2.11",
-      "port-version": 11
+      "baseline": "1.2.13",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "3.0.7",
@@ -5330,7 +5330,7 @@
     },
     "ode": {
       "baseline": "0.16.1",
-      "port-version": 3
+      "port-version": 4
     },
     "offscale-libetcd-cpp": {
       "baseline": "2019-07-10",
@@ -5442,7 +5442,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 6
+      "port-version": 7
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5489,8 +5489,8 @@
       "port-version": 1
     },
     "openmesh": {
-      "baseline": "8.1",
-      "port-version": 3
+      "baseline": "9.0",
+      "port-version": 0
     },
     "openmpi": {
       "baseline": "4.1.3",
@@ -7506,7 +7506,7 @@
     },
     "torch-th": {
       "baseline": "2019-04-19",
-      "port-version": 3
+      "port-version": 4
     },
     "tracy": {
       "baseline": "0.8.2",
@@ -7542,7 +7542,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 4
+      "port-version": 5
     },
     "trompeloeil": {
       "baseline": "41",
@@ -7881,11 +7881,11 @@
       "port-version": 0
     },
     "wayland": {
-      "baseline": "1.19.0",
+      "baseline": "1.21.0",
       "port-version": 0
     },
     "wayland-protocols": {
-      "baseline": "1.23",
+      "baseline": "1.27",
       "port-version": 0
     },
     "websocketpp": {
@@ -8217,8 +8217,8 @@
       "port-version": 2
     },
     "zlib": {
-      "baseline": "1.2.12",
-      "port-version": 2
+      "baseline": "1.2.13",
+      "port-version": 0
     },
     "zlib-ng": {
       "baseline": "2.0.6",
