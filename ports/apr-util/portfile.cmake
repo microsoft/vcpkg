@@ -24,7 +24,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_install()
     vcpkg_copy_pdbs()
 
-    file(READ ${CURRENT_PACKAGES_DIR}/include/apu.h  APU_H)
+    file(READ "${CURRENT_PACKAGES_DIR}/include/apu.h"  APU_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       string(REPLACE "defined(APU_DECLARE_STATIC)" "0" APU_H "${APU_H}")
     else()
