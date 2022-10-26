@@ -10,14 +10,6 @@ VCPKG_FROM_GITHUB(
         HEAD_REF master
 )
 
-FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
-          PATHS ENV NUMA_ROOT
-          HINTS $ENV{HOME}/local/include /opt/local/include /usr/local/include /usr/include
-          )
-IF (NOT NUMA_INCLUDE_DIR)
-    MESSAGE(FATAL_ERROR "Numa library not found.\nTry: 'sudo yum install numactl numactl-devel' (or sudo apt-get install libnuma1 libnuma-dev)")
-ENDIF ()
-
 VCPKG_CONFIGURE_CMAKE(
         SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
         PREFER_NINJA
