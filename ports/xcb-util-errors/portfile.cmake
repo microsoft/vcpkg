@@ -1,23 +1,32 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
+    message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 else()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PATCHES fix_python.patch)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxcb-render-util
-    REF  5293d8b6165f23b9f7a8bcc903da0e4d7a75984c #v 0.3.10
-    SHA512 ecd1876b62c1345ce3c06ac525f1af4f59dcce3c8d76003c59dd64c80f7787d6d2754c481e585507d6bcaf443026a7aa22ab9eac28b5153eff78d216e53eb29f
-    HEAD_REF master # branch name
-    PATCHES pthread.patch # required since this port directly depends on pthread functions. So it has to directly link it!
+    REPO lib/libxcb-errors
+    REF  517dd82c079de762a7426f20166a44f11e8d38c5 #1.0.1
+    SHA512 391f6bc9452bf4d6a3f1fa69232cdbef43f9fcd339b8d1965132a3b227ed7ebcbaad553fe64d42bc525811caedf3ff9d5bec108f6ac2efd5a014f75fb35cbf85
+    HEAD_REF master
+    PATCHES ${PATCHES}
 ) 
 file(TOUCH "${SOURCE_PATH}/m4/dummy")
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    COPY_SOURCE
 )
 
 vcpkg_install_make()
@@ -26,6 +35,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
