@@ -2,7 +2,8 @@
   "name": "sdl2-net",
   "version": "2.2.0",
   "description": "Networking library for SDL",
-  "homepage": "https://www.libsdl.org/projects/SDL_net",
+  "homepage": "https://github.com/libsdl-org/SDL_net",
+  "license": "Zlib",
   "dependencies": [
     "sdl2",
     {
