@@ -1,7 +1,7 @@
 {
   "name": "kf5globalaccel",
   "version": "5.89.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "lobal desktop keyboard shortcuts",
   "homepage": "https://api.kde.org/frameworks/kglobalaccel/html/index.html",
   "dependencies": [

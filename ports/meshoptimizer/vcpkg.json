@@ -1,8 +1,9 @@
 {
   "name": "meshoptimizer",
-  "version": "0.16",
+  "version": "0.18",
   "description": "Mesh optimization library that makes meshes smaller and faster to render",
   "homepage": "https://github.com/zeux/meshoptimizer",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "gltfpack": {
+      "description": "Build gltfpack tool"
+    }
+  }
 }

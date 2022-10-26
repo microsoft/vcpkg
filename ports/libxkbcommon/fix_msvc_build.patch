@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 47c436f8d..3fdbe4709 100644
+--- a/meson.build
++++ b/meson.build
+@@ -641,7 +641,7 @@ if get_option('enable-x11')
+     )
+     # test/x11comp is meant to be run, but it is (temporarily?) disabled.
+     # See: https://github.com/xkbcommon/libxkbcommon/issues/30
+-    executable('test-x11comp', 'test/x11comp.c', dependencies: x11_test_dep)
++    # executable('test-x11comp', 'test/x11comp.c', dependencies: x11_test_dep)
+ endif
+ if get_option('enable-xkbregistry')
+     test(

@@ -1,17 +1,43 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-type-index",
-  "version": "1.79.0",
+  "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost type_index module",
   "homepage": "https://github.com/boostorg/type_index",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-config",
-    "boost-container-hash",
-    "boost-core",
-    "boost-preprocessor",
-    "boost-static-assert",
-    "boost-throw-exception",
-    "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-container-hash",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    }
   ]
 }

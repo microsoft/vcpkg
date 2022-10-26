@@ -9,7 +9,7 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
 endif()
@@ -30,7 +30,8 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
-    
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
+
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
@@ -44,7 +45,7 @@ list(APPEND VCPKG_DEFAULT_ENV_VARS_TO_CHECK PATH INCLUDE C_INCLUDE_PATH CPLUS_IN
 list(REMOVE_DUPLICATES VCPKG_DEFAULT_ENV_VARS_TO_CHECK)
 
 #Flags to check. Flags are a bit special since they are configuration aware. 
-set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER)
+set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER MODULE_LINKER)
 foreach(flag IN LISTS FLAGS)
     list(APPEND VCPKG_DEFAULT_FLAGS_TO_CHECK CMAKE_${flag}_FLAGS)
 endforeach()
@@ -98,8 +99,9 @@ macro(_vcpkg_adjust_flags flag_var)
             endif()
         endif()
     endif()
-    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
+    if(APPLE)
+        set(flags_to_add_osx_arch_sysroot "${VCPKG_LANG_FLAGS}" CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS)
+        if("${flag_var}" IN_LIST flags_to_add_osx_arch_sysroot)
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
                 foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
@@ -108,10 +110,24 @@ macro(_vcpkg_adjust_flags flag_var)
             endif()
             string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
             if (CMAKE_OSX_DEPLOYMENT_TARGET)
-                string(APPEND ${flag_var} " -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}") 
+                list(GET VCPKG_LANGUAGES 0 lang)
+                string(APPEND ${flag_var} " ${CMAKE_${lang}_OSX_DEPLOYMENT_TARGET_FLAG}${CMAKE_OSX_DEPLOYMENT_TARGET}")
+                unset(lang)
             endif()
         endif()
+        unset(flags_to_add_osx_arch_sysroot)
     endif()
+    set(flags_to_add_target "${VCPKG_LANG_FLAGS}" CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS)
+    list(GET VCPKG_LANGUAGES 0 lang)
+    if(CMAKE_${lang}_COMPILER_TARGET AND "${flag_var}" IN_LIST flags_to_add_target)
+        if (CMAKE_${lang}_COMPILER_ID STREQUAL Clang)
+            string(PREPEND ${flag_var} "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET}${CMAKE_${lang}_COMPILER_TARGET} ")
+        elseif(CMAKE_${lang}_COMPILE_OPTIONS_TARGET)
+            string(PREPEND ${flag_var} "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET} ${CMAKE_${lang}_COMPILER_TARGET} ")
+        endif()
+    endif()
+    unset(lang)
+    unset(flags_to_add_target)
 endmacro()
 
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
@@ -128,7 +144,6 @@ foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
     endforeach()
 endforeach()
-
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 
