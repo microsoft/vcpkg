@@ -22,7 +22,7 @@ use, please read [this documentation](../maintainers/registries.md).
     - [Configuration: `"overlay-triplets"`](#configuration-overlay-triplets)
     - [Example Configuration File](#example-configuration-file)
   - [Package Name Resolution](#package-name-resolution)
-  - [Overlays Resolution](#overlays-resolution)
+    - [Overlays Resolution](#overlays-resolution)
     - [Versioning Support](#versioning-support)
 
 ## `vcpkg-configuration.json`
@@ -92,16 +92,18 @@ The `"packages"` fields of all the package registries must be disjoint.
 
 ### Configuration: `"overlay-ports"`
 
-The `"overlay-ports"` field must contain an array of paths. Each path in the array must point
-to either: 
+An array of port overlay paths.
+
+Each path in the array must point to etiher:
 * a particular port directory (a directory containing `vcpkg.json` and `portfile.cmake`), or
 * a directory containing port directories.
 Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
 
 ### Configuration: `"overlay-triplets"`
 
-The `"overlay-triplets"` field must contain an array of paths. Each path in the array 
-must point to a directory of triplet files ([see triplets documentation](triplets.md)).
+An array of triplet overlay paths.
+
+Each path in the array must point to a directory of triplet files ([see triplets documentation](triplets.md)).
 Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
 
 ### Example Configuration File
@@ -146,19 +148,20 @@ package definition will be fetched from.
 
 The name resolution algorithm is as follows:
 
+- If the name matches an [overlay](#overlays-resolution), use that overlay; otherwise
 - If there is a package registry that claims the package name,
   use that registry; otherwise
 - If there is a default registry defined, use that registry; otherwise
 - If the default registry is set to `null`, error out; otherwise
 - use the built-in registry.
 
-## Overlays Resolution
+### Overlays Resolution
 
 Overlay ports and triplets are evaluated in this order:
 
-1. Overlays from the command line
+1. Overlays from the [command line](../commands/common-options.md)
 2. Overlays from `vcpkg-configuration.json`
-3. Overlays from the `VCPKG_OVERLAY_[PORTS|TRIPLETS]` environment variable.
+3. Overlays from the `VCPKG_OVERLAY_[PORTS|TRIPLETS]` [environment](config-environment.md) variable.
 
 Additionaly, each method has its own evaluation order:
 
