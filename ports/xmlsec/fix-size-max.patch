@@ -1,0 +1,19 @@
+diff --git a/src/cast_helpers.h b/src/cast_helpers.h
+index 67330822..2b670ad1 100644
+--- a/src/cast_helpers.h
++++ b/src/cast_helpers.h
+@@ -17,13 +17,9 @@
+ #endif /* XMLSEC_PRIVATE */
+ 
+ #include <limits.h>
++#include <stdint.h>
+ #include "errors_helpers.h"
+ 
+-/* if it is missing */
+-#ifndef SIZE_MAX
+-#define SIZE_MAX (~(size_t)0)
+-#endif /* SIZE_MAX */
+-
+ /**
+  * Helpers for printing out enum values (mostly debugging).
+  */
