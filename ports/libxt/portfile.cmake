@@ -9,6 +9,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # if this is a dynamic library since the memory adress is only known at runtime
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    set(PATCHES cc_for_build.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,6 +22,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES windows_build.patch
             globals.patch
+            ${PATCHES}
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -30,17 +35,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_CXX_FLAGS " -DXT_DLL_EXPORTS")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        message(BLUB)
         vcpkg_find_acquire_program(CLANG)
         cmake_path(GET CLANG PARENT_PATH CLANG_PARENT_PATH)
         set(CLANG_CL "${CLANG_PARENT_PATH}/clang-cl.exe")
         file(READ "${cmake_vars_file}" contents)
         string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_C_COMPILER \"${CLANG_CL}\")")
         string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_CXX_COMPILER \"${CLANG_CL}\")")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG \" -m32\")")
+            string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE \" -m32\")")
+        endif()
         file(WRITE "${cmake_vars_file}" "${contents}")
     endif()
     set(cmake_vars_file "${cmake_vars_file}" CACHE INTERNAL "") # Don't run z_vcpkg_get_cmake_vars twice
@@ -62,15 +70,8 @@ vcpkg_configure_make(
 
 if(VCPKG_CROSSCOMPILING)
     file(INSTALL "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makestrs${VCPKG_HOST_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/util/")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        set(objext .obj)
-    else()
-        set(objext .o)
-    endif()
-    file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/util/makestrs${objext}")
     if(NOT VCPKG_BUILD_TYPE)
         file(INSTALL "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makestrs${VCPKG_HOST_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/util/")
-        file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/util/makestrs${objext}")
     endif()
 endif()
 
