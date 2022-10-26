@@ -29,7 +29,7 @@ All vcpkg commands support a set of [common options](common-options.md).
 
 All unrecognized options are considered [artifacts context options](artifacts-context-options.md).
 
-### artifact
+### `<artifact>`
 
 An artifact id or reference.
 
