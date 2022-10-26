@@ -14,6 +14,10 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
+    {
+      "name": "libxt",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ]

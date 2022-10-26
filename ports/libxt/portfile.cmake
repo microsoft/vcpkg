@@ -47,9 +47,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPTIONS --disable-selective-werror)
 endif()
 
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
-endif()
+
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -61,6 +59,20 @@ vcpkg_configure_make(
         xorg_cv_malloc0_returns_null=yes
         ${OPTIONS}
 )
+
+if(VCPKG_CROSSCOMPILING)
+    file(INSTALL "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makestrs${VCPKG_HOST_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/util/")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        set(objext .obj)
+    else()
+        set(objext .o)
+    endif()
+    file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/util/makestrs${objext}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(INSTALL "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makestrs${VCPKG_HOST_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/util/")
+        file(TOUCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/util/makestrs${objext}")
+    endif()
+endif()
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
