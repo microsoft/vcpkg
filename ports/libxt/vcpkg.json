@@ -11,11 +11,11 @@
     "libsm",
     "libx11",
     {
-      "name": "vcpkg-cmake-get-vars",
+      "name": "libxt",
       "host": true
     },
     {
-      "name": "libxt",
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     "xorg-macros",
