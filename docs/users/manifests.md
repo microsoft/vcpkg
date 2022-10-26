@@ -328,7 +328,7 @@ and that's the `"default-features"` field, which is an array of feature names.
 ### `"vcpkg-configuration"`
 
 Allows to embed vcpkg configuration properties inside the `vcpkg.json` file. Everything inside
-the `vcpkg-configuration` property is treated as if was defined in a `vcpkg-configuration.json` file. 
+the `vcpkg-configuration` property is treated as if it were defined in a `vcpkg-configuration.json` file. 
 See the [`vcpkg-configuration.json` documentation](registries.md) for details.
 
 Having a `vcpkg-configuration` defined in `vcpkg.json` while also having a `vcpkg-configuration.json` 
