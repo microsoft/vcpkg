@@ -1,9 +1,0 @@
-
-xcb:
-.././../src/6f94de47aa-4524a75055.clean/src/xcb_util.c(392): warning C4013: 'close' undefined; assuming extern returning int
-
-libxt:
-.././../src/4f82626eb7-a9d2dfda26/src/Converters.c(1585): warning C4013: '_getcwd' undefined; assuming extern returning int
-
-libsm:
-.././../src/4be07aebb2-cba733bad5.clean/src/sm_genid.c(239): warning C4013: '_getpid' undefined; assuming extern returning int

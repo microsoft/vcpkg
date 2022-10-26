@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES windows_build.patch
             globals.patch
+            getcwd.patch
             ${PATCHES}
 ) 
 
