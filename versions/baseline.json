@@ -2754,7 +2754,7 @@
     },
     "graphviz": {
       "baseline": "2.49.1",
-      "port-version": 4
+      "port-version": 5
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -3594,7 +3594,7 @@
     },
     "libcanberra": {
       "baseline": "0.30",
-      "port-version": 3
+      "port-version": 4
     },
     "libcbor": {
       "baseline": "0.9.0",
@@ -3907,6 +3907,10 @@
     "liblsquic": {
       "baseline": "3.1.1",
       "port-version": 1
+    },
+    "libltdl": {
+      "baseline": "2.4.7",
+      "port-version": 0
     },
     "liblzma": {
       "baseline": "5.2.5",
@@ -7594,7 +7598,7 @@
     },
     "unixodbc": {
       "baseline": "2.3.11",
-      "port-version": 1
+      "port-version": 2
     },
     "unqlite": {
       "baseline": "1.1.9",
@@ -8050,7 +8054,7 @@
     },
     "xmlsec": {
       "baseline": "1.2.34",
-      "port-version": 0
+      "port-version": 1
     },
     "xnnpack": {
       "baseline": "2021-05-17",
