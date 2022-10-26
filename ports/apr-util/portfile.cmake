@@ -6,8 +6,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
         PATCHES
             use-vcpkg-expat.patch
@@ -15,19 +15,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             unglue.patch
     )
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      set(APU_DECLARE_EXPORT ON)
-      set(APU_DECLARE_STATIC OFF)
-    else()
-      set(APU_DECLARE_EXPORT OFF)
-      set(APU_DECLARE_STATIC ON)
-    endif()
-
     vcpkg_cmake_configure(
       SOURCE_PATH "${SOURCE_PATH}"
-      OPTIONS
-        -DAPU_DECLARE_EXPORT=${APU_DECLARE_EXPORT}
-        -DAPU_DECLARE_STATIC=${APU_DECLARE_STATIC}
       OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
     )
@@ -44,8 +33,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/apu.h "${APU_H}")
 
 else()
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE} 
     )
 
