@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.5.2",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -82,7 +83,7 @@
             "hdf5",
             "netcdf"
           ],
-          "platform": "!uwp & !(windows & arm64) & !android"
+          "platform": "!uwp & !(windows & arm64) & !android & !ios"
         },
         "giflib",
         "libiconv",
