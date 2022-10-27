@@ -1,0 +1,29 @@
+# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+
+# These "checks" are also performed as part of our critical-path azure-pipelines review,
+# however here they are better able to post back to the original PR
+name: Change base branch
+
+on:
+  pull_request:
+    branches:
+      - 'master'      
+    types:
+      - opened
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: octokit/request-action@v2.x
+        id: create_check_run
+        with:
+          route: POST /repos/{owner}/{repo}/pulls/{pull_number}
+          owner: octokit
+          repo: request-action
+          name: "Test check run"
+          pull_number: ${{ github.event.number }}
+          body: '{ "base": "version-staging"}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
