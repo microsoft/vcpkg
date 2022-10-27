@@ -55,6 +55,7 @@ jobs:
             console.log(changed_ports);
             console.log("File: ##", await fs.readFile('.changed-ports', 'utf8'), "##");
             for (let changed_port of changed_ports) {
+              changed_port = changed_port.split('/')[1];
               const file_name = `port/${changed_port}/vcpkg.json`;
               let manifest = JSON.parse(await fs.readFile(file_name, 'utf8'));
               let version = manifest['version'] || manifest['version-date'] || manifest['version-semver'] || manifest['version-string']
