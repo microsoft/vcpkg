@@ -16,7 +16,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-arm-uwp.patch
 )
  
-# test that
+# test that 
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
