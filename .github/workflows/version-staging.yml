@@ -87,3 +87,4 @@ jobs:
           git push -f 
           git checkout master
           git merge --ff-only -
+          git push -f
