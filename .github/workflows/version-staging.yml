@@ -36,12 +36,12 @@ jobs:
 
           unset VCPKG_ROOT
 
-          git --no-pager diff --name-only --merge-base master HEAD ports | grep -o -E '^ports/[^/]\+' | sort -u > .changed-ports
-          git --no-pager diff --name-only --merge-base master HEAD ports
-          git --no-pager diff --name-only --merge-base master HEAD ports | grep -o -E '^ports/[^/]\+'
-          git --no-pager diff --name-only --merge-base master HEAD ports | grep -o -E '^ports/[^/]+'
-          git --no-pager diff --name-only --merge-base master HEAD ports | grep -o  '^ports/[^/]+'
-          git --no-pager diff --name-only --merge-base master HEAD ports | grep -o  '^ports/[^/]\+' 
+          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]\+' | sort -u > .changed-ports
+          git --no-pager diff --name-only --merge-base master HEAD -- ports
+          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]\+'
+          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]+'
+          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o  '^ports/[^/]+'
+          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o  '^ports/[^/]\+' 
 
       - uses: actions/github-script@v6
         with:
