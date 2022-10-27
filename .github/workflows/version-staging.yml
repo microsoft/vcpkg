@@ -59,6 +59,7 @@ jobs:
               const file_name = `ports/${changed_port}/vcpkg.json`;
               let manifest = JSON.parse(await fs.readFile(file_name, 'utf8'));
               let version = manifest['version'] || manifest['version-date'] || manifest['version-semver'] || manifest['version-string']
+              console.log(manifest)
               console.log(baseline[changed_port], " : ", manifest["port-version"], " : ", version )
               if (baseline[changed_port] === undefined) {
                 delete manifest["port-version"]; // new port
