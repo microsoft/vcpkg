@@ -20,7 +20,7 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: create_check_run
         with:
-          route: POST /repos/{owner}/{repo}/pulls/{pull_number}
+          route: PATCH /repos/{owner}/{repo}/pulls/{pull_number}
           owner: autoantwort
           repo: vcpkg
           name: "Test check run"
