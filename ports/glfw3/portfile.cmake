@@ -13,8 +13,19 @@ if(VCPKG_TARGET_IS_LINUX)
     xcursor
     xorg
     libglu1-mesa
+    pkg-config
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
+else(VCPKG_TARGET_IS_OSX)
+    message(
+"GLFW3 currently requires the following libraries from the system package manager:
+    xinerama
+    xcursor
+    xorg
+    libglu1-mesa
+    pkg-config
+
+These can be installed via brew install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
 endif()
 
 vcpkg_cmake_configure(

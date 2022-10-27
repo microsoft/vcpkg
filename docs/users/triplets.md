@@ -100,6 +100,11 @@ This field is optional.
 
 Also available as build-type specific `VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE` variables.
 
+### VCPKG_MESON_(CROSS|NATIVE)_FILE(_RELEASE|_DEBUG)
+Provide an additional (configuration dependent) file as a meson cross/native file. Can be used to override settings provided by vcpkg since it will be passed after vcpkg's generated cross/native files are passed.
+
+Especially usefull to provide your own build_machine and host_machine entries.
+
 ### VCPKG_CMAKE_CONFIGURE_OPTIONS
 Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md)).
 
@@ -161,7 +166,7 @@ To select the precise combination of Visual Studio instance and toolset version,
 1. Determine the setting for `VCPKG_VISUAL_STUDIO_PATH` from the triplet, or the environment variable `VCPKG_VISUAL_STUDIO_PATH`, or consider it unset
 2. Determine the setting for `VCPKG_PLATFORM_TOOLSET` from the triplet or consider it unset
 3. Gather a list of all pairs of Visual Studio Instances with all toolsets available in those instances
-    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v142, v141, v140)
+    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v143, v142, v141, v140)
 4. Filter the list based on the settings for `VCPKG_VISUAL_STUDIO_PATH` and `VCPKG_PLATFORM_TOOLSET`.
 5. Select the best remaining option
 
@@ -176,6 +181,7 @@ Specifies the VS-based C/C++ compiler toolchain to use.
 See [`VCPKG_VISUAL_STUDIO_PATH`](#VCPKG_VISUAL_STUDIO_PATH) for the full selection algorithm.
 
 Valid settings:
+* The Visual Studio 2022 platform toolset is `v143`.
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.

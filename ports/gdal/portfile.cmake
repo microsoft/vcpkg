@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.5.1
-    SHA512 658e515a16ed2b45a0b3dffa6bb23f28d6454a902d8d9efbed320e353112463ff8e9c3efd5b6c98cf61cf187dc88a0dd13f4989041acc836de2b9c07e8da32e9
+    REF v3.5.2
+    SHA512 fece50709090e21200298cf0d5c0dd10418bb800a3c92fb77eedab42c3942169bf69abcad9a6d61d3368ac5265e053e8c2aeb361d297ed0ace92ffba3b21dbca
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
+        fix-gdal-target-interfaces.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -49,24 +50,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         default-features GDAL_USE_WEBP
         core             GDAL_USE_ZLIB
         default-features GDAL_USE_ZSTD
+        tools            BUILD_APPS
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
 endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
-    FEATURES
-        tools           BUILD_APPS
-)
 
 # Compatibility with older Android versions https://github.com/OSGeo/gdal/pull/5941
 if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
 endif()
 
+string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
         ${FEATURE_OPTIONS}
         -DBUILD_DOCS=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
@@ -80,10 +80,14 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
+        -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
+        -DMYSQL_LIBRARIES=unofficial::libmariadb
         -DGDAL_CHECK_PACKAGE_NetCDF_NAMES=netCDF
         -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
-    OPTIONS_RELEASE
-        ${FEATURE_OPTIONS_RELEASE}
+        -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
+        "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
+        "-DQHULL_LIBRARY=${qhull_target}"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
 )

@@ -22,6 +22,8 @@ vcpkg_from_github(
       0011-remove-python2.patch
       0012-fix-zlib.patch
 )
+# Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -157,6 +159,7 @@ if("contrib" IN_LIST FEATURES)
       0007-fix-hdf5.patch
       0013-fix-ceres.patch
       0016-fix-freetype-contrib.patch
+      0018-fix-depend-tesseract.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

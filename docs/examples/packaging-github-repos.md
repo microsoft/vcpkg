@@ -37,7 +37,7 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libogg" RENAME copyright)
 ```
 
-Check the documentation for [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md) and [`vcpkg_cmake_install`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_install.md) if your package needs additional options. 
+Check the documentation for [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md) and [`vcpkg_cmake_install`](../maintainers/vcpkg_cmake_install.md) if your package needs additional options. 
 
 Now you can run `vcpkg install libogg` to build and install the package.
 
