@@ -5786,7 +5786,7 @@
     },
     "plib": {
       "baseline": "1.8.5",
-      "port-version": 5
+      "port-version": 6
     },
     "plibsys": {
       "baseline": "0.0.4",
