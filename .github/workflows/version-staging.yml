@@ -2,7 +2,7 @@
 
 # These "checks" are also performed as part of our critical-path azure-pipelines review,
 # however here they are better able to post back to the original PR
-name: PR Suggestions
+name: Add version infos
 
 on:
   push:
