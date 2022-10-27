@@ -90,4 +90,4 @@ jobs:
           git add versions
           git commit --amend --no-edit
           git status
-          git push
+          git push -f 
