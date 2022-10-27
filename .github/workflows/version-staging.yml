@@ -71,10 +71,13 @@ jobs:
 
       - name: Format, add versions and commit
         run: |
+          unset VCPKG_ROOT
           ./vcpkg format-manifest --all
+          git diff
           git add ports
           git commit --amend --no-edit
           ./vcpkg x-add-version --all
+          git diff
           git add versions
           git commit --amend --no-edit
           git status
