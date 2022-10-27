@@ -79,3 +79,4 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the P
  
  
  
+ 
