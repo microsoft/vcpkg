@@ -1861,11 +1861,11 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.68.1",
+      "baseline": "2.72.1",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.0.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "daw-utf-range": {
