@@ -54,6 +54,10 @@
           "platform": "windows | osx"
         },
         {
+          "name": "openmpi",
+          "platform": "linux | osx"
+        },
+        {
           "name": "tensorpipe",
           "platform": "linux | osx"
         }

@@ -31,6 +31,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SO
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
+    dist    USE_MPI
     zstd    USE_ZSTD
     fftw3   USE_FFTW
     fftw3   AT_FFTW_ENABLED
@@ -117,7 +118,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_PYTHON=OFF
         -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX}
-        -DUSE_MPI=${VCPKG_TARGET_IS_LINUX} # Linux package `libopenmpi-dev`
         -DUSE_METAL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
