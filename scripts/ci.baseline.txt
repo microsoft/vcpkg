@@ -550,6 +550,7 @@ libwandio:x64-windows-static-md=fail
 libwandio:x64-uwp=fail
 libwandio:arm64-windows=fail
 libwandio:arm-uwp=fail
+libxaw:x64-windows-static=skip
 licensepp:arm-uwp=fail
 licensepp:x64-uwp=fail
 linenoise-ng:arm-uwp=fail
