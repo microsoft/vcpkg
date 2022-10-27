@@ -63,7 +63,7 @@ jobs:
               if (baseline[changed_port] === undefined) {
                 delete manifest["port-version"]; // new port
                 console.log("new port")
-              } else if (baseline[changed_port].version !== version) {
+              } else if (baseline[changed_port].baseline !== version) {
                 delete manifest["port-version"]; // new version
                 console.log("new version")
               } else {
