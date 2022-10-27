@@ -56,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "freetype"  WITH_FREETYPE
  "gdcm"      WITH_GDCM
  "gstreamer" WITH_GSTREAMER
+ "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
  "jpeg"      WITH_JPEG
@@ -80,15 +81,6 @@ if("dnn" IN_LIST FEATURES)
     set(BUILD_opencv_dnn ON)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
-  endif()
-endif()
-
-set(WITH_GTK OFF)
-if("gtk" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_LINUX)
-    set(WITH_GTK ON)
-  else()
-    message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
 endif()
 
@@ -502,6 +494,9 @@ enable_language(C)
 find_dependency(HDF5)
 find_dependency(Tesseract)")
   endif()
+  if(WITH_CONTRIB AND WITH_FREETYPE)
+    string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
+  endif()
   if(WITH_TBB)
     string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
   endif()
@@ -524,7 +519,7 @@ find_dependency(Tesseract)")
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
-    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(freetype)")
+    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)")
   endif()
   if("quirc" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
@@ -584,4 +579,6 @@ vcpkg_fixup_pkgconfig()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(GLOB extra_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/opencv4/*")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_license_files})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
