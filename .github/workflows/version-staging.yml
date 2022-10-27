@@ -43,10 +43,10 @@ jobs:
           script: |
             const { promises: fs } = require('fs');
             const changed_ports = (await fs.readFile('.changed-ports', 'utf8')).trim().split('\n');
-            const baseline = Json.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
+            const baseline = JSON.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
             for (let changed_port of changed_ports) {
               const file_name = `port/${changed_port}/vcpkg.json`;
-              let manifest = Json.parse(await fs.readFile(file_name, 'utf8'));
+              let manifest = JSON.parse(await fs.readFile(file_name, 'utf8'));
               let version = manifest['version'] || manifest['version-date'] || manifest['version-semver'] || manifest['version-string']
               if (baseline[changed_port] === undefined) {
                 delete manifest["port-version"]; // new port
@@ -55,7 +55,7 @@ jobs:
               } else {
                 manifest["port-version"] = baseline[changed_port]['port-version'] + 1; // new version
               }
-              await fs.writeFile(file_name, Json.stringnify(manifest))
+              await fs.writeFile(file_name, JSON.stringnify(manifest))
             }
 
       - name: Format, add versions and commit
