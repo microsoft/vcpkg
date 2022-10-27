@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
         -DSDL2NET_SAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_net CONFIG_PATH cmake)
