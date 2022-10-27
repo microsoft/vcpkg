@@ -108,6 +108,7 @@ function(vcpkg_configure_qmake)
                     ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
             LOGNAME "config-${TARGET_TRIPLET}-rel"
+            SAVE_LOG_FILES config.log
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         if(EXISTS "${current_binary_dir}/config.log")
@@ -152,6 +153,7 @@ function(vcpkg_configure_qmake)
                     ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
             LOGNAME "config-${TARGET_TRIPLET}-dbg"
+            SAVE_LOG_FILES config.log
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
         if(EXISTS "${current_binary_dir}/config.log")

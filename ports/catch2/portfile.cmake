@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
+        no-absolute-paths.patch # from https://github.com/catchorg/Catch2/pull/2553
 )
 
 vcpkg_cmake_configure(
