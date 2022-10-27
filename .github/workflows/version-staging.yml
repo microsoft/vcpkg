@@ -32,6 +32,8 @@ jobs:
 
           git --version
 
+          git status
+
           unset VCPKG_ROOT
 
           git --no-pager diff --name-only --merge-base master HEAD ports | ggrep -oP '^ports/\K[^/]+' | sort -u > .changed-ports
@@ -64,3 +66,5 @@ jobs:
           ./vcpkg x-add-version --all
           git add versions
           git commit --amend --no-edit
+          git status
+          git push
