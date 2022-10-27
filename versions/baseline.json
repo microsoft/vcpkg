@@ -7114,7 +7114,7 @@
     },
     "sqlite3": {
       "baseline": "3.39.2",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
@@ -8202,7 +8202,7 @@
     },
     "zlib": {
       "baseline": "1.2.13",
-      "port-version": 1
+      "port-version": 2
     },
     "zlib-ng": {
       "baseline": "2.0.6",
