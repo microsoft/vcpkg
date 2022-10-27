@@ -1,13 +1,7 @@
 {
   "name": "spdk-dpdk",
-  "version-date": "2021-02-14",
+  "version-string": "20181124",
+  "port-version": 2,
   "description": "SPDK mirror of DPDK. A set of libraries and drivers for fast packet processing",
-  "supports": "linux",
-  "dependencies": [
-    "libnuma",
-    {
-      "name": "vcpkg-get-python-packages",
-      "host": true
-    }
-  ]
+  "supports": "linux"
 }

@@ -2,7 +2,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PATH(NUMA_ROOT_DIR
           NAMES include/numa.h
-          PATHS ENV NUMA_ROOT
+          PATHS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
           DOC "NUMA library root directory")
 
 FIND_PATH(NUMA_INCLUDE_DIR
