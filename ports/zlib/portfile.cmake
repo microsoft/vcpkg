@@ -23,6 +23,8 @@ vcpkg_cmake_configure(
         -DSKIP_INSTALL_HEADERS=ON
 )
 
+# test new system 
+
 vcpkg_cmake_install()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
