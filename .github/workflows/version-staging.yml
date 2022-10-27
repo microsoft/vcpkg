@@ -36,7 +36,7 @@ jobs:
 
           unset VCPKG_ROOT
 
-          git --no-pager diff --name-only --merge-base master HEAD ports | ggrep -oP '^ports/\K[^/]+' | sort -u > .changed-ports
+          git --no-pager diff --name-only --merge-base master HEAD ports | grep -oP '^ports/\K[^/]+' | sort -u > .changed-ports
 
       - uses: actions/github-script@v6
         with:
@@ -45,6 +45,7 @@ jobs:
             const changed_ports = (await fs.readFile('.changed-ports', 'utf8')).trim().split('\n');
             const baseline = JSON.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
             console.log(changed_ports);
+            console.log("File: ##", await fs.readFile('.changed-ports', 'utf8'), "##");
             for (let changed_port of changed_ports) {
               const file_name = `port/${changed_port}/vcpkg.json`;
               let manifest = JSON.parse(await fs.readFile(file_name, 'utf8'));
