@@ -34,6 +34,9 @@ jobs:
 
           git status
 
+          git checkout master
+          git status
+          git checkout -
           unset VCPKG_ROOT
 
           git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]\+' | sort -u > .changed-ports
