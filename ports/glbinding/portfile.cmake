@@ -18,9 +18,10 @@ vcpkg_cmake_configure(
         -DOPTION_BUILD_TOOLS=OFF
         -DOPTION_BUILD_EXAMPLES=OFF
         -DGIT_REV=0
+        -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
         -DOPTION_BUILD_EXAMPLES=OFF
     MAYBE_UNUSED_VARIABLES
-        -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
+        CMAKE_DISABLE_FIND_PACKAGE_cpplocate
 )
 
 vcpkg_cmake_install()
