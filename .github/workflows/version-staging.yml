@@ -44,6 +44,7 @@ jobs:
             const { promises: fs } = require('fs');
             const changed_ports = (await fs.readFile('.changed-ports', 'utf8')).trim().split('\n');
             const baseline = JSON.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
+            console.log(changed_ports);
             for (let changed_port of changed_ports) {
               const file_name = `port/${changed_port}/vcpkg.json`;
               let manifest = JSON.parse(await fs.readFile(file_name, 'utf8'));
