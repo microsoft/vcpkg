@@ -1,0 +1,66 @@
+# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+
+# These "checks" are also performed as part of our critical-path azure-pipelines review,
+# however here they are better able to post back to the original PR
+name: PR Suggestions
+
+on:
+  push:
+    branches:
+      - 'version-staging'
+    paths:
+      - 'ports/**'
+      - '!version/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # fetch-depth 50 tries to ensure we capture the whole history of the branch
+          fetch-depth: 50
+
+      - name: bootstrap
+        run: ./bootstrap-vcpkg.sh
+
+      - name: Get changes
+        run: |
+          git config user.email github-actions
+          git config user.name github-actions@github.com
+
+          git --version
+
+          unset VCPKG_ROOT
+
+          git --no-pager diff --name-only --merge-base master HEAD ports | ggrep -oP '^ports/\K[^/]+' | sort -u > .changed-ports
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const { promises: fs } = require('fs');
+            const changed_ports = (await fs.readFile('.changed-ports', 'utf8')).trim().split('\n');
+            const baseline = Json.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
+            for (let changed_port of changed_ports) {
+              const file_name = `port/${changed_port}/vcpkg.json`;
+              let manifest = Json.parse(await fs.readFile(file_name, 'utf8'));
+              let version = manifest['version'] || manifest['version-date'] || manifest['version-semver'] || manifest['version-string']
+              if (baseline[changed_port] === undefined) {
+                delete manifest["port-version"]; // new port
+              } else if (baseline[changed_port] !== version) {
+                delete manifest["port-version"]; // new version
+              } else {
+                manifest["port-version"] = baseline[changed_port]['port-version'] + 1; // new version
+              }
+              await fs.writeFile(file_name, Json.stringnify(manifest))
+            }
+
+      - name: Format, add versions and commit
+        run: |
+          ./vcpkg format-manifest --all
+          git add ports
+          git commit --amend --no-edit
+          ./vcpkg x-add-version --all
+          git add versions
+          git commit --amend --no-edit
