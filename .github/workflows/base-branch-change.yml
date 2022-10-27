@@ -25,6 +25,6 @@ jobs:
           repo: vcpkg
           name: "Test check run"
           pull_number: ${{ github.event.number }}
-          body: '{ "base": "version-staging"}'
+          base: version-staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
