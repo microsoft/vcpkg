@@ -40,9 +40,7 @@ jobs:
           unset VCPKG_ROOT
 
           git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o '^ports/[^/]\+' | sort -u > .changed-ports
-          echo "OUTPUT"
-          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o  '^ports/[^/]\+' 
-          git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -oP  '^ports/\K[^/]\+' 
+          
           # git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]\+'
           # git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o -E '^ports/[^/]+'
           # git --no-pager diff --name-only --merge-base master HEAD -- ports | grep -o  '^ports/[^/]+'
