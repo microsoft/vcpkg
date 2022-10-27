@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSDL2MIXER_VENDORED=OFF
+        -DSDL2MIXER_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
