@@ -65,6 +65,7 @@ jobs:
                 delete manifest["port-version"]; // new version
               } else {
                 manifest["port-version"] = baseline[changed_port]['port-version'] + 1; // new version
+                console.log("increase version")
               }
               await fs.writeFile(file_name, JSON.stringify(manifest))
             }
@@ -73,11 +74,15 @@ jobs:
         run: |
           unset VCPKG_ROOT
           ./vcpkg format-manifest --all
+          echo TEST
           git diff
+          echo TEST 2
           git add ports
           git commit --amend --no-edit
           ./vcpkg x-add-version --all
+          echo TEST 3          
           git diff
+          echo TEST 4
           git add versions
           git commit --amend --no-edit
           git status
