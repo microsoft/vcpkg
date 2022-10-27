@@ -54,12 +54,9 @@ endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
-list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
 list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dglvnd=false)
-list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
 
 if("offscreen" IN_LIST FEATURES)
@@ -70,6 +67,12 @@ endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
+    find_library(LLVMCore_LIBRARY NAMES LLVMCore libLLVMCore PATHS "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    if(LLVMCore_LIBRARY MATCHES "(\\\.so$|\\\.dll)")
+        list(APPEND MESA_OPTIONS -Dshared-llvm=enabled)
+    else()
+        list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
+    endif()
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
@@ -94,6 +97,19 @@ if("egl" IN_LIST FEATURES) # EGL feature only works on Linux
 else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
 endif()
+if("glx" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dglx=dri)
+else()
+    list(APPEND MESA_OPTIONS -Dglx=disabled)
+endif()
+
+if("egl" IN_LIST FEATURES OR "glx" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND MESA_OPTIONS -Dglvnd=true)
+    list(APPEND MESA_OPTIONS -Dgles-lib-suffix=_mesa)
+else()
+    list(APPEND MESA_OPTIONS -Dglvnd=false)
+endif()
+
 
 list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 
@@ -110,7 +126,6 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -Dgles-lib-suffix=_mesa
-        #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
     )

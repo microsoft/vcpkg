@@ -24,6 +24,13 @@
     },
     "libjpeg-turbo",
     "libpng",
+    "libx11",
+    "libxext",
+    "libxfixes",
+    "libxi",
+    "libxkbcommon",
+    "libxrender",
+    "opengl",
     "openssl",
     "pcre2",
     {
@@ -40,6 +47,11 @@
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
+    "xcb",
+    "xcb-image",
+    "xcb-keysyms",
+    "xcb-render-util",
+    "xcb-util-wm",
     "zlib",
     "zstd"
   ],

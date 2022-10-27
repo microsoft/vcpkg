@@ -1,0 +1,7 @@
+{
+  "name": "libnuma",
+  "version": "2.0.16",
+  "description": "Simple NUMA policy support. It consists of a numactl program to run other programs with a specific NUMA policy and a libnuma shared library (NUMA API) to set NUMA policy in applications.",
+  "homepage": "https://github.com/numactl/numactl",
+  "license": "GPL-2.0 AND LGPL-2.1-or-later"
+}

@@ -6,8 +6,25 @@
   "license": "Zlib",
   "supports": "!(arm | uwp)",
   "dependencies": [
+    "glfw3",
     {
-      "name": "glfw3",
+      "name": "libx11",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxcursor",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    },
+    {
+      "name": "opengl",
       "platform": "!windows"
     },
     {

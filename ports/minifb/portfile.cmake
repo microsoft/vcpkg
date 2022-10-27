@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} currently doesn't supports UWP.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emoon/minifb
@@ -14,6 +10,7 @@ vcpkg_from_github(
         fix-install-error.patch
         fix-build-error.patch
         fix-arm-build-error.patch
+        x11.patch
 )
 
 vcpkg_configure_cmake(
@@ -23,8 +20,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

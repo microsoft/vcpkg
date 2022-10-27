@@ -61,4 +61,5 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     vcpkg_fixup_pkgconfig()
 else()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/opengl/vcpkg-cmake-wrapper.cmake" @ONLY)
 endif()

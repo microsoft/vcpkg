@@ -10,14 +10,6 @@ VCPKG_FROM_GITHUB(
         HEAD_REF master
 )
 
-FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
-          PATHS ENV NUMA_ROOT
-          HINTS $ENV{HOME}/local/include /opt/local/include /usr/local/include /usr/include
-          )
-IF (NOT NUMA_INCLUDE_DIR)
-    MESSAGE(FATAL_ERROR "Numa library not found.\nTry: 'sudo yum install numactl numactl-devel' (or sudo apt-get install libnuma1 libnuma-dev)")
-ENDIF ()
-
 VCPKG_CONFIGURE_CMAKE(
         SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
         PREFER_NINJA
@@ -36,9 +28,7 @@ FOREACH (HEADER ${HEADERS})
 ENDFOREACH ()
 
 FILE(INSTALL ${SOURCE_PATH}/Release/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/spdk)
-if(NOT VCPKG_BUILD_TYPE)
-    FILE(INSTALL ${SOURCE_PATH}/Debug/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/spdk)
-endif()
+FILE(INSTALL ${SOURCE_PATH}/Debug/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/spdk)
 FILE(INSTALL ${REAL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/spdk-dpdkConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

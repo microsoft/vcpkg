@@ -1,0 +1,19 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index a6ae3d931..4c5639d28 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -71,6 +71,14 @@ elseif(APPLE)
+       target_link_libraries(gainput ${APPKIT})
+       endif()
+   endif()
++elseif(UNIX)
++  find_package(X11 REQUIRED)
++  if (GAINPUT_BUILD_SHARED)
++    target_link_libraries(gainput X11::X11 ${XINPUT})
++  endif(GAINPUT_BUILD_SHARED)
++  if(GAINPUT_BUILD_STATIC)
++    target_link_libraries(gainputstatic X11::X11 ${XINPUT})
++  endif(GAINPUT_BUILD_STATIC)
+ endif()
+ 
+ # Library installation directory

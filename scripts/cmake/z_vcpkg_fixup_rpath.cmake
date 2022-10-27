@@ -33,6 +33,11 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 set(current_prefix "${CURRENT_PACKAGES_DIR}/debug")
             endif()
 
+            # TODO: Read out current rpath
+            #       - nuke out any vcpkg related paths
+            #       - remove just $ORIGIN paths (because we add them any way)
+            #       - prepend our paths
+
             # compute path relative to lib
             file(RELATIVE_PATH relative_to_lib "${elf_file_dir}" "${current_prefix}/lib")
             if(relative_to_lib STREQUAL "")

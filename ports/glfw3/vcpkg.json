@@ -1,11 +1,30 @@
 {
   "name": "glfw3",
-  "version-semver": "3.3.8",
-  "port-version": 1,
+  "version-date": "2022-09-20",
   "description": "GLFW is a free, Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan application development. It provides a simple, platform-independent API for creating windows, contexts and surfaces, reading input, handling events, etc.",
   "homepage": "https://github.com/glfw/glfw",
   "license": "Zlib",
   "dependencies": [
+    {
+      "name": "libx11",
+      "platform": "linux"
+    },
+    {
+      "name": "libxcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "libxi",
+      "platform": "linux"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

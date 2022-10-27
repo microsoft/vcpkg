@@ -7,12 +7,36 @@
   "supports": "!(windows & arm)",
   "dependencies": [
     {
+      "name": "elfutils",
+      "platform": "!windows"
+    },
+    {
+      "name": "libdrm",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxshmfence",
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    },
+    {
+      "name": "wayland",
+      "platform": "!windows"
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "!windows"
     },
     "zlib",
     "zstd"
@@ -59,8 +83,8 @@
       "description": "Build support for EGL platform",
       "dependencies": [
         {
-          "name": "mesa",
-          "default-features": false
+          "name": "libglvnd",
+          "platform": "!windows"
         }
       ]
     },
@@ -80,6 +104,17 @@
           "name": "mesa",
           "default-features": false
         }
+      ]
+    },
+    "glx": {
+      "description": "Build support for GLX platform",
+      "supports": "!windows",
+      "dependencies": [
+        "libglvnd",
+        "libx11",
+        "libxext",
+        "libxfixes",
+        "libxxf86vm"
       ]
     },
     "llvm": {
@@ -108,6 +143,15 @@
             "target-aarch64"
           ],
           "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "libclc",
+            "target-amdgpu"
+          ],
+          "platform": "!windows"
         },
         {
           "name": "llvm",

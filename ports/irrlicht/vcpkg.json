@@ -9,6 +9,11 @@
     "bzip2",
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "libxxf86vm",
+      "platform": "!windows"
+    },
+    "opengl",
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"

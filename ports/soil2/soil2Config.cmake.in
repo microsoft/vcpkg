@@ -5,6 +5,8 @@
 
 # Load targets
 get_filename_component(SOIL2_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+find_dependency(OpenGL)
 include("${SOIL2_CMAKE_DIR}/soil2Targets.cmake")
 
 # Set properties

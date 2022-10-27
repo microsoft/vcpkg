@@ -104,4 +104,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT 
                      "__declspec(dllimport) extern xcb_extension_t")
     endforeach()
 endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/xcb/vcpkg-cmake-wrapper.cmake" @ONLY)
 endif()

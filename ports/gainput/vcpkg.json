@@ -8,6 +8,14 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "libx11",
+      "platform": "linux"
+    },
+    {
+      "name": "libxi",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

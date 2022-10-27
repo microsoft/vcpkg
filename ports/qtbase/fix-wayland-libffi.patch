@@ -1,0 +1,26 @@
+diff --git a/cmake/3rdparty/extra-cmake-modules/find-modules/FindWayland.cmake b/cmake/3rdparty/extra-cmake-modules/find-modules/FindWayland.cmake
+index 233cc88d0..14e02b2ef 100644
+--- a/cmake/3rdparty/extra-cmake-modules/find-modules/FindWayland.cmake	
++++ b/cmake/3rdparty/extra-cmake-modules/find-modules/FindWayland.cmake
+@@ -92,14 +92,19 @@ foreach(_comp ${Wayland_known_components})
+     set(Wayland_${_comp}_lib "wayland-${_lc_comp}")
+     set(Wayland_${_comp}_header "wayland-${_lc_comp}.h")
+ endforeach()
++set(Wayland_libffi_component_deps )
++set(Wayland_libffi_pkg_config "libffi")
++set(Wayland_libffi_lib "ffi")
++set(Wayland_libffi_header "ffi.h")
++set(Wayland_Client_component_deps libffi)
+ set(Wayland_Egl_component_deps Client)
+ 
+ ecm_find_package_parse_components(Wayland
+     RESULT_VAR Wayland_components
+-    KNOWN_COMPONENTS ${Wayland_known_components}
++    KNOWN_COMPONENTS libffi ${Wayland_known_components}
+ )
+ ecm_find_package_handle_library_components(Wayland
+-    COMPONENTS ${Wayland_components}
++    COMPONENTS libffi ${Wayland_components}
+ )
+ 
+ # If pkg-config didn't provide us with version information,

@@ -1,4 +1,5 @@
 {
+  "$comment": "deps on audio libs missing (alsa,pulseaudio etc.); OpenGL checks broken.",
   "name": "sdl2",
   "version": "2.24.1",
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
@@ -14,17 +15,48 @@
       "host": true
     }
   ],
+  "default-features": [
+    "default-features"
+  ],
   "features": {
+    "default-features": {
+      "description": "metafeature to select the platform dependent default features",
+      "dependencies": [
+        {
+          "name": "sdl2",
+          "features": [
+            "x11"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
     "vulkan": {
       "description": "Vulkan functionality for SDL"
     },
     "wayland": {
+      "$comment": "opt dep on libdecor",
       "description": "Dynamically load Wayland support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "libxkbcommon",
+        "wayland",
+        "wayland-protocols"
+      ]
     },
     "x11": {
       "description": "Dynamically load X11 support",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        "libx11",
+        "libxcursor",
+        "libxext",
+        "libxfixes",
+        "libxi",
+        "libxrandr",
+        "libxrender",
+        "libxscrnsaver"
+      ]
     }
   }
 }

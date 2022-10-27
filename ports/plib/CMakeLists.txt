@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.3.0)
 
 project(plib VERSION 1.8.5)
 
-set(CMAKE_DEBUG_POSTFIX d)
-
 # Sources & Headers
 set(fnt_SOURCES
     src/fnt/fnt.cxx
@@ -294,6 +292,9 @@ set(ul_HEADERS
     src/util/ul.h
     src/util/ulLocal.h
     src/util/ulRTTI.h)
+
+find_package(OpenGL REQUIRED)
+link_libraries(OpenGL::OpenGL)
 
 # Create and configure the targets
 add_library(plib_fnt STATIC ${fnt_SOURCES} ${fnt_HEADERS})

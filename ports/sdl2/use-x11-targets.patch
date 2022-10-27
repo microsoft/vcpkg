@@ -1,0 +1,25 @@
+diff --git a/cmake/sdlchecks.cmake b/cmake/sdlchecks.cmake
+index e062043c9..aae4d27d4 100644
+--- a/cmake/sdlchecks.cmake
++++ b/cmake/sdlchecks.cmake
+@@ -409,6 +409,7 @@ endmacro()
+ # - HAVE_SDL_LOADSO opt
+ macro(CheckX11)
+   if(SDL_X11)
++    find_package(X11 COMPONENTS Xext Xcursor Xi Xfixes Xrandr Xrender Xss) # Xss = libxscrnsaver
+     foreach(_LIB X11 Xext Xcursor Xi Xfixes Xrandr Xrender Xss)
+         FindLibraryAndSONAME("${_LIB}")
+     endforeach()
+@@ -492,10 +493,10 @@ macro(CheckX11)
+           endif()
+         endif()
+       else()
+-          list(APPEND EXTRA_LIBS ${X11_LIB} ${XEXT_LIB})
++          list(APPEND EXTRA_LIBS X11::X11 X11:Xext)
+       endif()
+ 
+-      set(CMAKE_REQUIRED_LIBRARIES ${X11_LIB} ${X11_LIB})
++      set(CMAKE_REQUIRED_LIBRARIES X11::X11)
+ 
+       check_c_source_compiles("
+           #include <X11/Xlib.h>

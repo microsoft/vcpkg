@@ -1,0 +1,8 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: mpi
+Description: vcpkg mpi redirection to open mpi
+Requires: ompi
+Version: 4.1.3

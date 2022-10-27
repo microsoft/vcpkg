@@ -8,6 +8,43 @@
   "supports": "!(arm | uwp)",
   "dependencies": [
     {
+      "name": "libx11",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxcursor",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxext",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxi",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxinerama",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxrender",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxscrnsaver",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxxf86vm",
+      "platform": "!windows"
+    },
+    "opengl",
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

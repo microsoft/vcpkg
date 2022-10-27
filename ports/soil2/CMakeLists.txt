@@ -43,7 +43,7 @@ add_library(soil2 STATIC ${SOIL2_SRC})
 target_include_directories(soil2 INTERFACE $<INSTALL_INTERFACE:include>)
 
 # link opengl32
-target_link_libraries(soil2 PRIVATE ${OPENGL_gl_LIBRARY})
+target_link_libraries(soil2 PRIVATE OpenGL::OpenGL)
 
 # If its msvc mute the secure warnings
 if(MSVC)

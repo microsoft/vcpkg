@@ -10,6 +10,7 @@
     "expat",
     "libpng",
     "lzo",
+    "opengl",
     "pixman",
     "pthread",
     {
@@ -43,7 +44,13 @@
     },
     "x11": {
       "description": "build with x11 support",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        "libx11",
+        "libxext",
+        "libxrender",
+        "libxshmfence"
+      ]
     }
   }
 }

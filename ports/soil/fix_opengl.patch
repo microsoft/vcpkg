@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc66b851c..22de9bde9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,10 @@ ADD_LIBRARY( soil STATIC
+   
+ target_include_directories(soil INTERFACE $<INSTALL_INTERFACE:include>)
+ 
++
++find_package(OpenGL)
++target_link_libraries(soil OpenGL::OpenGL)
++
+ install(TARGETS soil
+     EXPORT soilTargets
+     ARCHIVE DESTINATION lib

@@ -1,0 +1,6 @@
+#cairo: GL;GLES;(EGL;GLX);x11;xext;xrender;(xcb;xcb-render;x11-xcb;xcb-shm)
+
+TODOS:
+libX11.a needs fixing of hardcoding absolute paths. 
+libinput?
+libudev?

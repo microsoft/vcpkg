@@ -44,6 +44,8 @@ jobs:
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - bash: sudo apt-get remove --yes libxt-dev libxaw7-dev libx11-dev libxkbcommon-x11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev libxcursor-dev libxrandr-dev xutils-dev libgles2-mesa-dev libxext-dev libxfixes-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxcb-util0-dev libxkbcommon-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev libxcb-res0-dev libwayland-dev libxdamage-dev libdbus-1-dev libxtst-dev libnuma1 libnuma-dev
+    displayName: 'Remove system x libs'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports'
     inputs:

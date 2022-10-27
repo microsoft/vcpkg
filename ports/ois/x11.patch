@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f65b86000..fece41e9c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -188,8 +188,9 @@ endif()
+ if(UNIX)
+ 
+     if (NOT APPLE)
+-        add_dependencies(OIS X11)
+-        target_link_libraries(OIS X11)
++        find_package(X11)
++        target_link_libraries(OIS X11::X11 dl)
++        set(OIS_REQUIRES x11)
+     endif()
+ 
+     set_target_properties(OIS PROPERTIES
+diff --git a/OIS.pc.in b/OIS.pc.in
+index 8c8c89af5..5ccf0e202 100644
+--- a/OIS.pc.in
++++ b/OIS.pc.in
+@@ -5,6 +5,7 @@ includedir=${prefix}/include
+ 
+ Name: OIS
+ Description: Cross platform C++ Input Framework
++Requires: @OIS_REQUIRES@
+ Version: @OIS_VERSION@
+ Libs: -L${libdir} -lOIS@OIS_POSTFIX@
+ Cflags: -I${includedir} -I${includedir}/ois

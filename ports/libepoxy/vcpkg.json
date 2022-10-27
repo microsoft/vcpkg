@@ -5,6 +5,7 @@
   "homepage": "https://github.com/anholt/libepoxy",
   "license": "MIT",
   "dependencies": [
+    "opengl",
     {
       "name": "vcpkg-tool-meson",
       "host": true

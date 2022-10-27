@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_install_pkgconfig_win32.patch
+        x11.patch
 )
 
 vcpkg_cmake_configure(
