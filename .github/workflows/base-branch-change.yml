@@ -21,8 +21,8 @@ jobs:
         id: create_check_run
         with:
           route: POST /repos/{owner}/{repo}/pulls/{pull_number}
-          owner: octokit
-          repo: request-action
+          owner: autoantwort
+          repo: vcpkg
           name: "Test check run"
           pull_number: ${{ github.event.number }}
           body: '{ "base": "version-staging"}'
