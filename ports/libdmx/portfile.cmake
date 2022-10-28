@@ -15,6 +15,7 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS --enable-malloc0returnsnull=yes 
 )
 
 vcpkg_install_make()
