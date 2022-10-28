@@ -1,6 +1,6 @@
 # vcpkg version
 
-**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/commands/integrate.md).**
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/commands/version.md).**
 
 ## Synopsis
 
@@ -10,7 +10,7 @@ vcpkg version
 
 ## Description
 
-Displays the version of vcpkg installed.
+Displays the version of the vcpkg executable.
 
 ## Example
 ```no-highlight
