@@ -1,0 +1,40 @@
+diff --git a/configure b/configure
+index 1f9f35e..5c70fe6 100644
+--- a/configure
++++ b/configure
+@@ -1025,7 +1025,10 @@ test_cc(){
+     log test_cc "$@"
+     cat > $TMPC
+     log_file $TMPC
+-    test_cmd $cc $CPPFLAGS $CFLAGS "$@" $CC_C $(cc_o $TMPO) $TMPC
++    tmpc_=$TMPC
++    tmpo_=$TMPO
++    [ -x "$(command -v cygpath)" ] && tmpc_=$(cygpath -w $tmpc_) && tmpo_=$(cygpath -w $tmpo_)
++    test_cmd $cc $CPPFLAGS $CFLAGS "$@" $CC_C $(cc_o $tmpo_) $tmpc_
+ }
+ 
+ test_cxx(){
+@@ -1070,7 +1073,10 @@ test_cpp(){
+     log test_cpp "$@"
+     cat > $TMPC
+     log_file $TMPC
+-    test_cmd $cc $CPPFLAGS $CFLAGS "$@" $(cc_e $TMPO) $TMPC
++    tmpc_=$TMPC
++    tmpo_=$TMPO
++    [ -x "$(command -v cygpath)" ] && tmpc_=$(cygpath -w $tmpc_) && tmpo_=$(cygpath -w $tmpo_)
++    test_cmd $cc $CPPFLAGS $CFLAGS "$@" $(cc_e $tmpo_) $tmpc_
+ }
+ 
+ test_as(){
+@@ -1160,7 +1166,10 @@ test_ld(){
+     test_$type $($cflags_filter $flags) || return
+     flags=$($ldflags_filter $flags)
+     libs=$($ldflags_filter $libs)
+-    test_cmd $ld $LDFLAGS $LDEXEFLAGS $flags $(ld_o $TMPE) $TMPO $libs $extralibs
++    tmpe_=$TMPE
++    tmpo_=$TMPO
++    [ -x "$(command -v cygpath)" ] && tmpe_=$(cygpath -w $tmpe_) && tmpo_=$(cygpath -w $tmpo_)
++    test_cmd $ld $LDFLAGS $LDEXEFLAGS $flags $(ld_o $tmpe_) $tmpo_ $libs $extralibs
+ }
+ 
+ check_ld(){

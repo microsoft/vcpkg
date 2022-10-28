@@ -26,12 +26,12 @@ vcpkg_from_github(
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
         0021-fix-sdl2-version-check.patch
+        0022-fix-cl-path-format.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
-
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     # ffmpeg nasm build gives link error on x86, so fall back to yasm
@@ -45,6 +45,10 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(FFMPEG_MSVC TRUE)
+endif()
+
+if(FFMPEG_MSVC)
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
     set(LIB_PATH_VAR "LIB")
@@ -92,7 +96,7 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
-if(VCPKG_DETECTED_MSVC)
+if(FFMPEG_MSVC)
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
@@ -526,7 +530,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(ENV{CFLAGS} "@${crsp}")
     # All tools except the msvc arm{,64} assembler accept @... as response file syntax.
     # For that assembler, there is no known way to pass in flags. We must hope that not passing flags will work acceptably.
-    if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+    if(NOT FFMPEG_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
@@ -557,7 +561,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ldflags.rsp")
     file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     set(ENV{CFLAGS} "@${crsp}")
-    if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+    if(NOT FFMPEG_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
