@@ -1861,11 +1861,11 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.68.1",
+      "baseline": "2.72.1",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.0.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -2298,7 +2298,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 21
+      "port-version": 22
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2610,7 +2610,7 @@
     },
     "giflib": {
       "baseline": "5.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ginkgo": {
       "baseline": "1.4.0",
@@ -4281,7 +4281,7 @@
       "port-version": 2
     },
     "libtorrent": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.8",
       "port-version": 0
     },
     "libu2f-server": {
@@ -6381,7 +6381,7 @@
       "port-version": 8
     },
     "quill": {
-      "baseline": "2.2.0",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "quirc": {
@@ -6765,8 +6765,8 @@
       "port-version": 2
     },
     "sdl2-net": {
-      "baseline": "2.0.1",
-      "port-version": 9
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "sdl2-ttf": {
       "baseline": "2.20.0",

@@ -442,6 +442,7 @@ libmariadb:arm64-windows      = skip
 libmariadb:arm-uwp            = skip
 libmariadb:x64-linux          = skip
 libmariadb:x64-osx            = skip
+libmariadb:arm64-osx          = skip
 libmariadb:x64-uwp            = skip
 libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
