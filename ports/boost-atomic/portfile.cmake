@@ -18,4 +18,4 @@ boost_modular_build(SOURCE_PATH "${SOURCE_PATH}")
 include("${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake")
 boost_modular_headers(SOURCE_PATH "${SOURCE_PATH}")
 
-file(INSTALL "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-build")
+file(INSTALL "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")
