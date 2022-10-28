@@ -11,7 +11,7 @@ if(POLICY CMP0067)
 endif()
 if(POLICY CMP0137)
     cmake_policy(SET CMP0137 NEW)
-endif()```
+endif()
 
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
