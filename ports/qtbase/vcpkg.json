@@ -173,7 +173,7 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows & !linux"
+      "supports": "!windows"
     },
     "glib": {
       "description": "GLib",
