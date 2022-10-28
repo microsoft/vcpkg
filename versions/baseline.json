@@ -2634,7 +2634,7 @@
     },
     "glbinding": {
       "baseline": "3.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "glew": {
       "baseline": "2.2.0",
