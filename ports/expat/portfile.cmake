@@ -1,11 +1,15 @@
-set(EX_VERSION 2.4.8)
+file(READ ${CMAKE_CURRENT_LIST_DIR}/vcpkg.json vcpkg_json)
+string(JSON VERSION GET "${vcpkg_json}" "version")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF 3bab6c09bbe8bf42d84b81563ddbcf4cca4be838 #v2.4.8
-    SHA512 6bddf6514183b3bfa6bf869e63cf838cfe2912941ef04543bce00bee84a305f494368fb7cbd80404d06877a1d8da82de5ac2b44074b25e34aeaee7949d37e451
+    REF R_2_4_9
+    SHA512 6bf92516ce2642b2cdcbc586aaac0f706f125394fa428670f9b8b042a1f393e3b9dda1a24e58e6c8ad8b4ff3303cb5a8700628c6c04a881a06251c08be3759d3
     HEAD_REF master
+    PATCHES
+        "pkgconfig_fix.patch" # https://github.com/libexpat/libexpat/pull/656
+        "mingw_static_fix.patch" # https://github.com/libexpat/libexpat/pull/658
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
@@ -23,7 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${EX_VERSION}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

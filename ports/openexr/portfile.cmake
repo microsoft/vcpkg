@@ -1,43 +1,44 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "UWP build not supported")
-endif()
-
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO openexr/openexr
-  REF 918b8f543e81b5a1e1aca494ab7352ca280afc9e # v2.5.8
-  SHA512 7c4a22779718cb1a8962d53d0817a0b3cba90fc9ad4c6469e845bdfbf9ae8be8e43905ad8672955838976caeffd7dabcc6ea9c1f00babef0d5dfc8b5e058cce9
-  HEAD_REF master
-  PATCHES
-    0001-remove_find_package_macro.patch
-    0002-fixup_cmake_exports_path.patch
-    0003-fix-arm-intrin-detection-pr-1216.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO AcademySoftwareFoundation/openexr
+    REF v3.1.5
+    SHA512 01ef16eacd2dde83c67b81522bae87f47ba272a41ce7d4e35d865dbdcaa03093e7ac504b95d2c1b3a19535f2364a4f937b0e0570c74243bb1c6e021fce7b620c
+    HEAD_REF master
 )
 
-vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
-  OPTIONS
-    -DCMAKE_DEBUG_POSTFIX=_d
-    -DPYILMBASE_ENABLE=FALSE
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+    FEATURES
+        tools   OPENEXR_BUILD_TOOLS
+        tools   OPENEXR_INSTALL_TOOLS
 )
-
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+        -DBUILD_TESTING=OFF
+        -DOPENEXR_INSTALL_EXAMPLES=OFF
+        -DDOCS=OFF
+    OPTIONS_DEBUG
+        -DOPENEXR_BUILD_TOOLS=OFF
+        -DOPENEXR_INSTALL_TOOLS=OFF
+)
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup()
-vcpkg_cmake_config_fixup(PACKAGE_NAME ilmbase CONFIG_PATH share/ilmbase)
-vcpkg_fixup_pkgconfig()
-
-vcpkg_copy_tools(
-  TOOL_NAMES exrenvmap exrheader exrmakepreview exrmaketiled exrmultipart exrmultiview exrstdattr exr2aces
-  AUTO_CLEAN
-)
 vcpkg_copy_pdbs()
 
-if (VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
+vcpkg_fixup_pkgconfig()
+
+if(OPENEXR_INSTALL_TOOLS)
+    vcpkg_copy_tools(
+        TOOL_NAMES exrenvmap exrheader exrinfo exrmakepreview exrmaketiled exrmultipart exrmultiview exrstdattr exr2aces
+        AUTO_CLEAN
+    )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

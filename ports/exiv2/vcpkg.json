@@ -1,12 +1,16 @@
 {
   "name": "exiv2",
   "version": "0.27.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Image metadata library and tools",
   "homepage": "https://www.exiv2.org",
+  "license": "GPL-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "libiconv",
+    {
+      "name": "libiconv",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -4,7 +4,7 @@ index 6dc6501..d36a049 100644
 +++ b/CMakeLists.txt
 @@ -317,7 +317,9 @@ target_include_directories(
  
- if(LIBXSLT_WITH_CRYPTO)
+ if(LIBXSLT_WITH_CRYPTO AND NOT WIN32)
  	target_link_libraries(LibExslt PRIVATE Gcrypt::Gcrypt)
 -	set(LIBGCRYPT_LIBS "-lgcrypt")
 +	# For libexslt.pc
