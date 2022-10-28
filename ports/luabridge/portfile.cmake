@@ -6,14 +6,5 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(
-    COPY "${SOURCE_PATH}/Source/LuaBridge"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-)
-
-# Handle copyright
-configure_file(
-    "${SOURCE_PATH}/README.md"
-    "${CURRENT_PACKAGES_DIR}/share/luabridge/copyright"
-    COPYONLY
-)
+file(COPY "${SOURCE_PATH}/Source/LuaBridge" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
