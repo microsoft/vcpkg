@@ -6361,7 +6361,7 @@
       "port-version": 1
     },
     "quantlib": {
-      "baseline": "1.27",
+      "baseline": "1.28",
       "port-version": 0
     },
     "quaternions": {
