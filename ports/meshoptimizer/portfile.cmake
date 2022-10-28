@@ -1,10 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
-    REF v0.18
-    SHA512 b9fd6ce61c7d7b673892ace74feb300628d4bbbba4e912dba4a756d9709b952dde45b706c581df3fd0aef1e7065ff730d1827b0d6c724d716ccf41efb1953d3e
+    REF 1cfd09893292e5842ba44e93709779ea28639675
+    SHA512 fe767bc19bd5b718665f3b16209323eb3160841a118deabf9943a214db7860b4956642cd72274cae7ca2a3dbb5829419a78e6407340d655f37e01d53770397cb
     HEAD_REF master
 )
+
+# If we want basisu support in gltfpack we need a particular fork of basisu
+# We could modify this to support using the vcpkg version of basisu
+# but since this is only necessary for the gltfpack tool and not for the 
+# meshopt lib it shouldn't be too nasty to just grab this repo
+if ("gltfpack" IN_LIST FEATURES)
+  vcpkg_from_github(
+      OUT_SOURCE_PATH BASISU_PATH
+      REPO zeux/basis_universal
+      REF 498bba430b92f7458e5daa0fff58c2c6333b034e
+      SHA512 e97df12049b0b556fc771ac5ef90ed846579f7f9f31d5b169e7df0c574fd9a96a384e0910c3a6e87ad94740a027a8abcbfcc0d21326b7cf1c469b39caf28b075
+      HEAD_REF master
+  )
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -18,6 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
       ${FEATURE_OPTIONS}
       -DMESHOPT_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+      -DMESHOPT_BASISU_PATH=${BASISU_PATH}
 )
 
 vcpkg_cmake_install()
