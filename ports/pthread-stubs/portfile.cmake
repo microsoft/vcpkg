@@ -33,7 +33,7 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/pthreadGC3.lib")
 endif()
 file(WRITE "${_file}" "${_contents}")
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT VCPKG_BUILD_TYPE)
     set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pthread-stubs.pc")
     file(READ "${_file}" _contents)
     string(REPLACE "Cflags: -pthread" "Cflags: " _contents "${_contents}")
