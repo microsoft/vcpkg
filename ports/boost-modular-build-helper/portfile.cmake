@@ -8,7 +8,6 @@ file(
         ${CMAKE_CURRENT_LIST_DIR}/nothing.bat
         ${CMAKE_CURRENT_LIST_DIR}/usage
         ${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in
-        ${CMAKE_CURRENT_LIST_DIR}/has_synchronization_lib.cpp
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/boost-build
 )
