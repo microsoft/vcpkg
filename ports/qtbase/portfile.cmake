@@ -163,6 +163,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
+    "gles2"               FEATURE_opengl_desktop
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
