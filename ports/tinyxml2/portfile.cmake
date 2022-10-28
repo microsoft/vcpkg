@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-do-not-force-export-the-symbols-when-building-st.patch
+        0002-fix-check-for-TINYXML2_EXPORT-on-non-windows.patch
 )
 
 vcpkg_cmake_configure(

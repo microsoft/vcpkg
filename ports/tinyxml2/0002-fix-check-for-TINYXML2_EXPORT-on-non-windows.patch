@@ -1,0 +1,26 @@
+From 632c311b18015d194151489bb0773a28eed9c2e1 Mon Sep 17 00:00:00 2001
+From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
+Date: Thu, 27 Oct 2022 19:06:52 -0700
+Subject: [PATCH 2/2] fix: check for TINYXML2_EXPORT on non windows
+
+---
+ tinyxml2.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tinyxml2.h b/tinyxml2.h
+index cfb1053..a56251c 100755
+--- a/tinyxml2.h
++++ b/tinyxml2.h
+@@ -72,7 +72,8 @@ distribution.
+ #   else
+ #       define TINYXML2_LIB
+ #   endif
+-#elif __GNUC__ >= 4
++#endif
++#if defined(TINYXML2_EXPORT) && __GNUC__ >= 4
+ #   define TINYXML2_LIB __attribute__((visibility("default")))
+ #else
+ #   define TINYXML2_LIB
+-- 
+2.37.3.windows.1
+
