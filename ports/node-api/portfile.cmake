@@ -36,16 +36,18 @@ file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-output")
 file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
-set(npm_args --prefix "${NODEJS_BIN_DIR}" install cmake-js@7.0.0-3)
-execute_process(COMMAND "${npm_command}" ${npm_args}
-  WORKING_DIRECTORY ${NODEJS_BIN_DIR}
-  RESULT_VARIABLE npm_result
-  OUTPUT_VARIABLE npm_output
-)
+# Clone from GitHub instead of `npm install cmake-js`
 
-if(NOT "${npm_result}" STREQUAL "0")
-  message(FATAL_ERROR "${npm_command} ${npm_args} exited with ${npm_result}:\n${npm_output}")
-endif()
+set(node_modules_download_dir "${NODEJS_BIN_DIR}/node_modules")
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH CMAKE_JS_SOURCE_PATH
+  REPO cmake-js/cmake-js
+  REF v7.0.0 
+  SHA512 8fc38282e0a5dd6c02441130a16adef267a3f40eb2d70855befaa14f57d0fb1fd56ed5cd3a5057ea3350c0724986837ac7374a7f6786f75c55b638e34e9d48c9
+  HEAD_REF master
+)
+file(INSTALL "${CMAKE_JS_SOURCE_PATH}" DESTINATION "${node_modules_download_dir}" RENAME "cmake-js")
 
 # Prevent pollution of user home directory
 file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
@@ -112,5 +114,3 @@ file(REMOVE ${cmakejs_files})
 file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/node_modules/cmake-js")
 file(REMOVE_RECURSE "${NODEJS_BIN_DIR}/cmake-js-fetch")
 file(REMOVE "${NODEJS_BIN_DIR}/package.json")
-file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-output")
-file(REMOVE_RECURSE "${DOWNLOADS}/tmp-cmakejs-home")
