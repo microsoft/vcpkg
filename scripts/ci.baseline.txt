@@ -461,10 +461,6 @@ libmesh:x64-linux=skip
 # Build fails since PIC is not enabled and some configuration tests do not work properly on UWP
 libmicrodns:arm-uwp=fail
 libmicrodns:x64-uwp=fail
-libmikmod:x64-osx=fail
-libmikmod:arm64-osx=fail
-libmodman:arm-uwp=fail
-libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
 libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
