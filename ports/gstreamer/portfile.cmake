@@ -10,8 +10,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF 1.20.3
-    SHA512 f3f2e27e64af615e687419c350216f975be2a6115cd66ac25c4a488bad1e3b7ba2a9f4a9d0d68293cdccfc23abf6bbbd4513e2719778b6189fd43ae89da52b07
+    REF 1.20.4
+    SHA512 bd2e3812f719c530027513f1ac6715e093c4fb3c56553e4ad82506dfc5fd81616777ee08489723809faee693e68f010abf716cc23c82a7d17490b6942ce5cac4
     HEAD_REF master
     PATCHES
         gstreamer-disable-hot-doc.patch
