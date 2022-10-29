@@ -1,0 +1,21 @@
+{
+  "name": "kaldi",
+  "version-date": "2021-06-14",
+  "port-version": 2,
+  "description": "kaldi-asr/kaldi is the official location of the Kaldi project.",
+  "homepage": "https://github.com/kaldi-asr/kaldi",
+  "license": "Apache-2.0",
+  "supports": "!arm",
+  "dependencies": [
+    "cub",
+    "openfst",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ff24df434..2d55253cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
+ include(GNUInstallDirs)
+ include(Utils)
+ 
++add_definitions(-DNDEBUG)
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -pipe -W -Wall -Wno-unused-variable -Wno-unused-parameter -Wno-sign-compare -Wno-unused-local-typedefs -Wno-deprecated-declarations -Winit-self -fPIC -m64 -msse -msse2")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -ftemplate-backtrace-limit=0")
++
+ if(CONDA_ROOT)
+     message(STATUS "Adding ${CONDA_ROOT} directories")
+     set(CMAKE_INCLUDE_PATH "${CONDA_ROOT}/include")
+@@ -20,10 +24,6 @@ if(CONDA_ROOT)
+ 
+ endif()
+ 
+-include(third_party/get_third_party)
+-
+-include(cmake/third_party/openfst.cmake)
+-
+ find_package(PythonInterp)
+ if(NOT PYTHON_EXECUTABLE)
+     message(FATAL_ERROR "Needs python to auto-generate most CMake files, but not found.")
+@@ -68,10 +68,12 @@ option(KALDI_BUILD_EXE "If disabled, will make add_kaldi_executable a no-op" ON)
+ option(KALDI_BUILD_TEST "If disabled, will make add_kaldi_test_executable a no-op" ON)
+ option(KALDI_USE_PATCH_NUMBER "Use MAJOR.MINOR.PATCH format, otherwise MAJOR.MINOR" OFF)
+ 
++if(BUILD_UNIT_TESTS)
+ if (KALDI_BUILD_TEST)
+     include(CTest)
+     enable_testing()
+ endif()
++endif()
+ 
+ link_libraries(${CMAKE_DL_LIBS})
+ 
+@@ -102,6 +104,7 @@ else()
+         include_directories(${CMAKE_CURRENT_SOURCE_DIR}/tools/CLAPACK)
+         link_libraries(${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+     elseif(MATHLIB STREQUAL "MKL")
++        set(ENV{MKLROOT} "/opt/intel/compilers_and_libraries/linux/mkl")
+         if(NOT DEFINED ENV{MKLROOT} OR "$ENV{MKLROOT}" STREQUAL "")
+             message(FATAL_ERROR "Environment variable MKLROOT is not defined")
+         else()
+@@ -109,6 +112,7 @@ else()
+         endif()
+         normalize_env_path(ENV{MKLROOT})
+         set(BLA_VENDOR "Intel10_64lp_seq") # use the single threaded MKL by default
++        find_package(BLAS REQUIRED)
+         find_package(LAPACK REQUIRED)
+         add_definitions(-DHAVE_MKL=1)
+         include_directories($ENV{MKLROOT}/include)
+@@ -176,6 +180,9 @@ if(CUDA_FOUND)
+     add_definitions(-DHAVE_CUDA=1)
+     add_definitions(-DCUDA_API_PER_THREAD_DEFAULT_STREAM=1)
+     include_directories(${CUDA_INCLUDE_DIRS})
++    set(CUDA_CUDA_LIBRARY ${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs/libcuda.so)
++    set(CMAKE_BUILD_RPATH ${CUDA_TOOLKIT_ROOT_DIR}/lib64)
++
+     link_libraries(
+         ${CUDA_LIBRARIES}
+         ${CUDA_CUDA_LIBRARY}
+@@ -189,8 +196,8 @@ if(CUDA_FOUND)
+     include_directories(${NvToolExt_INCLUDE_DIR})
+     link_libraries(${NvToolExt_LIBRARIES})
+ 
+-
+-    find_package(CUB REQUIRED)
++    find_package(cub CONFIG REQUIRED)
++    get_target_property(CUB_INCLUDE_DIR CUB::CUB INTERFACE_INCLUDE_DIRECTORIES)
+     include_directories(${CUB_INCLUDE_DIR})
+ endif()
+ 
+@@ -219,7 +226,10 @@ endif()
+ #            PATHS "${CMAKE_CURRENT_SOURCE_DIR}/tools/openfst/include"
+ #            REQUIRED)
+ 
+-link_libraries(fst)
++find_package(openfst CONFIG REQUIRED)
++find_path(OPENFST_INCLUDE_DIR fst/fst.h)
++include_directories(${OPENFST_INCLUDE_DIR})
++link_libraries(openfst::fst)
+ 
+ # add all native libraries
+ add_subdirectory(src/base) # NOTE, we need to patch the target with version from outside
+@@ -261,6 +271,7 @@ if(CUDA_FOUND)
+     add_subdirectory(src/cudadecoder)
+ endif()
+ 
++if(BUILD_TOOLS)
+ # add all native executables
+ add_subdirectory(src/bin)
+ add_subdirectory(src/gmmbin)
+@@ -285,6 +296,7 @@ if(CUDA_FOUND)
+     add_subdirectory(src/cudafeatbin)
+     add_subdirectory(src/cudadecoderbin)
+ endif()
++endif()
+ 
+ if(NOT CONDA_ROOT)
+     include(CMakePackageConfigHelpers)
+@@ -300,7 +312,7 @@ if(NOT CONDA_ROOT)
+         COMPATIBILITY AnyNewerVersion
+     )
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config-version.cmake
+-        DESTINATION lib/cmake/kaldi
++        DESTINATION share/kaldi
+     )
+-    install(EXPORT kaldi-targets DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/kaldi)
++    install(EXPORT kaldi-targets DESTINATION share/kaldi)
+ endif()
+diff --git a/cmake/kaldi-config.cmake.in b/cmake/kaldi-config.cmake.in
+index 123f58c56..e6a322169 100644
+--- a/cmake/kaldi-config.cmake.in
++++ b/cmake/kaldi-config.cmake.in
+@@ -1,6 +1,7 @@
+ @PACKAGE_INIT@
+ 
+ find_package(Threads)
++find_package(openfst CONFIG)
+ 
+ if(NOT TARGET kaldi-base)
+     include(${CMAKE_CURRENT_LIST_DIR}/kaldi-targets.cmake)
