@@ -4,7 +4,7 @@
   "description": "Port of the OpenFST library to Windows",
   "homepage": "https://github.com/kkm000/openfst",
   "license": "Apache-2.0",
-  "supports": "!arm",
+  "supports": "!arm & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
