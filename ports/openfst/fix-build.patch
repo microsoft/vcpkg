@@ -37,74 +37,33 @@ index acc4bf1..00283d7 100644
  add_subdirectory(test)
 +endif()
 diff --git a/src/lib/CMakeLists.txt b/src/lib/CMakeLists.txt
-index c004aee..eff17ed 100644
+index c004aee..b2d716d 100644
 --- a/src/lib/CMakeLists.txt
 +++ b/src/lib/CMakeLists.txt
-@@ -1,7 +1,10 @@
+@@ -1,5 +1,7 @@
  FILE(GLOB HEADER_FILES ../include/fst/*.h)
  
 +include(CMakePackageConfigHelpers)
 +include(GNUInstallDirs)
  
--add_library(fst
-+if (BUILD_SHARED_LIBS)
-+add_library(fst SHARED
+ add_library(fst
    compat.cc
-   flags.cc
-   fst-types.cc
-@@ -14,13 +17,51 @@ add_library(fst
-   weight.cc
-   ${HEADER_FILES}
- )
-+else()
-+add_library(fst STATIC
-+  compat.cc
-+  flags.cc
-+  fst-types.cc
-+  fst.cc
-+  mapped-file.cc
-+  properties.cc
-+  symbol-table.cc
-+  symbol-table-ops.cc
-+  util.cc
-+  weight.cc
-+  ${HEADER_FILES}
-+)
-+endif()
-+
- set_target_properties(fst PROPERTIES
+@@ -18,9 +20,12 @@ set_target_properties(fst PROPERTIES
    SOVERSION "${SOVERSION}"
  )
  
-+if (BUILD_SHARED_LIBS)
-+install(TARGETS fst EXPORT openfstTargets
-+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        )
-+else()
-+install(TARGETS fst EXPORT openfstTargets
-+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        )
-+endif()
- 
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/openfst-config.cmake"
-+[[include(CMakeFindDependencyMacro)
-+file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/openfstTargets.cmake")
-+foreach (TARGET_FILE ${TARGET_FILES})
-+    include("${TARGET_FILE}")
-+endforeach()
-+]])
-+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/openfst-config.cmake" DESTINATION share/openfst)
- 
+-
+-
 -install(TARGETS fst
 -  LIBRARY DESTINATION lib
 -  ARCHIVE DESTINATION lib
 -  RUNTIME DESTINATION lib)
++install(TARGETS fst EXPORT unofficial-openfstTargets
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +install(DIRECTORY ../include/fst DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+install(EXPORT openfstTargets
-+    NAMESPACE openfst::
-+    DESTINATION share/openfst
++install(EXPORT unofficial-openfstTargets
++    NAMESPACE unofficial::openfst::
++    DESTINATION share/unofficial-openfst
 +)

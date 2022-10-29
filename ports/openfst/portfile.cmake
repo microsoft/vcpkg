@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME openfst CONFIG_PATH share/openfst)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-openfst CONFIG_PATH share/unofficial-openfst)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
