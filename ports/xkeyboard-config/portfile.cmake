@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xkeyboard-config/xkeyboard-config
     REF  b5f7adf3fd85b90c1fd5d85186ea5cb0d5db69be
-    SHA512 2a4cc13507401858e469333805471367a75697716ecae542a212696cc5c556999f6f18bc0fd3ec436065ed7419b1cd40251bcb8acb6932e75adb70de046fa776
+    SHA512 363e29f5f1d6c39d4340585ded3c2badad74a0147cdbdfc43164ded7b68d9c115934e9b4b3b066e0e94300b070e08cea53f75a22bd7afdc5f84f66ad91d47e03
     HEAD_REF master # branch name
 ) 
 

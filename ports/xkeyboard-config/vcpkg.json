@@ -5,8 +5,8 @@
   "homepage": "https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config",
   "dependencies": [
     "libx11",
+    "libxkbcommon",
     "libxslt",
-    "tool-meson",
-    "libxkbcommon"
+    "tool-meson"
   ]
 }
