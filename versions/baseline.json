@@ -1273,7 +1273,7 @@
       "port-version": 4
     },
     "cairomm": {
-      "baseline": "1.16.1",
+      "baseline": "1.16.2",
       "port-version": 0
     },
     "calceph": {
@@ -1509,7 +1509,7 @@
       "port-version": 1
     },
     "cnats": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.1",
       "port-version": 0
     },
     "cnl": {
@@ -1653,8 +1653,8 @@
       "port-version": 3
     },
     "cppcoro": {
-      "baseline": "2020-02-28",
-      "port-version": 3
+      "baseline": "2022-10-25",
+      "port-version": 0
     },
     "cppfs": {
       "baseline": "1.3.0",
@@ -1702,7 +1702,7 @@
     },
     "cppzmq": {
       "baseline": "4.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cpr": {
       "baseline": "1.9.2",
@@ -1861,11 +1861,11 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.68.1",
+      "baseline": "2.72.1",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.0.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -1989,8 +1989,8 @@
       "port-version": 2
     },
     "dmlc": {
-      "baseline": "2019-08-12",
-      "port-version": 7
+      "baseline": "2022-06-22",
+      "port-version": 0
     },
     "docopt": {
       "baseline": "2018-11-01",
@@ -2393,8 +2393,8 @@
       "port-version": 1
     },
     "fontconfig": {
-      "baseline": "2.14.0",
-      "port-version": 4
+      "baseline": "2.14.1",
+      "port-version": 0
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2610,7 +2610,7 @@
     },
     "giflib": {
       "baseline": "5.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ginkgo": {
       "baseline": "1.4.0",
@@ -2634,7 +2634,7 @@
     },
     "glbinding": {
       "baseline": "3.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "glew": {
       "baseline": "2.2.0",
@@ -2786,7 +2786,7 @@
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 9
+      "port-version": 10
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -3946,7 +3946,7 @@
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
-      "port-version": 10
+      "port-version": 11
     },
     "libmodbus": {
       "baseline": "3.1.6",
@@ -4281,7 +4281,7 @@
       "port-version": 2
     },
     "libtorrent": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.8",
       "port-version": 0
     },
     "libu2f-server": {
@@ -4581,8 +4581,8 @@
       "port-version": 0
     },
     "luabridge": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "2.8",
+      "port-version": 0
     },
     "luabridge3": {
       "baseline": "3.0-beta4",
@@ -4797,7 +4797,7 @@
       "port-version": 3
     },
     "microsoft-signalr": {
-      "baseline": "0.1.0-alpha3",
+      "baseline": "0.1.0-alpha4",
       "port-version": 1
     },
     "mikktspace": {
@@ -5625,8 +5625,8 @@
       "port-version": 3
     },
     "pangomm": {
-      "baseline": "2.50.0",
-      "port-version": 2
+      "baseline": "2.50.1",
+      "port-version": 0
     },
     "parallel-hashmap": {
       "baseline": "1.3.8",
@@ -5786,7 +5786,7 @@
     },
     "plib": {
       "baseline": "1.8.5",
-      "port-version": 5
+      "port-version": 6
     },
     "plibsys": {
       "baseline": "0.0.4",
@@ -6361,7 +6361,7 @@
       "port-version": 1
     },
     "quantlib": {
-      "baseline": "1.27",
+      "baseline": "1.28",
       "port-version": 0
     },
     "quaternions": {
@@ -6381,7 +6381,7 @@
       "port-version": 8
     },
     "quill": {
-      "baseline": "2.2.0",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "quirc": {
@@ -6765,8 +6765,8 @@
       "port-version": 2
     },
     "sdl2-net": {
-      "baseline": "2.0.1",
-      "port-version": 9
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "sdl2-ttf": {
       "baseline": "2.20.0",
@@ -7438,7 +7438,7 @@
     },
     "tinyxml2": {
       "baseline": "9.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tl-expected": {
       "baseline": "1.0.0",
@@ -7806,7 +7806,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vs-yasm": {
       "baseline": "0.5.0",
