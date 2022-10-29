@@ -24,7 +24,7 @@
     "xcb-render-util",
     "xcb-util",
     "xcb-util-m4",
-    "xcb-wm",
+    "xcb-util-wm",
     "libxdmcp",
     "libxfont",
     "libxkbcommon",
@@ -37,9 +37,9 @@
       "platform": "!windows"
     },
     "xtrans",
-    "xv",
+    "libxv",
     {
-      "name": "xxf86dga",
+      "name": "libxxf86dga",
       "platform": "!windows"
     }
   ],
@@ -79,7 +79,7 @@
     "xorg": {
       "description": "Build xorg server",
       "dependencies": [
-        "xcvt"
+        "libxcvt"
       ]
     },
     "xwayland": {
@@ -95,7 +95,7 @@
       "description": "Build xwin server",
       "dependencies": [
         "dirent",
-        "xcb-wm",
+        "xcb-util-wm",
         "libxfixes",
         {
           "name": "opengl-registry",
