@@ -18,6 +18,17 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
+if (NOT VCPKG_BUILD_TYPE)
+  foreach(file guile-tools guile-config guild)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/${file}" "${CURRENT_INSTALLED_DIR}/debug/../tools/guile/debug/bin" "`dirname $0`")
+  endforeach()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/guile-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
+foreach(file guile-tools guile-config guild)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${file}" "${CURRENT_INSTALLED_DIR}/tools/guile/bin" "`dirname $0`")
+endforeach()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/guile-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+
 file(
     INSTALL "${GUILE_SOURCES}/COPYING.LESSER" 
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 

@@ -1,7 +1,6 @@
 {
   "name": "tgui",
-  "version-date": "2021-04-19",
-  "port-version": 4,
+  "version": "0.9.5",
   "description": "TGUI is an easy to use, cross-platform, C++ GUI for SFML.",
   "homepage": "https://tgui.eu",
   "license": "Zlib",

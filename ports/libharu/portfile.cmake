@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF 6997cf775b2345e3db82ac774fe2931faf348458 #2.4.0-rc1
-    SHA512 758753b0f977c6b9f0b6309958e1edfba491851682c9b04cead6ebebc9af726fdec7265f36ca1b1e80f1849f9b4a43ad329a688b4844eb911c64d42a92cd7823
+    REF 0eb5cdc5a7b5f2b03de20de7a0a57921f56b59f3 # 2.4.2
+    SHA512 f6be210b09eee348d5de87a0e6edbab360091db121baa21d9e1b3c45fb4dda4f6351353605cc247fc375e0daf2f05b576a73244110e44cfb02798b3f3d1836db
     HEAD_REF master
     PATCHES
         fix-include-path.patch
@@ -56,4 +56,5 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
 
 vcpkg_copy_pdbs()
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

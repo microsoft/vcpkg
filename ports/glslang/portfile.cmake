@@ -14,11 +14,11 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path("${PYTHON_PATH}")
 
-if(VCPKG_TARGET_IS_IOS)
+if("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_IOS)
+  set(BUILD_BINARIES ON)
+else()
   # this case will report error since all executable will require BUNDLE DESTINATION
   set(BUILD_BINARIES OFF)
-else()
-  set(BUILD_BINARIES ON)  
 endif()
 
 vcpkg_cmake_configure(
