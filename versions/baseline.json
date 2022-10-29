@@ -1989,8 +1989,8 @@
       "port-version": 2
     },
     "dmlc": {
-      "baseline": "2019-08-12",
-      "port-version": 7
+      "baseline": "2022-06-22",
+      "port-version": 0
     },
     "docopt": {
       "baseline": "2018-11-01",
