@@ -1,0 +1,33 @@
+diff --git a/src/globals.c b/src/globals.c
+index ea3fe6e11..3a433f249 100644
+--- a/src/globals.c
++++ b/src/globals.c
+@@ -98,9 +98,26 @@ int			XTestFakeAckType   = 1;
+ #endif
+ 
+ #ifdef USE_THREAD_SAFETY_CONSTRUCTOR
+-__attribute__((constructor)) static void
+-xlib_ctor(void)
++#ifndef _MSC_VER
++#define INITIALIZER(f) __attribute__((constructor)) static void f(void)
++#else 
++// FROM: https://stackoverflow.com/questions/1113409/attribute-constructor-equivalent-in-vc
++#pragma section(".CRT$XCU",read)
++#define INITIALIZER2_(f,p) \
++        static void f(void); \
++        __declspec(allocate(".CRT$XCU")) void (*f##_)(void) = f; \
++        __pragma(comment(linker,"/include:" p #f "_")) \
++        static void f(void)
++#ifdef _WIN64
++#define INITIALIZER(f) INITIALIZER2_(f,"")
++#else
++#define INITIALIZER(f) INITIALIZER2_(f,"_")
++#endif
++
++#endif
++
++INITIALIZER(xlib_ctor)
+ {
+     XInitThreads();
+ }
+ #endif
