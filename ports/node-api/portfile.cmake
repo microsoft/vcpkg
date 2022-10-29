@@ -40,7 +40,11 @@ file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
 set(node_modules_download_dir "${NODEJS_BIN_DIR}/node_modules")
 
+# download cmake-js and its dependencies except loadsh which is a special case
 include("${CMAKE_CURRENT_LIST_DIR}/install_npm_deps.cmake")
+
+# todo: download lodash as an npm tarball
+# https://stackoverflow.com/questions/33530978/download-a-package-from-npm-as-a-tar-not-installing-it-to-a-module
 
 # Prevent pollution of user home directory
 file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
