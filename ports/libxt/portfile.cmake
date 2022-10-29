@@ -17,19 +17,21 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxt
-    REF edd70bdfbbd16247e3d9564ca51d864f82626eb7 # 1.2.1
-    SHA512  c49876253dfd187e7d56a098d3d992157daefa2c25ee732eaae5818ee04513bedd807d2f265085db2e82c0b1821e152a88fb4998c0002f6ac57204543fe18566
+    REF 1aaf5d502027104ddd566090787780319f510278 # 1.2.1
+    SHA512  1b0581b4c04e824ac08c9edf62cb4f8bc9f17ab68aa97b058def201c8ecc4e514f5c3811d297a7a5c3facf86e20bf76c36a83af5f7cb4a8f30f4662c346af402
     HEAD_REF master
     PATCHES windows_build.patch
             globals.patch
             getcwd.patch
+            win_ptypes.patch
+            fix_win_paths.patch
             ${PATCHES}
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-string(APPEND VCPKG_C_FLAGS " -DXT_BUILD")
-string(APPEND VCPKG_CXX_FLAGS " -DXT_BUILD")
+string(APPEND VCPKG_C_FLAGS " -DXT_BUILD -DXNL_DEBUG")
+string(APPEND VCPKG_CXX_FLAGS " -DXT_BUILD -DXNL_DEBUG")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_C_FLAGS " -DXT_DLL_EXPORTS")

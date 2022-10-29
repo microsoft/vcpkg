@@ -1,0 +1,13 @@
+diff --git a/include/X11/Intrinsic.h b/include/X11/Intrinsic.h
+index b5aa91630..a4fa5f366 100644
+--- a/include/X11/Intrinsic.h	
++++ b/include/X11/Intrinsic.h
+@@ -126,7 +126,7 @@ typedef char *String;
+ #define TRUE 1
+ #endif
+ 
+-#if __STDC_VERSION__ >= 199901L
++#if __STDC_VERSION__ >= 199901L || _MSC_VER
+ #include <stdint.h>
+ typedef intptr_t	XtIntPtr;
+ typedef uintptr_t	XtUIntPtr;

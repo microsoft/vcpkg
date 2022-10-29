@@ -1,0 +1,78 @@
+diff --git a/src/Initialize.c b/src/Initialize.c
+index 072fd4c6f..f2dbaf7eb 100644
+--- a/src/Initialize.c
++++ b/src/Initialize.c
+@@ -435,16 +437,21 @@ CombineUserDefaults(Display *dpy, XrmDatabase *pdb)
+         XrmCombineDatabase(XrmGetStringDatabase(dpy_defaults), pdb, False);
+     }
+     else {
+-#ifdef __MINGW32__
++#ifdef _MSC_VER
++        const char *slashDotXdefaults = ".Xdefaults";
++#elif defined(__MINGW32__)
+         const char *slashDotXdefaults = "/Xdefaults";
+ #else
+         const char *slashDotXdefaults = "/.Xdefaults";
+ #endif
+         char filename[PATH_MAX];
+-
++#ifndef _MSC_VER
+         (void) GetRootDirName(filename,
+                               PATH_MAX - (int) strlen(slashDotXdefaults) - 1);
+         (void) strcat(filename, slashDotXdefaults);
++#else
++        strcpy(filename, slashDotXdefaults);
++#endif
+         (void) XrmCombineFileDatabase(filename, pdb, False);
+     }
+ }
+@@ -581,16 +588,22 @@ XtScreenDatabase(Screen *screen)
+         if (!(filename = getenv("XENVIRONMENT"))) {
+             int len;
+ 
+-#ifdef __MINGW32__
++#ifdef _MSC_VER
++            const char *slashDotXdefaultsDash = "Xdefaults-";
++#elif defined(__MINGW32__)
+             const char *slashDotXdefaultsDash = "/Xdefaults-";
+ #else
+             const char *slashDotXdefaultsDash = "/.Xdefaults-";
+ #endif
+-
++#ifndef _MSC_VER
+             (void) GetRootDirName(filename = filenamebuf,
+                                   PATH_MAX -
+                                   (int) strlen(slashDotXdefaultsDash) - 1);
+             (void) strcat(filename, slashDotXdefaultsDash);
++#else
++            filename = filenamebuf;
++            strcpy(filename, slashDotXdefaultsDash);
++#endif
+             len = (int) strlen(filename);
+             GetHostname(filename + len, PATH_MAX - len);
+         }
+diff --git a/src/Intrinsic.c b/src/Intrinsic.c
+index 71a1b99a3..f05b6133b 100644
+--- a/src/Intrinsic.c
++++ b/src/Intrinsic.c
+@@ -964,6 +964,8 @@ AccessFile(char *path, char *pathbuf, int len_pathbuf, char **pathret)
+ static Boolean
+ TestFile(String path)
+ {
++    if(path == NULL || path[0] == '\0') {
++        return FALSE; }
+ #ifndef VMS
+     int ret = 0;
+     struct stat status;
+@@ -1352,7 +1352,10 @@ FillInLangSubs(Substitution subs, XtPerDisplay pd)
+ static const char *
+ implementation_default_path(void)
+ {
+-#if defined(WIN32)
++#if defined(_MSC_VER)
++    static char xfilesearchpath[] = ":";
++    return xfilesearchpath;
++#elif defined(WIN32)
+     static char xfilesearchpath[] = "";
+ 
+     return xfilesearchpath;
