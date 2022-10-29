@@ -1,0 +1,29 @@
+diff --git a/Eyes.c b/Eyes.c
+index aa54b1cfa..c878b346a 100644
+--- a/Eyes.c
++++ b/Eyes.c
+@@ -38,6 +38,11 @@ from the X Consortium.
+ # include "config.h"
+ #endif
+ 
++#ifdef _MSC_VER
++#define _USE_MATH_DEFINES
++#define _WILLWINSOCK_
++#endif
++
+ # include <X11/Xos.h>
+ # include <stdio.h>
+ # include <X11/IntrinsicP.h>
+diff --git a/Makefile.am b/Makefile.am
+index fe14b6d3e..3fdce01fc 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -23,7 +23,7 @@ SUBDIRS = man
+ bin_PROGRAMS = xeyes
+ 
+ AM_CFLAGS = $(XEYES_CFLAGS) $(XRENDER_CFLAGS) $(PRESENT_CFLAGS)  $(CWARNFLAGS)
+-xeyes_LDADD = $(XEYES_LIBS) $(XRENDER_LIBS) $(PRESENT_LIBS) -lm
++xeyes_LDADD = $(XEYES_LIBS) $(XRENDER_LIBS) $(PRESENT_LIBS)
+ 
+ xeyes_SOURCES =	\
+         Eyes.c \
