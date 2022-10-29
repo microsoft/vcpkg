@@ -116,7 +116,7 @@ function(boost_modular_build)
     )
 
     vcpkg_cmake_configure(
-        SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
+        SOURCE_PATH "${BOOST_BUILD_INSTALLED_DIR}/share/boost-build"
         GENERATOR Ninja
         OPTIONS
             "-DPORT=${PORT}"
@@ -128,6 +128,7 @@ function(boost_modular_build)
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
             "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
+            "-DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES
