@@ -40,14 +40,7 @@ file(MAKE_DIRECTORY "${DOWNLOADS}/tmp-cmakejs-home")
 
 set(node_modules_download_dir "${NODEJS_BIN_DIR}/node_modules")
 
-vcpkg_from_github(
-  OUT_SOURCE_PATH CMAKE_JS_SOURCE_PATH
-  REPO cmake-js/cmake-js
-  REF v7.0.0 
-  SHA512 8fc38282e0a5dd6c02441130a16adef267a3f40eb2d70855befaa14f57d0fb1fd56ed5cd3a5057ea3350c0724986837ac7374a7f6786f75c55b638e34e9d48c9
-  HEAD_REF master
-)
-file(INSTALL "${CMAKE_JS_SOURCE_PATH}" DESTINATION "${node_modules_download_dir}" RENAME "cmake-js")
+include("${CMAKE_CURRENT_LIST_DIR}/install_npm_deps.cmake")
 
 # Prevent pollution of user home directory
 file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
