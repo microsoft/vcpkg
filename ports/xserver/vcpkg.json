@@ -1,0 +1,124 @@
+{
+  "name": "xserver",
+  "version": "21.1.4",
+  "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
+  "homepage": "https://gitlab.freedesktop.org/xorg/xserver",
+  "dependencies": [
+    "dbus",
+    "libepoxy",
+    {
+      "name": "libpciaccess",
+      "platform": "!windows"
+    },
+    "libx11",
+    "libxau",
+        {
+      "name": "libxcvt",
+      "platform": "!windows"
+    },
+    "libxdmcp",
+    "libxfont",
+    "libxkbcommon",
+    {
+      "name": "libxshmfence",
+      "platform": "!windows"
+    },
+    "libxv",
+    {
+      "name": "libxxf86dga",
+      "platform": "!windows"
+    },
+    "nettle",
+    "opengl",
+    "pixman",
+    "pthread",
+    "tool-meson",
+    "xbitmaps",
+    "xcb",
+    "xcb-image",
+    "xcb-keysyms",
+    "xcb-proto",
+    "xcb-render-util",
+    "xcb-util",
+    "xcb-util-m4",
+    "xcb-util-wm",
+    "xkbcomp",
+    "libxkbfile",
+    "xkeyboard-config",
+    "xorg-macros",
+    "xproto",
+    "xtrans"
+  ],
+  "default-features": [
+    "platformselect"
+  ],
+  "features": {
+    "platformselect": {
+      "description": "Build xwayland server",
+      "dependencies": [
+        {
+          "name": "xserver",
+          "default-features": false,
+          "features": [
+            "xwin"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "xserver",
+          "default-features": false,
+          "features": [
+            "xnest",
+            "xorg",
+            "xwayland"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "xnest": {
+      "description": "Build xnest server",
+      "dependencies": [
+        "libx11",
+        "libxau",
+        "libxext"
+      ]
+    },
+    "xorg": {
+      "description": "Build xorg server",
+      "dependencies": [
+        "libxcvt"
+      ]
+    },
+    "xwayland": {
+      "description": "Build xwayland server",
+      "dependencies": [
+        "libdrm",
+        "libepoxy",
+        "wayland",
+        "wayland-protocols"
+      ]
+    },
+    "xwin": {
+      "description": "Build xwin server",
+      "dependencies": [
+        "angle",
+        "dirent",
+        "libxfixes",
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "egl"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "opengl-registry",
+          "platform": "windows"
+        },
+        "xcb-util-wm"
+      ]
+    }
+  }
+}

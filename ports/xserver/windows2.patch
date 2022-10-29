@@ -1,0 +1,110 @@
+diff --git a/config/config.c b/config/config.c
+index 4ef65bf70..c60a9105f 100644
+--- a/config/config.c
++++ b/config/config.c
+@@ -30,6 +30,9 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
++#ifdef _MSC_VER
++#include <io.h>
++#endif
+ #include "os.h"
+ #include "inputstr.h"
+ #include "hotplug.h"
+diff --git a/hw/xwin/winclipboard/wndproc.c b/hw/xwin/winclipboard/wndproc.c
+index 6276949d9..0e1bd18d2 100644
+--- a/hw/xwin/winclipboard/wndproc.c
++++ b/hw/xwin/winclipboard/wndproc.c
+@@ -48,6 +48,11 @@
+ #include "internal.h"
+ #include "winclipboard.h"
+ 
++#ifdef _MSC_VER
++#include <stdlib.h> 
++#include <malloc.h>
++#endif
++
+ /*
+  * Constants
+  */
+diff --git a/hw/xwin/winclipboard/xevents.c b/hw/xwin/winclipboard/xevents.c
+index cac17153f..16dc7e288 100644
+--- a/hw/xwin/winclipboard/xevents.c
++++ b/hw/xwin/winclipboard/xevents.c
+@@ -43,6 +43,11 @@
+ #include "winclipboard.h"
+ #include "internal.h"
+ 
++#ifdef _MSC_VER
++#include <stdlib.h> 
++#include <malloc.h>
++#endif
++
+ /*
+  * Constants
+  */
+diff --git a/mi/mibitblt.c b/mi/mibitblt.c
+index 0b13e49e4..6484bba14 100644
+--- a/mi/mibitblt.c
++++ b/mi/mibitblt.c
+@@ -65,7 +65,15 @@ SOFTWARE.
+ #ifdef __MINGW32__
+ #define ffs __builtin_ffs
+ #endif
+-
++#ifdef _MSC_VER
++//ffs needs implementation
++// Returns one plus the index of the least significant 1-bit of x, or if x is zero, returns zero. 
++#include <intrin.h>
++int ffs(int num) {
++    unsigned long index;
++    return (_BitScanForward(&index, num) ? index+1 : 0);
++}
++#endif
+ /* MICOPYAREA -- public entry for the CopyArea request
+  * For each rectangle in the source region
+  *     get the pixels with GetSpans
+diff --git a/os/client.c b/os/client.c
+index 2906d3914..f5893506f 100644
+--- a/os/client.c
++++ b/os/client.c
+@@ -56,7 +56,10 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+-
++#ifdef _MSC_VER
++#include <io.h>
++#include <process.h>
++#endif
+ #include "misc.h"
+ #include "client.h"
+ #include "os.h"
+diff --git a/os/strcasestr.c b/os/strcasestr.c
+index 3189cf21e..2d5fca38d 100644
+--- a/os/strcasestr.c
++++ b/os/strcasestr.c
+@@ -36,7 +36,7 @@
+ 
+ #include <ctype.h>
+ #include <string.h>
+-
++#include "os.h"
+ /*
+  * Find the first occurrence of find in s, ignore case.
+  */
+diff --git a/randr/rrlease.c b/randr/rrlease.c
+index ade54ff5e..056a8e111 100644
+--- a/randr/rrlease.c
++++ b/randr/rrlease.c
+@@ -25,6 +25,9 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
++#ifdef _MSC_VER
++#include <io.h>
++#endif
+ 
+ RESTYPE RRLeaseType;
+ 

@@ -1,0 +1,678 @@
+diff --git a/config/config.c b/config/config.c
+index fb60295ae..4ef65bf70 100644
+--- a/config/config.c
++++ b/config/config.c
+@@ -27,7 +27,9 @@
+ #include <dix-config.h>
+ #endif
+ 
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include "os.h"
+ #include "inputstr.h"
+ #include "hotplug.h"
+diff --git a/dix/colormap.c b/dix/colormap.c
+index 7a00d14d6..eaacbdb24 100644
+--- a/dix/colormap.c
++++ b/dix/colormap.c
+@@ -52,7 +52,9 @@ SOFTWARE.
+ #include <X11/Xproto.h>
+ #include <stdio.h>
+ #include <string.h>
++#ifdef HAVE_STRINGS_H
+ #include <strings.h>
++#endif
+ #include "misc.h"
+ #include "dix.h"
+ #include "dixstruct.h"
+diff --git a/dix/ptrveloc.c b/dix/ptrveloc.c
+index 632971ed9..d39ddcb66 100644
+--- a/dix/ptrveloc.c
++++ b/dix/ptrveloc.c
+@@ -25,7 +25,7 @@
+ #ifdef HAVE_DIX_CONFIG_H
+ #include <dix-config.h>
+ #endif
+-
++#define _USE_MATH_DEFINES
+ #include <math.h>
+ #include <ptrveloc.h>
+ #include <exevents.h>
+diff --git a/hw/xwin/InitOutput.c b/hw/xwin/InitOutput.c
+index 7a03bfb91..77201fee3 100644
+--- a/hw/xwin/InitOutput.c
++++ b/hw/xwin/InitOutput.c
+@@ -27,7 +27,7 @@ other dealings in this Software without prior written authorization
+ from The Open Group.
+ 
+ */
+-
++#define _WILLWINSOCK_
+ #ifdef HAVE_XWIN_CONFIG_H
+ #include <xwin-config.h>
+ #endif
+@@ -46,15 +46,24 @@ from The Open Group.
+ #endif
+ #ifdef RELOCATE_PROJECTROOT
+ #pragma push_macro("Status")
++#ifdef _MSC_VER
+ #undef Status
+ #define Status wStatus
++#endif
+ #include <shlobj.h>
+ #pragma pop_macro("Status")
++#ifdef _MSC_VER
++typedef HRESULT(*SHGETFOLDERPATH) (HWND hwndOwner,
++                                          int nFolder,
++                                          HANDLE hToken,
++                                          DWORD dwFlags, LPTSTR pszPath);
++#else
+ typedef WINAPI HRESULT(*SHGETFOLDERPATHPROC) (HWND hwndOwner,
+                                               int nFolder,
+                                               HANDLE hToken,
+                                               DWORD dwFlags, LPTSTR pszPath);
+ #endif
++#endif
+ 
+ #include "winmonitors.h"
+ #include "nonsdk_extinit.h"
+@@ -113,6 +122,7 @@ static PixmapFormatRec g_PixmapFormats[] = {
+ 
+ static Bool noDriExtension;
+ 
++#ifndef _MSC_VER
+ static const ExtensionModule xwinExtensions[] = {
+ #ifdef GLXEXT
+ #ifdef XWIN_WINDOWS_DRI
+@@ -120,6 +130,7 @@ static const ExtensionModule xwinExtensions[] = {
+ #endif
+ #endif
+ };
++#endif
+ 
+ /*
+  * XwinExtensionInit
+@@ -133,9 +144,8 @@ void XwinExtensionInit(void)
+         /* install the native GL provider */
+         glxWinPushNativeProvider();
+     }
+-#endif
+-
+     LoadExtensionList(xwinExtensions, ARRAY_SIZE(xwinExtensions), TRUE);
++#endif
+ }
+ 
+ #if defined(DDXBEFORERESET)
+diff --git a/hw/xwin/XWin.rc b/hw/xwin/XWin.rc
+index a54e0fdbb..5c3acb91a 100644
+--- a/hw/xwin/XWin.rc
++++ b/hw/xwin/XWin.rc
+@@ -37,15 +37,17 @@
+ /*
+  * Dialogs
+  */
++#define CONCAT(a,b) a##b
++#define CONCAT2(a,b)  CONCAT(a,b)
+ 
+ /* About */
+ ABOUT_BOX DIALOGEX 32, 32, 260, 105
+ STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE | WS_TABSTOP  | DS_CENTERMOUSE
+-CAPTION "About " XVENDORNAMESHORT
++CAPTION CONCAT2("About ",XVENDORNAMESHORT)
+ FONT 8, "MS Shell Dlg 2"
+ BEGIN
+   CONTROL				IDI_XWIN, IDC_STATIC, "Static", SS_ICON, 8, 8, 32, 32
+-  LTEXT			XVENDORNAMESHORT " X Server ", IDC_STATIC, 36, 8, 220, 8
++  LTEXT			CONCAT2(XVENDORNAMESHORT," X Server "), IDC_STATIC, 36, 8, 220, 8
+   LTEXT			VENDOR_MAN_VERSION, IDC_STATIC, 36, 18, 220, 8
+   LTEXT			BUILDERSTRING, IDC_STATIC, 36, 28, 220, 8
+   LTEXT			"This software is licensed under the terms of the MIT/X11 License.", IDC_STATIC, 36, 48, 220, 20
+@@ -65,7 +67,7 @@ BEGIN
+   DEFPUSHBUTTON		"Dismiss", IDOK, 66, 80, 50, 14
+   CTEXT			XVENDORNAMESHORT, IDC_STATIC, 40, 12, 100, 8
+   CTEXT			"Disruptive screen configuration change.", IDC_STATIC, 7, 40, 166, 8
+-  CTEXT			"Restore previous resolution to use " XVENDORNAMESHORT ".", IDC_STATIC, 7, 52, 166, 8
++  CTEXT			 CONCAT2("Restore previous resolution to use ",CONCAT2(XVENDORNAMESHORT,".")), IDC_STATIC, 7, 52, 166, 8
+ END
+ 
+ 
+@@ -74,7 +76,7 @@ END
+ EXIT_DIALOG DIALOGEX 32, 32, 180, 78
+ STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE | WS_TABSTOP | DS_CENTERMOUSE
+ FONT 8, "MS Shell Dlg 2"
+-CAPTION "Exit " XVENDORNAMESHORT "?"
++CAPTION CONCAT2("Exit ", CONCAT2(XVENDORNAMESHORT,"?"))
+ BEGIN
+   PUSHBUTTON "E&xit", IDOK, 55, 56, 30, 14
+   DEFPUSHBUTTON "&Cancel", IDCANCEL, 95, 56, 30, 14
+diff --git a/hw/xwin/ddraw.h b/hw/xwin/ddraw.h
+index 720fa5a9c..0593217d1 100644
+--- a/hw/xwin/ddraw.h
++++ b/hw/xwin/ddraw.h
+@@ -2,6 +2,10 @@
+ #include_next <ddraw.h>
+ #define __XWIN_DDRAW_H
+ #endif
++#ifdef _MSC_VER
++#include <../um/ddraw.h>
++#define __XWIN_DDRAW_H
++#endif
+ #ifndef __XWIN_DDRAW_H
+ #define __XWIN_DDRAW_H
+ 
+diff --git a/hw/xwin/meson.build b/hw/xwin/meson.build
+index e9940ccc3..5ff3fd761 100644
+--- a/hw/xwin/meson.build
++++ b/hw/xwin/meson.build
+@@ -11,12 +11,13 @@ if host_machine.system() == 'cygwin'
+     server_name = 'XWin'
+ else
+     server_name = 'Xming'
++    pthread_dep = dependency('pthread-stubs', required: true)
+     xwin_sys_libs += ['-lpthread', '-lws2_32']
+ endif
+ 
+ xwin_c_args = []
+ xwin_c_args += '-DHAVE_XWIN_CONFIG_H'
+-xwin_c_args += '-Wno-bad-function-cast'
++# xwin_c_args += '-Wno-bad-function-cast'
+ 
+ srcs_windows = [
+     'winclipboardinit.c',
+@@ -138,6 +139,7 @@ xwin_dep = [
+     dependency('xcb-ewmh'),
+     dependency('xcb-icccm'),
+     dependency('xcb-composite'),
++    pthread_dep
+ ]
+ 
+ executable(
+@@ -160,7 +162,7 @@ executable(
+     ],
+     link_args: ['-Wl,--disable-stdcall-fixup', '-Wl,--export-all-symbols'] +  xwin_sys_libs,
+     c_args: xwin_c_args,
+-    gui_app: true,
++    #gui_app: true,
+     install: true,
+ )
+ 
+diff --git a/hw/xwin/propertystore.h b/hw/xwin/propertystore.h
+index 6afc6c954..46c549559 100644
+--- a/hw/xwin/propertystore.h
++++ b/hw/xwin/propertystore.h
+@@ -24,27 +24,24 @@
+ #ifndef PROPERTYSTORE_H
+ #define PROPERTYSTORE_H
+ 
+-#include <windows.h>
+-
+-#ifdef __MINGW64_VERSION_MAJOR
++#if defined(__MINGW64_VERSION_MAJOR) || defined(_MSC_VER)
+ /* If we are using headers from mingw-w64 project, it provides the PSDK headers this needs ... */
+ #include <propkey.h>
+ #include <propsys.h>
+ #else /*  !__MINGW64_VERSION_MAJOR */
+ /* ... otherwise, we need to define all this stuff ourselves */
+-
+ typedef struct _tagpropertykey {
+     GUID fmtid;
+     DWORD pid;
+ } PROPERTYKEY;
+-
+-#define REFPROPERTYKEY const PROPERTYKEY *
+ #define REFPROPVARIANT const PROPVARIANT *
++#define REFPROPERTYKEY const PROPERTYKEY *
+ 
+ WINOLEAPI PropVariantClear(PROPVARIANT *pvar);
+ 
+ #ifdef INTERFACE
+ #undef INTERFACE
++
+ #endif
+ 
+ #define INTERFACE IPropertyStore
+@@ -65,13 +62,13 @@ typedef IPropertyStore *LPPROPERTYSTORE;
+ 
+ DEFINE_GUID(IID_IPropertyStore, 0x886d8eeb, 0x8cf2, 0x4446, 0x8d, 0x02, 0xcd,
+             0xba, 0x1d, 0xbd, 0xcf, 0x99);
+-
++#ifdef _MSC_VER
+ #ifdef INITGUID
+ #define DEFINE_PROPERTYKEY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8, pid) GUID_EXT const PROPERTYKEY DECLSPEC_SELECTANY name = { { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }, pid }
+ #else
+ #define DEFINE_PROPERTYKEY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8, pid) GUID_EXT const PROPERTYKEY name
+ #endif
+-
++#endif
+ DEFINE_PROPERTYKEY(PKEY_AppUserModel_ID, 0x9F4C2855, 0x9F79, 0x4B39, 0xA8, 0xD0,
+                    0xE1, 0xD4, 0x2D, 0xE1, 0xD5, 0xF3, 5);
+ 
+diff --git a/hw/xwin/winSetAppUserModelID.c b/hw/xwin/winSetAppUserModelID.c
+index f9cb92cdd..2e05b9a2b 100644
+--- a/hw/xwin/winSetAppUserModelID.c
++++ b/hw/xwin/winSetAppUserModelID.c
+@@ -33,6 +33,7 @@
+ #include "os.h"
+ #include "winmsg.h"
+ 
++#undef Status
+ #include <shlwapi.h>
+ 
+ #define INITGUID
+diff --git a/hw/xwin/winblock.c b/hw/xwin/winblock.c
+index c8eb0c9a1..4d44a7753 100644
+--- a/hw/xwin/winblock.c
++++ b/hw/xwin/winblock.c
+@@ -44,23 +41,21 @@ winBlockHandler(ScreenPtr pScreen, void *pTimeout)
+     winScreenPriv(pScreen);
+ 
+ #ifndef HAS_DEVWINDOWS
+-    struct timeval **tvp = pTimeout;
++    int *tvp = pTimeout;
+ 
+     if (*tvp != NULL) {
+       if (GetQueueStatus(QS_ALLINPUT | QS_ALLPOSTMESSAGE) != 0) {
+         /* If there are still messages to process on the Windows message
+            queue, make sure select() just polls rather than blocking.
+         */
+-        (*tvp)->tv_sec = 0;
+-        (*tvp)->tv_usec = 0;
++        (*tvp) = 0;
+       }
+       else {
+         /* Otherwise, lacking /dev/windows, we must wake up again in
+            a reasonable time to check the Windows message queue. without
+            noticeable delay.
+          */
+-        (*tvp)->tv_sec = 0;
+-        (*tvp)->tv_usec = 100;
++        (*tvp) = 100;
+       }
+     }
+ #endif
+diff --git a/hw/xwin/winclipboard/thread.c b/hw/xwin/winclipboard/thread.c
+index 0e60c1b24..984012a35 100644
+--- a/hw/xwin/winclipboard/thread.c
++++ b/hw/xwin/winclipboard/thread.c
+@@ -37,10 +37,14 @@
+ #endif
+ 
+ #include <assert.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <pthread.h>
++#ifdef HAVE_SYS_PARAM_H
+ #include <sys/param.h> // for MAX() macro
++#endif
+ 
+ #ifdef HAS_WINSOCK
+ #include <X11/Xwinsock.h>
+diff --git a/hw/xwin/winclipboard/wndproc.c b/hw/xwin/winclipboard/wndproc.c
+index 63de4b9e5..6276949d9 100644
+--- a/hw/xwin/winclipboard/wndproc.c
++++ b/hw/xwin/winclipboard/wndproc.c
+@@ -37,7 +37,9 @@
+ #endif
+ 
+ #include <sys/types.h>
++#ifdef HAVE_SYS_TIME_H
+ #include <sys/time.h>
++#endif
+ #include <limits.h>
+ 
+ #include <xcb/xproto.h>
+diff --git a/hw/xwin/winclipboardinit.c b/hw/xwin/winclipboardinit.c
+index dbce0bc17..67a71079d 100644
+--- a/hw/xwin/winclipboardinit.c
++++ b/hw/xwin/winclipboardinit.c
+@@ -32,7 +32,9 @@
+ #include <xwin-config.h>
+ #endif
+ 
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <pthread.h>
+ 
+ #include "win.h"
+diff --git a/hw/xwin/wincmap.c b/hw/xwin/wincmap.c
+index 000334ce3..c8dfefc93 100644
+--- a/hw/xwin/wincmap.c
++++ b/hw/xwin/wincmap.c
+@@ -35,7 +35,9 @@
+ #include <xwin-config.h>
+ #endif
+ #include "win.h"
+-
++#ifdef _MSC_VER
++#define None 0L
++#endif
+ /*
+  * Local prototypes
+  */
+diff --git a/hw/xwin/winmultiwindowwindow.c b/hw/xwin/winmultiwindowwindow.c
+index 5b9b74e3d..717a2fbc2 100644
+--- a/hw/xwin/winmultiwindowwindow.c
++++ b/hw/xwin/winmultiwindowwindow.c
+@@ -31,7 +31,7 @@
+  *		Harold L Hunt II
+  *              Colin Harrison
+  */
+-
++#define _WILLWINSOCK_
+ #ifdef HAVE_XWIN_CONFIG_H
+ #include <xwin-config.h>
+ #endif
+diff --git a/hw/xwin/winmultiwindowwm.c b/hw/xwin/winmultiwindowwm.c
+index 37f1a7a02..374b2f111 100644
+--- a/hw/xwin/winmultiwindowwm.c
++++ b/hw/xwin/winmultiwindowwm.c
+@@ -36,7 +36,9 @@
+ #endif
+ #include <stdio.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #ifdef __CYGWIN__
+ #include <sys/select.h>
+ #endif
+diff --git a/hw/xwin/winmultiwindowwndproc.c b/hw/xwin/winmultiwindowwndproc.c
+index 31b5d6307..4dd255233 100644
+--- a/hw/xwin/winmultiwindowwndproc.c
++++ b/hw/xwin/winmultiwindowwndproc.c
+@@ -320,7 +320,12 @@ typedef struct _WINCOMPATTR
+ 
+ #define WCA_ACCENT_POLICY 19
+ 
++#ifndef _MSC_VER
+ typedef WINBOOL WINAPI (*PFNSETWINDOWCOMPOSITIONATTRIBUTE)(HWND, WINCOMPATTR *);
++#else
++//typedef int BOOL;
++typedef int (*PFNSETWINDOWCOMPOSITIONATTRIBUTE)(HWND, WINCOMPATTR *);
++#endif
+ 
+ static void
+ CheckForAlpha(HWND hWnd, WindowPtr pWin, winScreenInfo *pScreenInfo)
+diff --git a/hw/xwin/winprefslex.l b/hw/xwin/winprefslex.l
+index 9e6f0d6d4..bc48d9073 100644
+--- a/hw/xwin/winprefslex.l
++++ b/hw/xwin/winprefslex.l
+@@ -55,6 +55,7 @@ static char *makestr(char *str)
+ 
+ %}
+ 
++%option nounistd
+ %option yylineno
+ %option nounput
+ %option noinput
+diff --git a/include/client.h b/include/client.h
+index 87f2b1172..7d3494fee 100644
+--- a/include/client.h
++++ b/include/client.h
+@@ -31,6 +31,9 @@
+ #endif                          /* HAVE_DIX_CONFIG_H */
+ #include <X11/Xfuncproto.h>
+ #include <sys/types.h>
++#ifdef _MSC_VER
++#include <sched.h> //# For pid_t
++#endif
+ 
+ /* Client IDs. Use GetClientPid, GetClientCmdName and GetClientCmdArgs
+  * instead of accessing the fields directly. */
+diff --git a/include/meson.build b/include/meson.build
+index 1fab731c3..06ecced5e 100644
+--- a/include/meson.build
++++ b/include/meson.build
+@@ -399,6 +399,8 @@ xwin_data = configuration_data()
+ xwin_data.set_quoted('DEFAULT_LOGDIR', log_dir)
+ xwin_data.set('HAS_WINSOCK', host_machine.system() == 'windows' ? '1' : false,
+               description: 'Use Windows sockets')
++xwin_data.set('_WILLWINSOCK_', host_machine.system() == 'windows' ? '1' : false,
++              description: 'Will Use Windows sockets')
+ xwin_data.set('HAS_DEVWINDOWS', host_machine.system() == 'cygwin' ? '1' : false,
+               description: 'Has /dev/windows for signaling new win32 messages')
+ xwin_data.set('RELOCATE_PROJECTROOT', host_machine.system() == 'windows' ? '1' : false,
+@@ -408,7 +410,7 @@ xwin_data.set10('CYGDEBUG', enable_debugging)
+ xwin_data.set10('CYGWINDOWING_DEBUG',enable_debugging)
+ xwin_data.set10('CYGMULTIWINDOW_DEBUG', enable_debugging)
+ 
+-configure_file(output : 'xwin-config.h',
++configure_file(output : 'xwin-config.h', 
+                input : 'xwin-config.h.meson.in',
+                configuration : xwin_data)
+ 
+diff --git a/include/misc.h b/include/misc.h
+index 4b632098b..0c0c37959 100644
+--- a/include/misc.h
++++ b/include/misc.h
+@@ -176,7 +176,7 @@ typedef struct _xReq *xReqPtr;
+ 
+ #endif
+ 
+-#ifndef PATH_MAX
++#if !defined(PATH_MAX) && !defined(WIN32)
+ #include <sys/param.h>
+ #ifndef PATH_MAX
+ #ifdef MAXPATHLEN
+@@ -185,6 +185,10 @@ typedef struct _xReq *xReqPtr;
+ #define PATH_MAX 1024
+ #endif
+ #endif
++#else
++#ifdef _MSC_VER
++#define PATH_MAX 1024
++#endif
+ #endif
+ 
+ /**
+diff --git a/include/os.h b/include/os.h
+index bb3348b18..5e15c44fe 100644
+--- a/include/os.h
++++ b/include/os.h
+@@ -721,9 +721,12 @@ os_move_fd(int fd);
+ 
+ #include <signal.h>
+ 
+-#if defined(WIN32) && !defined(__CYGWIN__)
++#if defined(WIN32) && !defined(__CYGWIN__) && !defined(_MSC_VER)
+ typedef _sigset_t sigset_t;
+ #endif
++#if defined(_MSC_VER)
++typedef int sigset_t;
++#endif
+ 
+ extern _X_EXPORT int
+ xthread_sigmask(int how, const sigset_t *set, sigset_t *oldest);
+diff --git a/include/xserver_poll.h b/include/xserver_poll.h
+index 0f3a37c73..917f848f7 100644
+--- a/include/xserver_poll.h
++++ b/include/xserver_poll.h
+@@ -39,12 +39,16 @@
+ #define POLLHUP		0x10
+ #define POLLNVAL	0x20
+ 
++#if !defined(_MSC_VER)
+ struct pollfd
+ {
+     int     fd;
+     short   events;
+     short   revents;
+ };
++#else
++#include <X11/Xwinsock.h>
++#endif
+ 
+ typedef unsigned long nfds_t;
+ 
+diff --git a/include/xwin-config.h.meson.in b/include/xwin-config.h.meson.in
+index 993227398..6c9a4cb1f 100644
+--- a/include/xwin-config.h.meson.in
++++ b/include/xwin-config.h.meson.in
+@@ -8,6 +8,7 @@
+ 
+ /* Winsock networking */
+ #mesondefine HAS_WINSOCK
++#mesondefine _WILLWINSOCK_
+ 
+ /* Cygwin has /dev/windows for signaling new win32 messages */
+ #mesondefine HAS_DEVWINDOWS
+diff --git a/os/client.c b/os/client.c
+index 89a92d5b5..2906d3914 100644
+--- a/os/client.c
++++ b/os/client.c
+@@ -53,8 +53,11 @@
+ 
+ #include <sys/stat.h>
+ #include <fcntl.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ 
++#include "misc.h"
+ #include "client.h"
+ #include "os.h"
+ #include "dixstruct.h"
+diff --git a/os/inputthread.c b/os/inputthread.c
+index 3469cfc1c..b4378ea9e 100644
+--- a/os/inputthread.c
++++ b/os/inputthread.c
+@@ -32,7 +32,9 @@
+ #include <stdio.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <pthread.h>
+ 
+ #include "inputstr.h"
+diff --git a/os/log.c b/os/log.c
+index 4bd6b7e9a..437a451b1 100644
+--- a/os/log.c
++++ b/os/log.c
+@@ -95,6 +95,12 @@ OR PERFORMANCE OF THIS SOFTWARE.
+ #define getpid(x) _getpid(x)
+ #endif
+ 
++#if defined(_MSC_VER)
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
++#endif
++
+ #ifdef XF86BIGFONT
+ #include "xf86bigfontsrv.h"
+ #endif
+diff --git a/os/meson.build b/os/meson.build
+index ab28fc4ed..d4e8d6dcb 100644
+--- a/os/meson.build
++++ b/os/meson.build
+@@ -83,6 +83,7 @@ if srcs_libc.length() > 0
+         include_directories: inc,
+         dependencies: [
+             xproto_dep,
++            pixman_dep
+         ],
+     )
+ endif
+diff --git a/os/ospoll.c b/os/ospoll.c
+index c68aabc87..ec5a7df8b 100644
+--- a/os/ospoll.c
++++ b/os/ospoll.c
+@@ -27,7 +27,9 @@
+ #include <X11/X.h>
+ #include <X11/Xproto.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include "misc.h"               /* for typedef of pointer */
+ #include "ospoll.h"
+ #include "list.h"
+diff --git a/os/strcasecmp.c b/os/strcasecmp.c
+index 2692f7f1e..c09f91024 100644
+--- a/os/strcasecmp.c
++++ b/os/strcasecmp.c
+@@ -33,7 +33,9 @@
+ 
+ #include <ctype.h>
+ #include "dix.h"
+-
++#ifdef _MSC_VER
++typedef unsigned char u_char;
++#endif
+ #ifndef HAVE_STRCASECMP
+ int
+ xstrcasecmp(const char *str1, const char *str2)
+diff --git a/os/utils.c b/os/utils.c
+index 92a66e81a..d84a19f49 100644
+--- a/os/utils.c
++++ b/os/utils.c
+@@ -68,7 +68,7 @@ __stdcall unsigned long GetTickCount(void);
+ #include <X11/Xos.h>
+ #include <stdio.h>
+ #include <time.h>
+-#if !defined(WIN32) || !defined(__MINGW32__)
++#if !defined(WIN32) || (!defined(__MINGW32__) && !defined(_MSC_VER))
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ #endif
+@@ -740,7 +740,7 @@ ProcessCommandLine(int argc, char *argv[])
+                 UseMsg();
+         }
+         else if (strcmp(argv[i], "-core") == 0) {
+-#if !defined(WIN32) || !defined(__MINGW32__)
++#if !defined(WIN32) || (!defined(__MINGW32__) && !defined(_MSC_VER))
+             struct rlimit core_limit;
+ 
+             getrlimit(RLIMIT_CORE, &core_limit);
+diff --git a/os/xserver_poll.c b/os/xserver_poll.c
+index 1927dfa10..2b1d40695 100644
+--- a/os/xserver_poll.c
++++ b/os/xserver_poll.c
+@@ -77,9 +77,13 @@
+ #include <dix-config.h>
+ #endif
+ 
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>			     /* standard Unix definitions */
++#endif
+ #include <sys/types.h>                       /* system types */
++#ifdef HAVE_SYS_TIME_H
+ #include <sys/time.h>                        /* time definitions */
++#endif
+ #include <assert.h>                          /* assertion macros */
+ #include <string.h>                          /* string functions */
+ #include "xserver_poll.h"
+diff --git a/randr/rrlease.c b/randr/rrlease.c
+index 11ba96f24..ade54ff5e 100644
+--- a/randr/rrlease.c
++++ b/randr/rrlease.c
+@@ -22,7 +22,9 @@
+ 
+ #include "randrstr.h"
+ #include "swaprep.h"
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ 
+ RESTYPE RRLeaseType;
+ 
+diff --git a/xkb/xkbInit.c b/xkb/xkbInit.c
+index 4108e1b26..d1ed886a0 100644
+--- a/xkb/xkbInit.c
++++ b/xkb/xkbInit.c
+@@ -33,7 +33,9 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <ctype.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <math.h>
+ #include <X11/X.h>
+ #include <X11/Xproto.h>

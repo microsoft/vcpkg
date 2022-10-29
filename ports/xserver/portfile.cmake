@@ -1,0 +1,150 @@
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(PATCHES windows.patch windows2.patch win_random.patch)
+endif()
+
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xorg/xserver
+    REF  6bf62381d0a1fb54226a10f9d0e6b03aff12f3aa
+    SHA512 405aeb99aa89c8dfa3846c1b53c4b5ab97c0e0505315fd780a9e82859fd92b956d503853ccc7920d62abfe3d64ec5fe9ac23fe5ce47bcab439d3b1205e0da460
+    HEAD_REF master # branch name
+    PATCHES ${PATCHES} 
+) 
+#https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+file(TO_NATIVE_PATH "${PYTHON3}" PYTHON3_NATIVE)
+set(ENV{PYTHON3} "${PYTHON3_NATIVE}")
+vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+
+set(PYTHON_OPTION "--user")
+if(NOT EXISTS "${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    if(NOT EXISTS "${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        vcpkg_from_github(
+            OUT_SOURCE_PATH PYFILE_PATH
+            REPO pypa/get-pip
+            REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+            SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+            HEAD_REF master
+        )
+        execute_process(COMMAND "${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION} COMMAND_ECHO STDOUT)
+    endif()
+    execute_process(COMMAND "${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" lxml COMMAND_ECHO STDOUT)
+else()
+    find_program(PIP3 NAMES pip3 pip)
+    execute_process(COMMAND "${PIP3}" install lxml --user COMMAND_ECHO STDOUT)
+endif()
+
+if(VCPKG_TARGET_IS_LINUX)
+    message(STATUS "Trying to install lxml")
+    find_program(PIP3 NAMES pip3 pip)
+    execute_process(COMMAND "${PIP3}" install lxml --user COMMAND_ECHO STDOUT)
+endif()
+
+vcpkg_find_acquire_program(FLEX)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+
+if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+    if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+    if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+endif()
+#xvfb
+# Dropped?
+if("xwayland" IN_LIST FEATURES)
+    #list(APPEND OPTIONS -Dxwayland=true)
+else()
+    #list(APPEND OPTIONS -Dxwayland=false)
+endif()
+if("xnest" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxnest=true)
+else()
+    list(APPEND OPTIONS -Dxnest=false)
+endif()
+if("xephyr" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxephyr=true)
+else()
+    list(APPEND OPTIONS -Dxephyr=false)
+endif()
+if("xorg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxorg=true)
+else()
+    list(APPEND OPTIONS -Dxorg=false)
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
+    list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
+    list(APPEND OPTIONS -Dlisten_tcp=true)
+    list(APPEND OPTIONS -Dlisten_local=false)
+    list(APPEND OPTIONS -Dxwin=true)
+    set(ENV{INCLUDE} "$ENV{INCLUDE};${CURRENT_INSTALLED_DIR}/include")
+else()
+    if("xwin" IN_LIST FEATURES)
+        list(APPEND OPTIONS -Dxwin=true)
+    else()
+        list(APPEND OPTIONS -Dxwin=false)
+    endif()
+endif()
+
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${OPTIONS}
+        -Dlisten_tcp=true
+        -Ddocs=false
+        # Note: xserver will overwrite the base settings by trying to be relocatable.
+        # To start the server you need to copy over xkbcomp + deps from tools/xkbcomp/bin
+        # and you need to copy the rules from share/X11/xkb to tools/xserver/xkb
+        #-Dlog_dir=logs
+        #-Dxkb_dir=../../share/X11/xkb
+        #-Dxkb_output_dir=xkb/out
+        #-Dxkb_bin_dir=../xkbcomp/bin
+)
+vcpkg_install_meson()
+
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var" "${CURRENT_PACKAGES_DIR}/var")
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+set(TOOLS cvt gtf Xorg Xvfb Xwayland Xwin Xming xwinclip)
+foreach(_tool ${TOOLS})
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_tool}.pdb" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${_tool}.pdb")
+        endif()
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}.pdb" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${_tool}.pdb")
+        endif()
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}.pdb")
+        endif()
+    endif()
+endforeach()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/xserver")
+
+file(GLOB_RECURSE BIN_FILES "${CURRENT_PACKAGES_DIR}/bin")
+if(NOT BIN_FILES)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
