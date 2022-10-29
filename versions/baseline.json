@@ -1273,7 +1273,7 @@
       "port-version": 4
     },
     "cairomm": {
-      "baseline": "1.16.1",
+      "baseline": "1.16.2",
       "port-version": 0
     },
     "calceph": {
