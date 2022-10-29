@@ -1,0 +1,14 @@
+{
+  "name": "libxshmfence",
+  "version": "1.3",
+  "description": "Shared memory 'SyncFence' synchronization primitive",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxshmfence",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "pthread",
+    "xorg-macros",
+    "xproto"
+  ]
+}
