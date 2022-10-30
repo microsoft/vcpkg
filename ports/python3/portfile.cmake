@@ -9,17 +9,22 @@ set(PYTHON_VERSION_PATCH  5)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
-    0002-use-vcpkg-zlib.patch
-    0003-devendor-external-dependencies.patch
-    0004-dont-copy-vcruntime.patch
-    0005-only-build-required-projects.patch
+    0001-only-build-required-projects.patch
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND PATCHES 0002-static-library.patch)
+endif()
+
+list(APPEND PATCHES
+    0003-use-vcpkg-zlib.patch
+    0004-devendor-external-dependencies.patch
+    0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(PREPEND PATCHES 0001-static-library.patch)
-endif()
+
 # Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)

@@ -1,16 +1,18 @@
-From 14d91e4f4a9377f47cc4cc33faeeb7c82f64b176 Mon Sep 17 00:00:00 2001
+From 1017adb33c1fe88d63c36f6e1aa17fda660c161a Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Thu, 28 May 2020 17:25:21 -0400
-Subject: [PATCH 1/7] static library
+Subject: [PATCH 02/11] static library
 
 builds the pythoncore as a static library instead of a DLL
 ---
  PC/pyconfig.h              | 9 +++++++++
+ PCbuild/pcbuild.proj       | 2 +-
  PCbuild/pythoncore.vcxproj | 4 ++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ Python/sysmodule.c         | 3 +++
+ 4 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index d7d3cf081e..34269f0b75 100644
+index 103e647ac8..9fe9b3018c 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -251,6 +251,7 @@ typedef int pid_t;
@@ -36,8 +38,21 @@ index d7d3cf081e..34269f0b75 100644
  #endif /* MS_COREDLL */
  
  #if defined(MS_WIN64)
+diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
+index 70c336a9d3..ba797e8afd 100644
+--- a/PCbuild/pcbuild.proj
++++ b/PCbuild/pcbuild.proj
+@@ -45,7 +45,7 @@
+       <BuildInParallel>false</BuildInParallel>
+     </Projects>
+     <!-- python3.dll -->
+-    <Projects Include="python3dll.vcxproj" />
++    <Projects Include="python3dll.vcxproj" Condition="false" />
+     <!-- py[w].exe -->
+     <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" Condition="false" />
+     <!-- pyshellext.dll -->
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 2625d0293d..2f8bdaa931 100644
+index fe8b2c90ed..f44d6d23fc 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -73,7 +73,7 @@
@@ -59,10 +74,10 @@ index 2625d0293d..2f8bdaa931 100644
      </ClCompile>
      <Link>
 diff --git a/Python/sysmodule.c b/Python/sysmodule.c
-index ac49f7867a..f3583345ff 100644
+index 1d5a06a6b4..f23d1b991b 100644
 --- a/Python/sysmodule.c
 +++ b/Python/sysmodule.c
-@@ -2804,6 +2804,9 @@ _PySys_InitCore(PyThreadState *tstate, PyObject *sysdict)
+@@ -2848,6 +2848,9 @@ _PySys_InitCore(PyThreadState *tstate, PyObject *sysdict)
  #ifdef MS_COREDLL
      SET_SYS("dllhandle", PyLong_FromVoidPtr(PyWin_DLLhModule));
      SET_SYS_FROM_STRING("winver", PyWin_DLLVersionString);
@@ -72,19 +87,6 @@ index ac49f7867a..f3583345ff 100644
  #endif
  #ifdef ABIFLAGS
      SET_SYS_FROM_STRING("abiflags", ABIFLAGS);
-diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 70c336a9d3..ba797e8afd 100644
---- a/PCbuild/pcbuild.proj
-+++ b/PCbuild/pcbuild.proj
-@@ -45,7 +45,7 @@
-       <BuildInParallel>false</BuildInParallel>
-     </Projects>
-     <!-- python3.dll -->
--    <Projects Include="python3dll.vcxproj" />
-+    <Projects Include="python3dll.vcxproj" Condition="false" />
-     <!-- py[w].exe -->
-     <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" />
-     <!-- pyshellext.dll -->
 -- 
-2.28.0.windows.1
+2.37.3.windows.1
 
