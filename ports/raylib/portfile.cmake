@@ -16,7 +16,7 @@ vcpkg_from_github(
     REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa #v4.2.0
     SHA512 f6b1738d96fef89059062f570f67aaa8b143ccfbee78abfe5fbb25083371a4c432f3d1d0d357e4b475b4b72a6db7823c2341b70ac947759603b033c2b0acec47
     HEAD_REF master
-    PATCHES fix-linkGlfw.patch
+    #PATCHES fix-linkGlfw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -39,7 +39,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DUSE_EXTERNAL_GLFW=${EXTERN_GLFW}
+        -DUSE_EXTERNAL_GLFW=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
