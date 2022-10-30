@@ -15,14 +15,18 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "This feature doesn't support Windows platform")
+    endif()
     list(APPEND BUILD_OPTIONS -Dtools=all)
+    # locate tools under "${CURRENT_PACKAGES_DIR}/bin"
+    list(APPEND BUILD_OPTIONS -Dbindir=${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${BUILD_OPTIONS}
-        -Dbindir=${CURRENT_PACKAGES_DIR}/bin
         # see ${SOURCE_PATH}/meson_options.txt
         -Dengines=sw
         -Dloaders=all
