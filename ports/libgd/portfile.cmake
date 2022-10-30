@@ -45,6 +45,14 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(REPLACE "_dynamic" "" suffix "_${VCPKG_LIBRARY_LINKAGE}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdlib.pc" " -lgd" " -llibgd${suffix}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdlib.pc" " -lgd" " -llibgd${suffix}")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 if(ENABLE_TOOLS)
