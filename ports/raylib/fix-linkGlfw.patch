@@ -10,29 +10,6 @@ index d0c23ca52..0cba05f55 100644
  elseif(USE_EXTERNAL_GLFW STREQUAL "IF_POSSIBLE")
      find_package(glfw3 3.3.3 QUIET)
  endif()
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 21cd3d3f0..c68b90d12 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -52,6 +52,8 @@ else ()
-     MESSAGE(STATUS "Audio Backend: None (-DUSE_AUDIO=OFF)")
- endif ()
- 
-+find_path(CGLTF_INCLUDE_DIRS "cgltf.h")
-+find_path(STB_INCLUDE_DIRS "stb_c_lexer.h")
- 
- add_library(raylib ${raylib_sources} ${raylib_public_headers})
- 
-@@ -68,6 +70,9 @@ else()
-     endif ()
- endif()
- 
-+target_include_directories(raylib PRIVATE ${CGLTF_INCLUDE_DIRS})
-+target_include_directories(raylib PRIVATE ${STB_INCLUDE_DIRS})
-+
- set_target_properties(raylib PROPERTIES
-                       PUBLIC_HEADER "${raylib_public_headers}"
-                       VERSION ${PROJECT_VERSION}
 diff --git a/src/rcore.c b/src/rcore.c
 index 7acedf6c2..3efd0b745 100644
 --- a/src/rcore.c
@@ -76,65 +53,3 @@ index 7acedf6c2..3efd0b745 100644
  #endif
  
      if (CORE.Window.flags & FLAG_MSAA_4X_HINT)
-diff --git a/src/rmodels.c b/src/rmodels.c
-index ee8b2117b..2c9726b9d 100644
---- a/src/rmodels.c
-+++ b/src/rmodels.c
-@@ -73,7 +73,7 @@
-     #define CGLTF_FREE RL_FREE
- 
-     #define CGLTF_IMPLEMENTATION
--    #include "external/cgltf.h"         // glTF file format loading
-+    #include "cgltf.h"         // glTF file format loading
- #endif
- 
- #if defined(SUPPORT_FILEFORMAT_VOX)
-diff --git a/src/rtext.c b/src/rtext.c
-index 40f6d3b5a..4bf38ef13 100644
---- a/src/rtext.c
-+++ b/src/rtext.c
-@@ -69,11 +69,11 @@
- 
- #if defined(SUPPORT_FILEFORMAT_TTF)
-     #define STB_RECT_PACK_IMPLEMENTATION
--    #include "external/stb_rect_pack.h"     // Required for: ttf font rectangles packaging
-+    #include "stb_rect_pack.h"     // Required for: ttf font rectangles packaging
- 
-     #define STBTT_STATIC
-     #define STB_TRUETYPE_IMPLEMENTATION
--    #include "external/stb_truetype.h"      // Required for: ttf font data reading
-+    #include "stb_truetype.h"      // Required for: ttf font data reading
- #endif
- 
- //----------------------------------------------------------------------------------
-diff --git a/src/rtextures.c b/src/rtextures.c
-index 2490d1d10..5257fc1bb 100644
---- a/src/rtextures.c
-+++ b/src/rtextures.c
-@@ -126,7 +126,7 @@
-     #define STBI_REALLOC RL_REALLOC
- 
-     #define STB_IMAGE_IMPLEMENTATION
--    #include "external/stb_image.h"         // Required for: stbi_load_from_file()
-+    #include "stb_image.h"         // Required for: stbi_load_from_file()
-                                             // NOTE: Used to read image data (multiple formats support)
- #endif
- 
-@@ -144,7 +144,7 @@
-     #define STBIW_REALLOC RL_REALLOC
- 
-     #define STB_IMAGE_WRITE_IMPLEMENTATION
--    #include "external/stb_image_write.h"   // Required for: stbi_write_*()
-+    #include "stb_image_write.h"   // Required for: stbi_write_*()
- #endif
- 
- #if defined(SUPPORT_IMAGE_MANIPULATION)
-@@ -152,7 +152,7 @@
-     #define STBIR_FREE(ptr,c) ((void)(c), RL_FREE(ptr))
- 
-     #define STB_IMAGE_RESIZE_IMPLEMENTATION
--    #include "external/stb_image_resize.h"  // Required for: stbir_resize_uint8() [ImageResize()]
-+    #include "stb_image_resize.h"  // Required for: stbir_resize_uint8() [ImageResize()]
- #endif
- 
- //----------------------------------------------------------------------------------
