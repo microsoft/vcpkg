@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  5)
+set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -24,7 +24,6 @@ list(APPEND PATCHES
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
 )
-
 # Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
@@ -52,7 +51,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 7a736c6bf76735f66eba50bc055661c46fefce1496869c51e9b6b264bca456d2f2c6de293dfc3bc15a9d1df4b633d7f6f66ed86696e71a36e500354a75f4200f
+    SHA512 88bf6efef632a7dad7306a59b7d5da159947d6675f0d264f1f33aa49a5703b4e4595011de52098eb839cc648994ae143f668507be7209f6bf3fe8ae0ec6a9125
     HEAD_REF master
     PATCHES ${PATCHES}
 )
