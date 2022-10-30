@@ -1,3 +1,5 @@
+set(VERSION 0.23.13)
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_IS_WINDOWS)
