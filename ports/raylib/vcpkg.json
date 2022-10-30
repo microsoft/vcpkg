@@ -7,9 +7,7 @@
   "license": "Zlib",
   "supports": "!(arm | uwp)",
   "dependencies": [
-    "cgltf",
     "glfw3",
-    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
