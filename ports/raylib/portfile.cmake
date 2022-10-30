@@ -19,6 +19,9 @@ vcpkg_from_github(
     PATCHES fix-linkGlfw.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         use-audio USE_AUDIO
@@ -34,6 +37,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        -DSHARED=${SHARED}
+        -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=ON
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
