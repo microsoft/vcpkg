@@ -19,8 +19,6 @@ if ("tools" IN_LIST FEATURES)
         message(FATAL_ERROR "This feature doesn't support Windows platform")
     endif()
     list(APPEND BUILD_OPTIONS -Dtools=all)
-    # locate tools under "${CURRENT_PACKAGES_DIR}/bin"
-    list(APPEND BUILD_OPTIONS -Dbindir=${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 vcpkg_configure_meson(
@@ -37,6 +35,9 @@ vcpkg_configure_meson(
         -Dexamples=false
     OPTIONS_DEBUG
         -Dlog=true
+        -Dbindir=${CURRENT_PACKAGES_DIR}/debug/bin
+    OPTIONS_RELEASE
+        -Dbindir=${CURRENT_PACKAGES_DIR}/bin
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
