@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.1/sentry-native.zip"
-    FILENAME "sentry-native-0.5.1.zip"
-    SHA512 d71eb0cdf9d477934aaa87adf1c5292102f61c4cbaaebacfe7502a4bc71a39797c26bd93824dd831103e634445d965f0f339f2cca5ab7cb17f631e67e4557aed
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.2/sentry-native.zip"
+    FILENAME "sentry-native-0.5.2.zip"
+    SHA512 bbeff94c6795be737d1aee99a061dfb863eca5abbc2797b2bb4a2903354b25787f4808694bf24eee9bdeb419eeae7f6e4f236b7eb95bcb1d3821ad799d322f54
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
         fix-warningC5105.patch
         fix-config-cmake.patch
         use-zlib-target.patch
-        fix-crashpad.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)

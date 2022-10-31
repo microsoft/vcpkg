@@ -301,6 +301,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include"
                     "${CURRENT_PACKAGES_DIR}/libexec"
                     "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include"
+                    "${CURRENT_PACKAGES_DIR}/share/gdb"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
