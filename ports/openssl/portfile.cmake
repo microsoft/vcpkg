@@ -11,19 +11,31 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-set(OPENSSL_VERSION 3.0.5)
-
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
     set(OPENSSL_PATCHES "${CMAKE_CURRENT_LIST_DIR}/windows/flags.patch")
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO openssl/openssl
-    REF openssl-${OPENSSL_VERSION}
-    SHA512 e426f2d48dcd87ad938b246cea69988710198c3ed2f5bb9065aa9e74492161b056336f5b1f29be64e70dfd86a77808fe727ebb46eae10331c76f1ff08e341133
+vcpkg_download_distfile(
+    ARCHIVE
+    URLS
+        https://www.openssl.org/source/openssl-3.0.7.tar.gz
+    FILENAME openssl-3.0.7.tar.gz
+    SHA512 6c2bcd1cd4b499e074e006150dda906980df505679d8e9d988ae93aa61ee6f8c23c0fa369e2edc1e1a743d7bec133044af11d5ed57633b631ae479feb59e3424
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${OPENSSL_PATCHES}
 )
+
+# vcpkg_from_github(
+#     OUT_SOURCE_PATH SOURCE_PATH
+#     REPO openssl/openssl
+#     REF openssl-${VERSION}
+#     SHA512 0
+#     PATCHES ${OPENSSL_PATCHES}
+# )
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
