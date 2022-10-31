@@ -46,6 +46,10 @@
     "zstd": {
       "description": "Enables zstd compressor support",
       "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
         "zstd"
       ]
     }
