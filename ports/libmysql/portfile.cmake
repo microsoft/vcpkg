@@ -99,11 +99,14 @@ endif()
 vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/${PORT}")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
 file(RENAME "${CURRENT_PACKAGES_DIR}/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/${PORT}" "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}")
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/${PORT}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/${PORT}" "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}")
+endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql CONFIG_PATH share/${PORT}/unofficial-libmysql)
 
