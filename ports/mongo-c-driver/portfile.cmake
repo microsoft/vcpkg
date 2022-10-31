@@ -55,6 +55,7 @@ vcpkg_cmake_configure(
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
