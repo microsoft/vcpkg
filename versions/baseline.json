@@ -3686,7 +3686,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.10",
-      "port-version": 0
+      "port-version": 1
     },
     "libevent": {
       "baseline": "2.1.12",
