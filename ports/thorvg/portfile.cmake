@@ -3,9 +3,9 @@ vcpkg_from_github(
     REPO Samsung/thorvg
     REF v0.8.2
     SHA512 f59e227f776fed2e0489fe33ff64008a728adf1795c58107f17ed92caa809f6f5fd0604fde91d0c1735ea82b0b9e91da36d325e492e4a9802647469b06ebafd2
+    HEAD_REF master
     PATCHES
         install-tools.patch
-    HEAD_REF master
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
