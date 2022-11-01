@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     REF  61eebdfde170841ae933cf65ba27346fbf2f8018
     SHA512 dd8acefc6f96d65e4b5d4807221aa3b87faca7b8b50e9de76081351503c9abb127a3063f3bb23ca71a0e3521640e7fdf7686e33cca5c7b7ad8d67a7ac26e65b5
     HEAD_REF master
-) 
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -20,5 +20,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_fixup_pkgconfig()
 
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
