@@ -2,15 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c552091..f05f50c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -90,8 +90,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
- 
- if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
- 	find_package(OpenSSL REQUIRED)
--else()
--	find_package(OpenSSL)
- endif()
- 
- if(OPENSSL_FOUND)
 @@ -123,22 +121,20 @@ endif()
  
  if(ENABLE_DATA_MYSQL)
