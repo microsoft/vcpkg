@@ -34,19 +34,22 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON)
+    list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON)
 endif()
 
 if("netssl" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND OPTIONS -DENABLE_NETSSL_WIN=ON)
-        list(APPEND OPTIONS -DENABLE_NETSSL=OFF)
-        list(APPEND OPTIONS -DENABLE_CRYPTO=OFF)
+        list(APPEND FEATURE_OPTIONS
+            -DENABLE_NETSSL_WIN=ON
+            -DENABLE_NETSSL=OFF
+            -DENABLE_CRYPTO=OFF
+        )
     else()
-        list(APPEND OPTIONS -DENABLE_NETSSL=ON)
-        list(APPEND OPTIONS -DENABLE_CRYPTO=ON)
+        list(APPEND FEATURE_OPTIONS
+            -DENABLE_NETSSL=ON
+            -DENABLE_CRYPTO=ON
+        )
     endif()
 endif()
 
@@ -60,7 +63,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${OPTIONS}
         # force to use dependencies as external
         -DPOCO_UNBUNDLED=ON
         # Define linking feature
