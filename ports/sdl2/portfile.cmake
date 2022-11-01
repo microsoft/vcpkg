@@ -2,8 +2,8 @@ set(SDL2_VERSION 2.24.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF a1d1946dcba6509f0679f507b57e7b228d32e6f8 #vrelease-2.24.1
-    SHA512 78794c5142153d9d7516815f6e9b2c153ab3cab466cbc35635d27d9bb7cd9cbfa2bb66b63569454d2de89975eba8a662d79ccba87204a263ddbf0bfd339b6926
+    REF release-2.24.2
+    SHA512 4050afc804b65617f3e9097d5173edb05abd3a15872ad5c79bf85e874758c72ebf7ce9768eb1c9969099b1b82d04a1b65505774d0b851c0541e032da9b2e1ad1
     HEAD_REF master
     PATCHES
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
