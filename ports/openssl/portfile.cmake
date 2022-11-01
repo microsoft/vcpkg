@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
     OR EXISTS "${CURRENT_INSTALLED_DIR}/share/boringssl/copyright")
     message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
@@ -15,27 +16,13 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
     set(OPENSSL_PATCHES "${CMAKE_CURRENT_LIST_DIR}/windows/flags.patch")
 endif()
 
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS
-        https://www.openssl.org/source/openssl-3.0.7.tar.gz
-    FILENAME openssl-3.0.7.tar.gz
-    SHA512 6c2bcd1cd4b499e074e006150dda906980df505679d8e9d988ae93aa61ee6f8c23c0fa369e2edc1e1a743d7bec133044af11d5ed57633b631ae479feb59e3424
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO openssl/openssl
+    REF openssl-${VERSION}
+    SHA512 27dd3ef0c1827a74ec880d20232acb818c7d05e004ad7389c355e200a01e899f1b1ba5c34dcce44ecf7c8767c5e1bfbb2c795e3fa5461346087e7e3b95c8a51f
     PATCHES ${OPENSSL_PATCHES}
 )
-
-# vcpkg_from_github(
-#     OUT_SOURCE_PATH SOURCE_PATH
-#     REPO openssl/openssl
-#     REF openssl-${VERSION}
-#     SHA512 0
-#     PATCHES ${OPENSSL_PATCHES}
-# )
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
