@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7febf33..50e4c43 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,8 +124,8 @@ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
+ 
+ # external packages
+-FIND_PACKAGE( BZip2 )
+-FIND_PACKAGE( ZLIB )
++FIND_PACKAGE( BZip2 REQUIRED )
++FIND_PACKAGE( ZLIB REQUIRED )
+ FIND_PACKAGE( Readline )
+ FIND_PACKAGE( Editline )
+ 
