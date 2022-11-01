@@ -2,5 +2,5 @@ prefix=${pcfiledir}/../..
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
-Version: @VERSION@
+Version: @OPENSSL_VERSION@
 @pc_data@
