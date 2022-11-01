@@ -1,8 +1,8 @@
-set(SDL2_VERSION 2.24.1)
+set(SDL2_VERSION 2.24.2)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF release-2.24.2
+    REF release-${SDL2_VERSION}
     SHA512 4050afc804b65617f3e9097d5173edb05abd3a15872ad5c79bf85e874758c72ebf7ce9768eb1c9969099b1b82d04a1b65505774d0b851c0541e032da9b2e1ad1
     HEAD_REF master
     PATCHES
