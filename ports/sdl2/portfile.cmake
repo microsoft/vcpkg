@@ -4,7 +4,7 @@ vcpkg_from_github(
     REPO libsdl-org/SDL
     REF release-${SDL2_VERSION}
     SHA512 4050afc804b65617f3e9097d5173edb05abd3a15872ad5c79bf85e874758c72ebf7ce9768eb1c9969099b1b82d04a1b65505774d0b851c0541e032da9b2e1ad1
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
