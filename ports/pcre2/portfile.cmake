@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
-        deps.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -34,7 +33,9 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
         -DINSTALL_MSVC_PDB=${INSTALL_PDB}
-)
+        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+    )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
