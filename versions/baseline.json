@@ -1933,7 +1933,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "directxsdk": {
@@ -1941,15 +1941,15 @@
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2022-07-29",
-      "port-version": 1
+      "baseline": "2022-10-17",
+      "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-07-29",
+      "baseline": "2022-10-17",
       "port-version": 0
     },
     "dirent": {
@@ -1965,7 +1965,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-10-12",
+      "baseline": "2022-10-30",
       "port-version": 0
     },
     "discount": {
@@ -2193,8 +2193,8 @@
       "port-version": 2
     },
     "expat": {
-      "baseline": "2.4.9",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "expected-lite": {
       "baseline": "0.6.2",
@@ -2649,7 +2649,7 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.74.0",
+      "baseline": "2.74.1",
       "port-version": 0
     },
     "glibmm": {
@@ -2761,7 +2761,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.49.0",
+      "baseline": "1.50.1",
       "port-version": 0
     },
     "grppi": {
@@ -3686,7 +3686,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.10",
-      "port-version": 0
+      "port-version": 1
     },
     "libevent": {
       "baseline": "2.1.12",
@@ -5321,8 +5321,8 @@
       "port-version": 3
     },
     "ogdf": {
-      "baseline": "2019-08-23",
-      "port-version": 2
+      "baseline": "2022-06-30",
+      "port-version": 0
     },
     "ogre": {
       "baseline": "13.4.4",
@@ -5817,7 +5817,7 @@
       "port-version": 3
     },
     "poco": {
-      "baseline": "1.11.2",
+      "baseline": "1.12.4",
       "port-version": 0
     },
     "podofo": {
@@ -6916,6 +6916,10 @@
       "baseline": "1.13.0",
       "port-version": 2
     },
+    "shader-slang": {
+      "baseline": "0.23.13",
+      "port-version": 0
+    },
     "sleef": {
       "baseline": "3.5.1",
       "port-version": 3
@@ -7332,6 +7336,10 @@
       "baseline": "2.0",
       "port-version": 6
     },
+    "thorvg": {
+      "baseline": "0.8.2",
+      "port-version": 0
+    },
     "threadpool": {
       "baseline": "0.2.5",
       "port-version": 2
@@ -7665,8 +7673,8 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-07-30",
-      "port-version": 1
+      "baseline": "2022-10-17",
+      "port-version": 0
     },
     "uvw": {
       "baseline": "2.12.1",
@@ -8002,7 +8010,7 @@
     },
     "xapian": {
       "baseline": "1.4.21",
-      "port-version": 0
+      "port-version": 1
     },
     "xaudio2redist": {
       "baseline": "1.2.9",
