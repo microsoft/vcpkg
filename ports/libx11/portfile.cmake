@@ -23,6 +23,7 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
     list(APPEND OPTIONS 
@@ -31,8 +32,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 --disable-thread-safety-constructor
     )
 endif()
-
-set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS 
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
@@ -42,7 +41,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         --with-launchd=no
         --with-lint=no
         --disable-selective-werror
-        ${OPTIONS}
         )
 endif()
 if(NOT XLSTPROC)
