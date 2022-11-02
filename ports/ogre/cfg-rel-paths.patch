@@ -1,0 +1,36 @@
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index cfe7db3..5d15212 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -61,7 +61,6 @@ elseif (APPLE)
+   endif()
+   # these are resolved relative to the app bundle
+   set(OGRE_SAMPLES_DIR_REL "Contents/Plugins/")
+-  set(OGRE_CFG_INSTALL_PATH "bin")
+ elseif (UNIX)
+   set(OGRE_TEST_MEDIA_DIR_REL "${CMAKE_INSTALL_PREFIX}/Tests/Media")
+   set(OGRE_SAMPLES_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_LIB_DIRECTORY}/OGRE/Samples")
+@@ -162,6 +161,10 @@ if(NOT OGRE_BUILD_TESTS)
+ endif()
+ 
+ 
++set(OGRE_PLUGIN_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_PLUGINS_PATH}")
++cmake_path(RELATIVE_PATH OGRE_PLUGIN_DIR_REL BASE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${OGRE_CFG_INSTALL_PATH}")
++set(OGRE_MEDIA_DIR_REL "${CMAKE_INSTALL_PREFIX}/${OGRE_MEDIA_PATH}")
++cmake_path(RELATIVE_PATH OGRE_MEDIA_DIR_REL BASE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${OGRE_CFG_INSTALL_PATH}")
+ set(OGRE_CORE_MEDIA_DIR "${OGRE_MEDIA_DIR_REL}")
+ # CREATE CONFIG FILES - INSTALL VERSIONS
+ configure_file(${OGRE_TEMPLATES_DIR}/resources.cfg.in ${PROJECT_BINARY_DIR}/inst/bin/resources.cfg)
+diff --git a/Components/Bites/CMakeLists.txt b/Components/Bites/CMakeLists.txt
+index 045e288..50c9956 100644
+--- a/Components/Bites/CMakeLists.txt
++++ b/Components/Bites/CMakeLists.txt
+@@ -135,7 +135,7 @@ elseif(UNIX)
+     set_source_files_properties(src/OgreBitesConfigDialog.cpp PROPERTIES COMPILE_DEFINITIONS HAVE_XAW)
+     list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGLXConfigDialog.cpp")
+     list(APPEND DEPENDENCIES ${X11_Xt_LIB} ${XAW_LIBRARY})
+-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/misc/GLX_backdrop.png" DESTINATION "share/OGRE/")
++    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/misc/GLX_backdrop.png" DESTINATION "${OGRE_MEDIA_PATH}/..")
+   endif()
+ endif()
+ 

@@ -47,7 +47,14 @@ file(REMOVE_RECURSE     "${CURRENT_PACKAGES_DIR}/debug/var/"
                         "${CURRENT_PACKAGES_DIR}/share/dbus-1/services"
                         "${CURRENT_PACKAGES_DIR}/share/dbus-1/session.d"
                         "${CURRENT_PACKAGES_DIR}/share/dbus-1/system-services"
-                        "${CURRENT_PACKAGES_DIR}/share/dbus-1/system.d")
+                        "${CURRENT_PACKAGES_DIR}/share/dbus-1/system.d"
+                        "${CURRENT_PACKAGES_DIR}/share/dbus-1/system.conf"
+                        "${CURRENT_PACKAGES_DIR}/share/dbus-1/system.conf"
+                        "${CURRENT_PACKAGES_DIR}/etc")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/dbus-1/session.conf" "<include ignore_missing=\"yes\">${CURRENT_PACKAGES_DIR}/etc/dbus/dbus-1/session.conf</include>" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/dbus-1/session.conf" "<includedir>${CURRENT_PACKAGES_DIR}/etc/dbus/dbus-1/session.d</includedir>" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/dbus-1/session.conf" "<include ignore_missing=\"yes\">${CURRENT_PACKAGES_DIR}/etc/dbus/dbus-1/session-local.conf</include>" "")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 set(TOOLS daemon launch monitor run-session send test-tool update-activation-environment)

@@ -32,7 +32,7 @@ jobs:
 
           git --version
 
-          export VCPKG_ROOT=.
+          unset VCPKG_ROOT
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' > .github-pr.changed-manifest-files
