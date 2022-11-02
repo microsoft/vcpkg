@@ -1155,6 +1155,8 @@ x265:arm-uwp=fail
 x265:x64-uwp=fail
 xalan-c:x64-windows-static=fail
 xalan-c:arm64-windows=fail
+# No xorg-macros available on osx
+xbitmaps:x64-osx=skip
 xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
 xmlsec:arm-uwp=fail
