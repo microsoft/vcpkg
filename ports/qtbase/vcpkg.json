@@ -120,6 +120,15 @@
             "xrender"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "gles2"
+          ],
+          "platform": "android"
         }
       ]
     },
@@ -161,6 +170,10 @@
           "default-features": false
         }
       ]
+    },
+    "gles2": {
+      "description": "OpenGL ES 2.0",
+      "supports": "!windows"
     },
     "glib": {
       "description": "GLib",
