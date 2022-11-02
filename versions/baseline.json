@@ -8049,7 +8049,7 @@
       "port-version": 1
     },
     "xmlsec": {
-      "baseline": "1.2.34",
+      "baseline": "1.2.35",
       "port-version": 0
     },
     "xnnpack": {
