@@ -34,7 +34,7 @@ endif()
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS 
+    list(APPEND OPTIONS 
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
         --enable-ipv6
         --enable-hyperv
