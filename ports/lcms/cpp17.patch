@@ -6,8 +6,8 @@ index 7e061ce7c..5d234c4e4 100644
  #endif
  
  // Handle "register" keyword
--#if defined(CMS_NO_REGISTER_KEYWORD) && !defined(CMS_DLL) && !defined(CMS_DLL_BUILD) 
-+#if __cplusplus >= 201703L || defined(CMS_NO_REGISTER_KEYWORD) && !defined(CMS_DLL) && !defined(CMS_DLL_BUILD) 
+-#if defined(CMS_NO_REGISTER_KEYWORD)
++#if __cplusplus >= 201703L || defined(CMS_NO_REGISTER_KEYWORD)
  #  define CMSREGISTER
  #else
  #  define CMSREGISTER register
