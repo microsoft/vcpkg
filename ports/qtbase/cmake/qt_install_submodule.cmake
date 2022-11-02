@@ -8,6 +8,10 @@ if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID AND NOT ANDROID_SDK_ROOT)
+    message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
+endif()
+
 function(qt_download_submodule_impl)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
 
@@ -123,6 +127,7 @@ function(qt_cmake_configure)
             -DINSTALL_LIBEXECDIR:STRING=bin
             -DINSTALL_PLUGINSDIR:STRING=${qt_plugindir}
             -DINSTALL_QMLDIR:STRING=${qt_qmldir}
+            -DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}
             ${_qarg_OPTIONS}
         OPTIONS_RELEASE
             ${_qarg_OPTIONS_RELEASE}
