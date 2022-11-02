@@ -19,7 +19,6 @@ vcpkg_from_gitlab(
             ${PATCHES}
             vcxserver.patch
             add_dl_pc.patch
-            thread-safe-init.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -29,6 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND OPTIONS 
                 --enable-loadable-i18n=no #Pointer conversion errors
                 --enable-unix-transport=no
+                --disable-thread-safety-constructor
     )
 endif()
 
