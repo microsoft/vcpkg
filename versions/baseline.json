@@ -6649,7 +6649,7 @@
       "port-version": 4
     },
     "rubberband": {
-      "baseline": "2.0.2",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "rxcpp": {
