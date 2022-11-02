@@ -4654,15 +4654,15 @@
     },
     "magnum-extras": {
       "baseline": "2020.06",
-      "port-version": 1
+      "port-version": 2
     },
     "magnum-integration": {
       "baseline": "2020.06",
-      "port-version": 1
+      "port-version": 2
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 8
+      "port-version": 9
     },
     "mailio": {
       "baseline": "0.21.0",
