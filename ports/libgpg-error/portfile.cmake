@@ -80,10 +80,19 @@ else()
             add_cflags_to_tools.patch
     )
 
+    vcpkg_list(SET options)
+    if("nls" IN_LIST FEATURES)
+        vcpkg_list(APPEND options "--enable-nls")
+    else()
+        set(ENV{AUTOPOINT} true) # true, the program
+        vcpkg_list(APPEND options "--disable-nls")
+    endif()
+
     vcpkg_configure_make(
         AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
+            ${options}
             --disable-tests
             --disable-doc
             --disable-silent-rules

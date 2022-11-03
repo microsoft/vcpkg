@@ -4,5 +4,21 @@
   "port-version": 5,
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
-  "supports": "!(windows & (arm | arm64))"
+  "supports": "!(windows & (arm | arm64))",
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
 }
