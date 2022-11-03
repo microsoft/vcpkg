@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/flac
-    REF 1151c93e992bb8c7c6394e04aa880d711c531c7f #1.3.4
-    SHA512 ebf8de3dbd8fc2153af2f4a05ecc04817570233c30e0ec1fbdbc99f810860801b951248ca6404152cba4038f5839985f4076bcee477c00fd23bd583a45b89b17
+    REF b32e5cbf9818ca23dd22aaa75522042c16ea7d17 #1.4.2
+    SHA512 911891203f3064b39058e209b62fc3fac8940ed01cc3c3d75c9e3e6f94b5cc5905efde94304a6aafa453adde2da2f9bafea9fb5297e6231562133a8acac2ea47
     HEAD_REF master
     PATCHES
         uwp-library-console.patch
@@ -43,7 +43,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME FLAC CONFIG_PATH share/FLAC/cmake)
+vcpkg_cmake_config_fixup(PACKAGE_NAME FLAC CONFIG_PATH lib/cmake/FLAC)
 
 vcpkg_copy_pdbs()
 
