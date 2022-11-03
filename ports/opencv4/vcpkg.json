@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.6.0",
-  "port-version": 5,
+  "port-version": 7,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -39,7 +39,7 @@
         },
         {
           "name": "tesseract",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         }
       ]
     },
@@ -130,8 +130,14 @@
     "freetype": {
       "description": "Freetype support for opencv",
       "dependencies": [
-        "freetype",
-        "harfbuzz"
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
       ]
     },
     "gdcm": {
@@ -148,8 +154,12 @@
     },
     "gtk": {
       "description": "GTK support for opencv",
+      "supports": "!windows & !osx & !ios & !android",
       "dependencies": [
-        "gtk"
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
       ]
     },
     "halide": {
