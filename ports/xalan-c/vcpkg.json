@@ -1,6 +1,0 @@
-{
-  "name": "xalan-c",
-  "version-string": "deprecated",
-  "description": "Retired port.  libxslt, qt5xmlpatterns and SaxonC are alternatives to consider.",
-  "license": "Apache-2.0"
-}
