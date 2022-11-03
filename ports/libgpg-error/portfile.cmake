@@ -1,6 +1,6 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     message(WARNING "libgpg-error on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
