@@ -8,9 +8,8 @@ vcpkg_from_github(
         fix-cmakelists.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure (
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCTI_CONTINUABLE_WITH_INSTALL=ON
         -DCTI_CONTINUABLE_WITH_TESTS=OFF
@@ -21,9 +20,9 @@ vcpkg_configure_cmake(
         -DCTI_CONTINUABLE_WITH_EXPERIMENTAL_COROUTINE=ON
         -DCTI_CONTINUABLE_WITH_CPP_LATEST=ON # requires cxx_std_17
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib 
                     ${CURRENT_PACKAGES_DIR}/debug
