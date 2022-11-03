@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -148,6 +148,18 @@
         }
       ]
     },
+    "batch": {
+      "description": "Batch API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "beyondcorp": {
       "description": "BeyondCorp API C++ Client Library",
       "dependencies": [
@@ -204,6 +216,18 @@
           "default-features": false,
           "features": [
             "grafeas",
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "certificatemanager": {
+      "description": "Certificate Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
             "grpc-common"
           ]
         }
@@ -331,8 +355,32 @@
         }
       ]
     },
+    "datastream": {
+      "description": "Datastream API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "debugger": {
       "description": "Stackdriver Debugger API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "deploy": {
+      "description": "Google Cloud Deploy API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
