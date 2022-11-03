@@ -1,64 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9abeefb..903e552 100644
+index 9abeefb..ba42875 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -694,37 +694,34 @@ if(SDL2IMAGE_INSTALL)
+@@ -694,7 +694,7 @@ if(SDL2IMAGE_INSTALL)
          COMPONENT devel
      )
  
 -    if(SDL2IMAGE_BUILD_SHARED_LIBS)
--        # Only create a .pc file for a shared SDL2_image
--        set(prefix "${CMAKE_INSTALL_PREFIX}")
--        set(exec_prefix "\${prefix}")
--        set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
--        set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
--        set(PACKAGE "${PROJECT_NAME}")
--        set(VERSION "${FULL_VERSION}")
--        set(SDL_VERSION "${SDL_REQUIRED_VERSION}")
--        string(JOIN " " PC_REQUIRES ${PC_REQUIRES})
--        string(JOIN " " PC_LIBS ${PC_LIBS})
--        configure_file("${PROJECT_SOURCE_DIR}/SDL2_image.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc.intermediate" @ONLY)
--        file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image-$<CONFIG>.pc" INPUT "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc.intermediate")
--
--        set(PC_DESTDIR)
--        if(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
--            # FreeBSD uses ${PREFIX}/libdata/pkgconfig
--            set(PC_DESTDIR "libdata/pkgconfig")
--        else()
--            set(PC_DESTDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
--        endif()
--        # Only install a SDL2_image.pc file in Release mode
--        install(CODE "
-+    set(prefix "${CMAKE_INSTALL_PREFIX}")
-+    set(exec_prefix "\${prefix}")
-+    set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
-+    set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
-+    set(PACKAGE "${PROJECT_NAME}")
-+    set(VERSION "${FULL_VERSION}")
-+    set(SDL_VERSION "${SDL_REQUIRED_VERSION}")
-+    string(JOIN " " PC_REQUIRES ${PC_REQUIRES})
-+    string(JOIN " " PC_LIBS ${PC_LIBS})
-+    configure_file("${PROJECT_SOURCE_DIR}/SDL2_image.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc.intermediate" @ONLY)
-+    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image-$<CONFIG>.pc" INPUT "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc.intermediate")
-+
-+    set(PC_DESTDIR)
-+    if(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
-+        # FreeBSD uses ${PREFIX}/libdata/pkgconfig
-+        set(PC_DESTDIR "libdata/pkgconfig")
-+    else()
-+        set(PC_DESTDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-+    endif()
-+    # Always install SDL2_net.pc file: libraries might be different between config modes
-+    install(CODE "
-             # FIXME: use file(COPY_FILE) if minimum CMake version >= 3.21
-             execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy_if_different
-                 \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image-$<CONFIG>.pc\"
++    if(1)
+         # Only create a .pc file for a shared SDL2_image
+         set(prefix "${CMAKE_INSTALL_PREFIX}")
+         set(exec_prefix "\${prefix}")
+@@ -723,7 +723,7 @@ if(SDL2IMAGE_INSTALL)
                  \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")
              file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${PC_DESTDIR}\"
                  TYPE FILE
 -                FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")" CONFIG Release COMPONENT devel)
--    endif()
 +                FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")" COMPONENT devel)
+     endif()
  
      if(SDL2IMAGE_BUILD_SHARED_LIBS AND (APPLE OR (UNIX AND NOT ANDROID)))
-         install(
