@@ -1,11 +1,11 @@
-set (PACKAGE_VERSION 1.42)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 if(VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "libgpg-error on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/libgpg-error
-        REF libgpg-error-${PACKAGE_VERSION}
+        REF libgpg-error-${VERSION}
         SHA512 2dbf41e28196f4b99d641a430e6e77566ae2d389bbe9d6f6e310d56a5ca90de9b9ae225a3eee979fe4606d36878d3db6f777162d697de717b4748151dd3525d0
         HEAD_REF master
         PATCHES 
@@ -73,7 +73,7 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO gpg/libgpg-error
-        REF libgpg-error-${PACKAGE_VERSION}
+        REF libgpg-error-${VERSION}
         SHA512 f5a1c1874ac1dee36ee01504f1ab0146506aa7af810879e192eac17a31ec81945fe850953ea1c57188590c023ce3ff195c7cab62af486b731fa1534546d66ba3
         HEAD_REF master
         PATCHES
