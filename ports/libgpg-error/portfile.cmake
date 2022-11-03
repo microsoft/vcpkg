@@ -78,6 +78,7 @@ else()
         HEAD_REF master
         PATCHES
             add_cflags_to_tools.patch
+            pkgconfig-libintl.patch
     )
 
     vcpkg_list(SET options)
