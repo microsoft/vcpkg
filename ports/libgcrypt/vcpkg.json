@@ -5,6 +5,12 @@
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
   "supports": "linux | osx",
   "dependencies": [
-    "libgpg-error"
+    {
+      "name": "libgpg-error",
+      "default-features": false,
+      "features": [
+        "disable-nls"
+      ]
+    }
   ]
 }

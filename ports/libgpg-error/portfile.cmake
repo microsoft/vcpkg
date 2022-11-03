@@ -1,5 +1,11 @@
 set (PACKAGE_VERSION 1.42)
 
+set(ADDITIONAL_OPTIONS "")
+if("disable-nls" IN_LIST FEATURES)
+    set(ADDITIONAL_OPTIONS "--disable-nls")
+endif()
+
+
 if(VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "libgpg-error on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
     vcpkg_from_github(
@@ -87,6 +93,7 @@ else()
             --disable-tests
             --disable-doc
             --disable-silent-rules
+            ${ADDITIONAL_OPTIONS}
     )
 
     vcpkg_install_make()

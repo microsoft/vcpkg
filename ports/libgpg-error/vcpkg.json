@@ -4,5 +4,10 @@
   "port-version": 4,
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
-  "supports": "!(windows & (arm | arm64))"
+  "supports": "!(windows & (arm | arm64))",
+  "features": {
+    "disable-nls": {
+      "description": "Disables Native Language Support (NLS), which lets GCC output diagnostics in languages other than American English"
+    }
+  }
 }
