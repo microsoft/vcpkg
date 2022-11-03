@@ -43,8 +43,19 @@ set(node_modules_download_dir "${NODEJS_BIN_DIR}/node_modules")
 # download cmake-js and its dependencies except loadsh which is a special case
 include("${CMAKE_CURRENT_LIST_DIR}/install_npm_deps.cmake")
 
-# todo: download lodash as an npm tarball
-# https://stackoverflow.com/questions/33530978/download-a-package-from-npm-as-a-tar-not-installing-it-to-a-module
+# download loadsh
+vcpkg_download_distfile(
+  cmakejs_archive
+  URLS "https://registry.npmjs.org/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz"
+  FILENAME "lodash.isplainobject-4.0.6.tgz"
+  SHA512 "a125f3696ca908c1e43c2dcdbc111a3c77f42ac0399af3eb38f810583b1b83c9fba2b676f743340660bf8e0459e2f709e834c0863aec49881db16fc5f8c14e04"
+)
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH cmakejs_source
+  ARCHIVE "${cmakejs_archive}"
+  REF "4.0.6"
+)
+file(INSTALL "${cmakejs_source}" DESTINATION "${node_modules_download_dir}" RENAME "lodash.isplainobject")
 
 # Prevent pollution of user home directory
 file(READ "${NODEJS_BIN_DIR}/node_modules/cmake-js/lib/environment.js" environment_js)
