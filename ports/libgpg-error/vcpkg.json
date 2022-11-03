@@ -5,7 +5,22 @@
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
   "supports": "!(windows & (arm | arm64))",
+  "dependencies": [
+    {
+      "name": "libgpg-error",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "build-tools"
+      ],
+      "platform": "!native"
+    }
+  ],
   "features": {
+    "build-tools": {
+      "description": "Build-time tools, needed for cross builds",
+      "supports": "native"
+    },
     "nls": {
       "description": "Enable native language support",
       "supports": "!windows | mingw",

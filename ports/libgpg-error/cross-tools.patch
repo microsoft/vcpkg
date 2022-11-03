@@ -1,0 +1,36 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 9a86251..00cc2fd 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -17,6 +17,7 @@
+ # License along with this program; if not, see <https://www.gnu.org/licenses/>.
+ # SPDX-License-Identifier: LGPL-2.1+
+ 
++HOST_TOOLS_PREFIX ?= .
+ 
+ #
+ # We distribute the generated sources err-sources.h and err-codes.h,
+@@ -290,8 +291,8 @@ mkw32errmap$(EXEEXT_FOR_BUILD): mkw32errmap.c mkw32errmap.tab.h Makefile
+ 	$(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkw32errmap.c
+ endif
+ 
+-code-from-errno.h: mkerrcodes$(EXEEXT_FOR_BUILD) Makefile
+-	./mkerrcodes$(EXEEXT_FOR_BUILD) | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
++code-from-errno.h: $(HOST_TOOLS_PREFIX)/mkerrcodes$(EXEEXT_FOR_BUILD) Makefile
++	$(HOST_TOOLS_PREFIX)/mkerrcodes$(EXEEXT_FOR_BUILD) | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+ 
+ errnos-sym.h: Makefile mkstrtable.awk errnos.in
+ 	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=2 -v nogettext=1 \
+@@ -336,10 +337,10 @@ endif
+ 
+ # We also depend on versioninfo.rc because that is build by
+ # config.status and thus has up-to-date version numbers.
+-gpg-error.h: Makefile mkheader$(EXEEXT_FOR_BUILD) $(parts_of_gpg_error_h) \
++gpg-error.h: Makefile $(HOST_TOOLS_PREFIX)/mkheader$(EXEEXT_FOR_BUILD) $(parts_of_gpg_error_h) \
+              versioninfo.rc ../config.h
+ 	$(pre_mkheader_cmds)
+-	./mkheader$(EXEEXT_FOR_BUILD) $(mkheader_opts)       \
++	$(HOST_TOOLS_PREFIX)/mkheader$(EXEEXT_FOR_BUILD) $(mkheader_opts)       \
+                    $(host_triplet)  $(srcdir)/gpg-error.h.in \
+                    ../config.h $(PACKAGE_VERSION) $(VERSION_NUMBER) >$@
+ 

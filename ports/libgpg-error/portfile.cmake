@@ -78,6 +78,7 @@ else()
         HEAD_REF master
         PATCHES
             add_cflags_to_tools.patch
+            cross-tools.patch
             pkgconfig-libintl.patch
     )
 
@@ -87,6 +88,10 @@ else()
     else()
         set(ENV{AUTOPOINT} true) # true, the program
         vcpkg_list(APPEND options "--disable-nls")
+    endif()
+
+    if(VCPKG_CROSSCOMPILING)
+        set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/tools/libgpg-error/bin")
     endif()
 
     vcpkg_configure_make(
@@ -102,6 +107,15 @@ else()
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig() 
     vcpkg_copy_pdbs()
+
+    if("build-tools" IN_LIST FEATURES)
+        file(INSTALL
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkerrcodes${VCPKG_TARGET_SUFFIX}"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkheader${VCPKG_TARGET_SUFFIX}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin"
+            USE_SOURCE_PERMISSIONS
+        )
+    endif()
 	
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
