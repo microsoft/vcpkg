@@ -50,7 +50,7 @@ vcpkg_download_distfile(
   FILENAME "lodash.isplainobject-4.0.6.tgz"
   SHA512 "a125f3696ca908c1e43c2dcdbc111a3c77f42ac0399af3eb38f810583b1b83c9fba2b676f743340660bf8e0459e2f709e834c0863aec49881db16fc5f8c14e04"
 )
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
   OUT_SOURCE_PATH cmakejs_source
   ARCHIVE "${cmakejs_archive}"
   REF "4.0.6"
