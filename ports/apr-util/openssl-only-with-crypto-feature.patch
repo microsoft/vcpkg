@@ -1,0 +1,21 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15526d6..7263743 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,8 +19,6 @@ PROJECT(APR-Util C)
+ 
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+ 
+-FIND_PACKAGE(OpenSSL)
+-
+ OPTION(APU_HAVE_CRYPTO      "Crypto support"                            OFF)
+ OPTION(APU_HAVE_ODBC        "Build ODBC DBD driver"                     ON)
+ OPTION(APR_HAS_LDAP         "LDAP support"                              ON)
+@@ -40,6 +38,7 @@ FOREACH(onelib ${APR_LIBRARIES})
+ ENDFOREACH()
+ 
+ IF(APU_HAVE_CRYPTO)
++FIND_PACKAGE(OpenSSL REQUIRED)
+ IF(NOT OPENSSL_FOUND)
+   MESSAGE(FATAL_ERROR "OpenSSL is the only supported crypto implementation, and it wasn't found!")
+ ENDIF()
