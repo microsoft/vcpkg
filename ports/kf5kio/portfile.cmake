@@ -24,6 +24,7 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
         -DCMAKE_VERBOSE_MAKEFILE=ON

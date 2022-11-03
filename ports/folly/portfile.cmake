@@ -8,20 +8,22 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 46c03de426e26f4c5a92df37ab233c586fbe369a #v2022.08.15.00
-    SHA512 6798878d6892ed79d954fb5754ee102ea04868bce4be9be5dc7c6d6c7ddcbc5573719fe09470d89c385d9e487a75d1a9abc70c29c67698b957fc68b97a8bea32
+    REF d8ed9cd2869c74b00fa6f1a7603301183f5c2249 #v2022.10.31.00
+    SHA512 55040dadb8a847f0d04c37a2dce920bb456a59decebc90920831998df9671feb33daf1f4235115adcce5eb9c469b97b9d96fa7a67a5914c434ebc1efc04f4770
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
-	fix-deps.patch
+        fix-deps.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLZ4.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
@@ -36,23 +38,17 @@ else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
-set(FEATURE_OPTIONS)
-
-macro(feature FEATURENAME PACKAGENAME)
-    if("${FEATURENAME}" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
-    else()
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
-    endif()
-endmacro()
-
-feature(zlib ZLIB)
-feature(bzip2 BZip2)
-feature(lzma LibLZMA)
-feature(lz4 LZ4)
-feature(zstd Zstd)
-feature(snappy Snappy)
-feature(libsodium unofficial-sodium)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+    INVERTED_FEATURES
+        "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
+        "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
+        "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
+        "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
+        "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -64,6 +60,8 @@ vcpkg_cmake_configure(
         -DLIBAIO_FOUND=OFF
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        LIBAIO_FOUND
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)

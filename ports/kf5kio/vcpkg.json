@@ -3,6 +3,7 @@
   "version": "5.98.0",
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
+  "license": null,
   "dependencies": [
     "ecm",
     {

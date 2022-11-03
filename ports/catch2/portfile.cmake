@@ -1,12 +1,13 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
+vcpkg_minimum_required(VERSION 2022-11-10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF v3.1.1
-    SHA512 b6deae2e87ae301bb3de9e378297a3f20333bb5f233fd9ef81f8c4f10fe0c4ad5de9174b850da8064607b9c56c68c7a0815e2bac80108e6db905bc660def7d57
+    REF v${VERSION}
+    SHA512 983d37824a8d9e24ff107d27f11cb4f8ea53516dc2c5c9b32d4758c718f29041eecdb023d81a2776c87d283e3671722352c9f0eea02393b5bb191fa26bb12c82
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
@@ -32,4 +33,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/benchmark/internal")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
