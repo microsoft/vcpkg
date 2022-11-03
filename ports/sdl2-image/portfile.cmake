@@ -13,8 +13,8 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libjpeg-turbo SDL2IMAGE_JPG
-        libwebp SDL2IMAGE_WEBP
-        tiff SDL2IMAGE_TIF
+        libwebp       SDL2IMAGE_WEBP
+        tiff          SDL2IMAGE_TIF
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL2IMAGE_DEPS_SHARED)
