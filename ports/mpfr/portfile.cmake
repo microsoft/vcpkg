@@ -1,8 +1,9 @@
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive\n")
+elseif(VCPKG_TARGET_IS_OSX)
+    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nIt can be installed with brew install autoconf-archive")
 endif()
 
-set(VERSION 4.1.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.mpfr.org/mpfr-${VERSION}/mpfr-${VERSION}.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-${VERSION}.tar.xz"
     FILENAME "mpfr-${VERSION}.tar.xz"
