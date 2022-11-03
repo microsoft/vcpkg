@@ -47,6 +47,9 @@ if(DEFINED OPENSSL_USE_STATIC_LIBS_BAK)
     unset(OPENSSL_USE_STATIC_LIBS_BAK)
 endif()
 
+# add option like ./Configure command 
+add_definition(-DOPENSSL_NO_SEED)
+
 if(OPENSSL_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if(WIN32)
         list(APPEND OPENSSL_LIBRARIES crypt32 ws2_32)
