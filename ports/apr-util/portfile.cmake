@@ -14,11 +14,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
             unglue.patch
     )
 
+    if ("crypto" IN_LIST FEATURES)
+        set(ENABLE_CRYPTO ON)
+    else()
+        set(ENABLE_CRYPTO OFF)
+    endif()
+
     vcpkg_cmake_configure(
       SOURCE_PATH "${SOURCE_PATH}"
       OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
+      OPTIONS
+        -DAPU_HAVE_CRYPTO=${ENABLE_CRYPTO}
     )
+
 
     vcpkg_cmake_install()
     vcpkg_copy_pdbs()
