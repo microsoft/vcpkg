@@ -1,0 +1,116 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 18e514e..2c62613 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,55 +22,24 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ 
+ if(PMP_BUILD_VIS)
+-  set(GLFW_SOURCE_DIR "external/glfw")
+-  set(GLEW_SOURCE_DIR "external/glew")
+-  set(IMGUI_SOURCE_DIR "external/imgui")
+-  set(STBI_SOURCE_DIR "external/stb_image")
+-
+-  # setup STB Image (place *before* GLFW since GLFW has an old copy of
+-  # stb_image_write.h)
+-  include_directories(${STBI_SOURCE_DIR})
+-  add_subdirectory(${STBI_SOURCE_DIR})
+-
+-  # Building only the GLFW lib
+-  set(BUILD_SHARED_LIBS
+-      OFF
+-      CACHE BOOL "")
+-  set(GLFW_BUILD_EXAMPLES
+-      OFF
+-      CACHE BOOL "")
+-  set(GLFW_BUILD_TESTS
+-      OFF
+-      CACHE BOOL "")
+-  set(GLFW_BUILD_DOCS
+-      OFF
+-      CACHE BOOL "")
+-  set(GLFW_INSTALL
+-      OFF
+-      CACHE BOOL "")
++  find_package(imgui CONFIG REQUIRED)
++  find_path(STB_INCLUDE_DIRS "stb_image.h" REQUIRED)
++
++  include_directories(${STB_INCLUDE_DIRS})
++  add_compile_definitions(STB_IMAGE_IMPLEMENTATION STB_IMAGE_WRITE_IMPLEMENTATION)
++  link_libraries(imgui::imgui)
+ 
+   # setup use of GLFW and GLEW
+   if(NOT EMSCRIPTEN)
+-    add_subdirectory(${GLFW_SOURCE_DIR} ${GLEW_SOURCE_DIR})
+-
+-    include_directories(${GLFW_SOURCE_DIR}/include ${GLFW_SOURCE_DIR}/deps
+-                        ${GLEW_SOURCE_DIR}/include)
+-
+-    add_definitions(-DGLEW_STATIC)
+-    add_library(glew STATIC ${GLEW_SOURCE_DIR}/src/glew.c
+-                            ${GLEW_SOURCE_DIR}/include)
+-    set_property(TARGET glew PROPERTY POSITION_INDEPENDENT_CODE ON)
+-    target_link_libraries(glew ${GLFW_LIBRARIES})
++    find_package(glfw3 CONFIG REQUIRED)
++    find_package(GLEW REQUIRED)
++    link_libraries(glfw GLEW::GLEW)
+   endif()
+-
+-  # setup IMGUI
+-  include_directories(${IMGUI_SOURCE_DIR})
+-  add_subdirectory(${IMGUI_SOURCE_DIR})
+ endif(PMP_BUILD_VIS)
+ 
+ # setup Eigen
+-set(EIGEN_SOURCE_DIR "external/eigen")
+-include_directories(${EIGEN_SOURCE_DIR})
++find_package(Eigen3 CONFIG REQUIRED)
++link_libraries(Eigen3::Eigen)
+ 
+ # setup PLY
+ set(RPLY_SOURCE_DIR "external/rply")
+@@ -222,7 +191,6 @@ if(NOT EMSCRIPTEN AND PMP_INSTALL)
+   install(
+     EXPORT pmpTargets
+     FILE pmpTargets.cmake
+-    EXPORT_LINK_INTERFACE_LIBRARIES
+     DESTINATION "${PMP_CONFIG_PATH}")
+ 
+   export(TARGETS pmp FILE pmpTargets.cmake)
+diff --git a/src/pmp/CMakeLists.txt b/src/pmp/CMakeLists.txt
+index c8599b0..2a71ac2 100644
+--- a/src/pmp/CMakeLists.txt
++++ b/src/pmp/CMakeLists.txt
+@@ -4,7 +4,7 @@ file(GLOB HEADERS ./*.h)
+ if(EMSCRIPTEN)
+   add_library(pmp STATIC ${SOURCES} ${HEADERS} $<TARGET_OBJECTS:rply>)
+ else()
+-  add_library(pmp SHARED ${SOURCES} ${HEADERS} $<TARGET_OBJECTS:rply>)
++  add_library(pmp ${SOURCES} ${HEADERS} $<TARGET_OBJECTS:rply>)
+   set_property(TARGET pmp PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ endif()
+ 
+diff --git a/src/pmp/visualization/CMakeLists.txt b/src/pmp/visualization/CMakeLists.txt
+index 318265e..be1e76d 100644
+--- a/src/pmp/visualization/CMakeLists.txt
++++ b/src/pmp/visualization/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(HDRS ${HDRS} "../MatVec.h")
+ if(EMSCRIPTEN)
+ 
+   add_library(pmp_vis STATIC ${SRCS} ${HDRS})
+-  target_link_libraries(pmp_vis stb_image imgui pmp)
++  target_link_libraries(pmp_vis pmp)
+ 
+ else()
+ 
+@@ -16,10 +16,6 @@ else()
+     target_link_libraries(
+       pmp_vis
+       pmp
+-      stb_image
+-      imgui
+-      glfw
+-      glew
+       ${OPENGL_LIBRARIES})
+     if(PMP_INSTALL)
+       install(TARGETS pmp_vis DESTINATION lib)

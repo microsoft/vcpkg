@@ -1,0 +1,59 @@
+{
+  "name": "pmp",
+  "version-semver": "2.0.1",
+  "description": "The Polygon Mesh Processing Library",
+  "homepage": "https://www.pmp-library.org",
+  "license": "MIT",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "test": {
+      "description": "Build the PMP test programs",
+      "dependencies": [
+        "gtest"
+      ]
+    },
+    "tools": {
+      "description": "Build the PMP visualization tools",
+      "dependencies": [
+        "glew",
+        "glfw3",
+        {
+          "name": "imgui",
+          "features": [
+            "freetype",
+            "glfw-binding",
+            "metal-binding",
+            "opengl3-binding",
+            "osx-binding"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "imgui",
+          "features": [
+            "dx11-binding",
+            "freetype",
+            "glfw-binding",
+            "win32-binding"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "imgui",
+          "platform": "!(windows | osx)"
+        },
+        "stb"
+      ]
+    }
+  }
+}
