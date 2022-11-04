@@ -32,12 +32,9 @@ index 18e514e..2c62613 100644
 -  set(GLFW_INSTALL
 -      OFF
 -      CACHE BOOL "")
-+  find_package(imgui CONFIG REQUIRED)
 +  find_path(STB_INCLUDE_DIRS "stb_image.h" REQUIRED)
-+
 +  include_directories(${STB_INCLUDE_DIRS})
 +  add_compile_definitions(STB_IMAGE_IMPLEMENTATION STB_IMAGE_WRITE_IMPLEMENTATION)
-+  link_libraries(imgui::imgui)
  
    # setup use of GLFW and GLEW
    if(NOT EMSCRIPTEN)
@@ -59,6 +56,9 @@ index 18e514e..2c62613 100644
 -  # setup IMGUI
 -  include_directories(${IMGUI_SOURCE_DIR})
 -  add_subdirectory(${IMGUI_SOURCE_DIR})
++
++  find_package(imgui CONFIG REQUIRED)
++  link_libraries(imgui::imgui)
  endif(PMP_BUILD_VIS)
  
  # setup Eigen
@@ -114,3 +114,38 @@ index 318265e..be1e76d 100644
        ${OPENGL_LIBRARIES})
      if(PMP_INSTALL)
        install(TARGETS pmp_vis DESTINATION lib)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c62613..16365ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,10 +126,6 @@ if(NOT CMAKE_BUILD_TYPE)
+         FORCE)
+ endif()
+ 
+-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb")
+-endif()
+-
+ # choose size of the scalar type
+ if(PMP_SCALAR_TYPE EQUAL 64)
+   message(STATUS "Using 64-bit scalar type")
+diff --git a/src/apps/CMakeLists.txt b/src/apps/CMakeLists.txt
+index efc310f..df070ec 100644
+--- a/src/apps/CMakeLists.txt
++++ b/src/apps/CMakeLists.txt
+@@ -87,6 +87,7 @@ else()
+   if(NOT WIN32)
+     add_executable(mconvert mconvert.cpp)
+     target_link_libraries(mconvert pmp)
++    install(TARGETS mconvert DESTINATION bin)
+   endif()
+ 
+   if(OpenGL_FOUND AND PMP_BUILD_VIS)
+@@ -117,6 +118,7 @@ else()
+     add_executable(mpview mpview.cpp MeshProcessingViewer.cpp
+                           MeshProcessingViewer.h)
+     target_link_libraries(mpview pmp_vis)
++    install(TARGETS mview curview subdiv smoothing fairing parameterization decimation remeshing mpview DESTINATION bin)
+   endif()
+ 
+ endif()

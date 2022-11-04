@@ -16,12 +16,6 @@
     }
   ],
   "features": {
-    "test": {
-      "description": "Build the PMP test programs",
-      "dependencies": [
-        "gtest"
-      ]
-    },
     "tools": {
       "description": "Build the PMP visualization tools",
       "dependencies": [
@@ -30,7 +24,6 @@
         {
           "name": "imgui",
           "features": [
-            "freetype",
             "glfw-binding",
             "metal-binding",
             "opengl3-binding",
@@ -42,8 +35,8 @@
           "name": "imgui",
           "features": [
             "dx11-binding",
-            "freetype",
             "glfw-binding",
+            "opengl3-binding",
             "win32-binding"
           ],
           "platform": "windows"

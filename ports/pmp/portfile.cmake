@@ -11,7 +11,6 @@ file(COPY "${SOURCE_PATH}/external/imgui/lato-font.h" DESTINATION "${SOURCE_PATH
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test  PMP_BUILD_TESTS
         tools PMP_BUILD_VIS
         tools PMP_BUILD_APPS
 )
@@ -20,16 +19,20 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DEMSCRIPTEN=OFF
         -DPMP_BUILD_EXAMPLES=OFF
+        -DPMP_BUILD_TESTS=OFF
         -DPMP_BUILD_DOCS=OFF
+        -DPMP_INSTALL=ON
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/pmp)
 vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
-    # vcpkg_copy_tools(TOOL_NAMES ... AUTO_CLEAN)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES mconvert AUTO_CLEAN)
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES mview curview subdiv smoothing fairing parameterization decimation remeshing mpview AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE
