@@ -5,6 +5,11 @@
   "description": "Apache Portable Runtime (APR) project  mission is to create and maintain software libraries that provide a predictable and consistent interface to underlying platform-specific implementation",
   "homepage": "https://apr.apache.org/",
   "license": "Apache-2.0",
+  "features": {
+    "crypto": {
+      "description": "Builds crypto abstract API"
+    }
+  },
   "dependencies": [
     "apr",
     "expat",
