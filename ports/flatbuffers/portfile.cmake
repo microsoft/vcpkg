@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF c92e78a9f841a6110ec27180d68d1f7f2afda21d #v2.9.29
-    SHA512 b49b9f706a1a763011cc13e42d61c2c36bad7791c5cb7f1fa410e4a5a6fa83a5890cbdb711beff4d88bad06abbc2277f7b940eb1dcf2748873f9f4fb5d9be624
+    REF 203241ed3275625c8a25c4a1e7b86e3c0289c488 #v22.10.26
+    SHA512 b2c889aa97d039f0044133daea6c68361ab4d4bb80bd6c67d3e1f6ffd1b4175fc36a21b1ab3a75d83b0296c83d98f6e42756e01fc1193ba19a77c3e896cba212
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
