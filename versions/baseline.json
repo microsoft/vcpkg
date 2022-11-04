@@ -1617,7 +1617,7 @@
       "port-version": 0
     },
     "cpp-jwt": {
-      "baseline": "2021-10-18",
+      "baseline": "2022-08-27",
       "port-version": 0
     },
     "cpp-netlib": {
@@ -1894,7 +1894,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.7",
-      "port-version": 2
+      "port-version": 3
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2905,7 +2905,7 @@
       "port-version": 3
     },
     "highway": {
-      "baseline": "0.14.2",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "hikogui": {
@@ -3501,8 +3501,8 @@
       "port-version": 5
     },
     "lcms": {
-      "baseline": "2.12",
-      "port-version": 4
+      "baseline": "2.14",
+      "port-version": 0
     },
     "leaf": {
       "baseline": "0.2.2",
@@ -3869,8 +3869,8 @@
       "port-version": 0
     },
     "libjxl": {
-      "baseline": "0.6.1",
-      "port-version": 1
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "libkeyfinder": {
       "baseline": "2.2.6",
@@ -4969,7 +4969,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "13.0.0",
+      "baseline": "13.1.0",
       "port-version": 0
     },
     "ms-angle": {
@@ -5118,7 +5118,7 @@
     },
     "ncurses": {
       "baseline": "6.3",
-      "port-version": 2
+      "port-version": 3
     },
     "neargye-semver": {
       "baseline": "0.3.0",
@@ -6218,7 +6218,7 @@
     },
     "qtbase": {
       "baseline": "6.3.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qtcharts": {
       "baseline": "6.3.2",
@@ -7637,7 +7637,7 @@
       "port-version": 2
     },
     "uriparser": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "usbmuxd": {
@@ -7725,7 +7725,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2022-09-26",
+      "baseline": "2022-10-30",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
