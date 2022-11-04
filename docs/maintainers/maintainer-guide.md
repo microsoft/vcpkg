@@ -349,6 +349,62 @@ Because of this, it is preferable to patch the buildsystem directly when setting
 
 When making changes to a library, strive to minimize the final diff. This means you should _not_ reformat the upstream source code when making changes that affect a region. Also, when disabling a conditional, it is better to add a `AND FALSE` or `&& 0` to the condition than to delete every line of the conditional.
 
+Don't include patch content describing the patch in the patch. If, for example, there is a header describing the patch's source, add this information in `portfile.cmake` with a comment rather than leaving it in the patch. That is, rather than:
+
+```diff
+diff --git a/ports/tinyxml2/fix.patch b/ports/tinyxml2/fix.patch
+new file mode 100644
+index 000000000..d9a36b4c5
+--- /dev/null
++++ b/ports/tinyxml2/fix.patch
+@@ -0,0 +1,7 @@
++From a512d312db5604efe803a6fe088e7d582e04533f Mon Sep 17 00:00:00 2001
++From: Example <example@example.com>
++Date: Wed, 26 Oct 2022 18:21:29 -0700
++Subject: Example
++
++---
++(Patch Content)
+diff --git a/ports/tinyxml2/portfile.cmake b/ports/tinyxml2/portfile.cmake
+index 424107590..d9205958f 100644
+--- a/ports/tinyxml2/portfile.cmake
++++ b/ports/tinyxml2/portfile.cmake
+@@ -4,6 +4,8 @@ vcpkg_from_github(
+     REF 9.0.0
+     SHA512 9C5CE8131984690DF302CA3E32314573B137180ED522C92FD631692979C942372A28F697FDB3D5E56BCF2D3DC596262B724D088153F3E1D721C9536F2A883367
+     HEAD_REF master
++    PATCHES
++        fix.patch
+ )
+
+ vcpkg_cmake_configure(
+```
+
+use
+
+```diff
+diff --git a/ports/tinyxml2/fix.patch b/ports/tinyxml2/fix.patch
+new file mode 100644
+index 000000000..e6bb74f39
+--- /dev/null
++++ b/ports/tinyxml2/fix.patch
+@@ -0,0 +1 @@
++(Patch Content)
+diff --git a/ports/tinyxml2/portfile.cmake b/ports/tinyxml2/portfile.cmake
+index 424107590..69f039072 100644
+--- a/ports/tinyxml2/portfile.cmake
++++ b/ports/tinyxml2/portfile.cmake
+@@ -4,6 +4,8 @@ vcpkg_from_github(
+     REF 9.0.0
+     SHA512 9C5CE8131984690DF302CA3E32314573B137180ED522C92FD631692979C942372A28F697FDB3D5E56BCF2D3DC596262B724D088153F3E1D721C9536F2A883367
+     HEAD_REF master
++    PATCHES
++        fix.patch # Upstream a512d312db5604efe803a6fe088e7d582e04533f
+ )
+
+ vcpkg_cmake_configure(
+```
+
 Don't add patches if the port is outdated and updating the port to a newer released version would solve the same issue. vcpkg prefers updating ports over patching outdated versions unless the version bump breaks a considerable amount of dependent ports.
 
 This helps to keep the size of the vcpkg repository down as well as improves the likelihood that the patch will apply to future code versions.
