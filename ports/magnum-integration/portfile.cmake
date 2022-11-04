@@ -8,28 +8,19 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-# Handle features
-set(_COMPONENT_FLAGS "")
-foreach(_feature IN LISTS ALL_FEATURES)
-    # Uppercase the feature name and replace "-" with "_"
-    if(_feature)
-        string(TOUPPER "${_feature}" _FEATURE)
-        string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
-
-        # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-        # is in the list.
-        if(_feature IN_LIST FEATURES)
-            list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
-        endif()
-    endif()
-endforeach()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        bullet WITH_BULLET
+        eigen  WITH_EIGEN
+        glm    WITH_GLM
+        imgui  WITH_IMGUI
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum

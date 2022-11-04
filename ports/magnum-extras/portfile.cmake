@@ -8,28 +8,16 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-# Handle features
-set(_COMPONENT_FLAGS "")
-foreach(_feature IN LISTS ALL_FEATURES)
-    if(_feature)
-        # Uppercase the feature name and replace "-" with "_"
-        string(TOUPPER "${_feature}" _FEATURE)
-        string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
-
-        # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-        # is in the list.
-        if(_feature IN_LIST FEATURES)
-            list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
-        endif()
-    endif()
-endforeach()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ui WITH_UI
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
@@ -40,7 +28,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME MagnumExtras CONFIG_PATH share/cmake/MagnumExtras)
 
 # Messages to the user
-if("ui" IN_LIST FEATURES)
+if(WITH_UI)
     message(WARNING "It is recommended to install one of magnum-plugins[freetypefont,harfbuzzfont,stbtruetypefont] to have the UI library working out of the box")
 endif()
 
