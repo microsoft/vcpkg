@@ -8,8 +8,8 @@ vcpkg_from_github(
         fix-cmakelists.patch
 )
 
-vcpkg_cmake_configure (
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCTI_CONTINUABLE_WITH_INSTALL=ON
         -DCTI_CONTINUABLE_WITH_TESTS=OFF
@@ -24,6 +24,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib 
-                    ${CURRENT_PACKAGES_DIR}/debug
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" 
+                    "${CURRENT_PACKAGES_DIR}/debug"
 )
