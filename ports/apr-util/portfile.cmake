@@ -8,6 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     crypto APU_HAVE_CRYPTO
+    crypto CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
+INVERTED_FEATURES
+    crypto CMAKE_DISABLE_FIND_PACKAGE_OpenSSL
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -18,7 +21,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
             use-vcpkg-expat.patch
             apr.patch
             unglue.patch
-            openssl-only-with-crypto-feature.patch
     )
 
     vcpkg_cmake_configure(
