@@ -1,7 +1,9 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive\n")
 elseif(VCPKG_TARGET_IS_OSX)
-    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nIt can be installed with brew install autoconf-archive")
+    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nIt can be installed with\n    brew install autoconf-archive\n")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
