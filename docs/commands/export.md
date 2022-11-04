@@ -160,6 +160,12 @@ Package references without a triplet are automatically qualified by the [default
 
 Export all installed packages.
 
+<a id="dry-run"></a>
+
+### `--dry-run`
+
+Do not perform the export, only print the export plan.
+
 <a id="ifw-configuration-file-path"></a>
 
 ### `--ifw-configuration-file-path=`
