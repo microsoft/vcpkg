@@ -1,6 +1,6 @@
 {
   "name": "node-api",
-  "version-semver": "14.17.4",
+  "version-semver": "18.12.1",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
   "license": null,
@@ -12,10 +12,6 @@
     },
     {
       "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
-      "name": "vcpkg-tool-nodejs",
       "host": true
     }
   ]
