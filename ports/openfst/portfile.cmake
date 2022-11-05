@@ -22,9 +22,6 @@ vcpkg_configure_make(
         "--enable-shared=${LINKAGE_DYNAMIC}"
         "--enable-static=${LINKAGE_STATIC}"
         "--prefix=${CURRENT_INSTALLED_DIR}"
-        "--disable-doxygen"
-    OPTIONS_DEBUG
-        "--enable-debug"
 )
 
 vcpkg_install_make()
