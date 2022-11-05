@@ -1,11 +1,26 @@
 {
   "name": "libassuan",
-  "version": "2.5.3",
-  "port-version": 5,
+  "version": "2.5.5",
   "description": "A library implementing the so-called Assuan protocol",
   "homepage": "https://gnupg.org/software/libassuan/index.html",
-  "supports": "!windows",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows | mingw",
   "dependencies": [
+    {
+      "name": "libassuan",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "build-tools"
+      ],
+      "platform": "!native"
+    },
     "libgpg-error"
-  ]
+  ],
+  "features": {
+    "build-tools": {
+      "description": "Build-time tools, needed for cross builds",
+      "supports": "native"
+    }
+  }
 }
