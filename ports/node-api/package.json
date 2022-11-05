@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "cmake-js-fetch": "node node_modules/cmake-js/bin/cmake-js configure --directory cmake-js-fetch"
-  }
-}
