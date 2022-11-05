@@ -1,10 +1,31 @@
 {
   "name": "libgcrypt",
   "version": "1.10.1",
+  "port-version": 1,
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
-  "supports": "linux | osx",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows | mingw",
   "dependencies": [
-    "libgpg-error"
-  ]
+    {
+      "name": "libgcrypt",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "build-tools"
+      ],
+      "platform": "!native"
+    },
+    "libgpg-error",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "features": {
+    "build-tools": {
+      "description": "Build-time tools, needed for cross builds",
+      "supports": "native"
+    }
+  }
 }
