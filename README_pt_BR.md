@@ -44,64 +44,64 @@ Primeiramente, siga o guia rapido de inicio para
 [Windows](#guia-de-inicio-rapido-windows), ou [macOS e Linux](#guia-rapido-de-inicio-unix),
 dependendo de qual que você usa.
 
-For more information, see [Installing and Using Packages][getting-started:using-a-package].
-If a library you need is not present in the vcpkg catalog,
-you can [open an issue on the GitHub repo][contributing:submit-issue]
-where the vcpkg team and community can see it,
-and potentially add the port to vcpkg.
+Para mais informações, consulte [Instalação e utilização de pacotes][getting-started:using-a-package].
+Se a biblioteca que você precisa não está presente no catálogo do vcpkg,
+você pode [abrir uma issue no repositório do github][contributing:submit-issue]
+onde a equipe e a comunidade do vcpkg possa ver,
+e potencialmente fazer o aport para o vcpkg.
 
-After you've gotten vcpkg installed and working,
-you may wish to add [tab completion](#tab-completionauto-completion) to your shell.
+Após você tenha o vcpkg instalado e funcionando,
+você pode adicionar o [tab completion](#tab-completionauto-completion) para o seu shell.
 
-Finally, if you're interested in the future of vcpkg,
-check out the [manifest][getting-started:manifest-spec] guide!
-This is an experimental feature and will likely have bugs,
-so try it out and [open all the issues][contributing:submit-issue]!
+Finalmente, se você está interessado no futuro do vcpkg,
+confira o Guia [manifest!][getting-started:manifest-spec]
+Isto é uma feature que está em fase experimental e provavelmente terá bugs,
+então tente usar a feature e [abra todas as issues possiveis][contributing:submit-issue]!
 
 ## Guia de inicio rapido: Windows
 
-Prerequisites:
-- Windows 7 or newer
+Pre-Requisitos:
+- Windows 7 ou mais novo
 - [Git][getting-started:git]
-- [Visual Studio][getting-started:visual-studio] 2015 Update 3 or greater with the English language pack
+- [Visual Studio][getting-started:visual-studio] 2015 Update 3 ou mais recente com o idioma padrão em Inglês.
 
-First, download and bootstrap vcpkg itself; it can be installed anywhere,
-but generally we recommend using vcpkg as a submodule for CMake projects,
-and installing it globally for Visual Studio projects.
-We recommend somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`,
-since otherwise you may run into path issues for some port build systems.
+Primeiramente, baixe e compile  o vcpkg em si; ele pode ser instalado em qualquer lugar,
+porém geralmente nos recomendamos usar o vcpkg como um submodulo para projetos em CMake,
+e instalando globalmente para projetos em Visual Studio.
+Nos recomendamos instalar em lugares como `C:\src\vcpkg` ou `C:\dev\vcpkg`,
+uma vez que, de uma outra modo você pode encontrar problemas ao rodar no path para algumas portas na construção de sistemas.
 
 ```cmd
 > git clone https://github.com/microsoft/vcpkg
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-To install the libraries for your project, run:
+Para instalar as bibliotecas para seu projeto, execute:
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
 ```
 
-Note: This will install x86 libraries by default. To install x64, run:
+Nota: Esse comando irá instalar por padrão as bibliotecas x86. Para instalar as bibliotecas x64, execute:
 
 ```cmd
 > .\vcpkg\vcpkg install [package name]:x64-windows
 ```
 
-Or
+Ou
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
 ```
 
-You can also search for the libraries you need with the `search` subcommand:
+Voçê também pode procurar por bibliotecas que você precisa com o subcomando `search`:
 
 ```cmd
 > .\vcpkg\vcpkg search [search term]
 ```
 
-In order to use vcpkg with Visual Studio,
-run the following command (may require administrator elevation):
+Siga a sequência para usaar o vcpkg com o Visual Studio,
+execute os comandos a seguir (Pode requisitar privilégios de administrador):
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
