@@ -25,12 +25,12 @@ Para uma breve descrição dos comandos disponiveis, uma vez que você tenha ins
   - [Inicio rapido: Unix](#guia-rapido-de-inicio-unix)
   - [Installing Linux Developer Tools](#installing-linux-developer-tools)
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
-  - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
-    - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
-    - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
-    - [Vcpkg with CLion](#vcpkg-with-clion)
+  - [Usando vcpkg com CMake](#usando-vcpkg-com-cmake)
+    - [Visual Studio Code com CMake Tools](#visual-studio-code-com-cmake-tools)
+    - [Vcpkg com Visual Studio CMake Projetos](#vcpkg-com-visual-studio-cmake-projetos)
+    - [Vcpkg com CLion](#vcpkg-com-clion)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
-    - [Vcpkg via FetchContent](#vcpkg-via-FetchContent)
+    - [Vcpkg via FetchContent](#vcpkg-via-fetchcontent)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -107,27 +107,27 @@ execute os comandos a seguir (Pode requisitar privilégios de administrador):
 > .\vcpkg\vcpkg integrate install
 ```
 
-After this, you can now create a New non-CMake Project (or open an existing one).
-All installed libraries are immediately ready to be `#include`'d and used
-in your project without additional configuration.
+Após isso, voçê agora pode criar um novo projeto CMake (ou obrir um projeto já existente).
+Com todas as bibliotecas instaladas já podem ser immediatamente usadas em seu projeto com o codigo `#include`
+sem configuração adicional.
 
-If you're using CMake with Visual Studio,
-continue [here](#vcpkg-with-visual-studio-cmake-projects).
+Se voçê está usando o CMake com o Visual Studio,
+continue [aqui](#vcpkg-com-visual-studio-cmake-projetos).
 
-In order to use vcpkg with CMake outside of an IDE,
-you can use the toolchain file:
+Seguindo, para usar o vcpkg com CMake fora de uma IDE,
+você precisa o utilizar o toolchain file:
 
 ```cmd
 > cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
-With CMake, you will still need to `find_package` and the like to use the libraries.
-Check out the [CMake section](#using-vcpkg-with-cmake) for more information,
-including on using CMake with an IDE.
+Com o CMake, você ainda precisará de usar o `find_package` e o prazer de usar as bibliotecas.
+Confira a [sessão CMake](#usando-vcpkg-com-cmake) para mais informações,
+incluindo o uso do CMake com uma IDE.
 
-For any other tools, including Visual Studio Code,
-check out the [integration guide][getting-started:integration].
+Para qualquer outra ferramenta, incluindo o Visual Studio COde,
+confira o [guia de integração][getting-started:integration].
 
 ## Guia rapido de Inicio: Unix
 
@@ -208,9 +208,9 @@ Then follow along with the prompts in the windows that comes up.
 
 You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick-start-unix)
 
-## Using vcpkg with CMake
+## Usando vcpkg com CMake
 
-### Visual Studio Code with CMake Tools
+### Visual Studio Code com CMake Tools
 
 Adding the following to your workspace `settings.json` will make
 CMake Tools automatically use vcpkg for libraries:
@@ -223,7 +223,7 @@ CMake Tools automatically use vcpkg for libraries:
 }
 ```
 
-### Vcpkg with Visual Studio CMake Projects
+### Vcpkg com Visual Studio CMake Projetos
 
 Open the CMake Settings Editor, and under `CMake toolchain file`,
 add the path to the vcpkg toolchain file:
@@ -232,7 +232,7 @@ add the path to the vcpkg toolchain file:
 [vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-### Vcpkg with CLion
+### Vcpkg com CLion
 
 Open the Toolchains settings
 (File > Settings on Windows and Linux, CLion > Preferences on macOS),
