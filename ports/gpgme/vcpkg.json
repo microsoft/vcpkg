@@ -3,6 +3,7 @@
   "version": "1.18.0",
   "description": "A library designed to make access to GnuPG easier for applications",
   "homepage": "https://gnupg.org/software/gpgme/index.html",
+  "license": null,
   "supports": "!windows | mingw",
   "dependencies": [
     "libassuan",
