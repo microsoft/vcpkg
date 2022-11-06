@@ -1,13 +1,17 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/libgpg-error
-    REF libgpg-error-${VERSION}
-    SHA512 f5a1c1874ac1dee36ee01504f1ab0146506aa7af810879e192eac17a31ec81945fe850953ea1c57188590c023ce3ff195c7cab62af486b731fa1534546d66ba3
-    HEAD_REF master
+vcpkg_download_distfile(tarball
+    URLS
+        "https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
+        "https://mirrors.dotsrc.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
+        "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
+    FILENAME "libgpg-error-${VERSION}.tar.bz2"
+    SHA512 b06223bb2b0f67d3db5d0d9ab116361a0eda175d4667352b5c0941408d37f2b0ba8e507297e480ccebb88cbba9d0a133820b896914b07d264fb3edaac7b8c99d
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${tarball}"
     PATCHES
-        add_cflags_to_tools.patch
         cross-tools.patch
         pkgconfig-libintl.patch
 )
@@ -21,7 +25,7 @@ else()
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/tools/libgpg-error/bin")
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin")
 endif()
 
 vcpkg_configure_make(
@@ -32,6 +36,7 @@ vcpkg_configure_make(
         --disable-tests
         --disable-doc
         --disable-silent-rules
+        --enable-install-gpg-error-config # still used downstream
 )
 
 vcpkg_install_make()
@@ -42,14 +47,14 @@ if("build-tools" IN_LIST FEATURES)
     file(INSTALL
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkerrcodes${VCPKG_TARGET_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkheader${VCPKG_TARGET_SUFFIX}"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         USE_SOURCE_PERMISSIONS
     )
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
