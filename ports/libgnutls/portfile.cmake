@@ -1,49 +1,65 @@
-set(GNUTLS_BRANCH 3.6)
-set(GNUTLS_VERSION ${GNUTLS_BRANCH}.15)
-set(GNUTLS_HASH f757d1532198f44bcad7b73856ce6a05bab43f6fb77fcc81c59607f146202f73023d0796d3e1e7471709cf792c8ee7d436e19407e0601bc0bda2f21512b3b01c)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.gnupg.org/ftp/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${GNUTLS_VERSION}.tar.xz"
-    FILENAME "gnutls-${GNUTLS_VERSION}.tar.xz"
-    SHA512 ${GNUTLS_HASH}
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
+vcpkg_download_distfile(tarball
+    URLS
+        "https://gnupg.org/ftp/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
+        "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
+    FILENAME "gnutls-${VERSION}.tar.xz"
+    SHA512 72c78d7fcb024393c1d15f2a1856608ae4460ba43cc5bbbb4c29b80508cae6cb822df4638029de2363437d110187e0a3cc19a7288c3b2f44b2f648399a028438
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${tarball}"
+    SOURCE_BASE "v${VERSION}"
+    PATCHES
+        use-gmp-pkgconfig.patch
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    REF ${GNUTLS_VERSION}
-)
+vcpkg_list(SET options)
+
+if("nls" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--enable-nls")
+else()
+    set(ENV{AUTOPOINT} true) # true, the program
+    vcpkg_list(APPEND options "--disable-nls")
+endif()
+if ("openssl" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--enable-openssl-compatibility")
+endif()
 
 if(VCPKG_TARGET_IS_OSX)
-    set(LDFLAGS "-framework CoreFoundation")
-else()
-    set(LDFLAGS "")
+    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
 endif()
 
-if ("openssl" IN_LIST FEATURES)
-  set(OPENSSL_COMPATIBILITY "--enable-openssl-compatibility")
-endif()
-
+set(ENV{GTKDOCIZE} true) # true, the program
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
     OPTIONS
+        --disable-dependency-tracking
         --disable-doc
-        --disable-silent-rules
-        --disable-tests
-        --disable-maintainer-mode
-        --disable-rpath
-        --disable-libdane
         --disable-guile
-        --with-included-unistring
+        --disable-libdane
+        --disable-maintainer-mode
+        --disable-silent-rules
+        --disable-rpath
+        --disable-tests
         --without-p11-kit
         --without-tpm
-        ${OPENSSL_COMPATIBILITY}
-        "LDFLAGS=${LDFLAGS}"
+        ${options}
+        YACC=false # false, the program - not used here
+    OPTIONS_DEBUG
+        --disable-tools
 )
-
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/doc/COPYING"
+        "${SOURCE_PATH}/doc/COPYING.LESSER"
+)
