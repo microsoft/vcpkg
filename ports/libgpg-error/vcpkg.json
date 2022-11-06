@@ -5,7 +5,7 @@
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
   "license": "LGPL-2.1-or-later",
-  "supports": "!(windows & (arm | arm64))",
+  "supports": "!windows | mingw",
   "dependencies": [
     {
       "name": "libgpg-error",
@@ -24,7 +24,6 @@
     },
     "nls": {
       "description": "Enable native language support",
-      "supports": "!windows | mingw",
       "dependencies": [
         "gettext",
         {
