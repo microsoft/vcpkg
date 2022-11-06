@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
-  "license": "LGPL-2.1-or-later",
+  "license": null,
   "supports": "!windows | mingw",
   "dependencies": [
     {

@@ -55,4 +55,14 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_install_copyright(COMMENT [[
+The library is distributed under the terms of the GNU Lesser General Public License (LGPL).
+The helper programs as well as the documentation are distributed under the terms of the GNU General Public License (GPL).
+There are additonal notices about contributions that require these additional notices are distributed.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING.LIB"
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/LICENSES"
+)
