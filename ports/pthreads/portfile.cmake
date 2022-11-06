@@ -3,8 +3,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
   return()
 endif()
 
-set(PTHREADS4W_VERSION "3.0.0")
-
 if(VCPKG_TARGET_IS_UWP)
   list(APPEND PATCH_FILES fix-uwp-linkage.patch)
   # Inject linker option using the `LINK` environment variable
@@ -22,10 +20,11 @@ endif()
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthreads4w
-    FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
+    FILENAME "pthreads4w-code-v${VERSION}.zip"
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
     PATCHES
         fix-arm-macro.patch
+        fix-arm64-version_rc.patch # https://sourceforge.net/p/pthreads4w/code/merge-requests/6/
         ${PATCH_FILES}
 )
 
@@ -37,7 +36,7 @@ find_program(NMAKE nmake REQUIRED)
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile all install
+    COMMAND "${NMAKE}" -f Makefile all install
         "DESTROOT=\"${INST_DIR_REL}\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
@@ -73,7 +72,7 @@ if(NOT VCPKG_BUILD_TYPE)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
     vcpkg_execute_required_process(
-        COMMAND ${NMAKE} /G -f Makefile all install
+        COMMAND "${NMAKE}" /G -f Makefile all install
             "DESTROOT=\"${INST_DIR_DBG}\""
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME nmake-build-${TARGET_TRIPLET}-debug

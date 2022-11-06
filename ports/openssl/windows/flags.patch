@@ -1,16 +1,3 @@
-diff --git a/Configurations/10-main.conf b/Configurations/10-main.conf
-index 66bc81d..2364633 100644
---- a/Configurations/10-main.conf
-+++ b/Configurations/10-main.conf
-@@ -1302,7 +1302,7 @@ my %targets = (
-         inherit_from     => [ "BASE_Windows" ],
-         template         => 1,
-         CC               => "cl",
--        CPP              => '"$(CC)" /EP /C',
-+        CPP              => '$(CC) /EP /C',
-         CFLAGS           => "/W3 /wd4090 /nologo",
-         coutflag         => "/Fo",
-         LD               => "link",
 diff --git a/Configure b/Configure
 index 8b234f6..e031768 100644
 --- a/Configure
