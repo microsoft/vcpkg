@@ -55,13 +55,14 @@ endif()
 if(VCPKG_DETECTED_MSVC)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(USER_CONFIG_TOOLSET clang-win)
+        string(REGEX MATCH "[^\\\.]+" USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION}")
     else()
         set(USER_CONFIG_TOOLSET msvc)
-    endif()
-    if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        endif()
     endif()
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
@@ -285,10 +286,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")
