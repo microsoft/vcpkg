@@ -755,8 +755,6 @@ endif()
 set(z_vcpkg_find_package_backup_id "0")
 macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     math(EXPR z_vcpkg_find_package_backup_id "${z_vcpkg_find_package_backup_id}+1" OUTPUT_FORMAT DECIMAL)
-
-    set(z_vcpkg_${z_vcpkg_find_package_backup_id}_backup_var_suffix "${z_vcpkg_find_package_package_name}")
     set(z_vcpkg_find_package_package_name "${z_vcpkg_find_package_package_name}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
