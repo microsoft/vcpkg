@@ -23,13 +23,13 @@ Para uma breve descrição dos comandos disponiveis, uma vez que você tenha ins
 - [Primeiros Passos](#primeiros-passos)
   - [Inicio rapido: Windows](#guia-de-inicio-rapido-windows)
   - [Inicio rapido: Unix](#guia-rapido-de-inicio-unix)
-  - [Installing Linux Developer Tools](#installing-linux-developer-tools)
-  - [Installing macOS Developer Tools](#installing-macos-developer-tools)
+  - [Instalando o Linux Developer Tools](#instalando-o-linux-developer-tools)
+  - [Instalando o macOS Developer Tools](#instalando-macos-developer-tools)
   - [Usando vcpkg com CMake](#usando-vcpkg-com-cmake)
     - [Visual Studio Code com CMake Tools](#visual-studio-code-com-cmake-tools)
-    - [Vcpkg com Visual Studio CMake Projetos](#vcpkg-com-visual-studio-cmake-projetos)
+    - [Vcpkg com Visual Studio Projetos CMake](#vcpkg-com-visual-studio-projetos-cmake)
     - [Vcpkg com CLion](#vcpkg-com-clion)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
+    - [Vcpkg como um Submodulo](#vcpkg-como-um-submodulo)
     - [Vcpkg via FetchContent](#vcpkg-via-fetchcontent)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
@@ -65,7 +65,7 @@ Pre-Requisitos:
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 ou mais recente com o idioma padrão em Inglês.
 
-Primeiramente, baixe e compile  o vcpkg em si; ele pode ser instalado em qualquer lugar,
+Primeiramente, baixe e compile  o vcpkg em si; ele pode ser instalado em qualquer pasta,
 porém geralmente nos recomendamos usar o vcpkg como um submodulo para projetos em CMake,
 e instalando globalmente para projetos em Visual Studio.
 Nos recomendamos instalar em lugares como `C:\src\vcpkg` ou `C:\dev\vcpkg`,
@@ -76,7 +76,7 @@ uma vez que, de uma outra modo você pode encontrar problemas ao rodar no path p
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-Para instalar as bibliotecas para seu projeto, execute:
+Para instalar as bibliotecas para seu projeto, execute o seguinte comando:
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
@@ -112,9 +112,9 @@ Com todas as bibliotecas instaladas já podem ser immediatamente usadas em seu p
 sem configuração adicional.
 
 Se voçê está usando o CMake com o Visual Studio,
-continue [aqui](#vcpkg-com-visual-studio-cmake-projetos).
+clique [aqui](#vcpkg-com-visual-studio-projetos-cmake).
 
-Seguindo, para usar o vcpkg com CMake fora de uma IDE,
+Na sequência, para usar o vcpkg com CMake fora de uma IDE,
 você precisa o utilizar o toolchain file:
 
 ```cmd
@@ -122,7 +122,7 @@ você precisa o utilizar o toolchain file:
 > cmake --build [build directory]
 ```
 
-Com o CMake, você ainda precisará de usar o `find_package` e o prazer de usar as bibliotecas.
+Com o CMake, você ainda precisará utilizar o `find_package` para ter o prazer de usar as bibliotecas.
 Confira a [sessão CMake](#usando-vcpkg-com-cmake) para mais informações,
 incluindo o uso do CMake com uma IDE.
 
@@ -131,53 +131,50 @@ confira o [guia de integração][getting-started:integration].
 
 ## Guia rapido de Inicio: Unix
 
-Prerequisites for Linux:
+Pré-Requisitos para Linux:
 - [Git][getting-started:git]
 - [g++][getting-started:linux-gcc] >= 6
 
-Prerequisites for macOS:
-- [Apple Developer Tools][getting-started:macos-dev-tools]
+Pré-Requisitos para MacOS:
+- [Apple Developer Tools](#instalando-macos-developer-tools)
 
-First, download and bootstrap vcpkg itself; it can be installed anywhere,
-but generally we recommend using vcpkg as a submodule for CMake projects.
+Primeiramente, baixe e compile o proprio vcpkg; ele pode ser instalado em qualquer pasta,
+mas geralmente recomendamos usar o  vcpkg como um sobmodulo para projetos em CMake.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
 $ ./vcpkg/bootstrap-vcpkg.sh
 ```
 
-To install the libraries for your project, run:
+Para instalar as bibliotecas para seu projeto, execute o seguinte comando:
 
 ```sh
 $ ./vcpkg/vcpkg install [packages to install]
 ```
 
-You can also search for the libraries you need with the `search` subcommand:
+Voçê também pode procurar por bibliotecas que você precisa com o subcomando `search`:
 
 ```sh
 $ ./vcpkg/vcpkg search [search term]
 ```
 
-In order to use vcpkg with CMake, you can use the toolchain file:
+Na sequência para usar o vcpkg com o CMake, voçê pode usar o toolchain file:
 
 ```sh
 $ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
-With CMake, you will still need to `find_package` and the like to use the libraries.
-Check out the [CMake section](#using-vcpkg-with-cmake)
-for more information on how best to use vcpkg with CMake,
-and CMake Tools for VSCode.
+Com o CMake, você ainda precisará utilizar o `find_package` para ter o prazer de usar as bibliotecas.
+Confira a [sessão CMake](#usando-vcpkg-com-cmake) para mais informações, sobre como usar da melhor forma o vcpkg com o CMake e o CMake tools para o VSCode.
 
-For any other tools, check out the [integration guide][getting-started:integration].
+Para qualquer outra ferramente, confira o [Guia de integração][getting-started:integration].
 
-## Installing Linux Developer Tools
+## Instalando o Linux Developer Tools
 
-Across the different distros of Linux, there are different packages you'll
-need to install:
+Para as diferentes distribuições Linux, há diferentes pacotes que você precisará instalar:
 
-- Debian, Ubuntu, popOS, and other Debian-based distributions:
+- Debian, Ubuntu, popOS, e outras distros baseadas no Debian:
 
 ```sh
 $ sudo apt-get update
@@ -192,28 +189,27 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-For any other distributions, make sure you're installing g++ 6 or above.
-If you want to add instructions for your specific distro,
-[please open a PR][contributing:submit-pr]!
+Para qualuquer outra distribuição, tenha certeza que você instalou ou tenha instalado o g++ 6 ou mais novo.
+Se voçê deseja adicionar instruções osbre uma distribuição específica,
+[Por Favor abra um Pull Request][contributing:submit-pr]!
 
-## Installing macOS Developer Tools
+## Instalando macOS Developer Tools
 
-On macOS, the only thing you should need to do is run the following in your terminal:
-
+No MacOS, a unica coisa que voçê deve fazer é executar o comando asseguir no terminal do sistema:
 ```sh
 $ xcode-select --install
 ```
 
-Then follow along with the prompts in the windows that comes up.
+A seguir siga as instruções juntos com as janelas que aperecerão.
 
-You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick-start-unix)
+Voçê será capaz de compilar o vcpkg seguindo o [Guia rapido](#guia-rapido-de-inicio-unix)
 
 ## Usando vcpkg com CMake
 
 ### Visual Studio Code com CMake Tools
 
-Adding the following to your workspace `settings.json` will make
-CMake Tools automatically use vcpkg for libraries:
+Adicionado os comandos a seguir no seu workspace `settings.json` fará que
+o CMake Tools use automaticamente o vcpkg para as bibliotecas:
 
 ```json
 {
@@ -223,10 +219,10 @@ CMake Tools automatically use vcpkg for libraries:
 }
 ```
 
-### Vcpkg com Visual Studio CMake Projetos
+### Vcpkg com Visual Studio Projetos CMake
 
-Open the CMake Settings Editor, and under `CMake toolchain file`,
-add the path to the vcpkg toolchain file:
+Abra o editor de configurações do CMake, e abaixo de `CMake toolchain file`,
+adicione o path para o vcpkg toolchain file:
 
 ```
 [vcpkg root]/scripts/buildsystems/vcpkg.cmake
@@ -234,18 +230,18 @@ add the path to the vcpkg toolchain file:
 
 ### Vcpkg com CLion
 
-Open the Toolchains settings
-(File > Settings on Windows and Linux, CLion > Preferences on macOS),
-and go to the CMake settings (Build, Execution, Deployment > CMake).
-Finally, in `CMake options`, add the following line:
+Abra as configurações do Toolchains
+(Arquivos > Configurações do Windows e Linux, CLion > Preferencias no MacOS),
+e va até o CMake settings (Build, Execution, Deployment > CMake).
+Finalmente, em `CMake options`, adicione a seguinte linha:
 
 ```
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-You must add this line to each profile.
+Voçê precisar adicionar essa linha para cada usuário (profile).
 
-### Vcpkg as a Submodule
+### Vcpkg como um Submodulo
 
 When using vcpkg as a submodule of your project,
 you can add the following to your CMakeLists.txt before the first `project()` call,
