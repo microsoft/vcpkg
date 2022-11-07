@@ -146,6 +146,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
+    "gles2"               FEATURE_opengles2
     #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
     #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
@@ -161,6 +162,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
+    "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
+    "gles2"               FEATURE_opengl_desktop
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -185,7 +188,11 @@ if("xkb" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=no)
 endif()
-list(APPEND FEATURE_GUI_OPTIONS )
+
+# Disable GLES3
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles3:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles31:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles32:BOOL=OFF)
 
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ATSPI2:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_DirectFB:BOOL=ON)
@@ -193,7 +200,6 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libdrm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
-list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON) # only used if INPUT_opengl is correctly set
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 # sql-drivers features:
 
