@@ -1,4 +1,7 @@
+#Header-only library
+
 vcpkg_from_github(
+
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ybalrid/kissnet
     REF 6c2bbbc1a114d83f11cea86d4370766ac12fbbd0
