@@ -74,12 +74,12 @@ endif()
 
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
-        PACKAGE_NAME Parquet
+        PACKAGE_NAME parquet
         CONFIG_PATH lib/cmake/Parquet
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
 endif()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Arrow CONFIG_PATH lib/cmake/Arrow)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Arrow)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 if("parquet" IN_LIST FEATURES)
