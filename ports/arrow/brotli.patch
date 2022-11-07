@@ -1,22 +1,21 @@
 diff --git a/cpp/cmake_modules/FindBrotli.cmake b/cpp/cmake_modules/FindBrotli.cmake
-index 4053b79ca7..60c07697ac 100644
+index 4053b79ca7..bdca85fab4 100644
 --- a/cpp/cmake_modules/FindBrotli.cmake
 +++ b/cpp/cmake_modules/FindBrotli.cmake
-@@ -21,6 +21,24 @@ if(Brotli_FOUND)
+@@ -21,6 +21,23 @@ if(Brotli_FOUND)
    return()
  endif()
  
-+if(ARROW_PACAKGE_KIND STREQUAL vcpkg)
-+  set(find_package_args)
++if(ARROW_PACAKGE_KIND STREQUAL "vcpkg")
++  set(find_package_args "")
 +  if(Brotli_FIND_VERSION)
 +    list(APPEND find_package_args ${Brotli_FIND_VERSION})
 +  endif()
 +  if(Brotli_FIND_QUIETLY)
 +    list(APPEND find_package_args QUIET)
 +  endif()
-+  find_package(unofficial-brotli ${find_package_args} REQUIRED)
-+  if(unofficial-brotli_FOUND)
-+    set(Brotli_FOUND TRUE)
++  find_package(Brotli NAMES unofficial-brotli ${find_package_args})
++  if(Brotli_FOUND)
 +    add_library(Brotli::brotlicommon ALIAS unofficial::brotli::brotlicommon)
 +    add_library(Brotli::brotlienc ALIAS unofficial::brotli::brotlienc)
 +    add_library(Brotli::brotlidec ALIAS unofficial::brotli::brotlidec)

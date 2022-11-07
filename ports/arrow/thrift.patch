@@ -13,7 +13,7 @@ index 2f20a5cb59..e317e2c7c4 100644
 +  return()
 +endif()
 +
-+set(find_package_args)
++set(find_package_args "")
 +if(ThriftAlt_FIND_VERSION)
 +  list(APPEND find_package_args ${ThriftAlt_FIND_VERSION})
 +endif()
