@@ -18,34 +18,22 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         csv         ARROW_CSV
+        cuda        ARROW_CUDA
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
+        jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
+        mimalloc    ARROW_MIMALLOC
         orc         ARROW_ORC
         parquet     ARROW_PARQUET
         parquet     PARQUET_REQUIRE_ENCRYPTION
         plasma      ARROW_PLASMA
         s3          ARROW_S3
-        cuda        ARROW_CUDA
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND FEATURE_OPTIONS "-DARROW_USE_NATIVE_INT128=OFF")
-endif()
-
-set(MALLOC_OPTIONS)
-
-if("jemalloc" IN_LIST FEATURES)
-    list(APPEND MALLOC_OPTIONS -DARROW_JEMALLOC=ON)
-else()
-    list(APPEND MALLOC_OPTIONS -DARROW_JEMALLOC=OFF)
-endif()
-
-if("mimalloc" IN_LIST FEATURES)
-    list(APPEND MALLOC_OPTIONS -DARROW_MIMALLOC=ON)
-else()
-    list(APPEND MALLOC_OPTIONS -DARROW_MIMALLOC=OFF)
 endif()
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
@@ -56,8 +44,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cpp"
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${MALLOC_OPTIONS}
-        ${S3_OPTIONS}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_TESTS=OFF
