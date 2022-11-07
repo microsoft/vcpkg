@@ -444,8 +444,33 @@ else()
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
+
+execute_process(
+    COMMAND "${Z_VCPKG_EXECUTABLE}" --version
+    OUTPUT_VARIABLE Z_VCPKG_MANIFEST_VERSION_LOGTEXT
+    ERROR_VARIABLE Z_VCPKG_MANIFEST_VERSION_LOGTEXT
+    RESULT_VARIABLE Z_VCPKG_MANIFEST_VERSION_RESULT
+)
+string(REGEX MATCH "program version ([0-9][0-9][0-9][0-9]-[0-9]?[0-9]-[0-9]?[0-9])" z_vcpkg_ver_bin "${Z_VCPKG_MANIFEST_VERSION_LOGTEXT}")
+string(REPLACE "-" "." z_vcpkg_ver_bin "${CMAKE_MATCH_1}")
+set(z_vcpkg_ver_bin "${z_vcpkg_ver_bin}" CACHE STRING "")
+message(STATUS "vcpkg binary version: '${z_vcpkg_ver_bin}'")
+
+# Read version
+file(READ "${Z_VCPKG_ROOT_DIR}/scripts/bootstrap.sh" z_vcpkg_bootstrap_script)
+string(REGEX MATCH "vcpkgToolReleaseTag=\\\"([^\\\"]+)\\\"" z_vcpkg_ver_string "${z_vcpkg_bootstrap_script}")
+string(REPLACE "-" "." z_vcpkg_ver_script "${CMAKE_MATCH_1}")
+message(STATUS "vcpkg bootstrap version: '${z_vcpkg_ver_script}'")
+
+set(Z_VCPKG_NEEDS_BOOTSTRAP OFF)
+if(z_vcpkg_ver_bin VERSION_LESS z_vcpkg_ver_script)
+    message(STATUS "vcpkg requires updating from:  '${z_vcpkg_ver_bin}' to '${z_vcpkg_ver_script}'")
+    set(Z_VCPKG_NEEDS_BOOTSTRAP ON)
+    unset(z_vcpkg_ver_bin CACHE)
+endif()
+
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND NOT Z_VCPKG_HAS_FATAL_ERROR)
-    if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
+    if((NOT EXISTS "${Z_VCPKG_EXECUTABLE}" OR Z_VCPKG_NEEDS_BOOTSTRAP) AND NOT Z_VCPKG_HAS_FATAL_ERROR )
         message(STATUS "Bootstrapping vcpkg before install")
 
         set(Z_VCPKG_BOOTSTRAP_LOG "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log")
