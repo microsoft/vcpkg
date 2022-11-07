@@ -1,8 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.5.2
-    SHA512 fece50709090e21200298cf0d5c0dd10418bb800a3c92fb77eedab42c3942169bf69abcad9a6d61d3368ac5265e053e8c2aeb361d297ed0ace92ffba3b21dbca
+    REF v${VERSION}
+    SHA512 5213f112730ce87b0ee432ad919480d6fc2ee1aeffd61e6485dd466bb8c269fe26e0df24ff955d0c21c13c1d95f3f4d9222a15604d5720db0f5570cc5cbfbb8d
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
@@ -90,6 +92,8 @@ vcpkg_cmake_configure(
         "-DQHULL_LIBRARY=${qhull_target}"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
+    MAYBE_UNUSED_VARIABLES
+        QHULL_LIBRARY
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

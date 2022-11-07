@@ -633,10 +633,6 @@ mmx:arm64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-# Flaky strange linker error
-mongo-c-driver:x64-osx=skip
-mongo-c-driver:arm-uwp=fail
-mongo-c-driver:x64-uwp=fail
 mongoose:arm-uwp=fail
 mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
@@ -863,7 +859,6 @@ qt5-x11extras:x64-windows-static-md=fail
 qwt:x64-osx=fail
 qwt:arm64-osx=fail
 qwt-qt6:x64-osx=fail
-rabit:x64-osx=fail
 rabit:arm64-osx=fail
 range-v3-vs2015:arm64-windows      = skip
 range-v3-vs2015:arm-uwp            = skip
@@ -1155,6 +1150,8 @@ x265:arm-uwp=fail
 x265:x64-uwp=fail
 xalan-c:x64-windows-static=fail
 xalan-c:arm64-windows=fail
+# No xorg-macros available on osx
+xbitmaps:x64-osx=skip
 xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
 xmlsec:arm-uwp=fail
