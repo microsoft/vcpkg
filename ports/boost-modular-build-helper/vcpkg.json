@@ -16,7 +16,7 @@
     },
     {
       "name": "vcpkg-cmake-get-vars",
-      "host": true
+      "host": true,
       "version>=": "2022-11-07"
     }
   ]
