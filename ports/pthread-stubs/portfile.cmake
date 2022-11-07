@@ -51,3 +51,4 @@ if(NOT VCPKG_BUILD_TYPE)
     endif()
     file(WRITE "${_file}" "${_contents}")
 endif()
+

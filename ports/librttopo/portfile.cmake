@@ -27,6 +27,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_build_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         TARGET librttopo.lib
+        CL_LANGUAGE C
         OPTIONS
             "OPTFLAGS=${OPTFLAGS}"
             "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
