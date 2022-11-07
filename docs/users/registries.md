@@ -16,6 +16,7 @@ use, please read [this documentation](../maintainers/registries.md).
       - [Registry Objects: `"baseline"`](#registry-objects-baseline)
       - [Registry Objects: `"repository"`](#registry-objects-repository)
       - [Registry Objects: `"path"`](#registry-objects-path)
+      - [Registry Objects: `"packages"`](#registry-objects-packages)
     - [Configuration: `"default-registry"`](#configuration-default-registry)
     - [Configuration: `"registries"`](#configuration-registries)
     - [Example Configuration File](#example-configuration-file)
@@ -71,6 +72,35 @@ This should be a string, of any repository format that git understands:
 This should be a path; it can be either absolute or relative; relative paths
 will be based at the directory the `vcpkg-configuration.json` lives in.
 
+#### Registry Objects: `"packages"`
+
+With exception of the default registry and artifacts registries. All registries
+must declare the packages they provide using the `"packages"` array.
+
+Each entry in the array must be:
+* a package name, or
+* a package prefix.
+
+Package names may contain only lowercase letters, digits, and `-`. Package names cannot start or end with `-`.
+
+Package prefixes must follow these rules:
+* Use a (`*`) wildcard character that matches one or more valid port name characters (lowercase letters, digits, and `-`).
+* Contain only one wildcard (`*`) and it must always be the last character in the pattern.
+* If any, all characters before the wildcard (`*`) must be valid port name characters.
+
+Examples of valid patterns:
+* `*`: Matches all port names
+* `b*`: Matches ports that start with the letter `b`
+* `boost-*`: Matches ports that start with the prefix `boost-`
+
+Examples of invalid patterns:
+* `*a` (`*` must be the last character in the prefix)
+* `a**` (only one `*` is allowed)
+* `a+` (`+` is not a valid wildcard)
+* `a?` (`?` is not a valid wildcard)
+
+See [package name resolution](#package-name-resolution) for more details.
+
 ### Configuration: `"default-registry"`
 
 The `"default-registry"` field should be a registry object. It defines
@@ -115,19 +145,70 @@ will work:
 
 ## Package Name Resolution
 
-The way package name resolution works in vcpkg is fairly distinct from many
-package managers. It is very carefully designed to _never_ implicitly choose
-the registry that a package is fetched from. Just from
-`vcpkg-configuration.json`, one can tell exactly from which registry a
-package definition will be fetched from.
+Package name resolution in vcpkg is designed to be predictable and easy to understand.
+An explicit goal of the `vcpkg-configuration.json` design is that one should be able to tell at a glance 
+exactly which registry will be selected for any given port name.
 
-The name resolution algorithm is as follows:
+When resolving a port name to a registry, we prioritize as follows:
+1. Exact match
+2. Pattern match
+    * Longer prefixes have higher priority, e.g.: when resolving `boost`, `boost*` > `b*` > `*`
+3. Default registry
+4. If the default registry has been set to null, emit an error
 
-- If there is a package registry that claims the package name,
-  use that registry; otherwise
-- If there is a default registry defined, use that registry; otherwise
-- If the default registry is set to `null`, error out; otherwise
-- use the built-in registry.
+Package names have higher priority than prefixes even if they both match the same amount of characters. 
+For example, when resolving `boost`: `boost` > `boost*`.
+
+If there is a tie in priority, vcpkg will use the first registry that declares the package name or prefix. 
+_This makes the order in which registries are declared in the `"registries"` array important._
+
+Example of package name resolution:
+
+`vcpkg-configuration.json`
+```json
+{
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://github.com/northwindtraders/vcpkg-registry",
+      "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
+      "packages": ["bei*"]
+    },
+    {
+      "kind": "git",
+      "repository": "https://github.com/vicroms/vcpkg-registry",
+      "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
+      "packages": ["beicode", "bei*"]
+    }
+  ]
+}
+
+```
+
+`vcpkg.json`
+```json
+{
+  "dependencies": [ 
+    "beicode", 
+    "beison",
+    "fmt"
+  ]  
+}
+```
+
+Given this configuration, each package name resolves to:
+
+* `beicode`: from registry `https://github.com/vicroms/vcpkg-registry` (exact match on `beicode`)
+* `beison`: from registry `https://github.com/northwindtraders/vcpkg-registry` (pattern match on `beison` and first in `"registries"` array)
+* `fmt`: from default registry (no matches)
+
+Because multiple registries declare `bei*`, vcpkg will also emit the following warning:
+
+```no-highlight
+$.registries[1].packages[1] (a package pattern): Pattern "bei*" is already declared by another registry.
+  Duplicate entries will be ignored.
+  Remove any duplicate entries to dismiss this warning.
+```
 
 ### Versioning Support
 
