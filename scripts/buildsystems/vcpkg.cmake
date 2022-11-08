@@ -451,8 +451,8 @@ execute_process(
     ERROR_VARIABLE Z_VCPKG_MANIFEST_VERSION_LOGTEXT
     RESULT_VARIABLE Z_VCPKG_MANIFEST_VERSION_RESULT
 )
-string(REGEX MATCH "program version ([0-9][0-9][0-9][0-9]-[0-9]?[0-9]-[0-9]?[0-9])" z_vcpkg_ver_bin "${Z_VCPKG_MANIFEST_VERSION_LOGTEXT}")
-string(REPLACE "-" "." z_vcpkg_ver_bin "${CMAKE_MATCH_1}")
+string(REGEX MATCH "[0-9][0-9][0-9][0-9]-[0-9]?[0-9]-[0-9]?[0-9]" z_vcpkg_ver_bin "${Z_VCPKG_MANIFEST_VERSION_LOGTEXT}")
+string(REPLACE "-" "." z_vcpkg_ver_bin "${z_vcpkg_ver_bin}")
 message(STATUS "vcpkg binary version: '${z_vcpkg_ver_bin}'")
 
 # Read version
