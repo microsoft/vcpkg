@@ -21,3 +21,5 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/trompeloeil.hpp")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
