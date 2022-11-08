@@ -14,7 +14,6 @@
   "features": {
     "nls": {
       "description": "Enable native language support",
-      "supports": "!windows | mingw",
       "dependencies": [
         "gettext",
         {
