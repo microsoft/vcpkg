@@ -625,7 +625,9 @@ list(APPEND LIBGLESV2_SOURCES
 )
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
 set_property(TARGET libGLESv2 PROPERTY OUTPUT_NAME libGLESv2_angle)
+endif()
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
@@ -670,7 +672,9 @@ add_library(libEGL
 )
 
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
 set_property(TARGET libEGL PROPERTY OUTPUT_NAME libEGL_angle)
+endif()
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 target_compile_definitions(libEGL
     PRIVATE
