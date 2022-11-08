@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF a8511d357650282c6915f7aa9775e9c4945e42b5
-    SHA512 6e0ff0be7621490b607eaae46d4ec13ea66b0061ed580c99d75eda3a7c9479b34c70da9ad844bd4a05e329bb40cebf48e7c6bab05d2a946d56b2d432c7ddc125
+    REF v0.9
+    SHA512 00e8ff6d73d0428eb7a77fc5e0556458285922fbf9d5f0d42ed4f27ff98ffcd96b0f59bbaa3c103fd0903283ded6e7577d2a49362e5803cdbac0f3236af957cb
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
