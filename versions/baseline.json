@@ -102,7 +102,7 @@
     },
     "angle": {
       "baseline": "chromium_4472",
-      "port-version": 5
+      "port-version": 6
     },
     "antlr4": {
       "baseline": "4.10.1",
@@ -6046,7 +6046,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-canvas3d": {
       "baseline": "0",
