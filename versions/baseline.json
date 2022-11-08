@@ -2317,8 +2317,8 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2022.03.21.00",
-      "port-version": 1
+      "baseline": "2022.10.31.00",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -2381,8 +2381,8 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2022.08.15.00",
-      "port-version": 1
+      "baseline": "2022.10.31.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5033,7 +5033,7 @@
       "port-version": 5
     },
     "mvfst": {
-      "baseline": "2022-03-27",
+      "baseline": "2022-11-03",
       "port-version": 0
     },
     "mygui": {
