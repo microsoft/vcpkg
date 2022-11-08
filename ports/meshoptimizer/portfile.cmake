@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.18
     SHA512 b9fd6ce61c7d7b673892ace74feb300628d4bbbba4e912dba4a756d9709b952dde45b706c581df3fd0aef1e7065ff730d1827b0d6c724d716ccf41efb1953d3e
     HEAD_REF master
+    PATCHES
+      no-werror.patch
 )
 
 # If we want basisu support in gltfpack we need a particular fork of basisu
