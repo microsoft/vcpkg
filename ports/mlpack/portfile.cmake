@@ -1,106 +1,70 @@
+# Became a header-only library since 4.0.0
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/mlpack
-    REF 7ae9ddda86c1751b6509ceb48b27d182feaae439 # 3.4.1
-    SHA512 db68c16b80af7037ac562f93775b6262f1552fbc89daa0c621075e2ff70a8306523da8eb74e33ac15ba34c9ccef8f2746bd1e4efa7c280a5be77b53c69d3f9a1
+    REF 28eb1858c59e4469da0e9689663a45fc140af9c4 # 4.0.0
+    SHA512 b33aa5df48c9f0e5a5fac7bfb69fd2c64bc01f1ba0ae22990774e1805881c60e4652d2f23b6c95627da1a20e39ee6a90e327fdaa6d1e00bac8986dcecc15a89a
     HEAD_REF master
-    PATCHES
-        cmakelists.patch
-        fix-configure-error.patch
-        fix-test-dependency.patch
-        fix-dependencies.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindACML.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindACMLMP.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindARPACK.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindBLAS.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindCBLAS.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindCLAPACK.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindLAPACK.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindMKL.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake")
-file(REMOVE "${SOURCE_PATH}/CMake/FindArmadillo.cmake")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        tools   BUILD_CLI_EXECUTABLES
-        openmp  USE_OPENMP
-)
+# Copy the header files
+set(mlpack_HEADERS 
+	"${SOURCE_PATH}/src/mlpack/base.hpp"
+	"${SOURCE_PATH}/src/mlpack/prereqs.hpp"
+	"${SOURCE_PATH}/src/mlpack/core.hpp"
+	"${SOURCE_PATH}/src/mlpack/namespace_compat.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/adaboost.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/amf.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/ann.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/approx_kfn.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/bayesian_linear_regression.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/bias_svd.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/block_krylov_svd.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/cf.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/dbscan.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/decision_tree.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/det.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/emst.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/fastmks.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/gmm.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/hmm.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/hoeffding_trees.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/kde.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/kernel_pca.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/kmeans.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/lars.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/linear_regression.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/lmnn.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/local_coordinate_coding.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/logistic_regression.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/lsh.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/matrix_completion.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/mean_shift.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/naive_bayes.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/nca.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/neighbor_search.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/pca.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/perceptron.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/quic_svd.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/radical.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/random_forest.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/randomized_svd.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/range_search.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/rann.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/regularized_svd.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/reinforcement_learning.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/softmax_regression.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/sparse_autoencoder.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/sparse_coding.hpp"
+	"${SOURCE_PATH}/src/mlpack/methods/svdplusplus.hpp")	
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
-    OPTIONS
-        -DBUILD_TESTS=OFF
-        -DDOWNLOAD_STB_IMAGE=OFF
-        -DDOWNLOAD_ENSMALLEN=OFF
-        -DBUILD_PYTHON_BINDINGS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        ${FEATURE_OPTIONS}
-)
-vcpkg_cmake_install()
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/mlpack/methods")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mlpack)
+foreach(HEADER ${mlpack_HEADERS})
+	string(REPLACE "${SOURCE_PATH}/src" "${CURRENT_PACKAGES_DIR}/include" OUT_HEADER "${HEADER}")
+    file(RENAME "${HEADER}" "${OUT_HEADER}")
+endforeach(HEADER ${mlpack_HEADERS})
 
-vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT.txt")
 
-vcpkg_fixup_pkgconfig()
-
-if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
-        mlpack_adaboost
-        mlpack_approx_kfn
-        mlpack_cf
-        mlpack_dbscan
-        mlpack_decision_stump
-        mlpack_decision_tree
-        mlpack_det
-        mlpack_emst
-        mlpack_fastmks
-        mlpack_gmm_generate
-        mlpack_gmm_probability
-        mlpack_gmm_train
-        mlpack_hmm_generate
-        mlpack_hmm_loglik
-        mlpack_hmm_train
-        mlpack_hmm_viterbi
-        mlpack_hoeffding_tree
-        mlpack_kde
-        mlpack_kernel_pca
-        mlpack_kfn
-        mlpack_kmeans
-        mlpack_knn
-        mlpack_krann
-        mlpack_lars
-        mlpack_linear_regression
-        mlpack_linear_svm
-        mlpack_lmnn
-        mlpack_local_coordinate_coding
-        mlpack_logistic_regression
-        mlpack_lsh
-        mlpack_mean_shift
-        mlpack_nbc
-        mlpack_nca
-        mlpack_nmf
-        mlpack_pca
-        mlpack_perceptron
-        mlpack_preprocess_binarize
-        mlpack_preprocess_describe
-        mlpack_preprocess_imputer
-        mlpack_preprocess_scale
-        mlpack_preprocess_split
-        mlpack_radical
-        mlpack_random_forest
-        mlpack_range_search
-        mlpack_softmax_regression
-        mlpack_sparse_coding
-        mlpack_image_converter
-        mlpack_bayesian_linear_regression
-        mlpack_preprocess_one_hot_encoding
-    )
-endif()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
