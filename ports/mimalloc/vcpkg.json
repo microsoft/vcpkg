@@ -4,7 +4,7 @@
   "description": "Compact general purpose allocator with excellent performance",
   "homepage": "https://github.com/microsoft/mimalloc",
   "license": "MIT",
-  "supports": "!(arm & !arm64) & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
