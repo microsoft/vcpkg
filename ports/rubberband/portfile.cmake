@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO breakfastquay/rubberband
-    REF v2.0.2
-    SHA512 56e33f3a6f5755242e46f9cb224e372bea7a367756f08d3322c8951a40b3907f1a2957775de6f2584a093e6adf82ca91015119650d5a624afe39086a47843ddc
+    REF v3.1.1
+    SHA512 aef4de02b6fe250ab43d627d30720dab8aea3587b428ce76fe339d0b1f0e50da6ba7fa7c76f61306704dd2cfc24241f3d4108b6c155c3d12624eac859672f86c
     HEAD_REF default
 )
 
@@ -22,22 +22,22 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/rubberband-program${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-  # Rubberband uses a different executable name when compiled with msvc 
+  # Rubberband uses a different executable name when compiled with msvc
   # Just looking for that file is faster than detecting msvc builds
-  set(RUBBERBAND_PROGRAM_NAME rubberband-program)
+  set(RUBBERBAND_PROGRAM_NAMES rubberband-program rubberband-program-r3)
 else()
-  set(RUBBERBAND_PROGRAM_NAME rubberband)
-endif()   
-
-# Features cli and lv2 are build whenever suficient dependencies are installed,
-# Remove them when not enabled. 
-if("cli" IN_LIST FEATURES)
-  vcpkg_copy_tools(TOOL_NAMES "${RUBBERBAND_PROGRAM_NAME}" AUTO_CLEAN)
-else()
-  vcpkg_clean_executables_in_bin(FILE_NAMES "${RUBBERBAND_PROGRAM_NAME}")
+  set(RUBBERBAND_PROGRAM_NAMES rubberband rubberband-r3)
 endif()
 
-# lv2 feature is not supported yet because vcpkg can't isntall to 
+# Features cli and lv2 are build whenever suficient dependencies are installed,
+# Remove them when not enabled.
+if("cli" IN_LIST FEATURES)
+  vcpkg_copy_tools(TOOL_NAMES ${RUBBERBAND_PROGRAM_NAMES} AUTO_CLEAN)
+else()
+  vcpkg_clean_executables_in_bin(FILE_NAMES ${RUBBERBAND_PROGRAM_NAMES})
+endif()
+
+# lv2 feature is not supported yet because vcpkg can't isntall to
 # %APPDATA%\LV2 or %COMMONPROGRAMFILES%\LV2 but also complains about dlls in "${CURRENT_PACKAGES_DIR}/lib/lv2"
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/lv2" "${CURRENT_PACKAGES_DIR}/debug/lib/lv2")
 
