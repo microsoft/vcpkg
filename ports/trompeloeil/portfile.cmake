@@ -20,4 +20,4 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/trompeloeil.hpp")
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
