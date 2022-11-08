@@ -32,11 +32,11 @@ Para uma breve descrição dos comandos disponiveis, uma vez que você tenha ins
     - [Vcpkg como um Submodulo](#vcpkg-como-um-submodulo)
     - [Vcpkg via FetchContent](#vcpkg-via-fetchcontent)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
-- [Security](#security)
-- [Telemetry](#telemetry)
+- [Exemplos](#exemplos)
+- [Contribuindo](#contribuindo)
+- [licença](#licença)
+- [Segurança](#Segurança)
+- [Telemetria](#telemetria)
 
 # Primeiros Passos
 
@@ -243,27 +243,27 @@ Voçê precisar adicionar essa linha para cada usuário (profile).
 
 ### Vcpkg como um Submodulo
 
-When using vcpkg as a submodule of your project,
-you can add the following to your CMakeLists.txt before the first `project()` call,
-instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
+Ao usar o vcpkg como um submodulo do seu projeto,
+voçê pode adicionar o comando a seguir no seu CMakeLists.txt antes da primeira chamado do `project()`
+ao invéz de passar o `CMAKE_TOOLCHAIN_FILE` para a chamada do CMake.
 
 ```cmake
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-This will still allow people to not use vcpkg,
-by passing the `CMAKE_TOOLCHAIN_FILE` directly,
-but it will make the configure-build step slightly easier.
+Isso ainda permitirá que as pessoas não use o vcpkg,
+passadno o  `CMAKE_TOOLCHAIN_FILE` diretamente,
+mas isso facilitará a configurar a ferramenta.
 
 ### Vcpkg via FetchContent
 
-You can also grab vcpkg with CMake's built-in [FetchContent](https://cmake.org/cmake/help/v3.24/module/FetchContent.html) module.
+Voçê também pode adquirir o vcpkg via módulo [FetchContent](https://cmake.org/cmake/help/v3.24/module/FetchContent.html).
 
-Don't worry about the bootstrap scripts, since `vcpkg.cmake` will run them for you!
+Não se preocupe com os scripts do bootstrap, já que o `vcpkg.cmake` irá rodar/compilar por você!
 
 ```
-cmake_minimum_required(VERSION 3.14)
+versão_minima_requerida_do_cmake(VERSION 3.14)
 
 include(FetchContent)
 FetchContent_Declare(vcpkg
@@ -272,7 +272,7 @@ FetchContent_Declare(vcpkg
 )
 FetchContent_MakeAvailable(vcpkg)
 
-# NOTE: This must be defined before the first project call
+# NOTE: Isso deve estar definido antes da primeira chanada do projeto
 set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake" CACHE FILEPATH "")
 
 project(FOOBAR LANGUAGES "CXX")
@@ -291,9 +291,9 @@ project(FOOBAR LANGUAGES "CXX")
 
 # Tab-Completion/Auto-Completion
 
-`vcpkg` supports auto-completion of commands, package names,
-and options in both powershell and bash.
-To enable tab-completion in the shell of your choice, run:
+`vcpkg` suporta a auto-completação dos comandos, nomes dos pacotes of commands, package names,
+e tanto em powershell quanto em bash.
+Para ativar a auto-completação nos terminais de sua escolha, execute:
 
 ```pwsh
 > .\vcpkg integrate powershell
@@ -305,61 +305,60 @@ or
 $ ./vcpkg integrate bash # or zsh
 ```
 
-depending on the shell you use, then restart your console.
+dependendo do terminal que voçê usa, deverá ser reiniciado.
 
-# Examples
+# Exemplos
 
-See the [documentation](docs/README.md) for specific walkthroughs,
-including [installing and using a package](docs/examples/installing-and-using-packages.md),
-[adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
-and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
+Confira a [documentação](docs/README.md) para um passo a passo mais especifico,
+incluindo [instalando e usando os pacotes](docs/examples/installing-and-using-packages.md),
+[adicione um novo pacote ao arquivo zip](docs/examples/packaging-zipfiles.md),
+e [adicione um novo pacote ao repositorio do GitHub](docs/examples/packaging-github-repos.md).
 
-Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
+Nossas documentações agora estão disponiveis online no nosso site https://vcpkg.io/. Nos realmente apreciamos qualquer feedback! Voçê submeter uma issue em  https://github.com/vcpkg/vcpkg.github.io/issues.
 
-See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
+veja uma [demo](https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutos
 
-# Contributing
+# Contribuindo
 
-Vcpkg is an open source project, and is thus built with your contributions.
-Here are some ways you can contribute:
+O vcpkg é um projeto open source, por tanto ele é construído atravéz das suas contribuições.
+Aqui está algumas formas de como contribuir:
 
-* [Submit Issues][contributing:submit-issue] in vcpkg or existing packages
-* [Submit Fixes and New Packages][contributing:submit-pr]
+* [Submeter Issues][contributing:submit-issue] no vcpkg ou em pacotes já existentes
+* [Submeter Fixes e Novos Pacotes][contributing:submit-pr]
 
-Please refer to our [Contributing Guide](CONTRIBUTING.md) for more details.
+Por favor cofnira nosso [Guia de contribuição](CONTRIBUTING.md) para mais detalhes.
 
-This project has adopted the [Microsoft Open Source Code of Conduct][contributing:coc].
-For more information see the [Code of Conduct FAQ][contributing:coc-faq]
-or email [opencode@microsoft.com](mailto:opencode@microsoft.com)
-with any additional questions or comments.
+Neste projeto foi adotado [Conduta de códigos Open Source da Microsoft][contributing:coc].
+Para mias informações confira [Codigo de conduta][contributing:coc-faq]
+ou email [opencode@microsoft.com](mailto:opencode@microsoft.com)
+com quaisquer perguntas ou comentários adicionais.
 
 [contributing:submit-issue]: https://github.com/microsoft/vcpkg/issues/new/choose
 [contributing:submit-pr]: https://github.com/microsoft/vcpkg/pulls
 [contributing:coc]: https://opensource.microsoft.com/codeofconduct/
 [contributing:coc-faq]: https://opensource.microsoft.com/codeofconduct/
 
-# License
+# licença
 
-The code in this repository is licensed under the [MIT License](LICENSE.txt). The libraries
-provided by ports are licensed under the terms of their original authors. Where available, vcpkg
-places the associated license(s) in the location `installed/<triplet>/share/<port>/copyright`.
+O código neste repositório esta licenciado sob a [MIT License](LICENSE.txt). As bibliotecas
+fornecidos por ports sob os termos de seus autores originais. Quando disponível, vcpkg
+coloca as licenças associadas no local `installed/<triplet>/share/<port>/copyright`.
 
-# Security
+# Segurança
 
-Most ports in vcpkg build the libraries in question using the original build system preferred
-by the original developers of those libraries, and download source code and build tools from their
-official distribution locations. For use behind a firewall, the specific access needed will depend
-on which ports are being installed. If you must install in in an "air gapped" environment, consider
-installing once in a non-"air gapped" environment, populating an
-[asset cache](docs/users/assetcaching.md) shared with the otherwise "air gapped" environment.
+A maioria das portas em vcpkg constroem as bibliotecas em questão usando o sistema de compilação original preferido
+pelos desenvolvedores originais dessas bibliotecas, além de baixar código fonte e construir ferramentas a partir dos seus
+locais oficiais de distribuição. Para uso "behind of firewall", o acesso específico é necessário e dependerá
+em que portas estão sendo instaladas. Se você deve instalar em um ambiente "air gapped", considere
+instalação uma vez em um ambiente "non-air gaped".
 
-# Telemetry
+# Telemetria
 
-vcpkg collects usage data in order to help us improve your experience.
-The data collected by Microsoft is anonymous.
-You can opt-out of telemetry by
-- running the bootstrap-vcpkg script with -disableMetrics
-- passing --disable-metrics to vcpkg on the command line
-- setting the VCPKG_DISABLE_METRICS environment variable
+O vcpkg coleta dados a fim de ajudar-nos a melhorar a sua experiência.
+Os dados coletados pela Microsoft são anônimos.
+Voçê pode desligar a telemetria:
+- executando o script bootstrap-vcpkg junto com -disableMetrics
+- passando --disable-metrics para o vcpkg via linha de comando.
+- setando o VCPKG_DISABLE_METRICS environment variable
 
-Read more about vcpkg telemetry at docs/about/privacy.md
+Leia sobre a telemetria do vcpkg na (docs/about/privacy.md)
