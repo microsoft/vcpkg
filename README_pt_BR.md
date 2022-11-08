@@ -189,9 +189,9 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-Para qualuquer outra distribuição, tenha certeza que você instalou ou tenha instalado o g++ 6 ou mais novo.
+Para qualuquer outra distribuição, tenha certeza que você instalou o g++ 6 ou mais novo.
 Se voçê deseja adicionar instruções osbre uma distribuição específica,
-[Por Favor abra um Pull Request][contributing:submit-pr]!
+[Por Favor abra um Pull Request][contributing:submit-pr!]
 
 ## Instalando macOS Developer Tools
 
