@@ -37,7 +37,7 @@ if("pem-pack" IN_LIST FEATURES)
         ${PEM_PACK_SOURCE_PATH}/*.h
         ${PEM_PACK_SOURCE_PATH}/*.cpp
     )
-    file(COPY ${PEM_PACK_FILES} DESTINATION ${SOURCE_PATH})
+    file(INSTALL ${PEM_PACK_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 endif()
 
 # disable assembly on ARM Windows to fix broken build
