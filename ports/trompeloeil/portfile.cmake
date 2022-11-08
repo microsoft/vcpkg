@@ -20,4 +20,4 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/trompeloeil.hpp")
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-configure_file("${SOURCE_PATH}/LICENSE_1_0.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
