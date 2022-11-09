@@ -1,4 +1,4 @@
-set(LIBPNG_VER 1.6.37)
+vcpkg_minimum_required(VERSION 2022-09-15) # for ${VERSION}
 
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
@@ -11,11 +11,11 @@ if ("apng" IN_LIST FEATURES)
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
     
-    set(LIBPNG_APNG_PATCH_NAME "libpng-${LIBPNG_VER}-apng.patch")
+    set(LIBPNG_APNG_PATCH_NAME "libpng-${VERSION}-apng.patch")
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
-        URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APNG_PATCH_NAME}.gz"
+        URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
+        SHA512 e8cb74d9be6bcbc474b6bbd6200ab5d5111e91d3ab601e5fda04213d2800a4051f04152fa5d47db690612ed06a488ff3b2608a8f0bac0cf207d486107d98da1f
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -33,16 +33,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glennrp/libpng
-    REF v${LIBPNG_VER}
-    SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
+    REF v${VERSION}
+    SHA512 def32a5e597d9f99b6f574193f0b94fe39a45ea69b764b0c2506e59df66e74f94dc313a983f092ec641d58e0c2be95a424a32c2ff019b0815ae51f2473282977
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
-        use_abort.patch
         cmake.patch
         fix-export-targets.patch
         pkgconfig.patch
-        macos-arch-fix.patch
         fix-msa-support-for-mips.patch
 )
 
