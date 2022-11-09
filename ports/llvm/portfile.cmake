@@ -1,6 +1,10 @@
 set(LLVM_VERSION "14.0.4")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if (VCPKG_TARGET_IS_WINDOWS AND (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
+    list(APPEND OPTIONS -DLLVM_EXPORT_SYMBOLS_FOR_PLUGINS=enabled)
+else()
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -232,6 +236,7 @@ set(LLVM_LINK_JOBS 1)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/llvm
     OPTIONS
+        ${OPTIONS}
         ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
