@@ -381,7 +381,6 @@ jemalloc:arm-uwp=fail
 jemalloc:x64-uwp=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-joltphysics:arm-uwp=fail
 kfr:arm64-windows=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
