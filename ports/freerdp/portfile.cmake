@@ -51,7 +51,6 @@ file(GLOB_RECURSE TOOLS_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 
 if(TOOLS_RELEASE)
     file(COPY ${TOOLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-
     file(GLOB_RECURSE TOOLS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
     file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
 endif()
@@ -65,11 +64,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(REMOVE "${FREERDP_DLL}")
     endforeach()
 
-    file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-    foreach(FREERDP_DLL ${FREERDP_DLLS})
-        file(COPY "${FREERDP_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE "${FREERDP_DLL}")
-    endforeach()
+    if(NOT VCPKG_BUILD_TYPE)
+        file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+        foreach(FREERDP_DLL ${FREERDP_DLLS})
+            file(COPY "${FREERDP_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(REMOVE "${FREERDP_DLL}")
+        endforeach()
+    endif()
 else()
     file(GLOB_RECURSE FREERDP_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach(FREERDP_TOOL ${FREERDP_TOOLS})
@@ -82,8 +83,10 @@ endif()
 foreach(PACKAGE FreeRDP-Client2 FreeRDP2 WinPR2)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}_temp")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}" "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}_temp/${PACKAGE}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp/${PACKAGE}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp/${PACKAGE}")
+    endif()
 endforeach()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Client2 PACKAGE_NAME FreeRDP-Client)
@@ -92,14 +95,16 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 PACKAGE_NAME W
 
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
-    "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
-    "debug/lib/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
+        "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+        "debug/bin/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
+        "debug/lib/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+        "debug/bin/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+    )
+endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-release.cmake"
     "lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
     "bin/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
@@ -108,18 +113,22 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-release.c
     "lib/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
     "bin/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
 )
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP/FreeRDPTargets-debug.cmake"
-    "debug/lib/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP/FreeRDPTargets-debug.cmake"
+        "debug/lib/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+        "debug/bin/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+    )
+endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP/FreeRDPTargets-release.cmake"
     "lib/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
     "bin/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
 )
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-ClientTargets-debug.cmake"
-    "debug/lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-ClientTargets-debug.cmake"
+        "debug/lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+        "debug/bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+    )
+endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-ClientTargets-release.cmake"
     "lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
     "bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"

@@ -1,7 +1,7 @@
 {
   "name": "libodb-sqlite",
-  "version-string": "2.4.0",
-  "port-version": 9,
+  "version": "2.4.0",
+  "port-version": 10,
   "description": "Sqlite support for the ODB ORM library",
   "homepage": "https://www.codesynthesis.com/products/odb/",
   "dependencies": [

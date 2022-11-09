@@ -1,10 +1,10 @@
-set(SDL2_VERSION 2.24.0)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF 8c9beb0c873f6ca5efbd88f1ad2648bfc793b2ac #vrelease-2.24.0
-    SHA512 7936fc3de9920eafe399f5b2af7bf87d479d4ba8c4a7957da90f3a90316dc7a6b8619ffd7a2c198d298d390e1235e00f9bd36fe3f04102bdff351b96c2ade59e
-    HEAD_REF master
+    REF release-${VERSION}
+    SHA512 4050afc804b65617f3e9097d5173edb05abd3a15872ad5c79bf85e874758c72ebf7ce9768eb1c9969099b1b82d04a1b65505774d0b851c0541e032da9b2e1ad1
+    HEAD_REF main
     PATCHES
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
@@ -114,4 +114,5 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

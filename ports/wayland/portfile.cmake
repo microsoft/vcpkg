@@ -7,17 +7,23 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland
-    REF  e60398b1755bfcdf09f040d3769131fe0d9762fc #1.19.0
-    SHA512 f2f7dd9ff71e99cf3621ab45160f59b679de763e3fdef6fcef7e14947ad43ed7a86845a213c75bb7117fdda11a51035566225a12d3eb33e8c3fe2e4456eb801d
+    REF  8135e856ebd79872f886466e9cee39affb7d9ee8
+    SHA512 c4115187826083e5f01a24dad0c4377458b7ca22973ea161ec9d4aeeb21869bdb9acd7ba7e89aba964571ce2fde319cb01808e94e502ff09061bf5fbd3a60079
     HEAD_REF master
-    PATCHES tests.patch
-) 
+)
+
+if(VCPKG_CROSSCOMPILING)
+    set(OPTIONS -Dscanner=false)
+else()
+    set(OPTIONS -Dscanner=true)
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Ddtd_validation=false
             -Ddocumentation=false
             -Dtests=false
+            ${OPTIONS}
 )
 vcpkg_install_meson()
 

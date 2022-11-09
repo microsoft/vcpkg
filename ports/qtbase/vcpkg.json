@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.3.1",
-  "port-version": 2,
+  "version": "6.3.2",
+  "port-version": 3,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -121,6 +121,15 @@
             "xrender"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "gles2"
+          ],
+          "platform": "android"
         }
       ]
     },
@@ -161,6 +170,10 @@
           "default-features": false
         }
       ]
+    },
+    "gles2": {
+      "description": "OpenGL ES 2.0",
+      "supports": "!windows"
     },
     "glib": {
       "description": "GLib",
@@ -263,6 +276,19 @@
           "default-features": false,
           "features": [
             "concurrent"
+          ]
+        }
+      ]
+    },
+    "sql-odbc": {
+      "description": "Enable SQL Driver odbc",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
           ]
         }
       ]
