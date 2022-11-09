@@ -20,6 +20,7 @@ vcpkg_from_github(
         install-examples.patch
         no-absolute.patch
         Workaround-ICE-in-release.patch
+        #set-qhull-found.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
