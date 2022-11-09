@@ -8,6 +8,7 @@
     "armadillo",
     "ensmallen",
     "stb",
+	"cereal",
     {
       "name": "vcpkg-cmake",
       "host": true

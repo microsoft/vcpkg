@@ -10,61 +10,20 @@ vcpkg_from_github(
 
 # Copy the header files
 set(mlpack_HEADERS 
+	"${SOURCE_PATH}/src/mlpack.hpp"
 	"${SOURCE_PATH}/src/mlpack/base.hpp"
 	"${SOURCE_PATH}/src/mlpack/prereqs.hpp"
 	"${SOURCE_PATH}/src/mlpack/core.hpp"
-	"${SOURCE_PATH}/src/mlpack/namespace_compat.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/adaboost.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/amf.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/ann.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/approx_kfn.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/bayesian_linear_regression.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/bias_svd.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/block_krylov_svd.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/cf.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/dbscan.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/decision_tree.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/det.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/emst.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/fastmks.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/gmm.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/hmm.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/hoeffding_trees.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/kde.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/kernel_pca.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/kmeans.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/lars.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/linear_regression.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/lmnn.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/local_coordinate_coding.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/logistic_regression.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/lsh.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/matrix_completion.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/mean_shift.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/naive_bayes.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/nca.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/neighbor_search.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/pca.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/perceptron.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/quic_svd.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/radical.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/random_forest.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/randomized_svd.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/range_search.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/rann.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/regularized_svd.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/reinforcement_learning.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/softmax_regression.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/sparse_autoencoder.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/sparse_coding.hpp"
-	"${SOURCE_PATH}/src/mlpack/methods/svdplusplus.hpp")	
+	"${SOURCE_PATH}/src/mlpack/namespace_compat.hpp")	
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/mlpack/methods")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/mlpack")
 
 foreach(HEADER ${mlpack_HEADERS})
 	string(REPLACE "${SOURCE_PATH}/src" "${CURRENT_PACKAGES_DIR}/include" OUT_HEADER "${HEADER}")
-    file(RENAME "${HEADER}" "${OUT_HEADER}")
+	file(COPY_FILE "${HEADER}" "${OUT_HEADER}")
 endforeach(HEADER ${mlpack_HEADERS})
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT.txt")
+file(COPY "${SOURCE_PATH}/src/mlpack/methods/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/methods")
+file(COPY "${SOURCE_PATH}/src/mlpack/core/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/core")
 
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT.txt")
