@@ -50,7 +50,7 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
     "// #define SPDLOG_FMT_EXTERNAL"
     "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
 )
-if(SPDLOG_WCHAR_SUPPORT)
+if(SPDLOG_WCHAR_SUPPORT AND VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
         "// #define SPDLOG_WCHAR_TO_UTF8_SUPPORT"
         "#ifndef SPDLOG_WCHAR_TO_UTF8_SUPPORT\n#define SPDLOG_WCHAR_TO_UTF8_SUPPORT\n#endif"
