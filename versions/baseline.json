@@ -3189,7 +3189,7 @@
       "port-version": 1
     },
     "joltphysics": {
-      "baseline": "2022-11-08",
+      "baseline": "2022-11-09",
       "port-version": 0
     },
     "josuttis-jthread": {
