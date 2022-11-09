@@ -1,7 +1,7 @@
-diff --git a/runtime/src/misc/MurmurHash.cpp b/runtime/src/misc/MurmurHash.cpp
+diff --git a/runtime/Cpp/runtime/src/misc/MurmurHash.cpp b/runtime/src/misc/MurmurHash.cpp
 index 73562cd..57aa3bf 100644
---- a/runtime/src/misc/MurmurHash.cpp
-+++ b/runtime/src/misc/MurmurHash.cpp
+--- a/runtime/Cpp/runtime/src/misc/MurmurHash.cpp
++++ b/runtime/Cpp/runtime/src/misc/MurmurHash.cpp
 @@ -63,23 +63,6 @@ size_t MurmurHash::update(size_t hash, size_t value) {
    return hash;
  }
