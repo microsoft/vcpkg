@@ -2161,7 +2161,7 @@
       "port-version": 3
     },
     "entt": {
-      "baseline": "3.10.1",
+      "baseline": "3.11.0",
       "port-version": 1
     },
     "epsilon": {
