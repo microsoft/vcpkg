@@ -105,19 +105,31 @@ See [package name resolution](#package-name-resolution) for more details.
 
 ### Configuration: `"default-registry"`
 
-The `"default-registry"` field should be a registry object. It defines
-the registry that is used for all packages that are not claimed by any
-package registries. It may also be `null`, in which case no packages that
-are not claimed by package registries may be installed.
+The default registry is used as a fallback when resolving package names, 
+if no other registry matches the package name, the default registry will be selected.
+Users can set the default registry to `null`, in which case, if no other registry matches
+a package name the install will fail.
+
+The default registry is either a registry object without a `"packages"` array 
+(since it will automatically match any non-resolved package names) or `null`. 
+
+If `vcpkg-configuration.json` does not declare a `"default-registry"`, vcpkg will 
+automatically set the default registry to the `"builtin-registry"`.
+
+The `"builtin-registry"` is the local instance of `https://github.com/Microsoft/vcpkg`.
+This is necessary so that a manifest with no explicit registry configuration can resolve 
+port names in the official vcpkg catalog. The `"builtin-baseline"` property in `vcpkg.json`
+can be used to set the baseline for the `"builtin-registry"`. 
 
 ### Configuration: `"registries"`
 
-The `"registries"` field should be an array of registry objects, each of
-which additionally contain a `"packages"` field, which should be an array of
-package names. These define the package registries, which are used for 
-the specific packages named by the `"packages"` field.
+The `"registries"` field is used to define additional port and/or artifact registries.  
 
-The `"packages"` fields of all the package registries must be disjoint.
+Port registries are also required to declare a list of packages they provide using the `"packages"` array. 
+
+Using additional port registries also requires that a baseline is provided for the default registry 
+or that the default registry is set to null. If using the `"builtin-registry"` you can set the baseline
+using the `"builtin-baseline"` field in `vcpkg.json`.
 
 ### Example Configuration File
 
@@ -193,7 +205,8 @@ _This makes the order in which registries are declared in the `"registries"` arr
     "beicode", 
     "beison",
     "fmt"
-  ]  
+  ],
+  "builtin-baseline": "7e7c62d863b1bf599c1d104b76cd8b74475844d4"
 }
 ```
 
@@ -232,9 +245,11 @@ One way is to use the `"default-registry"` object:
 }
 ```
 
-The other way is to use the `"*"` pattern in the first registry of the `"registries"` array.
+The other way is to set the `"default-registry"` object to null and 
+use the `"*"` pattern in the first registry of the `"registries"` array.
 ```json
 {
+  "default-registry": null,
   "registries": [
     {
       "kind": "git",
@@ -258,6 +273,11 @@ Let's consider a registry that provides the Qt Framework libraries.
 `vcpkg-configuration.json`
 ```json
 {
+  "default-registry": {
+    "kind": "git",
+    "repository": "https://github.com/Microsoft/vcpkg",
+    "baseline": "7e7c62d863b1bf599c1d104b76cd8b74475844d4"
+  },
   "registries": [
     {
       "kind": "git",
@@ -284,14 +304,16 @@ And the following project dependencies:
 
 The `"qt*"` pattern matches all port names in `vcpkg.json`. But there is a problem!
 The ports `qt-advanced-docking-system` and `qtkeychain` are not part of the official Qt Framework libraries, 
-because of this vcpkg won't be able to find the ports in the custom registry.
+and since vcpkg won't be able to find the ports in the custom registry the installation will fail.
 
 The obvious solution is to make sure that these packages come from the default registry instead,
-we can accomplish that by adding an entry for the default registry:
+we can accomplish that by changing the way we declare the default registry and adding `qt-advanced-docking-system`
+and `qtkeychain` to its `"packages"` array:
 
 `vcpkg-configuration.json`
 ```json
 {
+  "default-registry": null,
   "registries": [
     {
       "kind": "git",
@@ -310,7 +332,7 @@ we can accomplish that by adding an entry for the default registry:
 ```
 
 Because exact matches are preferred over pattern matches, this configuration will make
-`qt-advanced-docking-system` and `qtkeycahin` resolve to the overriden default registry.
+`qt-advanced-docking-system` and `qtkeychain` resolve to the default registry.
 
 ### Versioning Support
 
