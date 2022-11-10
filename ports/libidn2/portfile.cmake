@@ -29,13 +29,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_list(APPEND options "CPPFLAGS=\$CPPFLAGS -DIDN2_STATIC")
 endif()
 
-vcpkg_list(SET options_release)
-vcpkg_list(SET options_debug)
-if(NOT VCPKG_TARGET_IS_UWP)
-    vcpkg_list(APPEND options_release "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}")
-    vcpkg_list(APPEND options_debug "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}/debug")
-endif()
-
 set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -48,11 +41,11 @@ vcpkg_configure_make(
         --disable-doc
         --disable-gcc-warnings
     OPTIONS_RELEASE
-        ${options_release}
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
+        "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}"
     OPTIONS_DEBUG
-        ${options_debug}
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}/debug"
+        "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}/debug"
         "CFLAGS=\$CFLAGS -I${CURRENT_INSTALLED_DIR}/include"
 )
 

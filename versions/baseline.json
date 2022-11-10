@@ -3842,7 +3842,7 @@
     },
     "libidn2": {
       "baseline": "2.3.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libigl": {
       "baseline": "2.3.0",
@@ -4314,7 +4314,7 @@
     },
     "libunistring": {
       "baseline": "1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "liburing": {
       "baseline": "2.2",
