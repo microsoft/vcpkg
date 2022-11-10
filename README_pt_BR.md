@@ -152,13 +152,13 @@ Para instalar as bibliotecas para seu projeto, execute o seguinte comando:
 $ ./vcpkg/vcpkg install [packages to install]
 ```
 
-Voçê também pode procurar por bibliotecas que você precisa com o subcomando `search`:
+Você também pode procurar por bibliotecas que você precisa com o subcomando `search`:
 
 ```sh
 $ ./vcpkg/vcpkg search [search term]
 ```
 
-Na sequência para usar o vcpkg com o CMake, voçê pode usar o toolchain file:
+Na sequência para usar o vcpkg com o CMake, você pode usar o toolchain file:
 
 ```sh
 $ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
@@ -239,12 +239,12 @@ Finalmente, em `CMake options`, adicione a seguinte linha:
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-Voçê precisar adicionar essa linha para cada usuário (profile).
+Você precisar adicionar essa linha para cada usuário (profile).
 
 ### Vcpkg como um Submodulo
 
 Ao usar o vcpkg como um submodulo do seu projeto,
-voçê pode adicionar o comando a seguir no seu CMakeLists.txt antes da primeira chamado do `project()`
+você pode adicionar o comando a seguir no seu CMakeLists.txt antes da primeira chamado do `project()`
 ao invéz de passar o `CMAKE_TOOLCHAIN_FILE` para a chamada do CMake.
 
 ```cmake
@@ -258,7 +258,7 @@ mas isso facilitará a configurar a ferramenta.
 
 ### Vcpkg via FetchContent
 
-Voçê também pode adquirir o vcpkg via módulo [FetchContent](https://cmake.org/cmake/help/v3.24/module/FetchContent.html).
+Você também pode adquirir o vcpkg via módulo [FetchContent](https://cmake.org/cmake/help/v3.24/module/FetchContent.html).
 
 Não se preocupe com os scripts do bootstrap, já que o `vcpkg.cmake` irá rodar/compilar por você!
 
