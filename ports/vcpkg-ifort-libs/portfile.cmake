@@ -40,9 +40,9 @@ if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL)
         list(TRANSFORM IFORT_DLLS_DEBUG PREPEND "${IFORT_BASEPATH_DLLS}")
         list(TRANSFORM IFORT_DLLS_RELEASE PREPEND "${IFORT_BASEPATH_DLLS}")
 
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(COPY ${IFORT_DLLS} ${IFORT_DLLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(COPY ${IFORT_DLLS} ${IFORT_DLLS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/ifort" "${CURRENT_PACKAGES_DIR}/debug/bin/ifort")
+        file(COPY ${IFORT_DLLS} ${IFORT_DLLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/ifort")
+        file(COPY ${IFORT_DLLS} ${IFORT_DLLS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/ifort")
     endif()
     file(INSTALL "${BASE_PATH}/licensing/fortran/third-party-programs.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # libs are at share/ifort and reflect how they are installed by the compiler instead of splitting them. 
