@@ -1,0 +1,17 @@
+diff --git a/src/EGL/meson.build b/src/EGL/meson.build
+index 9d109b18f..a0916aa1a 100644
+--- a/src/EGL/meson.build
++++ b/src/EGL/meson.build
+@@ -39,9 +39,9 @@ libEGL = shared_library(
+     'libeglerror.c',
+   ],
+   c_args : [
+-    '-DDEFAULT_EGL_VENDOR_CONFIG_DIRS="@0@/glvnd/egl_vendor.d:@1@/glvnd/egl_vendor.d"'.format(
+-      join_paths(get_option('prefix'), get_option('sysconfdir')),
+-      join_paths(get_option('prefix'), get_option('datadir'))),
++    '-DDEFAULT_EGL_VENDOR_CONFIG_DIRS="glvnd/egl_vendor.d:@0@/glvnd/egl_vendor.d:@1@/glvnd/egl_vendor.d"'.format(
++      '/usr/local/etc',
++      '/usr/share/'),
+   ],
+   include_directories : inc_include,
+   link_args : '-Wl,-Bsymbolic',

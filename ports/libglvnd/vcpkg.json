@@ -5,11 +5,18 @@
   "homepage": "https://gitlab.freedesktop.org/glvnd/libglvnd",
   "license": null,
   "dependencies": [
-    "libx11",
-    "libxext",
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+      "glx" : {
+          "description": "Build with GL on X",
+          "dependencies": [
+              "libx11",
+              "libxext"
+          ]
+      }
+  }
 }

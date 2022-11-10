@@ -110,7 +110,11 @@
       "description": "Build support for GLX platform",
       "supports": "!windows",
       "dependencies": [
-        "libglvnd",
+        {
+          "name": "libglvnd",
+          "default-features": false,
+          "features":  ["glx"]
+        },
         "libx11",
         "libxext",
         "libxfixes",
