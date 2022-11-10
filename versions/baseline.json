@@ -4314,7 +4314,7 @@
     },
     "libunistring": {
       "baseline": "1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "liburing": {
       "baseline": "2.2",
