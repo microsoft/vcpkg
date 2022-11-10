@@ -339,7 +339,6 @@ vcpkg_cmake_configure(
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
         -DBUILD_TBB=OFF
-        -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
         ###### Disable build 3rd party components
         -DBUILD_PROTOBUF=OFF
@@ -397,6 +396,7 @@ vcpkg_cmake_configure(
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
+        -DBUILD_IPP_IW=${WITH_IPP}
 )
 
 vcpkg_cmake_install()
