@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         "-DBUILD_ONLY=${BUILD_ONLY}"
 		"-DFORCE_CURL=ON"		# TRICE - use curl on all platforms 
 		"-DCPP_STANDARD=17"		# TRICE - use c++17 for string_view 
+		"-DCURLOPT_VERBOSE=1"		# TRICE - log curl internals		
         "-DBUILD_DEPS=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DCMAKE_INSTALL_RPATH=${rpath}"
