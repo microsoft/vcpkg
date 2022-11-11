@@ -43,21 +43,37 @@ function(boost_modular_build)
     endif()
 
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(BOOST_LIB_PREFIX)
-        if(VCPKG_PLATFORM_TOOLSET MATCHES "v(14.)")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc${CMAKE_MATCH_1}-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc${CMAKE_MATCH_1}-mt-gd.lib)
-        elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
+        set(BOOST_LIB_PREFIX "")
+
+        if(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "IA64")
+          string(APPEND BOOST_ARCHITECTURE_TAG "i")
+        elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^[xX]86"
+                  OR VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^(([xX]86_)?[xX]64|AMD64)")
+          string(APPEND BOOST_ARCHITECTURE_TAG "x")
+        elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^ARM")
+          string(APPEND BOOST_ARCHITECTURE_TAG "a")
+        elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "MIPS")
+          string(APPEND BOOST_ARCHITECTURE_TAG "m")
+        endif()
+        if(VCPKG_DETECTED_CMAKE_SIZEOF_VOID_P EQUAL "8")
+          string(APPEND BOOST_ARCHITECTURE_TAG "64")
         else()
-            set(BOOST_LIB_RELEASE_SUFFIX .lib)
-            set(BOOST_LIB_DEBUG_SUFFIX .lib) # Note: FindBoost.cmake will not look for d suffixed libraries
+          string(APPEND BOOST_ARCHITECTURE_TAG "32")
+        endif()
+        if(VCPKG_PLATFORM_TOOLSET MATCHES "v(14.)")
+            set(BOOST_LIB_RELEASE_SUFFIX -vc${CMAKE_MATCH_1}-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc${CMAKE_MATCH_1}-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+        elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+        else()
+            set(BOOST_LIB_RELEASE_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib) # Note: FindBoost.cmake will not look for d suffixed libraries
         endif()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         string(REGEX MATCH "[^\\\.]+" clang_major_ver "${VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION}")
-        set(BOOST_LIB_RELEASE_SUFFIX -clangw${clang_major_ver}-mt.lib)
-        set(BOOST_LIB_DEBUG_SUFFIX -clangw${clang_major_ver}-mt-gd.lib)
+        set(BOOST_LIB_RELEASE_SUFFIX -clangw${clang_major_ver}-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+        set(BOOST_LIB_DEBUG_SUFFIX -clangw${clang_major_ver}-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
     else()
         set(BOOST_LIB_PREFIX lib)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -156,9 +172,8 @@ function(boost_modular_build)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+        string(REPLACE "-sgyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-gyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs with python debugging
-        string(REPLACE "-${BOOST_VERSION_ABI_TAG}" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")

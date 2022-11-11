@@ -11,5 +11,6 @@ vcpkg_download_distfile(
 )
 
 file(INSTALL "${FILE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost" RENAME "FindBoost.cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/boost/FindBoost.cmake" [[include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)]] [[include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)]])
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/boost/vcpkg-cmake-wrapper.cmake" @ONLY)
