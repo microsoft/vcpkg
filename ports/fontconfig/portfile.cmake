@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         libgetopt.patch
         fix-mingw-gperf-fallback.patch
         fix-preprocessor-clang-cl.patch
+        fix-gperf-path-windows.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
