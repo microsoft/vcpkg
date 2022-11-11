@@ -1,5 +1,5 @@
 vcpkg_download_distfile(ARCHIVE
-  URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.270.2.tar.gz
+  URLS https://github.com/apple-oss-distributions/mDNSResponder/archive/refs/tags/mDNSResponder-878.270.2.tar.gz
   FILENAME mDNSResponder-878.270.2.tar.gz
   SHA512 dbc1805c757fceb2b37165ad2575e4084447c10f47ddc871f5476e25affd91f5f759662c17843e30857a9ea1ffd25132bc8012737cf22700ac329713e6a3ac0a
 )
