@@ -7,9 +7,14 @@ vcpkg_from_github(
     HEAD_REF v1.3.234
 )
 
-# This must be vulkan as other vulkan packages expect it there.
-file(COPY "${SOURCE_PATH}/include/vulkan/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vulkan")
-file(COPY "${SOURCE_PATH}/include/vk_video/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vk_video")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+vcpkg_cmake_install()
+
+# Cleanup
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
