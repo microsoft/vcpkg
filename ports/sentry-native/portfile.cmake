@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         use-zlib-target.patch
 )
 
+# The ${SENTRY_BACKEND} of the following settings are the default values officially supported by different systems.
 if (NOT DEFINED SENTRY_BACKEND)
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
         set(SENTRY_BACKEND "breakpad")
@@ -21,8 +22,11 @@ if (NOT DEFINED SENTRY_BACKEND)
         set(SENTRY_BACKEND "crashpad")
     elseif(LINUX)
         set(SENTRY_BACKEND "breakpad")
-    else()
+    elseif(ANDROID)
         set(SENTRY_BACKEND "inproc")
+    else()
+        set(SENTRY_BACKEND "none")
+        message(WARNING "If ${SENTRY_BACKEND} is 'none', this builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests.")
     endif()
 endif()
 
