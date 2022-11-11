@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF v2.3.17.0
-    SHA512 25cb1a671e7cd5154e363eef178ab091fd7d55868746a4394340567a794f6c6f0295e58721a5b4ee8bf66b4cc0e6a01c3e82f9cc9de9953ae349d45738a04700
+    REF 1e70f7862ceca56c0d30185837ea08e765fa73db    # v2.4.5.0
+    SHA512 f0336b1f5de4709cf7d7194e55b9f54d76261287e0ddc38b9a8605a0a3383f271b5cb605026b3911c48e90087a4574fe62dfa911edbe1cb3570dff380178154b
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
-        fix-openexr-dll.patch
-        imath-version-guard.patch
+        fix-externalpackages.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -59,12 +58,13 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
+		-DENABLE_INSTALL_testtex=OFF  # testtex ordinarily gets built for testing but is not "installed".
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
+	MAYBE_UNUSED_VARIABLES
+		ENABLE_INSTALL_testtex
 )
 
 vcpkg_cmake_install()
-
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
