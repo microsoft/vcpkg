@@ -24,7 +24,7 @@ vcpkg_from_github(
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-m1-hardware-decode-nal-bits # remove in next version
+        0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
 )
 
 if (SOURCE_PATH MATCHES " ")
