@@ -29,7 +29,7 @@ endif()
 
 if("none" IN_LIST FEATURES)
     set(SENTRY_BACKEND "none")
-    message(WARNING "If ${SENTRY_BACKEND} is 'none', this builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests.")
+    message(STATUS "If ${SENTRY_BACKEND} is 'none', this builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests.")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
