@@ -7,7 +7,7 @@ index 468f43b..02ec3c4 100644
  #include <ostream>
  
 -#ifndef _WIN32
-+#if !defined(_WIN32) or defined(__MINGW32__)
++#if !defined(_WIN32) || defined(__MINGW32__)
  #include <libgen.h>
  #endif
  
