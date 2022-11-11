@@ -1,5 +1,3 @@
-#Header-only library
-
 vcpkg_from_github(
 
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,15 +7,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -Dkissnet_BUILD_TESTING=OFF
-)
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+# Install the header-only library
+file(INSTALL ${SOURCE_PATH}/kissnet.hpp
+     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
+# Install license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# Install usage
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
