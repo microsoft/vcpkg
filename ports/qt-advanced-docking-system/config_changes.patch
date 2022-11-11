@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 0bd721d..4848c5f 100644
+index 49cd799..6535465 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -52,7 +52,7 @@ if (UNIX)
+@@ -54,7 +54,7 @@ if (UNIX AND NOT APPLE)
      set(ads_SRCS linux/FloatingWidgetTitleBar.cpp ${ads_SRCS})
      set(ads_HEADERS linux/FloatingWidgetTitleBar.h ${ads_HEADERS})
  endif()

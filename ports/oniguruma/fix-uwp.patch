@@ -1,5 +1,4 @@
 diff --git a/src/regcomp.c b/src/regcomp.c
-index 69d4b95..380f441 100644
 --- a/src/regcomp.c
 +++ b/src/regcomp.c
 @@ -3880,7 +3880,7 @@ reduce_string_list(Node* node)
@@ -18,9 +17,9 @@ index ce498c6..6848c0f 100644
 @@ -4216,7 +4216,7 @@ regset_search_body_position_lead(OnigRegSet* set,
  {
    int r, n, i;
-   UChar *s, *prev;
--  UChar *low, *high, *low_prev;
-+  UChar *low, *high, *low_prev = NULL;
+   UChar *s;
+-  UChar *low, *high;
++  UChar *low, *high = NULL;
    UChar* sch_range;
    regex_t* reg;
    OnigEncoding enc;

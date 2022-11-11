@@ -1,21 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.84.0
-    SHA512 9f08f5e7de240c100e7ea6fcd6c71947cacfafbf0631f7e441a64ef36b0d51fa097b8ccc164c7b20441524a7211d84f9fc62d9a2bc62342e26938c133faf0940
+    REF v5.89.0
+    SHA512 815672fc572b22c51761476da9c82bc128a6a66ede39b5b9e09592c415908064d2b2f0c39674b702f503eeb48f33d0d4443d200bc2830b63b5f4468db66b0d8f
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_DATAROOTDIR=data
-
 )
 
 vcpkg_cmake_install()
@@ -27,10 +25,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

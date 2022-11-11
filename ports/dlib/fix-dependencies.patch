@@ -1,0 +1,80 @@
+diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index 9f3001d..962cfc4 100644
+--- a/dlib/CMakeLists.txt
++++ b/dlib/CMakeLists.txt
+@@ -287,6 +287,7 @@ if (NOT TARGET dlib)
+ 
+    set(dlib_needed_libraries)
+    set(dlib_needed_includes)
++   set(pkg_config_dlib_requires_private "")
+ 
+    if (DLIB_ISO_CPP_ONLY)
+       add_library(dlib ${source_files} )
+@@ -814,6 +815,10 @@ if (NOT TARGET dlib)
+ 
+ 
+       if (DLIB_LINK_WITH_SQLITE3)
++         find_package(unofficial-sqlite3 CONFIG REQUIRED)
++         list(APPEND dlib_needed_libraries unofficial::sqlite3::sqlite3)
++         string(APPEND pkg_config_dlib_requires_private " sqlite3")
++      elseif(0)
+          find_library(sqlite sqlite3)
+          # make sure sqlite3.h is in the include path
+          find_path(sqlite_path sqlite3.h)
+@@ -829,6 +834,10 @@ if (NOT TARGET dlib)
+ 
+ 
+       if (DLIB_USE_FFTW)
++         find_package(FFTW3 CONFIG REQUIRED)
++         list(APPEND dlib_needed_libraries FFTW3::fftw3)
++         string(APPEND pkg_config_dlib_requires_private " fftw3")
++      elseif(0)
+          find_library(fftw fftw3)
+          # make sure fftw3.h is in the include path
+          find_path(fftw_path fftw3.h)
+@@ -964,6 +973,8 @@ if (NOT TARGET dlib)
+ 
+       ## dlib-1.pc generation and installation
+ 
++      string (REGEX REPLACE " m " " -lm " pkg_config_dlib_needed_libraries "${pkg_config_dlib_needed_libraries} ")
++      string (REGEX REPLACE "[^ ]*::[^ ]*" "" pkg_config_dlib_needed_libraries "${pkg_config_dlib_needed_libraries}")
+       configure_file("cmake_utils/dlib.pc.in" "dlib-1.pc" @ONLY)
+       install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dlib-1.pc"
+          DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+@@ -977,7 +988,7 @@ if (NOT TARGET dlib)
+ 
+ endif()
+ 
+-if (MSVC)
++if (0)
+    # Give the output library files names that are unique functions of the
+    # visual studio mode that compiled them.  We do this so that people who
+    # compile dlib and then copy the .lib files around (which they shouldn't be
+diff --git a/dlib/cmake_utils/dlib.pc.in b/dlib/cmake_utils/dlib.pc.in
+index 9060110..2ec27e8 100644
+--- a/dlib/cmake_utils/dlib.pc.in
++++ b/dlib/cmake_utils/dlib.pc.in
+@@ -6,3 +6,4 @@ Description: Numerical and networking C++ library
+ Version: @VERSION@
+ Libs: -L${libdir} -ldlib @pkg_config_dlib_needed_libraries@
+ Cflags: -I${includedir} @pkg_config_dlib_needed_includes@
++Requires.private: @pkg_config_dlib_requires_private@
+diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
+index 2667a2e..cc7b4a2 100644
+--- a/dlib/cmake_utils/dlibConfig.cmake.in
++++ b/dlib/cmake_utils/dlibConfig.cmake.in
+@@ -31,6 +31,14 @@ if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
+    unset(dlib_deps_threads_check)
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++if("@DLIB_USE_FFTW@")
++   find_dependency(FFTW3 CONFIG)
++endif()
++if("@DLIB_LINK_WITH_SQLITE3@")
++   find_dependency(unofficial-sqlite3 CONFIG)
++endif()
++
+ set(dlib_LIBRARIES dlib::dlib)
+ set(dlib_LIBS      dlib::dlib)
+ set(dlib_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@" "@dlib_needed_includes@")

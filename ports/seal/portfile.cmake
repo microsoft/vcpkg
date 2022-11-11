@@ -3,9 +3,18 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF 2d2a25c916047d2f356d45ad50c98f0a9695905a
-    SHA512 81b2be39fca39dbd3a1246d0a1b8474d27eb6b1f3205f2107243bcd883b95814d2b642fa6807ed1f272d321233c2ec7992a256866ae1700c1203575594b42559
+    REF 79234726053c45eede688400aa219fdec0810bd8
+    SHA512 634ad75d70f04cce220bfa9f6d13e8ddb293e8403ebd195e2c8b522b751a1a268021feea7843038037ed6d1b354b2e470ad565966a117613cf5371073afda9a4
     HEAD_REF main
+    PATCHES
+        gsl.patch
+        shared-zstd.patch
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cmake/CheckCXXIntrinsicsSpecific.cmake"
+    "check_cxx_source_runs"
+    "check_cxx_source_compiles"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

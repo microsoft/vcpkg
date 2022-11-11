@@ -1,6 +1,12 @@
 {
   "name": "gherkin-c",
-  "version-string": "2019-10-07",
-  "port-version": 2,
-  "description": "Gherkin parser/compiler in C"
+  "version-date": "2019-10-07",
+  "port-version": 3,
+  "description": "Gherkin parser/compiler in C",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

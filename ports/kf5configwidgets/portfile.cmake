@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.84.0
-    SHA512 da03f4cfc2a64b3ccccfe2b6b7f392f84aba2b975edbf6a5b08a14604ccb565a4491c7eb707af7191345b55ca81e864b7ee13fe648589a56f3226c26160ed024
+    REF v5.89.0
+    SHA512 4dfc69c9b6126509df95d89172da0dfaaaa38cb497a3fda34b96a9fd25503998ab8124308a11e6894aed08feab4a122af775c2d375d0cac0736f85779e4d772e
     HEAD_REF master
-    PATCHES
-        add_support_for_static_builds.patch # https://invent.kde.org/frameworks/kconfigwidgets/-/merge_requests/71
 )
 
 vcpkg_check_features(
@@ -15,12 +13,13 @@ vcpkg_check_features(
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         ${FEATURE_OPTIONS}
@@ -37,4 +36,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

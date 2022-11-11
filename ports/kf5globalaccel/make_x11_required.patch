@@ -1,0 +1,28 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f78b454..4858674 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,19 +48,19 @@ find_package(KF5DBusAddons ${KF_DEP_VERSION} REQUIRED)
+ find_package(KF5WindowSystem ${KF_DEP_VERSION} REQUIRED)
+ 
+ # no X11 stuff on mac
+-if (NOT APPLE)
+-    find_package(XCB MODULE COMPONENTS XCB KEYSYMS XKB OPTIONAL_COMPONENTS XTEST)
++if (NOT APPLE AND ENABLE_X11EXTRAS)
++    find_package(XCB MODULE REQUIRED COMPONENTS XCB KEYSYMS XKB OPTIONAL_COMPONENTS XTEST)
+     set_package_properties(XCB PROPERTIES DESCRIPTION "X protocol C-language Binding"
+                        URL "http://xcb.freedesktop.org"
+                        TYPE OPTIONAL
+                       )
+ 
+-    find_package(X11)
++    find_package(X11 REQUIRED)
+ endif()
+ 
+ set(HAVE_X11 0)
+ 
+-if(X11_FOUND AND XCB_XCB_FOUND)
++if(X11_FOUND AND XCB_XCB_FOUND AND ENABLE_X11EXTRAS)
+     set(HAVE_X11 1)
+     find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED X11Extras)
+ endif()

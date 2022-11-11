@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CLIUtils/CLI11
-    REF v2.1.0
-    SHA512 22c75e6b55d5320656ca2f65bf7c1dc82546fa65458f66a3d6401d002e83f12a0ee93a572637f5daa8daed9e0ce11fbf4aabf864caadc851f75bced63814ba10
-    HEAD_REF master
+    REF v2.3.1
+    SHA512 7805a3bff5ce443e93a005341680db1e618d5b0789a697daaac881f9ccac76f855ea3d43c9c5b13c33c2bf590138241df9e55d70e133562272f0859d8341af09
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

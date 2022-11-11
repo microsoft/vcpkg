@@ -1,0 +1,13 @@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index b50a923..c3250b9 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -108,7 +108,7 @@ if (CMAKE_COMPILER_IS_CLANG AND OPENEXR_VERSION VERSION_LESS 2.3)
+     # clang C++ >= 11 doesn't like 'register' keyword in old exr headers
+     add_compile_options (-Wno-deprecated-register)
+ endif ()
+-if (MSVC AND NOT LINKSTATIC)
++if (WIN32 AND BUILD_SHARED_LIBS)
+     add_definitions (-DOPENEXR_DLL) # Is this needed for new versions?
+ endif ()
+ 

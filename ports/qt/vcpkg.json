@@ -1,9 +1,25 @@
 {
   "name": "qt",
-  "version-semver": "6.2.0",
+  "version": "6.3.2",
+  "port-version": 1,
   "description": "Qt",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
+    {
+      "name": "qt3d",
+      "default-features": false,
+      "features": [
+        "animation",
+        "assimp",
+        "extras",
+        "input",
+        "logic",
+        "qml",
+        "render",
+        "rhi"
+      ]
+    },
     {
       "name": "qt5compat",
       "default-features": false,
@@ -14,6 +30,7 @@
         "textcodec"
       ]
     },
+    "qtapplicationmanager",
     {
       "name": "qtbase",
       "default-features": false
@@ -30,6 +47,11 @@
     "qtconnectivity",
     "qtdatavis3d",
     "qtdeclarative",
+    {
+      "name": "qtdeviceutilities",
+      "default-features": false,
+      "platform": "linux"
+    },
     "qtdoc",
     {
       "name": "qtimageformats",
@@ -40,14 +62,7 @@
         "webp"
       ]
     },
-    {
-      "name": "qtlocation",
-      "default-features": false,
-      "features": [
-        "nmea",
-        "qml"
-      ]
-    },
+    "qtinterfaceframework",
     {
       "name": "qtlottie",
       "default-features": false,
@@ -60,14 +75,28 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer",
         "qml",
         "widgets"
       ]
     },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "gstreamer"
+      ],
+      "platform": "!(static & windows)"
+    },
     "qtnetworkauth",
     {
       "name": "qtopcua",
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtpositioning",
+      "default-features": false,
       "features": [
         "qml"
       ]
@@ -127,7 +156,8 @@
         "geolocation",
         "spellchecker",
         "webchannel"
-      ]
+      ],
+      "platform": "!static & !(windows & arm)"
     },
     {
       "name": "qtwebsockets",
@@ -140,9 +170,16 @@
       "name": "qtwebview",
       "default-features": false,
       "features": [
-        "qml",
-        "webengine"
+        "qml"
       ]
+    },
+    {
+      "name": "qtwebview",
+      "default-features": false,
+      "features": [
+        "webengine"
+      ],
+      "platform": "!static & !(windows & arm)"
     }
   ],
   "default-features": [
@@ -158,6 +195,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtbase",
+          "features": [
+            "gles2"
+          ],
+          "platform": "linux"
         },
         {
           "name": "qtwayland",

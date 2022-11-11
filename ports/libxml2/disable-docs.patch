@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f922d5ab..70466bc7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -647,11 +647,6 @@ if(LIBXML2_WITH_PYTHON)
+ 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
+ endif()
+ 
+-install(FILES libxml.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 COMPONENT documentation)
+-install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxml2 COMPONENT documentation PATTERN Makefile.* EXCLUDE)
+-
+ configure_package_config_file(
+ 	libxml2-config.cmake.cmake.in libxml2-config.cmake
+ 	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}

@@ -6,11 +6,12 @@ vcpkg_from_github(
     REF a92456d2e20451772dd76c2a0a3368537ee94184
     SHA512 d14ebc0d96e86d9226fa346cb6ef157b2949985dfedf4228dd4356ccacaac48fde47edfcba31e7455b25dc95c7a1cb148ad6845143c17ae5972659c98e683865
     HEAD_REF master
+    PATCHES
+        disable-test.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_UT=OFF
 )

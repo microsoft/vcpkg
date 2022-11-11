@@ -3,24 +3,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brunocodutra/metal
-    REF 43256d2c7f5715d9dc029037bcd8512624ec7865 # v2.1.1
-    SHA512 fc69e60b9c21d0215ca2c9ec27ab65d59115397e1d27c90fcdc35ccf8675546b1fbc3be0e6b8f69cd8eb848bac348ca0fe116f50a36ce8d1cbff0d646c4f05cb
+    REF 9db9b403e58e0be0bbd295ff64f01e700965f25d
+    SHA512 b611d88d310893329f48111716c849571cb1459da1e71851bf3ec7393f18f8eb94077ce12410a9bcb1953e6b4ea0e8f2d2db5ce7f555a72ab2b7dae434b52d62
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME Metal
     CONFIG_PATH lib/cmake/Metal
-    TARGET_PATH share/metal
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,19 @@
+Description: Play login sound in Unity too
+ if it's enabled (it's disabled by default in Ubuntu)
+Author: Michael Terry <michael.terry@canonical.com>
+Bug-Ubuntu: https://launchpad.net/bugs/803519
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=38883
+
+Index: libcanberra/src/libcanberra-login-sound.desktop.in
+===================================================================
+--- libcanberra.orig/src/libcanberra-login-sound.desktop.in	2011-07-01 15:02:59.870772598 +0100
++++ libcanberra/src/libcanberra-login-sound.desktop.in	2011-07-01 15:03:03.554772637 +0100
+@@ -3,7 +3,7 @@
+ Name=GNOME Login Sound
+ Comment=Plays a sound whenever you log in
+ Exec=@bindir@/canberra-gtk-play --id="desktop-login" --description="GNOME Login"
+-OnlyShowIn=GNOME;
++OnlyShowIn=GNOME;Unity;
+ AutostartCondition=GSettings org.gnome.desktop.sound event-sounds
+ X-GNOME-Autostart-Phase=Application
+ X-GNOME-Provides=login-sound

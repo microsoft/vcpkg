@@ -1,29 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
-    REF v5.84.0
-    SHA512 e5905c0aa5343ce3d4cd3765cb81390fc89fb78aec3c8de8b31d1dada8074d04f549ff785f3988498d2e274d7cb08a35a83ba031d18562049e6ca41d18ea52ee
+    REF v5.89.0
+    SHA512 062a8da3a5d3f9da3288031f8e694fd6adb5b4f404071f2d66c7f4d5b15cbf10fedff58d9db928e45a052b69abbe38d7de57349638d8bb9a229798a553e3b9ed
     HEAD_REF master
     PATCHES
-        add_missing_static_dependencies.patch # https://invent.kde.org/frameworks/kguiaddons/-/merge_requests/25
         fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wayland   WITH_WAYLAND
+        wayland WITH_WAYLAND
 )
 
-if("wayland" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
-    message(FATAL_ERROR "Feature wayland is only supported on Linux.")
-endif()
-
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DQtWaylandScanner_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner
         ${FEATURE_OPTIONS}
@@ -42,4 +37,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fancycode/MemoryModule
@@ -12,34 +10,34 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    unicode UNICODE
+    FEATURES
+        unicode UNICODE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DTESTSUITE=OFF
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_build_cmake(TARGET MemoryModule)
+vcpkg_cmake_build(TARGET MemoryModule)
 
-file(INSTALL ${SOURCE_PATH}/MemoryModule.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/MemoryModule.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib)
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib")
     file(INSTALL
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
     )
 endif()
 
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib)
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib")
     file(INSTALL
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
     )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

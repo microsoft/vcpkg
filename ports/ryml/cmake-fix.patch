@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e4eb23..115b8aa 100644
+index d18407c..db19e0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -19,8 +20,7 @@ option(RYML_BUILD_API "Enable API generation (python, etc)" OFF)
+@@ -21,8 +21,7 @@ option(RYML_DBG "Enable (very verbose) ryml debug prints." OFF)
  
  #-------------------------------------------------------
  
@@ -12,11 +12,11 @@ index 3e4eb23..115b8aa 100644
  
  c4_add_library(ryml
      SOURCES
-@@ -46,10 +46,10 @@ c4_add_library(ryml
+@@ -54,10 +53,10 @@ c4_add_library(ryml
          ryml.natvis
      SOURCE_ROOT ${RYML_SRC_DIR}
      INC_DIRS
-+	 $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
++    $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
          $<BUILD_INTERFACE:${RYML_SRC_DIR}>
          $<INSTALL_INTERFACE:include>
 -    LIBS c4core
@@ -24,5 +24,4 @@ index 3e4eb23..115b8aa 100644
 +    LIBS c4core::c4core
      )
  
- if(NOT RYML_DEFAULT_CALLBACKS)
-
+ if(RYML_WITH_TAB_TOKENS)

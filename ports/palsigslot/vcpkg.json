@@ -1,6 +1,16 @@
 {
   "name": "palsigslot",
-  "version-string": "1.2.0",
+  "version": "1.2.1",
   "description": "A header-only, thread safe implementation of signal-slots for C++.",
-  "homepage": "https://github.com/palacaze/sigslot"
+  "homepage": "https://github.com/palacaze/sigslot",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

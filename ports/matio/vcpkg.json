@@ -1,9 +1,9 @@
 {
   "name": "matio",
-  "version-semver": "1.5.19",
-  "port-version": 1,
+  "version-semver": "1.5.23",
   "description": "MATLAB MAT File I/O Library",
   "homepage": "https://github.com/tbeu/matio",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/scope_exit
-    REF boost-1.77.0
-    SHA512 f0a73ba219f2c47ff6e1dc6c9648708e6d31b11c85f4579ba35a6cfa4b633390effcc3508d269370101f776c1217f087b2f677f2e6bb1b9f07b33240f2ce3c77
+    REF boost-1.80.0
+    SHA512 1cac78c81fee8ada8eac3780955b4930dbf38f8066859aaca6db5d0eec9d285b2ee4bf87c2d412725c9558331a3d13f66c315338cc0ec6ad1c0c43086dc2a4a4
     HEAD_REF master
 )
 

@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DENABLE_HIDDEN_SYMBOLS=${DENABLE_HIDDEN_SYMBOLS}
         -DENABLE_TARGET_EXPORT=ON # Export CMake config files
         -DENABLE_CJSON_TEST=OFF
+        -DENABLE_CUSTOM_COMPILER_FLAGS=OFF
         -DENABLE_FUZZING=OFF
         ${FEATURE_OPTIONS}
 )
@@ -56,3 +57,5 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h" "${_contents}")
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+
+vcpkg_fixup_pkgconfig()

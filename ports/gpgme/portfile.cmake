@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -16,7 +15,7 @@ string(REPLACE ";" "," LANGUAGES "${FEATURES}")
 
 vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-gpgconf-test
         --disable-gpg-test
@@ -28,8 +27,16 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Gpgmepp)
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Gpgmepp)
+vcpkg_copy_pdbs() 
+# We have no dependency on glib, so remove this extra .pc file
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gpgme/bin/gpgme-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+if (NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gpgme/debug/bin/gpgme-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

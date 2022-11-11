@@ -9,26 +9,32 @@ vcpkg_from_github(
         fix-findzliberror.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT} TARGET_PATH share/unofficial-${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT} PACKAGE_NAME unofficial-${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static))
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
+endif()
+
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/doc/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT})
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+file(INSTALL "${SOURCE_PATH}/doc/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

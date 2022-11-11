@@ -3,17 +3,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/parallel-hashmap
-    REF 1.33
-    SHA512 287f098229153d925632e68e3cdbabfae0ea0ab8864089e4c0553a166c6079ca82ed5246ba53afd2a2917abcf06f37bc18f098e721f5f3b8def4d2d8c1c8c745
+    REF v1.3.8
+    SHA512 499f132aa1513942762ae5214e9a37915529d60142439d32276d9e68a446c93ecea66caa32ac00bea683e2c932101cd999c8839a89211e91032f777f236181f7
     HEAD_REF master
 )
 
 # Use greg7mdp/parallel-hashmap's own build process, skipping examples and tests
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPHMAP_BUILD_TESTS=OFF
+        -DPHMAP_BUILD_EXAMPLES=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Delete redundant directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/doc)

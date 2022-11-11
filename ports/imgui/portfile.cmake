@@ -4,26 +4,22 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF dedb381c510cc0b87164e16b9e7ef6bf50ffccec
-       SHA512 0b331cbf81fed15cdceb84ccf1962b5db19af1b6dc75a19460810919b7f61088a9ba46acf3e6fcadfda6297204b03f1be0ab08fa427f89e504d70be8da1f2281
+       REF 9cd9c2eff99877a3f10a7f9c2a3a5b9c15ea36c6
+       SHA512 4a9bf74f5f3971bcb954449bdef27e491a0abebc55356bcf0491c7e17dc941c90cf81d539fe4de1e23137866f55456776fcded34a4df2fb16b9020fe1b8d7851
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.84.2
-    SHA512 ea62d03ffc4c8d3dbc6be0076fb93158d464f4f02e88028c2bc64768f72e3117297854816bb7a776bd750c003013fe1d2871a1b505d04dd0922dfb2f214dd0a3
+    REF v1.88
+    SHA512 bfb7381334f1493d64386321401086e4136129b3cc57bf57505ec6183008dddab1a2056b0af2610bc3286c606bafdf9b6e3ebc103131e0504bab2336662bc2c1
     HEAD_REF master
     )
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
-    message(FATAL_ERROR "Feature metal-binding and osx-binding are only supported on osx.")
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES 
@@ -34,12 +30,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     dx12-binding                IMGUI_BUILD_DX12_BINDING
     glfw-binding                IMGUI_BUILD_GLFW_BINDING
     glut-binding                IMGUI_BUILD_GLUT_BINDING
-    marmalade-binding           IMGUI_COPY_MARMALADE_BINDING
     metal-binding               IMGUI_BUILD_METAL_BINDING
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
     sdl2-binding                IMGUI_BUILD_SDL2_BINDING
+    sdl2-renderer-binding       IMGUI_BUILD_SDL2_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
@@ -56,21 +52,18 @@ if ("libigl-imgui" IN_LIST FEATURES)
             abe9250c9a5989e0a3f2285bbcc83696ff8e38c1f5657c358e6fe616ff792d3c6e5ff2fa23c2eeae7d7b307392e0dc798a95d14f6d10f8e9bfbd7768d36d8b31
     )
 
-    file(INSTALL ${IMGUI_FONTS_DROID_SANS_H} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    file(INSTALL "${IMGUI_FONTS_DROID_SANS_H}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
-    MAYBE_UNUSED_VARIABLES
-        IMGUI_COPY_MARMALADE_BINDING
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
@@ -80,6 +73,6 @@ if ("wchar32" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

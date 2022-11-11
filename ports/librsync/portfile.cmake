@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -12,8 +10,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
-        -DBUILD_RDIFF:BOOL=OFF 
+    OPTIONS
+        -DBUILD_RDIFF:BOOL=OFF
         -DENABLE_COMPRESSION:BOOL=OFF
         -DENABLE_TRACE:BOOL=OFF
 )

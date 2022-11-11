@@ -6,18 +6,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/README.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libxmlmm-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libxmlmm")
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libxmlmm)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(READ "${SOURCE_PATH}/README.md" readme)
+string(REGEX REPLACE "^.*## Copying\n" "" copyright "${readme}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${copyright}")

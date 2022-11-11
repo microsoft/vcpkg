@@ -1,20 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knotifications
-    REF v5.84.0
-    SHA512 ee8d2d0531df726f3e372983e30c2365aab887e1a3cdf5fb9c1b788e78b490f984018a44934ce62116bf10827fbf9aeeaf23236a7024a0e3757a1da7e90dca6c
+    REF v5.89.0
+    SHA512 58e9fe34b29e0f6d7507a3a783918bcfbc8a191ddc7bb287c793628a97a2a203347971849100ae9a98d9f8a23c27ba184b509c11caf00517d8c6422ae91ac310
     HEAD_REF master
-    PATCHES
-        fix_config_cmake.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
@@ -28,4 +27,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

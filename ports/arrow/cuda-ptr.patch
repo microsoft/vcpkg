@@ -1,0 +1,61 @@
+diff --git a/cpp/src/arrow/gpu/cuda_context.h b/cpp/src/arrow/gpu/cuda_context.h
+index 00bcf94c8..0115ed19a 100644
+--- a/cpp/src/arrow/gpu/cuda_context.h
++++ b/cpp/src/arrow/gpu/cuda_context.h
+@@ -76,7 +76,7 @@ class ARROW_EXPORT CudaDeviceManager {
+   static std::unique_ptr<CudaDeviceManager> instance_;
+ 
+   class Impl;
+-  std::unique_ptr<Impl> impl_;
++  std::shared_ptr<Impl> impl_;
+ 
+   friend class CudaContext;
+   friend class CudaDevice;
+@@ -146,7 +146,7 @@ class ARROW_EXPORT CudaDevice : public Device {
+   /// \endcond
+ 
+   explicit CudaDevice(Impl);
+-  std::unique_ptr<Impl> impl_;
++  std::shared_ptr<Impl> impl_;
+ };
+ 
+ /// \brief Return whether a device instance is a CudaDevice
+@@ -297,7 +297,7 @@ class ARROW_EXPORT CudaContext : public std::enable_shared_from_this<CudaContext
+                                    uintptr_t dst, uintptr_t src, int64_t nbytes);
+ 
+   class Impl;
+-  std::unique_ptr<Impl> impl_;
++  std::shared_ptr<Impl> impl_;
+ 
+   friend class CudaBuffer;
+   friend class CudaBufferReader;
+diff --git a/cpp/src/arrow/gpu/cuda_internal.h b/cpp/src/arrow/gpu/cuda_internal.h
+index 25eb6e06c..d70873634 100644
+--- a/cpp/src/arrow/gpu/cuda_internal.h
++++ b/cpp/src/arrow/gpu/cuda_internal.h
+@@ -33,6 +33,7 @@ namespace internal {
+ 
+ std::string CudaErrorDescription(CUresult err);
+ 
++ARROW_EXPORT
+ Status StatusFromCuda(CUresult res, const char* function_name = nullptr);
+ 
+ #define CU_RETURN_NOT_OK(FUNC_NAME, STMT)                               \
+diff --git a/cpp/src/arrow/gpu/cuda_memory.h b/cpp/src/arrow/gpu/cuda_memory.h
+index 4efd38894..18c23a507 100644
+--- a/cpp/src/arrow/gpu/cuda_memory.h
++++ b/cpp/src/arrow/gpu/cuda_memory.h
+@@ -250,10 +250,12 @@ Result<std::shared_ptr<CudaHostBuffer>> AllocateCudaHostBuffer(int device_number
+                                                                const int64_t size);
+ 
+ /// Low-level: get a device address through which the CPU data be accessed.
++ARROW_EXPORT
+ Result<uintptr_t> GetDeviceAddress(const uint8_t* cpu_data,
+                                    const std::shared_ptr<CudaContext>& ctx);
+ 
+ /// Low-level: get a CPU address through which the device data be accessed.
++ARROW_EXPORT
+ Result<uint8_t*> GetHostAddress(uintptr_t device_ptr);
+ 
+ }  // namespace cuda
+ 

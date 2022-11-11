@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/solid
-    REF v5.84.0
-    SHA512 b6452e56c6029289450850c1fcfff96da0005f8dfa03f1817754910945e3ccadd8502e330a4484a5c5e9a8d5525838c8090268bb083639062dfca7176852c159
+    REF v5.89.0
+    SHA512 18d3c709756476870b6495bd5a99d70ec291a71a2f79dae954ce434953fb6299033c2dc85c68adf81031b03b70bf2e4798b7428da99c2ac28ddd6070cc413592
     HEAD_REF master
     PATCHES
-        fix_config_cmake.patch # https://invent.kde.org/frameworks/solid/-/merge_requests/53
+        fix-libmount.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -34,12 +34,18 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
@@ -47,9 +53,9 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Solid CONFIG_PATH lib/cmake/KF5Solid)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
-      TOOL_NAMES solid-hardware5
-      AUTO_CLEAN
- )
+    TOOL_NAMES solid-hardware5
+    AUTO_CLEAN
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -58,7 +64,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/debug/qml")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
-
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

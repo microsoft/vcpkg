@@ -1,0 +1,12 @@
+diff --git a/build-cmake/CMakeLists.txt b/build-cmake/CMakeLists.txt
+--- a/build-cmake/CMakeLists.txt
++++ b/build-cmake/CMakeLists.txt
+@@ -70,7 +70,7 @@ if (BUILD_PROTO3)
+ endif()
+ ENDIF()
+ 
+-if (MSVC AND NOT BUILD_SHARED_LIBS)
++if (0)
+ 	# In case we are building static libraries, link also the runtime library statically
+ 	# so that MSVCR*.DLL is not required at runtime.
+ 	# https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx

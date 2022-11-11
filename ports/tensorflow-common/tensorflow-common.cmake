@@ -1,15 +1,15 @@
-set(TF_VERSION 2.6.0)
-set(TF_VERSION_SHORT 2.6)
+set(TF_VERSION 2.10.0)
+set(TF_VERSION_SHORT 2.10)
 
-vcpkg_find_acquire_program(BAZEL)
+find_program(BAZEL bazel PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" REQUIRED)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
-vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
-set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
+vcpkg_add_to_path(PREPEND "${BAZEL_DIR}")
+set(ENV{BAZEL_BIN_PATH} "${BAZEL_DIR}")
 
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
 	if(EXISTS "${PATH_TO_REMOVE}")
-		vcpkg_execute_required_process(COMMAND ${CMAKE_COMMAND} -E sleep 5 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-sleep-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${CMAKE_COMMAND} -E sleep 5 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-sleep-${TARGET_TRIPLET})
 		file(REMOVE_RECURSE ${PATH_TO_REMOVE})
 	endif()
 endfunction()
@@ -39,29 +39,47 @@ if(CMAKE_HOST_WIN32)
 	set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
-	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
+
+	# on macos arm64 use conda miniforge
+	if (VCPKG_HOST_IS_OSX)
+		EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH)
+		if(HOST_ARCH STREQUAL "arm64")
+			message(STATUS "Using python from miniforge3 ")
+
+			if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/miniforge3)
+				vcpkg_execute_required_process(COMMAND curl -fsSLo Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+				vcpkg_execute_required_process(COMMAND bash ./Miniforge3.sh -p ${CURRENT_BUILDTREES_DIR}/miniforge3 -b WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+				SET(PYTHON3 ${CURRENT_BUILDTREES_DIR}/miniforge3/bin/python3)
+			endif()
+		endif()
+	endif()
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
+	vcpkg_add_to_path(PREPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin)
+	set(PYTHON3 ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3)
+	set(ENV{VIRTUAL_ENV} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv)
 
 	if(VCPKG_TARGET_IS_OSX)
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
 		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
 		set(ENV{BLAS} "None")
 		set(ENV{LAPACK} "None")
 		set(ENV{ATLAS} "None")
-		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequistes-pip-${TARGET_TRIPLET})
 	else()
-		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 	endif()
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
 # check if numpy can be loaded
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-numpy-${TARGET_TRIPLET})
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
 set(ENV{TF_NEED_KAFKA} 0)
@@ -83,9 +101,15 @@ set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
 set(ENV{TF_DOWNLOAD_CLANG} 0)
 set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
-set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
+set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+       if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
+               set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+       endif()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.dll)
@@ -125,7 +149,15 @@ else()
 	endif()
 endif()
 
-foreach(BUILD_TYPE dbg rel)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND PORT_BUILD_CONFIGS "dbg")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  list(APPEND PORT_BUILD_CONFIGS "rel")
+endif()
+
+foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
 	set(WINDOWS_ONLY_PATCHES)
@@ -139,11 +171,10 @@ foreach(BUILD_TYPE dbg rel)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 d052da4b324f1b5ac9c904ac3cca270cefbf916be6e5968a6835ef3f8ea8c703a0b90be577ac5205edf248e8e6c7ee8817b6a1b383018bb77c381717c6205e05
+		SHA512 bf8a6f16393499c227fc70f27bcfb6d44ada53325aee2b217599309940f60db8ee00dd90e3d82b87d9c309f5621c404edab55e97ab8bfa09e4fc67859b9e3967
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
@@ -179,6 +210,8 @@ foreach(BUILD_TYPE dbg rel)
 	set(COPTS)
 	set(CXXOPTS)
 	set(LINKOPTS)
+	set(BUILD_OPTS --jobs ${VCPKG_CONCURRENCY})
+	message(STATUS "Build Tensorflow with concurrent level: ${VCPKG_CONCURRENCY}")
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(PLATFORM_COMMAND WINDOWS_COMMAND)
 	else()
@@ -186,46 +219,57 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
-			set(BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS currently broken
+			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
+			else()
+				list(APPEND BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS x86_64 currently broken
+			endif()
 		else()
-			set(BUILD_OPTS --compilation_mode=dbg)
+			list(APPEND BUILD_OPTS --compilation_mode=dbg)
 		endif()
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_DEBUG)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
-		set(BUILD_OPTS --compilation_mode=opt)
+		list(APPEND BUILD_OPTS --compilation_mode=opt)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_RELEASE)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
+	endif()
+
+	if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		# tensorflow supports 10.12.6 (Sierra) or higher (64-bit)
+		# but actually does not compile with < 10.14
+		# https://www.tensorflow.org/install/pip#macos
+		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -286,7 +330,7 @@ foreach(BUILD_TYPE dbg rel)
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" ${TF_VERSION} ${TF_LIB_SUFFIX}
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)

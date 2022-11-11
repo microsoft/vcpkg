@@ -1,12 +1,12 @@
 diff --git a/src/3rdparty/chromium/third_party/angle/BUILD.gn b/src/3rdparty/chromium/third_party/angle/BUILD.gn
-index ad7675f4e..4a43479d9 100644
+index fb57176..fa84cc5 100644
 --- a/src/3rdparty/chromium/third_party/angle/BUILD.gn
 +++ b/src/3rdparty/chromium/third_party/angle/BUILD.gn
-@@ -126,7 +126,6 @@ config("extra_warnings") {
+@@ -131,7 +131,6 @@ config("extra_warnings") {
    # Enable more default warnings on Windows.
    if (is_win) {
      cflags += [
 -      "/we4244",  # Conversion: possible loss of data.
+       "/we4312",  # Conversion: greater size.
        "/we4456",  # Variable shadowing.
        "/we4458",  # declaration hides class member.
-       "/we4715",  # not all control paths return a value

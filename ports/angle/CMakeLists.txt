@@ -72,7 +72,21 @@ elseif(APPLE)
         set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win|_mac")
     endif()
 endif()
-file(GLOB ANGLE_COMMON_SOURCES 
+
+if(APPLE)
+    set(ANGLE_COMMON_PLATFORM_SOURCES
+        "src/common/apple/*.h"
+        "src/common/apple/*.cpp"
+        "src/common/apple/*.mm"
+        "src/common/gl/cgl/*.h"
+        "src/common/gl/cgl/*.cpp"
+        "src/common/gl/cgl/*.mm")
+else()
+    set(ANGLE_COMMON_PLATFORM_SOURCES )
+endif()
+
+file(GLOB ANGLE_COMMON_SOURCES
+    ${ANGLE_COMMON_PLATFORM_SOURCES}
     "src/common/*.h"
     "src/common/*.inc"
     "src/common/*.cpp"
@@ -84,7 +98,8 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/xxhash/*.h"
     "src/common/third_party/xxhash/*.c"
     "src/common/third_party/smhasher/src/*.h"
-    "src/common/third_party/smhasher/src/*.cpp")
+    "src/common/third_party/smhasher/src/*.cpp"
+    )
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common OBJECT ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base>")
@@ -235,13 +250,13 @@ file(GLOB TRANSLATOR_GLSL_BASE_SOURCES
     "src/compiler/translator/OutputGLSLBase.cpp"
     "src/compiler/translator/OutputGLSLBase.h"
 )
-file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES 
+file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES
     "src/compiler/translator/BuiltinsWorkaroundGLSL.cpp"
     "src/compiler/translator/BuiltinsWorkaroundGLSL.h"
     "src/compiler/translator/OutputGLSL.cpp"
     "src/compiler/translator/OutputGLSL.h"
 )
-file(GLOB TRANSLATOR_ESSL_SOURCES 
+file(GLOB TRANSLATOR_ESSL_SOURCES
     "src/compiler/translator/OutputESSL.cpp"
     "src/compiler/translator/OutputESSL.h"
     "src/compiler/translator/TranslatorESSL.cpp"
@@ -332,19 +347,22 @@ add_library(angle::preprocessor ALIAS angle_preprocessor)
 ## OpenGL Renderer
 if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     if(WINDOWS_DESKTOP)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/wgl/*.cpp"
             "src/libANGLE/renderer/gl/wgl/*.h"
         )
     elseif(APPLE)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/cgl/*.mm"
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.h"
+            "src/libANGLE/renderer/gl/apple/*.mm"
+            "src/libANGLE/renderer/gl/apple/*.cpp"
+            "src/libANGLE/renderer/gl/apple/*.h"
             "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/glx/*.cpp"
             "src/libANGLE/renderer/gl/glx/*.h"
             "src/libANGLE/renderer/gl/egl/*.cpp"
@@ -425,6 +443,18 @@ file(GLOB ANGLE_GPU_INFO_UTIL_SOURCES
     "src/gpu_info_util/SystemInfo_internal.h"
     "src/gpu_info_util/SystemInfo.cpp"
 )
+
+if(LINUX)
+    find_package(X11 COMPONENTS Xext Xi REQUIRED)
+    include_directories(${X11_INCLUDE_DIR})
+    list(APPEND LIBANGLE_RENDERER_PLATFORM ${X11_LIBRARIES})
+    set(LIBANGLE_RENDERER_COMPILEDEF
+        -DANGLE_USE_X11
+    )
+else()
+    set(LIBANGLE_RENDERER_COMPILEDEF )
+endif()
+
 add_library(angle_gpu_info_util OBJECT ${ANGLE_GPU_INFO_UTIL_SOURCES})
 if(WIN32)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
@@ -440,8 +470,9 @@ elseif(APPLE)
 	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
 elseif(LINUX)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
+    target_sources(angle_gpu_info_util PRIVATE "src/third_party/libXNVCtrl/NVCtrl.c")
     target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
-    target_link_libraries(angle_gpu_info_util PRIVATE X11 Xi Xext)
+    target_link_libraries(angle_gpu_info_util PRIVATE X11::X11 X11::Xi X11::Xext)
 elseif(ANDROID)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_android.cpp")
 endif()
@@ -530,17 +561,6 @@ else()
     set(LIBANGLE_RENDERER_PLATFORM )
 endif()
 
-if(LINUX)
-    find_package(X11)
-    include_directories(${X11_INCLUDE_DIR})
-    list(APPEND LIBANGLE_RENDERER_PLATFORM ${X11_LIBRARIES})
-    set(LIBANGLE_RENDERER_COMPILEDEF
-        -DANGLE_USE_X11
-    )
-else()
-    set(LIBANGLE_RENDERER_COMPILEDEF )
-endif()
-
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
     angle::common
@@ -554,9 +574,9 @@ target_link_libraries(libANGLE PRIVATE
 target_include_directories(libANGLE PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/khronos>")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
-    PUBLIC 
-        -DLIBANGLE_IMPLEMENTATION 
-        ${LIBANGLE_RENDERER_COMPILEDEF} 
+    PUBLIC
+        -DLIBANGLE_IMPLEMENTATION
+        ${LIBANGLE_RENDERER_COMPILEDEF}
         -DANGLE_EXPORT=
         -DANGLE_UTIL_EXPORT=
         -DEGLAPI=
@@ -605,6 +625,9 @@ list(APPEND LIBGLESV2_SOURCES
 )
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libGLESv2 PROPERTY OUTPUT_NAME libGLESv2_angle)
+endif()
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
@@ -649,6 +672,9 @@ add_library(libEGL
 )
 
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libEGL PROPERTY OUTPUT_NAME libEGL_angle)
+endif()
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 target_compile_definitions(libEGL
     PRIVATE

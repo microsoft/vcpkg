@@ -3,14 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/regex
-    REF boost-1.77.0
-    SHA512 1723747db78ff927b5e713604cedf5c8a2eb436ccb2b8e36691376bbf814438ed3e6a4862539f6b85aff27cc3690e0d37b0af7c6925e60b755a907e4ac51378c
+    REF boost-1.80.0
+    SHA512 266811207ed3eb91b436b42d99a3d0d6bfd7018d379a6116e908471449e5f4686bc940c268d48fe9b07be7ef68d9e01907eeda8c16de79eccaa6e17220468320
     HEAD_REF master
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-regex requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

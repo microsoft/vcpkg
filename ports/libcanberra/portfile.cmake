@@ -1,15 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-set(VERSION 0.30)
-set(PATCHES)
-
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHES macos_fix.patch macos_pkgconfig.patch)
-endif()
-
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with brew install automake libtool")
 else()
-    message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with apt-get install automake libtool")
+    message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n    ltdl-dev\n\nThey can be installed with apt-get install automake libtool ltdl-dev")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
@@ -18,28 +11,43 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 f7543582122256826cd01d0f5673e1e58d979941a93906400182305463d6166855cb51f35c56d807a56dc20b7a64f7ce4391368d24990c1b70782a7d0b4429c2
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
-    PATCHES ${PATCHES}
+    PATCHES
+        ltdl.patch
+        undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
+        gtk_dont_assume_x11.patch # likewise
+        03_onlyshowin_unity.patch # likewise
+        lc-messages.patch
 )
 
-set(EXTRA_CPPFLAGS)
-set(EXTRA_LDFLAGS)
+foreach(backend in oss pulse)
+    if("${backend}" IN_LIST FEATURES)
+        message(STATUS "Backend '${backend}' requires system libraries")
+    endif()
+endforeach()
 
-#libltdl fixes
+vcpkg_list(SET OPTIONS)
+foreach(feature IN ITEMS alsa gstreamer gtk3 null oss pulse)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND OPTIONS "--enable-${feature}")
+    else()
+        list(APPEND OPTIONS "--disable-${feature}")
+    endif()
+endforeach()
+
 if(VCPKG_TARGET_IS_OSX)
     execute_process(
          COMMAND brew --prefix libtool
          OUTPUT_VARIABLE BREW_LIBTOOL_PATH
+         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    string(STRIP ${BREW_LIBTOOL_PATH} BREW_LIBTOOL_PATH)
-
-    set(LIBS_PRIVATE "-L${BREW_LIBTOOL_PATH}/lib -lltdl")
-    set(CFLAGS_PRIVATE "-I${BREW_LIBTOOL_PATH}/include")
-    set(EXTRA_LDFLAGS "LDFLAGS=${LIBS_PRIVATE}")
-    set(EXTRA_CPPFLAGS "CPPFLAGS=${CFLAGS_PRIVATE}")
+    vcpkg_list(APPEND OPTIONS
+        "CPPFLAGS=-I${BREW_LIBTOOL_PATH}/include"
+        "LTDL_LDFLAGS=-L${BREW_LIBTOOL_PATH}/lib"
+        cc_cv_LDFLAGS__Wl___as_needed=no
+        cc_cv_LDFLAGS__Wl___gc_sections=no
+    )
 endif()
 
 set(ENV{GTKDOCIZE} true)
@@ -47,20 +55,16 @@ vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --disable-gtk
         --disable-gtk-doc
         --disable-lynx
         --disable-silent-rules
-        ${EXTRA_CPPFLAGS}
-        ${EXTRA_LDFLAGS}
+        --disable-tdb
+        --disable-udev
+        ${OPTIONS}
 )
 
 vcpkg_install_make()
-
-if(VCPKG_TARGET_IS_OSX)
-    configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
-    configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
-endif()
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

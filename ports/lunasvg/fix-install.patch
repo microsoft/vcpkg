@@ -1,0 +1,26 @@
+ CMakeLists.txt | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9916c67..159f3a6 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,16 +24,5 @@ if(LUNASVG_BUILD_EXAMPLES)
+     add_subdirectory(example)
+ endif()
+ 
+-set(LUNASVG_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+-set(LUNASVG_INCDIR ${CMAKE_INSTALL_PREFIX}/include)
+-
+-install(FILES
+-    include/lunasvg.h
+-    DESTINATION ${LUNASVG_INCDIR}
+-)
+-
+-install(TARGETS lunasvg
+-    LIBRARY     DESTINATION    ${LUNASVG_LIBDIR}
+-    ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
+-    INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
+-)
++set_target_properties(lunasvg PROPERTIES PUBLIC_HEADER "include/lunasvg.h")
++install(TARGETS lunasvg RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)

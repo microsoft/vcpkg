@@ -1,13 +1,31 @@
 {
   "name": "libgeotiff",
-  "version-string": "1.6.0",
-  "port-version": 4,
-  "description": "Libgeotiff is an open source library normally hosted on top of libtiff for reading, and writing GeoTIFF information tags.",
+  "version": "1.7.1",
+  "port-version": 1,
+  "description": "Libgeotiff is an open source library on top of libtiff for reading and writing GeoTIFF information tags.",
   "homepage": "https://github.com/OSGeo/libgeotiff",
+  "license": "MIT",
   "dependencies": [
-    "libjpeg-turbo",
-    "proj4",
-    "tiff",
-    "zlib"
-  ]
+    "proj",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Install libgeotiff utility programs",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    }
+  }
 }

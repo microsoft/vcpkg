@@ -10,6 +10,8 @@ FEATURES
     "big-codecs"    FEATURE_big_codecs
     "iconv"         FEATURE_iconv
     "iconv"         CMAKE_DISABLE_FIND_PACKAGE_ICU
+    #"iconv"         CMAKE_REQUIRE_FIND_PACKAGE_WrapIconv
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
 INVERTED_FEATURES
     "iconv"         CMAKE_DISABLE_FIND_PACKAGE_WrapIconv
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick

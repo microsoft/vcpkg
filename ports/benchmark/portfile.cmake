@@ -1,13 +1,10 @@
-#https://github.com/google/benchmark/issues/661
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF f91b6b42b1b9854772a90ae9501464a161707d1e # v1.6.0
-    SHA512 5e3db75fcaa86b766d33e368f58cec5c5b2b9ba7fde658d13868d577679c13069756e68e86323b972daccc4f7d5e392d24d2d42e5308c1ae7e9955e651d45866
+    REF v1.7.0
+    SHA512 25f81930ce210e298d9cc67c965cc8937f66c53427b18a672338b86424eef32df877ec6b7a7106417464b29c5048b014fcc82cfa773168ed701aa47d01f39f82
     HEAD_REF master
 )
 
