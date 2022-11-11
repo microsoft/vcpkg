@@ -14,7 +14,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 msvc_symbol.patch)
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        # Hint to use clang x86/x64 version in emulation mode on an ARM device 
         vcpkg_add_to_path("$ENV{VCINSTALLDIR}/Tools/Llvm/bin")
+
+        find_program(clang-cl-check clang-cl)
+        if (NOT clang-cl-check)
+            message(FATAL_ERROR "${PORT} requires Clang installed for ${VCPKG_TARGET_ARCHITECTURE} target architecture. For instance, Clang can be installed by using Visual Studio or LLVM installers")
+        endif()
+
         set(ENV{CCAS} "clang-cl --target=arm64-pc-win32 -c")
         # Avoid the x18 register since it is reserved on Darwin.
         vcpkg_download_distfile(
