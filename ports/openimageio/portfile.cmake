@@ -7,7 +7,8 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
-        fix-externalpackages.patch
+        fix-openexr-dll.patch
+        imath-version-guard.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -58,9 +59,9 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
-		-DENABLE_INSTALL_testtex=OFF  # testtex ordinarily gets built for testing but is not "installed".
+		-DENABLE_INSTALL_testtex=OFF
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
-	MAYBE_UNUSED_VARIABLES
+    MAYBE_UNUSED_VARIABLES
 		ENABLE_INSTALL_testtex
 )
 
