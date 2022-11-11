@@ -8012,10 +8012,6 @@
       "baseline": "3.4",
       "port-version": 7
     },
-    "xalan-c": {
-      "baseline": "1.12",
-      "port-version": 1
-    },
     "xapian": {
       "baseline": "1.4.21",
       "port-version": 1
