@@ -1,0 +1,7 @@
+The package avro-cpp can be used from CMake via:
+
+    find_path(AVROCPP_INCLUDE_DIRS avro/Encoder.hh)
+    find_library(AVROCPP_LIBRARIES avrocpp REQUIRED)
+
+    target_include_directories(main PRIVATE ${AVROCPP_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${AVROCPP_LIBRARIES})
