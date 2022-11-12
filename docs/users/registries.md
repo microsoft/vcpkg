@@ -19,8 +19,11 @@ use, please read [this documentation](../maintainers/registries.md).
       - [Registry Objects: `"packages"`](#registry-objects-packages)
     - [Configuration: `"default-registry"`](#configuration-default-registry)
     - [Configuration: `"registries"`](#configuration-registries)
+    - [Configuration: `"overlay-ports"`](#configuration-overlay-ports)
+    - [Configuration: `"overlay-triplets"`](#configuration-overlay-triplets)
     - [Example Configuration File](#example-configuration-file)
   - [Package Name Resolution](#package-name-resolution)
+    - [Overlays Resolution](#overlays-resolution)
     - [Versioning Support](#versioning-support)
 
 ## `vcpkg-configuration.json`
@@ -131,13 +134,30 @@ Using additional port registries also requires that a baseline is provided for t
 or that the default registry is set to null. If using the `"builtin-registry"` you can set the baseline
 using the `"builtin-baseline"` field in `vcpkg.json`.
 
+### Configuration: `"overlay-ports"`
+
+An array of port overlay paths.
+
+Each path in the array must point to etiher:
+* a particular port directory (a directory containing `vcpkg.json` and `portfile.cmake`), or
+* a directory containing port directories.
+Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
+
+### Configuration: `"overlay-triplets"`
+
+An array of triplet overlay paths.
+
+Each path in the array must point to a directory of triplet files ([see triplets documentation](triplets.md)).
+Relative paths are resolved relative to the `vcpkg-configuration.json` file. Absolute paths can be used but are discouraged.
+
 ### Example Configuration File
 
 Let's assume that you have mirrored <https://github.com/microsoft/vcpkg> at
 <https://git.example.com/vcpkg>: this will be your default registry.
 Additionally, you want to use North Wind Trader's registry for their
-beison and beicode libraries. The following `vcpkg-configuration.json`
-will work:
+beison and beicode libraries, as well as configure overlay ports and 
+overlay triplets from your custom directories. The following
+`vcpkg-configuration.json` will work:
 
 ```json
 {
@@ -153,7 +173,12 @@ will work:
       "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
       "packages": [ "beicode", "beison" ]
     }
-  ]
+  ],
+  "overlay-ports": [ "./team-ports",
+                     "c:/project/my-ports/fmt",
+                     "./custom-ports"
+   ],
+  "overlay-triplets": [ "./my-triplets" ]
 }
 ```
 
@@ -333,6 +358,20 @@ and `qtkeychain` to its `"packages"` array:
 
 Because exact matches are preferred over pattern matches, this configuration will make
 `qt-advanced-docking-system` and `qtkeychain` resolve to the default registry.
+
+### Overlays Resolution
+
+Overlay ports and triplets are evaluated in this order:
+
+1. Overlays from the [command line](../commands/common-options.md)
+2. Overlays from `vcpkg-configuration.json`
+3. Overlays from the `VCPKG_OVERLAY_[PORTS|TRIPLETS]` [environment](config-environment.md) variable.
+
+Additionaly, each method has its own evaluation order:
+
+* Overlays from the command line are evaluated from left-to-right in the order each argument is passed, with each `--overlay-[ports|triplets]` argument adding a new overlay location.
+* Overlays from `vcpkg-configuration.json` are evaluated in the order of the `"overlay-[ports|triplets]"` array.
+* Overlays set by `VCPKG_OVERLAY_[PORTS|TRIPLETS]` are evaluated from left-to-right. Overlay locations are separated by an OS-specific path separator (`;` on Windows and `:` on non-Windows).
 
 ### Versioning Support
 
