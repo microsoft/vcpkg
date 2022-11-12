@@ -36,8 +36,7 @@ vcpkg_configure_make(
         "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpg-error-config"
 )
 
-set(arg_MAKE_OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}") # TODO fix OPTIONS in vcpkg_install_make
-vcpkg_install_make()
+vcpkg_install_make(OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
