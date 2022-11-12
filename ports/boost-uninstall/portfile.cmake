@@ -12,6 +12,10 @@ vcpkg_download_distfile(
 
 file(INSTALL "${FILE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost" RENAME "FindBoost.cmake")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/boost/FindBoost.cmake" [[include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)]] [[include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)]])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/boost/FindBoost.cmake" [[cmake_policy(GET CMP0093 _Boost_CMP0093
+    PARENT_SCOPE # undocumented, do not use outside of CMake
+  )]] "if(POLICY CMP0093)\ncmake_policy(GET CMP0093 _Boost_CMP0093\n    PARENT_SCOPE # undocumented, do not use outside of CMake\n  )\nelse()\nset(_Boost_CMP0093 OLD)\nendif()\n")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/boost/FindBoost.cmake" [[cmake_policy(GET CMP0074 _Boost_CMP0074)]] "if(POLICY CMP0074)\ncmake_policy(GET CMP0074 _Boost_CMP0074)\nelse()\nset(_Boost_CMP0074 OLD)\nendif()\n")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/boost/FindBoost.cmake" [[cmake_policy(SET CMP0102 NEW)]] "if(POLICY CMP0102)\ncmake_policy(SET CMP0102 NEW)\nendif()\n")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/boost/vcpkg-cmake-wrapper.cmake" @ONLY)
