@@ -39,6 +39,10 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "Boost",
+          "name": "boost"
+        },
+        {
           "$package": "BZip2",
           "name": "bzip2"
         },
