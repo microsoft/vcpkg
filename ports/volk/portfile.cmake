@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DVOLK_INSTALL=ON
+        -DVULKAN_HEADERS_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
