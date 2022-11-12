@@ -38,11 +38,10 @@ if("cmake-3-7" IN_LIST FEATURES)
         message(FATAL_ERROR "Unable to test feature 'cmake-3-7' for '${HOST_TRIPLET}' host.")
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH legacy_cmake
+    vcpkg_extract_source_archive(legacy_cmake
         ARCHIVE "${legacy_cmake_archive}"
-        REF "${cmake_version}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${name}"
+        SOURCE_BASE "${cmake_version}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cmake"
     )
     list(APPEND cmake_commands "${legacy_cmake}${cmake_bin_dir}/cmake")
 endif()
