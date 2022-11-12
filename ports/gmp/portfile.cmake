@@ -9,19 +9,15 @@ vcpkg_download_distfile(
     SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(PATCHES yasm.patch)
-endif()
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF gmp-6.2.1
     PATCHES
+        asmflags.patch
         cross-tools.patch
         subdirs.patch
         msvc_symbol.patch
-        ${PATCHES}
 )
 
 vcpkg_list(SET OPTIONS)
@@ -31,14 +27,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
         vcpkg_list(APPEND OPTIONS --enable-assembly=no)
     else()
-        set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             set(asmflag win64)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             set(asmflag win32)
         endif()
-        set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-        vcpkg_list(APPEND OPTIONS "gmp_cv_asm_w32=.word")
+        vcpkg_list(APPEND OPTIONS
+            "CCAS=${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX} -Xvc -f ${asmflag} -pgas -rraw"
+            "gmp_cv_asm_w32=.word"
+        )
     endif()
 elseif(VCPKG_CROSSCOMPILING)
     vcpkg_cmake_get_vars(cmake_vars_file)
