@@ -6,12 +6,10 @@ else()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libsm
-    REF a52c79544fcd6b5e2242b9122dfaa34be07aebb2 # 1.2.3
-    SHA512  379e450d90e61d80d4fea8449a582b3eee3968bef137022053cb3bd51fa2815d8fccc43ff11e3b593c4a67ad64e93209c25111a20ac88e38c1f663cd274f5d56
+    REPO lib/libxtst
+    REF 99b89c3bcb0ebb0b6dd86bfdc9d276715eaea889 
+    SHA512  6479294057c73e91a086891e461e98d2717ae1fbe746cd74c9d13036a59bce931b8b0d5293d3c5ab4feeea426f2297647335179997e06a040b847697c7557199
     HEAD_REF master
-    PATCHES windows.patch
-            missing-include.patch # avoids: warning C4013: '_getpid' undefined; assuming extern returning int
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
