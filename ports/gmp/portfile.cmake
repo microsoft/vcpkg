@@ -27,6 +27,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_list(SET OPTIONS)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_list(APPEND OPTIONS "ac_cv_func_memset=yes")
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
         vcpkg_list(APPEND OPTIONS --enable-assembly=no)
     else()
@@ -37,10 +38,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             set(asmflag win32)
         endif()
         set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-        vcpkg_list(APPEND OPTIONS
-            "ac_cv_func_memset=yes"
-            "gmp_cv_asm_w32=.word"
-        )
+        vcpkg_list(APPEND OPTIONS "gmp_cv_asm_w32=.word")
     endif()
 elseif(VCPKG_CROSSCOMPILING)
     vcpkg_cmake_get_vars(cmake_vars_file)
