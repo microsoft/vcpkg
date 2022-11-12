@@ -3,9 +3,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcvt
     REF db5ff12110994dc9010d44f981399e796917a845
-    SHA512  81472455e3ce5645b8b0aa79222e9fc5de92f09429bf9a1641de259b8152253fda59abbcde97c99f59f313e9a571f2545e9420d7ba5ee9a38f70302fdce09f53
+    SHA512 a69c4d163ab7a5f71dd4940e9b1f7ac2c5b5f282cbe9e1af26dcb677d061ff5187aa17f9acf9f913d3b05afac44f44b962ca4290ad2f5ae7f104ec870d8b515f
     HEAD_REF master
-) 
+)
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
 )

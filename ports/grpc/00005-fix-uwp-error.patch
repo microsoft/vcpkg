@@ -3,7 +3,7 @@ index cb17759bba..a3c3598430 100644
 --- a/src/core/ext/transport/chttp2/transport/hpack_parser.cc
 +++ b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
 @@ -1032,7 +1032,7 @@ class HPackParser::Parser {
- 
+
   private:
    void GPR_ATTRIBUTE_NOINLINE LogHeader(const HPackTable::Memento& memento) {
 -    const char* type;
@@ -25,7 +25,7 @@ index 2e78b4de9e..77e88cab70 100644
      slice.data.inlined.length = len;
 @@ -199,7 +200,7 @@ grpc_slice grpc_slice_from_moved_string(grpc_core::UniquePtr<char> p) {
  }
- 
+
  grpc_slice grpc_slice_from_cpp_string(std::string str) {
 -  grpc_slice slice;
 +  grpc_slice slice = { 0 };
