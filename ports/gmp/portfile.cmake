@@ -19,32 +19,37 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     REF gmp-6.2.1
     PATCHES
+        cross-tools.patch
+        subdirs.patch
         ${PATCHES}
-        tools.patch
 )
 
+vcpkg_list(SET OPTIONS)
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(asmflag win64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(asmflag win32)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
+        vcpkg_list(APPEND OPTIONS --enable-assembly=no)
+    else()
+        set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(asmflag win64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(asmflag win32)
+        endif()
+        set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
+        vcpkg_list(APPEND OPTIONS
+            "ac_cv_func_memset=yes"
+            "gmp_cv_asm_w32=.word"
+        )
     endif()
-    set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-    set(OPTIONS ac_cv_func_memset=yes
-                "gmp_cv_asm_w32=.word"
-                )
-    
+elseif(VCPKG_CROSSCOMPILING)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    vcpkg_list(APPEND OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_C_COMPILER} -c")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
-    set(ENV{CC_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
-    set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
-    list(APPEND OPTIONS --enable-assembly=no)
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_configure_make(
@@ -54,32 +59,30 @@ vcpkg_configure_make(
         ${OPTIONS}
         --enable-cxx
         --with-pic
+        "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-
-set(tool_names bases fac fib jacobitab psqr trialdivtab)
-list(TRANSFORM tool_names PREPEND "gen-")
-list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-
-if(VCPKG_CROSSCOMPILING)
-    list(TRANSFORM tool_names PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/")
-    file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" )
-    if(NOT VCPKG_BUILD_TYPE)
-        file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" )
-    endif()
-endif()
-
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
-    list(TRANSFORM tool_names PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
-    file(COPY ${tool_names} DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}" )
+    set(tool_names bases fac fib jacobitab psqr trialdivtab)
+    list(TRANSFORM tool_names PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-")
+    list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    file(INSTALL ${tool_names} DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}" USE_SOURCE_PERMISSIONS)
+    vcpkg_copy_tool_dependencies("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/info")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/README"
+        "${SOURCE_PATH}/COPYING.LESSERv3"
+        "${SOURCE_PATH}/COPYINGv3"
+        "${SOURCE_PATH}/COPYINGv2"
+)
