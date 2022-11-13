@@ -9,6 +9,7 @@
   "dependencies": [
     {
       "name": "boost-accumulators",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -74,6 +75,7 @@
     },
     {
       "name": "boost-compute",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -107,6 +109,7 @@
     },
     {
       "name": "boost-convert",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -195,6 +198,7 @@
     },
     {
       "name": "boost-geometry",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -203,6 +207,7 @@
     },
     {
       "name": "boost-graph",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -298,6 +303,7 @@
     },
     {
       "name": "boost-math",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -330,6 +336,7 @@
     },
     {
       "name": "boost-multiprecision",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -342,6 +349,7 @@
     },
     {
       "name": "boost-odeint",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -425,6 +433,7 @@
     },
     {
       "name": "boost-random",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -543,10 +552,12 @@
     },
     {
       "name": "boost-ublas",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
       "name": "boost-units",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
@@ -559,6 +570,7 @@
     },
     {
       "name": "boost-uuid",
+      "platform": "!uwp",
       "version>=": "1.80.0#1"
     },
     {
