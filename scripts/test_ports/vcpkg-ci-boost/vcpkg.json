@@ -39,14 +39,19 @@
       "features": [
         "python3"
       ],
-      "platform": "!static"
+      "platform": "!static & !(arm & windows)"
+    },
+    {
+      "name": "boost-odeint",
+      "default-features": false
     },
     {
       "name": "boost-odeint",
       "default-features": false,
       "features": [
         "mpi"
-      ]
+      ],
+      "platform": "!(arm & windows)"
     },
     {
       "name": "boost-python",
