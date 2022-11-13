@@ -24,7 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost" = 2;
+    "boost" = 3;
     "boost-accumulators" = 1;
     "boost-algorithm" = 1;
     "boost-align" = 1;
@@ -131,7 +131,7 @@ $portVersions = @{
     "boost-ptr-container" = 1;
     "boost-python" = 1;
     "boost-qvm" = 1;
-    "boost-random" = 1;
+    "boost-random" = 2;
     "boost-range" = 1;
     "boost-ratio" = 1;
     "boost-rational" = 1;

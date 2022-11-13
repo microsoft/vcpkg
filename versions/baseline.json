@@ -558,7 +558,7 @@
     },
     "boost": {
       "baseline": "1.80.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-accumulators": {
       "baseline": "1.80.0",
@@ -990,7 +990,7 @@
     },
     "boost-random": {
       "baseline": "1.80.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-range": {
       "baseline": "1.80.0",
