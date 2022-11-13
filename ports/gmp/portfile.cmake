@@ -2,10 +2,12 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
 
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_download_distfile(
     ARCHIVE
-    URLS https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
-    FILENAME gmp-6.2.1.tar.xz
+    URLS "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
+    FILENAME "gmp-${VERSION}.tar.xz"
     SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
 )
 
@@ -17,10 +19,9 @@ vcpkg_download_distfile(
     SHA512 4a7c50dc0a78e6c297c0ac53129ed367dbf669100a613653987d0eddf175376296254ed26ecce15d02b0544b99e44719af49635e54982b22e745f22e2f8d1eda
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF gmp-6.2.1
+    SOURCE_BASE "v${VERSION}"
     PATCHES
         asmflags.patch
         cross-tools.patch
