@@ -9,6 +9,14 @@ vcpkg_download_distfile(
     SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
 )
 
+# Avoid the x18 register since it is reserved on arm64 osx and windows.
+vcpkg_download_distfile(
+    ARM64PATCH
+    URLS https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
+    FILENAME gmp-arm64-asm-fix-5f32dbc41afc.patch
+    SHA512 4a7c50dc0a78e6c297c0ac53129ed367dbf669100a613653987d0eddf175376296254ed26ecce15d02b0544b99e44719af49635e54982b22e745f22e2f8d1eda
+)
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -18,6 +26,8 @@ vcpkg_extract_source_archive_ex(
         cross-tools.patch
         subdirs.patch
         msvc_symbol.patch
+        arm64-coff.patch
+        "${ARM64PATCH}"
 )
 
 vcpkg_list(SET OPTIONS)
