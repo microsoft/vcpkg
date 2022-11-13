@@ -31,6 +31,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_list(SET OPTIONS)
+if("fat" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS "--enable-fat")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND OPTIONS
         "ac_cv_func_memset=yes"
