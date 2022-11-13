@@ -22,7 +22,8 @@
       "default-features": false,
       "features": [
         "numa"
-      ]
+      ],
+      "platform": "!uwp & !arm & !emscripten"
     },
     {
       "name": "boost-locale",
@@ -50,7 +51,14 @@
       "name": "boost-python",
       "default-features": false,
       "features": [
-        "python2",
+        "python2"
+      ],
+      "platform": "!(arm & windows)"
+    },
+    {
+      "name": "boost-python",
+      "default-features": false,
+      "features": [
         "python3"
       ]
     },
