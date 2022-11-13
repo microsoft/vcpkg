@@ -2,7 +2,7 @@
   "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost",
   "version": "1.80.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "license": "BSL-1.0",
@@ -594,6 +594,7 @@
   "features": {
     "mpi": {
       "description": "Build with MPI support",
+      "supports": "!(arm & windows)",
       "dependencies": [
         {
           "name": "boost-graph-parallel",
