@@ -185,6 +185,7 @@ function(vcpkg_cmake_configure)
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     # Sets configuration variables for macOS builds

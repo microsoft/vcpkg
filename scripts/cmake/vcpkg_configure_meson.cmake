@@ -264,8 +264,6 @@ function(z_vcpkg_meson_setup_extra_windows_variables config_type)
     ## winlibs
     separate_arguments(c_winlibs NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
     separate_arguments(cpp_winlibs NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-    list(TRANSFORM c_winlibs REPLACE "^(-|/)" "")
-    list(TRANSFORM cpp_winlibs REPLACE "^(-|/)" "")
     z_vcpkg_meson_convert_list_to_python_array(c_winlibs ${c_winlibs})
     z_vcpkg_meson_convert_list_to_python_array(cpp_winlibs ${cpp_winlibs})
     set(MESON_WINLIBS "c_winlibs = ${c_winlibs}\n")
