@@ -23,20 +23,20 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_TARGET_IS_UWP)
         set(UWP_LIBS windowsapp.lib)
-        set(UWP_LINK_FLAGS /APPCONTAINER)
     endif()
 
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        PREFER_JOM
+        CL_LANGUAGE C
         OPTIONS_RELEASE
             "INSTDIR=${INST_DIR}"
-            "LINK_FLAGS=${UWP_LINK_FLAGS}"
             "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} ${UWP_LIBS}"
         OPTIONS_DEBUG
             "INSTDIR=${INST_DIR}\\debug"
-            "LINK_FLAGS=${UWP_LINK_FLAGS} /debug"
+            "LINK_FLAGS=/debug"
             "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} ${UWP_LIBS}"
     )
 
