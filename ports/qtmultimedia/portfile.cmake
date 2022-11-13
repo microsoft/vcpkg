@@ -49,6 +49,8 @@ if("gstreamer" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
 endif()
+list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
+list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
