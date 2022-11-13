@@ -31,7 +31,8 @@
       "default-features": false,
       "features": [
         "icu"
-      ]
+      ],
+      "platform": "!uwp"
     },
     {
       "name": "boost-mpi",
@@ -66,14 +67,20 @@
       "default-features": false,
       "features": [
         "python3"
-      ]
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "boost-regex",
+      "default-features": false
     },
     {
       "name": "boost-regex",
       "default-features": false,
       "features": [
         "icu"
-      ]
+      ],
+      "platform": "!uwp"
     }
   ]
 }
