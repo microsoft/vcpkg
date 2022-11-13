@@ -85,6 +85,7 @@ vcpkg_configure_make(
         ${OPTIONS}
         --enable-cxx
         --with-pic
+        --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
 vcpkg_install_make()
