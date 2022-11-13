@@ -21,26 +21,43 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_list(SET OPTIONS)
-
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND OPTIONS "ac_cv_func_memset=yes")
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm|arm64)$")
-        vcpkg_list(APPEND OPTIONS --enable-assembly=no)
+    vcpkg_list(APPEND OPTIONS
+        "ac_cv_func_memset=yes"
+        "gmp_cv_asm_w32=.word"
+    )
+endif()
+
+set(disable_assembly OFF)
+set(ccas "")
+set(asmflags "-c")
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        string(APPEND asmflags " --target=i686-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND asmflags " --target=arm64-pc-windows-msvc")
     else()
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-            set(asmflag win64)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-            set(asmflag win32)
-        endif()
-        vcpkg_list(APPEND OPTIONS
-            "CCAS=${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX} -Xvc -f ${asmflag} -pgas -rraw"
-            "gmp_cv_asm_w32=.word"
-        )
+        set(disable_assembly ON)
+    endif()
+    if(NOT disable_assembly)
+        vcpkg_find_acquire_program(CLANG)
+        set(ccas "${CLANG}")
     endif()
 elseif(VCPKG_CROSSCOMPILING)
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    vcpkg_list(APPEND OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_C_COMPILER} -c")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+endif()
+
+if(disable_assembly)
+    vcpkg_list(APPEND OPTIONS "--enable-assembly=no")
+elseif(ccas)
+    cmake_path(GET ccas FILENAME ccas_command)
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path(PREPEND "${ccas_dir}")
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command} ${asmflags}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)

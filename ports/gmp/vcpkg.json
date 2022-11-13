@@ -12,16 +12,7 @@
     },
     {
       "name": "vcpkg-cmake-get-vars",
-      "host": true,
-      "platform": "!native & (!windows | mingw)"
-    },
-    {
-      "name": "yasm",
-      "host": true,
-      "features": [
-        "tools"
-      ],
-      "platform": "windows & !mingw & !arm"
+      "host": true
     }
   ]
 }
