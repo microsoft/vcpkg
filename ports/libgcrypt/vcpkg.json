@@ -9,23 +9,12 @@
   "dependencies": [
     {
       "name": "libgcrypt",
-      "host": true,
-      "default-features": false,
-      "features": [
-        "build-tools"
-      ],
-      "platform": "!native"
+      "host": true
     },
     "libgpg-error",
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ],
-  "features": {
-    "build-tools": {
-      "description": "Build-time tools, needed for cross builds",
-      "supports": "native"
-    }
-  }
+  ]
 }

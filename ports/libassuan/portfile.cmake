@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
 )
 
 if(VCPKG_CROSSCOMPILING)
-    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin")
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_configure_make(
@@ -40,12 +40,13 @@ if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 endif()
 
-if("build-tools" IN_LIST FEATURES)
+if(NOT VCPKG_CROSSCOMPILING)
     file(INSTALL
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkheader${VCPKG_TARGET_SUFFIX}"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
         USE_SOURCE_PERMISSIONS
     )
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

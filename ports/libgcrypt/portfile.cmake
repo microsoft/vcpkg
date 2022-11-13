@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
 )
 
 if(VCPKG_CROSSCOMPILING)
-    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin")
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=ASM;C")
@@ -40,12 +40,13 @@ vcpkg_install_make(OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
-if("build-tools" IN_LIST FEATURES)
+if(NOT VCPKG_CROSSCOMPILING)
     file(INSTALL
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cipher/gost-s-box${VCPKG_TARGET_SUFFIX}"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
         USE_SOURCE_PERMISSIONS
     )
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/libgcrypt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
