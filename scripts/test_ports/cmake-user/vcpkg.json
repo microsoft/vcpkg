@@ -40,7 +40,8 @@
       "dependencies": [
         {
           "$package": "Boost",
-          "name": "boost"
+          "name": "boost",
+          "platform": "!uwp"
         },
         {
           "$package": "BZip2",
