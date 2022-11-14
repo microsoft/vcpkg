@@ -8,8 +8,8 @@ set(AT_POCKETFFT_ENABLED 0)
 set(AT_MKL_ENABLED 0)
 set(AT_FFTW_ENABLED 0)
 
-find_program(Python3_EXECUTABLE NAMES python3 REQUIRED)
-find_program(PYTHON_EXECUTABLE NAMES python3 REQUIRED)
+find_program(Python3_EXECUTABLE NAMES python3 python REQUIRED)
+find_program(PYTHON_EXECUTABLE NAMES python3 python REQUIRED)
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 if(BUILD_PYTHON)
