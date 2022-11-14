@@ -1,16 +1,17 @@
 diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
-index bf7bd98..2cedc9a 100644
+index fe74e49..06e09d6 100644
 --- a/c10/util/Logging.cpp
 +++ b/c10/util/Logging.cpp
-@@ -4,6 +4,7 @@
+@@ -4,7 +4,7 @@
  #ifdef FBCODE_CAFFE2
  #include <folly/synchronization/SanitizeThread.h>
  #endif
+-
 +#include <glog/logging.h>
- 
  #include <algorithm>
  #include <cstdlib>
-@@ -187,23 +188,13 @@ C10_DEFINE_int(
+ #include <cstring>
+@@ -192,23 +194,13 @@ C10_DEFINE_int(
      google::GLOG_WARNING,
      "The minimum log level that caffe2 will output.");
  
@@ -25,13 +26,13 @@ index bf7bd98..2cedc9a 100644
 -} // namespace google
 -
  namespace c10 {
- bool InitCaffeLogging(int* argc, char** argv) {
-   if (*argc == 0)
-     return true;
+ namespace {
+ 
+ void initGoogleLogging(char const* name) {
  #if !defined(_MSC_VER)
    // This trick can only be used on UNIX platforms
 -  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized())
 +  if (!::google::IsGoogleLoggingInitialized())
  #endif
    {
-     ::google::InitGoogleLogging(argv[0]);
+     ::google::InitGoogleLogging(name);

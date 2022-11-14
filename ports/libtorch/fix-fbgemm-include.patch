@@ -1,0 +1,32 @@
+diff --git a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
+index 224a66f..eb42317 100644
+--- a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
++++ b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
+@@ -8,7 +8,10 @@
+ #include <torch/library.h>
+ 
+ #include <c10/util/irange.h>
+-
++#ifdef USE_FBGEMM
++#include <fbgemm/Fbgemm.h>
++#include <fbgemm/FbgemmEmbedding.h>
++#endif
+ int register_embedding_params();
+ 
+ /*
+diff --git a/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp b/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
+index f94d27b..299b88b 100644
+--- a/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
++++ b/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
+@@ -4,7 +4,10 @@
+ #include <ATen/native/quantized/cpu/fbgemm_utils.h>
+ #include <c10/util/irange.h>
+ #include <torch/library.h>
+-
++#ifdef USE_FBGEMM
++#include <fbgemm/Fbgemm.h>
++#include <fbgemm/FbgemmEmbedding.h>
++#endif
+ int register_embedding_params();
+ 
+ at::Tensor PackedEmbeddingBagWeight::unpack() {

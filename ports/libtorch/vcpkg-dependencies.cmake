@@ -8,6 +8,9 @@ set(AT_POCKETFFT_ENABLED 0)
 set(AT_MKL_ENABLED 0)
 set(AT_FFTW_ENABLED 0)
 
+find_program(Python3_EXECUTABLE NAMES python3 REQUIRED)
+find_program(PYTHON_EXECUTABLE NAMES python3 REQUIRED)
+
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 if(BUILD_PYTHON)
     find_package(Python3 REQUIRED COMPONENTS Development)
@@ -23,15 +26,15 @@ if(BUILD_PYTHON)
     find_package(pybind11 CONFIG REQUIRED)
     list(APPEND Caffe2_DEPENDENCY_LIBS pybind11::pybind11)
 endif()
-set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 
-find_path(FP16_INCLUDE_DIRS "fp16.h")
-find_path(PSIMD_INCLUDE_DIRS "psimd.h")
-find_path(FXDIV_INCLUDE_DIRS "fxdiv.h")
+find_path(FP16_INCLUDE_DIRS "fp16.h" REQUIRED)
+find_path(PSIMD_INCLUDE_DIRS "psimd.h" REQUIRED)
+find_path(FXDIV_INCLUDE_DIRS "fxdiv.h" REQUIRED)
 
 find_library(FOXI_LOADER_LIBPATH NAMES foxi_loader REQUIRED)
 list(APPEND Caffe2_DEPENDENCY_LIBS ${FOXI_LOADER_LIBPATH})
 
+find_package(Threads REQUIRED) # Threads::Threads
 find_package(gemmlowp CONFIG REQUIRED) # gemmlowp::gemmlowp
 find_package(gflags CONFIG REQUIRED) # gflags::gflags
 find_package(glog CONFIG REQUIRED) # glog::glog
@@ -137,8 +140,8 @@ if(USE_QNNPACK)
 endif()
 
 if(USE_XNNPACK)
-  find_package(xnnpack CONFIG REQUIRED) # unofficial::XNNPACK
-  list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::XNNPACK)
+  find_library(XNNPACK_LIBRARY NAMES xnnpack XNNPACK REQUIRED) # xnnpack
+  list(APPEND Caffe2_DEPENDENCY_LIBS ${XNNPACK_LIBRARY})
 endif()
  
 if(USE_ZSTD)
@@ -149,7 +152,7 @@ endif()
 if(USE_SYSTEM_ONNX)
   find_package(ONNX CONFIG REQUIRED) # onnx onnx_proto onnxifi_loader
   find_package(ONNXOptimizer CONFIG REQUIRED) # onnx_optimizer
-  list(APPEND Caffe2_DEPENDENCY_LIBS onnx onnx_proto onnxifi_loader onnx_optimizer)
+  list(APPEND Caffe2_DEPENDENCY_LIBS onnx onnx_proto onnx_optimizer)
   if(ONNX_ML)
     add_compile_definitions(ONNX_ML=1)
   endif()

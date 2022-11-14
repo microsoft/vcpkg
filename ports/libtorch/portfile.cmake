@@ -3,24 +3,38 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
-    REF v1.10.0
-    SHA512 92b70e6170a7f173c4a9cb29f6cec6dfa598587aa9cf6a620ec861b95da6ea555cbc7285914c0dab6cfc8af320fad4999be4a788acc1f15140664a67ad9dc35d
+    REF v1.12.1
+    SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
     HEAD_REF master
     PATCHES
+        pytorch-pr-85958.patch
         fix-cmake.patch
-        fix-sources.patch
+        fix-fbgemm-include.patch
         use-glog-header.patch
+        use-flatbuffers2.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
-vcpkg_find_acquire_program(PYTHON3)
+find_program(FLATC NAMES flatc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
+message(STATUS "Using flatc: ${FLATC}")
+
+vcpkg_execute_required_process(
+    COMMAND ${FLATC} --cpp --gen-object-api --gen-mutable mobile_bytecode.fbs
+    LOGNAME codegen-flatc-mobile_bytecode
+    WORKING_DIRECTORY "${SOURCE_PATH}/torch/csrc/jit/serialization"
+)
+
+find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
+message(STATUS "Using protoc: ${PROTOC}")
+
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
-    PYTHON_EXECUTABLE "${PYTHON3}"
     PACKAGES typing-extensions pyyaml
     OUT_PYTHON_VAR PYTHON3
 )
+message(STATUS "Using Python3: ${PYTHON3}")
+
 # Make the configure step use same Python executable
 get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
 vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
@@ -68,19 +82,7 @@ if("dist" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
         list(APPEND FEATURE_OPTIONS -DUSE_LIBUV=ON)
     endif()
-endif()
-
-if(VCPKG_TARGET_IS_LINUX)
-    # Linux package `libnuma-dev`
-    find_library(Numa_LIBPATH NAMES numa PATHS "/usr/lib" "/usr/lib/x86_64-linux-gnu")
-    if(Numa_LIBPATH)
-        message(STATUS "Detected numa: ${Numa_LIBPATH}")
-        list(APPEND FEATURE_OPTIONS -DUSE_NUMA=ON)
-    else()
-        message(FATAL_ERROR "To enable USE_NUMA build option, install 'libnuma-dev' package")
-    endif()
-else()
-    list(APPEND FEATURE_OPTIONS -DUSE_NUMA=OFF)
+    list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -111,13 +113,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_EXECUTABLE="${PYTHON3}"
+        -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH="${PROTOC}"
+        -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE:FILEPATH="${PROTOC}"
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_PYTHON=OFF
-        -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX}
         -DUSE_METAL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
@@ -134,6 +136,7 @@ vcpkg_cmake_configure(
         -DUSE_DEPLOY=OFF
         -DUSE_BREAKPAD=OFF
         -DUSE_FFTW=OFF
+        -DUSE_NUMA=OFF
         -DCAFFE2_USE_EIGEN_FOR_BLAS=ON
         # BLAS=MKL not supported
         -DUSE_MKLDNN=OFF
@@ -151,6 +154,7 @@ vcpkg_cmake_configure(
         MKLDNN_CPU_RUNTIME
 )
 vcpkg_cmake_build(TARGET __aten_op_header_gen) # explicit codegen is required
+vcpkg_cmake_build(TARGET torch_cpu LOGFILE_BASE torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
