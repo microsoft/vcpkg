@@ -5721,7 +5721,7 @@
       "port-version": 1
     },
     "pe-parse": {
-      "baseline": "1.3.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "pegtl": {
