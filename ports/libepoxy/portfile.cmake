@@ -2,15 +2,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/share/doc/libgles2/copyright")
-    message(STATUS "libgles2-mesa-dev must be installed before libepoxy can build. Install it with \"apt-get install libgles2-mesa-dev\".")
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n    libgles2-mesa-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libgles2-mesa-dev.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anholt/libepoxy
-    REF 1.5.9
-    SHA512 2b7c269063dc1c156c1a2a525e27a0a323baaa7fa4ac091536e4cc5fc4c247efe9770d7979dbddb54deb14853008bb6f4d67fddd26d87cbd264eb1e6e65bc5a8
+    REF 1.5.10
+    SHA512 6786f31c6e2865e68a90eb912900a86bf56fd3df4d78a477356886ac3b6ef52ac887b9c7a77aa027525f868ae9e88b12e5927ba56069c2e115acd631fca3abee
     HEAD_REF master
 )
 
