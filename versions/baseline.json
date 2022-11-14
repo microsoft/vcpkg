@@ -5929,7 +5929,7 @@
       "port-version": 1
     },
     "prometheus-cpp": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "promise-cpp": {
