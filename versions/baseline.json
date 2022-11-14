@@ -4458,7 +4458,7 @@
     },
     "libxmu": {
       "baseline": "1.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libxpm": {
       "baseline": "3.5.11",
