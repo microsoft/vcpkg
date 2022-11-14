@@ -1965,7 +1965,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-10-30",
+      "baseline": "2022-11-11",
       "port-version": 0
     },
     "discount": {
