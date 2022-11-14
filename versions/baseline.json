@@ -2481,8 +2481,8 @@
       "port-version": 0
     },
     "function2": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.2.2",
+      "port-version": 0
     },
     "functions-framework-cpp": {
       "baseline": "1.1.0",
