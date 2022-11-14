@@ -1,9 +1,9 @@
 {
   "name": "sqlitecpp",
-  "version-string": "3.1.1",
-  "port-version": 2,
+  "version": "3.2.0",
   "description": "SQLiteC++ (SQLiteCpp) is a smart and easy to use C++ SQLite3 wrapper.",
   "homepage": "https://github.com/SRombauts/SQLiteCpp",
+  "license": "MIT",
   "default-features": [
     "sqlite"
   ],
