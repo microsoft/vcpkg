@@ -102,37 +102,43 @@ string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
 )
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
+set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
-    set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
+    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
+        h5format_convert h5jam h5unjam h5mkgrp h5repack h5repart h5watch h5import
     )
+
+    if("parallel" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS ph5diff)
+    endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(TRANSFORM HDF5_TOOLS REPLACE  "^(.+)$" "\\1-shared")
-    else()
     endif()
 
-    foreach(HDF5_TOOL IN LISTS HDF5_TOOLS)
-        if (NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-            OR NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-            list(REMOVE_ITEM HDF5_TOOLS "${HDF5_TOOL}")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND HDF5_TOOLS h5cc h5hlcc)
+        if("cpp" IN_LIST FEATURES)
+            list(APPEND HDF5_TOOLS h5c++ h5hlc++)
         endif()
-    endforeach()
+    endif()
 
     if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS h5perf)
+        list(APPEND HDF5_TOOLS h5perf )
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
+            list(APPEND HDF5_TOOLS h5pcc)
+        endif()
     else()
         list(APPEND HDF5_TOOLS h5perf_serial)
     endif()
-
-    vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
 
 if ("utils" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES mirror_server mirror_server_stop
-        AUTO_CLEAN
-    )
+    list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
+endif()
+
+if(HDF5_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

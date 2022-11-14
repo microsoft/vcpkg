@@ -1,13 +1,14 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/1.0.2"
-    FILENAME "directstorage.1.0.2.zip"
-    SHA512 42a8d21a1be9981d5fcaaa2aa90d1e4bfe20969ee7959803f6acb76b0846d91d49ad89cebac069463729d013532508c6fbe41af3a1e99187ac13e849d747dd7e
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
+    FILENAME "directstorage.${VERSION}.zip"
+    SHA512 2c2cf6486220f99e7447c1a4406cea6fcaea69edccf790df6887acfde9a684e102547016adadd1ca23f17f8f02bfbd39095892ed63fba3e806bfa44ca9fe0fe6
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH PACKAGE_PATH
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )

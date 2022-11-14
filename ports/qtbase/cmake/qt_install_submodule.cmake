@@ -8,6 +8,10 @@ if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID AND NOT ANDROID_SDK_ROOT)
+    message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
+endif()
+
 function(qt_download_submodule_impl)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
 
@@ -56,7 +60,7 @@ function(qt_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA;DISABLE_PARALLEL_CONFIGURE"
                       ""
                       "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
-    
+
     vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
@@ -75,7 +79,7 @@ function(qt_cmake_configure)
     if(_qarg_DISABLE_NINJA)
         set(ninja_option WINDOWS_USE_MSBUILD)
     endif()
-    
+
     set(disable_parallel "")
     if(_qarg_DISABLE_PARALLEL_CONFIGURE)
         set(disable_parallel DISABLE_PARALLEL_CONFIGURE)
@@ -93,13 +97,17 @@ function(qt_cmake_configure)
     string(REGEX MATCHALL "CMAKE_REQUIRE_FIND_PACKAGE_[^:=]+(:BOOL)?=OFF" require_find_package "${_qarg_OPTIONS}")
     list(TRANSFORM require_find_package REPLACE "(:BOOL)?=OFF" "")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${require_find_package})
-    
-    # Disable unused warnings for disabled features. Qt might decide to not emit the feature variables if other features are deactivated. 
+
+    # Disable unused warnings for disabled features. Qt might decide to not emit the feature variables if other features are deactivated.
     string(REGEX MATCHALL "(QT_)?FEATURE_[^:=]+(:BOOL)?=OFF" disabled_features "${_qarg_OPTIONS}")
     list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
 
     list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
+
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND _qarg_OPTIONS "-DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}")
+    endif()
 
     if(NOT PORT MATCHES "qtbase")
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
@@ -109,8 +117,8 @@ function(qt_cmake_configure)
         SOURCE_PATH "${SOURCE_PATH}"
         ${ninja_option}
         ${disable_parallel}
-        OPTIONS 
-            -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings. 
+        OPTIONS
+            -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings.
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
@@ -183,7 +191,7 @@ function(qt_fixup_and_cleanup)
     ## Handle PRL files
     qt_fix_prl_files()
 
-    ## Handle CMake files. 
+    ## Handle CMake files.
     set(COMPONENTS)
     file(GLOB COMPONENTS_OR_FILES LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/share/Qt6*")
     list(REMOVE_ITEM COMPONENTS_OR_FILES "${CURRENT_PACKAGES_DIR}/share/Qt6")
@@ -198,7 +206,7 @@ function(qt_fixup_and_cleanup)
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
             vcpkg_cmake_config_fixup(PACKAGE_NAME "Qt6${_comp}" CONFIG_PATH "share/Qt6${_comp}" TOOLS_PATH "tools/Qt6/bin")
-            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_cmake_config_fixup is working against that. 
+            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_cmake_config_fixup is working against that.
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
         endif()
@@ -215,7 +223,7 @@ function(qt_fixup_and_cleanup)
         file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
         foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
             # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
-            vcpkg_replace_string("${_plugin_target}" 
+            vcpkg_replace_string("${_plugin_target}"
                                  [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
                                  "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
         endforeach()
@@ -270,7 +278,7 @@ function(qt_fixup_and_cleanup)
         file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
         if(NOT _bin_files STREQUAL "")
             message(STATUS "Remaining files in bin: '${_bin_files}'")
-        else() # Only clean if empty otherwise let vcpkg throw and error. 
+        else() # Only clean if empty otherwise let vcpkg throw and error.
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
@@ -290,7 +298,7 @@ function(qt_install_submodule)
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
     endif()
-    qt_cmake_configure(${_opt} 
+    qt_cmake_configure(${_opt}
                        OPTIONS ${_qis_CONFIGURE_OPTIONS}
                        OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                        OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE}
