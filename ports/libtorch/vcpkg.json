@@ -3,7 +3,8 @@
   "version": "1.12.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
-  "supports": "windows | osx | linux",
+  "license": null,
+  "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "cpuinfo",
     "eigen3",
