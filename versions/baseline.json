@@ -7117,7 +7117,7 @@
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2022.2",
+      "baseline": "2022.4",
       "port-version": 0
     },
     "spix": {
