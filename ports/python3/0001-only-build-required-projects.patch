@@ -1,16 +1,16 @@
-From 975412a77c8d59e0481247724ac7559e04897999 Mon Sep 17 00:00:00 2001
+From 6492277e39dbe7dd77d32fdc9ae4b989213ef3c6 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 20:15:58 -0400
-Subject: [PATCH 01/11] only build required projects
+Subject: [PATCH 5/6] only build required projects
 
 strips out tests and unsupported externals (eg tkinter).
 ---
  PCbuild/_ssl.vcxproj |  2 +-
- PCbuild/pcbuild.proj | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ PCbuild/pcbuild.proj | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
-index 4907f49b66..43d3f8cd4c 100644
+index 4dffa202b7..e661cb6fb6 100644
 --- a/PCbuild/_ssl.vcxproj
 +++ b/PCbuild/_ssl.vcxproj
 @@ -111,7 +111,7 @@
@@ -23,10 +23,10 @@ index 4907f49b66..43d3f8cd4c 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 8e7088d47d..70c336a9d3 100644
+index 4d416c589e..ede9868a8f 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
-@@ -47,19 +47,19 @@
+@@ -49,17 +49,17 @@
      <!-- python3.dll -->
      <Projects Include="python3dll.vcxproj" />
      <!-- py[w].exe -->
@@ -53,5 +53,5 @@ index 8e7088d47d..70c336a9d3 100644
      <ExtensionModules Include="@(ExternalModules->'%(Identity)')" Condition="$(IncludeExternals)" />
      <Projects Include="@(ExtensionModules->'%(Identity).vcxproj')" Condition="$(IncludeExtensions)" />
 -- 
-2.37.3.windows.1
+2.28.0.windows.1
 

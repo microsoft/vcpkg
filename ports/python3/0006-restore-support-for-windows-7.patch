@@ -9,15 +9,7 @@ pathcch.
 
 The same mechanism is applied to fix posixmodule.c
 ---
- Modules/_winapi.c          |  9 ++++++
- Modules/posixmodule.c      | 28 +++++++++++++++++--
- PC/getpathp.c              | 57 ++++++++++++++++++++++++++++++++++----
- PC/pyconfig.h              |  4 +--
- PCbuild/pythoncore.vcxproj |  2 +-
- 5 files changed, 90 insertions(+), 10 deletions(-)
-
-diff --git a/Modules/_winapi.c b/Modules/_winapi.c
-index 9b30a90032..40b923efcf 100644
+index 25ddc82..ff51042 100644
 --- a/Modules/_winapi.c
 +++ b/Modules/_winapi.c
 @@ -44,6 +44,15 @@

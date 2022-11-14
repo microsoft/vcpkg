@@ -8,7 +8,7 @@ Subject: [PATCH 10/11] dont skip rpath
  1 file changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 61b32662c3..4c2cfb43bb 100644
+index 61b3266..4c2cfb4 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -1153,6 +1153,7 @@ def detect_readline_curses(self):
