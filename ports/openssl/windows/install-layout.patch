@@ -1,0 +1,13 @@
+diff --git a/Configurations/windows-makefile.tmpl b/Configurations/windows-makefile.tmpl
+index f71f3bf..116954f 100644
+--- a/Configurations/windows-makefile.tmpl
++++ b/Configurations/windows-makefile.tmpl
+@@ -223,7 +223,7 @@ MODULESDIR_dev={- use File::Spec::Functions qw(:DEFAULT splitpath catpath);
+                       splitpath($modulesprefix, 1);
+                   our $modulesdir_dev = $modulesprefix_dev;
+                   our $modulesdir_dir =
+-                      catdir($modulesprefix_dir, "ossl-modules");
++                      catdir($modulesprefix_dir, "../bin");
+                   our $modulesdir = catpath($modulesdir_dev, $modulesdir_dir);
+                   our $enginesdir_dev = $modulesprefix_dev;
+                   our $enginesdir_dir =
