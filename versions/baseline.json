@@ -8133,7 +8133,7 @@
       "port-version": 1
     },
     "xsimd": {
-      "baseline": "8.1.0",
+      "baseline": "9.0.1",
       "port-version": 0
     },
     "xtensor": {
