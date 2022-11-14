@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 # Copy the header files
 set(mlpack_HEADERS 
-	"${SOURCE_PATH}/src/mlpack.hpp"
+	# "${SOURCE_PATH}/src/mlpack.hpp"
 	"${SOURCE_PATH}/src/mlpack/base.hpp"
 	"${SOURCE_PATH}/src/mlpack/prereqs.hpp"
 	"${SOURCE_PATH}/src/mlpack/core.hpp"
@@ -23,6 +23,7 @@ foreach(HEADER ${mlpack_HEADERS})
 	file(COPY_FILE "${HEADER}" "${OUT_HEADER}")
 endforeach(HEADER ${mlpack_HEADERS})
 
+file(COPY "${SOURCE_PATH}/src/mlpack.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
 file(COPY "${SOURCE_PATH}/src/mlpack/methods/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/methods")
 file(COPY "${SOURCE_PATH}/src/mlpack/core/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/core")
 
