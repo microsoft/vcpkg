@@ -1,5 +1,4 @@
 vcpkg_from_github(
-
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ybalrid/kissnet
     REF 6c2bbbc1a114d83f11cea86d4370766ac12fbbd0 # 2022-10-18
@@ -8,11 +7,8 @@ vcpkg_from_github(
 )
 
 # Install the header-only library
-file(INSTALL ${SOURCE_PATH}/kissnet.hpp
-     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/kissnet.hpp"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Install license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-# Install usage
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
