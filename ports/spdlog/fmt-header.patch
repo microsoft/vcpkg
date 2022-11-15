@@ -1,0 +1,27 @@
+From 199c7a5f8509ea4ec96b56abf1de864c460df164 Mon Sep 17 00:00:00 2001
+From: Romain Pokrzywka <romain.pokrzywka@gmail.com>
+Date: Fri, 11 Nov 2022 22:25:56 +0000
+Subject: [PATCH] Update #include to deprecated fmt header
+
+The <fmt/locale.h> header has been marked as deprecated for a while
+and has finally been removed in fmt v0.9.0:
+https://github.com/fmtlib/fmt/commit/5c7d315ded7bdb6cc5bd65daef091eefe
+
+Replace with <fmt/format.h> instead, as recommended.
+---
+ bench/bench.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bench/bench.cpp b/bench/bench.cpp
+index 8a46837a6..ae47f047c 100644
+--- a/bench/bench.cpp
++++ b/bench/bench.cpp
+@@ -15,7 +15,7 @@
+ #if defined(SPDLOG_USE_STD_FORMAT)
+ #    include <format>
+ #elif defined(SPDLOG_FMT_EXTERNAL)
+-#    include <fmt/locale.h>
++#    include <fmt/format.h>
+ #else
+ #    include "spdlog/fmt/bundled/format.h"
+ #endif
