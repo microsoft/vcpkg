@@ -222,6 +222,10 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
+    if (VCPKG_CROSSCOMPILING)
+        list(APPEND OPTIONS "--host")
+    endif()
+
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
