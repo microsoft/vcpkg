@@ -59,10 +59,10 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
-		-DENABLE_INSTALL_testtex=OFF
+        -DENABLE_INSTALL_testtex=OFF
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
-		ENABLE_INSTALL_testtex
+        ENABLE_INSTALL_testtex
 )
 
 vcpkg_cmake_install()
