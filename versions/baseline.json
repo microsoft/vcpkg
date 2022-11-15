@@ -545,7 +545,7 @@
       "port-version": 4
     },
     "boinc": {
-      "baseline": "7.20.2",
+      "baseline": "7.20.4",
       "port-version": 0
     },
     "bond": {
