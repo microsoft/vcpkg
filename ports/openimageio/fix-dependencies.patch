@@ -36,7 +36,7 @@ index 3ca046b..dad053c 100644
 -checked_find_package (OpenColorIO
 +set(OPENCOLORIO_INCLUDES "")
 +set(OPENCOLORIO_LIBRARIES OpenColorIO::OpenColorIO)
-+checked_find_package (OpenColorIO CONFIG 
++checked_find_package (OpenColorIO CONFIG
                        DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
                        # PREFER_CONFIG
                        )
@@ -47,7 +47,7 @@ index 3ca046b..dad053c 100644
 -checked_find_package (OpenCV 3.0
 +set(OPENCV_INCLUDES "")
 +set(OPENCV_LIBRARIES opencv_core)
-+checked_find_package (OpenCV CONFIG 
++checked_find_package (OpenCV CONFIG
                     DEFINITIONS  -DUSE_OPENCV=1)
  
  # Intel TBB
@@ -68,7 +68,7 @@ index 3ca046b..dad053c 100644
 -checked_find_package (Libheif VERSION_MIN 1.3
 +set(LIBHEIF_INCLUDES "")
 +set(LIBHEIF_LIBRARIES heif)
-+checked_find_package (Libheif CONFIG 
++checked_find_package (Libheif CONFIG
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)

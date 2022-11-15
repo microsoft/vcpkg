@@ -13,4 +13,4 @@ index 4d7e11c..0f15ba9 100644
 +endif()
  set(OPENCV_INCLUDES "")
  set(OPENCV_LIBRARIES opencv_core)
- checked_find_package (OpenCV CONFIG 
+ checked_find_package (OpenCV CONFIG
