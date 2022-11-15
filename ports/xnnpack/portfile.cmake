@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-packages.patch
+        use-c-cpp-11.patch
 )
 
 vcpkg_cmake_configure(
