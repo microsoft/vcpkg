@@ -10,11 +10,8 @@ vcpkg_from_github(
 )
 
 # Copy the header files
-file(COPY "${SOURCE_PATH}/src/mlpack.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
-file(COPY "${SOURCE_PATH}/src/mlpack/base.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
-file(COPY "${SOURCE_PATH}/src/mlpack/prereqs.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
-file(COPY "${SOURCE_PATH}/src/mlpack/core.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
-file(COPY "${SOURCE_PATH}/src/mlpack/namespace_compat.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
+file(GLOB HEADERS "${SOURCE_PATH}/src/*.hpp"  "${SOURCE_PATH}/src/mlpack/*.hpp")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack")
 file(COPY "${SOURCE_PATH}/src/mlpack/methods/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/methods")
 file(COPY "${SOURCE_PATH}/src/mlpack/core/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mlpack/core")
 
