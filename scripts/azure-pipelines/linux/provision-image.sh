@@ -54,7 +54,7 @@ APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 
 ## required by kf5globalaccel
-APT_PACKAGES="$APT_PACKAGES llibxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
+APT_PACKAGES="$APT_PACKAGES libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
 
 ## required by mesa
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
