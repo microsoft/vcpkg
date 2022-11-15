@@ -426,7 +426,7 @@
     },
     "basisu": {
       "baseline": "1.11",
-      "port-version": 6
+      "port-version": 7
     },
     "bcg729": {
       "baseline": "1.1.1",
