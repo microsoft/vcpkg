@@ -1,11 +1,10 @@
-set(VERSION 4.11.1)
-set(BRANCH "v${VERSION}")
+vcpkg_minimum_required(VERSION 2022-10-12)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO antlr/antlr4
     HEAD_REF master
-    REF ${BRANCH}
+    REF "v4.11.1"
     SHA512 a52356410c95ec6d7128b856dcf4c20a17cdd041270d2c4d700ef02ea715c87a00a87c2ad560277424b300435c6e9b196c8bc9c9f50ae5b6804d8214b4d397d0
     PATCHES
         fix_build_4.11.1.patch
