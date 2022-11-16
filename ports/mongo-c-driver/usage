@@ -1,9 +1,4 @@
-The package mongo-c-driver is compatible with built-in CMake targets:
+mongo-c-driver provides CMake targets:
 
     find_package(mongoc-1.0 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE mongo::mongoc_shared)
-
-or:
-
-    find_package(mongoc-1.0 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE mongo::mongoc_static)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongoc_shared>,mongo::mongoc_shared,mongo::mongoc_static>)

@@ -38,11 +38,10 @@ if("cmake-3-7" IN_LIST FEATURES)
         message(FATAL_ERROR "Unable to test feature 'cmake-3-7' for '${HOST_TRIPLET}' host.")
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH legacy_cmake
+    vcpkg_extract_source_archive(legacy_cmake
         ARCHIVE "${legacy_cmake_archive}"
-        REF "${cmake_version}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${name}"
+        SOURCE_BASE "${cmake_version}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cmake"
     )
     list(APPEND cmake_commands "${legacy_cmake}${cmake_bin_dir}/cmake")
 endif()
@@ -51,10 +50,6 @@ if(DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
     set(NINJA "ninja")
 else()
     vcpkg_find_acquire_program(NINJA)
-endif()
-
-if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    z_vcpkg_select_default_vcpkg_chainload_toolchain()
 endif()
 
 function(get_packages out_packages cmake_version)
@@ -112,28 +107,26 @@ function(test_cmake_project)
 
     set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}")
     set(base_options
+        # Interface: CMake
         -G "Ninja"
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
+        "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
-        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
-        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
+        # Interface: vcpkg.cmake
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
-        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
-        "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DVCPKG_MANIFEST_MODE=OFF"
+        # Interface: project/CMakeLists.txt
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
     )
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        # Interface: CMake
         list(APPEND base_options "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
-        endif()
-        if(DEFINED VCPKG_PLATFORM_TOOLSET)
-            list(APPEND base_options "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
     
