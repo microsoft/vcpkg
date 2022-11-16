@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
+        fix-find_package.patch
 )
 
 set(options "")
@@ -38,7 +39,7 @@ if(flatc_path)
     )
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/flatbuffers")
 else()
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/FlatbuffersConfig.cmake"
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/Flatbuffers-config.cmake"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
 endif()
 
