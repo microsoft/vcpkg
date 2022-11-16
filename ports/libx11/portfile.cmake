@@ -29,12 +29,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND OPTIONS 
                 --enable-loadable-i18n=no #Pointer conversion errors
                 --enable-unix-transport=no
+                --disable-thread-safety-constructor
+                ac_cv_search_dlopen=no
     )
 endif()
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS 
+    set(OPTIONS
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
         --enable-ipv6
         --enable-hyperv
