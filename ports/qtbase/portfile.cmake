@@ -18,7 +18,6 @@ set(${PORT}_PATCHES
         fix_egl_2.patch
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
-        cb2a812.diff
         GLIB2-static.patch # alternative is to force pkg-config
         )
 
