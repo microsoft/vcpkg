@@ -6425,7 +6425,7 @@
       "port-version": 3
     },
     "qwt": {
-      "baseline": "6.2.0-20220616",
+      "baseline": "6.2.0+20220616",
       "port-version": 0
     },
     "qwtw": {
