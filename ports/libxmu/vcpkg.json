@@ -6,6 +6,7 @@
   "license": null,
   "dependencies": [
     "bzip2",
+    "libxext",
     "libxt",
     "xorg-macros"
   ]
