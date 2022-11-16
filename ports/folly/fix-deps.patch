@@ -14,7 +14,7 @@ index 1689f9a..1d3295a 100644
 +if (NOT @CMAKE_DISABLE_FIND_PACKAGE_Zstd@)
 +    find_dependency(zstd CONFIG)
 +endif()
-+if (NOT @CMAKE_REQUIRE_FIND_PACKAGE_ZLIB@)
++if (@CMAKE_REQUIRE_FIND_PACKAGE_ZLIB@)
 +    find_dependency(ZLIB MODULE)
 +endif()
 +find_dependency(OpenSSL MODULE)
