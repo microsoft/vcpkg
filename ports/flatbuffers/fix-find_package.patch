@@ -1,13 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 779558e..f90a399 100644
+index 779558e..374033c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -709,7 +709,7 @@ if(FLATBUFFERS_INSTALL)
+@@ -708,12 +708,12 @@ if(FLATBUFFERS_INSTALL)
+ 
    configure_file(CMake/flatbuffers-config-version.cmake.in flatbuffers-config-version.cmake @ONLY)
    install(
-       FILES 
+-      FILES 
 -        "CMake/flatbuffers-config.cmake" 
-+        "CMake/Flatbuffers-config.cmake" 
++      FILES         
          "CMake/BuildFlatBuffers.cmake"
          "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-config-version.cmake"
        DESTINATION ${FB_CMAKE_DIR}
+   )
++  install(FILES "CMake/flatbuffers-config.cmake" DESTINATION ${FB_CMAKE_DIR} RENAME Flatbuffers-config.cmake)
+ 
+   if(FLATBUFFERS_BUILD_FLATLIB)
+     install(

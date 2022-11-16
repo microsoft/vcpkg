@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
-        fix-find_package.patch
+        #fix-find_package.patch
 )
 
 set(options "")
