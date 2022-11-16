@@ -20,8 +20,6 @@ vcpkg_qmake_configure(
         "CONFIG-=debug_and_release"
         "CONFIG+=create_prl"
         "CONFIG+=link_prl"
-        #QWT_CONFIG += QwtDesigner
-        #QWT_CONFIG += QwtPkgConfig
 )
 vcpkg_qmake_install()
 vcpkg_copy_pdbs()
