@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO apache/avro
     REF e44b680621328c4e6524bd2983af1ce11afeebed
     SHA512 932f642f272997b5c0be467d3a3ccc354c6edf425c36b33aa7e61984f67312c712bb1d74cb1a5fd8066169104851e73830f0ed3fdb450e005a5c5bef33c34f20
-    HEAD_REF branch-1.11
+    HEAD_REF master
     PATCHES
         install.patch
 )
