@@ -14,6 +14,10 @@ set(options "")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND options -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
 endif()
+if(WIN32)
+    message(STATUS "Using legacy option when building for Windows")
+    list(APPEND options -DFLATBUFFERS_BUILD_LEGACY=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
