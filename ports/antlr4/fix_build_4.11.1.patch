@@ -1,5 +1,5 @@
 diff --git a/runtime/Cpp/runtime/CMakeLists.txt b/runtime/Cpp/runtime/CMakeLists.txt
-index a4e4d1c6b..aa1feb243 100644
+index a4e4d1c..19cc21c 100644
 --- a/runtime/Cpp/runtime/CMakeLists.txt
 +++ b/runtime/Cpp/runtime/CMakeLists.txt
 @@ -25,15 +25,21 @@ file(GLOB libantlrcpp_SRC
@@ -36,7 +36,7 @@ index a4e4d1c6b..aa1feb243 100644
  endif()
  
  if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-@@ -93,26 +102,31 @@ set(static_lib_suffix "")
+@@ -93,26 +102,32 @@ set(static_lib_suffix "")
  
  if (WIN32)
    set(static_lib_suffix "-static")
@@ -57,7 +57,7 @@ index a4e4d1c6b..aa1feb243 100644
                                   SOVERSION ${ANTLR_VERSION}
                                   OUTPUT_NAME antlr4-runtime
                                   COMPILE_FLAGS "${disabled_compile_warnings} ${extra_share_compile_flags}")
--
+ 
 +else()
  set_target_properties(antlr4_static
                        PROPERTIES VERSION   ${ANTLR_VERSION}
@@ -69,7 +69,7 @@ index a4e4d1c6b..aa1feb243 100644
  
  if (ANTLR_BUILD_CPP_TESTS)
    # Copy the generated binaries to dist folder (required by test suite)
-@@ -130,18 +144,19 @@ if (ANTLR_BUILD_CPP_TESTS)
+@@ -130,18 +145,21 @@ if (ANTLR_BUILD_CPP_TESTS)
      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:antlr4_static> ${CMAKE_HOME_DIRECTORY}/dist)
  endif()
  
@@ -79,14 +79,14 @@ index a4e4d1c6b..aa1feb243 100644
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
--
+ 
 +else()
  install(TARGETS antlr4_static
          EXPORT antlr4-targets
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
--
+ 
 +endif()
  install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/"
          DESTINATION "include/antlr4-runtime"
