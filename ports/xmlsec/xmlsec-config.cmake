@@ -1,0 +1,6 @@
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+message(WARNING "find_package(xmlsec) is deprecated.\n${usage}")
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-xmlsec CONFIG REQUIRED)
+add_library(xmlsec1 ALIAS unofficial::xmlsec::xmlsec1)
+add_library(xmlsec1-openssl ALIAS unofficial::xmlsec::xmlsec1-openssl)
