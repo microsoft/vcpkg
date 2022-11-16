@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
-        #fix-find_package.patch
+        fix-find_package.patch
 )
 
 set(options "")
@@ -30,14 +30,7 @@ vcpkg_fixup_pkgconfig()
 
 file(GLOB flatc_path ${CURRENT_PACKAGES_DIR}/bin/flatc*)
 if(flatc_path)
-    make_directory("${CURRENT_PACKAGES_DIR}/tools/flatbuffers")
-    get_filename_component(flatc_executable ${flatc_path} NAME)
-    file(
-        RENAME
-        ${flatc_path}
-        ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
-    )
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/flatbuffers")
+    vcpkg_copy_tools(TOOL_NAMES flatc AUTO_CLEAN)
 else()
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/Flatbuffers-config.cmake"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
