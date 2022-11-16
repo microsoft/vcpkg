@@ -9,6 +9,7 @@ INTERPRETER=python3
 LAST_SEEN=
 COPY_OPTIONS=no
 COPY_PREFIX=yes
+BUILD_TYPE=RELEASE
 for OPTION; do
     case "${OPTION},${COPY_OPTIONS}" in
     */configure.py,no)
@@ -17,7 +18,7 @@ for OPTION; do
         COPY_OPTIONS=yes
         ;;
     --prefix=*,yes)
-        if test "${COPY_PREFIX}" = "yes" ; then
+        if [ "${COPY_PREFIX}" = "yes" ] ; then
             OUT_OPTIONS+=("${OPTION}")
             COPY_PREFIX=no
         fi
@@ -29,6 +30,9 @@ for OPTION; do
         ;;
     *,yes)
         OUT_OPTIONS+=("${OPTION}")
+        if [ "${OPTION}" = "--debug-mode" ] ; then
+            BUILD_TYPE=DEBUG
+        fi
         ;;
     esac
     LAST_SEEN="${OPTION}"
@@ -37,3 +41,6 @@ done
 set -x
 export CXXFLAGS="$CPPFLAGS $CXXFLAGS"
 "${INTERPRETER}" "${OUT_OPTIONS[@]}"
+
+sed -e "1i\\
+ZLIB_LIBS = \$(ZLIB_LIBS_${BUILD_TYPE})" -i -- Makefile

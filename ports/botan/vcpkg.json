@@ -18,6 +18,10 @@
     "zlib": {
       "description": "Build with zlib. Enable compression pipes.",
       "dependencies": [
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        },
         "zlib"
       ]
     }

@@ -11,6 +11,7 @@ vcpkg_from_github(
         arm64-windows.patch
         pkgconfig.patch
         verbose-install.patch
+        configure-zlib.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -23,6 +24,11 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
+set(pkgconfig_syntax "")
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(pkgconfig_syntax "--msvc-syntax")
+endif()
+
 vcpkg_list(SET configure_arguments
     "--distribution-info=vcpkg ${TARGET_TRIPLET}"
     --with-pkg-config
@@ -34,12 +40,18 @@ vcpkg_list(SET configure_arguments
     --without-documentation
     "--with-external-includedir=${CURRENT_INSTALLED_DIR}/include"
 )
+vcpkg_list(SET pkgconfig_requires)
 
 if("amalgamation" IN_LIST FEATURES)
-    list(APPEND configure_arguments --amalgamation)
+    vcpkg_list(APPEND configure_arguments --amalgamation)
 endif()
+
+set(ZLIB_LIBS_RELEASE "")
+set(ZLIB_LIBS_DEBUG "")
 if("zlib" IN_LIST FEATURES)
-    list(APPEND configure_arguments --with-zlib)
+    vcpkg_list(APPEND configure_arguments --with-zlib)
+    vcpkg_list(APPEND pkgconfig_requires zlib)
+    x_vcpkg_pkgconfig_get_modules(LIBS PREFIX "ZLIB" MODULES "zlib" ${pkgconfig_syntax})
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -90,6 +102,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "--msvc-runtime=${BOTAN_MSVC_RUNTIME}d"
             "--with-external-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
             --debug-mode
+        OPTIONS_RELEASE
+            "ZLIB_LIBS=${ZLIB_LIBS_RELEASE}"
+        OPTIONS_DEBUG
+            "ZLIB_LIBS=${ZLIB_LIBS_DEBUG}"
     )
     vcpkg_copy_tools(TOOL_NAMES botan-cli AUTO_CLEAN)
     vcpkg_copy_pdbs()
@@ -120,12 +136,24 @@ else()
             "--prefix=${CURRENT_PACKAGES_DIR}/debug"
             "--with-external-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
-    vcpkg_build_make(BUILD_TARGET install)
+    vcpkg_build_make(
+        BUILD_TARGET install
+        OPTIONS
+            "ZLIB_LIBS_RELEASE=${ZLIB_LIBS_RELEASE}"
+            "ZLIB_LIBS_DEBUG=${ZLIB_LIBS_DEBUG}"
+    )
     vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
 endif()
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
+if(pkgconfig_requires)
+    list(JOIN pkgconfig_requires ", " pkgconfig_requires)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
