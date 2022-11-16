@@ -7286,7 +7286,7 @@
     },
     "taglib": {
       "baseline": "1.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
