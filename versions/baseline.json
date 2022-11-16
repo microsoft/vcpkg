@@ -4322,7 +4322,7 @@
     },
     "libunistring": {
       "baseline": "1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "liburing": {
       "baseline": "2.2",
