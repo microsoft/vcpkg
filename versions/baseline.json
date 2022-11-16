@@ -1526,7 +1526,7 @@
     },
     "coin": {
       "baseline": "4.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "coinutils": {
       "baseline": "2.11.4",
