@@ -1,9 +1,10 @@
 {
   "name": "kf5kio",
   "version": "5.89.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
+  "license": null,
   "dependencies": [
     "ecm",
     {
