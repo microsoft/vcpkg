@@ -4,6 +4,18 @@
   "description": "SQLiteC++ (SQLiteCpp) is a smart and easy to use C++ SQLite3 wrapper.",
   "homepage": "https://github.com/SRombauts/SQLiteCpp",
   "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "platform": "windows"
+    }
+  ],
   "default-features": [
     "sqlite"
   ],
