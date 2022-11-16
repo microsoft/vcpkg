@@ -14,6 +14,10 @@ vcpkg_from_github(
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_get_vars(cmake_vars_file)
