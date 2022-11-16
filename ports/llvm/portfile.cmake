@@ -20,6 +20,7 @@ vcpkg_from_github(
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-install-bolt.patch
+        0012-fix-enable-export-dll.patch
 )
 
 vcpkg_check_features(
