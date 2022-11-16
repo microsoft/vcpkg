@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 210f3135c7af3ec774ef9a5c77254ce172a44e2fa720bf590e1c9214782bf5c8140ff683403a85b585868bc308286fbdeb1c988e4ed1eb3c75975254ffe75412
     HEAD_REF v1.x
     PATCHES
-        fmt-header.patch
+        fmt-header.patch # https://github.com/gabime/spdlog/pull/2545
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,7 +29,7 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
@@ -45,7 +45,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled")
 
 # add support for integration other than cmake
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
@@ -65,8 +65,7 @@ if(SPDLOG_WCHAR_FILENAMES)
     )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
