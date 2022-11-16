@@ -6426,7 +6426,7 @@
     },
     "qwt": {
       "baseline": "6.2.0",
-      "port-version": 3
+      "port-version": 2
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -7785,8 +7785,8 @@
       "port-version": 1
     },
     "vcpkg-qmake": {
-      "baseline": "2022-10-27",
-      "port-version": 0
+      "baseline": "2022-05-10",
+      "port-version": 1
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",

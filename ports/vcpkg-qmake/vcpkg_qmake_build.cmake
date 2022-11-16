@@ -1,12 +1,3 @@
-#[===[.md:
-# vcpkg_qmake_build
-
-Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-
-```cmake
-vcpkg_qmake_build()
-```
-#]===]
 include_guard(GLOBAL)
 
 function(z_run_jom_build invoke_command targets log_prefix log_suffix)
