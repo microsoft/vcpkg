@@ -1,5 +1,5 @@
 diff --git "a/lang/c++/CMakeLists.txt" "b/lang/c++/CMakeLists.txt"
-index 52d6ac8a..197ae051 100644
+index 52d6ac8a..39d59cd8 100644
 --- "a/lang/c++/CMakeLists.txt"
 +++ "b/lang/c++/CMakeLists.txt"
 @@ -51,6 +51,8 @@ list(GET AVRO_VERSION 2 AVRO_VERSION_PATCH)
@@ -36,7 +36,7 @@ index 52d6ac8a..197ae051 100644
  
  macro (gen file ns)
      add_custom_command (OUTPUT ${file}.hh
-@@ -166,37 +169,42 @@ gen (primitivetypes pt)
+@@ -166,37 +169,41 @@ gen (primitivetypes pt)
  gen (cpp_reserved_words cppres)
  
  add_executable (avrogencpp impl/avrogencpp.cc)
@@ -49,8 +49,9 @@ index 52d6ac8a..197ae051 100644
 +endif()
  
  macro (unittest name)
-     add_executable (${name} test/${name}.cc)
+-    add_executable (${name} test/${name}.cc)
 -    target_link_libraries (${name} avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
++    add_executable (${name} test/${name}.cc impl/json/JsonIO.cc impl/json/JsonDom.cc)
 +    target_link_libraries (${name} avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
      add_test (NAME ${name} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${name})
@@ -97,12 +98,11 @@ index 52d6ac8a..197ae051 100644
 +        union_array_union_hh union_map_union_hh union_conflict_hh
 +        recursive_hh reuse_hh circulardep_hh tree1_hh tree2_hh crossref_hh
 +        primitivetypes_hh empty_record_hh)
-+
 +endif()
  
  include (InstallRequiredSystemLibraries)
  
-@@ -207,9 +215,9 @@ include (CPack)
+@@ -207,9 +214,9 @@ include (CPack)
  install (TARGETS avrocpp avrocpp_s
      LIBRARY DESTINATION lib
      ARCHIVE DESTINATION lib

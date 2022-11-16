@@ -1,7 +1,6 @@
 {
   "name": "avro-cpp",
-  "version": "1.11.1",
-  "port-version": 1,
+  "version-date": "2022-11-07",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
   "license": "Apache-2.0",
@@ -34,7 +33,11 @@
     "test": {
       "description": "Build tests",
       "dependencies": [
-        "boost-test"
+        "boost-asio",
+        "boost-bind",
+        "boost-smart-ptr",
+        "boost-test",
+        "boost-thread"
       ]
     }
   }
