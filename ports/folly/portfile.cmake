@@ -64,6 +64,8 @@ vcpkg_cmake_configure(
         -DLIBAIO_FOUND=OFF
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        LIBAIO_FOUND
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
