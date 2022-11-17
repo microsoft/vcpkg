@@ -36,7 +36,10 @@ else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
-set(FEATURE_OPTIONS)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "zlib" CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+)
 
 macro(feature FEATURENAME PACKAGENAME)
     if("${FEATURENAME}" IN_LIST FEATURES)
@@ -46,7 +49,6 @@ macro(feature FEATURENAME PACKAGENAME)
     endif()
 endmacro()
 
-feature(zlib ZLIB)
 feature(bzip2 BZip2)
 feature(lzma LibLZMA)
 feature(lz4 LZ4)
