@@ -11,33 +11,38 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libx11
-    REF  4c96f3567a8d045ee57b886fddc9618b71282530 #x11 v 1.7.3.1
-    SHA512 15c55b6283aec363f6af5b549584d487ec5a8c0f74b95dc44674ff50764abe5b9fa216e2af3c5408faf12d17b04e9433f0ad66da6e32a0dfef0427ca131ef23b
+    REF  3a30ada60c5217ada37b143b541c8e6f6284c7fa
+    SHA512 441f86ff8293d27459feaa93f85bcd4d02c6bd64fdb4d95199e5ee8a75340c2ce9b0fccd0b05840ce0de30ff3af3d21e6f37c81840e82b37dbddf082911b585d
     HEAD_REF master
     PATCHES cl.build.patch
             io_include.patch
             ${PATCHES}
             vcxserver.patch
+            add_dl_pc.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{CPP} "cl_cpp_wrapper")
-endif()
-
 set(OPTIONS "")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(ENV{CPP} "cl_cpp_wrapper")
+    list(APPEND OPTIONS 
+                --enable-loadable-i18n=no #Pointer conversion errors
+                --enable-unix-transport=no
+                --disable-thread-safety-constructor
+                ac_cv_search_dlopen=no
+    )
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS 
+    list(APPEND OPTIONS 
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
-        --enable-loadable-i18n=no           #Pointer conversion errors
         --enable-ipv6
         --enable-hyperv
         --enable-tcp-transport
         --with-launchd=no
         --with-lint=no
         --disable-selective-werror
-        --enable-unix-transport=no)
+        )
 endif()
 if(NOT XLSTPROC)
     find_program(XLSTPROC NAMES "xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX}" PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt" PATH_SUFFIXES "bin")

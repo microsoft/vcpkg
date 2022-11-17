@@ -1,0 +1,22 @@
+diff --git a/src/bin/svg2png/meson.build b/src/bin/svg2png/meson.build
+index 8011410..40cf3f9 100644
+--- a/src/bin/svg2png/meson.build
++++ b/src/bin/svg2png/meson.build
+@@ -3,4 +3,5 @@ svg2png_src  = files('svg2png.cpp', 'lodepng.cpp')
+ executable('svg2png',
+            svg2png_src,
+            include_directories : headers,
+-           link_with : thorvg_lib)
++           link_with : thorvg_lib,
++           install : true, install_dir : get_option('bindir'))
+diff --git a/src/bin/svg2tvg/meson.build b/src/bin/svg2tvg/meson.build
+index 2df9fac..ffd5a20 100644
+--- a/src/bin/svg2tvg/meson.build
++++ b/src/bin/svg2tvg/meson.build
+@@ -3,4 +3,5 @@ svg2tvg_src  = files('svg2tvg.cpp')
+ executable('svg2tvg',
+            svg2tvg_src,
+            include_directories : headers,
+-           link_with : thorvg_lib)
++           link_with : thorvg_lib,
++           install : true, install_dir : get_option('bindir'))

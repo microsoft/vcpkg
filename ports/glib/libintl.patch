@@ -2,46 +2,16 @@ diff --git a/meson.build b/meson.build
 index f44fa2d4e..d465253af 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2090,37 +2090,10 @@ libz_dep = dependency('zlib')
+@@ -2090,9 +2090,9 @@ libz_dep = dependency('zlib')
  # proxy-libintl subproject.
  # FIXME: glib-gettext.m4 has much more checks to detect broken/uncompatible
  # implementations. This could be extended if issues are found in some platforms.
 -libintl_deps = []
 -libintl = dependency('intl', required: false)
 -if libintl.found()
--  # libintl supports different threading APIs, which may not
--  # require additional flags, but it defaults to using pthreads if
--  # found. Meson's "threads" dependency does not allow you to
--  # prefer pthreads. We may not be using pthreads for glib itself
--  # either so just link the library to satisfy libintl rather than
--  # also defining the macros with the -pthread flag.
--  #
--  # Meson's builtin dependency lookup as of 0.60.0 doesn't check for
--  # pthread, so we do this manually here.
--  if cc.has_function('ngettext', dependencies : libintl)
--    libintl_deps += [libintl]
--  else
--    libintl_pthread = cc.find_library('pthread', required : false)
--    if libintl_pthread.found() and cc.has_function('ngettext', dependencies : [libintl, libintl_pthread])
--      libintl_deps += [libintl, libintl_pthread]
--    else
--      libintl = disabler()
--    endif
--  endif
--endif
--
--if libintl.found()
--  have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', dependencies: libintl_deps)
--else
--  libintl = subproject('proxy-libintl').get_variable('intl_dep')
--  libintl_deps = [libintl]
--  have_bind_textdomain_codeset = true  # proxy-libintl supports it
--endif
 +libintl = dependency('Intl', method:'cmake', required : true)
 +libintl_deps = [libintl]
-+have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset',
-+                                                   dependencies : libintl_deps)
- 
- glib_conf.set('HAVE_BIND_TEXTDOMAIN_CODESET', have_bind_textdomain_codeset)
- 
-
++if false
+   # libintl supports different threading APIs, which may not
+   # require additional flags, but it defaults to using pthreads if
+   # found. Meson's "threads" dependency does not allow you to

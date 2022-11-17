@@ -31,7 +31,9 @@ set(HARFBUZZ_FEATURES @FEATURES@)
 
 if(APPLE)
     find_library(APPLICATIONSERVICES_LIBRARY ApplicationServices)
-    target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
+    if(APPLICATIONSERVICES_LIBRARY)
+        target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
+    endif()    
 endif()
 
 find_dependency(freetype CONFIG)

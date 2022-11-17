@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF 0ed0f19ea4fbb0d8bf64d3dca07abab3c7429803 # v9.0.0
-    SHA512 f033f2d5801327ab8aeffb12d1a74ff880e477a1f00da3b03a3087262a3e72ef77c13e05fe8e3c94a26721804230c0272d9ca069af997c36c992f3e2f3d962f2
+    REF be0e7a78861d2b7d9643f7a0cab04f3ab5951686 # v10.0.0
+    SHA512 92301bf675d700fedb0a2b3c4653158eeda6105e70623e5e4bda15d73391427cf0295a0426204888e2fe062847025542717bff34ceb923e51cffa1721e9d4105
     PATCHES
         0003-fix-cmake.patch
-        fix-Target-notfound.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
