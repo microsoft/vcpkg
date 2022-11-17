@@ -7824,6 +7824,10 @@
       "baseline": "2.7.18",
       "port-version": 0
     },
+    "vcpkg-xcode": {
+      "baseline": "2022-11-16",
+      "port-version": 0
+    },
     "vectorclass": {
       "baseline": "2.02.00",
       "port-version": 0
