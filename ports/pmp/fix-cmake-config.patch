@@ -1,0 +1,13 @@
+diff --git a/cmake/pmpConfig.cmake.in b/cmake/pmpConfig.cmake.in
+index 7d65de7..358ca06 100644
+--- a/cmake/pmpConfig.cmake.in
++++ b/cmake/pmpConfig.cmake.in
+@@ -1 +1,6 @@
+-include("${CMAKE_CURRENT_LIST_DIR}/pmpTargets.cmake")
++include(CMakeFindDependencyMacro)
++find_dependency(OpenMP)
++find_dependency(Eigen3 CONFIG REQUIRED)
++find_dependency(imgui CONFIG)
++find_dependency(GLEW)
++include("${CMAKE_CURRENT_LIST_DIR}/pmpTargets.cmake")
+\ No newline at end of file

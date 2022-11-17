@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         import-lato.patch
+        fix-cmake-config.patch
 )
 file(COPY "${SOURCE_PATH}/external/imgui/lato-font.h" DESTINATION "${SOURCE_PATH}/src/pmp/visualization")
 
