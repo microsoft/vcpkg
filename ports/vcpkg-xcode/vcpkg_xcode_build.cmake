@@ -1,11 +1,20 @@
 include_guard(GLOBAL)
 
 function(vcpkg_xcode_build)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "INSTALL;DISABLE_PARALLEL" "SOURCE_PATH;PROJECT_FILE;TARGET;LOGFILE_BASE" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "INSTALL;DISABLE_PARALLEL" "SOURCE_PATH;PROJECT_FILE;TARGET;LOGFILE_BASE;SCHEME" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_xcode_build was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
+
+    if (NOT arg_SOURCE_PATH)
+        message(FATAL_ERROR "SOURCE_PATH must be declared")
+    endif()
+
+    if (arg_TARGET AND arg_SCHEME)
+        message(FATAL_ERROR "TARGET and SCHEME only be selected one of them")
+    endif()
+
     if(NOT DEFINED arg_LOGFILE_BASE)
         set(arg_LOGFILE_BASE "build")
     endif()
@@ -29,7 +38,9 @@ function(vcpkg_xcode_build)
     endif()
 
     if(arg_TARGET)
-        vcpkg_list(APPEND target_param " -target" "${arg_TARGET}")
+        vcpkg_list(APPEND target_param "-target" "${arg_TARGET}")
+    elseif(arg_SCHEME)
+        vcpkg_list(APPEND build_param "-scheme" "${arg_SCHEME}")
     else()
         vcpkg_list(APPEND target_param "-alltargets")
     endif()
