@@ -1,6 +1,0 @@
-Source: libuvc
-Version: 2020-11-24
-Build-Depends: libusb
-Homepage: https://github.com/libuvc/libuvc
-Description: a cross-platform library for USB video devices
-Supports: linux

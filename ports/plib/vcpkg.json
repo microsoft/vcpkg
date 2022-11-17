@@ -1,0 +1,14 @@
+{
+  "name": "plib",
+  "version": "1.8.5",
+  "port-version": 6,
+  "description": "A suite of portable game libraries",
+  "license": "LGPL-2.0-only",
+  "supports": "!osx & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

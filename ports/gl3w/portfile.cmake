@@ -8,16 +8,9 @@ vcpkg_from_github(
       0001-enable-shared-build.patch
 )
 
-# Download khrplatform.h with vcpkg instead of gl3w_gen.py so that our downloader settings are used
-vcpkg_download_distfile(KHRPLATFORM_H
-  URLS "https://www.khronos.org/registry/EGL/api/KHR/khrplatform.h"
-  FILENAME khrplatform.h
-  SHA512 93d9075718eddb69c44482acdc72bbbd3511741272a6124d05ab1ef0702ef03e918501403b6fd334faf2c61f3332f34b7730158aa090db3d448c32b5dd9d9e67
-  )
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/GL/glcorearb.h" DESTINATION "${SOURCE_PATH}/include/GL")
-file(COPY "${KHRPLATFORM_H}" DESTINATION "${SOURCE_PATH}/include/KHR")
+file(COPY "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h" DESTINATION "${SOURCE_PATH}/include/KHR")
 
 vcpkg_find_acquire_program(PYTHON3)
 
@@ -27,15 +20,14 @@ vcpkg_execute_required_process(
   LOGNAME gl3w-gen
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  PREFER_NINJA
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/GL/gl3w.h" "#define GL3W_API" "#define GL3W_API __declspec(dllimport)")

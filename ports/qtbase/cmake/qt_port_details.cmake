@@ -1,13 +1,29 @@
-set(QT_VERSION 6.1.2)
-set(QT_GIT_TAG v${QT_VERSION})
-#set(QT_UPDATE_VERSION TRUE)
+### Steps to update the qt6 ports
+## 1. Change QT_VERSION below to the new version
+## 2. Set QT_UPDATE_VERSION to 1
+## 3. Add any new Qt modules to QT_PORTS
+## 4. Run a build of `qtbase`
+## 5. Fix any intermediate failures by adding the module into QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, or QT_FROM_QT_GIT as appropriate
+## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
+## 7. Set QT_UPDATE_VERSION back to 0
 
-# List of added an removed modules https://doc-snapshots.qt.io/qt6-dev/whatsnew60.html#changes-to-supported-modules
-#https://wiki.qt.io/Get_the_Source
-#TODO:qtknx?
+set(QT_VERSION 6.3.2)
+set(QT_UPDATE_VERSION 0)
 
-set(QT_PORTS qtbase 
-             qttools 
+if(PORT MATCHES "(qtquickcontrols2)")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    return()
+endif()
+
+if(PORT MATCHES "qtlocation") # No 6.3.1 tag/branch
+    set(QT_VERSION 6.3.0)
+endif()
+
+### Setting up the git tag.
+
+set(QT_PORTS qt
+             qtbase
+             qttools
              qtdeclarative
              qtsvg
              qt5compat
@@ -22,56 +38,103 @@ set(QT_PORTS qtbase
              qtimageformats
              qtmqtt
              qtnetworkauth
-             qtquickcontrols2
+             qt3d)
+             # qtquickcontrols2 -> moved into qtdeclarative
+if(QT_VERSION VERSION_GREATER_EQUAL 6.1)
+    list(APPEND QT_PORTS
+             ## New in 6.1
              qtactiveqt
              qtdatavis3d
-             #qtdeviceutils
+             qtdeviceutilities
              qtlottie
              qtscxml
              qtvirtualkeyboard
-             qtcharts
-             qt
-    )
+             qtcharts)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
+    list(APPEND QT_PORTS
+             ## New in 6.2
+             qtconnectivity
+             qtpositioning
+             qtlocation
+             qtmultimedia
+             qtremoteobjects
+             qtsensors
+             qtserialbus
+             qtserialport
+             qtwebchannel
+             qtwebengine
+             qtwebsockets
+             qtwebview)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.2.2)
+    list(APPEND QT_PORTS
+             ## New in 6.2.2
+             qtinterfaceframework
+             qtapplicationmanager)
+endif()
 
-foreach(_port IN LISTS QT_PORTS)
-    set(${_port}_TAG ${QT_GIT_TAG})
-endforeach()
+# 1. By default, modules come from the official release
+# 2. These modules are mirrored to github and have tags matching the release
+set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
+# 3. These modules are mirrored to github and have branches matching the release
+set(QT_FROM_GITHUB_BRANCH qtdeviceutilities qtlocation)
+# 4. These modules are not mirrored to github and not part of the release
+set(QT_FROM_QT_GIT qtinterfaceframework)
 
-set(qtbase_REF             c7c05ab0610ca521a7fcbfdd8d063358d62531b0)
-set(qttools_REF            304bae0d5acdee4313405c25dcd259db92dff23d)
-set(qtdeclarative_REF      bfe2822fb615fb9264c19cebc07994c7a719d159)
-set(qtsvg_REF              e4950cbb5810fb9e0fd1c42ba888e6d77c21d4b6)
-set(qt5compat_REF          ff070674ce05e580f023634d5c0fb33c27bb95fd)
-set(qtshadertools_REF      2e4aae72dad87eb6d32aa505d6fdcc51b7be057a)
-set(qtquicktimeline_REF    72f2f03964068d7a66f878949e739fa933d12246)
-set(qtquick3d_REF          261ad084def2fb0147a9def96a55d9ca2c469268)
-set(qttranslations_REF     caa1100446f659ab992585aecd647612df1d0755)
-set(qtwayland_REF          549e6892a0932b76ff7f4004057644980445df36)
-set(qtdoc_REF              5a1cc893a66e84155924a94d538ab9401aa02976)
-set(qtimageformats_REF     99a0ff33dc46582235363f5ca64a01ce3c1b9fe3)
-set(qtmqtt_REF             cef4c58c9b60248ab4fb0ae60815efb906a20f2a)
-set(qtquickcontrols2_REF   2d2e99d44337867585fa0dba8de5bd7ecd7ad6e7)
-set(qtnetworkauth_REF      b3e45d0dad36a0ec402bb6e3e85459546378ed22)
-set(qtcoap_REF             aa40b3cd7d699c926c8527fe7708436cc47eeced)
-set(qtopcua_REF            615ea73989fa5b2a7f560a292d3054af5d0663ed)
-set(qtactiveqt_REF         020d8da4e22be449846eefcfaa805cd8309cac20)
-set(qtdatavis3d_REF        a4ea8afeba164d2dc8229e693c541d364e99f3de)
-#set(qtdeviceutils_REF      0) #missing tag
-set(qtlottie_REF           35e46e52d8849caf84269f92701a5b342824582c)
-set(qtscxml_REF            d92013adb0a4ad0a80e94a265ec13b5c1730ee05)
-set(qtvirtualkeyboard_REF  4e71c9ae1ef8bfe1d9193cd14d11a4e1cf9ea7bc)
-set(qtcharts_REF           68a5725a5c97adad88a9d7a6318b06547f7bf1a3)
+function(qt_get_url_filename qt_port out_url out_filename)
+    if("${qt_port}" IN_LIST QT_FROM_GITHUB)
+        set(url "https://github.com/qt/${qt_port}/archive/v${QT_VERSION}.tar.gz")
+        set(filename "qt-${qt_port}-v${QT_VERSION}.tar.gz")
+    elseif("${qt_port}" IN_LIST QT_FROM_GITHUB_BRANCH)
+        set(url "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
+        set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
+    else()
+        string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
+        set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+    endif()
+    set(${out_url} "${url}" PARENT_SCOPE)
+    set(${out_filename} "${filename}" PARENT_SCOPE)
+endfunction()
 
 if(QT_UPDATE_VERSION)
-    message(STATUS "Running Qt in automatic version port update mode!")
-    set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
-    if("${PORT}" MATCHES "qtbase")
-        foreach(_current_qt_port IN LISTS QT_PORTS)
-            set(_current_control "${VCPKG_ROOT_DIR}/ports/${_current_qt_port}/vcpkg.json")
-            file(READ "${_current_control}" _control_contents)
-            string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
-            file(WRITE "${_current_control}" "${_control_contents}")
-            #need to run a vcpkg format-manifest --all after update once 
-        endforeach()
+    if(NOT PORT STREQUAL "qtbase")
+        message(FATAL_ERROR "QT_UPDATE_VERSION must be used from the root 'qtbase' package")
     endif()
+    set(VCPKG_USE_HEAD_VERSION 1)
+    set(msg "" CACHE INTERNAL "")
+    foreach(qt_port IN LISTS QT_PORTS)
+        set(port_json "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/vcpkg.json")
+        file(READ "${port_json}" _control_contents)
+        string(REGEX REPLACE "\"version(-(string|semver))?\": [^\n]+\n" "\"version\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
+        string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
+        file(WRITE "${port_json}" "${_control_contents}")
+        if(qt_port STREQUAL "qt")
+            continue()
+        endif()
+        if("${qt_port}" IN_LIST QT_FROM_QT_GIT)
+            vcpkg_find_acquire_program(GIT)
+            execute_process(
+                COMMAND "${GIT}" ls-remote -t "https://code.qt.io/cgit/qt/${qt_port}.git" "v${QT_VERSION}"
+                OUTPUT_VARIABLE out
+            )
+            string(SUBSTRING "${out}" 0 40 tag_sha)
+            string(APPEND msg "set(${qt_port}_REF ${tag_sha})\n")
+        else()
+            qt_get_url_filename("${qt_port}" url filename)
+            vcpkg_download_distfile(archive
+                URLS "${url}"
+                FILENAME "${filename}"
+                SKIP_SHA512
+            )
+            file(SHA512 "${archive}" hash)
+            string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
+        endif()
+    endforeach()
+    message("${msg}")
+    file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data_new.cmake" "${msg}")
+    message(FATAL_ERROR "Done downloading version and emitting hashes.")
 endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/qt_port_data.cmake")

@@ -1,0 +1,102 @@
+﻿diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 4085b5aaeb..f89ac88333 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -179,7 +179,7 @@ if (PKG_CONFIG_FOUND)
+   # (needed, at least, for MacOS)
+ 
+   # Use system installation on UNIX and Apple, and internal copy on Windows
+-  if (UNIX OR APPLE)
++  if (true)
+     message (STATUS "Using system tinyxml.")
+     set (USE_EXTERNAL_TINYXML True)
+   elseif(WIN32)
+@@ -225,7 +225,7 @@ if (PKG_CONFIG_FOUND)
+   # (needed, at least, for MacOS)
+ 
+   # Use system installation on UNIX and Apple, and internal copy on Windows
+-  if (UNIX OR APPLE)
++  if (true)
+     message (STATUS "Using system tinyxml2.")
+     set (USE_EXTERNAL_TINYXML2 True)
+   elseif(WIN32)
+@@ -513,7 +513,7 @@ if (PKG_CONFIG_FOUND)
+   endif ()
+ 
+   if (libavutil_FOUND AND libavformat_FOUND AND libavcodec_FOUND AND
+-      libswscale_FOUND)
++      libswscale_FOUND AND FFMPEG_FEATURE)
+     set (HAVE_FFMPEG TRUE)
+   else ()
+     set (HAVE_FFMPEG FALSE)
+@@ -538,7 +538,7 @@ if (PKG_CONFIG_FOUND)
+   ########################################
+   # Find GNU Triangulation Surface Library
+   pkg_check_modules(gts gts)
+-  if (gts_FOUND)
++  if (GTS_FEATURE)
+     message (STATUS "Looking for GTS - found")
+     set (HAVE_GTS TRUE)
+   else ()
+@@ -551,13 +551,14 @@ if (PKG_CONFIG_FOUND)
+   # First and preferred option is to look for bullet standard pkgconfig,
+   # so check it first. if it is not present, check for the OSRF
+   # custom bullet2.82.pc file
+-  pkg_check_modules(BULLET bullet>=2.82)
++  find_package(BULLET CONFIG 2.82)
+   if (NOT BULLET_FOUND)
+      pkg_check_modules(BULLET bullet2.82>=2.82)
+   endif()
+ 
+   if (BULLET_FOUND)
+     set (HAVE_BULLET TRUE)
++    set(BULLET_VERSION ${BULLET_VERSION_STRING})
+     add_definitions( -DLIBBULLET_VERSION=${BULLET_VERSION} )
+   else()
+     set (HAVE_BULLET FALSE)
+@@ -572,7 +573,7 @@ if (PKG_CONFIG_FOUND)
+   ########################################
+   # Find libusb
+   pkg_check_modules(libusb-1.0 libusb-1.0)
+-  if (NOT libusb-1.0_FOUND)
++  if (NO_LIBUSB_FEATURE)
+     BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
+     set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
+   else()
+@@ -648,7 +649,7 @@ endif ()
+ ########################################
+ # Find gdal
+ include (FindGDAL)
+-if (NOT GDAL_FOUND)
++if (NO_GDAL_FEATURE)
+   message (STATUS "Looking for libgdal - not found")
+   BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
+   set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
+@@ -718,7 +719,7 @@ endif()
+ ########################################
+ # Find graphviz
+ include (${gazebo_cmake_dir}/FindGraphviz.cmake)
+-if (NOT GRAPHVIZ_FOUND)
++if (NO_GRAPHVIZ_FEATURE)
+   message (STATUS "Looking for libgraphviz-dev - not found")
+   BUILD_WARNING ("Graphviz not found, Model editor's schematic view will be disabled.")
+   set (HAVE_GRAPHVIZ OFF CACHE BOOL "HAVE GRAPHVIZ" FORCE)
+diff --git a/cmake/gazebo-config.cmake.in b/cmake/gazebo-config.cmake.in
+index b57a90dd76..63ce97095e 100644
+--- a/cmake/gazebo-config.cmake.in
++++ b/cmake/gazebo-config.cmake.in
+@@ -99,12 +99,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
+ 
+ if (GAZEBO_HAS_BULLET)
+   if (PKG_CONFIG_FOUND)
+-    pkg_check_modules(BULLET bullet>=2.82)
++    find_package(BULLET CONFIG 2.82)
+     if (NOT BULLET_FOUND)
+        pkg_check_modules(BULLET bullet2.82>=2.82)
+     endif()
+ 
+     if (BULLET_FOUND)
++      set(BULLET_VERSION ${BULLET_VERSION_STRING})
+       add_definitions(-DLIBBULLET_VERSION=${BULLET_VERSION})
+     else()
+       message(FATAL_ERROR "Error: Bullet > 2.82 not found, please install libbullet2.82-dev.")

@@ -1,0 +1,43 @@
+{
+  "name": "microsoft-signalr",
+  "version": "0.1.0-alpha4",
+  "port-version": 1,
+  "description": "C++ Client for ASP.NET Core SignalR.",
+  "homepage": "https://github.com/aspnet/SignalR-Client-Cpp",
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "cpprestsdk": {
+      "description": "Add default Http and WebSocket implementations using CppRestSDK",
+      "dependencies": [
+        {
+          "name": "cpprestsdk",
+          "features": [
+            "default-features",
+            "websockets"
+          ]
+        }
+      ]
+    },
+    "default-features": {
+      "description": "Features installed by default",
+      "dependencies": [
+        "jsoncpp",
+        {
+          "name": "microsoft-signalr",
+          "features": [
+            "cpprestsdk"
+          ],
+          "platform": "!uwp"
+        }
+      ]
+    },
+    "messagepack": {
+      "description": "Add support for the messagepack hub protocol, must enable in code still",
+      "dependencies": [
+        "msgpack"
+      ]
+    }
+  }
+}

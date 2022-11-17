@@ -1,25 +1,24 @@
-vcpkg_from_git(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://gitlab.freedesktop.org/uchardet/uchardet
-    REF 8681fc060ea07f646434cd2d324e4a5aa7c495c4
+    REPO uchardet/uchardet
+    REF 6f38ab95f55afd45ee6ccefcb92d21034b4a2521
+    SHA512 a2e655d6e1eb6934cf93d99d27dfebc382eb01b6e62021f56b3fa71d269a851e7d68fe57536d40470e0329b3aa035467a9cdd9e11698f8ff76f06611ea7a58d1
+    HEAD_REF master
+    PATCHES fix-uwp-build.patch
 )
+
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tool BUILD_BINARY
+    FEATURES
+        tool BUILD_BINARY
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-if(VCPKG_TARGET_IS_UWP)
-    # uchardet calls `fopen` and `strdup`, which makes UWP unhappy.
-    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
-    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DBUILD_BINARY=OFF
     OPTIONS_RELEASE
@@ -28,29 +27,20 @@ vcpkg_configure_cmake(
         -DBUILD_STATIC=${BUILD_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 if(tool IN_LIST FEATURES)
-    file(COPY
-        ${CURRENT_PACKAGES_DIR}/bin/uchardet${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-    )
-
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/uchardet${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    vcpkg_copy_tools(TOOL_NAMES uchardet AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/share/man
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

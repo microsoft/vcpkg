@@ -1,11 +1,7 @@
-if(NOT VCPKG_TARGET_IS_OSX)
-    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.11/sentry-native.zip"
-    FILENAME "sentry-native-0.4.11.zip"
-    SHA512 3d66295526c0cd068a0b7c2180dbeae7594775b3eb3199a74da7efe634cbc19cff6eba8d44b1479037c43c6eb58a9ba4fdaf8da6995767f27c585a0d42582c37
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.2/sentry-native.zip"
+    FILENAME "sentry-native-0.5.2.zip"
+    SHA512 bbeff94c6795be737d1aee99a061dfb863eca5abbc2797b2bb4a2903354b25787f4808694bf24eee9bdeb419eeae7f6e4f236b7eb95bcb1d3821ad799d322f54
 )
 
 vcpkg_extract_source_archive_ex(
@@ -15,7 +11,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        fix-libcurl.patch
+        use-zlib-target.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -30,22 +26,29 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
+    set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
+        -DCRASHPAD_ZLIB_SYSTEM=ON
+    MAYBE_UNUSED_VARIABLES
+        CRASHPAD_ZLIB_SYSTEM
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
@@ -59,7 +62,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )

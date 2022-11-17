@@ -1,0 +1,70 @@
+{
+  "name": "libcanberra",
+  "version": "0.30",
+  "port-version": 4,
+  "description": "An implementation of the XDG Sound Theme and Name Specifications, for generating event sounds on free desktops",
+  "homepage": "http://0pointer.de/lennart/projects/libcanberra/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "gettext",
+    "libvorbis"
+  ],
+  "default-features": [
+    "defaults"
+  ],
+  "features": {
+    "alsa": {
+      "description": "Enable optional ALSA support",
+      "dependencies": [
+        "alsa"
+      ]
+    },
+    "defaults": {
+      "description": "Default features",
+      "dependencies": [
+        {
+          "name": "libcanberra",
+          "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "libcanberra",
+          "features": [
+            "null"
+          ],
+          "platform": "!linux"
+        }
+      ]
+    },
+    "gstreamer": {
+      "description": "Enable optional GStreamer support",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false
+        }
+      ]
+    },
+    "gtk3": {
+      "description": "Enable optional GTK3 support",
+      "dependencies": [
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
+      ]
+    },
+    "null": {
+      "description": "Enable optional null output"
+    },
+    "oss": {
+      "description": "Enable optional OSS support"
+    },
+    "pulse": {
+      "description": "Enable optional PulseAudio support"
+    }
+  }
+}

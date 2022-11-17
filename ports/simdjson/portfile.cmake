@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
-    REF e9b893ff1b13c6a70135827c62b3f3d65938d135 # v0.9.6
+    REF d520062f8ec066af53d6b52f202f88af7d5c0e1e # v3.0.0
     HEAD_REF master
-    SHA512 977b92ffae7219680f3d8567b1911b0d17ac1143a2ba58d7a4007cdcbf42dca6362853fcf3c3caf4af2029bc5f6a3cb8fab6139050a9d8539e8e4c7df646837d
+    SHA512 f6e4b674641b7e42ecac007b7f95f0dcaa9990d781271cea553bd905d9164d9da67896ad10fa9a41a6bd485af80c0828ede8900a333e4550b7aa8b143b9fb200
 )
 
 vcpkg_check_features(
@@ -18,7 +18,7 @@ vcpkg_check_features(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSIMDJSON_JUST_LIBRARY=ON
         -DSIMDJSON_SANITIZE_UNDEFINED=OFF
@@ -34,7 +34,9 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

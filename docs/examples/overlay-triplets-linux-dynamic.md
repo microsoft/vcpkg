@@ -1,4 +1,4 @@
-# Overlay triplets example
+# Using Overlay Triplets
 
 ## Building dynamic libraries on Linux
 

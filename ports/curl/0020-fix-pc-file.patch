@@ -1,16 +1,15 @@
-diff -urw a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2021-05-10 20:46:52.204346972 +0200
-+++ b/CMakeLists.txt	2021-05-11 19:39:00.065235266 +0200
-@@ -1482,6 +1482,12 @@
-       message(WARNING "Bad lib in library list: ${_libname}")
-       continue()
-     endif()
-+  elseif(_lib MATCHES "^(.*)/([^/]*)[.]framework$")
-+    if(CMAKE_MATCH_1 IN_LIST CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
-+      set(_lib "-framework ${CMAKE_MATCH_2}")
-+    else()
-+      set(_lib "-framework ${_lib}")
-+    endif()
-   endif()
-   if(_lib MATCHES ".*/.*" OR _lib MATCHES "^-")
-     set(LIBCURL_LIBS          "${LIBCURL_LIBS} ${_lib}")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8b2e428..ea430f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1505,7 +1505,9 @@ set(includedir              "\${prefix}/include")
+ set(LDFLAGS                 "${CMAKE_SHARED_LINKER_FLAGS}")
+ set(LIBCURL_LIBS            "")
+ set(libdir                  "${CMAKE_INSTALL_PREFIX}/lib")
+-foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
++set(CURL_LIBS_FLAT "")
++vcpkg_curl_flatten(CURL_LIBS CURL_LIBS_FLAT)
++foreach(_lib ${CURL_LIBS_FLAT})
+   if(TARGET "${_lib}")
+     set(_libname "${_lib}")
+     get_target_property(_imported "${_libname}" IMPORTED)

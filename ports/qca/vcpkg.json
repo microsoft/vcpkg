@@ -1,0 +1,32 @@
+{
+  "name": "qca",
+  "version": "2.3.4",
+  "port-version": 3,
+  "description": "Qt Cryptographic Architecture (QCA).",
+  "homepage": "https://cgit.kde.org/qca.git/",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "botan"
+  ],
+  "features": {
+    "botan": {
+      "description": "Build with botan",
+      "dependencies": [
+        "botan"
+      ]
+    }
+  }
+}

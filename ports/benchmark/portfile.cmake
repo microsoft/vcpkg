@@ -1,28 +1,23 @@
-#https://github.com/google/benchmark/issues/661
-vcpkg_fail_port_install(ON_TARGET "uwp") 
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF e991355c02b93fe17713efe04cbc2e278e00fdbd # v1.5.5
-    SHA512 aa4455fa0f8546ec5762f14065e0be6667b5874e6991ca6dd21dc7b29e38c7c74cfddb2c99c7a1ed2f7636aa7bdec8fc0fc1523967b179f5642c2dc2e968089c
+    REF v1.7.1
+    SHA512 396af1c1d3eaa2b78c6d23b1472f6088db85a294056ae1c2366dc5c0becdc8f141ba8fc3a235033324ab0a41c2298f5d242ef09b9b6f69d9877de6bcb2062efd
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/benchmark)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/benchmark)
 
 vcpkg_fixup_pkgconfig()
 

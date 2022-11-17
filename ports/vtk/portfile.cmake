@@ -2,20 +2,46 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
-# TODO:
-# - add loguru as a dependency requires #8682
+# =============================================================================
+# Clone & patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Kitware/VTK
+    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.9.1
+    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
+    HEAD_REF master
+    PATCHES
+        FindLZMA.patch
+        FindLZ4.patch
+        Findproj.patch
+        pegtl.patch
+        pythonwrapper.patch # Required by ParaView to Wrap required classes
+        NoUndefDebug.patch # Required to link against correct Python library depending on build type.
+        python_debug.patch
+        fix-using-hdf5.patch
+        # CHECK: module-name-mangling.patch
+        # Last patch TODO: Patch out internal loguru
+        FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
+        # upstream vtkm patches to make it work with vtkm 1.6
+        vtkm.patch # To include an external VTKm build
+        1f00a0c9.patch
+        156fb524.patch
+        d107698a.patch
+        fix-gdal.patch
+        missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
+        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
+        fix-find-libharu.patch
+        fix-libharu2.4-compat.patch
+)
+
+# =============================================================================
+#Overwrite outdated modules if they have not been patched:
+file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
+# =============================================================================
 
 # =============================================================================
 # Options:
 # Collect CMake options for optional components
-if("qt" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_GROUP_ENABLE_Qt=YES
-        -DVTK_MODULE_ENABLE_VTK_GUISupportQt=YES
-        -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
-        -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
-    )
 
 endif()
 if("atlmfc" IN_LIST FEATURES)
@@ -32,6 +58,50 @@ if("vtkm" IN_LIST FEATURES)
     )
 endif()
 
+# TODO:
+# - add loguru as a dependency requires #8682
+vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
+    FEATURES
+        "qt"          VTK_GROUP_ENABLE_Qt
+        "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQt
+        "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
+        "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
+        "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
+        "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
+        "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
+        "python"      VTK_MODULE_ENABLE_VTK_Python
+        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
+        "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
+        "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
+        "mpi"         VTK_GROUP_ENABLE_MPI
+        "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_opengl
+        "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
+        "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
+        "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
+)
+
+# Replace common value to vtk value
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
+
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
@@ -46,60 +116,25 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
-if("paraview" IN_LIST FEATURES)
+if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=YES
-        -DVTK_MODULE_ENABLE_VTK_IOParallelExodus=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingParallel=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeAMR=YES
-        -DVTK_MODULE_ENABLE_VTK_IOXdmf2=YES
-        -DVTK_MODULE_ENABLE_VTK_IOH5part=YES
-        -DVTK_MODULE_ENABLE_VTK_IOParallelLSDyna=YES
-        -DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=YES
-        -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemistry=YES
         -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
     )
-    if("python" IN_LIST FEATURES)
-        list(APPEND ADDITIONAL_OPTIONS
-            -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
-        )
-    endif()
 endif()
 
-if("mpi" IN_LIST FEATURES)
+if("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_GROUP_ENABLE_MPI=YES
-        -DVTK_USE_MPI=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
 
 if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
-    )
-endif()
-
-if("opengl" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_opengl=YES
-        )
-endif()
-
-if ("openvr" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS    
-        -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=YES
     )
 endif()
 
@@ -116,12 +151,18 @@ endif()
 if("all" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
+        -DVTK_FORBID_DOWNLOADS=OFF
+    )
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_FORBID_DOWNLOADS=ON
     )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
+    "mpi"          VTK_USE_MPI
     "all"          VTK_BUILD_ALL_MODULES
 )
 
@@ -164,14 +205,14 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 # Configure & Install
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
-        -DVTK_FORBID_DOWNLOADS=ON
         -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
@@ -183,14 +224,16 @@ vcpkg_configure_cmake(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         ${ADDITIONAL_OPTIONS}
+        -DVTK_DEBUG_MODULE_ALL=ON
+        -DVTK_DEBUG_MODULE=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-9.0)
 
 # =============================================================================
 # Clean-up other directories
@@ -285,9 +328,9 @@ if("paraview" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python) #python headers
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python") #python headers
         file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
-        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
+        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
     endif()
 endif()
 
@@ -306,6 +349,16 @@ else()
 endif()
 endforeach()
 
+# Use vcpkg provided find method
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
+endif()
 # =============================================================================
+# Usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")

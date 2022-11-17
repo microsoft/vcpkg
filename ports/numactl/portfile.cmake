@@ -1,14 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO numactl/numactl
-    REF v2.0.12
-    SHA512 3814efd924d1c9152a30f6ae5b665afc20648226cd475d72b933c0ec4f30249af4e25110de17f144734b787ed765644dca09a657219806ab5c9c550abd45bf8e
+    REF v2.0.14
+    SHA512 ADAF405F092FD9653F26D00F8C80CB83852C56EBD5D00E714E20D505008E74AA7105B0FB7AA55A605DEAC0D1491CEFF57DE931037D33E7944FCA105BC6510ED4
     HEAD_REF master
 )
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(FATAL_ERROR "Package only supports linux platform.")
-endif()
 
 message(
 "numactl currently requires the following libraries from the system package manager:
@@ -66,6 +62,8 @@ vcpkg_execute_required_process(
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 configure_file(${SOURCE_PATH}/README.md ${CURRENT_PACKAGES_DIR}/share/numactl/copyright COPYONLY)

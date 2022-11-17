@@ -1,8 +1,8 @@
 diff --git a/cmake/SociBackend.cmake b/cmake/SociBackend.cmake
-index 442d81d..ef56422 100644
+index 5d4ef0d..bb0edf2 100644
 --- a/cmake/SociBackend.cmake
 +++ b/cmake/SociBackend.cmake
-@@ -159,8 +159,13 @@ macro(soci_backend NAME)
+@@ -159,8 +159,14 @@ macro(soci_backend NAME)
            ${THIS_BACKEND_HEADERS})
  
          target_link_libraries(${THIS_BACKEND_TARGET}
@@ -12,42 +12,25 @@ index 442d81d..ef56422 100644
 +          
 +        target_include_directories(${THIS_BACKEND_TARGET}
 +          PUBLIC
-+          ${THIS_BACKEND_DEPENDS_INCLUDE_DIRS})
++          ${THIS_BACKEND_DEPENDS_INCLUDE_DIRS}
++        )
  
          if(WIN32)
            set_target_properties(${THIS_BACKEND_TARGET}
-@@ -197,8 +202,14 @@ macro(soci_backend NAME)
+@@ -197,9 +203,15 @@ macro(soci_backend NAME)
  
          # Still need to link the libraries for tests to work
          target_link_libraries (${THIS_BACKEND_TARGET_STATIC}
 +          PUBLIC
            ${THIS_BACKEND_DEPENDS_LIBRARIES}
          )
+-
 +        
 +        target_include_directories(${THIS_BACKEND_TARGET_STATIC}
 +          PUBLIC
 +          ${THIS_BACKEND_DEPENDS_INCLUDE_DIRS}
 +        )
- 
++        
          set_target_properties(${THIS_BACKEND_TARGET_STATIC}
            PROPERTIES
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index 3916cce..d537613 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -64,6 +64,7 @@ if (SOCI_SHARED)
-   target_include_directories(${SOCI_CORE_TARGET}
-       PUBLIC
-       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-+      $<INSTALL_INTERFACE:include>
-   )
- 
- endif()
-@@ -96,6 +97,7 @@ if (SOCI_STATIC)
-   target_include_directories(${SOCI_CORE_TARGET_STATIC}
-       PUBLIC
-       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-+      $<INSTALL_INTERFACE:include>
-   )
- 
- endif()
+           OUTPUT_NAME ${THIS_BACKEND_OUTPUT_NAME}

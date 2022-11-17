@@ -1,0 +1,18 @@
+{
+  "name": "kwsys",
+  "version-date": "2021-08-06",
+  "port-version": 1,
+  "description": "Provides platform-independent APIs to many common system features",
+  "homepage": "https://gitlab.kitware.com/utils/kwsys",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

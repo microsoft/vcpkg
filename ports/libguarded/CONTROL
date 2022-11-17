@@ -1,4 +1,0 @@
-Source: libguarded
-Version: 2019-08-27-1
-Homepage: https://github.com/copperspice/libguarded
-Description: The libGuarded library is a standalone header-only library for multithreaded programming.

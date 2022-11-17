@@ -1,7 +1,3 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _vcpkg_json)
-string(JSON _ver_string GET "${_vcpkg_json}" "version-semver")
-string(REGEX MATCH "^[0-9]+\.[0-9]+" VERSION "${_ver_string}")
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
@@ -14,7 +10,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF aad4b6f1e92154879209102edfab8367f1e7d191 # v5.9.1
+    REF d41b38848860f122232fbdafc50e77323e91dc09 # v5.11.0
     SHA512  330fcb8525bdee9b02e06f05d4e91cc4d631d03df99c30f82bb97da5e06b5a2a6ff4ecee807b6f6c7110d2f53db1c17e4670d6078ae1cc89cfd7089b67d05bdb
     HEAD_REF master
     PATCHES
@@ -62,9 +58,9 @@ vcpkg_from_gitlab(
 )
 
 
-file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
-file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
-file(COPY ${CATALYST_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/catalyst/vtkcatalyst/catalyst)
+file(COPY "${VISITIT_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/Utilities/VisItBridge")
+file(COPY "${QTTESTING_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting")
+file(COPY "${CATALYST_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/catalyst/vtkcatalyst/catalyst")
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -75,9 +71,8 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS ${FEATURE_OPTIONS}
         -DPARAVIEW_BUILD_WITH_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
@@ -102,16 +97,19 @@ if(CMAKE_HOST_UNIX)
     set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}:${CURRENT_INSTALLED_DIR}/lib")
 endif()
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
+vcpkg_cmake_install(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
 
 if(CMAKE_HOST_UNIX)
     set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-${VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/paraview-${VERSION})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# see https://gitlab.kitware.com/paraview/paraview/-/issues/21328
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/paraview-${VERSION}/vtkCPConfig.h")
 
 set(TOOLVER pv${VERSION})
 set(TOOLS   paraview
@@ -128,34 +126,34 @@ foreach(tool ${TOOLS})
     # Remove debug tools
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
-        file(REMOVE ${filename})
+        file(REMOVE "${filename}")
     endif()
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
-        file(REMOVE ${filename})
+        file(REMOVE "${filename}")
     endif()
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
-        file(REMOVE ${filename})
+        file(REMOVE "${filename}")
     endif()
     
     # Move release tools
     set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
-        file(INSTALL ${filename} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        file(REMOVE ${filename})
+        file(INSTALL "${filename}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${filename}")
     endif()
     set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
-        file(INSTALL ${filename} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        file(REMOVE ${filename})
+        file(INSTALL "${filename}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${filename}")
     endif()
 endforeach()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME Copyright.txt) # Which one is the correct one?
-file(INSTALL ${SOURCE_PATH}/License_v1.2.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME Copyright.txt) # Which one is the correct one?
+file(INSTALL "${SOURCE_PATH}/License_v1.2.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     macro(move_bin_to_lib name)
@@ -179,5 +177,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(WRITE "${cmake_file}" "${_contents}")
     endforeach()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+# The plugins also work without these files
+file(REMOVE "${CURRENT_PACKAGES_DIR}/Applications/paraview.app/Contents/Resources/paraview.conf")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/Applications/paraview.app/Contents/Resources/paraview.conf")

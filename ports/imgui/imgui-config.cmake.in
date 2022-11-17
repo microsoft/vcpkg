@@ -8,27 +8,11 @@ if (@IMGUI_BUILD_GLFW_BINDING@)
     find_dependency(glfw3 CONFIG)
 endif()
 
-if (@IMGUI_BUILD_OPENGL3_GLEW_BINDING@)
-    find_dependency(GLEW)
-endif()
-
-if (@IMGUI_BUILD_OPENGL3_GLAD_BINDING@)
-    find_dependency(glad CONFIG)
-endif()
-
-if (@IMGUI_BUILD_OPENGL3_GL3W_BINDING@)
-    find_dependency(gl3w CONFIG)
-endif()
-
 if (@IMGUI_BUILD_GLUT_BINDING@)
     find_dependency(GLUT)
 endif()
 
-if (@IMGUI_BUILD_OPENGL3_GLBINDING_BINDING@)
-    find_dependency(glbinding CONFIG)
-endif()
-
-if (@IMGUI_BUILD_SDL2_BINDING@)
+if (@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@)
     find_dependency(SDL2 CONFIG)
 endif()
 

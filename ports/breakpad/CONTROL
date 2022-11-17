@@ -1,6 +1,0 @@
-Source: breakpad
-Version: 2020-09-14
-Port-Version: 2
-Build-Depends: libdisasm
-Homepage: https://github.com/google/breakpad
-Description: a set of client and server components which implement a crash-reporting system.

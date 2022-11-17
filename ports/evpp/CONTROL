@@ -1,6 +1,0 @@
-Source: evpp
-Version: 0.7.0
-Port-Version: 4
-Homepage: https://github.com/Qihoo360/evpp
-Description: A modern C++ network library based on libevent for developing high performance network services in TCP/UDP/HTTP protocols.
-Build-Depends: glog, libevent (windows), libevent[openssl] (!windows), rapidjson, concurrentqueue (!windows), boost-lockfree (!windows)

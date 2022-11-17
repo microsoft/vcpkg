@@ -1,11 +1,12 @@
 ﻿diff --git a/omplConfig.cmake.in b/omplConfig.cmake.in
-index 465de25..ad373fa 100644
+index 465de25d..d1e91929 100644
 --- a/omplConfig.cmake.in
 +++ b/omplConfig.cmake.in
-@@ -18,8 +18,10 @@ set(OMPL_MAJOR_VERSION @PROJECT_VERSION_MAJOR@)
+@@ -18,8 +18,11 @@ set(OMPL_MAJOR_VERSION @PROJECT_VERSION_MAJOR@)
  set(OMPL_MINOR_VERSION @PROJECT_VERSION_MINOR@)
  set(OMPL_PATCH_VERSION @PROJECT_VERSION_PATCH@)
  
++include(CMakeFindDependencyMacro)
 +find_dependency(Boost 1.58 COMPONENTS serialization filesystem system program_options)
 +find_dependency(Eigen3)
  set_and_check(OMPL_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
@@ -14,7 +15,7 @@ index 465de25..ad373fa 100644
  foreach(_dir @FLANN_INCLUDE_DIRS@;@ODE_INCLUDE_DIRS@;@SPOT_INCLUDE_DIRS@;@TRIANGLE_INCLUDE_DIR@;@FCL_INCLUDE_DIRS@;@PQP_INCLUDE_DIR@;@ASSIMP_INCLUDE_DIRS@;@OPENGL_INCLUDE_DIR@)
      if(_dir)
          list(APPEND OMPL_INCLUDE_DIRS "${_dir}")
-@@ -29,7 +31,7 @@ list(REMOVE_DUPLICATES OMPL_INCLUDE_DIRS)
+@@ -29,7 +32,7 @@ list(REMOVE_DUPLICATES OMPL_INCLUDE_DIRS)
  set(OMPL_INCLUDE_DIRS "${OMPL_INCLUDE_DIRS}" CACHE STRING "Include path for OMPL and its dependencies")
  
  set_and_check(OMPL_LIBRARY_DIR @PACKAGE_LIB_INSTALL_DIR@)
@@ -23,7 +24,7 @@ index 465de25..ad373fa 100644
  foreach(_dir @FLANN_LIBRARY_DIRS@;@ODE_LIBRARY_DIRS@;@SPOT_LIBRARY_DIRS@;@FCL_LIBRARY_DIRS@;@ASSIMP_LIBRARY_DIRS@)
      if(_dir)
          list(APPEND OMPL_LIBRARY_DIRS "${_dir}")
-@@ -40,7 +42,7 @@ set(OMPL_LIBRARY_DIRS "${OMPL_LIBRARY_DIRS}" CACHE STRING "Library path for OMPL
+@@ -40,7 +43,7 @@ set(OMPL_LIBRARY_DIRS "${OMPL_LIBRARY_DIRS}" CACHE STRING "Library path for OMPL
  
  find_library(OMPL_LIBRARIES NAMES ompl.${OMPL_VERSION} ompl
      PATHS ${OMPL_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -32,7 +33,7 @@ index 465de25..ad373fa 100644
      if(_lib)
          list(APPEND OMPL_LIBRARIES "${_lib}")
      endif()
-@@ -61,3 +63,4 @@ endif()
+@@ -61,3 +64,4 @@ endif()
  
  include(FindPackageHandleStandardArgs)
  find_package_handle_standard_args(ompl DEFAULT_MSG OMPL_INCLUDE_DIRS OMPL_LIBRARY_DIRS OMPL_LIBRARIES)

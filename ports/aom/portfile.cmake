@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP")
-
 # NASM is required to build AOM
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
@@ -13,17 +11,24 @@ vcpkg_add_to_path(${PERL_PATH})
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 33aff8586e35ffe385637f6aa2c991858c0fb58e
-    TAG v3.1.0
+    REF 9a83c6a5a55c176adbce740e47d3512edfc9ae71 # v3.5.0
     PATCHES
         aom-rename-static.diff
+        aom-uninitialized-pointer.diff
         # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream
         aom-install.diff
 )
 
+set(aom_target_cpu "")
+if(VCPKG_TARGET_IS_UWP)
+    # UWP + aom's assembler files result in weirdness and build failures
+    set(aom_target_cpu "-DAOM_TARGET_CPU=generic")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${aom_target_cpu}
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF
@@ -35,6 +40,8 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_pkgconfig()
+
 # Move cmake configs
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
@@ -44,3 +51,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

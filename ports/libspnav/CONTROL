@@ -1,5 +1,0 @@
-Source: libspnav
-Version: 0.2.3
-Homepage: https://github.com/FreeSpacenav/libspnav
-Description: Library for communicating with spacenavd or 3dxsrv to get input from 6-dof devices.
-Supports: linux

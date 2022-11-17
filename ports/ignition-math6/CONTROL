@@ -1,5 +1,0 @@
-Source: ignition-math6
-Version: 6.6.0
-Homepage: https://ignitionrobotics.org/libs/math
-Build-Depends: eigen3, ignition-cmake2, ignition-modularscripts
-Description: Math API for robotic applications

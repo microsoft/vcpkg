@@ -1,36 +1,32 @@
-vcpkg_from_sourceforge(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO qwt/qwt
-    REF 6.1.5
-    FILENAME "qwt-6.1.5.zip"
-    SHA512 249634d2032ccc8083e26f1d151b301d6ccfcc3140a2c2c469d77d3d8973bc296872a1cff96e002944c40fa558a9896ca2a0f1a0531169c3c8d0fe2240610266
+    URL "https://git.code.sf.net/p/qwt/git"
+    REF "06d6822b595b70c9fd567a4fe0d835759bf271fe"
+    FETCH_REF qwt-6.2
+    PATCHES 
+        config.patch
+        fix_dll_install.patch
 )
 
-vcpkg_configure_qmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        CONFIG+=${VCPKG_LIBRARY_LINKAGE}
-)
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_install_qmake(
-        RELEASE_TARGETS sub-src-release_ordered
-        DEBUG_TARGETS sub-src-debug_ordered
-    )
-else ()
-    vcpkg_install_qmake(
-        RELEASE_TARGETS sub-src-all-ordered
-        DEBUG_TARGETS sub-src-all-ordered
-    )
+string(COMPARE EQUAL  "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IS_DYNAMIC)
+set(OPTIONS "")
+if(IS_DYNAMIC)
+    set(OPTIONS "QWT_CONFIG+=QwtDll")
 endif()
+vcpkg_qmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    QMAKE_OPTIONS
+        ${OPTIONS}
+        "CONFIG-=debug_and_release"
+        "CONFIG+=create_prl"
+        "CONFIG+=link_prl"
+)
+vcpkg_qmake_install()
+vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-#Install the header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,5 +1,0 @@
-Source: libusb-win32
-Version: 1.2.6.0-6
-Homepage: https://sourceforge.net/projects/libusb-win32
-Description: Allows user space applications to access many USB device on Windows.
-Supports: windows

@@ -5,25 +5,24 @@ vcpkg_from_github(
     SHA512 d590c1a00d1b314c6946e0f6ad3e3a8b6e6309bada2ec38857186f817147ac99dae8a1c4412abe701af88da5dca3dd8f989a1da66630192643d3c08c0146b603
     HEAD_REF master
     PATCHES
-        fix-pdb-install.patch
+        do-not-copy-pdbs-to-lib.patch
+        export-targets.patch
+        msvc-arm64-atomic.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DWANT_DOCS=OFF
         -DALLEGRO_SDL=OFF
         -DWANT_DEMO=OFF
         -DSHARED=${VCPKG_BUILD_SHARED_LIBS}
+        -DINSTALL_PKG_CONFIG_FILES=true
         -DWANT_EXAMPLES=OFF
-        -DWANT_CURL_EXAMPLE=OFF
         -DWANT_TESTS=OFF
         -DWANT_AUDIO=ON
         -DWANT_COLOR=ON
@@ -32,7 +31,6 @@ vcpkg_configure_cmake(
         -DWANT_DSOUND=ON
         -DWANT_FLAC=ON
         -DWANT_FONT=ON
-        -DWANT_GLES2=ON
         -DWANT_GLES3=ON
         -DWANT_IMAGE=ON
         -DWANT_IMAGE_JPG=ON
@@ -56,20 +54,19 @@ vcpkg_configure_cmake(
         -DWANT_TTF=ON
         -DWANT_VIDEO=ON
         -DWANT_VORBIS=ON
-        -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/AL
-        -DZLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-    OPTIONS_RELEASE -DWANT_ALLOW_SSE=ON
-    OPTIONS_DEBUG -DWANT_ALLOW_SSE=OFF
+    OPTIONS_RELEASE
+        -DWANT_ALLOW_SSE=ON
+    OPTIONS_DEBUG
+        -DWANT_ALLOW_SSE=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB PDB_GLOB ${CURRENT_BUILDTREES_DIR}-dbg/lib/*.pdb)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}-dbg/lib/Debug)
-file(COPY ${PDB_GLOB} DESTINATION ${CURRENT_BUILDTREES_DIR}-dbg/lib/Debug)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/allegro5 RENAME copyright)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-allegro5 CONFIG_PATH share/unofficial-allegro5)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

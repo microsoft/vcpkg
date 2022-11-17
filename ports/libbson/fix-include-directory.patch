@@ -1,0 +1,33 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index 88de79a..c3cfd7e 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -347,7 +347,7 @@ if (ENABLE_EXAMPLES)
+ endif () # ENABLE_EXAMPLES
+ 
+ set (BSON_HEADER_INSTALL_DIR
+-   "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
++   "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
+ 
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+diff --git a/src/libbson/src/libbson-1.0.pc.in b/src/libbson/src/libbson-1.0.pc.in
+index b65abbc..33346f3 100644
+--- a/src/libbson/src/libbson-1.0.pc.in
++++ b/src/libbson/src/libbson-1.0.pc.in
+@@ -7,4 +7,4 @@ Name: libbson
+ Description: The libbson BSON serialization library.
+ Version: @VERSION@
+ Libs: -L${libdir} -lbson-@BSON_API_VERSION@
+-Cflags: -I${includedir}/libbson-@BSON_API_VERSION@
++Cflags: -I${includedir}
+diff --git a/src/libbson/src/libbson-static-1.0.pc.in b/src/libbson/src/libbson-static-1.0.pc.in
+index 6ee58d0..e03a95b 100644
+--- a/src/libbson/src/libbson-static-1.0.pc.in
++++ b/src/libbson/src/libbson-static-1.0.pc.in
+@@ -7,4 +7,4 @@ Name: libbson static archive
+ Description: The libbson BSON serialization library.
+ Version: @VERSION@
+ Libs: -L${libdir} -lbson-static-@BSON_API_VERSION@ @LIBBSON_LIBRARIES@
+-Cflags: -I${includedir}/libbson-@BSON_API_VERSION@ -DBSON_STATIC
++Cflags: -I${includedir} -DBSON_STATIC

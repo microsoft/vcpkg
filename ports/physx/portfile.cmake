@@ -1,4 +1,16 @@
-vcpkg_fail_port_install(ON_TARGET MINGW)
+vcpkg_download_distfile(
+    patch1
+    URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/ada4fccf04e5a5832af1353d6d1f91de691aa47d.patch"
+    FILENAME "physx-PR569-ada4fccf.patch"
+    SHA512 ec2fc2fce0b5aab4d42b77f21373bf067f129543e672516477513419241c56b99f2d663b992cb29d296933440e7e7cc31a57198f6fcc78d6eac26b7706c1e937
+)
+
+vcpkg_download_distfile(
+    patch2
+    URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/d590c88e3cbf0fb682726abf7d7c16417855084f.patch"
+    FILENAME "physx-PR569-d590c88e.patch"
+    SHA512 4eb7630db1cb10b2372220c3706dfe255075f466c6b2b12654c9fbc3b17c4df69d7b91e6f0d798c92a4cb8806e1c34b66bb52b46d9358d643ca62ec0de321fd2
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,6 +20,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-compiler-flag.patch
+        "${patch1}"
+        "${patch2}"
         remove-werror.patch
 )
 
@@ -42,6 +56,7 @@ set(OPTIONS_DEBUG
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=uwp")
+    set(configure_options WINDOWS_USE_MSBUILD)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=windows")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -78,6 +93,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
+    ${configure_options}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
@@ -138,4 +154,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/source"
     "${CURRENT_PACKAGES_DIR}/source"
 )
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

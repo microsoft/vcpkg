@@ -1,4 +1,0 @@
-Source: cli11
-Version: 1.9.1
-Description: CLI11 is a command line parser for C++11 and beyond that provides a rich feature set with a simple and intuitive interface.
-Homepage: https://github.com/CLIUtils/CLI11

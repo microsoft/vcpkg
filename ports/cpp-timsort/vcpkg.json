@@ -1,0 +1,16 @@
+{
+  "name": "cpp-timsort",
+  "version": "2.1.0",
+  "description": "A C++ implementation of timsort",
+  "homepage": "https://github.com/timsort/cpp-TimSort",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

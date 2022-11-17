@@ -1,7 +1,0 @@
-Source: soqt
-Version: 1.6.0
-Port-Version: 2
-Description: A Qt Gui-toolkit binding for Coin
-Build-Depends: coin, qt5-base[core]
-Homepage: https://github.com/coin3d/soqt
-Supports: !(arm|arm64|uwp)

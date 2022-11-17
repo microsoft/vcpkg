@@ -1,9 +1,0 @@
-Source: type-lite
-Version: 0.1.0
-Homepage: https://github.com/martinmoene/type-lite
-Description: Strong types for C++98, C++11 and later in a single-file header-only library.
-
-Feature: test
-Description: Build with test
-
-

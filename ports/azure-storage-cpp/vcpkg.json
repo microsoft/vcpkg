@@ -1,0 +1,41 @@
+{
+  "name": "azure-storage-cpp",
+  "version-string": "7.5.0",
+  "port-version": 3,
+  "description": [
+    "[legacy] Microsoft Azure Storage Client SDK for C++",
+    "A client library for working with Microsoft Azure storage services including blobs, files, tables, and queues. This client library enables working with the Microsoft Azure storage services which include the blob service for storing binary and text data, the file service for storing binary and text data, the table service for storing structured non-relational data, and the queue service for storing messages that may be accessed by a client."
+  ],
+  "homepage": "https://blogs.msdn.com/b/windowsazurestorage/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-locale",
+      "platform": "!windows & !uwp"
+    },
+    {
+      "name": "boost-log",
+      "platform": "!windows & !uwp"
+    },
+    {
+      "name": "cpprestsdk",
+      "default-features": false
+    },
+    {
+      "name": "gettext",
+      "platform": "osx"
+    },
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp & !osx"
+    },
+    {
+      "name": "libxml2",
+      "platform": "!windows & !uwp"
+    }
+  ]
+}

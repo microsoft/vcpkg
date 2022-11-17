@@ -1,7 +1,17 @@
 {
   "name": "bfgroup-lyra",
-  "version-string": "1.5",
-  "port-version": 1,
+  "version": "1.6",
   "description": "A simple to use, composable, command line parser for C++ 11 and beyond",
-  "homepage": "https://bfgroup.github.io/Lyra/"
+  "homepage": "https://bfgroup.github.io/Lyra/",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

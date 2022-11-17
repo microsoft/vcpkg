@@ -1,7 +1,0 @@
-Source: oniguruma
-Version: 6.9.4
-Description: Modern and flexible regular expressions library
-Homepage: https://github.com/kkos/oniguruma
-
-Feature: non-posix
-Description: Disable POSIX API

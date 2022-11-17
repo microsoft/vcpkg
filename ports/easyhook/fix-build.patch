@@ -126,3 +126,29 @@ index ec66f91..5773555 100644
      <MASM>
        <GenerateDebugInformation>false</GenerateDebugInformation>
        <UseSafeExceptionHandlers>false</UseSafeExceptionHandlers>
+diff --git a/EasyHookDll/EasyHookDll_32.rc b/EasyHookDll/EasyHookDll_32.rc
+index 2a8dfb6..abf5ae3 100644
+--- a/EasyHookDll/EasyHookDll_32.rc
++++ b/EasyHookDll/EasyHookDll_32.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
++#include "windows.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/EasyHookDll/EasyHookDll_64.rc b/EasyHookDll/EasyHookDll_64.rc
+index 163a2f0..b32a4d4 100644
+--- a/EasyHookDll/EasyHookDll_64.rc
++++ b/EasyHookDll/EasyHookDll_64.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
++#include "windows.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS

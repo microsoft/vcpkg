@@ -1,14 +1,19 @@
 {
   "name": "atk",
-  "version": "2.36.0",
+  "version": "2.38.0",
+  "port-version": 3,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
-  "supports": "!(osx | arm)",
+  "license": "GPL-2.0-only",
   "dependencies": [
     "gettext",
     "glib",
     {
       "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ]

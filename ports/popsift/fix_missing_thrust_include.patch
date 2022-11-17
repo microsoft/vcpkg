@@ -1,0 +1,21 @@
+From 273adb1c375b12f285694488280e04efd251a76a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Sch=C3=B6ps?= <tom.schoeps@gmail.com>
+Date: Sat, 28 Aug 2021 16:52:25 +0200
+Subject: [PATCH] Add missing thrust include
+
+---
+ src/popsift/s_filtergrid.cu | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/popsift/s_filtergrid.cu b/src/popsift/s_filtergrid.cu
+index 078eb114..301c6a96 100644
+--- a/src/popsift/s_filtergrid.cu
++++ b/src/popsift/s_filtergrid.cu
+@@ -21,6 +21,7 @@
+ #include <thrust/copy.h>
+ #include <thrust/device_vector.h>
+ #include <thrust/execution_policy.h>
++#include <thrust/host_vector.h>
+ #include <thrust/iterator/discard_iterator.h>
+ #include <thrust/sequence.h>
+ #include <thrust/sort.h>

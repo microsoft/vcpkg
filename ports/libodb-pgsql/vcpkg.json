@@ -1,0 +1,19 @@
+{
+  "name": "libodb-pgsql",
+  "version": "2.4.0",
+  "port-version": 6,
+  "description": "Description: PostgreSQL support for the ODB ORM library",
+  "homepage": "https://www.codesynthesis.com/products/odb/",
+  "dependencies": [
+    "libodb",
+    "libpq",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,5 +1,0 @@
-Source: thrift
-Version: 0.13.0
-Build-Depends: zlib, libevent, openssl, boost-range, boost-smart-ptr, boost-date-time, boost-locale, boost-scope-exit
-Homepage: https://github.com/apache/thrift
-Description: Apache Thrift is a software project spanning a variety of programming languages and use cases. Our goal is to make reliable, performant communication and data serialization across languages as efficient and seamless as possible.

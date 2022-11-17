@@ -1,5 +1,0 @@
-Source: portmidi
-Version: 0.234
-Homepage: https://sourceforge.net/projects/portmedia/
-Description: Free, cross-platform, open-source I/O library for MIDI
-Supports: windows&!uwp&!arm

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5893f31..c8864fd 100644
+index d9bf7b5..eb2692c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -59,7 +59,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+@@ -60,7 +60,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
  endif()
  
  hunter_add_package(thrift)
@@ -11,7 +11,7 @@ index 5893f31..c8864fd 100644
  if(HUNTER_ENABLED)
    list(APPEND LIBS thrift::thrift_static)
  else()
-@@ -268,6 +268,9 @@ if(JAEGERTRACING_PLUGIN)
+@@ -273,6 +273,9 @@ if(JAEGERTRACING_PLUGIN)
    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/export.map
      "{ global: OpenTracingMakeTracerFactory; local: *; };")
    add_library(jaegertracing_plugin MODULE ${SRC})
@@ -21,7 +21,7 @@ index 5893f31..c8864fd 100644
    add_lib_deps(jaegertracing_plugin)
    target_link_libraries(jaegertracing_plugin PUBLIC
      -static-libgcc
-@@ -410,7 +413,7 @@ include(GNUInstallDirs)
+@@ -418,7 +421,7 @@ include(GNUInstallDirs)
  #   * <prefix>/lib*/cmake/<PROJECT-NAME>
  #   * <prefix>/lib*/
  #   * <prefix>/include/

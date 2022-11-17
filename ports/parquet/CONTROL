@@ -1,4 +1,0 @@
-Source: parquet
-Version: 0
-Build-Depends: arrow
-Description: Parquet-cpp is a C++ library to read and write the Apache Parquet columnar data format.  It is now part of the arrow library.

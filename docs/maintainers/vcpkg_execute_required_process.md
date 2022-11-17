@@ -13,6 +13,7 @@ vcpkg_execute_required_process(
     [TIMEOUT <seconds>]
     [OUTPUT_VARIABLE <var>]
     [ERROR_VARIABLE <var>]
+    [SAVE_LOG_FILES <relative-path> [<relative-path>...]]
 )
 ```
 ## Parameters
@@ -39,6 +40,14 @@ Optional variable to receive stdout of the command.
 Optional variable to receive stderr of the command.
 
 This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
+
+### SAVE_LOG_FILES
+
+Optional files to be moved from the working directory to `${CURRENT_BUILDTREES_DIR}`.
+The files are copied even if the process failed. 
+The target file names are constructed from the `LOGNAME` parameter and the source filename.
+If the target file name doesn't end in `.log`, this suffix is appended.
+This helps to collect relevant log files in CI setups.
 
 ## Examples
 

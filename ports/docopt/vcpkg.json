@@ -1,0 +1,6 @@
+{
+  "name": "docopt",
+  "version-string": "2018-11-01",
+  "port-version": 1,
+  "description": "Command line arguments parser that will make you smile (C++11 port)."
+}

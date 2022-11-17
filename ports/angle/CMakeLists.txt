@@ -72,7 +72,21 @@ elseif(APPLE)
         set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win|_mac")
     endif()
 endif()
-file(GLOB ANGLE_COMMON_SOURCES 
+
+if(APPLE)
+    set(ANGLE_COMMON_PLATFORM_SOURCES
+        "src/common/apple/*.h"
+        "src/common/apple/*.cpp"
+        "src/common/apple/*.mm"
+        "src/common/gl/cgl/*.h"
+        "src/common/gl/cgl/*.cpp"
+        "src/common/gl/cgl/*.mm")
+else()
+    set(ANGLE_COMMON_PLATFORM_SOURCES )
+endif()
+
+file(GLOB ANGLE_COMMON_SOURCES
+    ${ANGLE_COMMON_PLATFORM_SOURCES}
     "src/common/*.h"
     "src/common/*.inc"
     "src/common/*.cpp"
@@ -84,7 +98,8 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/xxhash/*.h"
     "src/common/third_party/xxhash/*.c"
     "src/common/third_party/smhasher/src/*.h"
-    "src/common/third_party/smhasher/src/*.cpp")
+    "src/common/third_party/smhasher/src/*.cpp"
+    )
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common OBJECT ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base>")
@@ -235,13 +250,13 @@ file(GLOB TRANSLATOR_GLSL_BASE_SOURCES
     "src/compiler/translator/OutputGLSLBase.cpp"
     "src/compiler/translator/OutputGLSLBase.h"
 )
-file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES 
+file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES
     "src/compiler/translator/BuiltinsWorkaroundGLSL.cpp"
     "src/compiler/translator/BuiltinsWorkaroundGLSL.h"
     "src/compiler/translator/OutputGLSL.cpp"
     "src/compiler/translator/OutputGLSL.h"
 )
-file(GLOB TRANSLATOR_ESSL_SOURCES 
+file(GLOB TRANSLATOR_ESSL_SOURCES
     "src/compiler/translator/OutputESSL.cpp"
     "src/compiler/translator/OutputESSL.h"
     "src/compiler/translator/TranslatorESSL.cpp"
@@ -332,19 +347,22 @@ add_library(angle::preprocessor ALIAS angle_preprocessor)
 ## OpenGL Renderer
 if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     if(WINDOWS_DESKTOP)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/wgl/*.cpp"
             "src/libANGLE/renderer/gl/wgl/*.h"
         )
     elseif(APPLE)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/cgl/*.mm"
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.h"
+            "src/libANGLE/renderer/gl/apple/*.mm"
+            "src/libANGLE/renderer/gl/apple/*.cpp"
+            "src/libANGLE/renderer/gl/apple/*.h"
             "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/glx/*.cpp"
             "src/libANGLE/renderer/gl/glx/*.h"
             "src/libANGLE/renderer/gl/egl/*.cpp"
@@ -362,7 +380,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
     add_library(angle_renderer_opengl INTERFACE)
     target_sources(angle_renderer_opengl INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_GL_SOURCES}>")
-    target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL)
+    target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL -DANGLE_ENABLE_OPENGL_DESKTOP)
     add_library(angle::renderer::opengl ALIAS angle_renderer_opengl)
 endif()
 
@@ -375,6 +393,9 @@ if(WIN32)
         "src/libANGLE/renderer/d3d/*.h"
     )
     list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "_unittest")
+    if(MINGW)
+        list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "CompositorNativeWindow11")
+    endif()
 
     ## WinRT D3D Renderer
     if(WINDOWS_STORE)
@@ -406,8 +427,12 @@ if(WIN32)
     target_compile_definitions(angle_renderer_d3d INTERFACE
         -DANGLE_ENABLE_D3D11
         "-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ \"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }"
-        -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW
-    )
+     )
+    if(NOT MINGW)
+        target_compile_definitions(angle_renderer_d3d INTERFACE
+            -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW
+        )
+    endif()
     target_link_libraries(angle_renderer_d3d INTERFACE d3d11 dxguid)
     add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
 endif()
@@ -418,6 +443,18 @@ file(GLOB ANGLE_GPU_INFO_UTIL_SOURCES
     "src/gpu_info_util/SystemInfo_internal.h"
     "src/gpu_info_util/SystemInfo.cpp"
 )
+
+if(LINUX)
+    find_package(X11 COMPONENTS Xext Xi REQUIRED)
+    include_directories(${X11_INCLUDE_DIR})
+    list(APPEND LIBANGLE_RENDERER_PLATFORM ${X11_LIBRARIES})
+    set(LIBANGLE_RENDERER_COMPILEDEF
+        -DANGLE_USE_X11
+    )
+else()
+    set(LIBANGLE_RENDERER_COMPILEDEF )
+endif()
+
 add_library(angle_gpu_info_util OBJECT ${ANGLE_GPU_INFO_UTIL_SOURCES})
 if(WIN32)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
@@ -433,8 +470,9 @@ elseif(APPLE)
 	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
 elseif(LINUX)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
+    target_sources(angle_gpu_info_util PRIVATE "src/third_party/libXNVCtrl/NVCtrl.c")
     target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
-    target_link_libraries(angle_gpu_info_util PRIVATE X11 Xi Xext)
+    target_link_libraries(angle_gpu_info_util PRIVATE X11::X11 X11::Xi X11::Xext)
 elseif(ANDROID)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_android.cpp")
 endif()
@@ -523,17 +561,6 @@ else()
     set(LIBANGLE_RENDERER_PLATFORM )
 endif()
 
-if(LINUX)
-    find_package(X11)
-    include_directories(${X11_INCLUDE_DIR})
-    list(APPEND LIBANGLE_RENDERER_PLATFORM ${X11_LIBRARIES})
-    set(LIBANGLE_RENDERER_COMPILEDEF
-        -DANGLE_USE_X11
-    )
-else()
-    set(LIBANGLE_RENDERER_COMPILEDEF )
-endif()
-
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
     angle::common
@@ -547,9 +574,9 @@ target_link_libraries(libANGLE PRIVATE
 target_include_directories(libANGLE PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/khronos>")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
-    PUBLIC 
-        -DLIBANGLE_IMPLEMENTATION 
-        ${LIBANGLE_RENDERER_COMPILEDEF} 
+    PUBLIC
+        -DLIBANGLE_IMPLEMENTATION
+        ${LIBANGLE_RENDERER_COMPILEDEF}
         -DANGLE_EXPORT=
         -DANGLE_UTIL_EXPORT=
         -DEGLAPI=
@@ -598,6 +625,9 @@ list(APPEND LIBGLESV2_SOURCES
 )
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libGLESv2 PROPERTY OUTPUT_NAME libGLESv2_angle)
+endif()
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
@@ -642,6 +672,9 @@ add_library(libEGL
 )
 
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libEGL PROPERTY OUTPUT_NAME libEGL_angle)
+endif()
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 target_compile_definitions(libEGL
     PRIVATE
@@ -679,9 +712,9 @@ if(NOT BUILD_SHARED_LIBS)
     add_definitions("-DANGLE_EXPORT=" "-DANGLE_UTIL_EXPORT=" "-DEGLAPI=" "-DGL_APICALL=" "-DGL_API=")
 endif()
 
-SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
+set_target_properties(libANGLE PROPERTIES PREFIX "")
+set_target_properties(libGLESv2 PROPERTIES PREFIX "" IMPORT_PREFIX "")
+set_target_properties(libEGL PROPERTIES PREFIX "" IMPORT_PREFIX "")
 
 install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_compression_utils angle_image_util angle_gpu_info_util angle_translator angle_preprocessor GL_VISIBILITY EXPORT ANGLEExport
     RUNTIME DESTINATION bin

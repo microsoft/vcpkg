@@ -1,4 +1,0 @@
-Source: ilmbase
-Version: 2.3.0
-Build-Depends: openexr
-Description: empty package, linking to newer one

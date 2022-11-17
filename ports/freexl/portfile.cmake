@@ -1,91 +1,40 @@
-set(FREEXL_VERSION_STR "1.0.4")
+set(FREEXL_VERSION_STR "1.0.6")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
+    URLS "https://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
     FILENAME "freexl-${FREEXL_VERSION_STR}.tar.gz"
-    SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
+    SHA512 efbbe261e57d5c05167ad8e1d5a5b348a7e702c0a4030b18dd2a8c60a38332caccbb073ff604bdf5bafac827310b41c7b79f9fa519ea512d6de2eafd9c1f71f6
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_extract_source_archive_ex(
-        ARCHIVE ${ARCHIVE}
-        OUT_SOURCE_PATH SOURCE_PATH
-        PATCHES
-            fix-makefiles.patch
-            fix-sources.patch
-    )
-    
-    set(LIBS_ALL_DBG 
-      "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
-      )
-    set(LIBS_ALL_REL 
-      "\"${CURRENT_INSTALLED_DIR}/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/lib/charset.lib\""
-      )
-    
-    vcpkg_install_nmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS_DEBUG
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}/debug"
-            INST_DIR="${CURRENT_PACKAGES_DIR}/debug"
-            "LINK_FLAGS=/debug"
-            "LIBS_ALL=${LIBS_ALL_DBG}"
-        OPTIONS_RELEASE
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-            INST_DIR="${CURRENT_PACKAGES_DIR}"
-            "LINK_FLAGS="
-            "LIBS_ALL=${LIBS_ALL_REL}"       
-    )
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib)
-    else()
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/freexl.lib)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib)
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/lib/freexl.lib)
-      endif()
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib)
-      endif()
-    endif()
+vcpkg_extract_source_archive_ex(
+    ARCHIVE "${ARCHIVE}"
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        fix-makefiles.patch
+        fix-sources.patch
+        fix-pc-file.patch
+)
 
-elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
-
-    vcpkg_extract_source_archive_ex(
-        ARCHIVE ${ARCHIVE}
-        OUT_SOURCE_PATH SOURCE_PATH
-    )
-    file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
-    vcpkg_configure_make(
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_DEBUG
-        INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-        "LINK_FLAGS=/debug"
-        "CL_FLAGS=${CL_FLAGS_DBG}"
-        "LIBS_ALL=${LIBS_ALL_DBG}"
-    OPTIONS_RELEASE
-        INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-        "LINK_FLAGS="
-        "CL_FLAGS=${CL_FLAGS_REL}"
-        "LIBS_ALL=${LIBS_ALL_REL}"
-    )
-    
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
-    
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)
+)
+vcpkg_install_make()
 
-else()# Other build system
-    message(FATAL_ERROR "Unsupported build system.")
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freexl.pc")
+        vcpkg_replace_string("${outfile}" " -lm" " -liconv -lcharset")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freexl.pc")
+        vcpkg_replace_string("${outfile}" " -lm" " -liconv -lcharset")
+    endif()
 endif()
 
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

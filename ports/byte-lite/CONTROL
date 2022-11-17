@@ -1,3 +1,0 @@
-Source: byte-lite
-Version: 0.2.0
-Description: A C++17-like byte type for C++98, C++11 and later in a single-file header-only library

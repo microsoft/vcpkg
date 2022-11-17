@@ -1,0 +1,37 @@
+diff --git a/libudis86/udis86.c b/libudis86/udis86.c
+index e039c4e..8459012 100644
+--- a/libudis86/udis86.c
++++ b/libudis86/udis86.c
+@@ -34,6 +34,10 @@
+ # endif
+ #endif /* !__UD_STANDALONE__ */
+ 
++#if defined(__APPLE__)
++#  include <string.h>
++#endif
++
+ static void ud_inp_init(struct ud *u);
+ 
+ /* =============================================================================
+diff --git a/udcli/udcli.c b/udcli/udcli.c
+index 9b044ca..ad1e4ab 100644
+--- a/udcli/udcli.c
++++ b/udcli/udcli.c
+@@ -27,13 +27,11 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <ctype.h>
+-#ifdef _MSC_VER
+-#include "..\udis86.h"
+-#define PACKAGE_STRING "udis86 pre-1.8"
+-#else
+ #include <udis86.h>
+-#include <config.h>
+-#endif
++#define PACKAGE_STRING "udis86 pre-1.8"
++#ifdef HAVE_CONFIG_H
++# include <config.h>
++#endif /* HAVE_CONFIG_H */
+ 
+ #if defined(__APPLE__)
+ # define FMT64 "ll" 

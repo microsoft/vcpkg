@@ -1,0 +1,13 @@
+diff --git a/libavcodec/libaomdec.c b/libavcodec/libaomdec.c
+index 1fc0a00..06b2ff0 100644
+--- a/libavcodec/libaomdec.c
++++ b/libavcodec/libaomdec.c
+@@ -224,7 +224,7 @@ static av_cold int aom_free(AVCodecContext *avctx)
+ 
+ static av_cold int av1_init(AVCodecContext *avctx)
+ {
+-    return aom_init(avctx, &aom_codec_av1_dx_algo);
++    return aom_init(avctx, aom_codec_av1_dx());
+ }
+ 
+ AVCodec ff_libaom_av1_decoder = {

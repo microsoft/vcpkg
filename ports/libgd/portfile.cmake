@@ -1,76 +1,83 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
-    REF gd-2.2.5
-    SHA512 e4ee4c0d1064c93640c29b5741f710872297f42bcc883026a63124807b6ff23bd79ae66bb9148a30811907756c4566ba8f1c0560673ccafc20fee38d82ca838f
+    REF b5319a41286107b53daa0e08e402aa1819764bdc # gd-2.3.3
+    SHA512 b4c6ca1d9575048de35a38b0db69e7380e160293133c1f72ae570f83ce614d4f2fd2615d217f7a0023e2265652c1089561b906beabca56c15e6ec0250e4394b2
     HEAD_REF master
     PATCHES
-        0001-fix-cmake.patch
-        no-write-source-dir.patch
-        intrin.patch
+        control-build.patch
+        fix-dependencies.cmake
+        fix_msvc_build.patch
 )
 
-#delete CMake builtins modules
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindFreetype.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindJPEG.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPNG.cmake)
-
-set(ENABLE_PNG OFF)
-if("png" IN_LIST FEATURES)
-    set(ENABLE_PNG ON)
-endif()
-
-set(ENABLE_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-    set(ENABLE_JPEG ON)
-endif()
-
-set(ENABLE_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-    set(ENABLE_TIFF ON)
-endif()
-
-set(ENABLE_FREETYPE OFF)
-if("freetype" IN_LIST FEATURES)
-    set(ENABLE_FREETYPE ON)
-endif()
-
-set(ENABLE_WEBP OFF)
-if("webp" IN_LIST FEATURES)
-    set(ENABLE_WEBP ON)
-endif()
-
-set(ENABLE_FONTCONFIG OFF)
-if("fontconfig" IN_LIST FEATURES)
-    set(ENABLE_FONTCONFIG ON)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(LIBGD_SHARED_LIBS ON)
-  set(LIBGD_STATIC_LIBS OFF)
-else()
-  set(LIBGD_SHARED_LIBS OFF)
-  set(LIBGD_STATIC_LIBS ON)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DENABLE_PNG=${ENABLE_PNG}
-            -DENABLE_JPEG=${ENABLE_JPEG}
-            -DENABLE_TIFF=${ENABLE_TIFF}
-            -DENABLE_FREETYPE=${ENABLE_FREETYPE}
-            -DENABLE_WEBP=${ENABLE_WEBP}
-            -DENABLE_FONTCONFIG=${ENABLE_FONTCONFIG}
-            -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
+# Delete vendored Find modules
+file(REMOVE
+    "${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindFontConfig.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindFreetype.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindJPEG.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindPNG.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindWEBP.cmake"
 )
 
-vcpkg_install_cmake()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        fontconfig   ENABLE_FONTCONFIG
+        freetype     ENABLE_FREETYPE
+        jpeg         ENABLE_JPEG
+        tiff         ENABLE_TIFF
+        png          ENABLE_PNG
+        tools        ENABLE_TOOLS
+        webp         ENABLE_WEBP
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+    OPTIONS_DEBUG
+        -DENABLE_TOOLS=OFF
+)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(REPLACE "_dynamic" "" suffix "_${VCPKG_LIBRARY_LINKAGE}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdlib.pc" " -lgd" " -llibgd${suffix}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdlib.pc" " -lgd" " -llibgd${suffix}")
+    endif()
+endif()
+vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgd)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/COPYING ${CURRENT_PACKAGES_DIR}/share/libgd/copyright)
+if(ENABLE_TOOLS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/bdftogd" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bdftogd")
+    vcpkg_list(SET tool_names gdcmpgif)
+    if(ENABLE_PNG)
+        vcpkg_list(APPEND tool_names gdtopng pngtogd)
+    endif()
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        if(ENABLE_FREETYPE AND ENABLE_JPEG)
+            vcpkg_list(APPEND tool_names annotate)
+        endif()
+        if(ENABLE_PNG)
+            vcpkg_list(APPEND tool_names webpng)
+        endif()
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

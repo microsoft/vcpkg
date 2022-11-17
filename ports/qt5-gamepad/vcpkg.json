@@ -1,0 +1,13 @@
+{
+  "name": "qt5-gamepad",
+  "version": "5.15.7",
+  "description": "Qt5 Gamepad Module - Enables Qt applications to support the use of gamepad hardware",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

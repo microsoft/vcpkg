@@ -1,0 +1,13 @@
+{
+  "name": "qt5-purchasing",
+  "version": "5.15.7",
+  "description": "Qt5 Purchasing Module - Enables in-app purchase of products in Qt applications.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

@@ -1,10 +1,19 @@
 {
   "name": "curl",
-  "version": "7.74.0",
-  "port-version": 8,
+  "version": "7.84.0",
+  "port-version": 2,
   "description": "A library for transferring data with URLs",
-  "homepage": "https://github.com/curl/curl",
+  "homepage": "https://curl.se/",
+  "license": null,
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
@@ -35,6 +44,27 @@
           ]
         },
         "nghttp2"
+      ]
+    },
+    "idn": {
+      "description": "Default IDN support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "winidn"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "idn2"
+          ],
+          "platform": "!windows"
+        }
       ]
     },
     "idn2": {
@@ -102,13 +132,13 @@
           "features": [
             "sectransp"
           ],
-          "platform": "osx"
+          "platform": "osx | ios"
         },
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "winssl"
+            "schannel"
           ],
           "platform": "(windows & !uwp) | mingw"
         },
@@ -118,7 +148,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
         }
       ]
     },
@@ -128,15 +158,37 @@
     "tool": {
       "description": "Builds curl executable"
     },
+    "winidn": {
+      "description": "WinIDN support"
+    },
+    "winldap": {
+      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        }
+      ]
+    },
     "winssl": {
       "description": "Legacy name for schannel",
       "dependencies": [
         {
           "name": "curl",
+          "default-features": false,
           "features": [
             "schannel"
           ]
         }
+      ]
+    },
+    "wolfssl": {
+      "description": "SSL support (wolfSSL)",
+      "dependencies": [
+        "wolfssl"
       ]
     }
   }

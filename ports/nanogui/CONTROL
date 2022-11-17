@@ -1,7 +1,0 @@
-Source: nanogui
-Version: 2019-09-23
-Port-Version: 1
-Homepage: https://github.com/wjakob/nanogui
-Description: NanoGUI is a minimalistic cross-platform widget library for OpenGL 3.x or higher.
-Build-Depends: glfw3, nanovg, eigen3
-Supports: !uwp

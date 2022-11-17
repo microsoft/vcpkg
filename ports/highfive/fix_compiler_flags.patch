@@ -1,0 +1,14 @@
+diff --git a/CMake/config/CompilerFlagsHelpers.cmake b/CMake/config/CompilerFlagsHelpers.cmake
+index 67e7d9fe1..11ae2036c 100644
+--- a/CMake/config/CompilerFlagsHelpers.cmake
++++ b/CMake/config/CompilerFlagsHelpers.cmake
+@@ -32,6 +32,9 @@ foreach(COMPILER_LANGUAGE ${SUPPORTED_COMPILER_LANGUAGE_LIST})
+ 	  set(CMAKE_${COMPILER_LANGUAGE}_COMPILER_IS_MSVC ON)
+ 	elseif(${CMAKE_${COMPILER_LANGUAGE}_COMPILER_ID} MATCHES "Clang")
+ 	  set(CMAKE_${COMPILER_LANGUAGE}_COMPILER_IS_CLANG ON)
++	  if(CMAKE_${COMPILER_LANGUAGE}_COMPILER_FRONTEND_VARIANT MATCHES "MSVC")
++	    set(CMAKE_${COMPILER_LANGUAGE}_COMPILER_IS_MSVC ON)
++	  endif()
+ 	elseif(CMAKE_${COMPILER_LANGUAGE}_COMPILER_ID MATCHES "GNU")
+ 	  set(CMAKE_${COMPILER_LANGUAGE}_COMPILER_IS_GCC ON)
+ 	else()

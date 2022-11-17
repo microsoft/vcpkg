@@ -1,0 +1,23 @@
+--- a/selene/img/pixel/Pixel.hpp
++++ b/selene/img/pixel/Pixel.hpp
+@@ -45,6 +45,6 @@
+   constexpr Pixel() noexcept = default;  ///< Default constructor. Pixel values are uninitialized.
+ 
+-  template <typename... Args, typename = std::enable_if_t<sizeof...(Args) == nr_channels_>>
+-  constexpr Pixel(Args... args) noexcept;
++  template <typename Arg1, typename... Args, typename = std::enable_if_t<sizeof...(Args) + 1 == nr_channels_>>
++  constexpr Pixel(Arg1 arg1, Args... args) noexcept;
+ 
+   constexpr explicit Pixel(const std::array<T, nr_channels>& arr) noexcept;
+@@ -216,8 +216,8 @@
+ template <typename T, std::size_t nr_channels_, PixelFormat pixel_format_>
+-template <typename... Args, typename>
+-constexpr Pixel<T, nr_channels_, pixel_format_>::Pixel(Args... args) noexcept
+-    : data_{{static_cast<T>(args)...}}
++template <typename Arg1, typename... Args, typename>
++constexpr Pixel<T, nr_channels_, pixel_format_>::Pixel(Arg1 arg1, Args... args) noexcept
++    : data_{{static_cast<T>(arg1), static_cast<T>(args)...}}
+ {
+   static_assert(std::is_trivial<Pixel<T, nr_channels_, pixel_format_>>::value, "Pixel type is not trivial");
+   static_assert(std::is_standard_layout<Pixel<T, nr_channels_, pixel_format_>>::value,
+                 "Pixel type is not standard layout");

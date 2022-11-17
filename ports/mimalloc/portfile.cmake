@@ -1,71 +1,56 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF a9686d6ecf00e4467e772f7c0b4ef76a15f325f6  # v1.6.4
-    SHA512 a1bda1b31d1bb3a4680fec91f180a988cf5ff486dcb8848fefd9245907f7986e4c4f10ce33133a3d796a7409ba38328bd156c47eba4f19368a2226a43b1ad298
+    REF v2.0.7
+    SHA512 120f89eef50ba83130e8ceb974a6148c84a7f3d975d1efaa094142518afb4ff6d9e24f8e75e9aa0bb02dc80bf497eced4b8ae1f2f5914fdabd773317e1341ea1
     HEAD_REF master
     PATCHES
         fix-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    asm         MI_SEE_ASM
-    secure      MI_SECURE
-    override    MI_OVERRIDE
+    FEATURES
+        asm         MI_SEE_ASM
+        secure      MI_SECURE
+        override    MI_OVERRIDE
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
-        -DMI_CHECK_FULL=ON
+        -DMI_DEBUG_FULL=ON
     OPTIONS_RELEASE
-        -DMI_CHECK_FULL=OFF
+        -DMI_DEBUG_FULL=OFF
     OPTIONS
-        -DMI_INTERPOSE=ON
-        -DMI_USE_CXX=OFF
+        -DMI_USE_CXX=ON
         -DMI_BUILD_TESTS=OFF
+        -DMI_BUILD_OBJECT=OFF
         ${FEATURE_OPTIONS}
         -DMI_BUILD_STATIC=${MI_BUILD_STATIC}
         -DMI_BUILD_SHARED=${MI_BUILD_SHARED}
+        -DMI_INSTALL_TOPLEVEL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(GLOB lib_directories RELATIVE ${CURRENT_PACKAGES_DIR}/lib "${CURRENT_PACKAGES_DIR}/lib/${PORT}-*")
-list(GET lib_directories 0 lib_install_dir)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${lib_install_dir}/cmake)
-
-vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/mimalloc.cmake
-    "lib/${lib_install_dir}/"
-    ""
-)
-
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/lib/${lib_install_dir}
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mimalloc)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/include/mimalloc.h
+        "${CURRENT_PACKAGES_DIR}/include/mimalloc.h"
         "!defined(MI_SHARED_LIB)"
         "0 // !defined(MI_SHARED_LIB)"
     )
 endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

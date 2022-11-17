@@ -1,4 +1,0 @@
-Source: osi
-Version: 0.108.6
-Description: Osi (Open Solver Interface) provides an abstract base class to a generic linear programming (LP) solver, along with derived classes for specific solvers. Many applications may be able to use the Osi to insulate themselves from a specific LP solver.
-Build-Depends: coinutils

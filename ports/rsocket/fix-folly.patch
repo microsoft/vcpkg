@@ -1,0 +1,13 @@
+diff --git a/rsocket/transports/tcp/TcpConnectionAcceptor.cpp b/rsocket/transports/tcp/TcpConnectionAcceptor.cpp
+index 12ac289f..c37f621a 100644
+--- a/rsocket/transports/tcp/TcpConnectionAcceptor.cpp
++++ b/rsocket/transports/tcp/TcpConnectionAcceptor.cpp
+@@ -31,7 +31,7 @@ class TcpConnectionAcceptor::SocketCallback
+ 
+   void connectionAccepted(
+       folly::NetworkSocket fdNetworkSocket,
+-      const folly::SocketAddress& address) noexcept override {
++      const folly::SocketAddress& address, AcceptInfo info) noexcept override {
+     int fd = fdNetworkSocket.toFd();
+ 
+     VLOG(2) << "Accepting TCP connection from " << address << " on FD " << fd;

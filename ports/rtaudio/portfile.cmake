@@ -1,39 +1,34 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtaudio
-    REF c9bf99d414cf81d19ef0ddd00212a4a58ccd99c6
-    SHA512 6dc0025288cbf09f21862be6093ad77b950e6af03ea7e5aea3a9f6c322d957897c0d6206636225bd439c05b5a13d53df3ef9a9f1a9ea5d3012bee06c1a62c9f0
+    REF 46b01b5b134f33d8ddc3dab76829d4b1350e0522
+    SHA512 f26f64fe77aa18c9adf401a720fc3d929af8655827f2c149539a1b73736efb3757ac2eaf5a6535a3c801df13e5f49728a49b6ffe5c01c2f91ab23e145bad5355
     HEAD_REF master
+    PATCHES fix-alsa.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(RTAUDIO_STATIC_MSVCRT ON)
-else()
-    set(RTAUDIO_STATIC_MSVCRT OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" RTAUDIO_STATIC_MSVCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         asio  RTAUDIO_API_ASIO
+        alsa  RTAUDIO_API_ALSA
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT} ${FEATURE_OPTIONS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+        -DRTAUDIO_API_JACK=OFF
+        -DRTAUDIO_API_PULSE=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# Version 5.1.0 has the license text embedded in the README.md, so we are including it as a standalone file in the vcpkg port
-# Current master version of rtaudio has a LICENSE file which should be used instead for ports of future releases
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

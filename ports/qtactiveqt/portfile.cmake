@@ -17,9 +17,16 @@ if(NOT NO_BIN_AND_TOOLS)
        )
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
+INVERTED_FEATURES
+    "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
+)
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
-                     CONFIGURE_OPTIONS
+                     CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )

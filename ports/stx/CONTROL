@@ -1,8 +1,0 @@
-Source: stx
-Version: 1.0.1
-Homepage: https://github.com/lamarrr/STX
-Description: C++17 & C++ 20 error-handling and utility extensions
-
-Feature: backtrace
-Description: stacktrace support for STX
-Build-Depends: abseil

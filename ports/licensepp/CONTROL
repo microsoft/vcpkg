@@ -1,7 +1,0 @@
-Source: licensepp
-Version: 2020-05-19
-Port-Version: 1
-Description: Cross platform software licensing library
-Build-Depends: cryptopp[pem-pack]
-Supports: !uwp
-Homepage: https://github.com/zuhd-org/licensepp

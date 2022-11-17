@@ -1,43 +1,39 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-   list(APPEND PATCHES "prevent-cmake-failing-with-variable-notfound.patch")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+     list(APPEND PATCHES fix_static_builds.patch)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.81.0
-    SHA512 8e14c429671a51b9b231f2a965f2368b019592a29a04a9e192da25a8a963042fe7478323508c097f73e2c328fd4742f8808fe68ea439e00e6667414d7f75be3e
+    REF v5.89.0
+    SHA512 f83d8b9ef51cc05a2eccb175e602fd0530d0cb6bb0c21e582a82fdd2897d9f988c2d927f2dc986faaf7482ec1c81e8cea4a9e74fc557c88be9958393db71c2a9
     PATCHES ${PATCHES}
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_QMLDIR=qml
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5I18n)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5I18n CONFIG_PATH lib/cmake/KF5I18n)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

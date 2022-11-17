@@ -3,14 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/serialization
-    REF boost-1.76.0
-    SHA512 ac9a0453f6244518a250c3d51f341b001618f2032b723467ad7a93aaf77a66d970d22b4a06072e98d4fc30b1b850c3cb9a7c7e3b46d6e4ea1adb2d9b55ff4b68
+    REF boost-1.80.0
+    SHA512 89140a1385a5bece0b01b8c366fd007163fbf4cde21db98e3f485602983af180a41b5d2906e9d504e87ac7739c97a7d99f9a52c40d3fa0c67386c2e06f380ac1
     HEAD_REF master
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-serialization requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

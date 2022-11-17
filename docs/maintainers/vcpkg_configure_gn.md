@@ -1,5 +1,7 @@
 # vcpkg_configure_gn
 
+**This function has been deprecated in favor of [`vcpkg_gn_configure`](ports/vcpkg-gn/vcpkg_gn_configure.md) from the vcpkg-gn port.**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_gn.md).
 
 Generate Ninja (GN) targets

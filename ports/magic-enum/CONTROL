@@ -1,4 +1,0 @@
-Source: magic-enum
-Version: 0.7.3
-Description: Header-only C++17 library provides static reflection for enums, work with any enum type without any macro or boilerplate code.
-Homepage: https://github.com/Neargye/magic_enum
