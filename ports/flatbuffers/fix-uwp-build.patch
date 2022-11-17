@@ -14,7 +14,7 @@ index aabc23a..06e9ebe 100644
 +  //There is no support for environment variables in UWP
 +  var_name; // Do nothing
 +  *_value = std::string("");
-+#endif  
++#endif
    return true;
  }
  
