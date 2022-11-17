@@ -48,6 +48,7 @@ function(vcpkg_xcode_build)
     endif()
 
     vcpkg_list(APPEND build_param "-project" "${arg_SOURCE_PATH}/${PROJECT_FILE}" "-verbose")
+    vcpkg_list(APPEND build_param "DYLIB_INSTALL_NAME_BASE=lib" "INSTALL_PATH=lib")
 
     if (arg_ENABLE_INSTALL)
         vcpkg_list(APPEND build_param "archive" )
