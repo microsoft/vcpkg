@@ -16,7 +16,6 @@
     },
     {
       "name": "qtshadertools",
-      "host": true,
       "default-features": false
     }
   ],
