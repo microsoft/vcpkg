@@ -12,6 +12,7 @@ vcpkg_from_github(
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
+        fix-objectfile-list.patch # https://github.com/randombit/botan/pull/3069
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
