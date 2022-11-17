@@ -20,6 +20,6 @@ function(vcpkg_xcode_install)
         LOGFILE_BASE install
         TARGET "${arg_TARGET}"
         SCHEME "${arg_SCHEME}"
-        INSTALL
+        ENABLE_INSTALL
     )
 endfunction()

@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(vcpkg_xcode_build)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "INSTALL;DISABLE_PARALLEL" "SOURCE_PATH;PROJECT_FILE;TARGET;LOGFILE_BASE;SCHEME" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "ENABLE_INSTALL;DISABLE_PARALLEL" "SOURCE_PATH;PROJECT_FILE;TARGET;LOGFILE_BASE;SCHEME" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_xcode_build was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -34,7 +34,9 @@ function(vcpkg_xcode_build)
     # build options
     # official doc: https://developer.apple.com/library/archive/technotes/tn2339/_index.html
     if (NOT arg_DISABLE_PARALLEL)
-        vcpkg_list(APPEND build_param "-parallelizeTargets")
+        vcpkg_list(APPEND build_param "-parallelizeTargets" "-jobs" "${VCPKG_MAX_CONCURRENCY}")
+    else()
+        vcpkg_list(APPEND build_param "-jobs" "1")
     endif()
 
     if(arg_TARGET)
@@ -47,7 +49,7 @@ function(vcpkg_xcode_build)
 
     vcpkg_list(APPEND build_param "-project" "${arg_SOURCE_PATH}/${PROJECT_FILE}" "-verbose")
 
-    if (arg_INSTALL)
+    if (arg_ENABLE_INSTALL)
         vcpkg_list(APPEND build_param "archive" )
     endif()
 
@@ -56,13 +58,13 @@ function(vcpkg_xcode_build)
             if("${build_type}" STREQUAL "debug")
                 set(short_build_type "dbg")
                 set(config "Debug")
-                if (arg_INSTALL)
+                if (arg_ENABLE_INSTALL)
                     set(install_param "DSTROOT=${CURRENT_PACKAGES_DIR}/debug")
                 endif()
             else()
                 set(short_build_type "rel")
                 set(config "Release")
-                if (arg_INSTALL)
+                if (arg_ENABLE_INSTALL)
                     set(install_param "DSTROOT=${CURRENT_PACKAGES_DIR}")
                 endif()
             endif()
