@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: EGL
+Description: EGL library and headers.
+Version: @VERSION@
+Requires: zlib opengl # angle
+Libs: -L${libdir} -llibEGL -llibGLESv2 -llibANGLE -lD3d9 -ldxguid -lDXGI
+Cflags: -I${includedir} @KHRONOS_STATIC@

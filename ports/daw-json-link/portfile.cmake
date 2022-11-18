@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
-    REF e0416224a80f1e3d8aff5e102dad59b4b7d78944  #v3.7.1
-    SHA512 2f6849a39ebff8a6e202a11beeda68ff7e75a14f7194643b3af3da7cf6916b1f04fa529b120190741919d1b8d43755a11cb8a98657f1dfceae17a5748ff1fdd1
+    REF 964c234769d46d420b87c9a1394daadd6c0ea1e0  #v3.7.2
+    SHA512 22f8d8cfbb7c852c5cbceffd10430d44250a8fee53be1bbf0ef4dd2bc28cdad4881d5f63bc2950969e3940e81c5ec03d4099b6d833c0a622b23c9f62c36323ec
     HEAD_REF master
 )
 
