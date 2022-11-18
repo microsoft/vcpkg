@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
