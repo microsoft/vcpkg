@@ -7709,8 +7709,8 @@
       "port-version": 1
     },
     "utfcpp": {
-      "baseline": "3.2.1",
-      "port-version": 1
+      "baseline": "3.2.2",
+      "port-version": 0
     },
     "utfz": {
       "baseline": "1.2",
