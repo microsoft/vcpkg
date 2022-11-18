@@ -5685,8 +5685,8 @@
       "port-version": 1
     },
     "parson": {
-      "baseline": "2020-09-14",
-      "port-version": 1
+      "baseline": "2022-11-13",
+      "port-version": 0
     },
     "pbc": {
       "baseline": "0.5.14",
