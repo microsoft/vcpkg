@@ -1,12 +1,3 @@
-From bfa81f3c3b98b1f8bc5e04400ce4b9562b3058de Mon Sep 17 00:00:00 2001
-From: Ryan Curtin <ryan@ratml.org>
-Date: Mon, 14 Nov 2022 16:46:50 -0500
-Subject: [PATCH] Add a patch that will hopefully help MSVC debugging.
-
----
- src/mlpack/base.hpp | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
 diff --git a/src/mlpack/base.hpp b/src/mlpack/base.hpp
 index 4879167814..151a59b589 100644
 --- a/src/mlpack/base.hpp
