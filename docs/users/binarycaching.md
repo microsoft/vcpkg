@@ -54,6 +54,10 @@ By default, zip-based archives will be cached at the first valid location of:
 | `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
 | `nugettimeout,<seconds>`    | Specifies a timeout for NuGet network operations; equivalent to the `-Timeout` parameter of the NuGet CLI.
 | `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
+| `x-gcs,<prefix>[,<rw>]`     | **Experimental: will change or be removed without warning**<br> Adds a Google Cloud Storage (GCS) source. Uses the gsutil CLI for uploads and downloads. Prefix should include the gs:// scheme and be suffixed with a `/`.
+| `x-aws,<prefix>[,<rw>]`     | **Experimental: will change or be removed without warning**<br> Adds an AWS S3 source. Uses the aws CLI for uploads and downloads. Prefix should include s3:// scheme and be suffixed with a `/`.
+| `x-aws-config,<parameter>`  | **Experimental: will change or be removed without warning**<br> Adds an AWS S3 source. Adds an AWS configuration; currently supports only 'no-sign-request' parameter that is an equivalent to the '--no-sign-request parameter of the AWS cli.
+| `x-cos,<prefix>[,<rw>]`     | **Experimental: will change or be removed without warning**<br> Adds a COS source. Uses the cos CLI for uploads and downloads. Prefix should include cos:// scheme and be suffixed with a `/`.
 | `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for
