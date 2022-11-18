@@ -2341,8 +2341,8 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "2.0.6",
-      "port-version": 1
+      "baseline": "22.10.26",
+      "port-version": 0
     },
     "flecs": {
       "baseline": "3.1.0",
@@ -2382,7 +2382,7 @@
     },
     "folly": {
       "baseline": "2022.10.31.00",
-      "port-version": 1
+      "port-version": 2
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4966,7 +4966,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 9
+      "port-version": 10
     },
     "mpark-variant": {
       "baseline": "1.4.0",
@@ -6425,8 +6425,8 @@
       "port-version": 3
     },
     "qwt": {
-      "baseline": "6.2.0",
-      "port-version": 2
+      "baseline": "6.2.0+20220616",
+      "port-version": 0
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -7785,8 +7785,8 @@
       "port-version": 1
     },
     "vcpkg-qmake": {
-      "baseline": "2022-05-10",
-      "port-version": 1
+      "baseline": "2022-11-16",
+      "port-version": 0
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",

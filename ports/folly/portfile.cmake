@@ -36,23 +36,17 @@ else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
-set(FEATURE_OPTIONS)
-
-macro(feature FEATURENAME PACKAGENAME)
-    if("${FEATURENAME}" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
-    else()
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
-    endif()
-endmacro()
-
-feature(zlib ZLIB)
-feature(bzip2 BZip2)
-feature(lzma LibLZMA)
-feature(lz4 LZ4)
-feature(zstd Zstd)
-feature(snappy Snappy)
-feature(libsodium unofficial-sodium)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+    INVERTED_FEATURES
+        "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
+        "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
+        "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
+        "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
+        "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
