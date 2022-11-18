@@ -1,0 +1,14 @@
+{
+    "name": "kvocontroller",
+    "version-semver": "1.2.0",
+    "description": "Key-value observing is a particularly useful technique for communicating between layers in a Model-View-Controller application.",
+    "homepage": "https://github.com/facebookarchive/KVOController",
+    "supports": "osx",
+    "dependencies": [
+      {
+        "name": "vcpkg-xmake",
+        "host": true
+      }
+    ]
+  }
+  
