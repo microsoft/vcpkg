@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
+        fix-msvc-cxx17.patch
 )
 file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
