@@ -33,51 +33,14 @@ diff --git a/mpn/Makeasm.am b/mpn/Makeasm.am
 index 5d7306c22..75692128d 100644
 --- a/mpn/Makeasm.am
 +++ b/mpn/Makeasm.am
-@@ -32,7 +32,7 @@
+@@ -31,8 +31,9 @@
+ 
  # COMPILE minus CC.
  #
++# Only used with CCAS
  COMPILE_FLAGS = $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 -	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASMFLAGS)
 +	$(CPPFLAGS) $(ASMFLAGS)
  
  # Flags used for preprocessing (in ansi2knr rules).
  #
-diff --git a/mpn/Makefile.in b/mpn/Makefile.in
-index 2bc061012..59c805976 100644
---- a/mpn/Makefile.in
-+++ b/mpn/Makefile.in
-@@ -403,7 +403,7 @@ EXTRA_DIST = asm-defs.m4 cpp-ccas m4-ccas $(TARG_DIST)
- # COMPILE minus CC.
- #
- COMPILE_FLAGS = $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
--	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASMFLAGS)
-+	$(CPPFLAGS) $(ASMFLAGS)
- 
- 
- # Flags used for preprocessing (in ansi2knr rules).
-diff --git a/tests/Makefile.in b/tests/Makefile.in
-index 9742a4016..430603cef 100644
---- a/tests/Makefile.in
-+++ b/tests/Makefile.in
-@@ -666,7 +666,7 @@ SUBDIRS = . devel mpn mpz mpq mpf rand misc cxx
- # COMPILE minus CC.
- #
- COMPILE_FLAGS = $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
--	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASMFLAGS)
-+	$(CPPFLAGS) $(ASMFLAGS)
- 
- 
- # Flags used for preprocessing (in ansi2knr rules).
-diff --git a/tune/Makefile.in b/tune/Makefile.in
-index f82cd13e2..351bcd9b1 100644
---- a/tune/Makefile.in
-+++ b/tune/Makefile.in
-@@ -549,7 +549,7 @@ TUNE_MPN_SRCS_BASIC = div_qr_2.c bdiv_q.c bdiv_qr.c			\
- # COMPILE minus CC.
- #
- COMPILE_FLAGS = $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
--	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASMFLAGS)
-+	$(CPPFLAGS) $(ASMFLAGS)
- 
- 
- # Flags used for preprocessing (in ansi2knr rules).
