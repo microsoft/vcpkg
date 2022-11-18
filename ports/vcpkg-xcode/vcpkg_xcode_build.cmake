@@ -34,7 +34,7 @@ function(vcpkg_xcode_build)
     # build options
     # official doc: https://developer.apple.com/library/archive/technotes/tn2339/_index.html
     if (NOT arg_DISABLE_PARALLEL)
-        vcpkg_list(APPEND build_param "-parallelizeTargets" "-jobs" "${VCPKG_MAX_CONCURRENCY}")
+        vcpkg_list(APPEND build_param "-parallelizeTargets" "-jobs" "${VCPKG_CONCURRENCY}")
     else()
         vcpkg_list(APPEND build_param "-jobs" "1")
     endif()
@@ -69,6 +69,9 @@ function(vcpkg_xcode_build)
                     set(install_param "DSTROOT=${CURRENT_PACKAGES_DIR}")
                 endif()
             endif()
+
+            file(REMOVE_RECURSE "${${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}}")
+            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}")
 
             message(STATUS "Building ${TARGET_TRIPLET}-${short_build_type}")
 
