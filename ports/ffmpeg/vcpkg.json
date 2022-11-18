@@ -486,7 +486,7 @@
     "openmpt": {
       "description": "Decoding tracked files via libopenmpt",
       "dependencies": [
-        "dependencies"
+        "libopenmpt"
       ]
     },
     "openssl": {
