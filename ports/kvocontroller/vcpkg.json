@@ -6,7 +6,7 @@
     "supports": "osx",
     "dependencies": [
       {
-        "name": "vcpkg-xmake",
+        "name": "vcpkg-xcode",
         "host": true
       }
     ]
