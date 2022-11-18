@@ -166,7 +166,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
-    "gles2"               FEATURE_opengl_desktop
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -180,6 +179,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             CMAKE_DISABLE_FIND_PACKAGE_XRender
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
+
+if( "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='es2')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+endif()
+
+if(NOT "opengl" IN_LIST FEATURES AND NOT "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='no')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_dynamic=OFF)
+endif()
 
 if("xcb" IN_LIST FEATURES)
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=yes)

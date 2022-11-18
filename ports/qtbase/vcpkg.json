@@ -173,7 +173,16 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "glib": {
       "description": "GLib",

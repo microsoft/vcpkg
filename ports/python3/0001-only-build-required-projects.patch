@@ -27,6 +27,8 @@ index 4d416c589e..ede9868a8f 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
 @@ -49,17 +49,17 @@
+     <!-- python3.dll -->
+     <Projects Include="python3dll.vcxproj" />
      <!-- py[w].exe -->
 -    <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" />
 +    <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" Condition="false" />
