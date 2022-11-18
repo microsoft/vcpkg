@@ -11,8 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
+    ARCHIVE "${ARCHIVE}"
     PATCHES fix-arm-uwp.patch
 )
 
