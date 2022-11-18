@@ -59,7 +59,6 @@ bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:arm64-osx=fail
 bond:x64-uwp=fail
-botan:x64-uwp=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
@@ -1058,9 +1057,6 @@ tensorflow:x64-windows-static-md=fail
 tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows-static-md=fail
-
-tensorflow:x64-osx=fail
-tensorflow-cc:x64-osx=fail
 
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
