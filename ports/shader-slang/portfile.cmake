@@ -25,6 +25,30 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	else()
 		message(FATAL_ERROR "Unsupported platform. Please implement me!")
 	endif()
+elseif (VCPKG_TARGET_IS_OSX)
+	set(SLANG_EXE_SUFFIX "")
+	set(SLANG_LIB_PREFIX "lib")
+	set(SLANG_LIB_SUFFIX ".a")
+	set(SLANG_DYNLIB_SUFFIX ".dylib")
+	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
+			FILENAME "slang-${VERSION}-macos-x64.zip"
+			SHA512 5914caa4ab9867fbceed6f0bb4f83f3b5400c05872baff40456460655efbdccb34b3590663f8ee80e953f3e584d0e729bc1da34ab8f80be33d1233ca4b043d71
+		)
+		set(SLANG_BIN_PATH "bin/macos-x64/release")
+	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
+			FILENAME "slang-${VERSION}-macos-aarch64.zip"
+			SHA512 9e792ba0dec87a892df566b48f4553691f20d48c74c7d111b93c6f55c83790a8857bd82c461746190d8507b4aef440aeadb267da9558692a6113cfda52d12c80
+		)
+		set(SLANG_BIN_PATH "bin/macos-aarch64/release")
+	else()
+		message(FATAL_ERROR "Unsupported platform. Please implement me!")
+	endif()
 elseif(VCPKG_TARGET_IS_LINUX)
 	set(SLANG_EXE_SUFFIX "")
 	set(SLANG_LIB_PREFIX "lib")
