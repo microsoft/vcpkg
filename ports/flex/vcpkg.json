@@ -1,0 +1,12 @@
+{
+  "name": "flex",
+  "version-semver": "5.22.10",
+  "description": "FLEX (Flipboard Explorer) is a set of in-app debugging and exploration tools for iOS development.",
+  "homepage": "https://github.com/FLEXTool/FLEX",
+  "dependencies": [
+    {
+      "name": "vcpkg-xcode",
+      "host": true
+    }
+  ]
+}
