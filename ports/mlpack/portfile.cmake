@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 b33aa5df48c9f0e5a5fac7bfb69fd2c64bc01f1ba0ae22990774e1805881c60e4652d2f23b6c95627da1a20e39ee6a90e327fdaa6d1e00bac8986dcecc15a89a
     HEAD_REF master
     PATCHES
-        0001-Add-a-patch-that-will-hopefully-help-MSVC-debugging.patch  #Force C++17 for MSVC, from upstream: https://github.com/mlpack/mlpack/pull/3318
+        Fix-build-with-MSVC.patch  #From upstream: https://github.com/mlpack/mlpack/pull/3318
 )
 
 # Copy the header files
