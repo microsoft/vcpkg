@@ -1,0 +1,26 @@
+diff --git a/configure.py b/configure.py
+index 2474860a5..16b43f3bc 100755
+--- a/configure.py
++++ b/configure.py
+@@ -798,16 +798,16 @@ class InfoObject:
+         (dirname, basename) = os.path.split(infofile)
+         self.lives_in = dirname
+         if basename == 'info.txt':
+-            (obj_dir, self.basename) = os.path.split(dirname)
++            (next_dir, self.basename) = os.path.split(dirname)
+             self.parent_module = None
+ 
+-            while obj_dir:
++            obj_dir = ''
++            while next_dir != obj_dir:
++                obj_dir = next_dir
+                 if os.access(os.path.join(obj_dir, 'info.txt'), os.R_OK):
+                     self.parent_module = os.path.basename(obj_dir)
+                     break
+-                (obj_dir, _) = os.path.split(obj_dir)
+-                if obj_dir == '/':
+-                    obj_dir = None
++                (next_dir, _) = os.path.split(obj_dir)
+         else:
+             self.basename = basename.replace('.txt', '')
+ 

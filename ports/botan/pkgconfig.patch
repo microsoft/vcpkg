@@ -11,4 +11,4 @@ index 7139436..81214fe 100644
 +includedir=${prefix}/include
  
  Name: Botan
- Description: Crypto and TLS for C++11
+ Description: Crypto and TLS for Modern C++

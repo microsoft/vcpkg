@@ -2,22 +2,24 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF "${VERSION}"
-    SHA512 0f99ef4026e5180dd65dc0e935ba2cabaf750862c651699294b3521053463b7e65a90847fef6f0d640eb9f9eb5efce64b13e999aa9c215310998817d13bd5332
+    REF 3b15cd6a1d9eb7048807cfa21ab3129b712cc221 # master as of 2022-11-19
+    SHA512 cef1aff15a0062187fb794c1f8296482d1e99935ed999c257d5f7bbad8a90e21deec9e9be528c49ca813ae292da7a8222fac8af2df758a83d1ca2f71d1223932
     HEAD_REF master
     PATCHES
-        fix-generate-build-path.patch
+        #fix-generate-build-path.patch
         embed-debug-info.patch
-        arm64-windows.patch
-        pkgconfig.patch
+        #arm64-windows.patch
+        #pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix-objectfile-list.patch # https://github.com/randombit/botan/pull/3069
+        fix-configure-recursion.patch # https://github.com/randombit/botan/pull/3072
+        fix-win32-uwp.patch # WIP
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_UWP)
+    #vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -38,6 +40,7 @@ vcpkg_list(SET configure_arguments
     --includedir=include
     --bindir=bin
     --libdir=lib
+    --without-compilation-database
     --without-documentation
     "--with-external-includedir=${CURRENT_INSTALLED_DIR}/include"
 )
@@ -68,7 +71,11 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND configure_arguments --os=windows)
+    if(VCPKG_TARGET_IS_UWP)
+        vcpkg_list(APPEND configure_arguments --os=uwp)
+    else()
+        vcpkg_list(APPEND configure_arguments --os=windows)
+    endif()
 
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         vcpkg_list(APPEND configure_arguments --cc=msvc)
@@ -146,13 +153,13 @@ else()
     vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 if(pkgconfig_requires)
     list(JOIN pkgconfig_requires ", " pkgconfig_requires)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-3.pc" "Requires.private: ${pkgconfig_requires}")
     if(NOT VCPKG_BUILD_TYPE)
-        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-3.pc" "Requires.private: ${pkgconfig_requires}")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
@@ -160,12 +167,12 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/botan-2"
+    #"${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan-3/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan-3/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan-3/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan-3/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

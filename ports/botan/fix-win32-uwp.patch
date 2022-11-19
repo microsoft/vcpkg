@@ -1,0 +1,116 @@
+diff --git a/src/build-data/os/mingw.txt b/src/build-data/os/mingw.txt
+index 836da6e9d..704890a75 100644
+--- a/src/build-data/os/mingw.txt
++++ b/src/build-data/os/mingw.txt
+@@ -25,6 +25,7 @@ mingw32.*
+ 
+ <target_features>
+ win32
++win32_desktop
+ rtlgenrandom
+ virtual_lock
+ 
+diff --git a/src/build-data/os/uwp.txt b/src/build-data/os/uwp.txt
+index eb79c65ed..9583827ea 100644
+--- a/src/build-data/os/uwp.txt
++++ b/src/build-data/os/uwp.txt
+@@ -1,8 +1,16 @@
+ 
++cli_exe_name botan-cli
+ # ?
+ program_suffix .exe
+ obj_suffix obj
+ static_suffix lib
++lib_prefix ''
++
++shared_lib_symlinks no
++
++default_compiler msvc
++
++soname_pattern_base "{libname}.dll"
+ 
+ install_root c:\\Botan
+ doc_dir docs
+diff --git a/src/build-data/os/windows.txt b/src/build-data/os/windows.txt
+index 07bfefb13..40bf50000 100644
+--- a/src/build-data/os/windows.txt
++++ b/src/build-data/os/windows.txt
+@@ -27,6 +27,7 @@ _WIN32_WINNT=0x0600
+ 
+ <target_features>
+ win32
++win32_desktop
+ winsock2
+ 
+ rtlgenrandom
+diff --git a/src/lib/entropy/win32_stats/info.txt b/src/lib/entropy/win32_stats/info.txt
+index 1800395fa..f2c3832c3 100644
+--- a/src/lib/entropy/win32_stats/info.txt
++++ b/src/lib/entropy/win32_stats/info.txt
+@@ -12,7 +12,7 @@ es_win32.h
+ </header:internal>
+ 
+ <os_features>
+-win32
++win32_desktop
+ </os_features>
+ 
+ <libs>
+diff --git a/src/lib/utils/dyn_load/info.txt b/src/lib/utils/dyn_load/info.txt
+index 3912e62b4..bde58c1fc 100644
+--- a/src/lib/utils/dyn_load/info.txt
++++ b/src/lib/utils/dyn_load/info.txt
+@@ -11,7 +11,7 @@ load_on dep
+ 
+ <os_features>
+ posix1
+-win32
++win32_desktop
+ </os_features>
+ 
+ <libs>
+diff --git a/src/lib/utils/info.txt b/src/lib/utils/info.txt
+index 2f1d0da0c..97b2efaa7 100644
+--- a/src/lib/utils/info.txt
++++ b/src/lib/utils/info.txt
+@@ -45,3 +45,7 @@ timer.h
+ <requires>
+ cpuid
+ </requires>
++
++<libs>
++uwp -> kernel32,WindowsApp
++</libs>
+diff --git a/src/lib/utils/os_utils.cpp b/src/lib/utils/os_utils.cpp
+index 449fd9bd3..10e963afc 100644
+--- a/src/lib/utils/os_utils.cpp
++++ b/src/lib/utils/os_utils.cpp
+@@ -54,6 +54,7 @@
+   #define NOMINMAX 1
+   #define _WINSOCKAPI_ // stop windows.h including winsock.h
+   #include <windows.h>
++  #include <memoryapi.h>
+ #endif
+ 
+ #if defined(BOTAN_TARGET_OS_IS_ANDROID)
+@@ -786,7 +787,7 @@ std::unique_ptr<OS::Echo_Suppression> OS::suppress_echo_on_terminal()
+ 
+    return std::make_unique<POSIX_Echo_Suppression>();
+ 
+-#elif defined(BOTAN_TARGET_OS_HAS_WIN32)
++#elif defined(BOTAN_TARGET_OS_HAS_WIN32_DESKTOP)
+ 
+    class Win32_Echo_Suppression : public Echo_Suppression
+       {
+diff --git a/src/lib/utils/socket/info.txt b/src/lib/utils/socket/info.txt
+index 8d454e9ad..61ab3c0b2 100644
+--- a/src/lib/utils/socket/info.txt
++++ b/src/lib/utils/socket/info.txt
+@@ -16,6 +16,7 @@ socket_udp.h
+ linux -> rt
+ mingw -> ws2_32
+ windows -> ws2_32
++uwp -> ws2_32
+ haiku -> network
+ solaris -> socket,nsl
+ qnx -> socket

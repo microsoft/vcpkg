@@ -6,8 +6,8 @@ index 4839112..5102933 100644
  	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/cleanup.py" --build-dir="%{build_dir}" --distclean
  
  install: %{install_targets}
--	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --prefix="%{prefix}" --build-dir="%{build_dir}" --bindir="%{bindir}" --libdir="%{libdir}" --docdir="%{docdir}" --includedir="%{includedir}"
-+	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --prefix="%{prefix}" --build-dir="%{build_dir}" --bindir="%{bindir}" --libdir="%{libdir}" --docdir="%{docdir}" --includedir="%{includedir}" --verbose
+-	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --build-dir="%{build_dir}"
++	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --build-dir="%{build_dir}" --verbose
  
  check: tests
  	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/check.py" --build-dir="%{build_dir}"
