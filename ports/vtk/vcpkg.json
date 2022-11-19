@@ -1,7 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.0.3-pv5.9.1",
-  "port-version": 12,
+  "version-semver": "9.2.0-pv5.11.0",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -16,7 +15,10 @@
       "default-features": false
     },
     "jsoncpp",
-    "libharu",
+    {
+      "name": "libharu",
+      "version>=": "2.4.3"
+    },
     "libjpeg-turbo",
     "liblzma",
     "libogg",
@@ -31,6 +33,10 @@
     "sqlite3",
     "tiff",
     "utfcpp",
+    "exprtk",
+    "fmt",
+    "trilinos",
+    "verdict",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -146,6 +152,7 @@
             "qt"
           ]
         },
+        "cli11",
         {
           "name": "vtk",
           "default-features": false,
@@ -167,11 +174,11 @@
       "dependencies": [
         "qt5-imageformats",
         "qt5-tools",
+        "qt5-declarative",
         {
           "name": "qt5-x11extras",
           "platform": "linux"
-        },
-        "qt5-xmlpatterns"
+        }
       ]
     },
     "utf8": {

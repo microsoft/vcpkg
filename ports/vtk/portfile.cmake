@@ -1,3 +1,4 @@
+set(VTK_SHORT_VERSION 9.2)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
@@ -8,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
     REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.9.1
-    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
+    SHA512 70662670622082bb8d8b16765bbdf645cfbe62151e93b9673c6f94b356df66ca003e5c78b45e99385f1630aed39c3a8eddecd1d9f5bc0cfb92f5e7e8c06e4dbb
     HEAD_REF master
     PATCHES
         FindLZMA.patch
@@ -17,21 +18,14 @@ vcpkg_from_github(
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
-        python_debug.patch
+        #python_debug.patch
         fix-using-hdf5.patch
         # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
         # upstream vtkm patches to make it work with vtkm 1.6
-        vtkm.patch # To include an external VTKm build
-        1f00a0c9.patch
-        156fb524.patch
-        d107698a.patch
-        fix-gdal.patch
-        missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
-        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
-        fix-find-libharu.patch
-        fix-libharu2.4-compat.patch
+        # vtkm.patch # To include an external VTKm build; TODO: Update
+        # fix-gdal.patch TODO?
 )
 
 # =============================================================================
@@ -43,7 +37,6 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 # Options:
 # Collect CMake options for optional components
 
-endif()
 if("atlmfc" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
@@ -87,6 +80,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
+        "paraview"    VTK_MODULE_ENABLE_VTK_cli11
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
@@ -102,6 +96,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
+if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt5/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
+endif()
+
+
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
@@ -110,7 +109,7 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
-        -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES
+        -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
@@ -166,41 +165,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "all"          VTK_BUILD_ALL_MODULES
 )
 
-
-# =============================================================================
-# Clone & patch
-
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Kitware/VTK
-    REF 2959413ff190bc6e3ff40f5b6c1342edd2e5233f # v9.0.x used by ParaView 5.9.1
-    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
-    HEAD_REF master
-    PATCHES
-        FindLZMA.patch
-        FindLZ4.patch
-        Findproj.patch
-        pegtl.patch
-        pythonwrapper.patch # Required by ParaView to Wrap required classes
-        NoUndefDebug.patch # Required to link against correct Python library depending on build type.
-        python_debug.patch
-        fix-using-hdf5.patch
-        # CHECK: module-name-mangling.patch
-        # Last patch TODO: Patch out internal loguru
-        FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        # upstream vtkm patches to make it work with vtkm 1.6
-        vtkm.patch # To include an external VTKm build
-        1f00a0c9.patch
-        156fb524.patch
-        d107698a.patch
-)
-
-# =============================================================================
-#Overwrite outdated modules if they have not been patched:
-file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
-# =============================================================================
-
 # =============================================================================
 # Configure & Install
 
@@ -208,6 +172,7 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --debug-find-pkg=hdf5,HDF5
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
@@ -226,6 +191,8 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
+        MAYBE_UNUSED_VARIABLES
+            VTK_MODULE_ENABLE_VTK_PythonContext2D
 )
 
 vcpkg_cmake_install()
@@ -233,7 +200,7 @@ vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-9.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-${VTK_SHORT_VERSION})
 
 # =============================================================================
 # Clean-up other directories
@@ -275,7 +242,6 @@ function(_vtk_move_release_tool TOOL_NAME)
     endif()
 endfunction()
 
-set(VTK_SHORT_VERSION 9.0)
 set(VTK_TOOLS
     vtkEncodeString-${VTK_SHORT_VERSION}
     vtkHashSource-${VTK_SHORT_VERSION}
@@ -318,12 +284,11 @@ if("paraview" IN_LIST FEATURES)
     endforeach()
 
     ## Check List on UPDATE !!
-    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${SOURCE_PATH}/Parallel/DIY/vtkDIYUtilities.txx" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
+    #file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    #file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 
 endif()
 
@@ -354,8 +319,8 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
 endif()
 # =============================================================================
 # Usage

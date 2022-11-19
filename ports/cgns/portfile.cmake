@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CGNS_BUILD_OPTS}
+        -DCGNS_ENABLE_SCOPING:BOOL=ON
 )
 
 vcpkg_cmake_install()

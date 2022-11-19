@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF 0eb5cdc5a7b5f2b03de20de7a0a57921f56b59f3 # 2.4.2
-    SHA512 f6be210b09eee348d5de87a0e6edbab360091db121baa21d9e1b3c45fb4dda4f6351353605cc247fc375e0daf2f05b576a73244110e44cfb02798b3f3d1836db
+    REF 8dbcfe470581edc4bc52c3ef132d410e66cadc20
+    SHA512 1000a8375b06e50f0c8beb53c4206de70b642d28d598ec8e3dda855bed3aee0129131bdf3270fc69010fb2cff7af04df4a7192e1ff2f480989f1f3ca51c6a535
     HEAD_REF master
     PATCHES
         fix-include-path.patch

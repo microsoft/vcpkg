@@ -1,4 +1,3 @@
-
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.3)
     cmake_policy(PUSH)
     cmake_policy(SET CMP0057 NEW)
