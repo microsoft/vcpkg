@@ -5,9 +5,9 @@ vcpkg_from_github(
     SHA512 a8be405e0e1586a06db038a0068df2c9277772ff7b8df2c542d18d2aae4b2bc0fd89de668ab10d84476446834390e4e27383b68d86c7d9f0d0749b57802866f1
     HEAD_REF master
     PATCHES
+	TRICE.asn-sanitizer.patch	# Filter out problematic functions with windows address sanitizer
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
-	TRICE.asn-sanitizer.patch
 )
 
 vcpkg_cmake_configure(

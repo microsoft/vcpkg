@@ -1,8 +1,32 @@
 diff --git a/include/aws/common/private/lookup3.inl b/include/aws/common/private/lookup3.inl
-index 50b269f..608d0b8 100644
+index 50b269f..f59f6b9 100644
 --- a/include/aws/common/private/lookup3.inl
 +++ b/include/aws/common/private/lookup3.inl
 @@ -348,6 +348,11 @@ static uint32_t hashlittle( const void *key, size_t length, uint32_t initval)
+ #ifdef CBMC
+ #    pragma CPROVER check push
+ #    pragma CPROVER check disable "pointer"
++#endif
++#if defined(WIN32) 
++	#ifdef __SANITIZE_ADDRESS__
++	    __declspec(no_sanitize_address);
++	#endif
+ #endif
+     // changed in aws-c-common: fix unused variable warning
+ 
+@@ -541,6 +546,11 @@ static void hashlittle2(
+ #ifdef CBMC
+ #    pragma CPROVER check push
+ #    pragma CPROVER check disable "pointer"
++#endif
++#if defined(WIN32) 
++	#ifdef __SANITIZE_ADDRESS__
++	    __declspec(no_sanitize_address);
++	#endif
+ #endif
+     // changed in aws-c-common: fix unused variable warning
+ 
+@@ -726,6 +736,11 @@ static uint32_t hashbig( const void *key, size_t length, uint32_t initval)
  #ifdef CBMC
  #    pragma CPROVER check push
  #    pragma CPROVER check disable "pointer"
