@@ -1,0 +1,24 @@
+diff --git a/src/LercLib/fpl_EsriHuffman.cpp b/src/LercLib/fpl_EsriHuffman.cpp
+index b72bd44..2f6ae7f 100644
+--- a/src/LercLib/fpl_EsriHuffman.cpp
++++ b/src/LercLib/fpl_EsriHuffman.cpp
+@@ -28,6 +28,7 @@ Original coding 2021 Yuriy Yakimenko
+ #include <cstdlib>
+ #include <stdint.h>
+ #include <limits>
++#include <algorithm>
+ 
+ USING_NAMESPACE_LERC
+ 
+diff --git a/src/LercLib/fpl_Lerc2Ext.cpp b/src/LercLib/fpl_Lerc2Ext.cpp
+index 64b5c06..1d39c98 100644
+--- a/src/LercLib/fpl_Lerc2Ext.cpp
++++ b/src/LercLib/fpl_Lerc2Ext.cpp
+@@ -28,6 +28,7 @@ Original coding 2021 Yuriy Yakimenko
+ #include <cmath>
+ #include <cstring>
+ #include <stdint.h>
++#include <algorithm>
+ 
+ USING_NAMESPACE_LERC
+ 
