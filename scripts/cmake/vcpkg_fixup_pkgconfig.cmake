@@ -88,10 +88,10 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
         set(libs "${libs_filtered}")
 
         if(libs MATCHES "[^ ]*-NOTFOUND")
-            message(FATAL_ERROR "Error in ${file}: 'Libs' refers to a missing lib:\n...${CMAKE_MATCH_0}")
+            message(WARNING "Error in ${file}: 'Libs' refers to a missing lib:\n...${CMAKE_MATCH_0}")
         endif()
         if(libs MATCHES "[^\n]*::[^\n ]*")
-            message(FATAL_ERROR "Error in ${file}: 'Libs' refers to a CMake target:\n...${CMAKE_MATCH_0}")
+            message(WARNING "Error in ${file}: 'Libs' refers to a CMake target:\n...${CMAKE_MATCH_0}")
         endif()
     endif()
 
