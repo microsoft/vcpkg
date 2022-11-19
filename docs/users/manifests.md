@@ -189,6 +189,20 @@ Then, you might just ask for:
 }
 ```
 
+You can also request features only for specific platforms:
+```json
+{
+  "name": "ffmpeg",
+  "default-features": false,
+  "features": [ 
+    { 
+      "name": "dav1d",
+      "platform": "!osx"
+    }
+  ]
+}
+```
+
 <a id="host"></a>
 
 #### `"host"` Field

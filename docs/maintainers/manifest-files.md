@@ -196,7 +196,7 @@ those can be specified using the `"features"` field of the dependency object.
 If the port does not require any features from the dependency,
 this should be specified with the `"default-features"` fields set to `false`.
 
-Dependencies can also be filtered based on the target triplet to support differing requirements.
+Dependencies and features can also be filtered based on the target triplet to support differing requirements.
 These filters use the same syntax as the `"supports"` field below,
 and are specified in the `"platform"` field.
 
@@ -208,17 +208,20 @@ and are specified in the `"platform"` field.
       "name": "curl",
       "default-features": false,
       "features": [
-        "winssl"
-      ],
-      "platform": "windows"
+        "http2",
+        {
+          "name": "winssl",
+          "platform": "windows"
+        },
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
     },
     {
-      "name": "curl",
-      "default-features": false,
-      "features": [
-        "openssl"
-      ],
-      "platform": "!windows"
+      "name": "dbghelp",
+      "platform": "windows"
     },
     "rapidjson"
   ]
@@ -319,7 +322,11 @@ An array of feature names that the library uses by default, if nothing else is s
 ```json
 {
   "default-features": [
-    "kinesis"
+    "kinesis",
+    {
+      "name": "dynamodb",
+      "platform": "!uwp"
+    }
   ],
   "features": {
     "dynamodb": {
