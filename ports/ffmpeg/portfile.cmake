@@ -4,8 +4,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4.1
-    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
+    REF n4.4.3
+    SHA512 46bb03d690bdf0d1ce55bfe0582edf1f50b938efcdd5708a6e5ba04154fa50ac8cff4a9e44544cfa50e7f52392c88cde9455aacd6b6e51d4944f123bdcc9297a
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -20,12 +20,11 @@ vcpkg_from_github(
         0013-define-WINVER.patch
         0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        0016-configure-dnn-needs-avformat.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0021-fix-sdl2-version-check.patch
+        0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -66,27 +65,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUA
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        vcpkg_acquire_msys(MSYS_ROOT
-            DIRECT_PACKAGES
-                # Required for "cpp.exe" preprocessor
-                "https://repo.msys2.org/msys/x86_64/gcc-11.3.0-2-x86_64.pkg.tar.zst"
-                1efc34aa8312eb5a8fef02c7c903d9ed98c4d50b13b8cf9679df1d545847eb9e0e9a42a810b2e085c6f938796a2a9846cb8b515e9380fdd6bec8ae4a1a131d9e
-                "https://repo.msys2.org/msys/x86_64/isl-0.25-2-x86_64.pkg.tar.zst"
-                9fcf50d18694ba983a1223f46312128bcdde700f72d3dc7b905acf1a8c167e5343ebf7957468fa943ad6f66259c316e437fc60c2456e18617e1ae1990eaf226b
-                "https://repo.msys2.org/msys/x86_64/zlib-1.2.12-2-x86_64.pkg.tar.zst"
-                5470a5da1acaf1e5639c5c1f396ca5dfdef58cb652168b04291c6c1a6cd90c6427f7d5b8e6620ad110e2c8ad1fe0d62a94e385a8d60bf41022754994b9bf39eb
-                "https://repo.msys2.org/msys/x86_64/mpc-1.2.1-1-x86_64.pkg.tar.zst"
-                31d9cd84bbd0b83ffc77ff0b0356d2c1e3dd8880e9f73f09c5140442c1ed17b93af08804038bd3cd1f90ac1e4cfe52bfeac1fe0b349ed5699088b7aa8420e550
-                "https://repo.msys2.org/msys/x86_64/mpfr-4.1.0-1-x86_64.pkg.tar.zst"
-                d64fa60e188124591d41fc097d7eb51d7ea4940bac05cdcf5eafde951ed1eaa174468f5ede03e61106e1633e3428964b34c96de76321ed8853b398fbe8c4d072
-                "https://repo.msys2.org/msys/x86_64/gmp-6.2.1-2-x86_64.pkg.tar.zst"
-                b2df273243ba08ed2b1117d2b4826900706859c51c1c39ca6e47df2b44b006b2512f7db801738fdbb9411594bc8bc67d308cf205f7fa1aab179863844218e513
-        )
-    else()
-        vcpkg_acquire_msys(MSYS_ROOT)
-    endif()
-
+    vcpkg_acquire_msys(MSYS_ROOT)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
 else()
     set(SHELL /bin/sh)
@@ -728,6 +707,7 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
+    list(FILTER contents EXCLUDE REGEX "^atomic$")
     if(VCPKG_TARGET_IS_WINDOWS)
         list(TRANSFORM contents TOLOWER)
     endif()
