@@ -1,3 +1,12 @@
+From 84652c4c5658fd443a05bf54fe6040857ba9c36c Mon Sep 17 00:00:00 2001
+From: Christoph Neuhauser <c.a.neuhauser@gmail.com>
+Date: Sat, 15 Oct 2022 01:14:12 +0200
+Subject: [PATCH 11/11] gcc ldflags fix
+
+---
+ Lib/distutils/unixccompiler.py | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
 index d00c48981e..b14ce8454e 100644
 --- a/Lib/distutils/unixccompiler.py
@@ -40,3 +49,6 @@ index d00c48981e..b14ce8454e 100644
  
      def runtime_library_dir_option(self, dir):
          # XXX Hackish, at the very least.  See Python bug #445902:
+-- 
+2.37.3.windows.1
+

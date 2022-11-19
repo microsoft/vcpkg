@@ -1,8 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF 8dbcfe470581edc4bc52c3ef132d410e66cadc20
-    SHA512 1000a8375b06e50f0c8beb53c4206de70b642d28d598ec8e3dda855bed3aee0129131bdf3270fc69010fb2cff7af04df4a7192e1ff2f480989f1f3ca51c6a535
+    REF v${VERSION}
+    SHA512 4b01dd0d23bdcaec6f69fe5f059902e7f49eafdf19d53d4cce8b4d52a54b2057b764de29390f4da9e75aeb32cb6af8606b23478b04edf9f7dcb1e4b769c5fff2
     HEAD_REF master
     PATCHES
         fix-include-path.patch
