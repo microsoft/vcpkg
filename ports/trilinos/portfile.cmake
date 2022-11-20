@@ -65,11 +65,17 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cma
 endforeach()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/external_packages" PACKAGE_NAME external_packages DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION )
 
+set(tool_names aprepro cgns_decomp conjoin cpup cth_pressure_map epu 
+                       ejoin exo2mat exodiff exomatlab exo_format
+                       io_info io_modify io_shell mat2exo nas2exo nem_slice nem_spread
+                       shell_to_hex skinner slice sphgen struc_to_unstruc zellij)
 
-vcpkg_copy_tools(TOOL_NAMES aprepro cgns_decomp conjoin cpup cth_pressure_map epu 
-                            ejoin exo2mat exodiff exomatlab exo_format
-                            io_info io_modify io_shell mat2exo nas2exo nem_slice nem_spread pepu
-                            shell_to_hex skinner slice sphgen struc_to_unstruc zellij AUTO_CLEAN)
+if("mpi" IN_LIST FEATURES)
+    list(APPEND tool_names pepu)
+endif()
+
+
+vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 
 set(scripts decomp epup pconjoin)
 

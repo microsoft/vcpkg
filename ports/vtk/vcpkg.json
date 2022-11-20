@@ -8,6 +8,8 @@
     "double-conversion",
     "eigen3",
     "expat",
+    "exprtk",
+    "fmt",
     "freetype",
     "glew",
     {
@@ -32,14 +34,11 @@
     "pugixml",
     "sqlite3",
     "tiff",
-    "utfcpp",
-    "exprtk",
-    "fmt",
-        {
+    {
       "name": "trilinos",
       "default-features": false
     },
-    "verdict",
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -48,6 +47,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "verdict",
     "zlib"
   ],
   "features": {
@@ -121,19 +121,19 @@
         },
         "mpi",
         {
-          "name": "vtk-m",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ]
-        },
-        {
           "name": "trilinos",
           "default-features": false,
           "features": [
             "mpi"
           ]
         },
+        {
+          "name": "vtk-m",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ]
+        }
       ]
     },
     "opengl": {
@@ -155,6 +155,7 @@
     "paraview": {
       "description": "Build vtk modules required by paraview",
       "dependencies": [
+        "cli11",
         {
           "name": "vtk",
           "default-features": false,
@@ -162,7 +163,6 @@
             "qt"
           ]
         },
-        "cli11",
         {
           "name": "vtk",
           "default-features": false,
@@ -182,9 +182,9 @@
     "qt": {
       "description": "Qt functionality for VTK",
       "dependencies": [
+        "qt5-declarative",
         "qt5-imageformats",
         "qt5-tools",
-        "qt5-declarative",
         {
           "name": "qt5-x11extras",
           "platform": "linux"
