@@ -1424,7 +1424,7 @@ index 66b52f1f6..7fbfef908 100644
  if (use_policy_0091) # XXX(cmake-3.15)
    if (NOT CMAKE_MSVC_RUNTIME_LIBRARY OR # The default uses `DLL`.
 -      CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL$")
-+      CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
++      VCPKG_CRT_LINKAGE MATCHES "dynamic")
      set(vtk_mfc_static 0)
    else ()
      set(vtk_mfc_static 1)
