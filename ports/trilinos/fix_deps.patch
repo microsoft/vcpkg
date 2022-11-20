@@ -178,8 +178,8 @@ index cc607e9d8..3bbc823b3 100644
 -  )
 +find_package(ZLIB REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
-+  ZLIB
-+  INNER_FIND_PACKAGE_NAME ZLIB
++  Zlib
++  INNER_FIND_PACKAGE_NAME Zlib
 +  IMPORTED_TARGETS_FOR_ALL_LIBS ZLIB::ZLIB )
 diff --git a/cmake/TPLs/FindTPLfmt.cmake b/cmake/TPLs/FindTPLfmt.cmake
 new file mode 100644
