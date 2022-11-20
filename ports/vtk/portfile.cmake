@@ -8,7 +8,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.9.1
+    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.11.0
     SHA512 70662670622082bb8d8b16765bbdf645cfbe62151e93b9673c6f94b356df66ca003e5c78b45e99385f1630aed39c3a8eddecd1d9f5bc0cfb92f5e7e8c06e4dbb
     HEAD_REF master
     PATCHES
@@ -18,14 +18,12 @@ vcpkg_from_github(
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
-        #python_debug.patch
         fix-using-hdf5.patch
         # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        # upstream vtkm patches to make it work with vtkm 1.6
-        # vtkm.patch # To include an external VTKm build; TODO: Update
         # fix-gdal.patch TODO?
+        make_it_work.patch
 )
 
 # =============================================================================
@@ -125,9 +123,9 @@ if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
     )
 endif()
 
-if("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+if("paraview" IN_LIST FEATURES AND "mpi" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
+        -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
     )
 endif()
 
@@ -190,8 +188,15 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
+        -DVTK_QT_VERSION=5
+        OPTIONS_RELEASE
+            "-DCMAKE_INSTALL_QMLDIR=${CURRENT_PACKAGES_DIR}/qml"
+        OPTIONS_DEBUG
+            "-DCMAKE_INSTALL_QMLDIR=${CURRENT_PACKAGES_DIR}/debug/qml"
         MAYBE_UNUSED_VARIABLES
-            VTK_MODULE_ENABLE_VTK_PythonContext2D
+            VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
+            VTK_QT_VERSION # Only with Qt
+            CMAKE_INSTALL_QMLDIR
 )
 
 vcpkg_cmake_install()
@@ -284,10 +289,11 @@ if("paraview" IN_LIST FEATURES)
 
     ## Check List on UPDATE !!
     file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    #file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    #file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 
-    #file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/Parallel/vtkCompositeZPassFS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 
 endif()
 

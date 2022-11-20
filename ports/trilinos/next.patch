@@ -1,0 +1,111 @@
+diff --git a/cmake/tribits/common_tpls/FindTPLHDF5.cmake b/cmake/tribits/common_tpls/FindTPLHDF5.cmake
+index b1997e92b..4d008be71 100644
+--- a/cmake/tribits/common_tpls/FindTPLHDF5.cmake
++++ b/cmake/tribits/common_tpls/FindTPLHDF5.cmake
+@@ -9,7 +9,7 @@ if (Netcdf_ALLOW_MODERN)
+   set(minimum_modern_HDF5_version 1.12.0)
+   print_var(Netcdf_ALLOW_MODERN)
+   message("-- Using find_package(HDF5 ${minimum_modern_HDF5_version} CONFIG) ...")
+-  find_package(HDF5  ${minimum_modern_HDF5_version})
++  find_package(HDF5 ${minimum_modern_HDF5_version} MODULE)
+   if (HDF5_FOUND)
+     message("-- Found HDF5_CONFIG=${HDF5_CONFIG}")
+     message("-- Generating Netcdf::all_libs and NetcdfConfig.cmake")
+@@ -17,7 +17,7 @@ if (Netcdf_ALLOW_MODERN)
+     tribits_extpkg_create_imported_all_libs_target_and_config_file(
+       HDF5
+       INNER_FIND_PACKAGE_NAME  HDF5
+-      IMPORTED_TARGETS_FOR_ALL_LIBS  HDF5::HDF5)
++      IMPORTED_TARGETS_FOR_ALL_LIBS  hdf5::hdf5)
+     set(HDF5_INTERNAL_IS_MODERN TRUE)
+   endif()
+ 
+diff --git a/cmake/tribits/common_tpls/find_modules/FindCGNS.cmake b/cmake/tribits/common_tpls/find_modules/FindCGNS.cmake
+index b6ee0a233..45e88fe4a 100644
+--- a/cmake/tribits/common_tpls/find_modules/FindCGNS.cmake
++++ b/cmake/tribits/common_tpls/find_modules/FindCGNS.cmake
+@@ -235,7 +235,7 @@ else(CGNS_LIBRARIES AND CGNS_INCLUDE_DIRS)
+           add_package_dependency(CGNS DEPENDS_ON HDF5)
+       endif()
+     else()
+-      message(STATUS "CGNS does not have cgnsconfig.h; assuming CGNS depends on HDF5")     
++      message(STATUS "CGNS does not have cgnsconfig.h; assuming CGNS depends on HDF5")
+       add_package_dependency(CGNS DEPENDS_ON HDF5)
+     endif()
+ 
+diff --git a/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake b/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
+index 1873267bd..ed6254632 100644
+--- a/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
++++ b/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
+@@ -120,17 +120,21 @@ function(tribits_extpkg_create_package_config_file_with_imported_targets
+       "set(${externalPkg}_DIR \"${${externalPkg}_DIR}\")\n" )
+   endif()
+   string(APPEND configFileStr
+-    "find_dependency(${externalPkg})\n"
+-    "add_library(${tplName}::all_libs  INTERFACE  IMPORTED  GLOBAL)\n"
++    "find_dependency(${externalPkg})\n" # This is outside TPL
++    "if(NOT TARGET ${tplName}::all_libs)\n"
++    "  add_library(${tplName}::all_libs  INTERFACE  IMPORTED  GLOBAL)\n" 
+     )
+   foreach (importedTarget  IN LISTS  PARSE_IMPORTED_TARGETS_FOR_ALL_LIBS)
+     string(APPEND configFileStr
+-      "target_link_libraries(${tplName}::all_libs  INTERFACE  ${importedTarget})\n")
++      "  target_link_libraries(${tplName}::all_libs  INTERFACE  ${importedTarget})\n")
+   endforeach()
++  string(APPEND configFileStr
++    "endif()\n"
++  )
+   set(buildDirExternalPkgsDir
+     "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
+   set(tplConfigFile
+-    "${buildDirExternalPkgsDir}/${tplName}/${tplName}Config.cmake")
++    "${buildDirExternalPkgsDir}/TPL${tplName}/TPL${tplName}Config.cmake")
+   file(WRITE "${tplConfigFile}" "${configFileStr}")
+ 
+ endfunction()
+diff --git a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+index c49a2c019..7c906ce26 100644
+--- a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
++++ b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+@@ -334,9 +334,10 @@ function(tribits_extpkg_add_find_upstream_dependencies_str
+       endif()
+       string(APPEND configFileFragStr
+         "if (NOT TARGET TPL::${upstreamTplDepName}::all_libs)\n"
+-        "  set(${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../${upstreamTplDepName}\")\n"
++        "  set(TPL${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../TPL${upstreamTplDepName}\")\n" # Looks for internal dep
++        "  # Really only upstream ? NO ! THis is for ::all_libs targets in internal consumers\n"
+         "  find_dependency(TPL${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
+-        "  unset(${upstreamTplDepName}_DIR)\n"
++        "  unset(TPL${upstreamTplDepName}_DIR)\n"
+         "endif()\n"
+         "\n"
+         )
+diff --git a/cmake/tribits/core/package_arch/TribitsProcessEnabledTpl.cmake b/cmake/tribits/core/package_arch/TribitsProcessEnabledTpl.cmake
+index aaec95d49..e029ddefa 100644
+--- a/cmake/tribits/core/package_arch/TribitsProcessEnabledTpl.cmake
++++ b/cmake/tribits/core/package_arch/TribitsProcessEnabledTpl.cmake
+@@ -154,9 +154,9 @@ function(tribits_process_enabled_tpl  TPL_NAME)
+     set(buildDirExternalPkgsDir
+       "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
+     set(tplConfigFile
+-      "${buildDirExternalPkgsDir}/${TPL_NAME}/TPL${TPL_NAME}Config.cmake")
++      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}Config.cmake")
+     set(tplConfigVersionFile
+-      "${buildDirExternalPkgsDir}/${TPL_NAME}/TPL${TPL_NAME}ConfigVersion.cmake")
++      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}ConfigVersion.cmake")
+     tribits_extpkg_write_config_version_file(${TPL_NAME}
+       "${tplConfigVersionFile}")
+     tribits_extpkg_install_config_file(${TPL_NAME} "${tplConfigFile}")
+diff --git a/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake b/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake
+index 3244290b2..927a83251 100644
+--- a/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake
++++ b/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake
+@@ -719,7 +719,7 @@ function(tribits_tpl_find_include_dirs_and_libraries TPL_NAME)
+ 
+   set(buildDirExternalPkgsDir
+     "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
+-  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/${TPL_NAME}")
++  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/TPL${TPL_NAME}")
+   set(tplConfigFile "${tplConfigFileBaseDir}/TPL${TPL_NAME}Config.cmake")
+   tribits_extpkg_write_config_file(${TPL_NAME} "${tplConfigFile}")
+   if (NOT ${PROJECT_NAME}_ENABLE_INSTALLATION_TESTING)

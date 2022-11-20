@@ -1,5 +1,5 @@
 set(VERSION_MAJOR_MINOR 5.11)
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
@@ -15,8 +15,7 @@ vcpkg_from_github(
     SHA512  441fdb0053e5d9c38e77ece8251888a239c59bcc58e789516bedbb6b0d28e671fd8bc9e1848fff07cd999628a9666baf5a1eee8da477e1bbfd204b1a5c39ae1e
     HEAD_REF master
     PATCHES
-        #external_vtk.patch
-        #cgns.patch
+        external_vtk.patch
         python_include.patch
         python_wrapper.patch
         add-tools-option.patch
@@ -55,9 +54,18 @@ vcpkg_from_gitlab(
 )
 
 #TODO: Add Icet
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH ICET_SOURCE_PATH
+    GITLAB_URL https://gitlab.kitware.com/
+    REPO paraview/IceT
+    REF 32816fe5592de3be664da6f8466a546f221d8532
+    SHA512  33d5e8f2ecdc20d305d04c23fc3a3121d3c5305ddff7f5b71cee1a2c2183c4b36c9d0bd91e9dba5f2369e237782d7dbcf635d2e1814ccde88570647c890edc9d
+)
+
 
 file(COPY "${VISITIT_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/Utilities/VisItBridge")
 file(COPY "${QTTESTING_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting")
+file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtkicet")
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)

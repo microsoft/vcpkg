@@ -7,7 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES fix_deps.patch
             fix_tpl_libs.patch
-    
+            next.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -80,5 +80,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
