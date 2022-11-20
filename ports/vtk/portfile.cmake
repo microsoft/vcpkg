@@ -190,9 +190,9 @@ vcpkg_cmake_configure(
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=5
         OPTIONS_RELEASE
-            "-DCMAKE_INSTALL_QMLDIR=${CURRENT_PACKAGES_DIR}/qml"
+            "-DCMAKE_INSTALL_QMLDIR=qml"
         OPTIONS_DEBUG
-            "-DCMAKE_INSTALL_QMLDIR=${CURRENT_PACKAGES_DIR}/debug/qml"
+            "-DCMAKE_INSTALL_QMLDIR=debug/qml"
         MAYBE_UNUSED_VARIABLES
             VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
             VTK_QT_VERSION # Only with Qt
