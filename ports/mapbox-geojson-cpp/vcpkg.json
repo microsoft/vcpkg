@@ -1,0 +1,11 @@
+{
+  "name": "mapbox-geojson-cpp",
+  "version-semver": "0.5.1",
+  "port-version": 1,
+  "description": "A C++14 library for converting GeoJSON into geometry.hpp representation",
+  "homepage": "https://github.com/mapbox/geojson-cpp",
+  "dependencies": [
+    "mapbox-geometry",
+    "mapbox-variant"
+  ]
+}

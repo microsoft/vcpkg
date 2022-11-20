@@ -1,0 +1,149 @@
+From 0325638832e35c8c8c6fc96e2c1d887aeea3dd43 Mon Sep 17 00:00:00 2001
+From: Julien Schueller <schueller@phimeca.com>
+Date: Mon, 8 Mar 2021 10:57:46 +0100
+Subject: [PATCH] Geovis: Use proj>=5 api
+
+Closes #18130
+---
+ Geovis/Core/vtkGeoProjection.cxx    | 17 ++++++++++++++++-
+ Geovis/Core/vtkGeoTransform.cxx     | 28 ++++++++++++++--------------
+ ThirdParty/libproj/vtk_libproj.h.in |  7 +------
+ 3 files changed, 31 insertions(+), 21 deletions(-)
+
+diff --git a/Geovis/Core/vtkGeoProjection.cxx b/Geovis/Core/vtkGeoProjection.cxx
+index 7ff6526a5d..0a0d06eba1 100644
+--- a/Geovis/Core/vtkGeoProjection.cxx
++++ b/Geovis/Core/vtkGeoProjection.cxx
+@@ -121,7 +121,11 @@ vtkGeoProjection::~vtkGeoProjection()
+   this->SetPROJ4String(nullptr);
+   if (this->Projection)
+   {
++#if PROJ_VERSION_MAJOR >= 5
++    proj_destroy(this->Projection);
++#else
+     pj_free(this->Projection);
++#endif
+   }
+   delete this->Internals;
+   this->Internals = nullptr;
+@@ -185,13 +189,21 @@ int vtkGeoProjection::UpdateProjection()
+ 
+   if (this->Projection)
+   {
++#if PROJ_VERSION_MAJOR >= 5
++    proj_destroy(this->Projection);
++#else
+     pj_free(this->Projection);
++#endif
+     this->Projection = nullptr;
+   }
+ 
+   if (this->PROJ4String && strlen(this->PROJ4String))
+   {
++#if PROJ_VERSION_MAJOR >= 5
++    this->Projection = proj_create(PJ_DEFAULT_CTX, this->PROJ4String);
++#else
+     this->Projection = pj_init_plus(this->PROJ4String);
++#endif
+     if (!this->Projection)
+     {
+       vtkErrorMacro("Cannot set projection with string " << this->PROJ4String);
+@@ -234,8 +246,11 @@ int vtkGeoProjection::UpdateProjection()
+       stringHolder[i] = param.str();
+       pjArgs[3 + i] = stringHolder[i].c_str();
+     }
+-
++#if PROJ_VERSION_MAJOR >= 5
++    this->Projection = proj_create_argv(PJ_DEFAULT_CTX, argSize, const_cast<char**>(pjArgs));
++#else
+     this->Projection = pj_init(argSize, const_cast<char**>(pjArgs));
++#endif
+     delete[] pjArgs;
+   }
+   this->ProjectionMTime = this->GetMTime();
+diff --git a/Geovis/Core/vtkGeoTransform.cxx b/Geovis/Core/vtkGeoTransform.cxx
+index 5c2c74279d..1c99b6b11b 100644
+--- a/Geovis/Core/vtkGeoTransform.cxx
++++ b/Geovis/Core/vtkGeoTransform.cxx
+@@ -163,8 +163,12 @@ void vtkGeoTransform::InternalTransformPoints(double* x, vtkIdType numPts, int s
+   projPJ src = this->SourceProjection ? this->SourceProjection->GetProjection() : nullptr;
+   projPJ dst = this->DestinationProjection ? this->DestinationProjection->GetProjection() : nullptr;
+   int delta = stride - 2;
++#if PROJ_VERSION_MAJOR >= 5
++  PJ_COORD c, c_out;
++#else
+   projLP lp;
+   projXY xy;
++#endif
+   if (src)
+   {
+     // Convert from src system to lat/long using inverse of src transform
+@@ -172,17 +176,15 @@ void vtkGeoTransform::InternalTransformPoints(double* x, vtkIdType numPts, int s
+     for (vtkIdType i = 0; i < numPts; ++i)
+     {
+ #if PROJ_VERSION_MAJOR >= 5
+-      xy.x = coord[0];
+-      xy.y = coord[1];
++      c.xy.x = coord[0];
++      c.xy.y = coord[1];
++      c_out = proj_trans(src, PJ_INV, c);
++      coord[0] = c_out.lp.lam;
++      coord[1] = c_out.lp.phi;
+ #else
+       xy.u = coord[0];
+       xy.v = coord[1];
+-#endif
+       lp = pj_inv(xy, src);
+-#if PROJ_VERSION_MAJOR >= 5
+-      coord[0] = lp.lam;
+-      coord[1] = lp.phi;
+-#else
+       coord[0] = lp.u;
+       coord[1] = lp.v;
+ #endif
+@@ -208,17 +210,15 @@ void vtkGeoTransform::InternalTransformPoints(double* x, vtkIdType numPts, int s
+     for (vtkIdType i = 0; i < numPts; ++i)
+     {
+ #if PROJ_VERSION_MAJOR >= 5
+-      lp.lam = coord[0];
+-      lp.phi = coord[1];
++      c.lp.lam = coord[0];
++      c.lp.phi = coord[1];
++      c_out = proj_trans(src, PJ_FWD, c);
++      coord[0] = c_out.xy.x;
++      coord[1] = c_out.xy.y;
+ #else
+       lp.u = coord[0];
+       lp.v = coord[1];
+-#endif
+       xy = pj_fwd(lp, dst);
+-#if PROJ_VERSION_MAJOR >= 5
+-      coord[0] = xy.x;
+-      coord[1] = xy.y;
+-#else
+       coord[0] = xy.u;
+       coord[1] = xy.v;
+ #endif
+diff --git a/ThirdParty/libproj/vtk_libproj.h.in b/ThirdParty/libproj/vtk_libproj.h.in
+index 4d8ffc3c5d..c4182c4db2 100644
+--- a/ThirdParty/libproj/vtk_libproj.h.in
++++ b/ThirdParty/libproj/vtk_libproj.h.in
+@@ -28,14 +28,9 @@
+ #if VTK_MODULE_USE_EXTERNAL_vtklibproj
+ # if VTK_LibPROJ_MAJOR_VERSION >= 5
+ #  include <proj.h>
+-# endif
+-# if VTK_LibPROJ_MAJOR_VERSION < 6
++# else
+ #  include <projects.h>
+ # endif
+-# if VTK_LibPROJ_MAJOR_VERSION >= 6
+-#  define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H 1
+-# endif
+-# include <proj_api.h>
+ # include <geodesic.h>
+ #else
+ # include <vtklibproj/src/projects.h>
+-- 
+2.32.0.windows.1
+

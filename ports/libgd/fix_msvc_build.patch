@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b3e5b3..966ddb3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,7 @@ else (USE_EXT_GD)
+ 	endif (ENABLE_ICONV)
+ 
+ 	IF (ENABLE_WEBP)
+-		FIND_PACKAGE(WEBP REQUIRED)
++		FIND_PACKAGE(WebP CONFIG REQUIRED)
+ 	ENDIF (ENABLE_WEBP)
+ 
+ 	IF (ENABLE_HEIF)
+diff --git a/src/config.h.cmake b/src/config.h.cmake
+index 0542942..e9cfde1 100644
+--- a/src/config.h.cmake
++++ b/src/config.h.cmake
+@@ -142,3 +142,8 @@
+ 
+ /* Version number of package */
+ #cmakedefine VERSION
++
++#ifdef _MSC_VER
++    #define ssize_t SSIZE_T
++    #define SSIZE_MAX MAXSSIZE_T
++#endif
+\ No newline at end of file

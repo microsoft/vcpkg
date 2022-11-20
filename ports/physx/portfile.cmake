@@ -1,17 +1,28 @@
-vcpkg_fail_port_install(ON_TARGET MINGW)
+vcpkg_download_distfile(
+    patch1
+    URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/ada4fccf04e5a5832af1353d6d1f91de691aa47d.patch"
+    FILENAME "physx-PR569-ada4fccf.patch"
+    SHA512 ec2fc2fce0b5aab4d42b77f21373bf067f129543e672516477513419241c56b99f2d663b992cb29d296933440e7e7cc31a57198f6fcc78d6eac26b7706c1e937
+)
+
+vcpkg_download_distfile(
+    patch2
+    URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/d590c88e3cbf0fb682726abf7d7c16417855084f.patch"
+    FILENAME "physx-PR569-d590c88e.patch"
+    SHA512 4eb7630db1cb10b2372220c3706dfe255075f466c6b2b12654c9fbc3b17c4df69d7b91e6f0d798c92a4cb8806e1c34b66bb52b46d9358d643ca62ec0de321fd2
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIAGameWorks/PhysX
-    REF ae80dede0546d652040ae6260a810e53e20a06fa
-    SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
+    REF 93c6dd21b545605185f2febc8eeacebe49a99479
+    SHA512 c9f50255ca9e0f1ebdb9926992315a62b77e2eea3addd4e65217283490714e71e24f2f687717dd8eb155078a1a6b25c9fadc123ce8bc4c5615f7ac66cd6b11aa
     HEAD_REF master
     PATCHES
-        internalMBP_symbols.patch
-        msvc_142_bug_workaround.patch
-        vs16_3_typeinfo_header_fix.patch
-        fix_discarded_qualifiers.patch
         fix-compiler-flag.patch
+        "${patch1}"
+        "${patch2}"
+        remove-werror.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)
@@ -45,6 +56,7 @@ set(OPTIONS_DEBUG
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=uwp")
+    set(configure_options WINDOWS_USE_MSBUILD)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=windows")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -79,15 +91,15 @@ else()
     list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
-    PREFER_NINJA
+    ${configure_options}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # NVIDIA Gameworks release structure is generally something like <compiler>/<configuration>/[artifact]
 # It would be nice to patch this out, but that directory structure is hardcoded over many cmake files.
@@ -142,4 +154,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/source"
     "${CURRENT_PACKAGES_DIR}/source"
 )
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,15 @@
+{
+  "name": "elfutils",
+  "version": "0.186",
+  "port-version": 4,
+  "description": "elfutils is a collection of utilities and libraries to read, create and modify ELF binary files, find and handle DWARF debug data, symbols, thread state and stacktraces for processes and core files on GNU/Linux.",
+  "homepage": "https://sourceware.org/elfutils/",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "liblzma",
+    "zlib",
+    "zstd"
+  ]
+}

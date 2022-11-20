@@ -1,8 +1,8 @@
 diff --git a/lang/c++/CMakeLists.txt b/lang/c++/CMakeLists.txt
-index 30a5d66..f7f2b94 100644
+index bf764ce4..e84524d0 100644
 --- a/lang/c++/CMakeLists.txt
 +++ b/lang/c++/CMakeLists.txt
-@@ -40,6 +40,8 @@ set (AVRO_VERSION_MINOR "0")
+@@ -48,6 +48,8 @@ list(GET AVRO_VERSION 2 AVRO_VERSION_PATCH)
  project (Avro-cpp)
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
  
@@ -11,12 +11,13 @@ index 30a5d66..f7f2b94 100644
  if (WIN32 AND NOT CYGWIN AND NOT MSYS)
      add_definitions (/EHa)
      add_definitions (
-@@ -118,11 +120,11 @@ set_target_properties (avrocpp PROPERTIES
+@@ -125,12 +127,12 @@ set_target_properties (avrocpp PROPERTIES
  set_target_properties (avrocpp_s PROPERTIES
-     VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR})
+     VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR}.${AVRO_VERSION_PATCH})
  
 -target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
 +target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
+ target_include_directories(avrocpp PRIVATE ${SNAPPY_INCLUDE_DIR})
  
  add_executable (precompile test/precompile.cc)
  
@@ -25,13 +26,12 @@ index 30a5d66..f7f2b94 100644
  
  macro (gen file ns)
      add_custom_command (OUTPUT ${file}.hh
-@@ -151,34 +153,40 @@ gen (crossref cr)
- gen (primitivetypes pt)
+@@ -160,37 +162,42 @@ gen (primitivetypes pt)
+ gen (cpp_reserved_words cppres)
  
  add_executable (avrogencpp impl/avrogencpp.cc)
 -target_link_libraries (avrogencpp avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
 +target_link_libraries (avrogencpp avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
-+
  
 -enable_testing()
 +if(BUILD_TESTING)
@@ -57,6 +57,9 @@ index 30a5d66..f7f2b94 100644
 -unittest (JsonTests)
 -unittest (AvrogencppTests)
 -unittest (CompilerTests)
+-unittest (AvrogencppTestReservedWords)
+-
+-add_dependencies (AvrogencppTestReservedWords cpp_reserved_words_hh)
 -
 -add_dependencies (AvrogencppTests bigrecord_hh bigrecord_r_hh bigrecord2_hh
 -    tweet_hh
@@ -75,6 +78,9 @@ index 30a5d66..f7f2b94 100644
 +    unittest (JsonTests)
 +    unittest (AvrogencppTests)
 +    unittest (CompilerTests)
++    unittest (AvrogencppTestReservedWords)
++
++    add_dependencies (AvrogencppTestReservedWords cpp_reserved_words_hh)
 +
 +    add_dependencies (AvrogencppTests bigrecord_hh bigrecord_r_hh bigrecord2_hh
 +        tweet_hh
@@ -86,7 +92,7 @@ index 30a5d66..f7f2b94 100644
  
  include (InstallRequiredSystemLibraries)
  
-@@ -189,9 +197,9 @@ include (CPack)
+@@ -201,9 +208,9 @@ include (CPack)
  install (TARGETS avrocpp avrocpp_s
      LIBRARY DESTINATION lib
      ARCHIVE DESTINATION lib

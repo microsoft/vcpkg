@@ -3,7 +3,7 @@ index a6a7554..b20fd4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -111,6 +111,11 @@ if(WIN32)
- 	set(PLATFORM_LIBS ${PLATFORM_LIBS} ws2_32)
+ 	set(PLATFORM_LIBS ${PLATFORM_LIBS} ws2_32 bcrypt)
  endif()
  
 +if(MSVC AND MSVC_VERSION GREATER_EQUAL 1912)

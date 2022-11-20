@@ -1,0 +1,13 @@
+diff --git a/parser.ypp b/parser.ypp
+index 2afbcac..baa9cab 100644
+--- a/parser.ypp
++++ b/parser.ypp
+@@ -7,8 +7,6 @@
+  * of patent rights can be found in the PATENTS file in the same directory.
+  */
+ 
+-%require "3"
+-
+ %skeleton "lalr1.cc"
+ 
+ %defines

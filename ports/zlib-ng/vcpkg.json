@@ -1,0 +1,14 @@
+{
+  "name": "zlib-ng",
+  "version": "2.0.6",
+  "port-version": 1,
+  "description": "zlib replacement with optimizations for 'next generation' systems",
+  "homepage": "https://github.com/zlib-ng/zlib-ng",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

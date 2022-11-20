@@ -1,5 +1,4 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm" "arm64")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,7 +6,7 @@ vcpkg_from_github(
     REF e4367a36f2e55d10b2b994bfbae8edf21f15bafd
     SHA512 cd5a2aa6cdfe6fa538067919aa49e5ecd901898e12929dc852068ce66efe386032eb1fe667ea7d9b7a3d73a7bef1d90a683c0b90b6fb0d6d9a27950b05c4ab6a
     HEAD_REF master
-    PATCHES 
+    PATCHES
     fix_cmake_install.patch
 )
 

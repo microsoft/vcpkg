@@ -1,201 +1,133 @@
-#[===[.md:
-# vcpkg_from_gitlab
-
-Download and extract a project from Gitlab instances. Enables support for `install --head`.
-
-## Usage:
-```cmake
-vcpkg_from_gitlab(
-    GITLAB_URL <https://gitlab.com>
-    OUT_SOURCE_PATH <SOURCE_PATH>
-    REPO <gitlab-org/gitlab-ce>
-    [REF <v10.7.3>]
-    [SHA512 <45d0d7f8cc350...>]
-    [HEAD_REF <master>]
-    [PATCHES <patch1.patch> <patch2.patch>...]
-    [FILE_DISAMBIGUATOR <N>]
-)
-```
-
-## Parameters:
-
-### GITLAB_URL
-The URL of the Gitlab instance to use.
-
-### OUT_SOURCE_PATH
-Specifies the out-variable that will contain the extracted location.
-
-This should be set to `SOURCE_PATH` by convention.
-
-### REPO
-The organization or user plus the repository name on the Gitlab instance.
-
-### REF
-A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
-
-For repositories without official releases, this can be set to the full commit id of the current latest master.
-
-If `REF` is specified, `SHA512` must also be specified.
-
-### SHA512
-The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
-The REPO_NAME variable is parsed from the value of REPO.
-
-This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
-
-### HEAD_REF
-The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
-
-For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
-
-### PATCHES
-A list of patches to be applied to the extracted sources.
-
-Relative paths are based on the port directory.
-
-### FILE_DISAMBIGUATOR
-A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
-
-## Notes:
-At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
-
-This exports the `VCPKG_HEAD_VERSION` variable during head builds.
-
-## Examples:
-* [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
-* [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
-* [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
-#]===]
-
 include(vcpkg_execute_in_download_mode)
 
-function(vcpkg_from_gitlab)
-    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF FILE_DISAMBIGUATOR)
-    set(multipleValuesArgs PATCHES)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
+function(z_uri_encode input output_variable)
+    string(HEX "${input}" hex)
+    string(LENGTH "${hex}" length)
+    math(EXPR last "${length} - 1")
+    set(result "")
+    foreach(i RANGE ${last})
+        math(EXPR even "${i} % 2")
+        if("${even}" STREQUAL "0")
+            string(SUBSTRING "${hex}" "${i}" 2 char)
+            string(APPEND result "%${char}")
+        endif()
+    endforeach()
+    set("${output_variable}" ${result} PARENT_SCOPE)
+endfunction()
 
-    if(NOT DEFINED _vdud_GITLAB_URL)
+function(vcpkg_from_gitlab)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+        ""
+        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR"
+        "PATCHES")
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "vcpkg_from_gitlab was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(NOT DEFINED arg_GITLAB_URL)
         message(FATAL_ERROR "GITLAB_URL must be specified.")
     endif()
 
-    if(NOT DEFINED _vdud_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
-    endif()
-
-    if((DEFINED _vdud_REF AND NOT DEFINED _vdud_SHA512) OR (NOT DEFINED _vdud_REF AND DEFINED _vdud_SHA512))
+    if(DEFINED arg_REF AND NOT DEFINED arg_SHA512)
         message(FATAL_ERROR "SHA512 must be specified if REF is specified.")
     endif()
-
-    if(NOT DEFINED _vdud_REPO)
-        message(FATAL_ERROR "REPO must be specified.")
+    if(NOT DEFINED arg_REF AND DEFINED arg_SHA512)
+        message(FATAL_ERROR "REF must be specified if SHA512 is specified.")
     endif()
 
-    if(NOT DEFINED _vdud_REF AND NOT DEFINED _vdud_HEAD_REF)
-        message(FATAL_ERROR "At least one of REF and HEAD_REF must be specified.")
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
+        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
+    endif()
+    if(NOT DEFINED arg_REPO)
+        message(FATAL_ERROR "The GitHub repository must be specified.")
     endif()
 
-    if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_HEAD_REF)
-        message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
-        set(VCPKG_USE_HEAD_VERSION OFF)
+    set(headers_param "")
+    if(DEFINED arg_AUTHORIZATION_TOKEN)
+        set(headers_param "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
     endif()
 
-    string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
-    
-    list(LENGTH GITLAB_REPO_LINK len)
-    if(${len} EQUAL "2")
-		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
-		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME})
-	endif()
-	
-	if(${len} EQUAL "3")
-		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
-		list(GET GITLAB_REPO_LINK 1 GROUP_NAME)
-		list(GET GITLAB_REPO_LINK 2 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${GROUP_NAME}/${REPO_NAME})
-	endif()
-    
-    # Handle --no-head scenarios
-    if(NOT VCPKG_USE_HEAD_VERSION)
-        if(NOT _vdud_REF)
-            message(FATAL_ERROR "Package does not specify REF. It must built using --head.")
-        endif()
-
-        string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-        set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}")
-        if (_vdud_FILE_DISAMBIGUATOR)
-            set(downloaded_file_name "${downloaded_file_name}-${_vdud_FILE_DISAMBIGUATOR}")
-        endif()
-
-        set(downloaded_file_name "${downloaded_file_name}.tar.gz")
-
-        vcpkg_download_distfile(ARCHIVE
-            URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
-            SHA512 "${_vdud_SHA512}"
-            FILENAME "${downloaded_file_name}"
-        )
-
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE "${ARCHIVE}"
-            REF "${SANITIZED_REF}"
-            PATCHES ${_vdud_PATCHES}
-        )
-
-        set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-        return()
+    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
+        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
     endif()
 
-    # The following is for --head scenarios
-    set(URL "${GITLAB_LINK}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
-    string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
-    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
-    set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
-
-    if(_VCPKG_NO_DOWNLOADS)
-        if(NOT EXISTS ${downloaded_file_path} OR NOT EXISTS ${downloaded_file_path}.version)
-            message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
-        endif()
-        message(STATUS "Using cached ${downloaded_file_path}")
+    if(arg_REPO MATCHES [[^([^/]*)/([^/]*)$]]) # 2 elements
+        set(org_name "${CMAKE_MATCH_1}")
+        set(repo_name "${CMAKE_MATCH_2}")
+        set(gitlab_link "${arg_GITLAB_URL}/${org_name}/${repo_name}")
+    elseif(arg_REPO MATCHES [[^([^/]*)/([^/]*)/([^/]*)$]]) # 3 elements
+        set(org_name "${CMAKE_MATCH_1}")
+        set(group_name "${CMAKE_MATCH_2}")
+        set(repo_name "${CMAKE_MATCH_3}")
+        set(gitlab_link "${arg_GITLAB_URL}/${org_name}/${group_name}/${repo_name}")
     else()
-        if(EXISTS ${downloaded_file_path})
-            message(STATUS "Purging cached ${downloaded_file_path} to fetch latest (use --no-downloads to suppress)")
-            file(REMOVE ${downloaded_file_path})
-        endif()
-        if(EXISTS ${downloaded_file_path}.version)
-            file(REMOVE ${downloaded_file_path}.version)
-        endif()
-        if(EXISTS ${CURRENT_BUILDTREES_DIR}/src/head)
-            file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src/head)
-        endif()
-
-        vcpkg_download_distfile(ARCHIVE
-            URLS ${URL}
-            FILENAME ${downloaded_file_name}
-            SKIP_SHA512
-        )
+        message(FATAL_ERROR "REPO (${arg_REPO}) is not a valid repo name. It must be:
+    - an organization name followed by a repository name separated by a single slash, or
+    - an organization name, group name, and repository name separated by slashes.")
     endif()
 
-    # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-    vcpkg_execute_in_download_mode(COMMAND ${GIT} ls-remote
-        "${GITLAB_LINK}.git" "${_vdud_HEAD_REF}"
-        RESULT_VARIABLE _git_result
-        OUTPUT_VARIABLE _git_output
-    )
-    string(REGEX MATCH "[a-f0-9]+" _version "${_git_output}")
+    set(redownload_param "")
+    set(working_directory_param "")
+    set(sha512_param "SHA512" "${arg_SHA512}")
+    set(ref_to_use "${arg_REF}")
+    if(VCPKG_USE_HEAD_VERSION)
+        if(DEFINED arg_HEAD_REF)
+            set(redownload_param "ALWAYS_REDOWNLOAD")
+            set(sha512_param "SKIP_SHA512")
+            set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            set(ref_to_use "${arg_HEAD_REF}")
+        else()
+            message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
+        endif()
+    elseif(NOT DEFINED arg_REF)
+        message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+    endif()
+
+    # avoid using either - or _, to allow both `foo/bar` and `foo-bar` to coexist
+    # we assume that no one will name a ref "foo_-bar"
+    string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
+    if(DEFINED arg_FILE_DISAMBIGUATOR AND NOT VCPKG_USE_HEAD_VERSION)
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
+    else()
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
+    endif()
+
+
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     # When multiple vcpkg_from_gitlab's are used after each other, only use the version from the first (hopefully the primary one).
-    if(NOT DEFINED VCPKG_HEAD_VERSION)
-        set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
+    if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED VCPKG_HEAD_VERSION)
+        z_uri_encode("${arg_REPO}" encoded_repo_path)
+        set(version_url "${arg_GITLAB_URL}/api/v4/projects/${encoded_repo_path}/repository/branches/${arg_HEAD_REF}")
+        vcpkg_download_distfile(archive_version
+            URLS "${version_url}"
+            FILENAME "${downloaded_file_name}.version"
+            ${headers_param}
+            SKIP_SHA512
+            ALWAYS_REDOWNLOAD
+        )
+        # Parse the gitlab response with regex.
+        file(READ "${archive_version}" version_contents)
+        if(NOT version_contents MATCHES [["id":(\ *)"([a-f0-9]+)"]])
+            message(FATAL_ERROR "Failed to parse API response from '${version_url}':\n${version_contents}\n")
+        endif()
+        set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_2}" PARENT_SCOPE)
     endif()
 
+    # download the file information from gitlab
+    vcpkg_download_distfile(archive
+        URLS "${gitlab_link}/-/archive/${ref_to_use}/${repo_name}-${ref_to_use}.tar.gz"
+        FILENAME "${downloaded_file_name}"
+        ${headers_param}
+        ${sha512_param}
+        ${redownload_param}
+    )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE "${downloaded_file_path}"
-        REF "${SANITIZED_HEAD_REF}"
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
-        PATCHES ${_vdud_PATCHES}
+        ARCHIVE "${archive}"
+        REF "${sanitized_ref}"
+        PATCHES ${arg_PATCHES}
+        ${working_directory_param}
     )
-    set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
+    set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

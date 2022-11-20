@@ -1,4 +1,0 @@
-Source: json-spirit
-Version: 4.1.0-1
-Description: json parser using boost library
-Build-Depends: boost-config, boost-integer, boost-smart-ptr, boost-variant, boost-spirit

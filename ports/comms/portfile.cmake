@@ -1,26 +1,25 @@
 #header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO commschamp/comms_champion
-    REF v3.1.3
-    SHA512 80aa3e0e53f3de21b8dcb4f02765f59ff58fc8c1b9e21beb09de26a3dd07fc4d6a3bc9fe78fb1c6cc633caabb1dd088f220d077b4a3a0d534cb1d243959c5a08
+    REPO commschamp/comms
+    REF v4.0
+    SHA512 ec83bef647dd6c32e6ba98ce51970c48befaa2b0ff9c26f538fb0ce72e46da14cd592a0c652af5f9f10906f7058ff623dcf13ac4b81c96c0aea1fd8a31551bb7
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCC_COMMS_LIB_ONLY=ON
-        -DCC_NO_UNIT_TESTS=ON
+        -DCC_COMMS_BUILD_UNIT_TESTS=OFF
+        -DBUILD_TESTING=OFF
+        -DCC_WARN_AS_ERR=OFF
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/LibComms/cmake TARGET_PATH share/LibComms)
-# currently this is only a header only library. after moving lib/LibComms to share this lib path will be empty
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME LibComms CONFIG_PATH lib/LibComms/cmake)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

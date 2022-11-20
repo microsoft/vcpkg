@@ -1,26 +1,25 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "osx" "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO marzer/tomlplusplus
-    REF v2.3.0
-    SHA512 3a6328f71953baca25cb29bb493605e964496d1bc39961679cd97f72feecad63a21d6ebd9fe51b6e1b9b185a35581cb3fb199f6b0cc643b5b782bdd85249b79e
+    REF v3.1.0
+    SHA512 b5223fa978b606f6b14fa74495884ccd491fa6017ef44b2ac9a384fa1df7100745145163e2a139255927fb51e5ecd779ee2643c19579eab6e4533b15e75c9be9
     HEAD_REF master
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -Dgenerate_cmake_config=true
         -Dbuild_tests=false
         -Dbuild_examples=false
 )
 
 vcpkg_install_meson()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/tomlplusplus)
+cmake_path(NATIVE_PATH SOURCE_PATH native_source_path)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tomlplusplus/tomlplusplusConfig.cmake" "${native_source_path}" "")
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug"
-                    "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

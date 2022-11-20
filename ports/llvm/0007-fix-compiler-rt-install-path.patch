@@ -1,0 +1,44 @@
+ clang/lib/Headers/CMakeLists.txt       | 2 +-
+ clang/runtime/CMakeLists.txt           | 2 +-
+ compiler-rt/cmake/base-config-ix.cmake | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/clang/lib/Headers/CMakeLists.txt b/clang/lib/Headers/CMakeLists.txt
+index 078988980c52..795f495b32d6 100644
+--- a/clang/lib/Headers/CMakeLists.txt
++++ b/clang/lib/Headers/CMakeLists.txt
+@@ -234,7 +234,7 @@ set_target_properties(clang-resource-headers PROPERTIES
+   FOLDER "Misc"
+   RUNTIME_OUTPUT_DIRECTORY "${output_dir}")
+ 
+-set(header_install_dir lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION}/include)
++set(header_install_dir tools/llvm/lib/clang/${CLANG_VERSION}/include)
+ 
+ install(
+   FILES ${files} ${generated_files}
+diff --git a/clang/runtime/CMakeLists.txt b/clang/runtime/CMakeLists.txt
+index ca7e17927ee1..87d4282b36ad 100644
+--- a/clang/runtime/CMakeLists.txt
++++ b/clang/runtime/CMakeLists.txt
+@@ -84,7 +84,7 @@ if(LLVM_BUILD_EXTERNAL_COMPILER_RT AND EXISTS ${COMPILER_RT_SRC_ROOT}/)
+                -DLLVM_LIT_ARGS=${LLVM_LIT_ARGS}
+                -DCOMPILER_RT_OUTPUT_DIR=${LLVM_LIBRARY_OUTPUT_INTDIR}/clang/${CLANG_VERSION}
+                -DCOMPILER_RT_EXEC_OUTPUT_DIR=${LLVM_RUNTIME_OUTPUT_INTDIR}
+-               -DCOMPILER_RT_INSTALL_PATH:PATH=lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION}
++               -DCOMPILER_RT_INSTALL_PATH:PATH=tools/llvm/lib/clang/${CLANG_VERSION}
+                -DCOMPILER_RT_INCLUDE_TESTS=${LLVM_INCLUDE_TESTS}
+                -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+                -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX}
+diff --git a/compiler-rt/cmake/base-config-ix.cmake b/compiler-rt/cmake/base-config-ix.cmake
+index d7b0124f3546..55e515cb1c7a 100644
+--- a/compiler-rt/cmake/base-config-ix.cmake
++++ b/compiler-rt/cmake/base-config-ix.cmake
+@@ -44,7 +44,7 @@ if (LLVM_TREE_AVAILABLE)
+   # Setup the paths where compiler-rt runtimes and headers should be stored.
+   set(COMPILER_RT_OUTPUT_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/clang/${CLANG_VERSION})
+   set(COMPILER_RT_EXEC_OUTPUT_DIR ${LLVM_RUNTIME_OUTPUT_INTDIR})
+-  set(COMPILER_RT_INSTALL_PATH lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION})
++  set(COMPILER_RT_INSTALL_PATH tools/llvm/lib/clang/${CLANG_VERSION})
+   option(COMPILER_RT_INCLUDE_TESTS "Generate and build compiler-rt unit tests."
+          ${LLVM_INCLUDE_TESTS})
+   option(COMPILER_RT_ENABLE_WERROR "Fail and stop if warning is triggered"

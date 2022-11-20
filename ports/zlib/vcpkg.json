@@ -1,0 +1,14 @@
+{
+  "name": "zlib",
+  "version": "1.2.12",
+  "port-version": 1,
+  "description": "A compression library",
+  "homepage": "https://www.zlib.net/",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "name": "poco",
+  "version": "1.11.2",
+  "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
+  "homepage": "https://github.com/pocoproject/poco",
+  "license": "BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "expat",
+    "pcre",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "mariadb": {
+      "description": "MariaDB support for POCO",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "mysql": {
+      "description": "Mysql support for POCO",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "netssl": {
+      "description": "NetSSL support for POCO",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "pdf": {
+      "description": "Haru support for POCO",
+      "dependencies": [
+        "libharu"
+      ]
+    },
+    "postgresql": {
+      "description": "PostgreSQL support for POCO",
+      "dependencies": [
+        "libpqxx"
+      ]
+    },
+    "sqlite3": {
+      "description": "Sqlite3 support for POCO",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

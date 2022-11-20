@@ -1,7 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ampl/mp
@@ -16,12 +14,11 @@ vcpkg_from_github(
         install-targets.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS AND (TRIPLET_SYSTEM_ARCH STREQUAL "arm" OR TRIPLET_SYSTEM_ARCH STREQUAL "arm64"))
-    set(EXPECTED_EXE ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT}/gen-expr-info.exe)
-    if (NOT EXISTS ${EXPECTED_EXE})
-        message(FATAL_ERROR "Please install ${PORT}:x86-windows first.")
+if (NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    set(ARITHCHK_EXEC ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/gen-expr-info${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    if (NOT EXISTS "${ARITHCHK_EXEC}")
+        message(FATAL_ERROR "Expected ${ARITHCHK_EXEC} to exist.")
     endif()
-    set(ARITHCHK_EXEC ${EXPECTED_EXE})
 endif()
 
 vcpkg_configure_cmake(

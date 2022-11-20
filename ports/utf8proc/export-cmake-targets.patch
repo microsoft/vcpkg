@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index edf1d80..bf9d982 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,7 +26,7 @@ add_library (utf8proc
+ )
+ 
+ # expose header path, for when this is part of a larger cmake project
+-target_include_directories(utf8proc PUBLIC .)
++target_include_directories(utf8proc PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+ 
+ if (BUILD_SHARED_LIBS)
+   # Building shared library
+@@ -57,10 +57,12 @@ if (UTF8PROC_INSTALL)
+   include(GNUInstallDirs)
+   install(FILES utf8proc.h DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+   install(TARGETS utf8proc
++    EXPORT unofficial-utf8proc-config
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}"
+   )
++  install(EXPORT unofficial-utf8proc-config DESTINATION share/unofficial-utf8proc)
+   configure_file(libutf8proc.pc.cmakein libutf8proc.pc @ONLY)
+   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libutf8proc.pc" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")
+ endif()

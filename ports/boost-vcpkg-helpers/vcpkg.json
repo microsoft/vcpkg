@@ -1,8 +1,8 @@
 {
   "name": "boost-vcpkg-helpers",
-  "version-string": "7",
-  "port-version": 2,
-  "description": "a set of vcpkg-internal scripts used to modularize boost",
+  "version": "1.80.0",
+  "description": "Internal vcpkg port used to modularize Boost",
+  "license": "MIT",
   "dependencies": [
     "boost-uninstall"
   ]

@@ -1,0 +1,19 @@
+{
+  "name": "quill",
+  "version": "2.1.0",
+  "description": "C++14 Asynchronous Low Latency Logging Library",
+  "homepage": "https://github.com/odygrd/quill/",
+  "license": "MIT",
+  "supports": "!(uwp | android)",
+  "dependencies": [
+    "fmt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

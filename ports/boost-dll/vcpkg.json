@@ -1,8 +1,9 @@
 {
   "name": "boost-dll",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost dll module",
   "homepage": "https://github.com/boostorg/dll",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",
@@ -12,7 +13,6 @@
       "platform": "!uwp"
     },
     "boost-function",
-    "boost-integer",
     "boost-move",
     "boost-predef",
     "boost-smart-ptr",

@@ -1,8 +1,20 @@
 {
   "name": "imgui",
-  "version": "1.82",
+  "version": "1.88",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "allegro5-binding": {
       "description": "Make available Allegro5 binding",
@@ -14,16 +26,20 @@
       "description": "Build with docking support"
     },
     "dx10-binding": {
-      "description": "Make available DirectX10 binding"
+      "description": "Make available DirectX10 binding",
+      "supports": "windows & !uwp"
     },
     "dx11-binding": {
-      "description": "Make available DirectX11 binding"
+      "description": "Make available DirectX11 binding",
+      "supports": "windows & !uwp"
     },
     "dx12-binding": {
-      "description": "Make available DirectX12 binding"
+      "description": "Make available DirectX12 binding",
+      "supports": "!x86 & windows & !uwp"
     },
     "dx9-binding": {
-      "description": "Make available DirectX9 binding"
+      "description": "Make available DirectX9 binding",
+      "supports": "windows & !uwp"
     },
     "freetype": {
       "description": "Build font atlases using FreeType instead of stb_truetype",
@@ -46,44 +62,28 @@
     "libigl-imgui": {
       "description": "Install the libigl-imgui headers"
     },
-    "marmalade-binding": {
-      "description": "Make available Marmalade binding"
-    },
     "metal-binding": {
-      "description": "Make available Metal binding"
+      "description": "Make available Metal binding",
+      "supports": "osx"
     },
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding"
     },
-    "opengl3-gl3w-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with gl3w",
-      "dependencies": [
-        "gl3w"
-      ]
-    },
-    "opengl3-glad-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with glad",
-      "dependencies": [
-        "glad"
-      ]
-    },
-    "opengl3-glbinding-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding glbinding",
-      "dependencies": [
-        "glbinding"
-      ]
-    },
-    "opengl3-glew-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with GLEW",
-      "dependencies": [
-        "glew"
-      ]
+    "opengl3-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding"
     },
     "osx-binding": {
-      "description": "Make available OSX binding"
+      "description": "Make available OSX binding",
+      "supports": "osx"
     },
     "sdl2-binding": {
       "description": "Make available SDL2 binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sdl2-renderer-binding": {
+      "description": "Make available SDL2 Renderer binding",
       "dependencies": [
         "sdl2"
       ]

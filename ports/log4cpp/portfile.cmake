@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orocos-toolchain/log4cpp
@@ -20,8 +18,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pkgconfig TARGET_PATH share/${PORT})
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

@@ -1,0 +1,6 @@
+{
+  "name": "sparsepp",
+  "version-string": "1.22",
+  "port-version": 2,
+  "description": "A fast, memory efficient hash map for C++"
+}

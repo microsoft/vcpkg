@@ -1,4 +1,0 @@
-Source: spdk-ipsec
-Version: 20180711
-Description: SPDK mirror of ipsec. Intel(R) Multi-Buffer Crypto for IPsec Library
-Supports: x64 & linux

@@ -1,5 +1,0 @@
-Source: metis
-Version: 5.1.0
-Port-Version: 7
-Homepage: https://glaros.dtc.umn.edu/gkhome/metis/metis/overview
-Description: Serial Graph Partitioning and Fill-reducing Matrix Ordering

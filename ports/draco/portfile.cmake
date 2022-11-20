@@ -3,39 +3,36 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 83b0922745981a35be16e2907bdbb749ebf2bf43 # 1.3.6
-    SHA512 29b270d749c5c0efcf791aaae7e33e2ae4404103ad8849d73aaca71492a3780d2fcaec01ec225da886bce2ab20ec14b8cf2d9e0976810cdaee557f97b3b0d9b8
+    REF bd1e8de7dd0596c2cbe5929cbe1f5d2257cd33db #v1.5.2
+    SHA512 6ae7e72a9f6f55563f8f612084d38bff1d2e10934fa84aad59538d323e59d205764ed364c753a55d80e9ffc7c17f542f6475b3f922edcb9085cbd83a942759d0
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
-		fix-uwperror.patch
+        fix-uwperror.patch
+        disable-symlinks.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/draco/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake)
+vcpkg_fixup_pkgconfig()
 
 # Install tools and plugins
-file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
-if(TOOLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/draco)
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/draco)
-endif()
+vcpkg_copy_tools(
+    TOOL_NAMES
+        draco_encoder
+        draco_decoder
+    AUTO_CLEAN
+)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/draco)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/draco)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

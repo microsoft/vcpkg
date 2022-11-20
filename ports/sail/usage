@@ -7,5 +7,5 @@ C libraries:
 
 C++ bindings:
 
-    find_package(Sail CONFIG REQUIRED)
+    find_package(SailC++ CONFIG REQUIRED)
     target_link_libraries(main PRIVATE SAIL::sail-c++)

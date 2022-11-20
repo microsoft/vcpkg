@@ -1,0 +1,7 @@
+{
+  "name": "chmlib",
+  "version-string": "0.40",
+  "port-version": 5,
+  "description": "CHMLIB is a library for dealing with Microsoft ITSS/CHM format files. Right now, it is a very simple library, but sufficient for dealing with all of the .chm files I've come across. Due to the fairly well-designed indexing built into this particular file format, even a small library is able to gain reasonably good performance indexing into ITSS archives.",
+  "homepage": "https://www.jedrea.com/chmlib/"
+}

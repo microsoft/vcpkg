@@ -1,0 +1,7 @@
+{
+  "name": "spdk-dpdk",
+  "version-string": "20181124",
+  "port-version": 1,
+  "description": "SPDK mirror of DPDK. A set of libraries and drivers for fast packet processing",
+  "supports": "linux"
+}

@@ -1,0 +1,19 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2539607..eceb5a0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -355,9 +355,12 @@ target_include_directories(libssh2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+ # Daniel's note: this should not be necessary and we need to work to
+ # get this removed.
+ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR ${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+-  target_compile_definitions(libssh2 PRIVATE LIBSSH2_WIN32)
++  target_compile_definitions(libssh2 PUBLIC LIBSSH2_WIN32)
++  if (BUILD_SHARED_LIBS)
++    target_compile_definitions(libssh2 PUBLIC _WINDLL PRIVATE LIBSSH2_LIBRARY)
++  endif()
+ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+-  target_compile_definitions(libssh2 PRIVATE LIBSSH2_DARWIN)
++  target_compile_definitions(libssh2 PUBLIC LIBSSH2_DARWIN)
+ endif()
+ 
+ if(MSVC)

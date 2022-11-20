@@ -1,0 +1,29 @@
+{
+  "name": "fontconfig",
+  "version": "2.14.0",
+  "port-version": 4,
+  "description": "Library for configuring and customizing font access.",
+  "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
+  "license": "MIT",
+  "dependencies": [
+    "dirent",
+    "expat",
+    "freetype",
+    "getopt",
+    "gettext",
+    {
+      "name": "gperf",
+      "host": true
+    },
+    "libiconv",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !osx & !mingw"
+    },
+    "pthread",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

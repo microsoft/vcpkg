@@ -1,0 +1,59 @@
+{
+  "name": "libgd",
+  "version-semver": "2.3.3",
+  "description": "Open source code library for the dynamic creation of images by programmers.",
+  "homepage": "https://github.com/libgd/libgd",
+  "license": "GD",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "fontconfig",
+    "freetype",
+    "jpeg",
+    "png",
+    "tiff",
+    "webp"
+  ],
+  "features": {
+    "fontconfig": {
+      "description": "Support for fontconfig",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "Support for freetype",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "jpeg": {
+      "description": "Support for jpeg",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "png": {
+      "description": "Support for png",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "tiff": {
+      "description": "Support for tiff",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "webp": {
+      "description": "Support for webp",
+      "dependencies": [
+        "libwebp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "qt5-charts",
+  "version": "5.15.6",
+  "description": "Qt5 Charts Module - UI components for displaying charts, driven by static or dynamic data models",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-multimedia"
+  ]
+}

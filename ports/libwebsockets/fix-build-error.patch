@@ -19,7 +19,7 @@ index 1e737e5..75534c1 100644
  	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
  	# Fail the build if any warnings
 -	add_compile_options(/W3 /WX)
-+	add_compile_options(/W3 /WX /wd4142 /wd4267)
++	add_compile_options(/W3 /WX /wd4142 /wd4267 /wd4996)
  endif(MSVC)
  
  if (MINGW)

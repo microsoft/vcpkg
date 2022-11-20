@@ -1,0 +1,14 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO vector-of-bool/cmrc
+  REF a64bea50c05594c8e7cf1f08e441bb9507742e2e
+  SHA512 134c358143bd43d38802c5b00b3f5cd6a0e4c7918659dd4cc6726a15048e11376e915889788d0dd6bbfe4c4057e18c9b5306c4e785ad16cb0f4cd1c5c4634f80
+  HEAD_REF master
+)
+
+file(INSTALL "${SOURCE_PATH}/CMakeRC.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME cmakerc-config.cmake)
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,33 @@
+{
+  "name": "glib",
+  "version": "2.72.3",
+  "port-version": 3,
+  "description": "Portable, general-purpose utility library.",
+  "homepage": "https://developer.gnome.org/glib/",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp",
+  "dependencies": [
+    "dirent",
+    "gettext",
+    "libffi",
+    "libiconv",
+    "pcre",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "libmount": {
+      "description": "Build with libmount support.",
+      "supports": "linux",
+      "dependencies": [
+        "libmount"
+      ]
+    },
+    "selinux": {
+      "description": "Build with selinux support."
+    }
+  }
+}

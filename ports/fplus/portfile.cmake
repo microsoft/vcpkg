@@ -1,20 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dobiasd/FunctionalPlus
-    REF 916abce0787da6c6c373d06c453a2cd684594dc2 #v0.2.13-p0
-    SHA512 40aa090fc96794e1255416fba84b4afae6b52fe66dc9b810d863da78f387238054e743ba775921b1387b10b00ce6d1500df97806018181f26fcbc925758ef0f6
+    REF v0.2.18-p0
+    SHA512 119aaef75020ef06818bf5d33db8bce272e89d69699df9be636bc6fdf06b584e1842440896a431ea2a75b88ce01472f3a9886b8dd781f5e5533315e9ad6860ac
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    -DFPLUS_BUILD_EXAMPLES=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DFunctionalPlus_INSTALL_CMAKEDIR=share/FunctionalPlus
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY) 
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

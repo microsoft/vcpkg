@@ -1,0 +1,22 @@
+{
+  "name": "antlr4",
+  "version": "4.10.1",
+  "description": "ANother Tool for Language Recognition",
+  "homepage": "https://www.antlr.org",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libuuid",
+      "platform": "!uwp & !windows & !osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "sentencepiece",
+  "version": "0.1.96",
+  "port-version": 1,
+  "description": "SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems where the vocabulary size is predetermined prior to the neural model training",
+  "supports": "!((windows | uwp) & !static)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

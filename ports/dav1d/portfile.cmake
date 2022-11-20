@@ -1,13 +1,9 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "x86" ON_TARGET "uwp")
-
 vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
-    REF 0.8.1
-    SHA512 dd40b82b65e4be37a27ab11e7116f7a244b0da4469915ead3922ac31724fb6da3910a78629a32a669031fe08d4323ab135174afb7462f6ea4adf96c111841c1c
-    PATCHES
-        "patch_underscore_prefix.patch"
+    REF 99172b11470776177939c3d2bc366fe8d904eab7  #v1.0.0
+    SHA512 8ab32d7f1e7ec0fb2aae9ae19e199f7a6b17f88af2287c13a9ca577f80f02351e601fb6c6f03c9505d6cecd047b823007ffef83a5ca3703e4d2a4dd5ff6d5d3b
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -20,7 +16,7 @@ if (LIBRARY_TYPE STREQUAL "dynamic")
 endif(LIBRARY_TYPE STREQUAL "dynamic")
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --default-library=${LIBRARY_TYPE}
         -Denable_tests=false
@@ -29,5 +25,6 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

@@ -1,7 +1,0 @@
-Source: atk
-Version: 2.24.0-5
-Port-Version: 2
-Homepage: https://developer.gnome.org/atk/
-Description: GNOME Accessibility Toolkit
-Build-Depends: glib, gettext
-Supports: !(osx|arm)

@@ -1,0 +1,17 @@
+{
+  "name": "glew",
+  "version-string": "2.2.0",
+  "description": "The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library.",
+  "homepage": "https://github.com/nigels-com/glew",
+  "dependencies": [
+    "opengl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

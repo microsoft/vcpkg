@@ -13,24 +13,24 @@ vcpkg_from_sourceforge(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
-	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-		set(platform "ARM64")
-		set(machine "ARM64")
-	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-		set(platform "ARM")
-		set(machine "ARM")
-	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-		set(platform "x64")
-		set(machine "x64")
-	else()
-		set(platform "Win32")
-		set(machine "x86")
-	endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(platform "ARM64")
+        set(machine "ARM64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(platform "ARM")
+        set(machine "ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(platform "x64")
+        set(machine "x64")
+    else()
+        set(platform "Win32")
+        set(machine "x86")
+    endif()
 
-	file(READ "${SOURCE_PATH}/vc_solution/vc11_lame.sln" sln_con)
-	string(REPLACE "|Win32" "|${platform}" sln_con "${sln_con}")
-	string(REPLACE "\"vc11_" "\"${machine}_vc11_" sln_con "${sln_con}")
-	file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_vc11_lame.sln" "${sln_con}")
+    file(READ "${SOURCE_PATH}/vc_solution/vc11_lame.sln" sln_con)
+    string(REPLACE "|Win32" "|${platform}" sln_con "${sln_con}")
+    string(REPLACE "\"vc11_" "\"${machine}_vc11_" sln_con "${sln_con}")
+    file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_vc11_lame.sln" "${sln_con}")
 
     
     file(GLOB vcxprojs RELATIVE "${SOURCE_PATH}/vc_solution" "${SOURCE_PATH}/vc_solution/vc11_*.vcxproj")
@@ -41,10 +41,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
         endif()
 
-		string(REPLACE "/machine:x86" "/machine:${machine}" vcxproj_con "${vcxproj_con}")
-		string(REPLACE "<Platform>Win32</Platform>" "<Platform>${platform}</Platform>" vcxproj_con "${vcxproj_con}")
-		string(REPLACE "|Win32" "|${platform}" vcxproj_con "${vcxproj_con}")
-		string(REPLACE "Include=\"vc11_" "Include=\"${machine}_vc11_" vcxproj_con "${vcxproj_con}")
+        string(REPLACE "/machine:x86" "/machine:${machine}" vcxproj_con "${vcxproj_con}")
+        string(REPLACE "<Platform>Win32</Platform>" "<Platform>${platform}</Platform>" vcxproj_con "${vcxproj_con}")
+        string(REPLACE "|Win32" "|${platform}" vcxproj_con "${vcxproj_con}")
+        string(REPLACE "Include=\"vc11_" "Include=\"${machine}_vc11_" vcxproj_con "${vcxproj_con}")
  
         if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
             string(REPLACE "/APPCONTAINER" "" vcxproj_con "${vcxproj_con}")
@@ -54,7 +54,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endforeach()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
         TARGET "lame"
         PLATFORM "${platform}"
@@ -62,22 +62,22 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libmp3lame.lib)
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libmp3lame.lib")
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libmp3lame.lib)
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libmp3lame.lib")
         endif()
         set(MP3LAME_LIB "libmp3lame-static.lib")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libmp3lame-static.lib)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libmpghip-static.lib)
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libmp3lame-static.lib")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libmpghip-static.lib")
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libmp3lame-static.lib)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libmpghip-static.lib)
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libmp3lame-static.lib")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libmpghip-static.lib")
         endif()
         set(MP3LAME_LIB "libmp3lame.lib")
     endif()
@@ -101,20 +101,21 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         OPTIONS ${OPTIONS}
     )
 
     vcpkg_install_make()
     file(REMOVE_RECURSE
-            ${CURRENT_PACKAGES_DIR}/debug/include 
-            ${CURRENT_PACKAGES_DIR}/debug/share
+            "${CURRENT_PACKAGES_DIR}/debug/include"
+            "${CURRENT_PACKAGES_DIR}/debug/share"
         )
-
 endif()
 
-file(COPY ${SOURCE_PATH}/include/lame.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/lame)
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/mp3lame-config.cmake @ONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1")
+
+file(COPY "${SOURCE_PATH}/include/lame.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/lame")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/mp3lame-config.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

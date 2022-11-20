@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef92706..fee22e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,6 +129,9 @@ if(SIMAGE_USE_GDIPLUS)
+     }
+   " GDIPLUS_FOUND)
+   unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT GDIPLUS_FOUND)
++    message(FATAL_ERROR "GDI+ is required on Windows.")
++  endif()
+ endif()
+ if(SIMAGE_USE_AVIENC)
+   set(CMAKE_REQUIRED_LIBRARIES vfw32)
+@@ -142,6 +145,9 @@ if(SIMAGE_USE_AVIENC)
+     }
+   " VFW_FOUND)
+   unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT VFW_FOUND)
++  	message(FATAL_ERROR "Video for Windows is required on Windows.")
++  endif()
+ endif()
+ 
+ # On macOS QuickTime supports BMP, GIF, JPEG, JPEG 2000, PNG, TIFF, and TGA.
+@@ -286,7 +292,7 @@ if(SIMAGE_OGGVORBIS_SUPPORT)
+   find_package(Ogg REQUIRED)
+   find_package(Vorbis REQUIRED)
+   if(OGG_FOUND)
+-    find_package(Opus)
++    find_package(Opus REQUIRED)
+   endif()
+ endif()
+ 
+@@ -306,8 +312,8 @@ if(NOT SIMAGE_QUICKTIME_SUPPORT AND NOT SIMAGE_CGIMAGE_SUPPORT AND NOT SIMAGE_GD
+   if(SIMAGE_TIFF_SUPPORT)
+     find_package(TIFF REQUIRED)
+     if(TIFF_FOUND)
+-      find_package(LibLZMA)
+-      find_package(Zstd)
++      find_package(LibLZMA REQUIRED)
++      find_package(Zstd REQUIRED)
+     endif()
+   endif()
+ 

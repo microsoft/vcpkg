@@ -1,27 +1,23 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.3.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-postgresql
-    REF 349d610084375c46be95d50ce10b787ae6c2baf4 # 1.2.0
-    SHA512 2faa688077020bbe64807be85d8d61e5aa84163a044d42df0a3b1701cf82048ff0322acb72d4e757a38403e14cba6a7a766daa965862e04756e483d9b750a365
+    REF ${OATPP_VERSION}
+    SHA512 6926194ae7d77db2a071fcb805ce048954908cf18d59f3095e1bf779748d9e5b9ceb657d97b1fc8a6ebfcf71936b211e2b10e68a62983e847c68ab58e1f3f2ba
     HEAD_REF master
 )
 
-set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-postgresql-${OATPP_VERSION})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-postgresql CONFIG_PATH lib/cmake/oatpp-postgresql-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

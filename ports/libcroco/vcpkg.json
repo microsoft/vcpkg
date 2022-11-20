@@ -1,0 +1,10 @@
+{
+  "name": "libcroco",
+  "version": "0.6.13",
+  "port-version": 3,
+  "description": "A standalone css2 parsing and manipulation library",
+  "dependencies": [
+    "glib",
+    "libxml2"
+  ]
+}

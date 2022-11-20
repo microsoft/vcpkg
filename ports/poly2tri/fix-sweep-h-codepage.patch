@@ -1,0 +1,13 @@
+diff --git a/poly2tri/sweep/sweep.h b/poly2tri/sweep/sweep.h
+index f62c4cc..af8af69 100644
+--- a/poly2tri/sweep/sweep.h
++++ b/poly2tri/sweep/sweep.h
+@@ -33,7 +33,7 @@
+  * Zalik, B.(2008)'Sweep-line algorithm for constrained Delaunay triangulation',
+  * International Journal of Geographical Information Science
+  *
+- * "FlipScan" Constrained Edge Algorithm invented by Thomas Åhlén, thahlen@gmail.com
++ * "FlipScan" Constrained Edge Algorithm invented by Thomas, thahlen@gmail.com
+  */
+ 
+ #ifndef SWEEP_H

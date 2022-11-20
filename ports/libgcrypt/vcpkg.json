@@ -1,0 +1,10 @@
+{
+  "name": "libgcrypt",
+  "version": "1.10.1",
+  "description": "A general purpose cryptographic library",
+  "homepage": "https://gnupg.org/software/libgcrypt/index.html",
+  "supports": "linux | osx",
+  "dependencies": [
+    "libgpg-error"
+  ]
+}

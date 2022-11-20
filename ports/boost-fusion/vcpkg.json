@@ -1,13 +1,13 @@
 {
   "name": "boost-fusion",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost fusion module",
   "homepage": "https://github.com/boostorg/fusion",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-container-hash",
     "boost-core",
-    "boost-detail",
     "boost-function-types",
     "boost-mpl",
     "boost-preprocessor",

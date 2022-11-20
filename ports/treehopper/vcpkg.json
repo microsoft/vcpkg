@@ -1,0 +1,10 @@
+{
+  "name": "treehopper",
+  "version-string": "1.11.3",
+  "port-version": 5,
+  "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
+  "homepage": "https://treehopper.io",
+  "dependencies": [
+    "libusb"
+  ]
+}

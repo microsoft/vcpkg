@@ -1,0 +1,11 @@
+--- a/src/cctag/utils/Exceptions.hpp
++++ b/src/cctag/utils/Exceptions.hpp
+@@ -7,7 +7,7 @@
+  */
+ #ifndef _CCTAG_EXCEPTIONS_HPP_
+ #define _CCTAG_EXCEPTIONS_HPP_
+-
++#define _GNU_SOURCE
+ #include <boost/exception/diagnostic_information.hpp>
+ #include <boost/exception/errinfo_file_name.hpp>
+ #include <boost/exception/exception.hpp>

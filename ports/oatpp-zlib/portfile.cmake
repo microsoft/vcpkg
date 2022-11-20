@@ -1,27 +1,23 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.3.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-zlib
-    REF b3a0c1d140175d8ec43ebbe1da9ac46e2baa142c # 1.2.0
-    SHA512 a6a012ad5294f994a5a65a57ccfd8b9af77515d0c203d04193a2202996b3a831f314c0847a3f5ebc1867835fbd0c438284142c070998ed26881fdc1110a3c5ad
+    REF ${OATPP_VERSION}
+    SHA512 574f0440cbb2cd2bc14ad89e33538a1a300ad23ecc941629b74aa8ccb9aeae5158b1b57e2f1af09d7a6b9b97430a5685354677002dab2261120afa9c6ea74381
     HEAD_REF master
 )
 
-set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-zlib-${OATPP_VERSION})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-zlib CONFIG_PATH lib/cmake/oatpp-zlib-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,25 +1,21 @@
 {
   "name": "boost-unordered",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
-    "boost-container",
     "boost-container-hash",
     "boost-core",
-    "boost-detail",
-    "boost-functional",
     "boost-move",
+    "boost-mp11",
     "boost-predef",
     "boost-preprocessor",
-    "boost-smart-ptr",
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -1,5 +1,0 @@
-Source: mp-units
-Version: 0.6.0
-Homepage: https://github.com/mpusz/units
-Description: mp-units - A Units Library for C++
-Build-Depends: fmt, ms-gsl

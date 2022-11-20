@@ -1,0 +1,29 @@
+{
+  "name": "kf5i18n",
+  "version": "5.89.0",
+  "port-version": 1,
+  "description": "Advanced internationalization framework",
+  "homepage": "https://api.kde.org/frameworks/ki18n/html/index.html",
+  "dependencies": [
+    "ecm",
+    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "libiconv",
+    "qt5-declarative",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

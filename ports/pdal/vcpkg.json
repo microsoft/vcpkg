@@ -1,0 +1,106 @@
+{
+  "name": "pdal",
+  "version": "2.4.3",
+  "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
+  "homepage": "https://pdal.io/",
+  "license": null,
+  "supports": "!(windows & staticcrt)",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    },
+    {
+      "name": "gdal",
+      "default-features": false
+    },
+    "libgeotiff",
+    "libxml2",
+    "nanoflann",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "supported-plugins"
+  ],
+  "features": {
+    "draco": {
+      "description": "Build the Draco plugin",
+      "dependencies": [
+        "draco"
+      ]
+    },
+    "e57": {
+      "description": "Build the E57 plugin",
+      "dependencies": [
+        "xerces-c"
+      ]
+    },
+    "hdf": {
+      "description": "Build the HDF plugin",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
+      ]
+    },
+    "i3s": {
+      "description": "Build the SLPK/I3S plugins",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "laszip": {
+      "description": "Obsolete. PDAL includes LAZperf."
+    },
+    "liblzma": {
+      "description": "Support for compression/decompression with LZMA",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "pgpointcloud": {
+      "description": "Build the PgPointCloud plugin",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "supported-plugins": {
+      "description": "Default set of plugins, dependent on platform",
+      "dependencies": [
+        {
+          "name": "pdal",
+          "default-features": false,
+          "features": [
+            "draco",
+            "e57",
+            "i3s"
+          ]
+        },
+        {
+          "name": "pdal",
+          "default-features": false,
+          "features": [
+            "hdf",
+            "pgpointcloud"
+          ],
+          "platform": "!uwp"
+        }
+      ]
+    },
+    "zstd": {
+      "description": "Support for ZSTD compression/decompression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

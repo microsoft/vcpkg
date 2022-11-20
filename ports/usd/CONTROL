@@ -1,6 +1,0 @@
-Source: usd
-Version: 20.08
-Homepage: https://github.com/PixarAnimationStudios/USD
-Build-Depends: boost-assign, boost-crc, boost-date-time, boost-filesystem, boost-format, boost-multi-index, boost-program-options, boost-regex, boost-system, boost-vmd, tbb, zlib
-Description: Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.
-Supports: !x86

@@ -1,0 +1,22 @@
+{
+  "name": "luasec",
+  "version": "1.1.0",
+  "maintainers": "Stephen Baker <baker.stephen.e@gmail.com>",
+  "description": "LuaSec depends on OpenSSL, and integrates with LuaSocket to make it easy to add secure connections to any Lua applications or scripts.",
+  "homepage": "https://github.com/brunoos/luasec",
+  "license": "MIT",
+  "supports": "!(windows & static)",
+  "dependencies": [
+    "lua",
+    "luasocket",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

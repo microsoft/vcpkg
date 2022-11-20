@@ -3,13 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF f88e5824d2cfca5edc58c7c2101ec9a4ec36afac
-  SHA512 92dc287e8930db6e00bde23b770f763dc3cf8a405a37b682bbd65e1dbde1f1f5161543fcc70b09eef07a5ce8bbe8f368ef84ac75003c122f42d1f6b9eaa8bd50
+  REF 11.11.0
+  SHA512 c018271d499efff03540e4572a9c2f1f752c81c87efe7f2e63c2631ac47cecfedffdcfee68eddaf9187603eaae8ccd9a3e5640a022ba9fd7d05950f7827bf8cd
   HEAD_REF master
   PATCHES
-    CMakeLists-targets.patch
-    CMakeLists-windows.patch
+    ignore-crt.patch
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path("${PYTHON_PATH}")
 
 if(VCPKG_TARGET_IS_IOS)
   # this case will report error since all executable will require BUNDLE DESTINATION
@@ -18,28 +21,28 @@ else()
   set(BUILD_BINARIES ON)  
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DCMAKE_DEBUG_POSTFIX=d
     -DSKIP_GLSLANG_INSTALL=OFF
+    -DBUILD_EXTERNAL=OFF
     -DENABLE_GLSLANG_BINARIES=${BUILD_BINARIES}
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 
 if(NOT BUILD_BINARIES)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 else()
-  file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools)
+  vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-# Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/glslang)
+# Install custom usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

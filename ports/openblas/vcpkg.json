@@ -1,0 +1,51 @@
+{
+  "name": "openblas",
+  "version": "0.3.21",
+  "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
+  "homepage": "https://github.com/xianyi/OpenBLAS",
+  "license": "BSD-3-Clause",
+  "supports": "!(arm & uwp)",
+  "dependencies": [
+    {
+      "name": "openblas",
+      "host": true
+    },
+    {
+      "name": "pthread",
+      "platform": "!windows & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "dynamic-arch": {
+      "description": "Support for multiple targets in a single library"
+    },
+    "simplethread": {
+      "description": "Use simple thread",
+      "dependencies": [
+        {
+          "name": "openblas",
+          "features": [
+            "threads"
+          ]
+        }
+      ]
+    },
+    "threads": {
+      "description": "Use a threading backend",
+      "dependencies": [
+        {
+          "name": "pthread",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    }
+  }
+}

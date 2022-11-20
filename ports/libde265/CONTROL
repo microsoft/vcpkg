@@ -1,5 +1,0 @@
-Source: libde265
-Version: 1.0.8
-Homepage: https://www.libde265.org/
-Description: Open h.265 video codec implementation.
-Supports: !(arm|uwp)

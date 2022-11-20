@@ -103,9 +103,9 @@ install(
 
 install(TARGETS theora theoraenc theoradec
   EXPORT unofficial-theora-targets
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
-  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 install(EXPORT unofficial-theora-targets

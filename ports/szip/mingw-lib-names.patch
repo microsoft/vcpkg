@@ -1,0 +1,30 @@
+diff -urN a/config/cmake/SZIPMacros.cmake b/config/cmake/SZIPMacros.cmake
+--- a/config/cmake/SZIPMacros.cmake	2021-05-15 09:06:50.546455249 +0200
++++ b/config/cmake/SZIPMacros.cmake	2021-05-15 09:01:24.933765423 +0200
+@@ -126,7 +126,7 @@
+ macro (SZIP_SET_BASE_OPTIONS libtarget libname libtype)
+   # message (STATUS "${libname} libtype: ${libtype}")
+   if (${libtype} MATCHES "SHARED")
+-    if (WIN32)
++    if (WIN32 AND NOT MINGW)
+       set (LIB_RELEASE_NAME "${libname}")
+       set (LIB_DEBUG_NAME "${libname}_D")
+     else ()
+@@ -134,7 +134,7 @@
+       set (LIB_DEBUG_NAME "${libname}_debug")
+     endif ()
+   else ()
+-    if (WIN32)
++    if (WIN32 AND NOT MINGW)
+       set (LIB_RELEASE_NAME "lib${libname}")
+       set (LIB_DEBUG_NAME "lib${libname}_D")
+     else ()
+@@ -164,7 +164,7 @@
+   endif ()
+ 
+   #----- Use MSVC Naming conventions for Shared Libraries
+-  if (MINGW AND ${libtype} MATCHES "SHARED")
++  if (FALSE AND MINGW AND ${libtype} MATCHES "SHARED")
+     set_target_properties (${libtarget}
+         PROPERTIES
+         IMPORT_SUFFIX ".lib"

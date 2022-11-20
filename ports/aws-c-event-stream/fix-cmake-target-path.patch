@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dddcc5d..55ff45f 100644
+index daf434c..32d7851 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -92,7 +92,7 @@ else()
+@@ -91,7 +91,7 @@ else()
  endif()
  
  install(EXPORT "${PROJECT_NAME}-targets"
@@ -12,11 +12,11 @@ index dddcc5d..55ff45f 100644
      COMPONENT Development)
  
 diff --git a/cmake/aws-c-event-stream-config.cmake b/cmake/aws-c-event-stream-config.cmake
-index e881cb8..cb817e4 100644
+index 76adb84..7884368 100644
 --- a/cmake/aws-c-event-stream-config.cmake
 +++ b/cmake/aws-c-event-stream-config.cmake
 @@ -2,9 +2,5 @@ include(CMakeFindDependencyMacro)
- find_dependency(aws-c-common)
+ find_dependency(aws-c-io)
  find_dependency(aws-checksums)
  
 -if (BUILD_SHARED_LIBS)

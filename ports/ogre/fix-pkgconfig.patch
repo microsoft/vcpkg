@@ -1,0 +1,27 @@
+diff --git a/CMake/ConfigureBuild.cmake b/CMake/ConfigureBuild.cmake
+index 73606c9..4377353 100644
+--- a/CMake/ConfigureBuild.cmake
++++ b/CMake/ConfigureBuild.cmake
+@@ -175,11 +175,19 @@ if (UNIX)
+     set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lpthread")
+   endif ()
+   if (OGRE_STATIC)
+-    if (OGRE_CONFIG_THREADS)
+-      set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lboost-thread-mt")
++    if (OGRE_CONFIG_THREADS AND OGRE_CONFIG_THREAD_PROVIDER STREQUAL "boost")
++      if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++      set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} ${Boost_THREAD_LIBRARY_DEBUG}")
++      else()
++      set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} ${Boost_THREAD_LIBRARY_RELEASE}")
++      endif()
+     endif ()
+     # there is no pkgconfig file for freeimage, so we need to add that lib manually
+-    set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lfreeimage")
++    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} ${FreeImage_LIBRARY_DBG}")
++    else()
++    set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} ${FreeImage_LIBRARY_REL}")
++    endif()
+     configure_file(${OGRE_TEMPLATES_DIR}/OGREStatic.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE.pc @ONLY)
+   else ()
+     configure_file(${OGRE_TEMPLATES_DIR}/OGRE.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE.pc @ONLY)

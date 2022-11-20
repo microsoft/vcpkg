@@ -1,31 +1,29 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-set(LIBXMLPP_VERSION 2.40.1)
+#..\src\libxml++-5-7c4d4a4cea.clean\meson.build:278:4: ERROR: Problem encountered: Static builds are not supported by MSVC-style builds
+set(LIBXMLPP_VERSION 5.0.0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/libxml++/2.40/libxml++-${LIBXMLPP_VERSION}.tar.xz"
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/libxml++/5.0/libxml++-${LIBXMLPP_VERSION}.tar.xz"
     FILENAME "libxml++-${LIBXMLPP_VERSION}.tar.xz"
-    SHA512 a4ec2e8182d981c57bdcb8f0a203a3161f8c735ceb59fd212408b7a539d1dc826adf6717bed8f4d544ab08afd9c2fc861efe518e24bbd3a1c4b158e2ca48183a
+    SHA512 ae8d7a178e7a3b48a9f0e1ea303e8a4e4d879d0d9367124ede3783d0c31e31c862b98e5d28d72edc4c0b19c6b457ead2d25664efd33d65e44fd52c5783ec3091
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        fixAutoPtrExpired.patch
+    ARCHIVE "${ARCHIVE}"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+        -Dbuild-documentation=false
+        -Dvalidation=false # Validate the tutorial XML file
+        -Dbuild-examples=false
+        -Dbuild-tests=false
+        -Dmsvc14x-parallel-installable=false # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
+        -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
 )
-
-vcpkg_install_cmake()
-
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Handle copyright and readme

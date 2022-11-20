@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 119855a..945085a 100644
+index ec782239..f163b64d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -155,7 +155,7 @@ set(FlatBuffers_GRPCTest_SRCS
+@@ -216,7 +216,7 @@ set(FlatBuffers_GRPCTest_SRCS
  # source_group(Compiler FILES ${FlatBuffers_Compiler_SRCS})
  # source_group(Tests FILES ${FlatBuffers_Tests_SRCS})
  

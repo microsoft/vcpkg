@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3363305..8516539 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -739,10 +739,13 @@ IF(ANDROID)
+ ELSE()
+ # Common to all platforms except android:
+     FIND_PACKAGE(Freetype)
+-    FIND_PACKAGE(ilmbase)
+     FIND_PACKAGE(Inventor)
+     FIND_PACKAGE(Jasper)
+-    FIND_PACKAGE(OpenEXR)
++    FIND_PACKAGE(OpenEXR CONFIG)
++    set(OPENEXR_LIBRARY OpenEXR::IlmImf)
++    set(OPENEXR_LIBRARIES_VARS OPENEXR_LIBRARY)
++    set(OPENEXR_INCLUDE_DIR "${OpenEXR_DIR}/../../include")
++    set(ILMBASE_INCLUDE_DIR "${OpenEXR_DIR}/../../include")
+     FIND_PACKAGE(OpenCascade)
+     FIND_PACKAGE(COLLADA)
+     FIND_PACKAGE(FBX)

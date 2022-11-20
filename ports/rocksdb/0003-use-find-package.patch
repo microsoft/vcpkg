@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6761929..6f74d31 100644
+index 526dfcf60..241f706b7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -91,7 +91,7 @@ include(CMakeDependentOption)
- CMAKE_DEPENDENT_OPTION(WITH_GFLAGS "build with GFlags" ON
-   "NOT MSVC;NOT MINGW" OFF)
+@@ -97,7 +97,7 @@ endif()
+ 
+ include(CMakeDependentOption)
  
 -if(MSVC)
 +if(MSVC AND NOT VCPKG_TOOLCHAIN)
+   option(WITH_GFLAGS "build with GFlags" OFF)
    option(WITH_XPRESS "build with windows built in compression" OFF)
    include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
- else()
-@@ -130,10 +130,7 @@ else()
+@@ -142,10 +142,7 @@ else()
    endif()
  
    if(WITH_SNAPPY)
@@ -23,7 +23,7 @@ index 6761929..6f74d31 100644
      add_definitions(-DSNAPPY)
      list(APPEND THIRDPARTY_LIBS Snappy::snappy)
    endif()
-@@ -157,16 +154,19 @@ else()
+@@ -169,16 +166,19 @@ else()
    endif()
  
    if(WITH_LZ4)
@@ -40,14 +40,14 @@ index 6761929..6f74d31 100644
 -    include_directories(${ZSTD_INCLUDE_DIR})
 -    list(APPEND THIRDPARTY_LIBS zstd::zstd)
 +    if(TARGET zstd::libzstd_shared)
-+    list(APPEND THIRDPARTY_LIBS zstd::libzstd_shared)
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_shared)
 +    elseif(TARGET zstd::libzstd_static)
-+    list(APPEND THIRDPARTY_LIBS zstd::libzstd_static)   
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_static)
 +    endif()
    endif()
  endif()
  
-@@ -375,9 +375,9 @@ endif()
+@@ -438,9 +438,9 @@ endif()
  
  option(WITH_TBB "build with Threading Building Blocks (TBB)" OFF)
  if(WITH_TBB)

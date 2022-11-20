@@ -1,0 +1,83 @@
+{
+  "name": "qttools",
+  "version": "6.3.2",
+  "description": "Qt Tools",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "assistant",
+        "linguist"
+      ]
+    }
+  ],
+  "features": {
+    "assistant": {
+      "description": "Build Qt Assistant",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "sql-sqlite"
+          ]
+        }
+      ]
+    },
+    "designer": {
+      "description": "Build Qt Designer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    },
+    "linguist": {
+      "description": "Build Qt Linguist components",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "qdoc": {
+      "description": "Build QDoc.",
+      "dependencies": [
+        "llvm"
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

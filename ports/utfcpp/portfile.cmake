@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
-    REF v3.1.2
-    SHA512 d43df19d9e8652291f1301a326ec0d592bad43d6ecf9086947037f0ae0c1e70c2d96082c48066639e2b7c57c0ea0e4782d6b215d017cf96a4c73ff3a15feec75
+    REF v3.2.1
+    SHA512 5798487f12b1bc55d3e06aed38f7604271ca3402963efcf85d181fd590d8a088d21e961e77698e60dc2cdae8cf4506645903442c45fd328201752d9589180e0d
     HEAD_REF master
-    PATCHES fix-test.patch
 )
 
 vcpkg_configure_cmake(

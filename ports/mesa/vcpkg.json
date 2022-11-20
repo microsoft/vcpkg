@@ -1,0 +1,135 @@
+{
+  "name": "mesa",
+  "version": "22.1.7",
+  "description": "Mesa - The 3D Graphics Library",
+  "homepage": "https://www.mesa3d.org/",
+  "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
+  "supports": "!(windows & arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform dependent default features",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "gles1"
+          ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "llvm"
+          ],
+          "platform": "x64"
+        }
+      ]
+    },
+    "egl": {
+      "description": "Build support for EGL platform",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false
+        }
+      ]
+    },
+    "gles1": {
+      "description": "Build support for OpenGL ES 1.x",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false
+        }
+      ]
+    },
+    "gles2": {
+      "description": "Build support for OpenGL ES 2.x and 3.x",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false
+        }
+      ]
+    },
+    "llvm": {
+      "description": "Build with llvmpipe",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "enable-rtti",
+            "libclc"
+          ]
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ],
+          "platform": "arm32"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64"
+          ],
+          "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-x86"
+          ],
+          "platform": "x64 | x86"
+        }
+      ]
+    },
+    "offscreen": {
+      "description": "Build with support for offscreen rendering (OSMesa)"
+    },
+    "opengl": {
+      "description": "Build support for OpenGL (all versions)",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

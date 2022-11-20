@@ -1,7 +1,7 @@
-diff --git a/src/base/PdfCompilerCompat.h b/src/base/PdfCompilerCompat.h
-index 706875f..8efb349 100644
---- a/src/base/PdfCompilerCompat.h
-+++ b/src/base/PdfCompilerCompat.h
+diff --git a/src/podofo/base/PdfCompilerCompat.h b/src/podofo/base/PdfCompilerCompat.h
+index 146731d..7041712 100644
+--- a/src/podofo/base/PdfCompilerCompat.h
++++ b/src/podofo/base/PdfCompilerCompat.h
 @@ -113,6 +113,10 @@
  #define NOMINMAX
  #endif

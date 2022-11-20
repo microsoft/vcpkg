@@ -1,33 +1,25 @@
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.10/libsigc++-2.10.0.tar.xz"
-    FILENAME "libsigc++-2.10.0.tar.xz"
-    SHA512 5b96df21d6bd6ba41520c7219e77695a86aabc60b7259262c7a9f4b8475ce0e2fd8dc37bcf7c17e24e818ff28c262d682b964c83e215b51bdbe000f3f58794ae
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libsigcplusplus/libsigcplusplus
+    REF 3.2.0
+    SHA512 95ab0acfc2c5a151335e73bdc9b0e058af67d9706d0697bfd938e38c51e853fdb29d7a26484f192abe150640c60d5e30075a23deaa043a8deed70616bc9f508a
+    HEAD_REF master
+    PATCHES 
+        disable_tests_enable_static_build.patch
+        fix-shared-windows-build.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_DEBUG
-        -DSIGCPP_SKIP_HEADERS=ON)
-
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME sigc++-3 CONFIG_PATH lib/cmake/sigc++-3)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(READ ${CURRENT_PACKAGES_DIR}/include/sigc++config.h SIGCPPCONFIG_H)
-    string(REPLACE "endif /* !SIGC_MSC */"
-    "endif /* !SIGC_MSC */
-#undef SIGC_DLL" SIGCPPCONFIG_H "${SIGCPPCONFIG_H}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sigc++config.h "${SIGCPPCONFIG_H}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/sigc++-3.0/include/sigc++config.h" "ifdef BUILD_SHARED" "if 1")
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsigcpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libsigcpp/COPYING ${CURRENT_PACKAGES_DIR}/share/libsigcpp/copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

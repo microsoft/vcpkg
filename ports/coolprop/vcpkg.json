@@ -1,0 +1,17 @@
+{
+  "name": "coolprop",
+  "version-semver": "6.4.1",
+  "port-version": 1,
+  "description": "Thermophysical properties for the masses",
+  "homepage": "https://github.com/CoolProp/CoolProp",
+  "dependencies": [
+    "catch",
+    "eigen3",
+    "fmt",
+    "if97",
+    "msgpack",
+    "pybind11",
+    "rapidjson",
+    "refprop-headers"
+  ]
+}

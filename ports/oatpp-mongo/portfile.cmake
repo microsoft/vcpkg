@@ -1,29 +1,23 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.3.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-mongo
-    REF ebfad69af3db61c3f989ec2ec30ebd582e3a4073 # 1.2.0
-    SHA512 6cba529b258b26e8456e10089a127e9ef2b4e683f9d4e37551ed71887978ba22ba796d4af6db6558e20812428dff8ba95d1de540de0675a6563ac6b941c91921
+    REF ${OATPP_VERSION}
+    SHA512 11f4164948feb63ed3f5e8554a54348e29cd4d90333761f98c37f4eb49f129c6589955755e8e052c5c29e6b2980f1bb899657415d6480c3ae7a50fc2445afbfe
     HEAD_REF master
-    PATCHES
-        no-designatore-expression.patch # https://github.com/oatpp/oatpp-mongo/pull/5
 )
 
-set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-mongo-${OATPP_VERSION})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-mongo CONFIG_PATH lib/cmake/oatpp-mongo-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,0 +1,6 @@
+{
+  "name": "qt5-modularscripts",
+  "version-string": "deprecated",
+  "port-version": 1,
+  "description": "now part of qt5-base, formerly vcpkg helpers to package qt5 modules"
+}

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64" "wasm32")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK303.zip"
     FILENAME "XPSDK303.zip"
@@ -16,7 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     file(MAKE_DIRECTORY
         ${CURRENT_PACKAGES_DIR}/lib
         ${CURRENT_PACKAGES_DIR}/debug/lib
-    )   
+    )
 endif()
 
 # copy headers & sources

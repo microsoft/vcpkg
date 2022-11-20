@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF 1.5.1.corrected
-    SHA512 92447b1b1eca6f0253265f36d67b00c0c79e93f6a707e27bd8239bd2f693c468a92b7f7c3bb3fde6bb091383baaff42d3b0bbfeb9ff5f952d8a0b9626b03848e
+    REF sdk-1.3.216.0
+    SHA512 951715cf62a643bfce6a3854f2206b95dd65e60b27355a2f290e829da0f06e19877e9dfcbf53f455b8a0524fb851a851742f3e16bb29be2f470cd62d3a8fc8f0
     HEAD_REF master
 )
 

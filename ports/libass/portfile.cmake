@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libass/libass
-    REF 0.15.0
-    SHA512 a832da5246577cf815481bb9e4bebabc74bc1d0f5c50faa098f4150a379d801d7e6d1bd7f9f578143a9412e258c5296d08c4fc2d04cc33f1751e613c2583214c
+    REF 0.16.0
+    SHA512 fea93b36d05cd69a5920b603951dd63f46b2434e0dcbb12414bf6e1e584bacc2743fbfc03682d0a672bbfe9bcc057452a942f9967d95a30e535bd3694e40fc7d
     HEAD_REF master
 )
 
@@ -15,11 +15,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 file(COPY ${SOURCE_PATH}/libass/ass.h ${SOURCE_PATH}/libass/ass_types.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ass)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA)
+)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

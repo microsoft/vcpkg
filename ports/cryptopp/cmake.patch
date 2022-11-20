@@ -1,13 +1,46 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8cf9fa2..86a756b 100644
+index fb43b95..c39e470 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -336,9 +336,13 @@ if (MSVC)
-   if (CMAKE_SYSTEM_VERSION MATCHES "10\\.0.*")
-     list(APPEND CRYPTOPP_COMPILE_DEFINITIONS "_WIN32_WINNT=0x0A00")
-   endif ()
--  list(APPEND CRYPTOPP_COMPILE_OPTIONS "/FI\"winapifamily.h\"")
-+  list(APPEND CRYPTOPP_COMPILE_OPTIONS "/FIwinapifamily.h")
+@@ -281,26 +281,6 @@ function(CheckCompileOption opt var)
+ endfunction(CheckCompileOption)
+
+ function(CheckCompileLinkOption opt var prog)
+-
+-  if (MSVC)
+-
+-    # TODO: improve this...
+-    CHECK_CXX_COMPILER_FLAG(${opt} ${var})
+-
+-  elseif (APPLE)
+-
+-    message(STATUS "Performing Test ${var}")
+-    try_compile(COMMAND_SUCCESS ${CMAKE_BINARY_DIR} ${prog} COMPILE_DEFINITIONS ${opt})
+-    if (COMMAND_SUCCESS)
+-      set(${var} 1 PARENT_SCOPE)
+-      message(STATUS "Performing Test ${var} - Success")
+-    else ()
+-      set(${var} 0 PARENT_SCOPE)
+-      message(STATUS "Performing Test ${var} - Failed")
+-    endif ()
+-
+-  else ()
+-
+     message(STATUS "Performing Test ${var}")
+     try_compile(COMMAND_SUCCESS ${CMAKE_BINARY_DIR} ${prog} COMPILE_DEFINITIONS ${opt})
+     if (COMMAND_SUCCESS)
+@@ -310,9 +290,6 @@ function(CheckCompileLinkOption opt var prog)
+       set(${var} 0 PARENT_SCOPE)
+       message(STATUS "Performing Test ${var} - Failed")
+     endif ()
+-
+-  endif ()
+-
+ endfunction(CheckCompileLinkOption)
+
+ function(AddCompileOption opt)
+@@ -451,6 +451,10 @@ if (MSVC)
+   endif()
  endif ()
  
 +if(WINDOWS_STORE)
@@ -17,3 +50,28 @@ index 8cf9fa2..86a756b 100644
  # Enable PIC for all target machines except 32-bit i386 due to register pressures.
  if (NOT CRYPTOPP_I386)
    SET(CMAKE_POSITION_INDEPENDENT_CODE 1)
+@@ -605,8 +605,8 @@ endif ()
+ # New as of Pull Request 461, http://github.com/weidai11/cryptopp/pull/461.
+ # Must use CMAKE_CXX_COMPILER here due to XLC 13.1 and LLVM front-end.
+ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel" OR CMAKE_CXX_COMPILER MATCHES "xlC")
+-
+-  if (CRYPTOPP_AMD64 OR CRYPTOPP_I386)
++  # If CMAKE_CXX_COMPILER_ID is Clang and MSVC is true then we are using clang-cl
++  if (CRYPTOPP_AMD64 OR CRYPTOPP_I386 OR MSVC)
+
+     # For Darwin and a GCC port compiler, we need to check for -Wa,-q first. -Wa,-q
+     # is a GCC option, and it tells GCC to use the Clang Integrated Assembler. We
+@@ -1022,10 +1026,10 @@ endif ()
+ # add_compile_definitions added in CMake 3.12
+ if (${CMAKE_VERSION} VERSION_LESS "3.12")
+   # https://stackoverflow.com/q/61250087
+-  add_definitions("${CMAKE_CPP_FLAGS}" "${CMAKE_CXX_FLAGS}" "${CRYPTOPP_COMPILE_DEFINITIONS}" "${CRYPTOPP_COMPILE_OPTIONS}")
++  add_definitions(${CMAKE_CPP_FLAGS} ${CRYPTOPP_COMPILE_DEFINITIONS} ${CRYPTOPP_COMPILE_OPTIONS})
+ else()
+-  add_compile_definitions("${CMAKE_CPP_FLAGS}" "${CRYPTOPP_COMPILE_DEFINITIONS}")
+-  add_compile_options("${CMAKE_CXX_FLAGS}" "${CRYPTOPP_COMPILE_OPTIONS}")
++  add_compile_definitions(${CRYPTOPP_COMPILE_DEFINITIONS})
++  add_compile_options(${CMAKE_CPP_FLAGS} ${CRYPTOPP_COMPILE_OPTIONS})
+ endif()
+ 
+ #============================================================================

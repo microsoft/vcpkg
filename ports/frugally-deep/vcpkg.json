@@ -1,0 +1,16 @@
+{
+  "name": "frugally-deep",
+  "version-semver": "0.15.10-p0",
+  "description": "Header-only library for using Keras models in C++.",
+  "homepage": "https://github.com/Dobiasd/frugally-deep",
+  "dependencies": [
+    "eigen3",
+    "fplus",
+    "nlohmann-json"
+  ],
+  "features": {
+    "double": {
+      "description": "Use double precision"
+    }
+  }
+}

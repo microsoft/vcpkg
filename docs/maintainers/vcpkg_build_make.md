@@ -7,15 +7,21 @@ Build a linux makefile project.
 ## Usage:
 ```cmake
 vcpkg_build_make([BUILD_TARGET <target>]
+                 [INSTALL_TARGET <target>]
                  [ADD_BIN_TO_PATH]
                  [ENABLE_INSTALL]
                  [MAKEFILE <makefileName>]
-                 [LOGFILE_ROOT <logfileroot>])
+                 [LOGFILE_ROOT <logfileroot>]
+                 [DISABLE_PARALLEL]
+                 [SUBPATH <path>])
 ```
 
 ### BUILD_TARGET
 The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 be passed.
+
+### INSTALL_TARGET
+The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
 
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
@@ -26,11 +32,8 @@ IF the port supports the install target use vcpkg_install_make() instead of vcpk
 ### MAKEFILE
 Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
 
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). Defaults to 'all'.
-
-### INSTALL_TARGET
-The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
+### LOGFILE_ROOT
+Specifies a log file prefix.
 
 ### DISABLE_PARALLEL
 The underlying buildsystem will be instructed to not parallelize
@@ -39,7 +42,7 @@ The underlying buildsystem will be instructed to not parallelize
 Additional subdir to invoke make in. Useful if only parts of a port should be built. 
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
+This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 

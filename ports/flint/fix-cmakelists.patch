@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2616d06..4be28ac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,10 +34,11 @@ find_package(MPFR REQUIRED)
+ if (WITH_NTL)
+     find_package(NTL REQUIRED)
+ endif()
+-find_package(PythonInterp REQUIRED)
+ 
++if(WITH_CBLAS)
+ find_package(CBLAS)
+ set(FLINT_USES_BLAS ${CBLAS_FOUND})
++endif()
+ 
+ if(CMAKE_BUILD_TYPE STREQUAL Debug)
+   set(FLINT_WANT_ASSERT ON)
+@@ -47,6 +48,8 @@ endif()
+ 
+ if(MSVC)
+     find_package(PThreads REQUIRED)
++    set(PThreads_LIBRARIES ${PThreads4W_LIBRARY})
++    set(PThreads_INCLUDE_DIRS ${PThreads4W_INCLUDE_DIR})
+     set(FLINT_USES_PTHREAD ON CACHE BOOL "Use POSIX Threads.")
+ else()
+     option(CMAKE_THREAD_PREFER_PTHREAD "Prefer pthreads" yes)

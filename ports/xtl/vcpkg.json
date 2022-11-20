@@ -1,0 +1,9 @@
+{
+  "name": "xtl",
+  "version": "0.7.2",
+  "description": "The x template library",
+  "homepage": "https://github.com/xtensor-stack/xtl",
+  "dependencies": [
+    "nlohmann-json"
+  ]
+}

@@ -27,20 +27,17 @@ vcpkg_from_github(
 )
 ```
 
-The important parts to update are `REPO` for the GitHub repository path, `REF` for a stable tag/commit to use, and `SHA512` with the checksum of the downloaded zipfile (you can get this easily by setting it to `1`, trying to install the package, and copying the checksum).
+The important parts to update are `REPO` for the GitHub repository path, `REF` for a stable tag/commit to use, and `SHA512` with the checksum of the downloaded zipfile (you can get this easily by setting it to `0`, trying to install the package, and copying the checksum).
 
 Finally, we configure the project with CMake, install the package, and copy over the license file:
 
 ```cmake
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
-vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libogg RENAME copyright)
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_cmake_install()
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libogg" RENAME copyright)
 ```
 
-Check the documentation for [`vcpkg_configure_cmake`](../maintainers/vcpkg_configure_cmake.md) and [`vcpkg_install_cmake`](../maintainers/vcpkg_install_cmake.md) if your package needs additional options. 
+Check the documentation for [`vcpkg_cmake_configure`](../maintainers/vcpkg_cmake_configure.md) and [`vcpkg_cmake_install`](../maintainers/vcpkg_cmake_install.md) if your package needs additional options. 
 
 Now you can run `vcpkg install libogg` to build and install the package.
 

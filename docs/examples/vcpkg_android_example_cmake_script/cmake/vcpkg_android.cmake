@@ -57,7 +57,7 @@ if (VCPKG_TARGET_ANDROID)
     # |x64-android                | x86_64               |
     # |x86-android                | x86                  |
     #
-    # The variable must be stored in the cache in order to successfuly the two toolchains. 
+    # The variable must be stored in the cache in order to successfully the two toolchains. 
     #
     if (ANDROID_ABI MATCHES "arm64-v8a")
         set(VCPKG_TARGET_TRIPLET "arm64-android" CACHE STRING "" FORCE)

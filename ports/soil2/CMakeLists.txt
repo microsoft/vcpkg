@@ -13,27 +13,27 @@ set(INSTALL_CMAKE_DIR share/soil2)
 
 # Set the source files to compile
 set(SOIL2_SRC
-        src/SOIL2/etc1_utils.c
-        src/SOIL2/image_DXT.c
-        src/SOIL2/image_helper.c
-        src/SOIL2/SOIL2.c
-)
-
-# Set the soil2 headers
-set(SOIL2_HEADERS
-        src/SOIL2/SOIL2.h
-        src/SOIL2/etc1_utils.h
-        src/SOIL2/image_DXT.h
-        src/SOIL2/image_helper.h
-        src/SOIL2/jo_jpeg.h
-        src/SOIL2/pkm_helper.h
-        src/SOIL2/pvr_helper.h
-        src/SOIL2/stb_image.h
-        src/SOIL2/stb_image_write.h
-        src/SOIL2/stbi_DDS.h
-        src/SOIL2/stbi_ext.h
-        src/SOIL2/stbi_pkm.h
-        src/SOIL2/stbi_pvr.h
+    "src/SOIL2/image_DXT.c"
+    "src/SOIL2/image_DXT.h"
+    "src/SOIL2/image_helper.c"
+    "src/SOIL2/image_helper.h"
+    "src/SOIL2/jo_jpeg.h"
+    "src/SOIL2/pkm_helper.h"
+    "src/SOIL2/pvr_helper.h"
+    "src/SOIL2/SOIL2.c"
+    "src/SOIL2/SOIL2.h"
+    "src/SOIL2/stbi_DDS.h"
+    "src/SOIL2/stbi_DDS_c.h"
+    "src/SOIL2/stbi_ext.h"
+    "src/SOIL2/stbi_ext_c.h"
+    "src/SOIL2/stbi_pkm.h"
+    "src/SOIL2/stbi_pkm_c.h"
+    "src/SOIL2/stbi_pvr.h"
+    "src/SOIL2/stbi_pvr_c.h"
+    "src/SOIL2/stb_image.h"
+    "src/SOIL2/stb_image_write.h"
+    "src/SOIL2/wfETC.c"
+    "src/SOIL2/wfETC.h"
 )
 
 # Add the library as a static linkage
@@ -58,11 +58,7 @@ if(INSTALL_HEADERS)
     )
 
     # Install the headers
-    install(FILES ${SOIL2_HEADERS}
-            DESTINATION include/SOIL2/)
-
-    # Prepare for install package files
-    set(SOIL2_VERSION "release-1.11")
+    install(FILES "src/SOIL2/SOIL2.h" DESTINATION include/SOIL2/)
 
     # Export the stuff
     export(TARGETS soil2 FILE "${PROJECT_BINARY_DIR}/soil2Targets.cmake")
@@ -70,12 +66,10 @@ if(INSTALL_HEADERS)
 
     # Create the soil2Config.cmake and soil2ConfigVersion.cmake
     configure_file(soil2Config.cmake.in        "${PROJECT_BINARY_DIR}/soil2Config.cmake"        @ONLY)
-    configure_file(soil2ConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/soil2ConfigVersion.cmake" @ONLY)
 
     # Install the soil2Config.cmake and soil2ConfigVersion.cmake
     install(FILES
             "${PROJECT_BINARY_DIR}/soil2Config.cmake"
-            "${PROJECT_BINARY_DIR}/soil2ConfigVersion.cmake"
             DESTINATION "${INSTALL_CMAKE_DIR}"
     )
 

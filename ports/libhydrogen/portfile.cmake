@@ -3,20 +3,22 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libhydrogen
-    REF 46f083ed1370f4f1063f412b443f5a7704676f27
-    SHA512 2408ba8ba365751cf4e4e52191f8a94fe00befcb1b6c741af73b3eeebe6e02aa191d9ad021b5eda555c2eeb9c9f39ab7d89a94fb7e0e2896bf4a015d2b8e2995
+    REF 9f9d504bb5a97bc98ee52529726d41c027df76ad #2022-06-21
+    SHA512 f4dabc0b399c8850563c8a967209db537fdf787deaef46899a5484bc89bffb31581312940549784defe4c42d057309aaabd402831a7c3a94b04a00d47a07736c 
     HEAD_REF master
+    PATCHES
+        remove-tests.patch
+        no-arch.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/hydrogen TARGET_PATH share/hydrogen)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/hydrogen)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

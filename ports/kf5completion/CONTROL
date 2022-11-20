@@ -1,5 +1,0 @@
-Source: kf5completion
-Version: 5.64.0
-Homepage: https://api.kde.org/frameworks/kcompletion/html/index.html
-Description: Text completion helpers and widgets
-Build-Depends: ecm, qt5-tools, kf5config, kf5widgetsaddons

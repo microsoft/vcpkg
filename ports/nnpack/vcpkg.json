@@ -1,0 +1,20 @@
+{
+  "name": "nnpack",
+  "version-date": "2021-02-21",
+  "port-version": 3,
+  "description": "Acceleration package for neural networks on multi-core CPUs",
+  "homepage": "https://github.com/Maratyszcza/NNPACK",
+  "license": "BSD-2-Clause",
+  "supports": "linux | osx",
+  "dependencies": [
+    "cpuinfo",
+    "fp16",
+    "fxdiv",
+    "psimd",
+    "pthreadpool",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

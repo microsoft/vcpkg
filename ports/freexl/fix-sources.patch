@@ -11,25 +11,3 @@ index a39d4e7..37f1c0b 100644
  
  /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
     slash. */
-diff --git a/src/freexl.c b/src/freexl.c
-index a0b255a..92163a9 100644
---- a/src/freexl.c
-+++ b/src/freexl.c
-@@ -92,7 +92,7 @@ freexl_version (void)
- #if defined(_WIN32) && !defined(__MINGW32__)
- /* MSVC compiler doesn't support lround() at all */
- static double
--round (double num)
-+round_old (double num)
- {
-     double integer = ceil (num);
-     if (num > 0)
-@@ -101,7 +101,7 @@ round (double num)
- }
- 
- static long
--lround (double num)
-+lround_old (double num)
- {
-     long integer = (long) round (num);
-     return integer;

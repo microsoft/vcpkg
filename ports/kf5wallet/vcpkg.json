@@ -1,0 +1,32 @@
+{
+  "name": "kf5wallet",
+  "version": "5.89.0",
+  "port-version": 1,
+  "description": "Safe desktop-wide storage for passwords",
+  "homepage": "https://api.kde.org/frameworks/kwallet/html/index.html",
+  "dependencies": [
+    "ecm",
+    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5config",
+    "kf5coreaddons",
+    "kf5i18n",
+    "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

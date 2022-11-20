@@ -1,0 +1,71 @@
+{
+  "name": "libarchive",
+  "version": "3.6.1",
+  "port-version": 1,
+  "description": "Library for reading and writing streaming archives",
+  "homepage": "https://github.com/libarchive/libarchive",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "bzip2",
+    "libxml2",
+    "lz4",
+    "lzma",
+    "openssl",
+    "zstd"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "BZip2 support",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "libxml2": {
+      "description": "Libxml2 support",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "lz4": {
+      "description": "Lz4 support",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "lzma": {
+      "description": "Lzma support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "lzo": {
+      "description": "Lzo support",
+      "dependencies": [
+        "lzo"
+      ]
+    },
+    "openssl": {
+      "description": "OpenSSL support (not available on macOS)",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!osx"
+        }
+      ]
+    },
+    "zstd": {
+      "description": "Zstd support",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

@@ -1,12 +1,12 @@
 {
   "name": "boost-endian",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost endian module",
   "homepage": "https://github.com/boostorg/endian",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",
-    "boost-integer",
     "boost-static-assert",
     "boost-type-traits",
     "boost-vcpkg-helpers"

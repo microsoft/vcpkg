@@ -1,4 +1,0 @@
-Source: pthread
-Version: 3.0.0
-Build-Depends: pthreads
-Description: empty package, linking to other port

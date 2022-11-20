@@ -1,8 +1,9 @@
 {
   "name": "boost-coroutine2",
-  "version-string": "1.75.0",
+  "version": "1.80.0",
   "description": "Boost coroutine2 module",
   "homepage": "https://github.com/boostorg/coroutine2",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-assert",
@@ -11,7 +12,6 @@
       "name": "boost-context",
       "platform": "!uwp & !emscripten"
     },
-    "boost-detail",
     "boost-vcpkg-helpers"
   ]
 }

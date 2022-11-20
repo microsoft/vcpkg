@@ -1,26 +1,24 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.3.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-sqlite
-    REF 5128a4a1dc1f6ff5d0618237d1dbb9e9d5447e2f # 1.2.0
-    SHA512 d066701d4c857e895816db14c9700f321e171d2f990ee1c505c8b5243351d726db973d61ec7ebbe1b3f19e678627c41975aeac24fd2891d41900dfb25d427903
+    REF ${OATPP_VERSION}
+    SHA512 8a208145ee10ed858767b4b56c220b6befd83e6858759128103ce679b889e6218a95ed6627af5098e4d26367be8add82de26e1f1f8ef581b1913b8386f9d56de
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
         "-DOATPP_SQLITE_AMALGAMATION:BOOL=OFF"
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-sqlite-${OATPP_VERSION})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-sqlite CONFIG_PATH lib/cmake/oatpp-sqlite-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

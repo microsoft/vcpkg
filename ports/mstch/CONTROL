@@ -1,5 +1,0 @@
-Source: mstch
-Version: 1.0.2-2
-Homepage: https://github.com/no1msd/mstch
-Description: Mstch is a complete implementation of {{mustache}} templates using modern C++
-Build-Depends: boost-variant

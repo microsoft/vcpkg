@@ -1,0 +1,10 @@
+{
+  "name": "boost-lambda2",
+  "version": "1.80.0",
+  "description": "Boost lambda2 module",
+  "homepage": "https://github.com/boostorg/lambda2",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

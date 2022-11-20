@@ -1,0 +1,25 @@
+{
+  "name": "libjuice",
+  "version": "1.0.4",
+  "description": "The library is a simplified implementation of the Interactive Connectivity Establishment (ICE) protocol in C for POSIX platforms (including Linux and Apple macOS) and Microsoft Windows.",
+  "homepage": "https://github.com/paullouisageneau/libjuice",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "nettle": {
+      "description": "Use nettle for HMAC computation instead of the Builtin",
+      "dependencies": [
+        "nettle"
+      ]
+    }
+  }
+}

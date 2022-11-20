@@ -1,0 +1,11 @@
+{
+  "name": "zkpp",
+  "version": "0.2.3",
+  "port-version": 2,
+  "description": "A ZooKeeper client for C++.",
+  "homepage": "https://github.com/tgockel/zookeeper-cpp",
+  "supports": "!windows",
+  "dependencies": [
+    "zookeeper"
+  ]
+}

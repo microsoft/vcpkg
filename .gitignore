@@ -10,6 +10,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+/vcpkg-configuration.json
 
 # fuzzing
 sync_dir*

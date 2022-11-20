@@ -1,17 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-vcpkg_fail_port_install(ON_ARCH "arm" "x86")
-
-set(PMDK_VERSION "1.9")
+set(PMDK_VERSION "1.12.0")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 1926ffb8f3f5f0617b3b3ed32029d437c272f187 #Commit id corresponding to the version 1.9
-    SHA512 dc828866291f1c4a6901de5845d21a60eb2c7951c6b5ebc680b309a4e5f7596b0d9bea663f997dff9f08f666124850aecd2219caf12bab571b4c2b63db28ec7f
+    REF 73d8f958e855904dc0776a7d77d0f0d3698a65b1 #v1.12.0
+    SHA512 ffe77796c9028478985ca98e4162a671e3e7f580faa46b31d0dcf8c5e97aa6478044efdf7ad238285044f18f754a20a4e2a1b5992c7b9cffa709884eb62007ab
     HEAD_REF master
-    PATCHES
-        remove-non-ascii-character.patch
 )
 
 # Build only the selected projects

@@ -1,0 +1,16 @@
+{
+  "name": "klein",
+  "version-date": "2021-05-09",
+  "description": "Klein is an implementation of P(R*_{3, 0, 1}), aka 3D Projective Geometric Algebra. It is designed for applications that demand high-throughput (animation libraries, kinematic solvers, etc).",
+  "dependencies": [
+    "simde",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "mfl",
+  "version": "0.0.1",
+  "description": "Computes the layout information for mathematical formulas provided in TeX-like syntax.",
+  "homepage": "https://github.com/cpp-niel/mfl",
+  "license": "MIT",
+  "supports": "static",
+  "dependencies": [
+    "cairo",
+    "doctest",
+    "fmt",
+    "freetype",
+    "harfbuzz",
+    "range-v3"
+  ]
+}

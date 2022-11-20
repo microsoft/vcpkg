@@ -1,0 +1,17 @@
+{
+  "name": "clblas",
+  "version": "2.12",
+  "port-version": 6,
+  "description": "clBLAS is an OpenCL 1.2 accelerated BLAS (Basic Linear Algebra Subsystem) library.",
+  "dependencies": [
+    "opencl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

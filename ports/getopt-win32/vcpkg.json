@@ -1,0 +1,15 @@
+{
+  "name": "getopt-win32",
+  "version": "0.1",
+  "port-version": 4,
+  "description": "An implementation of getopt.",
+  "homepage": "https://github.com/libimobiledevice-win32/getopt",
+  "license": "LGPL-3.0-only",
+  "supports": "windows & !mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

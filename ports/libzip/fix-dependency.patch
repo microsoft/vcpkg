@@ -1,0 +1,27 @@
+diff --git a/libzip-config.cmake.in b/libzip-config.cmake.in
+index 5b9aa55..0723f3c 100644
+--- a/libzip-config.cmake.in
++++ b/libzip-config.cmake.in
+@@ -1,8 +1,20 @@
+ @PACKAGE_INIT@
+ 
+ # only needed for static library, and doesn't work as-is
+-#include(CMakeFindDependencyMacro)
+-#find_dependency(ZLIB::ZLIB)
++include(CMakeFindDependencyMacro)
++if(@ENABLE_BZIP2@)
++    find_dependency(BZip2)
++endif()
++if(@ENABLE_LZMA@)
++    find_dependency(LibLZMA)
++endif()
++if(@ENABLE_ZSTD@)
++    find_dependency(Zstd)
++endif()
++if(@ENABLE_OPENSSL@)
++    find_dependency(OpenSSL)
++endif()
++find_dependency(ZLIB)
+ # how to handle the optional dependencies?
+ # Provide all our library targets to users.
+ include("${CMAKE_CURRENT_LIST_DIR}/libzip-targets.cmake")

@@ -1,0 +1,34 @@
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 2735a07..6721de4 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -62,16 +62,16 @@ if (NOT PKG_CONFIG_FOUND)
+   if (NOT DEFINED USE_INTERNAL_URDF)
+     BUILD_WARNING("Couldn't find pkg-config for urdfdom, using internal copy")
+     set(USE_INTERNAL_URDF true)
+-  elseif(NOT USE_INTERNAL_URDF)
++  elseif(0)
+     BUILD_ERROR("Couldn't find pkg-config for urdfdom")
+   endif()
+ endif()
+ 
+ if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+   # check for urdfdom with pkg-config
+-  pkg_check_modules(URDF urdfdom>=1.0)
++  find_package(urdfdom CONFIG REQUIRED)
+ 
+-  if (NOT URDF_FOUND)
++  if (NOT urdfdom_FOUND)
+     if (NOT DEFINED USE_INTERNAL_URDF)
+       message(STATUS "Couldn't find urdfdom >= 1.0, using internal copy")
+       set(USE_INTERNAL_URDF true)
+@@ -80,8 +80,7 @@ if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+     endif()
+   else()
+     # what am I doing here? pkg-config and cmake
+-    set(URDF_INCLUDE_DIRS ${URDF_INCLUDEDIR})
+-    set(URDF_LIBRARY_DIRS ${URDF_LIBDIR})
++    set(URDF_LIBRARIES urdfdom::urdfdom_model urdfdom::urdfdom_world urdfdom::urdfdom_sensor urdfdom::urdfdom_model_state)
+   endif()
+ endif()
+ 

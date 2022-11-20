@@ -1,9 +1,0 @@
-Source: date
-Version: 3.0.0
-Port-Version: 2
-Homepage: https://github.com/HowardHinnant/date
-Description: A date and time library based on the C++17 <chrono> header
-
-Feature: remote-api
-Description: support automatic download of tz data
-Build-Depends: curl

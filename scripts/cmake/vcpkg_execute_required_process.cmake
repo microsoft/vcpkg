@@ -1,75 +1,25 @@
-#[===[.md:
-# vcpkg_execute_required_process
-
-Execute a process with logging and fail the build if the command fails.
-
-## Usage
-```cmake
-vcpkg_execute_required_process(
-    COMMAND <${PERL}> [<arguments>...]
-    WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
-    LOGNAME <build-${TARGET_TRIPLET}-dbg>
-    [TIMEOUT <seconds>]
-    [OUTPUT_VARIABLE <var>]
-    [ERROR_VARIABLE <var>]
-)
-```
-## Parameters
-### ALLOW_IN_DOWNLOAD_MODE
-Allows the command to execute in Download Mode.
-[See execute_process() override](../../scripts/cmake/execute_process.cmake).
-
-### COMMAND
-The command to be executed, along with its arguments.
-
-### WORKING_DIRECTORY
-The directory to execute the command in.
-
-### LOGNAME
-The prefix to use for the log files.
-
-### TIMEOUT
-Optional timeout after which to terminate the command.
-
-### OUTPUT_VARIABLE
-Optional variable to receive stdout of the command.
-
-### ERROR_VARIABLE
-Optional variable to receive stderr of the command.
-
-This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
-
-## Examples
-
-* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-* [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
-* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
-#]===]
-
 function(vcpkg_execute_required_process)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE" "COMMAND")
-    set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
-    set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "ALLOW_IN_DOWNLOAD_MODE"
+        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
+        "COMMAND;SAVE_LOG_FILES"
+    )
 
-    if(vcpkg_execute_required_process_TIMEOUT)
-        set(TIMEOUT_PARAM "TIMEOUT;${vcpkg_execute_required_process_TIMEOUT}")
-    else()
-        set(TIMEOUT_PARAM "")
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if(vcpkg_execute_required_process_OUTPUT_VARIABLE)
-        set(OUTPUT_VARIABLE_PARAM "OUTPUT_VARIABLE;${vcpkg_execute_required_process_OUTPUT_VARIABLE}")
-    else()
-        set(OUTPUT_VARIABLE_PARAM "")
-    endif()
-    if(vcpkg_execute_required_process_ERROR_VARIABLE)
-        set(ERROR_VARIABLE_PARAM "ERROR_VARIABLE;${vcpkg_execute_required_process_ERROR_VARIABLE}")
-    else()
-        set(ERROR_VARIABLE_PARAM "")
+    foreach(required_arg IN ITEMS WORKING_DIRECTORY COMMAND)
+        if(NOT DEFINED arg_${required_arg})
+            message(FATAL_ERROR "${required_arg} must be specified.")
+        endif()
+    endforeach()
+
+    if(NOT DEFINED arg_LOGNAME)
+        message(WARNING "LOGNAME should be specified.")
+        set(arg_LOGNAME "required")
     endif()
 
-    if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
+    if (VCPKG_DOWNLOAD_MODE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
         message(FATAL_ERROR
 [[
 This command cannot be executed in Download Mode.
@@ -77,43 +27,87 @@ Halting portfile execution.
 ]])
     endif()
 
+    set(log_out "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log")
+    set(log_err "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
+
+    set(timeout_param "")
+    set(output_and_error_same OFF)
+    set(output_variable_param "")
+    set(error_variable_param "")
+
+    if(DEFINED arg_TIMEOUT)
+        set(timeout_param TIMEOUT "${arg_TIMEOUT}")
+    endif()
+    if(DEFINED arg_OUTPUT_VARIABLE AND DEFINED arg_ERROR_VARIABLE AND arg_OUTPUT_VARIABLE STREQUAL arg_ERROR_VARIABLE)
+        set(output_variable_param OUTPUT_VARIABLE out_err_var)
+        set(error_variable_param ERROR_VARIABLE out_err_var)
+        set(output_and_error_same ON)
+    else()
+        if(DEFINED arg_OUTPUT_VARIABLE)
+            set(output_variable_param OUTPUT_VARIABLE out_var)
+        endif()
+        if(DEFINED arg_ERROR_VARIABLE)
+            set(error_variable_param ERROR_VARIABLE err_var)
+        endif()
+    endif()
+
+    if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+    endif()
+
     vcpkg_execute_in_download_mode(
-        COMMAND ${vcpkg_execute_required_process_COMMAND}
-        OUTPUT_FILE ${LOG_OUT}
-        ERROR_FILE ${LOG_ERR}
+        COMMAND ${arg_COMMAND}
+        OUTPUT_FILE "${log_out}"
+        ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
-        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY}
-        ${TIMEOUT_PARAM}
-        ${OUTPUT_VARIABLE_PARAM}
-        ${ERROR_VARIABLE_PARAM})
-    if(error_code)
-        set(LOGS)
-        file(READ "${LOG_OUT}" out_contents)
-        file(READ "${LOG_ERR}" err_contents)
-        if(out_contents)
-            list(APPEND LOGS "${LOG_OUT}")
+        WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+        ${timeout_param}
+        ${output_variable_param}
+        ${error_variable_param}
+    )
+    vcpkg_list(SET saved_logs)
+    foreach(logfile IN LISTS arg_SAVE_LOG_FILES)
+        set(filepath "${arg_WORKING_DIRECTORY}/${logfile}")
+        if(NOT EXISTS "${filepath}")
+            continue()
         endif()
-        if(err_contents)
-            list(APPEND LOGS "${LOG_ERR}")
+        cmake_path(GET filepath FILENAME filename)
+        if(NOT filename MATCHES "[.]log\$")
+            string(APPEND filename ".log")
         endif()
-        set(STRINGIFIED_LOGS)
-        foreach(LOG ${LOGS})
-            file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
-            list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
+        configure_file("${filepath}" "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}" COPYONLY)
+        vcpkg_list(APPEND saved_logs "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}")
+    endforeach()
+    if(NOT error_code EQUAL 0)
+        set(stringified_logs "")
+        foreach(log IN LISTS saved_logs ITEMS "${log_out}" "${log_err}")
+            if(NOT EXISTS "${log}")
+                continue()
+            endif()
+            file(SIZE "${log}" log_size)
+            if(NOT log_size EQUAL "0")
+                file(TO_NATIVE_PATH "${log}" native_log)
+                string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
+            endif()
         endforeach()
-        z_vcpkg_prettify_command_line(vcpkg_execute_required_process_COMMAND_PRETTY ${vcpkg_execute_required_process_COMMAND})
+
+        z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
         message(FATAL_ERROR
-            "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
-            "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
+            "  Command failed: ${pretty_command}\n"
+            "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
             "  Error code: ${error_code}\n"
             "  See logs for more information:\n"
-            ${STRINGIFIED_LOGS}
+            "${stringified_logs}"
         )
     endif()
+
     # pass output parameters back to caller's scope
-    foreach(arg OUTPUT_VARIABLE ERROR_VARIABLE)
-        if(vcpkg_execute_required_process_${arg})
-            set(${vcpkg_execute_required_process_${arg}} ${${vcpkg_execute_required_process_${arg}}} PARENT_SCOPE)
-        endif()
-    endforeach()
+    if(output_and_error_same)
+        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_err_var)
+        # arg_ERROR_VARIABLE = arg_OUTPUT_VARIABLE, so no need to set it again
+    else()
+        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_var)
+        z_vcpkg_forward_output_variable(arg_ERROR_VARIABLE err_var)
+    endif()
 endfunction()

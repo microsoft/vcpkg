@@ -1,5 +1,0 @@
-Source: jinja2cpplight
-Version: 2018-05-08
-Homepage: https://github.com/hughperkins/Jinja2CppLight
-Description: (very) lightweight version of Jinja2 for C++, Lightweight templating engine for C++, based on Jinja2.
-Supports: !uwp

@@ -1,0 +1,195 @@
+{
+  "name": "curl",
+  "version": "7.84.0",
+  "port-version": 2,
+  "description": "A library for transferring data with URLs",
+  "homepage": "https://curl.se/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "non-http",
+    "ssl"
+  ],
+  "features": {
+    "brotli": {
+      "description": "brotli support (brotli)",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "c-ares": {
+      "description": "c-ares support",
+      "dependencies": [
+        "c-ares"
+      ]
+    },
+    "http2": {
+      "description": "HTTP2 support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        },
+        "nghttp2"
+      ]
+    },
+    "idn": {
+      "description": "Default IDN support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "winidn"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "idn2"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "idn2": {
+      "description": "idn2 support (libidn2)",
+      "dependencies": [
+        "libidn2"
+      ]
+    },
+    "mbedtls": {
+      "description": "SSL support (mbedTLS)",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "non-http": {
+      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "schannel": {
+      "description": "SSL support (Secure Channel)",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "sspi"
+          ]
+        }
+      ]
+    },
+    "sectransp": {
+      "description": "SSL support (sectransp)"
+    },
+    "ssh": {
+      "description": "SSH support via libssh2",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "libssh2"
+      ]
+    },
+    "ssl": {
+      "description": "Default SSL backend",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "sectransp"
+          ],
+          "platform": "osx | ios"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "schannel"
+          ],
+          "platform": "(windows & !uwp) | mingw"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
+        }
+      ]
+    },
+    "sspi": {
+      "description": "SSPI support"
+    },
+    "tool": {
+      "description": "Builds curl executable"
+    },
+    "winidn": {
+      "description": "WinIDN support"
+    },
+    "winldap": {
+      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        }
+      ]
+    },
+    "winssl": {
+      "description": "Legacy name for schannel",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "schannel"
+          ]
+        }
+      ]
+    },
+    "wolfssl": {
+      "description": "SSL support (wolfSSL)",
+      "dependencies": [
+        "wolfssl"
+      ]
+    }
+  }
+}

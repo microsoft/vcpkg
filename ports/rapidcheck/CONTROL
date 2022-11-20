@@ -1,4 +1,0 @@
-Source: rapidcheck
-Version: 2020-08-25
-Homepage: https://github.com/emil-e/rapidcheck
-Description: A property-based testing library for C++ (a la QuickCheck) with the goal of being simple to use with as little boilerplate as possible.

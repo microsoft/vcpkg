@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index a52ac3a78..ac5cf03f4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -42,7 +42,7 @@ AC_CHECK_FUNCS([localtime_r])
+ AC_CHECK_MEMBERS([struct tm.tm_gmtoff],,,[#include <time.h>])
+ dnl sqlite3 is needed for newer ipod models (nano5g), and libplist is needed 
+ dnl by libgpod sqlite code
+-PKG_CHECK_MODULES(LIBGPOD, glib-2.0 >= 2.8.0 gobject-2.0 sqlite3 libplist >= 1.0)
++PKG_CHECK_MODULES(LIBGPOD, glib-2.0 >= 2.8.0 gmodule-2.0 gobject-2.0 sqlite3 libplist >= 1.0)
+ 
+ dnl **************************************************
+ dnl we've copied gchecksum from glib 2.16. Only use the

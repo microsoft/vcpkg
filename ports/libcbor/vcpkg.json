@@ -1,0 +1,13 @@
+{
+  "name": "libcbor",
+  "version": "0.9.0",
+  "description": "libcbor is a C library for parsing and generating CBOR, the general-purpose schema-less binary data format",
+  "homepage": "https://github.com/PJK/libcbor",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -9,25 +9,17 @@ if(NOT CMAKE_SYSTEM_PROCESSOR)
 endif()
 
 # config variables for ffi.h.in
-set(VERSION 3.3)
+set(VERSION 3.4.2)
 
-set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386 armv7l armv7-a aarch64)
+set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el)
 
-if(NOT CMAKE_SYSTEM_PROCESSOR IN_LIST KNOWN_PROCESSORS)
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
+
+if(NOT lower_system_processor IN_LIST KNOWN_PROCESSORS)
     message(FATAL_ERROR "Unknown processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
-    set(TARGET ARM)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7l")
-    set(TARGET ARM)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7-a")
-    set(TARGET ARM)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-    set(TARGET ARM64)
-elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(TARGET X86_FREEBSD)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(TARGET ARM_WIN32)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(TARGET ARM_WIN64)
@@ -35,6 +27,14 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUA
     set(TARGET X86_WIN32)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(TARGET X86_WIN64)
+elseif(lower_system_processor MATCHES "arm64|aarch64")
+    set(TARGET ARM64)
+elseif(lower_system_processor MATCHES "mips64")
+    set(TARGET MIPS64)
+elseif(lower_system_processor MATCHES "arm")
+    set(TARGET ARM)
+elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(TARGET X86_FREEBSD)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin"  AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_DARWIN)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -45,7 +45,7 @@ else()
     message(FATAL_ERROR "Cannot determine target. Please consult ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac and add your platform to this CMake file.")
 endif()
 
-if("${TARGET}" STREQUAL "X86_64")
+if("${TARGET}" STREQUAL "X86_64" OR "${TARGET}" STREQUAL "MIPS64")
     set(HAVE_LONG_DOUBLE 1)
 else()
     set(HAVE_LONG_DOUBLE 0)
@@ -60,6 +60,8 @@ if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     file(COPY src/aarch64/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 elseif ("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+elseif ("${TARGET}" MATCHES "MIPS")
+    file(COPY src/mips/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 else()
     file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 endif()
@@ -76,7 +78,8 @@ endif()
 set(FFI_SOURCES
     src/closures.c
     src/prep_cif.c
-    src/types.c)
+    src/types.c
+    src/tramp.c)
 
 if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     set(FFI_SOURCES
@@ -86,6 +89,10 @@ elseif("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/arm/ffi.c)
+elseif("${TARGET}" MATCHES "MIPS")
+    set(FFI_SOURCES
+        ${FFI_SOURCES}
+        src/mips/ffi.c)
 else()
     set(FFI_SOURCES
         ${FFI_SOURCES}
@@ -190,6 +197,8 @@ elseif("${TARGET}" STREQUAL "ARM_WIN64")
     endif()
 elseif("${TARGET}" STREQUAL "ARM64")
     add_assembly(src/aarch64/sysv.S)
+elseif("${TARGET}" MATCHES "MIPS")
+    add_assembly(src/mips/n32.S)
 else()
     message(FATAL_ERROR "Target not implemented")
 endif()

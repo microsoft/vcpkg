@@ -1,0 +1,44 @@
+{
+  "name": "openscap",
+  "version": "1.3.1",
+  "port-version": 3,
+  "description": "The oscap program is a command line tool that allows users to load, scan, validate, edit, and export SCAP documents.",
+  "homepage": "https://github.com/OpenSCAP/openscap",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    "curl",
+    "glib",
+    "libpopt",
+    "libxml2",
+    "libxslt",
+    "libzip",
+    "openssl",
+    "pcre2",
+    "pthread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "docs": {
+      "description": "install docs"
+    },
+    "python": {
+      "description": "build with python3"
+    },
+    "tests": {
+      "description": "build with tests"
+    },
+    "util": {
+      "description": "build available utils",
+      "dependencies": [
+        {
+          "name": "getopt-win32",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}

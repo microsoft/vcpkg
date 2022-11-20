@@ -1,0 +1,10 @@
+{
+  "name": "libspatialindex",
+  "version": "1.9.3",
+  "port-version": 1,
+  "description": "C++ implementation of R*-tree, an MVR-tree and a TPR-tree with C API.",
+  "homepage": "http://libspatialindex.github.com",
+  "dependencies": [
+    "zlib"
+  ]
+}

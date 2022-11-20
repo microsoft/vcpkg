@@ -1,5 +1,0 @@
-Source: restclient-cpp
-Version: 0.5.2
-Build-Depends: curl
-Homepage: https://code.mrtazz.com/restclient-cpp/
-Description: Simple REST client for C++. It wraps libcurl for HTTP requests.

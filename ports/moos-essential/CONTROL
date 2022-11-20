@@ -1,5 +1,0 @@
-Source: moos-essential
-Version: 10.0.1-2
-Description: a set of useful applications that leverage the core-moos communications layer.
-Homepage: https://sites.google.com/site/moossoftware/
-Build-Depends: moos-core

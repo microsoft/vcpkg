@@ -1,0 +1,57 @@
+{
+  "name": "apsi",
+  "version-semver": "0.8.2",
+  "description": "APSI is a research library for asymmetric private set intersection.",
+  "homepage": "https://github.com/microsoft/APSI",
+  "license": "MIT",
+  "dependencies": [
+    "flatbuffers",
+    "jsoncpp",
+    "kuku",
+    {
+      "name": "seal",
+      "features": [
+        "no-throw-tran"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "log4cplus",
+    "zeromq"
+  ],
+  "features": {
+    "hexl": {
+      "description": "Use Intel® HEXL to accelerate Microsoft SEAL.",
+      "dependencies": [
+        {
+          "name": "seal",
+          "features": [
+            "hexl",
+            "no-throw-tran"
+          ],
+          "platform": "x64"
+        }
+      ]
+    },
+    "log4cplus": {
+      "description": "Use log4cplus for logging.",
+      "dependencies": [
+        "log4cplus"
+      ]
+    },
+    "zeromq": {
+      "description": "Use ZeroMQ for networking.",
+      "dependencies": [
+        "cppzmq"
+      ]
+    }
+  }
+}
