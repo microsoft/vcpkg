@@ -88,7 +88,7 @@ endif()
 
 # invalid: ...-NOTFOUND
 write_pkgconfig([[Libs: LIB-NOTFOUND]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # ...-NOTFOUND # ]])
+# Only warning: unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # ...-NOTFOUND # ]])
 
 # invalid: optimized/debug
 write_pkgconfig([[Libs: -laaa -loptimized -lrel -ldebug -ldbg -lbbb]])
@@ -118,7 +118,7 @@ unit_test_pkgconfig_check_key("release" "Libs:" [[ aaa.lib librel.a bbb.lib]])
 
 # invalid: namespaced targets
 write_pkgconfig([[Libs: -lAAA::aaa]])
-unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # namespaced target # ]])
+# Only warning: unit_test_ensure_fatal_error([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) # namespaced target # ]])
 
 # prefix
 write_pkgconfig(
