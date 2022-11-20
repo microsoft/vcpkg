@@ -24,7 +24,7 @@ index b3be259..72b4b25 100644
 +++ b/netCDFConfig.cmake.in
 @@ -15,6 +15,9 @@ set(netCDF_LIBRARIES netCDF::netcdf)
  include(CMakeFindDependencyMacro)
- find_dependency(HDF5 CONFIG)
+ find_dependency(hdf5 CONFIG)
  find_dependency(CURL CONFIG)
 +if(@ENABLE_NCZARR_ZIP@)
 +    find_dependency(libzip CONFIG)
