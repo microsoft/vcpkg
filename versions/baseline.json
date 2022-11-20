@@ -4732,6 +4732,10 @@
       "baseline": "22.04.0",
       "port-version": 1
     },
+    "marisa": {
+      "baseline": "0.2.6",
+      "port-version": 0
+    },
     "marl": {
       "baseline": "2022-03-02",
       "port-version": 0
