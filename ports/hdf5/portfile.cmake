@@ -155,4 +155,4 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACK
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
-endif
+endif()
