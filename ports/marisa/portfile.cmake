@@ -2,25 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/marisa-trie
     REF e54f296bb52d16693931c8b963744931ef1e37f7 #0.2.6
-    SHA512 0
+    SHA512 1002c495a7ef3c117c143231a244688529ed6962f1e9b8367087cecca51e2eeea37f61107b54b0a0503119dd90953fd921093799901400a2b5c016ebf6a63f05
     HEAD_REF master
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LINKAGE_DYNAMIC yes)
-    set(LINKAGE_STATIC no)
-else()
-    set(LINKAGE_DYNAMIC no)
-    set(LINKAGE_STATIC yes)
-endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        "--enable-shared=${LINKAGE_DYNAMIC}"
-        "--enable-static=${LINKAGE_STATIC}"
-        "--prefix=${CURRENT_INSTALLED_DIR}"
 )
 
 vcpkg_install_make()
