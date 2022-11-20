@@ -13,6 +13,10 @@ vcpkg_from_github(
 set(options "")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND options -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        # The option may cause "#error Unsupported architecture"
+        list(APPEND options -DFLATBUFFERS_OSX_BUILD_UNIVERSAL=OFF)
+    endif()
 endif()
 
 vcpkg_cmake_configure(

@@ -21,7 +21,7 @@
       "port-version": 1
     },
     "ace": {
-      "baseline": "7.0.8",
+      "baseline": "7.0.10",
       "port-version": 0
     },
     "activemq-cpp": {
@@ -358,7 +358,7 @@
     },
     "azure-iot-sdk-c": {
       "baseline": "2022-09-15",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
@@ -2346,7 +2346,7 @@
     },
     "flatbuffers": {
       "baseline": "22.10.26",
-      "port-version": 0
+      "port-version": 1
     },
     "flecs": {
       "baseline": "3.1.0",
@@ -2542,7 +2542,7 @@
     },
     "gdal": {
       "baseline": "3.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2694,7 +2694,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 13
+      "port-version": 14
     },
     "gmsh": {
       "baseline": "4.9.0",
@@ -4102,7 +4102,7 @@
     },
     "libpq": {
       "baseline": "14.4",
-      "port-version": 2
+      "port-version": 3
     },
     "libpqxx": {
       "baseline": "7.7.3",
@@ -5689,8 +5689,8 @@
       "port-version": 1
     },
     "parson": {
-      "baseline": "2020-09-14",
-      "port-version": 1
+      "baseline": "2022-11-13",
+      "port-version": 0
     },
     "pbc": {
       "baseline": "0.5.14",
@@ -5781,8 +5781,8 @@
       "port-version": 2
     },
     "pipewire": {
-      "baseline": "0.3.52",
-      "port-version": 1
+      "baseline": "0.3.60",
+      "port-version": 0
     },
     "pistache": {
       "baseline": "2021-03-31",
@@ -6881,7 +6881,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "0.23.13",
+      "baseline": "0.24.43",
       "port-version": 1
     },
     "shaderc": {
@@ -7169,7 +7169,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.39.2",
+      "baseline": "3.40.0",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -7709,8 +7709,8 @@
       "port-version": 1
     },
     "utfcpp": {
-      "baseline": "3.2.1",
-      "port-version": 1
+      "baseline": "3.2.2",
+      "port-version": 0
     },
     "utfz": {
       "baseline": "1.2",
