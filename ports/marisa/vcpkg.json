@@ -4,5 +4,5 @@
   "description": "MARISA: Matching Algorithm with Recursively Implemented StorAge",
   "homepage": "https://github.com/s-yata/marisa-trie",
   "license": "BSD-2-Clause",
-  "supports": "!(windows & static)"
+  "supports": "!(windows & static) && !arm"
 }
