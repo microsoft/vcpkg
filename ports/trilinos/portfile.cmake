@@ -16,6 +16,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
                                 "-DTrilinos_ENABLE_Zoltan:BOOL=OFF")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        mpi     TPL_ENABLE_MPI
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -41,7 +46,6 @@ vcpkg_cmake_configure(
         "-DTrilinos_HOSTNAME:STRING=localhost"
         #-DTPL_ENABLE_MPI:BOOL=ON 
         -DNetcdf_ALLOW_MODERN:BOOL=ON
-        -DTPL_ENABLE_MPI:BOOL=ON # MPI enabled needs feature for hdf5 netcdf
     OPTIONS_DEBUG
         -DTrilinos_ENABLE_DEBUG:BOOL=OFF
     MAYBE_UNUSED_VARIABLES

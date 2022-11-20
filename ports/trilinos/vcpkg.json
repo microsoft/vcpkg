@@ -5,11 +5,20 @@
   "homepage": "https://github.com/trilinos/Trilinos",
   "license": null,
   "dependencies" : [
-    "cgns",
+    {
+      "name": "cgns",
+      "default-features": false
+    },
     "matio",
-    "netcdf-c",
+    {
+      "name": "netcdf-c",
+      "default-features": false
+    },
     "hwloc",
-    "hdf5",
+    {
+      "name": "hdf5",
+      "default-features": false
+    },
     "zlib",
     "fmt",
     "metis",
@@ -30,5 +39,26 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-   ]
+   ],
+   "features" :{
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false,
+          "features": [
+            "parallel"
+          ]
+        },
+        {
+          "name": "cgns",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ]
+        }
+      ]
+    }
+   }
 }

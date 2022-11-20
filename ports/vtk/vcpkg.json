@@ -35,7 +35,10 @@
     "utfcpp",
     "exprtk",
     "fmt",
-    "trilinos",
+        {
+      "name": "trilinos",
+      "default-features": false
+    },
     "verdict",
     {
       "name": "vcpkg-cmake",
@@ -123,7 +126,14 @@
           "features": [
             "mpi"
           ]
-        }
+        },
+        {
+          "name": "trilinos",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ]
+        },
       ]
     },
     "opengl": {
