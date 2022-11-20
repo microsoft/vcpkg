@@ -5,6 +5,7 @@ set(${PORT}_PATCHES
                     remove_unistd.patch
                     remove_export_macro.patch
                     static_find_modules.patch
+                    fix_avfoundation_target.patch
 )
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
@@ -33,7 +34,6 @@ INVERTED_FEATURES
     "gstreamer"     CMAKE_DISABLE_FIND_PACKAGE_GStreamer
     "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
     # Features not yet added in the manifest:
-    "avfoundation"  CMAKE_DISABLE_FIND_PACKAGE_AVFoundation # not in vcpkg
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
 
