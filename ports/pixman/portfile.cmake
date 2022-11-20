@@ -29,7 +29,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
             -Dssse3=disabled)
 endif()
 
-if(VCPKG_TARGET_IS_UWP AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
    list(APPEND OPTIONS
                -Darm-simd=disabled
                -Dneon=disabled)
