@@ -193,6 +193,7 @@ vcpkg_cmake_configure(
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=5
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
+        -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
         MAYBE_UNUSED_VARIABLES
             VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
             VTK_QT_VERSION # Only with Qt

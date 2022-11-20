@@ -33,6 +33,10 @@
     "proj",
     "pugixml",
     "sqlite3",
+    {
+      "name": "sqlite3",
+      "host": true
+    },
     "tiff",
     {
       "name": "trilinos",
