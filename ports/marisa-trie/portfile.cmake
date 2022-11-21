@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/marisa-trie
-    REF 006020c1df76d0d7dc6118dacc22da64da2e35c4
+    REF 006020c1df76d0d7dc6118dacc22da64da2e35c4 #commit 2020-09-26
     SHA512 05dd7cc81a6347d4528654c19617af16de8d7352ad9e38d5f1cd296d88527377ecbfed9dbe722362d64369cd792d1ae0410319854b546ce0b6081ac560a40c0f
     HEAD_REF master
 )
