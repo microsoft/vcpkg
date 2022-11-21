@@ -16,6 +16,7 @@ vcpkg_from_github(
         FindLZ4.patch
         Findproj.patch
         pegtl.patch
+        jsoncpp.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
         fix-using-hdf5.patch

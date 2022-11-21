@@ -21,30 +21,46 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         mpi     TPL_ENABLE_MPI
 )
 
+# Pthread ? DLlib? RTlib?
+
+set(tpl_disable_list MKL yaml-cpp Peano CUDA CUBLAS CUSOLVER CUSPARSE Thrust Cusp TBB 
+                     HWLOC QTHREAD BinUtils ARPREC QD BOOST BLAS LAPACK Scotch OVIS gpcd 
+                     DataWrap MTMETIS ParMETIS PuLP TopoManager LibTopoMap PaToH CppUnit
+                     ADOLC ADIC TVMET MF ExodusII Nemesis XDMF Pnetcdf ADIOS2 Faodel Catalyst2
+                     yl2m SuperLUDist SuperLUMT SuperLU Cholmod UMFPACK MA28 AMD CSparse
+                     HYPRE PETSC BLACS SCALAPACK MUMPS STRUMPACK PARDISO_MKL PARDISO Oski
+                     TAUCS ForUQTK Dakota HIPS MATLAB CASK SPARSKIT QT gtest BoostLib 
+                     BoostAlbLib OpenNURBS Portals CrayPortals Gemini InfiniBand BGPDCMF
+                     BGQPAMI Pablo HPCToolkit Clp GLPK gpOASES PAPI MATLABLib Eigen X11
+                     Lemon GLM quadmath CAMAL AmgX CGAL CGALCore VTune TASMANIAN ArrayFireCPU
+                     SimMesh SimModel SimParasolid SimAcis SimField Valgrind QUO
+                     ViennaCL Avatar mlpack pebbl MAGMASparse Check SARMA)
+
+set(tpl_enable_list CGNS HDF5 METIS Matio Netcdf Zlib fmt Cereal)
+
+set(tpl_options "")
+foreach(tpl IN LISTS tpl_disable_list)
+    list(APPEND tpl_options "-DTPL_ENABLE_${tpl}:BOOL=OFF")
+endforeach()
+foreach(tpl IN LISTS tpl_enable_list)
+    list(APPEND tpl_options "-DTPL_ENABLE_${tpl}:BOOL=ON")
+endforeach()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         #--trace-expand
         -DBUILD_TESTING:BOOL=OFF
         -DTrilinos_ENABLE_ALL_PACKAGES:BOOL=OFF
         -DTrilinos_ENABLE_SEACAS:BOOL=ON
-        #-DTrilinos_ENABLE_Seacas:BOOL=ON
         -DTrilinos_ENABLE_Kokkos:BOOL=OFF
         -DTrilinos_USE_GNUINSTALLDIRS:BOOL=ON
         -DTrilinos_ENABLE_Fortran:BOOL=OFF
         -DTrilinos_ENABLE_TESTS:BOOL=OFF
         -DKokkos_ENABLE_TESTS:BOOL=OFF
-        #-DTPL_ENABLE_BOOST:BOOL=ON
-        -DTPL_ENABLE_CGNS:BOOL=ON
-        -DTPL_ENABLE_HDF5:BOOL=ON
-        -DTPL_ENABLE_METIS:BOOL=ON
-        -DTPL_ENABLE_Matio:BOOL=ON
-        -DTPL_ENABLE_Netcdf:BOOL=ON
-        -DTPL_ENABLE_Zlib:BOOL=ON
-        -DTPL_ENABLE_fmt:BOOL=ON
+        ${FEATURE_OPTIONS}
+        ${tpl_options}
         "-DTrilinos_HOSTNAME:STRING=localhost"
-        #-DTPL_ENABLE_MPI:BOOL=ON 
         -DNetcdf_ALLOW_MODERN:BOOL=ON
     OPTIONS_DEBUG
         -DTrilinos_ENABLE_DEBUG:BOOL=OFF
@@ -60,8 +76,12 @@ set(cmake_config_list tribits Trilinos SEACASExodus SEACASNemesis SEACASIoss SEA
                SEACASEpu SEACASExo2mat SEACASExomatlab  SEACASMat2exo SEACASExodiff SEACASExo_format SEACASNas2exo 
                SEACASCpup SEACASSlice SEACASZellij SEACASNemslice SEACASNemspread SEACAS)
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND cmake_config_list Zoltan)
+endif()
+
 foreach(cmake_conig IN LISTS cmake_config_list)
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig} DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig}DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
 endforeach()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/external_packages" PACKAGE_NAME external_packages DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION )
 
@@ -84,10 +104,22 @@ foreach(script IN LISTS scripts)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(GLOB remaining_bin_stuff "${CURRENT_PACKAGES_DIR}/bin/*" LIST_DIRECTORIES true)
+    if(NOT remaining_bin_stuff)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    else()
+        message(FATAL_ERROR "remaining_bin_stuff:${remaining_bin_stuff}")
+    endif()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+# vcpkg really needs: vcpkg_remove_dirs_if_empty(<dirs>)
+file(GLOB remaining_cmake_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECTORIES true)
+if(NOT remaining_cmake_dirs)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+else()
+    message(FATAL_ERROR "remaining_cmake_dirs:${remaining_cmake_dirs}")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

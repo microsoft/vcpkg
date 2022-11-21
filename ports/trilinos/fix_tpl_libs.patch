@@ -1,33 +1,3 @@
-diff --git a/cmake/tribits/common_tpls/FindTPLNetcdf.cmake b/cmake/tribits/common_tpls/FindTPLNetcdf.cmake
-index f35dc8914..27e395545 100644
---- a/cmake/tribits/common_tpls/FindTPLNetcdf.cmake
-+++ b/cmake/tribits/common_tpls/FindTPLNetcdf.cmake
-@@ -70,19 +70,19 @@ if (Netcdf_ALLOW_PREFIND)
-     "${CMAKE_CURRENT_LIST_DIR}/utils"
-      )
- 
--  find_package(NetCDF)
-+  find_package(netCDF CONFIG)
- 
--  if (NetCDF_FOUND)
-+  if (netCDF_FOUND)
-     set(DOCSTR "List of semi-colon separated paths to look for the TPL Netcdf")
--    set(TPL_Netcdf_Enables_Netcdf4 ${NetCDF_NEEDS_HDF5} CACHE BOOL
-+    set(TPL_Netcdf_Enables_Netcdf4 ${netCDF_HAS_HDF5} CACHE BOOL
-       "True if netcdf enables netcdf-4")
--    set(TPL_Netcdf_Enables_PNetcdf ${NetCDF_NEEDS_PNetCDF} CACHE BOOL
-+    set(TPL_Netcdf_Enables_PNetcdf ${netCDF_HAS_PNETCDF} CACHE BOOL
-       "True if netcdf enables pnetcdf")
--    set(TPL_Netcdf_PARALLEL ${NetCDF_PARALLEL} CACHE INTERNAL
-+    set(TPL_Netcdf_PARALLEL ${netCDF_HAS_PARALLEL} CACHE INTERNAL
-       "True if netcdf compiled with parallel enabled")
-     set(TPL_Netcdf_LIBRARY_DIRS ${_hdf5_LIBRARY_SEARCH_DIRS} CACHE PATH
-       "${DOCSTR} library files")
--    set(TPL_Netcdf_LIBRARIES ${NetCDF_LIBRARIES} CACHE PATH
-+    set(TPL_Netcdf_LIBRARIES netCDF::netcdf CACHE PATH
-       "List of semi-colon separated library names (not 'lib' or extension).")
-     set(TPL_Netcdf_INCLUDE_DIRS ${NetCDF_INCLUDE_DIRS} CACHE PATH
-       "${DOCSTR} header files.")
 diff --git a/cmake/tribits/core/package_arch/TribitsAddExecutable.cmake b/cmake/tribits/core/package_arch/TribitsAddExecutable.cmake
 index f08e7b78b..1274e8fce 100644
 --- a/cmake/tribits/core/package_arch/TribitsAddExecutable.cmake
@@ -204,10 +174,8 @@ index d3cb102cf..3641799ac 100644
    else()
      if (WIN32)
 -      set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
-+      #set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
      else()
 -      set(CMAKE_FIND_LIBRARY_SUFFIXES .a )
-+      #set(CMAKE_FIND_LIBRARY_SUFFIXES .a )
      endif()
    endif()
    #print_var(CMAKE_FIND_LIBRARY_SUFFIXES)
