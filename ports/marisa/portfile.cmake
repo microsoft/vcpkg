@@ -6,28 +6,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_msbuild(
-            SOURCE_PATH ${SOURCE_PATH}
-            PROJECT_SUBPATH vs2019/vs2019.sln
-            INCLUDES_SUBPATH include
-            LICENSE_SUBPATH COPYING.md
-            PLATFORM ${TRIPLET_SYSTEM_ARCH}
-            ALLOW_ROOT_INCLUDES
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH vs2019/vs2019.sln
+        INCLUDES_SUBPATH include
+        LICENSE_SUBPATH COPYING.md
+        PLATFORM ${TRIPLET_SYSTEM_ARCH}
+        ALLOW_ROOT_INCLUDES
     )
+    vcpkg_clean_msbuild()
 else()
     vcpkg_configure_make(
-            SOURCE_PATH "${SOURCE_PATH}"
-            AUTOCONFIG
-            COPY_SOURCE
-            OPTIONS
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        COPY_SOURCE
     )
     vcpkg_install_make()
-    vcpkg_copy_pdbs()
-    vcpkg_fixup_pkgconfig()
-
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(INSTALL "${SOURCE_PATH}/COPYING.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
