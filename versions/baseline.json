@@ -334,7 +334,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.220",
-      "port-version": 1
+      "port-version": 2
     },
     "azmq": {
       "baseline": "1.0.3",
@@ -346,7 +346,7 @@
     },
     "azure-core-cpp": {
       "baseline": "1.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.3",
@@ -1801,8 +1801,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "7.84.0",
-      "port-version": 2
+      "baseline": "7.86.0",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",
