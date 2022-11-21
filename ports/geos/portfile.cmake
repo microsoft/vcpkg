@@ -10,7 +10,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         disable-warning-4996.patch
         fix-exported-config.patch
-        fix_clang-cl.patch
+        fix-dll-builds.patch
 )
 
 vcpkg_list(SET EXTRA_OPTIONS)
