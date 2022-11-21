@@ -6529,8 +6529,8 @@
       "port-version": 0
     },
     "readline-unix": {
-      "baseline": "8.1",
-      "port-version": 2
+      "baseline": "8.2",
+      "port-version": 0
     },
     "readline-win32": {
       "baseline": "5.0",
