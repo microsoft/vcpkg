@@ -146,7 +146,8 @@
             "quickcontrols2",
             "svg",
             "tools",
-            "translations"
+            "translations",
+            "websockets"
           ]
         }
       ]
