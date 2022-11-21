@@ -7,13 +7,16 @@ vcpkg_from_github(
     SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
     HEAD_REF master
     PATCHES
-        pytorch-pr-85958.patch
+        pytorch-pr-85958.patch # https://github.com/pytorch/pytorch/pull/85958
         fix-cmake.patch
         fix-fbgemm-include.patch
-        use-glog-header.patch
-        use-flatbuffers2.patch
+        fix-c10-glog.patch
+        use-flatbuffers2.patch # check with codegen-flatc-mobile_bytecode
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
+
+# Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SOURCE_PATH}/cmake")
 
 find_program(FLATC NAMES flatc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
 message(STATUS "Using flatc: ${FLATC}")
@@ -27,20 +30,12 @@ vcpkg_execute_required_process(
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
 message(STATUS "Using protoc: ${PROTOC}")
 
-
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
     PACKAGES typing-extensions pyyaml
     OUT_PYTHON_VAR PYTHON3
 )
 message(STATUS "Using Python3: ${PYTHON3}")
-
-# Make the configure step use same Python executable
-get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
-vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
-
-# Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
@@ -111,12 +106,13 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH="${PROTOC}"
-        -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE:FILEPATH="${PROTOC}"
-        -DPYTHON_EXECUTABLE:FILEPATH="${PYTHON3}"
-        -DPython3_EXECUTABLE:FILEPATH="${PYTHON3}"
+        -DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}
+        -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}
+        -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
+        -DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
@@ -155,8 +151,8 @@ vcpkg_cmake_configure(
         USE_VULKAN_WRAPPER
         MKLDNN_CPU_RUNTIME
 )
-vcpkg_cmake_build(TARGET __aten_op_header_gen) # explicit codegen is required
-vcpkg_cmake_build(TARGET torch_cpu LOGFILE_BASE torch_cpu)
+vcpkg_cmake_build(TARGET __aten_op_header_gen LOGFILE_BASE build-header_gen) # explicit codegen is required
+vcpkg_cmake_build(TARGET torch_cpu            LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 

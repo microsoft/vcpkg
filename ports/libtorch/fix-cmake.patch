@@ -52,19 +52,6 @@ index 328210c..c407442 100644
  endif()
  
  add_subdirectory(core)
-diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index 9f96fbe..99933df 100644
---- a/aten/src/ATen/CMakeLists.txt
-+++ b/aten/src/ATen/CMakeLists.txt
-@@ -38,7 +38,7 @@ configure_file(Config.h.in "${CMAKE_CURRENT_SOURCE_DIR}/Config.h")
- # this file generates AT_ROCM_ENABLED() which is required by the miopen
- # files, which are compiled even if we are doing a vanilla CUDA build.
- # Once we properly split CUDA and HIP in ATen, we can remove this code.
--configure_file(cuda/CUDAConfig.h.in "${CMAKE_CURRENT_SOURCE_DIR}/cuda/CUDAConfig.h")
-+# configure_file(cuda/CUDAConfig.h.in "${CMAKE_CURRENT_SOURCE_DIR}/cuda/CUDAConfig.h")
- if(USE_ROCM)
-   configure_file(hip/HIPConfig.h.in "${CMAKE_CURRENT_SOURCE_DIR}/hip/HIPConfig.h")
- endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index c407442..16fa898 100644
 --- a/caffe2/CMakeLists.txt

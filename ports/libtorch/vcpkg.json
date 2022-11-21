@@ -8,11 +8,11 @@
   "dependencies": [
     "cpuinfo",
     "eigen3",
+    "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
-    "flatbuffers",
     "fmt",
     "foxi",
     "gemmlowp",
@@ -86,12 +86,6 @@
       "description": "Build with OpenCV 3.x",
       "dependencies": [
         "opencv"
-      ]
-    },
-    "qnnpack": {
-      "description": "Build with QNNPack",
-      "dependencies": [
-        "qnnpack"
       ]
     },
     "tbb": {

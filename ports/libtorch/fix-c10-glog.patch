@@ -36,3 +36,26 @@ index fe74e49..06e09d6 100644
  #endif
    {
      ::google::InitGoogleLogging(name);
+diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
+index 1864f17..b958fa0 100644
+--- a/c10/util/Logging.cpp
++++ b/c10/util/Logging.cpp
+@@ -154,18 +154,6 @@ void setLogLevelFlagFromEnv();
+ } // namespace detail
+ } // namespace c10
+ 
+-#if defined(C10_USE_GFLAGS) && defined(C10_USE_GLOG)
+-// When GLOG depends on GFLAGS, these variables are being defined in GLOG
+-// directly via the GFLAGS definition, so we will use DECLARE_* to declare
+-// them, and use them in Caffe2.
+-// GLOG's minloglevel
+-DECLARE_int32(minloglevel);
+-// GLOG's verbose log value.
+-DECLARE_int32(v);
+-// GLOG's logtostderr value
+-DECLARE_bool(logtostderr);
+-#endif // defined(C10_USE_GFLAGS) && defined(C10_USE_GLOG)
+-
+ #if !defined(C10_USE_GLOG)
+ // This backward compatibility flags are in order to deal with cases where
+ // Caffe2 are not built with glog, but some init flags still pass in these
