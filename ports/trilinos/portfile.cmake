@@ -25,13 +25,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(tpl_disable_list MKL yaml-cpp Peano CUDA CUBLAS CUSOLVER CUSPARSE Thrust Cusp TBB 
                      HWLOC QTHREAD BinUtils ARPREC QD BOOST BLAS LAPACK Scotch OVIS gpcd 
-                     DataWrap MTMETIS ParMETIS PuLP TopoManager LibTopoMap PaToH CppUnit
+                     DataWarp MTMETIS ParMETIS PuLP TopoManager LibTopoMap PaToH CppUnit
                      ADOLC ADIC TVMET MF ExodusII Nemesis XDMF Pnetcdf ADIOS2 Faodel Catalyst2
-                     yl2m SuperLUDist SuperLUMT SuperLU Cholmod UMFPACK MA28 AMD CSparse
+                     y12m SuperLUDist SuperLUMT SuperLU Cholmod UMFPACK MA28 AMD CSparse
                      HYPRE PETSC BLACS SCALAPACK MUMPS STRUMPACK PARDISO_MKL PARDISO Oski
                      TAUCS ForUQTK Dakota HIPS MATLAB CASK SPARSKIT QT gtest BoostLib 
                      BoostAlbLib OpenNURBS Portals CrayPortals Gemini InfiniBand BGPDCMF
-                     BGQPAMI Pablo HPCToolkit Clp GLPK gpOASES PAPI MATLABLib Eigen X11
+                     BGQPAMI Pablo HPCToolkit Clp GLPK qpOASES PAPI MATLABLib Eigen X11
                      Lemon GLM quadmath CAMAL AmgX CGAL CGALCore VTune TASMANIAN ArrayFireCPU
                      SimMesh SimModel SimParasolid SimAcis SimField Valgrind QUO
                      ViennaCL Avatar mlpack pebbl MAGMASparse Check SARMA)
