@@ -13,11 +13,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-dll-builds.patch
 )
 
-vcpkg_list(SET EXTRA_OPTIONS)
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -26,7 +21,6 @@ vcpkg_cmake_configure(
         -DBUILD_GEOSOP=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
-        ${EXTRA_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)
