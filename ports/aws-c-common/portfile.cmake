@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
+		TRICE.asn-sanitizer.patch	# Filter out problematic functions with windows address sanitizer
 )
 
 vcpkg_cmake_configure(
@@ -24,7 +25,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-common"
     "${CURRENT_PACKAGES_DIR}/lib/aws-c-common"
-    )
+)
 
 vcpkg_copy_pdbs()
 
