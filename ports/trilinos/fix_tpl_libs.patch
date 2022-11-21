@@ -169,7 +169,7 @@ diff --git a/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibrari
 index d3cb102cf..3641799ac 100644
 --- a/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake
 +++ b/cmake/tribits/core/package_arch/TribitsTplFindIncludeDirsAndLibraries.cmake
-@@ -423,9 +423,9 @@ function(tribits_tpl_find_include_dirs_and_libraries TPL_NAME)
+@@ -423,9 +423,7 @@ function(tribits_tpl_find_include_dirs_and_libraries TPL_NAME)
      set(TPL_CMAKE_FIND_LIBRARY_SUFFIXES ${TPL_CMAKE_FIND_LIBRARY_SUFFIXES_DEFAULT})
    else()
      if (WIN32)
