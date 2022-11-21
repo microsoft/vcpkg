@@ -4732,7 +4732,7 @@
       "baseline": "22.04.0",
       "port-version": 1
     },
-    "marisa": {
+    "marisa-trie": {
       "baseline": "0.2.6",
       "port-version": 0
     },
