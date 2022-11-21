@@ -1,6 +1,8 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF v2.5.0
+    REF v${VERSION}
     HEAD_REF development
     SHA512 d87f5e2641b064b6d6c53c2af86ed3c133f76a408728f4ad4fbc122d4392b4da21fea3faa0b2f58391e348f23c972f3c0196386c5c8c66800500da99d4522f70
 )
