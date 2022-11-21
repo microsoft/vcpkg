@@ -5057,8 +5057,8 @@
       "port-version": 5
     },
     "muparser": {
-      "baseline": "2.3.3",
-      "port-version": 2
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "murmurhash": {
       "baseline": "2016-01-09",
