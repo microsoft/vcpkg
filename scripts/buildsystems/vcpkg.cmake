@@ -148,9 +148,9 @@ endfunction()
 # NOTE: this function definition is copied directly from scripts/cmake/z_vcpkg_function_arguments.cmake
 # do not make changes here without making the same change there.
 macro(z_vcpkg_function_arguments OUT_VAR)
-    if("${ARGC}" EQUAL 1)
+    if("${ARGC}" EQUAL "1")
         set(z_vcpkg_function_arguments_FIRST_ARG "0")
-    elseif("${ARGC}" EQUAL 2)
+    elseif("${ARGC}" EQUAL "2")
         set(z_vcpkg_function_arguments_FIRST_ARG "${ARGV1}")
     else()
         # vcpkg bug
