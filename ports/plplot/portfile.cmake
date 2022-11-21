@@ -17,18 +17,31 @@ vcpkg_check_features(
     FEATURES
         wxwidgets PLD_wxwidgets
         wxwidgets ENABLE_wxwidgets
+        x11       PLD_xwin
+        x11       CMAKE_REQUIRE_FIND_PACKAGE_X11
+    INVERTED_FEATURES
+        x11       CMAKE_DISABLE_FIND_PACKAGE_X11
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DDEFAULT_NO_BINDINGS=ON
+        -DDEFAULT_NO_QT_DEVICES=ON
         -DENABLE_cxx=ON
-        -DPL_HAVE_QHULL=OFF
-        -DPLPLOT_USE_QT5=OFF
-        -DPL_DOUBLE=ON
         -DENABLE_DYNDRIVERS=OFF
+        -DENABLE_qt=OFF
+        -DENABLE_tk=OFF
+        -DHAVE_SHAPELIB=OFF
+        -DPL_DOUBLE=ON
+        -DPL_HAVE_QHULL=OFF
+        -DPLD_aqt=OFF   # needs aquaterm framework
+        -DPLD_pdf=OFF   # needs haru
+        -DPLD_psttf=OFF # needs lasi (in addition to pango)
         ${FEATURE_OPTIONS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Freetype=ON
     OPTIONS_DEBUG
         "-DDATA_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/data"
         "-DDOC_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/doc"

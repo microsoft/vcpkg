@@ -5,9 +5,11 @@
   "homepage": "http://plplot.org/",
   "license": null,
   "dependencies": [
-    "bzip2",
-    "freetype",
-    "libpng",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    "pango",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,14 +17,22 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
+    }
   ],
   "features": {
     "wxwidgets": {
-      "description": "plplot wxwidgets module",
+      "description": "Enable wxWidgets GUI binding",
       "dependencies": [
-        "wxwidgets"
+        {
+          "name": "wxwidgets",
+          "default-features": false
+        }
+      ]
+    },
+    "x11": {
+      "description": "Enable X11 support",
+      "dependencies": [
+        "libx11"
       ]
     }
   }
