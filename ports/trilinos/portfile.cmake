@@ -98,6 +98,10 @@ endif()
 vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 
 set(scripts decomp epup pconjoin)
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND scripts getopt.seacas)
+endif()
+
 
 foreach(script IN LISTS scripts)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
@@ -108,7 +112,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(NOT remaining_bin_stuff)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     else()
-        message(FATAL_ERROR "remaining_bin_stuff:${remaining_bin_stuff}")
+        message(WARNING "remaining_bin_stuff:${remaining_bin_stuff}")
     endif()
 endif()
 
@@ -117,7 +121,7 @@ file(GLOB remaining_cmake_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECT
 if(NOT remaining_cmake_dirs)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 else()
-    message(FATAL_ERROR "remaining_cmake_dirs:${remaining_cmake_dirs}")
+    message(WARNING "remaining_cmake_dirs:${remaining_cmake_dirs}")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
