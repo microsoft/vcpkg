@@ -1,15 +1,14 @@
-set(GDK_PIXBUF_VERSION 2.42)
-set(GDK_PIXBUF_PATCH 9)
-
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gdk-pixbuf
-    REF "${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}"
+    REF "${VERSION}"
     SHA512 3406f47b413fe3860df410a0cc0076ce47d10605b39347105690c85616739e67e5dfd0804efcad758614b0c8d1369e410b9efaa704a234bfd19686b82595b9e1
     HEAD_REF master
     PATCHES
         fix_build_error_windows.patch
+        loaders-cache.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -31,48 +30,27 @@ vcpkg_configure_meson(
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf
-    ADDITIONAL_NATIVE_BINARIES glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
-                               glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES  glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
-                               glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        )
+    ADDITIONAL_BINARIES glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
+                        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+)
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-# Fix paths in pc file.
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc")
-if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE [[${bindir}]] "\${prefix}/../tools/${PORT}" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdk-pixbuf-2.0.pc" [[${bindir}]] "\${prefix}/tools/${PORT}")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc" [[${bindir}]] "\${prefix}/../tools/${PORT}")
 endif()
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdk-pixbuf-2.0.pc")
-if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE [[${bindir}]] "\${prefix}/tools/${PORT}" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-endif()
-
 vcpkg_fixup_pkgconfig()
 
-set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders gdk-pixbuf-thumbnailer)
-
-# gdk-pixbuf-thumbnailer is not compiled for cross-compiling 
-set(IS_NEED_REMOVE_THUMBNAILER ${VCPKG_CROSSCOMPILING})
-# This adjusting logic might be place in vcpkg_common_definitions.cmake.
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86" OR VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
-        set(IS_NEED_REMOVE_THUMBNAILER false)
-    endif()
+set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders)
+# gdk-pixbuf-thumbnailer is not compiled for cross-compiling
+# vcpkg-meson cross-build configuration differs from VCPKG_CROSSCOMPILING
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/gdk-pixbuf-thumbnailer${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    list(APPEND TOOL_NAMES gdk-pixbuf-thumbnailer)
 endif()
-if(IS_NEED_REMOVE_THUMBNAILER)
-    list(REMOVE_ITEM TOOL_NAMES gdk-pixbuf-thumbnailer)
-endif()
-
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,8 +1,8 @@
 diff --git a/fftools/cmdutils.c b/fftools/cmdutils.c
-index 9cfbc45..e3447e6 100644
+index fe424b6..2df70df 100644
 --- a/fftools/cmdutils.c
 +++ b/fftools/cmdutils.c
-@@ -63,6 +63,8 @@
+@@ -60,6 +60,8 @@
  #include <sys/resource.h>
  #endif
  #ifdef _WIN32
