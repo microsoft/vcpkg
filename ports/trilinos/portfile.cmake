@@ -81,7 +81,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 foreach(cmake_conig IN LISTS cmake_config_list)
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig}DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig} DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
 endforeach()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/external_packages" PACKAGE_NAME external_packages DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION )
 
