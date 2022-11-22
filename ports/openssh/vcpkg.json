@@ -5,6 +5,7 @@
   "description": "OpenSSH is the premier connectivity tool for remote login with the SSH protocol.",
   "homepage": "https://www.openssh.com",
   "license": "BSD-3-Clause",
+  "supports": "linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
