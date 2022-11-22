@@ -131,7 +131,7 @@ index 90911a3cc..72529e063 100644
 +find_package(metis REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
 +  METIS
-+  INNER_FIND_PACKAGE_NAME METIS
++  INNER_FIND_PACKAGE_NAME metis
 +  IMPORTED_TARGETS_FOR_ALL_LIBS metis)
 diff --git a/cmake/TPLs/FindTPLMatio.cmake b/cmake/TPLs/FindTPLMatio.cmake
 index ede07c2b3..32160130a 100644
