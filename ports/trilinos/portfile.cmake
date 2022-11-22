@@ -37,7 +37,13 @@ set(tpl_disable_list MKL yaml-cpp Peano CUDA CUBLAS CUSOLVER CUSPARSE Thrust Cus
                      SimMesh SimModel SimParasolid SimAcis SimField Valgrind QUO
                      ViennaCL Avatar mlpack pebbl MAGMASparse Check SARMA)
 
-set(tpl_enable_list CGNS HDF5 METIS Matio Netcdf Zlib fmt Cereal)
+set(tpl_enable_list CGNS HDF5 Matio Netcdf Zlib fmt Cereal)
+
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND tpl_disable_list METIS)
+else()
+    list(APPEND tpl_enable_list METIS)
+endif()
 
 set(tpl_options "")
 foreach(tpl IN LISTS tpl_disable_list)
@@ -51,6 +57,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         #--trace-expand
+        -DTrilinos_VERBOSE_CONFIGURE:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DTrilinos_ENABLE_ALL_PACKAGES:BOOL=OFF
         -DTrilinos_ENABLE_SEACAS:BOOL=ON

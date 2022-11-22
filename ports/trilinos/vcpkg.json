@@ -15,9 +15,12 @@
       "name": "hdf5",
       "default-features": false
     },
-    "hwloc",
     "matio",
-    "metis",
+    {
+      "name": "metis",
+      "default-features": false
+      "platform": "!osx"
+    },
     {
       "name": "netcdf-c",
       "default-features": false
