@@ -5,8 +5,6 @@ vcpkg_from_github(
     REF release-${VERSION}
     SHA512 34088a7ceea7823941fc3d16d6c5add85500d0cc30519f0fadb739939a6a87f2509f2305564a4e35a3a533db41fdb8fab95cb51143240f5fb888535e36130b82
     HEAD_REF main
-    PATCHES
-        0001-sdl2-uwp-skip-list-clean.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
