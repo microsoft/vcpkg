@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF 5eff7f1df7b7cd31ef95b5059c2774d3d71a2d0e # v0.8.13
     SHA512 c2f8bd762a885955b13f278aa258aba694376606add17b588fa70d6f1b5e0b849ea91a536de3bf9a13c516fafb649d1fc579764c7b57772aaa3cd81e250ca239
     HEAD_REF master
-    PATCHES std.patch # similar patch is already in master
 )
 
 if ("gdcm" IN_LIST FEATURES)
