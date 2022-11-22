@@ -16,7 +16,6 @@ vcpkg_from_github(
         FindLZ4.patch
         Findproj.patch
         pegtl.patch
-        jsoncpp.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
         fix-using-hdf5.patch
@@ -24,7 +23,10 @@ vcpkg_from_github(
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
         # fix-gdal.patch TODO?
-        make_it_work.patch
+        cgns.patch
+        vtkm.patch
+        afxdll.patch
+        vtkioss.patch
 )
 
 # =============================================================================

@@ -9,6 +9,8 @@
 # add_subdirectory(thirdparty/taotuple)
 # add_subdirectory(thirdparty/lcl)
 
+set(VERSION_MAJOR_MINOR 1.9)
+
 vcpkg_check_features (OUT_FEATURE_OPTIONS OPTIONS 
     FEATURES
       cuda   VTKm_ENABLE_CUDA
@@ -48,9 +50,11 @@ vcpkg_cmake_configure(
   OPTIONS ${OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtkm-1.9 PACKAGE_NAME vtkm)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/vtkm-${VERSION_MAJOR_MINOR}" PACKAGE_NAME vtkm)
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake" [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-1.9")]] [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake" 
+                    [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-${VERSION_MAJOR_MINOR}")]] 
+                    [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]])
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "not/existing/buildtree")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

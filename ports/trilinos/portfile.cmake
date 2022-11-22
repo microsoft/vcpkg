@@ -7,9 +7,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES fix_deps.patch
             fix_tpl_libs.patch
-            next.patch
-            fix_zoltan_parmetis.patch
+            fix-ioss-includes.patch
+            devendor-fmt.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/packages/seacas/libraries/ioss/src/private_copy_fmt/fmt")
+file(REMOVE_RECURSE "${SOURCE_PATH}/packages/seacas/libraries/suplib_cpp/fmt")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

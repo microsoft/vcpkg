@@ -1,0 +1,59 @@
+diff --git a/TPLsList.cmake b/TPLsList.cmake
+index aefa25c0f..38ef4dcd0 100644
+--- a/TPLsList.cmake
++++ b/TPLsList.cmake
+@@ -73,6 +73,7 @@ TRIBITS_REPOSITORY_DEFINE_TPLS(
+   MPI             "${${PROJECT_NAME}_TRIBITS_DIR}/core/std_tpls/" PT
+   BLAS            "cmake/TPLs/"   PT
+   LAPACK          "cmake/TPLs/"   PT
++  fmt          "cmake/TPLs/"   PT
+   Boost           "${${PROJECT_NAME}_TRIBITS_DIR}/common_tpls/"   PT
+   Scotch          "cmake/TPLs/"    ST
+   OVIS            "cmake/TPLs/"    ST
+diff --git a/cmake/TPLs/FindTPLfmt.cmake b/cmake/TPLs/FindTPLfmt.cmake
+new file mode 100644
+index 000000000..f3a23324e
+--- /dev/null
++++ b/cmake/TPLs/FindTPLfmt.cmake
+@@ -0,0 +1,5 @@
++find_package(fmt REQUIRED)
++tribits_extpkg_create_imported_all_libs_target_and_config_file(
++  fmt
++  INNER_FIND_PACKAGE_NAME fmt
++  IMPORTED_TARGETS_FOR_ALL_LIBS fmt::fmt)
+diff --git a/packages/seacas/libraries/ioss/cmake/Dependencies.cmake b/packages/seacas/libraries/ioss/cmake/Dependencies.cmake
+index 37e15d944..425a0e0b8 100644
+--- a/packages/seacas/libraries/ioss/cmake/Dependencies.cmake
++++ b/packages/seacas/libraries/ioss/cmake/Dependencies.cmake
+@@ -1,10 +1,12 @@
+ if (CMAKE_PROJECT_NAME STREQUAL "Seacas")
+ TRIBITS_PACKAGE_DEFINE_DEPENDENCIES(
++  LIB_REQUIRED_TPLS fmt
+   LIB_OPTIONAL_PACKAGES SEACASExodus Zoltan
+   LIB_OPTIONAL_TPLS HDF5 Pamgen CGNS ParMETIS Faodel Cereal DLlib Pthread ADIOS2 Catalyst2 ${SEACAS_GTest_TPL_name} Kokkos DataWarp fmt
+ )
+ else()
+ TRIBITS_PACKAGE_DEFINE_DEPENDENCIES(
++  LIB_REQUIRED_TPLS fmt
+   LIB_OPTIONAL_PACKAGES SEACASExodus Pamgen Zoltan Kokkos
+   LIB_OPTIONAL_TPLS HDF5 CGNS ParMETIS Faodel Cereal DLlib Pthread DataWarp ADIOS2 Catalyst2 ${SEACAS_GTest_TPL_name}
+ )
+diff --git a/packages/seacas/libraries/suplib_cpp/CMakeLists.txt b/packages/seacas/libraries/suplib_cpp/CMakeLists.txt
+index 5eb15b5a7..16c5d4c58 100644
+--- a/packages/seacas/libraries/suplib_cpp/CMakeLists.txt
++++ b/packages/seacas/libraries/suplib_cpp/CMakeLists.txt
+@@ -31,4 +31,6 @@ TRIBITS_ADD_LIBRARY(
+   SOURCES ${SOURCES}
+   )
+ 
++target_link_libraries(suplib_cpp PUBLIC fmt::all_libs)
++
+ TRIBITS_SUBPACKAGE_POSTPROCESS()
+diff --git a/packages/seacas/libraries/suplib_cpp/cmake/Dependencies.cmake b/packages/seacas/libraries/suplib_cpp/cmake/Dependencies.cmake
+index c58e74bf9..093d60c3c 100644
+--- a/packages/seacas/libraries/suplib_cpp/cmake/Dependencies.cmake
++++ b/packages/seacas/libraries/suplib_cpp/cmake/Dependencies.cmake
+@@ -1,2 +1,3 @@
+ TRIBITS_PACKAGE_DEFINE_DEPENDENCIES(
++  LIB_REQUIRED_TPLS fmt
+ )

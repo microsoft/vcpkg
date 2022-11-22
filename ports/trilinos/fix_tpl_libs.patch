@@ -158,10 +158,10 @@ index dcdde4ce6..aaec95d49 100644
        "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
      set(tplConfigFile
 -      "${buildDirExternalPkgsDir}/${TPL_NAME}/${TPL_NAME}Config.cmake")
-+      "${buildDirExternalPkgsDir}/${TPL_NAME}/TPL${TPL_NAME}Config.cmake")
++      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}Config.cmake")
      set(tplConfigVersionFile
 -      "${buildDirExternalPkgsDir}/${TPL_NAME}/${TPL_NAME}ConfigVersion.cmake")
-+      "${buildDirExternalPkgsDir}/${TPL_NAME}/TPL${TPL_NAME}ConfigVersion.cmake")
++      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}ConfigVersion.cmake")
      tribits_extpkg_write_config_version_file(${TPL_NAME}
        "${tplConfigVersionFile}")
      tribits_extpkg_install_config_file(${TPL_NAME} "${tplConfigFile}")
@@ -182,7 +182,8 @@ index d3cb102cf..3641799ac 100644
 @@ -717,7 +717,7 @@ function(tribits_tpl_find_include_dirs_and_libraries TPL_NAME)
    set(buildDirExternalPkgsDir
      "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
-   set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/${TPL_NAME}")
+-  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/${TPL_NAME}")
++  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/TPL${TPL_NAME}")
 -  set(tplConfigFile "${tplConfigFileBaseDir}/${TPL_NAME}Config.cmake")
 +  set(tplConfigFile "${tplConfigFileBaseDir}/TPL${TPL_NAME}Config.cmake")
    tribits_extpkg_write_config_file(${TPL_NAME} "${tplConfigFile}")
@@ -230,3 +231,50 @@ index 1f31b6ec0..9bc1057b7 100644
          "endif()\n"
          )
      endif()
+diff --git a/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake b/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
+index 1873267bd..ed6254632 100644
+--- a/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
++++ b/cmake/tribits/core/package_arch/TribitsExternalPackageFindTplHelpers.cmake
+@@ -120,17 +120,21 @@ function(tribits_extpkg_create_package_config_file_with_imported_targets
+       "set(${externalPkg}_DIR \"${${externalPkg}_DIR}\")\n" )
+   endif()
+   string(APPEND configFileStr
+-    "find_dependency(${externalPkg})\n"
+-    "add_library(${tplName}::all_libs  INTERFACE  IMPORTED  GLOBAL)\n"
++    "find_dependency(${externalPkg})\n" # This is outside TPL
++    "if(NOT TARGET ${tplName}::all_libs)\n"
++    "  add_library(${tplName}::all_libs  INTERFACE  IMPORTED  GLOBAL)\n" 
+     )
+   foreach (importedTarget  IN LISTS  PARSE_IMPORTED_TARGETS_FOR_ALL_LIBS)
+     string(APPEND configFileStr
+-      "target_link_libraries(${tplName}::all_libs  INTERFACE  ${importedTarget})\n")
++      "  target_link_libraries(${tplName}::all_libs  INTERFACE  ${importedTarget})\n")
+   endforeach()
++  string(APPEND configFileStr
++    "endif()\n"
++  )
+   set(buildDirExternalPkgsDir
+     "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
+   set(tplConfigFile
+-    "${buildDirExternalPkgsDir}/${tplName}/${tplName}Config.cmake")
++    "${buildDirExternalPkgsDir}/TPL${tplName}/TPL${tplName}Config.cmake")
+   file(WRITE "${tplConfigFile}" "${configFileStr}")
+ 
+ endfunction()
+diff --git a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+index c49a2c019..7c906ce26 100644
+--- a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
++++ b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+@@ -334,9 +334,10 @@ function(tribits_extpkg_add_find_upstream_dependencies_str
+       endif()
+       string(APPEND configFileFragStr
+         "if (NOT TARGET TPL::${upstreamTplDepName}::all_libs)\n"
+-        "  set(${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../${upstreamTplDepName}\")\n"
++        "  set(TPL${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../TPL${upstreamTplDepName}\")\n" # Looks for internal dep
++        "  # Really only upstream ? NO ! THis is for ::all_libs targets in internal consumers\n"
+         "  find_dependency(TPL${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
+-        "  unset(${upstreamTplDepName}_DIR)\n"
++        "  unset(TPL${upstreamTplDepName}_DIR)\n"
+         "endif()\n"
+         "\n"
+         )
