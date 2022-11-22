@@ -148,9 +148,9 @@ endfunction()
 # NOTE: this function definition is copied directly from scripts/cmake/z_vcpkg_function_arguments.cmake
 # do not make changes here without making the same change there.
 macro(z_vcpkg_function_arguments OUT_VAR)
-    if("${ARGC}" EQUAL 1)
-        set(z_vcpkg_function_arguments_FIRST_ARG 0)
-    elseif("${ARGC}" EQUAL 2)
+    if("${ARGC}" EQUAL "1")
+        set(z_vcpkg_function_arguments_FIRST_ARG "0")
+    elseif("${ARGC}" EQUAL "2")
         set(z_vcpkg_function_arguments_FIRST_ARG "${ARGV1}")
     else()
         # vcpkg bug
@@ -172,7 +172,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
             set("${OUT_VAR}" "${${OUT_VAR}};${z_vcpkg_function_arguments_ESCAPED_ARG}")
         endforeach()
         # remove leading `;`
-        string(SUBSTRING "${${OUT_VAR}}" 1 -1 "${OUT_VAR}")
+        string(SUBSTRING "${${OUT_VAR}}" "1" "-1" "${OUT_VAR}")
     endif()
 endmacro()
 
@@ -280,7 +280,7 @@ else()
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_SYSTEM_NAME AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
-            if(Z_VCPKG_OSX_ARCH_COUNT EQUAL 0)
+            if(Z_VCPKG_OSX_ARCH_COUNT EQUAL "0")
                 message(WARNING "Unable to determine target architecture. "
                                 "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
                                 "Continuing without vcpkg.")
@@ -289,10 +289,10 @@ else()
                 return()
             endif()
 
-            if(Z_VCPKG_OSX_ARCH_COUNT GREATER 1)
+            if(Z_VCPKG_OSX_ARCH_COUNT GREATER "1")
                 message(WARNING "Detected more than one target architecture. Using the first one.")
             endif()
-            list(GET CMAKE_OSX_ARCHITECTURES 0 Z_VCPKG_OSX_TARGET_ARCH)
+            list(GET CMAKE_OSX_ARCHITECTURES "0" Z_VCPKG_OSX_TARGET_ARCH)
             if(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64")
                 set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
             elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64s")
@@ -410,7 +410,7 @@ function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
     if(VCPKG_PREFER_SYSTEM_LIBS)
         list(APPEND "${list}" "${vcpkg_paths}")
     else()
-        list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
+        list(INSERT "${list}" "0" "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
     endif()
     set("${list}" "${${list}}" PARENT_SCOPE)
 endfunction()
@@ -456,7 +456,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ERROR_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE Z_VCPKG_BOOTSTRAP_RESULT)
 
-        if(Z_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+        if(Z_VCPKG_BOOTSTRAP_RESULT EQUAL "0")
             message(STATUS "Bootstrapping vcpkg before install - done")
         else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
@@ -523,7 +523,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         file(TO_NATIVE_PATH "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
-        if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
+        if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL "0")
             message(STATUS "Running vcpkg install - done")
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${VCPKG_MANIFEST_DIR}/vcpkg.json")
@@ -585,7 +585,7 @@ function(add_executable)
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
-    if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
+    if(IMPORTED_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         if(VCPKG_APPLOCAL_DEPS)
             if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
                 z_vcpkg_set_powershell_path()
@@ -602,7 +602,7 @@ function(add_executable)
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
-                if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
+                if(NOT MACOSX_BUNDLE_IDX EQUAL "-1")
                     find_package(Python COMPONENTS Interpreter)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
                         COMMAND "${Python_EXECUTABLE}" "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
@@ -626,7 +626,7 @@ function(add_library)
     list(FIND ARGS "IMPORTED" IMPORTED_IDX)
     list(FIND ARGS "INTERFACE" INTERFACE_IDX)
     list(FIND ARGS "ALIAS" ALIAS_IDX)
-    if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
+    if(IMPORTED_IDX EQUAL "-1" AND INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             z_vcpkg_set_powershell_path()
@@ -657,7 +657,7 @@ function(x_vcpkg_install_local_dependencies)
         )
     endif()
 
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV "0" arg
         ""
         "DESTINATION;COMPONENT"
         "TARGETS"
@@ -797,7 +797,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
     elseif(z_vcpkg_find_package_package_name STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
         list(FIND z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "COMPONENTS" z_vcpkg_find_package_COMPONENTS_IDX)
-        if(NOT z_vcpkg_find_package_COMPONENTS_IDX EQUAL -1)
+        if(NOT z_vcpkg_find_package_COMPONENTS_IDX EQUAL "-1")
             _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN} COMPONENTS data)
         else()
             _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
@@ -837,7 +837,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         unset("${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_var}")
     endforeach()
     math(EXPR z_vcpkg_find_package_backup_id "${z_vcpkg_find_package_backup_id} - 1")
-    if(z_vcpkg_find_package_backup_id LESS 0)
+    if(z_vcpkg_find_package_backup_id LESS "0")
         message(FATAL_ERROR "[vcpkg]: find_package ended with z_vcpkg_find_package_backup_id being less than 0! This is a logical error and should never happen. Please provide a cmake trace log via cmake cmd line option '--trace-expand'!")
     endif()
 endmacro()
