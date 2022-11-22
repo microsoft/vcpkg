@@ -80,7 +80,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "paraview"    VTK_MODULE_ENABLE_VTK_cli11
-        "paraview"    VTK_MODULE_ENABLE_VTK_WebCore
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
@@ -126,6 +125,12 @@ if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
         -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
+    )
+endif()
+
+if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_WebCore=YES
     )
 endif()
 
