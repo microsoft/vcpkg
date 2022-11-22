@@ -1,0 +1,12 @@
+diff --git a/src/video/wayland/SDL_waylandmouse.c b/src/video/wayland/SDL_waylandmouse.c
+index 20c5efca0..aac4d056a 100644
+--- a/src/video/wayland/SDL_waylandmouse.c
++++ b/src/video/wayland/SDL_waylandmouse.c
+@@ -43,6 +43,7 @@
+ #include "SDL_hints.h"
+ #include "../../SDL_hints_c.h"
+ 
++#include "wayland-client.h"
+ static int
+ Wayland_SetRelativeMouseMode(SDL_bool enabled);
+ 

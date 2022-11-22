@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         0001-sdl2-uwp-skip-list-clean.patch
+        0002-sdl2-fix-wayland-include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
