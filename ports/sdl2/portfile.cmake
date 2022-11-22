@@ -7,7 +7,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         0001-sdl2-uwp-skip-list-clean.patch
-        0002-sdl2-fix-wayland-include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -18,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         vulkan   SDL_VULKAN
         x11      SDL_X11_SHARED
-        wayland  SDL_WAYLAND_SHARED
+        wayland  SDL_WAYLAND
 )
 
 if ("x11" IN_LIST FEATURES)

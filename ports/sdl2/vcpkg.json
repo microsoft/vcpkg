@@ -19,7 +19,7 @@
       "description": "Vulkan functionality for SDL"
     },
     "wayland": {
-      "description": "Dynamically load Wayland support",
+      "description": "Build with Wayland support",
       "supports": "linux"
     },
     "x11": {
