@@ -29,21 +29,22 @@ vcpkg_configure_make(
 		--prefix=${CURRENT_INSTALLED_DIR}
 		--with-ssl-dir=${CURRENT_INSTALLED_DIR}
 		--with-zlib=${CURRENT_INSTALLED_DIR}
-		--with-privsep-path=${CURRENT_INSTALLED_DIR}/var/empty
-		--with-mantype=man
-		--with-mantype=cat
-		--with-mantype=doc
+#		--bindir=/usr/bin
+		--sysconfdir=/etc
+#		--libexecdir=/usr/sbin
+#		--sbindir=/usr/sbin
+#		--localstatedir=/var
 		${OPTIONS}
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var/empty")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libexec")
+if(VCPKG_BUILD_TYPE STREQUAL "debug")
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+else()
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc")
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libexec")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENCE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
