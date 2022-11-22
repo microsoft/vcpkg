@@ -3,11 +3,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF release-${VERSION}
-    SHA512 4050afc804b65617f3e9097d5173edb05abd3a15872ad5c79bf85e874758c72ebf7ce9768eb1c9969099b1b82d04a1b65505774d0b851c0541e032da9b2e1ad1
+    SHA512 34088a7ceea7823941fc3d16d6c5add85500d0cc30519f0fadb739939a6a87f2509f2305564a4e35a3a533db41fdb8fab95cb51143240f5fb888535e36130b82
     HEAD_REF main
     PATCHES
-        0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
-        0002-sdl2-skip-ibus-on-linux.patch
+        0001-sdl2-uwp-skip-list-clean.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -42,19 +41,14 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_HIDAPI_JOYSTICK=ON
         -DSDL_TEST=OFF
+        -DSDL_IBUS=OFF
+        -DSDL_INSTALL_CMAKEDIR="cmake"
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
 
 vcpkg_cmake_install()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL2)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
-    vcpkg_cmake_config_fixup(CONFIG_PATH SDL2.framework/Resources)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

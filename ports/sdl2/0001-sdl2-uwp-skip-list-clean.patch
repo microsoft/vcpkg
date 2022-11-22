@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 021b66cd5..f2d5c96ad 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3046,6 +3046,7 @@ else()
+ endif()
+ 
+ # Clean up the different lists
++if(NOT WINDOWS_STORE)
+ listtostr(EXTRA_LIBS _EXTRA_LIBS "-l")
+ set(SDL_STATIC_LIBS ${SDL_LIBS} ${EXTRA_LDFLAGS} ${_EXTRA_LIBS})
+ list(REMOVE_DUPLICATES SDL_STATIC_LIBS)
+@@ -3074,6 +3075,7 @@ configure_file("${SDL2_SOURCE_DIR}/sdl2-config.in"
+ configure_file("${SDL2_SOURCE_DIR}/SDL2.spec.in"
+   "${SDL2_BINARY_DIR}/SDL2.spec" @ONLY)
+ 
++endif()
+ macro(check_add_debug_flag FLAG SUFFIX)
+     check_c_compiler_flag(${FLAG} HAS_C_FLAG_${SUFFIX})
+     if (HAS_C_FLAG_${SUFFIX})
