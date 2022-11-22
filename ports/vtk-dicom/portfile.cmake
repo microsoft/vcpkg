@@ -20,14 +20,17 @@ if(USE_GDCM)
         -DUSE_DCMTK=OFF
     )
 endif()
-vcpkg_find_acquire_program(PYTHON3)
+set(python_ver "")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(python_ver 3.10)
+endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
-        "-DPython3_EXECUTABLE=${PYTHON3}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         ${ADDITIONAL_OPTIONS}
 )
 

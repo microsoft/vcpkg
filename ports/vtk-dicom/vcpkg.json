@@ -9,6 +9,11 @@
       "name": "vtk",
       "default-features": false
     },
+    {
+      "name": "python3",
+      "default-features": false,
+      "host" : true
+    },
     "zlib"
   ],
   "features": {
