@@ -134,7 +134,7 @@
     },
     "apsi": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "arb": {
       "baseline": "2.21.1",
@@ -6825,8 +6825,8 @@
       "port-version": 6
     },
     "seal": {
-      "baseline": "3.7.2",
-      "port-version": 3
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "secp256k1": {
       "baseline": "2022-07-11",
