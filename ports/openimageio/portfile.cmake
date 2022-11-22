@@ -60,6 +60,7 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
+        "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
 )
 

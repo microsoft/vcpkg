@@ -22,7 +22,7 @@ index 6ee167322..628745584 100644
 -set(vtk_cmake_dir "${CMAKE_CURRENT_SOURCE_DIR}/VTK/CMake")
 +if (PARAVIEW_USE_EXTERNAL_VTK)
 +  find_package(VTK CONFIG REQUIRED)
-+  get_filename_component(vtk_cmake_dir "${vtk_CONFIG}" DIRECTORY )
++  get_filename_component(vtk_cmake_dir "${VTK_CONFIG}" DIRECTORY )
 +else()
 +  set(vtk_cmake_dir "${CMAKE_CURRENT_SOURCE_DIR}/VTK/CMake")
 +endif()
