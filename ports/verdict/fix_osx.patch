@@ -1,7 +1,7 @@
-diff --git a/a01231227a-2d85315912.clean/CMakeLists.txt b/a01231227a-2d85315912/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c41d98f70..83f7ca27a 100644
---- a/a01231227a-2d85315912.clean/CMakeLists.txt
-+++ b/a01231227a-2d85315912/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -53,7 +53,7 @@ configure_file(
  add_library(verdict ${verdict_SOURCES})
  target_include_directories(verdict PUBLIC
@@ -11,10 +11,10 @@ index c41d98f70..83f7ca27a 100644
  
  # Setting the VERSION and SOVERSION of a library will include
  # version information either in the library, or in the library
-diff --git a/a01231227a-2d85315912.clean/V_HexMetric.cpp b/a01231227a-2d85315912/V_HexMetric.cpp
+diff --git a/V_HexMetric.cpp b/V_HexMetric.cpp
 index 6ba32fa86..5fd976321 100644
---- a/a01231227a-2d85315912.clean/V_HexMetric.cpp
-+++ b/a01231227a-2d85315912/V_HexMetric.cpp
+--- a/V_HexMetric.cpp
++++ b/V_HexMetric.cpp
 @@ -2974,10 +2974,10 @@ double hex_distortion(int num_nodes, const double coordinates[][3])
    double weight[maxTotalNumberGaussPoints];
  
@@ -39,10 +39,10 @@ index 6ba32fa86..5fd976321 100644
    int node_id;
    for (node_id = 0; node_id < num_nodes; node_id++)
    {
-diff --git a/a01231227a-2d85315912.clean/V_QuadMetric.cpp b/a01231227a-2d85315912/V_QuadMetric.cpp
+diff --git a/V_QuadMetric.cpp b/V_QuadMetric.cpp
 index 0c7c508e0..8e8a2537e 100644
---- a/a01231227a-2d85315912.clean/V_QuadMetric.cpp
-+++ b/a01231227a-2d85315912/V_QuadMetric.cpp
+--- a/V_QuadMetric.cpp
++++ b/V_QuadMetric.cpp
 @@ -1329,10 +1329,10 @@ double quad_distortion(int num_nodes, const double coordinates[][3])
      double weight[maxTotalNumberGaussPoints];
  
@@ -67,10 +67,10 @@ index 0c7c508e0..8e8a2537e 100644
  
      VerdictVector normal_at_nodes[9];
  
-diff --git a/a01231227a-2d85315912.clean/V_TetMetric.cpp b/a01231227a-2d85315912/V_TetMetric.cpp
+diff --git a/V_TetMetric.cpp b/V_TetMetric.cpp
 index feb026968..dc956edb0 100644
---- a/a01231227a-2d85315912.clean/V_TetMetric.cpp
-+++ b/a01231227a-2d85315912/V_TetMetric.cpp
+--- a/V_TetMetric.cpp
++++ b/V_TetMetric.cpp
 @@ -1354,10 +1354,10 @@ double tet_distortion(int num_nodes, const double coordinates[][3])
    double weight[maxTotalNumberGaussPoints];
  
@@ -95,10 +95,10 @@ index feb026968..dc956edb0 100644
    int node_id;
    for (node_id = 0; node_id < num_nodes; node_id++)
    {
-diff --git a/a01231227a-2d85315912.clean/V_TriMetric.cpp b/a01231227a-2d85315912/V_TriMetric.cpp
+diff --git a/V_TriMetric.cpp b/V_TriMetric.cpp
 index 2fb5c37e8..71c16bea7 100644
---- a/a01231227a-2d85315912.clean/V_TriMetric.cpp
-+++ b/a01231227a-2d85315912/V_TriMetric.cpp
+--- a/V_TriMetric.cpp
++++ b/V_TriMetric.cpp
 @@ -664,10 +664,10 @@ double tri_distortion(int num_nodes, const double coordinates[][3])
    // create an object of GaussIntegration
    int number_dims = 2;
