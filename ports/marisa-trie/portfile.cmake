@@ -20,6 +20,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ALLOW_ROOT_INCLUDES
     )
     vcpkg_clean_msbuild()
+    set(prefix "${CURRENT_INSTALLED_DIR}")
+    configure_file("${SOURCE_PATH}/marisa.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/marisa.pc" @ONLY)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+        configure_file("${SOURCE_PATH}/marisa.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/marisa.pc" @ONLY)
+    endif()
 else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
