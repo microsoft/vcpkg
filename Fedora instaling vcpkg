@@ -1,4 +1,4 @@
-- CentOS
+- Fedora
 
 ```sh
 $ sudo yum install centos-release-scl
