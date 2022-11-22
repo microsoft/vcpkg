@@ -12,7 +12,10 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${WINRT_OPTIONS}
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
+        ${WINRT_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()

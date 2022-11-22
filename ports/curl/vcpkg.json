@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "7.84.0",
-  "port-version": 2,
+  "version": "7.86.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -157,6 +156,9 @@
     },
     "tool": {
       "description": "Builds curl executable"
+    },
+    "websockets": {
+      "description": "WebSocket support (experimental)"
     },
     "winidn": {
       "description": "WinIDN support"

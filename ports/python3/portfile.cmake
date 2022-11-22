@@ -5,24 +5,26 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  5)
+set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
-    0002-use-vcpkg-zlib.patch
-    0003-devendor-external-dependencies.patch
-    0004-dont-copy-vcruntime.patch
-    0005-only-build-required-projects.patch
-    0009-python.pc.patch
-    0010-bz2d.patch
-    0011-dont-skip-rpath.patch
+    0001-only-build-required-projects.patch
+    0003-use-vcpkg-zlib.patch
+    0004-devendor-external-dependencies.patch
+    0005-dont-copy-vcruntime.patch
+    0008-python.pc.patch
+    0009-bz2d.patch
+    0010-dont-skip-rpath.patch
 )
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(PREPEND PATCHES 0001-static-library.patch)
+    list(APPEND PATCHES 0002-static-library.patch)
 endif()
+
 # Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    list(APPEND PATCHES 0012-gcc-ldflags-fix.patch)
+    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
@@ -47,7 +49,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 7a736c6bf76735f66eba50bc055661c46fefce1496869c51e9b6b264bca456d2f2c6de293dfc3bc15a9d1df4b633d7f6f66ed86696e71a36e500354a75f4200f
+    SHA512 88bf6efef632a7dad7306a59b7d5da159947d6675f0d264f1f33aa49a5703b4e4595011de52098eb839cc648994ae143f668507be7209f6bf3fe8ae0ec6a9125
     HEAD_REF master
     PATCHES ${PATCHES}
 )
