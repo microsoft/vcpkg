@@ -207,6 +207,7 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
         MAYBE_UNUSED_VARIABLES
             VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
+            VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
             VTK_QT_VERSION # Only with Qt
             CMAKE_INSTALL_QMLDIR
 )
