@@ -229,3 +229,12 @@ See the `--feature-flags=` command line option for more information.
 
 When this option is turned on, every call to `find_package` is printed.
 Nested calls (e.g. via `find_dependency`) are indented according to nesting depth.
+
+### `VCPKG_FIND_PACKAGE_<Pkg>`
+
+When this option is turned set, non-nested calls to `find_package` are either
+required (`VCPKG_FIND_PACKAGE_<Pkg>=ON`) or disabled (`VCPKG_FIND_PACKAGE_<Pkg>=OFF`).
+
+This variable is a tool to control direct dependencies and related features in vcpkg ports
+which use the CMake build system. It can be used with `vcpkg_check_features` and avoids
+unintented effects on transitive dependencies.
