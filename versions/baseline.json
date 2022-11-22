@@ -4733,7 +4733,7 @@
       "port-version": 1
     },
     "marisa-trie": {
-      "baseline": "0.2.6+006020c",
+      "baseline": "0.2.6+20200926",
       "port-version": 0
     },
     "marl": {
