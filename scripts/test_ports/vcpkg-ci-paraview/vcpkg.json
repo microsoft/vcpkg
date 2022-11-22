@@ -17,6 +17,23 @@
       "name": "paraview",
       "default-features": false,
       "features": [
+        "python",
+        "mpi"
+      ]
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "gdal",
+        "openvr",
+        "utf8"
+      ]
+    },
+    {
+      "name": "paraview",
+      "default-features": false,
+      "features": [
         "tools",
         "vtkm"
       ],
