@@ -1,0 +1,18 @@
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 232bc03c..a09fafc7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,8 +29,8 @@ option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
+ if(HUNTER_ENABLED)
+     include("cmake/misc/HunterGate.cmake")
+     HunterGate(
+-        URL "https://github.com/cpp-pm/hunter/archive/v0.23.300.tar.gz"
+-        SHA1 "1151d539465d9cdbc880ee30f794864aec11c448"
++        URL "https://github.com/cpp-pm/hunter/archive/v0.24.8.tar.gz"
++        SHA1 "ca7838dded9a1811b04ffd56175f629e0af82d3d"
+     )
+ endif()
+ 
