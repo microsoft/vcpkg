@@ -398,101 +398,6 @@ target_include_directories(7zip
         $<INSTALL_INTERFACE:include>/7zip/CPP
 )
 
-set(PUBLIC_HEADERS
-    C/7z.h
-    C/7zAlloc.h
-    C/7zBuf.h
-    C/7zCrc.h
-    C/7zFile.h
-    C/7zTypes.h
-    C/7zVersion.h
-    C/Aes.h
-    C/Alloc.h
-    C/Bcj2.h
-    C/Blake2.h
-    C/Bra.h
-    C/BwtSort.h
-    C/Compiler.h
-    C/CpuArch.h
-    C/Delta.h
-    C/DllSecur.h
-    C/HuffEnc.h
-    C/LzFind.h
-    C/LzFindMt.h
-    C/LzHash.h
-    C/Lzma2Dec.h
-    C/LzmaDec.h
-    C/Lzma2DecMt.h
-    C/Lzma2Enc.h
-    C/LzmaEnc.h
-    C/Lzma86.h
-    C/LzmaLib.h
-    C/MtCoder.h
-    C/MtDec.h
-    C/Ppmd.h
-    C/Ppmd7.h
-    C/Ppmd8.h
-    C/Precomp.h
-    C/RotateDefs.h
-    C/Sha1.h
-    C/Sha256.h
-    C/Sort.h
-    C/Threads.h
-    C/Xz.h
-    C/XzCrc64.h
-    C/XzEnc.h
-    
-    CPP/7zip/Archive/IArchive.h
-    CPP/7zip/Archive/DeflateProps.h
-    CPP/7zip/Archive/HandlerCont.h
-    CPP/7zip/Archive/StdAfx.h
-    CPP/7zip/Archive/XzHandler.h
-    
-    CPP/7zip/ICoder.h
-    CPP/7zip/IDecl.h
-    CPP/7zip/IPassword.h
-    CPP/7zip/IProgress.h
-    CPP/7zip/IStream.h
-    CPP/7zip/MyVersion.h
-    CPP/7zip/PropID.h
-
-    CPP/Common/AutoPtr.h
-    CPP/Common/C_FileIO.h
-    CPP/Common/CommandLineParser.h
-    CPP/Common/Common.h
-    CPP/Common/ComTry.h
-    CPP/Common/Defs.h
-    CPP/Common/DynamicBuffer.h
-    CPP/Common/DynLimBuf.h
-    CPP/Common/IntToString.h
-    CPP/Common/Lang.h
-    CPP/Common/ListFileUtils.h
-    CPP/Common/MyBuffer.h
-    CPP/Common/MyBuffer2.h
-    CPP/Common/MyCom.h
-    CPP/Common/MyException.h
-    CPP/Common/MyGuidDef.h
-    CPP/Common/MyInitGuid.h
-    CPP/Common/MyLinux.h
-    CPP/Common/MyMap.h
-    CPP/Common/MyString.h
-    CPP/Common/MyTypes.h
-    CPP/Common/MyUnknown.h
-    CPP/Common/MyVector.h
-    CPP/Common/MyWindows.h
-    CPP/Common/MyXml.h
-    CPP/Common/NewHandler.h
-    CPP/Common/Random.h
-    CPP/Common/StdAfx.h
-    CPP/Common/StdInStream.h
-    CPP/Common/StdOutStream.h
-    CPP/Common/StringConvert.h
-    CPP/Common/StringToInt.h
-    CPP/Common/TextConfig.h
-    CPP/Common/UTFConvert.h
-    CPP/Common/Wildcard.h
-)
-
 install(
     TARGETS 7zip
     EXPORT 7zip-targets
@@ -502,14 +407,18 @@ install(
 )
 
 # Headers makes relative includes so directory structure must be kept
-foreach(HEADER ${PUBLIC_HEADERS})
-    get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
-    install(
-        FILES ${HEADER}
-        CONFIGURATIONS Release
-        DESTINATION include/7zip/${HEADER_DIR}
-    )
-endforeach()
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/C/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/C")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/Common/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/Common")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/Archive/*.h")
+install (FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip/Archive")
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
