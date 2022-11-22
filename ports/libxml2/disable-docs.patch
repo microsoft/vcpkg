@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9fdc2e6..049bb7c 100644
+index 9fdc2e6..cb64ef3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -598,17 +598,6 @@ if(LIBXML2_WITH_PYTHON)
+@@ -598,16 +598,18 @@ if(LIBXML2_WITH_PYTHON)
  	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
  endif()
  
@@ -16,7 +16,18 @@ index 9fdc2e6..049bb7c 100644
 -	PATTERN "*.res" EXCLUDE
 -	PATTERN "*.xml" EXCLUDE
 -	PATTERN "*.xsl" EXCLUDE)
--
++if(0)
++    install(FILES doc/xml2-config.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
++    install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
++    install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
++    install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT documentation
++	    PATTERN "Makefile.*" EXCLUDE
++	    PATTERN "*.1" EXCLUDE
++	    PATTERN "*.py" EXCLUDE
++	    PATTERN "*.res" EXCLUDE
++	    PATTERN "*.xml" EXCLUDE
++	    PATTERN "*.xsl" EXCLUDE)
++endif()
+ 
  configure_package_config_file(
  	libxml2-config.cmake.cmake.in libxml2-config.cmake
- 	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}

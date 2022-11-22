@@ -8,8 +8,12 @@ vcpkg_from_gitlab(
     PATCHES 
         disable-docs.patch
         fix_cmakelist.patch
-        fix-uwp.patch
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_CXX_FLAGS "/wd4996 ${VCPKG_CXX_FLAGS}")
+    set(VCPKG_C_FLAGS "/wd4996 ${VCPKG_C_FLAGS}")
+endif()
 
 if (VCPKG_TARGET_IS_UWP)
     message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automatically.")
