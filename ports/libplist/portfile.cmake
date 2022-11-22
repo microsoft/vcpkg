@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES dllexport.patch fix_static_link.patch
 )
 
-configure_file(${CURRENT_PORT_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
+configure_file("${CURRENT_PORT_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
