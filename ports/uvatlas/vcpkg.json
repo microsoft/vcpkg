@@ -1,7 +1,6 @@
 {
   "name": "uvatlas",
-  "version-date": "2022-07-30",
-  "port-version": 1,
+  "version-date": "2022-10-17",
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
