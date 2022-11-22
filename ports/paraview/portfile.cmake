@@ -11,8 +11,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF d41b38848860f122232fbdafc50e77323e91dc09 # v5.11.0
-    SHA512  441fdb0053e5d9c38e77ece8251888a239c59bcc58e789516bedbb6b0d28e671fd8bc9e1848fff07cd999628a9666baf5a1eee8da477e1bbfd204b1a5c39ae1e
+    REF 91aaf338c62f77fccd7d197dea05e7a68035ab25 # v5.11.0
+    SHA512  ddd72b127462a37dba220808925ab1991b3072ddd3f39ba7f26d260bd5abbaa6bd38a0c0181141f461df60dd718ec85df8c0faffff8e53a6cd1737b784565f4b
     HEAD_REF master
     PATCHES
         external_vtk.patch
