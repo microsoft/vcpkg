@@ -3,5 +3,6 @@
   "version-semver": "0.2.6+006020c",
   "description": "Matching Algorithm with Recursively Implemented StorAge (MARISA) is a space-efficient trie data structure. This is a C++ library for an implementation of MARISA.",
   "homepage": "https://github.com/s-yata/marisa-trie",
-  "license": "BSD-2-Clause OR LGPL-2.1-or-later"
+  "license": "BSD-2-Clause OR LGPL-2.1-or-later",
+  "supports": "!windows, (mingw, (windows & (x86 | x64) & !staticcrt))"
 }
