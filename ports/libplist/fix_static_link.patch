@@ -1,0 +1,94 @@
+diff --git a/include/plist/plist.h b/include/plist/plist.h
+index 9f0d3a6..53817fa 100644
+--- a/include/plist/plist.h
++++ b/include/plist/plist.h
+@@ -953,6 +953,10 @@ extern "C"
+ 
+     /*@}*/
+ 
++    PLIST_API_MSC void plist_init(void);
++
++    PLIST_API_MSC void plist_deinit(void);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/src/plist.c b/src/plist.c
+index 845f5ab..d3dd963 100644
+--- a/src/plist.c
++++ b/src/plist.c
+@@ -50,72 +50,18 @@ extern void plist_xml_deinit(void);
+ extern void plist_bin_init(void);
+ extern void plist_bin_deinit(void);
+ 
+-static void internal_plist_init(void)
++void plist_init(void)
+ {
+     plist_bin_init();
+     plist_xml_init();
+ }
+ 
+-static void internal_plist_deinit(void)
++void plist_deinit(void)
+ {
+     plist_bin_deinit();
+     plist_xml_deinit();
+ }
+ 
+-#ifdef WIN32
+-
+-typedef volatile struct {
+-    LONG lock;
+-    int state;
+-} thread_once_t;
+-
+-static thread_once_t init_once = {0, 0};
+-static thread_once_t deinit_once = {0, 0};
+-
+-void thread_once(thread_once_t *once_control, void (*init_routine)(void))
+-{
+-    while (InterlockedExchange(&(once_control->lock), 1) != 0) {
+-        Sleep(1);
+-    }
+-    if (!once_control->state) {
+-        once_control->state = 1;
+-        init_routine();
+-    }
+-    InterlockedExchange(&(once_control->lock), 0);
+-}
+-
+-BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+-{
+-    switch (dwReason) {
+-    case DLL_PROCESS_ATTACH:
+-        thread_once(&init_once, internal_plist_init);
+-        break;
+-    case DLL_PROCESS_DETACH:
+-        thread_once(&deinit_once, internal_plist_deinit);
+-        break;
+-    default:
+-        break;
+-    }
+-    return 1;
+-}
+-
+-#else
+-
+-static pthread_once_t init_once = PTHREAD_ONCE_INIT;
+-static pthread_once_t deinit_once = PTHREAD_ONCE_INIT;
+-
+-static void __attribute__((constructor)) libplist_initialize(void)
+-{
+-    pthread_once(&init_once, internal_plist_init);
+-}
+-
+-static void __attribute__((destructor)) libplist_deinitialize(void)
+-{
+-    pthread_once(&deinit_once, internal_plist_deinit);
+-}
+-
+-#endif
+-
+ #ifndef HAVE_MEMMEM
+ // see https://sourceware.org/legacy-ml/libc-alpha/2007-12/msg00000.html
+ 
