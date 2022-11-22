@@ -59,7 +59,6 @@ bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:arm64-osx=fail
 bond:x64-uwp=fail
-botan:x64-uwp=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
@@ -419,8 +418,6 @@ libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
-# the msbuild for libgpg:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
-libgpg:x64-uwp=fail
 libgxps:x64-windows-static=fail
 libgxps:x64-windows-static-md=fail
 libhdfs3:x64-linux=fail
@@ -547,6 +544,9 @@ libwandio:x64-windows-static-md=fail
 libwandio:x64-uwp=fail
 libwandio:arm64-windows=fail
 libwandio:arm-uwp=fail
+libxaw:x64-windows-static=skip
+# clang-cl ICEd
+libxt:arm64-windows=fail
 licensepp:arm-uwp=fail
 licensepp:x64-uwp=fail
 linenoise-ng:arm-uwp=fail
@@ -1057,9 +1057,6 @@ tensorflow:x64-windows-static-md=fail
 tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows-static-md=fail
-
-tensorflow:x64-osx=fail
-tensorflow-cc:x64-osx=fail
 
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
