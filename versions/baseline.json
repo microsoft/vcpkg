@@ -6405,8 +6405,8 @@
       "port-version": 0
     },
     "quadtree": {
-      "baseline": "2020-04-13",
-      "port-version": 1
+      "baseline": "2022-04-24",
+      "port-version": 0
     },
     "quantlib": {
       "baseline": "1.28",
