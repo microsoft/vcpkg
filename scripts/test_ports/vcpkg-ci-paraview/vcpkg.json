@@ -19,7 +19,8 @@
       "features": [
         "python",
         "mpi"
-      ]
+      ],
+      "platform": "!(windows & static)"
     },
     {
       "name": "vtk",
