@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "A library to handle Apple Property List format in binary or XML",
   "homepage": "https://libimobiledevice.org/",
-  "license": "LGPLv2.1",
+  "license": "LGPL-2.1-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
