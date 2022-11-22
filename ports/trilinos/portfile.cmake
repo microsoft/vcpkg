@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES fix_deps.patch
             fix_tpl_libs.patch
             next.patch
+            fix_zoltan_parmetis.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -78,6 +79,7 @@ set(cmake_config_list tribits Trilinos SEACASExodus SEACASNemesis SEACASIoss SEA
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND cmake_config_list Zoltan)
+    list(APPEND cmake_config_list Pamgen)
 endif()
 
 foreach(cmake_conig IN LISTS cmake_config_list)

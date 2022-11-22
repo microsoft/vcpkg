@@ -6,9 +6,8 @@ index a9581f862..ad17b7323 100644
      VERSION       "1.9.4"
      STANDARD_INCLUDE_DIRS
    EXTERNAL
--    PACKAGE JsonCpp
+     PACKAGE JsonCpp
 -    VERSION 0.7.0
-+    PACKAGE jsoncpp
      TARGETS JsonCpp::JsonCpp
      STANDARD_INCLUDE_DIRS)
  
