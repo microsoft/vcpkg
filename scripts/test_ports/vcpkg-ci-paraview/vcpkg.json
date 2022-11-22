@@ -36,7 +36,7 @@
       "features": [
         "openvr"
       ],
-      "platform": "!osx"
+      "platform": "!osx & !(windows & staticcrt)"
     },
     {
       "name": "paraview",
