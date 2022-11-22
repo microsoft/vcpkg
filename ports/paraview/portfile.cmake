@@ -68,10 +68,13 @@ file(COPY "${QTTESTING_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/QtT
 file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtkicet")
 
 if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    set(python_ver "")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        set(python_ver 3.10)
+    endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()

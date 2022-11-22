@@ -27,9 +27,16 @@
       "default-features": false,
       "features": [
         "gdal",
-        "openvr",
         "utf8"
       ]
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "openvr"
+      ],
+      "platform": "!osx"
     },
     {
       "name": "paraview",
