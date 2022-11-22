@@ -2,5 +2,12 @@
   "name": "quadtree",
   "version-date": "2022-04-24",
   "description": "A simple and modern C++ quadtree implementation",
-  "homepage": "https://github.com/pvigier/Quadtree"
+  "homepage": "https://github.com/pvigier/Quadtree",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }
