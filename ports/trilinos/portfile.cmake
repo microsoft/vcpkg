@@ -107,7 +107,7 @@ endif()
 vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 
 set(scripts decomp epup pconjoin)
-if(VCPKG_TARGET_IS_LINUX)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND scripts getopt.seacas)
 endif()
 

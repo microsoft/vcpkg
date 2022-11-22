@@ -101,12 +101,12 @@ endif()
 
 
 if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    #vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES

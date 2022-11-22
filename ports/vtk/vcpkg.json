@@ -180,7 +180,11 @@
     "python": {
       "description": "Python functionality for VTK",
       "dependencies": [
-        "python3"
+        "python3",
+        {
+            "name": "python3",
+            "host": true
+        }
       ]
     },
     "qt": {
