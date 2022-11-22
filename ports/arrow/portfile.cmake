@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(
     PATCHES
         brotli.patch
         msvc-static-name.patch
-        processor-type.patch
         thrift.patch
         utf8proc.patch
 )
