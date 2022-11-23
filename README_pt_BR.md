@@ -22,7 +22,7 @@ Para uma breve descrição dos comandos disponiveis, uma vez que você tenha ins
 - [Sumário](#sumário)
 - [Primeiros Passos](#primeiros-passos)
   - [Inicio rapido: Windows](#guia-de-inicio-rapido-windows)
-  - [Inicio rapido: Unix](#guia-rapido-de-inicio-unix)
+  - [Inicio rapido: Unix](#guia-de-inicio-rapido-unix)
   - [Instalando o Linux Developer Tools](#instalando-o-linux-developer-tools)
   - [Instalando o macOS Developer Tools](#instalando-macos-developer-tools)
   - [Usando vcpkg com CMake](#usando-vcpkg-com-cmake)
