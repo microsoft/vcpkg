@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
-    REF 9496a6dd5610910a495ca004a93c8ab6913293e4
-    SHA512 df4da3f3ab763dbd113b0ace0552d676ec905a6ff0d942d9fc1828e36fb8440d1b75a61c1ea6de09879e0f52547366936d02a77dba2bac89503a075da12414db
+    REF 16e9114f41343eed0a5f3f9881b171ce4ea6774a
+    SHA512 a9244c9791d672f57e06cafc0de753c307976f35f975b6f17ac0e5f8f773f4236674232afada015cd47c4ee2e4d0f550680251772693d4abf2b525dd9b3617f5
     HEAD_REF master
     PATCHES cmake_remove_bin_targets.patch
 )
@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
         -DSPDLOG_SYS_DEP=ON
         -DVW_BOOST_MATH_SYS_DEP=ON
         -DVW_ZLIB_SYS_DEP=ON
+        -DVW_EIGEN_SYS_DEP=ON
         -DVW_BUILD_VW_C_WRAPPER=OFF
         -DBUILD_TESTING=OFF
 )
