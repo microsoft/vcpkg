@@ -25,7 +25,8 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    "zlib",
+    "egl"
   ],
   "default-features": [
     "default-features",

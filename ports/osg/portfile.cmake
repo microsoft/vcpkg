@@ -91,6 +91,7 @@ endforeach()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         ${FEATURE_OPTIONS}
         -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
         -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
