@@ -32,7 +32,7 @@ message(STATUS "Using protoc: ${PROTOC}")
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
-    PACKAGES typing-extensions pyyaml
+    PACKAGES typing-extensions pyyaml numpy
     OUT_PYTHON_VAR PYTHON3
 )
 message(STATUS "Using Python3: ${PYTHON3}")
@@ -124,6 +124,7 @@ vcpkg_cmake_configure(
         -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_PYTHON=OFF
+        -DUSE_NUMPY=OFF
         -DUSE_METAL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
@@ -137,7 +138,6 @@ vcpkg_cmake_configure(
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
         -DUSE_DEPLOY=OFF
-        -DUSE_BREAKPAD=OFF
         -DUSE_FFTW=OFF
         -DUSE_NUMA=OFF
         ${BLAS_OPTIONS}
