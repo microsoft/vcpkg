@@ -11,11 +11,3 @@ index 66b52f1f6..7fbfef908 100644
      set(vtk_mfc_static 0)
    else ()
      set(vtk_mfc_static 1)
-@@ -27,7 +27,7 @@ else ()
-     set(vtk_mfc_static 0)
-   endif ()
- endif ()
- 
- # C runtime lib linkage and MFC lib linkage *MUST* match.
- # If linking to C runtime static lib, link to MFC static lib.
- # If linking to C runtime dll, link to MFC dll.
