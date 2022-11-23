@@ -25,4 +25,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-brotli PACKAGE_NAME unoffi
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/brotli")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
