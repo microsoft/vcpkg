@@ -200,6 +200,7 @@ $ sudo dnf group install "C Development Tools and Libraries" "Development Tools"
 $ sudo dnf check-update
 $ sudo dnf upgrade
 ```
+[Para mais informações da instação para o fedora clique aqui](Fedora_vcpkg_instalation_pt_BR.md)
 
 Para qualuquer outra distribuição, tenha certeza que você instalou o g++ 6 ou mais novo.
 Se voçê deseja adicionar instruções osbre uma distribuição específica,
