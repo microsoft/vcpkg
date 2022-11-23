@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF ba71aeb28a9f21e4ad59c45aa88232b099ce0b87 #0.8.2
     SHA512 810bcbe0afa3d1c9d299a85bc4266135bdf9adc33bfc754c59731f6cfa6a89d449fb134cef34c4614742bd50e9f8f3916e5b64998dcea69883ca27b7da3c5f04
     HEAD_REF main
+    PATCHES
+        fix-find_package.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,7 +24,7 @@ if (NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DAPSI_BUILD_TESTS=OFF"

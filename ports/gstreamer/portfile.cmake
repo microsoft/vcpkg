@@ -164,7 +164,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(PLUGIN_BASE_WIN
         -Dgst-plugins-base:xvideo=disabled
         -Dgst-plugins-base:xshm=disabled
-        -Dgst-plugins-base:gl_winsys=win32)
+        -Dgst-plugins-base:gl_winsys=win32
+        -Dgst-plugins-base:gl_platform=wgl)
+    # TODO: gstreamer has a lot of 'auto' options which probably should be controlled by vcpkg!
 endif()
 
 #
@@ -321,6 +323,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
                 "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
     )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
