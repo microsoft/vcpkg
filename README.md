@@ -207,6 +207,7 @@ $ sudo dnf group install "C Development Tools and Libraries" "Development Tools"
 $ sudo dnf check-update
 $ sudo dnf upgrade
 ```
+[More informations for install vcpkg in Fedora](Fedora_vcpkg_instalation.md)
 
 
 For any other distributions, make sure you're installing g++ 6 or above.
