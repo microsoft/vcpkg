@@ -27,9 +27,10 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-if("none" IN_LIST FEATURES)
-    set(SENTRY_BACKEND "none")
-    message(STATUS "If ${SENTRY_BACKEND} is 'none', this builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests.")
+vcpkg_list(SET FEATURE_OPTIONS)
+if(NOT "backend" IN_LIST FEATURES)
+    vcpkg_list(APPEND FEATURE_OPTIONS -DSENTRY_BACKEND=none)
+    message(STATUS "This build doesn't include a backend to handle crashes. It is primarily used for tests.")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -40,6 +41,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}

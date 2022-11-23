@@ -22,7 +22,7 @@
     "zlib"
   ],
   "features": {
-    "none": {
+    "backend": {
       "description": "This builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests."
     }
   }
