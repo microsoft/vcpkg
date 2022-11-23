@@ -127,3 +127,16 @@ index 16fa898..7a343f7 100644
  endif()
  
  # ---[ Caffe2 HIP sources.
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index 7a343f7..3390f9b 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -1673,7 +1673,7 @@ target_link_libraries(torch_cpu PRIVATE flatbuffers)
+ # namespaces, so libtorch is loaded with all its dependencies in a local scope.
+ # That usually leads to missing symbol errors at run-time, so to avoid a situation like
+ # this we have to preload those libs in a global namespace.
+-if(BUILD_SHARED_LIBS)
++if(BUILD_SHARED_LIBS AND (NOT WIN32))
+   add_library(torch_global_deps SHARED ${TORCH_SRC_DIR}/csrc/empty.c)
+   if(HAVE_SOVERSION)
+     set_target_properties(torch_global_deps PROPERTIES
