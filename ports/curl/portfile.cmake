@@ -1,22 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_83_1
-    SHA512 f4ede3c829aaa1142358d956cba4b33f06d3f0319c9f1cd65b63413de60a8690165e10fcb876fc413a20fcfa53bba2a064bb4b8c3070dbf474c2f2288eeab019
+    REF curl-7_86_0
+    SHA512 74fa76d58b09ae15c953f77918172e23657efd8ed9d16e3a741525a4f350e6bd9691e0b0935aac11e3060cebff043dc4a17c3dde625a19ca7399c173ea4160c9
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
-        0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        wolfssl-ntlm.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
 foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
@@ -25,7 +21,7 @@ foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
     endif()
 endforeach()
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+if("sectransp" IN_LIST FEATURES AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
@@ -52,21 +48,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
+        websockets  ENABLE_WEBSOCKETS
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS "")
-set(OPTIONS_RELEASE "")
-set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 if("sectransp" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
 endif()
 
 # UWP targets
@@ -78,6 +73,10 @@ if(VCPKG_TARGET_IS_UWP)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -DENABLE_UNICODE=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
@@ -86,14 +85,10 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-        -DENABLE_DEBUG=ON
         -DCURL_CA_FALLBACK=ON
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
+        -DCURL_USE_LIBPSL=OFF
     OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
+        -DENABLE_DEBUG=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

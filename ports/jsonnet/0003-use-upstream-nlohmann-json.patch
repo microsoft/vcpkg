@@ -1,5 +1,5 @@
 diff --git a/core/vm.cpp b/core/vm.cpp
-index 0cf06fa..d65a6d7 100644
+index 4617363..e328df5 100644
 --- a/core/vm.cpp
 +++ b/core/vm.cpp
 @@ -23,7 +23,7 @@ limitations under the License.
@@ -10,4 +10,4 @@ index 0cf06fa..d65a6d7 100644
 +#include "nlohmann/json.hpp"
  #include "md5.h"
  #include "parser.h"
- #include "state.h"
+ #include "ryml_std.hpp" // include this before any other ryml header

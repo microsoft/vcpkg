@@ -311,44 +311,25 @@ new file mode 100644
 index 0000000..a2540a6 100644
 --- /dev/null
 +++ b/ccfits_export.h
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,22 @@
 +#ifndef CCFITS_EXPORT_H
 +#define CCFITS_EXPORT_H
 +
 +#ifdef CCFITS_STATIC_DEFINE
 +#  define CCFITS_EXPORT
-+#  define CCFITS_NO_EXPORT
 +#else
 +#  ifndef CCFITS_EXPORT
-+#    ifdef CCfits_EXPORTS
-+        /* We are building this library */
-+#      define CCFITS_EXPORT __declspec(dllexport)
++#    ifdef _MSC_VER
++#      ifdef CCfits_EXPORTS
++         /* We are building this library */
++#        define CCFITS_EXPORT __declspec(dllexport)
++#      else
++         /* We are using this library */
++#        define CCFITS_EXPORT __declspec(dllimport)
++#      endif
 +#    else
-+        /* We are using this library */
-+#      define CCFITS_EXPORT __declspec(dllimport)
++#        define CCFITS_EXPORT __attribute__((visibility("default")))
 +#    endif
-+#  endif
-+
-+#  ifndef CCFITS_NO_EXPORT
-+#    define CCFITS_NO_EXPORT 
-+#  endif
-+#endif
-+
-+#ifndef CCFITS_DEPRECATED
-+#  define CCFITS_DEPRECATED __declspec(deprecated)
-+#endif
-+
-+#ifndef CCFITS_DEPRECATED_EXPORT
-+#  define CCFITS_DEPRECATED_EXPORT CCFITS_EXPORT CCFITS_DEPRECATED
-+#endif
-+
-+#ifndef CCFITS_DEPRECATED_NO_EXPORT
-+#  define CCFITS_DEPRECATED_NO_EXPORT CCFITS_NO_EXPORT CCFITS_DEPRECATED
-+#endif
-+
-+#if 0 /* DEFINE_NO_DEPRECATED */
-+#  ifndef CCFITS_NO_DEPRECATED
-+#    define CCFITS_NO_DEPRECATED
 +#  endif
 +#endif
 +

@@ -109,6 +109,8 @@
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
     <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(_ZVcpkgCurrentInstalledDir)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Using normalized configuration &quot;$(_ZVcpkgNormalizedConfiguration)&quot;"
+             Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
     <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')."
@@ -154,7 +156,9 @@
     <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           Importance="High" />
     <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="High"
+          IgnoreStandardErrorWarningFormat="true"
+          CustomWarningRegularExpression="([Ee]rror|[Ww]arning):" />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"

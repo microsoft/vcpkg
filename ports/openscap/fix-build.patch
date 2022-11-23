@@ -27,7 +27,7 @@ index 4de5b57..5f483a3 100644
 +    check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
 +    check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
 +else()
-+    set(THREADS_USE_PTHREADS_WIN32 -pthread)
++    find_package(Threads REQUIRED)
 +endif()
 +
 +# OpenSSL

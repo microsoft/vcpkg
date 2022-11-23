@@ -3,7 +3,29 @@
   <PropertyGroup>
     <VcpkgPropsImported>true</VcpkgPropsImported>
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+  </PropertyGroup>
+
+  <!-- Set the default value of $(VcpkgConfiguration) according to $(UseDebugLibraries) and $(Configuration) -->
+  <Choose>
+    <When Condition="'$(VcpkgConfiguration)' != ''" />
+    <When Condition="'$(UseDebugLibraries)' == ''">
+      <PropertyGroup>
+        <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(UseDebugLibraries)' == 'true'">
+      <PropertyGroup>
+        <VcpkgConfiguration>Debug</VcpkgConfiguration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <VcpkgConfiguration>Release</VcpkgConfiguration>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\..'))</VcpkgRoot>
 

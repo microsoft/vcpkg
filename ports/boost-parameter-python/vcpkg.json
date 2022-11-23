@@ -1,18 +1,33 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-parameter-python",
-  "version": "1.79.0",
+  "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost parameter_python module",
   "homepage": "https://github.com/boostorg/parameter_python",
   "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
-    "boost-mpl",
-    "boost-parameter",
-    "boost-preprocessor",
+    {
+      "name": "boost-mpl",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-parameter",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-python",
-      "platform": "!uwp & !emscripten & !ios & !android"
+      "platform": "!uwp & !emscripten & !ios & !android",
+      "version>=": "1.80.0#1"
     },
-    "boost-vcpkg-helpers"
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    }
   ]
 }

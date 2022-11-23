@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8ca40f8..84fcb18 100644
+index f1d37cf7..9cf43c75 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -174,7 +174,6 @@ set(KTX_MAIN_SRC
@@ -18,18 +18,17 @@ index 8ca40f8..84fcb18 100644
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>
          $<INSTALL_INTERFACE:other_include>
-@@ -361,6 +359,11 @@ macro(commom_lib_settings lib write)
+@@ -370,6 +368,10 @@ macro(commom_lib_settings lib write)
+         target_compile_definitions(${lib} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
++    # Use vcpkg zstd
++    find_package(zstd CONFIG REQUIRED)
++    target_link_libraries(${lib} PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
++
      if(WIN32)
-+        find_package(zstd CONFIG REQUIRED)
-+        target_link_libraries(
-+            ${lib} PRIVATE
-+            $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
-+        )
          # By wrapping in generator expression we force multi configuration
          # generators (like Visual Studio) to take the exact path and not
-         # change it.
 diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt
 index 492233a..8786d16 100644
 --- a/lib/basisu/CMakeLists.txt

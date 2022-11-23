@@ -1,12 +1,15 @@
+set(version 3.21.8)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.19.4
-    SHA512 2653b9852e5ac69f1de9b6ac02887c366aa0a9efd2b29e53135f61a9a10f5a1b5853a8c4cbb3658f519dfdbde9f32c547c39751ab417f123162b08be9e76c9e1
+    REF v3.21.8
+    SHA512 a9e3ff6fd4b5f4bf86ac58c9b0a35010e7069def08783c0aecc05cc0d6e38f04a1af6b6ad61191c3d3348c1e5e44062f63ce1377141ebbd10f122101ef089088
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+        compile_options.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -31,7 +34,7 @@ if (VCPKG_DOWNLOAD_MODE)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/cmake
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
@@ -77,7 +80,7 @@ if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.19.4.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${version}.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")

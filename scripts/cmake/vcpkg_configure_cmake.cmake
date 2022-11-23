@@ -7,11 +7,12 @@ function(z_vcpkg_configure_cmake_both_or_neither_set var1 var2)
     endif()
 endfunction()
 function(z_vcpkg_configure_cmake_build_cmakecache out_var whereat build_type)
-    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ${whereat} &&")
+    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n")
+    string(APPEND line "  process = \"${CMAKE_COMMAND}\" -E chdir \"${whereat}\"")
     foreach(arg IN LISTS "${build_type}_command")
         string(APPEND line " \"${arg}\"")
     endforeach()
-    set("${out_var}" "${${out_var}}${line}\"\n\n" PARENT_SCOPE)
+    set("${out_var}" "${${out_var}}${line}\n\n" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_get_visual_studio_generator)
@@ -26,16 +27,22 @@ function(z_vcpkg_get_visual_studio_generator)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
             message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 12 2013")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 14 2015")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-        set(generator "Visual Studio 15 2017")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-        set(generator "Visual Studio 16 2019")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
-        set(generator "Visual Studio 17 2022")
+
+    if(DEFINED ENV{VisualStudioVersion})
+        if("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "12.99" AND
+           "$ENV{VisualStudioVersion}" VERSION_GREATER_EQUAL  "12.0" AND
+           NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 12 2013")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "14.99" AND
+               NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 14 2015")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "15.99")
+            set(generator "Visual Studio 15 2017")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "16.99")
+            set(generator "Visual Studio 16 2019")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "17.99")
+            set(generator "Visual Studio 17 2022")
+        endif()
     endif()
 
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
@@ -148,8 +155,12 @@ function(vcpkg_configure_cmake)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
     platform toolset: ${VCPKG_PLATFORM_TOOLSET}
     architecture    : ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
 
@@ -231,6 +242,7 @@ function(vcpkg_configure_cmake)
         "-DZ_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     if(NOT "${generator_arch}" STREQUAL "")
@@ -246,13 +258,13 @@ function(vcpkg_configure_cmake)
 
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
-        vcpkg_list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
-        vcpkg_list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG})
     endif()
 
     vcpkg_list(SET rel_command
@@ -300,6 +312,7 @@ function(vcpkg_configure_cmake)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
+            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
         )
         
         vcpkg_list(APPEND config_logs
@@ -313,6 +326,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                 LOGNAME "${arg_LOGNAME}-dbg"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log"
@@ -326,6 +340,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGNAME}-rel"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log"

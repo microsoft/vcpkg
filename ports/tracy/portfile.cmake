@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF 80f6a93da79af94fc4604e37439f5a75d5e7dfbd
-    SHA512 80d24fd969a9f8ac000b127c586745c85239139c50f6aacf625cea50551303031a7e14da01fd96a0e17d59ea639019cab119b76945e96cb6e7cfc7e5399252f8
+    REF v0.9
+    SHA512 00e8ff6d73d0428eb7a77fc5e0556458285922fbf9d5f0d42ed4f27ff98ffcd96b0f59bbaa3c103fd0903283ded6e7577d2a49362e5803cdbac0f3236af957cb
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
@@ -90,13 +90,17 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
     endforeach()
 endfunction()
 
+function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
+  vcpkg_install_msbuild(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
+    USE_VCPKG_INTEGRATION
+  )
+endfunction()
+
 if("capture" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "capture/build/win32/capture.vcxproj"
-            USE_VCPKG_INTEGRATION
-        )
+        tracy_tool_install_win32(capture capture)
     else()
         tracy_tool_install_make(capture capture)
     endif()
@@ -104,11 +108,7 @@ endif()
 
 if("csvexport" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "csvexport/build/win32/csvexport.vcxproj"
-            USE_VCPKG_INTEGRATION
-        )
+        tracy_tool_install_win32(csvexport csvexport)
     else()
         tracy_tool_install_make(csvexport csvexport)
     endif()
@@ -116,11 +116,7 @@ endif()
 
 if("import-chrome" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "import-chrome/build/win32/import-chrome.vcxproj"
-            USE_VCPKG_INTEGRATION
-        )
+        tracy_tool_install_win32(import-chrome import-chrome)
     else()
         tracy_tool_install_make(import-chrome import-chrome)
     endif()
@@ -128,11 +124,7 @@ endif()
 
 if("profiler" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "profiler/build/win32/Tracy.vcxproj"
-            USE_VCPKG_INTEGRATION
-        )
+        tracy_tool_install_win32(profiler Tracy)
     else()
         tracy_tool_install_make(profiler Tracy)
     endif()
@@ -140,11 +132,7 @@ endif()
 
 if("update" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "update/build/win32/update.vcxproj"
-            USE_VCPKG_INTEGRATION
-        )
+        tracy_tool_install_win32(update update)
     else()
         tracy_tool_install_make(update update)
     endif()
@@ -153,18 +141,6 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
-
-foreach(TOOL capture csvexport import-chrome profiler update)
-    if(${TOOL} IN_LIST tracy_tools)
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        endif()
-        break()
-    endif()
-endforeach()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

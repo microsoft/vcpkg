@@ -47,10 +47,9 @@ Only set feature avx automaticlly.
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
@@ -58,9 +57,9 @@ vcpkg_configure_cmake(
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree TARGET_PATH share/embree)
+vcpkg_cmake_config_fixup(PACKAGE_NAME embree)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

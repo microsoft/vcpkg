@@ -2,11 +2,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO nu-book/zxing-cpp
-    REF v1.2.0
-    SHA512 e61b4e44ccaf0871b5d8badf9ce0a81576f55e5d6a9458907b9b599a66227adceabb8d51a0c47b32319d8aeff93e758b4785d3bd0440375247471d95999de487
+    REPO zxing-cpp/zxing-cpp
+    REF v1.4.0
+    SHA512 05c5b9282f13b76fa0897b21e5b73cb7df0c52e62f1a2d9760fe774aa0378fde97f5f9896690b65b28b4b96ba6ad2703bed53ffaf9d3784636d29cbe860d4bad
     HEAD_REF master
-    PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
 if (VCPKG_TARGET_IS_UWP)

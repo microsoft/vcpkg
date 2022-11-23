@@ -42,7 +42,7 @@ index d49db1b82..cbc2b7102 100644
    #
    # TODO: test for static library.
    #
-@@ -587,31 +577,19 @@ MARK_AS_ADVANCED(CLEAR LZ4_LIBRARY)
+@@ -587,31 +577,21 @@ MARK_AS_ADVANCED(CLEAR LZ4_LIBRARY)
  # Find Zstd
  #
  IF(ENABLE_ZSTD)
@@ -73,13 +73,15 @@ index d49db1b82..cbc2b7102 100644
 -  #
 -  CMAKE_POP_CHECK_STATE()
 +IF(zstd_FOUND)
++  SET(HAVE_ZSTD_H 1)
 +  SET(HAVE_LIBZSTD 1)
++  SET(HAVE_LIBZSTD_COMPRESSOR 1)
 +  IF(TARGET zstd::libzstd_shared)
 +      LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_shared)
 +      SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_shared)
 +  ELSE(TARGET zstd::libzstd_shared)
 +      LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_static)
-+      SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)  
++      SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)
 +  ENDIF(TARGET zstd::libzstd_shared)
  ENDIF(ZSTD_FOUND)
  MARK_AS_ADVANCED(CLEAR ZSTD_INCLUDE_DIR)

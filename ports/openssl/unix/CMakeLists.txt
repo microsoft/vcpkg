@@ -23,7 +23,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         message(FATAL_ERROR "Unknown iOS target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
     # disable that makes linkage error (e.g. require stderr usage)
-    list(APPEND DISABLES no-stdio no-ui no-asm)
+    list(APPEND DISABLES no-ui no-asm)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(PLATFORM darwin64-arm64-cc)
@@ -84,11 +84,6 @@ endif()
 
 string(REGEX REPLACE "^ " "" CFLAGS "${CFLAGS}")
 
-if(CMAKE_HOST_WIN32)
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT};$ENV{PATH}")
-else()
-    file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT}:$ENV{PATH}")
-endif()
 set(ENV{ANDROID_DEV} "${CMAKE_SYSROOT}/usr")
 
 if(NOT IOS)
@@ -227,6 +222,7 @@ else()
             ${DISABLES}
             ${PLATFORM}
             "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--libdir=${CMAKE_INSTALL_PREFIX}/lib"
             "--openssldir=/etc/ssl"
             ${CFLAGS}
             VERBATIM

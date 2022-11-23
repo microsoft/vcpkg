@@ -11,10 +11,21 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Packaging GitHub Repositories Example: libogg](examples/packaging-github-repos.md)
 - [Patching Example: Patching libpng to work for x64-uwp](examples/patching.md)
 - [Getting Started with Versioning](examples/versioning.getting-started.md)
+- [Manifest Mode: CMake Example](examples/manifest-mode-cmake.md)
+- [Pin old Boost Versions](examples/modify-baseline-to-pin-old-boost.md)
+- [Using Overlay Triplets](examples/overlay-triplets-linux-dynamic.md)
 
 ### Command Line Reference
 
-- [Command Line Reference](commands/index.md)
+- [Common Options](commands/common-options.md)
+- Commands
+  - [vcpkg install](commands/install.md)
+  - [vcpkg integrate](commands/integrate.md)
+  - [vcpkg list](commands/list.md)
+  - [vcpkg remove](commands/remove.md)
+  - [vcpkg search](commands/search.md)
+  - [vcpkg update-baseline](commands/update-baseline.md)
+  - [vcpkg version](commands/version.md)
 
 ### User Help
 

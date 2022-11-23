@@ -11,19 +11,21 @@ vcpkg_from_sourceforge(
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
+        error-strings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib        FT_REQUIRE_ZLIB
-        bzip2       FT_REQUIRE_BZIP2
-        png         FT_REQUIRE_PNG
-        brotli      FT_REQUIRE_BROTLI
+        zlib          FT_REQUIRE_ZLIB
+        bzip2         FT_REQUIRE_BZIP2
+        error-strings FT_ENABLE_ERROR_STRINGS
+        png           FT_REQUIRE_PNG
+        brotli        FT_REQUIRE_BROTLI
     INVERTED_FEATURES
-        zlib        FT_DISABLE_ZLIB
-        bzip2       FT_DISABLE_BZIP2
-        png         FT_DISABLE_PNG
-        brotli      FT_DISABLE_BROTLI
+        zlib          FT_DISABLE_ZLIB
+        bzip2         FT_DISABLE_BZIP2
+        png           FT_DISABLE_PNG
+        brotli        FT_DISABLE_BROTLI
 )
 
 vcpkg_cmake_configure(
@@ -75,9 +77,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-file(COPY
-    "${SOURCE_PATH}/docs/FTL.TXT"
-    "${SOURCE_PATH}/docs/GPLv2.TXT"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.TXT"
+        "${SOURCE_PATH}/docs/FTL.TXT"
+        "${SOURCE_PATH}/docs/GPLv2.TXT"
 )
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")

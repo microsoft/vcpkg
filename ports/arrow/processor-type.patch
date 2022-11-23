@@ -1,0 +1,13 @@
+diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
+index cef4eb0b16..51ef979a02 100644
+--- a/cpp/cmake_modules/SetupCxxFlags.cmake
++++ b/cpp/cmake_modules/SetupCxxFlags.cmake
+@@ -24,7 +24,7 @@ include(CheckCXXSourceCompiles)
+ message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
+ 
+ if(NOT DEFINED ARROW_CPU_FLAG)
+-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64|X86|x86|i[3456]86")
++  if(CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64|X86|x86|i[3456]86|x64")
+     set(ARROW_CPU_FLAG "x86")
+   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|ARM64|arm64")
+     set(ARROW_CPU_FLAG "armv8")
