@@ -2198,7 +2198,7 @@
     },
     "expat": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "expected-lite": {
       "baseline": "0.6.2",
@@ -6018,7 +6018,7 @@
     },
     "python3": {
       "baseline": "3.10.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6966,7 +6966,7 @@
     },
     "skia": {
       "baseline": "0.36.0",
-      "port-version": 1
+      "port-version": 2
     },
     "skyr-url": {
       "baseline": "1.13.0",
