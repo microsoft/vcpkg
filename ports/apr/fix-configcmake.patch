@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4632c3..0b86d12 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -259,27 +259,35 @@ SET(install_targets)
+ SET(install_bin_pdb)
+ 
+ # libapr-1 is shared, apr-1 is static
++IF(BUILD_SHARED_LIBS)
+ ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+ SET(install_targets ${install_targets} libapr-1)
+ SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+ TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+ SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
+ ADD_DEPENDENCIES(libapr-1 test_char_header)
+-
++TARGET_INCLUDE_DIRECTORIES(libapr-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ELSE()
+ ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} apr-1)
+ TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+ SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
+ ADD_DEPENDENCIES(apr-1 test_char_header)
++TARGET_INCLUDE_DIRECTORIES(apr-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ENDIF()
+ 
+ # libaprapp-1 and aprapp-1 are static
++IF(BUILD_SHARED_LIBS)
+ ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} libaprapp-1)
+ SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
+-
++TARGET_INCLUDE_DIRECTORIES(libaprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ELSE()
+ ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} aprapp-1)
+ SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
++TARGET_INCLUDE_DIRECTORIES(aprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
++ENDIF()
+ 
+ IF(APR_BUILD_TESTAPR)
+   ENABLE_TESTING()
+@@ -385,12 +393,18 @@ ENDIF (APR_BUILD_TESTAPR)
+ 
+ # Installation
+ 
+-INSTALL(TARGETS ${install_targets}
++INSTALL(TARGETS ${install_targets} EXPORT unofficial-apr-config
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib
+        )
+ 
++INSTALL(EXPORT unofficial-apr-config
++    NAMESPACE unofficial::apr::
++    DESTINATION share/unofficial-apr
++    FILE unofficial-apr-config.cmake
++)
++
+ IF(INSTALL_PDB)
+   INSTALL(FILES ${install_bin_pdb}
+           DESTINATION bin

@@ -1,8 +1,9 @@
+# header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
-    REF v20.11.0
-    SHA512 cd4efb386b4d140c6ccbfa92e8be1d3c9b896474a3074b95ad35bedde9face80a1e4bae594359555010d76c2ccf8243b29e97079de8b0f18cda510274135b8e0
+    REF 654b4558a4347cc9f437f82c6000639af5f20c2c  #v20.30.0
+    SHA512 89e1b5c6e62f09fdd5974491ac607ac96d3afcdc30c1bfc52cfd92945e884fb892904c007df67ec64500197fc36745b94c365d076461ce4daa4df208226b82b1
     HEAD_REF master
 )
 

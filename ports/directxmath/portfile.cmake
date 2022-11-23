@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF jan2022
-    SHA512 8defaa693c8b8aed05791c83b99fa73aac2fc18475b0d51337a81f7d9807b53e426fdf530ed6f1d2d0ebd259e87cc42ac881bdb168387d883998f58a5c0a4886
+    REF may2022
+    SHA512 685e5a0cdd1bc66a5df628f864eae0959d5d5abdcc7e9242ea7af1d5b011cb0705447c366bacd456db96e39dac8cf0e0618a6e055a7db821cdcfa20a1ad08868
     HEAD_REF main
 )
 
@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmath/cmake)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(

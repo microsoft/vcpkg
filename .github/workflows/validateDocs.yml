@@ -1,0 +1,54 @@
+name: Doc Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: vcpkg
+
+      - name: Checkout Website
+        uses: actions/checkout@v3
+        with:
+          repository: vcpkg/vcpkg.github.io
+          ref: '8ee5cacc91b6e017b5e4236940d9f385c1563598'
+          path: vcpkg.github.io
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm ci
+        working-directory: vcpkg.github.io
+
+      - name: Purge existing html files
+        run: rm -rf en
+        working-directory: vcpkg.github.io
+
+      # The current navbar embeds a link to integration.md which no longer exists
+      - name: Ignore navbar
+        run: echo "" > templates/navbar.html
+        working-directory: vcpkg.github.io
+
+      - name: Generate Core Pages
+        run: node scripts/generatePages.js
+        working-directory: vcpkg.github.io
+
+      - name: Generate Docs Pages
+        run: node scripts/generateDocs.js ../vcpkg/docs
+        working-directory: vcpkg.github.io
+
+      - name: Check Links
+        run: VCPKG_VALIDATE_LINKS_ONLY_DOCS=1 node scripts/validateLinks.js
+        working-directory: vcpkg.github.io

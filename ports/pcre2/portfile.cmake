@@ -1,25 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO PhilipHazel/pcre2
-    REF 35fee4193b852cb504892352bd0155de10809889 # pcre2-10.39
-    SHA512 a6e50f3354dc4172df05e887dd8646d4ce6a3584fe180b17dc27b42b094e13d1d1a7e5ab3cb15dd352764d81ac33cfd03e81b0c890d9ddec72d823ca6f8bd667
+    REPO PCRE2Project/pcre2
+    REF pcre2-10.40
+    SHA512 098c21d60ecb3bb8449173f50c9ab8e6018fafd5d55548be08b15df37f8e08bcd4f851d75758c4d22505db30a3444bb65783d83cd876c63fdf0de2850815ef93
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
+        no-static-suffix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_PDB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_STATIC_CRT)
 
+set(JIT ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(JIT OFF)
-else()
-    set(JIT ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -DPCRE2_STATIC_RUNTIME=${BUILD_STATIC_CRT}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
@@ -27,7 +30,12 @@ vcpkg_cmake_configure(
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF
-)
+        -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
+        -DINSTALL_MSVC_PDB=${INSTALL_PDB}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+    )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

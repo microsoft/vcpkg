@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c2f6ba5b..6a4c5410b 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -277,8 +277,8 @@ endif()
+ 
+ if(UNIX AND NOT DBUS_DISABLE_ASSERT)
+     # required for backtrace
+-    set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG}   -Wl,--export-dynamic")
+-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wl,--export-dynamic")
++    set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG}   -rdynamic")
++    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -rdynamic")
+     add_definitions(-DDBUS_BUILT_R_DYNAMIC)
+ endif()
+ 

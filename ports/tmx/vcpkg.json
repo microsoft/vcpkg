@@ -1,8 +1,9 @@
 {
   "name": "tmx",
   "version": "1.2.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A portable C library to load tiled maps in your games.",
+  "license": "BSD-2-Clause",
   "dependencies": [
     "libxml2",
     {

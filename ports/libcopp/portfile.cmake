@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.4.1
     SHA512 eba06bd2de7c9ee557cdd0bf79e0c53e37722b671347436322c14c99e94d955477bfc0980a4f59a5c31051e108f952ec96791024c45fa8eeaa5f7a49099dd8ae
     HEAD_REF v2
+    PATCHES fix-x86-windows.patch
 )
 
 # atframework/cmake-toolset needed as a submodule for configure cmake

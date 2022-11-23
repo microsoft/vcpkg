@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF v2022.03.21.00
-    SHA512 66dfd40e45b884d64be9c06b110caaa9333116c402312ee8eb0c21f0ab569ea31b9e4fb676c68b96730abbff0b74d139f5e39e702cd958c24ce0fe76f353fbe9
+    REF 0c932f6c57095838494520ec4ce7243a7f0c1234  #v2022.07.11.00
+    SHA512 496189c37be8f42821cb5357e501b02f013858f1917854000777ac5c0403d078837e89dc3eef5f66f30f83c7506e40316d730725d7f97070090ac6549e766093
     HEAD_REF master
     PATCHES
         remove-register.patch
@@ -13,16 +13,7 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(GPERF)
-    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
-    vcpkg_add_to_path(${GPERF_PATH})
-else()
-    # gperf only have windows package in vcpkg now.
-    if (NOT EXISTS /usr/bin/gperf)
-        message(FATAL_ERROR "proxygen requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
-    endif()
-endif()
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

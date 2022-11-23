@@ -3,18 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/test
-    REF boost-1.78.0
-    SHA512 0a2611fee4d8f361f172375b21c9bc3825c105fdbd8a1b17364bb92654c631df508fb6a5d086c0aa3f8d5004b672ecf496f846b79eecba8e007dd581ebd47956
+    REF boost-1.80.0
+    SHA512 0848afee0070950a2e3b1f3a4d297992cf3789d85b5cd64ac8894d629eea02d7830eda2a359567c5d2c9d1249accd934c7f9b422f14df2ccfa793f65a410ff02
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../predef/check/predef" "import ../predef/check/predef" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../predef/check/predef"
+    "import ../predef/check/predef"
+)
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${SOURCE_PATH}/predef")
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-test requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

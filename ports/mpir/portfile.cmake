@@ -19,12 +19,12 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_find_acquire_program(YASM)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(SHARED_STATIC "--enable-static --disable-shared")
+        set(SHARED_STATIC --enable-static --disable-shared --with-pic)
     else()
-        set(SHARED_STATIC "--disable-static --enable-shared")
+        set(SHARED_STATIC --disable-static --enable-shared)
     endif()
 
-    set(OPTIONS "--disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC}")
+    set(OPTIONS --disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC})
 
     string(APPEND VCPKG_C_FLAGS " -Wno-implicit-function-declaration")
     string(APPEND VCPKG_CXX_FLAGS " -Wno-implicit-function-declaration")

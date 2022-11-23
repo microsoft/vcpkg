@@ -1,15 +1,16 @@
-set(LIBTIFF_VERSION 4.3.0)
+set(LIBTIFF_VERSION 4.4.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF v${LIBTIFF_VERSION}
-    SHA512 eaa2503dc1805283e0590b06e3e660a793fe849ae8b975b2d69369695d65a40640787c156574faaca856917be799eeb844e60f55555e1f219dd513cef66ea95d
+    SHA512 93955a2b802cf243e41d49048499da73862b5d3ffc005e3eddf0bf948a8bd1537f7c9e7f112e72d082549b4c49e256b9da9a3b6d8039ad8fc5c09a941b7e75d7
     HEAD_REF master
-    PATCHES cmakelists.patch
-    fix-pkgconfig.patch
-    FindCMath.patch
+    PATCHES
+        cmakelists.patch
+        FindCMath.patch
+        android-libm.patch
 )
 
 set(EXTRA_OPTIONS "")
@@ -47,6 +48,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
 if(EXISTS "${_file}")

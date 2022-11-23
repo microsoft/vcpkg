@@ -1,0 +1,14 @@
+diff --git a/source/configure.ac b/source/configure.ac
+index d194c6d..33fcb2f 100644
+--- a/source/configure.ac
++++ b/source/configure.ac
+@@ -208,6 +208,8 @@ fi
+ #AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
+ #AC_CHECK_PROG(STRIP, strip, strip, true)
+ 
++m4_ifndef([AX_CHECK_COMPILE_FLAG], [AC_MSG_ERROR(['autoconf-archive' is missing])])
++
+ # TODO(ICU-20301): Remove fallback to Python 2.
+ AC_CHECK_PROGS(PYTHON, python3 "py -3" python "py")
+ AC_SUBST(PYTHON)
+

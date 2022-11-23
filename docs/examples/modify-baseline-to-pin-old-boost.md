@@ -1,12 +1,12 @@
 # Pin old Boost versions
-This document will teach you how to set versions of meta-packages like `boost` or `qt5`. 
+This document will teach you how to set versions of meta-packages like `boost` or `qt5`.
 
-**What is a meta-package?**  
-In vcpkg we call meta-packages to ports that by themselves don't install anything but that instead forward installation to another port or ports. The reasons for these meta-packages to exist are plenty: to install different versions of a library depending on platform (like the old OpenSSL port did), to allow for multiple versions to exist in the vcpkg registry at the same time (OpenCV), or to conveniently install/uninstall a catalog of related packages (Boost and Qt).  
+**What is a meta-package?**
+In vcpkg we call meta-packages to ports that by themselves don't install anything but that instead forward installation to another port or ports. The reasons for these meta-packages to exist are plenty: to install different versions of a library depending on platform or to conveniently install/uninstall a catalog of related packages (Boost and Qt).
 
-In the case of Boost, it is unlikely that a user requires all of the 140+ Boost libraries in their project. For the sake of convenience, vcpkg splits Boost into multiple sub-packages broken down to individual libraries. By doing so, users can limit the subset of Boost libraries that they depend on. 
+In the case of Boost, it is unlikely that a user requires all of the 140+ Boost libraries in their project. For the sake of convenience, vcpkg splits Boost into multiple sub-packages broken down to individual libraries. By doing so, users can limit the subset of Boost libraries that they depend on.
 
-If a user wants to install all of the Boost libraries available in vcpkg, they can do so by installing the `boost` meta-package. 
+If a user wants to install all of the Boost libraries available in vcpkg, they can do so by installing the `boost` meta-package.
 
 Due to the nature of meta-packages, some unexpected issues arise when trying to use them with versioning. If a user writes the following manifest file:
 
@@ -17,7 +17,7 @@ Due to the nature of meta-packages, some unexpected issues arise when trying to 
     "version": "1.0.0",
     "builtin-baseline": "787fe1418ea968913cc6daf11855ffd8b0b5e9d4",
     "dependencies": [ "boost-tuple" ],
-    "overrides": [ 
+    "overrides": [
         { "name": "boost", "version": "1.72.0" }
     ]
 }
@@ -49,7 +49,7 @@ It is reasonable to expect that overriding `boost` to version 1.72.0 results in 
 Below, we describe two methods to pin down Boost versions effectively.
 
 ## Method 1: Pin specific packages
-Use `"overrides"` to force specific versions in a package-by-package basis. 
+Use `"overrides"` to force specific versions in a package-by-package basis.
 
 `vcpkg.json`
 ```json
@@ -72,14 +72,15 @@ This method allows you to quickly set the specific versions you want, but you wi
 The second method makes it easy to pin the entire Boost collection and end up with a very simple manifest file.
 
 ## Method 2: Modify baseline
-An easy way to set the version for the entirety of boost is to use the `"builtin-baseline"` property. 
+An easy way to set the version for the entirety of boost is to use the `"builtin-baseline"` property.
 
-As of right now, it is only possible to go back to Boost version `1.75.0` using a baseline. Since that was the contemporary Boost version when the versioning feature was merged. **But, it is possible to modify the baseline to whatever you like and use that instead.**
+As of right now, it is only possible to go back to Boost version `1.75.0` using a baseline, since that was the contemporary Boost version when the versioning feature was merged. **But, it is possible to modify the baseline to whatever you like and use that instead.**
 
 ### Step 1: Create a new branch
-As described in the versioning documentation. The value that goes in `"builtin-baseline"` is a Git commit in the vcpkg repository's history. Then it stands to reason, that if you want to customize the baseline you should be able to create a new commit with said custom baseline. 
+As described in the versioning documentation. The value that goes in `"builtin-baseline"` is a git commit in the microsoft/vcpkg repository's history. If you want to customize the baseline and have control over the vcpkg instance, you can create a new commit with said custom baseline.
 
-Let's start by creating a new branch to hold our modified baseline.  
+Let's start by creating a new branch to hold our modified baseline.
+
 In the directory containing your clone of the vcpkg Git repository run:
 
 ```
@@ -91,7 +92,7 @@ This will create a new branch named `custom-boost-baseline` and check it out imm
 ### Step 2: Modify the baseline
 The next step is to modify the baseline file, open the file in your editor of choice and modify the entries for the Boost libraries.
 
-Change the `"baseline"` version to your desired version.  
+Change the `"baseline"` version to your desired version.
 _NOTE: Remember to also set the port versions to 0 (or your desired version)._
 
 `${vcpkg-root}/versions/baseline.json`
@@ -126,7 +127,7 @@ _NOTE: Remember to also set the port versions to 0 (or your desired version)._
 ...
 ```
 
-Some `boost-` packages are helpers used by vcpkg and are not part of Boost. For example, `"boost-uninstall"` is a vcpkg helper to conveniently uninstall all Boost libraries, but it didn't exist for Boost version `1.72.0`, in this case it is fine to leave it at `1.75.0` to avoid baseline errors (since all versions in `baseline.json` must have existed). 
+Some `boost-` packages are helpers used by vcpkg and are not part of Boost. For example, `"boost-uninstall"` is a vcpkg helper to conveniently uninstall all Boost libraries, but it didn't exist for Boost version `1.72.0`, in this case it is fine to leave it at `1.75.0` to avoid baseline errors (since all versions in `baseline.json` must have existed).
 
 ### Step 3: Commit your changes
 After saving your modified file, run these commands to commit your changes:

@@ -9,6 +9,11 @@ target_compile_definitions(main PRIVATE ${wxWidgets_DEFINITIONS} "$<$<CONFIG:DEB
 target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
 
+add_executable(main2 WIN32 popup.cpp)
+
+find_package(wxWidgets CONFIG REQUIRED)
+target_link_libraries(main2 PRIVATE wx::core wx::base)
+
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)
     execute_process(
@@ -19,3 +24,8 @@ if(USE_WXRC)
         message(FATAL_ERROR "Failed to run wxWidgets_wxrc_EXECUTABLE (${wxWidgets_wxrc_EXECUTABLE})")
     endif()
 endif()
+
+set(PRINT_VARS "" CACHE STRING "Variables to print at the end of configuration")
+foreach(var IN LISTS PRINT_VARS)
+    message(STATUS "${var}:=${${var}}")
+endforeach()

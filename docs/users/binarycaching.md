@@ -96,14 +96,17 @@ steps:
   - name: 'Setup NuGet Credentials'
     shell: 'bash'
     # Replace <OWNER> with your organization name
-    run: >
-      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
-      sources add
-      -source "https://nuget.pkg.github.com/<OWNER>/index.json"
-      -storepasswordincleartext
-      -name "GitHub"
-      -username "<OWNER>"
-      -password "${{ secrets.GITHUB_TOKEN }}"
+    run: |
+      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1` \
+        sources add \
+        -source "https://nuget.pkg.github.com/<OWNER>/index.json" \
+        -storepasswordincleartext \
+        -name "GitHub" \
+        -username "<OWNER>" \
+        -password "${{ secrets.GITHUB_TOKEN }}"
+      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1` \
+        setapikey "${{ secrets.GITHUB_TOKEN }}" \
+        -source "https://nuget.pkg.github.com/<OWNER>/index.json"
 
   # Omit this step if you're using manifests
   - name: 'vcpkg package restore'

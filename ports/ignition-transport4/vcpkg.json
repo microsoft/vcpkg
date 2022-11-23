@@ -1,12 +1,16 @@
 {
   "name": "ignition-transport4",
   "version": "4.0.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Transport middleware for robotics",
+  "license": null,
   "dependencies": [
     "cppzmq",
     "ignition-cmake0",
-    "ignition-modularscripts",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
     "ignition-msgs1",
     {
       "name": "libuuid",

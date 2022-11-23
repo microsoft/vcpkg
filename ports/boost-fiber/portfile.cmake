@@ -3,19 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/fiber
-    REF boost-1.78.0
-    SHA512 271454964e12c0006ed9ef52911cf76d004141da54d5f96e63d106a216841d9a939d3dcd802fc9e860ac6a21d0b7fab9f385e8647ebbd2fd669e48fc9b6a80c9
+    REF boost-1.80.0
+    SHA512 4eb5b35fcf5c882051d0deebc55c58c40a235c8d8695cfad462036a9a7de972a40c5bb4c724d4c412e400f9f1ed74f079af3ca7f5143739068f31c0c76567a8d
     HEAD_REF master
-    PATCHES fix-build-numa.patch
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-fiber requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

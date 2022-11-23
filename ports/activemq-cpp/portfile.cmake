@@ -38,6 +38,12 @@ if (VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}")
 
     vcpkg_copy_pdbs()
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/activemqcpp-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/activemqcpp-config" "${CURRENT_INSTALLED_DIR}/debug" "`dirname $0`/../../../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/activemqcpp-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    endif()
 else()
     set(ACTIVEMQCPP_MSVC_PROJ "${SOURCE_PATH}/vs2010-build/activemq-cpp.vcxproj")
 
@@ -125,6 +131,8 @@ else()
     file(COPY "${SOURCE_PATH}/src/main/decaf"    DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
     vcpkg_clean_msbuild()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CURRENT_PORT_DIR}/activemq-cppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/activemq-cpp")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

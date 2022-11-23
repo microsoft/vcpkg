@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            offscale/c89stringutils
-    REF             efa52aa513090d8569adcfc8b8f05eec027ee8ef
-    SHA512          0139fad109b0ab20b2c0447d7bedcadf19d05c5890551563dd8c6cd657ab1c40c0ae046451135a5694df94b3a89b93a65dc4b57ae94667c9bcf62f0b04d9b1e6
+    REF             bbf0e2e7ea0803e11dc4575a01d25f55fd5b48b1
+    SHA512          186ccb2cd54d84e547f95c65fc86955f11f73670803384a12186ef91dd67d79067b5c050775ccca515b6a218079757af9edf2808c3e6e2902755e7cee410f935
     HEAD_REF        master
 )
 
@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/LICENSE.txt"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/c89stringutils"
      RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")

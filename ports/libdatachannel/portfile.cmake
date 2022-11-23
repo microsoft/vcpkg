@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF 127f157fc00abeb6fe5a57ce56a7c4e092721203 #v0.16.4
-    SHA512 ef7d1f652af031c13260a4c436c949eb566d40d15dcde5b56ab782e9e9d7b5e287f4a6a61bc4eb3fcdbb835c102637b0368f3c43af6f9fa9c87cd99d15bde454
+    REF 2c6ef2053c6d28a66c16d0dae54e432750753575 #v0.17.11
+    SHA512 b65cff5a7cb274fe4651c2cd395533c50eb2959192596e6ac7017af40c93d75cbc83ad86f8810e728b33d8d0b5993eddba4eac8644a603c5e641bf7cc4b87425
     HEAD_REF master
     PATCHES
         ${PATCHES}
@@ -27,6 +27,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
+        -DUSE_SYSTEM_JUICE=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
 )

@@ -1,57 +1,6 @@
-#[===[.md:
-# vcpkg_from_git
-
-Download and extract a project from git
-
-## Usage:
-```cmake
-vcpkg_from_git(
-    OUT_SOURCE_PATH <SOURCE_PATH>
-    URL <https://android.googlesource.com/platform/external/fdlibm>
-    REF <59f7335e4d...>
-    [HEAD_REF <ref>]
-    [PATCHES <patch1.patch> <patch2.patch>...]
-)
-```
-
-## Parameters:
-### OUT_SOURCE_PATH
-Specifies the out-variable that will contain the extracted location.
-
-This should be set to `SOURCE_PATH` by convention.
-
-### URL
-The url of the git repository.
-
-### REF
-The git sha of the commit to download.
-
-### FETCH_REF
-The git branch to fetch in non-HEAD mode. After this is fetched,
-then `REF` is checked out. This is useful in cases where the git server
-does not allow checking out non-advertised objects.
-
-### HEAD_REF
-The git branch to use when the package is requested to be built from the latest sources.
-
-Example: `main`, `develop`, `HEAD`
-
-### PATCHES
-A list of patches to be applied to the extracted sources.
-
-Relative paths are based on the port directory.
-
-## Notes:
-`OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
-
-## Examples:
-
-* [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
-#]===]
-
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "LFS"
         "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG"
         "PATCHES"
     )
@@ -138,6 +87,32 @@ function(vcpkg_from_git)
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
+        if(arg_LFS)
+            # Running "git lfs" searches for "git-lfs[.exe]" on the path
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" lfs --version
+                OUTPUT_VARIABLE lfs_version_output
+                ERROR_VARIABLE lfs_version_error
+                RESULT_VARIABLE lfs_version_result
+                WORKING_DIRECTORY "${git_working_directory}"
+            )
+            if(lfs_version_result)
+                message(FATAL_ERROR "Git LFS is required for ${PORT}")
+            endif()
+
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND ${GIT} lfs install --local --force
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
+            )
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND ${GIT} lfs fetch "${arg_URL}" "${ref_to_fetch}"
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-fetch-${TARGET_TRIPLET}"
+            )
+        endif()
 
         if(VCPKG_USE_HEAD_VERSION)
             vcpkg_execute_in_download_mode(
@@ -175,7 +150,7 @@ function(vcpkg_from_git)
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
+            COMMAND "${GIT}" -c core.autocrlf=false archive "${rev_parse_ref}" -o "${temp_archive}"
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME git-archive
         )

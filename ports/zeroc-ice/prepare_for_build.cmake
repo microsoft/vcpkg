@@ -1,37 +1,53 @@
 
-# This function removes hardcoded RuntimeLibrary directives from Ice's vcxproh files and downloads
+# This function modifies hardcoded RuntimeLibrary directives in Ice's .vcxproj files and downloads
 # Ice Builder for MSBuild, which is required to generate C++ files based on the interface definition
-# files (.ice). 
+# files (.ice).
 
 function(prepare_for_build ICE_SOURCE_DIR)
 
-    message("-- Removing hardcoded 'RuntimeLibrary' directives from .vcxproj files")
+    message("-- Modifying hardcoded 'RuntimeLibrary' directives in .vcxproj files")
     set(CPP_SOURCE_DIR "${ICE_SOURCE_DIR}/cpp/src")
     file(GLOB_RECURSE PROJ_FILES "${CPP_SOURCE_DIR}/*.vcxproj")
     foreach(PROJ_FILE ${PROJ_FILES})
         file(READ ${PROJ_FILE} PROJ_FILE_CONTENT)
-        STRING(REGEX 
-            REPLACE 
-                "<Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\">" 
+        STRING(REGEX
+            REPLACE
+                "<Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\">"
                 "<Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\" Condition=\"'$(UseVcpkg)' != 'yes'\">"
             PROJ_FILE_CONTENT
             "${PROJ_FILE_CONTENT}"
         )
-        STRING(REGEX 
-            REPLACE 
-                "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" 
-                ""
-            PROJ_FILE_CONTENT
-            "${PROJ_FILE_CONTENT}"
-        )
-        STRING(REGEX 
-            REPLACE 
-                "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" 
-                ""
-            PROJ_FILE_CONTENT
-            "${PROJ_FILE_CONTENT}"
-        )
+
+        if((NOT ${PROJ_FILE} MATCHES ".*slice\.vcxproj") AND
+           (NOT ${PROJ_FILE} MATCHES ".*iceutil\.vcxproj") AND
+           (NOT ${PROJ_FILE} MATCHES ".*slice2cpp\.vcxproj"))
+
+            if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+                STRING(REGEX
+                    REPLACE
+                        "<ConfigurationType>DynamicLibrary</ConfigurationType>"
+                        "<ConfigurationType>StaticLibrary</ConfigurationType>"
+                    PROJ_FILE_CONTENT
+                    "${PROJ_FILE_CONTENT}"
+                )
+            else()
+                STRING(REGEX
+                    REPLACE
+                        "<ConfigurationType>StaticLibrary</ConfigurationType>"
+                        "<ConfigurationType>DynamicLibrary</ConfigurationType>"
+                    PROJ_FILE_CONTENT
+                    "${PROJ_FILE_CONTENT}"
+                )
+            endif()
+        endif()
+
         file(WRITE ${PROJ_FILE} "${PROJ_FILE_CONTENT}")
+
+        vcpkg_execute_required_process(
+            COMMAND pwsh ${CURRENT_PORT_DIR}/change_to_mt.ps1 ${PROJ_FILE} ${VCPKG_CRT_LINKAGE}
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME change_to_mt-${TARGET_TRIPLET}-rel
+        )
     endforeach()
 
     set(ICE_CPP_MSBUILD_PACKAGES_DIR "${ICE_SOURCE_DIR}/cpp/msbuild/packages")
@@ -46,8 +62,8 @@ function(prepare_for_build ICE_SOURCE_DIR)
         )
 
         vcpkg_extract_source_archive(
-            ICE_BUILDER_MSBUILD_DIRECTORY 
-            ARCHIVE 
+            ICE_BUILDER_MSBUILD_DIRECTORY
+            ARCHIVE
                 "${ICE_BUILDER_MSBUILD_ARCHIVE}"
             NO_REMOVE_ONE_LEVEL
             SOURCE_BASE icebuilder

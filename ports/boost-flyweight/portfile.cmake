@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/flyweight
-    REF boost-1.78.0
-    SHA512 192a9985ab4026284d703993e71db88feccc045bc3039763daa87078cd5881e0fee9e65024f264813d508d4cf53b41661befef50dbec911d4ad5063eb11da144
+    REF boost-1.80.0
+    SHA512 84e2ab0e65e1dd8d05c4e5f98a603b99b85faed8c7ab50244ba6d252ecc62c2a8c14f542958d8833b8ed8c13d364db1e33a872a94cf5c204dd33f280a7986ff2
     HEAD_REF master
 )
 

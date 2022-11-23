@@ -2,68 +2,105 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -11,6 +11,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
-                     HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
-     find_dependency(OpenEXR @OpenEXR_VERSION@
-                     HINTS @OpenEXR_DIR@)
-+    find_dependency(libpng CONFIG REQUIRED)
-+    find_dependency(libheif CONFIG REQUIRED)
-+    find_dependency(unofficial-libsquish CONFIG REQUIRED)
-     find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
-     find_dependency(Threads)  # Because OpenEXR doesn't do it
- endif ()
+@@ -1,6 +1,21 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++find_dependency(libheif CONFIG)
++find_dependency(PNG)
++find_dependency(unofficial-libsquish CONFIG)
++if(@USE_OPENCV@)
++    find_dependency(OpenCV CONFIG)
++endif()
++if(@USE_OPENCOLORIO@)
++    find_dependency(OpenColorIO CONFIG)
++endif()
++if(@USE_OPENJPEG@)
++    find_dependency(OpenJPEG CONFIG)
++endif()
++if(@USE_WEBP@)
++    find_dependency(WebP CONFIG)
++endif()
+ 
+ # add here all the find_dependency() whenever switching to config based dependencies
+ if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 631035a..9f4d096 100644
+index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -148,7 +148,7 @@ find_python()
- # Dependencies for optional formats and features. If these are not found,
- # we will continue building, but the related functionality will be disabled.
+@@ -158,14 +158,19 @@ endif ()
+ checked_find_package (Freetype
+                    DEFINITIONS  -DUSE_FREETYPE=1 )
  
--checked_find_package (PNG)
-+checked_find_package (png PREFER_CONFIG)
+-checked_find_package (OpenColorIO
++set(OPENCOLORIO_INCLUDES "")
++set(OPENCOLORIO_LIBRARIES OpenColorIO::OpenColorIO)
++checked_find_package (OpenColorIO CONFIG
+                       DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
+                       # PREFER_CONFIG
+                       )
++set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
+ if (NOT OPENCOLORIO_FOUND)
+     set (OPENCOLORIO_FOUND 0)
+ endif ()
+-checked_find_package (OpenCV 3.0
++set(OPENCV_INCLUDES "")
++set(OPENCV_LIBRARIES opencv_core)
++checked_find_package (OpenCV CONFIG
+                    DEFINITIONS  -DUSE_OPENCV=1)
  
- checked_find_package (BZip2)   # Used by ffmpeg and freetype
- if (NOT BZIP2_FOUND)
-@@ -200,7 +200,8 @@ if (ENABLE_FIELD3D)
+ # Intel TBB
+@@ -175,7 +177,9 @@ checked_find_package (TBB 2017
+                       PREFER_CONFIG)
+ 
+ checked_find_package (DCMTK VERSION_MIN 3.6.1)  # For DICOM images
+-checked_find_package (FFmpeg VERSION_MIN 3.0)
++checked_find_package (FFMPEG)
++set(FFmpeg_FOUND "${FFMPEG_FOUND}")
++set(FFMPEG_INCLUDES "${FFMPEG_INCLUDE_DIRS}")
+ checked_find_package (GIF
+                       VERSION_MIN 4
+                       RECOMMEND_MIN 5.0
+@@ -200,7 +200,9 @@ if (ENABLE_FIELD3D)
  endif ()
  
  # For HEIF/HEIC/AVIF formats
 -checked_find_package (Libheif VERSION_MIN 1.3
-+checked_find_package (libheif VERSION_MIN 1.3
-+                      PREFER_CONFIG
++set(LIBHEIF_INCLUDES "")
++set(LIBHEIF_LIBRARIES heif)
++checked_find_package (Libheif CONFIG
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-@@ -307,7 +308,8 @@ endmacro()
+@@ -221,9 +222,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+     # set (LIBRAW_FOUND 0)
+ endif ()
+ 
+-checked_find_package (OpenJPEG VERSION_MIN 2.0
+-                      RECOMMEND_MIN 2.2
+-                      RECOMMEND_MIN_REASON "for multithreading support")
++set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG ${USE_OPENJPEG})
++checked_find_package (OpenJPEG CONFIG)
+ # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
+ # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
+ 
+@@ -240,6 +243,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+     checked_find_package (Ptex)
+ endif ()
+ 
++set(WEBP_INCLUDES "")
++set(WEBP_LIBRARIES WebP::webp WebP::webpdemux)
+ checked_find_package (WebP)
+ 
+ option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)
+@@ -307,7 +309,9 @@ endmacro()
  option (USE_EMBEDDED_LIBSQUISH
          "Force use of embedded Libsquish, even if external is found" OFF)
  if (NOT USE_EMBEDDED_LIBSQUISH)
 -    checked_find_package (Libsquish)
-+    checked_find_package (unofficial-libsquish PREFER_CONFIG)
-+    set(libsquish_FOUND 1)
++    set(LIBSQUISH_INCLUDES "")
++    set(LIBSQUISH_LIBRARIES unofficial::libsquish::squish)
++    checked_find_package (Libsquish NAMES unofficial-libsquish)
  endif ()
  
  
-diff --git a/src/ico.imageio/CMakeLists.txt b/src/ico.imageio/CMakeLists.txt
-index d290625..cff954c 100644
---- a/src/ico.imageio/CMakeLists.txt
-+++ b/src/ico.imageio/CMakeLists.txt
-@@ -2,9 +2,15 @@
- # SPDX-License-Identifier: BSD-3-Clause
- # https://github.com/OpenImageIO/oiio
- 
--if (TARGET PNG::PNG)
-+if (libpng_FOUND)
-+    if (TARGET png_static)
-+        set(PNG_TARGET png_static)
-+    elseif (TARGET png)
-+        set(PNG_TARGET png)
-+    endif()
-+
-     add_oiio_plugin (icoinput.cpp icooutput.cpp
--                     LINK_LIBRARIES PNG::PNG ZLIB::ZLIB)
-+                     LINK_LIBRARIES ${PNG_TARGET} ZLIB::ZLIB)
- else ()
-     message (WARNING "libpng not found, so ICO support will not work")
-     set (format_plugin_definitions ${format_plugin_definitions} DISABLE_ICO=1 PARENT_SCOPE)

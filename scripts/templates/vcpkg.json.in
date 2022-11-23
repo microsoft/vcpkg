@@ -1,6 +1,6 @@
 {
   "name": "@PORT@",
-  "version-string": "",
+  "version": "",
   "homepage": "",
   "description": "",
   "dependencies": [

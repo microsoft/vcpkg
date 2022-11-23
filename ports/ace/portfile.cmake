@@ -1,39 +1,24 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.6)
-string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
+string(REPLACE "." "_" VERSION_DIRECTORY "${VERSION}")
 
 if("tao" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_WINDOWS)
-      # Don't change to vcpkg_from_github! This points to a release and not an archive
-      vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
-          FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 faef212f066263f9a87a688d105f15097f6b78fd77baf9e2b7da008027cd9ad0478b1f016892ee2d36fcb5aa6b14cc6fbb8fb906f018db6a1089820d522c65f9
-      )
-    else()
-      vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
-          FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 5d0bbeb1f729c3304637a15979303ba6efdbe52bb5d4ac73930fe9b86dbb73a5d74325476809863b26e1a3fc39a205d9d3a9909bce7bbdc5869de3e30f1bc317
-      )
-    endif()
-else()
-  if(VCPKG_TARGET_IS_WINDOWS)
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
-        FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 91f35727afc652f537ce242eb0a9e10878b51b63f9c10f72bddd6491481f10eec5d9d8469f79da3b95adeab7d6848eb1e8bad4e43f61db63daf796a2cd205d61
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
+        FILENAME "ACE-TAO-${VERSION}.tar.gz"
+        SHA512 c9a1e63e9cc8fe2006cd2f7ef0581af6bda13ab9d951da987a4861f70eb3dc5740b2aeff1284ab23a50db29e97c565c4fa4a13b024aa6fac1e2a7c8aaaba322f
     )
-  else()
+else()
+    # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
-        FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 9770fab3552835803a93c9a234218c9dd961ecde67227ee92e0972cd2e2ff267147b255ab437453a887bc47b20f70c7a64efeada5dde5d3ea2cade54200e8354
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
+        FILENAME "ACE-src-${VERSION}.tar.gz"
+        SHA512 e59b0a6032887ab9374af1fed3a2ce3c2cbc7cd9573272266775dbab7887759d2c848c636b5c4b20f7e7262899dd7c87a393ddf9415dd3eafcefa3b16e7f715f
     )
-  endif()
 endif()
 
 vcpkg_extract_source_archive_ex(
@@ -83,7 +68,7 @@ vcpkg_add_to_path("${PERL_PATH}")
 if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+    set(MSBUILD_PLATFORM "${TRIPLET_SYSTEM_ARCH}")
 endif()
 
 # Add ace/config.h file
@@ -123,14 +108,14 @@ endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_build_process(
-    COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" "${WORKSPACE}.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+    COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${WORKSPACE}.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
     WORKING_DIRECTORY "${ACE_ROOT}"
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
 if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
-      COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" "${ACE_ROOT}/ACEXML/ACEXML.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+      COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${ACE_ROOT}/ACEXML/ACEXML.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
       WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME mwc-xml-${TARGET_TRIPLET}
   )

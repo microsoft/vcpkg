@@ -3,14 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/stacktrace
-    REF boost-1.78.0
-    SHA512 edf10d4050e168b5eac7d19ff6afe3c54a3f237c65a6de974235446514ea1fae683ad01435649bd41120a51f05ae59644793c317066f5e946c02c471097e05ac
+    REF boost-1.80.0
+    SHA512 e4017745b1d56721321497e343bc7bce448ecaad8b184971a98c1c89d9f3a9766b214cf4887ea242d94521a22c40ed8211e249f0795a114f89c7d55066fc42c3
     HEAD_REF master
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-stacktrace requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

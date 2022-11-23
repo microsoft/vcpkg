@@ -1,8 +1,19 @@
 {
   "name": "rhash",
-  "version": "1.4.0",
-  "port-version": 2,
+  "version": "1.4.2",
+  "port-version": 1,
   "description": "C library for computing a wide variety of hash sums",
   "homepage": "https://github.com/rhash/RHash",
-  "supports": "!uwp"
+  "license": "0BSD",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

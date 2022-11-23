@@ -1,0 +1,22 @@
+diff --git a/tools/g-ir-tool-template.in b/tools/g-ir-tool-template.in
+index 75c35a7..499ed01 100644
+--- a/tools/g-ir-tool-template.in
++++ b/tools/g-ir-tool-template.in
+@@ -46,7 +46,7 @@ if debug:
+ filedir = os.path.dirname(__file__)
+ 
+ # Try using relative paths first so that the installation prefix is relocatable
+-datadir = os.path.abspath(os.path.join(filedir, '..', 'share'))
++datadir = os.path.abspath(os.path.join(filedir, '..', '..', 'share'))
+ # Fallback to hard-coded paths if the relocatable paths are wrong
+ if not os.path.isdir(os.path.join(datadir, 'gir-1.0')):
+     datadir = "@datarootdir@"
+@@ -55,7 +55,7 @@ builtins.__dict__['DATADIR'] = datadir
+ 
+ # Respect gir_dir_prefix
+ girdir = ''
+-girdir = os.path.abspath(os.path.join(filedir, '..', '@gir_dir_prefix@'))
++girdir = datadir
+ builtins.__dict__['GIRDIR'] = [girdir]
+ 
+ # Again, relative paths first so that the installation prefix is relocatable
