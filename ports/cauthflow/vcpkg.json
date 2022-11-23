@@ -1,6 +1,6 @@
 {
   "name": "cauthflow",
-  "version": "0.0.1",
+  "version-date": "2022-11-23",
   "description": "OAuth2 server flow handler in C89 for SunOS, Windows, macOS, BSD, and Linux.",
   "license": "Apache-2.0 OR MIT",
   "supports": "!uwp",
