@@ -189,6 +189,18 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
+- Fedora e RedHat
+
+```sh
+$ sudo dnf check-update
+$ sudo dnf upgrade
+$ sudo dnf install vcpkg
+$ sudo dnf group install "GROUPNAME"
+$ sudo dnf group install "C Development Tools and Libraries" "Development Tools"
+$ sudo dnf check-update
+$ sudo dnf upgrade
+```
+
 Para qualuquer outra distribuição, tenha certeza que você instalou o g++ 6 ou mais novo.
 Se voçê deseja adicionar instruções osbre uma distribuição específica,
 [Por Favor abra um Pull Request][contributing:submit-pr!]
