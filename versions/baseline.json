@@ -2709,7 +2709,7 @@
       "port-version": 1
     },
     "google-cloud-c": {
-      "baseline": "2022-11-22",
+      "baseline": "2022-11-23",
       "port-version": 0
     },
     "google-cloud-cpp": {
