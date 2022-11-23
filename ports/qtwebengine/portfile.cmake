@@ -1,7 +1,10 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-#set(${PORT}_PATCHES 0ce5e91.diff) # ICE Workaround; Needs path adjustments
+set(${PORT}_PATCHES
+    # 0ce5e91.diff # ICE Workaround; Needs path adjustments
+    add-missing-string.patch
+    ) 
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
