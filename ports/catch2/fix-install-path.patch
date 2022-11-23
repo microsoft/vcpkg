@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -168,7 +168,7 @@
+@@ -164,7 +164,7 @@
  
      ## Provide some pkg-config integration
      set(PKGCONFIG_INSTALL_DIR
@@ -13,15 +13,19 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -335,12 +335,20 @@
+@@ -363,16 +363,28 @@
      install(
        TARGETS
          Catch2
 -        Catch2WithMain
        EXPORT
          Catch2Targets
-       DESTINATION
+       LIBRARY DESTINATION 
          ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION
+         ${CMAKE_INSTALL_LIBDIR}
+       RUNTIME DESTINATION
+         ${CMAKE_INSTALL_BINDIR}
      )
 +
 +     install(
@@ -29,8 +33,12 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 +        Catch2WithMain
 +      EXPORT
 +        Catch2Targets
-+      DESTINATION
++      LIBRARY DESTINATION
 +        ${CMAKE_INSTALL_LIBDIR}/manual-link
++      ARCHIVE DESTINATION
++        ${CMAKE_INSTALL_LIBDIR}/manual-link
++      RUNTIME DESTINATION
++        ${CMAKE_INSTALL_BINDIR}
 +    )
  
  

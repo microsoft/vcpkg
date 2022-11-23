@@ -1,11 +1,10 @@
 {
   "name": "cpuinfo",
-  "version-date": "2022-04-02",
-  "port-version": 1,
+  "version-date": "2022-07-19",
   "description": "CPU INFOrmation library (x86/x86-64/ARM/ARM64, Linux/Windows/Android/macOS/iOS)",
   "homepage": "https://github.com/pytorch/cpuinfo",
   "license": "BSD-2-Clause",
-  "supports": "!(arm & windows)",
+  "supports": "!(uwp & arm32)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

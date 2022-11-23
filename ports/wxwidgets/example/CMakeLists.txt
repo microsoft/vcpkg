@@ -2,17 +2,17 @@ cmake_minimum_required(VERSION 3.7)
 
 project(wxwidgets-example)
 
-option(wxBUILD_DEBUG_LEVEL "Debug Level" Default)
-if(NOT wxBUILD_DEBUG_LEVEL STREQUAL "Default")
-    add_compile_options("-DwxDEBUG_LEVEL=${wxBUILD_DEBUG_LEVEL}")
-endif()
-
 add_executable(main WIN32 popup.cpp)
 
 find_package(wxWidgets REQUIRED)
 target_compile_definitions(main PRIVATE ${wxWidgets_DEFINITIONS} "$<$<CONFIG:DEBUG>:${wxWidgets_DEFINITIONS_DEBUG}>")
 target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
+
+add_executable(main2 WIN32 popup.cpp)
+
+find_package(wxWidgets CONFIG REQUIRED)
+target_link_libraries(main2 PRIVATE wx::core wx::base)
 
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)

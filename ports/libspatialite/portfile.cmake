@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         fix-makefiles.patch
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
+        fix-mingw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -81,6 +82,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        PREFER_JOM
+        CL_LANGUAGE C
         OPTIONS_RELEASE
             "CL_FLAGS=${CL_FLAGS_RELEASE}"
             "INST_DIR=${INST_DIR}"
@@ -177,6 +180,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}

@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectX-Headers
-    REF v1.602.0
-    SHA512 75d81191e3e0b60bc901f04fcb9cf53f0faae7f0c196a1b04f2b9199c72243d4dddaeacad29d82ca7ccb209b16d07b4f1b71a58368fccad13c4d8421e0c9f0d9
-    HEAD_REF master
+    REF v1.606.4
+    SHA512 3fb4142f8ceedd8484f5f7dae5804a7a0012951de344936fbf22991d6ae659d4e5093e1627bfe51c3cb0859340b13171c4f6aa68377ec26ac05038acaad8c540
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

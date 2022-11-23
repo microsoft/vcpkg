@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "7.83.1",
-  "port-version": 2,
+  "version": "7.86.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -132,7 +131,7 @@
           "features": [
             "sectransp"
           ],
-          "platform": "osx"
+          "platform": "osx | ios"
         },
         {
           "name": "curl",
@@ -148,7 +147,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
         }
       ]
     },
@@ -157,6 +156,9 @@
     },
     "tool": {
       "description": "Builds curl executable"
+    },
+    "websockets": {
+      "description": "WebSocket support (experimental)"
     },
     "winidn": {
       "description": "WinIDN support"

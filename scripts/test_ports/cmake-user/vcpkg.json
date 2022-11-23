@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-04-18",
+  "version-date": "2022-11-12",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -15,7 +15,8 @@
           "default-features": false,
           "features": [
             "cmake-current",
-            "find-package"
+            "find-package",
+            "pkg-check-modules"
           ]
         },
         {
@@ -43,15 +44,23 @@
         },
         {
           "$package": "CURL",
-          "name": "curl"
+          "name": "curl",
+          "default-features": false
         },
         {
           "$package": "EXPAT",
           "name": "expat"
         },
         {
+          "$package": "Fontconfig",
+          "$since": "3.14",
+          "name": "fontconfig",
+          "platform": "!mingw & !uwp"
+        },
+        {
           "$package": "Freetype",
-          "name": "freetype"
+          "name": "freetype",
+          "default-features": false
         },
         {
           "$package": "Intl",
@@ -63,7 +72,13 @@
         },
         {
           "$package": "ICU",
-          "name": "icu"
+          "name": "icu",
+          "platform": "!uwp"
+        },
+        {
+          "$package": "Iconv",
+          "$since": "3.11",
+          "name": "libiconv"
         },
         {
           "$package": "JPEG",
@@ -78,18 +93,57 @@
           "name": "libpng"
         },
         {
+          "$package": "PostgreSQL",
+          "name": "libpq",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXml2",
+          "$since": "3.11",
+          "name": "libxml2",
+          "default-features": false
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXslt",
+          "$since": "3.11",
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "SQLite3",
+          "name": "sqlite3",
+          "$since": "3.14",
+          "default-features": false
+        },
+        {
           "$package": "TIFF",
-          "name": "tiff"
+          "name": "tiff",
+          "default-features": false
         },
         {
           "$package": "wxWidgets",
           "name": "wxwidgets",
-          "platform": "!linux"
+          "default-features": false,
+          "platform": "!uwp"
         },
         {
           "$package": "ZLIB",
           "name": "zlib"
         }
+      ]
+    },
+    "pkg-check-modules": {
+      "description": "Test `find_package(PkgConfig)` and pkg_check_modules(...)",
+      "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
+        "zlib"
       ]
     }
   }

@@ -23,15 +23,23 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/luasocket/LICENSE" "${CURRENT_PACKAGE
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 # Handle socket dll name
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/bin/socket/core.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/socket/core.pdb")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/socket/core.pdb")
+    endif()
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.pdb")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.pdb")
+    endif()
 
 # Handle mime dll name
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/bin/mime/core.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/mime/core.pdb")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/mime/core.pdb")
+    endif()
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.pdb")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.pdb")
+    endif()
 endif()
 
 # Allow empty include directory

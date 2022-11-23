@@ -38,8 +38,6 @@ function(vcpkg_build_qmake)
         set(invoke_command "${MAKE}")
     endif()
 
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
-
     if(NOT DEFINED arg_BUILD_LOGNAME)
         set(arg_BUILD_LOGNAME build)
     endif()

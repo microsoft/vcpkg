@@ -213,6 +213,8 @@ This variable can be set to a list of additional command line parameters to pass
 
 ### `VCPKG_PREFER_SYSTEM_LIBS`
 
+**This feature has been deprecated. Use empty overlay ports instead.**
+
 This variable controls whether vcpkg will append instead of prepend its paths to `CMAKE_PREFIX_PATH`, `CMAKE_LIBRARY_PATH` and `CMAKE_FIND_ROOT_PATH` so that vcpkg libraries/packages are found after toolchain/system libraries/packages.
 
 Defaults to `OFF`.

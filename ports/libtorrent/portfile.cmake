@@ -30,16 +30,16 @@ endif()
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
-        REF e9bbf16bdd899f42aef0f0c2b1f214de2c15ac92 # v2.0.6
-        SHA512 5bc93be6b1bf5208f1bfc10ffe515e20face41ebf0f9cf7afc8f1c03addc42a88f92ec79a2c2a1d1a4fd0a3014b752d68e7e62cd86349694636b79da31ed8e08
+        REF 64817e0e8793d0875fc10245de52ffb2540a223d # v2.0.8
+        SHA512 607172e6a806d78bb34443101bd384ac7a42e0edc3e7c4a2cf5c3ab5f2be64f84557726dce16c2fbaaa2ba254529a8871b3123b0e79fe87cd5bf26021ecb59da
         HEAD_REF RC_2_0
 )
 
 vcpkg_from_github(
         OUT_SOURCE_PATH TRYSIGNAL_SOURCE_PATH
         REPO arvidn/try_signal
-        REF 751a7e5a5be14892bcfdff1e63c653bcbf71cf39
-        SHA512 4ccea4f67a79acf49a9943d8aec3999475357d7ad3cfc7b37f0e1c4527f8f4536993c6f6241bb3eb166a1dc939133a4f3b35197f9e47fb2ac9c713b64f8cb96d
+        REF 105cce59972f925a33aa6b1c3109e4cd3caf583d #2022-10-27
+        SHA512 4a0090755831e0e4a1930817345fa5934144421d9a9d710fe8ed3712233fa2fa037fc0e0d4f88b7cc8fb1bc05fe2d55372af1ff47d6fbf5208e03f45f2a424e4
         HEAD_REF master
 )
 
@@ -54,8 +54,8 @@ vcpkg_from_github(
 vcpkg_from_github(
         OUT_SOURCE_PATH LIB_SIMULATOR_SOURCE_PATH
         REPO arvidn/libsimulator
-        REF 64fb5b4fde1879abc09c018604d57e485a12e999
-        SHA512 20b57eb436127028339528f34a9db7e7149d2c5d86149114444205370482d3f5284e76493f2fbc1c6904175e6482671bfcaeb98d0bee7d399e546abef02f32f3
+        REF 39144efe83fcd38778cf76fc609e3475694642ca #2022-10-27
+        SHA512 a021f769d52d127355ecaceaf912bf3e86aaa256d4768d270fbe6066793b6159eddecd0262f3f2158602f883d49b3aac39eb79be5399212cdd7711f921ffa15a
         HEAD_REF master
 )
 

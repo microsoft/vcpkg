@@ -1,6 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.1.6",
+  "version": "3.2.1",
   "port-version": 2,
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
@@ -12,11 +12,24 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "cairo",
+      "default-features": false,
+      "platform": "!windows & !osx & !ios"
+    },
+    {
       "name": "curl",
       "default-features": false,
       "platform": "!windows & !osx"
     },
     "expat",
+    {
+      "name": "gtk3",
+      "platform": "!windows & !osx & !ios"
+    },
+    {
+      "name": "libiconv",
+      "platform": "!windows"
+    },
     "libjpeg-turbo",
     "libpng",
     "nanosvg",
@@ -33,11 +46,38 @@
     "zlib"
   ],
   "default-features": [
+    "debug-support",
     "sound"
   ],
   "features": {
+    "debug-support": {
+      "description": "Enable wxWidgets debugging support hooks even for release builds (wxDEBUG_LEVEL 1)"
+    },
     "example": {
       "description": "Example source code and CMake project"
+    },
+    "fonts": {
+      "description": "Enable to use the font functionality of wxWidgets",
+      "dependencies": [
+        {
+          "name": "fontconfig",
+          "platform": "!windows & !osx"
+        },
+        {
+          "name": "pango",
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "media": {
+      "description": "Build wxMediaCtrl support",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "platform": "!windows & !osx & !ios"
+        }
+      ]
     },
     "sound": {
       "description": "Build wxSound support",
@@ -45,8 +85,14 @@
         {
           "name": "sdl2",
           "default-features": false,
-          "platform": "!windows & !osx"
+          "platform": "!windows & !osx & !ios"
         }
+      ]
+    },
+    "webview": {
+      "description": "The Edge backend uses Microsoft's Edge WebView2",
+      "dependencies": [
+        "webview2"
       ]
     }
   }

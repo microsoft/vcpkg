@@ -1,14 +1,15 @@
-# Get this value from configure.ac:21
-set(LIBEXSLT_VERSION 0.8.20)
-set(VERSION 1.1.35)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF v${VERSION}
-    SHA512 1ab264a8d3996d74a89a22e4062950ef968b9252736e0b5f975e6f45d63a6484993fe383b85831cef0e4b9c9c90f9b2b3d5432c15ee9381dbaeb2fa681ab9b46
+    REF v1.1.37
+    SHA512 4e7a57cbe02ceea34404213a88bdbb63a756edfab63063ce3979b670816ae3f6fb3637a49508204e6e46b936628e0a3b8b77e9201530a1184225bd68da403b25
     HEAD_REF master
     PATCHES
-        cmake.patch
+        python3.patch
+        msvc-no-suffix.patch
+        libexslt-pkgconfig.patch
+        fix-gcrypt-deps.patch
+        skip-install-docs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -40,17 +41,19 @@ vcpkg_cmake_configure(
         -DLIBXSLT_WITH_DEBUGGER:BOOL=ON
     )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}-${VERSION}")
+file(GLOB config_path RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/libxslt-*")
+vcpkg_cmake_config_fixup(CONFIG_PATH "${config_path}")
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/xsltConf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xsltConf.sh")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt/bin")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/bin/xslt-config")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/xslt-config")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/xslt-config" [[$(cd "$(dirname "$0")"; pwd -P)/..]] [[$(cd "$(dirname "$0")/../.."; pwd -P)]])
 if(NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[$(cd "$(dirname "$0")"; pwd -P)/..]] [[$(cd "$(dirname "$0")/../../../debug"; pwd -P)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[${prefix}/include]] [[${prefix}/../include]])
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
 vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
@@ -58,26 +61,16 @@ vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-# You have to define LIB(E)XSLT_STATIC or not, depending on how you link
-file(READ "${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" XSLTEXPORTS_H)
+set(not_static 1)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "0" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
-else()
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "1" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
+    set(not_static 0)
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "${XSLTEXPORTS_H}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "!defined(LIBXSLT_STATIC)" "${not_static}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" "!defined(LIBEXSLT_STATIC)" "${not_static}")
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" EXSLTEXPORTS_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "0" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
-else()
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "1" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" "${EXSLTEXPORTS_H}")
-
-# Remove tools and debug include directories
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libxslt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libxslt")

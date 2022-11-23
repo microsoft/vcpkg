@@ -1,60 +1,190 @@
 {
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
   "name": "boost-graph",
-  "version": "1.79.0",
+  "version": "1.80.0",
+  "port-version": 1,
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-algorithm",
-    "boost-any",
-    "boost-array",
-    "boost-assert",
-    "boost-bimap",
-    "boost-bind",
+    {
+      "name": "boost-algorithm",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-any",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-array",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-bimap",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-bind",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-build",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-concept-check",
-    "boost-config",
-    "boost-container-hash",
-    "boost-conversion",
-    "boost-core",
-    "boost-detail",
-    "boost-foreach",
-    "boost-function",
-    "boost-integer",
-    "boost-iterator",
-    "boost-lexical-cast",
-    "boost-math",
+    {
+      "name": "boost-concept-check",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-container-hash",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-conversion",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-detail",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-foreach",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-function",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-math",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "boost-modular-build-helper",
-      "host": true
+      "host": true,
+      "version>=": "1.80.0#2"
     },
-    "boost-move",
-    "boost-mpl",
-    "boost-multi-index",
-    "boost-optional",
-    "boost-parameter",
-    "boost-preprocessor",
-    "boost-property-map",
-    "boost-property-tree",
-    "boost-random",
-    "boost-range",
-    "boost-regex",
-    "boost-serialization",
-    "boost-smart-ptr",
-    "boost-spirit",
-    "boost-static-assert",
-    "boost-throw-exception",
-    "boost-tti",
-    "boost-tuple",
-    "boost-type-traits",
-    "boost-typeof",
-    "boost-unordered",
-    "boost-utility",
-    "boost-vcpkg-helpers",
-    "boost-xpressive",
+    {
+      "name": "boost-move",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-multi-index",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-optional",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-parameter",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-property-map",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-property-tree",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-random",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-range",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-regex",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-serialization",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-spirit",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-tti",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-tuple",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-typeof",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-unordered",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.80.0#1"
+    },
+    {
+      "name": "boost-xpressive",
+      "version>=": "1.80.0#1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

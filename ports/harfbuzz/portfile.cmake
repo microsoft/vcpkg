@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 4.2.0
-    SHA512 2aff1e6a41d6186b71f2915296c46c0b2ffc67371e1f05c13a62c237ff7a84d7d78d414d7a395e1616a2861c83c4792ef5936a492713780564b994d18e2d3e38
+    REF 5.0.1
+    SHA512 9d05b97dfce248634b6b3ff69fac5cc344f0c8265bf05595b74b0b060049dba082d358184662b8ea045cd51c3d07e7c4a4804513052094566b777c33ec5af89c
     HEAD_REF master
+    PATCHES
+      fix-win32-build.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -54,7 +56,7 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS)
 	file(GLOB PC_FILES 
 		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
 		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
