@@ -25,6 +25,10 @@
     },
     "onnx",
     "onnx-optimizer",
+    {
+      "name": "openblas",
+      "platform": "windows"
+    },
     "protobuf",
     {
       "name": "protobuf",

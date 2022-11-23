@@ -80,10 +80,14 @@ if("dist" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND FEATURE_OPTIONS -DBLAS=Accelerate) # Accelerate.framework will be used for Apple platforms
-else()
-    list(APPEND FEATURE_OPTIONS -DBLAS=Eigen)
+# BLAS: MKL, OpenBLAS, or Accelerate
+#   The feature will be disabled if "generic" BLAS is not found
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    list(APPEND BLAS_OPTIONS -DBLAS=Accelerate -DUSE_BLAS=ON)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND BLAS_OPTIONS -DBLAS=OpenBLAS -DUSE_BLAS=ON)
+elseif(VCPKG_TARGET_IS_LINUX)
+    list(APPEND BLAS_OPTIONS -DBLAS=generic -DUSE_BLAS=ON)
 endif()
 
 if("tbb" IN_LIST FEATURES)
@@ -114,14 +118,15 @@ vcpkg_cmake_configure(
         -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
         -DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
-        -DBUILD_CUSTOM_PROTOBUF=OFF -DUSE_LITE_PROTO=OFF
-        -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
+        -DBUILD_CUSTOM_PROTOBUF=OFF
+        -DUSE_LITE_PROTO=OFF
+        -DBUILD_TEST=OFF
+        -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_PYTHON=OFF
         -DUSE_METAL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
-        -DUSE_BLAS=ON # Eigen, MKL, or Accelerate
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON
         -DUSE_LMDB=ON
@@ -135,8 +140,8 @@ vcpkg_cmake_configure(
         -DUSE_BREAKPAD=OFF
         -DUSE_FFTW=OFF
         -DUSE_NUMA=OFF
-        -DCAFFE2_USE_EIGEN_FOR_BLAS=ON
-        # BLAS=MKL not supported
+        ${BLAS_OPTIONS}
+        # BLAS=MKL not supported in this port
         -DUSE_MKLDNN=OFF
         -DUSE_MKLDNN_CBLAS=OFF
         -DCAFFE2_USE_MKL=OFF

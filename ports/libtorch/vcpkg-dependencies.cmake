@@ -56,6 +56,11 @@ add_compile_definitions(USE_PTHREADPOOL)
 find_package(fmt CONFIG REQUIRED) # fmt::fmt-header-only
 list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
 
+find_package(Eigen3 CONFIG REQUIRED) # Eigen3::Eigen
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+list(APPEND Caffe2_DEPENDENCY_LIBS Eigen3::Eigen)
+set(CAFFE2_USE_EIGEN_FOR_BLAS 1) # see caff2/core/macros.h.in
+
 if(BLAS STREQUAL "Accelerate")
   set(WITH_BLAS "accelerate")
   find_package(BLAS REQUIRED) # cmake/Modules/FindBLAS.cmake
@@ -63,11 +68,15 @@ if(BLAS STREQUAL "Accelerate")
   set(USE_LAPACK 1)
   list(APPEND Caffe2_PRIVATE_DEPENDENCY_LIBS ${LAPACK_LIBRARIES})
 
-elseif(BLAS STREQUAL "Eigen")
-  find_package(Eigen3 CONFIG REQUIRED) # Eigen3::Eigen
-  include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
-  list(APPEND Caffe2_DEPENDENCY_LIBS Eigen3::Eigen)
-  set(CAFFE2_USE_EIGEN_FOR_BLAS 1) # see caff2/core/macros.h.in
+elseif(BLAS STREQUAL "Open")
+  set(WITH_BLAS "open")
+  find_package(BLAS)
+  if(BLAS_FOUND)
+    set(USE_BLAS 1)
+    list(APPEND Caffe2_PRIVATE_DEPENDENCY_LIBS ${BLAS_LIBRARIES})
+  else()
+    set(USE_BLAS 0) # if we couldn't find the BLAS, disable the feature
+  endif()
   set(USE_LAPACK 0)
 
 elseif(BLAS STREQUAL "MKL")
@@ -82,6 +91,15 @@ elseif(BLAS STREQUAL "MKL")
   list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS caffe2::mkl)
   set(WITH_BLAS "mkl")
   find_package(BLAS REQUIRED) # cmake/Modules/FindBLAS.cmake
+
+else()
+  set(USE_BLAS 0)
+  set(WITH_BLAS "generic")
+  find_package(BLAS)
+  if(BLAS_FOUND)
+    set(USE_BLAS 1)
+    list(APPEND Caffe2_PRIVATE_DEPENDENCY_LIBS ${BLAS_LIBRARIES})
+  endif()
 
 endif()
 
