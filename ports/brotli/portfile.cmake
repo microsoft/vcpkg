@@ -8,7 +8,6 @@ vcpkg_from_github(
         install.patch
         fix-arm-uwp.patch
         pkgconfig.patch
-        fix-ios.patch
 )
 
 vcpkg_cmake_configure(
