@@ -1,6 +1,6 @@
 # Fedora e RedHat
 
-  ## Steps:
+  ## Passo a passo:
   
  ## 1 - Rode esses comandos no terminal:
   
