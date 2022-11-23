@@ -86,7 +86,13 @@ source ~/.bashrc
   vcpkg integrate bash
 source ~/.bashrc
 ```
-  ### 13 - Finish 
+  ### 13 - Finish:
+  ```sh
+  sudo dnf check-update
+  ```
+  ```sh
+  sudo dnf upgrade
+  ```
   
   
   
