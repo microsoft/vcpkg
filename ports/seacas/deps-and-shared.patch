@@ -115,7 +115,7 @@ index 37c329cd4..9d221f64f 100644
 -      INNER_FIND_PACKAGE_NAME  CGNS
 +      INNER_FIND_PACKAGE_NAME  cgns
 -      IMPORTED_TARGETS_FOR_ALL_LIBS   CGNS::cgns)
-+-     IMPORTED_TARGETS_FOR_ALL_LIBS   CGNS::CGNS)
++      IMPORTED_TARGETS_FOR_ALL_LIBS   CGNS::CGNS)
      set(TPL_CGNS_NOT_FOUND FALSE)
    endif()
 diff --git a/cmake/tribits/common_tpls/FindTPLHDF5.cmake b/cmake/tribits/common_tpls/FindTPLHDF5.cmake
