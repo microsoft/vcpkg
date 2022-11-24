@@ -1,0 +1,12 @@
+diff --git a/src/3rdparty/chromium/third_party/skia/src/core/SkShaderCodeDictionary.h b/src/3rdparty/chromium/third_party/skia/src/core/SkShaderCodeDictionary.h
+index 3a54bbe..3420147 100644
+--- a/src/3rdparty/chromium/third_party/skia/src/core/SkShaderCodeDictionary.h
++++ b/src/3rdparty/chromium/third_party/skia/src/core/SkShaderCodeDictionary.h
+@@ -11,6 +11,7 @@
+ #include <array>
+ #include <unordered_map>
+ #include <vector>
++#include <string>
+ #include "include/core/SkSpan.h"
+ #include "include/private/SkSpinlock.h"
+ #include "include/private/SkUniquePaintParamsID.h"
