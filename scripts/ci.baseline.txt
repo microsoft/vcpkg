@@ -1157,6 +1157,7 @@ yara:arm-uwp=fail
 yara:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
+zint:x64-osx=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
 clapack:x64-linux=skip
