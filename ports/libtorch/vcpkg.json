@@ -82,6 +82,7 @@
     },
     "nnpack": {
       "description": "Build with NNPack",
+      "supports": "linux | osx",
       "dependencies": [
         "nnpack"
       ]
