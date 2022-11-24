@@ -81,20 +81,15 @@ vcpkg_cmake_install()
 set(cmake_config_list ${enabled_projects})
 list(TRANSFORM cmake_config_list PREPEND "SEACAS")
 list(APPEND cmake_config_list SEACAS)
-if(NOT WIN32)
-    # Case sensitive filesystems will have two Seacas folders
-    list(APPEND cmake_config_list Seacas)
-endif()
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    #list(APPEND cmake_config_list Zoltan)
-    #list(APPEND cmake_config_list Pamgen)
-endif()
 
 foreach(cmake_conig IN LISTS cmake_config_list)
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig} DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${cmake_conig}" PACKAGE_NAME cmake/${cmake_conig} DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
 endforeach()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/external_packages" PACKAGE_NAME external_packages DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION )
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Seacas")
+    # Case sensitive filesystems will have two Seacas folders
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Seacas" PACKAGE_NAME cmake/Seacas DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
+endif()
 
 set(tool_names  cgns_decomp cth_pressure_map
                 io_info io_modify io_shell
