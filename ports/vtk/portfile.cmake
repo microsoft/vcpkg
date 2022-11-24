@@ -28,6 +28,7 @@ vcpkg_from_github(
         afxdll.patch
         vtkioss.patch
         jsoncpp.patch
+        iotr.patch
 )
 
 # =============================================================================
