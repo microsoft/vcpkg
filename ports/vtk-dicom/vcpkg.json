@@ -5,13 +5,13 @@
   "homepage": "https://github.com/dgobbi/vtk-dicom",
   "dependencies": [
     {
-      "name": "vtk",
+      "name": "python3",
+      "host": true,
       "default-features": false
     },
     {
-      "name": "python3",
-      "default-features": false,
-      "host" : true
+      "name": "vtk",
+      "default-features": false
     },
     "zlib"
   ],

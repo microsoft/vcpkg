@@ -41,7 +41,7 @@ index 2d041a2ca..c49a2c019 100644
   install(
      FILES "${tplConfigFile}"
 -    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/${tplName}"
-+    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/TPL${tplName}"
++    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/TPL-Seacas-${tplName}"
      )
  endfunction()
  
@@ -50,7 +50,7 @@ index 2d041a2ca..c49a2c019 100644
   install(
      FILES "${tplConfigVersionFile}"
 -    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/${tplName}"
-+    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/TPL${tplName}"
++    DESTINATION "${${PROJECT_NAME}_INSTALL_LIB_DIR}/external_packages/TPL-Seacas-${tplName}"
      )
  endfunction()
  
@@ -71,7 +71,7 @@ index 2d041a2ca..c49a2c019 100644
 +        "if (NOT TARGET TPL::${upstreamTplDepName}::all_libs)\n"
          "  set(${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../${upstreamTplDepName}\")\n"
 -        "  find_dependency(${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
-+        "  find_dependency(TPL${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
++        "  find_dependency(TPL-Seacas-${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
          "  unset(${upstreamTplDepName}_DIR)\n"
          "endif()\n"
          "\n"
@@ -158,10 +158,10 @@ index dcdde4ce6..aaec95d49 100644
        "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
      set(tplConfigFile
 -      "${buildDirExternalPkgsDir}/${TPL_NAME}/${TPL_NAME}Config.cmake")
-+      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}Config.cmake")
++      "${buildDirExternalPkgsDir}/TPL-Seacas-${TPL_NAME}/TPL-Seacas-${TPL_NAME}Config.cmake")
      set(tplConfigVersionFile
 -      "${buildDirExternalPkgsDir}/${TPL_NAME}/${TPL_NAME}ConfigVersion.cmake")
-+      "${buildDirExternalPkgsDir}/TPL${TPL_NAME}/TPL${TPL_NAME}ConfigVersion.cmake")
++      "${buildDirExternalPkgsDir}/TPL-Seacas-${TPL_NAME}/TPL-Seacas-${TPL_NAME}ConfigVersion.cmake")
      tribits_extpkg_write_config_version_file(${TPL_NAME}
        "${tplConfigVersionFile}")
      tribits_extpkg_install_config_file(${TPL_NAME} "${tplConfigFile}")
@@ -183,9 +183,9 @@ index d3cb102cf..3641799ac 100644
    set(buildDirExternalPkgsDir
      "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
 -  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/${TPL_NAME}")
-+  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/TPL${TPL_NAME}")
++  set(tplConfigFileBaseDir "${buildDirExternalPkgsDir}/TPL-Seacas-${TPL_NAME}")
 -  set(tplConfigFile "${tplConfigFileBaseDir}/${TPL_NAME}Config.cmake")
-+  set(tplConfigFile "${tplConfigFileBaseDir}/TPL${TPL_NAME}Config.cmake")
++  set(tplConfigFile "${tplConfigFileBaseDir}/TPL-Seacas-${TPL_NAME}Config.cmake")
    tribits_extpkg_write_config_file(${TPL_NAME} "${tplConfigFile}")
    if (NOT ${PROJECT_NAME}_ENABLE_INSTALLATION_TESTING)
      include("${tplConfigFile}")
@@ -216,9 +216,9 @@ index 1f31b6ec0..9bc1057b7 100644
        set(packageConfigBaseDir "${pkgConfigFileBaseDir}/${depPkg}")
      elseif (${depPkg}_PACKAGE_BUILD_STATUS STREQUAL "EXTERNAL")
 -      set(packageConfigBaseDir "${extPkgConfigFileBaseDir}/${depPkg}")
-+      set(packageConfigBaseDir "${extPkgConfigFileBaseDir}/TPL${depPkg}")
++      set(packageConfigBaseDir "${extPkgConfigFileBaseDir}/TPL-Seacas-${depPkg}")
 +      set(packageTarget "TPL::${depPkg}::all_libs")
-+      set(packageConfig "TPL${depPkg}Config.cmake")
++      set(packageConfig "TPL-Seacas-${depPkg}Config.cmake")
      else()
        message(FATAL_ERROR "ERROR: ${depPkg}_PACKAGE_BUILD_STATUS='${${depPkg}_PACKAGE_BUILD_STATUS}' invalid!")
      endif()
@@ -257,7 +257,7 @@ index 1873267bd..ed6254632 100644
      "${${PROJECT_NAME}_BINARY_DIR}/${${PROJECT_NAME}_BUILD_DIR_EXTERNAL_PKGS_DIR}")
    set(tplConfigFile
 -    "${buildDirExternalPkgsDir}/${tplName}/${tplName}Config.cmake")
-+    "${buildDirExternalPkgsDir}/TPL${tplName}/TPL${tplName}Config.cmake")
++    "${buildDirExternalPkgsDir}/TPL-Seacas-${tplName}/TPL-Seacas-${tplName}Config.cmake")
    file(WRITE "${tplConfigFile}" "${configFileStr}")
  
  endfunction()
@@ -270,11 +270,11 @@ index c49a2c019..7c906ce26 100644
        string(APPEND configFileFragStr
          "if (NOT TARGET TPL::${upstreamTplDepName}::all_libs)\n"
 -        "  set(${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../${upstreamTplDepName}\")\n"
-+        "  set(TPL${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../TPL${upstreamTplDepName}\")\n" # Looks for internal dep
++        "  set(TPL-Seacas-${upstreamTplDepName}_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../TPL-Seacas-${upstreamTplDepName}\")\n" # Looks for internal dep
 +        "  # Really only upstream ? NO ! THis is for ::all_libs targets in internal consumers\n"
-         "  find_dependency(TPL${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
+         "  find_dependency(TPL-Seacas-${upstreamTplDepName} REQUIRED CONFIG \${${tplName}_SearchNoOtherPathsArgs})\n"
 -        "  unset(${upstreamTplDepName}_DIR)\n"
-+        "  unset(TPL${upstreamTplDepName}_DIR)\n"
++        "  unset(TPL-Seacas-${upstreamTplDepName}_DIR)\n"
          "endif()\n"
          "\n"
          )

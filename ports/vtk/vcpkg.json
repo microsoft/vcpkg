@@ -32,16 +32,16 @@
     "pegtl-2",
     "proj",
     "pugixml",
+    {
+      "name": "seacas",
+      "default-features": false
+    },
     "sqlite3",
     {
       "name": "sqlite3",
       "host": true
     },
     "tiff",
-    {
-      "name": "trilinos",
-      "default-features": false
-    },
     "utfcpp",
     {
       "name": "vcpkg-cmake",
@@ -125,7 +125,7 @@
         },
         "mpi",
         {
-          "name": "trilinos",
+          "name": "seacas",
           "default-features": false,
           "features": [
             "mpi"
@@ -182,8 +182,8 @@
       "dependencies": [
         "python3",
         {
-            "name": "python3",
-            "host": true
+          "name": "python3",
+          "host": true
         }
       ]
     },

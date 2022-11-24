@@ -80,5 +80,19 @@ endif()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs" "${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h")
 file(INSTALL "${CURRENT_PORT_DIR}/cgnsconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # the include is all that is needed
 
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/cgns/cgns-config.cmake" 
+[[
+include("${CMAKE_CURRENT_LIST_DIR}/cgns-targets.cmake")
+if(NOT TARGET CGNS::cgns)
+    add_library(CGNS::cgns INTERFACE IMPORTED)
+    if(TARGET CGNS::cgns_shared)
+        target_link_libraries(CGNS::cgns INTERFACE  CGNS::cgns_shared)
+    elseif(TARGET CGNS::cgns_static)
+        target_link_libraries(CGNS::cgns INTERFACE  CGNS::cgns_static)
+    endif()
+endif()
+]]
+)
+
 # Handle copyright
 configure_file("${SOURCE_PATH}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
