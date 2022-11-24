@@ -1,0 +1,13 @@
+diff --git a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+index f821ea083..47b9bd29e 100644
+--- a/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
++++ b/cmake/tribits/core/package_arch/TribitsExternalPackageWriteConfigFile.cmake
+@@ -440,6 +440,8 @@ function(tribits_extpkg_process_libraries_list  tplName)
+     elseif (libEntryType STREQUAL "GENERAL_LINK_OPTION")
+       message_wrapper("-- NOTE: Moving the general link argument '${libentry}' in TPL_${tplName}_LIBRARIES forward on the link line which may change the link and break the link!")
+       list(APPEND libLinkFlagsList "${libentry}")
++    elseif(libEntryType STREQUAL "TARGET_NAME")
++        
+     else()
+       tribits_extpkg_process_libraries_list_library_entry(
+         ${tplName}  "${libentry}"  ${libEntryType}  libTargets  lastLibProcessed
