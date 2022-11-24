@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES fix_tpl_libs.patch
             fix-ioss-includes.patch
             deps-and-shared.patch
+            fix-mpi.patch
 )
 
 if(NOT VCPKG_TARGET_IS_OSX)

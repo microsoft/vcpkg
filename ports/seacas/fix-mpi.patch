@@ -1,0 +1,85 @@
+diff --git a/cmake/TPLs/FindTPLParMETIS.cmake b/cmake/TPLs/FindTPLParMETIS.cmake
+index 2dc2c149d..9bc04ae82 100644
+--- a/cmake/TPLs/FindTPLParMETIS.cmake
++++ b/cmake/TPLs/FindTPLParMETIS.cmake
+@@ -54,7 +54,8 @@
+ # @HEADER
+ 
+ 
+-TRIBITS_TPL_FIND_INCLUDE_DIRS_AND_LIBRARIES( ParMETIS
+-  REQUIRED_HEADERS parmetis.h
+-  REQUIRED_LIBS_NAMES "parmetis;metis"
+-  )
++find_package(parmetis REQUIRED)
++tribits_extpkg_create_imported_all_libs_target_and_config_file(
++  ParMETIS
++  INNER_FIND_PACKAGE_NAME parmetis
++  IMPORTED_TARGETS_FOR_ALL_LIBS parmetis )
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_Decomposition.h b/packages/seacas/libraries/ioss/src/Ioss_Decomposition.h
+index f53f140a7..c2df7a802 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_Decomposition.h
++++ b/packages/seacas/libraries/ioss/src/Ioss_Decomposition.h
+@@ -91,6 +91,8 @@ namespace Ioss {
+     SetDecompositionData()                             = default;
+     SetDecompositionData(const SetDecompositionData &) = delete;
+     SetDecompositionData(SetDecompositionData &&)      = default;
++    SetDecompositionData &operator =(const SetDecompositionData &) = delete;
++    SetDecompositionData &operator =(SetDecompositionData &&) = default;
+ 
+     ~SetDecompositionData()
+     {
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C b/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
+index a82d6ca14..c5e80f692 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
++++ b/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
+@@ -419,7 +419,7 @@ template IOSS_EXPORT void Ioss::ParallelUtils::broadcast(int &value, int) const;
+ /// \relates Ioss::ParallelUtils::broadcast
+ template IOSS_EXPORT void Ioss::ParallelUtils::broadcast(int64_t &value, int) const;
+ 
+-template <> void Ioss::ParallelUtils::broadcast(std::string &my_str, int root) const
++template <> IOSS_EXPORT void Ioss::ParallelUtils::broadcast(std::string &my_str, int root) const
+ {
+   PAR_UNUSED(my_str);
+   PAR_UNUSED(root);
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h b/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
+index cfdad81d9..1a785161e 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
++++ b/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
+@@ -27,7 +27,7 @@ public:
+ 
+ template <class T> inline RefHolder<T> ByRef(T &t) { return RefHolder<T>(t); }
+ 
+-class IOSS_EXPORT ScopeGuardImplBase
++class ScopeGuardImplBase
+ {
+   ScopeGuardImplBase &operator=(const ScopeGuardImplBase &) = delete;
+ 
+diff --git a/packages/seacas/libraries/ioss/src/exodus/Ioex_DecompositionData.h b/packages/seacas/libraries/ioss/src/exodus/Ioex_DecompositionData.h
+index 359c1e9fd..e4c2dff9e 100644
+--- a/packages/seacas/libraries/ioss/src/exodus/Ioex_DecompositionData.h
++++ b/packages/seacas/libraries/ioss/src/exodus/Ioex_DecompositionData.h
+@@ -34,7 +34,11 @@ namespace Ioex {
+   class IOEX_EXPORT DecompositionDataBase
+   {
+   public:
+-    DecompositionDataBase(Ioss_MPI_Comm comm) : comm_(comm) {}
++    explicit DecompositionDataBase(Ioss_MPI_Comm comm) : comm_(comm) {};
++    DecompositionDataBase(const DecompositionDataBase &) = delete;
++    DecompositionDataBase(DecompositionDataBase &&)      = delete;
++    DecompositionDataBase &operator =(const DecompositionDataBase &) = delete;
++    DecompositionDataBase &operator =(DecompositionDataBase &&) = delete;
+ 
+     virtual ~DecompositionDataBase()            = default;
+     virtual int    int_size() const             = 0;
+diff --git a/packages/seacas/libraries/ioss/src/exodus/Ioex_ParallelDatabaseIO.h b/packages/seacas/libraries/ioss/src/exodus/Ioex_ParallelDatabaseIO.h
+index f2785e37f..df0c8fbf6 100644
+--- a/packages/seacas/libraries/ioss/src/exodus/Ioex_ParallelDatabaseIO.h
++++ b/packages/seacas/libraries/ioss/src/exodus/Ioex_ParallelDatabaseIO.h
+@@ -16,6 +16,7 @@
+ #include <Ioss_Map.h>                   // for Map
+ #include <Ioss_State.h>                 // for State
+ #include <exodus/Ioex_BaseDatabaseIO.h> // for DatabaseIO
++#include <exodus/Ioex_DecompositionData.h>
+ #include <functional>                   // for less
+ #include <map>                          // for map, map<>::value_compare
+ #include <memory>
