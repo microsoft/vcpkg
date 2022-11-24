@@ -8,6 +8,7 @@
   "dependencies": [
     "eigen3",
     "mpfr",
+    "gmp",
     {
       "name": "vcpkg-cmake",
       "host": true
