@@ -1,19 +1,20 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 9cd9c2eff99877a3f10a7f9c2a3a5b9c15ea36c6
-       SHA512 4a9bf74f5f3971bcb954449bdef27e491a0abebc55356bcf0491c7e17dc941c90cf81d539fe4de1e23137866f55456776fcded34a4df2fb16b9020fe1b8d7851
+       REF 9964740a47fda96ee937cfea272ccac85dc6a500
+       SHA512 c6523dcad2eafcd32d81111c1016af18ea2f99b76089d713d016d5886b352d4e0521e9d2ae9bcd544e36b1bb5a9ac9483165d851aa77cbd71d60d17b4fbe6560
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.88
-    SHA512 bfb7381334f1493d64386321401086e4136129b3cc57bf57505ec6183008dddab1a2056b0af2610bc3286c606bafdf9b6e3ebc103131e0504bab2336662bc2c1
+    REF "v${VERSION}"
+    SHA512 6c027444842f8109bd6e0743c7eb40deb804b86419a190d304e0727d0c165f9c232c4386c244fa161ab9f1283880e998b970596f6505759808082e01c4cb7466
     HEAD_REF master
     )
 endif()
