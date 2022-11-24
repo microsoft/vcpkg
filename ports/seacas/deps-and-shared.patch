@@ -106,7 +106,7 @@ index 37c329cd4..9d221f64f 100644
    print_var(CGNS_FORCE_MODERN)
    message("-- Using find_package(CGNS ${minimum_modern_CGNS_version} CONFIG) ...")
 -  find_package(CGNS ${minimum_modern_CGNS_version} CONFIG)
-+  find_package(CGNS CONFIG)
++  find_package(cgns CONFIG)
    if (CGNS_FOUND)
      message("-- Found CGNS_CONFIG=${CGNS_CONFIG}")
      message("-- Generating CGNS::all_libs and CGNSConfig.cmake")
@@ -135,9 +135,9 @@ index 716068c28..3d8fc8e76 100644
      tribits_extpkg_create_imported_all_libs_target_and_config_file(
        HDF5
 -      INNER_FIND_PACKAGE_NAME  HDF5
-+      INNER_FIND_PACKAGE_NAME  hdf5
++      INNER_FIND_PACKAGE_NAME  HDF5
 -      IMPORTED_TARGETS_FOR_ALL_LIBS   ${HDF5_EXPORT_LIBRARIES})
-+      IMPORTED_TARGETS_FOR_ALL_LIBS  hdf5::HDF5)
++      IMPORTED_TARGETS_FOR_ALL_LIBS  HDF5::HDF5)
      set(HDF5_INTERNAL_IS_MODERN TRUE)
    else()
      message("-- Could not find HDF5_CONFIG (FindTPLHDF5.cmake)")

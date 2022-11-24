@@ -60,6 +60,7 @@ endforeach()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DSeacas_ENABLE_Zoltan:BOOL=OFF
@@ -67,8 +68,10 @@ vcpkg_cmake_configure(
         "-DSeacas_HOSTNAME:STRING=localhost"
         "-DSeacas_GENERATE_REPO_VERSION_FILE:BOOL=OFF"
         "-DNetcdf_ALLOW_MODERN:BOOL=ON"
+        #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
         #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
         -DCGNS_FORCE_MODERN:BOOL=ON
+        -DCGNS_ALLOW_MODERN:BOOL=ON
         ${proj_options}
         ${tpl_options}
 )

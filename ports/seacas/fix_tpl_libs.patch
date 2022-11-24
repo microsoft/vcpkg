@@ -112,7 +112,7 @@ index 2d041a2ca..c49a2c019 100644
 +      string(APPEND configFileStr 
 +      "add_library(${prefixed_libname} IMPORTED INTERFACE)\n"
 +      "find_package(${package_name} REQUIRED)\n"
-+      "target_link_libraries(${prefixed_libname} INTERFACE ${libentry})"
++      "target_link_libraries(${prefixed_libname} INTERFACE ${libentry})\n"
 +      )
    else()
      message(FATAL_ERROR "Error libEntryType='${libEntryType}' not supported here!")
