@@ -81,6 +81,10 @@ vcpkg_cmake_install()
 set(cmake_config_list ${enabled_projects})
 list(TRANSFORM cmake_config_list PREPEND "SEACAS")
 list(APPEND cmake_config_list SEACAS)
+if(NOT WIN32)
+    # Case sensitive filesystems will have two Seacas folders
+    list(APPEND cmake_config_list Seacas)
+endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND cmake_config_list Zoltan)
