@@ -27,10 +27,10 @@ index 90911a3cc..bb57e3bf6 100644
 -  REQUIRED_HEADERS metis.h
 -  REQUIRED_LIBS_NAMES "metis"
 -  )
-+find_package(METIS REQUIRED)
++find_package(metis REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
 +  METIS
-+  INNER_FIND_PACKAGE_NAME METIS
++  INNER_FIND_PACKAGE_NAME metis
 +  IMPORTED_TARGETS_FOR_ALL_LIBS metis )
 diff --git a/cmake/TPLs/FindTPLMatio.cmake b/cmake/TPLs/FindTPLMatio.cmake
 index c76713ab9..f5b8bd702 100644
