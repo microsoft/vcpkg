@@ -44,7 +44,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
-        -DWITH_METRICS_PREVIEW=ON
         -DWITH_LOGS_PREVIEW=ON
         ${FEATURE_OPTIONS}
 )
