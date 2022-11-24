@@ -32,10 +32,9 @@
       "description": "Build with embree",
       "dependencies": [
         {
-          "name": "embree",
+          "name": "embree3",
           "default-features": false
-        },
-        "embree3"
+        }
       ]
     },
     "glfw": {

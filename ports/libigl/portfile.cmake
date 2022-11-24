@@ -17,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opengl LIBIGL_OPENGL
         glfw   LIBIGL_GLFW
         imgui  LIBIGL_IMGUI
-        png LIBIGL_PNG # Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
+        png    LIBIGL_PNG
         xml    LIBIGL_XML
         cgal   LIBIGL_WITH_CGAL
         predicates   LIBIGL_PREDICATES
