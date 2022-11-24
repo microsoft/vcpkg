@@ -7,8 +7,8 @@
   "supports": "!(arm | uwp)",
   "dependencies": [
     "eigen3",
-    "mpfr",
     "gmp",
+    "mpfr",
     {
       "name": "vcpkg-cmake",
       "host": true
