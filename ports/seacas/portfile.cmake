@@ -61,7 +61,7 @@ endforeach()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
+        #--trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DSeacas_ENABLE_Zoltan:BOOL=OFF
