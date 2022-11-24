@@ -70,8 +70,6 @@ vcpkg_cmake_configure(
         "-DNetcdf_ALLOW_MODERN:BOOL=ON"
         #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
         #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
-        -DCGNS_FORCE_MODERN:BOOL=ON
-        -DCGNS_ALLOW_MODERN:BOOL=ON
         ${proj_options}
         ${tpl_options}
 )
