@@ -759,6 +759,8 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
         string(JOIN " " z_vcpkg_find_package_argn ${ARGN})
         message(STATUS "${z_vcpkg_find_package_indent}find_package(${z_vcpkg_find_package_package_name} ${z_vcpkg_find_package_argn})")
+        unset(z_vcpkg_find_package_argn)
+        unset(z_vcpkg_find_package_indent)
     endif()
 
     math(EXPR z_vcpkg_find_package_backup_id "${z_vcpkg_find_package_backup_id} + 1")
