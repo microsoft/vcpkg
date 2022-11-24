@@ -83,12 +83,12 @@ file(INSTALL "${CURRENT_PORT_DIR}/cgnsconfig.h" DESTINATION "${CURRENT_PACKAGES_
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/cgns/cgns-config.cmake" 
 [[
 include("${CMAKE_CURRENT_LIST_DIR}/cgns-targets.cmake")
-if(NOT TARGET CGNS::cgns)
-    add_library(CGNS::cgns INTERFACE IMPORTED)
-    if(TARGET CGNS::cgns_shared)
-        target_link_libraries(CGNS::cgns INTERFACE  CGNS::cgns_shared)
+if(NOT TARGET CGNS::CGNS)
+    add_library(CGNS::CGNS INTERFACE IMPORTED)
+    if(TARGET CGNS::CGNS)
+        target_link_libraries(CGNS::CGNS INTERFACE  CGNS::cgns_shared)
     elseif(TARGET CGNS::cgns_static)
-        target_link_libraries(CGNS::cgns INTERFACE  CGNS::cgns_static)
+        target_link_libraries(CGNS::CGNS INTERFACE  CGNS::cgns_static)
     endif()
 endif()
 ]]
