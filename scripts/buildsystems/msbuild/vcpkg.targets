@@ -39,6 +39,8 @@
     <_ZVcpkgLinkage />
     <_ZVcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</_ZVcpkgLinkage>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' != '' and !$(VcpkgTriplet.EndsWith('-static'))">$(VcpkgTriplet)$(_ZVcpkgLinkage)</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' != '' and $(VcpkgTriplet.EndsWith('-static'))">$(VcpkgTriplet)</VcpkgTriplet>
   </PropertyGroup>
 
   <!-- Include the triplet in ProjectStateLine to force VS2017 and later to fully rebuild if the user changes it.  -->
