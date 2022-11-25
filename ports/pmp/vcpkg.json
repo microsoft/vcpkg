@@ -6,6 +6,7 @@
   "license": "MIT",
   "dependencies": [
     "eigen3",
+    "rply",
     {
       "name": "vcpkg-cmake",
       "host": true

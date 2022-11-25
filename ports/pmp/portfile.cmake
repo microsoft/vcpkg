@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF 2.0.1
     SHA512 f3b8b4962e0543af68f257dab7544968e99fc61f20399f6acb34fdf4634088a78c01df73b72a8387d94893844feace567b26085012ef617062c75489a584bae6
     PATCHES
-        fix-cmake.patch
+        # fix-cmake.patch
         import-lato.patch
         fix-cmake-config.patch
 )
