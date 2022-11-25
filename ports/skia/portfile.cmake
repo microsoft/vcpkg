@@ -2,9 +2,9 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/google/skia
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
-    PATCHES
-        "use_vcpkg_fontconfig.patch"
 )
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" " \$win_sdk/bin/SetEnv.cmd /x86 " " echo . ")
+vcpkg_replace_string("${SOURCE_PATH}/src/utils/win/SkWGL_win.cpp" "(WINUWP)" "(SK_WINUWP)")
 
 # Replace hardcoded python paths
 vcpkg_find_acquire_program(PYTHON3)
@@ -20,21 +20,6 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
-    )
-    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
-    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
-endfunction()
-
-function(checkout_in_path_with_patch PATH URL REF PATCH)
-    if(EXISTS "${PATH}")
-        return()
-    endif()
-
-    vcpkg_from_git(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        URL "${URL}"
-        REF "${REF}"
-        PATCHES "${PATCH}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -63,125 +48,152 @@ checkout_in_path("${EXTERNALS}/piex"
     "bb217acdca1cc0c16b704669dd6f91a1b509c406"
 )
 
-# turn a CMake list into a GN list of quoted items
-# "a;b;c" -> ["a","b","c"]
-function(cmake_to_gn_list OUTPUT_ INPUT_)
-    if(NOT INPUT_)
-        set(${OUTPUT_} "[]" PARENT_SCOPE)
-    else()
-        string(REPLACE ";" "\",\"" TEMP "${INPUT_}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
+function(third_party_from_pkgconfig gn_group)
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "PATH" "DEFINES;MODULES")
+    if(NOT arg_PATH)
+        set(arg_PATH "third_party/${gn_group}")
     endif()
-endfunction()
-
-# multiple libraries with multiple names may be passed as
-# "libA,libA2;libB,libB2,libB3;..."
-function(find_libraries RESOLVED LIBRARY_NAMES PATHS)
-    set(_RESOLVED "")
-    foreach(_LIB_GROUP ${LIBRARY_NAMES})
-        string(REPLACE "," ";" _LIB_GROUP_NAMES "${_LIB_GROUP}")
-        unset(_LIB CACHE)
-        find_library(_LIB NAMES ${_LIB_GROUP_NAMES}
-            PATHS "${PATHS}"
-            NO_DEFAULT_PATH)
-
-        if(_LIB MATCHES "-NOTFOUND")
-            message(FATAL_ERROR "Could not find library with names: ${_LIB_GROUP_NAMES}")
+    if(NOT arg_MODULES)
+        set(arg_MODULES "${gn_group}")
+    endif()
+    if(arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unparsed arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    x_vcpkg_pkgconfig_get_modules(PREFIX PC_${module} MODULES ${arg_MODULES} CFLAGS LIBS)
+    foreach(config IN ITEMS DEBUG RELEASE)
+        separate_arguments(cflags UNIX_COMMAND "${PC_${module}_CFLAGS_${config}}")
+        set(defines "${cflags}")
+        list(FILTER defines INCLUDE REGEX "^-D" )
+        list(TRANSFORM defines REPLACE "^-D" "")
+        list(APPEND defines ${arg_DEFINES})
+        set(include_dirs "${cflags}")
+        list(FILTER include_dirs INCLUDE REGEX "^-I" )
+        list(TRANSFORM include_dirs REPLACE "^-I" "")
+        separate_arguments(libs UNIX_COMMAND "${PC_${module}_LIBS_${config}}")
+        set(lib_dirs "${libs}")
+        list(FILTER lib_dirs INCLUDE REGEX "^-L" )
+        list(TRANSFORM lib_dirs REPLACE "^-L" "")
+        # Passing link libraries via ldflags, cf. third-party.gn.in
+        set(ldflags "${libs}")
+        list(FILTER ldflags INCLUDE REGEX "^-l" )
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            list(TRANSFORM ldflags REPLACE "^-l" "")
+            list(TRANSFORM ldflags APPEND ".lib")
         endif()
-
-        list(APPEND _RESOLVED "${_LIB}")
+        set(GN_OUT_${config} "")
+        foreach(item IN ITEMS defines include_dirs lib_dirs ldflags)
+            set("gn_${item}_${config}" "")
+            if(NOT "${${item}}" STREQUAL "")
+                list(JOIN ${item} [[", "]] list)
+                set("gn_${item}_${config}" "\"${list}\"")
+            endif()
+        endforeach()
     endforeach()
-    set(${RESOLVED} "${_RESOLVED}" PARENT_SCOPE)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/third-party.gn.in" "${SOURCE_PATH}/${arg_PATH}/BUILD.gn" @ONLY)
 endfunction()
 
-# For each .gn file in the current list directory, configure and install at
-# the corresponding directory to replace Skia dependencies with ones from vcpkg.
-function(replace_skia_dep NAME INCLUDES LIBS_DBG LIBS_REL DEFINITIONS)
-    list(TRANSFORM INCLUDES PREPEND "${CURRENT_INSTALLED_DIR}")
-    cmake_to_gn_list(_INCLUDES "${INCLUDES}")
+third_party_from_pkgconfig(expat)
+third_party_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
+third_party_from_pkgconfig(libpng)
+third_party_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
+third_party_from_pkgconfig(zlib)
 
-    find_libraries(_LIBS_REL "${LIBS_REL}" "${CURRENT_INSTALLED_DIR}/lib")
-    cmake_to_gn_list(_LIBS_REL "${_LIBS_REL}")
+set(known_cpus x86 x64 arm arm64 wasm)
+if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
+    message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
+endif()
 
-    cmake_to_gn_list(_LIBS_DBG "")
-    if (NOT VCPKG_BUILD_TYPE)
-        find_libraries(_LIBS_DBG "${LIBS_DBG}" "${CURRENT_INSTALLED_DIR}/debug/lib")
-        cmake_to_gn_list(_LIBS_DBG "${_LIBS_DBG}")
+set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+set(OPTIONS_DBG "is_debug=true")
+set(OPTIONS_REL "is_official_build=true")
+vcpkg_list(SET SKIA_TARGETS ":skia")
+
+if(VCPKG_TARGET_IS_ANDROID)
+    string(APPEND OPTIONS " target_os=\"android\"")
+elseif(VCPKG_TARGET_IS_IOS)
+    string(APPEND OPTIONS " target_os=\"ios\"")
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    string(APPEND OPTIONS " target_os=\"wasm\"")
+elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND OPTIONS " target_os=\"win\"")
+    if(VCPKG_TARGET_IS_UWP)
+        string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
+endif()
 
-    cmake_to_gn_list(_DEFINITIONS "${DEFINITIONS}")
-
-    set(OUT_FILE "${SOURCE_PATH}/third_party/${NAME}/BUILD.gn")
-    file(REMOVE "${OUT_FILE}")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/${NAME}.gn" "${OUT_FILE}" @ONLY)
-endfunction()
-
-set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
-
-replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD,libexpatdMT" "libexpat,libexpatMD,libexpatMT" "")
-replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
-replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz;harfbuzz-subset" "harfbuzz;harfbuzz-subset" "")
-replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
-replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
-replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
-replace_skia_dep(libwebp "/include"
-    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;webpmux,webpmuxd"
-    "webp;webpdemux;webpdecoder;webpmux" "")
-replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
-if(CMAKE_HOST_UNIX)
-     replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
- endif()
-
-set(OPTIONS "\
-skia_use_lua=false \
-skia_enable_tools=false \
-skia_enable_spirv_validation=false \
-target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(APPEND OPTIONS " is_component_build=true")
 else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
-if(CMAKE_HOST_APPLE)
-    if("metal" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} skia_use_metal=true")
-    endif()
+if("fontconfig" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_fontconfig=true")
+    third_party_from_pkgconfig(fontconfig PATH "third_party")
+else()
+    string(APPEND OPTIONS " skia_use_fontconfig=false")
+endif()
+
+if("freetype" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_freetype=true")
+    third_party_from_pkgconfig(freetype2)
+else()
+    string(APPEND OPTIONS " skia_use_freetype=false")
+endif()
+
+if("harfbuzz" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_harfbuzz=true")
+    third_party_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
+else()
+    string(APPEND OPTIONS " skia_use_harfbuzz=false")
+endif()
+
+if("icu" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_icu=true")
+    third_party_from_pkgconfig(icu MODULES icu-uc DEFINES "U_USING_ICU_NAMESPACE=0")
+else()
+    string(APPEND OPTIONS " skia_use_icu=false")
+endif()
+
+if("gl" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_gl=true")
+else()
+    string(APPEND OPTIONS " skia_use_gl=false")
+endif()
+
+if("metal" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_metal=true")
 endif()
 
 if("vulkan" IN_LIST FEATURES)
-     set(OPTIONS "${OPTIONS} skia_use_vulkan=true")
- endif()
+    string(APPEND OPTIONS "${OPTIONS} skia_use_vulkan=true")
+endif()
 
-if(CMAKE_HOST_WIN32)
-   if("direct3d" IN_LIST FEATURES)
-       set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
+if("direct3d" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_direct3d=true")
 
-       checkout_in_path("${EXTERNALS}/spirv-cross"
-           "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-           "61c603f3baa5270e04bcfb6acf83c654e3c57679"
-       )
+    checkout_in_path("${EXTERNALS}/spirv-cross"
+        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+        "61c603f3baa5270e04bcfb6acf83c654e3c57679"
+    )
 
-       checkout_in_path("${EXTERNALS}/spirv-headers"
-           "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-           "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
-       )
+    checkout_in_path("${EXTERNALS}/spirv-headers"
+        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+        "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
+    )
 
-       checkout_in_path("${EXTERNALS}/spirv-tools"
-           "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-           "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
-       )
+    checkout_in_path("${EXTERNALS}/spirv-tools"
+        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+        "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
+    )
 
-       checkout_in_path("${EXTERNALS}/d3d12allocator"
-           "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
-           "169895d529dfce00390a20e69c2f516066fe7a3b"
-       )
-   endif()
+    checkout_in_path("${EXTERNALS}/d3d12allocator"
+        "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+        "169895d529dfce00390a20e69c2f516066fe7a3b"
+    )
 endif()
 
 if("dawn" IN_LIST FEATURES)
-
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING
 [[
@@ -196,7 +208,13 @@ They can be installed on Debian based systems via
         )
     endif()
 
-   set(OPTIONS "${OPTIONS} skia_use_dawn=true")
+    string(APPEND OPTIONS " skia_use_dawn=true")
+    string(REPLACE "dynamic" "shared" DAWN_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
+    vcpkg_list(APPEND SKIA_TARGETS
+        "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
+        "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
+        "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
+    )
 
    checkout_in_path("${EXTERNALS}/spirv-cross"
        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
@@ -256,127 +274,172 @@ They can be installed on Debian based systems via
    file(WRITE "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py" ${DVG_CONTENT})
 endif()
 
-if("gl" IN_LIST FEATURES)
-    string(APPEND OPTIONS " skia_use_gl=true")
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+else()
+    string(APPEND OPTIONS_DBG " \
+        cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
+        cxx=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()
 
-set(OPTIONS_DBG "${OPTIONS} is_debug=true")
-set(OPTIONS_REL "${OPTIONS} is_official_build=true")
-
-if(CMAKE_HOST_WIN32)
-    # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+# Turn a space separated string into a gn list:
+# "a b c" -> ["a","b","c"]
+function(string_to_gn_list out_var input)
+    separate_arguments(list UNIX_COMMAND "${input}")
+    if(NOT list STREQUAL "")
+        list(JOIN list [[","]] temp)
+        set(list "\"${temp}\"")
     endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    set("${out_var}" "[${list}]" PARENT_SCOPE)
+endfunction()
 
-    # turn a space delimited string into a gn list:
-    # "a b c" -> ["a","b","c"]
-    function(to_gn_list OUTPUT_ INPUT_)
-        string(STRIP "${INPUT_}" TEMP)
-        string(REPLACE "  " " " TEMP "${TEMP}")
-        string(REPLACE " " "\",\"" TEMP "${TEMP}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
-    endfunction()
-
-    to_gn_list(SKIA_C_FLAGS_DBG "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-    to_gn_list(SKIA_C_FLAGS_REL "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
-
-    to_gn_list(SKIA_CXX_FLAGS_DBG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-    to_gn_list(SKIA_CXX_FLAGS_REL "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
-
-    string(APPEND OPTIONS_DBG " extra_cflags_c=${SKIA_C_FLAGS_DBG} \
-        extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
-    string(APPEND OPTIONS_REL " extra_cflags_c=${SKIA_C_FLAGS_REL} \
-        extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
-
-    set(WIN_VC "$ENV{VCINSTALLDIR}")
-    string(REPLACE "\\VC\\" "\\VC" WIN_VC "${WIN_VC}")
-    string(APPEND OPTIONS_DBG " win_vc=\"${WIN_VC}\"")
-    string(APPEND OPTIONS_REL " win_vc=\"${WIN_VC}\"")
+string_to_gn_list(SKIA_C_FLAGS_DBG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+string_to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+string(APPEND OPTIONS_DBG " \
+    extra_cflags_c=${SKIA_C_FLAGS_DBG} \
+    extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
+string_to_gn_list(SKIA_C_FLAGS_REL "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+string_to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+string(APPEND OPTIONS_REL " \
+    extra_cflags_c=${SKIA_C_FLAGS_REL} \
+    extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
+if(VCPKG_TARGET_IS_UWP)
+    string_to_gn_list(SKIA_LD_FLAGS "-APPCONTAINER WindowsApp.lib")
+    string(APPEND OPTIONS " extra_ldflags=${SKIA_LD_FLAGS}")
 endif()
 
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-set(DAWN_LINKAGE "")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(DAWN_LINKAGE "shared")
-else()
-    set(DAWN_LINKAGE "static")
-endif()
-
-vcpkg_list(SET SKIA_TARGETS ":skia")
-if("dawn" IN_LIST FEATURES)
-    vcpkg_list(APPEND SKIA_TARGETS
-        "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
-        "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
-        "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
+# desc json output is dual-use: logging and further processing
+vcpkg_find_acquire_program(GN)
+vcpkg_execute_required_process(
+    COMMAND "${GN}" desc --format=json --all --testonly=false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "*"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME "desc-${TARGET_TRIPLET}-rel"
+    OUTPUT_VARIABLE desc_release
+)
+file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-rel-out.log" desc_release)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_execute_required_process(
+        COMMAND "${GN}" desc --format=json --all --testonly=false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "*"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "desc-${TARGET_TRIPLET}-dbg"
+        OUTPUT_VARIABLE desc_debug
     )
+    file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-dbg-out.log" desc_debug)
 endif()
 
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS
-        ${SKIA_TARGETS}
+    TARGETS ${SKIA_TARGETS}
 )
 
-message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
+# Use skia repository layout in ${CURRENT_PACKAGES_DIR}/include/skia
 file(COPY "${SOURCE_PATH}/include"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
-    "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false
-    "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
-foreach(file_ ${SKIA_INCLUDE_FILES})
-    vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
-endforeach()
+          "${SOURCE_PATH}/modules"
+          "${SOURCE_PATH}/src"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia"
+    FILES_MATCHING PATTERN "*.h"
+)
+set(skia_dll_static "0")
+set(skia_dll_dynamic "1")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
 
-# get a list of library dependencies for TARGET
-function(gn_desc_target_libs OUTPUT BUILD_DIR TARGET)
-    z_vcpkg_install_gn_get_desc("${OUTPUT}"
-        SOURCE_PATH "${SOURCE_PATH}"
-        BUILD_DIR "${BUILD_DIR}"
-        TARGET "${TARGET}"
-        WHAT_TO_DISPLAY libs)
+function(auto_clean dir)
+    file(GLOB entries "${dir}/*")
+    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
+    foreach(entry IN LISTS entries)
+        if(entry IN_LIST files)
+            continue()
+        endif()
+        file(GLOB_RECURSE children "${entry}/*")
+        if(children)
+            auto_clean("${entry}")
+        else()
+            file(REMOVE_RECURSE "${entry}")
+        endif()
+    endforeach()
+endfunction()
+auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
+# vcpkg legacy layout omits "include/" component. Just duplicate.
+file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
+
+function(list_from_json out_var json) # <path>
+    vcpkg_list(SET list)
+    string(JSON array ERROR_VARIABLE error GET "${json}" ${ARGN})
+    if(NOT error)
+        string(JSON len ERROR_VARIABLE error LENGTH "${array}")
+        if(NOT error AND NOT len STREQUAL "0")
+            math(EXPR last "${len} - 1")
+            foreach(i RANGE "${last}")
+                string(JSON item GET "${array}" "${i}")
+                vcpkg_list(APPEND list "${item}")
+            endforeach()
+        endif()
+    endif()
+    set("${out_var}" "${list}" PARENT_SCOPE)
 endfunction()
 
-function(gn_desc_target_defines OUTPUT BUILD_DIR TARGET)
-    z_vcpkg_install_gn_get_desc(OUTPUT_
-        SOURCE_PATH "${SOURCE_PATH}"
-        BUILD_DIR "${BUILD_DIR}"
-        TARGET "${TARGET}"
-        WHAT_TO_DISPLAY defines)
-    # exclude system defines such as _HAS_EXCEPTIONS=0
-    list(FILTER OUTPUT_ EXCLUDE REGEX "^_")
-    set(${OUTPUT} ${OUTPUT_} PARENT_SCOPE)
+function(get_definitions out_var desc_json target)
+    list_from_json(output "${desc_json}" "${target}" "defines")
+    list(FILTER output INCLUDE REGEX "^SK_")
+    set("${out_var}" "${output}" PARENT_SCOPE)
 endfunction()
 
-# skiaConfig.cmake.in input variables
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    gn_desc_target_libs(SKIA_DEP_DBG
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        //:skia)
-    gn_desc_target_defines(SKIA_DEFINITIONS_DBG
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        //:skia)
+function(get_link_libs out_var desc_json target)
+    # From ldflags, we only want lib names or filepaths (cf. third_party_from_pkgconfig)
+    list_from_json(ldflags "${desc_json}" "${target}" "ldflags")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        list(FILTER ldflags INCLUDE REGEX "[.]lib\$")
+    else()
+        list(FILTER ldflags INCLUDE REGEX "^-l|^/")
+    endif()
+    list(TRANSFORM ldflags REPLACE "^-l" "")
+    list_from_json(libs "${desc_json}" "${target}" "libs")
+    vcpkg_list(SET frameworks)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        list_from_json(frameworks "${desc_json}" "${target}" "frameworks")
+    endif()
+    vcpkg_list(SET output)
+    foreach(lib IN LISTS frameworks ldflags libs)
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${vcpkg_root}]] lib "${lib}")
+        string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${vcpkg_root}]] lib "${lib}")
+        if(NOT lib MATCHES "^-L")
+            vcpkg_list(REMOVE_ITEM output "${lib}")
+        endif()
+        vcpkg_list(APPEND output "${lib}")
+    endforeach()
+    set("${out_var}" "${output}" PARENT_SCOPE)
+endfunction()
+
+get_definitions(SKIA_DEFINITIONS_REL "${desc_release}" "//:skia")
+get_link_libs(SKIA_DEP_REL "${desc_release}" "//:skia")
+if(NOT VCPKG_BUILD_TYPE)
+    get_definitions(SKIA_DEFINITIONS_DBG "${desc_debug}" "//:skia")
+    get_link_libs(SKIA_DEP_DBG "${desc_debug}" "//:skia")
 endif()
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/unofficial-skia")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-skia/unofficial-skia-config.cmake" @ONLY)
+# vcpkg legacy
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/skia")
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    gn_desc_target_libs(SKIA_DEP_REL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        //:skia)
-    gn_desc_target_defines(SKIA_DEFINITIONS_REL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        //:skia)
-endif()
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/example/CMakeLists.txt"
+    "${SOURCE_PATH}/tools/convert-to-nia.cpp"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example"
+)
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/example/convert-to-nia.cpp" [[
+// Test for https://github.com/microsoft/vcpkg/issues/27219
+#include "include/core/SkColorSpace.h"
+]])
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"
-        "${CURRENT_PACKAGES_DIR}/share/skia/skiaConfig.cmake" @ONLY)
-
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
