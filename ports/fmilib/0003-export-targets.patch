@@ -9,17 +9,17 @@ index f3c11f1..2461ecb 100644
 -install(TARGETS ${FMILIB_TARGETS}
 +TARGET_INCLUDE_DIRECTORIES(${FMILIB_TARGETS} INTERFACE $<INSTALL_INTERFACE:include>)
 +
-+install(TARGETS ${FMILIB_TARGETS} EXPORT fmilib-config
++install(TARGETS ${FMILIB_TARGETS} EXPORT unofficial-fmilib-config
  	ARCHIVE DESTINATION lib
  	LIBRARY DESTINATION lib
 -	RUNTIME DESTINATION lib
 +	RUNTIME DESTINATION bin
 +)
 +
-+install(EXPORT fmilib-config
-+        FILE fmilib-config.cmake
-+        NAMESPACE fmilib::
-+        DESTINATION share/fmilib
++install(EXPORT unofficial-fmilib-config
++        FILE unofficial-fmilib-config.cmake
++        NAMESPACE unofficial::fmilib::
++        DESTINATION share/unofficial-fmilib
  )
  install(FILES 
  			"${FMILIBRARYHOME}/FMILIB_Readme.txt"
