@@ -1,4 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-11-10)
 
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
@@ -12,7 +13,7 @@ else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.89.1
+    REF v${VERSION}
     SHA512 1a87a4865cd6d3a1de4b64e59e89b88093354bcb3b1759e0fd7dfb226bca0ddc9727c44e519345a9fd098b3d4fe24a4436c38076f5659182aa70bb62f594fc03
     HEAD_REF master
     )
@@ -75,4 +76,4 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
