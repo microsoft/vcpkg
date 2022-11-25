@@ -309,7 +309,7 @@ index f6abe8c3..5485a0de 100644
 +find_package(PkgConfig REQUIRED)
 +pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp)
 +pkg_check_modules(mpfr REQUIRED IMPORTED_TARGET mpfr)
-+find_package(CGAL CONFIG REQUIRED)
++find_package(cgal CONFIG REQUIRED)
  igl_include(copyleft core)
  target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
      igl::core

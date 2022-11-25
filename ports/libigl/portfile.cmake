@@ -12,14 +12,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        embree LIBIGL_EMBREE
-        opengl LIBIGL_OPENGL
-        glfw   LIBIGL_GLFW
-        imgui  LIBIGL_IMGUI
-        png    LIBIGL_PNG
-        xml    LIBIGL_XML
-        cgal   LIBIGL_WITH_CGAL
-        predicates   LIBIGL_PREDICATES
+        embree          LIBIGL_EMBREE
+        opengl          LIBIGL_OPENGL
+        glfw            LIBIGL_GLFW
+        imgui           LIBIGL_IMGUI
+        png             LIBIGL_PNG
+        xml             LIBIGL_XML
+        cgal            LIBIGL_COPYLEFT_CGAL
+        predicates      LIBIGL_PREDICATES
 )
 
 vcpkg_cmake_configure(
