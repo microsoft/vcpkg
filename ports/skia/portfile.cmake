@@ -143,20 +143,8 @@ skia_enable_tools=false \
 skia_enable_spirv_validation=false \
 target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 
-# used for passing feature-specific definitions to the config file
-set(SKIA_PUBLIC_DEFINITIONS
-    SK_SUPPORT_PDF
-    SK_HAS_JPEG_LIBRARY
-    SK_USE_LIBGIFCODEC
-    SK_HAS_PNG_LIBRARY
-    SK_HAS_WEBP_LIBRARY
-    SK_XML)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     string(APPEND OPTIONS " is_component_build=true")
-    if(CMAKE_HOST_WIN32)
-        set(SKIA_PUBLIC_DEFINITIONS SKIA_DLL)
-    endif()
 else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
@@ -164,19 +152,16 @@ endif()
 if(CMAKE_HOST_APPLE)
     if("metal" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} skia_use_metal=true")
-        list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
     endif()
 endif()
 
 if("vulkan" IN_LIST FEATURES)
      set(OPTIONS "${OPTIONS} skia_use_vulkan=true")
-     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_VULKAN)
  endif()
 
 if(CMAKE_HOST_WIN32)
    if("direct3d" IN_LIST FEATURES)
        set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
-       list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
 
        checkout_in_path("${EXTERNALS}/spirv-cross"
            "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
@@ -217,7 +202,6 @@ They can be installed on Debian based systems via
     endif()
 
    set(OPTIONS "${OPTIONS} skia_use_dawn=true")
-   list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
 
    checkout_in_path("${EXTERNALS}/spirv-cross"
        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
@@ -279,7 +263,6 @@ endif()
 
 if("gl" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_gl=true")
-    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
 endif()
 
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
