@@ -36,7 +36,7 @@ index 226dadb..a3765a7 100644
  
  if(POCO_UNBUNDLED)
 -	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB)
-+	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB
++	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB)
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
  	add_definitions(
  		-D_pcre2_utf8_table1=_poco_pcre2_utf8_table1
