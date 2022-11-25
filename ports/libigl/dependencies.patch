@@ -1,0 +1,318 @@
+diff --git a/cmake/find/FindGMP.cmake b/cmake/find/FindGMP.cmake
+deleted file mode 100644
+index cfc7284f..00000000
+--- a/cmake/find/FindGMP.cmake
++++ /dev/null
+@@ -1,95 +0,0 @@
+-# Try to find the GNU Multiple Precision Arithmetic Library (GMP)
+-# See http://gmplib.org/
+-
+-if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
+-    set(REQUIRED_FLAG "")
+-else()
+-    set(REQUIRED_FLAG REQUIRED)
+-endif()
+-
+-# On Windows, we must use the pre-compiled versions downloaded with libigl
+-if(WIN32)
+-    set(NO_DEFAULT_FLAG NO_DEFAULT_PATH)
+-else()
+-    set(NO_DEFAULT_FLAG "")
+-endif()
+-
+-find_path(GMP_INCLUDES
+-    NAMES
+-        gmp.h
+-    PATHS
+-        ENV GMP_DIR
+-        ${INCLUDE_INSTALL_DIR}
+-    PATH_SUFFIXES
+-        include
+-    ${REQUIRED_FLAG}
+-    ${NO_DEFAULT_FLAG}
+-)
+-
+-find_library(GMP_LIBRARIES
+-    NAMES
+-        gmp
+-        libgmp-10
+-    PATHS
+-        ENV GMP_DIR
+-        ${LIB_INSTALL_DIR}
+-    PATH_SUFFIXES
+-        lib
+-    ${REQUIRED_FLAG}
+-    ${NO_DEFAULT_FLAG}
+-)
+-
+-set(GMP_EXTRA_VARS "")
+-if(WIN32)
+-    # Find dll file and set IMPORTED_LOCATION to the .dll file
+-    find_file(GMP_RUNTIME_LIB
+-        NAMES
+-            gmp.dll
+-            libgmp-10.dll
+-        PATHS
+-            ENV GMP_DIR
+-            ${LIB_INSTALL_DIR}
+-        PATH_SUFFIXES
+-            lib
+-        ${REQUIRED_FLAG}
+-        ${NO_DEFAULT_FLAG}
+-    )
+-    list(APPEND GMP_EXTRA_VARS GMP_RUNTIME_LIB)
+-endif()
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(GMP
+-    REQUIRED_VARS
+-        GMP_INCLUDES
+-        GMP_LIBRARIES
+-        ${GMP_EXTRA_VARS}
+-    REASON_FAILURE_MESSAGE
+-        "GMP is not installed on your system. Either install GMP using your preferred package manager, or disable libigl modules that depend on GMP, such as CGAL. See LibiglOptions.cmake.sample for configuration options. Do not forget to delete your <build>/CMakeCache.txt for the changes to take effect."
+-)
+-mark_as_advanced(GMP_INCLUDES GMP_LIBRARIES)
+-
+-if(GMP_INCLUDES AND GMP_LIBRARIES AND NOT TARGET gmp::gmp)
+-    if(GMP_RUNTIME_LIB)
+-        add_library(gmp::gmp SHARED IMPORTED)
+-    else()
+-        add_library(gmp::gmp UNKNOWN IMPORTED)
+-    endif()
+-
+-    # Set public header location and link language
+-    set_target_properties(gmp::gmp PROPERTIES
+-        IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-        INTERFACE_INCLUDE_DIRECTORIES "${GMP_INCLUDES}"
+-    )
+-
+-    # Set lib location. On Windows we specify both the .lib and the .dll paths
+-    if(GMP_RUNTIME_LIB)
+-        set_target_properties(gmp::gmp PROPERTIES
+-            IMPORTED_IMPLIB "${GMP_LIBRARIES}"
+-            IMPORTED_LOCATION "${GMP_RUNTIME_LIB}"
+-        )
+-    else()
+-        set_target_properties(gmp::gmp PROPERTIES
+-            IMPORTED_LOCATION "${GMP_LIBRARIES}"
+-        )
+-    endif()
+-endif()
+diff --git a/cmake/find/FindMPFR.cmake b/cmake/find/FindMPFR.cmake
+deleted file mode 100644
+index 4778f7ee..00000000
+--- a/cmake/find/FindMPFR.cmake
++++ /dev/null
+@@ -1,95 +0,0 @@
+-# Try to find the MPFR library
+-# See http://www.mpfr.org/
+-
+-if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
+-    set(REQUIRED_FLAG "")
+-else()
+-    set(REQUIRED_FLAG REQUIRED)
+-endif()
+-
+-# On Windows, we must use the pre-compiled versions downloaded with libigl
+-if(WIN32)
+-    set(NO_DEFAULT_FLAG NO_DEFAULT_PATH)
+-else()
+-    set(NO_DEFAULT_FLAG "")
+-endif()
+-
+-find_path(MPFR_INCLUDES
+-    NAMES
+-        mpfr.h
+-    PATHS
+-        ENV MPFR_DIR
+-        ${INCLUDE_INSTALL_DIR}
+-    PATH_SUFFIXES
+-        include
+-    ${REQUIRED_FLAG}
+-    ${NO_DEFAULT_FLAG}
+-)
+-
+-find_library(MPFR_LIBRARIES
+-    NAMES
+-        mpfr
+-        libmpfr-4
+-    PATHS
+-        ENV MPFR_DIR
+-        ${LIB_INSTALL_DIR}
+-    PATH_SUFFIXES
+-        lib
+-    ${REQUIRED_FLAG}
+-    ${NO_DEFAULT_FLAG}
+-)
+-
+-set(MPFR_EXTRA_VARS "")
+-if(WIN32)
+-    # Find dll file and set IMPORTED_LOCATION to the .dll file
+-    find_file(MPFR_RUNTIME_LIB
+-        NAMES
+-            mpfr.dll
+-            libmpfr-4.dll
+-        PATHS
+-            ENV MPFR_DIR
+-            ${LIB_INSTALL_DIR}
+-        PATH_SUFFIXES
+-            lib
+-        ${REQUIRED_FLAG}
+-        ${NO_DEFAULT_FLAG}
+-    )
+-    list(APPEND MPFR_EXTRA_VARS MPFR_RUNTIME_LIB)
+-endif()
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(MPFR
+-    REQUIRED_VARS
+-        MPFR_INCLUDES
+-        MPFR_LIBRARIES
+-        ${MPFR_EXTRA_VARS}
+-    REASON_FAILURE_MESSAGE
+-        "MPFR is not installed on your system. Either install MPFR using your preferred package manager, or disable libigl modules that depend on MPFR, such as CGAL. See LibiglOptions.cmake.sample for configuration options. Do not forget to delete your <build>/CMakeCache.txt for the changes to take effect."
+-)
+-mark_as_advanced(MPFR_INCLUDES MPFR_LIBRARIES)
+-
+-if(MPFR_INCLUDES AND MPFR_LIBRARIES AND NOT TARGET mpfr::mpfr)
+-    if(MPFR_RUNTIME_LIB)
+-        add_library(mpfr::mpfr SHARED IMPORTED)
+-    else()
+-        add_library(mpfr::mpfr UNKNOWN IMPORTED)
+-    endif()
+-
+-    # Set public header location and link language
+-    set_target_properties(mpfr::mpfr PROPERTIES
+-        IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-        INTERFACE_INCLUDE_DIRECTORIES "${MPFR_INCLUDES}"
+-    )
+-
+-    # Set lib location. On Windows we specify both the .lib and the .dll paths
+-    if(MPFR_RUNTIME_LIB)
+-        set_target_properties(mpfr::mpfr PROPERTIES
+-            IMPORTED_IMPLIB "${MPFR_LIBRARIES}"
+-            IMPORTED_LOCATION "${MPFR_RUNTIME_LIB}"
+-        )
+-    else()
+-        set_target_properties(mpfr::mpfr PROPERTIES
+-            IMPORTED_LOCATION "${MPFR_LIBRARIES}"
+-        )
+-    endif()
+-endif()
+diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
+index 4580c037..26f2a8ca 100644
+--- a/cmake/igl/modules/opengl.cmake
++++ b/cmake/igl/modules/opengl.cmake
+@@ -14,7 +14,6 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/*.cpp")
+ igl_target_sources(igl_opengl ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glad)
+ find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
+ target_link_libraries(igl_opengl ${IGL_SCOPE}
+     igl::core
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/opengl.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
+index 2aefcd64..c8de8f90 100644
+--- a/cmake/igl/modules/core.cmake
++++ b/cmake/igl/modules/core.cmake
+@@ -20,7 +20,7 @@ igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
+ igl_install(igl_core ${INC_FILES} ${SRC_FILES})
+ 
+ # 5. Dependencies
+-include(eigen)
++find_package(eigen3)
+ find_package(Threads REQUIRED)
+ target_link_libraries(igl_core ${IGL_SCOPE}
+     Eigen3::Eigen
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/core.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
+index 6f223192..f50ea544 100644
+--- a/cmake/igl/modules/embree.cmake
++++ b/cmake/igl/modules/embree.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/embree/*.cpp")
+ igl_target_sources(igl_embree ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(embree)
++find_package(embree 3.12)
+ target_link_libraries(igl_embree ${IGL_SCOPE}
+     igl::core
+     embree::embree
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/embree.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
+index 151338e4..07068c62 100644
+--- a/cmake/igl/modules/glfw.cmake
++++ b/cmake/igl/modules/glfw.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
+ igl_target_sources(igl_glfw ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glfw)
++find_package(glfw3)
+ igl_include(opengl)
+ target_link_libraries(igl_glfw ${IGL_SCOPE}
+     igl::core
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/glfw.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
+index 3763b771..bdc89d77 100644
+--- a/cmake/igl/modules/xml.cmake
++++ b/cmake/igl/modules/xml.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/xml/*.cpp")
+ igl_target_sources(igl_xml ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(tinyxml2)
++find_package(tinyxml2)
+ target_link_libraries(igl_xml ${IGL_SCOPE}
+     igl::core
+     tinyxml2::tinyxml2
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/xml.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
+index d7ffb9d4..5c4c9d30 100644
+--- a/cmake/igl/modules/imgui.cmake
++++ b/cmake/igl/modules/imgui.cmake
+@@ -14,8 +14,8 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/imgui/*.cpp")
+ igl_target_sources(igl_imgui ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(imgui)
+-include(imguizmo)
++find_package(imgui)
++find_package(imguizmo)
+ include(libigl_imgui_fonts)
+ igl_include(glfw)
+ target_link_libraries(igl_imgui ${IGL_SCOPE}
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/imgui.cmake.
+The file will have its original line endings in your working directory
+diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
+index f6abe8c3..5485a0de 100644
+--- a/cmake/igl/modules/copyleft/cgal.cmake
++++ b/cmake/igl/modules/copyleft/cgal.cmake
+@@ -14,7 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+ igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(cgal)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp)
++pkg_check_modules(mpfr REQUIRED IMPORTED_TARGET mpfr)
++find_package(CGAL CONFIG REQUIRED)
+ igl_include(copyleft core)
+ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
+     igl::core
+
+warning: LF will be replaced by CRLF in cmake/igl/modules/copyleft/cgal.cmake.
+The file will have its original line endings in your working directory

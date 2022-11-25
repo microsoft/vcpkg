@@ -9,6 +9,7 @@
     "eigen3",
     "gmp",
     "mpfr",
+    "pkgconf",
     {
       "name": "vcpkg-cmake",
       "host": true

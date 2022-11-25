@@ -7,8 +7,7 @@ vcpkg_from_github(
     SHA512 7014ffdaa160bfa2509fc283cb7176d7994a37f51509c7374659292efad076c8fb594f9f6990bab1aa5562d1f66e93403ea35a5bf2a924436560a2d4669ffcfd
     HEAD_REF master
     PATCHES
-        install-extra-headers.patch
-        fix-hunter-version.patch
+        dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,8 +31,11 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
         -DLIBIGL_USE_STATIC_LIBRARY=OFF
-        -DHUNTER_ENABLED=ON
-)
+        -DHUNTER_ENABLED=OFF
+        -DLIBIGL_COPYLEFT_COMISO=OFF #there is no comiso port available anywhere. solved internally via FetchContent in cmake\recipes\external\comiso.cmake. maybe replace in patch with vcpkg_from_github 
+        -DLIBIGL_COPYLEFT_TETGEN=OFF #there is no tetgen port available anywhere. solved internally via FetchContent in cmake\recipes\external\tetgen.cmake
+        -DLIBIGL_RESTRICTED_TRIANGLE=OFF #same
+        )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
