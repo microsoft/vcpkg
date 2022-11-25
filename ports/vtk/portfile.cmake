@@ -203,6 +203,7 @@ vcpkg_cmake_configure(
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
+        #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
