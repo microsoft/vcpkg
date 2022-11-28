@@ -3073,12 +3073,12 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.88",
-      "port-version": 1
+      "baseline": "1.89.1",
+      "port-version": 0
     },
     "imgui-sfml": {
       "baseline": "2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "imguizmo": {
       "baseline": "1.83",
@@ -4846,7 +4846,7 @@
     },
     "milerius-sfml-imgui": {
       "baseline": "1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "mimalloc": {
       "baseline": "2.0.7",
