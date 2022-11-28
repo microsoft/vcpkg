@@ -6,10 +6,11 @@ These can be installed on Ubuntu systems via sudo apt install libudev-dev"
     )
 endif()
 
+set(NRF_BLE_VERSION 4.1.4)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
-    REF v4.1.4
+    REF "v${NRF_BLE_VERSION}"
     SHA512 8f35e757dddc27c9b11cdb3b9920562bbe09ceac715d65957e56ec8479e8ffedf12df2f976e484ed0d24b9325d9ef2b8ad6576cccefd2de8d7fa6fa8d58b03e5
     HEAD_REF master
     PATCHES
@@ -34,8 +35,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DDISABLE_EXAMPLES=ON
         -DDISABLE_TESTS=ON
-        -DNRF_BLE_DRIVER_VERSION=4.1.2
-        -DCONNECTIVITY_VERSION=4.1.2
+        -DNRF_BLE_DRIVER_VERSION=${NRF_BLE_VERSION}
+        -DCONNECTIVITY_VERSION=${NRF_BLE_VERSION}
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         DISABLE_EXAMPLES
