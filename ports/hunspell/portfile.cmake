@@ -10,6 +10,7 @@ vcpkg_from_github(
         0003-fix-win-build.patch
         0004-add-win-arm64.patch
         0005-autotools-subdirs.patch
+        0006-remove-gm.patch # https://github.com/hunspell/hunspell/pull/890
 )
 
 file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
