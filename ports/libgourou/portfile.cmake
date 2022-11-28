@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            SamuelMarks/${PORT}
-    REF             b91fcbee29f23e69f1f38abdd51f64a840b94556
-    SHA512          f5787a7b095e50aa501b0f09f6c7496277d0ea4d917fb22ec83842a4c37242aaedc232a0eecadc15c8487e112636d78e64477592cfee0802fa73ab30e354ea90
+    REF             b30f175ced89adb4db35a457ea5649533ceb2bee
+    SHA512          cbd29cc9d7555279ca88e7748a07629493e89c874696f9feac1707c3e4f0caa7efdf0bc6f4389bbf5dd3790fb1a500de35df6fb81c8867ec2d2d820d3f5603b6
     HEAD_REF        master
 )
 
