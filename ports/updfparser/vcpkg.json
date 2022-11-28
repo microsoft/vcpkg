@@ -4,7 +4,7 @@
   "description": "updfparser is a very simple PDF parser that will load PDF objects without interpretation",
   "homepage": "https://indefero.soutade.fr/p/updfparser",
   "license": "LGPL-3.0-or-later",
-  "supports": "!uwp",
+  "supports": "!uwp & !windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
