@@ -6,6 +6,7 @@
   "license": "LGPL-3.0-or-later",
   "supports": "!uwp & !windows",
   "dependencies": [
+    "curl",
     "libzip",
     "openssl",
     "pugixml",
