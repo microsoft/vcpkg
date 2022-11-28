@@ -4249,7 +4249,7 @@
       "port-version": 3
     },
     "libssh": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.4+20221123",
       "port-version": 0
     },
     "libssh2": {
