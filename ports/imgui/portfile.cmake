@@ -1,19 +1,20 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-11-10)
 
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 9cd9c2eff99877a3f10a7f9c2a3a5b9c15ea36c6
-       SHA512 4a9bf74f5f3971bcb954449bdef27e491a0abebc55356bcf0491c7e17dc941c90cf81d539fe4de1e23137866f55456776fcded34a4df2fb16b9020fe1b8d7851
+       REF 595a428baa806c35622933e41a3bfb5bda68fe06
+       SHA512 c97aff2644581d68c444d07a23a5cb0a034aba4b58c787f6551b4302226393126a090ab9c9932edae2f4655a5e76008a5d249154c45d36a772490884b71c6581
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.88
-    SHA512 bfb7381334f1493d64386321401086e4136129b3cc57bf57505ec6183008dddab1a2056b0af2610bc3286c606bafdf9b6e3ebc103131e0504bab2336662bc2c1
+    REF v${VERSION}
+    SHA512 1a87a4865cd6d3a1de4b64e59e89b88093354bcb3b1759e0fd7dfb226bca0ddc9727c44e519345a9fd098b3d4fe24a4436c38076f5659182aa70bb62f594fc03
     HEAD_REF master
     )
 endif()
@@ -75,4 +76,4 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
