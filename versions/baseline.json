@@ -5,8 +5,8 @@
       "port-version": 2
     },
     "7zip": {
-      "baseline": "22.0",
-      "port-version": 1
+      "baseline": "22.01",
+      "port-version": 0
     },
     "ableton": {
       "baseline": "3.0.5",
@@ -2378,7 +2378,7 @@
     },
     "fmilib": {
       "baseline": "2.0.3",
-      "port-version": 4
+      "port-version": 5
     },
     "fmt": {
       "baseline": "9.1.0",
@@ -2386,7 +2386,7 @@
     },
     "folly": {
       "baseline": "2022.10.31.00",
-      "port-version": 2
+      "port-version": 3
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4249,7 +4249,7 @@
       "port-version": 3
     },
     "libssh": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.4+20221123",
       "port-version": 0
     },
     "libssh2": {
@@ -4614,7 +4614,7 @@
     },
     "lua": {
       "baseline": "5.4.4",
-      "port-version": 2
+      "port-version": 3
     },
     "lua-compat53": {
       "baseline": "0.10",
@@ -5366,7 +5366,7 @@
     },
     "ogre": {
       "baseline": "13.4.4",
-      "port-version": 2
+      "port-version": 3
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -6941,7 +6941,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.0.0",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -7170,7 +7170,7 @@
     },
     "sqlite3": {
       "baseline": "3.40.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
