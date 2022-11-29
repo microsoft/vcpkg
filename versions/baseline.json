@@ -3145,8 +3145,8 @@
       "port-version": 0
     },
     "ismrmrd": {
-      "baseline": "1.5.0",
-      "port-version": 2
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "itk": {
       "baseline": "5.2.1",
