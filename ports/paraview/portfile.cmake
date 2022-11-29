@@ -38,12 +38,8 @@ vcpkg_from_gitlab(
     PATCHES 
         ${VisItPatches}
 )
-
-#vtkicet https://gitlab.kitware.com/paraview/paraview/-/tree/release/ThirdParty/IceT
-
 #VTK_MODULE_USE_EXTERNAL_ParaView_protobuf
 #NVPipe?
-
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
@@ -53,7 +49,6 @@ vcpkg_from_gitlab(
     SHA512  cb4acdfe1206bd8bae4f70185c8ca1ce555cf983a1d1e97293dac544ab13b039638bfe0d1e448f9589db92b6ed23b9b940157e72d9ec9e3994ea9858ab1722ec
 )
 
-#TODO: Add Icet
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH ICET_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
@@ -61,7 +56,6 @@ vcpkg_from_gitlab(
     REF 32816fe5592de3be664da6f8466a546f221d8532
     SHA512  33d5e8f2ecdc20d305d04c23fc3a3121d3c5305ddff7f5b71cee1a2c2183c4b36c9d0bd91e9dba5f2369e237782d7dbcf635d2e1814ccde88570647c890edc9d
 )
-
 
 file(COPY "${VISITIT_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/Utilities/VisItBridge")
 file(COPY "${QTTESTING_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting")
@@ -90,7 +84,7 @@ vcpkg_cmake_configure(
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
 
-        #A little bit of help in finding the boost headers
+        # A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
 
         # Workarounds for CMake issues

@@ -8,7 +8,6 @@ vcpkg_from_github(
             fix-ioss-includes.patch
             deps-and-shared.patch
             fix-mpi.patch
-            fix-cgns.patch
 )
 
 if(NOT VCPKG_TARGET_IS_OSX)
@@ -23,11 +22,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    #vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     list(APPEND FEATURE_OPTIONS "-DTPL_ENABLE_DLlib:BOOL=OFF")
 endif()
-
-# Pthread ? DLlib? RTlib?
 
 set(tpl_disable_list GTest DataWarp Pamgen X11 CUDA Kokkos Faodel Pnetcdf ADIOS2 Catalyst2)
 
@@ -94,10 +90,6 @@ endif()
 set(tool_names  cgns_decomp cth_pressure_map
                 io_info io_modify io_shell
                 shell_to_hex skinner sphgen struc_to_unstruc)
-
-# exo2mat exomatlab mat2exo zellij slice nas2exo
-#  conjoin cpup  epu   nem_slice nem_spread
-# ejoin exodiff exo_format aprepro
 
 vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 

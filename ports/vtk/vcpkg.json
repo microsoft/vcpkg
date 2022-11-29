@@ -132,17 +132,17 @@
           ]
         },
         {
-          "name": "vtk-m",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ]
-        },
-        {
           "name": "vtk",
           "default-features": false,
           "features": [
             "vtkm"
+          ]
+        },
+        {
+          "name": "vtk-m",
+          "default-features": false,
+          "features": [
+            "mpi"
           ]
         }
       ]

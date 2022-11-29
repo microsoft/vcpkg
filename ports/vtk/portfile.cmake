@@ -113,7 +113,6 @@ endif()
 
 
 if("python" IN_LIST FEATURES)
-    #vcpkg_find_acquire_program(PYTHON3)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         set(python_ver 3.10)
@@ -195,7 +194,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ##--trace-expand
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
@@ -218,11 +216,11 @@ vcpkg_cmake_configure(
         -DVTK_QT_VERSION=5
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
-        MAYBE_UNUSED_VARIABLES
-            VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
-            VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
-            VTK_QT_VERSION # Only with Qt
-            CMAKE_INSTALL_QMLDIR
+    MAYBE_UNUSED_VARIABLES
+        VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
+        VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
+        VTK_QT_VERSION # Only with Qt
+        CMAKE_INSTALL_QMLDIR
 )
 
 vcpkg_cmake_install()

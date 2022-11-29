@@ -75,6 +75,14 @@ index 2d041a2ca..c49a2c019 100644
          "  unset(${upstreamTplDepName}_DIR)\n"
          "endif()\n"
          "\n"
+@@ -440,6 +440,7 @@ function(tribits_extpkg_process_libraries_list  tplName)
+     elseif (libEntryType STREQUAL "GENERAL_LINK_OPTION")
+       message_wrapper("-- NOTE: Moving the general link argument '${libentry}' in TPL_${tplName}_LIBRARIES forward on the link line which may change the link and break the link!")
+       list(APPEND libLinkFlagsList "${libentry}")
++    elseif(libEntryType STREQUAL "TARGET_NAME")
+     else()
+       tribits_extpkg_process_libraries_list_library_entry(
+         ${tplName}  "${libentry}"  ${libEntryType}  libTargets  lastLibProcessed
 @@ -501,6 +501,8 @@ function(tribits_tpl_libraries_entry_type  libentry  libEntryTypeOut)
      set(libEntryType FULL_LIB_PATH)
    elseif (libentry MATCHES "^[a-zA-Z_][a-zA-Z0-9_-]*$")
