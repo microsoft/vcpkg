@@ -7,6 +7,7 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EXPAT_CRT_LINKAGE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/expat"
@@ -16,6 +17,7 @@ vcpkg_cmake_configure(
         -DEXPAT_BUILD_TOOLS=OFF
         -DEXPAT_BUILD_DOCS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
+        -DEXPAT_MSVC_STATIC_CRT=${EXPAT_CRT_LINKAGE}
         -DEXPAT_BUILD_PKGCONFIG=ON
 )
 

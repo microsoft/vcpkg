@@ -4,8 +4,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4.1
-    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
+    REF n4.4.3
+    SHA512 46bb03d690bdf0d1ce55bfe0582edf1f50b938efcdd5708a6e5ba04154fa50ac8cff4a9e44544cfa50e7f52392c88cde9455aacd6b6e51d4944f123bdcc9297a
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -20,12 +20,11 @@ vcpkg_from_github(
         0013-define-WINVER.patch
         0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        0016-configure-dnn-needs-avformat.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0021-fix-sdl2-version-check.patch
+        0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -708,6 +707,7 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
+    list(FILTER contents EXCLUDE REGEX "^atomic$")
     if(VCPKG_TARGET_IS_WINDOWS)
         list(TRANSFORM contents TOLOWER)
     endif()

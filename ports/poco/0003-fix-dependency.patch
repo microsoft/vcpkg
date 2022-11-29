@@ -146,6 +146,28 @@ index 3a176d7..d8055cb 100644
  	target_compile_definitions(DataSQLite PUBLIC
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
+diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
+index 4fbf06f..793285a 100644
+--- a/XML/CMakeLists.txt
++++ b/XML/CMakeLists.txt
+@@ -20,7 +20,7 @@ endif()
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
+-	find_package(EXPAT REQUIRED)
++	find_package(expat CONFIG REQUIRED)
+ else()
+ 	POCO_SOURCES(SRCS expat
+ 		src/xmlparse.cpp
+@@ -50,7 +50,7 @@ target_include_directories(XML
+ )
+ 
+ if(POCO_UNBUNDLED)
+-	target_link_libraries(XML PUBLIC EXPAT::EXPAT)
++	target_link_libraries(XML PUBLIC expat::expat)
+ 	target_compile_definitions(XML PUBLIC POCO_UNBUNDLED)
+ else()
+ 	if(WIN32)
 diff --git a/XML/cmake/PocoXMLConfig.cmake b/XML/cmake/PocoXMLConfig.cmake
 index ef58207..4ed94ec 100644
 --- a/XML/cmake/PocoXMLConfig.cmake

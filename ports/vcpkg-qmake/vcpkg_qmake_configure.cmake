@@ -15,7 +15,7 @@ function(vcpkg_qmake_configure)
         vcpkg_list(APPEND arg_QMAKE_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        vcpkg_list(APPEND _csc_QMAKE_OPTIONS "CONFIG*=static-runtime")
+        vcpkg_list(APPEND arg_QMAKE_OPTIONS "CONFIG*=static-runtime")
     endif()
 
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -68,14 +68,22 @@ function(vcpkg_qmake_configure)
     qmake_append_program(qmake_build_tools "QMAKE_RC" "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
     qmake_append_program(qmake_build_tools "QMAKE_MT" "${VCPKG_DETECTED_CMAKE_MT}")
 
-    # QMAKE_OBJCOPY ?
+    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_DETECTED_CMAKE_AR MATCHES "ar$")
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=qc")
+    endif()
+
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        qmake_append_program(qmake_build_tools "LINKER" "${VCPKG_DETECTED_CMAKE_LINKER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LIB" "${VCPKG_DETECTED_CMAKE_AR}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_LINKER}")
-        qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_LINKER}")
     else()
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_C_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    endif()
+
+    if(DEFINED VCPKG_QT_TARGET_MKSPEC)
+        vcpkg_list(APPEND arg_QMAKE_OPTIONS "-spec" "${VCPKG_QT_TARGET_MKSPEC}")
     endif()
 
     foreach(buildtype IN LISTS buildtypes)
@@ -87,25 +95,40 @@ function(vcpkg_qmake_configure)
         # Cleanup build directories
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
 
+        set(qmake_comp_flags "")
+        macro(qmake_add_flags qmake_var operation flags)
+            string(STRIP "${flags}" striped_flags)
+            if(striped_flags)
+                vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}")
+            endif()
+        endmacro()
+        
+        qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_COMBINED_RC_FLAGS_${buildtype}}") # not exported by vcpkg_cmake_get_vars yet
+        qmake_add_flags("QMAKE_CFLAGS_${buildtype}" "+=" "${VCPKG_COMBINED_C_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_CXXFLAGS_${buildtype}" "+=" "${VCPKG_COMBINED_CXX_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS" "+=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_SHLIB" "+=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_PLUGIN" "+=" "${VCPKG_COMBINED_MODULE_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LIBFLAGS" "+=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LIBFLAGS_${buildtype}" "+=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}")
+
+        # QMAKE_CXXFLAGS_SHLIB
+
         # Setup qt.conf
         if(NOT VCPKG_QT_CONF_${buildtype})
             set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf")
+        else()
+            # Let a supplied qt.conf override everything.
+            # The file will still be configured so users might use the variables within this scope.
+            set(qmake_build_tools "") 
+            set(qmake_comp_flags "")
         endif()
-        configure_file("${VCPKG_QT_CONF_${buildtype}}" "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf") # Needs probably more TODO for cross builds
+        configure_file("${VCPKG_QT_CONF_${buildtype}}" "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf")
 
         vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-        vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
-
-        set(qmake_comp_flags "")
-        # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
-        vcpkg_list(APPEND qmake_comp_flags "QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
-                                           "QMAKE_RC+=${VCPKG_COMBINED_RC_FLAGS_${buildtype}}"
-                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_COMBINED_C_FLAGS_${buildtype}}"
-                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_COMBINED_CXX_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS*=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LIBFLAGS*=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_EXE*=${VCPKG_COMBINED_EXE_LINKER_FLAGS_${buildtype}}"
-                                           )
+        vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 
         message(STATUS "Configuring ${config_triplet}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
@@ -115,15 +138,17 @@ function(vcpkg_qmake_configure)
         # Options might need to go into a response file? I am a bit concerned about cmd line length. 
         vcpkg_execute_required_process(
             COMMAND ${VCPKG_QMAKE_COMMAND} ${qmake_config_${buildtype}}
-                    ${arg_QMAKE_OPTIONS} ${arg_QMAKE_OPTIONS_DEBUG}
+                    ${arg_QMAKE_OPTIONS} ${arg_QMAKE_OPTIONS_${buildtype}}
                     ${VCPKG_QMAKE_OPTIONS} ${VCPKG_QMAKE_OPTIONS_${buildtype}} # Advanced users need a way to inject QMAKE variables via the triplet.
                     ${qmake_build_tools} ${qmake_comp_flags}
                     "${arg_SOURCE_PATH}"
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf"
                     ${options}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${config_triplet}
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}"
             LOGNAME config-${config_triplet}
+            SAVE_LOG_FILES config.log
         )
+        z_vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${config_triplet}")
         message(STATUS "Configuring ${config_triplet} done")
 
         vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
