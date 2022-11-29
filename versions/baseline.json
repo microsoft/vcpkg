@@ -2264,6 +2264,10 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
+    "fastio": {
+      "baseline": "2022-11-14",
+      "port-version": 0
+    },
     "fastlz": {
       "baseline": "2021-05-10",
       "port-version": 0
