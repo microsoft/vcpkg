@@ -3,6 +3,7 @@
   "version": "2.1",
   "description": "Asynchronous logger with Dynamic Sinks",
   "homepage": "https://github.com/KjellKod/g3log",
+  "license": "Unlicense",
   "supports": "!(arm | uwp)",
   "dependencies": [
     {
