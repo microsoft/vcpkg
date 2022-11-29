@@ -3,6 +3,13 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
+vcpkg_download_distfile(
+    STRING_PATCH
+    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
+    FILENAME vtk-string-bfa3e4.diff
+    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
+)
+
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
@@ -29,6 +36,7 @@ vcpkg_from_github(
         vtkioss.patch
         jsoncpp.patch
         iotr.patch
+        ${STRING_PATCH}
 )
 
 # =============================================================================
