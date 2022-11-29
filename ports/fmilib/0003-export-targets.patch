@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3c11f1..2461ecb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -299,10 +299,18 @@ endif()
+ 
+ file(COPY "${FMILIBRARYHOME}/Config.cmake/fmilib.h" DESTINATION "${FMILibrary_BINARY_DIR}")
+ 
+-install(TARGETS ${FMILIB_TARGETS}
++TARGET_INCLUDE_DIRECTORIES(${FMILIB_TARGETS} INTERFACE $<INSTALL_INTERFACE:include>)
++
++install(TARGETS ${FMILIB_TARGETS} EXPORT unofficial-fmilib-config
+ 	ARCHIVE DESTINATION lib
+ 	LIBRARY DESTINATION lib
+-	RUNTIME DESTINATION lib
++	RUNTIME DESTINATION bin
++)
++
++install(EXPORT unofficial-fmilib-config
++        FILE unofficial-fmilib-config.cmake
++        NAMESPACE unofficial::fmilib::
++        DESTINATION share/unofficial-fmilib
+ )
+ install(FILES 
+ 			"${FMILIBRARYHOME}/FMILIB_Readme.txt"

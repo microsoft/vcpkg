@@ -1,0 +1,13 @@
+diff --git a/backend/CMakeLists.txt b/backend/CMakeLists.txt
+index 854674d..d62176b 100644
+--- a/backend/CMakeLists.txt
++++ b/backend/CMakeLists.txt
+@@ -13,7 +13,7 @@ set(zint_TWODIM_SRCS code16k.c codablock.c dmatrix.c pdf417.c qr.c maxicode.c co
+ set(zint_OUTPUT_SRCS vector.c ps.c svg.c emf.c bmp.c pcx.c gif.c png.c tif.c raster.c output.c)
+ set(zint_SRCS ${zint_OUTPUT_SRCS} ${zint_COMMON_SRCS} ${zint_ONEDIM_SRCS} ${zint_POSTAL_SRCS} ${zint_TWODIM_SRCS})
+ 
+-add_library(zint SHARED ${zint_SRCS})
++add_library(zint ${zint_SRCS})
+ 
+ if(WIN32)
+     target_sources(${PROJECT_NAME} PRIVATE libzint.rc)
