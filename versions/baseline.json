@@ -7844,6 +7844,10 @@
       "baseline": "2.02.00",
       "port-version": 0
     },
+    "vili": {
+      "baseline": "1.0.0+20221123",
+      "port-version": 0
+    },
     "visit-struct": {
       "baseline": "1.0",
       "port-version": 2
