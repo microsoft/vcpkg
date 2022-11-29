@@ -39,7 +39,7 @@
     <_ZVcpkgLinkage />
     <_ZVcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</_ZVcpkgLinkage>
     <_ZVcpkgLinkageMD />
-    <_ZVcpkgLinkageMD Condition="'$(VcpkgUseMD)' == 'true'">-md</_ZVcpkgLinkageMD>
+    <_ZVcpkgLinkageMD Condition="'$(VcpkgUseStatic)' == 'true' and '$(VcpkgUseMD)' == 'true'">-md</_ZVcpkgLinkageMD>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
     <VcpkgTriplet Condition="!$(VcpkgTriplet.EndsWith($(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)))">$(VcpkgTriplet)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
   </PropertyGroup>
