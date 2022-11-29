@@ -1,3 +1,11 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Dobiasd/frugally-deep
+    REF v0.15.19-p0
+    SHA512 3721ab90fcae975497346c459ad5c75b7a39fc43caddd0251119888834e6ebcfa75048a4f95104c874f5397e0320e97c345f1ae8d6a730c4dc8e5429f8f46a49
+    HEAD_REF master
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
