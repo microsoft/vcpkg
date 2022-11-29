@@ -1374,7 +1374,7 @@
     },
     "cgns": {
       "baseline": "4.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -2882,7 +2882,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 3
+      "port-version": 4
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -4762,7 +4762,7 @@
     },
     "matio": {
       "baseline": "1.5.23",
-      "port-version": 0
+      "port-version": 1
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -5506,7 +5506,7 @@
     },
     "openimageio": {
       "baseline": "2.3.17.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openjpeg": {
       "baseline": "2.5.0",
@@ -5685,8 +5685,8 @@
       "port-version": 1
     },
     "paraview": {
-      "baseline": "5.9.1",
-      "port-version": 2
+      "baseline": "5.11.0",
+      "port-version": 0
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6832,6 +6832,10 @@
       "baseline": "0.16.1",
       "port-version": 6
     },
+    "seacas": {
+      "baseline": "2022-11-22",
+      "port-version": 0
+    },
     "seal": {
       "baseline": "4.0.0",
       "port-version": 0
@@ -7848,6 +7852,10 @@
       "baseline": "2.02.00",
       "port-version": 0
     },
+    "verdict": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "vili": {
       "baseline": "1.0.0+20221123",
       "port-version": 0
@@ -7885,16 +7893,16 @@
       "port-version": 1
     },
     "vtk": {
-      "baseline": "9.0.3-pv5.9.1",
-      "port-version": 12
+      "baseline": "9.2.0-pv5.11.0",
+      "port-version": 0
     },
     "vtk-dicom": {
-      "baseline": "0.8.12",
-      "port-version": 2
+      "baseline": "0.8.13",
+      "port-version": 0
     },
     "vtk-m": {
-      "baseline": "1.6.0",
-      "port-version": 2
+      "baseline": "1.9.0",
+      "port-version": 0
     },
     "vulkan": {
       "baseline": "1.1.82.1",
