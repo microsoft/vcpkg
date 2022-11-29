@@ -16,5 +16,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "supports": "!x86 & !arm"
 }
