@@ -3,6 +3,7 @@
   "version-string": "v8.1.0",
   "description": "Port of http_parser to llparse.",
   "homepage": "https://github.com/nodejs/llhttp",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
