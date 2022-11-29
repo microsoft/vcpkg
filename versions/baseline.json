@@ -5,8 +5,8 @@
       "port-version": 2
     },
     "7zip": {
-      "baseline": "22.0",
-      "port-version": 1
+      "baseline": "22.01",
+      "port-version": 0
     },
     "ableton": {
       "baseline": "3.0.5",
@@ -190,7 +190,7 @@
     },
     "arrow": {
       "baseline": "10.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ashes": {
       "baseline": "2022-06-08",
@@ -1313,8 +1313,8 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "3.1.1",
-      "port-version": 2
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -2378,7 +2378,7 @@
     },
     "fmilib": {
       "baseline": "2.0.3",
-      "port-version": 4
+      "port-version": 5
     },
     "fmt": {
       "baseline": "9.1.0",
@@ -2386,7 +2386,7 @@
     },
     "folly": {
       "baseline": "2022.10.31.00",
-      "port-version": 2
+      "port-version": 3
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2785,12 +2785,12 @@
       "port-version": 1
     },
     "gst-rtsp-server": {
-      "baseline": "1.19.2",
-      "port-version": 2
+      "baseline": "1.20.4",
+      "port-version": 0
     },
     "gstreamer": {
-      "baseline": "1.19.2",
-      "port-version": 11
+      "baseline": "1.20.4",
+      "port-version": 0
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -3073,12 +3073,12 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.88",
-      "port-version": 1
+      "baseline": "1.89.1",
+      "port-version": 0
     },
     "imgui-sfml": {
       "baseline": "2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "imguizmo": {
       "baseline": "1.83",
@@ -3631,6 +3631,10 @@
     "libcopp": {
       "baseline": "1.4.1",
       "port-version": 2
+    },
+    "libcorrect": {
+      "baseline": "2018-10-11",
+      "port-version": 0
     },
     "libcpplocate": {
       "baseline": "2.3.0",
@@ -4249,7 +4253,7 @@
       "port-version": 3
     },
     "libssh": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.4+20221123",
       "port-version": 0
     },
     "libssh2": {
@@ -4614,7 +4618,7 @@
     },
     "lua": {
       "baseline": "5.4.4",
-      "port-version": 2
+      "port-version": 3
     },
     "lua-compat53": {
       "baseline": "0.10",
@@ -4846,7 +4850,7 @@
     },
     "milerius-sfml-imgui": {
       "baseline": "1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "mimalloc": {
       "baseline": "2.0.7",
@@ -5366,7 +5370,7 @@
     },
     "ogre": {
       "baseline": "13.4.4",
-      "port-version": 2
+      "port-version": 4
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -5466,7 +5470,7 @@
     },
     "opencv4": {
       "baseline": "4.6.0",
-      "port-version": 8
+      "port-version": 9
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6250,7 +6254,7 @@
     },
     "qtbase": {
       "baseline": "6.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.4.1",
@@ -6314,7 +6318,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.4.1",
@@ -6797,7 +6801,7 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.24.2",
+      "baseline": "2.26.0",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -6941,7 +6945,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.0.0",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -7170,7 +7174,7 @@
     },
     "sqlite3": {
       "baseline": "3.40.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
@@ -7838,6 +7842,10 @@
     },
     "vectorclass": {
       "baseline": "2.02.00",
+      "port-version": 0
+    },
+    "vili": {
+      "baseline": "1.0.0+20221123",
       "port-version": 0
     },
     "visit-struct": {

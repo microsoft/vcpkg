@@ -21,6 +21,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
+        gcs         ARROW_GCS
         jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
         mimalloc    ARROW_MIMALLOC
