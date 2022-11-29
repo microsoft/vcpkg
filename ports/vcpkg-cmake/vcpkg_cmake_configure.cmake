@@ -76,6 +76,14 @@ function(vcpkg_cmake_configure)
     if(arg_WINDOWS_USE_MSBUILD AND VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH arch)
         vcpkg_list(APPEND architecture_options "-A${arch}")
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
+        endif()
+        if(NOT generator)
+            message(FATAL_ERROR "Unable to determine appropriate Visual Studio generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
+    VCPKG_TARGET_ARCHITECTURE: ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
     elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(ninja_host)
@@ -177,6 +185,7 @@ function(vcpkg_cmake_configure)
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     # Sets configuration variables for macOS builds
