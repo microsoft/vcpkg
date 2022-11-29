@@ -1861,11 +1861,11 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.75.0",
+      "baseline": "2.76.2",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.7.2",
+      "baseline": "3.10.0",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -2262,6 +2262,10 @@
     },
     "fastgltf": {
       "baseline": "0.2.0",
+      "port-version": 0
+    },
+    "fastio": {
+      "baseline": "2022-11-14",
       "port-version": 0
     },
     "fastlz": {
@@ -3194,7 +3198,7 @@
     },
     "joltphysics": {
       "baseline": "2.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
@@ -3725,8 +3729,8 @@
       "port-version": 1
     },
     "libffi": {
-      "baseline": "3.4.2",
-      "port-version": 6
+      "baseline": "3.4.4",
+      "port-version": 0
     },
     "libfido2": {
       "baseline": "1.10.0",
@@ -4254,7 +4258,7 @@
     },
     "libssh": {
       "baseline": "0.10.4+20221123",
-      "port-version": 0
+      "port-version": 1
     },
     "libssh2": {
       "baseline": "1.10.0",
@@ -5862,7 +5866,7 @@
     },
     "poco": {
       "baseline": "1.12.4",
-      "port-version": 2
+      "port-version": 3
     },
     "podofo": {
       "baseline": "0.9.8",
@@ -7737,7 +7741,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.30.0",
+      "baseline": "20.31.0",
       "port-version": 0
     },
     "v-hacd": {

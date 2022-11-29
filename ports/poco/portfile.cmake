@@ -12,7 +12,6 @@ vcpkg_from_github(
         0003-fix-dependency.patch
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
-        0006-fix-install-data-mysql.patch
         0007-find-pcre2.patch
 )
 
