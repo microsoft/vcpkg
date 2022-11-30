@@ -6,6 +6,7 @@
   "license": "BSD-3-Clause",
   "supports": "linux",
   "dependencies": [
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,8 +15,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-	"zlib",
-	"openssl"
+    "zlib"
   ],
   "features": {
     "zlib": {
