@@ -7,7 +7,7 @@ index 4e796ec..9693dc7 100644
                            fallback: ['freetype2', 'freetype_dep'])
  
 -if freetype_dep.found() and freetype_dep.type_name() == 'pkgconfig'
-+if freetype_dep.found() and freetype_dep.type_name() == 'cmake'
++if freetype_dep.found()
    freetype2_pc = 'freetype2'
  endif
  
