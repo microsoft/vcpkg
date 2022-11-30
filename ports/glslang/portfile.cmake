@@ -8,6 +8,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     ignore-crt.patch
+    install-to-datadir.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
