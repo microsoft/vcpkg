@@ -11,42 +11,106 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
-function(checkout_in_path PATH URL REF)
-    if(EXISTS "${PATH}")
-        return()
+# Declare a named external dependency for download with vcpkg_from_git,
+# and validate against upstream's DEPS.
+function(declare_external_from_git name)
+    set(skia_external_git_${name} ${ARGN} PARENT_SCOPE)
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URL;REF" "")
+    if(NOT arg_URL OR NOT arg_REF)
+        message(FATAL_ERROR "Arguments URL and REF are required.")
     endif()
-
-    vcpkg_from_git(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        URL "${URL}"
-        REF "${REF}"
-    )
-    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
-    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+    set(actual "${arg_URL}@${arg_REF}")
+    file(STRINGS "${SOURCE_PATH}/DEPS" upstream REGEX "\"third_party/externals/${name}\"")
+    string(FIND "${upstream}" "${arg_URL}@${arg_REF}" pos)
+    if(pos STREQUAL "-1")
+        string(REGEX REPLACE "^[^:]*:  *" "" upstream "${upstream}")
+        message(WARNING "Dependency ${name} diverges from upstream. Upstream: ${upstream} Actual: \"${actual}\"")
+    endif()
 endfunction()
-
-set(EXTERNALS "${SOURCE_PATH}/third_party/externals")
-file(MAKE_DIRECTORY "${EXTERNALS}")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
-# define SKIA_USE_MIRROR in a triplet to use the mirrors
-checkout_in_path("${EXTERNALS}/sfntly"
-    "https://github.com/googlefonts/sfntly"
-    "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
+declare_external_from_git(abseil-cpp
+    URL "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
+    REF "c5a424a2a21005660b182516eb7a079cd8021699"
 )
-checkout_in_path("${EXTERNALS}/dng_sdk"
-    "https://android.googlesource.com/platform/external/dng_sdk"
-    "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+declare_external_from_git(d3d12allocator
+    URL "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+    REF "169895d529dfce00390a20e69c2f516066fe7a3b"
 )
-checkout_in_path("${EXTERNALS}/libgifcodec"
-    "https://skia.googlesource.com/libgifcodec"
-    "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
+declare_external_from_git(dawn
+    URL "https://dawn.googlesource.com/dawn.git"
+    REF "30fa0d8d2ced43e44baa522dd4bd4684b14a3099"
 )
-checkout_in_path("${EXTERNALS}/piex"
-    "https://android.googlesource.com/platform/external/piex"
-    "bb217acdca1cc0c16b704669dd6f91a1b509c406"
+declare_external_from_git(dng_sdk
+    URL "https://android.googlesource.com/platform/external/dng_sdk.git"
+    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
 )
+declare_external_from_git(jinja2
+    URL "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
+    REF "ee69aa00ee8536f61db6a451f3858745cf587de6"
+)
+declare_external_from_git(libgifcodec
+    URL "https://skia.googlesource.com/libgifcodec"
+    REF "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
+)
+declare_external_from_git(markupsafe
+    URL "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
+    REF "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
+)
+declare_external_from_git(piex
+    URL "https://android.googlesource.com/platform/external/piex.git"
+    REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
+)
+declare_external_from_git(sfntly
+    URL "https://github.com/googlefonts/sfntly.git"
+    REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
+)
+declare_external_from_git(spirv-cross
+    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+    REF "61c603f3baa5270e04bcfb6acf83c654e3c57679"
+)
+declare_external_from_git(spirv-headers
+    URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+    REF "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
+)
+declare_external_from_git(spirv-tools
+    URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+    REF "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
+)
+declare_external_from_git(tint
+    URL "https://dawn.googlesource.com/tint"
+    REF "200492e32b94f042d9942154fb4fa7f93bb8289a"
+)
+declare_external_from_git(vulkan-headers
+    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
+    REF "c896e2f920273bfee852da9cca2a356bc1c2031e"
+)
+declare_external_from_git(vulkan-tools
+    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
+    REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
+)
+
+function(download_externals)
+    list(REMOVE_DUPLICATES ARGN)
+    foreach(name IN LISTS ARGN)
+        if(NOT DEFINED "skia_external_git_${name}")
+            message(FATAL_ERROR "Unknown external dependency '${name}'")
+        endif()
+        set(dir "third_party/externals/${name}")
+        if(EXISTS "${SOURCE_PATH}/${dir}")
+            message(STATUS "Using existing ${dir}")
+            continue()
+        endif()
+        message(STATUS "Creating ${dir}")
+        file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/externals")
+        vcpkg_from_git(
+            OUT_SOURCE_PATH staging_dir
+            ${skia_external_git_${name}}
+        )
+        file(RENAME "${staging_dir}" "${SOURCE_PATH}/${dir}")
+    endforeach()
+endfunction()
 
 function(third_party_from_pkgconfig gn_group)
     cmake_parse_arguments(PARSE_ARGV 1 arg "" "PATH" "DEFINES;MODULES")
@@ -127,6 +191,14 @@ else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
+
+set(required_externals
+    dng_sdk
+    libgifcodec
+    piex
+    sfntly
+)
+
 if("fontconfig" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_fontconfig=true")
     third_party_from_pkgconfig(fontconfig PATH "third_party")
@@ -170,27 +242,13 @@ if("vulkan" IN_LIST FEATURES)
 endif()
 
 if("direct3d" IN_LIST FEATURES)
+    list(APPEND required_externals
+        spirv-cross
+        spirv-headers
+        spirv-tools
+        d3d12allocator
+    )
     string(APPEND OPTIONS " skia_use_direct3d=true")
-
-    checkout_in_path("${EXTERNALS}/spirv-cross"
-        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-        "61c603f3baa5270e04bcfb6acf83c654e3c57679"
-    )
-
-    checkout_in_path("${EXTERNALS}/spirv-headers"
-        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-        "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
-    )
-
-    checkout_in_path("${EXTERNALS}/spirv-tools"
-        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-        "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
-    )
-
-    checkout_in_path("${EXTERNALS}/d3d12allocator"
-        "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
-        "169895d529dfce00390a20e69c2f516066fe7a3b"
-    )
 endif()
 
 if("dawn" IN_LIST FEATURES)
@@ -208,6 +266,20 @@ They can be installed on Debian based systems via
         )
     endif()
 
+    list(APPEND required_externals
+        spirv-cross
+        spirv-headers
+        spirv-tools
+        tint
+        jinja2
+        markupsafe
+## Remove
+        vulkan-headers
+        vulkan-tools
+        abseil-cpp
+## REMOVE ^
+        dawn
+    )
     string(APPEND OPTIONS " skia_use_dawn=true")
     string(REPLACE "dynamic" "shared" DAWN_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
     vcpkg_list(APPEND SKIA_TARGETS
@@ -215,63 +287,15 @@ They can be installed on Debian based systems via
         "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
         "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
     )
+endif()
 
-   checkout_in_path("${EXTERNALS}/spirv-cross"
-       "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-       "61c603f3baa5270e04bcfb6acf83c654e3c57679"
-   )
-
-   checkout_in_path("${EXTERNALS}/spirv-headers"
-       "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-       "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
-   )
-
-   checkout_in_path("${EXTERNALS}/spirv-tools"
-       "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-       "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
-   )
-
-   checkout_in_path("${EXTERNALS}/tint"
-         "https://dawn.googlesource.com/tint"
-         "200492e32b94f042d9942154fb4fa7f93bb8289a"
-   )
-
-   checkout_in_path("${EXTERNALS}/jinja2"
-       "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-       "ee69aa00ee8536f61db6a451f3858745cf587de6"
-   )
-
-   checkout_in_path("${EXTERNALS}/markupsafe"
-       "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-       "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
-   )
-
-## Remove
-   checkout_in_path("${EXTERNALS}/vulkan-headers"
-       "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-       "c896e2f920273bfee852da9cca2a356bc1c2031e"
-   )
-
-   checkout_in_path("${EXTERNALS}/vulkan-tools"
-       "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
-       "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
-   )
-
-   checkout_in_path("${EXTERNALS}/abseil-cpp"
-       "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
-       "c5a424a2a21005660b182516eb7a079cd8021699"
-   )
-
-## REMOVE ^
-   checkout_in_path("${EXTERNALS}/dawn"
-       "https://dawn.googlesource.com/dawn.git"
-       "30fa0d8d2ced43e44baa522dd4bd4684b14a3099"
-   )
-
-   vcpkg_find_acquire_program(GIT)
-   file(READ "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py" DVG_CONTENT)
-   string(REPLACE "return 'git.bat' if sys.platform == 'win32' else 'git'" "return '${GIT}'" DVG_CONTENT ${DVG_CONTENT})
-   file(WRITE "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py" ${DVG_CONTENT})
+download_externals(${required_externals})
+if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py")
+    vcpkg_find_acquire_program(GIT)
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py"
+        "get_git()," 
+        "\"${GIT}\","
+    )
 endif()
 
 vcpkg_cmake_get_vars(cmake_vars_file)
