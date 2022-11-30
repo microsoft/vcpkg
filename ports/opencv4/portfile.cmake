@@ -560,7 +560,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
