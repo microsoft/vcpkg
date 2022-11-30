@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6198aef6f..d86f532b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -942,7 +942,7 @@ ENDIF()
+ IF(NOT TORCH_FOUND)
+    SET(TORCH "//")
+ ENDIF()
+-IF(NOT Python3_FOUND)
++IF(NOT WITH_PYTHON)
+    SET(PYTHON "//")
+ ENDIF()
+ IF(ADD_VTK_GUI_SUPPORT_QT_TO_CONF)
+@@ -1213,7 +1213,7 @@ ELSE()
+ MESSAGE(STATUS "  With SupertPoint          = NO (libtorch not found)")
+ ENDIF()
+ 
+-IF(Python3_FOUND)
++IF(WITH_PYTHON)
+ MESSAGE(STATUS "  With Python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}            = YES (License: PSF)")
+ ELSEIF(NOT WITH_PYTHON)
+ MESSAGE(STATUS "  With Python3              = NO (WITH_PYTHON=OFF)")
+diff --git a/corelib/src/CMakeLists.txt b/corelib/src/CMakeLists.txt
+index 25d5e2d2a..0c935dea4 100644
+--- a/corelib/src/CMakeLists.txt
++++ b/corelib/src/CMakeLists.txt
+@@ -192,7 +192,7 @@ IF(TORCH_FOUND)
+ 	)
+ ENDIF(TORCH_FOUND)
+ 
+-IF(Python3_FOUND)
++IF(WITH_PYTHON)
+ 	SET(LIBRARIES
+ 		${LIBRARIES}
+ 		Python3::Python

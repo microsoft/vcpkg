@@ -10,6 +10,7 @@ vcpkg_from_github(
         0001-add-bigobj-for-msvc.patch
         0002-fix-opencv46.patch
         0003-fix-qt.patch
+        python3.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,7 +22,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_APP=OFF
         -DBUILD_EXAMPLES=OFF
