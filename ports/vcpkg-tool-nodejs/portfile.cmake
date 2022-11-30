@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(PROGNAME node)
@@ -55,7 +56,7 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 message(STATUS "ARCHIVE_PATH: '${ARCHIVE_PATH}'")
 
 vcpkg_execute_in_download_mode(
-    COMMAND ${CMAKE_COMMAND} -E tar xzf "${ARCHIVE_PATH}" 
+    COMMAND ${CMAKE_COMMAND} -E tar xzf "${ARCHIVE_PATH}"
     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
 )
 

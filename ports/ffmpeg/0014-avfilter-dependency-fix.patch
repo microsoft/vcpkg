@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index a092a6b457..41e55b4101 100755
+index 26e512e..c0377b6 100755
 --- a/configure
 +++ b/configure
-@@ -3666,6 +3666,18 @@ vpp_qsv_filter_select="qsvvpp"
+@@ -3674,6 +3674,18 @@ vpp_qsv_filter_select="qsvvpp"
  xfade_opencl_filter_deps="opencl"
  yadif_cuda_filter_deps="ffnvcodec"
  yadif_cuda_filter_deps_any="cuda_nvcc cuda_llvm"

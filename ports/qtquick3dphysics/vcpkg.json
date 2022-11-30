@@ -1,0 +1,13 @@
+{
+  "name": "qtquick3dphysics",
+  "version": "6.4.1",
+  "description": "Physics engine integration for Qt Quick 3D",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtquick3d",
+      "default-features": false
+    }
+  ]
+}

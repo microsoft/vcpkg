@@ -1,7 +1,6 @@
 {
   "name": "qt",
-  "version": "6.3.2",
-  "port-version": 1,
+  "version": "6.4.1",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -85,7 +84,16 @@
       "features": [
         "gstreamer"
       ],
-      "platform": "!(static & windows)"
+      "platform": "!windows"
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "ffmpeg",
+        "gstreamer"
+      ],
+      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
@@ -195,6 +203,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtbase",
+          "features": [
+            "gles2"
+          ],
+          "platform": "linux"
         },
         {
           "name": "qtwayland",

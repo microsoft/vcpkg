@@ -1,6 +1,6 @@
 {
   "name": "qt5-speech",
-  "version": "5.15.6",
+  "version": "5.15.7",
   "description": "Qt5 Speech Module",
   "license": null,
   "dependencies": [

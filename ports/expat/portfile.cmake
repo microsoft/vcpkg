@@ -1,18 +1,13 @@
-file(READ ${CMAKE_CURRENT_LIST_DIR}/vcpkg.json vcpkg_json)
-string(JSON VERSION GET "${vcpkg_json}" "version")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_2_4_9
-    SHA512 6bf92516ce2642b2cdcbc586aaac0f706f125394fa428670f9b8b042a1f393e3b9dda1a24e58e6c8ad8b4ff3303cb5a8700628c6c04a881a06251c08be3759d3
+    REF R_2_5_0
+    SHA512 779f0d0f3f2d8b33db0fd044864ab5ab1a40f20501f792fe90ad0d18de536c4765c3749f120e21fec11a0e6c89af1dc576d1fe261c871ca44a594f7b61fd1d9e
     HEAD_REF master
-    PATCHES
-        "pkgconfig_fix.patch" # https://github.com/libexpat/libexpat/pull/656
-        "mingw_static_fix.patch" # https://github.com/libexpat/libexpat/pull/658
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EXPAT_CRT_LINKAGE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/expat"
@@ -22,6 +17,7 @@ vcpkg_cmake_configure(
         -DEXPAT_BUILD_TOOLS=OFF
         -DEXPAT_BUILD_DOCS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
+        -DEXPAT_MSVC_STATIC_CRT=${EXPAT_CRT_LINKAGE}
         -DEXPAT_BUILD_PKGCONFIG=ON
 )
 

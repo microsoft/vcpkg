@@ -117,7 +117,10 @@ if("tools" IN_LIST FEATURES)
     endif()
 
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++)
+        list(APPEND HDF5_TOOLS h5cc h5hlcc)
+        if("cpp" IN_LIST FEATURES)
+            list(APPEND HDF5_TOOLS h5c++ h5hlc++)
+        endif()
     endif()
 
     if("parallel" IN_LIST FEATURES)
