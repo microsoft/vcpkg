@@ -3,6 +3,7 @@
   "version": "0.8.13",
   "description": "DICOM for VTK",
   "homepage": "https://github.com/dgobbi/vtk-dicom",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "python3",
