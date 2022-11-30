@@ -4573,7 +4573,7 @@
       "port-version": 2
     },
     "llhttp": {
-      "baseline": "v8.1.0",
+      "baseline": "8.1.0",
       "port-version": 0
     },
     "llvm": {
