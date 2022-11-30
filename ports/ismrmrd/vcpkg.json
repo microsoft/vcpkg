@@ -4,7 +4,7 @@
   "description": "ISMRM Raw Data Format",
   "homepage": "https://github.com/ismrmrd/ismrmrd",
   "license": "BSD-3-Clause",
-  "supports": "!x86 & !arm",
+  "supports": "!(x86 | arm | wasm32)",
   "dependencies": [
     "boost",
     "fftw3",
