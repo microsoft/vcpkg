@@ -20,7 +20,7 @@
         "python",
         "mpi"
       ],
-      "platform": "!(windows & static)"
+      "platform": "!(windows & static) & !x86"
     },
     {
       "name": "vtk",
@@ -28,7 +28,8 @@
       "features": [
         "gdal",
         "utf8"
-      ]
+      ],
+      "platform": "!x86"
     },
     {
       "name": "vtk",
