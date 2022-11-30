@@ -7,7 +7,7 @@ if(NOT TARGET unofficial::skia::skia)
         set(vcpkg_root "")
     endif()
 
-    function(z_vcpkg_skia_set_dependencies out_var path libraries)
+    function(z_vcpkg_skia_get_link_libraries out_var path libraries)
         set(libs "")
         foreach(lib IN LISTS libraries)
             if(lib MATCHES [[^/|^(dl|m|pthread)$]])
@@ -35,7 +35,7 @@ if(NOT TARGET unofficial::skia::skia)
 
     find_library(z_vcpkg_skia_lib_release NAMES skia skia.dll PATHS "${vcpkg_root}/lib" NO_DEFAULT_PATH)
     mark_as_advanced(z_vcpkg_skia_lib_release)
-    z_vcpkg_skia_set_dependencies(
+    z_vcpkg_skia_get_link_libraries(
         z_vcpkg_skia_link_libs_release
         "${vcpkg_root}/lib;${vcpkg_root}/debug/lib"
         "@SKIA_DEP_REL@"
@@ -51,7 +51,7 @@ if(NOT TARGET unofficial::skia::skia)
     find_library(z_vcpkg_skia_lib_debug NAMES skia skia.dll PATHS "${vcpkg_root}/debug/lib" NO_DEFAULT_PATH)
     mark_as_advanced(z_vcpkg_skia_lib_debug)
     if(z_vcpkg_skia_lib_debug)
-        z_vcpkg_skia_set_dependencies(
+        z_vcpkg_skia_get_link_libraries(
             z_vcpkg_skia_link_libs_debug
             "${vcpkg_root}/debug/lib;${vcpkg_root}/lib"
             "@SKIA_DEP_DBG@"
