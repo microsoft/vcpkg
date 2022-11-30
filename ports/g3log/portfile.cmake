@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KjellKod/g3log
@@ -9,11 +10,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" G3_SHARED_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" G3_SHARED_RUNTIME)
 
-# https://github.com/KjellKod/g3log#prerequisites
-set(VERSION "2.1")
-
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DG3_SHARED_LIB=${G3_SHARED_LIB} # Options.cmake
         -DG3_SHARED_RUNTIME=${G3_SHARED_RUNTIME} # Options.cmake
