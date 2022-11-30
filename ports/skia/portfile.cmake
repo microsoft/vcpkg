@@ -6,7 +6,7 @@ vcpkg_from_git(
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
     PATCHES
         python-executable.patch
-        msvc-x86.patch
+        disable-msvc-env-setup.patch
         uwp.patch
 )
 
