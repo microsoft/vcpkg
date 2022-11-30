@@ -5506,7 +5506,7 @@
     },
     "openimageio": {
       "baseline": "2.3.17.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openjpeg": {
       "baseline": "2.5.0",
@@ -6678,7 +6678,7 @@
     },
     "rtabmap": {
       "baseline": "0.20.13",
-      "port-version": 4
+      "port-version": 5
     },
     "rtaudio": {
       "baseline": "2021-11-16",
