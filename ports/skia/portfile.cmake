@@ -91,12 +91,37 @@ declare_external_from_git(vulkan-tools
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
 )
 
-function(download_externals)
+# Declare a named external dependencies to be resolved via pkgconfig.
+function(declare_external_from_pkgconfig name)
+    set(skia_external_pkgconfig_${name} "${ARGN}" PARENT_SCOPE)
+endfunction()
+
+declare_external_from_pkgconfig(expat)
+declare_external_from_pkgconfig(fontconfig PATH "third_party")
+declare_external_from_pkgconfig(freetype2)
+declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
+declare_external_from_pkgconfig(icu MODULES icu-uc DEFINES "U_USING_ICU_NAMESPACE=0")
+declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
+declare_external_from_pkgconfig(libpng)
+declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
+declare_external_from_pkgconfig(zlib)
+
+# Download and integrate named external dependencies.
+# Downlods must be handled before vcpkg in order to support --only-downloads mode.
+function(get_externals)
     list(REMOVE_DUPLICATES ARGN)
+    set(from_git "")
+    set(from_pkgconfig "")
     foreach(name IN LISTS ARGN)
-        if(NOT DEFINED "skia_external_git_${name}")
+        if(DEFINED "skia_external_git_${name}")
+            list(APPEND from_git "${name}")
+        elseif(DEFINED "skia_external_pkgconfig_${name}")
+            list(APPEND from_pkgconfig "${name}")
+        else()
             message(FATAL_ERROR "Unknown external dependency '${name}'")
         endif()
+    endforeach()
+    foreach(name IN LISTS from_git)
         set(dir "third_party/externals/${name}")
         if(EXISTS "${SOURCE_PATH}/${dir}")
             message(STATUS "Using existing ${dir}")
@@ -109,6 +134,9 @@ function(download_externals)
             ${skia_external_git_${name}}
         )
         file(RENAME "${staging_dir}" "${SOURCE_PATH}/${dir}")
+    endforeach()
+    foreach(name IN LISTS from_pkgconfig)
+        third_party_from_pkgconfig("${name}" ${skia_external_pkgconfig_${name}})
     endforeach()
 endfunction()
 
@@ -156,12 +184,6 @@ function(third_party_from_pkgconfig gn_group)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/third-party.gn.in" "${SOURCE_PATH}/${arg_PATH}/BUILD.gn" @ONLY)
 endfunction()
 
-third_party_from_pkgconfig(expat)
-third_party_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
-third_party_from_pkgconfig(libpng)
-third_party_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
-third_party_from_pkgconfig(zlib)
-
 set(known_cpus x86 x64 arm arm64 wasm)
 if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
     message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
@@ -191,38 +213,42 @@ else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
-
 set(required_externals
     dng_sdk
+    expat
     libgifcodec
+    libjpeg
+    libpng
+    libwebp
     piex
     sfntly
+    zlib
 )
 
 if("fontconfig" IN_LIST FEATURES)
+    list(APPEND required_externals fontconfig)
     string(APPEND OPTIONS " skia_use_fontconfig=true")
-    third_party_from_pkgconfig(fontconfig PATH "third_party")
 else()
     string(APPEND OPTIONS " skia_use_fontconfig=false")
 endif()
 
 if("freetype" IN_LIST FEATURES)
+    list(APPEND required_externals freetype2)
     string(APPEND OPTIONS " skia_use_freetype=true")
-    third_party_from_pkgconfig(freetype2)
 else()
     string(APPEND OPTIONS " skia_use_freetype=false")
 endif()
 
 if("harfbuzz" IN_LIST FEATURES)
+    list(APPEND required_externals harfbuzz)
     string(APPEND OPTIONS " skia_use_harfbuzz=true")
-    third_party_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 else()
     string(APPEND OPTIONS " skia_use_harfbuzz=false")
 endif()
 
 if("icu" IN_LIST FEATURES)
+    list(APPEND required_externals icu)
     string(APPEND OPTIONS " skia_use_icu=true")
-    third_party_from_pkgconfig(icu MODULES icu-uc DEFINES "U_USING_ICU_NAMESPACE=0")
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -289,7 +315,7 @@ They can be installed on Debian based systems via
     )
 endif()
 
-download_externals(${required_externals})
+get_externals(${required_externals})
 if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py")
     vcpkg_find_acquire_program(GIT)
     vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py"
@@ -419,7 +445,7 @@ function(get_definitions out_var desc_json target)
 endfunction()
 
 function(get_link_libs out_var desc_json target)
-    # From ldflags, we only want lib names or filepaths (cf. third_party_from_pkgconfig)
+    # From ldflags, we only want lib names or filepaths (cf. declare_external_from_pkgconfig)
     list_from_json(ldflags "${desc_json}" "${target}" "ldflags")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         list(FILTER ldflags INCLUDE REGEX "[.]lib\$")
