@@ -1,0 +1,35 @@
+diff --git a/.gn b/.gn
+index 1d734b3..407e403 100644
+--- a/.gn
++++ b/.gn
+@@ -1,5 +1,4 @@
+ buildconfig = "//gn/BUILDCONFIG.gn"
+-script_executable = "python3"
+ 
+ default_args = {
+   angle_standalone = false
+diff --git a/gn/skia.gni b/gn/skia.gni
+index b81c0da..86f19bf 100644
+--- a/gn/skia.gni
++++ b/gn/skia.gni
+@@ -9,6 +9,7 @@ if (!defined(is_skia_standalone)) {
+ is_skia_dev_build = is_skia_standalone && !is_official_build
+ 
+ declare_args() {
++  script_executable = "python3"
+   skia_android_serial = ""
+   skia_compile_modules = false
+   skia_compile_sksl_tests = false
+diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
+index e4e28d6..1a20843 100644
+--- a/gn/toolchain/BUILD.gn
++++ b/gn/toolchain/BUILD.gn
+@@ -232,7 +232,7 @@ toolchain("msvc") {
+ 
+   tool("copy") {
+     cp_py = rebase_path("../cp.py")
+-    command = "$shell python3 \"$cp_py\" {{source}} {{output}}"
++    command = "$shell \"script_executable\" \"$cp_py\" {{source}} {{output}}"
+     description = "copy {{source}} {{output}}"
+   }
+ }

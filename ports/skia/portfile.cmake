@@ -4,14 +4,11 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/google/skia
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
+    PATCHES
+        python-executable.patch
+        msvc-x86.patch
+        uwp.patch
 )
-vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" " \$win_sdk/bin/SetEnv.cmd /x86 " " echo . ")
-vcpkg_replace_string("${SOURCE_PATH}/src/utils/win/SkWGL_win.cpp" "(WINUWP)" "(SK_WINUWP)")
-
-# Replace hardcoded python paths
-vcpkg_find_acquire_program(PYTHON3)
-vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
-vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
@@ -225,6 +222,9 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_gene
         "\"${GIT}\","
     )
 endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+string(APPEND OPTIONS " script_executable=\"${PYTHON3}\"")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
