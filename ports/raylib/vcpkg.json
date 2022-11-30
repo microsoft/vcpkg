@@ -8,7 +8,7 @@
   "dependencies": [
     {
       "name": "glfw3",
-      "platform": "!windows"
+      "platform": "!(windows | emscripten)"
     },
     {
       "name": "vcpkg-cmake",
