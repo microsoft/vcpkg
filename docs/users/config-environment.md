@@ -106,7 +106,8 @@ Setting `VCPKG_NO_CI` disables vcpkg's CI environment detection heuristics.
 
 #### VSLANG
 
-This environment variable allows us to change the language used to display messages. It should be set to one of the 14 supported LCIDs (locale identifier, 4-byte value corresponding to a language). 
+This environment variable sets the language vcpkg uses to display messages. It should be set to one of the 14 supported LCIDs (locale identifier, 4-byte value corresponding to a language). 
 
-For example: 1033 corresponds to the English language. For a full list of support LCIDs see [Localization](https://github.com/microsoft/vcpkg-tool/blob/main/docs/localization.md)
+For example: 1033 corresponds to the English (US) language. 
+For a full list of supported LCIDs see [Localization](https://github.com/microsoft/vcpkg-tool/blob/main/docs/localization.md).
 
