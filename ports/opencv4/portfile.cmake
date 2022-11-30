@@ -461,7 +461,7 @@ if (NOT VCPKG_BUILD_TYPE)
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(1)
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
 if(${BUILD_opencv_dnn})
