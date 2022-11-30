@@ -3,6 +3,8 @@
   "version": "1.13.0",
   "description": "ISMRM Raw Data Format",
   "homepage": "https://github.com/ismrmrd/ismrmrd",
+  "license": "BSD-3-Clause",
+  "supports": "!x86 & !arm",
   "dependencies": [
     "boost",
     "fftw3",
@@ -16,6 +18,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "supports": "!x86 & !arm"
+  ]
 }
