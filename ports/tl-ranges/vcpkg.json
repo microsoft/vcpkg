@@ -1,6 +1,6 @@
 {
   "name": "tl-ranges",
-  "version-date": "2021-12-02",
+  "version-date": "2022-12-01",
   "description": "Ranges that didn't make C++20",
   "homepage": "https://tl.tartanllama.xyz",
   "dependencies": [
