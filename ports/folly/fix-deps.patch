@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 1689f9a..1d3295a 100644
+index 1689f9a..801d562 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -28,10 +28,24 @@ endif()
+@@ -28,10 +28,30 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -21,6 +21,12 @@ index 1689f9a..1d3295a 100644
 +if (NOT @CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium@)
 +    find_dependency(unofficial-sodium CONFIG)
 +endif()
++if (NOT @CMAKE_DISABLE_FIND_PACKAGE_Snappy@)
++	find_dependency(Snappy CONFIG)
++endif()
++if (NOT @CMAKE_DISABLE_FIND_PACKAGE_LZ4@)
++    find_dependency(lz4 CONFIG)
++endif()
 +find_dependency(fmt CONFIG)
  
  set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
@@ -30,7 +36,7 @@ index 1689f9a..1d3295a 100644
      context
      filesystem
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 4b78e9f..6228bf9 100644
+index 4b78e9f..d4c224e 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -105,8 +111,20 @@ index 4b78e9f..6228bf9 100644
  endif()
  
  find_package(OpenSSL 1.1.1 MODULE REQUIRED)
-@@ -111,11 +112,15 @@ if (LZ4_FOUND)
-   list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
+@@ -104,25 +105,29 @@ if (LIBLZMA_FOUND)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
+ endif()
+ 
+-find_package(LZ4 MODULE)
+-set(FOLLY_HAVE_LIBLZ4 ${LZ4_FOUND})
+-if (LZ4_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LZ4_INCLUDE_DIR})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
++if (NOT CMAKE_DISABLE_FIND_PACKAGE_LZ4)
++  find_package(lz4 CONFIG)
++  if(TARGET lz4::lz4)
++    list(APPEND FOLLY_LINK_LIBRARIES lz4::lz4)
++  endif()
  endif()
  
 -find_package(Zstd MODULE)
@@ -125,7 +143,19 @@ index 4b78e9f..6228bf9 100644
 +    endif()
  endif()
  
- find_package(Snappy MODULE)
+-find_package(Snappy MODULE)
+-set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
+-if (SNAPPY_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
+-  list(APPEND FOLLY_LINK_LIBRARIES ${SNAPPY_LIBRARY})
++if (NOT CMAKE_DISABLE_FIND_PACKAGE_Snappy)
++    find_package(Snappy CONFIG)
++    if(TARGET Snappy::snappy)
++	    list(APPEND FOLLY_LINK_LIBRARIES Snappy::snappy)
++    endif()
+ endif()
+ 
+ find_package(LibDwarf)
 @@ -141,9 +146,12 @@ find_package(LibUring)
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
