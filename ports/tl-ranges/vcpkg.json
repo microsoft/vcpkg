@@ -3,6 +3,7 @@
   "version-date": "2022-12-01",
   "description": "Ranges that didn't make C++20",
   "homepage": "https://tl.tartanllama.xyz",
+  "license": "CC0-1.0"
   "dependencies": [
     {
       "name": "vcpkg-cmake",
