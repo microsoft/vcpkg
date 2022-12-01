@@ -1,4 +1,4 @@
- # highfive should be updated together with hdf5
+# highfive should be updated together with hdf5
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
