@@ -1,10 +1,9 @@
 # Declare a named external dependency for download with vcpkg_from_git,
 # and validate against upstream's DEPS.
 function(declare_external_from_git name)
-    set(skia_external_git_${name} ${ARGN} PARENT_SCOPE)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URL;REF" "")
-    if(NOT arg_URL OR NOT arg_REF)
-        message(FATAL_ERROR "Arguments URL and REF are required.")
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URL;REF;LICENSE_FILE" "")
+    if(NOT arg_URL OR NOT arg_REF OR NOT arg_LICENSE_FILE)
+        message(FATAL_ERROR "Arguments URL, REF and LICENSE_FILE are required.")
     endif()
     set(actual "${arg_URL}@${arg_REF}")
     file(STRINGS "${SOURCE_PATH}/DEPS" upstream REGEX "\"third_party/externals/${name}\"")
@@ -13,6 +12,9 @@ function(declare_external_from_git name)
         string(REGEX REPLACE "^[^:]*:  *" "" upstream "${upstream}")
         message(WARNING "Dependency ${name} diverges from upstream. Upstream: ${upstream} Actual: \"${actual}\"")
     endif()
+    set(skia_external_license_${name} "${arg_LICENSE_FILE}" PARENT_SCOPE)
+    list(REMOVE_ITEM ARGN "LICENSE_FILE" "${arg_LICENSE_FILE}")
+    set(skia_external_git_${name} "${ARGN}" PARENT_SCOPE)
 endfunction()
 
 # Declare a named external dependencies to be resolved via pkgconfig.
@@ -23,6 +25,10 @@ endfunction()
 # Download and integrate named external dependencies.
 # Downlods must be handled before vcpkg in order to support --only-downloads mode.
 function(get_externals)
+    set(licenses_dir "${SOURCE_PATH}/third_party_licenses")
+    file(REMOVE_RECURSE "${licenses_dir}")
+    file(MAKE_DIRECTORY "${licenses_dir}")
+
     list(REMOVE_DUPLICATES ARGN)
     set(from_git "")
     set(from_pkgconfig "")
@@ -48,6 +54,10 @@ function(get_externals)
             ${skia_external_git_${name}}
         )
         file(RENAME "${staging_dir}" "${SOURCE_PATH}/${dir}")
+
+        set(license_file "${SOURCE_PATH}/${dir}/${skia_external_license_${name}}")
+        cmake_path(GET license_file FILENAME filename)
+        file(COPY_FILE "${license_file}" "${licenses_dir}/## ${name} ${filename}")
     endforeach()
     foreach(name IN LISTS from_pkgconfig)
         third_party_from_pkgconfig("${name}" ${skia_external_pkgconfig_${name}})
