@@ -51,8 +51,21 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(_vcpkg_charset "")
     endif()
 
+    if ("${VCPKG_WARNING_FLAGS}" STREQUAL "")
+        set(VCPKG_WARNING_FLAGS "/W3")
+    endif()
+
+    if ("${VCPKG_OPTIMIZED_FLAGS_DEBUG}" STREQUAL "")
+        set(VCPKG_OPTIMIZED_FLAGS_DEBUG "/Od")
+    endif()
+
+    if ("${VCPKG_OPTIMIZED_FLAGS_RELEASE}" STREQUAL "")
+        set(VCPKG_OPTIMIZED_FLAGS_RELEASE "/O2")
+    endif()
+
+
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__" ) # VS adds /D "_WINDLL" for DLLs;
-    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
+    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- ${VCPKG_WARNING_FLAGS} /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
     #/ZW:nostdlib -> ZW is added by CMake # VS also normally adds /sdl but not cmake MSBUILD
     set(_vcpkg_winmd_flag "")
     file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
@@ -69,11 +82,11 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     unset(_vcpkg_common_flags)
     unset(_vcpkg_winmd_flag)
 
-    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /Od /RTC1 ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
-    set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG /Od /RTC1 ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG ${VCPKG_OPTIMIZED_FLAGS_DEBUG} /RTC1 ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG ${VCPKG_OPTIMIZED_FLAGS_DEBUG} /RTC1 ${VCPKG_CRT_LINK_FLAG_PREFIX}d ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
 
-    set(CMAKE_CXX_FLAGS_RELEASE "/Gy /O2 /Oi /DNDEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX} ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "") # VS adds /GL
-    set(CMAKE_C_FLAGS_RELEASE "/Gy /O2 /Oi /DNDEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX} ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS_RELEASE "/Gy ${VCPKG_OPTIMIZED_FLAGS_RELEASE} /Oi /DNDEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX} ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "") # VS adds /GL
+    set(CMAKE_C_FLAGS_RELEASE "/Gy ${VCPKG_OPTIMIZED_FLAGS_RELEASE} /Oi /DNDEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX} ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")
 
     string(APPEND CMAKE_STATIC_LINKER_FLAGS_RELEASE_INIT " /nologo ") # VS adds /LTCG
 

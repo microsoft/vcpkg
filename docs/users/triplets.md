@@ -84,6 +84,21 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
 
+### VCPKG_WARNING_FLAGS
+Sets compiler warning level to be used while building C and CXX files.
+
+The default value is `/W3` on Windows.
+
+### VCPKG_OPTIMIZED_FLAGS_DEBUG
+Sets compiler debug optimized flags while building C and CXX files.
+
+The default value is `/Od` on Windows.
+
+### VCPKG_OPTIMIZED_FLAGS_RELEASE
+Sets compiler release optimized flags while building C and CXX files.
+
+The default value is `/O2` on Windows.
+
 ### VCPKG_LINKER_FLAGS
 Sets additional linker flags to be used while building dynamic libraries and
 executables in the absence of `VCPKG_CHAINLOAD_TOOLCHAIN_FILE`.

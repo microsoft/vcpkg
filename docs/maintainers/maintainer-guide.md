@@ -337,8 +337,8 @@ However, not all of them are passed to the internal package build [(see implemen
 Consider the following example:
 
 ```cmake
-set(VCPKG_C_FLAGS "-O2 ${VCPKG_C_FLAGS}")
-set(VCPKG_CXX_FLAGS "-O2 ${VCPKG_CXX_FLAGS}")
+set(VCPKG_C_FLAGS "-Zi ${VCPKG_C_FLAGS}")
+set(VCPKG_CXX_FLAGS "-Zi ${VCPKG_CXX_FLAGS}")
 ```
 
 Using `vcpkg`'s built-in toolchains this works, because the value of `VCPKG_<LANG>_FLAGS` is forwarded to the appropriate `CMAKE_LANG_FLAGS` variable. But, a custom toolchain that is not aware of `vcpkg`'s variables will not forward them.
