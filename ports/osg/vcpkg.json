@@ -5,13 +5,14 @@
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
-  "supports": "!uwp",
+  "supports": "x64 & windows & static & !staticcrt",
   "dependencies": [
+    "egl",
     {
       "name": "expat",
       "platform": "windows"
     },
-    "opengl-registry",
+    "opengl",
     {
       "name": "openimageio",
       "default-features": false,
