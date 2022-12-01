@@ -98,7 +98,7 @@ vcpkg_configure_gn(
 
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS client util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
+    TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )
 
 message(STATUS "Installing headers...")
