@@ -18,6 +18,7 @@
     "protobuf",
     "re2",
     "abseil",
-    "icu"
+    "icu",
+    "dirent"
   ]
 }

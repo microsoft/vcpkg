@@ -1,0 +1,31 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 5cddf06..5d97408 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -77,7 +77,7 @@ endfunction ()
+ function (find_required_program NAME FILENAME DESCRIPTION)
+   find_program (${NAME}_BIN NAMES ${FILENAME})
+ 
+-  if (${NAME}_BIN STREQUAL "${${NAME}_BIN}-NOTFOUND")
++  if (${NAME}_BIN STREQUAL "${NAME}_BIN-NOTFOUND")
+     print_error (${DESCRIPTION} ${FILENAME})
+   endif ()
+ endfunction (find_required_program)
+@@ -417,7 +417,7 @@ if (${BUILD_GEOCODER} STREQUAL "ON")
+   add_dependencies (geocoding-shared generate_geocoding_data)
+   set_target_properties (geocoding-shared
+     PROPERTIES
+-      OUTPUT_NAME "geocoding"
++      OUTPUT_NAME "geocoding-shared"
+       PREFIX "lib"
+       SOVERSION ${libphonenumber_VERSION_MAJOR}
+       VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
+@@ -448,7 +448,7 @@ if (BUILD_SHARED_LIB)
+   endif ()
+   set_target_properties (phonenumber-shared
+     PROPERTIES
+-      OUTPUT_NAME "phonenumber"
++      OUTPUT_NAME "phonenumber-shared"
+       PREFIX "lib"
+       SOVERSION ${libphonenumber_VERSION_MAJOR}
+       VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
