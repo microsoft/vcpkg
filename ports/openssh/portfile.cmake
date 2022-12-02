@@ -20,6 +20,8 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 	set(OPTIONS --disable-strip)
 endif()
 
+set(OPTIONS ${OPTIONS} LIBS=-lpthread)
+
 # This is general vcpkg configure. But this is not operating in Linux.
 # because of autoconf fault in vcpkg_configure_make.
 vcpkg_configure_make(
@@ -30,7 +32,7 @@ vcpkg_configure_make(
 		--with-ssl-dir=${CURRENT_INSTALLED_DIR}
 		--with-zlib=${CURRENT_INSTALLED_DIR}
 #		--bindir=/usr/bin
-		--sysconfdir=/etc
+		--sysconfdir=/etc/ssh
 #		--libexecdir=/usr/sbin
 #		--sbindir=/usr/sbin
 #		--localstatedir=/var
