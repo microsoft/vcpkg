@@ -7,30 +7,16 @@ vcpkg_download_distfile(
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LINKAGE_DYNAMIC yes)
-    set(LINKAGE_STATIC no)
-else()
-    set(LINKAGE_DYNAMIC no)
-    set(LINKAGE_STATIC yes)
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    OPTIONS
-        "--enable-shared=${LINKAGE_DYNAMIC}"
-        "--enable-static=${LINKAGE_STATIC}"
-        "--prefix=${CURRENT_INSTALLED_DIR}"
+    COPY_SOURCE
 )
 
 vcpkg_install_make()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
-
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
