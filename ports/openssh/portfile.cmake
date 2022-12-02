@@ -42,9 +42,8 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_BUILD_TYPE STREQUAL "debug")
-	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-else()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(VCPKG_BUILD_TYPE STREQUAL "release")
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc")
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libexec")
 endif()
