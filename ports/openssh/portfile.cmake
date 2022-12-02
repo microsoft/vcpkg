@@ -7,6 +7,7 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 set(OPENSSH_VERSION "V_9_1_P1")
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
