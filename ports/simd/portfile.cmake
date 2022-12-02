@@ -26,28 +26,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(SOLUTION_TYPE vs2022)
   endif()
   
-  vcpkg_build_msbuild(
+  vcpkg_install_msbuild(
   	SOURCE_PATH ${SOURCE_PATH}
-  	PROJECT_PATH "${SOURCE_PATH}/prj/${SOLUTION_TYPE}/Simd.sln"
+  	PROJECT_SUBPATH "/prj/${SOLUTION_TYPE}/Simd.sln"
   	PLATFORM ${SIMD_PLATFORM}
   	TARGET Simd
   	RELEASE_CONFIGURATION "Release"
   	DEBUG_CONFIGURATION "Debug"
   )
   
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Release/Simd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Release/Simd.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Debug/Simd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Debug/Simd.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-  else()
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Release/Simd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/bin/${VCPKG_PLATFORM_TOOLSET}/${SIMD_PLATFORM}/Debug/Simd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  endif()
-  
   file(COPY "${SOURCE_PATH}/src/Simd/SimdLib.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
-  message(FATAL_ERROR "Not jet supported")
+  message(FATAL_ERROR "Other Targets then Windows are not jet supported")
 endif()
 
 # Handle copyright
