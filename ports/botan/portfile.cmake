@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 b467f8613832873b3337794d52bb46ddc77ffa78ee3498481b67aec66d35acd347d34056c7bdf68b303b836f0da18ce11ffa751b4cfbdce606780c292b417827
+    SHA512 0f99ef4026e5180dd65dc0e935ba2cabaf750862c651699294b3521053463b7e65a90847fef6f0d640eb9f9eb5efce64b13e999aa9c215310998817d13bd5332
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
