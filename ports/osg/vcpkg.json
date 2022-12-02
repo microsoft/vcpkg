@@ -12,6 +12,7 @@
       "name": "expat",
       "platform": "windows"
     },
+    "mesa",
     "opengl",
     {
       "name": "openimageio",
