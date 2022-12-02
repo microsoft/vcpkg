@@ -1,7 +1,7 @@
-diff --git a/mesonbuild/modules/python.py b/mesonbuild/modules/python.py
+diff --git a/tools/meson/mesonbuild/modules/python.py b/tools/meson/mesonbuild/modules/python.py
 index 84ec524..2789134 100644
---- a/mesonbuild/modules/python.py
-+++ b/mesonbuild/modules/python.py
+--- a/tools/meson/mesonbuild/modules/python.py
++++ b/tools/meson/mesonbuild/modules/python.py
 @@ -534,12 +534,12 @@ class PythonInstallation(ExternalProgramHolder):
              new_deps.append(dep)
          if not has_pydep:
