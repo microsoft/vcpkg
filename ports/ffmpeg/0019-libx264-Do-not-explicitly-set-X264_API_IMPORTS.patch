@@ -1,18 +1,8 @@
-From d5fca748d76602a912590b64022560283db6fae6 Mon Sep 17 00:00:00 2001
-From: Matt Oliver <protogonoi@gmail.com>
-Date: Sat, 30 Oct 2021 14:09:29 +1100
-Subject: [PATCH] libx264: Do not explicitly set X264_API_IMPORTS
-
----
- configure            | 8 +++-----
- libavcodec/libx264.c | 4 ----
- 2 files changed, 3 insertions(+), 9 deletions(-)
-
 diff --git a/configure b/configure
-index ede8f9777b..b35728aace 100755
+index 62753ef..018764e 100755
 --- a/configure
 +++ b/configure
-@@ -6535,11 +6535,8 @@ enabled libvpx            && {
+@@ -6508,11 +6508,8 @@ enabled libvpx            && {
  enabled libwebp           && {
      enabled libwebp_encoder      && require_pkg_config libwebp "libwebp >= 0.2.0" webp/encode.h WebPGetEncoderVersion
      enabled libwebp_anim_encoder && check_pkg_config libwebp_anim_encoder "libwebpmux >= 0.4.0" webp/mux.h WebPAnimEncoderOptionsInit; }
@@ -27,10 +17,10 @@ index ede8f9777b..b35728aace 100755
                                 { { check_lib libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++ -lgcc_s -lgcc -lrt -lnuma" ||
                                 require libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++"; } &&
 diff --git a/libavcodec/libx264.c b/libavcodec/libx264.c
-index 21f434d06d..efbc9608c7 100644
+index 4ddc497..0152d30 100644
 --- a/libavcodec/libx264.c
 +++ b/libavcodec/libx264.c
-@@ -34,10 +34,6 @@
+@@ -32,10 +32,6 @@
  #include "packet_internal.h"
  #include "atsc_a53.h"
  
@@ -41,6 +31,3 @@ index 21f434d06d..efbc9608c7 100644
  #include <x264.h>
  #include <float.h>
  #include <math.h>
--- 
-2.33.1.windows.1
-

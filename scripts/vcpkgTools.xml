@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.5</version>
+        <version>3.10.7</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.5/python-3.10.5-embed-win32.zip</url>
-        <sha512>7598cf838401d87c4aadb43f1d70a66c647b5c4c86d55eed747126eb21e699ee8e662eef50782eabe10c746ae3947a7f1418fa9e2c1131ca8f3ed06dcb48b00f</sha512>
-        <archiveName>python-3.10.5-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-win32.zip</url>
+        <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
+        <archiveName>python-3.10.7-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.10.5</version>
+        <version>3.10.7</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.10.5</url>
-        <sha512>be225985a23b685939ff6cb134fbe29b8fd6683cd6695753fc10ef4784dcc412fc98aa2dedca902cf0be5393dfd97724ea88331cda1bcd4b86a839e9d699de7d</sha512>
-        <archiveName>python-3.10.5.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.10.7</url>
+        <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
+        <archiveName>python-3.10.7.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.24.0</version>
-        <exeRelativePath>cmake-3.24.0-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-windows-i386.zip</url>
-        <sha512>0188bed2fea4b40b88c63cd4edbfa1e71f26518286c66ab8719435c6fc0a5d7582a94cdf348c4026bd619292c70247437ff84093abd396d749d438b732b4c6bb</sha512>
-        <archiveName>cmake-3.24.0-windows-i386.zip</archiveName>
+        <version>3.25.0</version>
+        <exeRelativePath>cmake-3.25.0-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-windows-i386.zip</url>
+        <sha512>6ef267b117af3369a72186f1c892e8f112b8013899f4b7a6573ea0d678b2ac41e84adb760ca793ebafa37852dfb9e7e1bc40d14f73ebb4cfedae9ab2f504b417</sha512>
+        <archiveName>cmake-3.25.0-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.24.0</version>
-        <exeRelativePath>cmake-3.24.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-macos-universal.tar.gz</url>
-        <sha512>c1480fdc1c28a61ea3979c0a5e58a7cf77ecb8f4797d8b2e605883612fb9681943e3490ebb38b0808e4480c33529e1d8628e7bf860e24874d4e41919cc078ad2</sha512>
-        <archiveName>cmake-3.24.0-macos-universal.tar.gz</archiveName>
+        <version>3.25.0</version>
+        <exeRelativePath>cmake-3.25.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-macos-universal.tar.gz</url>
+        <sha512>d37017c8917e284d1102e42dc3dcd5f0c956f70720b357a530766980f7b2c595c02d273dfb7d5a01bc6f7680bff6742354f528a49033f43b9b1ee7d8ad863f0f</sha512>
+        <archiveName>cmake-3.25.0-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.24.0</version>
-        <exeRelativePath>cmake-3.24.0-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-linux-x86_64.tar.gz</url>
-        <sha512>8eb604b80ee6c771d43cc3e430b2a1065319167cb4913258147482d6ef8d6b83ff4451e3173b0ce6e0546a35d6731f334a72479855abe1958b25678cafda21d0</sha512>
-        <archiveName>cmake-3.24.0-linux-x86_64.tar.gz</archiveName>
+        <version>3.25.0</version>
+        <exeRelativePath>cmake-3.25.0-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-linux-x86_64.tar.gz</url>
+        <sha512>fe59f499a6ca2c651457868ecd9c3541a3c9bcdfaef0e5b4ca18a9fb3eb12c097a19564333342f853b2b7ddef173128090baa4774c46cb8ee639b4fe7cc3add3</sha512>
+        <archiveName>cmake-3.25.0-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
@@ -194,11 +194,11 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.6</version>
+        <version>7.2.7</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/PowerShell-7.2.6-win-x86.zip</url>
-        <sha512>4b444e0d5de22380e47701c190cb8ec9464a14a7ca566bcb8a936f723d58571af537d0d872f788dac99e67b27a047ce53de3fe1a986967799c10ea6784dbd6b2</sha512>
-        <archiveName>PowerShell-7.2.6-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.7/PowerShell-7.2.7-win-x86.zip</url>
+        <sha512>e17b307b66d17d4ece4d2f93080e6111265070b2ee6b77ffe3224973a470c59a14b1b17fab7445b18d370ac1720045188a9a011f0c9c8538ac56eca7673f184a</sha512>
+        <archiveName>PowerShell-7.2.7-win-x86.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>
