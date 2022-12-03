@@ -1,6 +1,6 @@
 {
   "name": "libharu",
-  "version-semver": "2.4.2",
+  "version": "2.4.3",
   "description": "libharu - free PDF library",
   "homepage": "https://github.com/libharu/libharu",
   "license": "Zlib",
