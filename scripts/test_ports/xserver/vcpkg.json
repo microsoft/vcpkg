@@ -85,7 +85,7 @@
     "xwayland": {
       "description": "Build xwayland server",
       "dependencies": [
-        "drm",
+        "libdrm",
         "libepoxy",
         "wayland",
         "wayland-protocols"
