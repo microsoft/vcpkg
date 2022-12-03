@@ -1,5 +1,0 @@
-
-CMake provides the module target:
-
-    find_package("ALSA" MODULE REQUIRED)
-    target_link_libraries("main" PRIVATE "ALSA::ALSA")
