@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_fixup_pkgconfig()
