@@ -9,7 +9,7 @@
     "nettle",
     "opengl",
     {
-      "name": "pciaccess",
+      "name": "libpciaccess",
       "platform": "!windows"
     },
     "pixman",
