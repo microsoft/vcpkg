@@ -8,6 +8,6 @@
     "libxi",
     "libxext",
     "libxrender",
-    "xmu"
+    "libxmu"
   ]
 }
