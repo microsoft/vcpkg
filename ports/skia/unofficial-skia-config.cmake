@@ -1,12 +1,4 @@
 if(NOT TARGET unofficial::skia::skia)
-    # Compute the installation prefix relative to this file.
-    get_filename_component(vcpkg_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
-    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
-    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
-    if(vcpkg_root STREQUAL "/")
-        set(vcpkg_root "")
-    endif()
-
     function(z_vcpkg_skia_get_link_libraries out_var path libraries)
         set(libs "")
         foreach(lib IN LISTS libraries)
@@ -27,6 +19,14 @@ if(NOT TARGET unofficial::skia::skia)
         endforeach()
         set("${out_var}" "${libs}" PARENT_SCOPE)
     endfunction()
+
+    # Compute the installation prefix relative to this file.
+    get_filename_component(vcpkg_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
+    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
+    if(vcpkg_root STREQUAL "/")
+        set(vcpkg_root "")
+    endif()
 
     add_library(unofficial::skia::skia UNKNOWN IMPORTED)
     set_target_properties(unofficial::skia::skia PROPERTIES
