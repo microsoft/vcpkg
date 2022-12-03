@@ -33,7 +33,7 @@
     "xorg-macros",
     "xproto",
     {
-      "name": "xshmfence",
+      "name": "libxshmfence",
       "platform": "!windows"
     },
     "xtrans",
