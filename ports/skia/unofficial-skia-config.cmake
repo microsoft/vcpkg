@@ -36,6 +36,12 @@ if(NOT TARGET unofficial::skia::skia)
     find_library(z_vcpkg_skia_lib_release NAMES skia skia.dll PATHS "${z_vcpkg_skia_root}/lib" NO_DEFAULT_PATH)
     find_library(z_vcpkg_skia_lib_debug NAMES skia skia.dll PATHS "${z_vcpkg_skia_root}/debug/lib" NO_DEFAULT_PATH)
     mark_as_advanced(z_vcpkg_skia_lib_release z_vcpkg_skia_lib_debug)
+
+    set(z_vcpkg_skia_config_debug "\$<CONFIG:Debug>")
+    if(NOT z_vcpkg_skia_lib_debug)
+        set(z_vcpkg_skia_config_debug "0")
+    endif()
+
     z_vcpkg_skia_get_link_libraries(
         z_vcpkg_skia_link_libs_release
         "${z_vcpkg_skia_root}/lib;${z_vcpkg_skia_root}/debug/lib"
@@ -45,8 +51,8 @@ if(NOT TARGET unofficial::skia::skia)
         IMPORTED_CONFIGURATIONS RELEASE
         IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
         IMPORTED_LOCATION_RELEASE "${z_vcpkg_skia_lib_release}"
-        INTERFACE_COMPILE_DEFINITIONS "$<$<CONFIG:Release>:@SKIA_DEFINITIONS_REL@>"
-        INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:$<$<CONFIG:Release>:${z_vcpkg_skia_link_libs_release}>>"
+        INTERFACE_COMPILE_DEFINITIONS "\$<\$<NOT:${z_vcpkg_skia_config_debug}>:@SKIA_DEFINITIONS_REL@>"
+        INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:\$<\$<NOT:${z_vcpkg_skia_config_debug}>:${z_vcpkg_skia_link_libs_release}>>"
     )
 
     if(z_vcpkg_skia_lib_debug)
@@ -63,11 +69,12 @@ if(NOT TARGET unofficial::skia::skia)
             IMPORTED_LOCATION_DEBUG "${z_vcpkg_skia_lib_debug}"
         )
         set_property(TARGET unofficial::skia::skia APPEND PROPERTY
-            INTERFACE_COMPILE_DEFINITIONS "$<$<NOT:$<CONFIG:Release>>:@SKIA_DEFINITIONS_DBG@>"
+            INTERFACE_COMPILE_DEFINITIONS "\$<\$<CONFIG:Debug>:@SKIA_DEFINITIONS_DBG@>"
         )
         set_property(TARGET unofficial::skia::skia APPEND PROPERTY
-            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:$<$<NOT:$<CONFIG:Release>>:${z_vcpkg_skia_link_libs_debug}>>"
+            INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:\$<\$<CONFIG:Debug>:${z_vcpkg_skia_link_libs_debug}>>"
         )
     endif()
+    unset(z_vcpkg_skia_config_debug)
     unset(z_vcpkg_skia_root)
 endif()
