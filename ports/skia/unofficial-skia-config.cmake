@@ -21,23 +21,24 @@ if(NOT TARGET unofficial::skia::skia)
     endfunction()
 
     # Compute the installation prefix relative to this file.
-    get_filename_component(vcpkg_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
-    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
-    get_filename_component(vcpkg_root "${vcpkg_root}" PATH)
-    if(vcpkg_root STREQUAL "/")
-        set(vcpkg_root "")
+    get_filename_component(z_vcpkg_skia_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(z_vcpkg_skia_root "${z_vcpkg_skia_root}" PATH)
+    get_filename_component(z_vcpkg_skia_root "${z_vcpkg_skia_root}" PATH)
+    if(z_vcpkg_skia_root STREQUAL "/")
+        set(z_vcpkg_skia_root "")
     endif()
 
     add_library(unofficial::skia::skia UNKNOWN IMPORTED)
     set_target_properties(unofficial::skia::skia PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${vcpkg_root}/include/skia"
+        INTERFACE_INCLUDE_DIRECTORIES "${z_vcpkg_skia_root}/include/skia"
     )
 
-    find_library(z_vcpkg_skia_lib_release NAMES skia skia.dll PATHS "${vcpkg_root}/lib" NO_DEFAULT_PATH)
-    mark_as_advanced(z_vcpkg_skia_lib_release)
+    find_library(z_vcpkg_skia_lib_release NAMES skia skia.dll PATHS "${z_vcpkg_skia_root}/lib" NO_DEFAULT_PATH)
+    find_library(z_vcpkg_skia_lib_debug NAMES skia skia.dll PATHS "${z_vcpkg_skia_root}/debug/lib" NO_DEFAULT_PATH)
+    mark_as_advanced(z_vcpkg_skia_lib_release z_vcpkg_skia_lib_debug)
     z_vcpkg_skia_get_link_libraries(
         z_vcpkg_skia_link_libs_release
-        "${vcpkg_root}/lib;${vcpkg_root}/debug/lib"
+        "${z_vcpkg_skia_root}/lib;${z_vcpkg_skia_root}/debug/lib"
         "@SKIA_DEP_REL@"
     )
     set_target_properties(unofficial::skia::skia PROPERTIES
@@ -48,12 +49,10 @@ if(NOT TARGET unofficial::skia::skia)
         INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:$<$<CONFIG:Release>:${z_vcpkg_skia_link_libs_release}>>"
     )
 
-    find_library(z_vcpkg_skia_lib_debug NAMES skia skia.dll PATHS "${vcpkg_root}/debug/lib" NO_DEFAULT_PATH)
-    mark_as_advanced(z_vcpkg_skia_lib_debug)
     if(z_vcpkg_skia_lib_debug)
         z_vcpkg_skia_get_link_libraries(
             z_vcpkg_skia_link_libs_debug
-            "${vcpkg_root}/debug/lib;${vcpkg_root}/lib"
+            "${z_vcpkg_skia_root}/debug/lib;${z_vcpkg_skia_root}/lib"
             "@SKIA_DEP_DBG@"
         )
         set_property(TARGET unofficial::skia::skia APPEND PROPERTY
@@ -70,4 +69,5 @@ if(NOT TARGET unofficial::skia::skia)
             INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:$<$<NOT:$<CONFIG:Release>>:${z_vcpkg_skia_link_libs_debug}>>"
         )
     endif()
+    unset(z_vcpkg_skia_root)
 endif()
