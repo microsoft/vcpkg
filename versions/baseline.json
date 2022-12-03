@@ -78,7 +78,7 @@
     },
     "alsa": {
       "baseline": "1.2.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ampl-asl": {
       "baseline": "2020-11-11",
@@ -222,7 +222,7 @@
     },
     "asyncplusplus": {
       "baseline": "1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "at-spi2-atk": {
       "baseline": "2.38.0",
@@ -1186,7 +1186,7 @@
     },
     "brotli": {
       "baseline": "1.0.9",
-      "port-version": 3
+      "port-version": 4
     },
     "brpc": {
       "baseline": "1.2.0",
@@ -2674,7 +2674,7 @@
     },
     "glog": {
       "baseline": "0.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gloo": {
       "baseline": "20201203",
@@ -2709,7 +2709,7 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -3833,7 +3833,7 @@
       "port-version": 0
     },
     "libhv": {
-      "baseline": "1.2.6",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "libhydrogen": {
@@ -5206,6 +5206,10 @@
     },
     "ngspice": {
       "baseline": "37",
+      "port-version": 0
+    },
+    "ngtcp2": {
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "nifly": {
@@ -6813,7 +6817,7 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.26.0",
+      "baseline": "2.26.1",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -6830,7 +6834,7 @@
     },
     "sdl2-net": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-ttf": {
       "baseline": "2.20.0",
