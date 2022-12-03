@@ -51,10 +51,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 
     string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" WINDOWS_SDK_SEMVER "${WINDOWS_SDK}")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/opengl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opengl.pc" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/gl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gl.pc" @ONLY)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/glu.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glu.pc" @ONLY)
     if (NOT VCPKG_BUILD_TYPE)
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/opengl.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opengl.pc" @ONLY)
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/gl.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gl.pc" @ONLY)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/glu.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glu.pc" @ONLY)
     endif()
 
