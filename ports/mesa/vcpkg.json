@@ -29,20 +29,8 @@
           "name": "mesa",
           "default-features": false,
           "features": [
-            "gles1"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "gles2"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
+            "gles1",
+            "gles2",
             "opengl"
           ]
         },
@@ -57,20 +45,17 @@
       ]
     },
     "egl": {
-      "description": "Build support for EGL platform",
-      "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
-      ]
+      "description": "Build support for EGL platform"
     },
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
       "dependencies": [
         {
           "name": "mesa",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     },
@@ -79,7 +64,10 @@
       "dependencies": [
         {
           "name": "mesa",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     },
@@ -124,13 +112,7 @@
       "description": "Build with support for offscreen rendering (OSMesa)"
     },
     "opengl": {
-      "description": "Build support for OpenGL (all versions)",
-      "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
-      ]
+      "description": "Build support for OpenGL (all versions)"
     }
   }
 }
