@@ -37,12 +37,8 @@
       "platform": "!windows"
     },
     "xtrans",
-    "libxv",
-    {
-      "name": "libxxf86dga",
-      "platform": "!windows"
-    }
-  ],
+    "libxv"
+    ],
   "default-features" : [ "platformselect"],
   "features": {
     "platformselect": {
