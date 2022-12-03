@@ -135,6 +135,5 @@ file(REMOVE ${_double_files})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
-# Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")
