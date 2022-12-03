@@ -45,7 +45,10 @@
       ]
     },
     "egl": {
-      "description": "Build support for EGL platform"
+      "description": "Build support for EGL platform",
+      "dependencies": [
+        "egl-registry"
+      ]
     },
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
@@ -112,7 +115,10 @@
       "description": "Build with support for offscreen rendering (OSMesa)"
     },
     "opengl": {
-      "description": "Build support for OpenGL (all versions)"
+      "description": "Build support for OpenGL (all versions)",
+      "dependencies": [
+        "opengl-registry"
+      ]
     }
   }
 }
