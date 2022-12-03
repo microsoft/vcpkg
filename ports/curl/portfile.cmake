@@ -14,23 +14,6 @@ vcpkg_from_github(
         export-components.patch
 )
 
-# schannel will enable sspi, but sspi do not support uwp
-foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
-    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
-    endif()
-endforeach()
-
-if("sectransp" IN_LIST FEATURES AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
-endif()
-
-foreach(feature IN ITEMS "winldap" "winidn")
-    if(feature IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature ${feature} is not supported on non-Windows platforms.")
-    endif()
-endforeach()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
