@@ -57,7 +57,7 @@ if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         # for armeabi-v7a, check whether NEON is available
-        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
     endif()
 endif()
 
