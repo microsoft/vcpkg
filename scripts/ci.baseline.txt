@@ -585,8 +585,6 @@ mecab:x64-windows        = skip
 mecab:x64-windows-static = skip
 mecab:x64-windows-static-md=skip
 mecab:x86-windows        = skip
-# Due to static crt.
-mesa:x64-windows-static=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
