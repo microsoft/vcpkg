@@ -136,4 +136,15 @@ if(NOT remaining)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND "opengl" IN_LIST FEATURES)
+    # Avoid collision with opengl32 lib from port opengl.
+    # Selecting mesa's lib must be done in an overlay port for opengl.
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
+    endif()
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")
