@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 b4c087ae46b02b632427d8e4af1b5b8c43ab4f1efba21d2d705e1501aa8f33b97e03bf4e621ad4d4e14c19b1c890416332a56a2305c81930facfb8954bedee26
     PATCHES
         fix_dependencies.patch
+        disable_werror.patch # https://github.com/microsoft/vcpkg/pull/28139#issuecomment-1336119855
 )
 
 vcpkg_cmake_configure(
