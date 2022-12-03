@@ -6449,7 +6449,7 @@
       "port-version": 8
     },
     "quill": {
-      "baseline": "2.4.2",
+      "baseline": "2.5.1",
       "port-version": 0
     },
     "quirc": {
