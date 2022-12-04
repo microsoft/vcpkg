@@ -19,5 +19,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/${PORT}Config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper-getopt.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/getopt" RENAME vcpkg-cmake-wrapper.cmake)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
