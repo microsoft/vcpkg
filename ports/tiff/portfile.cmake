@@ -1,10 +1,10 @@
-set(LIBTIFF_VERSION 4.4.0)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
-    REF v${LIBTIFF_VERSION}
+    REF "v${VERSION}"
     SHA512 93955a2b802cf243e41d49048499da73862b5d3ffc005e3eddf0bf948a8bd1537f7c9e7f112e72d082549b4c49e256b9da9a3b6d8039ad8fc5c09a941b7e75d7
     HEAD_REF master
     PATCHES
@@ -64,10 +64,9 @@ file(REMOVE_RECURSE
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if ("tools" IN_LIST FEATURES)
-    set(_tools
+    set(tools
         fax2ps
         fax2tiff
         pal2rgb
@@ -87,9 +86,11 @@ if ("tools" IN_LIST FEATURES)
         tiffset
         tiffsplit
     )
-    vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 vcpkg_copy_pdbs()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
