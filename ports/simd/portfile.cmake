@@ -25,6 +25,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
   else()
     set(SOLUTION_TYPE vs2022)
   endif()
+   
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${SOURCE_PATH}/prj/${SOLUTION_TYPE}/Simd.vcxproj"
+	     "<ConfigurationType>DynamicLibrary</ConfigurationType>"
+		 "<ConfigurationType>StaticLibrary</ConfigurationType>")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+	  file(GLOB_RECURSE PROJ_FILES "${SOURCE_PATH}/prj/${SOLUTION_TYPE}/*.vcxproj")
+	  foreach(PROJ_FILE ${PROJ_FILES})
+        vcpkg_replace_string(${PROJ_FILE}
+	      "    </ClCompile>"
+	      "      <RuntimeLibrary Condition=\"'$(Configuration)'=='Debug'\">MultiThreadedDebugDLL</RuntimeLibrary>\n      <RuntimeLibrary Condition=\"'$(Configuration)'=='Release'\">MultiThreadedDLL</RuntimeLibrary>\n    </ClCompile>")
+	  endforeach()
+    endif()
+  endif()
   
   vcpkg_install_msbuild(
   	SOURCE_PATH ${SOURCE_PATH}
