@@ -59,6 +59,9 @@ set_target_properties(${missing_target} PROPERTIES INTERFACE_LINK_LIBRARIES ${ex
 ")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(READ "${SOURCE_PATH}/LICENSE" bsd)
-file(READ "${SOURCE_PATH}/COPYING" gpl)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "ZSTD is dual licensed under BSD and GPLv2.\n\n${bsd}\n\n${gpl}")
+vcpkg_install_copyright(
+    COMMENT "ZSTD is dual licensed under BSD and GPLv2."
+    FILE_LIST
+       "${SOURCE_PATH}/LICENSE"
+       "${SOURCE_PATH}/COPYING"
+)
