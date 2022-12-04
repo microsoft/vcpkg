@@ -1,5 +1,20 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+set(tiff_debian_archive_name "tiff_4.4.0-6.debian.tar.xz")
+vcpkg_download_distfile(
+    tiff_debian_archive
+    URLS "https://deb.debian.org/debian/pool/main/t/tiff/${tiff_debian_archive_name}"
+         "https://snapshot.debian.org/archive/debian/20221124T210835Z/pool/main/t/tiff/${tiff_debian_archive_name}"
+    FILENAME "${tiff_debian_archive_name}"
+    SHA512 a806debc92e8dac573f1e603a91eabb8fa1ab493404d0be62ca926e35f97df2d4514c58bdb93317a91d7f98abb18e9ff91ad51ff0f796a4f94f8b90195c4fdcf
+)
+vcpkg_extract_source_archive(tiff_debian
+    ARCHIVE "${tiff_debian_archive}"
+    SOURCE_BASE "debian"
+)
+file(STRINGS "${tiff_debian}/patches/series" cve_patches REGEX "^CVE-")
+list(TRANSFORM cve_patches PREPEND "${tiff_debian}/patches/")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,6 +26,7 @@ vcpkg_from_gitlab(
         cmakelists.patch
         FindCMath.patch
         android-libm.patch
+        ${cve_patches}
 )
 
 set(EXTRA_OPTIONS "")
