@@ -27,6 +27,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endif()
    
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${SOURCE_PATH}/src/Simd/SimdConfig.h"
+	    "//#define SIMD_STATIC"
+	    "#define SIMD_STATIC")
     vcpkg_replace_string("${SOURCE_PATH}/prj/${SOLUTION_TYPE}/Simd.vcxproj"
 	     "<ConfigurationType>DynamicLibrary</ConfigurationType>"
 		 "<ConfigurationType>StaticLibrary</ConfigurationType>")
