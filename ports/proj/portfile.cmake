@@ -8,7 +8,6 @@ vcpkg_from_github(
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
-        tools-cmake.patch
         remove-doc.patch
 )
 
@@ -35,6 +34,8 @@ vcpkg_cmake_configure(
         -DNLOHMANN_JSON=external
         -DBUILD_TESTING=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
+    OPTIONS_DEBUG
+        -DBUILD_APPS=OFF
 )
 
 vcpkg_cmake_install()
