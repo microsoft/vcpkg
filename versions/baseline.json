@@ -7008,6 +7008,10 @@
       "baseline": "2.4.0",
       "port-version": 0
     },
+    "smf": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "smpeg2": {
       "baseline": "2.0.0",
       "port-version": 7
