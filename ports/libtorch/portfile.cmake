@@ -40,7 +40,6 @@ message(STATUS "Using Python3: ${PYTHON3}")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    dist    USE_MPI
     zstd    USE_ZSTD
     fftw3   USE_FFTW
     fftw3   AT_FFTW_ENABLED
@@ -91,17 +90,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 if("tbb" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS
-        -DMKLDNN_CPU_RUNTIME=TBB
-    )
+    list(APPEND FEATURE_OPTIONS -DMKLDNN_CPU_RUNTIME=TBB)
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    list(APPEND FEATURE_OPTIONS
-        -DINTERN_BUILD_MOBILE=ON
-        -DBUILD_JNI=ON
-        -DUSE_NNAPI=ON
-    )
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
+    list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=ON)
 else()
     list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=OFF)
 endif()
@@ -140,6 +133,9 @@ vcpkg_cmake_configure(
         -DUSE_DEPLOY=OFF
         -DUSE_FFTW=OFF
         -DUSE_NUMA=OFF
+        -DUSE_MPI=${VCPKG_TARGET_IS_LINUX}
+        -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
+        -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}
         # BLAS=MKL not supported in this port
         -DUSE_MKLDNN=OFF
