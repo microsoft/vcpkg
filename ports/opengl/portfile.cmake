@@ -37,9 +37,9 @@ function(copy_from_windows_sdk WINDOWS_SDK)
 endfunction()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_IS_MINGW)
+    if(1)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-        set(WINDOWS_SDK_SEMVER "10.0.0")
+        set(WINDOWS_SDK_SEMVER "1.1") # OpenGL version!
         set(WINDOWS_GL_CFLAGS "")
     else()
         vcpkg_get_windows_sdk(WINDOWS_SDK)
