@@ -14,17 +14,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(NOT VCPKG_BUILD_TYPE STREQUAL release)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/${PORT}-targets-debug.cmake" "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/${PORT}-targets-debug.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_fixup_cmake_targets()
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
