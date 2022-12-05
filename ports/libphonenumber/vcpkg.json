@@ -3,6 +3,15 @@
   "version": "8.13.1",
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
   "dependencies": [
+    "abseil",
+    "boost-date-time",
+    "boost-system",
+    "boost-thread",
+    "dirent",
+    "gtest",
+    "icu",
+    "protobuf",
+    "re2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -10,15 +19,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "boost-system",
-    "boost-thread",
-    "boost-date-time",
-    "gtest",
-    "protobuf",
-    "re2",
-    "abseil",
-    "icu",
-    "dirent"
+    }
   ]
 }
