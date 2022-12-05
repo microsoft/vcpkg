@@ -5977,7 +5977,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "2.2.0",
+      "baseline": "2.2.1",
       "port-version": 0
     },
     "protozero": {
