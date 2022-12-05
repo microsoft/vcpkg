@@ -1,3 +1,5 @@
+# Wrapper for FindEGL.cmake in extra-cmake-modules (port ecm) and its vendored copies
+
 if(UNIX)
     find_package(OpenGL COMPONENTS EGL)
     if(OPENGL_egl_LIBRARY)
