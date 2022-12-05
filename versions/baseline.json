@@ -2129,7 +2129,7 @@
       "port-version": 3
     },
     "egl": {
-      "baseline": "2022-09-20",
+      "baseline": "2022-12-04",
       "port-version": 0
     },
     "egl-registry": {
