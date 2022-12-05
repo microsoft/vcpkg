@@ -15,7 +15,7 @@ vcpkg_install_msbuild(
     [DEBUG_CONFIGURATION <Debug>]
     [TARGET <Build>]
     [TARGET_PLATFORM_VERSION <10.0.15063.0>]
-    [PLATFORM <${TRIPLET_SYSTEM_ARCH}>]
+    [PLATFORM <(see below)>]
     [PLATFORM_TOOLSET <${VCPKG_PLATFORM_TOOLSET}>]
     [OPTIONS </p:ZLIB_INCLUDE_PATH=X>...]
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
@@ -60,22 +60,32 @@ Indicates that the intermediate files should not be removed.
 Ports using this option should later call [`vcpkg_clean_msbuild()`](vcpkg_clean_msbuild.md) to manually clean up.
 
 ### RELEASE_CONFIGURATION
-The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
+The configuration (`/p:Configuration` msbuild parameter) used for Release builds.
 
 ### DEBUG_CONFIGURATION
-The configuration (``/p:Configuration`` msbuild parameter) used for Debug builds.
+The configuration (`/p:Configuration` msbuild parameter) used for Debug builds.
 
 ### TARGET_PLATFORM_VERSION
-The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
+The WindowsTargetPlatformVersion (`/p:WindowsTargetPlatformVersion` msbuild parameter)
 
 ### TARGET
-The MSBuild target to build. (``/t:<TARGET>``)
+The MSBuild target to build. (`/t:<TARGET>`)
 
 ### PLATFORM
-The platform (``/p:Platform`` msbuild parameter) used for the build.
+The platform (``/p:Platform`` msbuild parameter) used for the build. This defaults to a value
+mapping `TRIPLET_SYSTEM_ARCH` to the default values Visual Studio uses when creating a `.vcxproj`:
+
+* `x86` becomes `Win32`
+* `x64` becomes `x64`
+* `arm` becomes `ARM`
+* `arm64` becomes `arm64`
+
+A common setting is to set this back to `${TRIPLET_SYSTEM_ARCH}` when passing a `.sln` rather than
+a `.vcxproj`, which has defaults closer to what vcpkg uses to denote target architecture on other
+build systems.
 
 ### PLATFORM_TOOLSET
-The platform toolset (``/p:PlatformToolset`` msbuild parameter) used for the build.
+The platform toolset (`/p:PlatformToolset` msbuild parameter) used for the build.
 
 ### OPTIONS
 Additional options passed to msbuild for all builds.
@@ -88,8 +98,10 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
-* [libirecovery](https://github.com/Microsoft/vcpkg/blob/master/ports/libirecovery/portfile.cmake)
 * [libfabric](https://github.com/Microsoft/vcpkg/blob/master/ports/libfabric/portfile.cmake)
+* [libirecovery](https://github.com/Microsoft/vcpkg/blob/master/ports/libirecovery/portfile.cmake)
+* [ngspice](https://github.com/Microsoft/vcpkg/blob/master/ports/ngspice/portfile.cmake) uses the
+  `PLATFORM ${TRIPLET_SYSTEM_ARCH}` trick
 
 ## Source
 [scripts/cmake/vcpkg\_install\_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_msbuild.cmake)
