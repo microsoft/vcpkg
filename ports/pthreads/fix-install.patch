@@ -1,8 +1,36 @@
 diff --git a/Makefile b/Makefile
-index a703b9c..1714a5e 100644
+index a703b9c..03628d3 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -218,8 +218,8 @@ install:
+@@ -80,18 +80,27 @@ help:
+ 	@ echo nmake clean VSE-static-debug
+ 
+ all:
++!IF DEFINED(BUILD_STATIC)
++!  IF DEFINED(BUILD_RELEASE)
+ 	$(MAKE) /E clean VC-static
+ 	$(MAKE) /E clean VCE-static
+ 	$(MAKE) /E clean VSE-static
++!  ELSE
+ 	$(MAKE) /E clean VC-static-debug
+ 	$(MAKE) /E clean VCE-static-debug
+ 	$(MAKE) /E clean VSE-static-debug
++!  ENDIF
++!ELSE
++!  IF DEFINED(BUILD_RELEASE)
+ 	$(MAKE) /E clean VC
+ 	$(MAKE) /E clean VCE
+ 	$(MAKE) /E clean VSE
++!  ELSE
+ 	$(MAKE) /E clean VC-debug
+ 	$(MAKE) /E clean VCE-debug
+ 	$(MAKE) /E clean VSE-debug
++!  ENDIF
++!ENDIF
+ 	$(MAKE) /E clean
+ 
+ TEST_ENV = CFLAGS="$(CFLAGS) /DNO_ERROR_DIALOGS"
+@@ -218,8 +227,8 @@ install:
  	if not exist $(LIBDEST) mkdir $(LIBDEST)
  	if not exist $(HDRDEST) mkdir $(HDRDEST)
  	if exist pthreadV*.dll copy pthreadV*.dll $(DLLDEST)
