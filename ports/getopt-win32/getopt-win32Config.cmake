@@ -90,7 +90,7 @@ if(getopt-win32_FOUND AND NOT TARGET getopt-win32)
             set_target_properties(
                 getopt-win32
                 PROPERTIES
-                    IMPORTED_LOCATION_DEBUG"${getopt-win32_LIBRARY_DEBUG}"
+                    IMPORTED_LOCATION_DEBUG "${getopt-win32_LIBRARY_DEBUG}"
             )
         endif()
     endif()
