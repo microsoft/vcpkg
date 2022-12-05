@@ -76,7 +76,7 @@ if(getopt-win32_FOUND AND NOT TARGET getopt-win32)
     else()
         add_library(getopt-win32 UNKNOWN IMPORTED)
         set_target_properties(
-            getpot-win32
+            getopt-win32
             PROPERTIES
                 IMPORTED_LOCATION_RELEASE         "${getopt-win32_LIBRARY_RELEASE}"
                 INTERFACE_INCLUDE_DIRECTORIES     "${getopt-win32_INCLUDE_DIR}"
