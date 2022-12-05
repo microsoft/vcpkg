@@ -48,6 +48,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencv  USE_OPENCV
     tbb     USE_TBB
     tbb     AT_PARALLEL_NATIVE_TBB
+    openmp  USE_OPENMP
     openmp  AT_PARALLEL_OPENMP
     leveldb USE_LEVELDB
     opencl  USE_OPENCL
@@ -106,7 +107,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -129,7 +129,6 @@ vcpkg_cmake_configure(
         -DUSE_GLOG=ON
         -DUSE_LMDB=ON
         -DUSE_ROCKSDB=OFF
-        -DUSE_OPENMP=OFF
         -DUSE_OBSERVERS=OFF 
         -DUSE_PYTORCH_QNNPACK=OFF
         -DUSE_KINETO=OFF
@@ -149,7 +148,7 @@ vcpkg_cmake_configure(
         -DAT_MKL_ENABLED=OFF
         -DAT_MKLDNN_ENABLED=OFF
     OPTIONS_RELEASE
-        -DBUILD_LIBTORCH_CPU_WITH_DEBUG=ON
+        -DBUILD_LIBTORCH_CPU_WITH_DEBUG=ON # Enable RelWithDebInfo
     MAYBE_UNUSED_VARIABLES
         USE_NUMA
         USE_SYSTEM_BIND11

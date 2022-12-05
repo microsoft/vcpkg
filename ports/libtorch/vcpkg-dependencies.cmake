@@ -112,7 +112,7 @@ if(USE_TBB)
 endif()
 
 if(USE_NNPACK)
-  find_library(NNPACK_LIB NAME nnpack REQUIRED)
+  find_library(NNPACK_LIB NAMES nnpack REQUIRED)
   list(APPEND Caffe2_DEPENDENCY_LIBS ${NNPACK_LIB})
   string(APPEND CMAKE_CXX_FLAGS " -DUSE_NNPACK")
 endif()
