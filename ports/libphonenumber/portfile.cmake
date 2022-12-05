@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         "change-icui18n-lib-name.patch"
+        "fix-re2-identifiers.patch"
         # "fix-ninja-error-multiple-rules.patch" Commenting this out for remove-shared-lib patch instead
         "remove-shared-lib.patch" # Getting ninja error with multiple rules
                                   # generating same lib name (hence the fix-ninja patch) but that created
@@ -19,7 +20,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cpp"
     OPTIONS
         -DREGENERATE_METADATA=OFF
-        -DUSE_RE2=OFF
+        -DUSE_RE2=ON
 )
 
 vcpkg_cmake_install()
