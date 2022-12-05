@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-fbgemm-include.patch
         fix-c10-glog.patch
         use-flatbuffers2.patch # check with codegen-flatc-mobile_bytecode
+        fix-windows.patch # https://github.com/pytorch/pytorch/issues/87957
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
@@ -46,6 +47,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
     tbb     USE_TBB
+    tbb     AT_PARALLEL_NATIVE_TBB
+    openmp  AT_PARALLEL_OPENMP
     leveldb USE_LEVELDB
     opencl  USE_OPENCL
     cuda    USE_CUDA
@@ -103,6 +106,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    WINDOWS_USE_MSBUILD
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -153,7 +157,8 @@ vcpkg_cmake_configure(
         MKLDNN_CPU_RUNTIME
 )
 vcpkg_cmake_build(TARGET __aten_op_header_gen LOGFILE_BASE build-header_gen) # explicit codegen is required
-vcpkg_cmake_build(TARGET torch_cpu            LOGFILE_BASE build-torch_cpu)
+vcpkg_cmake_build(TARGET c10        LOGFILE_BASE build-c10)
+vcpkg_cmake_build(TARGET torch_cpu  LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
