@@ -1,0 +1,18 @@
+diff --git a/pthread_getname_np.c b/pthread_getname_np.c
+index 8fc32b1..f98db51 100644
+--- a/pthread_getname_np.c
++++ b/pthread_getname_np.c
+@@ -59,8 +59,11 @@ pthread_getname_np(pthread_t thr, char *name, int len)
+ 
+   __ptw32_mcs_lock_acquire (&tp->threadLock, &threadLock);
+ 
+-  for (s = tp->name, d = name; *s && d < &name[len - 1]; *d++ = *s++)
+-    {}
++  if (tp->name)
++    {
++      for (s = tp->name, d = name; *s && d < &name[len - 1]; *d++ = *s++)
++        {}
++    }
+ 
+   *d = '\0';
+   __ptw32_mcs_lock_release (&threadLock);
