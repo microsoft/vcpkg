@@ -13,7 +13,6 @@
 #   VCPKG_TOOLCHAIN           = ON OFF
 #   TRIPLET_SYSTEM_ARCH       = arm x86 x64
 #   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
 #   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
 #   RELEASE_CONFIG            = "Release Static"" "Release DLL"
 #   VCPKG_TARGET_IS_WINDOWS
