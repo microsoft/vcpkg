@@ -54,7 +54,7 @@ if(NOT "${program}")
         SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
         PATCHES
             meson-intl.patch
-            remove-python-lib-dep.patch # to avoid auto linking the wrong python libs for python extensions
+            python-lib-dep.patch
     )
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
