@@ -1,0 +1,15 @@
+diff --git a/Makefile b/Makefile
+index a703b9c..1714a5e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -218,8 +218,8 @@ install:
+ 	if not exist $(LIBDEST) mkdir $(LIBDEST)
+ 	if not exist $(HDRDEST) mkdir $(HDRDEST)
+ 	if exist pthreadV*.dll copy pthreadV*.dll $(DLLDEST)
+-	copy pthreadV*.lib $(LIBDEST)
+-	copy libpthreadV*.lib $(LIBDEST)
++	if exist pthreadV*.lib copy pthreadV*.lib $(LIBDEST)
++	if exist libpthreadV*.lib copy libpthreadV*.lib $(LIBDEST)
+ 	copy _ptw32.h $(HDRDEST)
+ 	copy pthread.h $(HDRDEST)
+ 	copy sched.h $(HDRDEST)
