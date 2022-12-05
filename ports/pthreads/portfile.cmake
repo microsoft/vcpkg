@@ -17,6 +17,8 @@ else()
   list(APPEND PATCH_FILES use-mt.patch)
 endif()
 
+list(APPEND PATCH_FILES fix-pthread_getname_np.patch)
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthreads4w
