@@ -16,9 +16,9 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
         "${FEATURE_OPTIONS}"
 )
 vcpkg_cmake_install()
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/smf)
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
