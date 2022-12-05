@@ -33,12 +33,6 @@ vcpkg_find_acquire_program(PYTHON3)
 # )
 
 if(NOT "${program}")
-    vcpkg_download_distfile(
-        python_module_path
-        URLS https://raw.githubusercontent.com/mesonbuild/meson/9c6dab2cfd310ef2d840a2a7a479ce6b9e563b1d/mesonbuild/modules/python.py
-        FILENAME python-meson-module-9c6dab.py
-        SHA512 6e93dad2d12929757a37b97c44f697413504e7238ff7bb4e87925a3b5ba6d9eae7c25ae4d1a022ee836747fac760662a33d1ea88c7c74712673ce64e538eb691
-    )
     vcpkg_download_distfile(archive_path
         URLS ${download_urls}
         SHA512 "${download_sha512}"
@@ -58,7 +52,6 @@ if(NOT "${program}")
     )
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
-    file(INSTALL "${python_module_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/meson/mesonbuild/modules" RENAME "python.py")
 endif()
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
