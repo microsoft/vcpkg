@@ -15,9 +15,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/dlfcn-win32/dlfcn-win32-targets-debug.cmake" dlfcn-win32_DEBUG_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" dlfcn-win32_DEBUG_MODULE "${dlfcn-win32_DEBUG_MODULE}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/dlfcn-win32/dlfcn-win32-targets-debug.cmake" "${dlfcn-win32_DEBUG_MODULE}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/share/dlfcn-win32/dlfcn-win32-targets-debug.cmake" "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
