@@ -16,7 +16,7 @@ vcpkg_cmake_install()
 
 if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/${PORT}-targets-debug.cmake" "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/${PORT}-targets-debug.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-targets-debug.cmake")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/${PORT}-targets-debug.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
