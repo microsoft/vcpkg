@@ -1,6 +1,5 @@
 [binaries]
 cmake = ['@CMAKE_COMMAND@']
-python = ['@PYTHON3@']
 ninja = ['@NINJA@']
 pkgconfig= ['@PKGCONFIG@']
 @MESON_MT@
