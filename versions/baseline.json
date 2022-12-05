@@ -2582,7 +2582,7 @@
     },
     "geotrans": {
       "baseline": "3.8",
-      "port-version": 1
+      "port-version": 2
     },
     "getdns": {
       "baseline": "1.7.0",
