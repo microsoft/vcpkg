@@ -1,4 +1,4 @@
-set(VERSION 3.9.5)
+vcpkg_minimum_required(VERSION 2022-10-12)
 
 set(PATCHES )
 if (NOT VCPKG_TARGET_IS_LINUX)
@@ -17,8 +17,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES ${PATCHES}
+    ARCHIVE "${ARCHIVE}"
+    PATCHES "${PATCHES}"
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -65,12 +65,10 @@ else()
         vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";libapr-1.lib" ";apr-1.lib")
     endif()
 
-    if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(BUILD_ARCH "Win32")
-    elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(BUILD_ARCH "x64")
     else()
-        message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+        set(BUILD_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
     string(REPLACE "/" "\\" WIN_SOURCE_PATH "${SOURCE_PATH}")
@@ -108,13 +106,13 @@ else()
         endif()
     endif()
 
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         )
 
-        if (ACTIVEMQCPP_SHARED_LIB)
+        if(ACTIVEMQCPP_SHARED_LIB)
             file(COPY
                 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"

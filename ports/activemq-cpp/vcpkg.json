@@ -1,9 +1,9 @@
 {
   "name": "activemq-cpp",
   "version-semver": "3.9.5",
-  "port-version": 9,
+  "port-version": 10,
   "description": "Apache ActiveMQ is the most popular and powerful open source messaging and Integration Patterns server.",
-  "supports": "!(uwp | osx)",
+  "supports": "!uwp & !osx & (!windows | x86 | x64)",
   "dependencies": [
     "apr",
     {

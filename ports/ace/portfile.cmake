@@ -65,12 +65,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM "${TRIPLET_SYSTEM_ARCH}")
-endif()
-
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -142,7 +136,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
-    PLATFORM ${MSBUILD_PLATFORM}
     SKIP_CLEAN
   )
 
@@ -285,7 +278,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
-      PLATFORM ${MSBUILD_PLATFORM}
       SKIP_CLEAN
     )
 
