@@ -18,7 +18,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES "${PATCHES}"
+    PATCHES ${PATCHES}
 )
 
 if (VCPKG_TARGET_IS_LINUX)
