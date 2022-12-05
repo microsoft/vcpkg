@@ -6014,7 +6014,7 @@
     },
     "pthreads": {
       "baseline": "3.0.0",
-      "port-version": 12
+      "port-version": 13
     },
     "ptyqt": {
       "baseline": "0.6.5",
