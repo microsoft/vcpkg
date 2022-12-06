@@ -20,14 +20,14 @@ endif()
 list(APPEND PATCH_FILES fix-pthread_getname_np.patch fix-install.patch)
 
 vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO pthreads4w
-    FILENAME "pthreads4w-code-v${VERSION}.zip"
-    SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
-    PATCHES
-        fix-arm-macro.patch
-        fix-arm64-version_rc.patch # https://sourceforge.net/p/pthreads4w/code/merge-requests/6/
-        ${PATCH_FILES}
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO pthreads4w
+  FILENAME "pthreads4w-code-v${VERSION}.zip"
+  SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
+  PATCHES
+    fix-arm-macro.patch
+    fix-arm64-version_rc.patch # https://sourceforge.net/p/pthreads4w/code/merge-requests/6/
+    ${PATCH_FILES}
 )
 
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" DESTROOT_DEBUG)
@@ -36,7 +36,7 @@ file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" DESTROOT_RELEASE)
 vcpkg_list(SET OPTIONS_DEBUG "DESTROOT=\"${DESTROOT_DEBUG}\"")
 vcpkg_list(SET OPTIONS_RELEASE "DESTROOT=\"${DESTROOT_RELEASE}\"" "BUILD_RELEASE=1")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_list(APPEND OPTIONS_DEBUG "BUILD_STATIC=1")
   vcpkg_list(APPEND OPTIONS_RELEASE "BUILD_STATIC=1")
 endif()
@@ -49,6 +49,10 @@ vcpkg_install_nmake(
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/PThreads4WConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/PThreads4W")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper-pthread.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/pthread" RENAME vcpkg-cmake-wrapper.cmake)
