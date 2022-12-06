@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-directory-output.patch
         Fix-depends.patch
         remove-owner-read-perms.patch
+        253.patch # https://github.com/rttrorg/rttr/pull/253/
 )
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
