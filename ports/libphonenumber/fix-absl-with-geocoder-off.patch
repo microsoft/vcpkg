@@ -6,7 +6,7 @@ index 6033244..5e20ffc 100644
    DEPENDS ${PROTOBUF_SOURCES}
  )
  
-+find_package(absl)
++find_package(absl REQUIRED)
 +
  if (${BUILD_GEOCODER} STREQUAL "ON")
 -  find_package(absl)

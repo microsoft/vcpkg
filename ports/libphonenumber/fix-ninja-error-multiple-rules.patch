@@ -16,7 +16,7 @@ index 5cddf06..5d97408 100644
    set_target_properties (geocoding-shared
      PROPERTIES
 -      OUTPUT_NAME "geocoding"
-+      OUTPUT_NAME "geocoding"
++      OUTPUT_NAME "geocoding-shared"
        PREFIX "lib"
        SOVERSION ${libphonenumber_VERSION_MAJOR}
        VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
@@ -25,7 +25,7 @@ index 5cddf06..5d97408 100644
    set_target_properties (phonenumber-shared
      PROPERTIES
 -      OUTPUT_NAME "phonenumber"
-+      OUTPUT_NAME "phonenumber"
++      OUTPUT_NAME "phonenumber-shared"
        PREFIX "lib"
        SOVERSION ${libphonenumber_VERSION_MAJOR}
        VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
