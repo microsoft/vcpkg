@@ -9,7 +9,7 @@ vcpkg_from_github(
         fix-static-ffmpeg.patch
         fix-openexr-dll.patch
         imath-version-guard.patch
-		fix-openimageio_include_dir.patch
+        fix-openimageio_include_dir.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
