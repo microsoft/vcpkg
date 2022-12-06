@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-07-02",
+  "version-date": "2022-11-12",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -114,6 +114,12 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "SQLite3",
+          "name": "sqlite3",
+          "$since": "3.14",
+          "default-features": false
+        },
+        {
           "$package": "TIFF",
           "name": "tiff",
           "default-features": false
@@ -122,7 +128,7 @@
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!linux & !uwp"
+          "platform": "!uwp"
         },
         {
           "$package": "ZLIB",

@@ -105,11 +105,14 @@ function(replace_skia_dep NAME INCLUDES LIBS_DBG LIBS_REL DEFINITIONS)
     list(TRANSFORM INCLUDES PREPEND "${CURRENT_INSTALLED_DIR}")
     cmake_to_gn_list(_INCLUDES "${INCLUDES}")
 
-    find_libraries(_LIBS_DBG "${LIBS_DBG}" "${CURRENT_INSTALLED_DIR}/debug/lib")
-    cmake_to_gn_list(_LIBS_DBG "${_LIBS_DBG}")
-
     find_libraries(_LIBS_REL "${LIBS_REL}" "${CURRENT_INSTALLED_DIR}/lib")
     cmake_to_gn_list(_LIBS_REL "${_LIBS_REL}")
+
+    cmake_to_gn_list(_LIBS_DBG "")
+    if (NOT VCPKG_BUILD_TYPE)
+        find_libraries(_LIBS_DBG "${LIBS_DBG}" "${CURRENT_INSTALLED_DIR}/debug/lib")
+        cmake_to_gn_list(_LIBS_DBG "${_LIBS_DBG}")
+    endif()
 
     cmake_to_gn_list(_DEFINITIONS "${DEFINITIONS}")
 
@@ -120,7 +123,7 @@ endfunction()
 
 set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
 
-replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD" "libexpat,libexpatMD" "")
+replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD,libexpatdMT" "libexpat,libexpatMD,libexpatMT" "")
 replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
 replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz;harfbuzz-subset" "harfbuzz;harfbuzz-subset" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")

@@ -8,8 +8,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO skypjack/entt
-        REF v3.10.1
-        SHA512 ce611f8892626d8df2d6be6a0e7c0218683899bae5665b4466f149c6a5b6a4d184b390370262faa3ea822a399ac71a92f4780e9a22438d4a7a14ca5f554e94c4
+        REF v3.11.0
+        SHA512 aca15f0c59fcb700ae69a9bb451fd1d9a44613931c870d91a4696a376f70b35aaf5c7e8918119a194a8e33438e0354e1dcc22fe6294e3bf3a9511cb807c3135a
         HEAD_REF master
     )
 endif()

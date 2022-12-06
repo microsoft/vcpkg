@@ -1,14 +1,18 @@
 {
   "name": "mongo-c-driver",
-  "version": "1.17.6",
-  "port-version": 2,
+  "version": "1.22.2",
   "description": "Client library written in C for MongoDB.",
   "homepage": "https://github.com/mongodb/mongo-c-driver",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "libbson",
     {
-      "name": "openssl",
-      "platform": "!windows"
+      "name": "mongo-c-driver",
+      "features": [
+        "openssl"
+      ],
+      "platform": "!windows & !osx & !ios"
     },
     {
       "name": "vcpkg-cmake",
@@ -27,6 +31,12 @@
         "icu"
       ]
     },
+    "openssl": {
+      "description": "Use OpenSSL (even on Windows or Apple systems)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "snappy": {
       "description": "Enables snappy compressor support",
       "dependencies": [
@@ -36,6 +46,10 @@
     "zstd": {
       "description": "Enables zstd compressor support",
       "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
         "zstd"
       ]
     }

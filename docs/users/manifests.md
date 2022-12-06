@@ -38,6 +38,7 @@ manifest mode.
   - [`"supports"`](#supports)
   - [`"features"`](#features)
   - [`"default-features"`](#default-features)
+  - [`"vcpkg-configuration"`](#vcpkg-configuration)
 
 ## Simple Example Manifest
 
@@ -322,4 +323,34 @@ and that's the `"default-features"` field, which is an array of feature names.
     }
   }
 }
+```
+
+### `"vcpkg-configuration"`
+
+Allows to embed vcpkg configuration properties inside the `vcpkg.json` file. Everything inside
+the `vcpkg-configuration` property is treated as if it were defined in a `vcpkg-configuration.json` file. 
+See the [`vcpkg-configuration.json` documentation](registries.md) for details.
+
+Having a `vcpkg-configuration` defined in `vcpkg.json` while also having a `vcpkg-configuration.json` 
+file is not allowed and will result in the vcpkg command terminating with an error message.
+
+#### Example:
+
+```json
+  "name": "test",
+  "version": "1.0.0",
+  "dependencies": [ "beison", "zlib" ],
+  "vcpkg-configuration": {
+    "registries": [
+      {
+        "kind": "git",
+        "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
+        "repository": "https://github.com/northwindtraders/vcpkg-registry",
+        "packages": [ "beicode", "beison" ]
+      }
+    ],
+    "overlay-ports": [ "./my-ports/fmt", 
+                       "./team-ports"
+    ]
+  }
 ```

@@ -9,24 +9,17 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland-protocols
-    REF  cd153943618bcf157896a6d0f1154d0ad62078a7 #1.23 
-    SHA512 aae49d168e467d554ada638887511fa696a9fae900c93067d97f9e3d405068dc87883933f09ca2a3ef8a04631fdcffb629c178ec6e4c247f0c2ff6c1aaaaa952
+    REF  e631010ab7b96988e7c64c24b7d90f64717eaeee
+    SHA512 ea10d840b89eb081f0d5e2fbc034f24a53beceb8da03aecc6faccf35f1fc78e5d5e29a5d602a823ab4774c264599d05456020f50886ccdde196af246b7c601fd
     HEAD_REF master
 )
 
-set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/wayland/aclocal/")
-
-vcpkg_configure_make(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    OPTIONS
+            -Dtests=false
 )
-
-vcpkg_install_make()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
-endif()
+vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
