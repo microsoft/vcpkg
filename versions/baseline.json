@@ -2249,8 +2249,8 @@
       "port-version": 0
     },
     "fastcdr": {
-      "baseline": "1.0.15",
-      "port-version": 1
+      "baseline": "1.0.25",
+      "port-version": 0
     },
     "fastcgi": {
       "baseline": "2020-09-11",
