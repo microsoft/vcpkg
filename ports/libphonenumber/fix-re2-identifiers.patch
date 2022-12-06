@@ -1,0 +1,31 @@
+diff --git a/cpp/src/phonenumbers/regexp_adapter_re2.cc b/cpp/src/phonenumbers/regexp_adapter_re2.cc
+index bb54223..c91c6ff 100644
+--- a/cpp/src/phonenumbers/regexp_adapter_re2.cc
++++ b/cpp/src/phonenumbers/regexp_adapter_re2.cc
+@@ -42,7 +42,7 @@ class RE2RegExpInput : public RegExpInput {
+     return utf8_input_.ToString();
+   }
+ 
+-  StringPiece* Data() {
++  re2::StringPiece* Data() {
+     return &utf8_input_;
+   }
+ 
+@@ -50,7 +50,7 @@ class RE2RegExpInput : public RegExpInput {
+   // string_ holds the string referenced by utf8_input_ as StringPiece doesn't
+   // copy the string passed in.
+   const string string_;
+-  StringPiece utf8_input_;
++  re2::StringPiece utf8_input_;
+ };
+ 
+ namespace {
+@@ -105,7 +105,7 @@ class RE2RegExp : public RegExp {
+                        string* matched_string5,
+                        string* matched_string6) const {
+     DCHECK(input_string);
+-    StringPiece* utf8_input =
++    re2::StringPiece* utf8_input =
+         static_cast<RE2RegExpInput*>(input_string)->Data();
+ 
+     if (anchor_at_start) {
