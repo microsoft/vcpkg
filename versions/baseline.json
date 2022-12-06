@@ -2105,7 +2105,7 @@
       "port-version": 1
     },
     "ecsutil": {
-      "baseline": "1.0.7.21",
+      "baseline": "1.0.7.22",
       "port-version": 0
     },
     "edflib": {
