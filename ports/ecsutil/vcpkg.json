@@ -3,8 +3,8 @@
   "version": "1.0.7.22",
   "description": "Native Windows SDK for accessing ECS via the S3 HTTP protocol.",
   "homepage": "https://github.com/EMCECS/ecs-object-client-windows-cpp",
-  "supports": "windows & (x64 | x86)",
   "license": "Apache-2.0",
+  "supports": "windows & (x64 | x86)",
   "dependencies": [
     {
       "name": "atlmfc",
