@@ -48,23 +48,7 @@ vcpkg_install_nmake(
   OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpthreadVC3.lib" "${CURRENT_PACKAGES_DIR}/lib/pthreadVC3.lib")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpthreadVCE3.lib" "${CURRENT_PACKAGES_DIR}/lib/pthreadVCE3.lib")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpthreadVSE3.lib" "${CURRENT_PACKAGES_DIR}/lib/pthreadVSE3.lib")
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVC3d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVC3d.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVCE3d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVCE3d.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVSE3d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVSE3d.lib")
-    endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/PThreads4WConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/PThreads4W")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper-pthread.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/pthread" RENAME vcpkg-cmake-wrapper.cmake)
