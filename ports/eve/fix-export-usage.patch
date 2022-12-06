@@ -1,0 +1,13 @@
+diff --git a/cmake/config/eve-install.cmake b/cmake/config/eve-install.cmake
+index ff909a2..4a4b6a8 100644
+--- a/cmake/config/eve-install.cmake
++++ b/cmake/config/eve-install.cmake
+@@ -4,7 +4,7 @@
+ ##  SPDX-License-Identifier: BSL-1.0
+ ##==================================================================================================
+ include(GNUInstallDirs)
+-set(MAIN_DEST     "${CMAKE_INSTALL_LIBDIR}/eve-${PROJECT_VERSION}")
++set(MAIN_DEST     "share/eve")
+ set(INSTALL_DEST  "${CMAKE_INSTALL_INCLUDEDIR}/eve-${PROJECT_VERSION}")
+ set(DOC_DEST      "${CMAKE_INSTALL_DOCDIR}-${PROJECT_VERSION}")
+ 

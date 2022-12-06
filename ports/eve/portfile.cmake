@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2022.09.0
     SHA512 ab5be8c897955e08e1aa192ac9dd90e310b2786a2f295b0d5a5d309fa8e621b66673668b9dbe2f683a5e2596d291b0521d80a8bb80f493ecb12e86ab5d830c7b
     HEAD_REF main
+    PATCHES
+        fix-export-usage.patch
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
