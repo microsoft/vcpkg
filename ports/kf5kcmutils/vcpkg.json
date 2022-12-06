@@ -1,7 +1,6 @@
 {
   "name": "kf5kcmutils",
-  "version": "5.89.0",
-  "port-version": 1,
+  "version": "5.98.0",
   "description": "Utilities for KDE System Settings modules",
   "homepage": "https://api.kde.org/frameworks/kcmutils/html/index.html",
   "dependencies": [
