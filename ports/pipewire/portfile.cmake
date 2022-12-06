@@ -1,9 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
-    REF 0.3.52
-    SHA512 30e9cf74c92babafe386f02a03bb5c41a8ee5591a02f15845cca1ee44f091ce68eb14d48943d43b680cb525026a19e0290997670f9a82156eaa72e974fe6d01a
+    REF ${VERSION}
+    SHA512 33ef5a100107f07a2f42eb008af4dc4bc67c38f4d4929e7ab865c67f16750a3f8d9baca117dc035d5bb88e6f48ce535595435a14770e982c33c349a466508e98
     HEAD_REF master # branch name
 )
 

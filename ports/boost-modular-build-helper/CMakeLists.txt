@@ -48,11 +48,11 @@ else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
-    list(APPEND B2_OPTIONS "asmflags=/safeseh")
-endif()
-
 if(VCPKG_DETECTED_MSVC)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    endif()
+
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(USER_CONFIG_TOOLSET clang-win)
     else()
@@ -188,11 +188,6 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-include(ProcessorCount)
-ProcessorCount(NUMBER_OF_PROCESSORS)
-if(NOT NUMBER_OF_PROCESSORS)
-    set(NUMBER_OF_PROCESSORS 1)
-endif()
 
 # Handle ICU
 if(WIN32)
@@ -274,7 +269,7 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -j${NUMBER_OF_PROCESSORS}
+        -j ${VCPKG_CONCURRENCY}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
         --debug-configuration
