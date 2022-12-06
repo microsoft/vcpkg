@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 526dfcf60..241f706b7 100644
+index 7b4f47a..3d90152 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -97,7 +97,7 @@ endif()
+@@ -87,7 +87,7 @@ endif()
  
  include(CMakeDependentOption)
  
@@ -10,8 +10,8 @@ index 526dfcf60..241f706b7 100644
 +if(MSVC AND NOT VCPKG_TOOLCHAIN)
    option(WITH_GFLAGS "build with GFlags" OFF)
    option(WITH_XPRESS "build with windows built in compression" OFF)
-   include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
-@@ -142,10 +142,7 @@ else()
+   option(ROCKSDB_SKIP_THIRDPARTY "skip thirdparty.inc" OFF)
+@@ -136,10 +136,7 @@ else()
    endif()
  
    if(WITH_SNAPPY)
@@ -23,7 +23,7 @@ index 526dfcf60..241f706b7 100644
      add_definitions(-DSNAPPY)
      list(APPEND THIRDPARTY_LIBS Snappy::snappy)
    endif()
-@@ -169,16 +166,19 @@ else()
+@@ -163,16 +160,19 @@ else()
    endif()
  
    if(WITH_LZ4)
@@ -47,7 +47,7 @@ index 526dfcf60..241f706b7 100644
    endif()
  endif()
  
-@@ -438,9 +438,9 @@ endif()
+@@ -402,9 +402,9 @@ endif()
  
  option(WITH_TBB "build with Threading Building Blocks (TBB)" OFF)
  if(WITH_TBB)
