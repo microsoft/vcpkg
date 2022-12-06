@@ -42,6 +42,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_install_nmake(
+  CL_LANGUAGE C
   SOURCE_PATH "${SOURCE_PATH}"
   PROJECT_NAME Makefile
   OPTIONS_DEBUG ${OPTIONS_DEBUG}
