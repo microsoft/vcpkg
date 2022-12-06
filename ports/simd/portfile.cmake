@@ -54,7 +54,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
   
   file(COPY "${SOURCE_PATH}/src/Simd/SimdLib.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
-  message(FATAL_ERROR "Other Targets then Windows are not jet supported")
+  vcpkg_configure_cmake(
+    SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
+  )
+  vcpkg_cmake_install()
+  vcpkg_cmake_config_fixup()
+  vcpkg_copy_pdbs()
 endif()
 
 # Handle copyright
