@@ -212,6 +212,11 @@ easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
 ebml:arm-uwp=fail
 ebml:x64-uwp=fail
+# requires /Qspectre libraries for a successful build, which don't seem to be available.
+ecsutil:x64_windows=skip
+ecsutil:x64_windows_static=skip
+ecsutil:x64_windows_static_md=skip
+ecsutil:x86_windows=skip
 ecsutil:arm64-windows=fail
 ecsutil:arm-uwp=fail
 ecsutil:x64-linux=fail
