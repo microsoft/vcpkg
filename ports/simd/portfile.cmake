@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF e61df320747449322767e67534bd7bb6a9a6d2c8 # v5.1.119
     SHA512 9dfce424af8600aaa2c0eac8bbb8f20b12cbd086d495c7e9e1ce2a45ae60242ee893608fc41c88ff6caa960821188e4cffd586b416ab891ee86d6e28aad54726
     HEAD_REF master
+    PATCHES
+        fix-CMakeLists-install.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -60,6 +62,8 @@ else()
   vcpkg_cmake_install()
   vcpkg_cmake_config_fixup()
   vcpkg_copy_pdbs()
+  
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
 # Handle copyright
