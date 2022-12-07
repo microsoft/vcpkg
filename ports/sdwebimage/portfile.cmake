@@ -1,0 +1,19 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO SDWebImage/SDWebImage
+    REF 5.14.2
+    SHA512 4db2e8bccba73270c16000f22be9a8a011e2c29900329571586b08de0f5695f291175601bc39d7f72b52a651d218a9665183e65e5638b5805850091a34c8556a
+    HEAD_REF master
+)
+
+vcpkg_xcode_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_FILE SDWebImage.xcodeproj
+    TARGET "SDWebImage static"
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

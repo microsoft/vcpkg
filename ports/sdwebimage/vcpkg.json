@@ -1,0 +1,10 @@
+{
+  "name": "sdwebimage",
+  "version-semver": "5.14.2",
+  "description": "This library provides an async image downloader with cache support.",
+  "homepage": "https://github.com/SDWebImage/SDWebImage",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-xcode"
+  ]
+}
