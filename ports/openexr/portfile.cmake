@@ -18,6 +18,7 @@ vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=_d
     -DPYILMBASE_ENABLE=FALSE
+    -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
