@@ -1,0 +1,40 @@
+diff --git a/src/xcb_util.c b/src/xcb_util.c
+index 0296ce0dd..cce54aa50 100644
+--- a/src/xcb_util.c
++++ b/src/xcb_util.c
+@@ -389,7 +389,11 @@ static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short
+         fd = _xcb_socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+         if (_xcb_do_connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
+             break;
++#ifdef _WIN32
++        closesocket(fd);
++#else
+         close(fd);
++#endif
+         fd = -1;
+     }
+     freeaddrinfo(results);
+@@ -454,7 +458,11 @@ static int _xcb_open_unix(char *protocol, const char *file)
+         setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &val, sizeof(int));
+     }
+     if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
++#ifdef _WIN32
++        closesocket(fd);
++#else
+         close(fd);
++#endif
+         return -1;
+     }
+     return fd;
+@@ -481,7 +489,11 @@ static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen)
+     if (fd == -1)
+         return -1;
+     if (connect(fd, (struct sockaddr *) &addr, namelen) == -1) {
++#ifdef _WIN32
++        closesocket(fd);
++#else
+         close(fd);
++#endif
+         return -1;
+     }
+     return fd;

@@ -1,7 +1,7 @@
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
 index 495671ebb..fff3ea518 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gst-plugins-base/meson.build
++++ b/subprojects/gst-plugins-base/meson.build
 @@ -43,7 +43,7 @@ plugins = []
  
  cc = meson.get_compiler('c')

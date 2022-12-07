@@ -1,11 +1,16 @@
 {
   "name": "botan",
-  "version": "2.19.1",
-  "port-version": 1,
+  "version": "2.19.3",
   "description": "A cryptography library written in C++11",
   "homepage": "https://botan.randombit.net",
   "license": "BSD-2-Clause",
-  "supports": "!(arm & uwp)",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
   "features": {
     "amalgamation": {
       "description": "Do an amalgamation build of the library"
@@ -13,6 +18,10 @@
     "zlib": {
       "description": "Build with zlib. Enable compression pipes.",
       "dependencies": [
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        },
         "zlib"
       ]
     }
