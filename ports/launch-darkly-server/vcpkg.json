@@ -4,7 +4,7 @@
   "port-version": 0,
   "description": "LaunchDarkly server-side SDK for C/C++",
   "homepage": "https://github.com/launchdarkly/c-server-sdk",
-  "supports": "!uwp",
+  "supports": "!uwp & !arm",
   "dependencies": [
     "curl",
     "pcre",
