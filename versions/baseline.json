@@ -6812,6 +6812,10 @@
       "baseline": "0.16.1",
       "port-version": 6
     },
+    "sdwebimage": {
+      "baseline": "5.14.2",
+      "port-version": 0
+    },
     "seal": {
       "baseline": "3.7.2",
       "port-version": 3
