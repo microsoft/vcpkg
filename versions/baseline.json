@@ -545,7 +545,7 @@
       "port-version": 4
     },
     "boinc": {
-      "baseline": "7.20.4",
+      "baseline": "7.20.5",
       "port-version": 0
     },
     "bond": {
@@ -7228,7 +7228,7 @@
       "baseline": "0.9.3",
       "port-version": 0
     },
-    "sse2neon" : {
+    "sse2neon": {
       "baseline": "1.5.1",
       "port-version": 0
     },
