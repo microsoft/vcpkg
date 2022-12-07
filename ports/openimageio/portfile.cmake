@@ -1,3 +1,5 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
