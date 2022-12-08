@@ -123,6 +123,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/gdb"
 )
 
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules" "${CURRENT_PACKAGES_DIR}/lib/gio/modules")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules" "${CURRENT_PACKAGES_DIR}/lib/gio/modules")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
