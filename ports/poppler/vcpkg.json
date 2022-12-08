@@ -80,8 +80,7 @@
           "features": [
             "cairo"
           ]
-        },
-        "python3"
+        }
       ]
     },
     "private-api": {
