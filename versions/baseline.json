@@ -4290,7 +4290,7 @@
     },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
-      "port-version": 5
+      "port-version": 6
     },
     "libtins": {
       "baseline": "4.3",
