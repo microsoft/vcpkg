@@ -8,7 +8,6 @@
     "boost-date-time",
     "boost-system",
     "boost-thread",
-    "dirent",
     "gtest",
     "icu",
     "protobuf",
