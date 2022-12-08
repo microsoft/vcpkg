@@ -2,6 +2,7 @@
   "name": "libphonenumber",
   "version": "8.13.1",
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
+  "supports": "!static & !linux & !osx",
   "dependencies": [
     "abseil",
     "boost-date-time",
