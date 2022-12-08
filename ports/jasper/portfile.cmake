@@ -27,6 +27,7 @@ vcpkg_cmake_configure(
         -DJAS_ENABLE_LATEX=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
+        -DJAS_STDC_VERSION=199901L # Only intent is to print a warning if __STDC_VERSION__  < JAS_STDC_VERSION
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # Due to CMakes FindJasper; Default for multi config generators.
 )
