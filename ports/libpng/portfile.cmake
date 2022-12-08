@@ -15,7 +15,7 @@ if ("apng" IN_LIST FEATURES)
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
         URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 e8cb74d9be6bcbc474b6bbd6200ab5d5111e91d3ab601e5fda04213d2800a4051f04152fa5d47db690612ed06a488ff3b2608a8f0bac0cf207d486107d98da1f
+        SHA512 97a182da0b3b54aecf735e3655d8e8f1a569ae957b23fc3d7a9c8cc65dcdd26f34f173ce9f60af99b01d5347267b2afefaf787c500ce1005e86bf2810b3d0738
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -34,7 +34,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glennrp/libpng
     REF v${VERSION}
-    SHA512 def32a5e597d9f99b6f574193f0b94fe39a45ea69b764b0c2506e59df66e74f94dc313a983f092ec641d58e0c2be95a424a32c2ff019b0815ae51f2473282977
+    SHA512 d61408cee5850582baa57166547ccab6cc171bc809076e53494ace26157fd7787c3209e3b757fd68c541bfb95afe309745d887fb5cd2005b2024af7355c809a0
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
@@ -55,10 +55,10 @@ endif()
 vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
-    # for armeabi-v7a, check whether NEON is available
-    vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
-else()
-    vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        # for armeabi-v7a, check whether NEON is available
+        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
