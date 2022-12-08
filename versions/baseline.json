@@ -6230,7 +6230,7 @@
     },
     "qt5-webglplugin": {
       "baseline": "5.15.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-websockets": {
       "baseline": "5.15.7",
