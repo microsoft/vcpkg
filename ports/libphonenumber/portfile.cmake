@@ -10,6 +10,7 @@ vcpkg_from_github(
         "fix-re2-identifiers.patch"
         "fix-icui18n-lib-name.patch"
         "fix-absl-with-geocoder-off.patch"
+        "make-test-optional.patch"
         "remove-shared-lib.patch"   # Needs -DBUILD_GEOCODER=OFF option
                                     # Work on building shared libs in future. For now, temp fix.
 )
