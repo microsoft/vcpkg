@@ -14,11 +14,13 @@ endif()
 
 execute_process(
     COMMAND xcode-select -p
-    OUTPUT_VARIABLE OUTPUTS
+    OUTPUT_VARIABLE XCODE_PATH
     ERROR_VARIABLE ERROR_OUTPUT
 )
-message("OUTPUTS: ${OUTPUTS}")
-message("ERROR_OUTPUT: ${ERROR_OUTPUT}")
+
+if (NOT "${XCODE_PATH}" MATCHES "Xcode.app/Contents/Developer")
+    message(FATAL_ERROR "Please switch Xcode command line tool to your Xcode path using the following command:\nsudo xcode-select -s <YOUR_XCODE_PATH>")
+endif()
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_xcode_build.cmake"
