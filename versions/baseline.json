@@ -7529,8 +7529,8 @@
       "port-version": 2
     },
     "tl-expected": {
-      "baseline": "1.0.0",
-      "port-version": 2
+      "baseline": "2022-11-24",
+      "port-version": 0
     },
     "tl-function-ref": {
       "baseline": "1.0.0",
@@ -7541,12 +7541,12 @@
       "port-version": 0
     },
     "tl-optional": {
-      "baseline": "1.0.0",
-      "port-version": 2
+      "baseline": "2021-05-02",
+      "port-version": 0
     },
     "tl-ranges": {
       "baseline": "2022-12-07",
-      "port-version": 0
+      "port-version": 1
     },
     "tlx": {
       "baseline": "0.5.20191212",
