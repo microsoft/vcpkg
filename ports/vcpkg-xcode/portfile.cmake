@@ -4,8 +4,11 @@ endif()
 
 execute_process(
     COMMAND xcode-select --install
+    OUTPUT_VARIABLE OUTPUTS
     ERROR_VARIABLE ERROR_OUTPUT
 )
+message("OUTPUTS: ${OUTPUTS}")
+message("ERROR_OUTPUT: ${ERROR_OUTPUT}")
 
 if (NOT "${ERROR_OUTPUT}" MATCHES "command line tools are already installed")
     message(FATAL_ERROR "Please install Xcode command line tool first using the following command first:\nxcode-select --install")
