@@ -4,7 +4,7 @@ if(VCPKG_TARGET_IS_UWP)
             -Dsse2=disabled
             -Dssse3=disabled)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}")
+    set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}") # TODO: /arch: flag requires compiler check. needs to be MSVC
     set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
     list(APPEND OPTIONS
             -Dmmx=enabled
@@ -27,6 +27,12 @@ elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
             -Dmmx=disabled
             -Dsse2=disabled
             -Dssse3=disabled)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+    list(APPEND OPTIONS
+                -Da64-neon=disabled
+                )
 endif()
 
 set(PIXMAN_VERSION "${VERSION}")
