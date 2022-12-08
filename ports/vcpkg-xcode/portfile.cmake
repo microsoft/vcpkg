@@ -2,6 +2,15 @@ if(VCPKG_CROSSCOMPILING)
     message(WARNING "vcpkg-xcode is a host-only port; please mark it as a host port in your dependencies.")
 endif()
 
+execute_process(
+    COMMAND xcode-select --install
+    ERROR_VARIABLE ERROR_OUTPUT
+)
+
+if (NOT "${ERROR_OUTPUT}" MATCHES "command line tools are already installed")
+    message(FATAL_ERROR "Please install Xcode command line tool first using the following command first:\nxcode-select --install")
+endif()
+
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_xcode_build.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_xcode_install.cmake"
