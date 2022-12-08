@@ -1,8 +1,9 @@
 {
   "name": "tl-ranges",
-  "version-date": "2021-12-02",
+  "version-date": "2022-12-07",
   "description": "Ranges that didn't make C++20",
   "homepage": "https://tl.tartanllama.xyz",
+  "license": "CC0-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
