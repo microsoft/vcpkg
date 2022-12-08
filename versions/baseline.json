@@ -5809,8 +5809,8 @@
       "port-version": 1
     },
     "pixman": {
-      "baseline": "0.40.0",
-      "port-version": 4
+      "baseline": "0.42.2",
+      "port-version": 0
     },
     "pkgconf": {
       "baseline": "1.8.0",
