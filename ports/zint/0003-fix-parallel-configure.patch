@@ -1,0 +1,13 @@
+diff --git a/backend/CMakeLists.txt b/backend/CMakeLists.txt
+index 854674d..c9d7627 100644
+--- a/backend/CMakeLists.txt
++++ b/backend/CMakeLists.txt
+@@ -4,8 +4,6 @@
+ 
+ project(zint)
+ 
+-configure_file(zintconfig.h.in ${CMAKE_CURRENT_SOURCE_DIR}/zintconfig.h)
+-
+ set(zint_COMMON_SRCS common.c library.c large.c reedsol.c gs1.c eci.c general_field.c)
+ set(zint_ONEDIM_SRCS bc412.c code.c code128.c 2of5.c upcean.c telepen.c medical.c plessey.c rss.c)
+ set(zint_POSTAL_SRCS postal.c auspost.c imail.c mailmark.c)
