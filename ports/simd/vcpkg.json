@@ -4,7 +4,7 @@
   "description": "Simd image processing and machine learning library, designed for C and C++ programmers",
   "homepage": "https://github.com/ermig1979/Simd",
   "license": "MIT",
-  "supports": "((x86 | x64) & windows) | (x64 & linux)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
