@@ -7230,7 +7230,7 @@
     },
     "sse2neon": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "starlink-ast": {
       "baseline": "9.2.7",
