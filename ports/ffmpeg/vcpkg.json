@@ -513,6 +513,12 @@
         }
       ]
     },
+    "qsv": {
+      "description": "Intel QSV Codec",
+      "dependencies": [
+        "mfx-dispatch"
+      ]
+    },
     "sdl2": {
       "description": "Sdl2 support",
       "dependencies": [
