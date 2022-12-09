@@ -1618,7 +1618,7 @@
     },
     "cpp-jwt": {
       "baseline": "2022-08-27",
-      "port-version": 0
+      "port-version": 1
     },
     "cpp-netlib": {
       "baseline": "0.13.0",
