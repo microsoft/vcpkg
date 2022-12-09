@@ -3974,7 +3974,7 @@
     },
     "libmodbus": {
       "baseline": "3.1.6",
-      "port-version": 2
+      "port-version": 3
     },
     "libmodman": {
       "baseline": "2.0.1",
