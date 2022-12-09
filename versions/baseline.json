@@ -2657,7 +2657,7 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.74.1",
+      "baseline": "2.75.0",
       "port-version": 0
     },
     "glibmm": {
