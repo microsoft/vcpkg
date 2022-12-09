@@ -3,8 +3,8 @@
   "version": "0.52.0",
   "description": "A C++ library for Hashicorp Vault",
   "homepage": "https://github.com/abedra/libvault",
-  "supports": "!uwp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "curl",
     {
