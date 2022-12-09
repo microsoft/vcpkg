@@ -5166,7 +5166,7 @@
     },
     "neargye-semver": {
       "baseline": "0.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ned14-internal-quickcpplib": {
       "baseline": "2022-09-08",
