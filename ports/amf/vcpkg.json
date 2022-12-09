@@ -1,8 +1,8 @@
 {
-    "name": "amf",
-    "version": "1.4.26",
-    "description": "AMD Advanced Media Framework headers",
-    "homepage": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF",
-    "license": "MIT",
-    "supports": "!linux & !uwp & !osx"
+  "name": "amf",
+  "version": "1.4.26",
+  "description": "AMD Advanced Media Framework headers",
+  "homepage": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF",
+  "license": "MIT",
+  "supports": "!linux & !uwp & !osx"
 }
