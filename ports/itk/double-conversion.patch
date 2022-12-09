@@ -12,7 +12,7 @@ index 16c611fd3..13978724c 100644
 +    get_target_property(ITKDoubleConversion_LIBRARY_RELEASE double-conversion::double-conversion IMPORTED_LOCATION_RELEASE)
 +  endif()
 +  get_target_property(ITKDoubleConversion_LIBRARY_DEBUG double-conversion::double-conversion IMPORTED_IMPLIB_DEBUG)
-+  if(NOT IMPORTED_IMPLIB_DEBUG)
++  if(NOT ITKDoubleConversion_LIBRARY_DEBUG)
 +    get_target_property(ITKDoubleConversion_LIBRARY_DEBUG double-conversion::double-conversion IMPORTTED_LOCATION_DEBUG)
 +  endif()
 +  include(SelectLibraryConfigurations)
