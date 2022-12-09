@@ -27,16 +27,27 @@ such as https://github.com/microsoft/vcpkg/pull/23757
   the "auto generate release notes" button. Manually remove any entries created by the automated
   localization tools which will start with `* LEGO: Pull request from juno/`.
 9. Publish that draft release as "pre-release".
-10. Smoke test the 'one liner' installer: (Where 2022-06-15 is replaced with the right release name)
+10. Clean up a machine for the following tests:
+  * Delete `VCPKG_DOWNLOADS/artifacts` (which forces artifacts to be reacquired)
+  * Delete `LOCALAPPDATA/vcpkg` (which forces registries to be reacquired)
+11. Smoke test the 'one liner' installer: (Where 2022-06-15 is replaced with the right release name)
     * Powershell:
         `iex (iwr https://github.com/microsoft/vcpkg-tool/releases/download/2022-06-15/vcpkg-init.ps1)`
     * Batch:
         `curl -L -o vcpkg-init.cmd https://github.com/microsoft/vcpkg-tool/releases/download/2022-06-15/vcpkg-init.ps1 && .\vcpkg-init.cmd`
     * Bash:
         `. <(curl https://github.com/microsoft/vcpkg-tool/releases/download/2022-06-15/vcpkg-init -L)`
-11. In the vcpkg repo, draft a PR which updates `bootstrap-vcpkg.sh` and `boostrap-vcpkg.ps1`
+12. Test that embedded scenarios work for vcpkg-artifacts:
+    Ensure that none of the following report errors:
+    1. git clone https://github.com/some-example/blink/
+    2. cd blink
+    3. vcpkg activate
+    4. idf.py set-target ESP32
+    5. cd build
+    6. ninja
+13. In the vcpkg repo, draft a PR which updates `bootstrap-vcpkg.sh` and `boostrap-vcpkg.ps1`
   with the new release date, and update SHAs as appropriate in the .sh script. (For example, see
   https://github.com/microsoft/vcpkg/pull/23757)
-12. Merge the tool update PR.
-13. Change the github release in vcpkg-tool from "prerelease" to "release". (This automatically
+15. Merge the tool update PR.
+16. Change the github release in vcpkg-tool from "prerelease" to "release". (This automatically
   updates the aka.ms links)

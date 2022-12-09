@@ -1,0 +1,18 @@
+{
+  "name": "libxkbcommon",
+  "version": "1.4.1",
+  "description": "keymap handling library for toolkits and window systems",
+  "homepage": "https://xkbcommon.org/",
+  "license": null,
+  "dependencies": [
+    "getopt",
+    "libx11",
+    "tool-meson",
+    {
+      "name": "wayland",
+      "platform": "linux"
+    },
+    "xcb",
+    "xcb-render-util"
+  ]
+}

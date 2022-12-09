@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v3.7.2
     SHA512 82cf2afed4cc53c0e09d367ff3df1db0e9ac17ff2458e4660c646430d8e72f472b072a3910c9595b26eb5ac89c82fe74699acab3869014f87d8e2738b81568a1
     HEAD_REF master
+    PATCHES
+        clang-cl.patch # the normal lookup is not working since it doesn't take Ninja as a Generator into account
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE

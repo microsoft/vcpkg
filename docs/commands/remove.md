@@ -16,7 +16,7 @@ vcpkg remove --outdated [options]
 
 Remove port packages from Classic Mode.
 
-`remove` removes listed packages and any packages that require them from the Classic Mode [installed directory][common-options.md#install-root]. See the [install command documentation](install.md#package-syntax) for detailed syntax of the `<package>` parameter.
+`remove` removes listed packages and any packages that require them from the Classic Mode [installed directory](common-options.md#install-root). See the [install command documentation](install.md#package-syntax) for detailed syntax of the `<package>` parameter.
 
 This command is not currently supported in [Manifest Mode][].
 

@@ -1,14 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.7.5
-    SHA512 8be77961026d13b55dbfcc2e43972b4fb8f1cd9a6bfb8098d5bdfc8b60ff67c2d3ede4bdb5815614a8233dc184cbf3aa363a9d33eed96b9f748544e20b15f2c7
+    REF v1.8.2
+    SHA512 f50252a59951570c87cc1254b1954ef275ee7b2a5cac229aba98b49f34f9f73314d2db9df0abc92efdfeab565f6c1ee14080e049d370384e3398b8c27f5519b7
     HEAD_REF master
     PATCHES
         vcpkg.patch
         drogon_config.patch
-        static-brotli.patch
-        use-libmariadb.patch
 )
 
 vcpkg_check_features(
@@ -29,7 +27,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DBUILD_DROGON_SHARED=${BUILD_DROGON_SHARED}
+        -DBUILD_SHARED_LIBS=${BUILD_DROGON_SHARED}
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         ${FEATURE_OPTIONS}

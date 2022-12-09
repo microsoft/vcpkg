@@ -1,7 +1,3 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
-
 find_path(COR_H_PATH cor.h)
 if(COR_H_PATH MATCHES "NOTFOUND")
     message(FATAL_ERROR "Could not find <cor.h>. Ensure the NETFXSDK is installed.")
@@ -20,10 +16,6 @@ vcpkg_from_github(
             inherit_from_parent_or_project_defaults.patch
             replace_environment_variable.patch
 )
-
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-file(COPY ${SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
 file(TO_NATIVE_PATH ${CURRENT_INSTALLED_DIR} NATIVE_INSTALLED_DIR)
 configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" @ONLY)
@@ -44,14 +36,14 @@ endif()
 set(SOURCE_INCLUDE_PATH "${SOURCE_PATH}/Include")
 set(SOURCE_BIN_PATH_RELEASE "${SOURCE_PATH}/Bin/${PLATFORM}-Release")
 set(SOURCE_BIN_PATH_DEBUG "${SOURCE_PATH}/Bin/${PLATFORM}-Debug")
-set(SOURCE_CONFIG_PATH ${SOURCE_PATH}/Config)
+set(SOURCE_CONFIG_PATH "${SOURCE_PATH}/Config")
 set(SOURCE_THIRDPARTY_PATH "${SOURCE_PATH}/ThirdParty")
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Android-Arm/OniPlatformAndroid-Arm.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/Android-Arm
+        "${CURRENT_PACKAGES_DIR}/include/openni2/Android-Arm"
 )
 
 file(
@@ -59,35 +51,35 @@ file(
         "${SOURCE_INCLUDE_PATH}/Driver/OniDriverAPI.h"
         "${SOURCE_INCLUDE_PATH}/Driver/OniDriverTypes.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/Driver
+        "${CURRENT_PACKAGES_DIR}/include/openni2/Driver"
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Linux-Arm/OniPlatformLinux-Arm.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/Linux-Arm
+        "${CURRENT_PACKAGES_DIR}/include/openni2/Linux-Arm"
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Linux-x86/OniPlatformLinux-x86.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/Linux-x86
+        "${CURRENT_PACKAGES_DIR}/include/openni2/Linux-x86"
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/MacOSX/OniPlatformMacOSX.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/MacOSX
+        "${CURRENT_PACKAGES_DIR}/include/openni2/MacOSX"
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Win32/OniPlatformWin32.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2/Win32
+        "${CURRENT_PACKAGES_DIR}/include/openni2/Win32"
 )
 
 file(
@@ -105,22 +97,24 @@ file(
         "${SOURCE_INCLUDE_PATH}/PS1080.h"
         "${SOURCE_INCLUDE_PATH}/PSLink.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/openni2
+        "${CURRENT_PACKAGES_DIR}/include/openni2"
 )
 
 file(
     INSTALL
         "${SOURCE_BIN_PATH_RELEASE}/OpenNI2.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
+        "${CURRENT_PACKAGES_DIR}/lib"
 )
 
+if(NOT VCPKG_BUILD_TYPE)
 file(
     INSTALL
         "${SOURCE_BIN_PATH_DEBUG}/OpenNI2.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
 )
+endif()
 
 file(
     INSTALL
@@ -131,23 +125,24 @@ file(
         "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/PSLink.dll"
         "${SOURCE_CONFIG_PATH}/OpenNI2/Drivers/PSLink.ini"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers
+        "${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers"
 )
 
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin/OpenNI2
+        "${CURRENT_PACKAGES_DIR}/bin/OpenNI2"
 )
 
 file(
     INSTALL
         "${SOURCE_BIN_PATH_RELEASE}/OpenNI2.dll"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin
+        "${CURRENT_PACKAGES_DIR}/bin"
 )
 
+if(NOT VCPKG_BUILD_TYPE)
 file(
     INSTALL
         "${SOURCE_BIN_PATH_DEBUG}/OpenNI2/Drivers/Kinect.dll"
@@ -157,22 +152,25 @@ file(
         "${SOURCE_BIN_PATH_DEBUG}/OpenNI2/Drivers/PSLink.dll"
         "${SOURCE_CONFIG_PATH}/OpenNI2/Drivers/PSLink.ini"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers
+        "${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers"
 )
+endif()
 
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2
+        "${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2"
 )
 
+if(NOT VCPKG_BUILD_TYPE)
 file(
     INSTALL
         "${SOURCE_BIN_PATH_DEBUG}/OpenNI2.dll"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/bin
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
+endif()
 
 file(
     INSTALL
@@ -183,7 +181,7 @@ file(
         "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/PSLink.dll"
         "${SOURCE_CONFIG_PATH}/OpenNI2/Drivers/PSLink.ini"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers
+        "${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers"
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -201,13 +199,14 @@ file(
         "${SOURCE_BIN_PATH_RELEASE}/PS1080Console.exe"
         "${SOURCE_BIN_PATH_RELEASE}/PSLinkConsole.exe"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/tools/openni2
+        "${CURRENT_PACKAGES_DIR}/tools/openni2"
 )
 
 # Deploy Script
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/OpenNI2)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/OpenNI2")
+if(NOT VCPKG_BUILD_TYPE)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2")
+endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openni2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openni2/LICENSE ${CURRENT_PACKAGES_DIR}/share/openni2/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

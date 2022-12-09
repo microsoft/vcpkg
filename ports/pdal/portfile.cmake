@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
-    REF 2.4.0
-    SHA512 fd1314058404a1d15e308cee5682dcf3f1c6277884f200069b293b929ddfcd1d0d29bc74353bb08b1d163d3e776c8b036ba62d7c8599470b755128dacfe2f032
+    REF 2.4.3
+    SHA512 0293760c778be88e98e9c056730674c4e25bdba9094ff590e439a1ed1f61c880b7c03449b9cbc92190e12b3c0894cb337d93b2534c954f91277a0ee5cde5c78a
     HEAD_REF master
     PATCHES
         fix-dependency.patch
@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
+        fix-gcc8-compatibility.patch #Upstream PR: https://github.com/PDAL/PDAL/pull/3864
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
@@ -23,10 +24,14 @@ endforeach()
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/vendor/nanoflann"
     "${SOURCE_PATH}/vendor/nlohmann"
+    "${SOURCE_PATH}/pdal/JsonFwd.hpp"
 )
 file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nanoflann.hpp" DESTINATION "${SOURCE_PATH}/vendor/nanoflann")
 file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann/nlohmann")
 file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json_fwd.hpp" DESTINATION "${SOURCE_PATH}/pdal")
+file(RENAME "${SOURCE_PATH}/pdal/json_fwd.hpp" "${SOURCE_PATH}/pdal/JsonFwd.hpp")
+file(APPEND "${SOURCE_PATH}/pdal/JsonFwd.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
 
@@ -93,8 +98,6 @@ file(READ "${SOURCE_PATH}/vendor/kazhdan/PoissonRecon.h" kazhdan_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" kazhdan_license "${kazhdan_license}")
 file(READ "${SOURCE_PATH}/vendor/lazperf/lazperf.hpp" lazperf_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_license "${lazperf_license}")
-file(READ "${SOURCE_PATH}/vendor/lazperf/detail/field_xyz.hpp" lazperf_detail_license)
-string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_detail_license "${lazperf_detail_license}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
 "${pdal_license}
 ---
@@ -114,17 +117,12 @@ Files in vendor/lazperf/:
 ${lazperf_license}
 ---
 
-Files in vendor/lazperf/detail/:
-
-${lazperf_detail_license}
----
-
 Files in vendor/eigen:
 
 Most Eigen source code is subject to the terms of the Mozilla Public License
 v. 2.0. You can obtain a copy the MPL 2.0 at http://mozilla.org/MPL/2.0/.
 
-Some files included in Eigen are under of the following licenses:
+Some files included in Eigen are under one of the following licenses:
  - Apache License, Version 2.0 
  - BSD 3-Clause \"New\" or \"Revised\" License
 ")

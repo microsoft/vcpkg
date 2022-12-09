@@ -5,19 +5,26 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  5)
+set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
-    0002-use-vcpkg-zlib.patch
-    0003-devendor-external-dependencies.patch
-    0004-dont-copy-vcruntime.patch
-    0005-only-build-required-projects.patch
-    0009-python.pc.patch
-    0010-bz2d.patch
+    0001-only-build-required-projects.patch
+    0003-use-vcpkg-zlib.patch
+    0004-devendor-external-dependencies.patch
+    0005-dont-copy-vcruntime.patch
+    0008-python.pc.patch
+    0009-bz2d.patch
+    0010-dont-skip-rpath.patch
 )
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(PREPEND PATCHES 0001-static-library.patch)
+    list(APPEND PATCHES 0002-static-library.patch)
+endif()
+
+# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
@@ -42,7 +49,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 7a736c6bf76735f66eba50bc055661c46fefce1496869c51e9b6b264bca456d2f2c6de293dfc3bc15a9d1df4b633d7f6f66ed86696e71a36e500354a75f4200f
+    SHA512 88bf6efef632a7dad7306a59b7d5da159947d6675f0d264f1f33aa49a5703b4e4595011de52098eb839cc648994ae143f668507be7209f6bf3fe8ae0ec6a9125
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -76,8 +83,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD libexpatdMT PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -189,7 +196,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
-    
+
     # Remove static library belonging to executable
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
@@ -204,6 +211,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         endif()
     endif()
 else()
+    # The Python Stable ABI, `libpython3.so` is not produced by the upstream build system with --with-pydebug option
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_BUILD_TYPE)
+        set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+    endif()
+
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--without-ensurepip"
@@ -244,6 +256,26 @@ else()
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 
     vcpkg_fixup_pkgconfig()
+
+    # Perform some post-build checks on modules
+    file(GLOB python_libs_dynload_debug LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    file(GLOB python_libs_dynload_release LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    set(python_libs_dynload_failed_debug ${python_libs_dynload_debug})
+    set(python_libs_dynload_failed_release ${python_libs_dynload_release})
+    list(FILTER python_libs_dynload_failed_debug INCLUDE REGEX ".*_failed\.so.*")
+    list(FILTER python_libs_dynload_failed_release INCLUDE REGEX ".*_failed\.so.*")
+    if(python_libs_dynload_failed_debug OR python_libs_dynload_failed_release)
+        list(JOIN python_libs_dynload_failed_debug "\n" python_libs_dynload_failed_debug_str)
+        list(JOIN python_libs_dynload_failed_release "\n" python_libs_dynload_failed_release_str)
+        message(FATAL_ERROR "There should be no modules with \"_failed\" suffix:\n${python_libs_dynload_failed_debug_str}\n${python_libs_dynload_failed_release_str}")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE)
+        list(LENGTH python_libs_dynload_release python_libs_dynload_release_length)
+        list(LENGTH python_libs_dynload_debug python_libs_dynload_debug_length)
+        if(NOT python_libs_dynload_release_length STREQUAL python_libs_dynload_debug_length)
+            message(FATAL_ERROR "Mismatched number of modules: ${python_libs_dynload_debug_length} in debug, ${python_libs_dynload_release_length} in release")
+        endif()
+    endif()
 endif()
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)

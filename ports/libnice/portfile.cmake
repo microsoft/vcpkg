@@ -8,7 +8,7 @@ vcpkg_from_gitlab(
 ) 
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dgtk_doc=disabled #Enable generating the API reference (depends on GTK-Doc)
         -Dintrospection=disabled #Enable GObject Introspection (depends on GObject)'
@@ -35,6 +35,9 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES stunbdc stund AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 
-file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+  FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING.LGPL"
+    "${SOURCE_PATH}/COPYING.MPL"
+)

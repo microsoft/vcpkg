@@ -11,8 +11,11 @@ vcpkg_from_github(
       fix_cplusplus_macro.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    unwind     WITH_UNWIND
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        unwind          WITH_UNWIND
+        customprefix    WITH_CUSTOM_PREFIX
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 

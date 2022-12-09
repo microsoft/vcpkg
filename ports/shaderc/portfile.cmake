@@ -12,6 +12,8 @@ vcpkg_from_github(
         fix-build-type.patch
         fix-install-shaderc_util.patch
         fix-export-cmakefiles.patch
+        # NOTE: This should be removed when shaderc gets updated to use glslang 11.12.0
+        fix-tbuiltinresource-for-glslang-11-12.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")

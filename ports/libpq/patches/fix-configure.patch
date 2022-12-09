@@ -4,7 +4,7 @@ index fba79ee..4fadb94 100644
 +++ b/configure.ac
 @@ -19,7 +19,7 @@ m4_pattern_forbid(^PGAC_)dnl to catch undefined macros
  
- AC_INIT([PostgreSQL], [14.1], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
+ AC_INIT([PostgreSQL], [14.4], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
  
 -m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
 +m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_warn([unsupported],[Autoconf version 2.69 is required.

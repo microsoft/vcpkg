@@ -1,0 +1,204 @@
+diff --git a/src/plugins/multimedia/gstreamer/common/qgst_p.h b/src/plugins/multimedia/gstreamer/common/qgst_p.h
+index a7ce0b5fe..9c66b217d 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgst_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgst_p.h
+@@ -127,7 +127,7 @@ public:
+     inline int listSize() const { return gst_value_list_get_size(value); }
+     inline QGValue at(int index) const { return gst_value_list_get_value(value, index); }
+ 
+-    Q_MULTIMEDIA_EXPORT QList<QAudioFormat::SampleFormat> getSampleFormats() const;
++     QList<QAudioFormat::SampleFormat> getSampleFormats() const;
+ };
+ 
+ class QGstStructure {
+@@ -143,9 +143,9 @@ public:
+ 
+     QGValue operator[](const char *name) const { return gst_structure_get_value(structure, name); }
+ 
+-    Q_MULTIMEDIA_EXPORT QSize resolution() const;
+-    Q_MULTIMEDIA_EXPORT QVideoFrameFormat::PixelFormat pixelFormat() const;
+-    Q_MULTIMEDIA_EXPORT QGRange<float> frameRateRange() const;
++     QSize resolution() const;
++     QVideoFrameFormat::PixelFormat pixelFormat() const;
++     QGRange<float> frameRateRange() const;
+ 
+     QByteArray toString() const
+     {
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h b/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h
+index 0266e0312..ca32cbab4 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h
+@@ -30,7 +30,7 @@ QT_BEGIN_NAMESPACE
+ 
+ class QNetworkReply;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstAppSrc  : public QObject
++class QGstAppSrc  : public QObject
+ {
+     Q_OBJECT
+ public:
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreameraudioinput_p.h b/src/plugins/multimedia/gstreamer/common/qgstreameraudioinput_p.h
+index 2586898b2..cb7908508 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreameraudioinput_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreameraudioinput_p.h
+@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
+ class QGstreamerMessage;
+ class QAudioDevice;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerAudioInput : public QObject, public QPlatformAudioInput
++class QGstreamerAudioInput : public QObject, public QPlatformAudioInput
+ {
+     Q_OBJECT
+ 
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreameraudiooutput_p.h b/src/plugins/multimedia/gstreamer/common/qgstreameraudiooutput_p.h
+index a44e6589a..cdfb75584 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreameraudiooutput_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreameraudiooutput_p.h
+@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
+ class QGstreamerMessage;
+ class QAudioDevice;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerAudioOutput : public QObject, public QPlatformAudioOutput
++class  QGstreamerAudioOutput : public QObject, public QPlatformAudioOutput
+ {
+     Q_OBJECT
+ 
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamerbufferprobe_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamerbufferprobe_p.h
+index 83604c5d1..cf6e508b1 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamerbufferprobe_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamerbufferprobe_p.h
+@@ -23,7 +23,7 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerBufferProbe
++class  QGstreamerBufferProbe
+ {
+ public:
+     enum Flags
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamermediaplayer_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamermediaplayer_p.h
+index 7afad3ba7..ec74ad907 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamermediaplayer_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamermediaplayer_p.h
+@@ -34,7 +34,7 @@ class QGstAppSrc;
+ class QGstreamerAudioOutput;
+ class QGstreamerVideoOutput;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerMediaPlayer
++class  QGstreamerMediaPlayer
+     : public QObject,
+       public QPlatformMediaPlayer,
+       public QGstreamerBusMessageFilter,
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h
+index 04bcfc8d8..8190756a9 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h
+@@ -23,7 +23,7 @@ QT_BEGIN_NAMESPACE
+ // Required for QDoc workaround
+ class QString;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerMessage
++class  QGstreamerMessage
+ {
+ public:
+     QGstreamerMessage() = default;
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h
+index 74652aa77..36f3226f1 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h
+@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
+ 
+ class QVideoSink;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerVideoOutput : public QObject
++class  QGstreamerVideoOutput : public QObject
+ {
+     Q_OBJECT
+ 
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamervideooverlay_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamervideooverlay_p.h
+index 66345c44c..82a9cceba 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamervideooverlay_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamervideooverlay_p.h
+@@ -23,7 +23,7 @@
+ QT_BEGIN_NAMESPACE
+ class QGstreamerVideoSink;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerVideoOverlay
++class  QGstreamerVideoOverlay
+         : public QObject
+         , public QGstreamerSyncMessageFilter
+         , private QGstreamerBufferProbe
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamervideosink_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamervideosink_p.h
+index e628280e9..09b9a2699 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstreamervideosink_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstreamervideosink_p.h
+@@ -31,7 +31,7 @@ QT_BEGIN_NAMESPACE
+ class QGstreamerVideoRenderer;
+ class QVideoWindow;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstreamerVideoSink
++class  QGstreamerVideoSink
+     : public QPlatformVideoSink
+ {
+     Q_OBJECT
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstsubtitlesink_p.h b/src/plugins/multimedia/gstreamer/common/qgstsubtitlesink_p.h
+index cd0f9d3ca..083a5ea2d 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstsubtitlesink_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstsubtitlesink_p.h
+@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
+ 
+ class QGstreamerVideoSink;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstSubtitleSink
++class  QGstSubtitleSink
+ {
+ public:
+     GstBaseSink parent;
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstutils_p.h b/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
+index 809505868..02daf1474 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
+@@ -35,14 +35,14 @@ class QImage;
+ class QVideoFrameFormat;
+ 
+ namespace QGstUtils {
+-    Q_MULTIMEDIA_EXPORT QAudioFormat audioFormatForSample(GstSample *sample);
++     QAudioFormat audioFormatForSample(GstSample *sample);
+     QAudioFormat audioFormatForCaps(QGstCaps caps);
+-    Q_MULTIMEDIA_EXPORT QGstMutableCaps capsForAudioFormat(const QAudioFormat &format);
++     QGstMutableCaps capsForAudioFormat(const QAudioFormat &format);
+ 
+     void setFrameTimeStamps(QVideoFrame *frame, GstBuffer *buffer);
+ }
+ 
+-Q_MULTIMEDIA_EXPORT GList *qt_gst_video_sinks();
++ GList *qt_gst_video_sinks();
+ 
+ QT_END_NAMESPACE
+ 
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h b/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h
+index c534dddba..7309db5e5 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h
+@@ -27,7 +27,7 @@ class QVideoFrameFormat;
+ class QGstreamerVideoSink;
+ class QOpenGLContext;
+ 
+-class Q_MULTIMEDIA_EXPORT QGstVideoBuffer : public QAbstractVideoBuffer
++class  QGstVideoBuffer : public QAbstractVideoBuffer
+ {
+ public:
+ 
+diff --git a/src/plugins/multimedia/gstreamer/common/qgstvideorenderersink_p.h b/src/plugins/multimedia/gstreamer/common/qgstvideorenderersink_p.h
+index 139eaec5e..0f3e845ac 100644
+--- a/src/plugins/multimedia/gstreamer/common/qgstvideorenderersink_p.h
++++ b/src/plugins/multimedia/gstreamer/common/qgstvideorenderersink_p.h
+@@ -90,7 +90,7 @@ private:
+     QGstCaps::MemoryFormat memoryFormat = QGstCaps::CpuMemory;
+ };
+ 
+-class Q_MULTIMEDIA_EXPORT QGstVideoRendererSink
++class  QGstVideoRendererSink
+ {
+ public:
+     GstVideoSink parent;

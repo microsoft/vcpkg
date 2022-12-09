@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version": "3.10.5",
+  "version": "3.10.7",
   "port-version": 1,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
@@ -27,6 +27,10 @@
     {
       "name": "liblzma",
       "platform": "!(windows & static)"
+    },
+    {
+      "name": "libuuid",
+      "platform": "!osx & !windows"
     },
     {
       "name": "openssl",

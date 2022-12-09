@@ -38,7 +38,10 @@
   <PropertyGroup>
     <_ZVcpkgLinkage />
     <_ZVcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</_ZVcpkgLinkage>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)</VcpkgTriplet>
+    <_ZVcpkgLinkageMD />
+    <_ZVcpkgLinkageMD Condition="'$(VcpkgUseStatic)' == 'true' and '$(VcpkgUseMD)' == 'true'">-md</_ZVcpkgLinkageMD>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
+    <VcpkgTriplet Condition="!$(VcpkgTriplet.EndsWith($(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)))">$(VcpkgTriplet)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
   </PropertyGroup>
 
   <!-- Include the triplet in ProjectStateLine to force VS2017 and later to fully rebuild if the user changes it.  -->
@@ -68,7 +71,7 @@
 
     <_ZVcpkgConfigSubdir Condition="'$(_ZVcpkgNormalizedConfiguration)' == 'Debug'">debug\</_ZVcpkgConfigSubdir>
     <_ZVcpkgExecutable>$(_ZVcpkgRoot)vcpkg.exe</_ZVcpkgExecutable>
-    <ExternalIncludePath>$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
+    <ExternalIncludePath Condition="'$(VcpkgEnabled)' == 'true'">$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -108,6 +111,8 @@
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
     <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(_ZVcpkgCurrentInstalledDir)&quot;"
+             Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Using normalized configuration &quot;$(_ZVcpkgNormalizedConfiguration)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
