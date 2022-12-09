@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-CMakeLists-install.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if((VCPKG_TARGET_IS_WINDOWS) and (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") and (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
   #architecture detection
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
   	set(SIMD_PLATFORM "Win32")
