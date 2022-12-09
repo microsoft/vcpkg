@@ -1,11 +1,10 @@
-vcpkg_from_github(
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO xz-mirror/xz
-    REF v5.2.5
-    SHA512 686f01cfe33e2194766a856c48668c661b25eee194a443524f87ce3f866e0eb54914075b4e00185921516c5211db8cd5d2658f4b91f4a3580508656f776f468e
-    HEAD_REF master
+    REPO lzmautils
+    FILENAME "xz-${VERSION}.tar.xz"
+    SHA512 fa844d63ceedf3b35c38f82532dc3b847543ac37b9e56db774c234af73d1385a300ba1033154689059031f18793d791c8cdb65bbeb031691d837f76e673372a7
     PATCHES
-        enable-uwp-builds.patch
         fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
         add_support_ios.patch # add install bundle info for support ios 
@@ -20,6 +19,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCREATE_XZ_SYMLINKS=OFF
+        -DCREATE_LZMA_SYMLINKS=OFF
+    MAYBE_UNUSED_VARIABLES
+        CREATE_XZ_SYMLINKS
+        CREATE_LZMA_SYMLINKS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
