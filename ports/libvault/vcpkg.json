@@ -1,7 +1,6 @@
 {
   "name": "libvault",
-  "version": "0.5",
-  "port-version": 0,
+  "version": "0.52.0",
   "description": "A C++ library for Hashicorp Vault",
   "homepage": "https://github.com/abedra/libvault",
   "supports": "!uwp",
