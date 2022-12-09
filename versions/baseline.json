@@ -2594,7 +2594,7 @@
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 4
+      "port-version": 5
     },
     "gettext": {
       "baseline": "0.21",
