@@ -4856,6 +4856,10 @@
       "baseline": "0.0.1",
       "port-version": 1
     },
+    "mfx-dispatch": {
+      "baseline": "1.35.1",
+      "port-version": 0
+    },
     "mgnlibs": {
       "baseline": "2019-09-29",
       "port-version": 2

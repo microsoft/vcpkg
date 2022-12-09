@@ -588,6 +588,10 @@ mesa:x64-osx=fail
 mfl:x64-linux=skip
 mfl:x64-osx=skip
 mfl:arm64-osx=skip
+
+mfx-dispatch:x64-windows=pass
+mfx-dispatch:x86-windows=pass
+
 milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-uwp=fail
 minifb:x64-uwp=fail
