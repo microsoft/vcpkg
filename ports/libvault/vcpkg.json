@@ -4,6 +4,7 @@
   "description": "A C++ library for Hashicorp Vault",
   "homepage": "https://github.com/abedra/libvault",
   "supports": "!uwp",
+  "license": "MIT",
   "dependencies": [
     "curl",
     {
