@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 840908739..c485b830c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -423,8 +423,9 @@ if((DEFINED JAS_CROSSCOMPILING AND JAS_CROSSCOMPILING) OR
+ 		  "appropriately.")
+ 	endif()
+ else()
+-	jas_get_stdc_version(status JAS_STDC_VERSION)
+-	if(NOT status)
++	#jas_get_stdc_version(status JAS_STDC_VERSION)
++    set(JAS_STDC_VERSION 0L)
++	if(0)
+ 		message(FATAL_ERROR "Cannot determine the value of __STDC_VERSION__.")
+ 	endif()
+ endif()

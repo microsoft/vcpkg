@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 402d096b39f4f618ad9e6ff2b4fc1b5eb260a2e4 # version-4.0.0
     SHA512 b2c2a2514479ec4a3d634d42d0a614951c06f6177e43a80b9a31797b7d4ad248fcdff632596806fcf811c87779990ba7c19aa2f9b91afafbc172dd85f96bb239
     HEAD_REF master
+    PATCHES
+        no_stdc_check.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -27,7 +29,6 @@ vcpkg_cmake_configure(
         -DJAS_ENABLE_LATEX=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
-        -DJAS_STDC_VERSION=199901L # Only intent is to print a warning if __STDC_VERSION__  < JAS_STDC_VERSION
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # Due to CMakes FindJasper; Default for multi config generators.
 )
