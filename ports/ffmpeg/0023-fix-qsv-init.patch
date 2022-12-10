@@ -1,7 +1,17 @@
-diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
---- a/libavcodec/qsv.c
-+++ b/libavcodec/qsv.c 
-@@ -393,12 +392,35 @@
+
+diff --git a/qsv.c b/qsv.c
+--- a/qsv.c	(revision de7a07079936f87a89b002478bfbc2f12782d022)
++++ b/qsv.c	(revision 08a092cb83598ee3205aff7c8908476dd65c2597)
+@@ -383,7 +383,7 @@
+ int ff_qsv_init_internal_session(AVCodecContext *avctx, QSVSession *qs,
+                                  const char *load_plugins, int gpu_copy)
+ {
+-    mfxIMPL          impl = MFX_IMPL_AUTO_ANY;
++    mfxIMPL           impl = MFX_IMPL_AUTO_ANY;
+     mfxVersion        ver = { { QSV_VERSION_MINOR, QSV_VERSION_MAJOR } };
+     mfxInitParam init_par = { MFX_IMPL_AUTO_ANY };
+ 
+@@ -393,12 +393,38 @@
  #if QSV_VERSION_ATLEAST(1, 16)
      init_par.GPUCopy        = gpu_copy;
  #endif
@@ -9,8 +19,8 @@ diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
 +
 +    // https://trac.ffmpeg.org/ticket/7933
 +    // try d3d11
-+    impl = MFX_IMPL_HARDWARE_ANY | MFX_IMPL_VIA_D3D11;
-+    init_par.Implementation = impl;
++    init_par.Implementation = MFX_IMPL_HARDWARE_ANY | MFX_IMPL_VIA_D3D11;
++    impl = init_par.Implementation;
      init_par.Version        = ver;
      ret = MFXInitEx(init_par, &qs->session);
 -    if (ret < 0)
@@ -19,8 +29,8 @@ diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
 +
 +    if (ret < 0) {
 +        // try d3d9
-+        impl = MFX_IMPL_HARDWARE_ANY | MFX_IMPL_VIA_D3D9;
-+        init_par.Implementation = impl;
++        init_par.Implementation = MFX_IMPL_HARDWARE_ANY | MFX_IMPL_VIA_D3D9;
++        impl = init_par.Implementation;
 +        ret = MFXInitEx(init_par, &qs->session);
 +        if(ret >= 0)
 +            av_log(avctx, AV_LOG_DEBUG, "MFX Initialized with HARDWARE_ANY | VIA_D3D9\n");
@@ -28,8 +38,8 @@ diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
 +
 +    if (ret < 0) {
 +        // try any
-+        impl = MFX_IMPL_AUTO_ANY;
-+        init_par.Implementation = impl;
++        init_par.Implementation = MFX_IMPL_AUTO_ANY;
++        impl = init_par.Implementation;
 +        ret = MFXInitEx(init_par, &qs->session);
 +        if(ret >= 0)
 +            av_log(avctx, AV_LOG_DEBUG, "MFX Initialized with AUTO_ANY\n");
