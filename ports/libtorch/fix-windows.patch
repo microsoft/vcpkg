@@ -82,3 +82,19 @@ index 068c9d3..b869fde 100644
  namespace {
  
  const char* get_env_var(
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 3b390ec..7cfa2b0 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -45,7 +45,10 @@ if(HAVE_SOVERSION)
+       VERSION ${TORCH_VERSION} SOVERSION ${TORCH_SOVERSION})
+ endif()
+ # If building shared library, set dllimport/dllexport proper.
+-target_compile_options(c10 PRIVATE "-DC10_BUILD_MAIN_LIB")
++target_compile_definitions(c10 PRIVATE C10_BUILD_MAIN_LIB)
++if(WIN32)
++  target_compile_definitions(c10 PRIVATE NOMINMAX)
++endif()
+ # Enable hidden visibility if compiler supports it.
+ if(${COMPILER_SUPPORTS_HIDDEN_VISIBILITY})
+   target_compile_options(c10 PRIVATE "-fvisibility=hidden")
