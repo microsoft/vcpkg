@@ -536,6 +536,8 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/libxml-2.0.pc" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME libxml-2.0.pc.log)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
