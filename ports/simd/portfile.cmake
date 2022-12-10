@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
     REF b39197e00a902cbbc5ad397de92f086be994549b # v5.2.120 + arm64 fix
-    SHA512 4f506309aad77994967ea804b6891892e203531ce37afc0044a88b2a33c81fdaef2f514deb0421034489d08c4bd1d1c6155adfc65325d0a55063dddb113a3ea8
+    SHA512 9fba1b26fc266837ddcae7325699b1c540e52a4f16b1a0a5e8d4989528c070248bd3e1adfd287375efc24eb035fd72d67d13a404ce00ecb3aa647b9b613edfdb
     HEAD_REF master
     PATCHES
         fix-CMakeLists-install.patch
