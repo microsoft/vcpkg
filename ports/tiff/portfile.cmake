@@ -11,11 +11,6 @@ vcpkg_from_gitlab(
         FindCMath.patch
 )
 
-set(EXTRA_OPTIONS "")
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cxx     cxx
@@ -31,7 +26,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${EXTRA_OPTIONS}
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
@@ -64,7 +58,7 @@ file(REMOVE_RECURSE
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 if ("tools" IN_LIST FEATURES)
-    set(_tools
+    vcpkg_copy_tools(TOOL_NAMES
         fax2ps
         fax2tiff
         pal2rgb
@@ -83,10 +77,8 @@ if ("tools" IN_LIST FEATURES)
         tiffmedian
         tiffset
         tiffsplit
+        AUTO_CLEAN
     )
-    vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 vcpkg_copy_pdbs()
