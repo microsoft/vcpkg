@@ -1,16 +1,14 @@
-set(LIBTIFF_VERSION 4.4.0)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
-    REF v${LIBTIFF_VERSION}
-    SHA512 93955a2b802cf243e41d49048499da73862b5d3ffc005e3eddf0bf948a8bd1537f7c9e7f112e72d082549b4c49e256b9da9a3b6d8039ad8fc5c09a941b7e75d7
+    REF "v${VERSION}rc1"
+    SHA512 c9677d11c1588b9af669abb2642c9edcba0394a3e48de345bbb2a19bcadee4de39884895db1b39a2d4172b046139801a5cd6144d60b204fbd89f0e6a7f8f5b96
     HEAD_REF master
     PATCHES
-        cmakelists.patch
         FindCMath.patch
-        android-libm.patch
 )
 
 set(EXTRA_OPTIONS "")
@@ -23,7 +21,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx     cxx
         jpeg    jpeg
         lzma    lzma
-        tools   BUILD_TOOLS
+        tools   tiff-tools
         webp    webp
         zip     zlib
         zstd    zstd
@@ -34,9 +32,9 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
-        -DBUILD_DOCS=OFF
-        -DBUILD_CONTRIB=OFF
-        -DBUILD_TESTS=OFF
+        -Dtiff-docs=OFF
+        -Dtiff-contrib=OFF
+        -Dtiff-tests=OFF
         -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
@@ -64,7 +62,6 @@ file(REMOVE_RECURSE
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
@@ -93,3 +90,4 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
