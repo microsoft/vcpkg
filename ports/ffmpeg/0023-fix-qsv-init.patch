@@ -1,7 +1,7 @@
 
-diff --git a/qsv.c b/qsv.c
---- a/qsv.c	(revision de7a07079936f87a89b002478bfbc2f12782d022)
-+++ b/qsv.c	(revision 08a092cb83598ee3205aff7c8908476dd65c2597)
+diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
+--- a/libavcodec/qsv.c
++++ b/libavcodec/qsv.c
 @@ -383,7 +383,7 @@
  int ff_qsv_init_internal_session(AVCodecContext *avctx, QSVSession *qs,
                                   const char *load_plugins, int gpu_copy)
