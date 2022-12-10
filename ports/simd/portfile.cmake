@@ -49,6 +49,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
 else()
   vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
+	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+	  OPTIONS
+	    -DSIMD_TARGET="aarch64"
+    endif()
   )
   vcpkg_cmake_install()
   vcpkg_cmake_config_fixup()
