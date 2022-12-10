@@ -57,7 +57,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   vcpkg_copy_pdbs()
   
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-else
+else()
   vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
   )
