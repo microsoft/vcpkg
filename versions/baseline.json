@@ -7433,8 +7433,8 @@
       "port-version": 0
     },
     "tiff": {
-      "baseline": "4.4.0",
-      "port-version": 1
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "tinkerforge": {
       "baseline": "2.1.25",

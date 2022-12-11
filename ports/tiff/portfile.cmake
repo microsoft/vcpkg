@@ -4,8 +4,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
-    REF "v${VERSION}rc1"
-    SHA512 c9677d11c1588b9af669abb2642c9edcba0394a3e48de345bbb2a19bcadee4de39884895db1b39a2d4172b046139801a5cd6144d60b204fbd89f0e6a7f8f5b96
+    REF "v${VERSION}"
+    SHA512 5227cb7b496ac6829601d8d689233bd8f318c1d04e5ce3457cdd6eac9e4f8c80cd7211d90cd092c61ad38bc8a4949169a13eabd788c46c15bcee1f72519fa022
     HEAD_REF master
     PATCHES
         FindCMath.patch
