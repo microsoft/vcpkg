@@ -154,7 +154,6 @@ vcpkg_cmake_configure(
         MKLDNN_CPU_RUNTIME
 )
 vcpkg_cmake_build(TARGET __aten_op_header_gen LOGFILE_BASE build-header_gen) # explicit codegen is required
-vcpkg_cmake_build(TARGET c10        LOGFILE_BASE build-c10)
 vcpkg_cmake_build(TARGET torch_cpu  LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

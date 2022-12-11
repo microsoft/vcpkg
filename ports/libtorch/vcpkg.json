@@ -101,6 +101,7 @@
     },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
+      "supports": "!windows",
       "dependencies": [
         "vulkan"
       ]
