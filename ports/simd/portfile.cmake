@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
-    REF b39197e00a902cbbc5ad397de92f086be994549b # v5.2.120 + arm64 fix
-    SHA512 9fba1b26fc266837ddcae7325699b1c540e52a4f16b1a0a5e8d4989528c070248bd3e1adfd287375efc24eb035fd72d67d13a404ce00ecb3aa647b9b613edfdb
+    REF 96dfde3b243687d796426719cf354b47fd4cd727 # v5.2.120
+    SHA512 4f506309aad77994967ea804b6891892e203531ce37afc0044a88b2a33c81fdaef2f514deb0421034489d08c4bd1d1c6155adfc65325d0a55063dddb113a3ea8
     HEAD_REF master
     PATCHES
         fix-CMakeLists-install.patch
@@ -53,16 +53,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
   
   file(COPY "${SOURCE_PATH}/src/Simd/SimdLib.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  vcpkg_configure_cmake(
-    SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
-	OPTIONS
-	  -DSIMD_TARGET="aarch64"
-  )
-  vcpkg_cmake_install()
-  vcpkg_cmake_config_fixup()
-  vcpkg_copy_pdbs()
+  if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
+  else()
+    vcpkg_configure_cmake(
+      SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
+	  OPTIONS
+	    -DSIMD_TARGET="aarch64"
+    )
+    vcpkg_cmake_install()
+    vcpkg_cmake_config_fixup()
+    vcpkg_copy_pdbs()
   
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+  endif()
 else()
   vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
