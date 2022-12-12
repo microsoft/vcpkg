@@ -41,6 +41,16 @@ apr:arm64-windows=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
 bitserializer:arm64-osx=fail
+blingfire:x64-windows=pass
+blingfire:arm64-windows=skip
+blingfire:arm-uwp=skip
+blingfire:x64-linux=skip
+blingfire:x64-osx=skip
+blingfire:arm64-osx=skip
+blingfire:x64-uwp=skip
+blingfire:x64-windows-static=skip
+blingfire:x64-windows-static-md=skip
+blingfire:x86-windows=skip
 blitz:x64-uwp=fail
 blitz:arm64-windows=fail
 blitz:arm-uwp=fail
