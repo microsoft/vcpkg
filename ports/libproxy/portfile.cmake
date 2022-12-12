@@ -8,11 +8,10 @@ vcpkg_from_github(
         fix-tools-path.patch
         support-windows.patch
         fix-install-py.patch
-        #fix-arm-build.patch
         fix-module-lib-name.patch
 )
 
-string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -30,8 +29,8 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
         -DWITH_KDE=${VCPKG_TARGET_IS_LINUX}
-    MAYBE_UNUSED_VARIABLES
         -DMSVC_STATIC=${STATICCRT}
+    MAYBE_UNUSED_VARIABLES
         WITH_DOTNET
         WITH_PERL
         WITH_PYTHON2
