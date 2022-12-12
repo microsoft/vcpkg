@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sammycage/lunasvg
-  REF e612abda858b53160041381a23422cd2b4f42fbd #2.3.1
-  SHA512 44f5d013d918cb5af90114a12857bdd2c204caff761516ef98b12b08d8b6215e91f6d963c281500c386f287b9d0ecd5b3d986d4c8c33423c0c34d539d744e09d
+  REF v2.3.5
+  SHA512 456d428020b6a8926596760a66c7e15df744b7178e752e5d1090d304dfe76636d073aaac6e1e7a99ccd977f4012b8b2b9d5abce29d6d839f456072c9325c87c3
   HEAD_REF master
   PATCHES
     fix-install.patch
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
