@@ -3,6 +3,7 @@
   "version": "8.13.1",
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
   "supports": "!static & !linux & !osx",
+  "license": "Apache-2.0",
   "dependencies": [
     "abseil",
     "boost-date-time",
