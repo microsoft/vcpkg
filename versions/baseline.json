@@ -7961,7 +7961,7 @@
       "port-version": 0
     },
     "wayland-protocols": {
-      "baseline": "1.27",
+      "baseline": "1.31",
       "port-version": 0
     },
     "websocketpp": {
