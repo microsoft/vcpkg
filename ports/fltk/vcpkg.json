@@ -27,6 +27,9 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "opengl"
+  ],
   "features": {
     "opengl": {
       "description": "OpenGL support",
