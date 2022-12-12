@@ -13,6 +13,7 @@ file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    -DCMAKE_CXX_STANDARD 11
 )
 
 vcpkg_cmake_install()
