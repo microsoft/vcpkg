@@ -3,6 +3,7 @@
   "version": "1.4",
   "description": "Table maker for modern C++",
   "homepage": "https://github.com/p-ranav/tabulate",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
