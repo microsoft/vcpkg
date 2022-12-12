@@ -20,15 +20,19 @@ if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is in
     if(Freetype_FOUND)
         list(APPEND Fontconfig_LIBRARIES "${FREETYPE_LIBRARIES}")
         if(TARGET Freetype::Freetype)
-            set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY>:Freetype::Freetype>")
+            set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:Freetype::Freetype>")
         else()
-            # TODO link Freetype libraries to the target if the target Freetype::Freetype is not defined;
+            # TODO link FREETYPE_LIBRARIES transformed for $<CONFIG:...>.
         endif()
     endif()
     find_package(EXPAT)
     if(EXPAT_FOUND)
         list(APPEND Fontconfig_LIBRARIES "${EXPAT_LIBRARIES}")
-        set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY>:EXPAT::EXPAT>")
+        if(TARGET EXPAT::EXPAT)
+            set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:EXPAT::EXPAT>")
+        else()
+            # TODO link EXPAT_LIBRARIES transformed for $<CONFIG:...>.
+        endif()
     endif()
     if("@VCPKG_TARGET_IS_LINUX@")
         find_library(UUID_LIBRARY_DEBUG NAMES uuid uuidd uuid_d  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
