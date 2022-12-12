@@ -4541,7 +4541,7 @@
       "port-version": 0
     },
     "libzippp": {
-      "baseline": "5.1-1.8.0",
+      "baseline": "6.0-1.9.2",
       "port-version": 0
     },
     "licensepp": {
