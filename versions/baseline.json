@@ -1914,7 +1914,7 @@
     },
     "devil": {
       "baseline": "1.8.0",
-      "port-version": 8
+      "port-version": 9
     },
     "dimcli": {
       "baseline": "5.0.2",
@@ -3177,8 +3177,8 @@
       "port-version": 1
     },
     "jasper": {
-      "baseline": "2.0.33",
-      "port-version": 6
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "jbig2dec": {
       "baseline": "0.19",
