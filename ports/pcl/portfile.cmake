@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF f36a69a5e89953708990c4669317f989d532cf08 # pcl-1.12.0
+    REF 371a8e1373f7b2f66bbb92291be2f3e50dc19856 # pcl-1.13.0
     SHA512 dbbd0adbb08949ddef2789e0021b6ca9727be33c7193d0bb135c61def09a42ed6a71333f06b6fad407010ecb4b73c19f087f7520386b92a008e90c254eafe422
     HEAD_REF master
     PATCHES
@@ -11,15 +11,11 @@ vcpkg_from_github(
         fix-numeric-literals-flag.patch
         pcl_config.patch
         pcl_utils.patch
-        remove-broken-targets.patch
+        # remove-broken-targets.patch
         fix-cmake_find_library_suffixes.patch
-        fix-pkgconfig.patch # Remove this patch in the next update
-        fix-namespace-cub.patch # Remove this patch in the next update
-        fix-error-C3052.patch # Remove this patch in the next update
         fix-find-libusb.patch
         install-examples.patch
         no-absolute.patch
-        Workaround-ICE-in-release.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
