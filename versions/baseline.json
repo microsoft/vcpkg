@@ -2001,7 +2001,7 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "dpdk": {
@@ -3154,7 +3154,7 @@
     },
     "itk": {
       "baseline": "5.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "itpp": {
       "baseline": "4.3.1",
