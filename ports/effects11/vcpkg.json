@@ -5,7 +5,7 @@
   "homepage": "https://github.com/Microsoft/FX11",
   "documentation": "https://github.com/microsoft/FX11/wiki",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows & !mingw",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

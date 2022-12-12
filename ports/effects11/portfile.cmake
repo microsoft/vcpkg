@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_MINGW)
-    message(FATAL_ERROR "${PORT} is not compatible with the MinGW compiler.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
