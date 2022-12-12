@@ -7,17 +7,17 @@ vcpkg_from_github(
     REF release-1.3.8
     SHA512 197848d3b80a65cca936daf4f0b74609f0fe8332a4cd11af53385fb2aa45ad698b1e239a48732b118cd3cb189bc531711b72fb2eeeb85be887dc6c5a558fa4b3
     PATCHES
-        findlibsfix.patch
+        dependencies.patch
         config-path.patch
         include.patch
         fix-system-link.patch
 )
 
-if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-    set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
-else()
-    set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        opengl  OPTION_USE_GL
+)
 
 set(fluid_path_param "")
 if(VCPKG_CROSSCOMPILING)
@@ -27,16 +27,16 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DFLTK_BUILD_TEST=OFF
         -DOPTION_LARGE_FILE=ON
-        -DOPTION_USE_THREADS=ON
+        -DHAVE_ALSA_ASOUNDLIB_H=OFF # tests only
         -DOPTION_USE_SYSTEM_ZLIB=ON
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
-        -DFLTK_CONFIG_PATH=share/fltk
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         ${fluid_path_param}
-        ${OPTION_USE_GL}
 )
 
 vcpkg_cmake_install()
