@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-tools-path.patch
         support-windows.patch
         fix-install-py.patch
-        fix-arm-build.patch
+        #fix-arm-build.patch
         fix-module-lib-name.patch
 )
 
@@ -29,8 +29,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
-        -DMSVC_STATIC=${STATICCRT}
+        -DWITH_KDE=${VCPKG_TARGET_IS_LINUX}
     MAYBE_UNUSED_VARIABLES
+        -DMSVC_STATIC=${STATICCRT}
         WITH_DOTNET
         WITH_PERL
         WITH_PYTHON2
