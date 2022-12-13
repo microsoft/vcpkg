@@ -2573,7 +2573,7 @@
       "port-version": 4
     },
     "geographiclib": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "geos": {
