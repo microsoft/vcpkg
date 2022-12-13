@@ -198,7 +198,7 @@
     },
     "asio": {
       "baseline": "1.24.0",
-      "port-version": 0
+      "port-version": 1
     },
     "asio-grpc": {
       "baseline": "2.3.0",
