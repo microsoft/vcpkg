@@ -2909,8 +2909,8 @@
       "port-version": 0
     },
     "highfive": {
-      "baseline": "2.3",
-      "port-version": 3
+      "baseline": "2.6.2",
+      "port-version": 0
     },
     "highway": {
       "baseline": "1.0.2",
