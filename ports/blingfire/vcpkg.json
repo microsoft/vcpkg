@@ -3,7 +3,7 @@
   "version": "0.1.8.1",
   "description": "BlingFire is a lightning fast Finite State machine and REgular expression manipulation library.",
   "license": "MIT",
-  "supports": "windows & !static",
+  "supports": "windows & !static & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
