@@ -9,7 +9,6 @@
     "boost-date-time",
     "boost-system",
     "boost-thread",
-    "gtest",
     "icu",
     "protobuf",
     "re2",
