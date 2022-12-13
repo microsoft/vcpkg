@@ -8,5 +8,6 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "supports": "windows && !static"
 }
