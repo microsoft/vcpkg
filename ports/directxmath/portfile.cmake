@@ -23,7 +23,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     file(INSTALL
       ${DOWNLOADS}/sal.h
-      DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXMath)
+      DESTINATION ${CURRENT_PACKAGES_DIR}/include/directxmath)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
