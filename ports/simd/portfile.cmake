@@ -56,7 +56,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
   else()
-    vcpkg_configure_cmake(
+    vcpkg_cmake_configure(
       SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
 	  OPTIONS
 	    -DSIMD_TARGET="aarch64"
@@ -68,7 +68,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
   endif()
 else()
-  vcpkg_configure_cmake(
+  vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
   )
   vcpkg_cmake_install()
