@@ -15,7 +15,11 @@ if(VCPKG_TARGET_IS_LINUX)
     libglu1-mesa
     pkg-config
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
+
+Alternatively, when targeting the Wayland display server, use the packages listed in the GLFW documentation here:
+
+https://www.glfw.org/docs/3.3/compile.html#compile_deps_wayland")
 else(VCPKG_TARGET_IS_OSX)
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
