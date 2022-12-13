@@ -1,0 +1,43 @@
+From c534d9f72a89542ed639071b1ae15893aadf1f18 Mon Sep 17 00:00:00 2001
+From: rcombs <rcombs@rcombs.me>
+Date: Sat, 16 Apr 2022 03:41:29 -0500
+Subject: [PATCH] lavc/h264_ps: always include the stop bit in [s|p]ps->data
+
+The VideoToolbox hwaccel needs the entire NAL (including the stop bit),
+but ff_h2645_packet_split may remove it. Detect this case by looking for
+bit counts divisible by 8 and insert a stop-bit-only 0x80 byte.
+
+Signed-off-by: rcombs <rcombs@rcombs.me>
+---
+ libavcodec/h264_ps.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libavcodec/h264_ps.c b/libavcodec/h264_ps.c
+index 051f06692c..e16da68dec 100644
+--- a/libavcodec/h264_ps.c
++++ b/libavcodec/h264_ps.c
+@@ -351,6 +351,10 @@ int ff_h264_decode_seq_parameter_set(GetBitContext *gb, AVCodecContext *avctx,
+     }
+     memcpy(sps->data, gb->buffer, sps->data_size);
+ 
++    // Re-add the removed stop bit (may be used by hwaccels).
++    if (!(gb->size_in_bits & 7) && sps->data_size < sizeof(sps->data))
++        sps->data[sps->data_size++] = 0x80;
++
+     profile_idc           = get_bits(gb, 8);
+     constraint_set_flags |= get_bits1(gb) << 0;   // constraint_set0_flag
+     constraint_set_flags |= get_bits1(gb) << 1;   // constraint_set1_flag
+@@ -775,6 +779,10 @@ int ff_h264_decode_picture_parameter_set(GetBitContext *gb, AVCodecContext *avct
+     }
+     memcpy(pps->data, gb->buffer, pps->data_size);
+ 
++    // Re-add the removed stop bit (may be used by hwaccels).
++    if (!(bit_length & 7) && pps->data_size < sizeof(pps->data))
++        pps->data[pps->data_size++] = 0x80;
++
+     pps->sps_id = get_ue_golomb_31(gb);
+     if ((unsigned)pps->sps_id >= MAX_SPS_COUNT ||
+         !ps->sps_list[pps->sps_id]) {
+-- 
+2.20.1
+
