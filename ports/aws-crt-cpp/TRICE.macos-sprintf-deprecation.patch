@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 733b18a..61e2bbe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -176,6 +176,7 @@ endif()
+ 
+ include(AwsCFlags)
+ include(AwsSharedLibSetup)
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+ 
+ file(GLOB AWS_CRT_HEADERS
+     "include/aws/crt/*.h"
