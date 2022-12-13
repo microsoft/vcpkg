@@ -12,6 +12,11 @@ vcpkg_from_github(
         include.patch
         fix-system-link.patch
 )
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/jpeg"
+    "${SOURCE_PATH}/png"
+    "${SOURCE_PATH}/zlib"
+)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -83,4 +88,18 @@ endforeach()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fltk/UseFLTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel;${SOURCE_PATH}" [[${CMAKE_CURRENT_LIST_DIR}/../../include]])
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+set(copyright_files "${SOURCE_PATH}/COPYING")
+if("opengl" IN_LIST FEATURES)
+    file(READ "${SOURCE_PATH}/src/freeglut_geometry.cxx" freeglut_copyright)
+    string(REGEX MATCH " [*] Copyright.*" freeglut_copyright "${freeglut_copyright}" )
+    string(REGEX REPLACE "[*]/.*" "" freeglut_copyright "${freeglut_copyright}")
+    file(WRITE "${CURRENT_BUILDTREES_DIR}/Freeglut code copyright" "${freeglut_copyright}")
+    list(APPEND copyright_files "${CURRENT_BUILDTREES_DIR}/Freeglut code copyright")
+
+    file(READ "${SOURCE_PATH}/src/freeglut_teapot.cxx" teapot_copyright)
+    string(REGEX MATCH " [*][^*]*Silicon Graphics, Inc.*" teapot_copyright "${teapot_copyright}")
+    string(REGEX REPLACE "[*]/.*" "" teapot_copyright "${teapot_copyright}")
+    file(WRITE "${CURRENT_BUILDTREES_DIR}/Original teapot code copyright" "${teapot_copyright}")
+    list(APPEND copyright_files "${CURRENT_BUILDTREES_DIR}/Original teapot code copyright")
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
