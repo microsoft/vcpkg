@@ -11,7 +11,6 @@ vcpkg_from_gitlab(
         cmake.dep.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
-        # rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
 ) 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
