@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5fd9f61..760e0e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,13 +108,20 @@ function(mgl_add_lib mgl_tmp_lib)
+ 			set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib}${mgl_lib_static}${mgl_lib_end}")
+ 	endif(enable-mgl2)
+ 
+-	install(
+-			TARGETS ${mgllib} ${mgllib}-static
++    if(BUILD_SHARED_LIBS)
++    install(
++			TARGETS ${mgllib}
+ 			EXPORT MathGLTargets
+ 			RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
+ 			ARCHIVE DESTINATION ${MathGL_INSTALL_LIB_DIR}
+ 			LIBRARY DESTINATION ${MathGL_INSTALL_LIB_DIR}
+ 	)
++    else()
++    install(
++			TARGETS ${mgllib}-static
++			EXPORT MathGLTargets
++			LIBRARY DESTINATION ${MathGL_INSTALL_LIB_DIR})
++    endif()
+ endfunction(mgl_add_lib mgl_tmp_lib)
+ 
+ MACRO(MGL_DEPENDENT_OPTION option doc default depends1 force1 depends2 force2)
