@@ -1,0 +1,74 @@
+diff --git a/tests/unit/CMakeLists.txt b/tests/unit/CMakeLists.txt
+index 2c5f6422d..5ca3bb80b 100644
+--- a/tests/unit/CMakeLists.txt
++++ b/tests/unit/CMakeLists.txt
+@@ -8,7 +8,7 @@ endif()
+ ## Base tests
+ foreach(test_name tests_high_five_base tests_high_five_multi_dims tests_high_five_easy)
+   add_executable(${test_name} "${test_name}.cpp")
+-  target_link_libraries(${test_name} HighFive Catch2::Catch2)
++  target_link_libraries(${test_name} HighFive Catch2::Catch2WithMain)
+   catch_discover_tests(${test_name})
+ endforeach()
+ 
+@@ -18,7 +18,7 @@ if(HIGHFIVE_PARALLEL_HDF5)
+ 
+   ## parallel MPI tests
+   add_executable(tests_parallel_bin ${tests_parallel_src})
+-  target_link_libraries(tests_parallel_bin HighFive Catch2::Catch2)
++  target_link_libraries(tests_parallel_bin HighFive Catch2::Catch2WithMain)
+ 
+   # We need to patch in a call to `mpirun` or equivalent when using
+   # parallel tests. Somehow, this is not foreseen in Catch2, modify the
+diff --git a/tests/unit/tests_high_five_base.cpp b/tests/unit/tests_high_five_base.cpp
+index 101da13bf..040481441 100644
+--- a/tests/unit/tests_high_five_base.cpp
++++ b/tests/unit/tests_high_five_base.cpp
+@@ -25,7 +25,7 @@
+ #include <highfive/H5Utility.hpp>
+ 
+ #define CATCH_CONFIG_MAIN
+-#include <catch2/catch.hpp>
++#include <catch.hpp>
+ 
+ #include "tests_high_five.hpp"
+ 
+diff --git a/tests/unit/tests_high_five_easy.cpp b/tests/unit/tests_high_five_easy.cpp
+index 0df27b09a..3480860da 100644
+--- a/tests/unit/tests_high_five_easy.cpp
++++ b/tests/unit/tests_high_five_easy.cpp
+@@ -28,7 +28,7 @@
+ #endif
+ 
+ #define CATCH_CONFIG_MAIN
+-#include <catch2/catch.hpp>
++#include <catch.hpp>
+ 
+ TEST_CASE("H5Easy_Compression") {
+     {
+diff --git a/tests/unit/tests_high_five_multi_dims.cpp b/tests/unit/tests_high_five_multi_dims.cpp
+index 66ca07105..f81a7ae0c 100644
+--- a/tests/unit/tests_high_five_multi_dims.cpp
++++ b/tests/unit/tests_high_five_multi_dims.cpp
+@@ -19,7 +19,7 @@
+ #endif
+ 
+ #define CATCH_CONFIG_MAIN
+-#include <catch2/catch.hpp>
++#include <catch.hpp>
+ 
+ #include "tests_high_five.hpp"
+ 
+diff --git a/tests/unit/tests_high_five_parallel.cpp b/tests/unit/tests_high_five_parallel.cpp
+index a51e6cbde..3e196b597 100644
+--- a/tests/unit/tests_high_five_parallel.cpp
++++ b/tests/unit/tests_high_five_parallel.cpp
+@@ -19,7 +19,7 @@
+ #include <highfive/H5Group.hpp>
+ 
+ #define CATCH_CONFIG_RUNNER
+-#include <catch2/catch.hpp>
++#include <catch.hpp>
+ 
+ #include "tests_high_five.hpp"
+ 
