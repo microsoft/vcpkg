@@ -6960,6 +6960,10 @@
       "baseline": "2022-01-04",
       "port-version": 2
     },
+    "simd": {
+      "baseline": "5.1.119",
+      "port-version": 0
+    },
     "simde": {
       "baseline": "0.7.2",
       "port-version": 0
