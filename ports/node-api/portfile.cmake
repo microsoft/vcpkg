@@ -3,9 +3,9 @@ set(NODEJS_VERSION 18.12.1)
 set(SHA512 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
+  set(SHA512 ee66d0c03d2e48046a42616abf7639a3983e7db24c04d8643b9141cb9209a50643e31873c5a4918853a4344e822d653480558510a4db9a2ab481396891d79917)
+  set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-headers.tar.gz")
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(SHA512 0)
-    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-headers.tar.gz")
     vcpkg_download_distfile(
       out_win_lib
       URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x64/node.lib"
@@ -13,8 +13,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       SHA512 95c4b053bf88f758b6124b4a576719901545485613767f1ab996bb019ea7bb0d303c511b357f830e5a14d463dd74c6b412f126103f21d12e31ca00c7de86d853
     )
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(SHA512 0)
-    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-headers.tar.gz")
     vcpkg_download_distfile(
       out_win_lib
       URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x86/node.lib"
@@ -40,6 +38,7 @@ endif()
 get_filename_component(DIST_FILENAME "${DIST_URL}" NAME)
 
 if(out_win_lib)
+  # nodejs requires the same node.lib to be used for both debug and release builds
   file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
