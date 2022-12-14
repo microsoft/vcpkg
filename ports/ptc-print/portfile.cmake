@@ -4,7 +4,7 @@ vcpkg_from_github(
     REPO JustWhit3/ptc-print
     REF v1.4.0
     SHA512 17218b096bc616a448d5c257b29f3e6c5a263cb56ff0361fb4be19206daf687c012cad9c6fb551aec1d16024eb563962cd15fccff0b7c3ab71cce23dc0846a95
-    HEAD_REF main
+    HEAD_REF master
 )
 
 # Main commands
