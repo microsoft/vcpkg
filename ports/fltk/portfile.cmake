@@ -78,8 +78,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-foreach(FILE Fl_Export.H fl_utf8.h)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+foreach(FILE IN ITEMS Fl_Export.H fl_utf8.h)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "0")
     else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "1")
