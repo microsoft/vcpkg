@@ -1754,7 +1754,7 @@
     },
     "cryptopp": {
       "baseline": "8.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cserialport": {
       "baseline": "4.2.1",
