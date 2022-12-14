@@ -3,11 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF 11.11.0
-  SHA512 c018271d499efff03540e4572a9c2f1f752c81c87efe7f2e63c2631ac47cecfedffdcfee68eddaf9187603eaae8ccd9a3e5640a022ba9fd7d05950f7827bf8cd
+  REF 11.12.0
+  SHA512 fd955f9912551668056dfe52835eef11e5dc0bf0d25b2d961a31f684adbd63bc6380759944c1921cfd63d359a58c7cc3a4a4d5eea69fa1b050f58960e5101271
   HEAD_REF master
   PATCHES
     ignore-crt.patch
+    install-to-datadir.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

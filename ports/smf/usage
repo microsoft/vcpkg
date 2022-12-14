@@ -1,0 +1,4 @@
+The package smf provides CMake targets:
+
+    find_package(smf CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE smf::smf)

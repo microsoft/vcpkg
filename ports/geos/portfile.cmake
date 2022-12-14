@@ -1,24 +1,17 @@
-set(GEOS_VERSION 3.11.0)
-
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
-    FILENAME "geos-${GEOS_VERSION}.tar.bz2"
-    SHA512 40c7553bbb93673c231ddd0131b73bf43b3f50524bc5bd9e6934c068d2c09632f388b7429254ae15d9641da2d15e3a626b430438854e98d9e7419ad04e535189
+    URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
+    FILENAME "geos-${VERSION}.tar.bz2"
+    SHA512 708500aba9b04208ee46a531d55ddf63a213dfaa2922dae937b524300b2b46c95143ed6cd3ff1414e9099f2be95e5df5a2e0b49df43acf93a9478215259f20d3
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "${GEOS_VERSION}"
+    SOURCE_BASE "v${VERSION}"
     PATCHES
         disable-warning-4996.patch
         fix-exported-config.patch
-        fix_clang-cl.patch
+        fix-dll-builds.patch
 )
-
-vcpkg_list(SET EXTRA_OPTIONS)
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,7 +21,6 @@ vcpkg_cmake_configure(
         -DBUILD_GEOSOP=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
-        ${EXTRA_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)

@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-debug-linux-build.patch
+        add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
 )
 
 if(WIN32)

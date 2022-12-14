@@ -38,12 +38,13 @@ manifest mode.
   - [`"supports"`](#supports)
   - [`"features"`](#features)
   - [`"default-features"`](#default-features)
+  - [`"vcpkg-configuration"`](#vcpkg-configuration)
 
 ## Simple Example Manifest
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "my-application",
   "version": "0.15.2",
   "dependencies": [
@@ -68,7 +69,7 @@ Manifests follow strict JSON: they can't contain C++-style comments (`//`) nor t
 you can use field names that start with `$` to write your comments in any object that has a well-defined set of keys.
 These comment fields are not allowed in any objects which permit user-defined keys (such as `"features"`).
 
-The latest JSON Schema is available at https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json. IDEs with JSON Schema support such as Visual Studio and Visual Studio Code can use this file to provide IntelliSense and syntax checking. For most IDEs, you should set `"$schema"` in your `vcpkg.json` to this URL (like the above example).
+The latest JSON Schema is available at https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json. IDEs with JSON Schema support such as Visual Studio and Visual Studio Code can use this file to provide IntelliSense and syntax checking. For most IDEs, you should set `"$schema"` in your `vcpkg.json` to this URL (like the above example).
 
 Each manifest contains a top level object with the following fields:
 
@@ -322,4 +323,34 @@ and that's the `"default-features"` field, which is an array of feature names.
     }
   }
 }
+```
+
+### `"vcpkg-configuration"`
+
+Allows to embed vcpkg configuration properties inside the `vcpkg.json` file. Everything inside
+the `vcpkg-configuration` property is treated as if it were defined in a `vcpkg-configuration.json` file. 
+See the [`vcpkg-configuration.json` documentation](registries.md) for details.
+
+Having a `vcpkg-configuration` defined in `vcpkg.json` while also having a `vcpkg-configuration.json` 
+file is not allowed and will result in the vcpkg command terminating with an error message.
+
+#### Example:
+
+```json
+  "name": "test",
+  "version": "1.0.0",
+  "dependencies": [ "beison", "zlib" ],
+  "vcpkg-configuration": {
+    "registries": [
+      {
+        "kind": "git",
+        "baseline": "dacf4de488094a384ca2c202b923ccc097956e0c",
+        "repository": "https://github.com/northwindtraders/vcpkg-registry",
+        "packages": [ "beicode", "beison" ]
+      }
+    ],
+    "overlay-ports": [ "./my-ports/fmt", 
+                       "./team-ports"
+    ]
+  }
 ```

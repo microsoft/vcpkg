@@ -47,6 +47,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        PREFER_JOM
+        CL_LANGUAGE C
         OPTIONS_RELEASE
             "INSTDIR=${INST_DIR}"
             "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} ${ICONV_LIBS} ${UWP_LIBS}"
