@@ -23,15 +23,25 @@ set(NODEJS_VERSION 18.12.1)
 
 set(SHA512 0)
 
-# TODO: fix windows: download headers and also download node.lib
-
 if(VCPKG_TARGET_IS_WINDOWS)
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(SHA512 fe11e2b6c8465d9763ddefd35006ea2167437feeda8811a01662757b275fa37e0d1ba96f75c0df2f52cdd12d2bc0b833718e6f9187a47347611e4bbc9749dad0)
-    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-win-x64.zip")
+    set(SHA512 0)
+    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-headers.tar.gz")
+    vcpkg_download_distfile(
+      out_win_lib
+      URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x64/node.lib"
+      FILENAME "node.lib"
+      SHA512 0
+    )
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(SHA512 1d533d2648d42347cfceffb85e7bdbf11d34e0c6cbdd6e582e920b282581512a550afb358c9a0a578957b257fe2fc9a34ad962e84b6be1d4b89b7c4ec69c77f8)
-    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-win-x86.zip")
+    set(SHA512 0)
+    set(DIST_URL "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-headers.tar.gz")
+    vcpkg_download_distfile(
+      out_win_lib
+      URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x86/node.lib"
+      FILENAME "node.lib"
+      SHA512 0
+    )
   endif()
 elseif(VCPKG_TARGET_IS_OSX)
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -49,6 +59,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 get_filename_component(DIST_FILENAME "${DIST_URL}" NAME)
+
+if(out_win_lib)
+  file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 
 # download dist
 vcpkg_download_distfile(
