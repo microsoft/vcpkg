@@ -10,7 +10,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       out_win_lib
       URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x64/node.lib"
       FILENAME "node.lib"
-      SHA512 0
+      SHA512 95c4b053bf88f758b6124b4a576719901545485613767f1ab996bb019ea7bb0d303c511b357f830e5a14d463dd74c6b412f126103f21d12e31ca00c7de86d853
     )
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(SHA512 0)
@@ -19,7 +19,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       out_win_lib
       URLS "https://nodejs.org/dist/v${NODEJS_VERSION}/win-x86/node.lib"
       FILENAME "node.lib"
-      SHA512 0
+      SHA512 0baa54a7870088a3290f817f6362446d304e8710ee36f99075925d110bce5c1eac377aa5c4ed6cf30161f98f39032d848eeb8d459add57b1c6458b8c91c72073
     )
   endif()
 elseif(VCPKG_TARGET_IS_OSX)
