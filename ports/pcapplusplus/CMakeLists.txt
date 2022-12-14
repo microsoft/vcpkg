@@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 if (WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
+set(CMAKE_CXX_STANDARD 11)
 
 # dependencies
 include(FindPackageHandleStandardArgs)
