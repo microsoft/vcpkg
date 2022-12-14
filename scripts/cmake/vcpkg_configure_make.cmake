@@ -103,6 +103,15 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
     string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
     string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
+    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # that approach is flawed since it fails to pass flags unknown to libtool
+    # but required for linking to the link stage (e.g. -fsanitize=<x>).
+    separate_arguments(CFLAGS_LIST NATIVE_COMMAND "${CFLAGS_${flag_suffix}}")
+    list(JOIN CFLAGS_LIST " -Xcompiler " CFLAGS_${var_suffix})
+    string(PREPEND CFLAGS_${var_suffix} "-Xcompiler ")
+    separate_arguments(CXXFLAGS_LIST NATIVE_COMMAND "${CXXFLAGS_${flag_suffix}}")
+    list(JOIN CXXFLAGS_LIST " -Xcompiler " CXXFLAGS_${var_suffix})
+    string(PREPEND CXXFLAGS_${var_suffix} "-Xcompiler ")
     debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
     debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
