@@ -46,6 +46,10 @@ if(WIN32 AND BUILD_SHARED_LIBS)
     target_compile_options(plist++ PRIVATE -W3 -WX- -sdl-)
     target_compile_definitions(plist++ PRIVATE -DLIBPLIST_EXPORTS)
 endif()
+if(NOT BUILD_SHARED_LIBS)
+    target_compile_definitions(plist PRIVATE -DLIBPLIST_STATIC_LIBRARY)
+endif()
+
 target_link_libraries(plist++ PRIVATE plist)
 
 install(

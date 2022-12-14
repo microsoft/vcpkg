@@ -1,9 +1,10 @@
 {
   "name": "ideviceinstaller",
-  "version-string": "1.1.2.23",
-  "port-version": 3,
+  "version": "1.1.2.23",
+  "port-version": 4,
   "description": "Manage apps of iOS devices",
-  "supports": "!(windows & arm64)",
+  "license": "LGPL-2.1-only",
+  "supports": "windows & !arm64",
   "dependencies": [
     "libimobiledevice",
     "libzip"
