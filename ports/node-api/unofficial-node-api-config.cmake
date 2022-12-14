@@ -1,4 +1,8 @@
-add_library(unofficial::node-api::node-api UNKNOWN IMPORTED)
+if(WIN32)
+  add_library(unofficial::node-api::node-api UNKNOWN IMPORTED)
+else()
+  add_library(unofficial::node-api::node-api INTERFACE IMPORTED)
+endif()
 
 find_path(node-api_INCLUDE_DIR
   NAMES node.h
