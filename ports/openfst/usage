@@ -1,7 +1,4 @@
 The package openfst does not provide CMake targets:
 
-    find_path(FST_INCLUDE_DIRS "fst/fst.h")
     find_library(FST_LIBRARY NAMES fst fstscript)
-
-    target_include_directories(main PRIVATE ${FST_INCLUDE_DIRS})
     target_link_libraries(main PRIVATE ${FST_LIBRARY})
