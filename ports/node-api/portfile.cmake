@@ -1,24 +1,3 @@
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(nodejs_arch "x64")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-  set(nodejs_arch "x86")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(nodejs_arch "arm64")
-else()
-  message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  set(nodejs_os "win")
-elseif(VCPKG_TARGET_IS_OSX)
-  set(nodejs_os "darwin")
-elseif(VCPKG_TARGET_IS_LINUX)
-  set(nodejs_os "linux")
-else()
-  message(FATAL_ERROR "Unsupported OS")
-endif()
-
 set(NODEJS_VERSION 18.12.1)
 
 set(SHA512 0)
