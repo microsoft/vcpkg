@@ -422,7 +422,7 @@
     },
     "b64": {
       "baseline": "2.0.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "basisu": {
       "baseline": "1.11",
