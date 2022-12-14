@@ -23,6 +23,8 @@ set(NODEJS_VERSION 18.12.1)
 
 set(SHA512 0)
 
+# TODO: fix windows: download headers and also download node.lib
+
 if(VCPKG_TARGET_IS_WINDOWS)
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(SHA512 fe11e2b6c8465d9763ddefd35006ea2167437feeda8811a01662757b275fa37e0d1ba96f75c0df2f52cdd12d2bc0b833718e6f9187a47347611e4bbc9749dad0)
