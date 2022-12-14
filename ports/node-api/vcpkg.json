@@ -4,7 +4,7 @@
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
   "license": null,
-  "supports": "windows | linux | osx",
+  "supports": "((windows & !arm) | linux | osx) & !uwps",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
