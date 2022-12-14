@@ -8,6 +8,7 @@ if (WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 # dependencies
 include(FindPackageHandleStandardArgs)
