@@ -25,6 +25,11 @@ set(NODEJS_VERSION 18.12.1)
 set(dist_url "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-${nodejs_os}-${nodejs_arch}.tar.gz")
 
 set(nodejs_sha512_darwin_arm64 8eb1713afdce23b0e8408d81aa47b3ea0955de328105d666a57efef8955b286c707c107377cff36164d8455558829ab65567b9cbe5997085afc841d95128fcd5)
+set(nodejs_sha512_darwin_x64 0)
+set(nodejs_sha512_linux_x64 0)
+set(nodejs_sha512_win_x64 0)
+set(nodejs_sha512_win_x86 0)
+set(nodejs_sha512_win_arm64 0)
 
 set(SHA512 "${nodejs_sha512_${nodejs_os}_${nodejs_arch}}")
 if ("${SHA512}" STREQUAL "")
