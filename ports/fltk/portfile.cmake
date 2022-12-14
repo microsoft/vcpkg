@@ -50,24 +50,21 @@ vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 
-# don't install fluid
-if(VCPKG_CROSSCOMPILING)
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES fltk-config AUTO_CLEAN)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fltk-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fltk-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "{prefix}/include" "{prefix}/../include")
     endif()
-elseif(VCPKG_TARGET_IS_OSX)
-    vcpkg_copy_tools(TOOL_NAMES fluid.app fltk-config AUTO_CLEAN)
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config")
-    vcpkg_copy_tools(TOOL_NAMES fluid AUTO_CLEAN)
-else()
-    vcpkg_copy_tools(TOOL_NAMES fluid fltk-config AUTO_CLEAN)
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/fltk/fltk-config")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/fltk/fltk-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_EXECUTABLE_SUFFIX}" OR
+   EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_BUNDLE_SUFFIX}")
+   vcpkg_copy_tools(TOOL_NAMES fluid AUTO_CLEAN)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/bin"
         "${CURRENT_PACKAGES_DIR}/bin"
