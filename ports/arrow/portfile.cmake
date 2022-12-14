@@ -72,6 +72,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
+if("dataset" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowdataset
+        CONFIG_PATH lib/cmake/ArrowDataset
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
