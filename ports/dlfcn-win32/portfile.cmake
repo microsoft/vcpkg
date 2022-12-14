@@ -14,12 +14,16 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+file(READ "${CURRENT_PACKAGES_DIR}/debug/share/dlfcn-win32/dlfcn-win32-targets-debug.cmake" dlfcn-win32_DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" dlfcn-win32_DEBUG_MODULE "${dlfcn-win32_DEBUG_MODULE}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/dlfcn-win32/dlfcn-win32-targets-debug.cmake" "${dlfcn-win32_DEBUG_MODULE}")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4f51e38..32a0319 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,11 +31,15 @@ include(cmake/ctest.cmk)
+ include(cmake/paths.cmk)
+ 
+ option(WITH_WEBKIT3 "Build against gtk-3 version of webkitgtk" OFF)
+-
+-### Subdirectories
+-
+-add_subdirectory(libmodman)
+-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++find_package(libmodman REQUIRED)
++if(LIBMODMAN_FOUND)
++    include_directories(${LIBMODMAN_INCLUDE_DIR})
++    link_libraries(${LIBMODMAN_LIBRARIES})
++else()
++    ### Subdirectories
++    add_subdirectory(libmodman)
++    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++endif()
+ 
+ # Conditionally build bindings
+ if(NOT WIN32)
+diff --git a/libproxy/cmake/libproxy.cmk b/libproxy/cmake/libproxy.cmk
+index 9356486..f9eed2c 100644
+--- a/libproxy/cmake/libproxy.cmk
++++ b/libproxy/cmake/libproxy.cmk
+@@ -1,8 +1,8 @@
+ add_library(libproxy SHARED extension_config.cpp extension_pacrunner.cpp extension_wpad.cpp proxy.cpp url.cpp ${LIBPROXY_SOURCES})
+ if(WIN32)
+-  target_link_libraries(libproxy modman;ws2_32;${LIBPROXY_LIBRARIES})
++  target_link_libraries(libproxy ${LIBMODMAN_LIBRARIES};ws2_32;${LIBPROXY_LIBRARIES})
+ else()
+-  target_link_libraries(libproxy modman;m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
++  target_link_libraries(libproxy ${LIBMODMAN_LIBRARIES};m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
+ endif()
+ file(TO_NATIVE_PATH ${MODULE_INSTALL_DIR} MODULE_INSTALL_DIR)
+ if(WIN32)
+@@ -21,8 +21,8 @@ set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/proxy.cpp
+ set_target_properties(libproxy PROPERTIES PREFIX "" VERSION 1.0.0 SOVERSION 1)
+ set_target_properties(libproxy PROPERTIES INTERFACE_LINK_LIBRARIES "")
+ set_target_properties(libproxy PROPERTIES LINK_INTERFACE_LIBRARIES "")
+-if(NOT APPLE)
+-  set_target_properties(libproxy PROPERTIES LINK_FLAGS "-Wl,--version-script,${CMAKE_CURRENT_SOURCE_DIR}/libproxy.map")
+-endif()
++#if(NOT APPLE)
++#  set_target_properties(libproxy PROPERTIES LINK_FLAGS "-Wl,--version-script,${CMAKE_CURRENT_SOURCE_DIR}/libproxy.map")
++#endif()
+ install(TARGETS libproxy RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+ install(FILES   proxy.h  DESTINATION ${INCLUDE_INSTALL_DIR})

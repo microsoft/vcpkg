@@ -1,29 +1,39 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sainteos/tmxparser
-    REF d314b3115c7ed86a939eefcb6009a495f043a346 # 2019-10-14
+    REF v2.1.0
     HEAD_REF master
-    SHA512 b4c087ae46b02b632427d8e4af1b5b8c43ab4f1efba21d2d705e1501aa8f33b97e03bf4e621ad4d4e14c19b1c890416332a56a2305c81930facfb8954bedee26
+    SHA512 011cce3bb98057f8e2a0a82863fedb7c4b9e41324d5cfa6daade4d000c3f6c8c157da7b153f7f2564ecdefe8019fc8446c9b1b8a675be04329b04a0891ee1c27
     PATCHES
-        fix_dependencies.patch
-        disable_werror.patch # https://github.com/microsoft/vcpkg/pull/28139#issuecomment-1336119855
+        fix_include_paths.patch
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
-vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
-vcpkg_fixup_pkgconfig()
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB LIBS ${CURRENT_PACKAGES_DIR}/lib/*.so* ${CURRENT_PACKAGES_DIR}/debug/lib/*.so*)
+    if(LIBS)
+        file(REMOVE ${LIBS})
+    endif()
+else()
+    file(GLOB LIBS ${CURRENT_PACKAGES_DIR}/lib/*.a ${CURRENT_PACKAGES_DIR}/debug/lib/*.a)
+    if(LIBS)
+        file(REMOVE ${LIBS})
+    endif()
+endif()
+
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
