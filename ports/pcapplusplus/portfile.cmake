@@ -18,6 +18,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-pcapplusplus/unofficial-pcapplusplus-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)")
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-pcapplusplus)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
