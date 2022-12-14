@@ -1,0 +1,13 @@
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 14747c9..65c3ddb 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -155,7 +155,7 @@ elseif(NOT EPROSIMA_INSTALLER)
+         COMPONENT cmake
+         )
+ 
+-    if(MSVC OR MSVC_IDE)
++    if(MSVC OR MSVC_IDE AND 0)
+         if(TARGET_TYPE STREQUAL "SHARED_LIBRARY")
+             # Install pdb files
+             install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Debug/

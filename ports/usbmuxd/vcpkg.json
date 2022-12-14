@@ -1,11 +1,9 @@
 {
   "name": "usbmuxd",
-  "version": "1.2.235",
-  "port-version": 2,
+  "version-string": "1.2.235",
+  "port-version": 1,
   "description": "A socket daemon to multiplex connections from and to iOS devices",
   "homepage": "http://www.libimobiledevice.org",
-  "license": "LGPL-2.1-only",
-  "supports": "windows & !arm64",
   "dependencies": [
     "libimobiledevice",
     "libusb",
