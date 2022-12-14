@@ -14,7 +14,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         vulkan   SDL_VULKAN
-        x11      SDL_X11_SHARED
+        x11      SDL_X11
         wayland  SDL_WAYLAND
 )
 
@@ -37,7 +37,6 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
-        -DSDL_HIDAPI_JOYSTICK=ON
         -DSDL_TEST=OFF
         -DSDL_IBUS=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
