@@ -1,58 +1,68 @@
-# vcpkg export-port
+# vcpkg x-export-port
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/commands/export-port.md).**
 
 ## Synopsis
 ```no-highlight
-vcpkg export-port <package-spec> <destination> [options]
+vcpkg x-export-port <package-spec> <destination> [options]
 ```
 
 ## Description
 Export a package's port files to a destination.
 
-* **`<package-spec>`**: The most basic form of a package spec is a single port name. This command accepts non-qualified and version-qualified package specs.
+* **`<package-spec>`**: The package to export, optionally accepts a version-qualifier to export a specific port version.
 
     * The version-qualifier is an `@` (at sign) followed by a version identifier. Version identifiers consist of two parts, the version string and an optional numeric port-version separated by a `#` (number sign). Example: `1.0.0#1`, `2020-11-21#3`, `hello` (equivalent to `hello#0`). 
     
-    * All spaces and special characters in a version identifier must be escaped by prefixing them with a `\` (forward slash). For example, `tag\:1"`. To make it easier to match dot-separated and date versions, the following characters are not required to be escaped: 
+    * All spaces and special characters in a version identifier must be escaped by prefixing them with a `\` (backslash). To make it easier to match dot-separated and date versions, the following characters *don't require* escaping: 
         * `.` (dot), 
         * `-` (hyphen), 
         * `+` (plus sign), and 
         * `_` (underscore). 
 
-    * For legacy reasons, the `#` (number sign) character is never allowed as part of a version identifier to avoid ambiguity with the port-version delimiter. 
+    * For legacy reasons, the `#` (number sign) character is never allowed as part of a version identifier, even if escaped.
 
-    This command has two modes of operation: un-versioned and versioned. 
-    For un-versioned package specs, the exported port files correspond to the version of the port that Classic Mode installs.
-    For version-qualified package specs, the port files corresponding to the version identifier are exported.
+    This command has different behavior depending on whether any [registries](../users/registries.md) are configured.
 
-    Version-qualified package specs are looked up in the configured registry set. The `--no-registries` option can be passed to disable registry lookup.
+    If no registries are configured, all ports resolve to the builtin-registry. Un-versioned packages, resolve the same as Classic Mode's `install` command.
 
-* **`<destination>`**: The destination directory where the package's port files will be exported into, parent directories above the `destination` path will be created as necessary. By default, vcpkg will refuse to export to a directory that is not empty. The `--force` option forces vcpkg to export files to a non-empty directory, all existing files in `destination` will be deleted before exporting.
+    If registries are configured, the package is [resolved to a registry](../users/registries.md#package-name-resolution). If no version is passed, the baseline version of the port is exported.
+
+    The `--no-registries` option can be passed to disable registry lookup.
+
+    |                 | **No registries**         | **Has registries**        |
+    |-----------------|---------------------------|---------------------------|
+    | **No version**  | Classic Mode version      | Registry baseline version |
+    | **Has version** | Built-in registry version | Registry version          |
+
+* **`<destination>`**: The destination directory for the exported port files.
+
+    Parent directories above the `destination` path are created as necessary. By default, vcpkg refuses to export to a non-empty directory. The `--force` option removes all existing files at the `destination` before exporting.
 
 ## Example
 ### Basic examples
 ```no-highlight
-$vcpkg export zlib C:\overlay-ports\zlib
-Port files have been exported to C:\overlay-ports\zlib
+$ vcpkg x-export-port zlib overlay-ports/zlib
+Port files have been exported to /home/vcpkg/overlay-ports/zlib
 ```
 
 ```no-highlight
-$ vcpkg export-port fmt@8.1.1#2 C:\overlay-ports\fmt
-Port files have been exported to C:\overlay-ports\fmt
+$ vcpkg x-export-port fmt@8.1.1#2 /overlay-ports/fmt
+Port files have been exported to /home/vcpkg/overlay-ports/fmt
 ```
 
 ### Advanced example
 ```no-highlight
-# export version "hello $world" of library foo
+# export version 'hello $world' of library foo
 
-$ vcpkg export-port 'foo@hello\\ \\\$world' C:\overlay-ports\foo
-Port files have been exported to C:\overlay-ports\foo
+$ vcpkg x-export-port 'foo@hello\\ \\\$world' /overlay-ports/foo
+Port files have been exported to /home/vcpkg/overlay-ports/foo
 ```
-Note the following things in the previous example:
+Note the following things on this example:
 
 * The package spec argument is enclosed in quotes (`'`) to avoid spliting it into two separate arguments (`foo@hello\\` and `\\\$world`).
-* Escape sequences have their `\` (forward slashes) escaped, this is because terminals also use this character for their own escape sequences.
+
+* Escape sequences have their `\` (backslashes) escaped, this is because some terminals also use this character for their own escape sequences.
 * The `$` dollar sign is itself escaped (`\$`). Otherwise shell expands `$world` as a variable.  
 
 For vcpkg to match version "`hello $world`", all spaces and special characters in the version-qualifier need to be escaped. In other words, vcpkg needs to receive "`foo@hello\ \$world`" as its first argument's value. Review your terminal's documentation to determine which characters need to be escaped in your vcpkg invocation.
@@ -64,4 +74,7 @@ All vcpkg commands support a set of [common options](common-options.md).
 Forces vcpkg to export port files to a non-empty directory, any existing files will be deleted before exporting.
 
 ### `--no-registries`
-Disables looking up package names in registries.
+Disables name lookup in registries. All package names are resolved to the built-in registry instead.
+
+### `--subdir`
+Extract port files in a subdirectory in the destination. The subdirectory's name corresponds to the package's name.
