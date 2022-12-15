@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     FILENAME "mathgl-${MATHGL_VERSION}.tar.gz"
     SHA512 1fe27962ffef8d7127c4e1294d735e5da4dd2d647397f09705c3ca860f90bd06fd447ff614e584f3d2b874a02262c5518be37d59e9e0a838dd5b8b64fd77ef9d
     PATCHES
+        cmake-config.patch
         fix_cmakelists_and_cpp.patch
         fix_attribute.patch
         fix_default_graph_init.patch
@@ -31,20 +32,27 @@ FEATURES
 )
 
 vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DMathGL_INSTALL_CMAKE_DIR:STRING=share/mathgl2
 )
 
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-  file(REMOVE "${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake")
-  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake")
+# MathGL exports proper CMake config under the MathGL2Config.cmake filename, and
+# a find_path/find_library based package under the mathgl2-config.cmake filename.
+# The latter doesn't support multi-config or static linkage requirements, and
+# the variable names don't match the package names, i.e. it is unusable.
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake")
 else()
-  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mathgl2)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME mathgl2)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
