@@ -68,7 +68,7 @@ vcpkg_download_distfile(
   out_license
   URLS "${license_url}"
   FILENAME "LICENSE"
-  SHA512 0
+  SHA512 2d79b49a12178a078cf1246ef7589d127189914403cd6f4dfe277ced2b3ef441a6e6ee131f1c75f996d1c1528b7e1ae332e83c1dc44580b2b51a933ed0c50c48
 )
 file(INSTALL "${out_license}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
