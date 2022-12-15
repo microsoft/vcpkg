@@ -8,10 +8,10 @@ vcpkg_from_sourceforge(
     SHA512 1fe27962ffef8d7127c4e1294d735e5da4dd2d647397f09705c3ca860f90bd06fd447ff614e584f3d2b874a02262c5518be37d59e9e0a838dd5b8b64fd77ef9d
     PATCHES
         cmake-config.patch
+        linkage.patch
         fix_cmakelists_and_cpp.patch
         fix_attribute.patch
         fix_default_graph_init.patch
-        fix_mglDataList.patch
         fix_arma_sprintf.patch
 )
 
@@ -40,6 +40,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/dllexport.h" "#ifdef MGL_STATIC_DEFINE" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/dllexport.h" "#ifdef MGL_STATIC_DEFINE" "#if 0")
+endif()
 
 # MathGL exports proper CMake config under the MathGL2Config.cmake filename, and
 # a find_path/find_library based package under the mathgl2-config.cmake filename.

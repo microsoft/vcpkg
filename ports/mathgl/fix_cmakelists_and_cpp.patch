@@ -1,20 +1,3 @@
-diff --git a/mgllab/CMakeLists.txt b/mgllab/CMakeLists.txt
-index 1649104..eeec1c1 100644
---- a/mgllab/CMakeLists.txt
-+++ b/mgllab/CMakeLists.txt
-@@ -38,7 +38,11 @@ if(MGL_HAVE_FLTK)
- 		set(mgllab_src ${mgllab_src} mgllab.rc)
- 	endif(WIN32)
- 	add_executable(mgllab ${mgllab_src} ${mgllab_hdr})
--	target_link_libraries(mgllab mgl mgl-fltk ${FLTK_LIBRARIES})
-+	if(WIN32)
-+		target_link_libraries(mgllab mgl mgl-fltk mgl-fltk-static mgl-static getopt-static ${FLTK_LIBRARIES})
-+	else(WIN32)
-+		target_link_libraries(mgllab mgl mgl-fltk ${FLTK_LIBRARIES})
-+	endif(WIN32)	
- 	install(
- 		TARGETS mgllab
- 		RUNTIME DESTINATION bin	)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index d0c779d..acd9d7f 100644
 --- a/CMakeLists.txt
