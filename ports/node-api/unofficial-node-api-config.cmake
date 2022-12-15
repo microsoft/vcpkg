@@ -20,8 +20,4 @@ if(WIN32)
     IMPORTED_LOCATION_DEBUG "${node-api_LIBRARY_DEBUG}"
     IMPORTED_LOCATION_RELEASE "${node-api_LIBRARY_RELEASE}"
   )
-
-  target_sources(unofficial::node-api::node-api INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../node-api/win_delay_load_hook.cc>
-    $<INSTALL_INTERFACE:lib>)
 endif()
