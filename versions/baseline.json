@@ -83,7 +83,7 @@
     "amd-amf": {
       "baseline": "1.4.26",
       "port-version": 0
-    }, 
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 3
@@ -2953,7 +2953,7 @@
       "port-version": 1
     },
     "hwloc": {
-      "baseline": "2.7.1",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "hyperscan": {
