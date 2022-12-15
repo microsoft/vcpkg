@@ -71,13 +71,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cryptopp)
 
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cryptopp.pc")
+endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-if(EXISTS  "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp.pc")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp.pc")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
-endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
