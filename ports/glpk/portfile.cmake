@@ -58,11 +58,7 @@ if(DEFINED VCPKG_TARGET_IS_WINDOWS OR DEFINED VCPKG_TARGET_IS_UWP OR DEFINED VCP
     function(patch_config_h build_type_suffix)
         set(filename "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_type_suffix}/config.h")
         file(READ "${filename}" config_h_contents)
-        string(APPEND config_h_contents "\n/* Below are additions made by code at glpk/portfile.cmake */\n\n"
-        "/* Selects thread-unsafe versions of certain system functions; see files w64/config_VC\n"
-        "   and src/env/stdc.c */\n"
-        "#define __WOE__ 1\n\n"
-        )
+        string(APPEND config_h_contents "\n#define __WOE__ 1\n")
         string(REPLACE "libiodbc.so" "odbc32.dll" config_h_contents "${config_h_contents}")
         string(REPLACE "libodbc.so" "odbc32.dll" config_h_contents "${config_h_contents}")
         string(REPLACE "libmysqlclient.so" "libmysql.dll" config_h_contents "${config_h_contents}")
