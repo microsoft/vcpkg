@@ -8,8 +8,8 @@ vcpkg_from_sourceforge(
     SHA512 1fe27962ffef8d7127c4e1294d735e5da4dd2d647397f09705c3ca860f90bd06fd447ff614e584f3d2b874a02262c5518be37d59e9e0a838dd5b8b64fd77ef9d
     PATCHES
         cmake-config.patch
+        dependencies.patch
         linkage.patch
-        fix_cmakelists_and_cpp.patch
         fix_attribute.patch
         fix_default_graph_init.patch
         fix_arma_sprintf.patch
@@ -17,18 +17,18 @@ vcpkg_from_sourceforge(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    hdf5    enable-hdf5
+    arma    enable-arma
     fltk    enable-fltk
     gif     enable-gif
-    arma    enable-arma
-    png     enable-png
-    zlib    enable-zlib
-    jpeg    enable-jpeg
-    gsl     enable-gsl
-    opengl  enable-opengl
     glut    enable-glut
-    wx      enable-wx
+    gsl     enable-gsl
+    hdf5    enable-hdf5
+    jpeg    enable-jpeg
+    opengl  enable-opengl
+    png     enable-png
     qt5     enable-qt5
+    wx      enable-wx
+    zlib    enable-zlib
 )
 
 vcpkg_cmake_configure(

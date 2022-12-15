@@ -11,10 +11,10 @@ index 2a73d0f..fda5ba1 100644
  	if(NOT IS_ABSOLUTE "${${var}}")
  		set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
 diff --git a/scripts/MathGLConfig.cmake.in b/scripts/MathGLConfig.cmake.in
-index f219126..f0dbbad 100644
+index f219126..2a9f58b 100644
 --- a/scripts/MathGLConfig.cmake.in
 +++ b/scripts/MathGLConfig.cmake.in
-@@ -1,8 +1,12 @@
+@@ -1,15 +1,19 @@
  # - Config file for the MathGL package
  # It defines the following variables
   
@@ -29,3 +29,11 @@ index f219126..f0dbbad 100644
  set(MathGL2_HAVE_QT5 "@enable-qt5@")
  set(MathGL2_HAVE_QT4 "@enable-qt4@")
  set(MathGL2_HAVE_WX "@enable-wx@")
+ set(MathGL2_HAVE_FLTK "@enable-fltk@")
+ set(MathGL2_HAVE_GLUT "@enable-glut@")
+ set(MathGL2_HAVE_PTHREAD "@CMAKE_USE_PTHREADS_INIT@")
+-set(MathGL2_HAVE_OPENMP "@OPENMP_FOUND@")
++set(MathGL2_HAVE_OPENMP "@enable-openmp@")
+ 
+ include(CMakeFindDependencyMacro)
+ # Adding dependency for Threads imported target

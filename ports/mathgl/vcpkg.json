@@ -42,7 +42,14 @@
     "glut": {
       "description": "glut module",
       "dependencies": [
-        "freeglut"
+        "freeglut",
+        {
+          "name": "mathgl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "gsl": {
