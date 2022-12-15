@@ -1,0 +1,11 @@
+--- ./src/mpl/mplsql.c.original	2022-12-15 12:40:14.017978500 -0500
++++ ./src/mpl/mplsql.c	2022-12-15 12:40:21.302506500 -0500
+@@ -1118,7 +1118,7 @@
+ #include <my_global.h>
+ #include <my_sys.h>
+ #endif
+-#include <mysql.h>
++#include <mysql/mysql.h>
+ 
+ struct db_mysql
+ {

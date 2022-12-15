@@ -1,0 +1,10 @@
+--- configure.ac.original	2022-12-15 13:46:24.222223600 -0500
++++ configure.ac	2022-12-15 13:46:58.607858500 -0500
+@@ -104,6 +104,7 @@
+ elif test "$enable_dl" = "dlfcn"; then
+    AC_MSG_RESULT([dlfcn])
+    AC_DEFINE([HAVE_DLFCN], [1], [N/A])
++   LIBS="-ldl $LIBS"
+ else
+    AC_MSG_RESULT([no])
+ fi
