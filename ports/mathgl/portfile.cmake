@@ -62,36 +62,15 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME mathgl2)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-#somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
-if(CMAKE_HOST_WIN32)
-  set(EXECUTABLE_SUFFIX ".exe")
-else()
-  set(EXECUTABLE_SUFFIX "")
+set(tools mglconv mgltask)
+if(enable-fltk)
+    list(APPEND tools mglview mgllab)
 endif()
-
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mgllab${EXECUTABLE_SUFFIX}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mglview${EXECUTABLE_SUFFIX}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mglconv${EXECUTABLE_SUFFIX}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mgltask${EXECUTABLE_SUFFIX}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/udav${EXECUTABLE_SUFFIX}")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/mathgl/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mglconv${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/mathgl/mglconv${EXECUTABLE_SUFFIX}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mgltask${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/mathgl/mgltask${EXECUTABLE_SUFFIX}")
-if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/mgllab${EXECUTABLE_SUFFIX}")
-	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mgllab${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/mathgl/mgllab${EXECUTABLE_SUFFIX}")
+if(enable-qt5)
+    list(APPEND tools mglview udav)
 endif()
-if ("EXISTS ${CURRENT_PACKAGES_DIR}/bin/mglview${EXECUTABLE_SUFFIX}")
-	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mglview${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/mathgl/mglview${EXECUTABLE_SUFFIX}")
-endif()
-if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/udav${EXECUTABLE_SUFFIX}")
-	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/udav${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/mathgl/udav${EXECUTABLE_SUFFIX}")
-endif()
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/mathgl")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+list(REMOVE_DUPLICATES tools)
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_INSTALL_DIR	\"${CURRENT_PACKAGES_DIR}\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/fonts\"" "") # there is no fonts folder
