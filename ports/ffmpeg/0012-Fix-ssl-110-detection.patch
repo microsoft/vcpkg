@@ -1,9 +1,14 @@
+Subject: [PATCH] patch 0012
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/configure b/configure
-index 2be953f7e7..e075949ffc 100755
---- a/configure
-+++ b/configure
-@@ -6497,6 +6497,7 @@ enabled openssl           && { { check_pkg_config openssl "openssl >= 3.0.0
-                                  { enabled gplv3 || ! enabled gpl || enabled nonfree || die "ERROR: OpenSSL >=3.0.0 requires --enable-version3"; }; } ||
+--- a/configure	(revision 71857d9e7b8f4f08b124ed7c30a09283a9e4c085)
++++ b/configure	(revision 5ab8de3630ffd48eadb64bef7dd5b4fcc47c2c13)
+@@ -6784,6 +6784,7 @@
                                 { enabled gpl && ! enabled nonfree && die "ERROR: OpenSSL <3.0.0 is incompatible with the gpl"; } ||
                                 check_pkg_config openssl openssl openssl/ssl.h OPENSSL_init_ssl ||
                                 check_pkg_config openssl openssl openssl/ssl.h SSL_library_init ||
@@ -11,4 +16,3 @@ index 2be953f7e7..e075949ffc 100755
                                 check_lib openssl openssl/ssl.h OPENSSL_init_ssl -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl32 -leay32 ||
-

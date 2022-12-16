@@ -1,8 +1,20 @@
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# Fix bug compiling bin2c under msvc host
+if(VCPKG_DETECTED_MSVC)
+    # It seems we cannot change HOSTLD_O from outside, and this will make linking fail, so we directly patch the makefile
+    # if we are using MSVC at host.
+    # TODO: This kind of quick fix and could be replaced by better one. Could be more generic as there might be other
+    # targets which needs host compiling.
+    set(MSVC_PATCHES 0021-fix-compile-bin2c-under-msvc.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n5.0.2
-    SHA512 76f892f15b65574c01a98eb6e8e0fa8a6c9febd9419f3f2a91bbd275762934d65bd809c6dbe67e047a475e1c8510b3e8d503fb0016e979a52edb7a02722788ca
+    REF n5.1.2
+    SHA512 1b90c38b13149f2de7618ad419adc277afd5e65bbf52b849a7245aec0f92f73189c8547599dba8408b8828a767c1120f132727b57cd6231cd8b81de2471a4b8b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -11,21 +23,39 @@ vcpkg_from_github(
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0009-Fix-fdk-detection.patch
+        0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
+        0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-iconv.patch
+        ${MSVC_PATCHES}
 )
 
 if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    # ffmpeg nasm build causes linker to stall on x86, so fall back to yasm
+if ("use-lld-link" IN_LIST FEATURES)
+    set(SHOULD_USE_LLD_LINK ON)
+endif()
+if ("use-clang-cl" IN_LIST FEATURES)
+    set(SHOULD_USE_CLANG_CL ON)
+endif()
+if ("use-cuda-llvm" IN_LIST FEATURES)
+    set(SHOULD_USE_CUDA_LLVM ON)
+endif()
+
+# ffmpeg nasm build gives link error on x86 and (x64 without lld-link), so fall back to yasm
+if (NOT SHOULD_USE_LLD_LINK AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(SHOULD_FALLBACK_YASM ON)
+endif()
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(SHOULD_FALLBACK_YASM ON)
+endif()
+
+if (SHOULD_FALLBACK_YASM)
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
     vcpkg_add_to_path("${YASM_EXE_PATH}")
@@ -44,7 +74,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
@@ -53,7 +83,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
 endif()
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+    set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -84,25 +114,53 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
 else()
 endif()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
+# The MSVC linker will hang when building, but lld-link won't.
+# And cuda can be compiled by clang, both situations needs clang as dependency.
+if(SHOULD_USE_LLD_LINK OR SHOULD_USE_CLANG_CL OR SHOULD_USE_CUDA_LLVM)
+    vcpkg_find_acquire_program(CLANG)
+    if (CLANG MATCHES "-NOTFOUND")
+        message(FATAL_ERROR "Clang is required.")
+    endif ()
+    get_filename_component(CLANG "${CLANG}" DIRECTORY)
+endif()
+
+if(SHOULD_USE_CUDA_LLVM)
+    # This feature requires clang could be found in the building env.
+    # If enabling cuda-llvm, then it will use clang.exe to compile cu files instead of nvcc
+    # So, we are setting nvcc path to clang.
+    # By default, this is an autodetect feature depends on whether clang exists.
+    set(OPTIONS "${OPTIONS} --nvcc=${CLANG}/clang.exe")
+endif()
+
 if(VCPKG_DETECTED_MSVC)
-    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
     string(REGEX REPLACE "(^| )-RTC1( |$)" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
     string(REGEX REPLACE "(^| )-Od( |$)" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
     string(REGEX REPLACE "(^| )-Ob0( |$)" " " VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+
+    # use clang-cl
+    if(SHOULD_USE_CLANG_CL)
+        set(VCPKG_DETECTED_CMAKE_C_COMPILER ${CLANG}/clang-cl.exe)
+        set(VCPKG_DETECTED_CMAKE_CXX_COMPILER ${CLANG}/clang-cl.exe)
+
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            string(APPEND OPTIONS " --extra-cflags=-m32")
+            string(APPEND OPTIONS " --extra-cxxflags=-m32") 
+        endif()
+    endif()
+
+    # We are forced to use lld-link to replace MSVC link because the MSVC linker hangs on x64,
+    # And because we don't want to fallback to yasm on x64, and don't want to disable too much features.
+    # Considering all factors, use lld-link is the cheapest and best way.
+    if(SHOULD_USE_LLD_LINK)
+        set(VCPKG_DETECTED_CMAKE_LINKER ${CLANG}/lld-link.exe)
+    endif()
 endif()
 
-string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -I \"${CURRENT_INSTALLED_DIR}/include\"")
-string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/include\"")
-
 ## Setup vcpkg toolchain
-
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-
 set(prog_env "")
 
 if(VCPKG_DETECTED_CMAKE_C_COMPILER)
@@ -112,6 +170,7 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     string(APPEND OPTIONS " --cc=${CC_filename}")
     #string(APPEND OPTIONS " --host_cc=${CC_filename}") ffmpeg not yet setup for cross builds?
     list(APPEND prog_env "${CC_path}")
+    message(STATUS "Using C Compiler ${CC_filename}")
 endif()
 
 if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
@@ -121,6 +180,7 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
     string(APPEND OPTIONS " --cxx=${CXX_filename}")
     #string(APPEND OPTIONS " --host_cxx=${CC_filename}")
     list(APPEND prog_env "${CXX_path}")
+    message(STATUS "Using CXX Compiler ${CXX_filename}")
 endif()
 
 if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
@@ -129,6 +189,7 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     set(ENV{WINDRES} "${RC_filename}")
     string(APPEND OPTIONS " --windres=${RC_filename}")
     list(APPEND prog_env "${RC_path}")
+    message(STATUS "Using RC Compiler ${RC_filename}")
 endif()
 
 if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -138,6 +199,7 @@ if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     string(APPEND OPTIONS " --ld=${LD_filename}")
     #string(APPEND OPTIONS " --host_ld=${LD_filename}")
     list(APPEND prog_env "${LD_path}")
+    message(STATUS "Using Linker ${LD_filename}")
 endif()
 
 if(VCPKG_DETECTED_CMAKE_NM)
@@ -146,9 +208,10 @@ if(VCPKG_DETECTED_CMAKE_NM)
     set(ENV{NM} "${NM_filename}")
     string(APPEND OPTIONS " --nm=${NM_filename}")
     list(APPEND prog_env "${NM_path}")
+    message(STATUS "Using NM ${NM_filename}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_AR)
+if(VCPKG_DETECTED_CMAKE_AR AND NOT VCPKG_TARGET_IS_WINDOWS)
     get_filename_component(AR_path "${VCPKG_DETECTED_CMAKE_AR}" DIRECTORY)
     get_filename_component(AR_filename "${VCPKG_DETECTED_CMAKE_AR}" NAME)
     if(AR_filename MATCHES [[^(llvm-)?lib\.exe$]])
@@ -159,6 +222,7 @@ if(VCPKG_DETECTED_CMAKE_AR)
         string(APPEND OPTIONS " --ar='${AR_filename}'")
     endif()
     list(APPEND prog_env "${AR_path}")
+    message(STATUS "Using AR ${AR_filename}")
 endif()
 
 list(REMOVE_DUPLICATES prog_env)
@@ -166,7 +230,22 @@ vcpkg_add_to_path(PREPEND ${prog_env})
 
 # More? RANLIB OBJCC STRIP BIN2C
 
-file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+# Disabling inline-asm because clang-cl can't compile x86 inline asm (lacking sufficient registers)
+if (VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(SHOULD_DISABLE_INLINE_ASM ON)
+endif()
+# If inline asm cause other problems, disable it for good
+if("disable-inline-asm" IN_LIST FEATURES)
+    set(SHOULD_DISABLE_INLINE_ASM ON)
+endif()
+if (SHOULD_DISABLE_INLINE_ASM)
+    string(APPEND OPTIONS " --disable-inline-asm")
+endif()
+
+string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -I \"${CURRENT_INSTALLED_DIR}/include\"")
+string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/include\"")
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
 set(FFMPEG_PKGCONFIG_MODULES libavutil)
 
@@ -198,6 +277,10 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if (NOT "alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
@@ -236,6 +319,22 @@ else()
     set(ENABLE_AVFILTER OFF)
 endif()
 
+if("avresample" IN_LIST FEATURES)
+    message(WARNING "avresample is deprecated since ffmpeg 5.0")
+endif()
+
+if ("alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-alsa")
+else()
+    set(OPTIONS "${OPTIONS} --disable-alsa")
+endif()
+
+if ("qsv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmfx")
+endif()
+
 if("postproc" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-postproc")
     set(ENABLE_POSTPROC ON)
@@ -268,18 +367,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
 endif()
 
-if ("alsa" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-alsa")
-else()
-    set(OPTIONS "${OPTIONS} --disable-alsa")
-endif()
-
-if("amf" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-amf")
-else()
-    set(OPTIONS "${OPTIONS} --disable-amf")
-endif()
-
 if("aom" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libaom")
 else()
@@ -290,6 +377,12 @@ if("ass" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libass")
 else()
     set(OPTIONS "${OPTIONS} --disable-libass")
+endif()
+
+if ("amf" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-amf")
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
@@ -371,6 +464,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid --disable-ffnvcodec")
 endif()
 
+if("openmpt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+endif()
+
 if("opencl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-opencl")
 else()
@@ -393,12 +492,6 @@ if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
-endif()
-
-if("openmpt" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libopenmpt")
-else()
-    set(OPTIONS "${OPTIONS} --disable-libopenmpt")
 endif()
 
 if("openssl" IN_LIST FEATURES)
@@ -514,10 +607,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
 endif()
 
-if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
-else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
+if (VCPKG_TARGET_IS_OSX)
+    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+endif()
+
+if(VCPKG_TARGET_IS_IOS)
+    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
 endif()
 
 set(OPTIONS_CROSS " --enable-cross-compile")
@@ -535,6 +630,8 @@ endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     if(VCPKG_TARGET_IS_WINDOWS)
+        # https://www.mail-archive.com/ffmpeg-devel@ffmpeg.org/msg133741.html
+        # GASPREPROCESSOR was updated due to arm64 asm `tbnz` error at 2022/12/19
         vcpkg_find_acquire_program(GASPREPROCESSOR)
         foreach(GAS_PATH ${GASPREPROCESSOR})
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
@@ -772,6 +869,7 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
+    list(FILTER contents EXCLUDE REGEX "^atomic$")
     if(VCPKG_TARGET_IS_WINDOWS)
         list(TRANSFORM contents TOLOWER)
     endif()
@@ -798,14 +896,25 @@ message(STATUS "Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
 # Handle version strings
 
 function(extract_regex_from_file out)
-    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
-    file(READ "${arg_FILE}" contents)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "MAJOR" "FILE_WITHOUT_EXTENSION;REGEX" "")
+    file(READ "${arg_FILE_WITHOUT_EXTENSION}.h" contents)
     if (contents MATCHES "${arg_REGEX}")
         if(NOT CMAKE_MATCH_COUNT EQUAL 1)
             message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
         endif()
     else()
-        message(FATAL_ERROR "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE}\"")
+        if (arg_MAJOR)
+            file(READ "${arg_FILE_WITHOUT_EXTENSION}_major.h" contents)
+            if (contents MATCHES "${arg_REGEX}")
+                if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+                    message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
+                endif()
+            else()
+                message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}_major.h\"")
+            endif()
+        else()
+            message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}.h\"")
+        endif()
     endif()
     set("${out}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
 endfunction()
@@ -815,22 +924,23 @@ function(extract_version_from_component out)
     string(TOLOWER "${arg_COMPONENT}" component_lower)
     string(TOUPPER "${arg_COMPONENT}" component_upper)
     extract_regex_from_file(major_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
+        MAJOR
         REGEX "#define ${component_upper}_VERSION_MAJOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(minor_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(micro_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MICRO[ ]+([0-9]+)"
     )
     set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
 endfunction()
 
 extract_regex_from_file(FFMPEG_VERSION
-    FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+    FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion"
     REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
 )
 
@@ -842,7 +952,7 @@ extract_version_from_component(LIBAVDEVICE_VERSION
     COMPONENT libavdevice)
 extract_version_from_component(LIBAVFILTER_VERSION
     COMPONENT libavfilter)
-extract_version_from_component( LIBAVFORMAT_VERSION
+extract_version_from_component(LIBAVFORMAT_VERSION
     COMPONENT libavformat)
 extract_version_from_component(LIBSWRESAMPLE_VERSION
     COMPONENT libswresample)

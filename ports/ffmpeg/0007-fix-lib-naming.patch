@@ -1,8 +1,14 @@
+Subject: [PATCH] patch 7
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/configure b/configure
-index d6c4388..75b96c3 100644
---- a/configure
-+++ b/configure
-@@ -4378,6 +4378,11 @@ msvc_common_flags(){
+--- a/configure	(revision 46e1113b97a084b5c8b804a4fb36cc1872dbea12)
++++ b/configure	(revision e6fc14d76eee0c158ab414834a18ddde4c9129fa)
+@@ -4603,6 +4603,11 @@
              -march=*)             ;;
              -lz)                  echo zlib.lib ;;
              -lx264)               echo libx264.lib ;;

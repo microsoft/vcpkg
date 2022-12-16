@@ -1,7 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "5.0.2",
-  "port-version": 1,
+  "version": "5.1.2",
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -150,6 +149,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "aom"
           ],
           "platform": "!(windows & arm & !uwp)"
@@ -174,33 +181,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tensorflow"
-          ],
-          "platform": "x64 & !static & !uwp & !windows"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static & !uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "amf"
-          ],
-          "platform": "linux | (!osx & !uwp & !(arm & windows))"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "qsv"
-          ],
-          "platform": "linux | (!osx & !uwp & !(arm & windows))"
         },
         {
           "name": "ffmpeg",
@@ -228,17 +211,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!(arm & windows)"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!uwp & !(arm & windows)"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
@@ -272,7 +255,8 @@
       ]
     },
     "amf": {
-      "description": "AMD AMF codec support",
+      "description": "AMD AMF Support",
+      "supports": "windows",
       "dependencies": [
         "amd-amf"
       ]
@@ -335,7 +319,7 @@
       ]
     },
     "avresample": {
-      "description": "Build the avresample library"
+      "description": "[Deprecated]"
     },
     "bzip2": {
       "description": "Bzip2 support",
@@ -349,6 +333,9 @@
       "dependencies": [
         "dav1d"
       ]
+    },
+    "disable-inline-asm": {
+      "description": "Disable inline assembly for all situations."
     },
     "fdk-aac": {
       "description": "AAC de/encoding via libfdk-aac, **including GPL-incompatible patent-encumbered HE-AAC**. If you do not require HE-AAC, use the built-in FFmpeg AAC codec.",
@@ -504,12 +491,6 @@
         "openjpeg"
       ]
     },
-    "openmpt": {
-      "description": "Decoding tracked files via libopenmpt",
-      "dependencies": [
-        "libopenmpt"
-      ]
-    },
     "openssl": {
       "description": "Needed for https support if gnutls, libtls or mbedtls is not used",
       "dependencies": [
@@ -543,6 +524,7 @@
     },
     "qsv": {
       "description": "Intel QSV Codec",
+      "supports": "windows",
       "dependencies": [
         "mfx-dispatch"
       ]
@@ -627,6 +609,18 @@
       "dependencies": [
         "libtheora"
       ]
+    },
+    "use-clang-cl": {
+      "description": "Use clang-cl to compile to replace MSVC cl on Windows. If enabled it will disable inline assembly on x86.",
+      "supports": "windows & !arm & !arm64"
+    },
+    "use-cuda-llvm": {
+      "description": "CUDA compilation using clang on Windows.",
+      "supports": "windows"
+    },
+    "use-lld-link": {
+      "description": "Use lld-link to compile to replace MSVC link on Windows. If disabled, x64 will use yasm to avoid MSVC linker hang, otherwise nasm.",
+      "supports": "windows"
     },
     "version3": {
       "description": "Upgrade (L)GPL to version 3"

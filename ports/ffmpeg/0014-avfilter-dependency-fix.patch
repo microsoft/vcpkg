@@ -1,0 +1,27 @@
+Subject: [PATCH] patch 0014
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/configure b/configure
+--- a/configure	(revision c07fc446ba780def994c74de5b5a4accde7251ba)
++++ b/configure	(revision ff9b12bbcc9d5c1b1cc0c9e3841553c297a27eda)
+@@ -3761,6 +3761,16 @@
+ yadif_cuda_filter_deps="ffnvcodec"
+ yadif_cuda_filter_deps_any="cuda_nvcc cuda_llvm"
+ yadif_videotoolbox_filter_deps="metal corevideo videotoolbox"
++headphone_filter_deps="avcodec"
++headphone_filter_select="fft"
++showspatial_filter_deps="avcodec"
++showspatial_filter_select="fft"
++superequalizer_filter_deps="avcodec"
++superequalizer_filter_select="rdft"
++surround_filter_deps="avcodec"
++surround_filter_select="rdft"
++sinc_filter_deps="avcodec"
++sinc_filter_select="rdft"
+ 
+ # examples
+ avio_list_dir_deps="avformat avutil"
