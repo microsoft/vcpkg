@@ -1,6 +1,6 @@
 {
   "name": "lzfse",
-  "version-string": "1.0",
+  "version": "1.0",
   "port-version": 4,
   "description": "Lempel-Ziv style data compressor using Finite State Entropy coding.",
   "homepage": "https://github.com/lzfse/lzfse",

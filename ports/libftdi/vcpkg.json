@@ -1,6 +1,6 @@
 {
   "name": "libftdi",
-  "version-string": "0.20",
+  "version": "0.20",
   "port-version": 4,
   "description": "FTDI USB driver with bitbang mode (v0.20)",
   "dependencies": [

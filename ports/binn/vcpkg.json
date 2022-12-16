@@ -1,6 +1,6 @@
 {
   "name": "binn",
-  "version-string": "3.0",
+  "version": "3.0",
   "port-version": 2,
   "description": "Binn is a binary data serialization format designed to be compact, fast and easy to use.",
   "dependencies": [

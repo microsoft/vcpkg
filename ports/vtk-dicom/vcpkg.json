@@ -1,6 +1,6 @@
 {
   "name": "vtk-dicom",
-  "version-string": "0.8.12",
+  "version": "0.8.12",
   "port-version": 3,
   "description": "DICOM for VTK",
   "homepage": "https://github.com/dgobbi/vtk-dicom",

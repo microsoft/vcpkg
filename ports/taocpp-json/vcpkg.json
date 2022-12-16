@@ -1,6 +1,6 @@
 {
   "name": "taocpp-json",
-  "version-string": "2020-09-14",
+  "version": "2020-09-14",
   "port-version": 2,
   "description": "C++ header-only JSON library",
   "dependencies": [

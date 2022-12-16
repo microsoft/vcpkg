@@ -1,6 +1,6 @@
 {
   "name": "libprotobuf-mutator",
-  "version-string": "1.0",
+  "version": "1.0",
   "port-version": 1,
   "description": "Library for structured fuzzing with protobuffers.",
   "dependencies": [

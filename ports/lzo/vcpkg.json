@@ -1,6 +1,6 @@
 {
   "name": "lzo",
-  "version-string": "2.10",
+  "version": "2.10",
   "port-version": 8,
   "description": "Lossless data compression library",
   "homepage": "https://www.oberhumer.com/opensource/lzo/",

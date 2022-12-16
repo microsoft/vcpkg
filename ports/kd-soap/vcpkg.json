@@ -1,6 +1,6 @@
 {
   "name": "kd-soap",
-  "version-string": "1.9.0",
+  "version": "1.9.0",
   "port-version": 2,
   "description": "A Qt-based client-side and server-side SOAP component",
   "homepage": "https://www.kdab.com/products/kd-soap",

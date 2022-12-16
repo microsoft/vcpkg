@@ -1,6 +1,6 @@
 {
   "name": "stormlib",
-  "version-string": "2019-05-10",
+  "version": "2019-05-10",
   "port-version": 4,
   "description": "StormLib is a library for opening and manipulating Blizzard MPQ files",
   "dependencies": [

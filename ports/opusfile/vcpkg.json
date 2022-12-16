@@ -1,6 +1,6 @@
 {
   "name": "opusfile",
-  "version-string": "0.12",
+  "version": "0.12",
   "port-version": 2,
   "description": "Stand-alone decoder library for .opus streams",
   "homepage": "https://github.com/xiph/opusfile",

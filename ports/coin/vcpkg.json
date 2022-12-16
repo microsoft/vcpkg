@@ -1,6 +1,6 @@
 {
   "name": "coin",
-  "version-string": "4.0.0",
+  "version": "4.0.0",
   "port-version": 6,
   "description": "A high-level 3D visualization library with Open Inventor 2.1 API",
   "homepage": "https://github.com/coin3d/coin",

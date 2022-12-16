@@ -1,6 +1,6 @@
 {
   "name": "mio",
-  "version-string": "2019-02-10",
+  "version": "2019-02-10",
   "port-version": 2,
   "description": "Cross-platform header-only C++11 library for memory mapped file IO.",
   "dependencies": [

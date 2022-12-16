@@ -1,6 +1,6 @@
 {
   "name": "wepoll",
-  "version-string": "1.5.8",
+  "version": "1.5.8",
   "port-version": 2,
   "description": "Fast epoll for windows",
   "homepage": "https://github.com/piscisaureus/wepoll",

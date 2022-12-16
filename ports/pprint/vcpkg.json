@@ -1,6 +1,6 @@
 {
   "name": "pprint",
-  "version-string": "2019-07-19",
+  "version": "2019-07-19",
   "port-version": 2,
   "description": "Pretty Printer for Modern C++",
   "homepage": "https://github.com/p-ranav/pprint",

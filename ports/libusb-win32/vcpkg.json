@@ -1,6 +1,6 @@
 {
   "name": "libusb-win32",
-  "version-string": "1.2.6.0",
+  "version": "1.2.6.0",
   "port-version": 9,
   "description": "Allows user space applications to access many USB device on Windows.",
   "homepage": "https://sourceforge.net/projects/libusb-win32",

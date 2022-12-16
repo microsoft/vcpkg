@@ -1,6 +1,6 @@
 {
   "name": "p-ranav-csv2",
-  "version-string": "2020-12-14",
+  "version": "2020-12-14",
   "port-version": 3,
   "description": "CSV for modern C++",
   "homepage": "https://github.com/p-ranav/csv2",

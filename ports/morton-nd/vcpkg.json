@@ -1,6 +1,6 @@
 {
   "name": "morton-nd",
-  "version-string": "4.0.0",
+  "version": "4.0.0",
   "port-version": 2,
   "description": "header-only constexpr library for fast Morton encoding/decoding in N dimensions.",
   "homepage": "https://github.com/kevinhartman/morton-nd",

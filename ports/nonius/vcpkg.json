@@ -1,6 +1,6 @@
 {
   "name": "nonius",
-  "version-string": "2019-04-20",
+  "version": "2019-04-20",
   "port-version": 3,
   "description": "A C++ micro-benchmarking framework",
   "dependencies": [
