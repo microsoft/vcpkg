@@ -12,4 +12,3 @@ diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
 +#endif
      mfxVersion        ver = { { QSV_VERSION_MINOR, QSV_VERSION_MAJOR } };
      mfxInitParam init_par = { MFX_IMPL_AUTO_ANY };
-
