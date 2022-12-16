@@ -12,14 +12,13 @@ vcpkg_from_github(
         disable-cli-option.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DLZFSE_DISABLE_TESTS=ON
         -DLZFSE_DISABLE_CLI=ON)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

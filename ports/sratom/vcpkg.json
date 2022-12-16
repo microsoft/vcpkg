@@ -7,6 +7,14 @@
   "dependencies": [
     "lv2",
     "serd",
-    "sord"
+    "sord",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

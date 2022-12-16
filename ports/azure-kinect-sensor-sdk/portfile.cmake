@@ -23,7 +23,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tool BUILD_TOOLS
 )
 
-# .rc file needs windows.h, so do not use PREFER_NINJA here
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -63,8 +62,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 17630a00f4e9ff3ef68945b62021f6d0390030b43c120c207afe934075a7a87c5848be1f46f4c35c7ecd5698012452ffcbb67f739e9048857410ec7077e5e8c6 
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH PACKAGE_PATH
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )

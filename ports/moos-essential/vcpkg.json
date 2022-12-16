@@ -5,6 +5,10 @@
   "description": "a set of useful applications that leverage the core-moos communications layer.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "dependencies": [
-    "moos-core"
+    "moos-core",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

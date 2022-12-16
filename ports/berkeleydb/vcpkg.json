@@ -4,5 +4,11 @@
   "port-version": 8,
   "description": "BDB - A high-performance embedded database for key/value data.",
   "homepage": "https://download.oracle.com/",
-  "supports": "!(uwp | linux | osx)"
+  "supports": "!(uwp | linux | osx)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

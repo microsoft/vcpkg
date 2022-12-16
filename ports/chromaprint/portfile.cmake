@@ -7,11 +7,10 @@ vcpkg_from_github(
         fix_lrintf_detection.patch # submitted upstream as https://github.com/acoustid/chromaprint/pull/85
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

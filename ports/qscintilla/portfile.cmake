@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 9bdaba5c33c1b11ccad83eb1fda72142758afc50c955a62d5a8ff102b41d4b67d897bf96ce0540e16bc5a7fae2ce1acbf06931d5f0ae6768759c9ff072c03daa
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
         fix-static.patch

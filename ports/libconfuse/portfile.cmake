@@ -13,12 +13,11 @@ vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR ${FLEX} DIRECTORY)
 vcpkg_add_to_path(${FLEX_DIR})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -30,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

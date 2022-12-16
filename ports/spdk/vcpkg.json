@@ -7,6 +7,10 @@
   "dependencies": [
     "spdk-dpdk",
     "spdk-ipsec",
-    "spdk-isal"
+    "spdk-isal",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

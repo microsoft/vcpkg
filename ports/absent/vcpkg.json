@@ -3,5 +3,15 @@
   "version-string": "0.3.1",
   "port-version": 1,
   "description": "A small C++17 library meant to simplify the composition of nullable types in a generic, type-safe, and declarative way",
-  "homepage": "https://github.com/rvarago/absent"
+  "homepage": "https://github.com/rvarago/absent",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

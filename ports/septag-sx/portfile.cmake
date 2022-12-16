@@ -12,19 +12,18 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SX_SHARED_LIB)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DSX_BUILD_TESTS=OFF
         -DSX_SHARED_LIB=${SX_SHARED_LIB}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sx TARGET_PATH share/sx)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sx TARGET_PATH share/sx)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/sx/config.h

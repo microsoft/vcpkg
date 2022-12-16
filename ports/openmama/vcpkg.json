@@ -8,6 +8,10 @@
   "dependencies": [
     "apr",
     "libevent",
-    "qpid-proton"
+    "qpid-proton",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

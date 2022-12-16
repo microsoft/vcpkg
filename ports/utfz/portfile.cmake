@@ -6,12 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Copy the include file
 file(COPY ${SOURCE_PATH}/utfz.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)

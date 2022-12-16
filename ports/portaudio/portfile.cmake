@@ -12,9 +12,8 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static PA_BUILD_STATIC)
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
 # in a sibling folder of the portaudio source in vcpkg/buildtrees/portaudio/src
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPA_USE_DS=ON
         -DPA_USE_WASAPI=ON
@@ -28,8 +27,8 @@ vcpkg_configure_cmake(
         -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

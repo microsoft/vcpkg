@@ -30,16 +30,15 @@ else()
   set(BUILD_SHARED_LIBS OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/quickfast)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/quickfast)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

@@ -5,6 +5,14 @@
   "description": "GLUI is a GLUT-based C++ user interface library",
   "homepage": "https://github.com/libglui/glui",
   "dependencies": [
-    "freeglut"
+    "freeglut",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

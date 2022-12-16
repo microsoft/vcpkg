@@ -3,5 +3,15 @@
   "version-string": "2.9.4",
   "port-version": 1,
   "description": "HTTP Parser.",
-  "homepage": "https://github.com/nodejs/http-parser"
+  "homepage": "https://github.com/nodejs/http-parser",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

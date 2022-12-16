@@ -3,5 +3,15 @@
   "version-string": "1.0.0",
   "port-version": 1,
   "description": "Financial Information Exchange Protocol C++ Library",
-  "homepage": "https://jamesdbrock.github.io/hffix"
+  "homepage": "https://jamesdbrock.github.io/hffix",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -9,9 +9,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_DEMOS=OFF
         -DBUILD_SHARED=${KEYSTONE_BUILD_SHARED}
@@ -19,7 +18,7 @@ vcpkg_configure_cmake(
         -DINSTALL_STATIC=${KEYSTONE_BUILD_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

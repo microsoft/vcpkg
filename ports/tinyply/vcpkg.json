@@ -3,5 +3,15 @@
   "version-string": "2020-05-22",
   "port-version": 2,
   "description": "C++11 ply 3d mesh format importer & exporter",
-  "homepage": "https://github.com/ddiakopoulos/tinyply"
+  "homepage": "https://github.com/ddiakopoulos/tinyply",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

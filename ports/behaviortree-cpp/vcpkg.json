@@ -7,6 +7,14 @@
   "supports": "!uwp",
   "dependencies": [
     "boost-coroutine2",
-    "cppzmq"
+    "cppzmq",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

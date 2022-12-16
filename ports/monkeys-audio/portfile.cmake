@@ -9,8 +9,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 d3b5a10574dde1ea90578959378b87f8a8c94b3cc7198bc51b86f7128d66117d706c191d56a699dce0c2a53b7722e0893cb614f96f9ad725a266a871da587fd4
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     PATCHES

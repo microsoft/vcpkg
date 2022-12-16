@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 038a3ac9d160a8cf86a8a88c34367e154ef26ede289c93349332b7bc449a5199b51ea3611cebf3a2416ae23b9e45ecf8f9c6b24ea6d16a5519b796d3c7e272d4
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE} 
 )
 
@@ -15,16 +15,15 @@ file(READ "${SOURCE_PATH}/src/libcroco.symbols" SYMBOLS)
 string(REGEX REPLACE ";[^\n]*\n" "" DEF "EXPORTS\n${SYMBOLS}")
 file(WRITE "${SOURCE_PATH}/src/libcroco.def" "${DEF}")
 vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libcroco TARGET_PATH share/unofficial-libcroco)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-libcroco TARGET_PATH share/unofficial-libcroco)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright

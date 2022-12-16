@@ -29,8 +29,8 @@ function(qt_download_submodule)
         message(STATUS "${PORT} new hash is ${ARCHIVE_HASH}")
         file(APPEND "${VCPKG_ROOT_DIR}/ports/qt5-base/cmake/qt_new_hashes.cmake" "set(QT_HASH_${PORT} ${ARCHIVE_HASH})\n")
     else()
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
+        vcpkg_extract_source_archive(
+            SOURCE_PATH
             ARCHIVE "${ARCHIVE_FILE}"
             REF ${FULL_VERSION}
             PATCHES ${_csc_PATCHES}

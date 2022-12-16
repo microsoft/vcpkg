@@ -11,15 +11,14 @@ if(VCPKG_TARGET_IS_MINGW)
     vcpkg_replace_string(${SOURCE_PATH}/win32/ogg.def "LIBRARY ogg" "LIBRARY libogg")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DINSTALL_DOCS=0 -DINSTALL_PKG_CONFIG_MODULE=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Ogg TARGET_PATH share/ogg)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ogg TARGET_PATH share/ogg)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

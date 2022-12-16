@@ -12,7 +12,7 @@ vcpkg_from_github(
 )
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindOpenGL.cmake)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DFG_BUILD_DOCS=OFF
@@ -21,8 +21,8 @@ vcpkg_configure_cmake(
         -DFG_INSTALL_CMAKE_DIR=share/Forge
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/Forge TARGET_PATH share/Forge)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/Forge TARGET_PATH share/Forge)
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/bin/* ${CURRENT_PACKAGES_DIR}/debug/bin/*)
 list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")

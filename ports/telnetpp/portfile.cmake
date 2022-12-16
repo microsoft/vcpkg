@@ -12,19 +12,18 @@ if("zlib" IN_LIST FEATURES)
     set(USE_ZLIB ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
   DISABLE_PARALLEL_CONFIGURE
-  PREFER_NINJA
   OPTIONS
     -DGSL_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include
     -DTELNETPP_WITH_ZLIB=${USE_ZLIB}
     -DTELNETPP_WITH_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/telnetpp)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/telnetpp)
 
 vcpkg_copy_pdbs()
 

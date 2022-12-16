@@ -8,18 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBOX2D_BUILD_UNIT_TESTS=OFF
         -DBOX2D_BUILD_TESTBED=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/box2d)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/box2d)
 
 vcpkg_copy_pdbs()
 

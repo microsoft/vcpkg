@@ -35,8 +35,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "pixman-${PIXMAN_VERSION}.tar.gz"
     SHA512 063776e132f5d59a6d3f94497da41d6fc1c7dca0d269149c78247f0e0d7f520a25208d908cf5e421d1564889a91da44267b12d61c0bd7934cd54261729a7de5f
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PIXMAN_VERSION}
     PATCHES

@@ -8,12 +8,11 @@ vcpkg_from_github(
         fix.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/pAntler")

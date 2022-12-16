@@ -17,6 +17,10 @@
       "platform": "!windows"
     },
     "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "features": {

@@ -7,6 +7,10 @@
   "dependencies": [
     "freeglut",
     "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

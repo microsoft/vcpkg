@@ -2,5 +2,15 @@
   "name": "tiny-process-library",
   "version-string": "2.0.4",
   "port-version": 1,
-  "description": "A small platform independent library to create and stop new processes in C++"
+  "description": "A small platform independent library to create and stop new processes in C++",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

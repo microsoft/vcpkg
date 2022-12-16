@@ -6,6 +6,10 @@
   "homepage": "https://github.com/mraggi/discreture",
   "dependencies": [
     "boost-container",
-    "boost-iterator"
+    "boost-iterator",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

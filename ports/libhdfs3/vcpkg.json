@@ -12,6 +12,10 @@
       "platform": "!windows & !osx"
     },
     "libxml2",
-    "protobuf"
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

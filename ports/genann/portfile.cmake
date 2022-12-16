@@ -10,14 +10,13 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_RELEASE -DINSTALL_HEADERS=ON
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/genann)

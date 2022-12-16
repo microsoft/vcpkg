@@ -8,16 +8,15 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KDSoap_STATIC)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DKDSoap_STATIC=${KDSoap_STATIC}
         -DKDSoap_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KDSoap TARGET_PATH share/KDSoap)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KDSoap TARGET_PATH share/KDSoap)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX})

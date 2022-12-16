@@ -6,6 +6,10 @@
   "homepage": "https://github.com/google/butteraugli",
   "dependencies": [
     "libjpeg-turbo",
-    "libpng"
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

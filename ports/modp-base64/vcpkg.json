@@ -2,5 +2,11 @@
   "name": "modp-base64",
   "version-string": "2020-09-26",
   "port-version": 1,
-  "description": "High performance base64 encoder/decoder"
+  "description": "High performance base64 encoder/decoder",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

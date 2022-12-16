@@ -11,12 +11,11 @@ vcpkg_from_github(
 # Workaround for https://github.com/tfhe/tfhe/issues/246
 vcpkg_replace_string("${SOURCE_PATH}/src/CMakeLists.txt" "-Wall -Werror" "")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/src
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

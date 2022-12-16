@@ -8,6 +8,14 @@
     "boost-integer",
     "boost-move",
     "boost-preprocessor",
-    "boost-type-traits"
+    "boost-type-traits",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

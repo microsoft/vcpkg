@@ -4,5 +4,11 @@
   "port-version": 9,
   "description": "Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss.",
   "homepage": "http://argtable.sourceforge.net",
-  "supports": "!uwp"
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

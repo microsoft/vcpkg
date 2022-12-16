@@ -4,5 +4,11 @@
   "port-version": 4,
   "description": "TFHE is open-source software distributed under the terms of the Apache 2.0 license.",
   "homepage": "https://github.com/tfhe/tfhe",
-  "supports": "!windows & !arm"
+  "supports": "!windows & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

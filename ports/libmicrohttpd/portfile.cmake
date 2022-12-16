@@ -8,9 +8,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 4dc62ed191342a61cc2767171bb1ff4050f390db14ef7100299888237b52ea0b04b939c843878fe7f5daec2b35a47b3c1b7e7c11fb32d458184fe6b19986a37c
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

@@ -6,6 +6,10 @@
   "homepage": "https://github.com/mfontanini/cppkafka",
   "dependencies": [
     "boost-program-options",
-    "librdkafka"
+    "librdkafka",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

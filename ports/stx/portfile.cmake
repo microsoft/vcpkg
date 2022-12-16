@@ -14,9 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      backtrace    STX_ENABLE_BACKTRACE
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSTX_BUILD_DOCS=OFF
@@ -24,8 +23,8 @@ vcpkg_configure_cmake(
         -DSTX_BUILD_SHARED=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/stx)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/stx)
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

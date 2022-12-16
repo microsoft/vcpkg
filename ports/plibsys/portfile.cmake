@@ -10,9 +10,8 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PLIBSYS_STATIC)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPLIBSYS_TESTS=OFF
         -DPLIBSYS_COVERAGE=OFF
@@ -20,7 +19,7 @@ vcpkg_configure_cmake(
         -DPLIBSYS_BUILD_STATIC=${PLIBSYS_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

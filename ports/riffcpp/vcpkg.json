@@ -3,5 +3,15 @@
   "version-string": "2.2.4",
   "port-version": 1,
   "description": "Simple library for reading RIFF files",
-  "homepage": "https://github.com/libdmusic/riffcpp"
+  "homepage": "https://github.com/libdmusic/riffcpp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

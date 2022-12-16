@@ -12,8 +12,8 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
   list(APPEND PATCHES 0002-static-crt.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+  SOURCE_PATH
   ARCHIVE ${ARCHIVE}
   REF 4.4.6
   PATCHES ${PATCHES}

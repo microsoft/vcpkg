@@ -12,6 +12,10 @@
         "websockets"
       ]
     },
-    "openssl"
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

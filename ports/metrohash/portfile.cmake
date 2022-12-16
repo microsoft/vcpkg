@@ -11,13 +11,12 @@ vcpkg_from_github(
 file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 configure_file(${CURRENT_PORT_DIR}/Config.cmake.in ${SOURCE_PATH}/cmake/Config.cmake.in COPYONLY)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
 if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/metrohash128crc.h")

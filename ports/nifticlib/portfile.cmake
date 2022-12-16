@@ -27,16 +27,15 @@ if("tests" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES nifit_test) 
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake TARGET_PATH share)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake TARGET_PATH share)
 
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)

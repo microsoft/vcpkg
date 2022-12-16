@@ -19,9 +19,8 @@ endif()
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/internal-complibs)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DPREFER_EXTERNAL_LZ4=ON
             -DPREFER_EXTERNAL_SNAPPY=ON
             -DPREFER_EXTERNAL_ZLIB=ON
@@ -32,9 +31,9 @@ vcpkg_configure_cmake(
             -DBUILD_SHARED=${BLOSC_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/blosc)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/blosc)
 
 # cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -14,16 +14,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFETCHCONTENT_FULLY_DISCONNECTED=ON
         -DFETCHCONTENT_SOURCE_DIR_TL_CMAKE=${TL_CMAKE_SOURCE_DIR}
         -DFUNCTION_REF_ENABLE_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

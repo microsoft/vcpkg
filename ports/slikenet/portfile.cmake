@@ -13,20 +13,19 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/Source/src/crypto" "${SOURCE_PATH}/Source/in
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SLIKENET_ENABLE_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SLIKENET_ENABLE_DLL)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DSLIKENET_ENABLE_DLL=${SLIKENET_ENABLE_DLL}
         -DSLIKENET_ENABLE_STATIC=${SLIKENET_ENABLE_STATIC}
         -DSLIKENET_ENABLE_SAMPLES=FALSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/slikenet)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/slikenet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 

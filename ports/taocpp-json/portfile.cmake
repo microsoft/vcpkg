@@ -8,18 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS
         -DTAOCPP_JSON_BUILD_TESTS=OFF
         -DTAOCPP_JSON_BUILD_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/taocpp-json/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/taocpp-json/cmake)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug

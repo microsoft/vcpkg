@@ -8,12 +8,11 @@ vcpkg_from_github(
 		0001-fix-_POSIX_C_SOURCE.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
 	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(
 	INSTALL 

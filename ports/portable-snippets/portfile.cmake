@@ -10,18 +10,17 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DPSNIP_INSTALL_HEADERS=OFF
     OPTIONS_RELEASE
         -DPSNIP_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/COPYING.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

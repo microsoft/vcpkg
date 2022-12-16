@@ -22,7 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
 # note: The PDB file path is making Ninja fails to install.
-#       For Windows, we rely on /MP. The other platforms should be able to build with PREFER_NINJA.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD

@@ -12,6 +12,10 @@
       "name": "openssl",
       "platform": "!uwp & !windows"
     },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "xerces-c",
     "zlib"
   ]

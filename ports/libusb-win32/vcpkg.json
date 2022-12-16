@@ -4,5 +4,11 @@
   "port-version": 8,
   "description": "Allows user space applications to access many USB device on Windows.",
   "homepage": "https://sourceforge.net/projects/libusb-win32",
-  "supports": "windows"
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

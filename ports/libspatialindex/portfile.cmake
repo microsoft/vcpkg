@@ -9,14 +9,14 @@ vcpkg_from_github(
         mingw.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DCMAKE_DEBUG_POSTFIX=d
         -DSIDX_BUILD_TESTS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 

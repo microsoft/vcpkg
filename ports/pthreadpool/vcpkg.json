@@ -5,6 +5,14 @@
   "description": "Portable (POSIX/Windows/Emscripten) thread pool for C/C++",
   "homepage": "https://github.com/Maratyszcza/pthreadpool",
   "dependencies": [
-    "fxdiv"
+    "fxdiv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

@@ -3,5 +3,15 @@
   "version-string": "2020-09-25",
   "description": "Tiny recursive descent parser and evaluation engine in C",
   "homepage": "https://codeplea.com/tinyexpr",
-  "license": "Zlib"
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

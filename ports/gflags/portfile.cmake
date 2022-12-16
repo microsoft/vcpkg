@@ -13,9 +13,8 @@ vcpkg_from_github(
         fix_cmake_config.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
         -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
@@ -24,8 +23,8 @@ vcpkg_configure_cmake(
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gflags)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gflags)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)

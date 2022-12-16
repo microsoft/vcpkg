@@ -10,14 +10,13 @@ vcpkg_from_github(
         fix-include-path.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/UnitTest++)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/UnitTest++)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/unittest-cpp ${CURRENT_PACKAGES_DIR}/share/unittest++)
 
 # Handle copyright

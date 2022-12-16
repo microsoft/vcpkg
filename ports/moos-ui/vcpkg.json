@@ -5,6 +5,10 @@
   "description": "set of user interface tools to use and leverage the MOOS project.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "dependencies": [
-    "moos-core"
+    "moos-core",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

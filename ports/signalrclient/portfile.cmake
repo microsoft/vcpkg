@@ -9,9 +9,8 @@ vcpkg_from_github(
         0002_fix-compile-error.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_10d.lib
     OPTIONS_RELEASE
@@ -21,7 +20,7 @@ vcpkg_configure_cmake(
         -DDISABLE_TESTS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

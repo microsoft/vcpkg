@@ -12,7 +12,15 @@
     "boost-math",
     "boost-smart-ptr",
     "boost-static-assert",
-    "opengl-registry"
+    "opengl-registry",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "simage",

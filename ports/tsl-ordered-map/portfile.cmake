@@ -5,12 +5,11 @@ vcpkg_from_github(
     SHA512 c4789df12db34bba1a1b2e07ada39afd6bfb637d34006675ee7f83253e49b5741d301cebb7c368c7a99311c51304f844a6229d00df3717e346e5fc1254e7721b
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

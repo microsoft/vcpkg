@@ -6,8 +6,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "libgta-${LIBGTA_VERSION}.tar.xz"
     SHA512 ${LIBGTA_HASH})
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${LIBGTA_VERSION}
 )
@@ -15,15 +15,14 @@ vcpkg_extract_source_archive_ex(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  ENABLE_STATIC_LIBS)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DGTA_BUILD_SHARED_LIB=${ENABLE_SHARED_LIBS}
             -DGTA_BUILD_STATIC_LIB=${ENABLE_STATIC_LIBS}
             -DGTA_BUILD_DOCUMENTATION=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

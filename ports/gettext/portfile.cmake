@@ -19,8 +19,8 @@ set(PATCHES "")
 if(VCPKG_TARGET_IS_UWP)
     set(PATCHES uwp_remove_localcharset.patch)
 endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF "${GETTEXT_VERSION}"
     PATCHES

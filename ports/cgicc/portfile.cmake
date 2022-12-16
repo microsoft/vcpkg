@@ -8,9 +8,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 c361923cf3ac876bc3fc94dffd040d2be7cd44751d8534f4cfa3545e9f58a8ec35ebcd902a8ce6a19da0efe52db67506d8b02e5cc868188d187ce3092519abdf
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-define.patch
         fix-static-build.patch
@@ -18,15 +18,14 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS_DEBUG
     -DDISABLE_INSTALL_HEADERS=ON
     -DDISABLE_INSTALL_TOOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/cgicc/CgiDefs.h CGI_H)

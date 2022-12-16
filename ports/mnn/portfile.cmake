@@ -32,12 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools       MNN_BUILD_CONVERTER
 )
 
-# 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
-set(NINJA_OPTION PREFER_NINJA)
-if("cuda" IN_LIST FEATURES)
-    unset(NINJA_OPTION)
-endif()
-
 set(FLATC_EXEC ${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX})
 if (NOT EXISTS "${FLATC_EXEC}")
     message(FATAL_ERROR "Expected ${FLATC_EXEC} to exist.")
@@ -66,9 +60,8 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    ${NINJA_OPTION}
     OPTIONS
         ${FEATURE_OPTIONS} ${PLATFORM_OPTIONS}
         -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
@@ -77,7 +70,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DMNN_DEBUG_MEMORY=ON -DMNN_DEBUG_TENSOR_SIZE=ON
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH

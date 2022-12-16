@@ -9,8 +9,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 28b0d53b846af070e1512663a55ed9c8ff57bf57d1c1b548e1970f365e16f771fc0dad3c55717be9fe0c0948aa930fa12d0e1aac1398800e9e43215c128de17f
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
       "glpk-uwp.patch" # patch GLPK for UWP compatibility

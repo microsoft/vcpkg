@@ -4,6 +4,16 @@
   "port-version": 1,
   "description": "C++ Client for ASP.NET Core SignalR.",
   "homepage": "https://github.com/aspnet/SignalR-Client-Cpp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
     "default-features"
   ],

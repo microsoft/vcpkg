@@ -4,6 +4,10 @@
   "description": "Header-only library for conversion to/from half-precision floating point formats",
   "homepage": "https://github.com/Maratyszcza/FP16",
   "dependencies": [
-    "psimd"
+    "psimd",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

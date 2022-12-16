@@ -5,6 +5,10 @@
   "description": "{{mustaches}} for C++",
   "dependencies": [
     "boost-algorithm",
-    "boost-regex"
+    "boost-regex",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

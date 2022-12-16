@@ -9,9 +9,9 @@ vcpkg_download_distfile(ARCHIVE
     HEAD_REF master
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-boost-headers.patch
         fix-cmake-config.patch

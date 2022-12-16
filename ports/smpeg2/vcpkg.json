@@ -5,6 +5,10 @@
   "description": "SDL MPEG Player Library",
   "homepage": "https://www.libsdl.org/projects/smpeg/",
   "dependencies": [
-    "sdl2"
+    "sdl2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

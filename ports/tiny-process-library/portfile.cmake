@@ -7,19 +7,18 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/${PORT}
     TARGET_PATH share/${PORT}
 )

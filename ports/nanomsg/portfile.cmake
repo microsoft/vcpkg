@@ -14,9 +14,8 @@ else()
     set(NN_ENABLE_NANOCAT OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DNN_STATIC_LIB=${NN_STATIC_LIB}
@@ -26,11 +25,11 @@ vcpkg_configure_cmake(
         -DNN_ENABLE_NANOCAT=${NN_ENABLE_NANOCAT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(STRINGS ${SOURCE_PATH}/.version NN_PACKAGE_VERSION)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
 
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake

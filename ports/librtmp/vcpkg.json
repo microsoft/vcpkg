@@ -6,6 +6,10 @@
   "homepage": "https://rtmpdump.mplayerhq.hu",
   "dependencies": [
     "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

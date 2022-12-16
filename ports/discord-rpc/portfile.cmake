@@ -10,9 +10,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DUSE_STATIC_CRT=${STATIC_CRT}
         -DBUILD_EXAMPLES=OFF
@@ -24,7 +23,7 @@ if(EXISTS ${SOURCE_PATH}/thirdparty)
     message(FATAL_ERROR "The source directory should not be modified during the build.")
 endif()
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 a3dae5e4a6b93b1f5bf7435e8ab114a9be57252e9efc5dd444947d7a2d031b0819f34bcaeb35f60b5629a01b1238d738735a64db8f672be9690d3c80094511a4
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES always_install_pc.patch
 )
@@ -18,15 +18,14 @@ else()
     set(LZO_SHARED ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DENABLE_STATIC=${LZO_STATIC}
         -DENABLE_SHARED=${LZO_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

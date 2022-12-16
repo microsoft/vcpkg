@@ -5,6 +5,12 @@
   "description": "a free MPEG-2 video stream decoder",
   "homepage": "http://libmpeg2.sourceforge.net/",
   "supports": "!(linux | osx | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "tools": {
       "description": "Build tools provided with libmpeg2"

@@ -5,6 +5,10 @@
   "description": "Range-based for loop add-ons inspired by the Python builtins and itertools library",
   "homepage": "https://github.com/ryanhaining/cppitertools",
   "dependencies": [
-    "boost-optional"
+    "boost-optional",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

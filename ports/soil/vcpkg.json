@@ -4,5 +4,11 @@
   "port-version": 1,
   "description": "SOIL is a tiny C library used primarily for uploading textures into OpenGL.",
   "homepage": "https://github.com/paralin/soil",
-  "supports": "!uwp"
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

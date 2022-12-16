@@ -15,9 +15,8 @@ vcpkg_from_github(
         fix-std-headers.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
       -DBUILD_PYTHON=OFF
       -DBUILD_TESTING=OFF
@@ -25,8 +24,8 @@ vcpkg_configure_cmake(
       -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

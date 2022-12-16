@@ -4,6 +4,14 @@
   "description": "An OSGi-like C++ dynamic module system and service registry",
   "homepage": "https://github.com/CppMicroServices/CppMicroServices",
   "dependencies": [
-    "gtest"
+    "gtest",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

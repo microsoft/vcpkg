@@ -11,6 +11,10 @@
     {
       "name": "lapack-reference",
       "platform": "!((arm & windows) | uwp)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }

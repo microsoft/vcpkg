@@ -12,9 +12,8 @@ vcpkg_from_github(
         0001-fix-visual-studio.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_STATIC_LIBS=ON
         -DBUILD_EXAMPLES=OFF
@@ -34,13 +33,13 @@ vcpkg_configure_cmake(
         -DSTXXL_DEBUG_ASSERTIONS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
 vcpkg_replace_string(

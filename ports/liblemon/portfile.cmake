@@ -8,8 +8,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 029640e4f791a18068cb2e2b4e794d09822d9d56fb957eb3e2cceae3a30065c0041a31c465637cfcadf7b2473564070b34adc88513439cdf9046831854e2aa70
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${VERSION}
     PATCHES
@@ -17,9 +17,8 @@ vcpkg_extract_source_archive_ex(
         fixup-targets.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DLEMON_ENABLE_GLPK=OFF
         -DLEMON_ENABLE_ILOG=OFF
@@ -27,9 +26,9 @@ vcpkg_configure_cmake(
         -DLEMON_ENABLE_SOPLEX=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/lemon/cmake TARGET_PATH share/lemon)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/lemon/cmake TARGET_PATH share/lemon)
 
 file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblemon/)

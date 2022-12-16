@@ -13,7 +13,11 @@
       "host": true
     },
     "rapidjson",
-    "stb"
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "cuda": {

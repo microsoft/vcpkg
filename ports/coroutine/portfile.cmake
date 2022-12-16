@@ -14,15 +14,14 @@ vcpkg_from_github(
         gsl-4_0_0.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DGSL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DBUILD_TESTING=False
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL        ${SOURCE_PATH}/LICENSE
      DESTINATION    ${CURRENT_PACKAGES_DIR}/share/${PORT}

@@ -8,9 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/Microsoft.WindowsAzure.Storage
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
@@ -21,7 +20,7 @@ vcpkg_configure_cmake(
         -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE.txt

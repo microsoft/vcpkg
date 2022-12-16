@@ -16,15 +16,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES presentmon AUTO_CLEAN)

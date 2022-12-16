@@ -12,6 +12,10 @@
       "features": [
         "utility"
       ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "default-features": [

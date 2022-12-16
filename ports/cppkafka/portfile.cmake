@@ -13,16 +13,15 @@ else()
     set(CPPKAFKA_BUILD_SHARED ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
        -DCPPKAFKA_BUILD_SHARED=${CPPKAFKA_BUILD_SHARED}
        -DCPPKAFKA_DISABLE_TESTS=ON
        -DCPPKAFKA_DISABLE_EXAMPLES=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 

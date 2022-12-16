@@ -18,14 +18,13 @@ IF (NOT NUMA_INCLUDE_DIR)
     MESSAGE(FATAL_ERROR "Numa library not found.\nTry: 'sudo yum install numactl numactl-devel' (or sudo apt-get install libnuma1 libnuma-dev)")
 ENDIF ()
 
-VCPKG_CONFIGURE_CMAKE(
+VCPKG_CMAKE_CONFIGURE(
         SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-        PREFER_NINJA
         OPTIONS
         -DSOURCE_PATH=${SOURCE_PATH}
 )
 
-VCPKG_INSTALL_CMAKE()
+VCPKG_CMAKE_INSTALL()
 
 # Headers are symbolic links here, gather all, resolve and copy real files
 FILE(GLOB_RECURSE HEADERS FOLLOW_SYMLINKS "${SOURCE_PATH}/build/include/*")

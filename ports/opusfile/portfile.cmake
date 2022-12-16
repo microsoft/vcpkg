@@ -19,14 +19,13 @@ else()
     set(BUILD_OPUSURL OFF)
 endif()
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_OPUSURL=${BUILD_OPUSURL}
     OPTIONS_DEBUG
         -DOPUSFILE_SKIP_HEADERS=ON)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # make includes work with MSBuild integration

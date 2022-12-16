@@ -4,6 +4,14 @@
   "description": "OpenGL Image (GLI)",
   "homepage": "https://gli.g-truc.net",
   "dependencies": [
-    "glm"
+    "glm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

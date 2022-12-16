@@ -3,5 +3,11 @@
   "version-string": "3.0",
   "port-version": 2,
   "description": "OpenIGTLink is an open-source network communication interface specifically designed for image-guided interventions.",
-  "homepage": "https://github.com/openigtlink/OpenIGTLink"
+  "homepage": "https://github.com/openigtlink/OpenIGTLink",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 9836a4af3bbbfed1ea1b4c70b9d500ac485d7c3d8131eb8a25ee6ef6662f46ba52b5161c45c709ed9a601ff0e9ec36daa5650eaaf4f2cc7d6f4bb5640f10da15
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-fix-dependencies.patch
@@ -36,9 +36,8 @@ if ("pthreads" IN_LIST FEATURES)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
@@ -46,9 +45,9 @@ vcpkg_configure_cmake(
         -DPKG_CONFIG_LIBS=-lcfitsio
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake ASSIMP_CONFIG)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake "

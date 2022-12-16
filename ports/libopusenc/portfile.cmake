@@ -11,12 +11,11 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         -DOPUSENC_SKIP_HEADERS=ON)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # make includes work with MSBuild integration

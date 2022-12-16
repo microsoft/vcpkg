@@ -6,14 +6,13 @@ vcpkg_from_github(
         HEAD_REF master
 	)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-          -DSHIVA_BUILD_TESTS=OFF -DSHIVA_USE_SFML_AS_RENDERER=ON -DSHIVA_INSTALL_PLUGINS=ON -DSHIVA_BUILD_EXAMPLES=OFF
+        -DSHIVA_BUILD_TESTS=OFF -DSHIVA_USE_SFML_AS_RENDERER=ON -DSHIVA_INSTALL_PLUGINS=ON -DSHIVA_BUILD_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 
 if (VCPKG_CMAKE_SYSTEM_NAME)
@@ -26,7 +25,7 @@ endif()
 
 message(STATUS "PLUGINS_RELEASE -> ${PLUGINS_RELEASE}")
 message(STATUS "PLUGINS_DEBUG -> ${PLUGINS_DEBUG}")
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/shiva-sfml)
 
 
 if (VCPKG_CMAKE_SYSTEM_NAME)

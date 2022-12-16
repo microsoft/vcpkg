@@ -8,9 +8,8 @@ vcpkg_from_github(
     HEAD_REF next
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPROTON_ROOT=${CURRENT_INSTALLED_DIR}
         -DAPR_ROOT=${CURRENT_INSTALLED_DIR}
@@ -20,7 +19,7 @@ vcpkg_configure_cmake(
         -DWITH_TESTTOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Copy across license files and copyright
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -5,6 +5,14 @@
   "description": "A standalone css2 parsing and manipulation library",
   "dependencies": [
     "glib",
-    "libxml2"
+    "libxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

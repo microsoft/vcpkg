@@ -13,16 +13,15 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FLUIDLITE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FLUIDLITE_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFLUIDLITE_BUILD_STATIC=${FLUIDLITE_BUILD_STATIC}
         -DFLUIDLITE_BUILD_SHARED=${FLUIDLITE_BUILD_SHARED}
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Remove unnecessary files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -12,8 +12,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "libiconv-${LIBICONV_VERSION}.tar.gz"
     SHA512 18a09de2d026da4f2d8b858517b0f26d853b21179cf4fa9a41070b2d140030ad9525637dc4f34fc7f27abca8acdc84c6751dfb1d426e78bf92af4040603ced86
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF "${LIBICONV_VERSION}"
     PATCHES

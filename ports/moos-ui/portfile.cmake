@@ -6,15 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_CONSOLE_TOOLS=ON
         -DBUILD_GRAPHICAL_TOOLS=OFF #${BUILD_GRAPHICAL_TOOLS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
 if (VCPKG_TARGET_IS_WINDOWS)

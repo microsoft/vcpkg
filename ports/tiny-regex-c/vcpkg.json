@@ -3,5 +3,15 @@
   "version-string": "2019-07-31",
   "port-version": 1,
   "description": "A small regex implementation in C",
-  "homepage": "https://github.com/kokke/tiny-regex-c"
+  "homepage": "https://github.com/kokke/tiny-regex-c",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

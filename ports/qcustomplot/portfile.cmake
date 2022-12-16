@@ -5,8 +5,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "QCustomPlot-${QCP_VERSION}.tar.gz"
     SHA512 a15598718146ed3c6b5d38530a56661c16269e530fe0dedb71b4cb2722b5733a3b57689d668a75994b79c19c6e61dcc133dbcb9ed77b93a165f4ac826a5685b9
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${QCP_VERSION}
 )

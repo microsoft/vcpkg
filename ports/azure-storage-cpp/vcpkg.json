@@ -36,6 +36,10 @@
     {
       "name": "libxml2",
       "platform": "!windows & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }

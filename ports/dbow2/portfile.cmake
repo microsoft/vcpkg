@@ -8,16 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
     OPTIONS -DBUILD_Demo=OFF    
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Move CMake files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/DBoW2)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/DBoW2)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/DBoW2/DBoW2Config.cmake)

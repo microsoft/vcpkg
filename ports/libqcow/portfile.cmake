@@ -10,8 +10,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 911d29bd880df95288e552356d128d18c924fcd0d61d166fbeaf09936f11bf27b984d8ffd4cdc4bc285e7df295a1fe64ff595b0dfdd10b6fcfbdc6586d6bd3b0
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${LIB_VERSION}
     PATCHES macos_fixes.patch
@@ -20,13 +20,12 @@ vcpkg_extract_source_archive_ex(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libqcow")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libqcow")
 
 vcpkg_copy_pdbs()
 

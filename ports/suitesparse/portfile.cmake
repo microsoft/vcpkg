@@ -29,9 +29,8 @@ file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/lapack_windows)
 file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse/metis-5.1.0)
 message(STATUS "Removing integrated lapack and metis lib... done")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SUITESPARSEWIN_SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_METIS=OFF
         -DUSE_VCPKG_METIS=ON
@@ -42,9 +41,9 @@ vcpkg_configure_cmake(
         -DSUITESPARSE_INSTALL_PREFIX="${CURRENT_PACKAGES_DIR}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/suitesparse)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/suitesparse)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

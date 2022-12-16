@@ -13,17 +13,16 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCryptoPP.cmake DESTINATION ${SOURCE_PATH}/cmake)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -Dtest=OFF
         -Dtravis=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -14,12 +14,11 @@ vcpkg_from_github(
         "fix_install_paths_lastools.patch"
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -8,6 +8,14 @@
       "name": "sfml",
       "platform": "windows"
     },
-    "shiva"
+    "shiva",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

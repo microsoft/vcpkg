@@ -18,13 +18,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     direct3d11 LLGL_BUILD_RENDERER_DIRECT3D11 
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH} 
     OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

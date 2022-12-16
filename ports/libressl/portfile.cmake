@@ -14,8 +14,8 @@ vcpkg_download_distfile(
     SHA512 "${LIBRESSL_HASH}"
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     REF "${LIBRESSL_VERSION}"
     PATCHES

@@ -28,9 +28,8 @@ else()
     message(FATAL_ERROR "Unknown system: ${VCPKG_CMAKE_SYSTEM_NAME}")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     NO_CHARSET_FLAG
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
@@ -42,7 +41,7 @@ vcpkg_configure_cmake(
         -DCRYPTO_LIB=${CRYPTO_LIB}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 

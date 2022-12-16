@@ -17,9 +17,8 @@ if ("xmlch-wchar" IN_LIST FEATURES)
     set(XMLCHTYPE -Dxmlch-type=wchar_t)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DDISABLE_TESTS=ON
         -DDISABLE_DOC=ON
@@ -29,14 +28,14 @@ vcpkg_configure_cmake(
         ${XMLCHTYPE}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/xercesc)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/xercesc)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/XercesC TARGET_PATH share/xercesc)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/XercesC TARGET_PATH share/xercesc)
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake _contents)

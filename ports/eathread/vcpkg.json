@@ -7,6 +7,14 @@
   "supports": "!uwp & x64",
   "dependencies": [
     "eabase",
-    "eastl"
+    "eastl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

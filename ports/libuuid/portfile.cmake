@@ -14,12 +14,11 @@ file(COPY
     DESTINATION ${SOURCE_PATH}
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 set(prefix ${CURRENT_INSTALLED_DIR})
 set(exec_prefix \$\{prefix\})
@@ -33,7 +32,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/unofficial-libuuid TARGET_PATH share/unofficial-libuuid)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/unofficial-libuuid TARGET_PATH share/unofficial-libuuid)
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL

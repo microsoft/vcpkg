@@ -3,5 +3,15 @@
   "version-string": "2020-07-10",
   "port-version": 1,
   "description": "An open library of computer vision algorithms",
-  "homepage": "https://www.vlfeat.org"
+  "homepage": "https://www.vlfeat.org",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

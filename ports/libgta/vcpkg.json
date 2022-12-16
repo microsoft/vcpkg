@@ -7,6 +7,10 @@
   "dependencies": [
     "bzip2",
     "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

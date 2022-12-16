@@ -8,6 +8,14 @@
   "supports": "!(arm & (osx | windows)) & !uwp",
   "dependencies": [
     "boost-system",
-    "boost-thread"
+    "boost-thread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

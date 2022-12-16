@@ -6,6 +6,10 @@
   "homepage": "https://github.com/acoustid/chromaprint",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
-    "ffmpeg"
+    "ffmpeg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -23,9 +23,8 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYRE_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZYRE_BUILD_STATIC)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DZYRE_BUILD_SHARED=${ZYRE_BUILD_SHARED}
@@ -33,14 +32,14 @@ vcpkg_configure_cmake(
         -DENABLE_DRAFTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
 endif()
 
 file(COPY

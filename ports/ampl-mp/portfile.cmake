@@ -21,9 +21,8 @@ if (NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD=no
         -DBUILD_TESTING=OFF
@@ -31,13 +30,13 @@ vcpkg_configure_cmake(
         -DARITHCHK_EXEC=${ARITHCHK_EXEC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES gen-expr-info AUTO_CLEAN)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-mp TARGET_PATH share/unofficial-mp)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-mp TARGET_PATH share/unofficial-mp)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

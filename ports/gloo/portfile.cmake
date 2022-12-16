@@ -18,14 +18,13 @@ if ("cuda" IN_LIST FEATURES)
   list(APPEND GLOO_FEATURE_OPTIONS "-DUSE_CUDA=1" "-DUSE_NCCL=1")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS ${GLOO_FEATURE_OPTIONS}
   )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Gloo)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Gloo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

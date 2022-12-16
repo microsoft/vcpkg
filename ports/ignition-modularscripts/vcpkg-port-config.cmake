@@ -5,9 +5,8 @@ function(ignition_modular_build_library)
     set(multiValueArgs OPTIONS)
     cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     vcpkg_find_acquire_program(PKGCONFIG)
-    vcpkg_configure_cmake(
+    vcpkg_cmake_configure(
         SOURCE_PATH ${IML_SOURCE_PATH}
-        PREFER_NINJA
         DISABLE_PARALLEL_CONFIGURE
         OPTIONS
             -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
@@ -15,19 +14,19 @@ function(ignition_modular_build_library)
             ${IML_OPTIONS}
     )
 
-    vcpkg_install_cmake(ADD_BIN_TO_PATH)
+    vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
         # Some ignition libraries install library subcomponents, that are effectively additional cmake packages
-        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_fixup_cmake_targets for them as well
+        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_cmake_config_fixup for them as well
         file(GLOB COMPONENTS_CMAKE_PACKAGE_NAMES
              LIST_DIRECTORIES TRUE
              RELATIVE "${CURRENT_PACKAGES_DIR}/lib/cmake/"
              "${CURRENT_PACKAGES_DIR}/lib/cmake/*")
 
         foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
-            vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
+            vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
                                       TARGET_PATH "share/${COMPONENT_CMAKE_PACKAGE_NAME}"
                                       DO_NOT_DELETE_PARENT_CONFIG_PATH)
         endforeach()

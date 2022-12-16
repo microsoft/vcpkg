@@ -7,6 +7,10 @@
   "supports": "(x86 | x64) & windows",
   "dependencies": [
     "json-c",
-    "openssl"
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

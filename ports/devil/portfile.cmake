@@ -28,9 +28,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     lcms    IL_NO_LCMS
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/DevIL
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
          ${FEATURE_OPTIONS}
@@ -39,7 +38,7 @@ vcpkg_configure_cmake(
         -DIL_USE_DXTC_SQUISH=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()

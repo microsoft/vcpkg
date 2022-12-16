@@ -8,16 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DARGAGG_BUILD_EXAMPLES=OFF
         -DARGAGG_BUILD_TESTS=OFF
         -DARGAGG_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

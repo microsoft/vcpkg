@@ -6,16 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/cmake
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS -DTHREADING=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Install needed files into package directory
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblo)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/liblo)
 
 vcpkg_copy_tools(TOOL_NAMES oscsend oscdump AUTO_CLEAN)
 

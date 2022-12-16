@@ -6,6 +6,14 @@
   "homepage": "http://suitesparse.com",
   "dependencies": [
     "lapack",
-    "metis"
+    "metis",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

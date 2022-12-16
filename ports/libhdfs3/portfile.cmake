@@ -6,12 +6,11 @@ vcpkg_from_github(
         HEAD_REF apache-rpc-9
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 

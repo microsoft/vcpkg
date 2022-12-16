@@ -4,5 +4,11 @@
   "port-version": 2,
   "description": "The Apple Lossless Audio Codec (ALAC) is a lossless audio codec developed by Apple and deployed on all of its platforms and devices.",
   "homepage": "https://github.com/macosforge/alac",
-  "supports": "!uwp"
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

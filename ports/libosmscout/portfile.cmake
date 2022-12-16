@@ -21,7 +21,7 @@ else()
 	list(APPEND FEATURE_OPTIONS -DOSMDCOUT_BUILD_MAP_DIRECTX=OFF -DOSMDCOUT_BUILD_MAP_GDI=OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DOSMSCOUT_BUILD_DEMOS=OFF
@@ -37,9 +37,9 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libosmscout)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libosmscout)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

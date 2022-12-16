@@ -6,6 +6,10 @@
   "homepage": "https://github.com/memononen/nanovg",
   "supports": "!uwp",
   "dependencies": [
-    "stb"
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

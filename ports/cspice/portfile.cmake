@@ -35,8 +35,8 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     set(PATCHES ${PATCHES} mktemp.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     PATCHES ${PATCHES}

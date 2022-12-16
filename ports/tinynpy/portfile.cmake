@@ -8,17 +8,16 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DBUILD_DEMO=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/TinyNPY")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TinyNPY")
 
 vcpkg_copy_pdbs()
 

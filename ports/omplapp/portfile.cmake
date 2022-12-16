@@ -12,8 +12,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(STATIC_PATCH fix_boost_static_link.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
     PATCHES

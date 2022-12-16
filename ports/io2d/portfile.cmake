@@ -14,9 +14,8 @@ if (VCPKG_TARGET_IS_OSX)
     set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DIO2D_WITHOUT_SAMPLES=1
         -DIO2D_WITHOUT_TESTS=1
@@ -24,11 +23,11 @@ vcpkg_configure_cmake(
         ${IO2D_DEFAULT_OPTION}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/io2d)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/io2d)
 
 if (NOT VCPKG_TARGET_IS_OSX)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake ${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake)

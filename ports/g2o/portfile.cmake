@@ -8,20 +8,19 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
         -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g2o)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/g2o)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/*")
