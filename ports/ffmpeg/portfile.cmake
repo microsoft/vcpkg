@@ -25,7 +25,7 @@ vcpkg_from_github(
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
-        0023-fix-qsv-init.patch
+        0023-fix-qsv-init.patch # remove in next version (5.x)
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -120,6 +120,12 @@ endif()
 
 if("version3" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-version3")
+endif()
+
+if("amf" IN_LIST FEATURES)
+    # Do nothing
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)

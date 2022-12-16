@@ -262,6 +262,12 @@
         "aom"
       ]
     },
+    "amf": {
+      "description": "AMD AMF codec support",
+      "dependencies": [
+        "amd-amf"
+      ]
+    },
     "ass": {
       "description": "Libass subtitles rendering, needed for subtitles and ass filter support in ffmpeg",
       "dependencies": [
