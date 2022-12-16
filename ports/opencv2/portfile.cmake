@@ -37,6 +37,7 @@ FEATURES
  "tiff"     WITH_TIFF
  "world"    BUILD_opencv_world
  "dc1394"   WITH_1394
+ "openvino"  WITH_OPENVINO
 )
 
 set(WITH_MSMF ON)
