@@ -1,6 +1,6 @@
 {
   "name": "fadbad",
-  "version-string": "2.1.0",
+  "version": "2.1.0",
   "port-version": 2,
   "description": "FADBAD++ Templates for Automatic Differentiation",
   "homepage": "https://www.fadbad.com/"
