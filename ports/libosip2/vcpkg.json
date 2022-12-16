@@ -1,7 +1,7 @@
 {
   "name": "libosip2",
   "version": "5.2.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "oSIP is an LGPL implementation of SIP. It's stable, portable, flexible and compliant! -may be more-! It is used mostly with eXosip2 stack (GPL) which provides simpler API for User-Agent implementation.",
   "homepage": "https://www.gnu.org/software/osip/",
   "supports": "!(windows & arm)",

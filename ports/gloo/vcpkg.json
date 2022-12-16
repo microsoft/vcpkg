@@ -1,6 +1,7 @@
 {
   "name": "gloo",
   "version-string": "20201203",
+  "port-version": 1,
   "description": "Collective communications library with various primitives for multi-machine training.",
   "homepage": "https://github.com/facebookincubator/gloo",
   "supports": "x64 & linux",

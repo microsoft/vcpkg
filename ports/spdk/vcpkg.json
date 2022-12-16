@@ -1,7 +1,7 @@
 {
   "name": "spdk",
   "version-string": "19.01.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Storage Performance Development Kit",
   "supports": "linux",
   "dependencies": [

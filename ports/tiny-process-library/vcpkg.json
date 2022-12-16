@@ -1,7 +1,7 @@
 {
   "name": "tiny-process-library",
   "version-string": "2.0.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A small platform independent library to create and stop new processes in C++",
   "dependencies": [
     {

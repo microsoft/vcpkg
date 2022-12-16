@@ -1,7 +1,7 @@
 {
   "name": "stxxl",
   "version-date": "2018-11-15",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Standard Template Library for Extra Large Data Sets",
   "dependencies": [
     {

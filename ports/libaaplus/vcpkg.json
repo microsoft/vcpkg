@@ -1,6 +1,7 @@
 {
   "name": "libaaplus",
   "version": "2.36",
+  "port-version": 1,
   "description": "libaaplus is an astronomical computations library by naughter software",
   "homepage": "http://www.naughter.com/aa.html",
   "dependencies": [

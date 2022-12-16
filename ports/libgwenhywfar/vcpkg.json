@@ -1,7 +1,7 @@
 {
   "name": "libgwenhywfar",
   "version-semver": "5.6.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
   "supports": "!windows",
