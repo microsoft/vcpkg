@@ -2,8 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "glpk",
   "version": "5.0",
-  "port-version": 0,
-  "maintainers": "Fabio A. Correa Duran facorread@gmail.com",
+  "maintainers": "Fabio A. Correa Duran https://github.com/facorread/vcpkg-contrib",
   "description": [
     "The GNU Linear Programming Kit (GLPK) solves large-scale linear programming (LP), mixed integer programming (MIP), and related problems.",
     "GLPK includes the following main components:",
@@ -17,6 +16,9 @@
   "homepage": "https://www.gnu.org/software/glpk/",
   "documentation": "https://www.gnu.org/software/glpk/#documentation",
   "license": "GPL-3.0-or-later",
+  "default-features": [
+    "default-features"
+  ],
   "features": {
     "default-features": {
       "description": "Default set of features",
@@ -44,13 +46,13 @@
     "mysql": {
       "description": "Sharing between MathProg objects and MySQL databases (libmysql)",
       "dependencies": [
-        "libmysql",
         {
           "name": "glpk",
           "features": [
             "dl"
           ]
-        }
+        },
+        "libmysql"
       ]
     },
     "odbc": {
@@ -64,8 +66,5 @@
         }
       ]
     }
-  },
-  "default-features": [
-    "default-features"
-  ]
+  }
 }
