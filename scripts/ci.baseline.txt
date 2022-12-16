@@ -468,7 +468,6 @@ libmysql:arm64-windows=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libplist:x64-windows-static=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm-uwp            = skip
 libpng-apng:x64-linux          = skip
