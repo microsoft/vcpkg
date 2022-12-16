@@ -52,6 +52,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
   )
   
   file(COPY "${SOURCE_PATH}/src/Simd/SimdLib.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+  file(COPY "${SOURCE_PATH}/src/Simd/SimdView.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+  file(COPY "${SOURCE_PATH}/src/Simd/SimdPixel.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+  file(COPY "${SOURCE_PATH}/src/Simd/SimdPyramid.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
