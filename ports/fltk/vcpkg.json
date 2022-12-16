@@ -11,7 +11,10 @@
       "name": "fltk",
       "host": true
     },
-    "fontconfig",
+    {
+      "name": "fontconfig",
+      "platform": "!osx"
+    },
     {
       "name": "freetype",
       "default-features": false
