@@ -1762,7 +1762,7 @@
     },
     "cryptopp": {
       "baseline": "8.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cserialport": {
       "baseline": "4.2.1",
@@ -2693,8 +2693,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.12.0",
-      "port-version": 1
+      "baseline": "11.13.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -7738,7 +7738,7 @@
     },
     "usbmuxd": {
       "baseline": "1.2.235",
-      "port-version": 2
+      "port-version": 3
     },
     "usd": {
       "baseline": "20.08",
