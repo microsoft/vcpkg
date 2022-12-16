@@ -1,14 +1,10 @@
-# Maintained by Fabio A. Correa Duran facorread@gmail.com
-# Find documentation and commentary about this portfile at
-# https://github.com/facorread/vcpkg-contrib
-
-set(GLPK_VERSION 5.0)
+vcpkg_minimum_required(VERSION 2022-10-12)
 set(DISTFILE_SHA512_HASH 4e92195fa058c707146f2690f3a38b46c33add948c852f67659ca005a6aa980bbf97be96528b0f8391690facb880ac2126cd60198c6c175e7f3f06cca7e29f9d)
 
 vcpkg_download_distfile(
     DISTFILE
     FILENAME "glpk.tar.gz"
-    URLS "https://ftpmirror.gnu.org/gnu/glpk/glpk-${GLPK_VERSION}.tar.gz" "http://ftp.gnu.org/gnu/glpk/glpk-${GLPK_VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz" "https://ftp.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz"
     SHA512 ${DISTFILE_SHA512_HASH}
 )
 
