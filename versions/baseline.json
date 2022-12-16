@@ -83,7 +83,7 @@
     "amd-amf": {
       "baseline": "1.4.26",
       "port-version": 0
-    }, 
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 3
@@ -6974,7 +6974,7 @@
     },
     "simd": {
       "baseline": "5.1.119",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.7.2",
