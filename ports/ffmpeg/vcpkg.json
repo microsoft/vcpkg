@@ -256,16 +256,16 @@
         "alsa"
       ]
     },
-    "aom": {
-      "description": "AV1 video encoding/decoding via libaom support in ffmpeg",
-      "dependencies": [
-        "aom"
-      ]
-    },
     "amf": {
       "description": "AMD AMF codec support",
       "dependencies": [
         "amd-amf"
+      ]
+    },
+    "aom": {
+      "description": "AV1 video encoding/decoding via libaom support in ffmpeg",
+      "dependencies": [
+        "aom"
       ]
     },
     "ass": {
