@@ -83,7 +83,7 @@
     "amd-amf": {
       "baseline": "1.4.26",
       "port-version": 0
-    }, 
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 3
@@ -2974,7 +2974,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 4
+      "port-version": 5
     },
     "idevicerestore": {
       "baseline": "1.0.12",
