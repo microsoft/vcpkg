@@ -1,7 +1,11 @@
+set(VERSION_MAJOR 2)
+set(VERSION_MINOR 5)
+set(VERSION_PATCH 0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_2_5_0
+    REF R_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_PATCH}
     SHA512 779f0d0f3f2d8b33db0fd044864ab5ab1a40f20501f792fe90ad0d18de536c4765c3749f120e21fec11a0e6c89af1dc576d1fe261c871ca44a594f7b61fd1d9e
     HEAD_REF master
 )
@@ -23,7 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
