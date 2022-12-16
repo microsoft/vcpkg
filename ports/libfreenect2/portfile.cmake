@@ -9,10 +9,7 @@ vcpkg_from_github(
         fix-macbuild.patch
 )
 
-file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)
-string(REPLACE "(WIN32)"
-               "(WIN32_DISABLE)" FINDLIBUSB "${FINDLIBUSB}")
-file(WRITE "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "${FINDLIBUSB}")
+vcpkg_replace_string("${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "(WIN32)" "(WIN32_DISABLE)")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -37,6 +34,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/GPL2" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/GPL2")
 
 vcpkg_fixup_pkgconfig()
