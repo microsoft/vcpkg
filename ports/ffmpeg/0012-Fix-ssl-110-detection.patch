@@ -1,10 +1,16 @@
+Subject: [PATCH] patch 0012
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/configure b/configure
-index f3688ad..26e512e 100755
---- a/configure
-+++ b/configure
-@@ -6556,6 +6556,7 @@ enabled omx_rpi           && { test_code cc OMX_Core.h OMX_IndexConfigBrcmVideoR
- enabled omx               && require_headers OMX_Core.h
- enabled openssl           && { check_pkg_config openssl openssl openssl/ssl.h OPENSSL_init_ssl ||
+--- a/configure	(revision 71857d9e7b8f4f08b124ed7c30a09283a9e4c085)
++++ b/configure	(revision 5ab8de3630ffd48eadb64bef7dd5b4fcc47c2c13)
+@@ -6784,6 +6784,7 @@
+                                { enabled gpl && ! enabled nonfree && die "ERROR: OpenSSL <3.0.0 is incompatible with the gpl"; } ||
+                                check_pkg_config openssl openssl openssl/ssl.h OPENSSL_init_ssl ||
                                 check_pkg_config openssl openssl openssl/ssl.h SSL_library_init ||
 +                               check_lib openssl openssl/ssl.h OPENSSL_init_ssl -lssl -lcrypto $pthreads_extralibs -ldl ||
                                 check_lib openssl openssl/ssl.h OPENSSL_init_ssl -lssl -lcrypto ||

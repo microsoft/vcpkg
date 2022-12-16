@@ -1,0 +1,31 @@
+Subject: [PATCH] Patch: Quick fix for compiling bin2c.exe in MSVC host, as we cannot change HOSTLD_O from portfile
+---
+Index: ffbuild/common.mak
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ffbuild/common.mak b/ffbuild/common.mak
+--- a/ffbuild/common.mak	(revision 3815e2a5fc71dec686ab01880d684cb3027b4a18)
++++ b/ffbuild/common.mak	(revision 13c60be8a7fd22df9258a3e26a45ba521e281e7f)
+@@ -92,9 +92,6 @@
+ %.o: %.S
+ 	$(COMPILE_S)
+
+-%_host.o: %.c
+-	$(COMPILE_HOSTC)
+-
+ %$(DEFAULT_X86ASMD).asm: %.asm
+ 	$(DEPX86ASM) $(X86ASMFLAGS) -M -o $@ $< > $(@:.asm=.d)
+ 	$(X86ASM) $(X86ASMFLAGS) -e $< | sed '/^%/d;/^$$/d;' > $@
+@@ -112,8 +109,8 @@
+ %.h.c:
+ 	$(Q)echo '#include "$*.h"' >$@
+
+-$(BIN2CEXE): ffbuild/bin2c_host.o
+-	$(HOSTLD) $(HOSTLDFLAGS) $(HOSTLD_O) $^ $(HOSTEXTRALIBS)
++$(BIN2CEXE):
++	$(CC) $(CFLAGS) -Foffbuild/bin2c.o -Feffbuild/bin2c.exe $(SRC_PATH)/ffbuild/bin2c.c
+
+ %.metal.air: %.metal
+ 	$(METALCC) $< -o $@

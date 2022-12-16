@@ -1,8 +1,14 @@
+Subject: [PATCH] patch 0009
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/configure b/configure
-index f2c83b7..5e42b12 100755
---- a/configure
-+++ b/configure
-@@ -6379,7 +6379,7 @@ enabled libdavs2          && require_pkg_config libdavs2 "davs2 >= 1.6.0" davs2.
+--- a/configure	(revision eb9a92addf12136c78bd0e558b68fa45b0c963ae)
++++ b/configure	(revision 43fafa041cf45dfda70722e2bb08f5d81fb8c285)
+@@ -6571,7 +6571,7 @@
  enabled libdc1394         && require_pkg_config libdc1394 libdc1394-2 dc1394/dc1394.h dc1394_new
  enabled libdrm            && require_pkg_config libdrm libdrm xf86drm.h drmGetVersion
  enabled libfdk_aac        && { check_pkg_config libfdk_aac fdk-aac "fdk-aac/aacenc_lib.h" aacEncOpen ||

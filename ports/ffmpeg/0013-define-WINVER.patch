@@ -1,7 +1,13 @@
+Subject: [PATCH] patch 0013
+---
+Index: libavcodec/mf_utils.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/libavcodec/mf_utils.c b/libavcodec/mf_utils.c
-index eeabd0c..ea3a03b 100644
---- a/libavcodec/mf_utils.c
-+++ b/libavcodec/mf_utils.c
+--- a/libavcodec/mf_utils.c	(revision 5ab8de3630ffd48eadb64bef7dd5b4fcc47c2c13)
++++ b/libavcodec/mf_utils.c	(revision c07fc446ba780def994c74de5b5a4accde7251ba)
 @@ -22,6 +22,11 @@
  #define _WIN32_WINNT 0x0602
  #endif

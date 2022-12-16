@@ -1,13 +1,19 @@
+Subject: [PATCH] patch 0003
+---
+Index: fftools/cmdutils.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/fftools/cmdutils.c b/fftools/cmdutils.c
-index fe424b6..2df70df 100644
---- a/fftools/cmdutils.c
-+++ b/fftools/cmdutils.c
-@@ -60,6 +60,8 @@
- #include <sys/resource.h>
- #endif
+--- a/fftools/cmdutils.c	(revision 9adf02247cd5f1c6cc404ab3dad317a40f4f6e0c)
++++ b/fftools/cmdutils.c	(revision 1c47c051ec063e7328edbe73e07274c7f3a3a852)
+@@ -51,6 +51,8 @@
+ #include "fopen_utf8.h"
+ #include "opt_common.h"
  #ifdef _WIN32
 +#define _WIN32_WINNT 0x0502
 +#define WIN32_LEAN_AND_MEAN
  #include <windows.h>
+ #include "compat/w32dlfcn.h"
  #endif
- 

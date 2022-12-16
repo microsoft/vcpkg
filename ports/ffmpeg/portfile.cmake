@@ -1,11 +1,18 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# Fix bug compiling bin2c under msvc host
+if(VCPKG_DETECTED_MSVC)
+    # It seems we cannot change HOSTLD_O from outside, and this will make linking fail, so we directly patch the makefile
+    # if we are using MSVC at host..
+    set(MSVC_PATCHES 0021-fix-compile-bin2c-under-msvc.patch)
 endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4.3
-    SHA512 46bb03d690bdf0d1ce55bfe0582edf1f50b938efcdd5708a6e5ba04154fa50ac8cff4a9e44544cfa50e7f52392c88cde9455aacd6b6e51d4944f123bdcc9297a
+    REF n5.1.2
+    SHA512 1b90c38b13149f2de7618ad419adc277afd5e65bbf52b849a7245aec0f92f73189c8547599dba8408b8828a767c1120f132727b57cd6231cd8b81de2471a4b8b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -20,11 +27,8 @@ vcpkg_from_github(
         0013-define-WINVER.patch
         0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        ${PATCHES}
-        0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
-        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
+        ${MSVC_PATCHES}
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -87,9 +91,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android")
 else()
 endif()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
@@ -206,13 +207,6 @@ else()
     set(ENABLE_SWSCALE OFF)
 endif()
 
-set(ENABLE_AVRESAMPLE OFF)
-if("avresample" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avresample")
-    set(ENABLE_AVRESAMPLE ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libavresample)
-endif()
-
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
@@ -228,6 +222,12 @@ if("ass" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libass")
 else()
     set(OPTIONS "${OPTIONS} --disable-libass")
+endif()
+
+if ("amf" IN_LIST FEATURES)
+    # Auto detected by ffmpeg
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
@@ -304,9 +304,16 @@ endif()
 
 if("nvcodec" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec")
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec --nvcc=\"C:/vcpkg/installed/x64-windows/tools/llvm/clang.exe\"")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid --disable-ffnvcodec")
+endif()
+
+if("cuda-llvm" IN_LIST FEATURES)
+
+else()
+    # By default, disable this feature. Because this is an autodetect feature depends on whether clang exists.
+    #set(OPTIONS "${OPTIONS} --disable-cuda-llvm")
 endif()
 
 if("opencl" IN_LIST FEATURES)
@@ -698,7 +705,6 @@ function(append_dependencies_from_libs out)
     list(TRANSFORM contents REPLACE "^-Wl,-framework," "-l")
     list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
     list(TRANSFORM contents REPLACE "^-l" "")
-    list(FILTER contents EXCLUDE REGEX "^avresample$")
     list(FILTER contents EXCLUDE REGEX "^avutil$")
     list(FILTER contents EXCLUDE REGEX "^avcodec$")
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
@@ -734,14 +740,25 @@ message(STATUS "Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
 # Handle version strings
 
 function(extract_regex_from_file out)
-    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
-    file(READ "${arg_FILE}" contents)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "MAJOR" "FILE_WITHOUT_EXTENSION;REGEX" "")
+    file(READ "${arg_FILE_WITHOUT_EXTENSION}.h" contents)
     if (contents MATCHES "${arg_REGEX}")
         if(NOT CMAKE_MATCH_COUNT EQUAL 1)
             message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
         endif()
     else()
-        message(FATAL_ERROR "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE}\"")
+        if (arg_MAJOR)
+            file(READ "${arg_FILE_WITHOUT_EXTENSION}_major.h" contents)
+            if (contents MATCHES "${arg_REGEX}")
+                if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+                    message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
+                endif()
+            else()
+                message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}_major.h\"")
+            endif()
+        else()
+            message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}.h\"")
+        endif()
     endif()
     set("${out}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
 endfunction()
@@ -751,22 +768,23 @@ function(extract_version_from_component out)
     string(TOLOWER "${arg_COMPONENT}" component_lower)
     string(TOUPPER "${arg_COMPONENT}" component_upper)
     extract_regex_from_file(major_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
+        MAJOR
         REGEX "#define ${component_upper}_VERSION_MAJOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(minor_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(micro_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MICRO[ ]+([0-9]+)"
     )
     set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
 endfunction()
 
 extract_regex_from_file(FFMPEG_VERSION
-    FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+    FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion"
     REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
 )
 
@@ -778,10 +796,8 @@ extract_version_from_component(LIBAVDEVICE_VERSION
     COMPONENT libavdevice)
 extract_version_from_component(LIBAVFILTER_VERSION
     COMPONENT libavfilter)
-extract_version_from_component( LIBAVFORMAT_VERSION
+extract_version_from_component(LIBAVFORMAT_VERSION
     COMPONENT libavformat)
-extract_version_from_component(LIBAVRESAMPLE_VERSION
-    COMPONENT libavresample)
 extract_version_from_component(LIBSWRESAMPLE_VERSION
     COMPONENT libswresample)
 extract_version_from_component(LIBSWSCALE_VERSION
