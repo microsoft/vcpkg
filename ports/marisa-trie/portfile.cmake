@@ -40,10 +40,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         configure_file("${SOURCE_PATH}/marisa.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/marisa.pc" @ONLY)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/marisa.pc" "-lmarisa" "-llibmarisa")
     endif()
-    
-    file(RENAME "${CURRENT_PACKAGES_DIR}/include/marisa.h" "${CURRENT_PACKAGES_DIR}/include/marisa/marisa.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/marisa/Makefile.am" "  base.h \\" "  marisa.h \\\n  base.h \\")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
 else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"

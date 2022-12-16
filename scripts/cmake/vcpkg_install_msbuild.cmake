@@ -133,6 +133,8 @@ function(vcpkg_install_msbuild)
         file(COPY "${arg_SOURCE_PATH}/${arg_INCLUDES_SUBPATH}/"
             DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
         )
+        file(GLOB_RECURSE all_makefile "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
+        file(REMOVE ${all_makefile})
         file(GLOB root_includes
             LIST_DIRECTORIES false
             "${CURRENT_PACKAGES_DIR}/include/*")
