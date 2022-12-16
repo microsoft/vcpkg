@@ -1,6 +1,7 @@
 {
   "name": "libproxy",
   "version": "0.4.18",
+  "port-version": 1,
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
   "license": "LGPL-2.1-only",
