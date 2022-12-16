@@ -41,7 +41,10 @@ vcpkg_cmake_configure(
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
+        "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
+    MAYBE_UNUSED_VARIABLES
+        Cocoa
 )
 
 vcpkg_cmake_install()
