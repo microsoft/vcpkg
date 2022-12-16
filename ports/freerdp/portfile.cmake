@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 40ee5d3bcc70343af6c0300d71968858c1f1948f #v2.7.0
-    SHA512 b18fa4830a6b4367e28e92fe91b9ae925d5d4fd517b2f6f8655eae7306f181b98e9e611c0cde576f642987c12af6eb862952179f5d7b60019cd7b024fd2db142
+    REF 2.9.0
+    SHA512 8b43ff28c5afaf6dc12f73fe9cab3969049f40725dedc873af5af1caabefec4bdd1bedad7df121c1440493e5441296db076ba7726242bfb32f76dad0b21564ed
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-include-path.patch
         fix-libusb.patch
         install-dirs.patch
+        fix-FreeRDP.patch 
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -33,7 +34,8 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake") # Remove outdated Module
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    urbdrc CHANNEL_URBDRC
+        server WITH_SERVER
+	urbdrc CHANNEL_URBDRC
 )
 
 vcpkg_cmake_configure(
@@ -54,8 +56,6 @@ if(TOOLS_RELEASE)
     file(GLOB_RECURSE TOOLS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
     file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
 endif()
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
