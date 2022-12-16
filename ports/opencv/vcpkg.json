@@ -39,18 +39,6 @@
         }
       ]
     },
-    "openvino": {
-      "description": "Include Intel OpenVINO toolkit support",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "openvino"
-          ]
-        }
-      ]
-    },
     "cuda": {
       "description": "CUDA support for opencv",
       "dependencies": [
@@ -300,6 +288,18 @@
           "default-features": false,
           "features": [
             "openmp"
+          ]
+        }
+      ]
+    },
+    "openvino": {
+      "description": "Include Intel OpenVINO toolkit support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "openvino"
           ]
         }
       ]
