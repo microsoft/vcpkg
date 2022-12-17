@@ -104,12 +104,12 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     # libtool has an -R option so we need to guard against -RTC by using -Xcompiler
     # while configuring there might be a lot of unknown compiler option warnings due to that
     # just ignore them.
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
       separate_arguments(CFLAGS_LIST NATIVE_COMMAND "${CFLAGS_${flag_suffix}}")
       list(JOIN CFLAGS_LIST " -Xcompiler " CFLAGS_${var_suffix})
       string(PREPEND CFLAGS_${var_suffix} "-Xcompiler ")
     endif()
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
       separate_arguments(CXXFLAGS_LIST NATIVE_COMMAND "${CXXFLAGS_${flag_suffix}}")
       list(JOIN CXXFLAGS_LIST " -Xcompiler " CXXFLAGS_${var_suffix})
       string(PREPEND CXXFLAGS_${var_suffix} "-Xcompiler ")
