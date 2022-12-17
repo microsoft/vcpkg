@@ -1,7 +1,7 @@
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
 index 9b00253..495671e 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gst-plugins-base/meson.build
++++ b/subprojects/gst-plugins-base/meson.build
 @@ -388,10 +388,11 @@ int32x4_t testfunc(int16_t *a, int16_t *b) {
    endif
  endif

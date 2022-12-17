@@ -1,9 +1,9 @@
 {
   "name": "ace",
-  "version": "7.0.8",
+  "version": "7.0.10",
   "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
   "description": "The ADAPTIVE Communication Environment",
-  "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
+  "homepage": "https://github.com/DOCGroup/ACE_TAO",
   "license": "DOC",
   "features": {
     "ssl": {

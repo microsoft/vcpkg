@@ -45,9 +45,9 @@ while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 
 Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
-$versionDate = '2022-10-17'
+$versionDate = '2022-12-14'
 if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
-    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgRootDir\vcpkg.exe"
+    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgRootDir\vcpkg.exe"
 } else {
     & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
 }

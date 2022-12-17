@@ -1,4 +1,4 @@
-set(LIBPNG_VER 1.6.37)
+vcpkg_minimum_required(VERSION 2022-09-15) # for ${VERSION}
 
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
@@ -11,11 +11,11 @@ if ("apng" IN_LIST FEATURES)
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
     
-    set(LIBPNG_APNG_PATCH_NAME "libpng-${LIBPNG_VER}-apng.patch")
+    set(LIBPNG_APNG_PATCH_NAME "libpng-${VERSION}-apng.patch")
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
-        URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APNG_PATCH_NAME}.gz"
+        URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
+        SHA512 97a182da0b3b54aecf735e3655d8e8f1a569ae957b23fc3d7a9c8cc65dcdd26f34f173ce9f60af99b01d5347267b2afefaf787c500ce1005e86bf2810b3d0738
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -33,16 +33,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glennrp/libpng
-    REF v${LIBPNG_VER}
-    SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
+    REF v${VERSION}
+    SHA512 d61408cee5850582baa57166547ccab6cc171bc809076e53494ace26157fd7787c3209e3b757fd68c541bfb95afe309745d887fb5cd2005b2024af7355c809a0
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
-        use_abort.patch
         cmake.patch
         fix-export-targets.patch
         pkgconfig.patch
-        macos-arch-fix.patch
         fix-msa-support-for-mips.patch
 )
 
@@ -57,10 +55,10 @@ endif()
 vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
-    # for armeabi-v7a, check whether NEON is available
-    vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
-else()
-    vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        # for armeabi-v7a, check whether NEON is available
+        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
