@@ -30,6 +30,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 --enable-loadable-i18n=no #Pointer conversion errors
                 --enable-unix-transport=no
                 --disable-thread-safety-constructor
+                ac_cv_search_dlopen=no
     )
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)

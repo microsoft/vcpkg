@@ -1,6 +1,6 @@
 {
   "name": "capnproto",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Data interchange format and capability-based RPC system",
   "homepage": "https://capnproto.org/",
   "license": "MIT",
