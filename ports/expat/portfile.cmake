@@ -1,11 +1,11 @@
-set(VERSION_MAJOR 2)
-set(VERSION_MINOR 5)
-set(VERSION_PATCH 0)
+vcpkg_minimum_required(VERSION 2022-10-12)
+string(REPLACE "." "_" REF "${VERSION}")
+string(PREPEND REF "R_")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_PATCH}
+    REF "${REF}"
     SHA512 779f0d0f3f2d8b33db0fd044864ab5ab1a40f20501f792fe90ad0d18de536c4765c3749f120e21fec11a0e6c89af1dc576d1fe261c871ca44a594f7b61fd1d9e
     HEAD_REF master
 )
