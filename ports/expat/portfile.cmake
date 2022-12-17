@@ -1,6 +1,5 @@
 vcpkg_minimum_required(VERSION 2022-10-12)
-string(REPLACE "." "_" REF "${VERSION}")
-string(PREPEND REF "R_")
+string(REPLACE "." "_" REF "R_${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +26,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
