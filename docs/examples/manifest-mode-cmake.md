@@ -198,3 +198,21 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 You can see that with just a _single file_, we've changed over to manifests without _any_ trouble.
 The build system doesn't change _at all_! We just add a `vcpkg.json` file, delete the build directory,
 and reconfigure. And we're done!
+
+### Downloading vcpkg using CMake
+
+Instead of downloading `vcpkg` and specifying toolchain file via `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`, you can use `FetchContent` as follows:
+```cmake
+include(FetchContent)
+FetchContent_Declare(vcpkg
+    GIT_REPOSITORY https://github.com/microsoft/vcpkg/
+    GIT_TAG 2022.11.14
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(vcpkg)
+
+# NOTE: This must be defined before the first project call
+set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake" CACHE FILEPATH "")
+
+project(fibo CXX)
+```
