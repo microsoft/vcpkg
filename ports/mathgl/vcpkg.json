@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "license": "GPL-3.0-only",
-  "supports": "windows | native",
+  "supports": "(windows | native) & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
