@@ -6,6 +6,7 @@
   "license": "GPL-3.0-only",
   "supports": "(windows | native) & !uwp",
   "dependencies": [
+    "getopt",
     {
       "name": "vcpkg-cmake",
       "host": true

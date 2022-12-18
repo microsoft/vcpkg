@@ -14,6 +14,7 @@ vcpkg_from_sourceforge(
         fix_default_graph_init.patch
         fix_arma_sprintf.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -42,6 +43,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DMathGL_INSTALL_CMAKE_DIR:STRING=share/mathgl2
         -DCMAKE_CXX_STANDARD=11 # minimum for armadillo on osx
         -DCMAKE_DISABLE_FIND_PACKAGE_Intl=1
