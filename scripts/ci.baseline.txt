@@ -517,6 +517,7 @@ libssh:arm-uwp=fail
 libssh:x64-uwp=fail
 libtins:arm-uwp=fail
 libtins:x64-uwp=fail
+libtorch:x64-windows=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm-uwp=fail
 libusb:arm-uwp=fail
