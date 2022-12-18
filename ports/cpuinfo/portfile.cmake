@@ -50,8 +50,12 @@ vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
+    set(CPUINFO_TOOLS "cache-info;cpu-info;isa-info")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND CPUINFO_TOOLS "cpuid-dump")
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        TOOL_NAMES ${CPUINFO_TOOLS}
         AUTO_CLEAN
     )
 endif()
