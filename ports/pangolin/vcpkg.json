@@ -1,9 +1,10 @@
 {
   "name": "pangolin",
   "version": "0.6",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "glew",
@@ -107,7 +108,18 @@
       ]
     },
     "tools": {
-      "description": "Build Tools"
+      "description": "Build Tools",
+      "dependencies": [
+        {
+          "name": "pangolin",
+          "default-features": false,
+          "features": [
+            "gui",
+            "vars",
+            "video"
+          ]
+        }
+      ]
     },
     "uvc": {
       "description": "Build support for MediaFoundation UVC input",
