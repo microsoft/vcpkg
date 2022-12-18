@@ -31,11 +31,19 @@ FEATURES
     zlib    enable-zlib
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS
+        -Denable-openmp=OFF
+        -Denable-pthread=ON
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DMathGL_INSTALL_CMAKE_DIR:STRING=share/mathgl2
+        -DCMAKE_CXX_STANDARD=11 # minimum for armadillo on osx
         -DCMAKE_DISABLE_FIND_PACKAGE_Intl=1
         -DCMAKE_POLICY_DEFAULT_CMP0127=NEW # cmake_dependent_option condition syntax
 )
