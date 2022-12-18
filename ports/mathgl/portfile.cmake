@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DMathGL_INSTALL_CMAKE_DIR:STRING=share/mathgl2
+        -DCMAKE_DISABLE_FIND_PACKAGE_Intl=1
         -DCMAKE_POLICY_DEFAULT_CMP0127=NEW # cmake_dependent_option condition syntax
 )
 
