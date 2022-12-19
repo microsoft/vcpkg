@@ -1,0 +1,23 @@
+diff --git a/src/plugins/platforms/windows/qwindowseglcontext.cpp b/src/plugins/platforms/windows/qwindowseglcontext.cpp
+index 4ae087dfa..a0c3060a0 100644
+--- a/src/plugins/platforms/windows/qwindowseglcontext.cpp
++++ b/src/plugins/platforms/windows/qwindowseglcontext.cpp
+@@ -46,6 +46,9 @@
+ 
+ #if defined(QT_OPENGL_ES_2_ANGLE) || defined(QT_OPENGL_DYNAMIC)
+ #  include <EGL/eglext.h>
++#ifndef EGL_ANGLE_platform_angle
++#  include <EGL/eglext_angle.h>
++#endif
+ #endif
+ 
+ QT_BEGIN_NAMESPACE
+@@ -210,7 +213,7 @@ bool QWindowsEGLStaticContext::initializeAngle(QWindowsOpenGLTester::Renderers p
+             { EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_NONE },
+             { EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE, EGL_NONE },
+             { EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+-              EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE, EGL_NONE }
++              EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE, EGL_NONE }
+         };
+         const EGLint *attributes = nullptr;
+         if (preferredType & QWindowsOpenGLTester::AngleRendererD3d11)
