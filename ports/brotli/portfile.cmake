@@ -8,7 +8,6 @@ vcpkg_from_github(
         install.patch
         fix-arm-uwp.patch
         pkgconfig.patch
-        fix-ios.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,16 +15,15 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBROTLI_DISABLE_TESTS=ON
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/brotli")
-vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-brotli PACKAGE_NAME unofficial-brotli)
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-brotli-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-brotli")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-brotli PACKAGE_NAME unofficial-brotli)
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-brotli")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/brotli")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

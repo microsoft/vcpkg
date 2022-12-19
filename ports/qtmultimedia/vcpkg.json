@@ -1,6 +1,7 @@
 {
   "name": "qtmultimedia",
   "version": "6.4.1",
+  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -42,10 +43,15 @@
     },
     "gstreamer": {
       "description": "Build with gstreamer",
-      "supports": "!(windows & static)",
       "dependencies": [
         "egl",
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "qml": {

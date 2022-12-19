@@ -4,7 +4,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 21176cb95fcab49a781d02789bf21191a96a34a6391f066699b3c20b414b3169c958bd86623deb34ca55912083862885f7a7d12b67cc041467da2ba94d9e83c3
+    SHA512 0402c063975680ff2385876f521b37aa4cc599d2570eb79976ad2a1b530e47a086d514fe122fd870b4a8f7358f48c926285694d153cc2c32cf6963ed2d5da9d9
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -88,6 +88,14 @@ elseif(VCPKG_TARGET_IS_OSX)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${GLIB_TOOLS} AUTO_CLEAN)
 
+set(pc_replace_intl_path gio glib gmodule-no-export gobject gthread)
+foreach(pc_prefix IN LISTS pc_replace_intl_path)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/debug/lib/intl" "-lintl")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/intl" "-lintl")
+    endif()
+endforeach()
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gio-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
 if(NOT VCPKG_BUILD_TYPE)
@@ -114,5 +122,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/gdb"
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio" "${CURRENT_PACKAGES_DIR}/lib/gio")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

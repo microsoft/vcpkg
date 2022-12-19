@@ -1,7 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libssh.org/projects/libssh.git
-    REF e8322817a9e5aaef0698d779ddd467a209a85d85 # REFERENCE VERSION 0.10.4
+    REF 9941e89f307e73352d887cac14e4e26b481a0a82 # Latest commit on 2022-11-23
+    FETCH_REF master
     PATCHES
         0001-export-pkgconfig-file.patch
         0002-mingw_for_Android.patch
@@ -15,9 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if (VCPKG_TARGET_IS_ANDROID)
-	set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
-			"-DWITH_PCAP=FALSE"
-			)
+    set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
+                   "-DWITH_PCAP=FALSE")
 endif ()
 
 vcpkg_cmake_configure(
@@ -48,18 +48,18 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     vcpkg_replace_string(
-	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
-	    "#ifdef LIBSSH_STATIC"
-	    "#if 1"
-	)
+        "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
+        "#ifdef LIBSSH_STATIC"
+        "#if 1"
+    )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(
-	    "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
-	    ".dll"
-	    ".lib"
-	)
+        "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
+        ".dll"
+        ".lib"
+    )
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

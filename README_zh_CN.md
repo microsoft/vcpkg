@@ -14,8 +14,6 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
 * 文档: [Documentation](docs/README.md)
 
-[![当前生成状态](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 # 目录
 
 - [Vcpkg: 总览](#vcpkg-总览)
@@ -31,9 +29,10 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     - [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
     - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
 - [Tab补全/自动补全](#tab补全自动补全)
-  - [示例](#示例)
-  - [贡献](#贡献)
+- [示例](#示例)
+- [贡献](#贡献)
 - [开源协议](#开源协议)
+- [安全事项](#安全事项)
 - [数据收集](#数据收集)
 
 # 入门
@@ -42,10 +41,10 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 [Windows](#快速开始-windows) 或 [macOS 和 Linux](#快速开始-unix)，
 这取决于您使用的是什么平台。
 
-有关更多信息，请参见 [安装和使用软件包][getting-started:using-a-package]。
+更多有关信息，请参见 [安装和使用软件包][getting-started:using-a-package]。
 如果 vcpkg 目录中没有您需要的库，
 您可以 [在 GitHub 上打开问题][contributing:submit-issue]。
-vcpkg 团队和贡献者可以看到它的地方，
+vcpkg 团队和贡献者可以在这里看到它，
 并可能将这个库添加到 vcpkg。
 
 安装并运行 vcpkg 后，
@@ -60,7 +59,7 @@ vcpkg 团队和贡献者可以看到它的地方，
 前置条件:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
-- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
+- [Visual Studio][getting-started:visual-studio] 2015 Update 3 或更新的版本（**包含英文语言包**）
 
 首先，**请使用 `git clone vcpkg`** 并执行 bootstrap.bat 脚本。
 您可以将 vcpkg 安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
@@ -127,8 +126,8 @@ Linux平台前置条件:
 macOS 平台前置条件:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
 
-首先，**请使用 `git clone vcpkg`** 并执行 bootstrap.sh 脚本。
-我们建议您将 vcpkg 作为 CMake 项目的子模块使用。
+首先，请下载 vcpkg 并执行 bootstrap.sh 脚本。
+您可以将 vcpkg 安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块。
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -196,8 +195,6 @@ $ xcode-select --install
 
 ## 在 CMake 中使用 vcpkg
 
-若您希望在 CMake 中使用vcpkg，以下内容可能帮助您：
-
 ### Visual Studio Code 中的 CMake Tools
 
 将以下内容添加到您的工作区的 `settings.json` 中将使 CMake Tools 自动使用 vcpkg 中的第三方库:
@@ -229,7 +226,7 @@ $ xcode-select --install
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-遗憾的是，您必须手动将此选项加入每个项目配置文件中。
+您必须手动将此选项加入每个项目配置文件中。
 
 ### 将 vcpkg 作为一个子模块
 
@@ -257,7 +254,7 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 
 # Tab 补全/自动补全
 
-`vcpkg` 支持命令，包名称，以及 Powershell 和 Bash 中的选项。
+`vcpkg` 支持在 Powershell 和 Bash 中自动补全命令，包名称及选项。
 若您需要在指定的 shell 中启用 Tab 补全功能，请依据您使用的 shell 运行：
 
 ```pwsh
@@ -304,7 +301,14 @@ Vcpkg是一个开源项目，并通过您的贡献不断发展。
 
 # 开源协议
 
-在此存储库中使用的代码均遵循 [MIT License](LICENSE.txt)。
+在此存储库中使用的代码均遵循 [MIT License](LICENSE.txt)。这些库是根据其作者的开源协议受到许可的。
+vcpkg会将库的协议文件放置在 `installed/<triplet>/share/<port>/copyright` 中。
+
+# 安全事项
+
+大多数vcpkg中的库采用其官方发布的构建工具来构建它们，并从其官方渠道下载源码及构建工具。
+若您的环境包含防火墙或反病毒程序，为了避免构建失败，请考虑在禁用防火墙与反病毒程序的环境中构建它们一次，
+再将它们生成的二进制缓存共享给原始环境中使用。
 
 # 数据收集
 
