@@ -1,7 +1,7 @@
 {
   "name": "exiv2",
   "version": "0.27.5",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Image metadata library and tools",
   "homepage": "https://www.exiv2.org",
   "license": "GPL-2.0",
@@ -41,7 +41,8 @@
       ]
     },
     "unicode": {
-      "description": "Compile with unicode support on windows"
+      "description": "Compile with unicode support on windows",
+      "supports": "windows"
     },
     "video": {
       "description": "Build video support into library"
