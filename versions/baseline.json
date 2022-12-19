@@ -83,7 +83,7 @@
     "amd-amf": {
       "baseline": "1.4.26",
       "port-version": 0
-    }, 
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 3
@@ -490,7 +490,7 @@
     },
     "bgfx": {
       "baseline": "1.118.8384-362",
-      "port-version": 0
+      "port-version": 1
     },
     "bigint": {
       "baseline": "2010.04.30",
@@ -1762,7 +1762,7 @@
     },
     "cryptopp": {
       "baseline": "8.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cserialport": {
       "baseline": "4.2.1",
@@ -2689,8 +2689,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.12.0",
-      "port-version": 1
+      "baseline": "11.13.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2974,7 +2974,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 4
+      "port-version": 5
     },
     "idevicerestore": {
       "baseline": "1.0.12",
@@ -3886,7 +3886,7 @@
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 5
+      "port-version": 6
     },
     "libjpeg-turbo": {
       "baseline": "2.1.4",
@@ -4134,7 +4134,7 @@
     },
     "libproxy": {
       "baseline": "0.4.18",
-      "port-version": 0
+      "port-version": 1
     },
     "libqcow": {
       "baseline": "20210419",
@@ -4697,7 +4697,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "magic-get": {
@@ -7734,7 +7734,7 @@
     },
     "usbmuxd": {
       "baseline": "1.2.235",
-      "port-version": 2
+      "port-version": 3
     },
     "usd": {
       "baseline": "20.08",
