@@ -3062,7 +3062,7 @@
     },
     "igraph": {
       "baseline": "0.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "iir1": {
       "baseline": "1.9.1",
