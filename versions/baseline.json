@@ -7721,7 +7721,7 @@
       "port-version": 0
     },
     "updfparser": {
-      "baseline": "0.8.0",
+      "baseline": "2022-12-19",
       "port-version": 0
     },
     "urdfdom": {

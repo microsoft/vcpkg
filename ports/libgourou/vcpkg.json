@@ -4,7 +4,7 @@
   "description": "libgourou is a free implementation of Adobe's ADEPT protocol used to add DRM on ePub/PDF files",
   "homepage": "https://indefero.soutade.fr/p/libgourou",
   "license": "LGPL-3.0-or-later",
-  "supports": "!uwp & !windows",
+  "supports": "!windows",
   "dependencies": [
     "curl",
     "libzip",
@@ -13,10 +13,6 @@
     "updfparser",
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
