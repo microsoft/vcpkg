@@ -9,16 +9,6 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision 7e4d221c36c630c1250b23a5dfa15657bc04c10c)
 +++ b/CMakeLists.txt	(revision 5ebef171699530ca01594a5cef10a68811f4d105)
-@@ -18,8 +18,7 @@
-   src/main.cpp
-   src/mfx_dispatcher.cpp
-   src/mfx_dispatcher_log.cpp
--  src/mfx_function_table.cpp
--)
-+  src/mfx_function_table.cpp)
- 
- if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-   add_definitions(-fPIC)
 @@ -40,6 +39,7 @@
      src/mfx_load_plugin.cpp
      src/mfx_plugin_hive.cpp
