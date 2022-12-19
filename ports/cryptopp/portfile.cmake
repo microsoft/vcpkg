@@ -71,11 +71,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cryptopp)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
