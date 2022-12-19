@@ -1618,7 +1618,7 @@
     },
     "cpp-httplib": {
       "baseline": "0.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "cpp-ipc": {
       "baseline": "1.2.0",
