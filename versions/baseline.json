@@ -5869,7 +5869,7 @@
       "port-version": 6
     },
     "plog": {
-      "baseline": "1.1.8",
+      "baseline": "1.1.9",
       "port-version": 0
     },
     "plplot": {
