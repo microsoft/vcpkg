@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO theAeon/libleidenalg
     REF "v${VERSION}"
-    SHA512 eeb718457dd9eebbf429c83e9b4512225917432074829b34f1bedf49d2179f73cc687fada99250d633ad1b6d06d6865e0b7c40ac94d1c0c944a5bcd781c66e18
+    SHA512 66d7a9e1b039e8fe180b5ca7c7685a661e87abbd317cfacbbd232c80e3c759bb8ababb890161e360d348b47188b07bcc664945b3bea80f0f70216dc5bb8c477e
     HEAD_REF master
 )
 
@@ -12,7 +12,7 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "${CONFIG_CMAKE_DIR}")
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
