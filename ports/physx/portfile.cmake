@@ -12,6 +12,13 @@ vcpkg_download_distfile(
     SHA512 4eb7630db1cb10b2372220c3706dfe255075f466c6b2b12654c9fbc3b17c4df69d7b91e6f0d798c92a4cb8806e1c34b66bb52b46d9358d643ca62ec0de321fd2
 )
 
+vcpkg_download_distfile(
+    patch3
+    URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/cdbfc0f1283829c71b07e332ddd6ce2e5aa7d467.patch"
+    FILENAME "physx-PR569-cdbfc0f.patch"
+    SHA512 2d9d4d30d923b0e006ae1a5c413993325bb4ce5c130fe655242611e87dab945cb220776f112b6cf96b1f06c83a6cec475314a11649bf03304083f5068e282ef2
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIAGameWorks/PhysX
@@ -22,6 +29,7 @@ vcpkg_from_github(
         fix-compiler-flag.patch
         "${patch1}"
         "${patch2}"
+        "${patch3}"
         remove-werror.patch
 )
 

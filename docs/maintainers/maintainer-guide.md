@@ -410,11 +410,11 @@ We require that the manifest file be formatted. Use the following command to for
 
 ### Portfiles are run in Script Mode
 
-While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core CMake language constructs, portfiles run in "Script Mode", whereas `CMakeLists.txt` files run in "Build Mode" (unofficial term). The most important difference between these two modes is that "Script Mode" does not have a concept of "Target" -- any behaviors that depend on the "target" machine (`CMAKE_CXX_COMPILER`, `CMAKE_EXECUTABLE_SUFFIX`, `CMAKE_SYSTEM_NAME`, etc) will not be correct.
+While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core CMake language constructs (aka "Scripting Commands"), portfiles run in "Script Mode", whereas `CMakeLists.txt` files run in "Project Mode". The most important difference between these two modes is that "Script Mode" does not have the concepts of "Toolchain", "Language" and "Target". Any behaviors, including scripting commands, which depend on these constructs (e.g. `CMAKE_CXX_COMPILER`, `CMAKE_EXECUTABLE_SUFFIX`, `CMAKE_SYSTEM_NAME`) will not be correct.
 
 Portfiles have direct access to variables set in the triplet file, but `CMakeLists.txt`s do not (though there is often a translation that happens -- `VCPKG_LIBRARY_LINKAGE` versus `BUILD_SHARED_LIBS`).
 
-Portfiles and CMake builds invoked by portfiles are run in different processes. Conceptually:
+Portfiles and Project builds invoked by portfiles are run in different processes. Conceptually:
 
 ```no-highlight
 +----------------------------+       +------------------------------------+

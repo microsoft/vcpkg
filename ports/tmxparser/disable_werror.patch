@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 69a0df0..5bb8de6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -106,7 +106,7 @@ target_compile_options(tmxparser
+   PRIVATE -Werror=strict-prototypes
+   PRIVATE -Werror=old-style-definition
+   PRIVATE -Werror=missing-prototypes)
+-if(NOT USE_MINIZ)
++if(0)
+   target_compile_options(tmxparser
+     PRIVATE -Werror)
+ endif()
