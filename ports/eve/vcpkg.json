@@ -1,11 +1,14 @@
 {
   "name": "eve",
-  "version-date": "2022-09-20",
-  "description": "EVE - the Expressive Vector Engine",
+  "version": "2022.9.1",
+  "description": [
+    "EVE - the Expressive Vector Engine",
+    "A header-only C++20 and onward implementation of a type based wrapper around SIMD extensions sets for most current architectures."
+  ],
   "homepage": "https://github.com/jfalcou/eve",
   "documentation": "https://jfalcou.github.io/eve/",
   "license": "BSL-1.0",
-  "supports": "!windows",
+  "supports": "!windows, mingw",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

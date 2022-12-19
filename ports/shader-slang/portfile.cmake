@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -10,7 +11,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win64.zip"
 			FILENAME "slang-${VERSION}-win64.zip"
-			SHA512 b7fb926426ee4ccd9e38ce1cb1b54b3034eeefbd38dbfba56d1559f9ff286521b4029ef411ecc8190ba426def2e775c4b747fb3eb8491bf7118d167185f65bbc
+			SHA512 a3f9f1a30468588fc5706eacd3a4c2dc41b014a949b34fe8a16dc1a9a2cb3e85edfcabb46473a3599fe9cd95a2ca8cbae5ab39fdf626e6b5b614a94be48e6d4d
 		)
 		set(SLANG_BIN_PATH "bin/windows-x64/release")
 	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -18,9 +19,33 @@ if (VCPKG_TARGET_IS_WINDOWS)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win32.zip"
 			FILENAME "slang-${VERSION}-win32.zip"
-			SHA512 a42639e500e63a8fb9e18074c5d04671f6a2d871db03d2e99b48ec0bb46f6a80a75a8bf6fc3a8eed2b72505311b665dcd55e99b5305baedcc2a0f212ca32b770
+			SHA512 06012d3d7004f0565cda01b11fd7236e6828a8ea79ca93ad05e3e1a3e35571daf2cd6558e096dfd97c46c23ce74b802d71287e02eec5d7951c18e16c6c635da6
 		)
 		set(SLANG_BIN_PATH "bin/windows-x86/release")
+	else()
+		message(FATAL_ERROR "Unsupported platform. Please implement me!")
+	endif()
+elseif (VCPKG_TARGET_IS_OSX)
+	set(SLANG_EXE_SUFFIX "")
+	set(SLANG_LIB_PREFIX "lib")
+	set(SLANG_LIB_SUFFIX ".a")
+	set(SLANG_DYNLIB_SUFFIX ".dylib")
+	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
+			FILENAME "slang-${VERSION}-macos-x64.zip"
+			SHA512 5914caa4ab9867fbceed6f0bb4f83f3b5400c05872baff40456460655efbdccb34b3590663f8ee80e953f3e584d0e729bc1da34ab8f80be33d1233ca4b043d71
+		)
+		set(SLANG_BIN_PATH "bin/macos-x64/release")
+	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
+			FILENAME "slang-${VERSION}-macos-aarch64.zip"
+			SHA512 9e792ba0dec87a892df566b48f4553691f20d48c74c7d111b93c6f55c83790a8857bd82c461746190d8507b4aef440aeadb267da9558692a6113cfda52d12c80
+		)
+		set(SLANG_BIN_PATH "bin/macos-aarch64/release")
 	else()
 		message(FATAL_ERROR "Unsupported platform. Please implement me!")
 	endif()
@@ -34,7 +59,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.tar.gz"
 			FILENAME "slang-${VERSION}-linux-x86_64.tar.gz"
-			SHA512 77806dc15131d9360cf80c7cc274637fe54cf0147482ba6ac1e49094c05d7ad91716fd6fdcc2fe2e02265913b0b8bc72137d1e8092f4341eff61758f88291c38
+			SHA512 f6e3d49ddfdb79e0dc8183bd915ee4e2975428f1a6020498062cb54b0f078c86bcdc50d274c8ed22ba2f3ae823cb0b95d719a1067321fb0400c329f8c34149dd
 		)
 		set(SLANG_BIN_PATH "bin/linux-x64/release")
 	else()
@@ -74,7 +99,7 @@ vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO shader-slang/slang
 	REF v${VERSION}
-	SHA512 d02e166c694c46df8402f94b3f117d04494465ffa2cf636913ddced6f6a614547032c78408d87b79eb5d9de14b97cf8d17087a41c7d038c546b9a294e7a1f3d7
+	SHA512 ddb50eb59bebbb826844c4831f721bb40e28edb64d37d7463afb68cd27b653d7d8e1776000eaf70f4b5a882182ac06fa233dfe51167c2a3d170df89987da2cc2
 	HEAD_REF master
 )
 

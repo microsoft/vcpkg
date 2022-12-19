@@ -389,7 +389,6 @@ vcpkg_cmake_configure(
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
         -DBUILD_TBB=OFF
-        -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
         ###### Disable build 3rd party components
         -DBUILD_PROTOBUF=OFF
@@ -447,6 +446,7 @@ vcpkg_cmake_configure(
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
+        -DBUILD_IPP_IW=${WITH_IPP}
 )
 
 vcpkg_cmake_install()
@@ -577,7 +577,7 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
+configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 file(GLOB extra_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/opencv4/*")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_license_files})

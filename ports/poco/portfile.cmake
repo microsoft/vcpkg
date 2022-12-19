@@ -12,7 +12,6 @@ vcpkg_from_github(
         0003-fix-dependency.patch
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
-        0006-fix-install-data-mysql.patch
         0007-find-pcre2.patch
 )
 
@@ -30,12 +29,24 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pdf         ENABLE_PDF
-        netssl      ENABLE_NETSSL
-        netssl      ENABLE_NETSSL_WIN
-        netssl      ENABLE_CRYPTO
         sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
+
+if("netssl" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND FEATURE_OPTIONS
+            -DENABLE_NETSSL_WIN=ON
+            -DENABLE_NETSSL=OFF
+            -DENABLE_CRYPTO=OFF
+        )
+    else()
+        list(APPEND FEATURE_OPTIONS
+            -DENABLE_NETSSL=ON
+            -DENABLE_CRYPTO=ON
+        )
+    endif()
+endif()
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
     set(POCO_USE_MYSQL ON)
@@ -45,7 +56,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         # force to use dependencies as external
         -DPOCO_UNBUNDLED=ON
         # Define linking feature
@@ -115,4 +127,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
