@@ -4,7 +4,7 @@ include("${cmake_vars_file}")
 # Fix bug compiling bin2c under msvc host
 if(VCPKG_DETECTED_MSVC)
     # It seems we cannot change HOSTLD_O from outside, and this will make linking fail, so we directly patch the makefile
-    # if we are using MSVC at host..
+    # if we are using MSVC at host. This kind of quick fix and could be replaced by better one.
     set(MSVC_PATCHES 0021-fix-compile-bin2c-under-msvc.patch)
 endif()
 
@@ -180,6 +180,17 @@ else()
     set(ENABLE_AVFILTER OFF)
 endif()
 
+if("cuda-llvm" IN_LIST FEATURES)
+    # This feature requires clang could be found in the building env.
+    # If enabling cuda-llvm, then it will use clang to compile cu files instead of nvcc
+    # So, we are setting nvcc path to clang.
+    set(OPTIONS "${OPTIONS} --nvcc=${CURRENT_INSTALLED_DIR}/tools/llvm/clang.exe")
+else()
+    # By default, disable this feature. Because this is an autodetect feature depends on whether clang exists.
+    # Disabling this, will disable cu compile to ptx, disabling hwaccel "cuda-llvm"
+    set(OPTIONS "${OPTIONS} --disable-cuda-llvm")
+endif()
+
 if("postproc" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-postproc")
     set(ENABLE_POSTPROC ON)
@@ -304,16 +315,9 @@ endif()
 
 if("nvcodec" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec --nvcc=\"C:/vcpkg/installed/x64-windows/tools/llvm/clang.exe\"")
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid --disable-ffnvcodec")
-endif()
-
-if("cuda-llvm" IN_LIST FEATURES)
-
-else()
-    # By default, disable this feature. Because this is an autodetect feature depends on whether clang exists.
-    #set(OPTIONS "${OPTIONS} --disable-cuda-llvm")
 endif()
 
 if("opencl" IN_LIST FEATURES)

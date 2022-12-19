@@ -327,7 +327,17 @@
       ]
     },
     "cuda-llvm": {
-      "description": "CUDA compilation using clang"
+      "description": "CUDA compilation using clang",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "target-nvptx"
+          ]
+        }
+      ]
     },
     "dav1d": {
       "description": "AV1 decoding via libdav1d",
