@@ -6,14 +6,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF dd801d244db3a8e27b7fe8020cd751404aa818fd #v0.6
-    SHA512 8004ab6f146f319df41e4b8d4bdb6677b8faf6db725e34fea76fcbf065522fa286d334c2426dcb39faf0cfb3332946104f78393d2b2b2418fe02d91450916e78
+    REF v0.8
+    SHA512 d4ca405097e8c439a4f74495f374bc5d5e4febafcf59ee88d985a8764ed36da1753ca4a3a73476dfb74c7d92df31a99242df6e1b47c648e860eee835a6f4f434
     HEAD_REF master
-    PATCHES
-        fix-includepath-error.patch # include path has one more ../
-        fix-cmake-version.patch
-        fix-build-error-in-vs2019.patch
-        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
