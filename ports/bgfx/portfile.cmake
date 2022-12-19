@@ -18,6 +18,7 @@ vcpkg_from_github(
   HEAD_REF master
   REF 85109d7cdbe775a0ab72cf38510df525d5e8d3da
   SHA512 b3e082cd249e802e6d209ed45a552843604713a06597277b2855d1fa1c39b3d5136d5589599a85126eda218ccfee0ce6177f004cb5dccb912fe64ea7e07af2a8
+  PATCHES fix-headerfile.patch
 )
 
 vcpkg_from_github(
@@ -44,6 +45,7 @@ endif ()
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES fix-dependencies.patch
 )
 
 vcpkg_cmake_configure(
