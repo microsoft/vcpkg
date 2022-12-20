@@ -385,11 +385,11 @@ function(vcpkg_find_acquire_program program)
         endif()
     elseif(program STREQUAL "CLANG")
         set(program_name clang)
-        set(tool_subdirectory "clang-12.0.0")
-        set(program_version 12.0.0)
+        set(tool_subdirectory "clang-15.0.6")
+        set(program_version 15.0.6)
         if(CMAKE_HOST_WIN32)
             set(paths_to_search
-                # Support LLVM in Visual Studio 2019
+                # Support LLVM in Visual Studio
                 "$ENV{LLVMInstallDir}/x64/bin"
                 "$ENV{LLVMInstallDir}/bin"
                 "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
@@ -406,11 +406,11 @@ function(vcpkg_find_acquire_program program)
             if(host_arch MATCHES "64")
                 set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
                 set(download_filename "LLVM-${program_version}-win64.7z.exe")
-                set(download_sha512 67a9b54abad5143fa5f79f0cfc184be1394c9fc894fa9cee709943cb6ccbde8f0ea6003d8fcc20eccf035631abe4009cc0f694ac84e7879331cebba8125e4c7f)
+                set(download_sha512 2dd6f3eea106f2b905e6658ea5ea12856d17285adbfba055edc2d6b6389c4c2f7aa001df5cb0d8fb84fa7fa47d5035a7fddf276523b472dd55f150ae25938768)
             else()
                 set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win32.exe")
                 set(download_filename "LLVM-${program_version}-win32.7z.exe")
-                set(download_sha512 92fa5252fd08c1414ee6d71e2544cd2c44872124c47225f8d98b3af711d20e699f2888bc30642dfd00e005013da1607a593674fb4878951cc434694f9a119199)
+                set(download_sha512 90225D650EADB0E590A9912B479B46A575D41A19EB5F2DA03C4DC8B032DC0790222F0E3706DFE2A35C0E7747941972AC26CB47D3EB13730DB76168931F37E5F1)
             endif()
         endif()
         set(brew_package_name "llvm")

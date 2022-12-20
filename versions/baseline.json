@@ -4541,8 +4541,8 @@
       "port-version": 3
     },
     "libyuv": {
-      "baseline": "2021-04-15",
-      "port-version": 1
+      "baseline": "2022-12-15",
+      "port-version": 0
     },
     "libzen": {
       "baseline": "0.4.39",
