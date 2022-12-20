@@ -3,13 +3,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
-    REF 8.0.3
-    SHA512 4c93eea5c5ba7c72f718d7d404b9630850e0805d2698d472b964e4de765678801b369ce1da5e53372f28944f5f647a7ac162995f92535a820c6f4fc9defa7e5f
+    REF 9.0.1
+    SHA512 ed56287f608ccdf5bc5d5fc2918e313e7c4cecdd9ef2c9993a72ea900d9ff662c57ac5326c7a809eb11505c6f39d4599f3f161b97b6e03c65783b824b8d700d2
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xcomplex ENABLE_XTL_COMPLEX
+    FEATURES
+        xcomplex ENABLE_XTL_COMPLEX
 )
 
 vcpkg_cmake_configure(

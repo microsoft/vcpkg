@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kpackage
-    REF v5.89.0
-    SHA512 0f008129d2675fb8faa274bc9d1389be6a4acee0be95eb06973762933a7306749742e852a83144c54523aacdd10e5a808c8c06834ff533719a6e66ccc62f7186
+    REF v5.98.0
+    SHA512 2d82817825b3c5a284bee147abc1f8e9aff9f4730f7f149f95aef7270b7d41a7d6b8184e1f7c42c13c9ad26abbc63ffcd2e4eabef2f6ff734629d39808b5eeea
     HEAD_REF master
+    PATCHES
+        fix_duplicate_symbol.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -29,4 +31,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/histogram
-    REF boost-1.78.0
-    SHA512 1124b52f68f6a240ca5fc8e1514fe3350a1f16260b137b5fbdd67c9fd68573f11a9d95cfcc6f370201ef6ae95a35098e1c8a457180c26ffaeb9b29bb6fbb0a2a
+    REF boost-1.81.0
+    SHA512 0918c37563bc082b3da18b0c1c2b81aa42b964ab362cb397f2f74f7a58ee9c4dd94163333224bda8ff078921cfeb93488b766dcfec65b551592675cc90dfc5e0
     HEAD_REF master
 )
 

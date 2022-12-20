@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
-    REF v5.89.0
-    SHA512 8cdb177b5dff487c0039f6243a8652e8e0aaae5cd55f299f8ad4cd2c66651fc0be36328998807398b53803989881b511f0ee472359c6129ff809e9b50283b66a
+    REF v5.98.0
+    SHA512 839d9fcd805fe14aa13cf0cc39f12aa412f19309698c062c14a7d35db4e6fd3af6f46908c13d76a8234ba9f2067b9a67e0426b265d334be3e805daf5a6cd0afb
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -32,4 +32,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/KF5/KWindowSystem/config-kwindowsystem.h" "${CURRENT_PACKAGES_DIR}/" "")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

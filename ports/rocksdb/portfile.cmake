@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF fcf3d75f3f022a6a55ff1222d6b06f8518d38c7c # v6.27.3
-  SHA512 da78886dbd21339fbc9081e3f3de3aeac5b1124a0e4a879c936fae5248177bfc58ec5397d200e15ceeaf9cda2fb3850145e007a18ac0ba632dba084cc4064bfb
+  REF eb9a80fe1f18017b4d7f4084e8f2554f12234822 # v7.7.3
+  SHA512 6606a18a75c0794bc962b10c22aab9ae44e426b127972f2cb4b4d52a34f52181a0c66007fc17a5d1ee4d43de4c490b3754d805c6f7d02c280196a60d7a14dd2f
   HEAD_REF master
   PATCHES
     0002-only-build-one-flavor.patch
@@ -57,6 +57,8 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

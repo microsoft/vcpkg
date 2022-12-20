@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         cmakelists.patch
         skip-doc-install.patch
+        public-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index d6c4388..75b96c3 100644
+index ee26559..f2c83b7 100755
 --- a/configure
 +++ b/configure
-@@ -4378,6 +4378,10 @@ msvc_common_flags(){
+@@ -4496,6 +4496,10 @@ msvc_common_flags(){
              -march=*)             ;;
              -lz)                  echo zlib.lib ;;
              -lx264)               echo libx264.lib ;;

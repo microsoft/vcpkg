@@ -1,18 +1,17 @@
 # Be sure to update both of these versions together.
-set(SQLITE_VERSION 3370100)
-set(PKGCONFIG_VERSION 3.37.1)
-set(SQLITE_HASH b59343772dc4c6bb8e05fff6206eeb44861efa52c120c789ce6b733e974cf950657b6ab369aa405d75f45ed9cf1cb8128a76447bc63e9ce9822578d71581a7a3)
+set(SQLITE_VERSION 3400000)
+set(PKGCONFIG_VERSION 3.40.0)
+set(SQLITE_HASH db099793e05ac0f37355c9bd41173fb63cfe20fe4eea49de227d06f6d22064ded38bb8369c495ce06a1ef1e687d41169d93d74359367333622c6893720f3c1f0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2021/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
     SHA512 ${SQLITE_HASH}
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES fix-arm-uwp.patch
 )
 
@@ -69,4 +68,4 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sqlite3.h" "# define SQLITE_API\n" "# define SQLITE_API __declspec(dllimport)\n")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")

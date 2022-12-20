@@ -1,13 +1,14 @@
 {
   "name": "mqtt-cpp",
-  "version-semver": "12.0.0",
+  "version-semver": "13.1.0",
   "description": "Header-only MQTT client/server for C++14 based on Boost.Asio.",
   "homepage": "https://github.com/redboltz/mqtt_cpp",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-asio",
-    "boost-log",
     "boost-multi-index",
+    "boost-program-options",
     "boost-type-erasure",
     {
       "name": "vcpkg-cmake",

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemviews
-    REF v5.89.0
-    SHA512 c96cb1204d5e9d0b1206eac93f36b06c94b7fcf63c7a75938e50783af1e7d3fe48617fadd264f55f2ac31c3d316a062b9200053a582ccf2e7c927659b7e1b442
+    REF v5.98.0
+    SHA512 1a9643376c971323a82a8ef909a9c31f168bdf89842ebf667ac69c9d76c51fc8124eb366c602b2bdff28082c9199690be6091d2634ebf12a07aeeaddd96810ab
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -26,4 +26,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

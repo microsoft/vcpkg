@@ -1,17 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0370ea3..7cef01a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -146,7 +146,7 @@ if (NOT_SUBPROJECT)
-       EXPORT
-         Catch2Targets
-       DESTINATION
--        ${CMAKE_INSTALL_LIBDIR}
-+        ${CMAKE_INSTALL_LIBDIR}/manual-link
-     )
- 
- 
-@@ -226,7 +226,7 @@ if (NOT_SUBPROJECT)
+@@ -164,7 +164,7 @@
  
      ## Provide some pkg-config integration
      set(PKGCONFIG_INSTALL_DIR
@@ -20,3 +10,36 @@ index 0370ea3..7cef01a 100644
          CACHE PATH "Path where catch2.pc is installed"
      )
      configure_file(
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -401,16 +401,28 @@
+     install(
+       TARGETS
+         Catch2
+-        Catch2WithMain
+       EXPORT
+         Catch2Targets
+       LIBRARY DESTINATION
+         ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION
+         ${CMAKE_INSTALL_LIBDIR}
+       RUNTIME DESTINATION
+         ${CMAKE_INSTALL_BINDIR}
+     )
++
++     install(
++      TARGETS
++        Catch2WithMain
++      EXPORT
++        Catch2Targets
++      LIBRARY DESTINATION
++        ${CMAKE_INSTALL_LIBDIR}/manual-link
++      ARCHIVE DESTINATION
++        ${CMAKE_INSTALL_LIBDIR}/manual-link
++      RUNTIME DESTINATION
++        ${CMAKE_INSTALL_BINDIR}
++    )
+ 
+ 
+     install(

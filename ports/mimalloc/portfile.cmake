@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF v2.0.5
-    SHA512 d164392ace523a3fa0aa00fc58d8a9e8fbe913f07957e19ca977675b389e6d2a2eaf4772e72cae0d87aabb960f3fd6ea3923a066ece4ba4fdaa0c6860cfa414d
+    REF v2.0.7
+    SHA512 120f89eef50ba83130e8ceb974a6148c84a7f3d975d1efaa094142518afb4ff6d9e24f8e75e9aa0bb02dc80bf497eced4b8ae1f2f5914fdabd773317e1341ea1
     HEAD_REF master
     PATCHES
         fix-cmake.patch
@@ -52,5 +52,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

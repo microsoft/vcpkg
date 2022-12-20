@@ -3,9 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/phoenix
-    REF boost-1.78.0
-    SHA512 38d64222a205f76f94ca6822c9f67c41fad7001b0939548fdd725588cd0f95c0acbff64eb8ca93ca3184328d54d4b312bbf768237010ca20dff17c455589a9fc
+    REF boost-1.81.0
+    SHA512 11bd2fc20c5cc89649ab37cd3502413827a84f80de5df606de783a001a25fd8d8647ca1f5c458f32609eb48c8c93723475ea1552ceccd5658a96a6890a936310
     HEAD_REF master
+    PATCHES fix-duplicate-symbols.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

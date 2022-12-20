@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tradias/asio-grpc
-    REF v1.5.1
-    SHA512 528a790a7414db1b03b20d4d82d510a08cba9fc3c99501955c60c28ce4d768202a4339241b9e99f0199deb379345dc75934f991bad735eda0b32eb6cb3cef587
+    REF v2.3.0
+    SHA512 c6ef02ff01e5fffdd8d1af99e39c632bc9ba76107f1f37232d521c2e5fd57fd32d820b9a5060fd8a71225201f3a27b2657e445e8434722d9728024000e4e694a
     HEAD_REF master
 )
 
@@ -15,13 +15,14 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
+        -DASIO_GRPC_CMAKE_CONFIG_INSTALL_DIR=share/asio-grpc
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/asio-grpc)
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

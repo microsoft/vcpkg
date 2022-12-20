@@ -3,10 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/multiprecision
-    REF boost-1.78.0
-    SHA512 eef97b9a53e85e921d29dcea521ba8f751d71f03782d53eda345628d1ba400b83c7f656f41340128ded0a54a6d7955b1493cdca3804bea586158aa28b02fc941
+    REF boost-1.81.0
+    SHA512 1ba40da0185a9af2cfa37641641ac6d1a281891d6d38f3ee3be0c713f02ff20be23ddefa68a50cf9ae88c5dff3f3c7f7b43d984150215fa1bb419cbb33a840e1
     HEAD_REF master
-    PATCHES 0001-Fix-selection-logic-in-intel_intrinsics.hpp.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

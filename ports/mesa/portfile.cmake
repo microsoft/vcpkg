@@ -3,16 +3,10 @@
 
 # Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
 set(PATCHES
-    # Fix swrAVX512 build
-    swravx512-post-static-link.patch
-    # Fix swr build with MSVC
-    swr-msvc-2.patch
-    # Fix swr build with LLVM 13
-    swr-llvm13.patch
-    # Fix radv MSVC build with LLVM 13
-    radv-msvc-llvm13-2.patch
-    # Fix d3d10sw MSVC build
-    d3d10sw.patch
+    # Fix symbols exporting for MinGW GCC x86
+    def-fixes.patch
+    # Clover build on Windows
+    clover.patch
 )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
@@ -24,8 +18,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.2.5
-    SHA512 a9ead27f08e862738938cf728928b7937ff37e4c26967f2e46e40a3c8419159397f75b2f4ce43f9b453b35bb3716df581087fb7ba8434fafdfab9488c3db6f92
+    REF mesa-22.1.7
+    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
@@ -59,7 +53,6 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
 endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
-#string(APPEND GALLIUM_DRIVERS 'auto')
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
@@ -68,25 +61,18 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dglvnd=false)
 list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
-list(APPEND MESA_OPTIONS -Dosmesa=true)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND MESA_OPTIONS -Dshared-swr=false)
-    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx']")
+if("offscreen" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dosmesa=true)
 else()
-    list(APPEND MESA_OPTIONS -Dshared-swr=true)
-    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx','avx2','knl','skx']")
+    list(APPEND MESA_OPTIONS -Dosmesa=false)
 endif()
 
-string(APPEND GALLIUM_DRIVERS 'swrast')
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
-    string(APPEND GALLIUM_DRIVERS ",'swr'") # SWR always requires llvm
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
-
-list(APPEND MESA_OPTIONS -Dgallium-drivers=[${GALLIUM_DRIVERS}])
 
 if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)

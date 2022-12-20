@@ -1,13 +1,14 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/1.2.8"
-    FILENAME "xaudio2redist.1.2.8.zip"
-    SHA512 509b2783457b86ed1878fd4e14a01fa7288591925a2bb3cad4d68afd597fbff1f1349b619dad628b5d685169825a775120e1611559e9097837cff0fb6d39acf0
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/${VERSION}"
+    FILENAME "xaudio2redist.${VERSION}.zip"
+    SHA512 03aab03f793648a0b1467916a05b22891c32ce44166f85a184746a949338cdeff7104479b88920570e6beeb04395e03669a3ee569c3f2523f3dbc01a368e86b7
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH PACKAGE_PATH
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )

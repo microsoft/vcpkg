@@ -160,46 +160,46 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ICE_BUILD_CONFIG "static cpp11-static")
     endif()
-
+    if(NOT VCPKG_BUILD_TYPE)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_build_process(
-        COMMAND make
-            V=1
-            "prefix=${CURRENT_PACKAGES_DIR}/debug"
-            linux_id=vcpkg
-            "CONFIGS=${ICE_BUILD_CONFIG}"
-            USR_DIR_INSTALL=yes
-            OPTIMIZE=no
-            ${ICE_OPTIONAL_COMPONENTS_MAKE}
-            "-j${VCPKG_CONCURRENCY}"
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-${TARGET_TRIPLET}-dbg
-    )
+        vcpkg_execute_build_process(
+            COMMAND make
+                V=1
+                "prefix=${CURRENT_PACKAGES_DIR}/debug"
+                linux_id=vcpkg
+                "CONFIGS=${ICE_BUILD_CONFIG}"
+                USR_DIR_INSTALL=yes
+                OPTIMIZE=no
+                ${ICE_OPTIONAL_COMPONENTS_MAKE}
+                "-j${VCPKG_CONCURRENCY}"
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-${TARGET_TRIPLET}-dbg
+        )
 
-    # Install debug libraries to packages directory
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
-    else()
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
-    endif()
-    file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        # Install debug libraries to packages directory
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
+        else()
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
+        endif()
+        file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-    # Clean up for the next round
-    vcpkg_execute_build_process(
-        COMMAND make distclean
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-clean-${TARGET_TRIPLET}
-    )
+        # Clean up for the next round
+        vcpkg_execute_build_process(
+            COMMAND make distclean
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-clean-${TARGET_TRIPLET}
+        )
 
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
-    endif()
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
-    endif()
-    file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
-
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
+        endif()
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
+        endif()
+        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
+    endif() # TODO: get-cmake-vars!
     # Release build
     set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/lib")
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
@@ -257,6 +257,12 @@ else() # VCPKG_TARGET_IS_WINDOWS
     include("${CURRENT_PORT_DIR}/prepare_for_build.cmake")
     prepare_for_build("${SOURCE_PATH}")
 
+    vcpkg_list(SET MSBUILD_OPTIONS
+        "/p:UseVcpkg=yes"
+        "/p:IceBuildingSrc=yes"
+        ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+    )
+
     # Build Ice
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
@@ -265,9 +271,7 @@ else() # VCPKG_TARGET_IS_WINDOWS
         TARGET "C++11\\ice++11"
         USE_VCPKG_INTEGRATION
         OPTIONS
-            /p:UseVcpkg=yes
-            /p:IceBuildingSrc=yes
-            ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+            ${MSBUILD_OPTIONS}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

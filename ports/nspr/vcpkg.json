@@ -1,6 +1,7 @@
 {
   "name": "nspr",
   "version": "4.33",
+  "port-version": 2,
   "description": "Netscape portable runtime",
   "homepage": "https://releases.mozilla.org/pub/nspr/",
   "license": "MPL-2.0",

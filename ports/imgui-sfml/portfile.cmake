@@ -8,11 +8,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix_find_package.patch
+        0002-fix-imgui-dependency.patch
         004-fix-find-sfml.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

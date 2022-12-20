@@ -1,36 +1,5 @@
-#[===[.md:
-# vcpkg_gn_configure
-
-Generate Ninja (GN) targets
-
-## Usage:
-```cmake
-vcpkg_gn_configure(
-    SOURCE_PATH <SOURCE_PATH>
-    [OPTIONS <OPTIONS>]
-    [OPTIONS_DEBUG <OPTIONS_DEBUG>]
-    [OPTIONS_RELEASE <OPTIONS_RELEASE>]
-)
-```
-
-## Parameters:
-### SOURCE_PATH (required)
-The path to the GN project.
-
-### OPTIONS
-Options to be passed to both the debug and release targets.
-Note: Must be provided as a space-separated string.
-
-### OPTIONS_DEBUG (space-separated string)
-Options to be passed to the debug target.
-
-### OPTIONS_RELEASE (space-separated string)
-Options to be passed to the release target.
-#]===]
-if(Z_VCPKG_GN_CONFIGURE_GUARD)
-    return()
-endif()
-set(Z_VCPKG_GN_CONFIGURE_GUARD ON CACHE INTERNAL "guard variable")
+include_guard(GLOBAL)
+include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_real_path.cmake")
 
 function(z_vcpkg_gn_configure_generate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")

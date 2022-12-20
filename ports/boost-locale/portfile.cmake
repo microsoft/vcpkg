@@ -3,17 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.78.0
-    SHA512 17870d13898fe1c8df3958757aba81f385924ee063e9f92f821ced912346b89d106b2256d659239323efba125ecd8507a8f3fbc326285cc243befdab5dcaf72d
+    REF boost-1.81.0
+    SHA512 553fe135656dfd4e1dd797396964508a3a9807c9a04233a86e340402eaf1913f8d89eff6e1c3fe9415258d541af877839d2d7b5616f40df892cbbdb2dfcbdb97
     HEAD_REF master
-    PATCHES
-        0001-Fix-boost-ICU-support.patch
-        allow-force-finding-iconv.patch
+    PATCHES fix-dependencies.patch
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-locale requires a newer version of vcpkg in order to build.")
-endif()
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import config : requires ;"
+    "import ../config/checks/config : requires ;"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"

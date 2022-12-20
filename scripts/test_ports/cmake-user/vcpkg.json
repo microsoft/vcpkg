@@ -1,7 +1,8 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-03-18",
+  "version-date": "2022-11-12",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "license": "MIT",
   "default-features": [
     "ci"
   ],
@@ -14,7 +15,8 @@
           "default-features": false,
           "features": [
             "cmake-current",
-            "find-package"
+            "find-package",
+            "pkg-check-modules"
           ]
         },
         {
@@ -41,16 +43,24 @@
           "name": "bzip2"
         },
         {
+          "$package": "CURL",
+          "name": "curl",
+          "default-features": false
+        },
+        {
           "$package": "EXPAT",
           "name": "expat"
         },
         {
-          "$package": "Freetype",
-          "name": "freetype"
+          "$package": "Fontconfig",
+          "$since": "3.14",
+          "name": "fontconfig",
+          "platform": "!mingw & !uwp"
         },
         {
-          "$package": "ICU",
-          "name": "icu"
+          "$package": "Freetype",
+          "name": "freetype",
+          "default-features": false
         },
         {
           "$package": "Intl",
@@ -61,6 +71,16 @@
           "name": "giflib"
         },
         {
+          "$package": "ICU",
+          "name": "icu",
+          "platform": "!uwp"
+        },
+        {
+          "$package": "Iconv",
+          "$since": "3.11",
+          "name": "libiconv"
+        },
+        {
           "$package": "JPEG",
           "name": "libjpeg-turbo"
         },
@@ -69,17 +89,61 @@
           "name": "liblzma"
         },
         {
+          "$package": "PNG",
+          "name": "libpng"
+        },
+        {
+          "$package": "PostgreSQL",
+          "name": "libpq",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXml2",
+          "$since": "3.11",
+          "name": "libxml2",
+          "default-features": false
+        },
+        {
+          "$comment": "CMake 3.11 because it needs Iconv",
+          "$package": "LibXslt",
+          "$since": "3.11",
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "SQLite3",
+          "name": "sqlite3",
+          "$since": "3.14",
+          "default-features": false
+        },
+        {
           "$package": "TIFF",
-          "name": "tiff"
+          "name": "tiff",
+          "default-features": false
         },
         {
           "$package": "wxWidgets",
-          "name": "wxwidgets"
+          "name": "wxwidgets",
+          "default-features": false,
+          "platform": "!uwp"
         },
         {
           "$package": "ZLIB",
           "name": "zlib"
         }
+      ]
+    },
+    "pkg-check-modules": {
+      "description": "Test `find_package(PkgConfig)` and pkg_check_modules(...)",
+      "dependencies": [
+        {
+          "name": "pkgconf",
+          "host": true
+        },
+        "zlib"
       ]
     }
   }

@@ -1,20 +1,19 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
-    REF feb2021
-    SHA512 bdf35347582646e782c20a96180c8286786da46583527b76b2d348cd76a75285a31ebb88297962cd279c09bbd416c15c0d25ae91881ffebbf9e8ce2f21912f16
-    HEAD_REF master
-    FILE_DISAMBIGUATOR 1
+    REF dec2022
+    SHA512 4fcdf48117865837ef11e0ed338f329f71eb89d96f0b2ab0ecfcfe604e68ec58c9dcb3060029f000726ead3ed5fb752e4fdd63446b837aecf9fc8919222be48a
+    HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/effects11)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

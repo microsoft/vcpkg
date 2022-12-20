@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,9 +12,11 @@ cmake_policy(SET CMP0048 NEW) # set VERSION in project()
+ cmake_policy(SET CMP0042 NEW) # enable MACOSX_RPATH by default
+ 
+ include(GNUInstallDirs)
++if(BUILD_TESTING)
+ add_subdirectory(test)
+ add_subdirectory(demo)
+ enable_testing ()
++endif()
+ 
+ if (MSVC)
+   add_compile_options(/W4)
+@@ -47,6 +49,8 @@ set(LIBINCLUDE
+   iir/State.h
+   iir/Types.h)
+ 
++if(BUILD_SHARED_LIBS)
++
+ add_library(iir SHARED ${LIBSRC})
+ add_library(iir::iir ALIAS iir)
+ 
+@@ -73,6 +77,8 @@ install(TARGETS iir EXPORT iir-targets
+ 
+ configure_file(iir.pc.in iir.pc @ONLY)
+ 
++else(BUILD_SHARED_LIBS)
++
+ add_library(iir_static STATIC ${LIBSRC})
+ add_library(iir::iir_static ALIAS iir_static)
+ 
+@@ -97,6 +103,8 @@ install(TARGETS iir_static EXPORT iir-targets
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iir)
+ 
++endif(BUILD_SHARED_LIBS)
++
+ install(EXPORT iir-targets
+   DESTINATION lib/cmake/iir
+   NAMESPACE iir::

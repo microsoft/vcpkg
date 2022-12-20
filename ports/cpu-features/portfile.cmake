@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF a8397ba4591237c17d18e4acc091f5f3ebe7391e # 0.6.0
     SHA512 71a583e8190699d6df3dfa2857886089265cdfbcb916d9828a3611a1d6d23487464d6448b900b49637f015dd7d4e18bb206e0249af0932928f8ced13a081d42b
     HEAD_REF master
-    PATCHES make_list_cpu_features_optional.patch
+    PATCHES
+        make_list_cpu_features_optional.patch
+        windows-x86-fix.patch
 )
 
 # If feature "tools" is not specified, disable building/exporting executable targets.

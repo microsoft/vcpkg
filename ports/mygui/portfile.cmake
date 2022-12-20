@@ -10,6 +10,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-generation.patch
+        Use-vcpkg-sdl2.patch
+        Install-tools.patch
+        fix-osx-build.patch # from https://github.com/MyGUI/mygui/pull/244
 )
 
 if("opengl" IN_LIST FEATURES)
@@ -18,18 +21,23 @@ else()
     set(MYGUI_RENDERSYSTEM 1)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools MYGUI_BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMYGUI_STATIC=TRUE
         -DMYGUI_BUILD_DEMOS=FALSE
         -DMYGUI_BUILD_PLUGINS=TRUE
-        -DMYGUI_BUILD_TOOLS=FALSE
         -DMYGUI_BUILD_UNITTESTS=FALSE
         -DMYGUI_BUILD_TEST_APP=FALSE
         -DMYGUI_BUILD_WRAPPER=FALSE
         -DMYGUI_BUILD_DOCS=FALSE
         -DMYGUI_RENDERSYSTEM=${MYGUI_RENDERSYSTEM}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -40,6 +48,10 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_fixup_pkgconfig()
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES FontEditor ImageEditor LayoutEditor SkinEditor AUTO_CLEAN)
+endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

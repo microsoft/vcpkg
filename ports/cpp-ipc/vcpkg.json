@@ -1,7 +1,6 @@
 {
   "name": "cpp-ipc",
-  "version": "1.0.1",
-  "port-version": 1,
+  "version": "1.2.0",
   "description": "C++ IPC Library: A high-performance inter-process communication using shared memory on Linux/Windows.",
   "homepage": "https://github.com/mutouyun/cpp-ipc",
   "supports": "!osx",

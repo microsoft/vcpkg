@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF fd6908097f758ef65bd83680cf413313ad36c98d
     SHA512 c35a2e3680d3ff5c7d715752570b5f12cf9da716ef28377694e9aa079553b5c0276c51a66b342956d217e9842edd12c25af4a001fae34175a2114134ee4428ee
     HEAD_REF master
+    PATCHES
+        add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
 )
 
 if(WIN32)

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e70c4d0b..8038abee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -796,7 +796,7 @@ if(SDL2MIXER_INSTALL)
+         COMPONENT devel
+     )
+ 
+-    if(SDL2MIXER_BUILD_SHARED_LIBS)
++    if(1)
+         # Only create a .pc file for a shared SDL2_mixer
+         set(VERSION ${FULL_VERSION})
+         set(SDL_VERSION ${SDL_REQUIRED_VERSION})

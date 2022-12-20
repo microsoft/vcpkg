@@ -1,9 +1,10 @@
 {
   "name": "clfft",
   "version": "2.12.2",
-  "port-version": 4,
+  "port-version": 6,
   "description": "clFFT is an OpenCL 1.2 accelerated Fast Fourier Transform library.",
   "homepage": "https://github.com/clMathLibraries/clFFT",
+  "license": "Apache-2.0",
   "dependencies": [
     "opencl",
     {

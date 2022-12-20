@@ -1,0 +1,17 @@
+{
+  "name": "qthttpserver",
+  "version": "6.4.1",
+  "description": "Qt Extension: Qt HTTP Server",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "network"
+      ]
+    }
+  ]
+}

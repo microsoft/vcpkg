@@ -3,5 +3,6 @@
   "version-date": "2022-11-09",
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
+  "license": "MIT",
   "supports": "!osx & !uwp & (linux | (!static & !staticcrt))"
 }

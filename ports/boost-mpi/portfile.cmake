@@ -3,15 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
-    REF boost-1.78.0
-    SHA512 22037c92eb0f2a8e26b39637003b0b470d1e34f85cb6c83cb6d63d84ff9b57adcf172ff4ecf86a30d07bd89f422a4b39eb12a7e5940648f6ebb2b7af66a00f2e
+    REF boost-1.81.0
+    SHA512 48b93c0fee3b83924764ffb35586d96337b3031a7135ad2e5c0f31240efc475fe691a17aa6c6799dbbe44bde81bd850965164d5980f1302833d389db9e6e4df1
     HEAD_REF master
     PATCHES fix-build-boost_mpi_python-on-windows.patch
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-mpi requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
