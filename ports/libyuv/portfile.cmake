@@ -1,5 +1,8 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# https://github.com/microsoft/vcpkg/pull/10398
+SET(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/libyuv/libyuv
@@ -129,5 +132,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libyuv)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/libyuv-config.cmake  ${CURRENT_PACKAGES_DIR}/share/${PORT} COPYONLY)
+#configure_file(${CMAKE_CURRENT_LIST_DIR}/libyuv-config.cmake  ${CURRENT_PACKAGES_DIR}/share/${PORT} COPYONLY)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
