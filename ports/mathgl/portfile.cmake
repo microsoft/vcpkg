@@ -13,6 +13,7 @@ vcpkg_from_sourceforge(
         fix_attribute.patch
         fix_default_graph_init.patch
         fix_arma_sprintf.patch
+        fix-format-specifiers.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 
