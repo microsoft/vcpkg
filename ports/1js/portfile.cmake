@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skyrim-multiplayer/skymp
     REF de0cd797248df7ae3f252e4cf703401d5609feff
-    SHA512 0
+    SHA512 4e91cb78f85b941a42894b72df33d978132fb09945bb09ad187757f2ea687e044c88f36c283e798c8c70d154a170667ecb1eafac5236a6ae03f6640d568e4af6
     HEAD_REF main
 )
 
