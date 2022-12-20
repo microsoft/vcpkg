@@ -136,7 +136,9 @@ else()
             "${out_dir_release}/ch"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/chakracore"
         )
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/chakracore")
+        vcpkg_copy_tools(TOOL_NAMES ch
+            SEARCH_DIR "${out_dir_release}"
+        )
     endif()
 endif()
 
