@@ -15,6 +15,10 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AVCPP_ENABLE_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" AVCPP_ENABLE_SHARED)
 
+if(NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET)
+    vcpkg_add_to_path(${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
