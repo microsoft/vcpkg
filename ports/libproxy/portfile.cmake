@@ -9,6 +9,7 @@ vcpkg_from_github(
         support-windows.patch
         fix-install-py.patch
         fix-module-lib-name.patch
+        fix-missing-modman.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
@@ -38,6 +39,7 @@ vcpkg_cmake_configure(
         WITH_PYTHON3
         WITH_VALA
         MSVC_STATIC
+        WITH_GNOME3
 )
 
 vcpkg_cmake_install()

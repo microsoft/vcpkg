@@ -1,0 +1,13 @@
+diff --git a/libmodman/CMakeLists.txt b/libmodman/CMakeLists.txt
+index 8264b33..35022ca 100644
+--- a/libmodman/CMakeLists.txt
++++ b/libmodman/CMakeLists.txt
+@@ -7,7 +7,7 @@ else(WIN32)
+ endif(WIN32)
+ include_directories(${CMAKE_SOURCE_DIR})
+ 
+-add_library(modman STATIC
++add_library(modman OBJECT
+             module.hpp
+             module_manager.hpp
+             module_manager.cpp)
