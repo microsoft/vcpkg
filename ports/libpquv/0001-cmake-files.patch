@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fad7d78..20b1035 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,13 @@ project(libpquv C)
+ 
+ add_compile_options(-pedantic -Wall -Wextra)
+ 
++find_package(PostgreSQL REQUIRED)
++find_package(libuv CONFIG REQUIRED)
++
+ add_subdirectory(src)
+-enable_testing()
+-add_subdirectory(test)
++if(BUILD_TESTING)
++    enable_testing()
++    add_subdirectory(test)
++endif()
++
++install(FILES unofficial-pquv-config.cmake DESTINATION share/unofficial-pquv)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index bc32d22..672c9d2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,3 +1,10 @@
+-add_library(pquv SHARED pquv.c util.c)
+-target_link_libraries(pquv pq)
+-target_include_directories(pquv PUBLIC include)
++add_library(pquv pquv.c util.c)
++target_link_libraries(pquv PUBLIC PostgreSQL::PostgreSQL)
++target_link_libraries(pquv PUBLIC $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>)
++target_include_directories(pquv PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++)
++install(TARGETS pquv EXPORT unofficial-pquv-targets)
++install(EXPORT unofficial-pquv-targets NAMESPACE unofficial::pquv:: DESTINATION share/unofficial-pquv)
++install(FILES include/pquv.h DESTINATION include)
+diff --git a/unofficial-pquv-config.cmake b/unofficial-pquv-config.cmake
+new file mode 100644
+index 0000000..6d5f3f4
+--- /dev/null
++++ b/unofficial-pquv-config.cmake
+@@ -0,0 +1,4 @@
++include(CMakeFindDependencyMacro)
++find_dependency(PostgreSQL)
++find_dependency(libuv CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-pquv-targets.cmake")

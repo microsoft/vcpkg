@@ -1,0 +1,20 @@
+{
+  "name": "libpquv",
+  "version-date": "2017-10-30",
+  "description": "A small library combining libpq and libuv",
+  "homepage": "https://github.com/rootmos/libpquv",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    "libpq",
+    "libuv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

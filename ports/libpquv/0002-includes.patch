@@ -1,0 +1,38 @@
+diff --git a/src/include/pquv.h b/src/include/pquv.h
+index 97d219e..496ccde 100644
+--- a/src/include/pquv.h
++++ b/src/include/pquv.h
+@@ -1,7 +1,11 @@
+ #pragma once
+ 
+ #include <uv.h>
+-#include <postgresql/libpq-fe.h>
++#include <libpq-fe.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct pquv_st;
+ typedef struct pquv_st pquv_t;
+@@ -66,3 +70,7 @@ static inline void pquv_query(
+ {
+     pquv_query_params(pquv, q, 0, NULL, NULL, NULL, NULL, cb, opaque, 0);
+ }
++
++#ifdef __cplusplus
++}
++#endif
+diff --git a/src/pquv.c b/src/pquv.c
+index 0a59965..50c28f2 100644
+--- a/src/pquv.c
++++ b/src/pquv.c
+@@ -1,7 +1,7 @@
+ #include <pquv.h>
+ #include "util.h"
+ 
+-#include <postgresql/libpq-fe.h>
++#include <libpq-fe.h>
+ #include <uv.h>
+ 
+ #include <string.h>
