@@ -1,9 +1,7 @@
 {
-    "name": "1js",
-    "version-date": "2022-12-20",
-    "license": "MIT",
-    "description": "ChakraCore wrapper to simplify embedding JavaScript in C++",
-    "supports": "windows | linux",
-    "dependencies": [
-    ]
+  "name": "1js",
+  "version-date": "2022-12-20",
+  "description": "ChakraCore wrapper to simplify embedding JavaScript in C++",
+  "license": "MIT",
+  "supports": "windows | linux"
 }

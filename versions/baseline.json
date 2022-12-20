@@ -1,5 +1,9 @@
 {
   "default": {
+    "1js": {
+      "baseline": "2022-12-20",
+      "port-version": 0
+    },
     "3fd": {
       "baseline": "2.6.3",
       "port-version": 2
