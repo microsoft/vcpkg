@@ -3,7 +3,7 @@
   "version-date": "2022-12-20",
   "description": "ChakraCore wrapper to simplify embedding JavaScript in C++",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "!osx & !uwp & (linux | (!static & !staticcrt))",
   "dependencies": [
     "chakracore"
   ]
