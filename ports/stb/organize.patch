@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..7a3ec00
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,26 @@
++cmake_minimum_required(VERSION 3.19)
++project(stb)
++
++# copy the headers we're using
++list(APPEND HEADERS stb_image.h stb_image_write.h stb_perlin.h)
++foreach (header IN LISTS HEADERS)
++    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${header}" "${CMAKE_CURRENT_SOURCE_DIR}/include/${header}" COPYONLY)
++endforeach()
++
++set(TARGET stb)
++file(GLOB SRCS src/*.cpp)
++file(GLOB HDRS include/*.h)
++
++add_library(${TARGET} STATIC ${HDRS} ${SRCS})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++)
++
++install(TARGETS ${TARGET}
++    EXPORT "${TARGET}Config"
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++    INCLUDES DESTINATION include)
++install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
++install(EXPORT "${TARGET}Config" DESTINATION "share/${TARGET}")
+diff --git a/src/stb.cpp b/src/stb.cpp
+new file mode 100644
+index 0000000..08bf6ef
+--- /dev/null
++++ b/src/stb.cpp
+@@ -0,0 +1,5 @@
++#define STB_IMAGE_IMPLEMENTATION
++#include <stb_image.h>
++
++#define STB_IMAGE_WRITE_IMPLEMENTATION
++#include <stb_image_write.h>
