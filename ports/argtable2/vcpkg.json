@@ -3,8 +3,8 @@
   "version": "2.13",
   "port-version": 10,
   "description": "Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss.",
-   "license": "LGPL-2.0-only",
   "homepage": "http://argtable.sourceforge.net",
+  "license": "LGPL-2.0-only",
   "supports": "!uwp",
   "dependencies": [
     {
