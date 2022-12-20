@@ -50,7 +50,7 @@ vcpkg_configure_make(
         ${CONFIGURE_OPTIONS}
 )
 
-if(DEFINED VCPKG_TARGET_IS_WINDOWS OR DEFINED VCPKG_TARGET_IS_UWP OR DEFINED VCPKG_TARGET_IS_MINGW)
+if(VCPKG_TARGET_IS_WINDOWS)
     function(patch_config_h build_type_suffix)
         set(filename "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_type_suffix}/config.h")
         file(READ "${filename}" config_h_contents)
@@ -64,7 +64,6 @@ if(DEFINED VCPKG_TARGET_IS_WINDOWS OR DEFINED VCPKG_TARGET_IS_UWP OR DEFINED VCP
     patch_config_h("rel")
 endif()
 
-vcpkg_build_make()
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()

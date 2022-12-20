@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "glpk",
   "version": "5.0",
-  "maintainers": "Fabio A. Correa Duran https://github.com/facorread/vcpkg-contrib",
+  "maintainers": "Fabio A. Correa Duran",
   "description": [
     "The GNU Linear Programming Kit (GLPK) solves large-scale linear programming (LP), mixed integer programming (MIP), and related problems.",
     "GLPK includes the following main components:",
@@ -16,21 +16,7 @@
   "homepage": "https://www.gnu.org/software/glpk/",
   "documentation": "https://www.gnu.org/software/glpk/#documentation",
   "license": "GPL-3.0-or-later",
-  "default-features": [
-    "default-features"
-  ],
   "features": {
-    "default-features": {
-      "description": "Default set of features",
-      "dependencies": [
-        {
-          "name": "glpk",
-          "features": [
-            "gmp"
-          ]
-        }
-      ]
-    },
     "dl": {
       "description": "Enable shared library support",
       "dependencies": [
