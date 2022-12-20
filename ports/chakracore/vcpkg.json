@@ -4,5 +4,15 @@
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
   "license": "MIT",
-  "supports": "!osx & !uwp & (linux | (!static & !staticcrt))"
+  "supports": "!osx & !uwp & (linux | (!static & !staticcrt))",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -24,8 +24,9 @@ file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
 if(WIN32)
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${BUILDTREE_PATH}/Build/Chakra.Core.sln"
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${BUILDTREE_PATH}"
+        PROJECT_SUBPATH "Build/Chakra.Core.sln"
         OPTIONS
             "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
@@ -108,7 +109,9 @@ if(WIN32)
             "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/chakracore"
         )
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/chakracore")
+        vcpkg_copy_tools(TOOL_NAMES ch rl GCStress
+            SEARCH_DIR "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release"
+        )
     endif()
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
