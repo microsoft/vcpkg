@@ -5,7 +5,7 @@
   "description": "Manage apps of iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-only",
-  "supports": "windows & !arm64",
+  "supports": "windows & !arm64 & !static",
   "dependencies": [
     "libimobiledevice",
     "libzip"
