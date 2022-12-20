@@ -3,12 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF 79234726053c45eede688400aa219fdec0810bd8
-    SHA512 634ad75d70f04cce220bfa9f6d13e8ddb293e8403ebd195e2c8b522b751a1a268021feea7843038037ed6d1b354b2e470ad565966a117613cf5371073afda9a4
+    REF a0fc0b732f44fa5242593ab488c8b2b3076a5f76  #v4.0.0
+    SHA512 74c2f9ddbcdd93795185be8ccffda1b34fd75cb4f7458804a7faa97b6a8ce244c7b2ba9e1d918e685bf4dbde1ffc7be05232b3237acb6e3e54d822516633c837
     HEAD_REF main
     PATCHES
         gsl.patch
         shared-zstd.patch
+        fix-find_package.patch
 )
 
 vcpkg_replace_string(
@@ -28,7 +29,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DSEAL_BUILD_DEPS=OFF"
@@ -40,7 +41,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/SEAL-3.7")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/SEAL-4.0")
 
 vcpkg_fixup_pkgconfig()
 

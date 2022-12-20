@@ -1,0 +1,42 @@
+diff --git a/gl/fcntl.c b/gl/fcntl.c
+index f9753c4..ae71a4a 100644
+--- a/gl/fcntl.c
++++ b/gl/fcntl.c
+@@ -229,12 +229,17 @@ fcntl (int fd, int action, /* arg */...)
+       {
+ # if defined _WIN32 && ! defined __CYGWIN__
+         HANDLE handle = (HANDLE) _get_osfhandle (fd);
++#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+         DWORD flags;
+         if (handle == INVALID_HANDLE_VALUE
+             || GetHandleInformation (handle, &flags) == 0)
+           errno = EBADF;
+         else
+           result = (flags & HANDLE_FLAG_INHERIT) ? 0 : FD_CLOEXEC;
++#  else
++        if (handle == INVALID_HANDLE_VALUE)
++          errno = EBADF;
++#  endif
+ # else /* !W32 */
+         /* Use dup2 to reject invalid file descriptors.  No way to
+            access this information, so punt.  */
+diff --git a/gl/stat.c b/gl/stat.c
+index adb6123..5afefb2 100644
+--- a/gl/stat.c
++++ b/gl/stat.c
+@@ -194,6 +194,7 @@ rpl_stat (char const *name, struct stat *buf)
+   {
+     int ret;
+ 
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+     {
+       /* Approach based on the file.  */
+ 
+@@ -219,6 +220,7 @@ rpl_stat (char const *name, struct stat *buf)
+           goto done;
+         }
+     }
++#endif
+ 
+     /* Test for root and UNC root directories.  */
+     if ((rlen == drive_prefix_len + 1 && ISSLASH (rname[drive_prefix_len]))

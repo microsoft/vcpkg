@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
-    REF  a3517dcc6de9bae1193075b7112aa7db97b39dcc #v1.50.9
-    SHA512 d09bc672e65897f5a3deae45f6e7f91844fb6d72c43944d3480a4b9e84b43fcb0e701b0b84d864b15d8520287f6d0d02b489a42775df6746ffe6673588f8f05c
+    REF  3d3f165e77178b630d7dc2b733e64af513c99f5f #v1.50.12
+    SHA512 02ddcd0be05d6c8a84f186e6ea5c64019e34922480769f9b8e6e6883dd9d30b7d473681b6dbdf84c5a7e592f0d7bf37984adf2c9b40f37d6207b4bf40bdeaa7b
     HEAD_REF master # branch name
 ) 
 
