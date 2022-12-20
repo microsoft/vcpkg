@@ -253,7 +253,7 @@
       "port-version": 0
     },
     "aubio": {
-      "baseline": "0.4.9-26Jan22",
+      "baseline": "2022-01-26",
       "port-version": 0
     },
     "audiofile": {
