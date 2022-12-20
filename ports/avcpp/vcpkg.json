@@ -18,9 +18,7 @@
         "swscale"
       ]
     },
-    {
-      "name": "pkgconf"
-    },
+    "pkgconf",
     {
       "name": "vcpkg-cmake",
       "host": true
