@@ -19,6 +19,9 @@
       ]
     },
     {
+      "name": "pkgconf"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
