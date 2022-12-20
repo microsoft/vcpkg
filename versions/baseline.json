@@ -22,7 +22,7 @@
     },
     "ace": {
       "baseline": "7.0.10",
-      "port-version": 0
+      "port-version": 1
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -350,7 +350,7 @@
     },
     "azure-core-cpp": {
       "baseline": "1.7.2",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.3",
@@ -1205,7 +1205,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.12.1",
+      "baseline": "1.12.2",
       "port-version": 0
     },
     "bshoshany-thread-pool": {
@@ -1382,7 +1382,7 @@
     },
     "cgns": {
       "baseline": "4.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -1618,7 +1618,7 @@
     },
     "cpp-httplib": {
       "baseline": "0.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "cpp-ipc": {
       "baseline": "1.2.0",
@@ -1698,7 +1698,7 @@
     },
     "cpputest": {
       "baseline": "2019-9-16",
-      "port-version": 2
+      "port-version": 3
     },
     "cppwinrt": {
       "baseline": "2.0.220929.3",
@@ -1726,7 +1726,7 @@
     },
     "cpuinfo": {
       "baseline": "2022-07-19",
-      "port-version": 0
+      "port-version": 1
     },
     "cr": {
       "baseline": "2020-04-26",
@@ -2149,7 +2149,7 @@
       "port-version": 2
     },
     "elfio": {
-      "baseline": "3.10",
+      "baseline": "3.11",
       "port-version": 0
     },
     "elfutils": {
@@ -2202,11 +2202,11 @@
     },
     "exiv2": {
       "baseline": "0.27.5",
-      "port-version": 2
+      "port-version": 3
     },
     "expat": {
       "baseline": "2.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "expected-lite": {
       "baseline": "0.6.2",
@@ -2370,7 +2370,7 @@
     },
     "fltk": {
       "baseline": "1.3.8",
-      "port-version": 2
+      "port-version": 3
     },
     "fluidlite": {
       "baseline": "2020-08-27",
@@ -2553,7 +2553,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.6.0",
+      "baseline": "3.6.1",
       "port-version": 0
     },
     "gdcm": {
@@ -2718,7 +2718,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2953,7 +2953,7 @@
       "port-version": 1
     },
     "hwloc": {
-      "baseline": "2.7.1",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "hyperscan": {
@@ -3062,7 +3062,7 @@
     },
     "igraph": {
       "baseline": "0.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "iir1": {
       "baseline": "1.9.1",
@@ -4246,7 +4246,7 @@
     },
     "libspatialindex": {
       "baseline": "1.9.3",
-      "port-version": 1
+      "port-version": 3
     },
     "libspatialite": {
       "baseline": "5.0.1",
@@ -5590,7 +5590,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -5694,7 +5694,7 @@
     },
     "pangolin": {
       "baseline": "0.6",
-      "port-version": 3
+      "port-version": 4
     },
     "pangomm": {
       "baseline": "2.50.1",
@@ -5730,7 +5730,7 @@
     },
     "pcapplusplus": {
       "baseline": "22.05",
-      "port-version": 1
+      "port-version": 2
     },
     "pcg": {
       "baseline": "2021-04-06",
@@ -5798,7 +5798,7 @@
     },
     "physx": {
       "baseline": "4.1.2",
-      "port-version": 4
+      "port-version": 5
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -5869,7 +5869,7 @@
       "port-version": 6
     },
     "plog": {
-      "baseline": "1.1.8",
+      "baseline": "1.1.9",
       "port-version": 0
     },
     "plplot": {
@@ -5990,7 +5990,7 @@
     },
     "protobuf-c": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "protopuf": {
       "baseline": "2.2.1",
@@ -7453,8 +7453,8 @@
       "port-version": 0
     },
     "tiff": {
-      "baseline": "4.4.0",
-      "port-version": 1
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -7962,7 +7962,7 @@
     },
     "wampcc": {
       "baseline": "2019-09-04",
-      "port-version": 3
+      "port-version": 4
     },
     "wangle": {
       "baseline": "2022.03.21.00",
@@ -8309,7 +8309,7 @@
       "port-version": 3
     },
     "zint": {
-      "baseline": "2.11.1",
+      "baseline": "2.12.0",
       "port-version": 0
     },
     "zkpp": {
