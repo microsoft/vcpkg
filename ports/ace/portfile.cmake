@@ -335,7 +335,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -349,7 +349,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -372,7 +372,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -386,7 +386,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -400,7 +400,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-rel
     )
   endif()
