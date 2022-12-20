@@ -1,6 +1,6 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO faburaya/3fd
+    REPO skyrim-multiplayer/skymp
     REF de0cd797248df7ae3f252e4cf703401d5609feff
     SHA512 0
     HEAD_REF main
