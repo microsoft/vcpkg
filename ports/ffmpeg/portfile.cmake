@@ -117,12 +117,6 @@ if("version3" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-version3")
 endif()
 
-if("amf" IN_LIST FEATURES)
-    # Do nothing
-else()
-    set(OPTIONS "${OPTIONS} --disable-amf")
-endif()
-
 if("ffmpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffmpeg")
 else()
@@ -139,10 +133,6 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
-endif()
-
-if (NOT "alsa" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
@@ -211,6 +201,18 @@ endif()
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
+endif()
+
+if (NOT "alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-alsa")
+else()
+    set(OPTIONS "${OPTIONS} --disable-alsa")
+endif()
+
+if("amf" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-amf")
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("aom" IN_LIST FEATURES)
