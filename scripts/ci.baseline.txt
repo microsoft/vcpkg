@@ -981,8 +981,6 @@ shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
 simbody:arm64-windows=fail
-skia:arm-uwp=fail
-skia:x64-uwp=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
@@ -1182,6 +1180,8 @@ workflow:arm-uwp=fail
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
 
+zeroc-ice:x86-windows=fail
+zeroc-ice:x64-windows=fail
 # ZeroC doesn't provide ARM tagets in project files.
 zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
