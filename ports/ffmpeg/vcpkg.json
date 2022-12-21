@@ -254,6 +254,12 @@
         "alsa"
       ]
     },
+    "amf": {
+      "description": "AMD AMF codec support",
+      "dependencies": [
+        "amd-amf"
+      ]
+    },
     "aom": {
       "description": "AV1 video encoding/decoding via libaom support in ffmpeg",
       "dependencies": [
@@ -510,6 +516,12 @@
             "gpl"
           ]
         }
+      ]
+    },
+    "qsv": {
+      "description": "Intel QSV Codec",
+      "dependencies": [
+        "mfx-dispatch"
       ]
     },
     "sdl2": {

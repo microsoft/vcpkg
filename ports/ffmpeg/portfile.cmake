@@ -117,6 +117,12 @@ if("version3" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-version3")
 endif()
 
+if("amf" IN_LIST FEATURES)
+    # Do nothing
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
+endif()
+
 if("ffmpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffmpeg")
 else()
@@ -433,6 +439,12 @@ if ("srt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsrt")
 else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
+endif()
+
+if ("qsv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
 set(OPTIONS_CROSS " --enable-cross-compile")
