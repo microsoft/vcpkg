@@ -2,13 +2,12 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF 7846b0a677f8d3ce72486125fa281e92ac9970e8
-    SHA512 3b960e410cf812a94938cd31c317f9a8d4b2d5b3e148efb108f6dad86ce8c9553c0fe3b32dd68d15e3d5ada9db07b39f9e0b13906edf6ed1bb1cec4f137bca71
+    REF f507d167f1755b7eaea09fb1a44d29aab828b6d1
+    SHA512 2ac3dcab31111f608a3fe33dde492c9653ad2bd49a792373acdd03d2787e1a4ef70eeb7a3d47cf67eefd43aee2ab75ec50b36cdcd124445ca206de924abb6021
     HEAD_REF master
     PATCHES 
         disable-docs.patch
         fix_cmakelist.patch
-        fix-uwp.patch
 )
 
 if (VCPKG_TARGET_IS_UWP)
@@ -33,7 +32,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_C14N=ON
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON 
-        -DLIBXML2_WITH_DOCB=ON
         -DLIBXML2_WITH_ICONV=ON
         -DLIBXML2_WITH_ISO8859X=ON 
         -DLIBXML2_WITH_ZLIB=ON
@@ -64,7 +62,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libxml2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
