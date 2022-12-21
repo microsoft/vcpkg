@@ -5,7 +5,7 @@
   "description": "A Discord bot library written in C++ using custom asynchronous coroutines.",
   "homepage": "https://discordcoreapi.com",
   "license": "LGPL-2.1-or-later",
-  "supports": "(windows & x64 & !static & !uwp) | (linux & x64)",
+  "supports": "(windows & x64 & !static) | (linux & x64)",
   "dependencies": [
     "ffmpeg",
     "libsodium",
