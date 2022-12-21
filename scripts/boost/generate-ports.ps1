@@ -28,6 +28,7 @@ $portVersions = @{
     "boost-atomic" = 1;
     "boost-modular-build-helper" = 1;
     "boost-random" = 1;
+    "boost-uninstall" = 1;
 }
 
 $portData = @{
