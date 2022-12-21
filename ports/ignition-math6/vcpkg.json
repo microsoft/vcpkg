@@ -1,6 +1,6 @@
 {
   "name": "ignition-math6",
-  "version": "6.13.0",
+  "version": "6.9.2",
   "description": "Math API for robotic applications",
   "homepage": "https://ignitionrobotics.org/libs/math",
   "license": null,
@@ -10,7 +10,6 @@
     {
       "name": "ignition-modularscripts",
       "host": true
-    },
-    "python3"
+    }
   ]
 }
