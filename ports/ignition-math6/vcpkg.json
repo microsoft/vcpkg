@@ -6,6 +6,7 @@
   "license": null,
   "dependencies": [
     "eigen3",
+    "python3",
     "ignition-cmake2",
     {
       "name": "ignition-modularscripts",
