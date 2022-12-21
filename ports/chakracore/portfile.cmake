@@ -32,6 +32,13 @@ if(WIN32)
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
     )
+    file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+    foreach(file ${LIB_FILES} ${DEBUG_LIB_FILES})
+        if(NOT file MATCHES "ChakraCore.lib")
+            file(REMOVE ${file})
+        endif()
+    endforeach()
 else()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(CHAKRACORE_TARGET_ARCH amd64)
