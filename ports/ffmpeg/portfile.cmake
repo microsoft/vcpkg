@@ -203,7 +203,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
 endif()
 
-if (NOT "alsa" IN_LIST FEATURES)
+if ("alsa" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-alsa")
 else()
     set(OPTIONS "${OPTIONS} --disable-alsa")
