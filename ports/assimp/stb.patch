@@ -1,0 +1,11 @@
+diff --git a/code/Common/Assimp.cpp b/code/Common/Assimp.cpp
+index e3b39c349..126289651 100644
+--- a/code/Common/Assimp.cpp
++++ b/code/Common/Assimp.cpp
+@@ -1289,6 +1289,5 @@ ASSIMP_API void aiQuaternionInterpolate(
+ #   ifdef ASSIMP_USE_STB_IMAGE_STATIC
+ #       define STB_IMAGE_STATIC
+ #   endif
+-#   define STB_IMAGE_IMPLEMENTATION
+ #   include "Common/StbCommon.h"
+ #endif

@@ -105,7 +105,7 @@ index 6551dcb..0796448 100644
 +    find_dependency(poly2tri CONFIG)
 +    #find_dependency(polyclipping  CONFIG)
 +    find_dependency(RapidJSON CONFIG)
-+    find_dependency(Stb MODULE)
++    find_dependency(Stb CONFIG)
 +    find_dependency(utf8cpp CONFIG)
 +    find_dependency(ZLIB)
 +endif()
