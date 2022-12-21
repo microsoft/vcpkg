@@ -3021,7 +3021,7 @@
       "port-version": 3
     },
     "ignition-math6": {
-      "baseline": "6.13.0",
+      "baseline": "6.9.2",
       "port-version": 0
     },
     "ignition-modularscripts": {
