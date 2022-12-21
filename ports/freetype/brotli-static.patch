@@ -2,7 +2,7 @@ diff --git a/builds/cmake/FindBrotliDec.cmake b/builds/cmake/FindBrotliDec.cmake
 index 46356b1fd..ed4cc2409 100644
 --- a/builds/cmake/FindBrotliDec.cmake
 +++ b/builds/cmake/FindBrotliDec.cmake
-@@ -35,10 +35,17 @@ find_path(BROTLIDEC_INCLUDE_DIRS
+@@ -35,10 +35,19 @@ find_path(BROTLIDEC_INCLUDE_DIRS
    PATH_SUFFIXES brotli)
  
  find_library(BROTLIDEC_LIBRARIES
@@ -11,13 +11,15 @@ index 46356b1fd..ed4cc2409 100644
    HINTS ${PC_BROTLIDEC_LIBDIR}
          ${PC_BROTLIDEC_LIBRARY_DIRS})
  
-+if(BROTLIDEC_LIBRARIES MATCHES "-static")
++get_filename_component(z_vcpkg_freetype_brotlidec_name "${BROTLIDEC_LIBRARIES}" NAME)
++if(z_vcpkg_freetype_brotlidec_name MATCHES "-static")
 +  find_library(BROTLICOMMON_LIBRARIES
 +    NAMES brotlicommon-static
 +    HINTS ${PC_BROTLIDEC_LIBDIR}
 +          ${PC_BROTLIDEC_LIBRARY_DIRS})
-+  set(BROTLIDEC_LIBRARIES ${BROTLIDEC_LIBRARIES} ${BROTLICOMMON_LIBRARIES})
++  set(BROTLIDEC_LIBRARIES "${BROTLIDEC_LIBRARIES};${BROTLICOMMON_LIBRARIES}")
 +endif()
++unset(z_vcpkg_freetype_brotlidec_name)
  
  include(FindPackageHandleStandardArgs)
  find_package_handle_standard_args(

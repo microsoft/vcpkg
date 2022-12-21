@@ -3,7 +3,7 @@ project(libimobiledevice C)
 
 # find dependencies
 find_library(libplist NAMES plist plist-2.0 libplist libplist-2.0 REQUIRED)
-find_library(libusbmuxd libusbmuxd REQUIRED)
+find_library(libusbmuxd NAMES usbmuxd libusbmuxd REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_path(dirent_INCLUDE_DIR dirent.h)
 if (WIN32)
@@ -20,13 +20,15 @@ file(GLOB_RECURSE IMOBDEV_PRIVATE_HDR src/*.h)
 file(GLOB_RECURSE IMOBDEV_SRC src/*.c)
 
 add_library(libimobiledevice ${IMOBDEV_SRC} ${IMOBDEV_PUBLIC_HDR} ${IMOBDEV_PUBLIC_SUB_HDR} ${IMOBDEV_PRIVATE_HDR} ${IMOBDEV_COMMON_HDR} ${IMOBDEV_COMMON_SRC})
-set_target_properties(libimobiledevice PROPERTIES OUTPUT_NAME libimobiledevice-1.0)
+set_target_properties(libimobiledevice PROPERTIES OUTPUT_NAME imobiledevice-1.0)
 target_include_directories(libimobiledevice PRIVATE ${dirent_INCLUDE_DIR} include .)
 target_compile_definitions(libimobiledevice PRIVATE -DHAVE_OPENSSL)
 target_link_libraries(libimobiledevice PRIVATE ${libplist} ${libusbmuxd} ${getopt} OpenSSL::SSL OpenSSL::Crypto)
 if (WIN32)
     target_link_libraries(libimobiledevice PRIVATE Ws2_32)
-else()
+endif()
+if (UNIX)
+    target_compile_definitions(libimobiledevice PRIVATE -DHAVE_STPCPY -DHAVE_VASPRINTF -DHAVE_ASPRINTF -DHAVE_GETIFADDRS)
 endif()
 
 # install

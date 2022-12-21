@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/vmd
-    REF boost-1.80.0
-    SHA512 cf6c9c3684e14225750669413ac2f538ebc207fc6ca7180a10a371b0d03de4e3ac570648d2b30e7f534a8f5c49499e9a03866cbf0613cdf25f1ff7ce4a7e1cac
+    REF boost-1.81.0
+    SHA512 8d4ff82b0b3cb575a2f6c7a01f93bcc8c9dbc15593842180c74f9f4cced671c91439a31f5d6cda45ff17b3e80f8ba5881b5e02f704ffb3592b42e458187fdd52
     HEAD_REF master
 )
 
