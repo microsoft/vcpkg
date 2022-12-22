@@ -242,11 +242,14 @@ function(vcpkg_configure_cmake)
         "-DZ_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
-        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     if(NOT "${generator_arch}" STREQUAL "")
         vcpkg_list(APPEND arg_OPTIONS "-A${generator_arch}")
+    endif()
+
+    if(NOT "-DFETCHCONTENT_FULLY_DISCONNECTED=OFF" IN_LIST arg_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
     endif()
 
     # Sets configuration variables for macOS builds
