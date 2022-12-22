@@ -50,6 +50,8 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
     endif()
 
     set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
+    cmake_path(NATIVE_PATH _LIBRARY_REL "${_LIBRARY_REL}")
+    cmake_path(NATIVE_PATH _LIBRARY_DEB "${_LIBRARY_DEB}")
 
     file(REMOVE "${OUTPUT_FILE}")
     configure_file("${INPUT_FILE}" "${OUTPUT_FILE}" @ONLY)
