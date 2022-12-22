@@ -1,51 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 02adc2e..835e2ab 100644
+index 02adc2e..ccd5492 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -110,38 +110,9 @@ if(NATS_BUILD_STREAMING)
+@@ -110,6 +110,11 @@ if(NATS_BUILD_STREAMING)
  endif(NATS_BUILD_STREAMING)
  
  if(NATS_BUILD_USE_SODIUM)
--  IF(DEFINED ENV{NATS_SODIUM_DIR})
--    SET(NATS_SODIUM_DIR "$ENV{NATS_SODIUM_DIR}")
--  ENDIF()
--  FIND_PATH(
--    NATS_SODIUM_INCLUDE_DIR
--      sodium.h
--    HINTS
--      ${NATS_SODIUM_DIR}
--  )
--  FIND_LIBRARY(NATS_SODIUM_LIBRARY
--    NAMES libsodium.so libsodium.dylib libsodium.a libsodium.lib libsodium.dll
--    HINTS ${NATS_SODIUM_DIR}
--  )
--  FIND_PACKAGE_HANDLE_STANDARD_ARGS(libsodium DEFAULT_MSG
--    NATS_SODIUM_INCLUDE_DIR
--    NATS_SODIUM_LIBRARY
--  )
--  IF(libsodium_FOUND)
--    SET(NATS_SODIUM_INCLUDE_DIRS ${NATS_SODIUM_INCLUDE_DIR})
--    SET(NATS_SODIUM_LIBRARIES ${NATS_SODIUM_LIBRARY})
--    MARK_AS_ADVANCED(
--      NATS_SODIUM_LIBRARY
--      NATS_SODIUM_INCLUDE_DIR
--      NATS_SODIUM_DIR
--    )
--  ELSE()
--    SET(NATS_SODIUM_DIR "" CACHE STRING
--      "An optional hint to a directory for finding `libsodium`"
--    )
--    MESSAGE(FATAL_ERROR
--      "Could not find libsodium package. Check build instructions: https://github.com/nats-io/nats.c#building-with-libsodium")
--  ENDIF()
-+  find_package(unofficial-sodium CONFIG REQUIRED)
++  find_package(libsodium NAMES unofficial-sodium CONFIG REQUIRED)
 +  set(NATS_SODIUM_INCLUDE_DIRS "")
 +  set(NATS_SODIUM_LIBRARIES unofficial-sodium::sodium)
-   add_definitions(-DNATS_USE_LIBSODIUM)
- endif(NATS_BUILD_USE_SODIUM)
- 
++  add_definitions(-DNATS_USE_LIBSODIUM)
++elseif(0)
+   IF(DEFINED ENV{NATS_SODIUM_DIR})
+     SET(NATS_SODIUM_DIR "$ENV{NATS_SODIUM_DIR}")
+   ENDIF()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ea536de..ccae4b9 100644
+index ea536de..6198776 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -63,7 +63,7 @@ if(NATS_BUILD_LIB_SHARED)
@@ -53,7 +23,7 @@ index ea536de..ccae4b9 100644
    install(EXPORT cnats-targets
          NAMESPACE cnats::
 -        FILE cnats-config.cmake
-+        FILE cnatsTargets.cmake
++        FILE cnats-targets.cmake
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
  endif(NATS_BUILD_LIB_SHARED)
  
@@ -62,28 +32,28 @@ index ea536de..ccae4b9 100644
    install(EXPORT cnats-targets
          NAMESPACE cnats::
 -        FILE cnats-config.cmake
-+        FILE cnatsTargets.cmake
++        FILE cnats-targets.cmake
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
  endif(NATS_BUILD_LIB_STATIC)
  
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/cnatsConfig.cmake" INSTALL_DESTINATION ${NATS_LIBDIR}/cmake/cnats)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cnatsConfig.cmake DESTINATION ${NATS_LIBDIR}/cmake/cnats)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/cnats-config.cmake" INSTALL_DESTINATION ${NATS_LIBDIR}/cmake/cnats)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cnats-config.cmake DESTINATION ${NATS_LIBDIR}/cmake/cnats)
 +
  install(FILES deprnats.h DESTINATION ${NATS_INCLUDE_DIR} RENAME nats.h)
  install(FILES nats.h status.h version.h DESTINATION ${NATS_INCLUDE_DIR}/nats)
  install(FILES adapters/libevent.h adapters/libuv.h DESTINATION ${NATS_INCLUDE_DIR}/nats/adapters)
 diff --git a/src/Config.cmake.in b/src/Config.cmake.in
 new file mode 100644
-index 0000000..ddfbd87
+index 0000000..aa1d6bf
 --- /dev/null
 +++ b/src/Config.cmake.in
 @@ -0,0 +1,8 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
-+if(@NATS_BUILD_USE_SODIUM@)
++if("@NATS_BUILD_USE_SODIUM@")
 +  find_dependency(unofficial-sodium)
 +endif()
 +
-+include ( "${CMAKE_CURRENT_LIST_DIR}/cnatsTargets.cmake" )
++include ( "${CMAKE_CURRENT_LIST_DIR}/cnats-targets.cmake" )
