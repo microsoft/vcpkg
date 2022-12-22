@@ -7825,7 +7825,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2022-10-30",
+      "baseline": "2022-12-22",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
