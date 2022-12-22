@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF d8ed9cd2869c74b00fa6f1a7603301183f5c2249 #v2022.10.31.00
-    SHA512 55040dadb8a847f0d04c37a2dce920bb456a59decebc90920831998df9671feb33daf1f4235115adcce5eb9c469b97b9d96fa7a67a5914c434ebc1efc04f4770
+    REF 4c1964ddcecd157b478166c4c360fe95ad06c042 #v2022.10.31.00
+    SHA512 5272c1145d85b682eefd72bb3d94723723e2e726a53cf91ece642c8affc378f428748c3d4fa9ae5262ee891865ff8a6914f31216d2f1699c5e6c6c0cc8ec3e7c
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -51,7 +51,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
