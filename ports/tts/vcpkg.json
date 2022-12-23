@@ -1,6 +1,6 @@
 {
   "name": "tts",
-  "version-date": "2022-02-21",
+  "version": "2.1",
   "description": "TTS - Tiny Tests System",
   "homepage": "https://github.com/jfalcou/tts",
   "documentation": "https://jfalcou.github.io/tts/",
