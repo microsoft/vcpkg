@@ -25,7 +25,7 @@ file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 if(WIN32)
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-        set(OPTIONS_WIN32 "/p:Platform=\"Win32\"")
+        set(OPTIONS_WIN32 "/p:Platform=x86") # it's x86, not Win32 in sln file
     endif()
     vcpkg_install_msbuild(
         SOURCE_PATH "${BUILDTREE_PATH}"
