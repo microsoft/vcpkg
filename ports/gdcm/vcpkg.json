@@ -9,6 +9,10 @@
     "expat",
     "openjpeg",
     {
+      "name": "getopt",
+      "platform": "windows & !mingw"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
