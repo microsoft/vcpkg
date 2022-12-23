@@ -8,11 +8,11 @@
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "expat",
-    "openjpeg",
     {
       "name": "getopt",
       "platform": "windows & !mingw"
     },
+    "openjpeg",
     {
       "name": "vcpkg-cmake",
       "host": true
