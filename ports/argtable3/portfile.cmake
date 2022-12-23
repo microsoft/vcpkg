@@ -7,9 +7,9 @@ vcpkg_from_github(
     PATCHES Fix-dependence-getopt.patch
 )
 
-set(ARGTABLE3_REPLACE_GETOPT "")
+set(ARGTABLE3_REPLACE_GETOPT ON)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-   set(ARGTABLE3_REPLACE_GETOPT 1)
+   set(ARGTABLE3_REPLACE_GETOPT OFF)
 endif()
 
 vcpkg_cmake_configure(
