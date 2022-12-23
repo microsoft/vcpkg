@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "A single-file, ANSI C, command-line parsing library that parses GNU-style command-line options",
   "homepage": "https://www.argtable.org/",
-  "license": "BSD-2-Clause-FreeBSD",
+  "license": "BSD-2-Clause-NetBSD",
   "dependencies": [
     {
       "name": "getopt",
