@@ -814,7 +814,6 @@ ptc-print:arm64-windows=skip
 ptc-print:arm-uwp=skip
 ptc-print:x64-linux=skip
 ptc-print:x64-osx=skip
-ptc-print:arm64-osx=skip
 ptc-print:x64-uwp=skip
 ptc-print:x64-windows=skip
 ptc-print:x64-windows-static=skip
