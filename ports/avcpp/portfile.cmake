@@ -6,7 +6,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO h4tr3d/avcpp
-    REF v2.1.0
+    REF "v${VERSION}"
     SHA512 1e66afcf9a1f1085001aab9eb270cbbc6930cc42e60567300676d220120c421c44d24c7aeccb0b5c3ebd9de574ca1efbc67a29c681e3e11a796c32cc370069e4
     HEAD_REF master
     PATCHES
