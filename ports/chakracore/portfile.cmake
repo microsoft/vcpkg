@@ -25,7 +25,7 @@ file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 if(WIN32)
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-        set(OPTIONS_WIN32 "/p:Platform=x86") # it's x86, not Win32 in sln file
+        set(PLATFORM_ARG PLATFORM x86) # it's x86, not Win32 in sln file
     endif()
     vcpkg_install_msbuild(
         SOURCE_PATH "${BUILDTREE_PATH}"
@@ -34,7 +34,7 @@ if(WIN32)
             "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
-            ${OPTIONS_WIN32}
+        ${PLATFORM_ARG}
     )
     file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
