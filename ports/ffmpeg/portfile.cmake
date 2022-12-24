@@ -26,6 +26,7 @@ vcpkg_from_github(
         0020-fix-aarch64-libswscale.patch
         0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
         0023-fix-qsv-init.patch # remove in next version (5.x)
+        0024-remove-amf-trash-code.patch # 1000% Speed up h264_amf / hevc_amf
 )
 
 if (SOURCE_PATH MATCHES " ")

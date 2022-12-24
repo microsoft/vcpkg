@@ -1,0 +1,45 @@
+Subject: [PATCH] remove trash
+---
+Index: libavcodec/amfenc.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/libavcodec/amfenc.c b/libavcodec/amfenc.c
+--- a/libavcodec/amfenc.c	(revision 4bc4cafaef8a55462138d7b6f7579c1522de26dc)
++++ b/libavcodec/amfenc.c	(revision 4bf273b7b0be19ea55ee81c7f4f5925452e44789)
+@@ -671,18 +671,8 @@
+         }
+
+         if (hw_surface) {
+-            AMFBuffer *frame_ref_storage_buffer;
+-
+             // input HW surfaces can be vertically aligned by 16; tell AMF the real size
+             surface->pVtbl->SetCrop(surface, 0, 0, frame->width, frame->height);
+-
+-            frame_ref_storage_buffer = amf_create_buffer_with_frame_ref(frame, ctx->context);
+-            AMF_RETURN_IF_FALSE(ctx, frame_ref_storage_buffer != NULL, AVERROR(ENOMEM), "create_buffer_with_frame_ref() returned NULL\n");
+-
+-            res = amf_set_property_buffer(surface, L"av_frame_ref", frame_ref_storage_buffer);
+-            AMF_RETURN_IF_FALSE(ctx, res == AMF_OK, AVERROR_UNKNOWN, "SetProperty failed for \"av_frame_ref\" with error %d\n", res);
+-            ctx->hwsurfaces_in_queue++;
+-            frame_ref_storage_buffer->pVtbl->Release(frame_ref_storage_buffer);
+         }
+
+         surface->pVtbl->SetPts(surface, frame->pts);
+@@ -729,15 +719,6 @@
+             ret = amf_copy_buffer(avctx, avpkt, buffer);
+
+             buffer->pVtbl->Release(buffer);
+-
+-            if (data->pVtbl->HasProperty(data, L"av_frame_ref")) {
+-                AMFBuffer *frame_ref_storage_buffer;
+-                res = amf_get_property_buffer(data, L"av_frame_ref", &frame_ref_storage_buffer);
+-                AMF_RETURN_IF_FALSE(ctx, res == AMF_OK, AVERROR_UNKNOWN, "GetProperty failed for \"av_frame_ref\" with error %d\n", res);
+-                amf_release_buffer_with_frame_ref(frame_ref_storage_buffer);
+-                ctx->hwsurfaces_in_queue--;
+-            }
+-
+             data->pVtbl->Release(data);
+
+             AMF_RETURN_IF_FALSE(ctx, ret >= 0, ret, "amf_copy_buffer() failed with error %d\n", ret);
