@@ -1,7 +1,4 @@
-* Kumi provides CMake targets:
+KUMI is header-only and can be used from CMake via:
 
     find_package(kumi CONFIG REQUIRED)
-    add_executable(test_kumi your_file.cpp)
-    target_link_libraries(test_kumi PUBLIC kumi::kumi)
-
-* Using KUMI requires a C++20 compliant compiler.
+    target_link_libraries(main PRIVATE kumi::kumi)
