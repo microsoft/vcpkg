@@ -22,8 +22,7 @@
   ],
   "features": {
     "cxx": {
-      "description": "Build C++ libtiffxx library",
-      "supports": "!arm"
+      "description": "Build C++ libtiffxx library"
     },
     "jpeg": {
       "description": "Support JPEG compression in TIFF image files",
