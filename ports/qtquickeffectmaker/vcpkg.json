@@ -1,7 +1,7 @@
 {
-  "name": "qtdeclarative",
+  "name": "qtquickeffectmaker",
   "version": "6.5.0-beta1",
-  "description": "Qt Declarative (Quick 2)",
+  "description": "Qt Quick Effect Maker (QQEM) for creating and editing custom shader effects.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -9,13 +9,11 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "network",
-        "testlib"
+        "gui"
       ]
     },
     {
       "name": "qtdeclarative",
-      "host": true,
       "default-features": false
     },
     {

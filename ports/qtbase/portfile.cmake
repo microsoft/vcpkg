@@ -10,13 +10,13 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
         allow_outside_prefix.patch
-        clang-cl_source_location.patch
+        #clang-cl_source_location.patch
         config_install.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
         fix_egl_2.patch
-        clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
+        #clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
         GLIB2-static.patch # alternative is to force pkg-config
         )

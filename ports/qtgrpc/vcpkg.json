@@ -1,10 +1,14 @@
 {
-  "name": "qtdoc",
+  "name": "qtgrpc",
   "version": "6.5.0-beta1",
-  "description": "Qt Documentation",
+  "description": "Qt framework based gRPC clients and services.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "protobuf",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "default-features": false
