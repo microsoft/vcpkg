@@ -8,9 +8,12 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE release) # header-only port
 
-vcpkg_cmake_configure( SOURCE_PATH "${SOURCE_PATH}"
-                       OPTIONS -DTTS_BUILD_TEST=OFF
-                     )
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DTTS_BUILD_TEST=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+)
 
 vcpkg_cmake_install()
 

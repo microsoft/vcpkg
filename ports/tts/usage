@@ -1,7 +1,8 @@
-* TTS provides CMake targets:
+TTS provides CMake targets:
+
 
     find_package(tts CONFIG REQUIRED)
-    add_executable(test_tts your_file.cpp)
-    target_link_libraries(test_tts PUBLIC tts::tts)
+    target_link_libraries(main PRIVATE tts::tts)
+
 
 * Using TTS requires a C++20 compliant compiler.
