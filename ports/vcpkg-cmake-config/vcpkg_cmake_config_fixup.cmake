@@ -89,6 +89,7 @@ function(vcpkg_cmake_config_fixup)
         file(READ "${release_target}" contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
         string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
+        string(REGEX REPLACE "\\\${PACKAGE_PREFIX_DIR}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${PACKAGE_PREFIX_DIR}/${arg_TOOLS_PATH}/\\1" contents "${contents}") # For Qt6
         file(WRITE "${release_target}" "${contents}")
     endforeach()
 
@@ -102,6 +103,7 @@ function(vcpkg_cmake_config_fixup)
             file(READ "${debug_target}" contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
             string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
+            string(REGEX REPLACE "\\\${PACKAGE_PREFIX_DIR}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${PACKAGE_PREFIX_DIR}/${arg_TOOLS_PATH}/\\1" contents "${contents}") # For Qt6
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" contents "${contents}")
             file(WRITE "${release_share}/${debug_target_rel}" "${contents}")
