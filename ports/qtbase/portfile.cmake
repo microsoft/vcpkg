@@ -266,7 +266,11 @@ set(TOOL_NAMES
         qtpaths
         qtpaths6
         windeployqt
+        windeployqt6
         macdeployqt
+        macdeployqt6
+        androiddeployqt6
+        syncqt
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -323,6 +327,7 @@ list(APPEND other_files
                 target_qt.conf
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
+                sanitizer-testrunner.py
                 )
 
 foreach(_config debug release)
