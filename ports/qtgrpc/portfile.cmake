@@ -8,7 +8,7 @@ set(TOOL_NAMES qtprotobufgen)
 # qtprotobufgen -> protobuf WrapProtobuf
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
-                     OPTIONS
+                     CONFIGURE_OPTIONS
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                          QT_BUILD_EXAMPLES
