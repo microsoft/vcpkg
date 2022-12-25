@@ -17,6 +17,10 @@
       "default-features": false
     },
     {
+      "name": "qtquick3d",
+      "default-features": false
+    },
+    {
       "name": "qtshadertools",
       "default-features": false
     }

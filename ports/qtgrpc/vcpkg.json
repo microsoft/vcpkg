@@ -6,7 +6,16 @@
   "license": null,
   "dependencies": [
     {
+      "name": "grpc",
+      "default-features": false
+    },
+    {
       "name": "protobuf",
+      "default-features": false
+    },
+    {
+      "name": "protobuf",
+      "host": true,
       "default-features": false
     },
     {
