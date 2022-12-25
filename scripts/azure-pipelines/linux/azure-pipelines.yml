@@ -36,6 +36,7 @@ jobs:
       sudo chown `id -u` /home/agent
       sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      sudo apt-get install libxcb-cursor-dev
       exit 0
     displayName: 'Create working directories'
   - bash: ./bootstrap-vcpkg.sh
