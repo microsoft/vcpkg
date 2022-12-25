@@ -47,6 +47,9 @@ APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
+## required by xcb feature in qtbase
+APT_PACKAGES="$APT_PACKAGES libxcb-cursor-dev"
+
 ## required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 
