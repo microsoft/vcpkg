@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 e107508a41fca50845cc2494e64adaba93efb95a2fa486fc962510a8ba4b2180d93067cae9870f119e88e5e8b28a046bc2240b0b23cdd8933d1fb1a6a9668c1e
     HEAD_REF dev
     PATCHES
-        install_pkgpc.patch
+        pkgconfig.patch
         no-static-suffix.patch
 )
 
@@ -29,14 +29,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zstd)
 vcpkg_fixup_pkgconfig()
-
-file(READ "${CURRENT_PACKAGES_DIR}/share/zstd/zstdTargets.cmake" targets)
-if(targets MATCHES "-pthread")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc" " -lzstd" " -lzstd -pthread")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzstd.pc" " -lzstd" " -lzstd -pthread")
-    endif()
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

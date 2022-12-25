@@ -8350,7 +8350,7 @@
     },
     "zstd": {
       "baseline": "1.5.2",
-      "port-version": 2
+      "port-version": 3
     },
     "zstr": {
       "baseline": "1.0.4",
