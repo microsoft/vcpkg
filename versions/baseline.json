@@ -3204,6 +3204,10 @@
       "baseline": "5.3.0",
       "port-version": 1
     },
+    "jfalcou-tts": {
+      "baseline": "2.2",
+      "port-version": 0
+    },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
       "port-version": 1
@@ -7663,10 +7667,6 @@
     "ttauri": {
       "baseline": "0.5.0",
       "port-version": 2
-    },
-    "tts": {
-      "baseline": "2.2",
-      "port-version": 0
     },
     "turbobase64": {
       "baseline": "2020-01-12",
