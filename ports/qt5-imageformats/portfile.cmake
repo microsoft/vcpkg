@@ -9,7 +9,7 @@ list(APPEND CORE_OPTIONS
     -no-mng # must be explicitly disabled to not automatically pick up mng
     -verbose)
     
-x_vcpkg_pkgconfig_get_modules(PREFIX tiff MODULES libtiff-4 LIBRARIES)
+x_vcpkg_pkgconfig_get_modules(PREFIX tiff MODULES libtiff-4 LIBS)
 
 find_library(JPEG_RELEASE NAMES jpeg jpeg-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(JPEG_DEBUG NAMES jpeg jpeg-static jpegd jpeg-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -44,10 +44,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     string(APPEND WEBP_DEBUG " -pthread")
 endif()
 
-set(OPT_REL "TIFF_LIBS=${tiff_LIBRARIES_RELEASE}"
+set(OPT_REL "TIFF_LIBS=${tiff_LIBS_RELEASE}"
             "WEBP_LIBS=${WEBPDECODER_RELEASE} ${WEBPDEMUX_RELEASE} ${WEBPMUX_RELEASE} ${WEBP_RELEASE}" 
             "JASPER_LIBS=${JASPER_RELEASE} ${JPEG_RELEASE} ${ZLIB_RELEASE}") # This will still fail if LIBWEBP is installed with all available features due to the missing additional dependencies
-set(OPT_DBG "TIFF_LIBS=${tiff_LIBRARIES_DEBUG}"
+set(OPT_DBG "TIFF_LIBS=${tiff_LIBS_DEBUG}"
             "WEBP_LIBS=${WEBPDECODER_DEBUG} ${WEBPDEMUX_DEBUG} ${WEBPMUX_DEBUG} ${WEBP_DEBUG}"
             "JASPER_LIBS=${JASPER_DEBUG}  ${JPEG_DEBUG} ${ZLIB_DEBUG}")
 
