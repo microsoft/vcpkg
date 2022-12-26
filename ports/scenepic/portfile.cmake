@@ -4,13 +4,11 @@ vcpkg_from_github(
     REF v1.0.16
     SHA512 2d9dfcefa7a054cf0addb12113ab65cb7dd3a8a6f7b42f60558a5d47a6de45a9e801be3266b81358ff8ac075dd9e9e2b9369905d62f2383531d6e28e93406ac9
     HEAD_REF main
-    PATCHES
-    "find_eigen_first.patch"
 )
 
 
 
-    # Run npm install and npm run build on the cloned project    
+# Run npm install and npm run build on the cloned project    
 execute_process(
     COMMAND npm install
     WORKING_DIRECTORY ${SOURCE_PATH}
@@ -21,30 +19,14 @@ execute_process(
     )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
-    )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+)
+    
+vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(
-  INSTALL "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
