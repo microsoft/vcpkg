@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.8.3
-    SHA512 f6774f6076bae5d37d4f5bd12153bc99b97893f43fe9253fe805b5b0c2475ffe878e32f3fc7391544ea24020e59d5ae48e44e5b3a302f7280ad15b6a6820f70b
+    REF v2.8.4
+    SHA512 99119744d908104b44edaa8dadb1b0545bfc17c79c2ceb7f0e1101dde279b28238524dbdaa1d9716ba0f07a2f16d9979dc89be916527bd45f8615f79dc95e700
     HEAD_REF master
     PATCHES
         fix-bin-install-path.patch
