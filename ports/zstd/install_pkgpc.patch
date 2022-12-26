@@ -1,14 +1,13 @@
 diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
-index b12511b..6a5d563 100644
+index 5f75665..dabc9d5 100644
 --- a/build/cmake/lib/CMakeLists.txt
 +++ b/build/cmake/lib/CMakeLists.txt
-@@ -135,7 +135,8 @@ if (ZSTD_BUILD_STATIC)
+@@ -130,7 +130,7 @@ if (ZSTD_BUILD_STATIC)
              OUTPUT_NAME ${STATIC_LIBRARY_BASE_NAME})
  endif ()
  
 -if (UNIX OR MINGW)
 +if (1)
-+    list(APPEND LIBS_PRIVATE ${THREADS_LIBS})
      # pkg-config
      set(PREFIX "${CMAKE_INSTALL_PREFIX}")
      set(EXEC_PREFIX "\${prefix}")
