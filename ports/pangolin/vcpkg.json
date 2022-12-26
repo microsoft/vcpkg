@@ -94,12 +94,7 @@
       "dependencies": [
         {
           "name": "pangolin",
-          "default-features": false,
-          "features": [
-            "gui",
-            "vars",
-            "video"
-          ]
+          "default-features": false
         }
       ]
     },
