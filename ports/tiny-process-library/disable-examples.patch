@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 31cc9b2..040e642 100644
+index 8662ba3..040e642 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -42,9 +42,6 @@ if(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -8,7 +8,7 @@ index 31cc9b2..040e642 100644
  
 -  add_executable(examples examples.cpp)
 -  target_link_libraries(examples tiny-process-library)
--
+-  
    install(TARGETS tiny-process-library
      EXPORT ${PROJECT_NAME}-config
      ARCHIVE DESTINATION lib
