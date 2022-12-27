@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
-    REF aug2022
-    SHA512 babb9fb5f2ee822d21e7262e4d0a9fce8383c2415d6c59f4101b782688ea4a7818411a922c60fc88da136bf427eec4e57da3610955d4cdbf11a77b61fd9bba14
+    REF dec2022
+    SHA512 4fcdf48117865837ef11e0ed338f329f71eb89d96f0b2ab0ecfcfe604e68ec58c9dcb3060029f000726ead3ed5fb752e4fdd63446b837aecf9fc8919222be48a
     HEAD_REF main
 )
 
