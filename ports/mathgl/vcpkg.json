@@ -44,7 +44,10 @@
     "glut": {
       "description": "glut module",
       "dependencies": [
-        "freeglut",
+        {
+          "name": "freeglut",
+          "platform": "!osx"
+        },
         {
           "name": "mathgl",
           "default-features": false,
