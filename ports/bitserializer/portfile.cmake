@@ -1,3 +1,8 @@
+# All components of BitSerializer is "header only" except CSV archive
+if (${BUILD_CSV_ARCHIVE})
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Pavel_Kisliak/BitSerializer
@@ -27,7 +32,6 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# All components of BitSerializer is "header only" except CSV archive
 if (NOT ${BUILD_CSV_ARCHIVE})
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
