@@ -41,9 +41,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_build()
 
-file(INSTALL ${SOURCE_PATH}/lib/include/elements.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/lib/include/elements DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/lib/infra/include/infra DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/lib/include/elements.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/lib/include/elements" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/lib/infra/include/infra" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
