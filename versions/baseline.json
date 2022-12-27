@@ -8122,7 +8122,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "wyhash": {
       "baseline": "2022-10-12",
