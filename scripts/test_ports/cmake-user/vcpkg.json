@@ -71,6 +71,11 @@
           "name": "giflib"
         },
         {
+          "$package": "GLUT",
+          "name": "freeglut",
+          "platform": "!uwp & !osx"
+        },
+        {
           "$package": "ICU",
           "name": "icu",
           "platform": "!uwp"
