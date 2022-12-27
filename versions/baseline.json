@@ -4062,7 +4062,7 @@
     },
     "libogg": {
       "baseline": "1.3.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libopenmpt": {
       "baseline": "0.5.12",
