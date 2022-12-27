@@ -1,18 +1,13 @@
-set(MATHGL_VERSION "2.5")
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathgl/mathgl
-    REF mathgl%20${MATHGL_VERSION}
-    FILENAME "mathgl-${MATHGL_VERSION}.tar.gz"
-    SHA512 1fe27962ffef8d7127c4e1294d735e5da4dd2d647397f09705c3ca860f90bd06fd447ff614e584f3d2b874a02262c5518be37d59e9e0a838dd5b8b64fd77ef9d
+    REF "mathgl 8.0"
+    FILENAME "mathgl-${VERSION}.tar.gz"
+    SHA512 1ff3023f1bbd7bfd84202777a0166a8d4255a020a07f3650b9858929345bc8a2ceea4db155d2c93ba32b762d2304474276290a9edac99fda70fb4b5bc12982c2
     PATCHES
         cmake-config.patch
         dependencies.patch
         linkage.patch
-        fix_attribute.patch
-        fix_default_graph_init.patch
-        fix_arma_sprintf.patch
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch

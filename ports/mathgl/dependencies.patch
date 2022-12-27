@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 136425d..d048fc8 100644
+index 466e9bc..d99c1e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -432,9 +432,10 @@ else(enable-pthr-widget OR enable-pthread)
+@@ -441,9 +441,10 @@ else(enable-pthr-widget OR enable-pthread)
  endif(enable-pthr-widget OR enable-pthread)
  
  if(enable-arma)
@@ -14,7 +14,7 @@ index 136425d..d048fc8 100644
  	else(ARMADILLO_FOUND)
  		set(MGL_HAVE_ARMA 0)
  	endif(ARMADILLO_FOUND)
-@@ -539,7 +540,7 @@ endif(enable-hdf5)
+@@ -548,7 +549,7 @@ endif(enable-hdf5)
  
  if(enable-jpeg)
  	set(MGL_HAVE_JPEG 1)
@@ -23,7 +23,7 @@ index 136425d..d048fc8 100644
  	if(NOT JPEG_FOUND)
  		message(SEND_ERROR "Couldn't find JPEG library.")
  	endif(NOT JPEG_FOUND)
-@@ -552,7 +553,7 @@ endif(enable-jpeg)
+@@ -561,7 +562,7 @@ endif(enable-jpeg)
  
  if(enable-zlib)
  	set(MGL_HAVE_ZLIB 1)
@@ -32,7 +32,7 @@ index 136425d..d048fc8 100644
  	if(NOT ZLIB_FOUND)
  		message(SEND_ERROR "Couldn't find ZLib library.")
  	endif(NOT ZLIB_FOUND)
-@@ -564,7 +565,7 @@ endif(enable-zlib)
+@@ -573,7 +574,7 @@ endif(enable-zlib)
  
  if(enable-freetype)
  	set(MGL_HAVE_FREETYPE 1)
@@ -41,7 +41,7 @@ index 136425d..d048fc8 100644
  	if(NOT FREETYPE_FOUND)
  		message(SEND_ERROR "Couldn't find FreeType library.")
  	endif(NOT FREETYPE_FOUND)
-@@ -579,7 +580,7 @@ if(enable-png)
+@@ -588,7 +589,7 @@ if(enable-png)
  	if(NOT MGL_HAVE_ZLIB)
  		message(SEND_ERROR "You have to enable ZLib if you plan to use PNG export.")
  	endif(NOT MGL_HAVE_ZLIB)
@@ -50,7 +50,7 @@ index 136425d..d048fc8 100644
  	if(NOT PNG_FOUND)
  		message(SEND_ERROR "Couldn't find PNG library.")
  	endif(NOT PNG_FOUND)
-@@ -611,7 +612,7 @@ endif(enable-pdf)
+@@ -620,7 +621,7 @@ endif(enable-pdf)
  
  if(enable-gif)
  	set(MGL_HAVE_GIF 1)
@@ -59,7 +59,7 @@ index 136425d..d048fc8 100644
  	if(NOT GIF_FOUND)
  		message(SEND_ERROR "Couldn't find GIF library.")
  	endif(NOT GIF_FOUND)
-@@ -624,7 +625,7 @@ endif(enable-gif)
+@@ -633,7 +634,7 @@ endif(enable-gif)
  if(enable-opengl)
  	set(MGL_HAVE_OPENGL 1)
  	set(OpenGL_GL_PREFERENCE LEGACY)
@@ -68,7 +68,7 @@ index 136425d..d048fc8 100644
  	if(NOT OPENGL_FOUND)
  		message(SEND_ERROR "Couldn't find OpenGL libraries.")
  	endif(NOT OPENGL_FOUND)
-@@ -639,7 +640,7 @@ if(enable-glut)
+@@ -648,7 +649,7 @@ if(enable-glut)
  	if(NOT MGL_HAVE_OPENGL)
  		message(SEND_ERROR "You have to enable OpenGL if you plan to use GLUT.")
  	endif(NOT MGL_HAVE_OPENGL)
@@ -77,7 +77,7 @@ index 136425d..d048fc8 100644
  	if(NOT GLUT_FOUND)
  		message(SEND_ERROR "Couldn't find GLUT library.")
  	endif(NOT GLUT_FOUND)
-@@ -649,14 +650,19 @@ endif(enable-glut)
+@@ -658,14 +659,19 @@ endif(enable-glut)
  
  if(enable-fltk)
  	set(MGL_HAVE_FLTK 1)
@@ -100,10 +100,10 @@ index 136425d..d048fc8 100644
  	if(NOT MGL_HAVE_FL_COPY)
  		set(MGL_HAVE_FL_COPY 0)
 diff --git a/scripts/MathGLConfig.cmake.in b/scripts/MathGLConfig.cmake.in
-index 141a53d..a424895 100644
+index 78bad89..0c2e5ed 100644
 --- a/scripts/MathGLConfig.cmake.in
 +++ b/scripts/MathGLConfig.cmake.in
-@@ -21,6 +21,12 @@ endif()
+@@ -25,6 +25,12 @@ endif()
  if (MathGL2_HAVE_OPENMP STRGREATER "")
    find_dependency(OpenMP)
  endif()

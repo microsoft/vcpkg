@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a316984..920a099 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -68,6 +68,14 @@ macro(mgl_po_src)
+@@ -71,6 +71,14 @@ macro(mgl_po_src)
  	set(po_files ${po_files} ${l_files} PARENT_SCOPE)
  endmacro(mgl_po_src)
  
@@ -17,7 +17,7 @@ index a316984..920a099 100644
  function(mgl_add_lib mgl_tmp_lib)
  	if(${mgl_tmp_lib} MATCHES mgl)
  		set(mgllib mgl)
-@@ -109,8 +117,10 @@ function(mgl_add_lib mgl_tmp_lib)
+@@ -113,8 +121,10 @@ function(mgl_add_lib mgl_tmp_lib)
  			set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib}${mgl_lib_static}${mgl_lib_end}")
  	endif(enable-mgl2)
  
@@ -96,7 +96,7 @@ index 0263910..186d95b 100644
  	target_include_directories(mgl_mpi_example SYSTEM PUBLIC ${MPI_CXX_INCLUDE_PATH})
  endif(MGL_HAVE_MPI)
 diff --git a/include/mgl2/abstract.h b/include/mgl2/abstract.h
-index c6e6da5..ddd3f65 100644
+index da27869..b1e6761 100644
 --- a/include/mgl2/abstract.h
 +++ b/include/mgl2/abstract.h
 @@ -20,6 +20,15 @@
@@ -120,25 +120,16 @@ index c6e6da5..ddd3f65 100644
  //-----------------------------------------------------------------------------
  /// Callback function for asking user a question. Result shouldn't exceed 1024.
 -extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
-+MGL_CORE_EXPORT extern void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
++extern MGL_CORE_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
  /// Console function for asking user a question. Result shouldn't exceed 1024.
  void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res);
  /// Callback function for displaying progress of something.
 -extern MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL gr);
-+MGL_CORE_EXPORT extern void (*mgl_progress_func)(int value, int maximal, HMGL gr);
++extern MGL_CORE_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL gr);
  /// Console function for displaying progress of something.
  void MGL_EXPORT mgl_progress_txt(int value, int maximal, HMGL gr);
  /// Display progress of something.
-@@ -235,7 +244,7 @@ struct MGL_EXPORT mglNum
- };
- //-----------------------------------------------------------------------------
- /// List of user-defined data arrays
--MGL_EXPORT extern std::vector<mglDataA*> mglDataList;
-+MGL_CORE_EXPORT extern std::vector<mglDataA*> mglDataList;
- //-----------------------------------------------------------------------------
- /// Abstract class for data array
- class MGL_EXPORT mglDataA
-@@ -400,7 +409,7 @@ struct MGL_EXPORT mglColorID
+@@ -404,7 +413,7 @@ struct MGL_EXPORT mglColorID
  	char id;
  	mglColor col;
  };
