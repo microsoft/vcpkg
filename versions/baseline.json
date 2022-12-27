@@ -10,7 +10,7 @@
     },
     "ableton": {
       "baseline": "3.0.5",
-      "port-version": 1
+      "port-version": 2
     },
     "abseil": {
       "baseline": "20220623.1",
@@ -22,7 +22,7 @@
     },
     "ace": {
       "baseline": "7.0.11",
-      "port-version": 0
+      "port-version": 1
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -5741,8 +5741,8 @@
       "port-version": 6
     },
     "pcapplusplus": {
-      "baseline": "22.05",
-      "port-version": 2
+      "baseline": "22.11",
+      "port-version": 0
     },
     "pcg": {
       "baseline": "2021-04-06",
@@ -7018,7 +7018,7 @@
     },
     "skia": {
       "baseline": "0.36.0",
-      "port-version": 2
+      "port-version": 3
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7953,7 +7953,7 @@
       "port-version": 2
     },
     "vulkan-headers": {
-      "baseline": "1.3.234",
+      "baseline": "1.3.238",
       "port-version": 0
     },
     "vulkan-hpp": {
