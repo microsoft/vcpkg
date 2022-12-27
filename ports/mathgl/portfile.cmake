@@ -54,7 +54,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/dllexport.h" "#ifdef MGL_STATIC_DEFINE" "#if 1")
@@ -75,7 +74,13 @@ else()
 endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME mathgl2)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/share/applications"
+    "${CURRENT_PACKAGES_DIR}/share/mime"
+    "${CURRENT_PACKAGES_DIR}/share/pixmaps"
+)
 
 set(tools mglconv mgltask)
 if(enable-fltk)
