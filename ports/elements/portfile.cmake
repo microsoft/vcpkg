@@ -1,4 +1,6 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -24,9 +26,9 @@ if(NOT EXISTS "${SOURCE_PATH}/lib/infra/CMakeLists.txt")
 endif()
 
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ELEMENTS_HOST_UI_LIBRARY "win32")
-elseif(APPLE)
+elseif(VCPKG_TARGET_IS_OSX)
     set(ELEMENTS_HOST_UI_LIBRARY "cocoa")
 else()
     set(ELEMENTS_HOST_UI_LIBRARY "gtk")
