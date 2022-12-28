@@ -8,6 +8,8 @@ vcpkg_from_github(
 	REF c8591ab721b76a7649cb5b45944fab1c5c798242
 	SHA512 943d2a77dc3d297b4ec84d6b4808554aec9a89c33a242e5f6401a9831f674ff948f53d3e877737a40517a393b3b2a9bd873c6007a193892743c88c2fdb58341a
 	HEAD_REF main
+    PATCHES
+        0001-Add-extern-C-to-avcodec.patch
 )
 
 vcpkg_cmake_configure(
