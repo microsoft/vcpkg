@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
         dependencies.patch
         linkage.patch
         enable-examples.patch
+        fix-examples.patch
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch
