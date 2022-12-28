@@ -34,7 +34,10 @@
     "fltk": {
       "description": "fltk module",
       "dependencies": [
-        "fltk"
+        {
+          "name": "fltk",
+          "default-features": false
+        }
       ]
     },
     "gif": {
@@ -68,7 +71,10 @@
     "hdf5": {
       "description": "hdf5 module",
       "dependencies": [
-        "hdf5"
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
       ]
     },
     "jpeg": {
@@ -92,13 +98,19 @@
     "qt5": {
       "description": "qt5 module",
       "dependencies": [
-        "qt5-base"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
       ]
     },
     "wx": {
       "description": "wx module",
       "dependencies": [
-        "wxwidgets"
+        {
+          "name": "wxwidgets",
+          "default-features": false
+        }
       ]
     },
     "zlib": {
