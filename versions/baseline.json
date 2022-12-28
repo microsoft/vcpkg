@@ -2152,6 +2152,10 @@
       "baseline": "3.4.0",
       "port-version": 2
     },
+    "elements": {
+      "baseline": "2022-12-07",
+      "port-version": 0
+    },
     "elfio": {
       "baseline": "3.11",
       "port-version": 0
