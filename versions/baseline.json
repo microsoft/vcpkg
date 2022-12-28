@@ -2169,7 +2169,7 @@
       "port-version": 1
     },
     "ensmallen": {
-      "baseline": "2.18.1",
+      "baseline": "2.19.0",
       "port-version": 0
     },
     "entityx": {
