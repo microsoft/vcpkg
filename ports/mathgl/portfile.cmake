@@ -8,6 +8,7 @@ vcpkg_from_sourceforge(
         cmake-config.patch
         dependencies.patch
         linkage.patch
+        enable-examples.patch
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch
@@ -17,6 +18,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     arma    enable-arma
+    examples enable-examples
     fltk    enable-fltk
     gif     enable-gif
     glut    enable-glut

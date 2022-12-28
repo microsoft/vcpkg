@@ -28,6 +28,9 @@
         "armadillo"
       ]
     },
+    "examples": {
+      "description": "Build example programs (not installed)"
+    },
     "fltk": {
       "description": "fltk module",
       "dependencies": [
