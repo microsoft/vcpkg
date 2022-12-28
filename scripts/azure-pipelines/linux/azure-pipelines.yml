@@ -44,7 +44,7 @@ jobs:
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: sudo -y --no-install-recommends install libxcb-cursor-dev
+  - bash: sudo apt-get -y --no-install-recommends install libxcb-cursor-dev
     displayName: 'Install libxcb-cursor-dev'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports'
