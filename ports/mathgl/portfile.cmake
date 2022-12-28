@@ -10,6 +10,7 @@ vcpkg_from_sourceforge(
         linkage.patch
         enable-examples.patch
         fix-examples.patch
+        fix-cross-builds.patch
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch
@@ -38,6 +39,10 @@ if(VCPKG_TARGET_IS_OSX)
         -Denable-openmp=OFF
         -Denable-pthread=ON
     )
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND FEATURE_OPTIONS "-DMAKE_BIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/make_bin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 vcpkg_cmake_configure(
@@ -81,6 +86,9 @@ file(REMOVE_RECURSE
 )
 
 set(tools mglconv mgltask)
+if(NOT VCPKG_CROSSCOMPILING)
+    list(APPEND tools make_bin)
+endif()
 if(enable-fltk)
     list(APPEND tools mglview mgllab)
 endif()
