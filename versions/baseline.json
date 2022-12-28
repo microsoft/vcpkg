@@ -185,7 +185,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "11.2.3",
+      "baseline": "11.4.3",
       "port-version": 0
     },
     "arrayfire": {
