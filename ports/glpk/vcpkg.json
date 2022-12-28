@@ -16,7 +16,24 @@
   "homepage": "https://www.gnu.org/software/glpk/",
   "documentation": "https://www.gnu.org/software/glpk/#documentation",
   "license": "GPL-3.0-or-later",
+  "default-features": [
+      "default-features"
+  ],
   "features": {
+    "default-features": {
+      "description": "Default set of features",
+      "dependencies": [
+        {
+          "name": "glpk",
+          "features": [
+            "dl",
+            "gmp",
+            "mysql",
+            "odbc"
+          ]
+        }
+      ]
+    },
     "dl": {
       "description": "Enable shared library support",
       "dependencies": [

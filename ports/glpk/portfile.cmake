@@ -13,12 +13,11 @@ vcpkg_extract_source_archive(
     ARCHIVE "${DISTFILE}"
     PATCHES
         configure.ac.patch
-        mysql.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS)
 if("dl" IN_LIST FEATURES)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-dl=dlfcn)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-dl=dlfcn "LIBS=-ldl \$LIBS")
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-dl)
 endif()
@@ -30,7 +29,10 @@ else()
 endif()
 
 if("mysql" IN_LIST FEATURES)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-mysql)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS
+        --enable-mysql
+        "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include/mysql \$CPPFLAGS"
+    )
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-mysql)
 endif()
@@ -49,20 +51,6 @@ vcpkg_configure_make(
     OPTIONS
         ${CONFIGURE_OPTIONS}
 )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    function(patch_config_h build_type_suffix)
-        set(filename "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_type_suffix}/config.h")
-        file(READ "${filename}" config_h_contents)
-        string(APPEND config_h_contents "\n#define __WOE__ 1\n")
-        string(REPLACE "libiodbc.so" "odbc32.dll" config_h_contents "${config_h_contents}")
-        string(REPLACE "libodbc.so" "odbc32.dll" config_h_contents "${config_h_contents}")
-        string(REPLACE "libmysqlclient.so" "libmysql.dll" config_h_contents "${config_h_contents}")
-        file(WRITE "${filename}" "${config_h_contents}")
-    endfunction()
-    patch_config_h("dbg")
-    patch_config_h("rel")
-endif()
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
