@@ -8,7 +8,15 @@ vcpkg_from_sourceforge(
     PATCHES
         cmake-config.patch
         dependencies.patch
+        pkgconfig.patch
 )
+
+set(REQUIRES_PRIVATE "")
+foreach(module IN ITEMS lapack blas)
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/${module}.pc")
+        string(APPEND REQUIRES_PRIVATE " ${module}")
+    endif()
+endforeach()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -16,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DALLOW_FLEXIBLAS_LINUX=OFF
         -DDETECT_HDF5=OFF
+        "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
 )
 
 vcpkg_cmake_install()
