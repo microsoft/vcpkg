@@ -8,10 +8,6 @@ vcpkg_from_github(
         "fix_dependencies.patch"
 )
 
-set(VCPKG_BUILD_TYPE release)
-
-
-
 # Run npm install and npm run build on the cloned project    
 execute_process(
     COMMAND npm install
