@@ -17,7 +17,7 @@
   "documentation": "https://www.gnu.org/software/glpk/#documentation",
   "license": "GPL-3.0-or-later",
   "default-features": [
-      "default-features"
+    "default-features"
   ],
   "features": {
     "default-features": {
