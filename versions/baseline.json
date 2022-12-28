@@ -3928,6 +3928,10 @@
       "baseline": "1.10",
       "port-version": 2
     },
+    "libleidenalg": {
+      "baseline": "0.9.0",
+      "port-version": 0
+    },
     "liblemon": {
       "baseline": "2019-06-13",
       "port-version": 3
