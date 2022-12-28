@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 245b1c5..002fe5f 100644
+index 245b1c5..6130a44 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -86,11 +86,7 @@ endif()
@@ -42,17 +42,3 @@ index 245b1c5..002fe5f 100644
  if( SCENEPIC_BUILD_DOCUMENTATION )
    set( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${CMAKE_SOURCE_DIR}/ci/doxygen )
    find_package( Doxygen REQUIRED )
-@@ -255,6 +252,13 @@ export(EXPORT scenepic-targets
- 
- export(PACKAGE scenepic)
- 
-+
-+target_include_directories(scenepic PUBLIC  
-+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include/scenepic>  
-+    $<INSTALL_INTERFACE:include/scenepic>  # <prefix>/include/mylib
-+)
-+install( TARGETS scenepic EXPORT scenepic RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" )
-+
- # -------------------- Package ------------------------------------
- 
- set( PROJECT_FILES

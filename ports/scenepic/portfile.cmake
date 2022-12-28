@@ -8,7 +8,7 @@ vcpkg_from_github(
         "fix_dependencies.patch"
 )
 
-#set(VCPKG_BUILD_TYPE release)
+set(VCPKG_BUILD_TYPE release)
 
 
 
@@ -36,6 +36,7 @@ vcpkg_configure_cmake(
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
