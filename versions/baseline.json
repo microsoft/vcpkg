@@ -6798,7 +6798,7 @@
     },
     "scenepic": {
       "baseline": "1.0.16",
-      "port-version": 0
+      "port-version": 1
     },
     "scintilla": {
       "baseline": "4.4.6",
