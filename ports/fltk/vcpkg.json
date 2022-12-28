@@ -9,7 +9,8 @@
   "dependencies": [
     {
       "name": "fltk",
-      "host": true
+      "host": true,
+      "default-features": false
     },
     {
       "name": "fontconfig",
