@@ -12,14 +12,16 @@ vcpkg_from_github(
 
 set(PRODUCT_VERSION "7.0.0")
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  execute_process(COMMAND sh -c "mkdir -p ${SOURCE_PATH}/artifacts/obj && ${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
   set(RID_PLAT "win")
 elseif(VCPKG_TARGET_IS_OSX)
   set(RID_PLAT "osx")
-  execute_process(COMMAND sh -c "${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
-  elseif(VCPKG_TARGET_IS_LINUX)
+elseif(VCPKG_TARGET_IS_LINUX)
   set(RID_PLAT "linux")
-  execute_process(COMMAND sh -c "${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
 else()
   message(FATAL_ERROR "Unsupported platform")
 endif()

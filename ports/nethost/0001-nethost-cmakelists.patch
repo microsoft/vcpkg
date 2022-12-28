@@ -1,15 +1,3 @@
-diff --git a/eng/native/version/copy_version_files.sh b/eng/native/version/copy_version_files.sh
-index d60ed4715b5..3508b585727 100755
---- a/eng/native/version/copy_version_files.sh
-+++ b/eng/native/version/copy_version_files.sh
-@@ -29,6 +29,7 @@ for path in "${__VersionFolder}/"*{.h,.c}; do
-             echo "$version_file_contents" > "$version_file_destination"
-         fi
-     elif [[ ! -e "$__RepoRoot/artifacts/obj/$(basename "$path")" ]]; then
-+        mkdir -p "$__RepoRoot/artifacts/obj/"
-         cp "$path" "$__RepoRoot/artifacts/obj/"
-     fi
- done
 diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
 index 5ae3f76e8fe..9c0209ba9bc 100644
 --- a/src/native/corehost/nethost/CMakeLists.txt
