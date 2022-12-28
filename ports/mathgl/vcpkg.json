@@ -92,7 +92,7 @@
     "qt5": {
       "description": "qt5 module",
       "dependencies": [
-        "qt5"
+        "qt5-base"
       ]
     },
     "wx": {
