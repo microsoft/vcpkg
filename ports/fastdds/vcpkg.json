@@ -1,0 +1,18 @@
+{
+  "name": "fastdds",
+  "version-semver": "2.9.0",
+  "description": "Eprosima Fast DDS is a C++ implementation of the DDS (Data Distribution Service), which provides publisher-subscriber communications over unreliable transports such as UDP, as defined and maintained by the Object Management Group (OMG) consortium.",
+  "homepage": "https://www.eprosima.com/index.php/products-all/eprosima-fast-dds",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "asio",
+    "fastcdr",
+    "foonathan-memory",
+    "openssl",
+    "tinyxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
