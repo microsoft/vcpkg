@@ -8012,6 +8012,10 @@
       "baseline": "1.5.8",
       "port-version": 1
     },
+    "wg21-linear-algebra": {
+      "baseline": "0.7.2",
+      "port-version": 0
+    },
     "wg21-sg14": {
       "baseline": "2019-08-13",
       "port-version": 1
