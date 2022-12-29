@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-connector-cpp
-    REF 8.0.30
-    SHA512 fd6d8a03ba66ca028b3748218c60a721c9e2c79867c6cf2ea95d2649d3a252e9bd307986b149897dcc1d24a11785666c5480225a20c4baba7c87b376b7289a13
+    REF 8.0.31
+    SHA512 29c8e36d0ffe32600cc3c41040bfffbf2f6d36953ccd20e8c8ada99b2378ee0ae7f07929c84a84c6b4a58899775bae22fda7c470801400e9ac9feed941393577
     HEAD_REF master
     PATCHES
         fix-static-build8.patch
@@ -15,11 +15,24 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_MSVCRT)
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        jdbc WITH_JDBC
+)
+
+if("jdbc" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")   
+    list(APPEND FEATURE_OPTIONS -DBOOST_ROOT=ON)
+    list(APPEND FEATURE_OPTIONS -DBoost_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include")
+endif()
+
 # Use mysql-connector-cpp's own build process.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD
     OPTIONS
+        ${FEATURE_OPTIONS}
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}

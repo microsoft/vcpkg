@@ -1,7 +1,6 @@
 {
   "name": "mysql-connector-cpp",
-  "version": "8.0.30",
-  "port-version": 1,
+  "version": "8.0.31",
   "description": "This is a release of MySQL Connector/C++, the C++ interface for communicating with MySQL servers.",
   "homepage": "https://github.com/mysql/mysql-connector-cpp",
   "license": null,
@@ -16,5 +15,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "jdbc": {
+      "description": "Build legacy JDBC library",
+      "dependencies": [
+        "boost",
+        "libmysql"
+      ]
+    }
+  }
 }

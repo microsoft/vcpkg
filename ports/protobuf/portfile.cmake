@@ -1,10 +1,10 @@
-set(version 3.21.8)
+set(version 3.21.11)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.8
-    SHA512 a9e3ff6fd4b5f4bf86ac58c9b0a35010e7069def08783c0aecc05cc0d6e38f04a1af6b6ad61191c3d3348c1e5e44062f63ce1377141ebbd10f122101ef089088
+    REF v3.21.11
+    SHA512 597d5cbd97afcba5a8b31c592d68f096e545947b12bf92b8ad40ca4eae6b3511bbf2b8e210be835ac8032ec9e1e2d22d3bc083c81dc99cf8da2f6851ab4ed176
     HEAD_REF master
     PATCHES
         fix-static-build.patch
