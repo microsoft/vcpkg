@@ -8,7 +8,11 @@ vcpkg_from_github(
 )
 
 # Main commands
-vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPTCPRINT_TESTS=OFF
+)
 vcpkg_cmake_install()
 
 # Move cmake configs
