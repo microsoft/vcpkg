@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(pcapplusplus CXX)
+project(pcapplusplus C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 if (WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 # dependencies
 include(FindPackageHandleStandardArgs)
@@ -67,9 +69,9 @@ endif()
 # pcap++
 file(GLOB PCAPPP_HEADERS "${CMAKE_CURRENT_LIST_DIR}/Pcap++/header/*.h")
 file(GLOB PCAPPP_SOURCES "${CMAKE_CURRENT_LIST_DIR}/Pcap++/src/*.cpp")
-file(GLOB LIGHTPCAPNG_SOURCES "${CMAKE_CURRENT_LIST_DIR}/3rdParty/LightPcapNg/LightPcapNg/src/*.cpp")
+file(GLOB LIGHTPCAPNG_SOURCES "${CMAKE_CURRENT_LIST_DIR}/3rdParty/LightPcapNg/LightPcapNg/src/*.c")
 
-add_library(pcappp ${PCAPPP_SOURCES})
+add_library(pcappp ${PCAPPP_SOURCES} ${LIGHTPCAPNG_SOURCES})
 
 target_include_directories(pcappp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Pcap++/header> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/LightPcapNg/LightPcapNg/include> "${PCAP_INCLUDES}" $<INSTALL_INTERFACE:include>)
 
