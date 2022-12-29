@@ -3,5 +3,6 @@
   "version": "1.12.1",
   "description": "onnxruntime (GPU)",
   "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT",
   "supports": "windows & !x86 & !uwp & !static & !arm"
 }
