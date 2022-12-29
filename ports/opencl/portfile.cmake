@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-Headers
-    REF 0d5f18c6e7196863bc1557a693f1509adfcee056
-    SHA512 7e8fa6c8e73c660d8e9e31ddea3bfef887ed827fc21a1da559bde9dd4af6c52a91f609401bb718528b5c96d21e4c01aee7b8027bdf3dec4b0aa326270788a4b0
+    REF a51354a85f41d203e755124ad51ae3425933df45
+    SHA512 007f852c10f486c67696a278766790102369306aea2aa0f9b238ef167868c76771e4f6a11abb01bb3614defea501f295a97684a48531865a68299e69704bedca
     HEAD_REF master
 )
 
@@ -12,53 +12,31 @@ file(INSTALL "${SOURCE_PATH}/CL" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-CLHPP
-    REF d62a02090625655e5b2d791d6a58618b043c989c
-    SHA512 837bbe914931d2f18a468f21634dbd4d088eda0a2f22eea23304c0323b9ee064c3ee76db7ebf28ba67fbe07c44129241f8dca62512d89bc7a6b35c2b4b316ed7
+    REF 4a1157466afe72a87e8abc59537ef577534ccadf
+    SHA512 8b2f6dfecba649f3eca1c6b7ef825602215bf911fb08cc0745d0d3bb627d6edd9e95cf2355ba55718686d3604421ec632c2c3381040f73861bd0218fcfc60c57
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/gen_cl_hpp.py"
-        -i ${SOURCE_PATH}/input_cl.hpp
-        -o ${CURRENT_PACKAGES_DIR}/include/CL/cl.hpp
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_clhpp-${TARGET_TRIPLET}
-)
-
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/gen_cl_hpp.py"
-        -i ${SOURCE_PATH}/input_cl2.hpp
-        -o ${CURRENT_PACKAGES_DIR}/include/CL/cl2.hpp
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_cl2hpp-${TARGET_TRIPLET}
-)
-message(STATUS "Generating OpenCL C++ headers done")
+file(INSTALL "${SOURCE_PATH}/include/CL" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # OpenCL ICD loader
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-ICD-Loader
-    REF e6e30ab9c7a61c171cf68d2e7f5c0ce28e2a4eae
-    SHA512 f3563c0a4c094d3795d8386ec0db41189d350ab8136d80ae5de611ee3db87fbb0ab851bad2b33e111eddf135add5dbfef77d96979473ca5a23c036608d443378
+    REF 4aa683775c4ee55594196c79def7a75103d75e4c
+    SHA512 319e33de9fd10da333e5928856d3c3f5a5d5b1b33cf57e395217cb70098588f7959c68f81fd52cd9d5717d334d2e187d29a6591cac249b7bfd65731f0f120f90
     HEAD_REF master
-    PATCHES
-        0001-include-unistd-for-gete-ug-id.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} dynamic USE_DYNAMIC_VCXX_RUNTIME)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
-        -DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF
-        -DUSE_DYNAMIC_VCXX_RUNTIME=${USE_DYNAMIC_VCXX_RUNTIME}
 )
 
-vcpkg_build_cmake(TARGET OpenCL)
+vcpkg_cmake_build(TARGET OpenCL)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

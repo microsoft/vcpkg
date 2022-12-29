@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1a7964..7a5b1a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -293,9 +293,9 @@ if (CMAKE_BUILD_TYPE STREQUAL "" OR CMAKE_BUILD_TYPE MATCHES Debug)
+     target_compile_definitions(${PROJECT_NAME} PRIVATE "-DDEBUG_BUILD")
+     #set extra warning flags for debug build
+     if (MSVC)
+-        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /wd4068)
++        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /wd4068)
+     else ()
+-        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic -Werror)
++        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
+     endif ()
+ endif ()
+ 
