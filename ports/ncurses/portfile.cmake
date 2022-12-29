@@ -17,7 +17,6 @@ vcpkg_extract_source_archive(
 set(OPTIONS
     --disable-db-install
     --enable-pc-files
-    --enable-mixed-case
     --without-ada
     --without-manpages
     --without-progs
@@ -36,6 +35,7 @@ if(VCPKG_TARGET_IS_MINGW)
         --disable-home-terminfo
         --enable-term-driver
         --disable-termcap
+        --enable-mixed-case
     )
 endif()
 
