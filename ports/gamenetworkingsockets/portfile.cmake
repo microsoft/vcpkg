@@ -21,12 +21,18 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/GameNetworkingSockets")
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/GameNetworkingSocketsConfig.cmake"
+[[find_dependency(Threads)]]
+[[find_dependency(Threads)
+find_dependency(protobuf CONFIG REQUIRED)]]
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
