@@ -67,6 +67,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/Qt5PluginTarget.patch
                             patches/create_cmake.patch
                             patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
+                            patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build

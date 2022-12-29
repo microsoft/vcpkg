@@ -1,12 +1,12 @@
 {
   "name": "pangolin",
-  "version": "0.6",
-  "port-version": 4,
+  "version": "0.8",
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "eigen3",
     "glew",
     {
       "name": "vcpkg-cmake",
@@ -18,21 +18,11 @@
     }
   ],
   "default-features": [
-    "eigen",
     "ffmpeg",
-    "gui",
     "jpeg",
-    "png",
-    "vars",
-    "video"
+    "png"
   ],
   "features": {
-    "eigen": {
-      "description": "Build support for Eigen matrix types",
-      "dependencies": [
-        "eigen3"
-      ]
-    },
     "examples": {
       "description": "Build Examples"
     },
@@ -47,9 +37,6 @@
         }
       ]
     },
-    "gui": {
-      "description": "Build support for Pangolin GUI"
-    },
     "jpeg": {
       "description": "Build support for libjpeg image input",
       "dependencies": [
@@ -60,12 +47,6 @@
       "description": "Build support for liblz4 compression",
       "dependencies": [
         "lz4"
-      ]
-    },
-    "module": {
-      "description": "Python wrapper for Pangolin",
-      "dependencies": [
-        "python3"
       ]
     },
     "openexr": {
@@ -86,10 +67,11 @@
         "libpng"
       ]
     },
-    "pybind11": {
-      "description": "Build support for Pangolin Interactive Console",
+    "python": {
+      "description": "Python wrapper for Pangolin",
       "dependencies": [
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     },
     "realsense": {
@@ -126,12 +108,6 @@
       "dependencies": [
         "libuvc"
       ]
-    },
-    "vars": {
-      "description": "Build support for Pangolin Vars"
-    },
-    "video": {
-      "description": "Build support for Pangolin Video Utilities"
     },
     "zstd": {
       "description": "Build support for libzstd compression",
