@@ -846,7 +846,7 @@
     },
     "boost-locale": {
       "baseline": "1.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lockfree": {
       "baseline": "1.81.0",
