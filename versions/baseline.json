@@ -2453,7 +2453,7 @@
       "port-version": 3
     },
     "freeglut": {
-      "baseline": "3.2.2",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "freeimage": {
