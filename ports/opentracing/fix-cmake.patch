@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a451844..d520351 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ set(OPENTRACING_VERSION_STRING
+ 
+ # ==============================================================================
+ # Set up cpack
+-
++if(0)
+ SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ implementation of the OpenTracing API")
+ SET(CPACK_PACKAGE_VENDOR "opentracing.io")
+ SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+@@ -44,7 +44,7 @@ include(CPack)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+-
++endif()
+ # ==============================================================================
+ # Configure compilers
+ 
+@@ -165,7 +165,7 @@ if (BUILD_SHARED_LIBS)
+   target_compile_definitions(opentracing PRIVATE OPENTRACING_EXPORTS)
+   install(TARGETS opentracing EXPORT OpenTracingTargets
+           COMPONENT DIST
+-          RUNTIME DESTINATION ${LIB_INSTALL_DIR}
++          RUNTIME DESTINATION bin
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+           ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+           )
+diff --git a/mocktracer/CMakeLists.txt b/mocktracer/CMakeLists.txt
+index 9835fe3..147179b 100644
+--- a/mocktracer/CMakeLists.txt
++++ b/mocktracer/CMakeLists.txt
+@@ -21,6 +21,7 @@ if (BUILD_SHARED_LIBS)
+   install(TARGETS opentracing_mocktracer
+           COMPONENT DIST
+           EXPORT OpenTracingTargets
++          RUNTIME DESTINATION bin
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+           ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
+ 
