@@ -211,17 +211,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!(uwp | arm)"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!(arm & windows)"
+          "platform": "!uwp & !(arm & windows)"
         },
         {
           "name": "ffmpeg",

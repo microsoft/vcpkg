@@ -1,0 +1,16 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2e0b519..6b455dd 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -79,6 +79,11 @@ endif()
+ add_library(${ARGTABLE3_PROJECT_NAME}::argtable3 ALIAS argtable3)
+ target_include_directories(argtable3 PRIVATE ${PROJECT_SOURCE_DIR}/src)
+ 
++if(NOT ARGTABLE3_REPLACE_GETOPT)
++  find_package(unofficial-getopt-win32 REQUIRED)
++  target_link_libraries(argtable3 PRIVATE unofficial::getopt-win32::getopt)
++endif()
++
+ set_target_properties(argtable3 PROPERTIES
+   VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
+   SOVERSION ${PROJECT_VERSION_MAJOR}
