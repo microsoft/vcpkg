@@ -7280,6 +7280,10 @@
       "baseline": "9.2.7",
       "port-version": 1
     },
+    "staticjson": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "status-code": {
       "baseline": "2022-09-08",
       "port-version": 0
