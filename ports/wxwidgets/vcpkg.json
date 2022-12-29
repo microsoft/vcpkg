@@ -33,6 +33,7 @@
     "libjpeg-turbo",
     "libpng",
     "nanosvg",
+    "opengl",
     "pcre2",
     "tiff",
     {
