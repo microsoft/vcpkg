@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.8.5
+    REF "v${VERSION}"
     SHA512 7f2c22cd030ce59641636aa162b422694f79860c8a76d2227c706af9959d2c5269ae861c123e656ed3ae91835eb7e2b22501bca20fcd6ad0223ae95f312e73aa
     HEAD_REF master
     PATCHES
