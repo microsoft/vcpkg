@@ -8330,7 +8330,7 @@
     },
     "zfp": {
       "baseline": "0.5.5",
-      "port-version": 3
+      "port-version": 0
     },
     "zint": {
       "baseline": "2.12.0",
