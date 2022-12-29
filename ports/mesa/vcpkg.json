@@ -117,7 +117,7 @@
     "opengl": {
       "description": "Build support for OpenGL (all versions)",
       "dependencies": [
-        "opengl-registry"
+        "opengl"
       ]
     }
   }

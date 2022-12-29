@@ -136,13 +136,14 @@ if(NOT remaining)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
-    # Avoid collision with opengl32 lib from Windows SDK (or mingw).
+if(VCPKG_TARGET_IS_WINDOWS)
+    # opengl32.lib is already installed by port opengl.
+    # Mesa claims to provide a drop-in replacement of opengl32.dll.
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
     if(NOT VCPKG_BUILD_TYPE)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
 endif()
 
