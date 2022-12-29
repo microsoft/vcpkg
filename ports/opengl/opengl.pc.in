@@ -4,5 +4,6 @@ includedir=${prefix}/include
 
 Name: OpenGL
 Description: Windows OpenGL library
-Version: 1.1
+Version: @WINDOWS_SDK_SEMVER@
 Libs: -L${libdir} -lopengl32
+Cflags: @WINDOWS_GL_CFLAGS@
