@@ -14,7 +14,7 @@
       "default-features": false
     },
     {
-      "name": "protobuf",
+      "name": "qtgrpc",
       "host": true,
       "default-features": false
     },
