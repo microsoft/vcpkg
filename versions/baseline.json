@@ -2700,6 +2700,10 @@
       "baseline": "20201203",
       "port-version": 0
     },
+    "glpk": {
+      "baseline": "5.0",
+      "port-version": 0
+    },
     "glslang": {
       "baseline": "11.13.0",
       "port-version": 0
