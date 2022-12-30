@@ -4990,7 +4990,7 @@
     },
     "monkeys-audio": {
       "baseline": "5.70",
-      "port-version": 2
+      "port-version": 3
     },
     "moos-core": {
       "baseline": "10.4.0",
