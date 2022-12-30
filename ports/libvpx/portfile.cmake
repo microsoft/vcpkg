@@ -10,15 +10,16 @@ vcpkg_from_github(
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        allow-unknown-options.patch
 )
 
-
+set(OPTIONS)
 if("realtime" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    list(APPEND OPTIONS "--enable-realtime-only")
 endif()
 
 if("highbitdepth" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    list(APPEND OPTIONS "--enable-vp9-highbitdepth")
 endif()
 
 

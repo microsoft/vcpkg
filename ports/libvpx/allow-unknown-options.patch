@@ -1,0 +1,12 @@
+diff --git a/build/make/configure.sh b/build/make/configure.sh
+index 581042e38..155bb4edf 100644
+--- a/build/make/configure.sh
++++ b/build/make/configure.sh
+@@ -17,7 +17,6 @@ die_unknown(){
+   echo "Unknown option \"$1\"."
+   echo "See $0 --help for available options."
+   clean_temp_files
+-  exit 1
+ }
+ 
+ die() {
