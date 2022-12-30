@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 69a0df0..43e5dd9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,7 +4,7 @@ project(tmxparser)
+ 
+ include(GNUInstallDirs)
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake ${CMAKE_MODULE_PATH})
++#set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake ${CMAKE_MODULE_PATH})
+ 
+ set(TMXPARSER_VERSION_MAJOR 2)
+ set(TMXPARSER_VERSION_MINOR 1)
+@@ -25,9 +25,9 @@ option(BUILD_TESTS  "Build tests. (default: OFF)" OFF)
+ option(BUILD_DOCS  "Build documentation. (default: OFF)" OFF)
+ 
+ #Dependencies Settings
+-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/deps.cmake)
++#include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/deps.cmake)
+ 
+-find_package(tinyxml2 REQUIRED)
++find_package(tinyxml2 CONFIG REQUIRED)
+ 
+ if(NOT USE_MINIZ)
+   find_package(ZLIB) #<-- build it as external project?
+@@ -115,7 +115,7 @@ target_compile_features(tmxparser
+   PRIVATE cxx_std_11)
+ 
+ target_link_libraries(tmxparser
+-  PRIVATE tinyxml2)
++  PRIVATE tinyxml2::tinyxml2)
+ 
+ if(NOT USE_MINIZ)
+   target_link_libraries(tmxparser
