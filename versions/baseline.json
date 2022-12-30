@@ -2072,6 +2072,10 @@
       "baseline": "11.30",
       "port-version": 0
     },
+    "dynamic-loader": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "eabase": {
       "baseline": "2.09.12",
       "port-version": 2
