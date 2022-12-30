@@ -21,9 +21,6 @@
       "dependencies": [
         "boost-container"
       ]
-    },
-    "recycling-allocator": {
-      "description": "Use asio::recycling_allocator instead of <memory_resource>"
     }
   }
 }

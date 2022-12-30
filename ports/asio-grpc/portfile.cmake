@@ -6,16 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if ("boost-container" IN_LIST FEATURES AND "recycling-allocator" IN_LIST FEATURES)
-    message(WARNING "Features 'boost-container' and 'recycling-allocator' are mutually exclusive. Automatically disabling feature 'boost-container'.")
-    list(REMOVE_ITEM FEATURES "boost-container")
-endif()
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         boost-container ASIO_GRPC_USE_BOOST_CONTAINER
-        recycling-allocator ASIO_GRPC_USE_RECYCLING_ALLOCATOR
 )
 
 vcpkg_cmake_configure(
