@@ -7876,6 +7876,10 @@
       "baseline": "2022-11-16",
       "port-version": 0
     },
+    "vcpkg-spdx": {
+      "baseline": "3.19",
+      "port-version": 0
+    },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
       "port-version": 0
