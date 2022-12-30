@@ -17,28 +17,19 @@ vcpkg_from_github(
         allow-unknown-options.patch
 )
 
-set(OPTIONS "")
-if("realtime" IN_LIST FEATURES)
-    list(APPEND OPTIONS "--enable-realtime-only")
-endif()
-
-if("highbitdepth" IN_LIST FEATURES)
-    list(APPEND OPTIONS "--enable-vp9-highbitdepth")
-endif()
-
 vcpkg_find_acquire_program(PERL)
 
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
     set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 endif()
 
 vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+vcpkg_add_to_path("${NASM_EXE_PATH}")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
@@ -81,9 +72,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-    
+
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -96,8 +97,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         LOGNAME configure-${TARGET_TRIPLET})
 
     message(STATUS "Generating MSBuild projects")
-    vcpkg_install_make()
-    message(FATAL_ERROR "abort to get logs")
+    vcpkg_execute_required_process(
+        COMMAND
+            ${BASH} --noprofile --norc -c "make dist"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        LOGNAME generate-${TARGET_TRIPLET})
+
+    vcpkg_build_msbuild(
+        PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
+        OPTIONS /p:UseEnv=True
+    )
 
     # note: pdb file names are hardcoded in the lib file, cannot rename
     set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
@@ -143,6 +152,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
 else()
+    set(OPTIONS "")
+    if("realtime" IN_LIST FEATURES)
+        list(APPEND OPTIONS "--enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        list(APPEND OPTIONS "--enable-vp9-highbitdepth")
+    endif()
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
@@ -171,23 +189,22 @@ else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_VERBOSE_FLAGS
+        NO_ADDITIONAL_PATHS
+        BUILD_TRIPLET --target=${LIBVPX_TARGET}
+        OPTIONS
+            ${OPTIONS}
+            --disable-examples
+            --disable-tools
+            --disable-docs
+            --disable-unit-tests
+            --enable-pic
+            --as=nasm
+    )
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_VERBOSE_FLAGS
-    NO_ADDITIONAL_PATHS
-    BUILD_TRIPLET --target=${LIBVPX_TARGET}
-    OPTIONS
-        ${OPTIONS}
-        --disable-examples
-        --disable-tools
-        --disable-docs
-        --disable-unit-tests
-        --enable-pic
-        --as=nasm
-)
-
-vcpkg_install_make()
+    vcpkg_install_make()
 endif()
 vcpkg_fixup_pkgconfig()
 
