@@ -16,10 +16,17 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_MSVCRT)
 
 # Use mysql-connector-cpp's own build process.
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        jdbc    WITH_JDBC
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD
     OPTIONS
+        ${FEATURE_OPTIONS}
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
