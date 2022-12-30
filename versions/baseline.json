@@ -5542,7 +5542,7 @@
     },
     "opengl-registry": {
       "baseline": "2022-09-29",
-      "port-version": 0
+      "port-version": 1
     },
     "openh264": {
       "baseline": "2021-03-16",

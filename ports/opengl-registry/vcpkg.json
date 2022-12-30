@@ -1,9 +1,14 @@
 {
   "name": "opengl-registry",
   "version-date": "2022-09-29",
+  "port-version": 1,
   "description": "the API and Extension registries for the OpenGL family APIs",
   "homepage": "https://github.com/KhronosGroup/OpenGL-Registry",
   "dependencies": [
-    "egl-registry"
+    "egl-registry",
+    {
+      "name": "vcpkg-spdx",
+      "host": true
+    }
   ]
 }
