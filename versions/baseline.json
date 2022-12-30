@@ -2453,7 +2453,7 @@
       "port-version": 3
     },
     "freeglut": {
-      "baseline": "3.2.2",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "freeimage": {
@@ -6693,8 +6693,8 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "7.7.3",
-      "port-version": 1
+      "baseline": "7.8.3",
+      "port-version": 0
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -7280,6 +7280,10 @@
       "baseline": "9.2.7",
       "port-version": 1
     },
+    "staticjson": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "status-code": {
       "baseline": "2022-09-08",
       "port-version": 0
@@ -7805,7 +7809,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.31.0",
+      "baseline": "20.34.0",
       "port-version": 0
     },
     "v-hacd": {
