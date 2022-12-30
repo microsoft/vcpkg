@@ -846,7 +846,7 @@
     },
     "boost-locale": {
       "baseline": "1.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lockfree": {
       "baseline": "1.81.0",
@@ -2453,7 +2453,7 @@
       "port-version": 3
     },
     "freeglut": {
-      "baseline": "3.2.2",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "freeimage": {
@@ -2698,6 +2698,10 @@
     },
     "gloo": {
       "baseline": "20201203",
+      "port-version": 0
+    },
+    "glpk": {
+      "baseline": "5.0",
       "port-version": 0
     },
     "glslang": {
@@ -2962,7 +2966,7 @@
     },
     "hunspell": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "hwloc": {
       "baseline": "2.9.0",
@@ -6306,7 +6310,7 @@
     },
     "qtbase": {
       "baseline": "6.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "qtcharts": {
       "baseline": "6.4.1",
@@ -6689,8 +6693,8 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "7.7.3",
-      "port-version": 1
+      "baseline": "7.8.3",
+      "port-version": 0
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -7280,6 +7284,10 @@
       "baseline": "9.2.7",
       "port-version": 1
     },
+    "staticjson": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "status-code": {
       "baseline": "2022-09-08",
       "port-version": 0
@@ -7805,7 +7813,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.31.0",
+      "baseline": "20.34.0",
       "port-version": 0
     },
     "v-hacd": {
