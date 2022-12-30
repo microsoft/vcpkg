@@ -17,7 +17,7 @@ vcpkg_from_github(
         allow-unknown-options.patch
 )
 
-set(OPTIONS)
+set(OPTIONS "")
 if("realtime" IN_LIST FEATURES)
     list(APPEND OPTIONS "--enable-realtime-only")
 endif()
@@ -26,8 +26,16 @@ if("highbitdepth" IN_LIST FEATURES)
     list(APPEND OPTIONS "--enable-vp9-highbitdepth")
 endif()
 
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+vcpkg_add_to_path("${NASM_EXE_PATH}")
+
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(VCPKG_CRT_LINKAGE STREQUAL static)
+        list(APPEND OPTIONS "--enable-static-msvcrt")
+    endif()
+
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND (VCPKG_PLATFORM_TOOLSET STREQUAL v142 OR VCPKG_PLATFORM_TOOLSET STREQUAL v143))
         set(LIBVPX_TARGET_OS "uwp")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
@@ -100,6 +108,7 @@ vcpkg_configure_make(
         --disable-docs
         --disable-unit-tests
         --enable-pic
+        --as=nasm
 )
 
 vcpkg_install_make()
