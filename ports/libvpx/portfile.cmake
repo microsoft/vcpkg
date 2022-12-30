@@ -84,33 +84,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     
-    vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_VERBOSE_FLAGS
-    NO_ADDITIONAL_PATHS
-    OPTIONS
-        --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
-        ${LIBVPX_CRT_LINKAGE}
-        ${OPTIONS}
-        --disable-examples
-        --disable-tools
-        --disable-docs
-        --disable-unit-tests
-        --enable-pic
-        --as=nasm
-)
-
-    message(STATUS "Generating MSBuild projects")
     vcpkg_execute_required_process(
         COMMAND
-            ${BASH} --noprofile --norc -c "make dist"
+            ${BASH} --noprofile --norc
+            "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
+            ${LIBVPX_CRT_LINKAGE}
+            ${OPTIONS}
+            --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
-        LOGNAME generate-${TARGET_TRIPLET})
+        LOGNAME configure-${TARGET_TRIPLET})
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
-        OPTIONS /p:UseEnv=True
-    )
+    message(STATUS "Generating MSBuild projects")
+    vcpkg_install_make()
+    message(FATAL_ERROR "abort to get logs")
 
     # note: pdb file names are hardcoded in the lib file, cannot rename
     set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
