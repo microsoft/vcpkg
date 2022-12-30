@@ -262,6 +262,27 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
+### Vcpkg via FetchContent
+
+You can use the following snippet before the first project call to fetch vcpkg via CMake's `FetchContent` module.
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    vcpkg
+    GIT_REPOSITORY https://github.com/microsoft/vcpkg.git
+    GIT_TAG [vcpkg version])
+FetchContent_GetProperties(vcpkg)
+if(NOT vcpkg_POPULATED)
+    FetchContent_Populate(vcpkg)
+    set(CMAKE_TOOLCHAIN_FILE
+        "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "Vcpkg toolchain file")
+endif()
+```
+
+This will fetch the vcpkg version specified by the `GIT_TAG` option.
+
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
