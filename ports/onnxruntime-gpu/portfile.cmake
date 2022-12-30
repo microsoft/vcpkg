@@ -1,6 +1,6 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(VERSION 1.12.1)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/onnxruntime-win-x64-gpu-${VERSION}.zip"
