@@ -1,8 +1,8 @@
-set(CPPWINRT_VERSION 2.0.221121.5)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Windows.CppWinRT/${CPPWINRT_VERSION}"
-    FILENAME "cppwinrt.${CPPWINRT_VERSION}.zip"
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.Windows.CppWinRT/${VERSION}"
+    FILENAME "cppwinrt.${VERSION}.zip"
     SHA512 0a5a46bf2508ee396861b810a2196e694f351385700c267cb6637dcbb966a4017703020378289aebb50c508cf082c9be9b7f4c756fd757d177ebd74480b7d13e
 )
 
