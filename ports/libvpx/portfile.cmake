@@ -34,9 +34,6 @@ if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
-else()
-    set(BASH /bin/bash)
-    set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
 
 vcpkg_find_acquire_program(NASM)
@@ -84,28 +81,24 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
-
-    if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
-    endif()
-
-    if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
-    endif()
-
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-    vcpkg_execute_required_process(
-        COMMAND
-            ${BASH} --noprofile --norc
-            "${SOURCE_PATH}/configure"
-            --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
-            ${LIBVPX_CRT_LINKAGE}
-            ${OPTIONS}
-            --as=nasm
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
-        LOGNAME configure-${TARGET_TRIPLET})
+    
+    vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_VERBOSE_FLAGS
+    NO_ADDITIONAL_PATHS
+    OPTIONS
+        --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
+        ${LIBVPX_CRT_LINKAGE}
+        ${OPTIONS}
+        --disable-examples
+        --disable-tools
+        --disable-docs
+        --disable-unit-tests
+        --enable-pic
+        --as=nasm
+)
 
     message(STATUS "Generating MSBuild projects")
     vcpkg_execute_required_process(
