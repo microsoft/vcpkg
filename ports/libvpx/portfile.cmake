@@ -103,7 +103,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME generate-${TARGET_TRIPLET})
 
-    vcpkg_build_msbuild(
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
         OPTIONS /p:UseEnv=True
     )
@@ -201,7 +202,6 @@ else()
             --disable-docs
             --disable-unit-tests
             --enable-pic
-            --as=nasm
     )
 
     vcpkg_install_make()
