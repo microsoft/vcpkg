@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Move cmake configs
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ptcprint)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ptcprint CONFIG_PATH lib/cmake/ptcprint)
 
 # Remove duplicate files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
