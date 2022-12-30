@@ -26,14 +26,32 @@ if("highbitdepth" IN_LIST FEATURES)
     list(APPEND OPTIONS "--enable-vp9-highbitdepth")
 endif()
 
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-vcpkg_add_to_path("${NASM_EXE_PATH}")
+vcpkg_find_acquire_program(PERL)
 
+get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+
+if(CMAKE_HOST_WIN32)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+else()
+    set(BASH /bin/bash)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+endif()
+
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+
     if(VCPKG_CRT_LINKAGE STREQUAL static)
-        list(APPEND OPTIONS "--enable-static-msvcrt")
+        set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
+        set(LIBVPX_CRT_SUFFIX mt)
+    else()
+        set(LIBVPX_CRT_SUFFIX md)
     endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND (VCPKG_PLATFORM_TOOLSET STREQUAL v142 OR VCPKG_PLATFORM_TOOLSET STREQUAL v143))
@@ -65,7 +83,85 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     else()
         set(LIBVPX_TARGET_VS "vs15")
     endif()
-    set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}")
+
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
+    message(STATUS "Generating makefile")
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    vcpkg_execute_required_process(
+        COMMAND
+            ${BASH} --noprofile --norc
+            "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
+            ${LIBVPX_CRT_LINKAGE}
+            ${OPTIONS}
+            --as=nasm
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        LOGNAME configure-${TARGET_TRIPLET})
+
+    message(STATUS "Generating MSBuild projects")
+    vcpkg_execute_required_process(
+        COMMAND
+            ${BASH} --noprofile --norc -c "make dist"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        LOGNAME generate-${TARGET_TRIPLET})
+
+    vcpkg_build_msbuild(
+        PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
+        OPTIONS /p:UseEnv=True
+    )
+
+    # note: pdb file names are hardcoded in the lib file, cannot rename
+    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        else()
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        endif()
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        else()
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        endif()
+    endif()
+
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+    else()
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+    endif()
+    file(
+        INSTALL
+            "${LIBVPX_INCLUDE_DIR}"
+        DESTINATION
+            "${CURRENT_PACKAGES_DIR}/include"
+        RENAME
+            "vpx")
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
+
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
 else()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
@@ -94,7 +190,7 @@ else()
     else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
-endif()
+
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -112,6 +208,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
