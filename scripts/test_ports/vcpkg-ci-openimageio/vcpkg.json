@@ -1,0 +1,22 @@
+{
+  "name": "vcpkg-ci-openimageio",
+  "version": "1",
+  "description": "OpenImageIO features testing within CI.",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "openimageio",
+      "features": [
+        "ffmpeg",
+        "freetype",
+        "gif",
+        "libraw",
+        "opencv",
+        "openjpeg",
+        "pybind11",
+        "tools",
+        "webp"
+      ]
+    }
+  ]
+}

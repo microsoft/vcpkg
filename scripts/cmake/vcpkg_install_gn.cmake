@@ -1,31 +1,3 @@
-# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_install
-#[===[.md:
-# vcpkg_install_gn
-
-Installs a GN project.
-
-In order to build a GN project without installing, use [`vcpkg_build_ninja()`].
-
-## Usage:
-```cmake
-vcpkg_install_gn(
-     SOURCE_PATH <SOURCE_PATH>
-     [TARGETS <target>...]
-)
-```
-
-## Parameters:
-### SOURCE_PATH
-The path to the source directory
-
-### TARGETS
-Only install the specified targets.
-
-Note: includes must be handled separately
-
-[`vcpkg_build_ninja()`]: vcpkg_build_ninja.md
-#]===]
-
 function(z_vcpkg_install_gn_get_target_type out_var)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
-    FILENAME "armadillo-10.6.2.tar.xz"
-    SHA512 ae04e993830ca04e7eddfaf9c40a50fb9139b10b9667412f5a18707ac73ee529b8e3a5a91337782e4e01bae61207b44f24bdd8a77c6c2404011a06006d849aba
+    FILENAME "armadillo-11.2.3.tar.xz"
+    SHA512 db3457adbc799c68c928aaf22714598b4b9df91ec83aff33bf2d0096b755bd316d4bae12ac973bf1821759a71f3a58a7dd8dc64cbcb1f53ea2646d8bb0bc9a3b
     PATCHES
         remove_custom_modules.patch
         fix-CMakePath.patch
@@ -41,8 +41,11 @@ if(SHARE_LEN EQUAL 0)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp" "#define ARMA_AUX_LIBS ${CURRENT_INSTALLED_DIR}/lib/openblas.lib;${CURRENT_INSTALLED_DIR}/lib/lapack.lib;${CURRENT_INSTALLED_DIR}/lib/openblas.lib" "")
+set(filename "${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp")
+if(EXISTS "${filename}")
+    file(READ "${filename}" contents)
+    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\n]*\n" "\n" contents "${contents}")
+    file(WRITE "${filename}" "${contents}")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

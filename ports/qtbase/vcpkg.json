@@ -1,11 +1,12 @@
 {
   "name": "qtbase",
-  "version-semver": "6.2.2",
-  "port-version": 2,
+  "version": "6.4.1",
+  "port-version": 5,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
-    "freetype",
     {
       "name": "libb2",
       "platform": "!windows"
@@ -15,6 +16,37 @@
       "name": "qtbase",
       "host": true,
       "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "doubleconversion"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "thread"
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "pcre2"
+      ],
+      "platform": "windows & static"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     "zlib"
   ],
@@ -30,6 +62,7 @@
     "icu",
     "jpeg",
     "network",
+    "opengl",
     "openssl",
     "pcre2",
     "png",
@@ -37,6 +70,7 @@
     "sql-psql",
     "sql-sqlite",
     "testlib",
+    "thread",
     "widgets",
     "zstd"
   ],
@@ -58,7 +92,16 @@
       ]
     },
     "concurrent": {
-      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+      "description": "Provides a high-level multi-threading API. Qt Concurrent",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus"
@@ -85,6 +128,15 @@
             "xrender"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "gles2"
+          ],
+          "platform": "android"
         }
       ]
     },
@@ -96,8 +148,9 @@
     },
     "egl": {
       "description": "EGL",
+      "supports": "linux",
       "dependencies": [
-        "egl-registry"
+        "egl"
       ]
     },
     "fontconfig": {
@@ -126,6 +179,19 @@
         }
       ]
     },
+    "gles2": {
+      "description": "OpenGL ES 2.0",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
@@ -135,12 +201,21 @@
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
+        "opengl",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "freetype"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -178,6 +253,19 @@
     },
     "network": {
       "description": "Qt Network"
+    },
+    "opengl": {
+      "description": "OpenGL",
+      "dependencies": [
+        "opengl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "openssl": {
       "description": "Enable OpenSSL",
@@ -223,6 +311,45 @@
         }
       ]
     },
+    "sql-mysql": {
+      "description": "Enable SQL Driver MySQL",
+      "dependencies": [
+        "libmysql",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "sql-oci": {
+      "description": "Enable SQL Driver Oracle OCI",
+      "dependencies": [
+        "ocilib",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "sql-odbc": {
+      "description": "Enable SQL Driver odbc",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
     "sql-psql": {
       "description": "Enable SQL Driver psql",
       "dependencies": [
@@ -252,6 +379,9 @@
     "testlib": {
       "description": "Qt Testlib"
     },
+    "thread": {
+      "description": "Thread support; provides QThread and related classes."
+    },
     "vulkan": {
       "description": "Enable Vulkan support"
     },
@@ -274,6 +404,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "concurrent",
             "xkbcommon-x11",
             "xlib"
           ]

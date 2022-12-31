@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
@@ -9,6 +7,7 @@ vcpkg_from_github(
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
         fix-usage.patch
+        fix-android-threads.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

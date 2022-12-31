@@ -1,10 +1,9 @@
 # header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO veselink1/refl-cpp
-    REF v0.12.2
-    SHA512 a124f12f2a491b3f2ea74bcf3b8cd3e14f1a4aa5ede105edbed90c3329af7d7fffa5c7a287f2e1e6079d9f0fad34190887700ae20a7d15f00299526317b41137
+    REF ce47c1355219f3b9af56ae91d997daf2b1555d97 #v0.12.3
+    SHA512 f73e542a9ee00d677e2445c148b732cbdf6247adc1f4f412ad8e9587c5971b3cb02b39b15cdb9b0788f53e9efea6c5a485367505ecb569a367be012f6246ea92
     HEAD_REF master
 )
 

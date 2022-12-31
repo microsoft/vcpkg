@@ -1,11 +1,20 @@
 {
   "name": "libgcrypt",
-  "version": "1.9.4",
-  "port-version": 2,
+  "version": "1.10.1",
+  "port-version": 1,
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
-  "supports": "linux | osx",
+  "license": null,
+  "supports": "!windows | mingw",
   "dependencies": [
-    "libgpg-error"
+    {
+      "name": "libgcrypt",
+      "host": true
+    },
+    "libgpg-error",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
   ]
 }

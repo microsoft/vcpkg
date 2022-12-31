@@ -1,13 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.18/7.18.1
-    SHA512 200587a0896aec6a7e7247132811141909aa333cb2bb9350c5ba016ffdf056413b1c5346361b311c087634b2d29cdbb204486385d8561a299b68739244c5a532
+    REF client_release/7.20/7.20.5
+    SHA512 7ded13b401834c9d7f8a835223856c1ed7e7a2bad39ac260b2589cfd49070024fd6e6b70bb953cff8c929b738886f44df488bc857c40a8eb64cd9f5290574ff1
     HEAD_REF master
 )
 

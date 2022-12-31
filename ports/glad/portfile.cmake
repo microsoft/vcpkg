@@ -3,10 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
-    REF 7ece538856bf124d798ab323c8e1e64ebb83cb50
-    SHA512 f6a8ba7d0d09b89c23b6f76962d3e6eef1babc8e1a659e238d30e143eb33ccba424957e5a6d46d99a714bfa2967523b193586d0ff24e29ad8d86c92c9faf9c02
+    REF 1ecd45775d96f35170458e6b148eb0708967e402 # 0.1.36
+    SHA512 f6292e9dbce503a95b6eca927a90cf8a06f5e3de39b84f9a47e0d9273a6ea3f6591a64d35f2e33b5ea353e0c784f15c38579fc15aa6c5b180154e241ccbb16fe
     HEAD_REF master
-    PATCHES encoding.patch find_python.patch
+    PATCHES 
+        encoding.patch
+        find_python.patch
 )
 
 if(NOT GLAD_PROFILE)

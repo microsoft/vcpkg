@@ -155,6 +155,15 @@ if "@PORT@" != "boost-container"
     explicit boost_container ;
 }
 
+if "@PORT@" != "boost-python"
+{
+    use-project /boost/python : . ;
+
+    lib boost_python : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_python@PYTHON_VERSION_TAG@@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_python : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_python@PYTHON_VERSION_TAG@@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
+    explicit boost_python ;
+}
+
 rule requires ( foo * )
 {
 }

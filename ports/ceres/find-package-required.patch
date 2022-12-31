@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b6a3d05..a78c027 100644
+index 2d241fe..b79454d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -245,7 +245,7 @@ if (EIGEN3_FOUND)
- endif (EIGEN3_FOUND)
+@@ -244,7 +244,7 @@ else (CUDA)
+ endif (CUDA)
  
  if (LAPACK)
 -  find_package(LAPACK QUIET)
@@ -11,48 +11,102 @@ index b6a3d05..a78c027 100644
    if (LAPACK_FOUND)
      message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
    else (LAPACK_FOUND)
-@@ -263,7 +263,7 @@ if (SUITESPARSE)
+@@ -266,7 +266,8 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
--  find_package(SuiteSparse)
-+  find_package(SuiteSparse REQUIRED)
-   if (SUITESPARSE_FOUND)
-     # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
-     # Ubuntu 13.10 cannot be used to link shared libraries.
-@@ -300,7 +300,7 @@ endif (SUITESPARSE)
+-  find_package(SuiteSparse 4.0 COMPONENTS CHOLMOD SPQR)
++  find_package(suitesparse CONFIG REQUIRED)
++  set(SuiteSparse_FOUND 1)
+   if (SuiteSparse_FOUND)
+     set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
+     # By default, if all of SuiteSparse's dependencies are found, Ceres is
+@@ -274,11 +275,11 @@ if (SUITESPARSE)
+     message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
+             "building with SuiteSparse.")
+ 
+-    if (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
++    if (0)
+       install(FILES ${Ceres_SOURCE_DIR}/cmake/FindSuiteSparse.cmake
+                     ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
+               DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
+-    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
++    endif ()
+   else (SuiteSparse_FOUND)
+     # Disable use of SuiteSparse if it cannot be found and continue.
+     message("-- Did not find all SuiteSparse dependencies, disabling "
+@@ -294,7 +295,7 @@ endif (SUITESPARSE)
  # CXSparse.
  if (CXSPARSE)
    # Don't search with REQUIRED as we can continue without CXSparse.
 -  find_package(CXSparse)
 +  find_package(CXSparse REQUIRED)
-   if (CXSPARSE_FOUND)
+   if (CXSparse_FOUND)
+     set(CXSparse_DEPENDENCY "find_dependency(CXSparse ${CXSparse_VERSION})")
      # By default, if CXSparse and all dependencies are found, Ceres is
-     # built with CXSparse support.
-@@ -336,7 +336,7 @@ endif(NOT SUITESPARSE AND NOT CXSPARSE AND NOT EIGENSPARSE)
+@@ -302,10 +303,10 @@ if (CXSPARSE)
+     message("-- Found CXSparse version: ${CXSparse_VERSION}, "
+       "building with CXSparse.")
+ 
+-    if (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
++    if (0)
+       install(FILES ${Ceres_SOURCE_DIR}/cmake/FindCXSparse.cmake
+               DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
+-    endif (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
++    endif ()
+   else (CXSparse_FOUND)
+     # Disable use of CXSparse if it cannot be found and continue.
+     message("-- Did not find CXSparse, Building without CXSparse.")
+@@ -367,9 +368,10 @@ endif()
  # GFlags.
  if (GFLAGS)
    # Don't search with REQUIRED as we can continue without gflags.
 -  find_package(gflags 2.2.0)
-+  find_package(gflags REQUIRED)
++  find_package(gflags CONFIG REQUIRED)
    if (gflags_FOUND)
-     if (TARGET gflags)
+-    if (TARGET gflags)
++    if (TARGET gflags::gflags)
++      add_library(gflags ALIAS gflags::gflags)
        message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
-@@ -537,7 +537,7 @@ else (NOT OPENMP AND NOT TBB AND NOT CXX11_THREADS)
- set_ceres_threading_model("${CERES_THREADING_MODEL}")
+     else()
+       message("-- Detected version of gflags: ${gflags_VERSION} does not define "
+@@ -420,7 +422,7 @@ set_ceres_threading_model("${CERES_THREADING_MODEL}")
  
  if (BUILD_BENCHMARKS)
--  find_package(benchmark QUIET)
-+  find_package(benchmark REQUIRED)
+   # Version 1.3 was first to provide import targets
+-  find_package(benchmark 1.3 QUIET)
++  find_package(benchmark CONFIG REQUIRED)
    if (benchmark_FOUND)
       message("-- Found Google benchmark library. Building Ceres benchmarks.")
    else()
-@@ -782,7 +782,7 @@ if (BUILD_DOCUMENTATION)
-   set(CERES_DOCS_INSTALL_DIR "share/doc/ceres" CACHE STRING
-       "Ceres docs install path relative to CMAKE_INSTALL_PREFIX")
+@@ -611,7 +613,7 @@ create_ceres_config("${CERES_COMPILE_OPTIONS}"
+ add_subdirectory(internal/ceres)
  
--  find_package(Sphinx QUIET)
+ if (BUILD_DOCUMENTATION)
+-  find_package(Sphinx)
 +  find_package(Sphinx REQUIRED)
    if (NOT SPHINX_FOUND)
-     message("-- Failed to find Sphinx, disabling build of documentation.")
+     message("-- Failed to find Sphinx and/or its dependencies, disabling build of documentation.")
      update_cache_variable(BUILD_DOCUMENTATION OFF)
+diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
+index 299b373..33d41d8 100644
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -108,14 +108,14 @@ endif (NOT MINIGLOG)
+ if (SUITESPARSE AND SuiteSparse_FOUND)
+   # Define version information for use in Solver::FullReport.
+   add_definitions(-DCERES_SUITESPARSE_VERSION="${SuiteSparse_VERSION}")
+-  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::CHOLMOD
+-    SuiteSparse::SPQR)
++  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::cholmod
++    SuiteSparse::spqr)
+ endif (SUITESPARSE AND SuiteSparse_FOUND)
+ 
+ if (CXSPARSE AND CXSparse_FOUND)
+   # Define version information for use in Solver::FullReport.
+   add_definitions(-DCERES_CXSPARSE_VERSION="${CXSparse_VERSION}")
+-  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES CXSparse::CXSparse)
++  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES ${CXSparse_LIBRARIES})
+ endif (CXSPARSE AND CXSparse_FOUND)
+ 
+ if (ACCELERATESPARSE AND AccelerateSparse_FOUND)

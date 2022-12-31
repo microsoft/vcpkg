@@ -1,6 +1,6 @@
 {
   "name": "kf5configwidgets",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Widgets for configuration dialogs",
   "homepage": "https://api.kde.org/frameworks/kconfigwidgets/html/index.html",
   "dependencies": [
@@ -12,9 +12,13 @@
         "tools"
       ]
     },
-    "kf5auth",
+    {
+      "name": "kf5auth",
+      "platform": "!(windows | android)"
+    },
     "kf5codecs",
     "kf5config",
+    "kf5coreaddons",
     "kf5guiaddons",
     "kf5i18n",
     "kf5widgetsaddons",

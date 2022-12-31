@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 25bbf383..31ca2da2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -678,7 +678,7 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+     set(CMAKE_INSTALL_LIBDIR "lib")
+ endif()
+
+-set(package_location "cmake")
++set(package_location "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+
+ if(${build_as_dynamic})
+     set(targets aziotsharedutil aziotsharedutil_dll)

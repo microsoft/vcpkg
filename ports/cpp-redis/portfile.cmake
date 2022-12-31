@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 4.3.1
     SHA512 abf372542c53f37f504b3211b840b100d07a8f4b2e7f5584cc7550ab16ed617838e2df79064374c7a409458d8567f4834686318ea3a40249c767e36c744c7a47
     HEAD_REF master
+    PATCHES 
+        "fix-sleep_for.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/tacopie/CMakeLists.txt DESTINATION ${SOURCE_PATH}/tacopie)
@@ -22,14 +24,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
     set(VCPKG_C_FLAGS_DEBUG "${VCPKG_C_FLAGS_DEBUG} -RTC1")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DMSVC_RUNTIME_LIBRARY_CONFIG=${MSVC_RUNTIME_LIBRARY_CONFIG}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

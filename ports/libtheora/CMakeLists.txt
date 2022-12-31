@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(theora LANGUAGES C)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-FIND_PACKAGE(Ogg REQUIRED)
+find_package(Ogg CONFIG REQUIRED)
 
 file(GLOB HEADERS
   "include/theora/codec.h"
@@ -10,6 +10,25 @@ file(GLOB HEADERS
   "include/theora/theoradec.h"
   "include/theora/theoraenc.h"
 )
+
+if(MSVC)
+  set(LIBTHEORA_COMMON_X86
+    "lib/x86_vc/mmxfrag.c"
+    "lib/x86_vc/mmxidct.c"
+    "lib/x86_vc/mmxstate.c"
+    "lib/x86_vc/x86cpu.c"
+    "lib/x86_vc/x86state.c"
+  )
+else()
+  set(LIBTHEORA_COMMON_X86
+    "lib/x86/mmxfrag.c"
+    "lib/x86/mmxidct.c"
+    "lib/x86/mmxstate.c"
+    "lib/x86/sse2idct.c"
+    "lib/x86/x86cpu.c"
+    "lib/x86/x86state.c"
+  )
+endif()
 
 set(LIBTHEORA_COMMON
   "lib/apiwrapper.c"
@@ -22,12 +41,24 @@ set(LIBTHEORA_COMMON
   "lib/state.c"
   "lib/quant.c"
 
-  "lib/x86_vc/mmxfrag.c"
-  "lib/x86_vc/mmxidct.c"
-  "lib/x86_vc/mmxstate.c"
-  "lib/x86_vc/x86cpu.c"
-  "lib/x86_vc/x86state.c"
+  ${LIBTHEORA_COMMON_X86}
 )
+
+if(MSVC)
+  set(LIBTHEORA_ENC_X86
+    "lib/x86_vc/mmxencfrag.c"
+    "lib/x86_vc/mmxfdct.c"
+    "lib/x86_vc/x86enc.c"
+  )
+else()
+  set(LIBTHEORA_ENC_X86
+    "lib/x86/mmxencfrag.c"
+    "lib/x86/mmxfdct.c"
+    "lib/x86/x86enc.c"
+    "lib/x86/x86enquant.c"
+    "lib/x86/sse2encfrag.c"
+  )
+endif()
 
 set(LIBTHEORA_ENC
   "lib/analyze.c"
@@ -43,9 +74,7 @@ set(LIBTHEORA_ENC
   "lib/rate.c"
   "lib/tokenize.c"
 
-  "lib/x86_vc/mmxencfrag.c"
-  "lib/x86_vc/mmxfdct.c"
-  "lib/x86_vc/x86enc.c"
+  ${LIBTHEORA_ENC_X86}
 )
 
 set(LIBTHEORA_DEC
@@ -103,9 +132,9 @@ install(
 
 install(TARGETS theora theoraenc theoradec
   EXPORT unofficial-theora-targets
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
-  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 install(EXPORT unofficial-theora-targets

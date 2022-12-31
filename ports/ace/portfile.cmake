@@ -1,77 +1,60 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.5)
-string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
+string(REPLACE "." "_" VERSION_DIRECTORY "${VERSION}")
 
 if("tao" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_WINDOWS)
-      # Don't change to vcpkg_from_github! This points to a release and not an archive
-      vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
-          FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 3ea0cc7b35433d7c41f51137caacd394a976cf4d5c2972a35015901b3ba172bacff0216a3146bf632b929a63853b7123019382c22d14c6d64e43a71a61b88023
-      )
-    else()
-      # VCPKG_TARGET_IS_LINUX
-      vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
-          FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 65c6557f72a57dc137882bbf6cbb009ae2e403c9848e3e4c3165f1ed55865c5e08fc0226dcf715b33bfa501b13b3863f5c40403791b0dcd29b7c88fec20a9660
-      )
-    endif()
-else()
-  if(VCPKG_TARGET_IS_WINDOWS)
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
-        FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 73707c92a0533ab60f090cfb620d508755b8267e2b83fb52d9903c4d780d2e2b504545433fdbe34801d4895cf938ecc5a5f26c34528851080bcce07f5a501ac1
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
+        FILENAME "ACE-TAO-${VERSION}.tar.gz"
+        SHA512 7210091f0512fa9c7ba2ea9e3f805a2ba0aab4d848a8e9e5651a824dcac65ddd50b95c98f4da86900487fa0a79aede126d021f4eb109f224224fc88a58133f79
     )
-  else(VCPKG_TARGET_IS_WINDOWS)
-    # VCPKG_TARGET_IS_LINUX
+else()
+    # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
-        FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 6e5e43e600763e612c292cb88443e4dce1be94d049e2a784c5a4d4720314b484cccec4f7f05534c6ef824d86bef8bfe4ff5bce5f7998896cdaa599302b5b2562
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
+        FILENAME "ACE-src-${VERSION}.tar.gz"
+        SHA512 6e8b63ee8fa691656544a7a9e5887b499a8791f25766a8081df1d64e911f667a95fed26c1eb6355f6ce1233694f8ef11c1a986ca16a686e21fb1e375035a29ed
     )
-  endif()
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
-set(ACE_ROOT ${SOURCE_PATH})
-set(ENV{ACE_ROOT} ${ACE_ROOT})
-set(ACE_SOURCE_PATH ${ACE_ROOT}/ace)
+set(ACE_ROOT "${SOURCE_PATH}")
+set(ENV{ACE_ROOT} "${ACE_ROOT}")
+set(ACE_SOURCE_PATH "${ACE_ROOT}/ace")
 if("tao" IN_LIST FEATURES)
-  set(TAO_ROOT ${SOURCE_PATH}/TAO)
-  set(ENV{TAO_ROOT} ${TAO_ROOT})
-  set(WORKSPACE ${TAO_ROOT}/TAO_ACE)
+  set(TAO_ROOT "${SOURCE_PATH}/TAO")
+  set(ENV{TAO_ROOT} "${TAO_ROOT}")
+  set(WORKSPACE "${TAO_ROOT}/TAO_ACE")
 else()
-  set(WORKSPACE ${ACE_ROOT}/ace/ace)
+  set(WORKSPACE "${ACE_ROOT}/ace/ace")
 endif()
 if("wchar" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "uses_wchar=1")
 endif()
 if("zlib" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "zlib=1")
-    set(ENV{ZLIB_ROOT} ${CURRENT_INSTALLED_DIR})
+    set(ENV{ZLIB_ROOT} "${CURRENT_INSTALLED_DIR}")
 else()
     list(APPEND ACE_FEATURE_LIST "zlib=0")
 endif()
 if("ssl" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "ssl=1")
     list(APPEND ACE_FEATURE_LIST "openssl11=1")
-    set(ENV{SSL_ROOT} ${CURRENT_INSTALLED_DIR})
+    set(ENV{SSL_ROOT} "${CURRENT_INSTALLED_DIR}")
 else()
     list(APPEND ACE_FEATURE_LIST "ssl=0")
 endif()
 if("xml-utils" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "xerces3=1")
-    set(ENV{XERCESCROOT} ${CURRENT_INSTALLED_DIR})
+    set(ENV{XERCESCROOT} "${CURRENT_INSTALLED_DIR}")
 else()
     list(APPEND ACE_FEATURE_LIST "xerces3=0")
 endif()
@@ -80,12 +63,12 @@ list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 # Acquire Perl and add it to PATH (for execution of MPC)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
+vcpkg_add_to_path("${PERL_PATH}")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+    set(MSBUILD_PLATFORM "${TRIPLET_SYSTEM_ARCH}")
 endif()
 
 # Add ace/config.h file
@@ -103,16 +86,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 	set(MPC_STATIC_FLAG -static)
   endif()
-  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
+  set(config_h_contents "#include \"ace/config-windows.h\"\n")
 elseif(VCPKG_TARGET_IS_LINUX)
   set(SOLUTION_TYPE gnuace)
-  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
+  set(config_h_contents "#include \"ace/config-linux.h\"\n")
+  file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "CCFLAGS += -fPIC\ninclude $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
 elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
-  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+  set(config_h_contents "#include \"ace/config-macosx.h\"\n")
+  file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
+
+if("wchar" IN_LIST FEATURES)
+  string(APPEND config_h_contents "#define ACE_USES_WCHAR 1\n")
+endif()
+file(WRITE "${ACE_SOURCE_PATH}/config.h" "${config_h_contents}")
 
 if(VCPKG_TARGET_IS_UWP)
   set(MPC_VALUE_TEMPLATE -value_template link_options+=/APPCONTAINER)
@@ -120,22 +108,22 @@ endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_build_process(
-    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ${WORKSPACE}.mwc ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
-    WORKING_DIRECTORY ${ACE_ROOT}
+    COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${WORKSPACE}.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+    WORKING_DIRECTORY "${ACE_ROOT}"
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
 if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
-      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ${ACE_ROOT}/ACEXML/ACEXML.mwc ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
-      WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
+      COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${ACE_ROOT}/ACEXML/ACEXML.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME mwc-xml-${TARGET_TRIPLET}
   )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
   if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
-    file(WRITE ${SOURCE_PATH}/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+    file(WRITE "${SOURCE_PATH}/Directory.Build.props" "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                                                      <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
                                                      <ItemDefinitionGroup>
                                                      <ClCompile>
@@ -149,9 +137,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
                                                      </Project>")
   endif()
 
-  file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
+  file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
   vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
@@ -166,19 +154,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
       file(
         GLOB
         HEADER_FILES
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.hpp
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.cpp
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.idl
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.pidl)
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h"
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.hpp"
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl"
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.cpp"
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.idl"
+        "${ORIGINAL_PATH}/${RELATIVE_PATH}/*.pidl")
       file(INSTALL ${HEADER_FILES}
-           DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
+           DESTINATION "${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH}")
     endforeach()
   endfunction()
 
   get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-  set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}")
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
@@ -193,22 +181,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes(${SOURCE_COPY_PATH} "${ACE_INCLUDE_FOLDERS}")
+  install_includes("${SOURCE_COPY_PATH}" "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
-    install_includes(${SOURCE_COPY_PATH} "ace/SSL")
+    install_includes("${SOURCE_COPY_PATH}" "ace/SSL")
   endif()
 
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes(${SOURCE_COPY_PATH}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}/protocols" "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
-    install_includes(${SOURCE_COPY_PATH} "Kokyu")
+    install_includes("${SOURCE_COPY_PATH}" "Kokyu")
 
     set(TAO_ORBSVCS_INCLUDE_FOLDERS
         "orbsvcs"
@@ -242,11 +230,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("ssl" IN_LIST FEATURES)
       list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_includes(${SOURCE_COPY_PATH}/TAO/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}/TAO/orbsvcs" "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
                                          "orbsvcs/Notify_Service")
-    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}/TAO" "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_INCLUDE_FOLDERS
         "tao"
@@ -288,13 +276,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("zlib" IN_LIST FEATURES)
       list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}/TAO" "${TAO_INCLUDE_FOLDERS}")
   endif()
 
   if("xml" IN_LIST FEATURES)
-    file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH} ${ACE_ROOT}/ACEXML/ACEXML.sln)
+    file(RELATIVE_PATH PROJECT_SUBPATH_XML "${SOURCE_PATH}" "${ACE_ROOT}/ACEXML/ACEXML.sln")
     vcpkg_install_msbuild(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
       PLATFORM ${MSBUILD_PLATFORM}
@@ -303,17 +291,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
   if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll
-        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
-        ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
+        "${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll"
+        "${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb")
     endif()
   endif()
 
@@ -332,22 +320,22 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     list(APPEND _ace_makefile_macros "static_libs_only=1")
   endif()
 
-  set(ENV{INSTALL_PREFIX} ${CURRENT_PACKAGES_DIR})
+  set(ENV{INSTALL_PREFIX} "${CURRENT_PACKAGES_DIR}")
   # Set `PWD` environment variable since ACE's `install` make target calculates install dir using this env.
   set(_prev_env $ENV{PWD})
-  get_filename_component(WORKING_DIR ${WORKSPACE} DIRECTORY)
-  set(ENV{PWD} ${WORKING_DIR})
+  get_filename_component(WORKING_DIR "${WORKSPACE}" DIRECTORY)
+  set(ENV{PWD} "${WORKING_DIR}")
 
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY ${WORKING_DIR}
+    WORKING_DIRECTORY "${WORKING_DIR}"
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -355,20 +343,20 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} install
-    WORKING_DIRECTORY ${WORKING_DIR}
+    WORKING_DIRECTORY "${WORKING_DIR}"
     LOGNAME install-${TARGET_TRIPLET}-dbg
   )
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
 
-  file(COPY ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+  file(COPY "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 
-  file(GLOB _pkg_components ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc)
+  file(GLOB _pkg_components "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
   foreach(_pkg_comp ${_pkg_components})
     file(READ ${_pkg_comp} _content)
     string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" _content ${_content})
@@ -378,13 +366,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} realclean
-    WORKING_DIRECTORY ${WORKING_DIR}
+    WORKING_DIRECTORY "${WORKING_DIR}"
     LOGNAME realclean-${TARGET_TRIPLET}-dbg
   )
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
-      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -392,13 +380,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY ${WORKING_DIR}
+    WORKING_DIRECTORY "${WORKING_DIR}"
     LOGNAME make-${TARGET_TRIPLET}-rel
   )
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -406,29 +394,30 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} install
-    WORKING_DIRECTORY ${WORKING_DIR}
+    WORKING_DIRECTORY "${WORKING_DIR}"
     LOGNAME install-${TARGET_TRIPLET}-rel
   )
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-rel
     )
   endif()
   if("tao" IN_LIST FEATURES)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
   endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 
   # Handle copyright
-  file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+  file(INSTALL "${ACE_ROOT}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
 
 vcpkg_fixup_pkgconfig()

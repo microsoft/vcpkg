@@ -2,5 +2,13 @@
 include(CMakeFindDependencyMacro)
 
 set_and_check(leveldb_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+find_dependency(Threads)
+
+if (@WITH_CRC32C@)
+    find_dependency(Crc32c CONFIG)
+endif()
+if (@WITH_SNAPPY@)
+    find_dependency(Snappy CONFIG)
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/leveldbTargets.cmake")

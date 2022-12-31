@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.89.0
-    SHA512 83f748690efe8024f603057cc97ab713f82ba6fbdb4462bb6052a8e89945e4117d6b1f030e0064120ae7e34a9b06860ba77d56617d5663578f0ac11a74dba2db
+    REF v5.98.0
+    SHA512 e92d54b41ed65be517c4d8d46ed98f4b4a5df7ed66ef490f340e44a2ee230236b738d06c980f44dbe93bbbbcbdba387f60f5fbdde8e77d4df4f1d0433b4f0255
     HEAD_REF master
+    PATCHES
+        fix_static_build.patch  # https://invent.kde.org/frameworks/kdbusaddons/-/merge_requests/26
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -30,4 +32,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

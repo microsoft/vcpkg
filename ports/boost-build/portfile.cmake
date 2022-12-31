@@ -4,14 +4,16 @@ if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME 
     return()
 endif()
 
-set(BOOST_VERSION 1.77.0)
+set(BOOST_VERSION 1.81.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 35352daaa31b54ee0bfce764dda0863931ac0e90aa8e3facde26a7ba472ddd2d799fced7cfcca8fc3ffd7a0a7f7e7d095337ba28f200da10e5187b7ef39bb88b
+    SHA512 ecd7f3d48200939cfea57ca85a41b5d700d4c934131298aa86840104bc4c35d0366673608dc70c9c62c275b573a9a5a1e4568399f41f3564f8816a295c27d4fc
     HEAD_REF master
+    PATCHES
+        0002-fix-get-version.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

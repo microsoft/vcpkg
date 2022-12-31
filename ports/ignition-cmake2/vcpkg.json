@@ -1,10 +1,14 @@
 {
   "name": "ignition-cmake2",
-  "version": "2.5.0",
+  "version": "2.16.0",
   "port-version": 1,
   "description": "CMake helper functions for building robotic applications",
   "homepage": "https://ignitionrobotics.org/libs/cmake",
+  "license": null,
   "dependencies": [
-    "ignition-modularscripts"
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
   ]
 }

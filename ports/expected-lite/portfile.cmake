@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/expected-lite
-    REF v0.5.0
-    SHA512 6dd8974d518db0c79fe7bd0e407a85436c6ad222f8e5ed84efb34925d9a665b5b83ff08529b3e985034ed9a9201c80575f6a956132408ef6577c9c47cac55eae
+    REF 95b9cb015fa17baa749c2b396b335906e1596a9e # v0.6.2
+    SHA512 f4d46daf45d857137d9b026fdeac3101c7707868aa133b696ee3c5cfc208ea402c71db73882eeece0c2eb6271ee06495c7afde4eefb20de0a98ad9bc5727dc35
     HEAD_REF master
 )
 

@@ -11,6 +11,7 @@ our $config = {
 	extraver  => undef,    # --with-extra-version=<string>
 	gss       => undef,    # --with-gssapi=<path>
 	icu       => undef,    # --with-icu=<path>
+	lz4       => undef,    # --with-lz4=<path>
 	nls       => undef,    # --enable-nls=<path>
 	tap_tests => undef,    # --enable-tap-tests
 	tcl       => undef,    # --with-tcl=<path>

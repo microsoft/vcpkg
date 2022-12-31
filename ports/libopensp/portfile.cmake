@@ -28,9 +28,9 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
     vcpkg_cmake_install()
 else()
-    set(EXTRA_OPTS "")
     if(VCPKG_TARGET_IS_OSX)
-        list(APPEND EXTRA_OPTS "LDFLAGS=-framework CoreFoundation \$LDFLAGS") # libintl links to it
+        # libintl links to those
+        set(EXTRA_LIBS "-framework CoreFoundation -lintl -liconv") 
     endif()
 
     vcpkg_configure_make(
@@ -38,12 +38,13 @@ else()
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
-            ${EXTRA_OPTS}
+            "LDFLAGS=${EXTRA_LIBS} \$LDFLAGS"
     )
 
     vcpkg_install_make()
 endif()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/opensp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opensp.pc" @ONLY)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
@@ -53,4 +54,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -7,53 +7,70 @@ vcpkg_from_github(
     PATCHES 
         include-qhullcpp-shared.patch
         fix-missing-symbols.patch # upstream https://github.com/qhull/qhull/pull/93
+        noapp.patch # upstream https://github.com/qhull/qhull/pull/124
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if("tools" IN_LIST FEATURES)
+    list(APPEND QHULL_OPTIONS -DBUILD_APPLICATIONS:BOOL=ON)
+else()
+    list(APPEND QHULL_OPTIONS -DBUILD_APPLICATIONS:BOOL=OFF)
+endif()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        ${QHULL_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/share/doc
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share/man
-    ${CURRENT_PACKAGES_DIR}/debug/share/doc
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share/doc"
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull)
-file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic.pc
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qhull)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhull_r.pc
-        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhull_rd.pc
-    )
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/qhull/QhullTargets-interface.cmake" [[
+        add_library(Qhull::qhull_r IMPORTED INTERFACE)
+        set_target_properties(Qhull::qhull_r PROPERTIES INTERFACE_LINK_LIBRARIES Qhull::qhullstatic_r)
+]])
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(active_basename "qhullstatic")
+    set(inactive_basename "qhull")
 else()
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic_r.pc
-        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_rd.pc
-    )
+    set(active_basename "qhull")
+    set(inactive_basename "qhullstatic")
+endif()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${inactive_basename}_r.pc")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${inactive_basename}.pc") # qhullstatic.pc in dynamic build
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${inactive_basename}_rd.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${active_basename}_rd.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${active_basename}_r.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${inactive_basename}.pc") # qhullstatic.pc in dynamic build
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullcpp_d.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullcpp.pc")
 endif()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_tools(TOOL_NAMES
-    qconvex
-    qdelaunay
-    qhalf
-    qhull
-    qvoronoi
-    rbox
-    AUTO_CLEAN
-)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES
+        qconvex
+        qdelaunay
+        qhalf
+        qhull
+        qvoronoi
+        rbox
+        AUTO_CLEAN
+    )
+endif()
 
-file(INSTALL ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

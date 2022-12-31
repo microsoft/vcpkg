@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(libpff C)
 
-find_package(zlib REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_DEPRECATE)

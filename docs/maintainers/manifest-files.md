@@ -155,6 +155,13 @@ one string per line.
 
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
 
+#### Example:
+```json
+{
+  "homepage": "https://github.com/microsoft/vcpkg"
+}
+```
+
 ### `"documentation"`
 
 The URL where a user would be able to find official documentation for the library. Optional.
@@ -166,13 +173,6 @@ It's recommended that these take the form of `Givenname Surname <email>`,
 but this field is not checked for consistency.
 
 Optional.
-
-#### Example:
-```json
-{
-  "homepage": "https://github.com/microsoft/vcpkg"
-}
-```
 
 ### `"dependencies"`
 
@@ -433,6 +433,7 @@ These predefined identifier expressions are computed from standard triplet setti
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
 - `wasm32` - `VCPKG_TARGET_ARCHITECTURE` == `"wasm32"`
 - `emscripten` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Emscripten"`
+- `staticcrt` - `VCPKG_CRT_LINKAGE` == `"static"`
 
 These predefined identifier expressions can be overridden in the triplet file,
 via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option,
@@ -452,3 +453,99 @@ This field is optional and defaults to true.
 ```
 
 This means "doesn't support uwp, nor arm32 (but does support arm64)".
+
+### `"license"`
+
+The license of the port. This is an [SPDX license expression],
+or `null` for proprietary licenses and other licenses for which
+one should "just read the `copyright` file" (e.g., Qt).
+
+[SPDX license expression]: https://spdx.dev/ids/#how
+
+Additionally, you can find the list of [recognized license IDs]
+and [recognized license exception IDs] in Annex A of the SPDX specification.
+
+[recognized license IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a1-licenses-with-short-identifiers
+[recognized license exception IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a2-exceptions-list
+
+The following is an EBNF conversion of the ABNF located at
+<https://spdx.github.io/spdx-spec/SPDX-license-expressions/>,
+and this is what we actually parse in vcpkg.
+Note that vcpkg does not support DocumentRefs.
+
+```ebnf
+idchar = ? regex /[-.a-zA-Z0-9]/ ?
+idstring = ( idchar ), { idchar } ;
+
+(* note that unrecognized license and license exception IDs will be warned against *)
+license-id = idstring ;
+license-exception-id = idstring ;
+(* note that DocumentRefs are unsupported by this implementation *)
+license-ref = "LicenseRef-", idstring ;
+
+with = [ whitespace ], "WITH", [ whitespace ] ;
+and = [ whitespace ], "AND", [ whitespace ] ;
+or = [ whitespace ], "OR", [ whitespace ] ;
+
+simple-expression = [ whitespace ], (
+  | license-id
+  | license-id, "+"
+  | license-ref
+  ), [ whitespace ] ;
+
+(* the following are split up from compound-expression to make precedence obvious *)
+parenthesized-expression =
+  | simple-expression
+  | [ whitespace ], "(", or-expression, ")", [ whitespace ] ;
+
+with-expression =
+  | parenthesized-expression
+  | simple-expression, with, license-exception-id, [ whitespace ] ;
+
+(* note: "a AND b OR c" gets parsed as "(a AND b) OR c" *)
+and-expression = with-expression, { and, with-expression } ;
+or-expression = and-expression, { or, and-exression } ;
+
+license-expression = or-expression ;
+```
+
+#### Examples
+
+For libraries with simple licensing,
+only one license identifier may be needed;
+
+vcpkg, for example, would use this since it uses the MIT license:
+
+```json
+{
+  "license": "MIT"
+}
+```
+
+Many GPL'd projects allow either the GPL 2 or any later versions:
+
+```json
+{
+  "license": "GPL-2.0-or-later"
+}
+```
+
+Many Rust projects, in order to make certain they're useable with GPL,
+but also desiring the MIT license, will allow licensing under either
+the MIT license or Apache 2.0:
+
+```json
+{
+  "license": "Apache-2.0 OR MIT"
+}
+```
+
+Some major projects include exceptions;
+the Microsoft C++ standard library, and the LLVM project,
+are licensed under Apache 2.0 with the LLVM exception:
+
+```json
+{
+  "license": "Apache-2.0 WITH LLVM-exception"
+}
+```

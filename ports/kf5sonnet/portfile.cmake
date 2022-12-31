@@ -1,13 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/sonnet
-    REF v5.89.0
-    SHA512 18e2b9f9553229853952e2b0e3e6fac9c87417014f607144419bfe10b9d40cf5b542b253a43e5305d75ccef525f8cce36c112e1bad9398365847d5ec2996e8e4
+    REF v5.98.0
+    SHA512 7bd4dc164e049e9b5be2f29a81444f4545bb0c70db8ede0cc4303292d983e21c6701ac9ab02f4b4b3b2793ec7e6a078601e8c7cf083b1a799d10dc9f1d5a57c0
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    "hunspell"    CMAKE_REQUIRE_FIND_PACKAGE_HUNSPELL
+  INVERTED_FEATURES
+    "hunspell"    CMAKE_DISABLE_FIND_PACKAGE_HUNSPELL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -17,6 +24,10 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_VOIKKO=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_ASPELL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_HSPELL=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
@@ -44,4 +55,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

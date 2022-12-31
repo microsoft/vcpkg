@@ -11,6 +11,6 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.3)
     cmake_policy(POP)
 endif()
 
-find_program(Protobuf_PROTOC_EXECUTABLE NAMES protoc PATHS "${CMAKE_CURRENT_LIST_DIR}/../../tools/protobuf" NO_DEFAULT_PATH)
+find_program(Protobuf_PROTOC_EXECUTABLE NAMES protoc PATHS "${CMAKE_CURRENT_LIST_DIR}/../../../@HOST_TRIPLET@/tools/protobuf" NO_DEFAULT_PATH)
 
 _find_package(${ARGS})

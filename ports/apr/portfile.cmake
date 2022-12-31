@@ -10,12 +10,15 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-configcmake.patch
+        unglue.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
-            private-headers INSTALL_PRIVATE_H
+            private-headers APR_INSTALL_PRIVATE_H
     )
 
     vcpkg_cmake_configure(
@@ -24,28 +27,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
-            -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
             ${FEATURE_OPTIONS}
     )
 
     vcpkg_cmake_install()
-
+    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-apr CONFIG_PATH share/unofficial-apr)
     # There is no way to suppress installation of the headers in debug builds.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-    # Both dynamic and static are built, so keep only the one needed
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/apr-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib")
-    else()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
 
     vcpkg_copy_pdbs()
 else()
@@ -64,7 +52,6 @@ else()
     set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        NO_DEBUG
         OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
             "${CONFIGURE_PARAMETER_1}"
@@ -74,9 +61,12 @@ else()
 
     vcpkg_install_make()
 
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc"
-        "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
-    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc"
+            "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
+        )
+    endif()
+
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/apr-1.pc"
         "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
@@ -85,11 +75,19 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}\"" "`dirname $0`/../../..")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\"" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}/debug\"" "`dirname $0`/../../../..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\"" "")
+    
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}/debug\"" "`dirname $0`/../../../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\"" "")
+
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+    endif()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-

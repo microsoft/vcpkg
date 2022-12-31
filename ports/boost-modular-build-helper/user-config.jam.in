@@ -7,15 +7,7 @@ using @USER_CONFIG_TOOLSET@ : @USER_CONFIG_TOOLSET_VERSION@ : @USER_CONFIG_TOOLS
 
 @USER_CONFIG_EXTRA_LINES@
 
-if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
-{
-    using mpi : :
-        <library-path>"@CURRENT_INSTALLED_DIR@/lib"
-        <include>"@CURRENT_INSTALLED_DIR@/include"
-        <find-shared-library>msmpi ;
-}
-
-project user-config : ;
+project user-config : requirements @USER_CONFIG_REQUIREMENTS@ ;
 
 if "@USER_CONFIG_TOOLSET@" = "msvc" || "@USER_CONFIG_TOOLSET@" = "clang-win"
 {

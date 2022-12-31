@@ -3,10 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/config
-    REF boost-1.77.0
-    SHA512 c6df16825b7bb27412667e00b6b6cdecbf56ee0707aa1df3505637c7de5c39c87335fabd7cd4361b29625d71c7664e6af865fc271ad0b3e70cc8872825f6155e
+    REF boost-1.81.0
+    SHA512 0c09fd30aae566c72df30ec57d7b7acefcfd03b5154451596e0f8f5f633664db0f1dfb5239f8ce4503045463af6f79466b2cbbed1a5a1cf3bca96884ceff02ee
     HEAD_REF master
-    PATCHES fix-emscripten-compilation.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

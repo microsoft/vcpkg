@@ -1,14 +1,15 @@
 {
   "name": "qtdeclarative",
-  "version-semver": "6.2.2",
-  "port-version": 1,
+  "version": "6.4.1",
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "network",
         "testlib"
       ]
     },

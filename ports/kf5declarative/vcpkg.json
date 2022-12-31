@@ -1,6 +1,6 @@
 {
   "name": "kf5declarative",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Integration of QML and KDE work spaces",
   "homepage": "https://api.kde.org/frameworks/kdeclarative/html/index.html",
   "dependencies": [
@@ -13,7 +13,10 @@
       ]
     },
     "kf5config",
-    "kf5globalaccel",
+    {
+      "name": "kf5globalaccel",
+      "platform": "!windows"
+    },
     "kf5guiaddons",
     "kf5i18n",
     "kf5iconthemes",

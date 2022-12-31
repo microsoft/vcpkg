@@ -99,7 +99,7 @@ index 5d909ec..ab7eb6f 100644
 +endif()
  
 +find_package(cereal REQUIRED CONFIG)
-+get_target_property(CEREAL_INCLUDE_DIRS cereal INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(CEREAL_INCLUDE_DIRS cereal::cereal INTERFACE_INCLUDE_DIRECTORIES)
 + 
  # ==============================================================================
  # Eigen
@@ -502,7 +502,7 @@ index cc5212f..acc57dd 100644
      $<INSTALL_INTERFACE:include>
  )
 diff --git a/src/openMVG/matching/CMakeLists.txt b/src/openMVG/matching/CMakeLists.txt
-index 2e0eafd..be0006f 100644
+index 2e0eafd7..d54d1e88 100644
 --- a/src/openMVG/matching/CMakeLists.txt
 +++ b/src/openMVG/matching/CMakeLists.txt
 @@ -16,6 +16,7 @@ list(REMOVE_ITEM matching_files_cpp ${REMOVEFILESUNITTEST})
@@ -513,9 +513,12 @@ index 2e0eafd..be0006f 100644
  
  set_source_files_properties(${matching_files_cpp} PROPERTIES LANGUAGE CXX)
  add_library(openMVG_matching
-@@ -37,10 +38,10 @@ target_link_libraries(openMVG_matching
+@@ -35,12 +36,12 @@ target_link_libraries(openMVG_matching
+   PUBLIC
+     openMVG_features
      Threads::Threads
-     cereal
+-    cereal
++    cereal::cereal
  )
 -if (NOT DEFINED OpenMVG_USE_INTERNAL_FLANN)
 +if (NOT OpenMVG_USE_INTERNAL_FLANN)
@@ -614,45 +617,6 @@ index 6db7e83..51e06f5 100644
      ${OpenCV_LIBS})
    target_include_directories(openMVG_main_ComputeFeatures_OpenCV PRIVATE ${OpenCV_INCLUDE_DIRS})
  
-diff --git a/src/software/SfM/SfM_GlobalPipeline.py.in b/src/software/SfM/SfM_GlobalPipeline.py.in
-index 42b41cc..7fda0cd 100644
---- a/src/software/SfM/SfM_GlobalPipeline.py.in
-+++ b/src/software/SfM/SfM_GlobalPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/SfM_SequentialPipeline.py.in b/src/software/SfM/SfM_SequentialPipeline.py.in
-index 423c85c..0ff2e77 100644
---- a/src/software/SfM/SfM_SequentialPipeline.py.in
-+++ b/src/software/SfM/SfM_SequentialPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/tutorial_demo.py.in b/src/software/SfM/tutorial_demo.py.in
-index c7361f3..1c56aab 100644
---- a/src/software/SfM/tutorial_demo.py.in
-+++ b/src/software/SfM/tutorial_demo.py.in
-@@ -12,7 +12,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
 diff --git a/src/software/VO/Tracker_opencv_klt.hpp b/src/software/VO/Tracker_opencv_klt.hpp
 index aa7dffe..2c4d237 100644
 --- a/src/software/VO/Tracker_opencv_klt.hpp
@@ -706,3 +670,55 @@ index 0d61c9f..05c8b29 100644
    #Configure Eigen install
    set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/eigen)
    add_subdirectory(eigen)
+diff --git a/src/openMVG/cameras/CMakeLists.txt b/src/openMVG/cameras/CMakeLists.txt
+index 333ab729..50c8f572 100644
+--- a/src/openMVG/cameras/CMakeLists.txt
++++ b/src/openMVG/cameras/CMakeLists.txt
+@@ -4,7 +4,7 @@ set_property(TARGET openMVG_camera APPEND PROPERTY
+   INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:include>")
+ 
+ target_compile_features(openMVG_camera INTERFACE ${CXX11_FEATURES})
+-target_link_libraries(openMVG_camera INTERFACE openMVG_numeric cereal ${OPENMVG_LIBRARY_DEPENDENCIES})
++target_link_libraries(openMVG_camera INTERFACE openMVG_numeric cereal::cereal ${OPENMVG_LIBRARY_DEPENDENCIES})
+ install(TARGETS openMVG_camera DESTINATION lib EXPORT openMVG-targets)
+ 
+ UNIT_TEST(openMVG Camera_Pinhole openMVG_camera)
+diff --git a/src/openMVG/features/CMakeLists.txt b/src/openMVG/features/CMakeLists.txt
+index 2e49701d..0b5e1c3d 100644
+--- a/src/openMVG/features/CMakeLists.txt
++++ b/src/openMVG/features/CMakeLists.txt
+@@ -31,7 +31,7 @@ target_include_directories(openMVG_features
+ )
+ target_link_libraries(openMVG_features
+   PRIVATE openMVG_fast ${STLPLUS_LIBRARY}
+-  PUBLIC ${OPENMVG_LIBRARY_DEPENDENCIES} cereal)
++  PUBLIC ${OPENMVG_LIBRARY_DEPENDENCIES} cereal::cereal)
+ if (MSVC)
+   set_target_properties(openMVG_features PROPERTIES COMPILE_FLAGS "/bigobj")
+   target_compile_options(openMVG_features PUBLIC "-D_USE_MATH_DEFINES")
+diff --git a/src/openMVG/geometry/CMakeLists.txt b/src/openMVG/geometry/CMakeLists.txt
+index 0a6a016a..e509a4d5 100644
+--- a/src/openMVG/geometry/CMakeLists.txt
++++ b/src/openMVG/geometry/CMakeLists.txt
+@@ -21,7 +21,7 @@ set_property(TARGET openMVG_geometry PROPERTY FOLDER OpenMVG/OpenMVG)
+ target_link_libraries(openMVG_geometry
+   PUBLIC
+     openMVG_numeric
+-    cereal
++    cereal::cereal
+   PRIVATE
+     openMVG_linearProgramming
+ )
+diff --git a/src/openMVG/sfm/CMakeLists.txt b/src/openMVG/sfm/CMakeLists.txt
+index b8928083..1d10f939 100644
+--- a/src/openMVG/sfm/CMakeLists.txt
++++ b/src/openMVG/sfm/CMakeLists.txt
+@@ -25,7 +25,7 @@ target_link_libraries(openMVG_sfm
+     openMVG_graph
+     openMVG_matching
+     openMVG_multiview
+-    cereal
++    cereal::cereal
+     ${OPENMVG_LIBRARY_DEPENDENCIES}
+ )
+ 

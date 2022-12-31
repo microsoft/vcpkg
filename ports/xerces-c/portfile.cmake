@@ -66,3 +66,13 @@ file(REMOVE_RECURSE
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(pc_file_release "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xerces-c.pc")
+    set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xerces-c.pc")
+    if(EXISTS "${pc_file_release}")
+        vcpkg_replace_string("${pc_file_release}" "-lxerces-c" "-lxerces-c_3")
+    endif()
+    if(EXISTS "${pc_file_debug}")
+        vcpkg_replace_string("${pc_file_debug}" "-lxerces-c" "-lxerces-c_3D")
+    endif()
+endif()

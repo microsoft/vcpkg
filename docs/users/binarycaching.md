@@ -47,7 +47,7 @@ By default, zip-based archives will be cached at the first valid location of:
 
 | form                        | description
 |-----------------------------|---------------
-| `clear`                     | Removes all previous sources (including the default)
+| `clear`                     | Disable read all previous sources (including the default)
 | `default[,<rw>]`            | Adds the default file-based location
 | `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
@@ -96,14 +96,17 @@ steps:
   - name: 'Setup NuGet Credentials'
     shell: 'bash'
     # Replace <OWNER> with your organization name
-    run: >
-      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
-      sources add
-      -source "https://nuget.pkg.github.com/<OWNER>/index.json"
-      -storepasswordincleartext
-      -name "GitHub"
-      -username "<OWNER>"
-      -password "${{ secrets.GITHUB_TOKEN }}"
+    run: |
+      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1` \
+        sources add \
+        -source "https://nuget.pkg.github.com/<OWNER>/index.json" \
+        -storepasswordincleartext \
+        -name "GitHub" \
+        -username "<OWNER>" \
+        -password "${{ secrets.GITHUB_TOKEN }}"
+      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1` \
+        setapikey "${{ secrets.GITHUB_TOKEN }}" \
+        -source "https://nuget.pkg.github.com/<OWNER>/index.json"
 
   # Omit this step if you're using manifests
   - name: 'vcpkg package restore'

@@ -1,9 +1,9 @@
 {
   "name": "llvm",
-  "version": "13.0.0",
-  "port-version": 1,
+  "version": "14.0.4",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
+  "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
@@ -12,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     }
   ],
@@ -23,6 +27,18 @@
     "tools"
   ],
   "features": {
+    "bolt": {
+      "description": "BOLT is a post-link optimizer developed to speed up large applications.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
     "clang": {
       "description": "Include C Language Family Front-end.",
       "dependencies": [
@@ -49,7 +65,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "disable-abi-breaking-checks",
             "disable-assertions",
             "disable-clang-static-analyzer",
             "enable-bindings",
@@ -63,6 +78,13 @@
     "default-targets": {
       "description": "Build with platform-specific default targets.",
       "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-spirv"
+          ]
+        },
         {
           "name": "llvm",
           "default-features": false,
@@ -96,9 +118,6 @@
           "platform": "!x86 & !x64 & !arm & !arm64"
         }
       ]
-    },
-    "disable-abi-breaking-checks": {
-      "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF."
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."
@@ -237,9 +256,6 @@
         }
       ]
     },
-    "parallel-libs": {
-      "description": "Include parallel-libs project."
-    },
     "polly": {
       "description": "Include Polly (Polyhedral optimizations for LLVM) project.",
       "dependencies": [
@@ -279,7 +295,9 @@
             "target-powerpc",
             "target-riscv",
             "target-sparc",
+            "target-spirv",
             "target-systemz",
+            "target-ve",
             "target-webassembly",
             "target-x86",
             "target-xcore"
@@ -323,8 +341,14 @@
     "target-sparc": {
       "description": "Build with Sparc backend."
     },
+    "target-spirv": {
+      "description": "Build with Spriv backend."
+    },
     "target-systemz": {
       "description": "Build with SystemZ backend."
+    },
+    "target-ve": {
+      "description": "Build with VE backend."
     },
     "target-webassembly": {
       "description": "Build with WebAssembly backend."
@@ -336,7 +360,16 @@
       "description": "Build with XCore backend."
     },
     "tools": {
-      "description": "Build LLVM tools."
+      "description": "Build LLVM tools.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "enable-threads"
+          ]
+        }
+      ]
     },
     "utils": {
       "description": "Build LLVM utils."

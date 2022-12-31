@@ -1,0 +1,49 @@
+diff --git a/wx-config.in b/wx-config.in
+index 441f88c..b326867 100755
+--- a/wx-config.in
++++ b/wx-config.in
+@@ -91,7 +91,7 @@ EOF
+ 
+ 
+ # Contentious tools determined by configure.
+-EGREP="@EGREP@"
++EGREP="grep -E" # no absolute path from host
+ 
+ 
+ # For the people who know what they want, or think they do:
+@@ -402,8 +402,23 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+ 
+ 
+ # Determine the base directories we require.
+-prefix=${input_option_prefix-${this_prefix:-@prefix@}}
+-exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
++vcpkg_prefix=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
++case "$vcpkg_prefix" in
++    */lib/wx/config)
++        vcpkg_prefix=${vcpkg_prefix%/*/*/*}
++        ;;
++    */tools/wxwidgets/debug)
++        vcpkg_prefix=${vcpkg_prefix%/*/*/*}/debug
++        ;;
++    */tools/wxwidgets)
++        vcpkg_prefix=${vcpkg_prefix%/*/*}
++        ;;
++esac
++if [ -n "@MINGW@" -a -n "@CMAKE_HOST_WIN32@" ]; then
++    vcpkg_prefix=$(cygpath -m "$vcpkg_prefix")
++fi
++prefix=${input_option_prefix-${this_prefix:-$vcpkg_prefix}}
++exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-$prefix}}}
+ wxconfdir="@libdir@/wx/config"
+ 
+ installed_configs=`cd "$wxconfdir" 2> /dev/null && ls | grep -v "^inplace-"`
+@@ -940,6 +949,9 @@ prefix=${this_prefix-$prefix}
+ exec_prefix=${this_exec_prefix-$exec_prefix}
+ 
+ includedir="@includedir@"
++if [ "@CMAKE_BUILD_TYPE@" = "Debug" ] ; then
++    includedir="${includedir%/debug/include}/include"
++fi
+ libdir="@libdir@"
+ bindir="@bindir@"
+ 

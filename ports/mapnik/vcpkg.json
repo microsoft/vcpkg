@@ -1,9 +1,10 @@
 {
   "name": "mapnik",
-  "version-date": "2021-11-15",
-  "port-version": 1,
+  "version-date": "2022-01-28",
+  "port-version": 2,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
+  "license": "LGPL-2.1-only",
   "supports": "!(static & windows)",
   "dependencies": [
     "boost-assign",
@@ -157,7 +158,7 @@
     "proj": {
       "description": "PROJ Functionalities",
       "dependencies": [
-        "proj4"
+        "proj"
       ]
     },
     "svg-renderer": {

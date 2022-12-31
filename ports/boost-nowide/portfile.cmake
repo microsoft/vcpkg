@@ -3,15 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/nowide
-    REF boost-1.77.0
-    SHA512 7af7a33aed8a8e88d8da37db302bb2d560e71dad57e2be23086dfca5260fb7b15ab4513807c566e91b3ebe27b10d58614e967895b922bc408c774550625d15cf
+    REF boost-1.81.0
+    SHA512 2271e1c030bed4e487dcd0e2d6fc58808db740a0f00412431df3ba81d062e12aba9dbff94fb955b6343ee7d3447c02abe4e8705471355b11a240fd9765cd9a14
     HEAD_REF master
-    PATCHES 001-remove-checks.patch
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-nowide requires a newer version of vcpkg in order to build.")
-endif()
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

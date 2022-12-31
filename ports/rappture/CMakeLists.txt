@@ -80,23 +80,25 @@ set(HEADERS
 
 add_library(rappture ${SRC_RAPPTURE_CORE} ${HEADERS})
 
-target_include_directories(rappture PUBLIC 
-                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/core/> 
+set_property(TARGET rappture PROPERTY CXX_STANDARD 11)
+
+target_include_directories(rappture PUBLIC
+                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/core/>
                             $<INSTALL_INTERFACE:include>
 )
 
 find_package(expat CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
-target_compile_definitions(rappture PUBLIC 
-                            -D_CRT_SECURE_NO_WARNINGS 
-                            -DRAPPTURE_VERSION=1.9 
-                            -DSVN_VERSION=6713 
+target_compile_definitions(rappture PUBLIC
+                            -D_CRT_SECURE_NO_WARNINGS
+                            -DRAPPTURE_VERSION=1.9
+                            -DSVN_VERSION=6713
                             -D_USE_MATH_DEFINES
 )
 
-target_link_libraries(rappture PRIVATE 
-                        expat::expat 
+target_link_libraries(rappture PRIVATE
+                        expat::expat
                         ZLIB::ZLIB
 )
 

@@ -38,7 +38,10 @@
   <PropertyGroup>
     <_ZVcpkgLinkage />
     <_ZVcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</_ZVcpkgLinkage>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)</VcpkgTriplet>
+    <_ZVcpkgLinkageMD />
+    <_ZVcpkgLinkageMD Condition="'$(VcpkgUseStatic)' == 'true' and '$(VcpkgUseMD)' == 'true'">-md</_ZVcpkgLinkageMD>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
+    <VcpkgTriplet Condition="!$(VcpkgTriplet.EndsWith($(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)))">$(VcpkgTriplet)$(_ZVcpkgLinkage)$(_ZVcpkgLinkageMD)</VcpkgTriplet>
   </PropertyGroup>
 
   <!-- Include the triplet in ProjectStateLine to force VS2017 and later to fully rebuild if the user changes it.  -->
@@ -68,7 +71,7 @@
 
     <_ZVcpkgConfigSubdir Condition="'$(_ZVcpkgNormalizedConfiguration)' == 'Debug'">debug\</_ZVcpkgConfigSubdir>
     <_ZVcpkgExecutable>$(_ZVcpkgRoot)vcpkg.exe</_ZVcpkgExecutable>
-    <ExternalIncludePath>$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
+    <ExternalIncludePath Condition="'$(VcpkgEnabled)' == 'true'">$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -108,6 +111,8 @@
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
     <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(_ZVcpkgCurrentInstalledDir)&quot;"
+             Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Using normalized configuration &quot;$(_ZVcpkgNormalizedConfiguration)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
@@ -154,7 +159,9 @@
     <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           Importance="High" />
     <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="High"
+          IgnoreStandardErrorWarningFormat="true"
+          CustomWarningRegularExpression="([Ee]rror|[Ww]arning):" />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"

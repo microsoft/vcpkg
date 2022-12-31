@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
+        stack-walker-arm64.patch
     )
 
 set(TOOL_NAMES appman
@@ -24,6 +25,7 @@ set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
@@ -39,7 +41,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
     endif()
 endif()
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 

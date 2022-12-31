@@ -9,9 +9,11 @@ vcpkg_from_github(
     PATCHES
         fix-external-dependencies.patch
         fix-external-dependencies2.patch
+        eigen-3.4.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenImageIO.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)

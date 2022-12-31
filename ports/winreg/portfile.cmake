@@ -1,11 +1,10 @@
 # WinReg - Header-only library
-vcpkg_fail_port_install(ON_TARGET "linux" "osx")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg
-    REF 2594342b7fe6065430bc377961c37d30614cb4ff #v4.1.2
-    SHA512 924cdb77518c3f0843e95cd7e7d4626d4c0c466444cd79fdfa6943975154a54f4eb0d4bd45b8d37d73c650467b1d2728543176688f356c5100d98810e95c9fe8
+    REF ba6b74972038778d0bf5ffa6de705ec6e2768735 #v6.1.0
+    SHA512 1b7ac1ef4322c2e1c80be840d4117424263c4ad02050926f1ebdd3fbb4978a02d12f485ccb0aff46ca4acc4188f48f7522ac4d6d663517d7bad71147224accc7
     HEAD_REF master
 )
 

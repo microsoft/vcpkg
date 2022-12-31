@@ -15,6 +15,8 @@ vcpkg_from_github(
     PATCHES
         build_fixes.patch
         0001-eigen_3.4.0.patch
+        0002-eigen-3.4.patch
+        no-absolute-paths.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
@@ -74,7 +76,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/openMVG/cmake)
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG-targets.cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG-targets-debug.cmake")
 endif()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/openMVG-targets.cmake" "${CURRENT_PACKAGES_DIR}/lib/openMVG-targets-release.cmake")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
                     "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"

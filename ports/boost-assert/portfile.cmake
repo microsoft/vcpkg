@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/assert
-    REF boost-1.77.0
-    SHA512 90116861cd0457ffa61b4b2ebecc978252f74196ad87d1f756702b28b4010fe366b4dd1e6a5b3726c6926b4fb1821d9f997a758fd02f8d3be5a45ef64e104e27
+    REF boost-1.81.0
+    SHA512 c443b61a9ad29d4c9707aaaa997300a959fdef2d360aec9ee221abc12cd8446b3bc969e6c282ba778bee7d6fb54cc02655f15e01eacf1ad87262534dc4cc32bf
     HEAD_REF master
 )
 

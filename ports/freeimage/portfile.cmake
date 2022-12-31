@@ -18,6 +18,7 @@ vcpkg_from_sourceforge(
         fix-function-overload.patch
         use-typedef-as-already-declared.patch
         use-functions-to-override-libtiff-warning-error-handlers.patch
+        remove_auto_ptr.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

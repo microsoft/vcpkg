@@ -1,13 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(HALIDE_VERSION_TAG v13.0.2)
+set(HALIDE_VERSION_TAG v14.0.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
     REF ${HALIDE_VERSION_TAG}
-    SHA512 d2b19934ff0d759d302428f61e4075306f79c29cc1cd8802dc1ac5f325434034e0f430c435610e58f862b87cc8ef34ddcc3d0588947eeb8e1387d0bf31b9c008
-    HEAD_REF release/13.x
+    SHA512 c7b1186cca545f30d038f1e9bb28ca7231023869d191c50722213da4c7e9adfd4a53129fe395cd7938cb7cb3fb1bf80f9cd3b4b8473a0246f15b9ad8d3e40fe2
+    HEAD_REF release/14.x
 )
 
 vcpkg_check_features(
@@ -28,16 +28,18 @@ vcpkg_check_features(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DWITH_DOCS=NO
-        -DWITH_PYTHON_BINDINGS=NO
-        -DWITH_TESTS=NO
-        -DWITH_TUTORIALS=NO
-        -DWITH_UTILS=NO
+        -DWITH_WABT=OFF
+        -DWITH_V8=OFF
+        -DWITH_DOCS=OFF
+        -DWITH_PYTHON_BINDINGS=OFF
+        -DWITH_TESTS=OFF
+        -DWITH_TUTORIALS=OFF
+        -DWITH_UTILS=OFF
         -DCMAKE_INSTALL_LIBDIR=bin
-        -DCMAKE_INSTALL_DATADIR=share/${PORT}
-        -DHalide_INSTALL_CMAKEDIR=share/${PORT}
+        "-DCMAKE_INSTALL_DATADIR=share/${PORT}"
+        "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
         -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
         -DHalide_INSTALL_PLUGINDIR=bin
 )
@@ -66,9 +68,8 @@ vcpkg_copy_pdbs(
 vcpkg_cmake_config_fixup()
 vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
