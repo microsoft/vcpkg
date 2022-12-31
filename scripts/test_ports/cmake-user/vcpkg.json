@@ -71,6 +71,13 @@
           "name": "giflib"
         },
         {
+          "$comment": "CMake 3.13 for debug postfix support",
+          "$package": "GLUT",
+          "$since": "3.13",
+          "name": "freeglut",
+          "platform": "!uwp & !osx"
+        },
+        {
           "$package": "ICU",
           "name": "icu",
           "platform": "!uwp"
