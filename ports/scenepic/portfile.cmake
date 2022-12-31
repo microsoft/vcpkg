@@ -12,23 +12,21 @@ vcpkg_from_github(
 execute_process(
     COMMAND npm install
     WORKING_DIRECTORY ${SOURCE_PATH}
-    )
+)
 execute_process(
     COMMAND npm run build
     WORKING_DIRECTORY ${SOURCE_PATH}
-    )
+)
 
 
-vcpkg_configure_cmake(
-    PREFER_NINJA
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Release
         -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
-        -DBUILD_SHARED_LIBS=OFF
         -DCPP_TARGETS=cpp
-)
-    
+)   
+  
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
@@ -38,7 +36,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 
 file(COPY  ${CURRENT_PACKAGES_DIR}/cmake/scenepicTargets.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY  ${CURRENT_PACKAGES_DIR}/cmake/scenepicConfigVersion.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY  ${CURRENT_PACKAGES_DIR}/cmake/scenepicTargets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY  ${CURRENT_PACKAGES_DIR}/cmake/scenepicTargets-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY  ${CURRENT_PACKAGES_DIR}/cmake/scenepicConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY  ${CURRENT_PACKAGES_DIR}/build DESTINATION ${CURRENT_PACKAGES_DIR}/share)
 
