@@ -23,6 +23,9 @@
     "png"
   ],
   "features": {
+    "eigen": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
     "examples": {
       "description": "Build Examples"
     },
@@ -37,6 +40,9 @@
         }
       ]
     },
+    "gui": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
     "jpeg": {
       "description": "Build support for libjpeg image input",
       "dependencies": [
@@ -48,6 +54,9 @@
       "dependencies": [
         "lz4"
       ]
+    },
+    "module": {
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "openexr": {
       "description": "Build support for libopenexr image input",
@@ -67,7 +76,7 @@
         "libpng"
       ]
     },
-    "python": {
+    "pybind11": {
       "description": "Python wrapper for Pangolin",
       "dependencies": [
         "pybind11",
@@ -94,12 +103,7 @@
       "dependencies": [
         {
           "name": "pangolin",
-          "default-features": false,
-          "features": [
-            "gui",
-            "vars",
-            "video"
-          ]
+          "default-features": false
         }
       ]
     },
@@ -108,6 +112,12 @@
       "dependencies": [
         "libuvc"
       ]
+    },
+    "vars": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "video": {
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "zstd": {
       "description": "Build support for libzstd compression",

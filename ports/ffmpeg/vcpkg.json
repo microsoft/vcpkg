@@ -487,6 +487,12 @@
         "openjpeg"
       ]
     },
+    "openmpt": {
+      "description": "Decoding tracked files via libopenmpt",
+      "dependencies": [
+        "libopenmpt"
+      ]
+    },
     "openssl": {
       "description": "Needed for https support if gnutls, libtls or mbedtls is not used",
       "dependencies": [

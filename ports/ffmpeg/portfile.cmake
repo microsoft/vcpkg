@@ -330,6 +330,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
+if("openmpt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
