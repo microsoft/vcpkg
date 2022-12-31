@@ -2578,7 +2578,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.9",
-      "port-version": 3
+      "port-version": 4
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -6174,7 +6174,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.7",
@@ -6346,7 +6346,7 @@
     },
     "qtimageformats": {
       "baseline": "6.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtinterfaceframework": {
       "baseline": "6.4.1",
@@ -7482,7 +7482,7 @@
     },
     "tiff": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinkerforge": {
       "baseline": "2.1.25",
