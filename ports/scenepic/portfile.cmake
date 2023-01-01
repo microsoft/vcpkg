@@ -21,7 +21,6 @@ execute_process(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_BUILD_TYPE=Release
         -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
