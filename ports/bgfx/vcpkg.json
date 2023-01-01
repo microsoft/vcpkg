@@ -9,7 +9,6 @@
   "license": "BSD-2-Clause",
   "dependencies": [
     "libsquish",
-    "nvtt",
     "tinyexr",
     {
       "name": "vcpkg-cmake",

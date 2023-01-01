@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 14eb13d..dad3b53 100644
+index 1b0a893..c78c684 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -149,7 +149,7 @@ if( BGFX_INSTALL )
@@ -7,37 +7,69 @@ index 14eb13d..dad3b53 100644
  	)
  	if( NOT BGFX_LIBRARY_TYPE MATCHES "SHARED" )
 -		install( TARGETS bimg bx astc-encoder edtaa3 etc1 etc2 iqa squish nvtt pvrtc tinyexr
-+		install( TARGETS bimg bx astc-encoder edtaa3 etc1 etc2 iqa pvrtc
++		install( TARGETS bimg bx astc-encoder edtaa3 etc1 etc2 iqa bgfx-nvtt pvrtc
  				 EXPORT "${TARGETS_EXPORT_NAME}"
  				 LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
  				 ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+diff --git a/bimg b/bimg
+--- a/bimg
++++ b/bimg
+@@ -1 +1 @@
+-Subproject commit 85109d7cdbe775a0ab72cf38510df525d5e8d3da
++Subproject commit 85109d7cdbe775a0ab72cf38510df525d5e8d3da-dirty
+diff --git a/cmake/3rdparty/nvtt.cmake b/cmake/3rdparty/nvtt.cmake
+index 9fd7dda..995e58c 100644
+--- a/cmake/3rdparty/nvtt.cmake
++++ b/cmake/3rdparty/nvtt.cmake
+@@ -8,7 +8,7 @@
+ # You should have received a copy of the CC0 Public Domain Dedication along with
+ # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ 
+-if( TARGET nvtt )
++if( TARGET bgfx-nvtt )
+ 	return()
+ endif()
+ 
+@@ -27,10 +27,10 @@ file(
+ 	${BIMG_DIR}/3rdparty/nvtt/*.h
+ )
+ 
+-add_library( nvtt STATIC ${NVTT_SOURCES} )
+-target_include_directories( nvtt
++add_library( bgfx-nvtt STATIC ${NVTT_SOURCES} )
++target_include_directories( bgfx-nvtt
+ 	PUBLIC
+ 		$<BUILD_INTERFACE:${BIMG_DIR}/3rdparty>
+ 		$<BUILD_INTERFACE:${BIMG_DIR}/3rdparty/nvtt> )
+-set_target_properties( nvtt PROPERTIES FOLDER "bgfx/3rdparty" )
+-target_link_libraries( nvtt PUBLIC bx )
+\ No newline at end of file
++set_target_properties( bgfx-nvtt PROPERTIES FOLDER "bgfx/3rdparty" )
++target_link_libraries( bgfx-nvtt PUBLIC bx )
+\ No newline at end of file
 diff --git a/cmake/bimg.cmake b/cmake/bimg.cmake
-index 9519b3a..e4b6341 100644
+index 9519b3a..367d850 100644
 --- a/cmake/bimg.cmake
 +++ b/cmake/bimg.cmake
-@@ -14,10 +14,11 @@ include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/edtaa3.cmake )
+@@ -14,10 +14,10 @@ include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/edtaa3.cmake )
  include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/etc1.cmake )
  include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/etc2.cmake )
  include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/iqa.cmake )
 -include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/libsquish.cmake )
--include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/nvtt.cmake )
+ include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/nvtt.cmake )
  include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/pvrtc.cmake )
 -include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/tinyexr.cmake )
 +find_package(tinyexr CONFIG REQUIRED)
 +find_package(unofficial-libsquish CONFIG REQUIRED)
-+find_library(NVTT_LIBRARIES NAMES nvtt libnvtt PATH_SUFFIXES static)
-+find_path(NVTT_INCLUDE_DIRS NAMES nvtt.h PATH_SUFFIXES nvtt)
  
  # Ensure the directory exists
  if( NOT IS_DIRECTORY ${BIMG_DIR} )
-@@ -38,7 +38,8 @@ add_library( bimg STATIC ${BIMG_SOURCES} )
- 		$<BUILD_INTERFACE:${BIMG_DIR}/include>
+@@ -38,7 +38,7 @@ target_include_directories( bimg
  		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
-+target_include_directories( bimg PRIVATE ${NVTT_INCLUDE_DIRS})
  # bimg dependencies
 -target_link_libraries( bimg PUBLIC bx PRIVATE astc-encoder edtaa3 etc1 etc2 iqa squish nvtt pvrtc tinyexr )
-+target_link_libraries( bimg PUBLIC bx PRIVATE astc-encoder edtaa3 etc1 etc2 iqa unofficial::libsquish::squish ${NVTT_LIBRARIES} pvrtc unofficial::tinyexr::tinyexr )
++target_link_libraries( bimg PUBLIC bx PRIVATE astc-encoder edtaa3 etc1 etc2 iqa unofficial::libsquish::squish bgfx-nvtt pvrtc unofficial::tinyexr::tinyexr )
  
  # Put in a "bgfx" folder in Visual Studio
  set_target_properties( bimg PROPERTIES FOLDER "bgfx" )
