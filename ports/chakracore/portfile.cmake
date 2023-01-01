@@ -97,14 +97,17 @@ if(WIN32)
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(out_file libChakraCore.so)
+        set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
+        set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
     else()
         set(out_file lib/libChakraCoreStatic.a)
+        set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/lib")
+        set(destination_dir_release "${CURRENT_PACKAGES_DIR}/lib")
     endif()
 
-    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
-    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
     set(out_dir_debug "${BUILDTREE_PATH}/out/Debug")
     set(out_dir_release "${BUILDTREE_PATH}/out/Release")
+
     foreach(config ${configs})
         file(INSTALL
             ${out_dir_${config}}/${out_file}
