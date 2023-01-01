@@ -42,3 +42,16 @@ index 9519b3a..e4b6341 100644
  # Put in a "bgfx" folder in Visual Studio
  set_target_properties( bimg PROPERTIES FOLDER "bgfx" )
 \ No newline at end of file
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 5b5dd5d..335112f 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,5 +1,8 @@
+ @PACKAGE_INIT@
+
++find_dependency(tinyexr CONFIG REQUIRED)
++find_dependency(unofficial-libsquish CONFIG REQUIRED)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ get_target_property(BGFX_INCLUDE_PATH bgfx::bgfx INTERFACE_INCLUDE_DIRECTORIES)
+ list(GET BGFX_INCLUDE_PATH 0 BGFX_INCLUDE_PATH_1) # bgfx::bgfx exports include directory twice?
