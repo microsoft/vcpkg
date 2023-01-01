@@ -30,12 +30,7 @@ index 9519b3a..e4b6341 100644
  
  # Ensure the directory exists
  if( NOT IS_DIRECTORY ${BIMG_DIR} )
-@@ -33,12 +34,13 @@ add_library( bimg STATIC ${BIMG_SOURCES} )
- 
- # Add include directory of bimg
- target_include_directories( bimg
--	PUBLIC
-+    PUBLIC
+@@ -38,7 +38,8 @@ add_library( bimg STATIC ${BIMG_SOURCES} )
  		$<BUILD_INTERFACE:${BIMG_DIR}/include>
  		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
