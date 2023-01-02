@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF release-${VERSION}
     SHA512 c4cffa32d4d43de64cc47ada80a657a9db53f4c60da3684f96a036527fdc12b0e459e9e638cab6c7eb796de29fd60ee5a8c73b56bccd8483024e225c81469961
     HEAD_REF main
+    PATCHES
+        deps.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -16,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vulkan   SDL_VULKAN
         x11      SDL_X11
         wayland  SDL_WAYLAND
+        samplerate SDL_LIBSAMPLERATE
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -40,6 +43,8 @@ vcpkg_cmake_configure(
         -DSDL_TEST=OFF
         -DSDL_IBUS=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
@@ -54,6 +59,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config"
     "${CURRENT_PACKAGES_DIR}/SDL2.framework"
     "${CURRENT_PACKAGES_DIR}/debug/SDL2.framework"
+    "${CURRENT_PACKAGES_DIR}/share/licenses"
+    "${CURRENT_PACKAGES_DIR}/share/aclocal"
 )
 
 file(GLOB BINS "${CURRENT_PACKAGES_DIR}/debug/bin/*" "${CURRENT_PACKAGES_DIR}/bin/*")
