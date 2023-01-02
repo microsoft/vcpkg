@@ -1,13 +1,15 @@
 # Find the directory that contains "bin/clang"
 # Note: Only clang-cl is supported on Windows
-vcpkg_find_acquire_program(CLANG)
-if(CLANG MATCHES "-NOTFOUND")
-    message(FATAL_ERROR "Clang is required.")
-endif()
-get_filename_component(CLANG "${CLANG}" DIRECTORY)
-get_filename_component(CLANG "${CLANG}" DIRECTORY)
-if(WIN32 AND NOT EXISTS "${CLANG}/bin/clang-cl.exe")
-    message(FATAL_ERROR "Clang needs to be inside a bin directory.")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(CLANG)
+    if(CLANG MATCHES "-NOTFOUND")
+        message(FATAL_ERROR "Clang is required.")
+    endif()
+    get_filename_component(CLANG "${CLANG}" DIRECTORY)
+    get_filename_component(CLANG "${CLANG}" DIRECTORY)
+    if(NOT EXISTS "${CLANG}/bin/clang-cl.exe")
+        message(FATAL_ERROR "Clang needs to be inside a bin directory.")
+    endif()
 endif()
 
 vcpkg_from_github(
