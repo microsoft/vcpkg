@@ -5,11 +5,11 @@
   "homepage": "WasmEdge.org",
   "license": "Apache-2.0",
   "dependencies": [
-    "spdlog",
     "boost-algorithm",
     "boost-align",
-    "boost-winapi",
     "boost-predef",
+    "boost-winapi",
+    "spdlog",
     {
       "name": "vcpkg-cmake",
       "host": true
