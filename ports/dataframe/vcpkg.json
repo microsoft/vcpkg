@@ -1,7 +1,7 @@
 {
   "name": "dataframe",
-  "version": "1.19.0",
-  "description": "This is a C++ statistical library that provides an interface similar to Pandas package in Python",
+  "version": "1.22.0",
+  "description": "DataFrame is a templatized and heterogeneous C++ container designed for data analysis for statistical, machine-learning, or financial applications"
   "homepage": "https://github.com/hosseinmoein/DataFrame",
   "supports": "!uwp",
   "dependencies": [
