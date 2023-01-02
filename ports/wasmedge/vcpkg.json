@@ -20,7 +20,6 @@
     }
   ],
   "default-features": [
-    "examples",
     "plugins",
     "tools"
   ],
@@ -30,9 +29,6 @@
       "dependencies": [
         "llvm"
       ]
-    },
-    "examples": {
-      "description": "Build examples"
     },
     "plugin-wasi-nn-backend-openvino": {
       "description": "Build the OpenVINO backend plugin for the WasmEdge WASI-NN extension",
