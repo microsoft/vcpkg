@@ -4,12 +4,6 @@
   "description": "WasmEdge is a high-performance WebAssembly runtime for edge computing.",
   "homepage": "WasmEdge.org",
   "license": "Apache-2.0",
-  "default-features": [
-    "tools",
-    "aot",
-    "plugins",
-    "examples"
-  ],
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -20,18 +14,18 @@
       "host": true
     }
   ],
+  "default-features": [
+    "aot",
+    "examples",
+    "plugins",
+    "tools"
+  ],
   "features": {
-    "tools": {
-      "description": "Build tools"
-    },
     "aot": {
       "description": "Build with the Ahead-of-Time compiler supporting",
       "dependencies": [
         "llvm"
       ]
-    },
-    "plugins": {
-      "description": "Build plugins"
     },
     "examples": {
       "description": "Build examples"
@@ -47,6 +41,12 @@
     "plugin-wasi-nn-backend-tensorflowlite": {
       "description": "Build the TensorFlow Lite backend plugin for the WasmEdge WASI-NN extension",
       "supports": "linux"
+    },
+    "plugins": {
+      "description": "Build plugins"
+    },
+    "tools": {
+      "description": "Build tools"
     }
   }
 }
