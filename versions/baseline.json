@@ -22,7 +22,7 @@
     },
     "ace": {
       "baseline": "7.0.11",
-      "port-version": 1
+      "port-version": 2
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -205,7 +205,7 @@
       "port-version": 1
     },
     "asio-grpc": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "asiosdk": {
@@ -505,8 +505,8 @@
       "port-version": 0
     },
     "bitserializer": {
-      "baseline": "0.44",
-      "port-version": 2
+      "baseline": "0.50",
+      "port-version": 0
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -1349,7 +1349,7 @@
       "port-version": 3
     },
     "celero": {
-      "baseline": "2.8.3",
+      "baseline": "2.8.5",
       "port-version": 0
     },
     "cello": {
@@ -2326,7 +2326,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2453,7 +2453,7 @@
       "port-version": 3
     },
     "freeglut": {
-      "baseline": "3.2.2",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "freeimage": {
@@ -2542,7 +2542,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
@@ -2578,7 +2578,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.9",
-      "port-version": 3
+      "port-version": 4
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -3010,7 +3010,7 @@
     },
     "ignition-cmake2": {
       "baseline": "2.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ignition-common1": {
       "baseline": "1.1.1",
@@ -3034,7 +3034,7 @@
     },
     "ignition-math6": {
       "baseline": "6.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ignition-modularscripts": {
       "baseline": "2022-05-11",
@@ -4249,8 +4249,8 @@
       "port-version": 1
     },
     "libsndfile": {
-      "baseline": "1.1.0",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -5717,8 +5717,8 @@
       "port-version": 0
     },
     "pangolin": {
-      "baseline": "0.6",
-      "port-version": 4
+      "baseline": "0.8",
+      "port-version": 0
     },
     "pangomm": {
       "baseline": "2.50.1",
@@ -6138,7 +6138,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.7",
-      "port-version": 4
+      "port-version": 5
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6174,7 +6174,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.7",
@@ -6346,7 +6346,7 @@
     },
     "qtimageformats": {
       "baseline": "6.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtinterfaceframework": {
       "baseline": "6.4.1",
@@ -6608,6 +6608,10 @@
       "baseline": "1.5.1",
       "port-version": 5
     },
+    "recycle": {
+      "baseline": "6.0.0",
+      "port-version": 0
+    },
     "redis-plus-plus": {
       "baseline": "1.3.6",
       "port-version": 0
@@ -6693,8 +6697,8 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "7.7.3",
-      "port-version": 1
+      "baseline": "7.8.3",
+      "port-version": 0
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -7280,6 +7284,10 @@
       "baseline": "9.2.7",
       "port-version": 1
     },
+    "staticjson": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "status-code": {
       "baseline": "2022-09-08",
       "port-version": 0
@@ -7478,7 +7486,7 @@
     },
     "tiff": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -7781,7 +7789,7 @@
       "port-version": 1
     },
     "utfcpp": {
-      "baseline": "3.2.2",
+      "baseline": "3.2.3",
       "port-version": 0
     },
     "utfz": {
@@ -7805,7 +7813,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.31.0",
+      "baseline": "20.34.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -8118,7 +8126,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "wyhash": {
       "baseline": "2022-10-12",

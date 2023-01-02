@@ -2,7 +2,6 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-    #add-missing-string.patch
     )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
@@ -27,11 +26,11 @@ endif()
 # webengine-extensions
 # webengine-printing-and-pdf
 # webengine-pepper-plugins
-set(deactivated_features   webengine_webrtc_pipewire)
+set(deactivated_features  webengine_webrtc_pipewire)
 foreach(_feat IN LISTS deactivated_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=OFF")
 endforeach()
-set(enabled_features  webengine_webrtc  webengine_v8_snapshot_support)
+set(enabled_features  webengine_webrtc )
 foreach(_feat IN LISTS enabled_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
