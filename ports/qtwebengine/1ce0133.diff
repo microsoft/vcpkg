@@ -15,7 +15,7 @@ index 6eef1b3..87f62fc 100644
  #include "components/viz/service/viz_service_export.h"
  #include "gpu/command_buffer/common/sync_token.h"
 -#include "third_party/khronos/GLES2/gl2.h"
-+//#include "third_party/khronos/GLES2/gl2.h"
++#include "third_party/khronos/GLES2/gl2.h"
  #include "ui/gfx/geometry/rect_f.h"
  #include "ui/gfx/geometry/size.h"
  
