@@ -77,8 +77,14 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${WASMEDGE_CMAKE_OPTIONS}
+    OPTIONS_RELEASE
+        -DCMAKE_INSTALL_BINDIR=${CURRENT_PACKAGES_DIR}/tools
+    OPTIONS_DEBUG
+        -DCMAKE_INSTALL_BINDIR=${CURRENT_PACKAGES_DIR}/debug/tools
 )
 
 vcpkg_cmake_install()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
