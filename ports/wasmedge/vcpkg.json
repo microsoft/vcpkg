@@ -8,10 +8,7 @@
     "tools",
     "aot",
     "plugins",
-    "examples",
-    "plugin-wasi-nn-backend-openvino",
-    "plugin-wasi-nn-backend-pytorch",
-    "plugin-wasi-nn-backend-tensorflowlite"
+    "examples"
   ],
   "dependencies": [
     {
@@ -28,7 +25,10 @@
       "description": "Build tools"
     },
     "aot": {
-      "description": "Build with the Ahead-of-Time compiler supporting"
+      "description": "Build with the Ahead-of-Time compiler supporting",
+      "dependencies": [
+        "llvm"
+      ]
     },
     "plugins": {
       "description": "Build plugins"
