@@ -1,3 +1,15 @@
+# Find the directory that contains "bin/clang"
+# Note: Only clang-cl is supported on Windows
+vcpkg_find_acquire_program(CLANG)
+if(CLANG MATCHES "-NOTFOUND")
+    message(FATAL_ERROR "Clang is required.")
+endif()
+get_filename_component(CLANG "${CLANG}" DIRECTORY)
+get_filename_component(CLANG "${CLANG}" DIRECTORY)
+if(WIN32 AND NOT EXISTS "${CLANG}/bin/clang-cl.exe")
+    message(FATAL_ERROR "Clang needs to be inside a bin directory.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WasmEdge/WasmEdge
