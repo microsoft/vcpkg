@@ -86,5 +86,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/launch-darkly-server-config.cmake DESTINATIO
 file(RENAME ${shareDir}/ldserverapiTargets.cmake ${shareDir}/ldserverapi-targets.cmake)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
