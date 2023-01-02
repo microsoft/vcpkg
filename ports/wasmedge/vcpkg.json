@@ -32,18 +32,19 @@
     },
     "plugin-wasi-nn-backend-openvino": {
       "description": "Build the OpenVINO backend plugin for the WasmEdge WASI-NN extension",
-      "supports": "linux"
+      "supports": "linux & !static"
     },
     "plugin-wasi-nn-backend-pytorch": {
       "description": "Build the PyTorch backend plugin for the WasmEdge WASI-NN extension",
-      "supports": "linux"
+      "supports": "linux & !static"
     },
     "plugin-wasi-nn-backend-tensorflowlite": {
       "description": "Build the TensorFlow Lite backend plugin for the WasmEdge WASI-NN extension",
-      "supports": "linux"
+      "supports": "linux & !static"
     },
     "plugins": {
-      "description": "Build plugins"
+      "description": "Build plugins",
+      "supports": "!static"
     },
     "tools": {
       "description": "Build tools"
