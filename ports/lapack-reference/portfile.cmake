@@ -60,16 +60,17 @@ if(VCPKG_USE_INTERNAL_Fortran)
             message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
         endif()
     endif()
-else()
-    set(USE_OPTIMIZED_BLAS ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         ${FORTRAN_CMAKE}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
 
 vcpkg_cmake_install()
