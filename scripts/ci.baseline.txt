@@ -1186,6 +1186,12 @@ zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
 zeroc-ice:x64-uwp=fail
 
+wasmedge:x64-windows=skip
+wasmedge:x86-windows=skip
+wasmedge:x64-windows-static=skip
+wasmedge:x64-windows-static-md=skip
+wasmedge:arm64-windows=skip
+
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
 cmake:x64-windows-static=pass
