@@ -15,7 +15,6 @@
     }
   ],
   "default-features": [
-    "aot",
     "examples",
     "plugins",
     "tools"
