@@ -6,6 +6,10 @@
   "license": "Apache-2.0",
   "dependencies": [
     "spdlog",
+    "boost-algorithm",
+    "boost-align",
+    "boost-winapi",
+    "boost-predef",
     {
       "name": "vcpkg-cmake",
       "host": true
