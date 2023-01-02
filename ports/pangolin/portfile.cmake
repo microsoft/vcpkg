@@ -59,7 +59,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Pangolin)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinConfig.cmake" "SET( Pangolin_CMAKEMODULES ${SOURCE_PATH}/src/../CMakeModules )" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinConfig.cmake" "Pangolin_CMAKEMODULES ${SOURCE_PATH}/" "Pangolin_CMAKEMODULES \${CMAKE_CURRENT_LIST_DIR}/")
 
 vcpkg_copy_pdbs()
 
