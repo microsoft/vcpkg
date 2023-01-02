@@ -1,0 +1,61 @@
+From 1ce0133b6ddd0484d15726fc482343a8559c18b3 Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@qt.io>
+Date: Mon, 02 Jan 2023 12:04:10 +0100
+Subject: [PATCH] FIXUP: Jumbo build
+
+Change-Id: I309c4430f4638a00ec3ab7453d66eb2adb2ed94f
+---
+
+diff --git a/src/3rdparty/chromium/components/viz/common/BUILD.gn b/src/3rdparty/chromium/components/viz/common/BUILD.gn
+index 0c609df..6af77ab 100644
+--- a/src/3rdparty/chromium/components/viz/common/BUILD.gn
++++ b/src/3rdparty/chromium/components/viz/common/BUILD.gn
+@@ -47,6 +47,7 @@
+     "viz_resource_format_export.h",
+   ]
+ 
++  jumbo_excluded_sources = [ "resources/resource_format_utils.cc" ]
+   configs = [ "//third_party/khronos:khronos_headers" ]
+ 
+   public_deps = [ ":resource_format" ]
+diff --git a/src/3rdparty/chromium/components/viz/service/BUILD.gn b/src/3rdparty/chromium/components/viz/service/BUILD.gn
+index 56d412c..bd68f80 100644
+--- a/src/3rdparty/chromium/components/viz/service/BUILD.gn
++++ b/src/3rdparty/chromium/components/viz/service/BUILD.gn
+@@ -225,6 +225,10 @@
+   jumbo_excluded_sources = [
+     "display/display.cc",
+     "display/overlay_processor_on_gpu.cc",
++    "display_embedder/compositor_gpu_thread.cc",
++    "display_embedder/skia_output_device_gl.cc",
++    "display_embedder/skia_output_device_webview.cc",
++    "display_embedder/skia_output_surface_impl_on_gpu.cc",
+     "frame_sinks/frame_sink_manager_impl.cc",
+     "frame_sinks/video_capture/frame_sink_video_capturer_impl.cc",
+   ]
+diff --git a/src/3rdparty/chromium/components/viz/service/display/display_resource_provider.h b/src/3rdparty/chromium/components/viz/service/display/display_resource_provider.h
+index 6eef1b3..87f62fc 100644
+--- a/src/3rdparty/chromium/components/viz/service/display/display_resource_provider.h
++++ b/src/3rdparty/chromium/components/viz/service/display/display_resource_provider.h
+@@ -28,7 +28,7 @@
+ #include "components/viz/service/display/resource_fence.h"
+ #include "components/viz/service/viz_service_export.h"
+ #include "gpu/command_buffer/common/sync_token.h"
+-#include "third_party/khronos/GLES2/gl2.h"
++//#include "third_party/khronos/GLES2/gl2.h"
+ #include "ui/gfx/geometry/rect_f.h"
+ #include "ui/gfx/geometry/size.h"
+ 
+diff --git a/src/3rdparty/chromium/components/viz/service/transitions/transferable_resource_tracker.cc b/src/3rdparty/chromium/components/viz/service/transitions/transferable_resource_tracker.cc
+index a6cd399..961f853 100644
+--- a/src/3rdparty/chromium/components/viz/service/transitions/transferable_resource_tracker.cc
++++ b/src/3rdparty/chromium/components/viz/service/transitions/transferable_resource_tracker.cc
+@@ -4,7 +4,7 @@
+ 
+ #include "components/viz/service/transitions/transferable_resource_tracker.h"
+ 
+-#include <GLES2/gl2.h>
++#include "third_party/khronos/GLES2/gl2.h"
+ 
+ #include <limits>
+ #include <memory>
