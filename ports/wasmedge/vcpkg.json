@@ -5,6 +5,7 @@
   "homepage": "WasmEdge.org",
   "license": "Apache-2.0",
   "dependencies": [
+    "spdlog",
     {
       "name": "vcpkg-cmake",
       "host": true
