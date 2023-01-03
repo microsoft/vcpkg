@@ -17,7 +17,7 @@ if (NOT DEFINED SENTRY_BACKEND)
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
         set(SENTRY_BACKEND "breakpad")
     elseif(APPLE OR WIN32)
-        set(SENTRY_BACKEND "crashpad")
+        set(SENTRY_BACKEND "crashpad") # needs zlib
     elseif(LINUX)
         set(SENTRY_BACKEND "breakpad")
     else()

@@ -19,6 +19,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    {
+      "name": "zlib",
+      "platform": "ios | osx | windows"
+    }
   ]
 }
