@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "MD5 C++ class convert from Frank Thilo (thilo@unix-ag.org) for bzflag (http://www.bzflag.org)",
   "homepage": "https://www.bzflag.org/",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
