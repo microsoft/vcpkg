@@ -11,7 +11,6 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        use-zlib-target.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
