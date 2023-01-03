@@ -5,7 +5,9 @@ vcpkg_from_github(
     REPO eclipse-ecal/tcp_pubsub
     REF "v${VERSION}"
     SHA512 f89b9d9cdbd8e5787ac8923ec65cc2fc259e7d12269b1466a4c29657d8d466e39b95ec8b8483e975bf393f71b5c2d8f59cfd3d955e4e72d69716ec59fe0429af
-    PATCHES "use-ports-for-asio-and-recycle.patch"
+    PATCHES
+        "fix-package-config-file.patch"
+        "use-ports-for-asio-and-recycle.patch"
 )
 
 vcpkg_cmake_configure(
