@@ -108,7 +108,7 @@ index 78bad89..0c2e5ed 100644
    find_dependency(OpenMP)
  endif()
 +if("@enable-arma@")
-+  find_package(Armadillo CONFIG)
++  find_dependency(Armadillo CONFIG)
 +endif()
 +if(MathGL2_HAVE_FLTK)
 +  find_dependency(FLTK CONFIG)
