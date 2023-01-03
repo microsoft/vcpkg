@@ -1259,3 +1259,13 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
+
+# conflicts with kddockwidgets
+kddockwidgets2:x86-windows=skip
+kddockwidgets2:x64-windows=skip
+kddockwidgets2:x64-windows-static=skip
+kddockwidgets2:x64-uwp=skip
+kddockwidgets2:arm64-windows=skip
+kddockwidgets2:x64-linux=skip
+kddockwidgets2:x64-osx=skip
+kddockwidgets2:x64-windows-static-md=skip
