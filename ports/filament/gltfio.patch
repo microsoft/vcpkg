@@ -1,0 +1,294 @@
+diff --git a/libs/gltfio/include/gltfio/AssetLoader.h b/libs/gltfio/include/gltfio/AssetLoader.h
+index c031850f3..bece20e8a 100644
+--- a/libs/gltfio/include/gltfio/AssetLoader.h
++++ b/libs/gltfio/include/gltfio/AssetLoader.h
+@@ -62,6 +62,15 @@ struct AssetConfiguration {
+ 
+     //! Optional default node name for anonymous nodes
+     char* defaultNodeName = nullptr;
++
++    //! Whether to skip ambient occlusion maps. Generally not needed for photogrammetry assets
++    bool skipAmbientOcclusionMaps = false;
++
++    //! Whether to skip normal maps. Generally not needed for photogrammetry assets
++    bool skipNormalMaps = false;
++
++    //! Whether to skip metallic roughness maps. Generally not needed for photogrammetry assets
++    bool skipMetallicRoughnessMaps = false;
+ };
+ 
+ /**
+diff --git a/libs/gltfio/include/gltfio/TextureProvider.h b/libs/gltfio/include/gltfio/TextureProvider.h
+index ff497af2d..dd2304776 100644
+--- a/libs/gltfio/include/gltfio/TextureProvider.h
++++ b/libs/gltfio/include/gltfio/TextureProvider.h
+@@ -20,6 +20,8 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
++#include <optional>
++
+ #include <utils/compiler.h>
+ #include <utils/BitmaskEnum.h>
+ 
+@@ -171,7 +173,7 @@ public:
+  * Creates a simple decoder based on stb_image that can handle "image/png" and "image/jpeg".
+  * This works only if your build configuration includes STB.
+  */
+-TextureProvider* createStbProvider(filament::Engine* engine);
++TextureProvider* createStbProvider(filament::Engine* engine, const std::optional<unsigned int> &maxTextureSize = std::optional<unsigned int>());
+ 
+ /**
+  * Creates a decoder that can handle certain types of "image/ktx2" content as specified in
+diff --git a/libs/gltfio/src/AssetLoader.cpp b/libs/gltfio/src/AssetLoader.cpp
+index 2f93172b1..27e48a679 100644
+--- a/libs/gltfio/src/AssetLoader.cpp
++++ b/libs/gltfio/src/AssetLoader.cpp
+@@ -222,7 +222,10 @@ struct FAssetLoader : public AssetLoader {
+             mTransformManager(config.engine->getTransformManager()),
+             mMaterials(*config.materials),
+             mEngine(*config.engine),
+-            mDefaultNodeName(config.defaultNodeName) {}
++            mDefaultNodeName(config.defaultNodeName),
++            mSkipAmbientOcclusionMaps(config.skipAmbientOcclusionMaps),
++            mSkipNormalMaps(config.skipNormalMaps),
++            mSkipMetallicRoughnessMaps(config.skipMetallicRoughnessMaps) {}
+ 
+     FFilamentAsset* createAsset(const uint8_t* bytes, uint32_t nbytes);
+     FFilamentAsset* createInstancedAsset(const uint8_t* bytes, uint32_t numBytes,
+@@ -296,6 +299,11 @@ public:
+     Engine& mEngine;
+     FNodeManager mNodeManager;
+ 
++    // options applied to assets created by this loader
++    bool mSkipAmbientOcclusionMaps;
++    bool mSkipNormalMaps;
++    bool mSkipMetallicRoughnessMaps;
++
+     // Transient state used only for the asset currently being loaded:
+     FFilamentAsset* mAsset;
+     tsl::robin_map<cgltf_node*, SceneMask> mRootNodes;
+@@ -1217,8 +1225,8 @@ MaterialKey FAssetLoader::getMaterialKey(const cgltf_data* srcAsset,
+         .unlit = !!inputMat->unlit,
+         .hasVertexColors = vertexColor,
+         .hasBaseColorTexture = baseColorTexture->texture != nullptr,
+-        .hasNormalTexture = inputMat->normal_texture.texture != nullptr,
+-        .hasOcclusionTexture = inputMat->occlusion_texture.texture != nullptr,
++        .hasNormalTexture = inputMat->normal_texture.texture != nullptr && !mSkipNormalMaps,
++        .hasOcclusionTexture = inputMat->occlusion_texture.texture != nullptr && !mSkipAmbientOcclusionMaps,
+         .hasEmissiveTexture = inputMat->emissive_texture.texture != nullptr,
+         .enableDiagnostics = mDiagnosticsEnabled,
+         .baseColorUV = (uint8_t) baseColorTexture->texcoord,
+@@ -1260,7 +1268,7 @@ MaterialKey FAssetLoader::getMaterialKey(const cgltf_data* srcAsset,
+             matkey.specularGlossinessUV = (uint8_t) metallicRoughnessTexture->texcoord;
+         }
+     } else {
+-        matkey.hasMetallicRoughnessTexture = metallicRoughnessTexture->texture != nullptr;
++        matkey.hasMetallicRoughnessTexture = metallicRoughnessTexture->texture != nullptr && !mSkipMetallicRoughnessMaps;
+         matkey.metallicRoughnessUV = (uint8_t) metallicRoughnessTexture->texcoord;
+     }
+ 
+diff --git a/libs/gltfio/src/FilamentAsset.cpp b/libs/gltfio/src/FilamentAsset.cpp
+index acec38ccd..2e55c262f 100644
+--- a/libs/gltfio/src/FilamentAsset.cpp
++++ b/libs/gltfio/src/FilamentAsset.cpp
+@@ -79,7 +79,7 @@ FFilamentAsset::~FFilamentAsset() {
+         mEngine->destroy(ib);
+     }
+     for (auto tx : mTextures) {
+-        if (UTILS_LIKELY(tx.isOwner)) {
++        if (UTILS_LIKELY(tx.isOwner) && tx.texture != nullptr) {
+             mEngine->destroy(tx.texture);
+         }
+     }
+diff --git a/libs/gltfio/src/ResourceLoader.cpp b/libs/gltfio/src/ResourceLoader.cpp
+index 8b83c4f30..dca8586e2 100644
+--- a/libs/gltfio/src/ResourceLoader.cpp
++++ b/libs/gltfio/src/ResourceLoader.cpp
+@@ -760,6 +760,9 @@ void ResourceLoader::Impl::createTextures(FFilamentAsset* asset, bool async) {
+     // Create new texture objects if they are not cached and kick off decoding jobs.
+     for (size_t textureIndex = 0, n = asset->mTextures.size(); textureIndex < n; ++textureIndex) {
+         FFilamentAsset::TextureInfo& info = asset->mTextures[textureIndex];
++        if(info.bindings.empty()) {
++          continue;
++        }
+         auto [texture, cacheResult] = getOrCreateTexture(asset, textureIndex, info.flags);
+         if (texture == nullptr) {
+             if (cacheResult == CacheResult::NOT_READY) {
+diff --git a/libs/gltfio/src/StbProvider.cpp b/libs/gltfio/src/StbProvider.cpp
+index 4c5f811b3..db9fe5d6e 100644
+--- a/libs/gltfio/src/StbProvider.cpp
++++ b/libs/gltfio/src/StbProvider.cpp
+@@ -25,6 +25,10 @@
+ #include <filament/Engine.h>
+ #include <filament/Texture.h>
+ 
++#include <image/LinearImage.h>
++#include <image/ColorTransform.h>
++#include <image/ImageSampler.h>
++
+ #include <stb_image.h>
+ 
+ using namespace filament;
+@@ -38,7 +42,7 @@ namespace filament::gltfio {
+ 
+ class StbProvider final : public TextureProvider {
+ public:
+-    StbProvider(Engine* engine);
++    StbProvider(Engine* engine, const std::optional<unsigned int> &maxTextureSize);
+     ~StbProvider();
+ 
+     Texture* pushTexture(const uint8_t* data, size_t byteCount,
+@@ -63,11 +67,13 @@ private:
+ 
+     struct TextureInfo {
+         Texture* texture;
++        bool resized;
+         TextureState state;
+         atomic<intptr_t> decodedTexelsBaseMipmap;
+         vector<uint8_t> sourceBuffer;
+         JobSystem::Job*  decoderJob;
+     };
++    static void decode(TextureInfo &info);
+ 
+     // Declare some sentinel values for the "decodedTexelsBaseMipmap" field.
+     // Note that the "state" field can be modified only on the foreground thread.
+@@ -84,8 +90,25 @@ private:
+     std::string mRecentPushMessage;
+     std::string mRecentPopMessage;
+     Engine* const mEngine;
++    const std::optional<unsigned int> mMaxTextureSize;
+ };
+ 
++static int scaleDownDimension(int dimension, float scaleDownFactor) {
++    assert_invariant(dimension > 0);
++    const auto scaledDimension = std::max(1, static_cast<int>(std::round(static_cast<float>(dimension) / scaleDownFactor)));
++    return (scaledDimension);
++}
++
++static void scaleDownDimensionsIfNeeded(int &width, int &height, unsigned int maxTextureSize) {
++  const auto largerDimension = std::max(width, height);
++  if(largerDimension <= maxTextureSize) {
++    return;
++  }
++  const auto scaleDownFactor = static_cast<float>(largerDimension) / static_cast<float>(maxTextureSize);
++  width = scaleDownDimension(width, scaleDownFactor);
++  height = scaleDownDimension(height, scaleDownFactor);
++}
++
+ Texture* StbProvider::pushTexture(const uint8_t* data, size_t byteCount,
+             const char* mimeType, TextureFlags flags) {
+     int width, height, numComponents;
+@@ -93,6 +116,9 @@ Texture* StbProvider::pushTexture(const uint8_t* data, size_t byteCount,
+         mRecentPushMessage = std::string("Unable to parse texture: ") + stbi_failure_reason();
+         return nullptr;
+     }
++    if(mMaxTextureSize.has_value()) {
++      scaleDownDimensionsIfNeeded(width, height, *mMaxTextureSize);
++    }
+ 
+     using InternalFormat = Texture::InternalFormat;
+ 
+@@ -126,19 +152,7 @@ Texture* StbProvider::pushTexture(const uint8_t* data, size_t byteCount,
+     }
+ 
+     JobSystem* js = &mEngine->getJobSystem();
+-    info->decoderJob = jobs::createJob(*js, mDecoderRootJob, [this, info] {
+-        auto& source = info->sourceBuffer;
+-        int width, height, comp;
+-
+-        // Test asynchronous loading by uncommenting this line.
+-        // std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 10000));
+-
+-        stbi_uc* texels = stbi_load_from_memory(source.data(), source.size(),
+-                &width, &height, &comp, 4);
+-        source.clear();
+-        source.shrink_to_fit();
+-        info->decodedTexelsBaseMipmap.store(texels ? intptr_t(texels) : DECODING_ERROR);
+-    });
++    info->decoderJob = jobs::createJob(*js, mDecoderRootJob, [this, info] { decode(*info); });
+ 
+     js->runAndRetain(info->decoderJob);
+     return texture;
+@@ -183,9 +197,11 @@ void StbProvider::updateQueue() {
+                 ++mDecodedCount;
+                 continue;
+             }
+-            Texture::PixelBufferDescriptor pbd((uint8_t*) data,
+-                    texture->getWidth() * texture->getHeight() * 4, Texture::Format::RGBA,
+-                    Texture::Type::UBYTE, [](void* mem, size_t, void*) { stbi_image_free(mem); });
++            const auto textureSize = texture->getWidth() * texture->getHeight() * 4;
++            auto pbd = info->resized ? Texture::PixelBufferDescriptor((uint8_t*)data, textureSize, Texture::Format::RGBA, Texture::Type::UBYTE,
++                                                                      [](void* mem, size_t, void*) { delete[] ((uint8_t*)mem); })
++                                     : Texture::PixelBufferDescriptor((uint8_t*)data, textureSize, Texture::Format::RGBA, Texture::Type::UBYTE,
++                                                                      [](void* mem, size_t, void*) { stbi_image_free(mem); });
+             texture->setImage(*mEngine, 0, std::move(pbd));
+ 
+             // Call generateMipmaps unconditionally to fulfill the promise of the TextureProvider
+@@ -229,23 +245,47 @@ const char* StbProvider::getPopMessage() const {
+     return mRecentPopMessage.empty() ? nullptr : mRecentPopMessage.c_str();
+ }
+ 
++void StbProvider::decode(TextureInfo& info) {
++    auto& source = info.sourceBuffer;
++    int width, height, comp;
++
++    std::uint8_t* texels = static_cast<std::uint8_t*>(stbi_load_from_memory(source.data(), source.size(), &width, &height, &comp, 4));
++    source.clear();
++    source.shrink_to_fit();
++    if (texels == nullptr) {
++        info.decodedTexelsBaseMipmap.store(DECODING_ERROR);
++        return;
++    }
++    info.resized = ((width != info.texture->getWidth()) || (height != info.texture->getHeight()));
++    if (info.resized) {
++        if (image::canSimpleScaleDown(width, height, info.texture->getWidth(), info.texture->getHeight())) {
++            auto scaled_down_texels = image::simpleScaleDownRgba(texels, width, height, width * sizeof(std::uint8_t) * 4u, info.texture->getWidth(),
++                                                                 info.texture->getHeight(), info.texture->getWidth() * sizeof(std::uint8_t) * 4u);
++            stbi_image_free(texels);
++            texels = scaled_down_texels.release();
++        } else {
++            auto linearImage = image::toLinearWithAlpha<std::uint8_t>(width, height, width * sizeof(std::uint8_t) * 4u, texels);
++            stbi_image_free(texels);
++            linearImage = image::resampleImage(linearImage, info.texture->getWidth(), info.texture->getHeight());
++            auto scaled_down_texels = image::fromLinearTosRGB<std::uint8_t, 4>(linearImage);
++            texels = scaled_down_texels.release();
++        }
++    }
++    info.decodedTexelsBaseMipmap.store(intptr_t(texels));
++}
++
+ void StbProvider::decodeSingleTexture() {
+     assert_invariant(!UTILS_HAS_THREADING);
+     for (auto& info : mTextures) {
+         if (info->state == TextureState::DECODING) {
+-            auto& source = info->sourceBuffer;
+-            int width, height, comp;
+-            stbi_uc* texels = stbi_load_from_memory(source.data(), source.size(),
+-                    &width, &height, &comp, 4);
+-            source.clear();
+-            source.shrink_to_fit();
+-            info->decodedTexelsBaseMipmap.store(texels ? intptr_t(texels) : DECODING_ERROR);
++            decode(*info);
+             break;
+         }
+     }
+ }
+ 
+-StbProvider::StbProvider(Engine* engine) : mEngine(engine) {
++StbProvider::StbProvider(Engine* engine, const std::optional<unsigned int> &maxTextureSize) : mEngine(engine), mMaxTextureSize(maxTextureSize) {
++    assert_invariant(maxTextureSize.has_value() ? *maxTextureSize > 0u : true);
+     mDecoderRootJob = mEngine->getJobSystem().createJob();
+ #ifndef NDEBUG
+     slog.i << "Texture Decoder has "
+@@ -259,8 +299,8 @@ StbProvider::~StbProvider() {
+     mEngine->getJobSystem().release(mDecoderRootJob);
+ }
+ 
+-TextureProvider* createStbProvider(Engine* engine) {
+-    return new StbProvider(engine);
++TextureProvider* createStbProvider(Engine* engine, const std::optional<unsigned int> &maxTextureSize) {
++    return new StbProvider(engine, maxTextureSize);
+ }
+ 
+ } // namespace filament::gltfio

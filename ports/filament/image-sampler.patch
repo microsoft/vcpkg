@@ -1,0 +1,103 @@
+diff --git a/libs/image/include/image/ImageSampler.h b/libs/image/include/image/ImageSampler.h
+index e01da45ec..c6ea3af00 100644
+--- a/libs/image/include/image/ImageSampler.h
++++ b/libs/image/include/image/ImageSampler.h
+@@ -20,6 +20,8 @@
+ #include <image/LinearImage.h>
+ 
+ #include <utils/compiler.h>
++#include <memory>
++#include <cstdint>
+ 
+ namespace image {
+ 
+@@ -159,6 +161,20 @@ uint32_t getMipmapCount(const LinearImage& source);
+ UTILS_PUBLIC
+ Filter filterFromString(const char* name);
+ 
++/**
++ * Returns whether simpleScaleDownRgba() is usable on the specified dimensions.
++ */
++bool canSimpleScaleDown(uint32_t sourceWidth, uint32_t sourceHeight, uint32_t destinationWidth, uint32_t destinationHeight);
++
++/**
++ * Scales down a single byte per component RGBA image where each destination pixel corresponds to
++ * a whole number of source pixels on each dimension. canSimpleScaleDown(sourceWidth, sourceHeight, destinationWidth, destinationHeight)
++ * must return true as a precondition.
++ */
++std::unique_ptr<uint8_t[]> simpleScaleDownRgba(
++    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
++    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride);
++
+ } // namespace image
+ 
+ #endif /* IMAGE_IMAGESAMPLER_H */
+diff --git a/libs/image/src/ImageSampler.cpp b/libs/image/src/ImageSampler.cpp
+index 157f15867..4d22518cb 100644
+--- a/libs/image/src/ImageSampler.cpp
++++ b/libs/image/src/ImageSampler.cpp
+@@ -379,4 +379,64 @@ Filter filterFromString(const char* rawname) {
+     return iter == map.end() ? Filter::DEFAULT : iter->second;
+ }
+ 
++bool canSimpleScaleDown(uint32_t sourceWidth, uint32_t sourceHeight, uint32_t destinationWidth, uint32_t destinationHeight) {
++  assert(sourceWidth > 0u);
++  assert(sourceHeight > 0u);
++  assert(destinationWidth > 0u);
++  assert(destinationHeight > 0u);
++  return(((sourceWidth % destinationWidth) == 0u) && ((sourceHeight % destinationHeight) == 0u));
++}
++
++template <uint32_t componentsPerPixel>
++static std::unique_ptr<uint8_t[]> simpleScaleDown(
++    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
++    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride) {
++  assert(canSimpleScaleDown(sourceWidth, sourceHeight, destinationWidth, destinationHeight));
++  assert(sourceLineStride >= sourceWidth * componentsPerPixel);
++  assert(destinationLineStride >= destinationWidth * componentsPerPixel);
++
++  const auto sourceColumnsPerDestinationColumn = sourceWidth / destinationWidth;
++  const auto sourceRowsPerDestinationRow = sourceHeight / destinationHeight;
++  const auto sourcePixelsPerDestinationPixel = sourceColumnsPerDestinationColumn * sourceRowsPerDestinationRow;
++  const auto sourceComponentOffsets = std::unique_ptr<uint32_t[]>(new uint32_t [sourcePixelsPerDestinationPixel]);
++  for(auto row = 0u ; row < sourceRowsPerDestinationRow ; ++row) {
++    const auto rowSourceBase = row * sourceLineStride;
++    const auto rowOffsetBase = row * sourceColumnsPerDestinationColumn;
++    for(auto column = 0u ; column < sourceColumnsPerDestinationColumn ; ++column) {
++      sourceComponentOffsets[rowOffsetBase + column] = column * componentsPerPixel + rowSourceBase;
++    }
++  }
++
++  const auto sumBaseline = (sourcePixelsPerDestinationPixel + 1u) / 2u; // Creates the effect of a crude rounding as opposed to flooring.
++  const auto rowRelativeDestinationEnd = destinationWidth * componentsPerPixel;
++  const auto rowSourceIncrement = sourceRowsPerDestinationRow * sourceLineStride;
++  const auto pixelSourceIncrement = sourceColumnsPerDestinationColumn * componentsPerPixel;
++  auto destination = std::unique_ptr<uint8_t[]>(new uint8_t[destinationLineStride * destinationHeight]);
++  for(auto destinationY = 0u ; destinationY < destinationHeight ; ++destinationY) {
++    const auto rowSourceBase = destinationY * rowSourceIncrement;
++    auto pixelSource = rowSourceBase;
++    const auto rowDestinationBase = destinationY * destinationLineStride;
++    const auto rowDestinationEnd = rowDestinationBase + rowRelativeDestinationEnd;
++    for(auto pixelDestination = rowDestinationBase ; pixelDestination < rowDestinationEnd ; pixelDestination += componentsPerPixel) {
++      for(auto component = 0u ; component < componentsPerPixel ; ++component) {
++        auto sum = sumBaseline;
++        const auto componentSource = pixelSource + component;
++        for(auto sourceComponentOffset = 0u ; sourceComponentOffset < sourcePixelsPerDestinationPixel ; ++sourceComponentOffset) {
++          sum += (uint32_t)source[componentSource + sourceComponentOffsets[sourceComponentOffset]];
++        }
++        destination[pixelDestination + component] = sum / sourcePixelsPerDestinationPixel;
++      }
++      pixelSource += pixelSourceIncrement;
++    }
++  }
++
++  return(destination);
++}
++
++std::unique_ptr<uint8_t[]> simpleScaleDownRgba(
++    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
++    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride) {
++  return(simpleScaleDown<4u>(source, sourceWidth, sourceHeight, sourceLineStride, destinationWidth, destinationHeight, destinationLineStride));
++}
++
+ } // namespace image

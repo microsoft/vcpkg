@@ -1,0 +1,26 @@
+{
+  "name": "filament",
+  "version": "1.29.0",
+  "description": "Filament",
+  "homepage": "https://github.com/Polycam/filament",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "zlib",
+    "libpng",
+    "draco",
+    "stb",
+    "assimp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "filament",
+      "host": true
+    }
+  ]
+}
