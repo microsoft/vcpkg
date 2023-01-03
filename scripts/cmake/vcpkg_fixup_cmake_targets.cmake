@@ -18,7 +18,7 @@ function(z_vcpkg_cmake_config_check_for_release_libs filepath contents)
         string(SUBSTRING "${unprocessed}" 0 ${pos} prefix)
         string(APPEND processed "${prefix}")
         string(SUBSTRING "${unprocessed}" ${pos} -1 unprocessed)
-        if(NOT prefix MATCHES "(>:|optimized;)\$")
+        if(NOT prefix MATCHES "(>:|>:-L|optimized;)\$")
             string(REGEX REPLACE "^.*\n" "" processed "${processed}")
             string(REGEX REPLACE "\n.*\$" "" hit "${unprocessed}")
             string(APPEND messages

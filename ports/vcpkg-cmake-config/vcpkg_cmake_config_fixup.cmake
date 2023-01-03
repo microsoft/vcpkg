@@ -183,6 +183,10 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
             string(REPLACE "set_target_properties::done" "set_target_properties" contents "${contents}") # Restore original command
         endif()
 
+        # Fixup before z_vcpkg_cmake_config_check_for_release_libs.
+        string(REPLACE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/../../include" [[${VCPKG_IMPORT_PREFIX}/include]] contents "${contents}")
+        string(REPLACE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/../../lib" "${CURRENT_INSTALLED_DIR}/lib" contents "${contents}")
+
         # Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}.
         # This happens if vcpkg built libraries are directly linked to binary files
         # instead of using an imported target for it.
