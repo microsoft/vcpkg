@@ -1186,6 +1186,7 @@ zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail
 zeroc-ice:x64-uwp=fail
 
+# this port requires clang-cl on windows while ci only has cl
 wasmedge:x64-windows=skip
 wasmedge:x86-windows=skip
 wasmedge:x64-windows-static=skip

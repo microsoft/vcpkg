@@ -1,6 +1,6 @@
 {
   "name": "wasmedge",
-  "version-date": "2022-12-31",
+  "version-string": "0.12.0-alpha.1",
   "description": "WasmEdge is a high-performance WebAssembly runtime for edge computing.",
   "homepage": "WasmEdge.org",
   "license": "Apache-2.0",

@@ -15,7 +15,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WasmEdge/WasmEdge
-    REF c8d9a7fceb772ad882a70604c5fa0c8949796c1c
+    REF 0.12.0-alpha.1
     SHA512 fd8c4f509c379eee5269ed2a6dbcda84ad1368592f141020b4f35ada3ea7f3a02b931c3080158c492a368caadf1389974514fed7a406e2e6456d3c72a7a2ad87
     HEAD_REF master
 )
