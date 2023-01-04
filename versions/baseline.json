@@ -3152,6 +3152,10 @@
       "baseline": "2020-04-06",
       "port-version": 3
     },
+    "inipp": {
+      "baseline": "1.0.12",
+      "port-version": 0
+    },
     "inja": {
       "baseline": "3.3.0",
       "port-version": 0
