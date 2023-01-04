@@ -5312,6 +5312,10 @@
       "baseline": "2021-02-21",
       "port-version": 3
     },
+    "node-api": {
+      "baseline": "18.12.1",
+      "port-version": 0
+    },
     "nonius": {
       "baseline": "2019-04-20",
       "port-version": 2
