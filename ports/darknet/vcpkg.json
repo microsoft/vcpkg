@@ -6,12 +6,12 @@
   "homepage": "https://github.com/alexeyab/darknet",
   "license": null,
   "dependencies": [
-    "pthreads",
-    "stb",
     {
       "name": "getopt",
       "platform": "windows & !mingw"
     },
+    "pthreads",
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
