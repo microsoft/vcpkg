@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "the API and Extension registries for the OpenGL family APIs",
   "homepage": "https://github.com/KhronosGroup/OpenGL-Registry",
+  "license": "MIT AND Apache-2.0",
   "dependencies": [
     "egl-registry",
     {
