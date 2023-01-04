@@ -3732,6 +3732,10 @@
       "baseline": "1.2.6",
       "port-version": 0
     },
+    "libenvpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libepoxy": {
       "baseline": "1.5.10",
       "port-version": 1
