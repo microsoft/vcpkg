@@ -1,0 +1,20 @@
+diff --git a/getopt.h b/getopt.h
+index 5e33682de..47cf2ff54 100644
+--- a/getopt.h
++++ b/getopt.h	
+@@ -124,13 +124,13 @@ _GETOPT_END_EXTERN_C
+ 		#define getopt getopt_w
+ 		#define getopt_long getopt_long_w
+ 		#define getopt_long_only getopt_long_only_w
+-		#define option option_w
++		typedef option_w option;
+ 		#define optarg optarg_w
+ 	#else
+ 		#define getopt getopt_a
+ 		#define getopt_long getopt_long_a
+ 		#define getopt_long_only getopt_long_only_a
+-		#define option option_a
++		typedef option_a option;
+ 		#define optarg optarg_a
+ 	#endif
+ #endif  // __GETOPT_H_
