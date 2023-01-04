@@ -24,9 +24,16 @@ if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-vcpkg_add_to_path("${NASM_EXE_PATH}")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    # ffmpeg nasm build causes linker to stall on x86, so fall back to yasm
+    vcpkg_find_acquire_program(YASM)
+    get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
+    vcpkg_add_to_path("${YASM_EXE_PATH}")
+else()
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+    vcpkg_add_to_path("${NASM_EXE_PATH}")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #We're assuming that if we're building for Windows we're using MSVC
