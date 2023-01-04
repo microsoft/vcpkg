@@ -2070,7 +2070,7 @@
     },
     "dxut": {
       "baseline": "11.30",
-      "port-version": 0
+      "port-version": 1
     },
     "eabase": {
       "baseline": "2.09.12",
@@ -2130,7 +2130,7 @@
     },
     "effects11": {
       "baseline": "11.29",
-      "port-version": 0
+      "port-version": 1
     },
     "effolkronium-random": {
       "baseline": "1.4.1",
