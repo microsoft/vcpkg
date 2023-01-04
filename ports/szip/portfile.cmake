@@ -21,7 +21,7 @@ if (VCPKG_CROSSCOMPILING)
     # 2) stat works properly, which is true
     set(extra_opts 
         -DTEST_LFS_WORKS_RUN=TRUE
-        -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=""
+        -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=
     )
 endif()
 
