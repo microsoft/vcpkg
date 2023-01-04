@@ -5222,7 +5222,7 @@
     },
     "ncurses": {
       "baseline": "6.3",
-      "port-version": 3
+      "port-version": 4
     },
     "neargye-semver": {
       "baseline": "0.3.0",
