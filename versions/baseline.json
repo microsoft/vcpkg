@@ -185,7 +185,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "11.2.3",
+      "baseline": "11.4.3",
       "port-version": 0
     },
     "arrayfire": {
@@ -2181,7 +2181,7 @@
       "port-version": 1
     },
     "ensmallen": {
-      "baseline": "2.18.1",
+      "baseline": "2.19.0",
       "port-version": 0
     },
     "entityx": {
