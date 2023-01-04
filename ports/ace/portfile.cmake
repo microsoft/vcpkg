@@ -417,6 +417,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
 
 vcpkg_fixup_pkgconfig()
