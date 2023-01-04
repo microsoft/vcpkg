@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2.0.0rc9
     SHA512 e188d6077cb19f9044da9c98c2c4284cad09f4ee745f4746d0df5b22a379d3b32fe20aa998151d6dc08e7f113f50abf80a7509d63c36de46547ce43b5fe1fa54
     HEAD_REF master
+    PATCHES
+        OcclusionMaps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

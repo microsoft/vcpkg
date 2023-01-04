@@ -1,0 +1,50 @@
+diff --git a/tiny_obj_loader.h b/tiny_obj_loader.h
+index c4bb454..f310fca 100644
+--- a/tiny_obj_loader.h
++++ b/tiny_obj_loader.h
+@@ -227,12 +227,14 @@ struct material_t {
+   std::string sheen_texname;      // map_Ps
+   std::string emissive_texname;   // map_Ke
+   std::string normal_texname;     // norm. For normal mapping.
++  std::string ambient_occlusion_texname; // map_ao
+ 
+   texture_option_t roughness_texopt;
+   texture_option_t metallic_texopt;
+   texture_option_t sheen_texopt;
+   texture_option_t emissive_texopt;
+   texture_option_t normal_texopt;
++  texture_option_t ambient_occlusion_texopt;
+ 
+   int pad2;
+ 
+@@ -1346,6 +1348,7 @@ static void InitMaterial(material_t *material) {
+   InitTexOpt(&material->emissive_texopt, /* is_bump */ false);
+   InitTexOpt(&material->normal_texopt,
+              /* is_bump */ false);  // @fixme { is_bump will be true? }
++  InitTexOpt(&material->ambient_occlusion_texopt, /* is_bump */ false);
+   material->name = "";
+   material->ambient_texname = "";
+   material->diffuse_texname = "";
+@@ -1379,6 +1382,7 @@ static void InitMaterial(material_t *material) {
+   material->sheen_texname = "";
+   material->emissive_texname = "";
+   material->normal_texname = "";
++  material->ambient_occlusion_texname = "";
+ 
+   material->unknown_parameter.clear();
+ }
+@@ -2291,6 +2295,14 @@ void LoadMtl(std::map<std::string, int> *material_map,
+       continue;
+     }
+ 
++    // PBR: ambient occlusion texture
++    if ((0 == strncmp(token, "map_ao", 6)) && IS_SPACE(token[6])) {
++        token += 7;
++        ParseTextureNameAndOption(&(material.ambient_occlusion_texname),
++            &(material.ambient_occlusion_texopt), token);
++        continue;
++    }
++
+     // unknown parameter
+     const char *_space = strchr(token, ' ');
+     if (!_space) {
