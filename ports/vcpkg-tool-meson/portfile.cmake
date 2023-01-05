@@ -5,17 +5,17 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program MESON)
-set(program_version 0.64.1)
+set(program_version 1.0.0)
 set(program_name meson)
 set(search_names meson meson.py)
 set(interpreter PYTHON3)
 set(apt_package_name "meson")
 set(brew_package_name "meson")
-set(ref e000aa11373298c6c07e264d4436b5075210bd11)
+set(ref 05f85c79454e206e00c6ced5b6fc25ffcafed39c)
 set(paths_to_search "${CURRENT_PACKAGES_DIR}/tools/meson")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 a51f799183bdcf309b52487e3b98b7b9a83379c411375369b24fdb1ebd3eedd550b922fe98117040c8033c8b476a12c9e730c67c403efa711802dfdca88c34c8)
+set(download_sha512 b4744b9cc28d85d6c7df9199e74fb695930b3af5d065035c6728b5883b5df4faae9ce1dcc0461c3fc28c68d854c6daf4edef5e7e448ba2eabff9fe8e9e4650d9)
 set(supported_on_unix ON)
 set(version_command --version)
 set(extra_search_args EXACT_VERSION_MATCH)
@@ -62,3 +62,19 @@ z_vcpkg_find_acquire_program_find_internal("${program}"
 
 message(STATUS "Using meson: ${MESON}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${program_version}") # For vcpkg_find_acquire_program
+
+
+vcpkg_find_acquire_program(PYTHON3)
+vcpkg_execute_required_process(COMMAND "${PYTHON3}" --version
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "python3-version-${TARGET_TRIPLET}")
+
+file(READ "${CURRENT_BUILDTREES_DIR}/python3-version-${TARGET_TRIPLET}-out.log" version_contents)
+string(REGEX MATCH [[[0-9]+\.[0-9]+\.[0-9]+]] python_ver "${version_contents}")
+
+set(min_required 3.7)
+if(python_ver VERSION_LESS "${min_required}")
+    message(FATAL_ERROR "Found Python version '${python_ver} at ${PYTHON3}' is insufficient for meson. meson requires at least version '${min_required}'")
+else()
+    message(STATUS "Found Python version '${python_ver} at ${PYTHON3}'")
+endif()
