@@ -6060,6 +6060,10 @@
       "baseline": "2021-02-21",
       "port-version": 0
     },
+    "ptc-print": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "ptex": {
       "baseline": "2.3.2",
       "port-version": 4
@@ -7985,8 +7989,8 @@
       "port-version": 12
     },
     "vtk-dicom": {
-      "baseline": "0.8.12",
-      "port-version": 2
+      "baseline": "0.8.14",
+      "port-version": 0
     },
     "vtk-m": {
       "baseline": "1.6.0",
@@ -8431,10 +8435,6 @@
     "zziplib": {
       "baseline": "0.13.72",
       "port-version": 3
-    },
-    "ptc-print": {
-      "baseline": "1.4.0",
-      "port-version": 0
     }
   }
 }
