@@ -2377,8 +2377,8 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "22.10.26",
-      "port-version": 1
+      "baseline": "23.1.4",
+      "port-version": 0
     },
     "flecs": {
       "baseline": "3.1.0",
@@ -6060,6 +6060,10 @@
       "baseline": "2021-02-21",
       "port-version": 0
     },
+    "ptc-print": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "ptex": {
       "baseline": "2.3.2",
       "port-version": 4
@@ -8431,10 +8435,6 @@
     "zziplib": {
       "baseline": "0.13.72",
       "port-version": 3
-    },
-    "ptc-print": {
-      "baseline": "1.4.0",
-      "port-version": 0
     }
   }
 }
