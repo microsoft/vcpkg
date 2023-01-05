@@ -57,8 +57,9 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUA
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/share/automake-1.16")
 else()
     set(SHELL /bin/sh)
 endif()
@@ -84,8 +85,8 @@ endif()
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
-
 if(VCPKG_DETECTED_MSVC)
+    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
@@ -97,9 +98,71 @@ endif()
 string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -I \"${CURRENT_INSTALLED_DIR}/include\"")
 string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/include\"")
 
-set(_csc_PROJECT_PATH ffmpeg)
+## Setup vcpkg toolchain
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+
+set(prog_env "")
+
+if(VCPKG_DETECTED_CMAKE_C_COMPILER)
+    get_filename_component(CC_path "${VCPKG_DETECTED_CMAKE_C_COMPILER}" DIRECTORY)
+    get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
+    set(ENV{CC} "${CC_filename}")
+    string(APPEND OPTIONS " --cc=${CC_filename}")
+    list(APPEND prog_env "${CC_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
+    get_filename_component(CXX_path "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" DIRECTORY)
+    get_filename_component(CXX_filename "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" NAME)
+    set(ENV{CXX} "${CXX_filename}")
+    string(APPEND OPTIONS " --cxx=${CXX_filename}")
+    list(APPEND prog_env "${CXX_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
+    get_filename_component(RC_path "${VCPKG_DETECTED_CMAKE_RC_COMPILER}" DIRECTORY)
+    get_filename_component(RC_filename "${VCPKG_DETECTED_CMAKE_RC_COMPILER}" NAME)
+    set(ENV{WINDRES} "${RC_filename}")
+    string(APPEND OPTIONS " --windres=${RC_filename}")
+    list(APPEND prog_env "${RC_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_LINKER)
+    get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
+    get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
+    set(ENV{LD} "${LD_filename}")
+    string(APPEND OPTIONS " --ld=${LD_filename}")
+    list(APPEND prog_env "${LD_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_NM)
+    get_filename_component(NM_path "${VCPKG_DETECTED_CMAKE_NM}" DIRECTORY)
+    get_filename_component(NM_filename "${VCPKG_DETECTED_CMAKE_NM}" NAME)
+    set(ENV{NM} "${NM_filename}")
+    string(APPEND OPTIONS " --nm=${NM_filename}")
+    list(APPEND prog_env "${NM_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_AR)
+    get_filename_component(AR_path "${VCPKG_DETECTED_CMAKE_AR}" DIRECTORY)
+    get_filename_component(AR_filename "${VCPKG_DETECTED_CMAKE_AR}" NAME)
+    if(AR_filename MATCHES [[^(llvm-)?lib\.exe$]]
+        set(ENV{AR} "ar-lib ${AR_filename}")
+        string(APPEND OPTIONS " --ar='ar-lib ${AR_filename}'")
+    else()
+        set(ENV{AR} "${AR_filename}")
+        string(APPEND OPTIONS " --ar='${AR_filename}'")
+    endif()
+    list(APPEND prog_env "${AR_path}")
+endif()
+
+list(REMOVE_DUPLICATES prog_env)
+vcpkg_add_to_path(PREPEND ${prog_env})
+
+# More? RANLIB OBJCC STRIP BIN2C
+
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 set(FFMPEG_PKGCONFIG_MODULES libavutil)
 
@@ -503,15 +566,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
 
-set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-
-get_filename_component(CC_path "${VCPKG_DETECTED_CMAKE_C_COMPILER}" DIRECTORY)
-get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
-set(ENV{CC} "${CC_filename}")
-if(CC_path)
-    vcpkg_add_to_path(PREPEND "${CC_path}")
-endif()
-
 message(STATUS "Building Options: ${OPTIONS}")
 
 # Release build
@@ -519,7 +573,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    message(STATUS "Building ${PORT} for Release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     # We use response files here as the only known way to handle spaces in paths
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cflags.rsp")
@@ -533,6 +587,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_RELEASE}")
@@ -553,7 +608,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    message(STATUS "Building ${PORT} for Debug")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
     file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
@@ -564,6 +619,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_DEBUG}")
