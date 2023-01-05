@@ -3,7 +3,7 @@ vcpkg_from_github(
   REPO nodejs/node-addon-api
   REF v5.0.0
   SHA512 5ee14bc325ce66c6f645c3b638efaf69a7dfc90f0d6514f8568dedf34d5b5460b80c4438c4c12264d80c827edf46a82f0ecceb53b2a370ed5ec2ee640fa1ef7f
-HEAD_REF main
+  HEAD_REF main
 )
 
 file(COPY "${SOURCE_PATH}/napi.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
