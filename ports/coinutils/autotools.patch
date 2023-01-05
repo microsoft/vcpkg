@@ -1,11 +1,11 @@
 diff --git a/CoinUtils/Makefile.in b/CoinUtils/Makefile.in
-index 6b7ebf7..92551f3 100644
+index df78534..f590c23 100644
 --- a/CoinUtils/Makefile.in
 +++ b/CoinUtils/Makefile.in
 @@ -354,7 +354,7 @@ CLEANFILES =
  # Files that are generated and should be cleaned with make distclean
  DISTCLEANFILES = $(am__append_3) $(VPATH_DISTCLEANFILES)
- DocFiles = README AUTHORS LICENSE 
+ DocFiles = README README.md AUTHORS AUTHORS.md LICENSE LICENSE.md 
 -DocInstallDir = $(datadir)/coin/doc/$(PACKAGE_NAME)
 +DocInstallDir = $(datadir)/coinutils
  COIN_HAS_DOXYGEN = @COIN_HAS_DOXYGEN_TRUE@TRUE

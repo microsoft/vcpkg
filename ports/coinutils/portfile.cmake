@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CoinUtils
-    REF f709081c9b57cc2dd32579d804b30689ca789982 # releases/2.11.4
-    SHA512 1c2e7f796524d67d87253bc7938c1a6db3c8266acec6b6399aeb83c0fb253b77507e6b5e84f16b0b8e40098aef94676499f396d1c7f653b1e04cbadca7620185
+    REF "releases/${VERSION}"
+    SHA512 47759e6ff85541c77a5447b1a3d46870f0704c2a508b946e07db76a06f1874cfd838100965c959bb32c85d6c5fe8a54702e911dde437f9c0116a99b55c98c31e
     PATCHES
         autotools.patch
         pkgconfig.patch
@@ -20,6 +20,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX BZIP MODULES bzip2 LIBRARIES)
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}/CoinUtils"
+    # AUTOCONFIG # needs more coin build tools
     NO_ADDITIONAL_PATHS
     OPTIONS
         --without-blas
@@ -44,4 +45,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/coinutils/LICENSE" "${CURRENT_PACKAGES_DIR}/share/coinutils/copyright")
