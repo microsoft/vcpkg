@@ -6060,6 +6060,10 @@
       "baseline": "2021-02-21",
       "port-version": 0
     },
+    "ptc-print": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "ptex": {
       "baseline": "2.3.2",
       "port-version": 4
@@ -7896,9 +7900,13 @@
       "baseline": "2021-11-16",
       "port-version": 2
     },
-    "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2022-02-10",
+    "vcpkg-msbuild": {
+      "baseline": "2022-08-04",
       "port-version": 1
+    },
+    "vcpkg-pkgconfig-get-modules": {
+      "baseline": "2022-08-80",
+      "port-version": 0
     },
     "vcpkg-qmake": {
       "baseline": "2022-11-16",
@@ -8358,7 +8366,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.7",
-      "port-version": 3
+      "port-version": 4
     },
     "zeromq": {
       "baseline": "4.3.4",
@@ -8431,10 +8439,6 @@
     "zziplib": {
       "baseline": "0.13.72",
       "port-version": 3
-    },
-    "ptc-print": {
-      "baseline": "1.4.0",
-      "port-version": 0
     }
   }
 }
