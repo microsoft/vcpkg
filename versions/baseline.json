@@ -5618,7 +5618,7 @@
     },
     "openssl": {
       "baseline": "3.0.7",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6058,6 +6058,10 @@
     },
     "psimd": {
       "baseline": "2021-02-21",
+      "port-version": 0
+    },
+    "ptc-print": {
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "ptex": {
@@ -8431,10 +8435,6 @@
     "zziplib": {
       "baseline": "0.13.72",
       "port-version": 3
-    },
-    "ptc-print": {
-      "baseline": "1.4.0",
-      "port-version": 0
     }
   }
 }
