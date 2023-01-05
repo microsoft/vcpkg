@@ -1,0 +1,16 @@
+diff --git a/plugin/CMakeLists.txt b/plugin/CMakeLists.txt
+index 6f40f27..420ad0f 100644
+--- a/plugin/CMakeLists.txt
++++ b/plugin/CMakeLists.txt
+@@ -1,4 +1,11 @@
+ add_subdirectory(core)
++add_subdirectory(dot_layout)
++add_subdirectory(gdiplus)
++add_subdirectory(neato_layout)
++add_subdirectory(pango)
++add_subdirectory(quartz)
++add_subdirectory(gd)
++return()
+ add_subdirectory(devil)
+ add_subdirectory(dot_layout)
+ add_subdirectory(gd)

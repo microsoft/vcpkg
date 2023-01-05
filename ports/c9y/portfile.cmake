@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rioki/c9y
-    REF v0.4.0
-    SHA512 496466a639fa1f4111583363ce13ce4f2c1d6a56763fd12f45acc2cb791f379a6d81545536186e8f0f72f19a9b5689d16fd0561345411ca1cb98a16447141114
+    REF v0.6.0
+    SHA512 20203771ca88c69a8f77010ad79ac5fe90b9e60457cb3a037106241622fd7b6c1ef409055c969dddbe7575816947d95cbe5e7c291bad557c358cc43d0db17c2d
     )
 
 vcpkg_cmake_configure(
@@ -12,5 +12,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

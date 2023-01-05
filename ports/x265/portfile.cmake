@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
+        fix-pkgconfig-version.patch
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
@@ -22,6 +23,7 @@ vcpkg_cmake_configure(
         ${ASSEMBLY_OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_LIBNUMA=OFF
+        -DX265_LATEST_TAG=3.4
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
     MAYBE_UNUSED_VARIABLES

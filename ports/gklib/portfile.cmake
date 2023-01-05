@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 e906c7af8b40ce1c4c4ea43cbfca3e3970e5595686333ac9ac80c6cbc558feb0e833f530f034161927030edac5272234c6ac9cad5287cb6edab0c0671ba3644c
     PATCHES
         build-fixes.patch
+        fix-mingw.patch
 )
 
 # Delete files that are workarounds for very old copies of msvc.

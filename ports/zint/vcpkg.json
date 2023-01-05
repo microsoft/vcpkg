@@ -1,0 +1,25 @@
+{
+  "name": "zint",
+  "version": "2.12.0",
+  "description": "A barcode encoding library supporting over 50 symbologies",
+  "homepage": "https://github.com/zint/zint",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "png": {
+      "description": "Build with PNG support",
+      "dependencies": [
+        "libpng"
+      ]
+    }
+  }
+}

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/statechart
-    REF boost-1.79.0
-    SHA512 db28105e06764987a3adcd2e5a30ef8803b862a4d1176da58f4950c10f4c06c174de9d8157c3bcaaa1cad81fbbed03f85309f2bb733ca177e12dd9cf59dc6eb5
+    REF boost-1.81.0
+    SHA512 4ab660f7da082e8c211fe3c03b222d1c3e7f556836dec70d10c008b14b5678a5c7aa288e8a0f0f97e23daeb5b1eda7b70738b0cac1b86e12223fcd34a50e305c
     HEAD_REF master
 )
 

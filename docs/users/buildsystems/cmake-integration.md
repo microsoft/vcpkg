@@ -213,6 +213,8 @@ This variable can be set to a list of additional command line parameters to pass
 
 ### `VCPKG_PREFER_SYSTEM_LIBS`
 
+**This feature has been deprecated. Use empty overlay ports instead.**
+
 This variable controls whether vcpkg will append instead of prepend its paths to `CMAKE_PREFIX_PATH`, `CMAKE_LIBRARY_PATH` and `CMAKE_FIND_ROOT_PATH` so that vcpkg libraries/packages are found after toolchain/system libraries/packages.
 
 Defaults to `OFF`.
@@ -222,3 +224,8 @@ Defaults to `OFF`.
 This variable can be set to a list of feature flags to pass to the vcpkg tool during automatic installation to opt-in to experimental behavior.
 
 See the `--feature-flags=` command line option for more information.
+
+### `VCPKG_TRACE_FIND_PACKAGE`
+
+When this option is turned on, every call to `find_package` is printed.
+Nested calls (e.g. via `find_dependency`) are indented according to nesting depth.

@@ -1,0 +1,10 @@
+{
+  "name": "wayland-protocols",
+  "version": "1.31",
+  "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
+  "homepage": "https://wayland.freedesktop.org",
+  "license": "MIT",
+  "dependencies": [
+    "wayland"
+  ]
+}

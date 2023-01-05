@@ -1,0 +1,87 @@
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index f1321db..b0e9283 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -22,6 +21,7 @@ project /boost/locale
+ # Features
+ 
+ feature.feature boost.locale.iconv : on off : optional propagated ;
++feature.feature boost.locale.force-found-iconv : on off : optional propagated ;
+ feature.feature boost.locale.icu : on off :  optional propagated ;
+ feature.feature boost.locale.posix : on off : optional propagated ;
+ feature.feature boost.locale.std : on off : optional propagated ;
+@@ -133,13 +133,7 @@ if $(ICU_ICUUC_NAME)
+ }
+ else
+ {
+-    lib icuuc : :                                                               <runtime-link>shared <conditional>@path_options ;
+-    lib icuuc : : <toolset>msvc                     <variant>debug <name>icuucd <runtime-link>shared <conditional>@path_options ;
+-    lib icuuc : : <toolset>intel <target-os>windows <variant>debug <name>icuucd <runtime-link>shared <conditional>@path_options ;
+-    lib icuuc : :                                                  <name>sicuuc <runtime-link>static <conditional>@path_options ;
+-    lib icuuc : : <toolset>msvc                     <variant>debug <name>sicuucd <runtime-link>static <conditional>@path_options ;
+-    lib icuuc : : <toolset>intel <target-os>windows <variant>debug <name>sicuucd <runtime-link>static <conditional>@path_options ;
+-    lib icuuc : : <name>this_is_an_invalid_library_name ;
++	alias icuuc : /user-config//icuuc ;
+ }
+ 
+ if $(ICU_ICUDT_NAME)
+@@ -149,13 +143,7 @@ if $(ICU_ICUDT_NAME)
+ }
+ else
+ {
+-    lib icudt : : <name>icudata                                   <runtime-link>shared <conditional>@path_options ;
+-    lib icudt : : <name>icudt   <toolset>msvc                     <runtime-link>shared <conditional>@path_options ;
+-    lib icudt : : <name>icudt   <toolset>intel <target-os>windows <runtime-link>shared <conditional>@path_options ;
+-    lib icudt : : <name>sicudata                                   <runtime-link>static <conditional>@path_options ;
+-    lib icudt : : <name>sicudt   <toolset>msvc                     <runtime-link>static <conditional>@path_options ;
+-    lib icudt : : <name>sicudt   <toolset>intel <target-os>windows <runtime-link>static <conditional>@path_options ;
+-    lib icudt : : <name>this_is_an_invalid_library_name ;
++	alias icudt : /user-config//icudt ;
+ }
+ 
+ if $(ICU_ICUIN_NAME)
+@@ -165,27 +153,15 @@ if $(ICU_ICUIN_NAME)
+ }
+ else
+ {
+-    lib icuin : :                                                    <name>icui18n <runtime-link>shared <conditional>@path_options ;
+-    lib icuin : : <toolset>msvc                     <variant>debug   <name>icuind  <runtime-link>shared <conditional>@path_options ;
+-    lib icuin : : <toolset>msvc                                      <name>icuin   <runtime-link>shared <conditional>@path_options ;
+-    lib icuin : : <toolset>intel <target-os>windows <variant>debug   <name>icuind  <runtime-link>shared <conditional>@path_options ;
+-    lib icuin : : <toolset>intel <target-os>windows                  <name>icuin   <runtime-link>shared <conditional>@path_options ;
+-    lib icuin : :                                                    <name>sicui18n <runtime-link>static <conditional>@path_options ;
+-    lib icuin : : <toolset>msvc                     <variant>debug   <name>sicuind  <runtime-link>static <conditional>@path_options ;
+-    lib icuin : : <toolset>msvc                                      <name>sicuin   <runtime-link>static <conditional>@path_options ;
+-    lib icuin : : <toolset>intel <target-os>windows <variant>debug   <name>sicuind  <runtime-link>static <conditional>@path_options ;
+-    lib icuin : : <toolset>intel <target-os>windows                  <name>sicuin   <runtime-link>static <conditional>@path_options ;
+-    lib icuin : : <name>this_is_an_invalid_library_name ;
++	alias icuin : /user-config//icuin ;
+ }
++explicit icuuc icuin icudt ;
+ 
+ ICU_OPTS =
+   <include>$(.icu-path)/include
+-  <runtime-link>shared:<library>icuuc/<link>shared
+-  <runtime-link>shared:<library>icudt/<link>shared
+-  <runtime-link>shared:<library>icuin/<link>shared
+-  <runtime-link>static:<library>icuuc
+-  <runtime-link>static:<library>icudt
+-  <runtime-link>static:<library>icuin
++  <library>icuuc
++  <library>icudt
++  <library>icuin
+   <target-os>windows,<toolset>clang:<linkflags>"advapi32.lib"
+   <runtime-link>static:<define>U_STATIC_IMPLEMENTATION=1
+   ;
+@@ -204,6 +204,11 @@ rule configure-full ( properties * : flags-only )
+ 
+     local found-iconv ;
+ 
++	if <boost.locale.force-found-iconv>on in $(properties)
++	{
++		found-iconv = true ;
++	}
++
+     # The system Iconv on Solaris may have bugs, while the GNU Iconv is fine.
+     # So enable by default only if not on Solaris.
+     if <boost.locale.iconv>on in $(properties)

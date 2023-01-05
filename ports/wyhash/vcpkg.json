@@ -1,0 +1,7 @@
+{
+  "name": "wyhash",
+  "version-date": "2022-10-12",
+  "description": "The FASTEST QUALITY hash function, random number generators (PRNG) and hash map.",
+  "homepage": "https://github.com/wangyi-fudan/wyhash",
+  "license": "Unlicense"
+}

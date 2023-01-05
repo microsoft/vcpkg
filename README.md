@@ -14,7 +14,7 @@ check out our [Getting Started](#getting-started) section for how to start using
 For short description of available commands, once you've installed vcpkg,
 you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 
-* Github: ports at [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg), program at [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
+* GitHub: ports at [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg), program at [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
