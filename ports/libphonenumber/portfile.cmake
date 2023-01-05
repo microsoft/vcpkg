@@ -13,6 +13,7 @@ vcpkg_from_github(
         "remove-build-test.patch"   # Make build test a feature in future. For now, temp fix.
         "remove-shared-lib.patch"   # Needs -DBUILD_GEOCODER=OFF option
                                     # Work on building shared libs in future. For now, temp fix.
+        fix-find-protobuf.patch
 )
 
 vcpkg_cmake_configure(
