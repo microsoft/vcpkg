@@ -9,6 +9,11 @@
     "boost-align",
     "boost-predef",
     "boost-winapi",
+    {
+      "name": "llvm",
+      "host": true,
+      "platform": "windows"
+    },
     "spdlog",
     {
       "name": "vcpkg-cmake",
@@ -17,11 +22,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "llvm",
-      "host": true,
-      "platform": "windows"
     }
   ],
   "default-features": [
