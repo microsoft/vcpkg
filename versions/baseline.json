@@ -4722,7 +4722,7 @@
     },
     "lz4": {
       "baseline": "1.9.4",
-      "port-version": 0
+      "port-version": 1
     },
     "lzfse": {
       "baseline": "1.0",
