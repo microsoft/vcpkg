@@ -92,6 +92,11 @@
           "name": "libjpeg-turbo"
         },
         {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
@@ -122,14 +127,17 @@
         },
         {
           "$package": "SQLite3",
-          "name": "sqlite3",
           "$since": "3.14",
+          "name": "sqlite3",
           "default-features": false
         },
         {
           "$package": "TIFF",
           "name": "tiff",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
         },
         {
           "$package": "wxWidgets",

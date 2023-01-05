@@ -55,6 +55,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCRYPTOPP_SOURCES=${SOURCE_PATH}
         -DCRYPTOPP_BUILD_SHARED=OFF
         -DBUILD_STATIC=ON
         -DCRYPTOPP_BUILD_TESTING=OFF
