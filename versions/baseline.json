@@ -6060,6 +6060,10 @@
       "baseline": "2021-02-21",
       "port-version": 0
     },
+    "ptc-print": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "ptex": {
       "baseline": "2.3.2",
       "port-version": 4
@@ -8150,7 +8154,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.1",
-      "port-version": 3
+      "port-version": 4
     },
     "wyhash": {
       "baseline": "2022-10-12",
@@ -8431,10 +8435,6 @@
     "zziplib": {
       "baseline": "0.13.72",
       "port-version": 3
-    },
-    "ptc-print": {
-      "baseline": "1.4.0",
-      "port-version": 0
     }
   }
 }
