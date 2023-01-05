@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(x_vcpkg_pkgconfig_get_modules)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS" "PREFIX" "MODULES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS;MSVC_SYNTAX" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
@@ -10,6 +10,10 @@ function(x_vcpkg_pkgconfig_get_modules)
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "extra arguments passed to x_vcpkg_pkgconfig_get_modules: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    set(msvc "")
+    if(arg_MSVC_SYNTAX)
+        set(msvc "--msvc-syntax")
     endif()
 
     set(PKGCONFIG "${CURRENT_INSTALLED_DIR}/../@HOST_TRIPLET@/tools/pkgconf/pkgconf@VCPKG_HOST_EXECUTABLE_SUFFIX@")
@@ -21,7 +25,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
         if(arg_LIBS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBS_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -29,7 +33,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_LIBRARIES)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs-only-l ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs-only-l ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBRARIES_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -37,7 +41,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_LIBRARIES_DIRS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs-only-L ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs-only-L ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBRARIES_DIRS_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -45,7 +49,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_INCLUDE_DIRS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --cflags-only-I ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --cflags-only-I ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_INCLUDE_DIRS_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -53,7 +57,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_CFLAGS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --cflags ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --cflags ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_CFLAGS_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -64,7 +68,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
         if(arg_LIBS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBS_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -72,7 +76,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_LIBRARIES)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs-only-l ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs-only-l ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBRARIES_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -80,7 +84,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_LIBRARIES_DIRS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --libs-only-L ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --libs-only-L ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_LIBRARIES_DIRS_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -88,7 +92,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_INCLUDE_DIRS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --cflags-only-I ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --cflags-only-I ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_INCLUDE_DIRS_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
@@ -96,7 +100,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
         if(arg_CFLAGS)
             execute_process(
-                COMMAND "${PKGCONFIG}" --cflags ${arg_MODULES}
+                COMMAND "${PKGCONFIG}" ${msvc} --cflags ${arg_MODULES}
                 OUTPUT_VARIABLE ${arg_PREFIX}_CFLAGS_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )

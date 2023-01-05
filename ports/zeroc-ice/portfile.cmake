@@ -10,10 +10,9 @@ vcpkg_from_github(
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
 set(UNIX_BUILD_DIR "${SOURCE_PATH}")
-set(WIN_DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
-set(WIN_RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
+set(WIN_DEBUG_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}")
+set(WIN_RELEASE_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
 
 # install_includes
 function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
@@ -101,6 +100,7 @@ if("icegridtools" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridregistry")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
+    list(APPEND pkgconfig_packages expat)
 endif()
 
 # IceStorm
@@ -264,14 +264,20 @@ else() # VCPKG_TARGET_IS_WINDOWS
     )
 
     # Build Ice
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
-        SKIP_CLEAN
         TARGET "C++11\\ice++11"
-        USE_VCPKG_INTEGRATION
         OPTIONS
             ${MSBUILD_OPTIONS}
+        OPTIONS_DEBUG
+            #"/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        OPTIONS_RELEASE
+            #"/p:IceToolsPath=${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        DEPENDENT_PKGCONFIG bzip2 ${pkgconfig_packages}
+        ADDITIONAL_LIBS lmdb.lib
+        ADDITIONAL_LIBS_RELEASE mcpp.lib ${libs_rel}
+        ADDITIONAL_LIBS_DEBUG mcppd.lib ${libs_dbg}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
@@ -303,4 +309,4 @@ list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 file(REMOVE ${PDLIBS} ${PRLIBS})
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zeroc-ice RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/zeroc-ice" RENAME copyright)
