@@ -17,6 +17,11 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "llvm",
+      "host": true,
+      "platform": "windows"
     }
   ],
   "default-features": [
