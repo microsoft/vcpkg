@@ -11,4 +11,4 @@ file(COPY ${SOURCE_PATH}/napi-inl.deprecated.h DESTINATION ${CURRENT_PACKAGES_DI
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-node-addon-api-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-addon-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
