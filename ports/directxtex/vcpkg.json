@@ -1,6 +1,6 @@
 {
   "name": "directxtex",
-  "version-date": "2022-10-17",
+  "version-date": "2022-12-15",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -27,6 +27,9 @@
       "dependencies": [
         "openexr"
       ]
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
     }
   }
 }

@@ -10,6 +10,7 @@ vcpkg_from_github(
         use-openjpeg-config.patch
         fix-share-path.patch
         Fix-Cmake_DIR.patch
+        fix-dependence-getopt.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake")
@@ -18,6 +19,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
+set(USE_VCPKG_GETOPT OFF)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+   set(USE_VCPKG_GETOPT ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -30,6 +36,7 @@ vcpkg_cmake_configure(
         -DGDCM_USE_SYSTEM_ZLIB=ON
         -DGDCM_USE_SYSTEM_OPENJPEG=ON
         -DGDCM_BUILD_TESTING=OFF
+        -DUSE_VCPKG_GETOPT=${USE_VCPKG_GETOPT}
 )
 
 vcpkg_cmake_install()
@@ -59,4 +66,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")

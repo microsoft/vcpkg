@@ -1,6 +1,6 @@
 {
   "name": "uvatlas",
-  "version-date": "2022-10-17",
+  "version-date": "2022-12-15",
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
@@ -33,6 +33,9 @@
         "eigen3",
         "spectra"
       ]
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
     }
   }
 }
