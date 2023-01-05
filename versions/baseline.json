@@ -2333,7 +2333,7 @@
       "port-version": 5
     },
     "ffmpeg": {
-      "baseline": "5.0.0",
+      "baseline": "5.0.2",
       "port-version": 0
     },
     "ffnvcodec": {
