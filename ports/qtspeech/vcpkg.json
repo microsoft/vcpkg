@@ -1,17 +1,24 @@
 {
-  "name": "qtdeviceutilities",
+  "name": "qtspeech",
   "version": "6.4.2",
-  "description": "Utils for Boot2Qt",
+  "description": "Qt Speech support",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "linux",
   "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "widgets"
+      ]
+    },
     {
       "name": "qtdeclarative",
       "default-features": false
     },
     {
-      "name": "qttools",
+      "name": "qtmultimedia",
       "default-features": false
     }
   ]

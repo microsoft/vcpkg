@@ -7,7 +7,8 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.4.1)
+set(QT_VERSION 6.4.2)
+set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
 
@@ -74,11 +75,17 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2.2)
              qtinterfaceframework
              qtapplicationmanager)
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.3.0)
+    list(APPEND QT_PORTS
+             ## New in 6.3.0
+             qtlanguageserver)
+endif()
 if(QT_VERSION VERSION_GREATER_EQUAL 6.4.0)
     list(APPEND QT_PORTS
              ## New in 6.4.0
              qthttpserver
-             qtquick3dphysics)
+             qtquick3dphysics
+             qtspeech)
 endif()
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
@@ -100,7 +107,11 @@ function(qt_get_url_filename qt_port out_url out_filename)
         set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
     else()
         string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
-        set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        if(NOT QT_DEV_BRANCH)
+            set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        else()
+            set(url "https://download.qt.io/development_releases/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        endif()
         set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
     endif()
     set(${out_url} "${url}" PARENT_SCOPE)
