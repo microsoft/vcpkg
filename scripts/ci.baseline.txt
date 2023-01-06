@@ -784,8 +784,6 @@ opusfile:arm-uwp=fail
 opusfile:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
-pango:x64-windows-static=fail
-pango:x64-windows-static-md=fail
 pfring:x64-osx=fail
 pfring:arm64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
