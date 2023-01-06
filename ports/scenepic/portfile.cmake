@@ -1,3 +1,4 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
@@ -8,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         "fix_dependencies.patch"
+        "fix-CMakeInstall.patch"
 )
 
 # Run npm install and npm run build on the cloned project    
@@ -20,28 +22,23 @@ execute_process(
     WORKING_DIRECTORY ${SOURCE_PATH}
 )
 
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_BUILD_TYPE=Release
         -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
-        -DBUILD_SHARED_LIBS=OFF
         -DCPP_TARGETS=cpp
 )   
   
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME scenepic)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME ${PORT})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${CURRENT_PACKAGES_DIR}/build DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug
-                    ${CURRENT_PACKAGES_DIR}/README.md
-                    ${CURRENT_PACKAGES_DIR}/CHANGELOG.md
-                    ${CURRENT_PACKAGES_DIR}/cmake
-                    ${CURRENT_PACKAGES_DIR}/build)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.md"
+                    "${CURRENT_PACKAGES_DIR}/debug/CHANGELOG.md"
+                    "${CURRENT_PACKAGES_DIR}/README.md"
+                    "${CURRENT_PACKAGES_DIR}/CHANGELOG.md"
+                    "${CURRENT_PACKAGES_DIR}/debug/include")
 
