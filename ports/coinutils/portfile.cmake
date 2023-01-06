@@ -15,6 +15,25 @@ vcpkg_from_github(
 vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lz" "")
 vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lbz2" "")
 
+# We cannot run autoreconf without providing extra coin-or build tools,
+# but we need to update key scripts for arm64-windows and uwp support.
+set(gnu_config_revision f992bcc08219edb283d2ab31dd3871a4a0e8220e) # 2022-10-07
+vcpkg_download_distfile(
+    gnu_config_archive
+    URLS https://git.savannah.gnu.org/cgit/config.git/snapshot/config-${gnu_config_revision}.tar.gz
+    FILENAME "gnu-config-${gnu_config_revision}.tar.gz"
+    SHA512 2fcce1b1a2b4d59080662ef52d4f32bb105266888a0c40479b9bd044e38f9b7c83ed4bddd32c7c64494f172f22107cc5477c54311039189622765cc55ba34db8
+)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH gnu_config_source
+    ARCHIVE "${gnu_config_archive}"
+    REF "${gnu_config_revision}"
+)
+file(INSTALL "${gnu_config_source}/config.guess"
+             "${gnu_config_source}/config.sub"
+    DESTINATION "${SOURCE_PATH}"
+)
+
 x_vcpkg_pkgconfig_get_modules(PREFIX ZLIB MODULES zlib LIBRARIES)
 x_vcpkg_pkgconfig_get_modules(PREFIX BZIP MODULES bzip2 LIBRARIES)
 
