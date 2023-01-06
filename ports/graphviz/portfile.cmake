@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     PATCHES
         fix-dependencies.patch
         select-plugins.patch
+        static-linkage.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -51,6 +52,7 @@ vcpkg_cmake_configure(
         "-DGIT=${GIT}"
         "-DPython3_EXECUTABLE=${PYTHON3}"
         "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -Dinstall_win_dependency_dlls=OFF
         -Duse_win_pre_inst_libs=OFF
         -Dwith_smyrna=OFF
