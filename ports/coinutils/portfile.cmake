@@ -15,8 +15,10 @@ vcpkg_from_github(
 vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lz" "")
 vcpkg_replace_string("${SOURCE_PATH}/CoinUtils/configure" "-lbz2" "")
 
-# We cannot run autoreconf without providing extra coin-or build tools,
-# but we need to update key scripts for arm64-windows and uwp support.
+# We cannot run autoreconf without providing extra coin-or build tools
+# and the specific compatible version of autotools, cg.
+# https://coin-or-tools.github.io/BuildTools/autotools#using-the-correct-version-of-the-autotools
+# But we need to update key scripts for arm64-windows and uwp support.
 set(gnu_config_revision f992bcc08219edb283d2ab31dd3871a4a0e8220e) # 2022-10-07
 vcpkg_download_distfile(
     gnu_config_archive
@@ -31,7 +33,7 @@ vcpkg_extract_source_archive_ex(
 )
 file(INSTALL "${gnu_config_source}/config.guess"
              "${gnu_config_source}/config.sub"
-    DESTINATION "${SOURCE_PATH}"
+    DESTINATION "${SOURCE_PATH}/CoinUtils"
 )
 
 x_vcpkg_pkgconfig_get_modules(PREFIX ZLIB MODULES zlib LIBRARIES)
@@ -39,7 +41,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX BZIP MODULES bzip2 LIBRARIES)
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}/CoinUtils"
-    # AUTOCONFIG # needs more coin build tools
+    DETERMINE_BUILD_TRIPLET
     NO_ADDITIONAL_PATHS
     OPTIONS
         --without-blas
