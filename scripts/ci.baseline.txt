@@ -335,7 +335,6 @@ healpix:arm-uwp=fail
 healpix:x64-osx=fail
 hpx:x64-windows-static=fail
 hpx:arm64-windows=fail
-hunspell:x64-windows-static-md=fail
 ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
@@ -792,7 +791,6 @@ pfring:arm64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
-pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
 plibsys:arm-uwp=fail
@@ -981,8 +979,6 @@ shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
 simbody:arm64-windows=fail
-skia:arm-uwp=fail
-skia:x64-uwp=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
