@@ -47,6 +47,7 @@ jobs:
           script: |
             const { promises: fs } = require('fs');
             const changed_ports_content = (await fs.readFile('.changed-ports', 'utf8')).trim()
+            console.log("File content:", changed_ports_content);
             if (changed_ports_content === "") {
               return; // nothing to do, no port change
             }
