@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-msbuild",
+  "version-date": "2023-01-06",
+  "documentation": "https://vcpkg.io/en/docs/README.html",
+  "license": "MIT",
+  "supports": "native & windows",
+  "dependencies": [
+    "pkgconf",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }
+  ]
+}
