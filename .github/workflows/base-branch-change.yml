@@ -21,7 +21,7 @@ jobs:
         id: create_check_run
         with:
           route: PATCH /repos/{owner}/{repo}/pulls/{pull_number}
-          owner: autoantwort
+          owner: ${{ github.repository_owner }}
           repo: vcpkg
           name: "Test check run"
           pull_number: ${{ github.event.number }}
