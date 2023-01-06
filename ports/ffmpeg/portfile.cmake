@@ -130,7 +130,7 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     list(APPEND prog_env "${RC_path}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_LINKER)
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
