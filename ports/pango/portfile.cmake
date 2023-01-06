@@ -6,6 +6,8 @@ vcpkg_from_gitlab(
     REF "${VERSION}"
     SHA512 30be64784fac2539741c5e085ed0cf515fdd2044e71b6c08121dfb838e50d1a31f4f9e53d9869b65aa1fa246ab5cc1bec18503a08dcf0337aece84290472e336
     HEAD_REF master
+    PATCHES
+        freetype2-pc.patch
 ) 
 
 vcpkg_configure_meson(
