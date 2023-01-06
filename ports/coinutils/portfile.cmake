@@ -43,6 +43,7 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}/CoinUtils"
     DETERMINE_BUILD_TRIPLET
     NO_ADDITIONAL_PATHS
+    USE_WRAPPERS
     OPTIONS
         --without-blas
         --without-lapack

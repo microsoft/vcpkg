@@ -29,16 +29,3 @@ index df78534..f590c23 100644
  	@$(mkdir_p) "$(addlibsdir)"
  @COIN_HAS_PKGCONFIG_TRUE@	PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir) \
  @COIN_HAS_PKGCONFIG_TRUE@	"$(PKG_CONFIG)" --libs coinutils > $(addlibsdir)/coinutils_addlibs.txt
-diff --git a/CoinUtils/configure.ac b/CoinUtils/configure.ac
-index 697c994..f9fbcfe 100644
---- a/CoinUtils/configure.ac
-+++ b/CoinUtils/configure.ac
-@@ -30,6 +30,8 @@ AC_CONFIG_SRCDIR(src/CoinError.cpp)
- # /usr/local.      
- AC_PREFIX_DEFAULT([`pwd`])
- 
-+AC_COIN_CREATE_LIBTOOL
-+
- #############################################################################
- #                         Standard build tool stuff                         #
- #############################################################################
