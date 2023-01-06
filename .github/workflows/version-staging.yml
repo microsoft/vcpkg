@@ -46,7 +46,11 @@ jobs:
         with:
           script: |
             const { promises: fs } = require('fs');
-            const changed_ports = (await fs.readFile('.changed-ports', 'utf8')).trim().split('\n');
+            const changed_ports_content = (await fs.readFile('.changed-ports', 'utf8')).trim()
+            if (changed_ports_content === "") {
+              return; // nothing to do, no port change
+            }
+            const changed_ports = changed_ports_content.split('\n');
             const baseline = JSON.parse(await fs.readFile('versions/baseline.json', 'utf8')).default;
             console.log(changed_ports);
             console.log("File: ##", await fs.readFile('.changed-ports', 'utf8'), "##");
