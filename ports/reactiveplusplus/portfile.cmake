@@ -11,6 +11,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME RPP CONFIG_PATH share/RPP)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(GLOB_RECURSE CMAKE_LISTS "${CURRENT_PACKAGES_DIR}/include/CMakeLists.txt")
+file(REMOVE ${CMAKE_LISTS})
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
