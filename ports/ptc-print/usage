@@ -1,5 +1,5 @@
-ptc-print provides CMake targets:
+The package ptc-print can be used from CMake via:
 
-    find_package(ptcprint)
-    target_link_libraries(main PRIVATE ptcprint::ptcprint)
+    find_path(PTC_INCLUDE_DIRS "ptc/print.hpp")
+    target_include_directories(main PRIVATE ${PTC_INCLUDE_DIRS})
     

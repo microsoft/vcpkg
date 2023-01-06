@@ -1,3 +1,5 @@
+# header-only library
+
 # Github config
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,6 +25,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/lib" 
                     "${CURRENT_PACKAGES_DIR}/lib"
                     "${CURRENT_PACKAGES_DIR}/debug")
+
+# Usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 # Install license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ptc-print" RENAME copyright)
