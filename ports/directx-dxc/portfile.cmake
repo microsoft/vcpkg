@@ -1,15 +1,19 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
+if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+   message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
+endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.7.2207/dxc_2022_07_18.zip"
-    FILENAME "dxc_2022_07_18.zip"
-    SHA512 b34d770ed9299e6a9ade12cd8d9add28f50e41abdfcdbc7e272568d7f78fe5a8f2bbe5f905839981b97d34b52e1fa627ceacd55743f2cf71e39861418b11ae3b
+    URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.7.2212/dxc_2022_12_16.zip"
+    FILENAME "dxc_2022_12_16.zip"
+    SHA512 b4885bdec0db5b6385d4a8c06617051b1777002c3f39bfcf4c9d2c95e9491634f0e77a18375bf5be5152136c5f509a94e3b4a9c56d2e844316e8b760b6acaf68
 )
 
 vcpkg_download_distfile(
     LICENSE_TXT
-    URLS "https://raw.githubusercontent.com/microsoft/DirectXShaderCompiler/v1.7.2207/LICENSE.TXT"
-    FILENAME "LICENSE.v1.7.2207"
+    URLS "https://raw.githubusercontent.com/microsoft/DirectXShaderCompiler/v1.7.2212/LICENSE.TXT"
+    FILENAME "LICENSE.v1.7.2212"
     SHA512 7589f152ebc3296dca1c73609a2a23a911b8fc0029731268a6151710014d82005a868c85c8249219f060f64ab1ddecdddff5ed6ea34ff509f63ea3e42bbbf47e
 )
 
@@ -21,6 +25,8 @@ vcpkg_extract_source_archive_ex(
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(DXC_ARCH arm64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(DXC_ARCH x86)
 else()
     set(DXC_ARCH x64)
 endif()
