@@ -1,6 +1,7 @@
 {
   "name": "qtimageformats",
   "version": "6.4.1",
+  "port-version": 1,
   "description": "Additional Image Format plugins for Qt",
   "homepage": "https://www.qt.io/",
   "license": null,

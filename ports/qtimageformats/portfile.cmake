@@ -35,6 +35,7 @@ list(APPEND FEATURE_OPTIONS -DINPUT_mng=no) # marked as FIXME
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Cf. QTBUG-95052
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
