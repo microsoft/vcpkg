@@ -65,6 +65,7 @@ if (VCPKG_TARGET_IS_LINUX)
   set(dll_name "libdxcompiler.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
+  set(tool_path "bin/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
 
@@ -93,6 +94,7 @@ else()
   set(dll_name "dxcompiler.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
+  set(tool_path "tools/directx-dxc/dxc.exe")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
