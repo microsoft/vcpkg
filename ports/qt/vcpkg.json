@@ -139,7 +139,11 @@
     "qtserialbus",
     "qtserialport",
     "qtshadertools",
-    "qtspeech",
+    {
+      "name": "qtspeech",
+      "default-features": false,
+      "platform": "!(windows & x86)"
+    },
     "qtsvg",
     {
       "name": "qttools",
