@@ -1,11 +1,8 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
-endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4.3
-    SHA512 46bb03d690bdf0d1ce55bfe0582edf1f50b938efcdd5708a6e5ba04154fa50ac8cff4a9e44544cfa50e7f52392c88cde9455aacd6b6e51d4944f123bdcc9297a
+    REF n5.0.2
+    SHA512 76f892f15b65574c01a98eb6e8e0fa8a6c9febd9419f3f2a91bbd275762934d65bd809c6dbe67e047a475e1c8510b3e8d503fb0016e979a52edb7a02722788ca
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -14,26 +11,21 @@ vcpkg_from_github(
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0009-Fix-fdk-detection.patch
-        0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        ${PATCHES}
-        0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-m1-hardware-decode-nal-bits.patch # remove in next version
+        0022-fix-iconv.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    # ffmpeg nasm build gives link error on x86, so fall back to yasm
+    # ffmpeg nasm build causes linker to stall on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
     vcpkg_add_to_path("${YASM_EXE_PATH}")
@@ -52,7 +44,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
@@ -78,11 +70,13 @@ if(VCPKG_TARGET_IS_MINGW)
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
-    string(APPEND OPTIONS " --target-os=linux")
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
+elseif(VCPKG_TARGET_IS_UWP)
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
-    string(APPEND OPTIONS " --target-os=darwin")
+    string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android")
 else()
@@ -137,10 +131,6 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
-endif()
-
-if (NOT "alsa" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
@@ -206,16 +196,21 @@ else()
     set(ENABLE_SWSCALE OFF)
 endif()
 
-set(ENABLE_AVRESAMPLE OFF)
-if("avresample" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avresample")
-    set(ENABLE_AVRESAMPLE ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libavresample)
-endif()
-
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
+endif()
+
+if ("alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-alsa")
+else()
+    set(OPTIONS "${OPTIONS} --disable-alsa")
+endif()
+
+if("amf" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-amf")
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("aom" IN_LIST FEATURES)
@@ -333,10 +328,21 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
+if("openmpt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND OPTIONS " --enable-schannel")
+    elseif(VCPKG_TARGET_IS_OSX)
+        string(APPEND OPTIONS " --enable-securetransport")
+    endif()
 endif()
 
 if("opus" IN_LIST FEATURES)
@@ -441,12 +447,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
 endif()
 
-if (VCPKG_TARGET_IS_OSX)
-    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
-endif()
-
-if(VCPKG_TARGET_IS_IOS)
-    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
+if ("qsv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
 set(OPTIONS_CROSS " --enable-cross-compile")
@@ -698,7 +702,6 @@ function(append_dependencies_from_libs out)
     list(TRANSFORM contents REPLACE "^-Wl,-framework," "-l")
     list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
     list(TRANSFORM contents REPLACE "^-l" "")
-    list(FILTER contents EXCLUDE REGEX "^avresample$")
     list(FILTER contents EXCLUDE REGEX "^avutil$")
     list(FILTER contents EXCLUDE REGEX "^avcodec$")
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
@@ -707,7 +710,6 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
-    list(FILTER contents EXCLUDE REGEX "^atomic$")
     if(VCPKG_TARGET_IS_WINDOWS)
         list(TRANSFORM contents TOLOWER)
     endif()
@@ -780,8 +782,6 @@ extract_version_from_component(LIBAVFILTER_VERSION
     COMPONENT libavfilter)
 extract_version_from_component( LIBAVFORMAT_VERSION
     COMPONENT libavformat)
-extract_version_from_component(LIBAVRESAMPLE_VERSION
-    COMPONENT libavresample)
 extract_version_from_component(LIBSWRESAMPLE_VERSION
     COMPONENT libswresample)
 extract_version_from_component(LIBSWSCALE_VERSION

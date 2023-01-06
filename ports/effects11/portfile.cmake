@@ -3,13 +3,19 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
-    REF aug2022
-    SHA512 babb9fb5f2ee822d21e7262e4d0a9fce8383c2415d6c59f4101b782688ea4a7818411a922c60fc88da136bf427eec4e57da3610955d4cdbf11a77b61fd9bba14
+    REF dec2022b
+    SHA512 5dc209c830d940aba9378d1442b0fb236d5e1f63bb4e073ce8db5a832da22cb2e575c171aff0b641201b34b4362b9274b106f93518b09d57d231386d0b4bdf58
     HEAD_REF main
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+         spectre ENABLE_SPECTRE_MITIGATION
+)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
