@@ -32,7 +32,7 @@
 ##    x86-windows
 ##
 
-# Add new items alphabetically 
+# Add new items alphabetically   
 
 # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 allegro5:arm64-windows=fail
