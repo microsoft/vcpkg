@@ -1,6 +1,6 @@
 {
   "name": "hazelcast-cpp-client",
-  "version-semver": "5.0.0",
+  "version-semver": "5.1.0",
   "description": "C++ client library for Hazelcast in-memory database.",
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
@@ -10,6 +10,7 @@
     "boost-asio",
     "boost-chrono",
     "boost-format",
+    "boost-multiprecision",
     "boost-optional",
     "boost-property-tree",
     "boost-system",

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgobbi/vtk-dicom
-    REF 5eff7f1df7b7cd31ef95b5059c2774d3d71a2d0e # v0.8.13
-    SHA512 c2f8bd762a885955b13f278aa258aba694376606add17b588fa70d6f1b5e0b849ea91a536de3bf9a13c516fafb649d1fc579764c7b57772aaa3cd81e250ca239
+    REF 6c781948c2df3e3a7f7163731d4f65a23e19288f # v0.8.14
+    SHA512 9032194ab72b1aa3b4c6a05a7f4de0575dc73b3eb713e9b88b3e3ce332dd9bb906fd456bcb96672b3a4450faa890194afa9ea6bd4c5f9685c9c2610e861b13a6
     HEAD_REF master
 )
 
@@ -18,10 +18,12 @@ if(USE_GDCM)
         -DUSE_DCMTK=OFF
     )
 endif()
+
 set(python_ver "")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(python_ver 3.10)
 endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -38,5 +40,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
+
