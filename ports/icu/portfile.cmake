@@ -1,14 +1,13 @@
-set(ICU_VERSION_MAJOR 71)
-set(ICU_VERSION_MINOR 1)
-set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
-set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
-set(VERSION3 "${ICU_VERSION_MAJOR}-${ICU_VERSION_MINOR}")
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
+string(REPLACE "." "_" VERSION2 "${VERSION}")
+string(REPLACE "." "-" VERSION3 "${VERSION}")
 
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 1fd2a20aef48369d1f06e2bb74584877b8ad0eb529320b976264ec2db87420bae242715795f372dbc513ea80047bc49077a064e78205cd5e8b33d746fd2a2912
+    SHA512 848c341b37c0ff077e34a95d92c6200d5aaddd0ee5e06134101a74e04deb08256a5e817c8aefab020986abe810b7827dd7b2169a60dacd250c298870518dcae8
 )
 
 vcpkg_extract_source_archive_ex(
@@ -22,7 +21,6 @@ vcpkg_extract_source_archive_ex(
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix-win-build.patch
-        check-autoconf-archive.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
