@@ -1,19 +1,3 @@
-macro(z_vcpkg_determine_host_mingw out_var)
-    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-        set(host_arch $ENV{PROCESSOR_ARCHITEW6432})
-    else()
-        set(host_arch $ENV{PROCESSOR_ARCHITECTURE})
-    endif()
-    if(host_arch MATCHES "(amd|AMD)64")
-        set(${out_var} mingw64)
-    elseif(host_arch MATCHES "(x|X)86")
-        set(${out_var} mingw32)
-    else()
-        message(FATAL_ERROR "Unsupported mingw architecture ${host_arch} in z_vcpkg_determine_autotools_host_cpu!" )
-    endif()
-    unset(host_arch)
-endmacro()
-
 macro(z_vcpkg_determine_autotools_host_cpu out_var)
     # TODO: the host system processor architecture can differ from the host triplet target architecture
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -151,7 +135,7 @@ function(vcpkg_configure_make)
     set(requires_autoconfig OFF) # use autotools and configure.ac
     if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
         set(requires_autoconfig ON)
-        file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
+        file(REMOVE "${SRC_DIR}/configure") # remove possible outdated configure scripts
     elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
@@ -220,8 +204,16 @@ function(vcpkg_configure_make)
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
             if(CMAKE_HOST_WIN32)
-                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                # Respect host triplet when determining --build
+                if(NOT VCPKG_CROSSCOMPILING)
+                    set(_win32_build_arch "${TARGET_ARCH}")
+                else()
+                    set(_win32_build_arch "${BUILD_ARCH}")
+                endif()
+
+                # This is required since we are running in a msys
+                # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                set(arg_BUILD_TRIPLET "--build=${_win32_build_arch}-pc-mingw32")
             endif()
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32) # we don't need to specify the additional flags if we build nativly, this does not hold when we are not on windows
                 string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
