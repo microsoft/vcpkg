@@ -8,6 +8,7 @@ vcpkg_from_github(
         control-build.patch
         fix-dependencies.cmake
         fix_msvc_build.patch
+        fix-static-usage.patch
 )
 
 # Delete vendored Find modules
