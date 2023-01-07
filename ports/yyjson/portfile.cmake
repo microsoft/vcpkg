@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ibireme/yyjson
-    REF 0.5.1
-    SHA512 dbae242ee023e872184b4f28e32e3044adfa0cf00e0f480e961a0c8979ff69b2d2f95a33504f10883eba16b68db0adce3a38c2f99dcb6f94eb73a107b89cca95
+    REF 0.6.0
+    SHA512 ad8b9d904ecd6c745d8b261d5c20879922db01a8e4f3d9df2949f2cc7ec40360411d571cb8d0a8d4e1bab39f9b8f9ddf4c54db42f4e5f35b1ea005197374ee17
     HEAD_REF master
 )
 
