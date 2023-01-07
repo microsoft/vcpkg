@@ -47,7 +47,9 @@ file(INSTALL
 
 if (VCPKG_TARGET_IS_LINUX)
 
-  file(INSTALL "${PACKAGE_PATH}/inc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+  # Work around for https://github.com/microsoft/DirectXShaderCompiler/issues/4918
+  file(COPY "${PACKAGE_PATH}/inc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/dxc/Support")
+  file(COPY "${PACKAGE_PATH}/inc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/Support")
 
   file(INSTALL
     "${PACKAGE_PATH}/lib/${DXC_ARCH}/libdxcompiler.so"
