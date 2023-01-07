@@ -4817,8 +4817,8 @@
       "port-version": 1
     },
     "mathgl": {
-      "baseline": "2.5",
-      "port-version": 2
+      "baseline": "8.0.1",
+      "port-version": 0
     },
     "matio": {
       "baseline": "1.5.23",
