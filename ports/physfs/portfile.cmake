@@ -9,8 +9,14 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED)
 
+set(generator_param "")
+if(VCPKG_TARGET_IS_UWP)
+    set(generator_param WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    ${generator_param}
     OPTIONS
         -DPHYSFS_BUILD_STATIC=${PHYSFS_STATIC}
         -DPHYSFS_BUILD_SHARED=${PHYSFS_SHARED}
