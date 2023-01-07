@@ -24,6 +24,12 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PhysFS)
 vcpkg_fixup_pkgconfig()
 
+if(PHYSFS_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/physfs.h" "defined(PHYSFS_STATIC)" "1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/physfs.h" "dllexport" "dllimport")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
