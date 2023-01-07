@@ -9,7 +9,7 @@ index f44fa2d4e..d465253af 100644
 -libintl_deps = []
 -libintl = dependency('intl', required: false)
 -if libintl.found()
-+libintl = dependency('Intl', method:'cmake', required : true)
++libintl = dependency('intl', required : true)
 +libintl_deps = [libintl]
 +if false
    # libintl supports different threading APIs, which may not
