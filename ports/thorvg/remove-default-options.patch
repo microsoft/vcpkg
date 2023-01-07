@@ -1,0 +1,12 @@
+diff --git a/meson.build b/meson.build
+index d273a5c35..56197b867 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,6 +1,6 @@
+ project('thorvg',
+         'cpp',
+-        default_options : ['buildtype=debugoptimized', 'b_sanitize=none', 'werror=false', 'optimization=s', 'cpp_std=c++14'],
++        default_options : ['cpp_std=c++14'],
+         version : '0.8.3',
+         license : 'MIT')
+ 
