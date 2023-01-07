@@ -1,24 +1,21 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO icculus/physfs
-    REF eb3383b532c5f74bfeb42ec306ba2cf80eed988c # release-3.2.0
-    SHA512 4231b379107a8dbacad18d98c0800bad4a3aae1bdd1db0bd4cf0c89c69bb7590ed14422c77671c28bd7556f606d3ff155ad8432940ce6222340f647f9e73ae8e
+    REF "release-${VERSION}"
+    SHA512 e0d84d6ac6bd8f0973149a5add54ed5ed890b5fabb4592ba61b59a3b3e01c05e05f1754f18d7a1c8d72e68777a23cda0c50dc0512cf57a8310a950bf908f54b1
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED)
 
-if(VCPKG_TARGET_IS_UWP)
-    set(configure_opts WINDOWS_USE_MSBUILD)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${configure_opts}
     OPTIONS
         -DPHYSFS_BUILD_STATIC=${PHYSFS_STATIC}
         -DPHYSFS_BUILD_SHARED=${PHYSFS_SHARED}
         -DPHYSFS_BUILD_TEST=OFF
+        -DPHYSFS_BUILD_DOCS=OFF
 )
 
 vcpkg_cmake_install()
