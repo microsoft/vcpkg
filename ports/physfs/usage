@@ -1,0 +1,4 @@
+physfs provides CMake targets:
+
+    find_package(PhysFS CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:PhysFS::PhysFS>,PhysFS::PhysFS,PhysFS::PhysFS-static>)
