@@ -50,8 +50,12 @@ vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
+    set(additional_tools "")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(APPEND additional_tools "cpuid-dump")
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        TOOL_NAMES cache-info cpu-info isa-info ${additional_tools}
         AUTO_CLEAN
     )
 endif()
