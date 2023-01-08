@@ -46,18 +46,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endforeach()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(missing_target zstd::libzstd_static)
-    set(existing_target zstd::libzstd_shared)
-else()
-    set(existing_target zstd::libzstd_static)
-    set(missing_target zstd::libzstd_shared)
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/zstd/zstdTargets-interface.cmake" "
-add_library(${missing_target} IMPORTED INTERFACE)
-set_target_properties(${missing_target} PROPERTIES INTERFACE_LINK_LIBRARIES ${existing_target})
-")
-
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(
     COMMENT "ZSTD is dual licensed under BSD and GPLv2."
