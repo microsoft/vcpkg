@@ -60,8 +60,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     # CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
     #set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
 
-    set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
-    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_C_FLAGS}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS "/TP ${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
+    set(CMAKE_C_FLAGS "/TC ${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_C_FLAGS}" CACHE STRING "")
     set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
     unset(_vcpkg_charset)
@@ -80,14 +80,17 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     if(CMAKE_GENERATOR MATCHES "Ninja")
         set(additional_exe_flags "/WINMD") # VS Generator chokes on this in the compiler detection
     endif()
-    string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
     # VS adds /DEBUG:FULL /TLBID:1.    WindowsApp.lib is in CMAKE_C|CXX_STANDARD_LIBRARIES
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_exe_flags} /APPCONTAINER /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_exe_flags} /APPCONTAINER /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
 
-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF " CACHE STRING "") # VS uses /LTCG:incremental
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF " CACHE STRING "")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "") # VS uses /LTCG:incremental
+    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "") # VS uses /LTCG:incremental
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     string(APPEND CMAKE_STATIC_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT " /nologo ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
 endif()
 endif()
