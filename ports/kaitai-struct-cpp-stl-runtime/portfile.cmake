@@ -8,7 +8,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
+set(STRING_ENCODING_TYPE "NONE")
+if ("iconv" IN_LIST FEATURES)
+    set(STRING_ENCODING_TYPE "ICONV")
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS    
+        -DSTRING_ENCODING_TYPE=${STRING_ENCODING_TYPE}
+)
 
 vcpkg_cmake_install()
 

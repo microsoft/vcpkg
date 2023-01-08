@@ -7,7 +7,6 @@
   "license": "MIT",
   "supports": "!staticcrt",
   "dependencies": [
-    "libiconv",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,5 +16,16 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "default-features": [
+    "iconv"
+  ],
+  "features": {
+    "iconv": {
+      "description": "Set the way strings have to be encoded to ICONV",
+      "dependencies": [
+        "libiconv"
+      ]
+    }
+  }
 }
