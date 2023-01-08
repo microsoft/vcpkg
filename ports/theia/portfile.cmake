@@ -21,6 +21,7 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        --trace-expand
         -DCMAKE_CXX_STANDARD=14
         -DCMAKE_CXX_EXTENSIONS=OFF
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
