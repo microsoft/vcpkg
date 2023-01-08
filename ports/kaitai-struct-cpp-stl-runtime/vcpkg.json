@@ -5,6 +5,7 @@
   "homepage": "http://kaitai.io/",
   "documentation": "https://doc.kaitai.io/lang_cpp_stl.html",
   "license": "MIT",
+  "supports": "!staticcrt",
   "dependencies": [
     "libiconv",
     {
