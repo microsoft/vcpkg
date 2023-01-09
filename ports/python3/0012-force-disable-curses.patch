@@ -1,0 +1,12 @@
+diff --git a/Modules/Setup b/Modules/Setup
+index 87c6a15..7ad53f5 100644
+--- a/Modules/Setup
++++ b/Modules/Setup
+@@ -375,3 +375,7 @@ xxsubtype xxsubtype.c
+ #
+ #_sqlite3 _tkinter _curses pyexpat
+ #_codecs_jp _codecs_kr _codecs_tw unicodedata
++
++*disabled*
++_curses
++_curses_panel
