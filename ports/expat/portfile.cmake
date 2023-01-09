@@ -1,12 +1,16 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+string(REPLACE "." "_" REF "R_${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_2_5_0
+    REF "${REF}"
     SHA512 779f0d0f3f2d8b33db0fd044864ab5ab1a40f20501f792fe90ad0d18de536c4765c3749f120e21fec11a0e6c89af1dc576d1fe261c871ca44a594f7b61fd1d9e
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EXPAT_CRT_LINKAGE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/expat"
@@ -16,7 +20,9 @@ vcpkg_cmake_configure(
         -DEXPAT_BUILD_TOOLS=OFF
         -DEXPAT_BUILD_DOCS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
+        -DEXPAT_MSVC_STATIC_CRT=${EXPAT_CRT_LINKAGE}
         -DEXPAT_BUILD_PKGCONFIG=ON
+    MAYBE_UNUSED_VARIABLES EXPAT_MSVC_STATIC_CRT
 )
 
 vcpkg_cmake_install()

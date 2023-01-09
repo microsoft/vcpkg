@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     PATCHES
         fix_build_error_windows.patch
         loaders-cache.patch
+        use-libtiff-4-pkgconfig.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

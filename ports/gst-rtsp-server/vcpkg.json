@@ -1,10 +1,18 @@
 {
   "name": "gst-rtsp-server",
-  "version": "1.19.2",
-  "port-version": 2,
+  "version": "1.20.5",
   "description": "gst-rtsp-server is a library on top of GStreamer for building an RTSP server",
+  "homepage": "https://gstreamer.freedesktop.org/",
+  "license": "LGPL-2.1-only",
   "dependencies": [
-    "gstreamer",
+    "glib",
+    {
+      "name": "gstreamer",
+      "default-features": false,
+      "features": [
+        "plugins-base"
+      ]
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
