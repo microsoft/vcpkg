@@ -335,7 +335,6 @@ healpix:arm-uwp=fail
 healpix:x64-osx=fail
 hpx:x64-windows-static=fail
 hpx:arm64-windows=fail
-ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
 ignition-common1:x64-linux=fail
