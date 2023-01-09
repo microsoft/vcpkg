@@ -252,6 +252,10 @@
       "baseline": "2021-05-03",
       "port-version": 0
     },
+    "attr": {
+      "baseline": "2.5.1",
+      "port-version": 0
+    },
     "aubio": {
       "baseline": "2022-01-26",
       "port-version": 0
@@ -1794,7 +1798,7 @@
     },
     "ctpg": {
       "baseline": "1.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "ctre": {
       "baseline": "3.7.1",
@@ -1941,11 +1945,11 @@
       "port-version": 3
     },
     "directx-dxc": {
-      "baseline": "2022-07-18",
+      "baseline": "2022-12-16",
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.606.4",
+      "baseline": "1.608.2",
       "port-version": 0
     },
     "directxmath": {
@@ -2830,7 +2834,7 @@
     },
     "gstreamer": {
       "baseline": "1.20.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gtest": {
       "baseline": "1.12.1",
@@ -2918,7 +2922,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 3
+      "port-version": 4
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -2997,7 +3001,7 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "71.1",
+      "baseline": "72.1",
       "port-version": 0
     },
     "ideviceinstaller": {
@@ -3194,7 +3198,7 @@
     },
     "itk": {
       "baseline": "5.2.1",
-      "port-version": 3
+      "port-version": 4
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -3291,6 +3295,10 @@
     "jxrlib": {
       "baseline": "2019.10.9",
       "port-version": 5
+    },
+    "kaitai-struct-cpp-stl-runtime": {
+      "baseline": "0.10",
+      "port-version": 0
     },
     "kangaru": {
       "baseline": "4.3.1",
@@ -3596,6 +3604,10 @@
       "baseline": "2.36",
       "port-version": 0
     },
+    "libadwaita": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "libaiff": {
       "baseline": "5.0",
       "port-version": 7
@@ -3869,7 +3881,7 @@
       "port-version": 3
     },
     "libheif": {
-      "baseline": "1.13.0",
+      "baseline": "1.14.2",
       "port-version": 0
     },
     "libhsplasma": {
@@ -4558,7 +4570,7 @@
     },
     "libxslt": {
       "baseline": "1.1.37",
-      "port-version": 0
+      "port-version": 1
     },
     "libxt": {
       "baseline": "1.2.1",
@@ -4722,7 +4734,7 @@
     },
     "lz4": {
       "baseline": "1.9.4",
-      "port-version": 0
+      "port-version": 1
     },
     "lzfse": {
       "baseline": "1.0",
@@ -5462,7 +5474,7 @@
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 4
+      "port-version": 5
     },
     "onednn": {
       "baseline": "2.6.1",
@@ -5481,8 +5493,8 @@
       "port-version": 0
     },
     "onnxruntime-gpu": {
-      "baseline": "1.5.1",
-      "port-version": 1
+      "baseline": "1.12.1",
+      "port-version": 0
     },
     "oof": {
       "baseline": "2021-11-23",
@@ -5542,7 +5554,7 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 5
+      "port-version": 6
     },
     "opencv4": {
       "baseline": "4.6.0",
@@ -5842,7 +5854,7 @@
     },
     "physfs": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "physx": {
       "baseline": "4.1.2",
@@ -6106,7 +6118,7 @@
     },
     "python3": {
       "baseline": "3.10.7",
-      "port-version": 3
+      "port-version": 4
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6604,6 +6616,10 @@
       "baseline": "2021-11-01",
       "port-version": 1
     },
+    "reactiveplusplus": {
+      "baseline": "0.2.2",
+      "port-version": 0
+    },
     "readerwriterqueue": {
       "baseline": "1.0.6",
       "port-version": 0
@@ -6889,8 +6905,8 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.26.1",
-      "port-version": 2
+      "baseline": "2.26.2",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
