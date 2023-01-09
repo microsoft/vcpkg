@@ -1,7 +1,7 @@
 {
   "name": "libcsv",
   "version": "3.0.3",
-  "homepage": "https://github.com/rgamble/libcsv",
   "description": "CSV parser and writer library",
+  "homepage": "https://github.com/rgamble/libcsv",
   "supports": "static"
 }
