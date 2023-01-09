@@ -6901,8 +6901,8 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.26.1",
-      "port-version": 2
+      "baseline": "2.26.2",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
