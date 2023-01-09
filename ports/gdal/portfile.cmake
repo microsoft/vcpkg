@@ -69,7 +69,6 @@ string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
         ${FEATURE_OPTIONS}
         -DBUILD_DOCS=OFF
