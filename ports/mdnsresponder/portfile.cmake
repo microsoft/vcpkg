@@ -54,6 +54,7 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
 endfunction()
 
 FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLL/dnssd.vcxproj")
+FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLLStub/DLLStub.vcxproj")
 FIX_VCXPROJ("${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj")
 
 vcpkg_install_msbuild(
