@@ -3604,6 +3604,10 @@
       "baseline": "2.36",
       "port-version": 0
     },
+    "libadwaita": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "libaiff": {
       "baseline": "5.0",
       "port-version": 7
