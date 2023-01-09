@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n5.0
-    SHA512 4b9f0b207031fb53fe8b03dfa7ad62a58ec60f68911d7200238249152937ba4393f28ada24361217ee6324900b92bf9abefc754cccbd673bd6780482bf62eba6
+    REF n5.0.2
+    SHA512 76f892f15b65574c01a98eb6e8e0fa8a6c9febd9419f3f2a91bbd275762934d65bd809c6dbe67e047a475e1c8510b3e8d503fb0016e979a52edb7a02722788ca
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -17,7 +17,6 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0021-fix-sdl2-version-check.patch
         0022-fix-iconv.patch
 )
 
@@ -25,9 +24,8 @@ if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    # ffmpeg nasm build gives link error on x86, so fall back to yasm
+    # ffmpeg nasm build causes linker to stall on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
     vcpkg_add_to_path("${YASM_EXE_PATH}")
@@ -78,7 +76,7 @@ elseif(VCPKG_TARGET_IS_UWP)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
-    string(APPEND OPTIONS " --target-os=darwin")
+    string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android")
 else()
