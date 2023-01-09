@@ -51,7 +51,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
     set(additional_tools "")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         list(APPEND additional_tools "cpuid-dump")
     endif()
     vcpkg_copy_tools(
