@@ -92,6 +92,11 @@
           "name": "libjpeg-turbo"
         },
         {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
