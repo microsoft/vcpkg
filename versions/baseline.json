@@ -5721,8 +5721,8 @@
       "port-version": 1
     },
     "pcl": {
-      "baseline": "1.12.0",
-      "port-version": 7
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "pcre": {
       "baseline": "8.45",
