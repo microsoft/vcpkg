@@ -9,11 +9,11 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure (
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -DBUILD_TESTS=off
 )
 
-vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt [[set( PLUGIN_INSTALL_DIR ${LIB_INSTALL_DIR}/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING} )]] [[set( PLUGIN_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)]])
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" [[set( PLUGIN_INSTALL_DIR ${LIB_INSTALL_DIR}/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING} )]] [[set( PLUGIN_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)]])
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Grantlee5)
@@ -21,4 +21,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
