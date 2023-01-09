@@ -1798,7 +1798,7 @@
     },
     "ctpg": {
       "baseline": "1.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "ctre": {
       "baseline": "3.7.1",
