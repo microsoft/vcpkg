@@ -238,7 +238,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 3
+      "port-version": 4
     },
     "atkmm": {
       "baseline": "2.36.1",
@@ -2802,7 +2802,7 @@
     },
     "graphviz": {
       "baseline": "7.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -2846,7 +2846,7 @@
     },
     "gtk3": {
       "baseline": "3.24.34",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.6.0",
@@ -3826,7 +3826,7 @@
     },
     "libgd": {
       "baseline": "2.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libgeotiff": {
       "baseline": "1.7.1",
@@ -5750,7 +5750,7 @@
     },
     "pango": {
       "baseline": "1.50.12",
-      "port-version": 0
+      "port-version": 1
     },
     "pangolin": {
       "baseline": "0.8",
