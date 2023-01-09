@@ -1,4 +1,4 @@
-set(DIRECTXTEX_TAG oct2022)
+set(DIRECTXTEX_TAG dec2022)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF oct2022b
-    SHA512 48db2d88f84cda0692e887d5b26fb6051649eae2f9699803170926a9660abaf836f567b2dacdf4900a7a041c22e936d612615247825e256f840808e5ae497e4d
+    REF dec2022b
+    SHA512 353ac25b77218e7e7f11495d51bf10552444f71b2dd3a13e64264328fd8814fb3d65704dc7c517ff349a5143e9c454ae6a7782c16dc74f992b0ae9d517daa404
     HEAD_REF main
     )
 
@@ -19,26 +19,24 @@ vcpkg_check_features(
     FEATURES
         dx12 BUILD_DX12
         openexr ENABLE_OPENEXR_SUPPORT
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
+set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON -DBUILD_DX11=ON)
+
 if(VCPKG_TARGET_IS_UWP)
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${FEATURE_OPTIONS}
-        ${EXTRA_OPTIONS}
-        -DBUILD_SAMPLE=OFF
-        -DBC_USE_OPENMP=ON
-        -DBUILD_DX11=ON
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -49,21 +47,21 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     TEXASSEMBLE_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble.exe"
     FILENAME "texassemble-${DIRECTXTEX_TAG}.exe"
-    SHA512 cdf2394c83900fa09f4d8c127863223891fb713090c18407fd83581fdd3e476292cfca4e5accaaa66310d62e03c2836bddac37e508aecb1c2a2346d35eecf08b
+    SHA512 78f556d6fa7808f6c22b6b1fa130c7c0c694ab8011ebb2ed633d3f35b281b39a2aee2c171da665ccbbbc49be1af6e90bdecc7d837a789aac5d9ef54afd2d0951
   )
 
   vcpkg_download_distfile(
     TEXCONV_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv.exe"
     FILENAME "texconv-${DIRECTXTEX_TAG}.exe"
-    SHA512 d2c5899a2b4abea5e975699326143f198c04808f9ac5b19c0580618601ed671b12eaef846938142bfa22eb7338ad7fabbdaadff76bc1776f543ecbd33b8d2586
+    SHA512 6bd3f5d9a986887b618d3cb2c765f29c8e632f70df96c60ee3492bed26f1f3407e5293177c479b7f80d8178491dbe22b25737b34e426712e6e1dede7eebb84df
   )
 
   vcpkg_download_distfile(
     TEXDIAG_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag.exe"
     FILENAME "texdiag-${DIRECTXTEX_TAG}.exe"
-    SHA512 99e9073c6a22b54b56337dfaa18c6723febe6ca65b1e8b53a64dadee149e06111511115bf06aca95ad4b30a5cc24da9d7b526260f7c58e38740a38ff7a6e007b
+    SHA512 e443407d69e628341d72b18a6ae2ebddf69d0554c468a7aa77e2dbf87a4498c4cefe59be709d9d786c7a940ac4cc523e95a31a1a8fd056b103045ef0412f3775
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")

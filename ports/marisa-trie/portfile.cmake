@@ -2,6 +2,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires the following packages:\n    libtool\n    This can be installed on Ubuntu systems via\n    sudo apt-get install -y libtool\n")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/marisa-trie
