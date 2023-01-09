@@ -60,8 +60,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     # CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
     #set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
 
-    set(CMAKE_CXX_FLAGS "/TP ${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
-    set(CMAKE_C_FLAGS "/TC ${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_C_FLAGS}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
+    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${_vcpkg_charset} ${VCPKG_C_FLAGS}" CACHE STRING "")
     set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
     unset(_vcpkg_charset)
