@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        fix_gdal_find_package.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")

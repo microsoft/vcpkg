@@ -1,0 +1,13 @@
+diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
+index be14b66..a409ce7 100644
+--- a/cmake/helpers/CheckDependentLibraries.cmake	
++++ b/cmake/helpers/CheckDependentLibraries.cmake
+@@ -110,7 +110,7 @@ macro (gdal_check_package name purpose)
+   set(_find_dependency "")
+   set(_find_dependency_args "")
+   find_package2(${name} QUIET OUT_DEPENDENCY _find_dependency)
+-  if (NOT DEFINED ${key}_FOUND)
++  if (1)
+     set(_find_package_args)
+     if (_GCP_VERSION)
+       list(APPEND _find_package_args ${_GCP_VERSION})
