@@ -1,0 +1,8 @@
+{
+  "name": "attr",
+  "version-semver": "2.5.1",
+  "description": "Commands for Manipulating Filesystem Extended Attributes",
+  "homepage": "http://savannah.nongnu.org/projects/attr",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux"
+}
