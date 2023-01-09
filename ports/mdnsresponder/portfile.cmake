@@ -56,30 +56,13 @@ endfunction()
 FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLL/dnssd.vcxproj")
 FIX_VCXPROJ("${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj")
 
-vcpkg_build_msbuild(
-  PROJECT_PATH "${SOURCE_PATH}/mDNSWindows/mDNSResponder.sln"
-  PLATFORM ${BUILD_ARCH}
-  TARGET dns-sd
+vcpkg_install_msbuild(
+  SOURCE_PATH "${SOURCE_PATH}"
+  PROJECT_SUBPATH "mDNSWindows/mDNSResponder.sln"
+  PLATFORM ${BUILD_ARCH}
+  TARGET dns-sd
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  file(INSTALL
-    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-  )
-  file(INSTALL
-    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-  )
-endif()
-file(INSTALL
-  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.lib"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-)
-file(INSTALL
-  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.lib"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-)
 file(INSTALL
   "${SOURCE_PATH}/mDNSShared/dns_sd.h"
   DESTINATION "${CURRENT_PACKAGES_DIR}/include"
