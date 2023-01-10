@@ -1,17 +1,13 @@
 {
   "name": "libphonenumber",
-  "version": "8.13.1",
+  "version": "8.13.4",
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
   "license": "Apache-2.0",
   "supports": "!linux & !osx",
   "dependencies": [
     "abseil",
-    "boost-date-time",
-    "boost-system",
-    "boost-thread",
     "icu",
     "protobuf",
-    "re2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,5 +16,78 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "default-options"
+  ],
+  "features": {
+    "boost": {
+      "description": "Build libphonenumber with boost.",
+      "dependencies": [
+        "boost-date-time",
+        "boost-system",
+        "boost-thread"
+      ]
+    },
+    "build-testing": {
+      "description": "Use build testing.",
+      "dependencies": [
+        "gtest"
+      ]
+    },
+    "default-options": {
+      "description": "Build with default options.",
+      "dependencies": [
+        {
+          "name": "libphonenumber",
+          "default-features": false,
+          "features": [
+            "boost"
+          ]
+        }
+      ]
+    },
+    "disable-alt-formats": {
+      "description": "Disable alternate formats."
+    },
+    "disable-icu-regexp": {
+      "description": "Disable ICU regexp engine.",
+      "dependencies": [
+        {
+          "name": "libphonenumber",
+          "default-features": false,
+          "features": [
+            "disable-shared-libs"
+          ]
+        }
+      ]
+    },
+    "disable-shared-libs": {
+      "description": "Disable building shared libraries."
+    },
+    "disable-static-lib": {
+      "description": "Disable building static libraries."
+    },
+    "lite-metadata": {
+      "description": "Use lite metadata."
+    },
+    "posix": {
+      "description": "Use Posix api for multi-threading."
+    },
+    "protobuf-lite": {
+      "description": "Link to protobuf-lite."
+    },
+    "re2": {
+      "description": "Build libphonenumber with re2.",
+      "dependencies": [
+        "re2"
+      ]
+    },
+    "std-map": {
+      "description": "Force the use of std::map."
+    },
+    "stdmutex": {
+      "description": "Use C++ 2011 std::mutex for multi-threading."
+    }
+  }
 }

@@ -1,0 +1,31 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 8460858..c30728a 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -394,7 +394,7 @@ add_metadata_gen_target (
+   ${TEST_METADATA_TARGET}
+   "${RESOURCES_DIR}/PhoneNumberMetadataForTesting.xml"
+   "test_metadata"
+-  "metadata"
++  "test_metadata"
+ )
+ list (APPEND TESTING_LIBRARY_SOURCES "src/phonenumbers/test_metadata.cc")
+ 
+@@ -488,7 +488,7 @@ if (BUILD_SHARED_LIBS)
+ 
+   set_target_properties (phonenumber-shared
+     PROPERTIES
+-      OUTPUT_NAME "phonenumber"
++      OUTPUT_NAME "phonenumber-shared"
+       PREFIX "lib"
+       SOVERSION ${libphonenumber_VERSION_MAJOR}
+       VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
+@@ -506,7 +506,7 @@ if (BUILD_SHARED_LIBS)
+ 
+     set_target_properties (geocoding-shared
+       PROPERTIES
+-        OUTPUT_NAME "geocoding"
++        OUTPUT_NAME "geocoding-shared"
+         PREFIX "lib"
+         SOVERSION ${libphonenumber_VERSION_MAJOR}
+         VERSION ${libphonenumber_VERSION_MAJOR}.${libphonenumber_VERSION_MINOR})
