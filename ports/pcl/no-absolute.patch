@@ -2,7 +2,7 @@ diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
 index 4137ed1..167fde2 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
-@@ -230,7 +230,7 @@ macro(find_flann)
+@@ -225,7 +225,7 @@ macro(find_flann)
    if(PCL_ALL_IN_ONE_INSTALLER)
      set(FLANN_ROOT "${PCL_ROOT}/3rdParty/Flann")
    elseif(NOT FLANN_ROOT)
@@ -10,4 +10,4 @@ index 4137ed1..167fde2 100644
 +    set(FLANN_ROOT "${VCPKG_IMPORT_PREFIX}")
    endif()
  
-   set(FLANN_USE_STATIC @FLANN_USE_STATIC@)
+   set(PCL_FLANN_REQUIRED_TYPE @PCL_FLANN_REQUIRED_TYPE@)
