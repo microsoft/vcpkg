@@ -67,6 +67,12 @@
           "name": "gettext"
         },
         {
+          "$package": "GDAL",
+          "name": "gdal",
+          "default-features": false,
+          "platform": "!uwp"
+        },
+        {
           "$package": "GIF",
           "name": "giflib"
         },
