@@ -335,7 +335,6 @@ healpix:arm-uwp=fail
 healpix:x64-osx=fail
 hpx:x64-windows-static=fail
 hpx:arm64-windows=fail
-ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
 ignition-common1:x64-linux=fail
@@ -780,8 +779,6 @@ opusfile:arm-uwp=fail
 opusfile:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
-pango:x64-windows-static=fail
-pango:x64-windows-static-md=fail
 pfring:x64-osx=fail
 pfring:arm64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
