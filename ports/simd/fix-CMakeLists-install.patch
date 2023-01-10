@@ -9,7 +9,7 @@ index 7589930..b92b9d0 100644
 +file(GLOB SIMD_HEADERS "${SIMD_ROOT}/src/Simd/*.hpp" "${SIMD_ROOT}/src/Simd/*.h")
 +set_target_properties(Simd PROPERTIES PUBLIC_HEADER "${SIMD_HEADERS}")
 +install(TARGETS Simd EXPORT simdtargets LIBRARY DESTINATION "lib" PUBLIC_HEADER DESTINATION "include/Simd")
-+install(EXPORT simdtargets DESTINATION share/Simd)
++install(EXPORT simdtargets DESTINATION share/simd)
 +
  if(SIMD_TEST)
  	file(GLOB_RECURSE TEST_SRC_C ${SIMD_ROOT}/src/Test/*.c)
@@ -25,7 +25,7 @@ index 944bd5c..9b5180f 100644
 +file(GLOB SIMD_HEADERS "${SIMD_ROOT}/src/Simd/*.hpp" "${SIMD_ROOT}/src/Simd/*.h")
 +set_target_properties(Simd PROPERTIES PUBLIC_HEADER "${SIMD_HEADERS}")
 +install(TARGETS Simd EXPORT simdtargets LIBRARY DESTINATION "lib" PUBLIC_HEADER DESTINATION "include/Simd")
-+install(EXPORT simdtargets DESTINATION share/Simd)
++install(EXPORT simdtargets DESTINATION share/simd)
 +
  if(SIMD_TEST)
  	file(GLOB_RECURSE TEST_SRC_C ${SIMD_ROOT}/src/Test/*.c)
