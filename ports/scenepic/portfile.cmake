@@ -15,24 +15,23 @@ vcpkg_from_github(
 # Run npm install and npm run build on the cloned project    
 execute_process(
     COMMAND npm install
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    WORKING_DIRECTORY "${SOURCE_PATH}"
 )
 execute_process(
     COMMAND npm run build
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    WORKING_DIRECTORY "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
         -DCPP_TARGETS=cpp
 )   
   
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME ${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 

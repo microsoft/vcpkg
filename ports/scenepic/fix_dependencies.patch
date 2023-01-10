@@ -1,21 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 245b1c5..a2a14bb 100644
+index a2db3db..a10a942 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -86,12 +86,6 @@ endif()
- 
- set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
- 
--FetchContent_Declare(
--  eigen
--  GIT_REPOSITORY https://gitlab.com/libeigen/eigen
--  GIT_TAG        3.4.0
--)
--
- FetchContent_Declare(
-   pybind11
-   GIT_REPOSITORY https://github.com/pybind/pybind11/
-@@ -100,13 +94,11 @@ FetchContent_Declare(
+@@ -100,13 +100,11 @@ FetchContent_Declare(
  
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) 
  
