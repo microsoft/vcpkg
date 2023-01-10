@@ -2149,8 +2149,8 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "2020-06-08",
-      "port-version": 3
+      "baseline": "2023-01-06",
+      "port-version": 0
     },
     "egl": {
       "baseline": "2022-12-04",
