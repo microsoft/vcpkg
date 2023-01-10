@@ -92,6 +92,11 @@
           "name": "libjpeg-turbo"
         },
         {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
@@ -119,6 +124,10 @@
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "PhysFS",
+          "name": "physfs"
         },
         {
           "$package": "SQLite3",
