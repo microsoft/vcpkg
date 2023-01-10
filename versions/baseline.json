@@ -238,7 +238,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 3
+      "port-version": 4
     },
     "atkmm": {
       "baseline": "2.36.1",
@@ -1661,8 +1661,8 @@
       "port-version": 0
     },
     "cppad": {
-      "baseline": "20210000.7",
-      "port-version": 3
+      "baseline": "20230000.0",
+      "port-version": 0
     },
     "cppcms": {
       "baseline": "1.2.1",
@@ -2338,7 +2338,7 @@
     },
     "ffmpeg": {
       "baseline": "5.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2802,7 +2802,7 @@
     },
     "graphviz": {
       "baseline": "7.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -2846,7 +2846,7 @@
     },
     "gtk3": {
       "baseline": "3.24.34",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.6.0",
@@ -3121,7 +3121,7 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.89.1",
+      "baseline": "1.89.2",
       "port-version": 0
     },
     "imgui-sfml": {
@@ -3557,7 +3557,7 @@
       "port-version": 1
     },
     "launch-darkly-server": {
-      "baseline": "2.4.3",
+      "baseline": "2.8.6",
       "port-version": 0
     },
     "lazy-importer": {
@@ -3834,7 +3834,7 @@
     },
     "libgd": {
       "baseline": "2.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libgeotiff": {
       "baseline": "1.7.1",
@@ -5638,7 +5638,7 @@
     },
     "openssl": {
       "baseline": "3.0.7",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -5758,7 +5758,7 @@
     },
     "pango": {
       "baseline": "1.50.12",
-      "port-version": 0
+      "port-version": 1
     },
     "pangolin": {
       "baseline": "0.8",
@@ -7261,8 +7261,8 @@
       "port-version": 1
     },
     "spirv-reflect": {
-      "baseline": "1.3.204.1",
-      "port-version": 1
+      "baseline": "1.3.236.0",
+      "port-version": 0
     },
     "spirv-tools": {
       "baseline": "2022.4",
@@ -7905,7 +7905,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2022-10-30",
+      "baseline": "2022-11-13",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
