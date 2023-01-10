@@ -154,3 +154,17 @@ index d5dcb27e..04fbfe2f 100644
  #include "AutoPtr.h"
  #include "List.h"
  #include "Thread.h"
+
+diff --git a/apps/InterfaceMetashape/InterfaceMetashape.cpp b/apps/InterfaceMetashape/InterfaceMetashape.cpp
+index 4886973a..c2ab8f98 100644
+--- a/apps/InterfaceMetashape/InterfaceMetashape.cpp
++++ b/apps/InterfaceMetashape/InterfaceMetashape.cpp
+@@ -627,7 +627,7 @@ bool ParseSceneXML(Scene& scene, PlatformDistCoeffs& pltDistCoeffs, size_t& nCam
+ 		}
+ 		const size_t nLen(pStream->getSize());
+ 		String str; str.resize(nLen);
+-		pStream->read(&str[0], nLen);
++		pStream->read(str.data(), nLen);
+ 		doc.Parse(str.c_str(), nLen);
+ 	}
+ 	if (doc.ErrorID() != tinyxml2::XML_SUCCESS) {
