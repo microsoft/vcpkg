@@ -139,6 +139,11 @@ endif()
 
 if(HDF5_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
+    foreach(tool h5cc h5pcc h5hlcc)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../..")
+        endif()
+    endforeach()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

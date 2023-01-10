@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
+
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_gitlab(
@@ -9,7 +11,9 @@ vcpkg_from_gitlab(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        no-absolute-paths.patch
         select-plugins.patch
+        static-linkage.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -51,6 +55,7 @@ vcpkg_cmake_configure(
         "-DGIT=${GIT}"
         "-DPython3_EXECUTABLE=${PYTHON3}"
         "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -Dinstall_win_dependency_dlls=OFF
         -Duse_win_pre_inst_libs=OFF
         -Dwith_smyrna=OFF
@@ -96,6 +101,8 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB plugins "${CURRENT_PACKAGES_DIR}/bin/gvplugin_*")
     file(COPY ${plugins} ${plugin_config} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+else()
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib/graphviz" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
