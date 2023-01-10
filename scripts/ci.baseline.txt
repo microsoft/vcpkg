@@ -212,11 +212,6 @@ easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
 ebml:arm-uwp=fail
 ebml:x64-uwp=fail
-ecsutil:arm64-windows=fail
-ecsutil:arm-uwp=fail
-ecsutil:x64-linux=fail
-ecsutil:x64-osx=fail
-ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
 elfutils:arm64-osx=fail
