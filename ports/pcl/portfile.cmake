@@ -10,7 +10,6 @@ vcpkg_from_github(
         fix-numeric-literals-flag.patch
         pcl_config.patch
         pcl_utils.patch
-        fix-find-libusb.patch
         install-examples.patch
         no-absolute.patch
 )
