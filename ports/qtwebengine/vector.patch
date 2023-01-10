@@ -1,0 +1,14 @@
+diff --git a/src/3rdparty/chromium/ui/base/resource/resource_handle.h b/src/3rdparty/chromium/ui/base/resource/resource_handle.h
+index 1d06d6d..070338b 100644
+--- a/src/3rdparty/chromium/ui/base/resource/resource_handle.h	
++++ b/src/3rdparty/chromium/ui/base/resource/resource_handle.h
+@@ -6,6 +6,9 @@
+ #define UI_BASE_RESOURCE_RESOURCE_HANDLE_H_
+ 
+ #include <stdint.h>
++#if DCHECK_IS_ON()
++#include <vector>
++#endif
+ 
+ #include "base/strings/string_piece.h"
+ #include "ui/base/resource/data_pack_export.h"

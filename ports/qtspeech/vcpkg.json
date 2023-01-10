@@ -1,20 +1,25 @@
 {
-  "name": "qtdatavis3d",
+  "name": "qtspeech",
   "version": "6.4.2",
-  "description": "Qt 3D data visualization framework",
+  "description": "Qt Speech support",
   "homepage": "https://www.qt.io/",
   "license": null,
+  "supports": "!(windows & x86)",
   "dependencies": [
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
         "gui",
-        "testlib"
+        "widgets"
       ]
     },
     {
       "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
       "default-features": false
     }
   ]
