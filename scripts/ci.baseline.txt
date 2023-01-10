@@ -173,8 +173,6 @@ cppgraphqlgen:x64-linux=fail
 crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x86-windows=fail
-ctemplate:x64-linux=fail
-ctemplate:x64-osx=fail
 cuda:x64-osx=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
