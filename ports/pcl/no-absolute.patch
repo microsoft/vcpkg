@@ -11,11 +11,3 @@ index 4137ed1..167fde2 100644
    endif()
  
    set(FLANN_USE_STATIC @FLANN_USE_STATIC@)
-@@ -402,7 +402,6 @@ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
-   # pcl_message("PCL found into a build tree.")
-   set(PCL_CONF_INCLUDE_DIR "${PCL_DIR}/include") # for pcl_config.h
-   set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
--  set(PCL_SOURCES_TREE "@CMAKE_SOURCE_DIR@")
- else()
-   pcl_report_not_found("PCL can not be found on this machine")
- endif()
