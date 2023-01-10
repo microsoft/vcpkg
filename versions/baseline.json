@@ -8394,7 +8394,7 @@
     },
     "zint": {
       "baseline": "2.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "zkpp": {
       "baseline": "0.2.3",
