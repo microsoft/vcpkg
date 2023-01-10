@@ -1,0 +1,29 @@
+diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
+index dc23a2b987..245c0777c8 100644
+--- a/cmake/helpers/CheckDependentLibraries.cmake
++++ b/cmake/helpers/CheckDependentLibraries.cmake
+@@ -109,8 +109,9 @@ macro (gdal_check_package name purpose)
+   string(TOUPPER ${name} key)
+   set(_find_dependency "")
+   set(_find_dependency_args "")
+-  find_package2(${name} QUIET OUT_DEPENDENCY _find_dependency)
+-  if (NOT DEFINED ${key}_FOUND)
++  if(FIND_PACKAGE2_${name}_ENABLED)
++    find_package2(${name} QUIET OUT_DEPENDENCY _find_dependency)
++  else()
+     set(_find_package_args)
+     if (_GCP_VERSION)
+       list(APPEND _find_package_args ${_GCP_VERSION})
+diff --git a/cmake/modules/DefineFindPackage2.cmake b/cmake/modules/DefineFindPackage2.cmake
+index 96acb527cd..855e5156f0 100644
+--- a/cmake/modules/DefineFindPackage2.cmake
++++ b/cmake/modules/DefineFindPackage2.cmake
+@@ -68,6 +68,8 @@ function(define_find_package2 pkgname include_file library_name)
+     else()
+         set_property(GLOBAL APPEND PROPERTY define_find_package_find_path_suffix "_unset_")
+     endif()
++    set(FIND_PACKAGE2_${pkgname}_ENABLED TRUE CACHE BOOL "Use find_package2 for dependency ${pkgname}")
++    mark_as_advanced(FIND_PACKAGE2_${pkgname}_ENABLED)
+ endfunction()
+ 
+ function(find_package2 pkgname)
