@@ -12,6 +12,7 @@ vcpkg_from_github(
         pcl_utils.patch
         install-examples.patch
         no-absolute.patch
+        add_bigobj_option.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
