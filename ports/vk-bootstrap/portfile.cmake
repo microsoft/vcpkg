@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        # This option will disable build tests and example, and next release this option need to change as -DVK_BOOTSTRAP_TEST=OFF. The related upstream commit: https://github.com/charles-lunarg/vk-bootstrap/commit/4ae9513ff9182b9c519504a73435ed575a821300.
         -DCMAKE_PROJECT_NAME=
 )
 
