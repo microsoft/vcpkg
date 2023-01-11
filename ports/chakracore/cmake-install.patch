@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4729a81..6262044 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -581,3 +581,28 @@ add_subdirectory (lib)
+ add_subdirectory (bin)
+ 
+ add_subdirectory(test)
++
++include(GNUInstallDirs)
++install(FILES
++    "${PROJECT_SOURCE_DIR}/lib/Jsrt/ChakraCore.h"
++    "${PROJECT_SOURCE_DIR}/lib/Jsrt/ChakraCommon.h"
++    "${PROJECT_SOURCE_DIR}/lib/Jsrt/ChakraDebug.h"
++    "${PROJECT_SOURCE_DIR}/lib/Jsrt/ChakraCommonWindows.h"
++    "${PROJECT_SOURCE_DIR}/lib/Jsrt/ChakraCoreWindows.h"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++if(BUILD_SHARED_LIBS)
++    install(TARGETS ChakraCoreStatic
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    )
++else()
++    install(TARGETS ChakraCoreStatic
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    )
++endif()
++if(NOT CC_LIBS_ONLY_BUILD)
++    install(TARGETS ch
++        RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    )
++endif()

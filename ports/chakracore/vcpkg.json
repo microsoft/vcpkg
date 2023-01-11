@@ -1,11 +1,11 @@
 {
   "name": "chakracore",
   "version-date": "2022-11-09",
-  "port-version": 1,
-  "description": "Core part of the Chakra Javascript engine",
-  "homepage": "https://github.com/Microsoft/ChakraCore",
+  "port-version": 2,
+  "description": "ChakraCore is an open source Javascript engine with a C API.",
+  "homepage": "https://github.com/chakra-core/ChakraCore",
   "license": "MIT",
-  "supports": "!osx & !uwp & (linux | (!static & !staticcrt))",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,5 +15,23 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "icu",
+    "jit"
+  ],
+  "features": {
+    "icu": {
+      "description": "Enable Unicode and Intl. (Ignored for Windows.)",
+      "dependencies": [
+        "icu"
+      ]
+    },
+    "jit": {
+      "description": "Enable JIT. (Ignored for Windows.)"
+    },
+    "tools": {
+      "description": "Build tools. (Ignored for Windows.)"
+    }
+  }
 }

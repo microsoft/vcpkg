@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6262044..4554453 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -224,7 +224,12 @@ elseif(ICU_INCLUDE_PATH)
+     endif()
+ endif()
+ 
+-if(CC_TARGET_OS_LINUX OR CC_TARGET_OS_ANDROID)
++if(NOT NO_ICU)
++    find_package(ICU COMPONENTS uc i18n REQUIRED)
++    add_definitions(-DHAS_ICU -DHAS_REAL_ICU=1 -DINTL_ICU=1)
++    set(HAVE_LIBICU_UCHAR_H 1)
++elseif(1)
++elseif(CC_TARGET_OS_LINUX OR CC_TARGET_OS_ANDROID)
+     if(SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH AND NOT NO_ICU))
+         set(ICU_LIBRARIES "icuuc")
+         if(INTL_ICU)
