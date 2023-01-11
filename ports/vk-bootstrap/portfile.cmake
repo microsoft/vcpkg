@@ -10,6 +10,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_PROJECT_NAME=
 )
 
 vcpkg_cmake_install()
@@ -17,6 +19,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/${PORT}-config.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-release.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-debug.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/${PORT}-config.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-release.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-debug.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
