@@ -7057,8 +7057,8 @@
       "port-version": 1
     },
     "simbody": {
-      "baseline": "2022-01-04",
-      "port-version": 2
+      "baseline": "2023-01-10",
+      "port-version": 0
     },
     "simd": {
       "baseline": "5.1.119",
