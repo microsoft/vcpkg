@@ -126,6 +126,10 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "PhysFS",
+          "name": "physfs"
+        },
+        {
           "$package": "SQLite3",
           "$since": "3.14",
           "name": "sqlite3",

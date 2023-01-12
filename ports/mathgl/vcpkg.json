@@ -1,10 +1,17 @@
 {
   "name": "mathgl",
-  "version": "2.5",
-  "port-version": 2,
+  "version": "8.0.1",
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "license": "GPL-3.0-only",
+  "supports": "!uwp",
   "dependencies": [
+    "getopt",
+    {
+      "$comment": "Non-windows targets need host `make_bin`.",
+      "name": "mathgl",
+      "host": true,
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -27,10 +34,16 @@
         "armadillo"
       ]
     },
+    "examples": {
+      "description": "Build example programs (not installed)"
+    },
     "fltk": {
       "description": "fltk module",
       "dependencies": [
-        "fltk"
+        {
+          "name": "fltk",
+          "default-features": false
+        }
       ]
     },
     "gif": {
@@ -42,7 +55,17 @@
     "glut": {
       "description": "glut module",
       "dependencies": [
-        "freeglut"
+        {
+          "name": "freeglut",
+          "platform": "!osx"
+        },
+        {
+          "name": "mathgl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "gsl": {
@@ -54,7 +77,10 @@
     "hdf5": {
       "description": "hdf5 module",
       "dependencies": [
-        "hdf5"
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
       ]
     },
     "jpeg": {
@@ -78,13 +104,19 @@
     "qt5": {
       "description": "qt5 module",
       "dependencies": [
-        "qt5"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
       ]
     },
     "wx": {
       "description": "wx module",
       "dependencies": [
-        "wxwidgets"
+        {
+          "name": "wxwidgets",
+          "default-features": false
+        }
       ]
     },
     "zlib": {
