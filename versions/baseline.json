@@ -3886,7 +3886,7 @@
     },
     "libheif": {
       "baseline": "1.14.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2022-05-19",
