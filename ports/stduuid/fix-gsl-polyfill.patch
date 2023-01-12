@@ -27,7 +27,7 @@ index 7217b72..fb981d2 100644
      endif ()
  endif ()
  
-+if (NOT "@UUID_USING_CXX20_SPAN@")
++if (NOT @UUID_USING_CXX20_SPAN@)
 +    find_dependency(Microsoft.GSL)
 +endif ()
 +
