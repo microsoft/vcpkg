@@ -1,0 +1,35 @@
+{
+  "name": "bgfx",
+  "version": "1.118.8384-362",
+  "port-version": 1,
+  "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
+  "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
+  "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
+  "documentation": "https://bkaradzic.github.io/bgfx",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "libsquish",
+    "nvtt",
+    "tinyexr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "multithreaded"
+  ],
+  "features": {
+    "multithreaded": {
+      "description": "Encode and render on different threads"
+    },
+    "tools": {
+      "$comment": "Use '\"host\": true' in dependencies of vcpkg.json to prevent cross compiling the tools.",
+      "description": "Shader, Texture and Geometry compilers for bgfx."
+    }
+  }
+}

@@ -1,19 +1,17 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libproxy/libproxy
-    REF e78a5ccfe0a2340f2c73e419767f8492ffc2787a #0.4.17
-    SHA512 b22251f73f7a94dade5dcdcd9d5510170038b0d101ee98ab427106c20a3d9979c2b16c57d6cf8d8ae59c3a28ccffcecafc0bed399926dc2416a27837fd2f043c
+    REF 8fec01ed4b95afc71bf7710bf5b736a5de03b343 #0.4.18
+    SHA512 6367d21b8816d7e5e3c75ee124c230ec89abbffa09538b6700c9ae61be33629f864617f51a2317e18d2fb960b09e26cae0e3503d747112f23921d1910856b109
     HEAD_REF master
     PATCHES
         fix-tools-path.patch
         support-windows.patch
-        fix-dependency-libmodman.patch
         fix-install-py.patch
-        fix-arm-build.patch
         fix-module-lib-name.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -30,12 +28,16 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
+        -DWITH_KDE=${VCPKG_TARGET_IS_LINUX}
+        -DMSVC_STATIC=${STATICCRT}
+        -DWITH_GNOME3=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_DOTNET
         WITH_PERL
         WITH_PYTHON2
         WITH_PYTHON3
         WITH_VALA
+        MSVC_STATIC
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,56 @@
+diff --git a/.gn b/.gn
+index 1d734b3..407e403 100644
+--- a/.gn
++++ b/.gn
+@@ -1,5 +1,4 @@
+ buildconfig = "//gn/BUILDCONFIG.gn"
+-script_executable = "python3"
+ 
+ default_args = {
+   angle_standalone = false
+diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
+index ba85c3d..5dd991a 100644
+--- a/gn/toolchain/BUILD.gn
++++ b/gn/toolchain/BUILD.gn
+@@ -6,6 +6,7 @@ if (is_fuchsia) {
+ }
+ 
+ declare_args() {
++  script_executable = "python3"
+   host_ar = ar
+   host_cc = cc
+   host_cxx = cxx
+@@ -232,7 +234,7 @@ toolchain("msvc") {
+ 
+   tool("copy") {
+     cp_py = rebase_path("../cp.py")
+-    command = "$shell python3 \"$cp_py\" {{source}} {{output}}"
++    command = "\"$script_executable\" \"$cp_py\" {{source}} {{output}}"
+     description = "copy {{source}} {{output}}"
+   }
+ }
+@@ -302,7 +304,7 @@ template("gcc_like_toolchain") {
+         rspfile = "{{output}}.rsp"
+         rspfile_content = "{{inputs}}"
+         rm_py = rebase_path("../rm.py")
+-        command = "$shell python3 \"$rm_py\" \"{{output}}\" && $ar rcs {{output}} @$rspfile"
++        command = "$shell \"$script_executable\" \"$rm_py\" \"{{output}}\" && $ar rcs {{output}} @$rspfile"
+       }
+ 
+       outputs =
+@@ -386,13 +388,13 @@ template("gcc_like_toolchain") {
+ 
+     tool("copy") {
+       cp_py = rebase_path("../cp.py")
+-      command = "python3 \"$cp_py\" {{source}} {{output}}"
++      command = "\"script_executable\" \"$cp_py\" {{source}} {{output}}"
+       description = "copy {{source}} {{output}}"
+     }
+ 
+     tool("copy_bundle_data") {
+       cp_py = rebase_path("../cp.py")
+-      command = "python3 \"$cp_py\" {{source}} {{output}}"
++      command = "\"script_executable\" \"$cp_py\" {{source}} {{output}}"
+       description = "copy_bundle_data {{source}} {{output}}"
+     }
+ 

@@ -1,0 +1,38 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 07d3f62..86f2212 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -126,7 +126,9 @@ if (${USE_BOOST} STREQUAL "OFF" AND ${USE_STDMUTEX} STREQUAL "OFF")
+   find_package (Threads)
+ endif()
+ 
++if (FALSE)
+ find_or_build_gtest ()
++endif()
+ 
+ if (${USE_RE2} STREQUAL "ON")
+   find_required_library (RE2 re2/re2.h re2 "Google RE2")
+@@ -504,6 +506,7 @@ if (${BUILD_GEOCODER} STREQUAL "ON")
+   target_link_libraries (geocoding-shared ${LIBRARY_DEPS})
+ endif ()
+ 
++if (FALSE)
+ # Build a specific library for testing purposes.
+ add_library (phonenumber_testing STATIC ${TESTING_LIBRARY_SOURCES})
+ if (${BUILD_GEOCODER} STREQUAL "ON")
+@@ -530,7 +533,6 @@ if (${BUILD_GEOCODER} STREQUAL "ON")
+   )
+ endif ()
+ 
+-
+ set (TEST_SOURCES
+   "test/phonenumbers/asyoutypeformatter_test.cc"
+   "test/phonenumbers/logger_test.cc"
+@@ -588,6 +590,7 @@ else ()
+     DEPENDS libphonenumber_test
+   )
+ endif ()
++endif ()
+ 
+ # Install rules.
+ install (FILES

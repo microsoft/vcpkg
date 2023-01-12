@@ -1,0 +1,15 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 6033244..5e20ffc 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -202,8 +202,9 @@ add_custom_command (
+   DEPENDS ${PROTOBUF_SOURCES}
+ )
+ 
++find_package(absl REQUIRED)
++
+ if (${BUILD_GEOCODER} STREQUAL "ON")
+-  find_package(absl)
+ 
+   # Geocoding data cpp file generation
+   set (TOOLS_DIR "${CMAKE_CURRENT_BINARY_DIR}/tools")

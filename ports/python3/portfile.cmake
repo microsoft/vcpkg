@@ -16,6 +16,7 @@ set(PATCHES
     0008-python.pc.patch
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
+    0012-force-disable-curses.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
