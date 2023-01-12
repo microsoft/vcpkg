@@ -278,8 +278,6 @@ geotrans:x64-windows         = skip
 geotrans:x86-windows         = skip
 getopt:arm-uwp=fail
 getopt:x64-uwp=fail
-getopt-win32:x64-linux=fail
-getopt-win32:x64-osx=fail
 gflags:arm-uwp=fail
 gflags:x64-uwp=fail
 
