@@ -6,14 +6,16 @@ if(buildtrees_path_length GREATER warning_length AND CMAKE_HOST_WIN32)
     )
 endif()
 
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.gnome.org
     REPO GNOME/gtk
-    REF 3.24.34
+    REF "${VERSION}"
     SHA512 20a91e30a89070461af06b33829bc723b348806b4a785d0743af8bd4789b55dade24686e08bf1b2f0335240463aacc040134babb0605b809186b15de9cf261e4
     PATCHES
         0001-build.patch
+        cairo-cpp-linkage.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -38,27 +40,25 @@ vcpkg_configure_meson(
         -Dtracker3=false            # Enable Tracker3 filechooser search
         -Dcolord=no                 # Build colord support for the CUPS printing backend
         -Dintrospection=false
-    ADDITIONAL_NATIVE_BINARIES
-        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
-        glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-    ADDITIONAL_CROSS_BINARIES
-        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
-        glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+    ADDITIONAL_BINARIES
+        "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
+        "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
+        "glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'"
+        "glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
 )
 
+# Reduce command line lengths, in particular for static windows builds.
+foreach(dir IN ITEMS "${TARGET_TRIPLET}-dbg" "${TARGET_TRIPLET}-rel")
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${dir}/build.ninja")
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${dir}/build.ninja" "/${dir}/../src/" "/src/")
+    endif()
+endforeach()
 vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 set(GTK_TOOLS
     gtk-builder-tool
@@ -73,6 +73,4 @@ vcpkg_copy_tools(TOOL_NAMES ${GTK_TOOLS} AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
