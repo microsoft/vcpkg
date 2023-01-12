@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF fd5591f04708abad7333bb1181ced189d1eb73b4  #v4.1.0
-    SHA512 284d9f222e0766b3b1aab2937ecea9092fa9b48dddcbb80cea58ef2e11fbcd93a73f7e6e8c30c421b3e75ef70ab3832fe17a69ab7de3cdf014d70a881e06ee47
+    REF 206648d0e4634e5c61dcf9370676630268290b59  #v4.1.1
+    SHA512 8aa2dd06766bbc482c0e10d1c8a8379b3cd9bdc08ed93ae24f5c996ff2417f2df228e576309c521e2bd2c452d50014376f8183d2272c3af74bcc6f292ae7408b
     HEAD_REF main
     PATCHES
         shared-zstd.patch
