@@ -20,6 +20,7 @@ vcpkg_from_gitlab(
         fix-clang-cl-ugly.patch
         gstreamer-disable-no-unused.patch
         srtp_fix.patch
+        fix-bz2-windows-debug-dependency.patch
         ${PATCHES}
 )
 
@@ -49,6 +50,12 @@ if("gpl" IN_LIST FEATURES)
     set(LICENSE_GPL enabled)
 else()
     set(LICENSE_GPL disabled)
+endif()
+
+if ("libav" IN_LIST FEATURES)
+    set(LIBAV enabled)
+else()
+    set(LIBAV disabled)
 endif()
 
 if("nls" IN_LIST FEATURES)
@@ -402,7 +409,7 @@ vcpkg_configure_meson(
     OPTIONS
         # General options
         -Dpython=disabled
-        -Dlibav=disabled
+        -Dlibav=${LIBAV}
         -Dlibnice=disabled
         -Ddevtools=disabled
         -Dges=disabled
