@@ -82,7 +82,7 @@
     },
     "alsa": {
       "baseline": "1.2.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "amd-amf": {
       "baseline": "1.4.26",
