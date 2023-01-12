@@ -15,9 +15,6 @@ vcpkg_from_github(
         add_bigobj_option.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
-            "${SOURCE_PATH}/cmake/Modules/Findlibusb.cmake"
-)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -74,6 +71,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
+        PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
 )
 
 vcpkg_cmake_install()
