@@ -19,7 +19,9 @@
     "wayland": {
       "description": "Use Wayland display server",
       "supports": "linux",
-      "dependencies": [ "wayland" ]
+      "dependencies": [
+        "wayland"
+      ]
     }
   }
 }
