@@ -1,4 +1,4 @@
-add_library(unofficial::chakracore::chakracore UNKNOWN IMPORTED)
+add_library(unofficial::chakracore::chakracore INTERFACE IMPORTED)
 
 find_path(ChakraCore_INCLUDE_DIR NAMES ChakraCore.h)
 
@@ -12,5 +12,4 @@ find_library(ChakraCore_LIBRARY_DEBUG NAMES ChakraCore PATHS "${CMAKE_CURRENT_LI
 set_target_properties(unofficial::chakracore::chakracore PROPERTIES
   IMPORTED_LOCATION_DEBUG "${ChakraCore_LIBRARY_DEBUG}"
   IMPORTED_LOCATION_RELEASE "${ChakraCore_LIBRARY_RELEASE}"
-  IMPORTED_CONFIGURATIONS Debug;Release
 )
