@@ -63,6 +63,7 @@
           "features": [
             "gif",
             "iconv",
+            "libkml",
             "libxml2",
             "lzma",
             "openjpeg",
@@ -145,6 +146,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libkml": {
+      "description": "Enable the LibKML driver",
+      "dependencies": [
+        "libkml"
       ]
     },
     "libspatialite": {
