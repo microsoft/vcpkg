@@ -3006,7 +3006,7 @@
     },
     "icu": {
       "baseline": "72.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
