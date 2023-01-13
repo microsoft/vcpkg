@@ -10,7 +10,7 @@ vcpkg_from_git(
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
-if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND NOT VCPKG_TARGET_IS_UWP)
     # Most of libyuv accelerated features need to be compiled by clang/gcc, so force use clang-cl, otherwise the performance is too poor.
     # Manually build the port with clang-cl when using MSVC as compiler
 
