@@ -16,6 +16,7 @@ set(PATCHES
     0008-python.pc.patch
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
+    0012-force-disable-curses.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -224,18 +225,12 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
-    if (VCPKG_CROSSCOMPILING)
-        list(APPEND OPTIONS "ac_cv_file__dev_ptmx=no")
-        list(APPEND OPTIONS "ac_cv_file__dev_ptc=no")
-    endif()
-
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )

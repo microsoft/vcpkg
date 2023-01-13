@@ -4,7 +4,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 0402c063975680ff2385876f521b37aa4cc599d2570eb79976ad2a1b530e47a086d514fe122fd870b4a8f7358f48c926285694d153cc2c32cf6963ed2d5da9d9
+    SHA512 4338bf3e42ccbf3679f60b917194070040ff94ba3643121e8916180d6949f3b8cc308b6ad73912bebcb53a29920954bcfb2216bacca0503473a897f1fd023981
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -28,10 +28,6 @@ if (libmount IN_LIST FEATURES)
     list(APPEND OPTIONS -Dlibmount=enabled)
 else()
     list(APPEND OPTIONS -Dlibmount=disabled)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS -Diconv=external)
 endif()
 
 vcpkg_configure_meson(
