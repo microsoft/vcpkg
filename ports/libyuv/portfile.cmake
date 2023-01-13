@@ -10,11 +10,11 @@ vcpkg_from_git(
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # Most of libyuv accelerated features need to be compiled by clang/gcc, so force use clang-cl, otherwise the performance is too poor.
-    # Manually build the port with clang-cl when targeting windows and using MSVC as compiler
+    # Manually build the port with clang-cl when using MSVC as compiler
 
-    message(STATUS "Set compiler to clang-cl when targeting windows and using MSVC")
+    message(STATUS "Set compiler to clang-cl when using MSVC")
 
     # https://github.com/microsoft/vcpkg/pull/10398
     set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
