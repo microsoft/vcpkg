@@ -4826,7 +4826,7 @@
     },
     "marisa-trie": {
       "baseline": "0.2.6+20200926",
-      "port-version": 1
+      "port-version": 2
     },
     "marl": {
       "baseline": "2022-03-02",
