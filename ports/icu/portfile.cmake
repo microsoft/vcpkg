@@ -11,9 +11,9 @@ vcpkg_download_distfile(
 )
 
 if(VCPKG_TARGET_IS_OSX)
-      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n\nIt can be installed with brew install autoconf-archive ")
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf-archive\n\nIt can be installed with brew install autoconf-archive ")
 elseif(VCPKG_TARGET_IS_LINUX)
-      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n\nIt can be installed with apt-get install autoconf-archive ")
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf-archive\n\nIt can be installed with apt-get install autoconf-archive ")
 endif()
 
 vcpkg_extract_source_archive(SOURCE_PATH
