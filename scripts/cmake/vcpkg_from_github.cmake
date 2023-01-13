@@ -64,7 +64,7 @@ function(vcpkg_from_github)
             SKIP_SHA512
             ALWAYS_REDOWNLOAD
         )
-        # Parse the github refs response with regex.
+        # Parse the github refs response with string(JSON).
         file(READ "${archive_version}" version_contents)
         string(JSON head_version
             ERROR_VARIABLE head_version_err
