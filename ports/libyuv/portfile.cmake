@@ -40,6 +40,7 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(CLANG_TRIPLE "${CLANG_TRIPLE}-pc-windows-msvc")
+    set(LINKER_FLAGS "-Wl,-nodefaultlib:libcmt -D_DLL -lmsvcrt")
 elseif(VCPKG_TARGET_IS_OSX)
     set(CLANG_TRIPLE "${CLANG_TRIPLE}-pc-darwin-macho")
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -66,6 +67,8 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             -DCMAKE_C_COMPILER=${CLANG}/clang.exe
             -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
             -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+            -DCMAKE_MODULE_LINKER_FLAGS=${LINKER_FLAGS}
+            -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS}
             -DVCPKG_INSTALLED_DIR=${VCPKG_INSTALLED_DIR}
             -D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}
             -G Ninja
@@ -107,6 +110,8 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             -DCMAKE_C_COMPILER=${CLANG}/clang.exe
             -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
             -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+            -DCMAKE_MODULE_LINKER_FLAGS=${LINKER_FLAGS}
+            -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS}
             -DVCPKG_INSTALLED_DIR=${VCPKG_INSTALLED_DIR}
             -D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}
             -G Ninja
