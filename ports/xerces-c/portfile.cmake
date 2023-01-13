@@ -1,8 +1,9 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF v3.2.3
-    SHA512 aaafe2de4ea156d94e71e3631c79bd66660badf17bf2a19587a0ca34011f70bd1584a0beef909409a3ff05eecea9d37ffee6dbb267625f59217fd86705d2cd28
+    REF "v${VERSION}"
+    SHA512 0da61e000e871c045fb6e546cabba244eb6470a7a972c1d1b817ba5ce91c0d1d12dfb3ff1479d8b57ab06c49deefd1c16c36dc2541055e41a1cdb15dbd769fcf
     HEAD_REF master
     PATCHES
         disable-tests.patch
