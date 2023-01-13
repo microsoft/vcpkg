@@ -15,39 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "tools": {
-      "description": "Build the PMP visualization tools",
-      "dependencies": [
-        "glew",
-        "glfw3",
-        {
-          "name": "imgui",
-          "features": [
-            "glfw-binding",
-            "metal-binding",
-            "opengl3-binding",
-            "osx-binding"
-          ],
-          "platform": "osx"
-        },
-        {
-          "name": "imgui",
-          "features": [
-            "dx11-binding",
-            "glfw-binding",
-            "opengl3-binding",
-            "win32-binding"
-          ],
-          "platform": "windows"
-        },
-        {
-          "name": "imgui",
-          "platform": "!(windows | osx)"
-        },
-        "stb"
-      ]
-    }
-  }
+  ]
 }
