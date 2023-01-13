@@ -10,6 +10,12 @@ vcpkg_download_distfile(
     SHA512 848c341b37c0ff077e34a95d92c6200d5aaddd0ee5e06134101a74e04deb08256a5e817c8aefab020986abe810b7827dd7b2169a60dacd250c298870518dcae8
 )
 
+if(VCPKG_TARGET_IS_OSX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n\nIt can be installed with brew install autoconf-archive ")
+elseif(VCPKG_TARGET_IS_LINUX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n\nIt can be installed with apt-get install autoconf-archive ")
+endif()
+
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
