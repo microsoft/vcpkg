@@ -1,4 +1,6 @@
-Subject: [PATCH] 3
+Subject: [PATCH] 5
+4
+3
 ---
 Index: CMakeLists.txt
 IDEA additional info:
@@ -7,7 +9,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 ===================================================================
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision 2dc874c490874d25b187f2fa0057073910096a3c)
-+++ b/CMakeLists.txt	(revision df1095644b020d5f99a84ce84a187d3eb1152845)
++++ b/CMakeLists.txt	(revision b73a734ce117d21076ac4ddf9507dbcf2374a4b5)
 @@ -2,10 +2,14 @@
  # Originally created for "roxlu build system" to compile libyuv on windows
  # Run with -DTEST=ON to build unit tests
@@ -32,7 +34,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  FILE ( GLOB_RECURSE	ly_source_files ${ly_src_dir}/*.cc )
  LIST ( SORT			ly_source_files )
 
-@@ -22,24 +27,29 @@
+@@ -22,33 +27,43 @@
 
  INCLUDE_DIRECTORIES( BEFORE ${ly_inc_dir} )
 
@@ -75,22 +77,24 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 
  # this creates the yuvconstants tool
  ADD_EXECUTABLE      ( yuvconstants ${ly_base_dir}/util/yuvconstants.c )
-@@ -47,8 +57,12 @@
+ TARGET_LINK_LIBRARIES  ( yuvconstants ${ly_lib_static} )
 
- find_package ( JPEG )
+-find_package ( JPEG )
++# Instead of find jpeg here, we will pass it from vcpkg portfile.
++# find_package ( JPEG )
  if (JPEG_FOUND)
 -  include_directories( ${JPEG_INCLUDE_DIR} )
 -  target_link_libraries( ${ly_lib_shared} ${JPEG_LIBRARY} )
 +  include_directories( ${JPEG_INCLUDE_DIR})
 +  if(BUILD_SHARED_LIBS)
-+    target_link_libraries(${ly_lib_shared} PUBLIC ${JPEG_LIBRARY})
++    target_link_libraries(${ly_lib_shared} PUBLIC ${JPEG_LIBRARIES})
 +  else()
-+    target_link_libraries(${ly_lib_static} PUBLIC ${JPEG_LIBRARY})
++    target_link_libraries(${ly_lib_static} PUBLIC ${JPEG_LIBRARIES})
 +  endif()
    add_definitions( -DHAVE_JPEG )
  endif()
 
-@@ -91,10 +105,15 @@
+@@ -91,10 +106,15 @@
 
 
  # install the conversion tool, .so, .a, and all the header files

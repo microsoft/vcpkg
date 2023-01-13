@@ -48,6 +48,15 @@ endif()
 
 message(STATUS "Using clang triple ${CLANG_TRIPLE}")
 
+find_package(JPEG REQUIRED)
+if (JPEG_FOUND)
+    message(STATUS "Found JPEG")
+    message(STATUS "${JPEG_LIBRARIES}")
+    message(STATUS "${JPEG_INCLUDE_DIR}")
+else()
+    message(STATUS "NOT Found JPEG")
+endif()
+
 # Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -66,6 +75,9 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
                     -DCMAKE_C_COMPILER=${CLANG}/clang.exe
                     -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
                     -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+                    -DJPEG_FOUND="${JPEG_FOUND}"
+                    -DJPEG_LIBRARIES="${JPEG_LIBRARIES}"
+                    -DJPEG_INCLUDE_DIR="${JPEG_INCLUDE_DIR}"
                     -G Ninja
                     -S ${SOURCE_PATH}
                     -B ${BUILD_DIR}
@@ -105,6 +117,9 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
                     -DCMAKE_C_COMPILER=${CLANG}/clang.exe
                     -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
                     -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+                    -DJPEG_FOUND="${JPEG_FOUND}"
+                    -DJPEG_LIBRARIES="${JPEG_LIBRARIES}"
+                    -DJPEG_INCLUDE_DIR="${JPEG_INCLUDE_DIR}"
                     -G Ninja
                     -S ${SOURCE_PATH}
                     -B ${BUILD_DIR}
