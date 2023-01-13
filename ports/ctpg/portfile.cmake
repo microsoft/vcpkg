@@ -18,10 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(GLOB files "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/*")
-file(COPY ${files} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
