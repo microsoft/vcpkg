@@ -48,15 +48,6 @@ endif()
 
 message(STATUS "Using clang triple ${CLANG_TRIPLE}")
 
-find_package(JPEG REQUIRED)
-if (JPEG_FOUND)
-    message(STATUS "Found JPEG")
-    message(STATUS "${JPEG_LIBRARIES}")
-    message(STATUS "${JPEG_INCLUDE_DIR}")
-else()
-    message(STATUS "NOT Found JPEG")
-endif()
-
 # Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -67,20 +58,19 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
             COMMAND "${CMAKE_COMMAND}"
-                    -DCMAKE_BUILD_TYPE=Release
-                    -DCMAKE_MAKE_PROGRAM=${NINJA}
-                    -DCMAKE_INSTALL_PREFIX=${INST_PREFIX}
-                    -DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake
-                    -DCMAKE_CXX_COMPILER=${CLANG}/clang++.exe
-                    -DCMAKE_C_COMPILER=${CLANG}/clang.exe
-                    -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
-                    -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
-                    -DJPEG_FOUND="${JPEG_FOUND}"
-                    -DJPEG_LIBRARIES="${JPEG_LIBRARIES}"
-                    -DJPEG_INCLUDE_DIR="${JPEG_INCLUDE_DIR}"
-                    -G Ninja
-                    -S ${SOURCE_PATH}
-                    -B ${BUILD_DIR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_MAKE_PROGRAM=${NINJA}
+            -DCMAKE_INSTALL_PREFIX=${INST_PREFIX}
+            -DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake
+            -DCMAKE_CXX_COMPILER=${CLANG}/clang++.exe
+            -DCMAKE_C_COMPILER=${CLANG}/clang.exe
+            -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
+            -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+            -DVCPKG_INSTALLED_DIR=${VCPKG_INSTALLED_DIR}
+            -D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}
+            -G Ninja
+            -S ${SOURCE_PATH}
+            -B ${BUILD_DIR}
             WORKING_DIRECTORY "${BUILD_DIR}"
             LOGNAME "configure-${TARGET_TRIPLET}-rel"
     )
@@ -108,21 +98,20 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
             COMMAND "${CMAKE_COMMAND}"
-                    -DCMAKE_BUILD_TYPE=Debug
-                    -DCMAKE_MAKE_PROGRAM=${NINJA}
-                    -DCMAKE_INSTALL_PREFIX=${INST_PREFIX}
-                    -DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake
-                    -DCMAKE_DEBUG_POSTFIX=d
-                    -DCMAKE_CXX_COMPILER=${CLANG}/clang++.exe
-                    -DCMAKE_C_COMPILER=${CLANG}/clang.exe
-                    -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
-                    -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
-                    -DJPEG_FOUND="${JPEG_FOUND}"
-                    -DJPEG_LIBRARIES="${JPEG_LIBRARIES}"
-                    -DJPEG_INCLUDE_DIR="${JPEG_INCLUDE_DIR}"
-                    -G Ninja
-                    -S ${SOURCE_PATH}
-                    -B ${BUILD_DIR}
+            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_MAKE_PROGRAM=${NINJA}
+            -DCMAKE_INSTALL_PREFIX=${INST_PREFIX}
+            -DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake
+            -DCMAKE_DEBUG_POSTFIX=d
+            -DCMAKE_CXX_COMPILER=${CLANG}/clang++.exe
+            -DCMAKE_C_COMPILER=${CLANG}/clang.exe
+            -DCMAKE_CXX_FLAGS="--target=${CLANG_TRIPLE}"
+            -DCMAKE_C_FLAGS="--target=${CLANG_TRIPLE}"
+            -DVCPKG_INSTALLED_DIR=${VCPKG_INSTALLED_DIR}
+            -D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}
+            -G Ninja
+            -S ${SOURCE_PATH}
+            -B ${BUILD_DIR}
             WORKING_DIRECTORY "${BUILD_DIR}"
             LOGNAME "configure-${TARGET_TRIPLET}-dbg"
     )
