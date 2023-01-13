@@ -7362,7 +7362,7 @@
     },
     "stduuid": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "stftpitchshift": {
       "baseline": "1.4.1",

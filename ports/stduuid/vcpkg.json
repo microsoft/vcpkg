@@ -1,6 +1,7 @@
 {
   "name": "stduuid",
   "version": "1.2.2",
+  "port-version": 1,
   "description": "A C++17 cross-platform implementation for UUIDs",
   "license": "MIT",
   "dependencies": [
