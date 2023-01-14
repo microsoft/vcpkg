@@ -3,13 +3,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF a921d615c5cb4eb55a8dfc608dae6efde13e9126
+    REF 98bf3fb184f89e8061b3d985f96a6c4f62ed6749
     SHA512 7787d5f927f53554cec3044221011cbc78b654c504d96af29947266e25058194923c5463aefde73b93dcfb3930eedf731f6af4d0c311d8f2f0d7be2114393e05
     HEAD_REF master
     PATCHES
         0001-add-bigobj-for-msvc.patch
-        0002-fix-opencv46.patch
         0003-fix-qt.patch
+        0004-fix-opencv47.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
