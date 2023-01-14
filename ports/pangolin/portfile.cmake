@@ -6,7 +6,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF v0.8
+    # This commit remove XVMC so that ffmpeg 5.1 can works
+    # https://github.com/stevenlovegrove/Pangolin/pull/798
+    REF eab3d3449a33a042b1ee7225e1b8b593b1b21e3e
     SHA512 d4ca405097e8c439a4f74495f374bc5d5e4febafcf59ee88d985a8764ed36da1753ca4a3a73476dfb74c7d92df31a99242df6e1b47c648e860eee835a6f4f434
     HEAD_REF master
     PATCHES
