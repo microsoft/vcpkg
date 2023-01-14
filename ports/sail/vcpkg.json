@@ -1,0 +1,157 @@
+{
+  "name": "sail",
+  "version-semver": "0.9.0-rc2",
+  "description": "The missing small and fast image decoding library for humans (not for machines)",
+  "homepage": "https://github.com/HappySeaFox/sail",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "high-priority"
+  ],
+  "features": {
+    "all": {
+      "description": "Enable all codecs",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "high-priority",
+            "low-priority",
+            "lowest-priority",
+            "medium-priority"
+          ]
+        }
+      ]
+    },
+    "avif": {
+      "description": "Enable AVIF codec",
+      "dependencies": [
+        "libavif"
+      ]
+    },
+    "bmp": {
+      "description": "Enable BMP codec"
+    },
+    "gif": {
+      "description": "Enable GIF codec",
+      "dependencies": [
+        "giflib"
+      ]
+    },
+    "high-priority": {
+      "description": "Enable high priority codecs such as JPEG or PNG",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "bmp",
+            "gif",
+            "jpeg",
+            "png",
+            "tiff"
+          ]
+        }
+      ]
+    },
+    "ico": {
+      "description": "Enable ICO codec"
+    },
+    "jpeg": {
+      "description": "Enable JPEG codec",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "jpeg2000": {
+      "description": "Enable JPEG2000 codec",
+      "dependencies": [
+        "jasper"
+      ]
+    },
+    "low-priority": {
+      "description": "Enable low priority codecs such as TGA",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "ico",
+            "pcx",
+            "qoi",
+            "tga"
+          ]
+        }
+      ]
+    },
+    "lowest-priority": {
+      "description": "Enable lowest priority codecs such as XBM",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "wal",
+            "xbm"
+          ]
+        }
+      ]
+    },
+    "medium-priority": {
+      "description": "Enable medium priority codecs such as AVIF",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "avif",
+            "jpeg2000",
+            "webp"
+          ]
+        }
+      ]
+    },
+    "pcx": {
+      "description": "Enable PCX codec"
+    },
+    "png": {
+      "description": "Enable PNG codec",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "qoi": {
+      "description": "Enable QOI codec"
+    },
+    "svg": {
+      "description": "Enable SVG codec"
+    },
+    "tga": {
+      "description": "Enable TGA codec"
+    },
+    "tiff": {
+      "description": "Enable TIFF codec",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "wal": {
+      "description": "Enable WAL codec"
+    },
+    "webp": {
+      "description": "Enable WEBP codec",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "xbm": {
+      "description": "Enable XBM codec"
+    }
+  }
+}

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO billyquith/ponder
@@ -8,11 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-unused.patch
+        github-121.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DUSES_RAPIDJSON=OFF
@@ -20,20 +18,22 @@ vcpkg_configure_cmake(
         -DBUILD_TEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/${PORT}/cmake)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}
-    ${CURRENT_PACKAGES_DIR}/lib/${PORT})
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/${PORT}/config.hpp _contents)
-    string(REPLACE "ifndef PONDER_STATIC" "if 0 //ifndef PONDER_STATIC" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/${PORT}/config.hpp "${_contents}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/config.hpp" "ifndef PONDER_STATIC" "if 0 //ifndef PONDER_STATIC")
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+

@@ -1,0 +1,63 @@
+{
+  "name": "sdl2-mixer",
+  "version": "2.6.1",
+  "port-version": 2,
+  "description": "Multi-channel audio mixer library for SDL.",
+  "homepage": "https://github.com/libsdl-org/SDL_mixer",
+  "license": "Zlib",
+  "dependencies": [
+    "sdl2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "nativemidi"
+  ],
+  "features": {
+    "fluidsynth": {
+      "description": "Use FluidSynth to play MIDI audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
+    },
+    "libflac": {
+      "description": "Use libflac to play FLAC audio format instead of the built-in dr_flac.",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "libmodplug": {
+      "description": "Support for MOD audio format using libmodplug.",
+      "dependencies": [
+        "libmodplug"
+      ]
+    },
+    "libvorbis": {
+      "description": "Use libvorbis to play OGG Vorbis audio format instead of the built-in stb_vorbis.",
+      "dependencies": [
+        "libvorbis"
+      ]
+    },
+    "mpg123": {
+      "description": "Use mpg123 to play MP3 audio format instead of the built-in dr_mp3.",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "nativemidi": {
+      "description": "Support for MIDI audio format on Windows and macOS."
+    },
+    "opusfile": {
+      "description": "Support for Opus audio format using opusfile.",
+      "dependencies": [
+        "opusfile"
+      ]
+    }
+  }
+}

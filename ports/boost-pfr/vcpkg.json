@@ -1,0 +1,14 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-pfr",
+  "version": "1.81.0",
+  "description": "Boost pfr module",
+  "homepage": "https://github.com/boostorg/pfr",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

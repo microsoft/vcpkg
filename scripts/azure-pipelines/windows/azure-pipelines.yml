@@ -1,0 +1,107 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
+  - name: triplet
+    type: string
+    default: 'x86-windows'
+  - name: jobName
+    type: string
+    default: 'x86_windows'
+  - name: poolName
+    type: string
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 2880 # 2 days
+  variables:
+  - name: WORKING_ROOT
+    value: D:\
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
+  - name: DiffFile
+    value: $(Build.ArtifactStagingDirectory)\format.diff
+  - name: ExtraChecksTriplet
+    value: x86-windows
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
+
+  steps:
+  - script: .\bootstrap-vcpkg.bat
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - script: .\scripts\azure-pipelines\windows\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
+    displayName: "Build vcpkg with CMake"
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - script: '.\vcpkg.exe format-manifest --all'
+    displayName: 'Format Manifests'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+  - task: Powershell@2
+    displayName: 'Create Diff'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+    inputs:
+      filePath: scripts/azure-pipelines/Create-PRDiff.ps1
+      arguments: "-DiffFile '$(DiffFile)'"
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Format and Documentation Diff'
+    condition: and(eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}'), failed())
+    inputs:
+      PathtoPublish: '$(DiffFile)'
+      ArtifactName: 'format.diff'
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Validate version files'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/validate-version-files.ps1'
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
+      ArtifactName: 'failure logs for ${{ parameters.triplet }}'
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+  - task: PowerShell@2
+    displayName: 'Build a file list for all packages'
+    condition: always()
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    condition: ne(variables['XML_RESULTS_FILE'], '')
+    inputs:
+      testRunTitle: ${{ parameters.triplet }}
+      testResultsFormat: xUnit
+      testResultsFiles: $(XML_RESULTS_FILE)
+      platform: ${{ parameters.triplet }}
+

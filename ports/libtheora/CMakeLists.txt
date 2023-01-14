@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(theora LANGUAGES C)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-FIND_PACKAGE(OGG REQUIRED)
+find_package(Ogg CONFIG REQUIRED)
 
 file(GLOB HEADERS
   "include/theora/codec.h"
@@ -11,8 +11,24 @@ file(GLOB HEADERS
   "include/theora/theoraenc.h"
 )
 
-include_directories("include")
-include_directories(${OGG_INCLUDE_DIR})
+if(MSVC)
+  set(LIBTHEORA_COMMON_X86
+    "lib/x86_vc/mmxfrag.c"
+    "lib/x86_vc/mmxidct.c"
+    "lib/x86_vc/mmxstate.c"
+    "lib/x86_vc/x86cpu.c"
+    "lib/x86_vc/x86state.c"
+  )
+else()
+  set(LIBTHEORA_COMMON_X86
+    "lib/x86/mmxfrag.c"
+    "lib/x86/mmxidct.c"
+    "lib/x86/mmxstate.c"
+    "lib/x86/sse2idct.c"
+    "lib/x86/x86cpu.c"
+    "lib/x86/x86state.c"
+  )
+endif()
 
 set(LIBTHEORA_COMMON
   "lib/apiwrapper.c"
@@ -25,12 +41,24 @@ set(LIBTHEORA_COMMON
   "lib/state.c"
   "lib/quant.c"
 
-  "lib/x86_vc/mmxfrag.c"
-  "lib/x86_vc/mmxidct.c"
-  "lib/x86_vc/mmxstate.c"
-  "lib/x86_vc/x86cpu.c"
-  "lib/x86_vc/x86state.c"
+  ${LIBTHEORA_COMMON_X86}
 )
+
+if(MSVC)
+  set(LIBTHEORA_ENC_X86
+    "lib/x86_vc/mmxencfrag.c"
+    "lib/x86_vc/mmxfdct.c"
+    "lib/x86_vc/x86enc.c"
+  )
+else()
+  set(LIBTHEORA_ENC_X86
+    "lib/x86/mmxencfrag.c"
+    "lib/x86/mmxfdct.c"
+    "lib/x86/x86enc.c"
+    "lib/x86/x86enquant.c"
+    "lib/x86/sse2encfrag.c"
+  )
+endif()
 
 set(LIBTHEORA_ENC
   "lib/analyze.c"
@@ -46,9 +74,7 @@ set(LIBTHEORA_ENC
   "lib/rate.c"
   "lib/tokenize.c"
 
-  "lib/x86_vc/mmxencfrag.c"
-  "lib/x86_vc/mmxfdct.c"
-  "lib/x86_vc/x86enc.c"
+  ${LIBTHEORA_ENC_X86}
 )
 
 set(LIBTHEORA_DEC
@@ -71,22 +97,47 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 add_library(theora-common OBJECT ${LIBTHEORA_COMMON} ${HEADERS})
+target_link_libraries(theora-common PUBLIC Ogg::ogg)
+target_include_directories(theora-common PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
+target_link_libraries(theora-enc PUBLIC Ogg::ogg)
+target_include_directories(theora-enc PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
+target_link_libraries(theora-dec PUBLIC Ogg::ogg)
+target_include_directories(theora-dec PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec> "libtheora.def")
-target_link_libraries(theora ${OGG_LIBRARY})
+target_link_libraries(theora PUBLIC Ogg::ogg)
+target_include_directories(theora PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theoraenc $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> "win32/xmingw32/libtheoraenc-all.def")
-target_link_libraries(theoraenc ${OGG_LIBRARY})
+target_link_libraries(theoraenc PUBLIC Ogg::ogg)
+target_include_directories(theoraenc PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theoradec $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-dec> "win32/xmingw32/libtheoradec-all.def")
-target_link_libraries(theoradec ${OGG_LIBRARY})
+target_link_libraries(theoradec PUBLIC Ogg::ogg)
+target_include_directories(theoradec PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(unofficial-theora-config.cmake.in unofficial-theora-config.cmake
+  INSTALL_DESTINATION "lib/unofficial-theora")
 
 install(FILES ${HEADERS} DESTINATION include/theora)
 
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-theora-config.cmake"
+  DESTINATION "lib/unofficial-theora"
+)
+
 install(TARGETS theora theoraenc theoradec
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
-  ARCHIVE DESTINATION lib
+  EXPORT unofficial-theora-targets
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+)
+
+install(EXPORT unofficial-theora-targets
+  NAMESPACE unofficial::theora::
+  DESTINATION "lib/unofficial-theora"
 )

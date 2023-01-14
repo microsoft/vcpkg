@@ -1,0 +1,26 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-interval",
+  "version": "1.81.0",
+  "description": "Boost interval module",
+  "homepage": "https://github.com/boostorg/interval",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-detail",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-logic",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

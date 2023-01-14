@@ -1,0 +1,13 @@
+diff --git a/src/ODEIntegrators.cpp b/src/ODEIntegrators.cpp
+index 4152f01..e5986ca 100644
+--- a/src/ODEIntegrators.cpp
++++ b/src/ODEIntegrators.cpp
+@@ -4,6 +4,8 @@
+ #include "CPstrings.h"
+ #include "Exceptions.h"
+ #include <algorithm>
++#undef max
++#undef min
+ 
+ bool ODEIntegrators::AdaptiveRK54(AbstractODEIntegrator &ode, double tstart, double tend, double hmin, double hmax, double eps_allowed, double step_relax)
+ {

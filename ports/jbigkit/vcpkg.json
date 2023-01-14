@@ -1,0 +1,7 @@
+{
+  "name": "jbigkit",
+  "version-string": "2.1",
+  "port-version": 5,
+  "description": "A software implementation of the JBIG1 data compression standard (ITU-T T.82)",
+  "homepage": "https://www.cl.cam.ac.uk/~mgk25/jbigkit"
+}

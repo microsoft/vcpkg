@@ -1,0 +1,99 @@
+{
+  "name": "poppler",
+  "version": "22.8.0",
+  "port-version": 1,
+  "description": "A PDF rendering library",
+  "homepage": "https://poppler.freedesktop.org/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-container",
+    "boost-move",
+    "freetype",
+    "libiconv",
+    "libjpeg-turbo",
+    "libpng",
+    "openjpeg",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "font-configuration",
+    "zlib"
+  ],
+  "features": {
+    "cairo": {
+      "description": "Enable the Cairo graphics backend",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
+    "curl": {
+      "description": "curl for poppler",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "font-configuration": {
+      "description": "Defaut font configuration backend",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!windows & !android"
+        }
+      ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "supports": "!windows, mingw",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "glib": {
+      "description": "glib for poppler",
+      "dependencies": [
+        {
+          "name": "glib",
+          "default-features": false
+        },
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "cairo"
+          ]
+        }
+      ]
+    },
+    "private-api": {
+      "description": "Install headers for private API (aka unstable API/ABI headers)"
+    },
+    "splash": {
+      "description": "The splash backend is always enabled. This option is kept for compatibility."
+    },
+    "zlib": {
+      "description": "zlib for poppler",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

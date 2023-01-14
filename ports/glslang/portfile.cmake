@@ -1,37 +1,49 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF f88e5824d2cfca5edc58c7c2101ec9a4ec36afac
-  SHA512 92dc287e8930db6e00bde23b770f763dc3cf8a405a37b682bbd65e1dbde1f1f5161543fcc70b09eef07a5ce8bbe8f368ef84ac75003c122f42d1f6b9eaa8bd50
+  REF 11.13.0
+  SHA512 20c2a6543b002648f459f26bd36b5c445afd6d8eae175e400dbe45632f11ca8de1f9e6f6e98fd6f910aa75d90063e174c095e7df26d9d4982192b84d08b0dc8b
   HEAD_REF master
   PATCHES
-    CMakeLists-targets.patch
-    CMakeLists-windows.patch
+    ignore-crt.patch
+    install-to-datadir.patch
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path("${PYTHON_PATH}")
+
+if("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_IOS)
+  set(BUILD_BINARIES ON)
+else()
+  # this case will report error since all executable will require BUNDLE DESTINATION
+  set(BUILD_BINARIES OFF)
+endif()
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DCMAKE_DEBUG_POSTFIX=d
     -DSKIP_GLSLANG_INSTALL=OFF
+    -DBUILD_EXTERNAL=OFF
+    -DENABLE_GLSLANG_BINARIES=${BUILD_BINARIES}
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(NOT BUILD_BINARIES)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+else()
+  vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
+endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-# Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/glslang)
+# Install custom usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-vcpkg_test_cmake(PACKAGE_NAME glslang)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

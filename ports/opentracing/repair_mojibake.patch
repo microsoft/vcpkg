@@ -1,0 +1,59 @@
+From 31c92781ac953cb83963cfe5ac30324579fa7b2d Mon Sep 17 00:00:00 2001
+From: Billy Robert O'Neal III <bion@microsoft.com>
+Date: Fri, 18 Dec 2020 10:07:02 -0800
+Subject: [PATCH] Repair mojibake in expected.hpp
+
+The affected characters herein triggered warnings
+C:\Dev\vcpkg\buildtrees\opentracing\src\b67575dab0-0250653c81.clean\3rd_party\include\opentracing/expected/expected.hpp(1): warning C4828: The file contains a character starting at offset 0x4a77 that is illegal in the current source character set (codepage 65001).
+---
+ 3rd_party/include/opentracing/expected/expected.hpp | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/3rd_party/include/opentracing/expected/expected.hpp b/3rd_party/include/opentracing/expected/expected.hpp
+index 8283a77..0d21d43 100644
+--- a/3rd_party/include/opentracing/expected/expected.hpp
++++ b/3rd_party/include/opentracing/expected/expected.hpp
+@@ -778,13 +778,13 @@ class expected
+ //  expected<decltype(func(declval<T>())),E> map(F&& func) ;
+ 
+ //  template <typename F>
+-//  ’see below’ bind(F&& func);
++//  'see below' bind(F&& func);
+ 
+ //  template <typename F>
+ //  expected<T,E> catch_error(F&& f);
+ 
+ //  template <typename F>
+-//  ’see below’ then(F&& func);
++//  'see below' then(F&& func);
+ 
+ private:
+     bool has_value_;
+@@ -955,9 +955,9 @@ class expected<void, E>
+         return ! has_value() && std::is_base_of< Ex, decltype( get_unexpected().value() ) >::value;
+     }
+ 
+-//  template constexpr ’see below’ unwrap() const&;
++//  template constexpr 'see below' unwrap() const&;
+ //
+-//  template ’see below’ unwrap() &&;
++//  template 'see below' unwrap() &&;
+ 
+     // factories
+ 
+@@ -968,13 +968,13 @@ class expected<void, E>
+ //  expected<decltype(func()), E> map(F&& func) ;
+ //
+ //  template <typename F>
+-//  ’see below’ bind(F&& func) ;
++//  'see below' bind(F&& func) ;
+ //
+ //  template <typename F>
+ //  expected<void,E> catch_error(F&& f);
+ //
+ //  template <typename F>
+-//  ’see below’ then(F&& func);
++//  'see below' then(F&& func);
+ 
+ private:
+     bool has_value_;

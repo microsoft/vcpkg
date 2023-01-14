@@ -1,0 +1,42 @@
+{
+  "name": "hareflow",
+  "version-semver": "0.1.0",
+  "description": "Hareflow: A RabbitMQ C++ stream client.",
+  "homepage": "https://github.com/coveooss/hareflow",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "boost-asio",
+      "features": [
+        "ssl"
+      ],
+      "version>=": "1.78.0"
+    },
+    {
+      "name": "boost-endian",
+      "version>=": "1.78.0"
+    },
+    {
+      "name": "fmt",
+      "version>=": "8.0.1"
+    },
+    {
+      "name": "openssl",
+      "version>=": "3.0.2#3"
+    },
+    {
+      "name": "qpid-proton",
+      "version>=": "0.37.0#2"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "version>=": "2021-02-28"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "version>=": "2021-02-26"
+    }
+  ]
+}

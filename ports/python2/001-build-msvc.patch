@@ -1,28 +1,5 @@
-From 4988ea4f4ce6af0b567e6a2dc2c23aaf7cc5f12d Mon Sep 17 00:00:00 2001
-From: Jean-Christophe Fillion-Robin <jchris.fillionr@kitware.com>
-Date: Mon, 31 Jul 2017 10:59:47 -0400
-Subject: [PATCH 1/3] VS2010 Support: Backport "Fix #13210. Port the Windows
- build from VS2008 to VS2010."
-
-This commit is a partial backport of python/cpython@401f9f3. It was
-originally designed to work with python-cmake-buildsystem.
-
-The following modules have NOT been backported:
-
-* Tools/msi
-* Tools/buildbot
-* PCBuild
----
- Lib/distutils/command/build_ext.py |  2 +-
- Lib/distutils/msvc9compiler.py     | 11 ++++++-----
- PC/dl_nt.c                         | 11 ++++++++++-
- PC/msvcrtmodule.c                  | 15 ++++++++++++++-
- PC/pyconfig.h                      |  9 +++++++--
- Python/dynload_win.c               |  8 ++++++++
- 6 files changed, 46 insertions(+), 10 deletions(-)
-
 diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
-index 2c68be3..f1d184b 100644
+index 86a85c1..65a60b5 100644
 --- a/Lib/distutils/command/build_ext.py
 +++ b/Lib/distutils/command/build_ext.py
 @@ -193,7 +193,7 @@ class build_ext (Command):
@@ -35,7 +12,7 @@ index 2c68be3..f1d184b 100644
                  if self.plat_name == 'win32':
                      suffix = ''
 diff --git a/Lib/distutils/msvc9compiler.py b/Lib/distutils/msvc9compiler.py
-index 33d3e51..f6de11c 100644
+index 33d3e51..9fe6417 100644
 --- a/Lib/distutils/msvc9compiler.py
 +++ b/Lib/distutils/msvc9compiler.py
 @@ -662,11 +662,12 @@ class MSVCCompiler(CCompiler) :
@@ -50,26 +27,24 @@ index 33d3e51..f6de11c 100644
 +                if self.__version < 10:
 +                    try:
 +                        self.spawn(['mt.exe', '-nologo', '-manifest',
-+                                    temp_manifest, out_arg])
-+                    except PackagingExecError as msg:
++                                    mffilename, out_arg])
++                    except DistutilsExecError, msg:
 +                        raise LinkError(msg)
          else:
              log.debug("skipping %s (up-to-date)", output_filename)
  
 diff --git a/PC/dl_nt.c b/PC/dl_nt.c
-index ef1ce09..5ff07fd 100644
+index 3e58bac..cad9de5 100644
 --- a/PC/dl_nt.c
 +++ b/PC/dl_nt.c
-@@ -18,7 +18,8 @@ char dllVersionBuffer[16] = ""; // a private buffer
+@@ -18,6 +18,7 @@ char dllVersionBuffer[16] = ""; // a private buffer
  HMODULE PyWin_DLLhModule = NULL;
  const char *PyWin_DLLVersionString = dllVersionBuffer;
  
--// Windows "Activation Context" work:
 +#if HAVE_SXS
-+// Windows "Activation Context" work.
+ // Windows "Activation Context" work:
  // Our .pyd extension modules are generally built without a manifest (ie,
  // those included with Python and those built with a default distutils.
- // This requires we perform some "activation context" magic when loading our
 @@ -29,6 +30,8 @@ const char *PyWin_DLLVersionString = dllVersionBuffer;
  // As an added complication, this magic only works on XP or later - we simply
  // use the existence (or not) of the relevant function pointers from kernel32.
@@ -79,16 +54,15 @@ index ef1ce09..5ff07fd 100644
  
  typedef BOOL (WINAPI * PFN_GETCURRENTACTCTX)(HANDLE *);
  typedef BOOL (WINAPI * PFN_ACTIVATEACTCTX)(HANDLE, ULONG_PTR *);
-@@ -76,6 +79,8 @@ void _Py_DeactivateActCtx(ULONG_PTR cookie)
+@@ -75,6 +78,7 @@ void _Py_DeactivateActCtx(ULONG_PTR cookie)
+         if (!(*pfnDeactivateActCtx)(0, cookie))
              OutputDebugString("Python failed to de-activate the activation context\n");
  }
- 
 +#endif /* HAVE_SXS */
-+
+ 
  BOOL    WINAPI  DllMain (HANDLE hInst,
                                                  ULONG ul_reason_for_call,
-                                                 LPVOID lpReserved)
-@@ -87,17 +92,21 @@ BOOL    WINAPI  DllMain (HANDLE hInst,
+@@ -87,6 +91,7 @@ BOOL    WINAPI  DllMain (HANDLE hInst,
              // 1000 is a magic number I picked out of the air.  Could do with a #define, I spose...
              LoadString(hInst, 1000, dllVersionBuffer, sizeof(dllVersionBuffer));
  
@@ -96,9 +70,10 @@ index ef1ce09..5ff07fd 100644
              // and capture our activation context for use when loading extensions.
              _LoadActCtxPointers();
              if (pfnGetCurrentActCtx && pfnAddRefActCtx)
-                 if ((*pfnGetCurrentActCtx)(&PyWin_DLLhActivationContext))
-                     if (!(*pfnAddRefActCtx)(PyWin_DLLhActivationContext))
-                         OutputDebugString("Python failed to load the default activation context\n");
+@@ -98,12 +103,15 @@ BOOL    WINAPI  DllMain (HANDLE hInst,
+                                       "activation context\n");
+                     return FALSE;
+                 }
 +#endif
              break;
  
@@ -110,8 +85,9 @@ index ef1ce09..5ff07fd 100644
              break;
      }
      return TRUE;
+ }
 diff --git a/PC/msvcrtmodule.c b/PC/msvcrtmodule.c
-index 44c82e4..68928dd 100644
+index 44c82e4..091957e 100644
 --- a/PC/msvcrtmodule.c
 +++ b/PC/msvcrtmodule.c
 @@ -25,6 +25,8 @@
@@ -140,11 +116,10 @@ index 44c82e4..68928dd 100644
  #ifdef _VC_ASSEMBLY_PUBLICKEYTOKEN
      st = PyModule_AddStringConstant(m, "VC_ASSEMBLY_PUBLICKEYTOKEN",
                                      _VC_ASSEMBLY_PUBLICKEYTOKEN);
-@@ -427,4 +430,14 @@ initmsvcrt(void)
+@@ -427,4 +430,13 @@ initmsvcrt(void)
                                      __LIBRARIES_ASSEMBLY_NAME_PREFIX);
      if (st < 0)return;
  #endif
-+
 +/* constants for the 2010 crt versions */
 +#if defined(_VC_CRT_MAJOR_VERSION) && defined (_VC_CRT_MINOR_VERSION) && defined(_VC_CRT_BUILD_VERSION) && defined(_VC_CRT_RBUILD_VERSION)
 +    version = PyUnicode_FromFormat("%d.%d.%d.%d", _VC_CRT_MAJOR_VERSION,
@@ -156,12 +131,12 @@ index 44c82e4..68928dd 100644
 +#endif
  }
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index 5d1c90a..b60af1e 100644
+index 5fa6398..0cbd236 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
-@@ -231,14 +231,19 @@ typedef int pid_t;
- #define hypot _hypot
- #endif
+@@ -226,14 +226,19 @@ typedef int pid_t;
+ #define Py_IS_FINITE(X) _finite(X)
+ #define copysign _copysign
  
 -#endif /* _MSC_VER */
 +/* Side by Side assemblies supported in VS 2005 and VS 2008 but not 2010*/
@@ -222,6 +197,3 @@ index 4e5555e..8626642 100644
          }
  
          /* restore old error mode settings */
--- 
-2.5.0
-

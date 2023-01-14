@@ -1,4 +1,0 @@
-Source: nmap
-Version: 7.70-4
-Build-Depends: winpcap (windows), libpcap (!windows), lua, openssl, python2 (windows), libssh2, zlib, pcre
-Description: A library for scanning network ports.

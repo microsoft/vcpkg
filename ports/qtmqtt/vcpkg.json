@@ -1,0 +1,16 @@
+{
+  "name": "qtmqtt",
+  "version": "6.4.2",
+  "description": "Qt Module to implement MQTT protocol version 3.1 and 3.1.1 http://mqtt.org/",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    }
+  ]
+}

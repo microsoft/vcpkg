@@ -1,0 +1,17 @@
+{
+  "name": "mpmcqueue",
+  "version-date": "2021-12-01",
+  "description": "A bounded multi-producer multi-consumer lock-free queue written in C++11",
+  "homepage": "https://github.com/rigtorp/MPMCQueue",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

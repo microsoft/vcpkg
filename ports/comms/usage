@@ -1,0 +1,4 @@
+The package comms provides CMake targets:
+
+    find_package(LibComms CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cc::comms)

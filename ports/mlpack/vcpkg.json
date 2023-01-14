@@ -1,0 +1,33 @@
+{
+  "name": "mlpack",
+  "version": "4.0.0",
+  "description": "mlpack is an intuitive, fast, and flexible header-only C++ machine learning library with bindings to other languages.",
+  "homepage": "https://github.com/mlpack/mlpack",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "armadillo",
+    "cereal",
+    "ensmallen",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "use OpenMP for parallelization."
+    },
+    "tools": {
+      "description": "Build command-line executables.",
+      "dependencies": [
+        "boost-format"
+      ]
+    }
+  }
+}

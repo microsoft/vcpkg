@@ -1,0 +1,154 @@
+{
+  "versions": [
+    {
+      "git-tree": "4c6350f32b68fc7216251526449e5d6b5342b2a9",
+      "version": "2.10.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "84251d247cc46bde6696ad9043326981370e1a79",
+      "version": "2.10.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0723f5ac350935e5d68d8087c82883dffa706812",
+      "version": "2.9.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b1eb3bb762f1ba08ffd2ffb216df9504ed9fda3c",
+      "version": "2.9.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "24ea84c002f9cc529a54996dbbf2e9b2cce9cadf",
+      "version-semver": "2.9.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "66591866c63bfff5fea690e23a05aa14cad10967",
+      "version-semver": "2.9.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "16618fe9543461ee68ba815f511afacbbcfd8330",
+      "version-semver": "2.8.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "893da2421e31681611515d8416a8f1a3b4496b5e",
+      "version-semver": "2.8.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b6b211738705fc8bb09ad24e39d6239f8b719aae",
+      "version-semver": "2.8.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a8d7e31e74a9d73e4956e70efbcc0c3490968883",
+      "version-semver": "2.7.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e24d24b2afa6506e1dbea1bb922be82d0f4ffafb",
+      "version": "2.6.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e3d883eb6e3cf9a83a34c3640d049f627d9ab1ae",
+      "version-string": "2.6.0",
+      "port-version": 3
+    },
+    {
+      "git-tree": "0b20fc25515142265062ab506efe37e01ccfcf4b",
+      "version-string": "2.6.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "4e419fd7c279712f8ac1a9efd2b99657e6cefe72",
+      "version-string": "2.6.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "7b55ce91d4263c298682c29b1046f933145d6682",
+      "version-string": "2.6.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "355c309841bb390c372c761830fa354bee3effaf",
+      "version-string": "2.5.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "6a778e691fd5b92c830293679a0724fd812198ab",
+      "version-string": "2.5.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b3072c9585a20208b619b76fbb5dd4bcec680692",
+      "version-string": "2.4.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e82b963fc9ba7d07c93845b6a6125a8a90840706",
+      "version-string": "2.3.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a902f398114ef2400e5be0073a842a74c054cf54",
+      "version-string": "2.3.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "049b57ca0877925b1f25fd75f0bb4a142d89e541",
+      "version-string": "2.2.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "457c121c6f45a093cf83055f0433bcbc32929107",
+      "version-string": "2.2.3-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7cb65f056340c026cd2d7e3609c96d1c709a80d5",
+      "version-string": "2.2.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1c8628b12ac199ac5fdb7d78b91ce28b38527265",
+      "version-string": "2.2.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9fbc58acd0bbf5f674a62de5d6bdb78647c0b3f1",
+      "version-string": "2.2.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "acc84454b222e0d40b2573f691a792e76a1b8d5e",
+      "version-string": "2.1.0-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8685415a7bb5d3b25ec970bb5cefb9dd1a36e60c",
+      "version-string": "2.2.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "db6dd9f17b3c660c64d71eef6afca9eb8549d9ff",
+      "version-string": "2.1.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "01b91f9136c68811bc820d0734dacf2016c18935",
+      "version-string": "2.1.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b6075b8a60804d3344c3bc49561c6ee9eea0d677",
+      "version-string": "2.0.1",
+      "port-version": 0
+    }
+  ]
+}

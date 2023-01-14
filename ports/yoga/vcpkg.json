@@ -1,0 +1,19 @@
+{
+  "name": "yoga",
+  "version": "1.19.0",
+  "port-version": 1,
+  "description": "Yoga is a cross-platform layout engine which implements Flexbox",
+  "homepage": "https://github.com/facebook/yoga",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

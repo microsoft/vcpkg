@@ -1,0 +1,26 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 11d14e4..0fa3e1e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -137,6 +137,21 @@ set_target_properties(
+       1.1
+ )
+ 
++if(USE_SYSTEM_RAPIDJSON)
++  find_package(RapidJSON CONFIG REQUIRED)
++  target_link_libraries(libopencc PRIVATE rapidjson)
++endif()
++
++if(USE_SYSTEM_TCLAP)
++  find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
++  target_include_directories(libopencc PUBLIC ${TCLAP_INCLUDE_DIRS})
++endif()
++
++if(USE_SYSTEM_DARTS)
++  find_path(DARTS_INCLUDE_DIRS "darts.h")
++  target_include_directories(libopencc PUBLIC ${DARTS_INCLUDE_DIRS})
++endif()
++
+ # Installation
+ 
+ install(

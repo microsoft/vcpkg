@@ -1,0 +1,6 @@
+{
+  "name": "mapbox-wagyu",
+  "version-semver": "0.5.0",
+  "description": "A general library for geometry operations of union, intersections, difference, and xor",
+  "homepage": "https://github.com/mapbox/wagyu"
+}

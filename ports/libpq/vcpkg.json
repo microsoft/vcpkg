@@ -1,0 +1,129 @@
+{
+  "name": "libpq",
+  "version": "14.4",
+  "port-version": 3,
+  "description": "The official database access API of postgresql",
+  "homepage": "https://www.postgresql.org/",
+  "license": "PostgreSQL",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libpq",
+      "default-features": false,
+      "features": [
+        "bonjour"
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "lz4",
+    "openssl",
+    "zlib"
+  ],
+  "features": {
+    "bonjour": {
+      "description": "Build with Bonjour support (--with-bonjour)",
+      "supports": "osx"
+    },
+    "client": {
+      "description": "Build all client tools and libraries (dynamic only?)",
+      "supports": "!(windows & !mingw & static)"
+    },
+    "icu": {
+      "description": "Build with support for the ICU library (--with-icu)",
+      "dependencies": [
+        "icu"
+      ]
+    },
+    "lz4": {
+      "description": "Use lz4 (else --without-lz4)",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "nls": {
+      "description": "Native Language Support (--enable-nls[=LANGUAGES])",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "openssl": {
+      "description": "support for encrypted client connections and random number generation on platforms that do not have \"/dev/urandom\" (except windows) (--with-openssl)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "python": {
+      "description": "build the PL/Python server programming language (dynamic only?) (--with-python)",
+      "supports": "!(windows & (static | mingw))",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "client"
+          ]
+        },
+        "python3"
+      ]
+    },
+    "readline": {
+      "description": "Use readline (else --without-readline)",
+      "supports": "!windows, mingw",
+      "dependencies": [
+        "readline"
+      ]
+    },
+    "tcl": {
+      "description": "build the PL/Tcl procedural language(dynamic only?) (--with-tcl)",
+      "supports": "!(windows & (static | mingw))",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "client"
+          ]
+        },
+        "tcl"
+      ]
+    },
+    "xml": {
+      "description": "Build with libxml (--with-libxml)",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "xslt": {
+      "description": "Build with libxslt (--with-libxslt)",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "xml"
+          ]
+        },
+        "libxslt"
+      ]
+    },
+    "zlib": {
+      "description": "Use zlib (else --without-zlib)",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

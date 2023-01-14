@@ -1,4 +1,0 @@
-Source: plf-stack
-Version: 2019-08-10
-Description: A C++ data container replicating std::stack functionality but with better performance
-Homepage: https://www.plflib.org/

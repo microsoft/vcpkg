@@ -1,5 +1,0 @@
-Source: orocos-kdl
-Version: 1.4-2
-Homepage: https://github.com/orocos/orocos_kinematics_dynamics
-Description: Kinematics and Dynamics Library
-Build-Depends: eigen3

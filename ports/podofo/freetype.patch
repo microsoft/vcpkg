@@ -1,0 +1,18 @@
+diff --git a/cmake/modules/FindFREETYPE.cmake b/cmake/modules/FindFREETYPE.cmake
+index 41114798f..0911dc092 100644
+--- a/cmake/modules/FindFREETYPE.cmake
++++ b/cmake/modules/FindFREETYPE.cmake
+@@ -15,9 +15,13 @@ SET(FREETYPE_FIND_QUIETLY 1)
+ # first we try to find ft2build.h in the new location as
+ # of freetype 2.5.1
+ FIND_PATH(FREETYPE_INCLUDE_DIR_FT2BUILD ft2build.h
++  PATHS
+   /usr/include/freetype2
+   /usr/local/include/freetype2
+   /usr/X11/include/freetype2
++  PATH_SUFFIXES
++  freetype2
++  include/freetype2
+   NO_CMAKE_SYSTEM_PATH
+ )
+ 

@@ -1,0 +1,22 @@
+diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
+index 0bd14be11..f9f6aa878 100644
+--- a/cmake/RocksDBConfig.cmake.in
++++ b/cmake/RocksDBConfig.cmake.in
+@@ -37,7 +37,7 @@ if(@WITH_LZ4@)
+ endif()
+ 
+ if(@WITH_ZSTD@)
+-  find_dependency(zstd)
++  find_dependency(zstd CONFIG)
+ endif()
+ 
+ if(@WITH_NUMA@)
+@@ -45,7 +45,7 @@ if(@WITH_NUMA@)
+ endif()
+ 
+ if(@WITH_TBB@)
+-  find_dependency(TBB)
++  find_dependency(TBB CONFIG)
+ endif()
+ 
+ find_dependency(Threads)

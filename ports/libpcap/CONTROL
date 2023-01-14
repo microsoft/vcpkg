@@ -1,4 +1,0 @@
-Source: libpcap
-Version: 1.9.1
-Description: A portable C/C++ library for network traffic capture
-Homepage: https://www.tcpdump.org/

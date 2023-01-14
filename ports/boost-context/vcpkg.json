@@ -1,0 +1,57 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-context",
+  "version": "1.81.0",
+  "description": "Boost context module",
+  "homepage": "https://github.com/boostorg/context",
+  "license": "BSL-1.0",
+  "supports": "!uwp & !emscripten",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-build",
+      "host": true,
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-modular-build-helper",
+      "host": true,
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-pool",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

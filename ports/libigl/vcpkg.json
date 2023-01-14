@@ -1,0 +1,82 @@
+{
+  "name": "libigl",
+  "version": "2.3.0",
+  "port-version": 2,
+  "description": "libigl is a simple C++ geometry processing library. We have a wide functionality including construction of sparse discrete differential geometry operators and finite-elements matrices such as the cotangent Laplacian and diagonalized mass matrix, simple facet and edge-based topology data structures, mesh-viewing utilities for OpenGL and GLSL, and many core functions for matrix manipulation which make Eigen feel a lot more like MATLAB.",
+  "homepage": "https://github.com/libigl/libigl",
+  "license": "GPL-3.0-only",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cgal": {
+      "description": "Build with cgal",
+      "dependencies": [
+        "cgal"
+      ]
+    },
+    "embree": {
+      "description": "Build with embree",
+      "dependencies": [
+        "embree3"
+      ]
+    },
+    "glfw": {
+      "description": "Build with glfw",
+      "dependencies": [
+        "glfw3",
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "imgui": {
+      "description": "Build with imgui",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "default-features": false,
+          "features": [
+            "glfw-binding",
+            "libigl-imgui",
+            "opengl3-binding"
+          ]
+        },
+        "imguizmo",
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "opengl": {
+      "description": "Build with opengl",
+      "dependencies": [
+        "glad",
+        "opengl"
+      ]
+    },
+    "xml": {
+      "description": "Build with libxml",
+      "dependencies": [
+        "tinyxml2"
+      ]
+    }
+  }
+}

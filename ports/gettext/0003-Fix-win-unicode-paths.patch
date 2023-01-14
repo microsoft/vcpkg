@@ -1,0 +1,60 @@
+diff --git "a/gettext-runtime/intl/loadmsgcat.c" "b/gettext-runtime/intl/loadmsgcat.c"
+index 63351523..c078de3f 100644
+--- a/gettext-runtime/intl/loadmsgcat.c
++++ b/gettext-runtime/intl/loadmsgcat.c
+@@ -388,6 +388,55 @@ char *alloca ();
+ # define munmap(addr, len)	__munmap (addr, len)
+ #endif
+ 
++#ifdef _WIN32
++/* Provide wrapper of "open" for Windows that supports UTF-8 filenames. */
++# ifndef WIN32_LEAN_AND_MEAN
++#  define WIN32_LEAN_AND_MEAN
++# endif
++# ifndef WIN32_EXTRA_LEAN
++#  define WIN32_EXTRA_LEAN
++# endif
++# undef NOMINMAX
++# define NOMINMAX
++# include <windows.h>	// For: MultiByteToWideChar
++# include <io.h>
++# include <wchar.h>
++
++int _open_utf8_windows_wrapper(
++   const char *filename,
++   int flags
++)
++{
++	int wstr_len = -1;
++	wchar_t* pUtf16FileName = NULL;
++	int fh = -1;
++
++	// on Windows, convert the filename from UTF-8 to UTF-16
++	wstr_len = MultiByteToWideChar(CP_UTF8, 0, filename, -1, NULL, 0);
++	if (wstr_len <= 0)
++	{
++		// MultiByteToWideChar failed
++		errno = ENOENT;
++		return -1;
++	}
++	pUtf16FileName = malloc(wstr_len * sizeof(wchar_t));
++	if (MultiByteToWideChar(CP_UTF8, 0, filename, -1, pUtf16FileName, wstr_len) == 0)
++	{
++		// MultiByteToWideChar failed
++		free(pUtf16FileName);
++		errno = ENOENT;
++		return -1;
++	}
++
++	// and call _wopen
++	fh = _wopen(pUtf16FileName, flags);
++
++	free(pUtf16FileName);
++	return fh;
++}
++# define open(name, flags)	_open_utf8_windows_wrapper(name, flags)
++#endif // #ifdef _WIN32
++
+ /* For those losing systems which don't have `alloca' we have to add
+    some additional code emulating it.  */
+ #ifdef HAVE_ALLOCA

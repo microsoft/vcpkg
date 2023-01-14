@@ -1,0 +1,25 @@
+From 0c1e0079653223fafb346f67c7e3bb001a39de73 Mon Sep 17 00:00:00 2001
+From: Leander Schulten <Leander.Schulten@rwth-aachen.de>
+Date: Sun, 23 Oct 2022 15:53:08 +0200
+Subject: [PATCH] do not simply include everything
+
+---
+ MyGUIEngine/CMakeLists.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/MyGUIEngine/CMakeLists.txt b/MyGUIEngine/CMakeLists.txt
+index 33f74563b..40ec35101 100644
+--- a/MyGUIEngine/CMakeLists.txt
++++ b/MyGUIEngine/CMakeLists.txt
+@@ -48,11 +48,6 @@ if (MYGUI_USE_FREETYPE)
+ 	endif()
+ endif()
+ 
+-# platform specific dependencies
+-if (APPLE)
+-	include_directories(/usr/local/include /usr/include)
+-endif ()
+-
+ if (${CMAKE_VERSION} VERSION_EQUAL "3.16" OR ${CMAKE_VERSION} VERSION_GREATER "3.16")
+ 	target_precompile_headers(${PROJECTNAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/MyGUI_Precompiled.h")
+ endif ()

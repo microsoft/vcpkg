@@ -1,0 +1,74 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-lockfree",
+  "version": "1.81.0",
+  "description": "Boost lockfree module",
+  "homepage": "https://github.com/boostorg/lockfree",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-align",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-array",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-atomic",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-parameter",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-tuple",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

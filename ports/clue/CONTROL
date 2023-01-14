@@ -1,7 +1,0 @@
-Source: clue
-Version: 1.0.0-alpha.7
-Homepage: https://github.com/martinmoene/clue
-Description: clue is a C++03 header-only library to log messages with a severity and optional module identifier. 
-
-Feature: test
-Description: Build test

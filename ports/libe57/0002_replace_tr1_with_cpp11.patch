@@ -1,0 +1,95 @@
+diff --color -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2013-04-03 22:24:08.000000000 +0800
++++ b/CMakeLists.txt	2022-03-01 17:23:01.210728200 +0800
+@@ -36,8 +36,9 @@
+ # If you find any errors or have suggestion to improve the build script:
+ # patches are most welcome! Please send them to the development mailing list.
+ 
++cmake_minimum_required(VERSION 3.1)
+ 
+-cmake_minimum_required(VERSION 2.8.2)
++set(CMAKE_CXX_STANDARD 11)
+ 
+ # Override flags to enable prepare for linking to static runtime
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+diff --color -Naur a/src/tools/e57fields.cpp b/src/tools/e57fields.cpp
+--- a/src/tools/e57fields.cpp	2012-04-04 17:19:01.000000000 +0800
++++ b/src/tools/e57fields.cpp	2022-03-01 17:24:17.904911600 +0800
+@@ -30,11 +30,7 @@
+ #include <iomanip>
+ #include <float.h>
+ #include <map>
+-#if defined(_MSC_VER)
+-#   include <memory>
+-#else
+-#   include <tr1/memory>
+-#endif
++#include <memory>
+ #include "E57Foundation.h"
+ #include "E57FoundationImpl.h" //??? for exceptions, should be in separate file
+ 
+@@ -43,7 +39,6 @@
+ 
+ using namespace e57;
+ using namespace std;
+-using namespace std::tr1;
+ 
+ //!!! prologue, file name, date, version#, total # elements
+ //!!! doc
+@@ -446,9 +441,9 @@
+     /// Only one is used, depending on the type of the E57 element.
+     /// One of these three should be resized to BUFFER_ELEMENT_COUNT.
+     /// These are smart pointers to avoid the copying (and the moving) when put on the cvElements list.
+-    shared_ptr<vector<int64_t> > iBuffer;
+-    shared_ptr<vector<double> >  dBuffer;
+-    shared_ptr<vector<string> >  sBuffer;
++    std::shared_ptr<vector<int64_t> > iBuffer;
++    std::shared_ptr<vector<double> >  dBuffer;
++    std::shared_ptr<vector<string> >  sBuffer;
+ 
+     /// The precalculated parts of the element path name.
+     /// The only part that is missing is the record number which goes in between.
+diff --color -Naur a/src/tools/e57unpack.cpp b/src/tools/e57unpack.cpp
+--- a/src/tools/e57unpack.cpp	2013-04-03 22:24:08.000000000 +0800
++++ b/src/tools/e57unpack.cpp	2022-03-01 17:25:15.206260200 +0800
+@@ -45,12 +45,8 @@
+ #include <stdexcept>
+ using std::runtime_error;
+ 
+-#if defined(_MSC_VER)
+-#   include <memory>
+-#else
+-#   include <tr1/memory>
+-#endif
+-using std::tr1::shared_ptr;
++#include <memory>
++using std::shared_ptr;
+ 
+ #include <string>
+ using std::string;
+diff --color -Naur a/src/tools/e57validate.cpp b/src/tools/e57validate.cpp
+--- a/src/tools/e57validate.cpp	2011-10-06 16:01:00.000000000 +0800
++++ b/src/tools/e57validate.cpp	2022-03-01 17:25:46.220771800 +0800
+@@ -66,11 +66,7 @@
+ 
+ 
+ ================================================================*/
+-#if defined(_MSC_VER)
+-#   include <unordered_map>
+-#else
+-#   include <tr1/unordered_map>
+-using std::tr1::unordered_map;
+-#endif
++#include <unordered_map>
++using std::unordered_map;
+ #include <cstring>
+ using std::strlen;
+@@ -694,7 +691,7 @@
+     void        dump(int indent = 0, std::ostream& os = std::cout);
+ //================
+ private:
+-    typedef std::tr1::unordered_map<int64_t, LineGroup> GroupsMap;
++    typedef std::unordered_map<int64_t, LineGroup> GroupsMap;
+ 
+     bool        isDefined_;
+     bool        isByRow_;

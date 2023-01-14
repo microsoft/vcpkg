@@ -1,0 +1,13 @@
+diff --git a/app/meson.build b/app/meson.build
+index 93d8c15032..389dc13b99 100644
+--- a/app/meson.build
++++ b/app/meson.build
+@@ -27,7 +27,7 @@ if get_option('default_library') == 'static' and not is_windows
+ endif
+
+ foreach app:apps
+-    build = true
++    build = false
+     name = app
+     sources = []
+     includes = []

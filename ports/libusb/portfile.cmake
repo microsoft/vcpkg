@@ -1,22 +1,19 @@
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "Error: the port is unsupported on your platform. Please open an issue on github.com/Microsoft/vcpkg to request a fix")
-endif()
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
 endif()
 
+set(VERSION 1.0.26)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF e782eeb2514266f6738e242cdcb18e3ae1ed06fa # v1.0.23
-    SHA512 27cfff4bbf64d5ec5014acac0871ace74b6af76141bd951309206f4806e3e3f2c7ed32416f5b55fd18d033ca5494052eb2e50ed3cc0be10839be2bd4168a9d4c
+    REF 4239bc3a50014b8e6a5a2a59df1fff3b7469543b # v1.0.26
+    SHA512 f07ec9ef4df555733dab9388595cd10bc87195da54f4c646478d4a0496ee7b8933de03e957c7466291c120102d8801e8b26846cb27b201bb9cbca5df03f3a6ef
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-    set(MSVS_VERSION 2017)  #they are abi compatible, so it should work
+    set(MSVS_VERSION 2019)
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
     set(MSVS_VERSION 2017)
   else()
@@ -41,78 +38,35 @@ if(VCPKG_TARGET_IS_WINDOWS)
       endif()
   endif()
 
+  # The README.md file in the archive is a symlink to README
+  # which causes issues with the windows MSBUILD process
+  file(REMOVE "${SOURCE_PATH}/README.md")
+
   vcpkg_install_msbuild(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
       LICENSE_SUBPATH COPYING
   )
+  file(INSTALL "${SOURCE_PATH}/libusb/libusb.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/libusb-1.0")
+  set(prefix "")
+  set(exec_prefix [[${prefix}]])
+  set(libdir [[${prefix}/lib]])
+  set(includedir [[${prefix}/include]])  
+  configure_file("${SOURCE_PATH}/libusb-1.0.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libusb-1.0.pc" @ONLY)
+  if(NOT VCPKG_BUILD_TYPE)
+      set(includedir [[${prefix}/../include]])  
+      configure_file("${SOURCE_PATH}/libusb-1.0.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" @ONLY)
+  endif()
 else()
-    set(BASH /bin/bash)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}/debug\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      # Build release
-      message(STATUS "Package ${TARGET_TRIPLET}-rel")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-      message(STATUS "Package ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      # Build debug
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
-    endif()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+    )
+    vcpkg_install_make()
 endif()
 
-file(INSTALL
-    ${SOURCE_PATH}/libusb/libusb.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0
-)
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+configure_file("${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

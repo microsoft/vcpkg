@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
-
 ignition_modular_library(NAME common
                          VERSION "1.1.1"
                          REF ignition-common_1.1.1
-                         SHA512 8453e1cf2337898b81b313aeffd1a7b683fd03184edfae74c81aa861b28036f6b9094fcab36f7a0f68b4204956d7116bd03073c7bdf2e769e47dffcdaad454d6)
+                         SHA512 3311a07fad8fdf809ff3f865de2493ec17c3dd157ee3297f283cf872090fb9e9f05b163416dca32f1bdf2bde02c9b4a9a7defc308344b747a8d113594f65f309)

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # WINDOWS_EXPORT_ALL_SYMBOLS doesn't work.
 # unresolved external symbol "public: static unsigned int const foonathan::memory::detail::memory_block_stack::implementation_offset
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -125,6 +123,3 @@ endif()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

@@ -1,0 +1,11 @@
+{
+  "name": "chromaprint",
+  "version": "1.5.0",
+  "port-version": 1,
+  "description": "C library for generating audio fingerprints used by AcoustID",
+  "homepage": "https://github.com/acoustid/chromaprint",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    "ffmpeg"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "libsbml",
+  "version": "5.19.0",
+  "port-version": 2,
+  "description": "A library for reading / writing SBML files",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "comp",
+    "expat",
+    "fbc",
+    "groups",
+    "layout",
+    "libxml2",
+    "render"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "bz2 compression support for libsbml",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "comp": {
+      "description": "support for Hierarchical Model Composition"
+    },
+    "expat": {
+      "description": "libsbml using expat parser",
+      "dependencies": [
+        "expat"
+      ]
+    },
+    "fbc": {
+      "description": "support for Flux Balance Constrant Modeling"
+    },
+    "groups": {
+      "description": "support for Groups"
+    },
+    "layout": {
+      "description": "support for Pathway Layouts"
+    },
+    "libxml2": {
+      "description": "libsbml using libxml2 parser",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "multi": {
+      "description": "support for Multistate Modeling"
+    },
+    "namespace": {
+      "description": "Build with the WITH_CPP_NAMESPACE option set to on"
+    },
+    "qual": {
+      "description": "support for Qualitative Modeling"
+    },
+    "render": {
+      "description": "support for Rendering information"
+    },
+    "test": {
+      "description": "Unit testing of libSBMLs implementation",
+      "dependencies": [
+        "check"
+      ]
+    },
+    "zlib": {
+      "description": "gzip compression support for libsbml",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

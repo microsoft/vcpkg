@@ -1,157 +1,74 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF  v1.1.33
-    SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
+    REF v1.1.37
+    SHA512 4e7a57cbe02ceea34404213a88bdbb63a756edfab63063ce3979b670816ae3f6fb3637a49508204e6e46b936628e0a3b8b77e9201530a1184225bd68da403b25
     HEAD_REF master
     PATCHES
-        0001-Fix-makefile.patch
-        0002-Fix-lzma.patch
+        python3.patch
+        msvc-no-suffix.patch
+        libexslt-pkgconfig.patch
+        fix-gcrypt-deps.patch
+        skip-install-docs.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    # Create some directories ourselves, because the makefile doesn't
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-    set(CONFIGURE_COMMAND_TEMPLATE
-        cruntime=@CRUNTIME@
-        debug=@DEBUGMODE@
-        prefix=@INSTALL_DIR@
-        include=@INCLUDE_DIR@
-        lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\
-        sodir=$(PREFIX)\\bin\\
-    )
-    # Debug params
-    if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-        set(CRUNTIME /MD)
-    else()
-        set(CRUNTIME /MT)
-    endif()
-    set(DEBUGMODE no)
-    set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
-    set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
-    set(INSTALL_DIR ${CURRENT_PACKAGES_DIR})
-    file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
-    file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
-    file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
-    string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_REL)
-    # Release params
-    if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-        set(CRUNTIME /MDd)
-    else()
-        set(CRUNTIME /MTd)
-    endif()
-    set(DEBUGMODE yes)
-    set(LIB_DIR ${CURRENT_INSTALLED_DIR}/debug/lib)
-    set(INSTALL_DIR ${CURRENT_PACKAGES_DIR}/debug)
-    file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
-    file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
-    string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_DBG)
-    
-    vcpkg_install_nmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH win32
-        PROJECT_NAME Makefile.msvc
-        PRERUN_SHELL_DEBUG cscript configure.js ${CONFIGURE_COMMAND_DBG}
-        PRERUN_SHELL_RELEASE cscript configure.js ${CONFIGURE_COMMAND_REL}
-        OPTIONS rebuild
-    )
-    
-    # The makefile builds both static and dynamic libraries, so remove the ones we don't want
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        # Rename the libs to match the dynamic lib names
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    endif()
-else()
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
-    
-    find_library(LibXml2_DEBUG_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
-    find_library(LibXml2_RELEASE_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
-    
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        AUTOCONFIG
-        OPTIONS
-            --with-crypto
-            --with-plugins
-            --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include
-            --with-python=${PYTHON2_DIR}
-        OPTIONS_DEBUG
-            --with-mem-debug
-            --with-debug
-            --with-debugger
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzmad"
-            --with-html-dir=${CURRENT_INSTALLED_DIR}/debug/tools
-            --with-html-subdir=${CURRENT_INSTALLED_DIR}/debug/tools
-        OPTIONS_RELEASE
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/lib -lxml2 -lz -llzma"
-            --with-html-dir=${CURRENT_INSTALLED_DIR}/tools
-            --with-html-subdir=${CURRENT_INSTALLED_DIR}/tools
-    )
-    
-    vcpkg_install_make()
-    
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xsltproc)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xsltproc DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(COPY ${CURRENT_PACKAGES_DIR}/lib/libxslt.so ${CURRENT_PACKAGES_DIR}/bin/)
-    else()
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libxslt-plugins ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt-plugins)
-    endif()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.so)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "python"          LIBXSLT_WITH_PYTHON
+        "crypto"          LIBXSLT_WITH_CRYPTO
+)
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+    list(APPEND FEATURE_OPTIONS_RELEASE "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/site-packages")
+    list(APPEND FEATURE_OPTIONS_DEBUG "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/site-packages")
 endif()
-#
-# Cleanup
-#
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIBXSLT_WITH_TESTS:BOOL=OFF
+        -DLIBXSLT_WITH_THREADS:BOOL=ON
+    OPTIONS_RELEASE
+        ${FEATURE_OPTIONS_RELEASE}
+        -DLIBXSLT_WITH_XSLT_DEBUG:BOOL=OFF
+        -DLIBXSLT_WITH_MEM_DEBUG:BOOL=OFF
+        -DLIBXSLT_WITH_DEBUGGER:BOOL=OFF
+    OPTIONS_DEBUG
+        ${FEATURE_OPTIONS_DEBUG}
+        -DLIBXSLT_WITH_XSLT_DEBUG:BOOL=ON
+        -DLIBXSLT_WITH_MEM_DEBUG:BOOL=ON
+        -DLIBXSLT_WITH_DEBUGGER:BOOL=ON
+    )
+vcpkg_cmake_install()
+file(GLOB config_path RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/libxslt-*")
+vcpkg_cmake_config_fixup(CONFIG_PATH "${config_path}")
 
-# You have to define LIB(E)XSLT_STATIC or not, depending on how you link
-file(READ ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h XSLTEXPORTS_H)
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/xsltConf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xsltConf.sh")
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/xslt-config")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/xslt-config" [[$(cd "$(dirname "$0")"; pwd -P)/..]] [[$(cd "$(dirname "$0")/../.."; pwd -P)]])
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/xslt-config" "${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[$(cd "$(dirname "$0")"; pwd -P)/..]] [[$(cd "$(dirname "$0")/../../../debug"; pwd -P)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[${prefix}/include]] [[${prefix}/../include]])
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
+vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
+
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "0" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
-else()
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "1" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
-endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h "${XSLTEXPORTS_H}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h EXSLTEXPORTS_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "0" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
-else()
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "1" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
-endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
-
-# Remove tools and debug include directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_copy_pdbs()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "ifdef LIBXSLT_STATIC" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" "ifdef LIBEXSLT_STATIC" "if 1")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libxslt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

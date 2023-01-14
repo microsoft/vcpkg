@@ -1,0 +1,25 @@
+{
+  "name": "libxml2",
+  "version": "2.10.3",
+  "description": "Libxml2 is the XML C parser and toolkit developed for the Gnome project (but usable outside of the Gnome platform).",
+  "homepage": "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home",
+  "license": "MIT",
+  "dependencies": [
+    "libiconv",
+    "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

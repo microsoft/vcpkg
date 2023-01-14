@@ -1,0 +1,20 @@
+diff --git a/ou/include/ou/atomic.h b/ou/include/ou/atomic.h
+index 2f90a70..33e0ab9 100644
+--- a/ou/include/ou/atomic.h
++++ b/ou/include/ou/atomic.h
+@@ -397,6 +397,7 @@ END_NAMESPACE_OU();
+ 
+ #include <windows.h>
+ #include <stddef.h>
++#include <intrin.h>
+ 
+ 
+ BEGIN_NAMESPACE_OU();
+@@ -574,7 +575,6 @@ static _OU_ALWAYSINLINE bool _OU_CONVENTION_API
+ 
+ #define __OU_ATOMIC_READREORDERBARRIER_FUNCTION_DEFINED
+ 
+-#include <intrin.h>
+ 
+ static _OU_ALWAYSINLINE void _OU_CONVENTION_API 
+ /*void */AtomicReadReorderBarrier()

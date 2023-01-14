@@ -1,0 +1,42 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-mpl",
+  "version": "1.81.0",
+  "description": "Boost mpl module",
+  "homepage": "https://github.com/boostorg/mpl",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "licensepp",
+  "version-date": "2020-05-19",
+  "port-version": 3,
+  "description": "Cross platform software licensing library",
+  "homepage": "https://github.com/zuhd-org/licensepp",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "cryptopp",
+      "features": [
+        "pem-pack"
+      ]
+    }
+  ]
+}

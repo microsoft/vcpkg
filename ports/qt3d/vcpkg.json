@@ -1,0 +1,106 @@
+{
+  "name": "qt3d",
+  "version": "6.4.2",
+  "description": "Qt wrapper for existing OPC UA stacks",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    "assimp",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "gui",
+        "network",
+        "widgets"
+      ]
+    }
+  ],
+  "default-features": [
+    "animation",
+    "assimp",
+    "extras",
+    "input",
+    "logic",
+    "render"
+  ],
+  "features": {
+    "animation": {
+      "description": "Use the 3D Animation Aspect library",
+      "dependencies": [
+        {
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "render"
+          ]
+        }
+      ]
+    },
+    "assimp": {
+      "description": "Build with assimp",
+      "dependencies": [
+        "assimp"
+      ]
+    },
+    "extras": {
+      "description": "Use the 3D Extra library",
+      "dependencies": [
+        {
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "input",
+            "logic",
+            "render"
+          ]
+        }
+      ]
+    },
+    "input": {
+      "description": "Use the 3D Input Aspect library"
+    },
+    "logic": {
+      "description": "Use the 3D Logic Aspect library"
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "render": {
+      "description": "Use the 3D Render Aspect library"
+    },
+    "rhi": {
+      "description": "Enable RHI renderer",
+      "dependencies": [
+        "qtshadertools"
+      ]
+    },
+    "vulkan": {
+      "description": "Build with vulkan support",
+      "dependencies": [
+        {
+          "name": "qt3d",
+          "default-features": false,
+          "features": [
+            "rhi"
+          ]
+        },
+        "vulkan"
+      ]
+    }
+  }
+}

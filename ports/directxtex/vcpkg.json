@@ -1,0 +1,35 @@
+{
+  "name": "directxtex",
+  "version-date": "2022-12-15",
+  "description": "DirectXTex texture processing library",
+  "homepage": "https://github.com/Microsoft/DirectXTex",
+  "documentation": "https://github.com/microsoft/DirectXTex/wiki",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "dx12": {
+      "description": "Build with DirectX12 support for Windows 10"
+    },
+    "openexr": {
+      "description": "Enable OpenEXR support",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    }
+  }
+}

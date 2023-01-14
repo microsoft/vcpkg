@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4967b94..e36009e 100644
+index 4f002b5..d48f3f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,8 +27,6 @@ option(K4A_BUILD_DOCS "Build K4A doxygen documentation" OFF)
@@ -11,35 +11,51 @@ index 4967b94..e36009e 100644
  # Set the project version
  include(K4AProjectVersion)
  
-@@ -100,6 +98,27 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+@@ -100,6 +98,43 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
      set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
  endif()
  
 +find_package(azure_c_shared_utility CONFIG REQUIRED)
 +find_package(glfw3 CONFIG REQUIRED)
 +find_package(cJSON CONFIG REQUIRED)
-+find_package(gtest CONFIG REQUIRED)
++find_package(GTest CONFIG REQUIRED)
 +find_package(imgui CONFIG REQUIRED)
 +find_package(EBML CONFIG REQUIRED)
-+find_package(JPEG REQUIRED)
-+find_library(JPEG_TURBO turbojpeg REQUIRED)
++find_path(TURBOJPEG_INCLUDE_DIR NAMES turbojpeg.h PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" NO_DEFAULT_PATH REQUIRED)
++find_library(TURBOJPEG_LIBRARY_RELEASE NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH REQUIRED)
++add_library(libjpeg-turbo::libjpeg-turbo UNKNOWN IMPORTED)
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${TURBOJPEG_INCLUDE_DIR})
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_RELEASE ${TURBOJPEG_LIBRARY_RELEASE})
++if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++    find_library(TURBOJPEG_LIBRARY_DEBUG NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH REQUIRED)
++    set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_DEBUG ${TURBOJPEG_LIBRARY_DEBUG})
++endif()
 +find_package(Matroska CONFIG REQUIRED)
++add_definitions(-DMATROSKA_VERSION=2)
 +find_package(libsoundio CONFIG REQUIRED)
-+find_library(LibUSB libusb-1.0 REQUIRED)
++if (NOT WIN32)
++   find_package(libusb CONFIG REQUIRED)
++   find_package(libuvc CONFIG REQUIRED)
++   add_library(libuvc::libuvc ALIAS LibUVC::UVCStatic)
++   find_package(OpenSSL REQUIRED)
++   find_package(ZLIB REQUIRED)
++else()
++   find_library(LibUSB libusb-1.0 REQUIRED)
++endif()
 +find_package(libyuv CONFIG REQUIRED)
 +find_package(spdlog CONFIG REQUIRED)
 +if (BUILD_TOOLS)
 +    find_package(gl3w CONFIG REQUIRED)
 +endif()
-+# add jpeg-turbo library to jpeg libraries.
-+set(JPEG_LIBRARIES ${JPEG_LIBRARIES} ${JPEG_TURBO})
 +# Fix embl error
-+add_compile_options(/wd4828 /wd4251)
++if ("MSVC")
++add_compile_options(/wd4828 /wd4251 /wd4275)
++endif()
 +
  # Find all dependencies
  add_subdirectory(extern)
  
-@@ -160,10 +179,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+@@ -161,10 +196,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
      endif()
  endif()
  
@@ -60,49 +76,6 @@ index 4967b94..e36009e 100644
  
  if (K4A_BUILD_DOCS)
      find_package(Doxygen 1.8.14 EXACT)
-diff --git a/examples/green_screen/CMakeLists.txt b/examples/green_screen/CMakeLists.txt
-index 423ca68..0c7cc0a 100644
---- a/examples/green_screen/CMakeLists.txt
-+++ b/examples/green_screen/CMakeLists.txt
-@@ -7,9 +7,9 @@ target_include_directories( green_screen PRIVATE ${OpenCV_INCLUDE_DIRS} )
- # OpenCV_LIBS, by default, is picking up the debug version of opencv on Windows even in release mode, which was causing a dependency on non-redistributable Visual Studio dlls.
- if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
--        target_link_libraries(green_screen PRIVATE k4a::k4a ${OpenCV_DIR}/Opencv_world320d.lib)
-+        target_link_libraries(green_screen PRIVATE k4a::k4a ${OpenCV_LIBS})
-     else()
--        target_link_libraries(green_screen PRIVATE k4a::k4a ${OpenCV_DIR}/Opencv_world320.lib)
-+        target_link_libraries(green_screen PRIVATE k4a::k4a ${OpenCV_LIBS})
-     endif()        
- else()
-     target_link_libraries(green_screen PRIVATE k4a::k4a ${OpenCV_LIBS})
-diff --git a/examples/opencv_compatibility/CMakeLists.txt b/examples/opencv_compatibility/CMakeLists.txt
-index ef72e99..f1faeb7 100644
---- a/examples/opencv_compatibility/CMakeLists.txt
-+++ b/examples/opencv_compatibility/CMakeLists.txt
-@@ -7,9 +7,9 @@ target_include_directories( opencv_example PRIVATE ${OpenCV_INCLUDE_DIRS} )
- # OpenCV_LIBS, by default, is picking up the debug version of opencv on Windows even in release mode, which was causing a dependency on non-redistributable Visual Studio dlls.
- if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
--        target_link_libraries(opencv_example PRIVATE k4a::k4a ${OpenCV_DIR}/Opencv_world320d.lib)
-+        target_link_libraries(opencv_example PRIVATE k4a::k4a ${OpenCV_LIBS})
-     else()
--        target_link_libraries(opencv_example PRIVATE k4a::k4a ${OpenCV_DIR}/Opencv_world320.lib)
-+        target_link_libraries(opencv_example PRIVATE k4a::k4a ${OpenCV_LIBS})
-     endif()
- else()
-     target_link_libraries(opencv_example PRIVATE k4a::k4a ${OpenCV_LIBS})
-diff --git a/examples/transformation/CMakeLists.txt b/examples/transformation/CMakeLists.txt
-index e5b41e6..8f7f7f3 100644
---- a/examples/transformation/CMakeLists.txt
-+++ b/examples/transformation/CMakeLists.txt
-@@ -9,5 +9,5 @@ add_executable(transformation_example
- target_link_libraries(transformation_example PRIVATE
-     k4a::k4a
-     k4a::k4arecord
--    libjpeg-turbo::libjpeg-turbo
-+    ${JPEG_LIBRARIES}
-     )
 diff --git a/examples/viewer/opengl/CMakeLists.txt b/examples/viewer/opengl/CMakeLists.txt
 index 166fe2a..a3db07f 100644
 --- a/examples/viewer/opengl/CMakeLists.txt
@@ -117,7 +90,7 @@ index 166fe2a..a3db07f 100644
      ${OPENGL_LIBRARIES})
 \ No newline at end of file
 diff --git a/extern/CMakeLists.txt b/extern/CMakeLists.txt
-index cb4f7b4..c102766 100644
+index cb4f7b4..3d00084 100644
 --- a/extern/CMakeLists.txt
 +++ b/extern/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -143,11 +116,12 @@ index cb4f7b4..c102766 100644
 -add_subdirectory(libmatroska)
 -add_subdirectory(libsoundio)
 -add_subdirectory(libyuv)
- add_subdirectory(libuvc)
+-add_subdirectory(libuvc)
 -add_subdirectory(spdlog)
 -if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
 -    add_subdirectory(libusb)
 -endif()
++
 diff --git a/src/allocator/CMakeLists.txt b/src/allocator/CMakeLists.txt
 index 7140274..3bb6747 100644
 --- a/src/allocator/CMakeLists.txt
@@ -175,7 +149,7 @@ index e96b7d0..ed69f41 100644
  
  # Define alias for other targets to link against
 diff --git a/src/calibration/calibration.c b/src/calibration/calibration.c
-index f046ef2..3d23ada 100644
+index bf5f34a..d37c4e6 100644
 --- a/src/calibration/calibration.c
 +++ b/src/calibration/calibration.c
 @@ -6,7 +6,7 @@
@@ -184,9 +158,9 @@ index f046ef2..3d23ada 100644
  #include <k4ainternal/common.h>
 -#include <cJSON.h>
 +#include <cjson/cJSON.h>
+ #include <locale.h> //cJSON.h need this set correctly.
  
  // System dependencies
- #include <stdlib.h>
 diff --git a/src/capturesync/CMakeLists.txt b/src/capturesync/CMakeLists.txt
 index a434593..bcb19ba 100644
 --- a/src/capturesync/CMakeLists.txt
@@ -270,7 +244,7 @@ diff --git a/src/record/internal/CMakeLists.txt b/src/record/internal/CMakeLists
 index 97c6cf3..e9f5b1a 100644
 --- a/src/record/internal/CMakeLists.txt
 +++ b/src/record/internal/CMakeLists.txt
-@@ -22,17 +22,17 @@ target_include_directories(k4a_playback PUBLIC
+@@ -22,16 +22,16 @@ target_include_directories(k4a_playback PUBLIC
  target_link_libraries(k4a_record PUBLIC 
      k4a::k4a
      k4ainternal::logging
@@ -286,21 +260,19 @@ index 97c6cf3..e9f5b1a 100644
 -    ebml::ebml
 -    matroska::matroska
 -    libyuv::libyuv
--    libjpeg-turbo::libjpeg-turbo
 +    EBML::ebml
 +    Matroska::matroska
 +    yuv
-+    ${JPEG_LIBRARIES}
+     libjpeg-turbo::libjpeg-turbo
  )
  
- # Define alias for other targets to link against
 diff --git a/src/record/sdk/CMakeLists.txt b/src/record/sdk/CMakeLists.txt
-index 571a297..4be0697 100644
+index 2e23295..d150e70 100644
 --- a/src/record/sdk/CMakeLists.txt
 +++ b/src/record/sdk/CMakeLists.txt
-@@ -41,8 +41,8 @@ target_link_libraries(k4arecord PRIVATE
+@@ -40,8 +40,8 @@ target_link_libraries(k4arecord PRIVATE
+     k4ainternal::record
      k4ainternal::playback
-     k4a::k4a
      k4ainternal::logging
 -    ebml::ebml
 -    matroska::matroska
@@ -308,7 +280,7 @@ index 571a297..4be0697 100644
 +    Matroska::matroska
  )
  
- # Define alias for k4arecord
+ target_link_libraries(k4arecord PUBLIC
 diff --git a/src/tewrapper/CMakeLists.txt b/src/tewrapper/CMakeLists.txt
 index e4a696e..6ee6696 100644
 --- a/src/tewrapper/CMakeLists.txt
@@ -394,19 +366,6 @@ index 1e65ad7..709dfb0 100644
 +    aziotsharedutil)
  
  k4a_add_tests(TARGET color_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
-diff --git a/tests/ColorTests/UnitTest/CMakeLists.txt b/tests/ColorTests/UnitTest/CMakeLists.txt
-index f8f49c1..541548f 100644
---- a/tests/ColorTests/UnitTest/CMakeLists.txt
-+++ b/tests/ColorTests/UnitTest/CMakeLists.txt
-@@ -42,7 +42,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
- elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-     target_link_libraries(color_ut PRIVATE
-         libuvc::libuvc
--        libjpeg-turbo::libjpeg-turbo)
-+        ${JPEG_LIBRARIES})
- endif()
- 
- k4a_add_tests(TARGET color_ut TEST_TYPE UNIT)
 diff --git a/tests/DepthTests/FunctionalTest/CMakeLists.txt b/tests/DepthTests/FunctionalTest/CMakeLists.txt
 index 469c125..00f15f8 100644
 --- a/tests/DepthTests/FunctionalTest/CMakeLists.txt
@@ -629,12 +588,9 @@ diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
 index 98578c0..6ab38d9 100644
 --- a/tools/k4aviewer/CMakeLists.txt
 +++ b/tools/k4aviewer/CMakeLists.txt
-@@ -58,12 +58,13 @@ set(EXTERNAL_LIBRARIES
-     k4a::k4a
-     k4a::k4arecord
+@@ -60,10 +60,11 @@ set(EXTERNAL_LIBRARIES
      imgui::imgui
--    libjpeg-turbo::libjpeg-turbo
-+    ${JPEG_LIBRARIES}
+     libjpeg-turbo::libjpeg-turbo
      libsoundio::libsoundio
 -    LibUSB::LibUSB
 -    libyuv::libyuv

@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(minizip C)
-
-set(PROJECT_VERSION 1.2.11)
-set(PROJECT_VERSION_MAJOR 1)
-set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 11)
+project(minizip VERSION 1.2.13 LANGUAGES C)
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
@@ -53,19 +48,22 @@ target_link_libraries(minizip PRIVATE ZLIB::ZLIB)
 target_compile_definitions(minizip PRIVATE -D_ZLIB_H)
 
 if(ENABLE_BZIP2)
-  target_link_libraries(minizip PRIVATE ${BZIP2_LIBRARIES})
+  target_link_libraries(minizip PUBLIC ${BZIP2_LIBRARIES})
   target_compile_definitions(minizip PRIVATE -DHAVE_BZIP2=1)
 endif()
+if(ANDROID)
+  target_compile_definitions(minizip PRIVATE IOAPI_NO_64)
+endif()
+if(NOT DISABLE_INSTALL_TOOLS)
+  add_executable(minizip_bin ${MIN_SRC}/minizip.c)
+  add_executable(miniunz_bin ${MIN_SRC}/miniunz.c)
 
-add_executable(minizip_bin ${MIN_SRC}/minizip.c)
-add_executable(miniunz_bin ${MIN_SRC}/miniunz.c)
+  target_link_libraries(minizip_bin minizip ${MINIZIP_LIBRARIES})
+  target_link_libraries(miniunz_bin minizip ${MINIZIP_LIBRARIES})
 
-target_link_libraries(minizip_bin minizip ${MINIZIP_LIBRARIES})
-target_link_libraries(miniunz_bin minizip ${MINIZIP_LIBRARIES})
-
-set_target_properties(minizip_bin PROPERTIES OUTPUT_NAME minizip)
-set_target_properties(miniunz_bin PROPERTIES OUTPUT_NAME miniunz)
-
+  set_target_properties(minizip_bin PROPERTIES OUTPUT_NAME minizip)
+  set_target_properties(miniunz_bin PROPERTIES OUTPUT_NAME miniunz)
+endif()
 
 install(
   TARGETS minizip

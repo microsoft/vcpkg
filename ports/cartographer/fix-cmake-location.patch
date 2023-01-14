@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e3a686be..f2a0c5d8e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -300,7 +300,7 @@ foreach(HDR ${INSTALL_GENERATED_HDRS})
+   )
+ endforeach()
+ 
+-set(CARTOGRAPHER_CMAKE_DIR share/cartographer/cmake)
++set(CARTOGRAPHER_CMAKE_DIR share/cartographer)
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+   cartographer-config.cmake.in
+@@ -311,7 +311,7 @@ configure_package_config_file(
+ 
+ install(
+   EXPORT CartographerExport
+-  DESTINATION share/cartographer/cmake/
++  DESTINATION share/cartographer/
+   FILE CartographerTargets.cmake
+ )
+ 

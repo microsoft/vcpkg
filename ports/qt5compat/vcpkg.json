@@ -1,0 +1,81 @@
+{
+  "name": "qt5compat",
+  "version": "6.4.2",
+  "description": "The module contains unsupported Qt 5 APIs",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "big-codecs",
+    "codecs",
+    "default-features",
+    "qml",
+    "textcodec"
+  ],
+  "features": {
+    "big-codecs": {
+      "description": "Supports big codecs, e.g. CJK.",
+      "dependencies": [
+        {
+          "name": "qt5compat",
+          "default-features": false,
+          "features": [
+            "textcodec"
+          ]
+        }
+      ]
+    },
+    "codecs": {
+      "description": "Supports non-unicode text conversions.",
+      "dependencies": [
+        {
+          "name": "qt5compat",
+          "default-features": false,
+          "features": [
+            "textcodec"
+          ]
+        }
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features"
+    },
+    "iconv": {
+      "description": "Provides internationalization on Unix.",
+      "dependencies": [
+        "libiconv",
+        {
+          "name": "qt5compat",
+          "default-features": false,
+          "features": [
+            "textcodec"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "textcodec": {
+      "description": "Supports conversions between text encodings."
+    }
+  }
+}

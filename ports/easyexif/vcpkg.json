@@ -1,0 +1,13 @@
+{
+  "name": "easyexif",
+  "version-date": "2022-10-07",
+  "description": "Tiny ISO-compliant C++ EXIF parsing library, third-party dependency free",
+  "homepage": "https://github.com/mayanklahiri/easyexif",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

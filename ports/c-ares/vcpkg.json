@@ -1,0 +1,19 @@
+{
+  "name": "c-ares",
+  "version-semver": "1.18.1",
+  "port-version": 1,
+  "description": "A C library for asynchronous DNS requests",
+  "homepage": "https://github.com/c-ares/c-ares",
+  "license": "MIT-CMU",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

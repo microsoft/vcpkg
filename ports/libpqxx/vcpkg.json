@@ -1,0 +1,22 @@
+{
+  "name": "libpqxx",
+  "version": "7.7.3",
+  "port-version": 1,
+  "description": "The official C++ client API for PostgreSQL",
+  "homepage": "https://www.postgresql.org/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "libpq",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

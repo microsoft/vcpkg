@@ -1,0 +1,16 @@
+diff --git a/src/support_x86.cpp b/src/support_x86.cpp
+index 0ab9669..d5c17ba 100644
+--- a/src/support_x86.cpp
++++ b/src/support_x86.cpp
+@@ -58,8 +58,9 @@ static inline bool xgetbvCheck(unsigned int bits)
+ #endif
+ }
+ 
+-Vc_TARGET_NO_SIMD
+-bool isImplementationSupported(Implementation impl)
++
++Vc_TARGET_NO_SIMD 
++bool Vc_VDECL isImplementationSupported(Vc::Implementation impl)
+ {
+     CpuId::init();
+ 

@@ -1,0 +1,40 @@
+{
+  "name": "directxtk",
+  "version-date": "2022-12-15",
+  "description": "A collection of helper classes for writing DirectX 11.x code in C++.",
+  "homepage": "https://github.com/Microsoft/DirectXTK",
+  "documentation": "https://github.com/microsoft/DirectXTK/wiki",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    },
+    "xaudio2-8": {
+      "description": "Build with XAudio 2.8 support for Windows 8.x or later"
+    },
+    "xaudio2-9": {
+      "description": "Build with XAudio 2.9 support for Windows 10/11"
+    },
+    "xaudio2redist": {
+      "description": "Build with XAudio2Redist support for Windows 7 SP1 or later",
+      "dependencies": [
+        {
+          "name": "xaudio2redist",
+          "platform": "!uwp & !arm"
+        }
+      ]
+    }
+  }
+}

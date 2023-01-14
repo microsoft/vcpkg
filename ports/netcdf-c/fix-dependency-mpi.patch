@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1207,7 +1207,8 @@
+   IF(NOT HDF5_PARALLEL)
+     SET(USE_PARALLEL OFF CACHE BOOL "")
+     MESSAGE(STATUS "Cannot find HDF5 library built with parallel support. Disabling parallel build.")
+   ELSE()
+     FIND_PACKAGE(MPI REQUIRED)
++    list(REMOVE_ITEM MPI_C_INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+     SET(HDF5_PARALLEL ON CACHE BOOL "")
+     SET(USE_PARALLEL ON CACHE BOOL "")

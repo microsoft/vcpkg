@@ -1,0 +1,8 @@
+{
+  "name": "vulkan-hpp",
+  "version": "1.3.231",
+  "description": "Header only C++ bindings for the Vulkan C API",
+  "dependencies": [
+    "vulkan"
+  ]
+}

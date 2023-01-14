@@ -42,7 +42,11 @@ EXPORTS
 	ftdi_setdtr
 	ftdi_setdtr_rts
 	ftdi_setflowctrl
+	ftdi_setflowctrl_xonxoff
 	ftdi_setrts
+	ftdi_tciflush
+	ftdi_tcioflush
+	ftdi_tcoflush
 	ftdi_transfer_data_cancel
 	ftdi_transfer_data_done
 	ftdi_usb_close

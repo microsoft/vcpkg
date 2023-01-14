@@ -9,7 +9,8 @@ function(extract_from_makefile PATTERN RETURN FILEPATH)
     string(REGEX MATCH "${PATTERN}" CONTENTS "${MAKEFILE_CONTENT}")
     set(CONTENTS ${CMAKE_MATCH_1})
     # Split string into list
-    string(REGEX REPLACE "[ \t]+" ";" CONTENTS "${CONTENTS}")
+    string(REGEX REPLACE "([\t ]+(\\\\\n)?)+" ";" CONTENTS "${CONTENTS}")
+    string(REGEX REPLACE "[\t ]*\\\\\n[\t ]*;" "" CONTENTS "${CONTENTS}")
     if("${CONTENTS}" STREQUAL "")
         message(AUTHOR_WARNING "No match for \"${PATTERN}\" found in file ${FILEPATH}")
     endif()
@@ -19,8 +20,8 @@ endfunction(extract_from_makefile)
 
 # Function to extract C sources from makefile
 function(extract_sources SUBFOLDER ALLSOURCES)
-    extract_from_makefile("lib[a-zA-Z1-9_]*_la_SOURCES[ \t]*=[ \t]*([^\n]*)" SOURCEFILES "${SUBFOLDER}/Makefile.am")
-    # Add the folder in front of the file names
+    extract_from_makefile("lib[a-zA-Z1-9_]*_la_SOURCES[ \t]*=[ \t]*(((\\\\\n)?[^\n])*)" SOURCEFILES "${SUBFOLDER}/Makefile.am")
+    # Add the folder in front of the file names 
     string(REGEX REPLACE "([^;]+)" "${SUBFOLDER}/\\1" SOURCEFILES "${SOURCEFILES}")
     # Return 
     set(${ALLSOURCES} ${${ALLSOURCES}} ${SOURCEFILES} PARENT_SCOPE)
@@ -28,7 +29,7 @@ endfunction(extract_sources)
 
 set(SOURCES)
 set(CBLAS_SOURCES)
-extract_from_makefile("SUBDIRS = ([^\n]*)" FOLDERS "./Makefile.am")
+extract_from_makefile("SUBDIRS = (((\\\\\n)?[^\n])*)" FOLDERS "./Makefile.am")
 extract_sources("." SOURCES)
 foreach(DIR IN LISTS FOLDERS)
     if("${DIR}" STREQUAL "cblas")
@@ -73,6 +74,9 @@ set(TARGET_INSTALL_OPTIONS)
 if(INSTALL_HEADERS)
     set(TARGET_INSTALL_OPTIONS PUBLIC_HEADER DESTINATION include/gsl)
 endif()
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gsl.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/gsl.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gsl.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(TARGETS gsl gslcblas
     RUNTIME DESTINATION bin

@@ -1,0 +1,50 @@
+{
+  "name": "quantlib",
+  "version": "1.28",
+  "description": "The QuantLib C++ library",
+  "homepage": "https://www.quantlib.org/",
+  "license": "BSD-3-Clause",
+  "supports": "!(windows & !staticcrt)",
+  "dependencies": [
+    "boost-accumulators",
+    "boost-algorithm",
+    "boost-any",
+    "boost-array",
+    "boost-assert",
+    "boost-assign",
+    "boost-atomic",
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-date-time",
+    "boost-dynamic-bitset",
+    "boost-format",
+    "boost-function",
+    "boost-functional",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-multi-array",
+    "boost-multiprecision",
+    "boost-optional",
+    "boost-preprocessor",
+    "boost-random",
+    "boost-serialization",
+    "boost-signals2",
+    "boost-smart-ptr",
+    "boost-thread",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-ublas",
+    "boost-unordered",
+    "boost-utility",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

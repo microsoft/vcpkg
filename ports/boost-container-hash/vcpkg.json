@@ -1,0 +1,30 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-container-hash",
+  "version": "1.81.0",
+  "description": "Boost container_hash module",
+  "homepage": "https://github.com/boostorg/container_hash",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-describe",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

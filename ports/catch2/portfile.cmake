@@ -1,28 +1,36 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+vcpkg_minimum_required(VERSION 2022-11-10)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF d10b9bd02e098476670f5eb0527d2c7281476e8a #v2.11.1
-    SHA512 c4a2f6bac4eb7abf8ad79aa1421b8b2ea623be3c946b02b9287fa2f95952b281a454eb56b80224fc1824e4d8c67317bc657eec4b4e65fb9709031602371e13b3
-    HEAD_REF master
+    REF v${VERSION}
+    SHA512 f9be225ca042f03ea750e77e8a0118f631100d607181ffe505e74063f3a0eda95de6ff0b7db39b7a31e8ea3ce72da5a95b408a1d34c89f57c3b9ec8a97c4fe5b
+    HEAD_REF devel
+    PATCHES
+        fix-install-path.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTING=OFF
-        -DCATCH_BUILD_EXAMPLES=OFF
+        -DCATCH_INSTALL_DOCS=OFF
+        -DCMAKE_CXX_STANDARD=17
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Catch2)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Catch2)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/catch2/catch.hpp)
-    message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
-endif()
+# We remove these folders because they are empty and cause warnings on the library installation
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/benchmark/internal")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal")
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/catch.hpp "#include <catch2/catch.hpp>")
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

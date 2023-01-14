@@ -1,0 +1,24 @@
+{
+  "name": "openvpn3",
+  "version": "3.7.0",
+  "port-version": 1,
+  "description": "a C++ class library that implements the functionality of an OpenVPN client, and is protocol-compatible with the OpenVPN 2.x branch.",
+  "homepage": "https://openvpn.net",
+  "license": "AGPL-3.0",
+  "dependencies": [
+    "asio",
+    "mbedtls",
+    {
+      "name": "tap-windows6",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "name": "folly",
+  "version-string": "2022.10.31.00",
+  "port-version": 3,
+  "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
+  "homepage": "https://github.com/facebook/folly",
+  "license": "Apache-2.0",
+  "supports": "(windows & x64 & !uwp) | (!windows & (x64 | arm64))",
+  "dependencies": [
+    "boost-chrono",
+    "boost-context",
+    "boost-conversion",
+    "boost-crc",
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-multi-index",
+    "boost-program-options",
+    "boost-regex",
+    "boost-smart-ptr",
+    "boost-system",
+    "boost-thread",
+    "double-conversion",
+    "fmt",
+    "gflags",
+    "glog",
+    "libevent",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support bzip2 for compression",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "libsodium": {
+      "description": "Support libsodium for cryto",
+      "dependencies": [
+        "libsodium"
+      ]
+    },
+    "lz4": {
+      "description": "Support lz4 for compression",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "lzma": {
+      "description": "Support LZMA for compression",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "snappy": {
+      "description": "Support Snappy for compression",
+      "dependencies": [
+        "snappy"
+      ]
+    },
+    "zlib": {
+      "description": "Support zlib for compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support zstd for compression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

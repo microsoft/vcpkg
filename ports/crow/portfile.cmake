@@ -1,12 +1,21 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ipkn/crow
-    REF v0.1
-    SHA512 5a97c5b8cda3ffe79001aa382d4391eddde30027401bbb1d9c85c70ea715f556d3659f5eac0b9d9192c19d13718f19ad6bdf49d67bef03b21e75300d60e7d02a
+    REPO CrowCpp/crow
+    REF edf12f699ec3bf6f751cf73cb97f32919e48ca6e # v1.0+5
+    SHA512 615a12d39198f2b3e48d795a65590050e8416a0c36b8b54fadea57e447393c4328f3c3ae04f9a7ce5a769efcf000ab2aa5057d6431569a6ec2ffa5f19055d743
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/crow RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCROW_BUILD_EXAMPLES=OFF
+        -DCROW_BUILD_TESTS=OFF
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Crow)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

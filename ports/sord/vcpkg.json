@@ -1,0 +1,10 @@
+{
+  "name": "sord",
+  "version-string": "0.16.4",
+  "description": "Sord is a lightweight C library for storing RDF statements in memory.",
+  "homepage": "https://drobilla.net/software/sord",
+  "license": "ISC",
+  "dependencies": [
+    "serd"
+  ]
+}

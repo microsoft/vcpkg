@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f50b187..30109b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -344,7 +344,7 @@ set(qhull_SHAREDP qhull_p)  # libqhull and qhull_p are deprecated, use qhull_r i
+ 
+ set(qhull_TARGETS_APPLICATIONS qhull rbox qconvex qdelaunay qvoronoi qhalf)
+ set(qhull_TARGETS_STATIC ${qhull_CPP} ${qhull_STATIC} ${qhull_STATICR})
+-set(qhull_TARGETS_SHARED ${qhull_SHAREDR})
++set(qhull_TARGETS_SHARED ${qhull_CPP} ${qhull_SHAREDR})
+ 
+ set(
+     qhull_TARGETS_TEST   # Unused
+@@ -474,7 +474,6 @@ set_target_properties(${qhull_CPP} PROPERTIES
+ if(NOT ${BUILD_STATIC_LIBS})
+     set_target_properties(${qhull_STATIC} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+     set_target_properties(${qhull_STATICR} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+-    set_target_properties(${qhull_CPP} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ endif()
+ if(NOT ${BUILD_SHARED_LIBS})
+     set_target_properties(${qhull_SHARED} PROPERTIES EXCLUDE_FROM_ALL TRUE)

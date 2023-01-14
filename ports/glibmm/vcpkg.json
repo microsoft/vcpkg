@@ -1,0 +1,21 @@
+{
+  "name": "glibmm",
+  "version": "2.74.0",
+  "description": "This is glibmm, a C++ API for parts of glib that are useful for C++.",
+  "homepage": "https://www.gtkmm.org.",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    "gettext",
+    "glib",
+    "libffi",
+    "libiconv",
+    "libsigcpp-3",
+    "pcre",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib"
+  ]
+}

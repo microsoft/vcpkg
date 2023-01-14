@@ -1,0 +1,27 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ebabb8a..4a166dc 100755
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -173,6 +173,9 @@ else()
+     set_target_properties(tgui PROPERTIES RELWITHDEBINFO_POSTFIX -s)
+ endif()
+ 
++find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
++target_include_directories(tgui PRIVATE "${STB_INCLUDE_DIR}")
++
+ # Add the backend files to the library.
+ # Without the ability to call target_link_libraries in a subdirectory (which was only added in CMake 3.13 in policy CMP0079),
+ # the code would be more complicated when using add_subdirectory. So we just avoid creating a new scope by using include.
+diff --git a/src/Loading/ImageLoader.cpp b/src/Loading/ImageLoader.cpp
+index e3ec9c5..d2f691d 100644
+--- a/src/Loading/ImageLoader.cpp
++++ b/src/Loading/ImageLoader.cpp
+@@ -45,7 +45,7 @@
+ #define STB_IMAGE_STATIC
+ #define STBI_WINDOWS_UTF8
+ #define STB_IMAGE_IMPLEMENTATION
+-#include <TGUI/extlibs/stb/stb_image.h>
++#include <stb_image.h>
+ 
+ #if defined(__GNUC__)
+     #pragma GCC diagnostic pop

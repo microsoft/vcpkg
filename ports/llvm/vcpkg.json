@@ -1,0 +1,378 @@
+{
+  "name": "llvm",
+  "version": "14.0.4",
+  "description": "The LLVM Compiler Infrastructure.",
+  "homepage": "https://llvm.org",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "clang",
+    "default-options",
+    "default-targets",
+    "lld",
+    "tools"
+  ],
+  "features": {
+    "bolt": {
+      "description": "BOLT is a post-link optimizer developed to speed up large applications.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "clang": {
+      "description": "Include C Language Family Front-end.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "compiler-rt",
+            "tools"
+          ]
+        }
+      ]
+    },
+    "clang-tools-extra": {
+      "description": "Include Clang tools."
+    },
+    "compiler-rt": {
+      "description": "Include compiler's runtime libraries."
+    },
+    "default-options": {
+      "description": "Build with default options.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "disable-assertions",
+            "disable-clang-static-analyzer",
+            "enable-bindings",
+            "enable-terminfo",
+            "enable-threads",
+            "enable-zlib"
+          ]
+        }
+      ]
+    },
+    "default-targets": {
+      "description": "Build with platform-specific default targets.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-spirv"
+          ]
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64"
+          ],
+          "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-x86"
+          ],
+          "platform": "x86 | x64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ],
+          "platform": "arm & !arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-all"
+          ],
+          "platform": "!x86 & !x64 & !arm & !arm64"
+        }
+      ]
+    },
+    "disable-assertions": {
+      "description": "Build LLVM without assertions."
+    },
+    "disable-clang-static-analyzer": {
+      "description": "Build without static analyzer."
+    },
+    "enable-abi-breaking-checks": {
+      "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON."
+    },
+    "enable-assertions": {
+      "description": "Build LLVM with assertions."
+    },
+    "enable-bindings": {
+      "description": "Build bindings."
+    },
+    "enable-eh": {
+      "description": "Build LLVM with exception handler.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "enable-rtti"
+          ]
+        }
+      ]
+    },
+    "enable-ffi": {
+      "description": "Build LLVM with FFI.",
+      "dependencies": [
+        "libffi"
+      ]
+    },
+    "enable-libxml2": {
+      "description": "Build with LibXml2.",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "enable-rtti": {
+      "description": "Build LLVM with run-time type information."
+    },
+    "enable-terminfo": {
+      "description": "Use terminfo database if available."
+    },
+    "enable-threads": {
+      "description": "Use threads if available."
+    },
+    "enable-zlib": {
+      "description": "Build with ZLib.",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "flang": {
+      "description": "Include Fortran front end.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "mlir",
+            "tools"
+          ]
+        }
+      ]
+    },
+    "libclc": {
+      "description": "Include OpenCL library."
+    },
+    "libcxx": {
+      "description": "Include libcxx library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "libcxxabi"
+          ]
+        }
+      ]
+    },
+    "libcxxabi": {
+      "description": "Include libcxxabi library."
+    },
+    "libunwind": {
+      "description": "Include libunwind library."
+    },
+    "lld": {
+      "description": "Include LLVM linker.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "lldb": {
+      "description": "Include LLVM debugger.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "mlir": {
+      "description": "Include MLIR (Multi-Level IR Compiler Framework) project.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "Include LLVM OpenMP libraries.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "utils"
+          ]
+        }
+      ]
+    },
+    "polly": {
+      "description": "Include Polly (Polyhedral optimizations for LLVM) project.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools",
+            "utils"
+          ]
+        }
+      ]
+    },
+    "pstl": {
+      "description": "Include pstl (Parallel STL) library."
+    },
+    "target-aarch64": {
+      "description": "Build with AArch64 backend."
+    },
+    "target-all": {
+      "description": "Build with all backends.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64",
+            "target-amdgpu",
+            "target-arm",
+            "target-avr",
+            "target-bpf",
+            "target-hexagon",
+            "target-lanai",
+            "target-mips",
+            "target-msp430",
+            "target-nvptx",
+            "target-powerpc",
+            "target-riscv",
+            "target-sparc",
+            "target-spirv",
+            "target-systemz",
+            "target-ve",
+            "target-webassembly",
+            "target-x86",
+            "target-xcore"
+          ]
+        }
+      ]
+    },
+    "target-amdgpu": {
+      "description": "Build with AMDGPU backend."
+    },
+    "target-arm": {
+      "description": "Build with ARM backend."
+    },
+    "target-avr": {
+      "description": "Build with AVR backend."
+    },
+    "target-bpf": {
+      "description": "Build with BPF backend."
+    },
+    "target-hexagon": {
+      "description": "Build with Hexagon backend."
+    },
+    "target-lanai": {
+      "description": "Build with Lanai backend."
+    },
+    "target-mips": {
+      "description": "Build with Mips backend."
+    },
+    "target-msp430": {
+      "description": "Build with MSP430 backend."
+    },
+    "target-nvptx": {
+      "description": "Build with NVPTX backend."
+    },
+    "target-powerpc": {
+      "description": "Build with PowerPC backend."
+    },
+    "target-riscv": {
+      "description": "Build with RISC-V backend."
+    },
+    "target-sparc": {
+      "description": "Build with Sparc backend."
+    },
+    "target-spirv": {
+      "description": "Build with Spriv backend."
+    },
+    "target-systemz": {
+      "description": "Build with SystemZ backend."
+    },
+    "target-ve": {
+      "description": "Build with VE backend."
+    },
+    "target-webassembly": {
+      "description": "Build with WebAssembly backend."
+    },
+    "target-x86": {
+      "description": "Build with X86 backend."
+    },
+    "target-xcore": {
+      "description": "Build with XCore backend."
+    },
+    "tools": {
+      "description": "Build LLVM tools.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "enable-threads"
+          ]
+        }
+      ]
+    },
+    "utils": {
+      "description": "Build LLVM utils."
+    }
+  }
+}

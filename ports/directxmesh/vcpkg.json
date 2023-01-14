@@ -1,0 +1,29 @@
+{
+  "name": "directxmesh",
+  "version-date": "2022-12-15",
+  "description": "DirectXMesh geometry processing library",
+  "homepage": "https://github.com/Microsoft/DirectXMesh",
+  "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "dx12": {
+      "description": "Build with DirectX12 support for Windows 10"
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    }
+  }
+}

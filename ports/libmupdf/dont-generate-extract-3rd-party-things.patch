@@ -1,0 +1,16 @@
+--- a/Makethird
++++ b/Makethird
+@@ -238,6 +238,7 @@ endif
+ 
+ # --- EXTRACT ---
+ 
++ifeq (0, 1)
+ THIRD_CFLAGS += $(EXTRACT_CFLAGS)
+ THIRD_LIBS += $(EXTRACT_LIBS)
+ THIRD_SRC += $(EXTRACT_SRC)
+@@ -268,3 +269,4 @@ thirdparty/extract/src/odt_template.c: thirdparty/extract/src/template.odt third
+        @touch $@
+ 
+ generate: thirdparty/extract/src/docx_template.c
++endif
+

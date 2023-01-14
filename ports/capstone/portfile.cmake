@@ -1,87 +1,52 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REF 120373dc9789875ccbc968397219a86598a4351e
-    REPO "aquynh/capstone"
-    SHA512 90961176ab68110b0fea08f11a5ed6997dcd92ceeec568978003bfd01e2170479256f137e4f91be5e22a9bdebbe1f436c2849bde1d4e0bbd0b781f8562b58059
-    HEAD_REF v4
+    REPO "capstone-engine/capstone"
+    REF 000561b4f74dc15bda9af9544fe714efda7a6e13 # 5.0.0-rc2
+    SHA512 66b09a7d2fda297836bbedaeece71dcfe39bdbd633d9b6ecb68ee2e5aa094b697226136ab172cdc4550e8b2ef1448d001c8ee4e0d456c6d277afe0b3d1aab5a1
+    HEAD_REF next
+    PATCHES
+        001-silence-windows-crt-secure-warnings.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CS_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CS_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "arm"         CAPSTONE_ARM_SUPPORT
+        "arm64"       CAPSTONE_ARM64_SUPPORT
+        "evm"         CAPSTONE_EVM_SUPPORT
+        "m680x"       CAPSTONE_M680X_SUPPORT
+        "m68k"        CAPSTONE_M68K_SUPPORT
+        "mips"        CAPSTONE_MIPS_SUPPORT
+        "osxkernel"   CAPSTONE_OSXKERNEL_SUPPORT
+        "ppc"         CAPSTONE_PPC_SUPPORT
+        "sparc"       CAPSTONE_SPARC_SUPPORT
+        "sysz"        CAPSTONE_SYSZ_SUPPORT
+        "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
+        "x86"         CAPSTONE_X86_SUPPORT
+        "x86-reduce"  CAPSTONE_X86_REDUCE
+        "xcore"       CAPSTONE_XCORE_SUPPORT
+        "diet"        CAPSTONE_BUILD_DIET
+)
 
-function(check_feature name var)
-    set(${var} OFF PARENT_SCOPE)
-    if (${name} IN_LIST FEATURES)
-        set(${var} ON PARENT_SCOPE)
-    endif ()
-endfunction ()
+if ("osxkernel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+    message(FATAL_ERROR "Feature 'osxkernel' only supported in OSX")
+endif()
 
-
-check_feature("arm"         WITH_ARM_SUPPORT)
-check_feature("arm64"       WITH_ARM64_SUPPORT)
-check_feature("evm"         WITH_EVM_SUPPORT)
-check_feature("m680x"       WITH_M680X_SUPPORT)
-check_feature("m68k"        WITH_M68K_SUPPORT)
-check_feature("mips"        WITH_MIPS_SUPPORT)
-check_feature("osxkernel"   WITH_OSXKERNEL_SUPPORT)
-check_feature("ppc"         WITH_PPC_SUPPORT)
-check_feature("sparc"       WITH_SPARC_SUPPORT)
-check_feature("sysz"        WITH_SYSZ_SUPPORT)
-check_feature("tms320c64x"  WITH_C64X_SUPPORT)
-check_feature("x86"         WITH_X86_SUPPORT)
-check_feature("x86_reduce"  WITH_X86_REDUCE)
-check_feature("xcore"       WITH_XCORE_SUPPORT)
-
-check_feature("diet"  CS_BUILD_DIET)
-
-if (WITH_X86_REDUCE AND NOT WITH_X86_SUPPORT)
-    set(WITH_X86_SUPPORT ON)
-endif ()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCAPSTONE_BUILD_STATIC=${CS_BUILD_STATIC}
-        -DCAPSTONE_BUILD_SHARED=${CS_BUILD_SHARED}
-        -DCAPSTONE_BUILD_DIET=${CS_BUILD_DIET}
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
-        -DCAPSTONE_BUILD_STATIC_RUNTIME=OFF
-
-        -DCAPSTONE_ARM_SUPPORT=${WITH_ARM_SUPPORT}
-        -DCAPSTONE_ARM64_SUPPORT=${WITH_ARM64_SUPPORT}
-        -DCAPSTONE_EVM_SUPPORT=${WITH_EVM_SUPPORT}
-        -DCAPSTONE_M680X_SUPPORT=${WITH_M680X_SUPPORT}
-        -DCAPSTONE_M68K_SUPPORT=${WITH_M68K_SUPPORT}
-        -DCAPSTONE_MIPS_SUPPORT=${WITH_MIPS_SUPPORT}
-        -DCAPSTONE_OSXKERNEL_SUPPORT=${WITH_OSXKERNEL_SUPPORT}
-        -DCAPSTONE_PPC_SUPPORT=${WITH_PPC_SUPPORT}
-        -DCAPSTONE_SPARC_SUPPORT=${WITH_SPARC_SUPPORT}
-        -DCAPSTONE_SYSZ_SUPPORT=${WITH_SYSZ_SUPPORT}
-        -DCAPSTONE_TMS320C64X_SUPPORT=${WITH_C64X_SUPPORT}
-        -DCAPSTONE_X86_SUPPORT=${WITH_X86_SUPPORT}
-        -DCAPSTONE_XCORE_SUPPORT=${WITH_XCORE_SUPPORT}
-
-        -DCAPSTONE_X86_REDUCE=${WITH_X86_REDUCE}
-        -DCAPSTONE_X86_ONLY=OFF
+        -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/capstone
-    RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

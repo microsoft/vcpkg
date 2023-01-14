@@ -1,0 +1,28 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-coroutine2",
+  "version": "1.81.0",
+  "description": "Boost coroutine2 module",
+  "homepage": "https://github.com/boostorg/coroutine2",
+  "license": "BSL-1.0",
+  "supports": "!emscripten",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-context",
+      "platform": "!uwp & !emscripten",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

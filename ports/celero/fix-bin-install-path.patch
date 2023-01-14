@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0158c4f..5be0fbc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -220,9 +220,11 @@ install(
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+ install(
+     TARGETS     celero
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     EXPORT      celero-targets
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
+ )
+ install(
+     EXPORT      celero-targets

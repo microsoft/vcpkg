@@ -1,0 +1,6 @@
+{
+  "name": "coinutils",
+  "version-string": "2.11.4",
+  "port-version": 1,
+  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project"
+}

@@ -1,0 +1,37 @@
+{
+  "name": "qt5-webengine",
+  "version": "5.15.8",
+  "description": "Qt5 webengine Module;",
+  "license": null,
+  "supports": "!static",
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "platform": "!windows"
+    },
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-location",
+    "qt5-quickcontrols",
+    "qt5-quickcontrols2",
+    "qt5-tools",
+    "qt5-webchannel",
+    {
+      "name": "vcpkg-tool-nodejs",
+      "host": true
+    }
+  ],
+  "features": {
+    "proprietary-codecs": {
+      "description": "Enable proprietary-codecs in qtwebengine"
+    }
+  }
+}

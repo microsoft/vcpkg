@@ -1,0 +1,25 @@
+{
+  "name": "azure-storage-blobs-cpp",
+  "version-semver": "12.6.2",
+  "description": [
+    "Microsoft Azure Storage Blobs SDK for C++",
+    "This library provides Azure Storage Blobs SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-blobs",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-storage-common-cpp",
+      "default-features": false,
+      "version>=": "12.3.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-mpi",
+  "version": "1.81.0",
+  "description": "Boost mpi module",
+  "homepage": "https://github.com/boostorg/mpi",
+  "license": "BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-build",
+      "host": true,
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-foreach",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-function",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-graph",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-modular-build-helper",
+      "host": true,
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-optional",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-serialization",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-smart-ptr",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-utility",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    },
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "python3": {
+      "description": "Build Python3 bindings",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "boost-python",
+          "features": [
+            "python3"
+          ],
+          "platform": "!uwp & !emscripten & !ios & !android",
+          "version>=": "1.81.0"
+        },
+        "python3"
+      ]
+    }
+  }
+}

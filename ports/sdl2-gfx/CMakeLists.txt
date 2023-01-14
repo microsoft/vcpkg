@@ -24,7 +24,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include/SDL2>
 )
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${SDL_GFX_DEFINES})
+if(WIN32)
+    add_compile_definitions(${SDL_GFX_DEFINES})
+endif()
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
 

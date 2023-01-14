@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIBGTA_VERSION 1.0.8)
 set(LIBGTA_HASH 99ec3d6317c9a12cf440a60bb989cc7a3fe35e0a1da3e65206e5cd52b69fb860850e61ea0f819511ef48ddc87c468c0ded710409990627096738886e1b358423)
 
@@ -35,3 +33,5 @@ endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgta)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgta/COPYING ${CURRENT_PACKAGES_DIR}/share/libgta/copyright)
+
+vcpkg_fixup_pkgconfig()

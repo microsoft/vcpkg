@@ -1,0 +1,94 @@
+diff --git a/CMake/abslConfig.cmake.in b/CMake/abslConfig.cmake.in
+index 62d246d..afcec1f 100644
+--- a/CMake/abslConfig.cmake.in
++++ b/CMake/abslConfig.cmake.in
+@@ -6,3 +6,5 @@ find_dependency(Threads)
+ @PACKAGE_INIT@
+ 
+ include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
++
++set(ABSL_USE_CXX17 @ABSL_USE_CXX17@)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 750a475..239977f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -67,6 +67,23 @@ else()
+   option(ABSL_ENABLE_INSTALL "Enable install rule" ON)
+ endif()
+ 
++# CXX standard
++option(ABSL_USE_CXX17 "Enable CXX 17 standard" OFF)
++
++if (ABSL_USE_CXX17)
++    set(CMAKE_CXX_STANDARD 17)
++    set(STD_ANY 1)
++    set(STD_OPTIONAL 1)
++    set(STD_STRING_VIEW 1)
++    set(STD_VARIANT 1)
++else()
++    set(CMAKE_CXX_STANDARD 11)
++    set(STD_ANY 0)
++    set(STD_OPTIONAL 0)
++    set(STD_STRING_VIEW 0)
++    set(STD_VARIANT 0)
++endif()
++
+ option(ABSL_PROPAGATE_CXX_STD
+   "Use CMake C++ standard meta features (e.g. cxx_std_11) that propagate to targets that link to Abseil"
+   OFF)  # TODO: Default to ON for CMake 3.8 and greater.
+diff --git a/absl/base/CMakeLists.txt b/absl/base/CMakeLists.txt
+index c7233cb..65a9076 100644
+--- a/absl/base/CMakeLists.txt
++++ b/absl/base/CMakeLists.txt
+@@ -38,6 +38,11 @@ absl_cc_library(
+   COPTS
+     ${ABSL_DEFAULT_COPTS}
+ )
++if (NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/options.h.in)
++    file(RENAME ${CMAKE_CURRENT_LIST_DIR}/options.h ${CMAKE_CURRENT_LIST_DIR}/options.h.in)
++endif()
++file(REMOVE ${CMAKE_CURRENT_LIST_DIR}/options.h)
++configure_file(${CMAKE_CURRENT_LIST_DIR}/options.h.in ${CMAKE_CURRENT_LIST_DIR}/options.h @ONLY)
+ 
+ absl_cc_library(
+   NAME
+diff --git a/absl/base/options.h b/absl/base/options.h
+index 56b4e36..0b098ed 100644
+--- a/absl/base/options.h
++++ b/absl/base/options.h
+@@ -100,7 +100,7 @@
+ // User code should not inspect this macro.  To check in the preprocessor if
+ // absl::any is a typedef of std::any, use the feature macro ABSL_USES_STD_ANY.
+ 
+-#define ABSL_OPTION_USE_STD_ANY 2
++#define ABSL_OPTION_USE_STD_ANY @STD_ANY@
+ 
+ 
+ // ABSL_OPTION_USE_STD_OPTIONAL
+@@ -127,7 +127,7 @@
+ // absl::optional is a typedef of std::optional, use the feature macro
+ // ABSL_USES_STD_OPTIONAL.
+ 
+-#define ABSL_OPTION_USE_STD_OPTIONAL 2
++#define ABSL_OPTION_USE_STD_OPTIONAL @STD_OPTIONAL@
+ 
+ 
+ // ABSL_OPTION_USE_STD_STRING_VIEW
+@@ -154,7 +154,7 @@
+ // absl::string_view is a typedef of std::string_view, use the feature macro
+ // ABSL_USES_STD_STRING_VIEW.
+ 
+-#define ABSL_OPTION_USE_STD_STRING_VIEW 2
++#define ABSL_OPTION_USE_STD_STRING_VIEW @STD_STRING_VIEW@
+ 
+ // ABSL_OPTION_USE_STD_VARIANT
+ //
+@@ -180,7 +180,7 @@
+ // absl::variant is a typedef of std::variant, use the feature macro
+ // ABSL_USES_STD_VARIANT.
+ 
+-#define ABSL_OPTION_USE_STD_VARIANT 2
++#define ABSL_OPTION_USE_STD_VARIANT @STD_VARIANT@
+ 
+ 
+ // ABSL_OPTION_USE_INLINE_NAMESPACE

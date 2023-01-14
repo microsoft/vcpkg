@@ -1,0 +1,91 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 23098aa578..a8e8bc274b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,6 +85,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
+ set(gRPC_PROTOBUF_PROVIDER "module" CACHE STRING "Provider of protobuf library")
+ set_property(CACHE gRPC_PROTOBUF_PROVIDER PROPERTY STRINGS "module" "package")
+
++set(gRPC_UPB_PROVIDER "module" CACHE STRING "Provider of upb library")
++set_property(CACHE gRPC_UPB_PROVIDER PROPERTY STRINGS "module" "package")
++
+ set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
+ set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
+
+@@ -1631,6 +1634,7 @@ target_link_libraries(gpr
+   absl::time
+   absl::optional
+   absl::variant
++  ${_gRPC_UPB_LIBRARIES}
+ )
+ if(_gRPC_PLATFORM_ANDROID)
+   target_link_libraries(gpr
+@@ -2435,7 +2439,6 @@ target_link_libraries(grpc
+   gpr
+   ${_gRPC_SSL_LIBRARIES}
+   address_sorting
+-  upb
+ )
+ if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
+   target_link_libraries(grpc "-framework CoreFoundation")
+@@ -2979,7 +2982,6 @@ target_link_libraries(grpc_unsecure
+   absl::utility
+   gpr
+   address_sorting
+-  upb
+ )
+ if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
+   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
+@@ -4251,6 +4253,7 @@ endif()
+
+ endif()
+
++if (gRPC_UPB_PROVIDER STREQUAL "module")
+ add_library(upb
+   third_party/upb/third_party/utf8_range/naive.c
+   third_party/upb/third_party/utf8_range/range2-neon.c
+@@ -4319,7 +4322,7 @@ if(gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
+-
++endif()
+
+ if(gRPC_BUILD_TESTS)
+
+diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
+index 3623f4aa5e..df6ced560e 100644
+--- a/cmake/gRPCConfig.cmake.in
++++ b/cmake/gRPCConfig.cmake.in
+@@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
+ @_gRPC_FIND_CARES@
+ @_gRPC_FIND_ABSL@
+ @_gRPC_FIND_RE2@
++@_gRPC_FIND_UPB@
+
+ # Targets
+ include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
+diff --git a/cmake/upb.cmake b/cmake/upb.cmake
+index f2a0e508c3..09751f5ef0 100644
+--- a/cmake/upb.cmake
++++ b/cmake/upb.cmake
+@@ -12,9 +12,19 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+
++set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
++if (gRPC_UPB_PROVIDER STREQUAL "module")
++
+ set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
+
+ set(_gRPC_UPB_INCLUDE_DIR "${UPB_ROOT_DIR}")
+ set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
+
+ set(_gRPC_UPB_LIBRARIES upb)
++
++elseif(gRPC_UPB_PROVIDER STREQUAL "package")
++    find_package(upb CONFIG REQUIRED)
++    set(_gRPC_UPB_LIBRARIES upb::fastdecode upb::json upb::upb upb::utf8_range upb::textformat upb::reflection upb::descriptor_upb_proto)
++    set(_gRPC_UPB_INCLUDE_DIR)
++    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
++endif()

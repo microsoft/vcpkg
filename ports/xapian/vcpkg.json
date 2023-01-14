@@ -1,0 +1,16 @@
+{
+  "name": "xapian",
+  "version": "1.4.21",
+  "port-version": 1,
+  "description": "Xapian is an Open Source Search Engine Library, released under the GPL v2+. It's written in C++, with bindings to allow use from Perl, Python 2, Python 3, PHP 5, PHP 7, Java, Tcl, C#, Ruby, Lua, Erlang, Node.js and R (so far!)",
+  "homepage": "https://github.com/xapian/xapian",
+  "license": "GPL-2.0-or-later",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

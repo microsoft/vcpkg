@@ -1,0 +1,25 @@
+{
+  "name": "mailio",
+  "version": "0.21.0",
+  "port-version": 2,
+  "maintainers": "Tomislav Karastojković <contact@alepho.com>",
+  "description": "mailio is a cross platform C++ library for MIME format and SMTP, POP3 and IMAP protocols. It is based on the standard C++ 17 and Boost library.",
+  "homepage": "https://github.com/karastojko/mailio",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-date-time",
+    "boost-regex",
+    "boost-system",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

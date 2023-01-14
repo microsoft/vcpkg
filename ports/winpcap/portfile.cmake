@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libpcap")
+    message(FATAL_ERROR "FATAL ERROR: libpcap and winpcap are incompatible.")
+endif()
 
 set(WINPCAP_VERSION 4_1_3)
 
@@ -6,12 +8,6 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://www.winpcap.org/install/bin/WpcapSrc_${WINPCAP_VERSION}.zip"
     FILENAME "WpcapSrc_${WINPCAP_VERSION}.zip"
     SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
-)
-
-vcpkg_download_distfile(COPYRIGHT
-    URLS "https://www.winpcap.org/misc/copyright.htm"
-    FILENAME "Wpcap_license.htm"
-    SHA512 661e848f229612a4354e8243cdb0cb7ef387abc8933412b8c09ccfcaa3335143a958ea9ec9da558f89afe71afea29f0548872e3544ea51144c297a1aa1276718
 )
 
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
@@ -43,12 +39,7 @@ vcpkg_extract_source_archive_ex(
         "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
 )
 
-file(
-    COPY
-        "${CURRENT_PORT_DIR}/create_bin.bat"
-    DESTINATION
-        ${SOURCE_PATH}
-)
+file(COPY "${CURRENT_PORT_DIR}/create_bin.bat" DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
@@ -60,12 +51,12 @@ vcpkg_execute_required_process(
     COMMAND "devenv.exe"
             "Packet.sln"
             /Upgrade
-    WORKING_DIRECTORY ${SOURCE_PATH}/packetNtx/Dll/Project
+    WORKING_DIRECTORY "${SOURCE_PATH}/packetNtx/Dll/Project"
     LOGNAME upgrade-Packet-${TARGET_TRIPLET}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CURRENT_PORT_DIR}/Packet.vcxproj DESTINATION ${SOURCE_PATH}/packetNtx/Dll/Project/)
+    file(COPY "${CURRENT_PORT_DIR}/Packet.vcxproj" DESTINATION "${SOURCE_PATH}/packetNtx/Dll/Project/")
 endif()
 
 vcpkg_build_msbuild(
@@ -93,7 +84,7 @@ vcpkg_execute_required_process(
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CURRENT_PORT_DIR}/wpcap.vcxproj DESTINATION ${SOURCE_PATH}/wpcap/PRJ/)
+    file(COPY "${CURRENT_PORT_DIR}/wpcap.vcxproj" DESTINATION "${SOURCE_PATH}/wpcap/PRJ/")
 endif()
 
 vcpkg_build_msbuild(
@@ -109,8 +100,7 @@ vcpkg_execute_required_process(
     LOGNAME create_include-${TARGET_TRIPLET}
 )
 
-file(
-    INSTALL
+file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/bittypes.h"
         "${SOURCE_PATH}/WpdPack/Include/ip6_misc.h"
         "${SOURCE_PATH}/WpdPack/Include/Packet32.h"
@@ -120,12 +110,9 @@ file(
         "${SOURCE_PATH}/WpdPack/Include/pcap-stdinc.h"
         "${SOURCE_PATH}/WpdPack/Include/remote-ext.h"
         "${SOURCE_PATH}/WpdPack/Include/Win32-Extensions.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
-)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(
-    INSTALL
+file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap/bluetooth.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/bpf.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/namedb.h"
@@ -133,9 +120,7 @@ file(
         "${SOURCE_PATH}/WpdPack/Include/pcap/sll.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/usb.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/vlan.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/pcap
-)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/pcap")
 
 vcpkg_execute_required_process(
     COMMAND ${SOURCE_PATH}/create_lib.bat
@@ -148,26 +133,20 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PCAP_LIBRARY_PATH "${PCAP_LIBRARY_PATH}/x64")
 endif()
 
-file(
-    INSTALL
+file(INSTALL
         "${PCAP_LIBRARY_PATH}/Packet.lib"
         "${PCAP_LIBRARY_PATH}/wpcap.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
-)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-file(
-    INSTALL
+file(INSTALL
         "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
         "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/create_bin.bat
-        WORKING_DIRECTORY ${SOURCE_PATH}
+        COMMAND "${SOURCE_PATH}/create_bin.bat"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME create_bin-${TARGET_TRIPLET}
     )
 
@@ -176,21 +155,18 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
     endif()
 
-    file(
-        INSTALL
+    file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/bin
-    )
+        DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
-    file(
-        INSTALL
+    file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
+        DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/winpcap/copyright COPYONLY)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.
+")

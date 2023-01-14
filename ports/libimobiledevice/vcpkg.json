@@ -1,0 +1,19 @@
+{
+  "name": "libimobiledevice",
+  "version": "1.3.17",
+  "port-version": 1,
+  "description": "A cross-platform protocol library to communicate with iOS devices",
+  "homepage": "http://www.libimobiledevice.org",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    "dirent",
+    "getopt",
+    "libplist",
+    "libusbmuxd",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+diff --git a/src/xmessage.cpp b/src/xmessage.cpp
+index 1ab9544..5a14ba0 100644
+--- a/src/xmessage.cpp
++++ b/src/xmessage.cpp
+@@ -13,6 +13,7 @@
+ #include <sstream>
+ #include <string>
+ #include <utility>
++#include <ciso646>
+ 
+ #include "nlohmann/json.hpp"
+ 

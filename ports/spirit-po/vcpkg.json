@@ -1,0 +1,10 @@
+{
+  "name": "spirit-po",
+  "version-string": "1.1.2",
+  "port-version": 2,
+  "description": "A header-only C++ library for localization using GNU gettext po files, based on Boost.Spirit.",
+  "homepage": "https://github.com/cbeck88/spirit-po",
+  "dependencies": [
+    "boost"
+  ]
+}

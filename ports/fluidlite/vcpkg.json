@@ -1,0 +1,14 @@
+{
+  "name": "fluidlite",
+  "version-date": "2020-08-27",
+  "port-version": 3,
+  "description": "FluidLite is a very light version of FluidSynth designed to be hardware, platform and external dependency independant.",
+  "homepage": "https://github.com/divideconcept/FluidLite",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,31 +1,72 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO eProsima/Fast-RTPS
-    REF b1779b608c7b5b2dcb101728f4213c58bdde74ee # waiting for next release
-    SHA512 9ec4a1e41296df1c0bc00926d925e0947602fabb68e9b28311e92739b0e1909a2993b15fc05eb31aeb9842ed50127f8d56571d09e57dd64ac6f37d0fed6cea73
+    REPO eProsima/Fast-DDS
+    REF v2.7.0
+    SHA512 289c94fb177209ffc80e93ae61822c83e7cb74ba7682f05a921c50ce048498bd811c19825d1fdb8af39b29a64904e96d87c5c59468139f0d8bb528549b80c94a
     HEAD_REF master
-    PATCHES 
-        fix-install.patch 
-        namespace_tinyxml2.patch 
+    PATCHES
+        fix-find-package-asio.patch
+        disable-symlink.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/fastrtps/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/fastrtps/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/examples)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/examples)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/fastrtps)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/fastrtps)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # copy tools from "bin" to "tools" folder
+    foreach(TOOL "fast-discovery-server-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+    endforeach()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/fastrtps/copyright)
+    # remove tools from debug builds
+    foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+        endif()
+    endforeach()
+
+    # adjust paths in batch files
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
+
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+elseif(VCPKG_TARGET_IS_LINUX)
+    # copy tools from "bin" to "tools" folder
+    foreach(TOOL "fast-discovery-server-1.0.0" "fast-discovery-server" "fastdds" "ros-discovery")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+    endforeach()
+
+    # replace symlink by a copy because symlinks do not work well together with vcpkg binary caching
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server-1.0.0" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}" RENAME "fast-discovery-server")
+
+    # remove tools from debug builds
+    foreach(TOOL "fast-discovery-serverd-1.0.0" "fast-discovery-server" "fastdds" "ros-discovery")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+    endforeach()
+
+    # adjust paths in batch files
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
+endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/fastdds/discovery/parser.py" "tool_path / '../../../bin'" "tool_path / '../../${PORT}'")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

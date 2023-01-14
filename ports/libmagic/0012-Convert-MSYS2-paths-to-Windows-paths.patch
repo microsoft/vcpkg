@@ -1,0 +1,24 @@
+From f0139ced57c1579450f3d09b6e3ae0159aae031b Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Mon, 10 May 2021 08:43:28 +0700
+Subject: [PATCH 12/14] Convert MSYS2 paths to Windows paths
+
+---
+ src/Makefile.am | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 34781b9..26f853f 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,4 +1,7 @@
+ MAGIC = $(pkgdatadir)/magic
++if MINGW
++MAGIC != cygpath -m -a -l '$(MAGIC)'
++endif
+ lib_LTLIBRARIES = libmagic.la
+ nodist_include_HEADERS = magic.h
+ 
+-- 
+2.29.2.windows.2
+

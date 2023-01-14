@@ -1,0 +1,33 @@
+{
+  "$reason": "Note that independent usage and testing may work, but it seems to fail in CI environments for potential cross-compilation, and is thusly noted here to note break how vcpkg builds things!",
+  "name": "infoware",
+  "version-date": "2021-06-16",
+  "port-version": 1,
+  "description": "C++ Library for pulling system and hardware information, without hitting the command line.",
+  "homepage": "https://github.com/ThePhD/infoware",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "d3d": {
+      "description": "Prefer usage of Direct3D to find graphical capabilities (typically only works on Windows systems)."
+    },
+    "opencl": {
+      "description": "Prefer usage of OpenCL to find graphical capabilities of the system."
+    },
+    "opengl": {
+      "description": "Prefer usage of OpenGL to find graphical capabilities (may require additional libraries to be available for linking depending on the system)."
+    },
+    "x11": {
+      "description": "Prefer usage of X11 to find graphical capabilities."
+    }
+  }
+}

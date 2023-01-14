@@ -1,0 +1,323 @@
+{
+  "name": "opencv4",
+  "version": "4.6.0",
+  "port-version": 10,
+  "description": "computer vision library",
+  "homepage": "https://github.com/opencv/opencv",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "ade": {
+      "description": "graph api",
+      "dependencies": [
+        "ade"
+      ]
+    },
+    "contrib": {
+      "description": "opencv_contrib module",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
+        },
+        {
+          "name": "tesseract",
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
+        }
+      ]
+    },
+    "cuda": {
+      "description": "CUDA support for opencv",
+      "dependencies": [
+        "cuda",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "dnn": {
+      "description": "Enable dnn module",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "eigen": {
+      "description": "Eigen support for opencv",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "ffmpeg": {
+      "description": "ffmpeg support for opencv",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
+      ]
+    },
+    "gdcm": {
+      "description": "GDCM support for opencv",
+      "dependencies": [
+        "gdcm"
+      ]
+    },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "supports": "!windows & !osx & !ios & !android",
+      "dependencies": [
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
+      ]
+    },
+    "halide": {
+      "description": "Halide support for opencv",
+      "dependencies": [
+        "halide",
+        {
+          "name": "opencv4",
+          "default-features": false
+        },
+        {
+          "name": "opencv4",
+          "features": [
+            "dnn"
+          ]
+        }
+      ]
+    },
+    "ipp": {
+      "description": "Enable Intel Integrated Performance Primitives"
+    },
+    "jasper": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "jasper"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG support for opencv",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lapack": {
+      "description": "LAPACK support for opencv",
+      "dependencies": [
+        "blas",
+        "lapack"
+      ]
+    },
+    "nonfree": {
+      "description": "allow nonfree and unredistributable libraries"
+    },
+    "openexr": {
+      "description": "OpenEXR support for opencv",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "opengl": {
+      "description": "opengl support for opencv",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "openmp": {
+      "description": "Enable openmp support for opencv"
+    },
+    "ovis": {
+      "description": "opencv_ovis module",
+      "dependencies": [
+        "ogre",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
+    "png": {
+      "description": "PNG support for opencv",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    "qt": {
+      "description": "Qt GUI support for opencv",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    },
+    "quirc": {
+      "description": "Enable QR code module",
+      "dependencies": [
+        "quirc"
+      ]
+    },
+    "sfm": {
+      "description": "opencv_sfm module",
+      "dependencies": [
+        "ceres",
+        "gflags",
+        "glog",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "eigen"
+          ]
+        }
+      ]
+    },
+    "tbb": {
+      "description": "Enable Intel Threading Building Blocks",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "tiff": {
+      "description": "TIFF support for opencv",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "vtk": {
+      "description": "vtk support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "features": [
+            "contrib"
+          ]
+        },
+        "vtk"
+      ]
+    },
+    "webp": {
+      "description": "WebP support for opencv",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "world": {
+      "description": "Compile to a single package support for opencv"
+    }
+  }
+}

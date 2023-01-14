@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b13d946..1aa1304 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,9 +55,9 @@ set(GLTF_SOURCES
+ )
+ 
+ if(MSVC)
+-    add_compile_options(/W4 /WX)
++    add_compile_options(/W4)
+ else()
+-    add_compile_options(-Wall -Wextra -Wshadow -Wno-missing-field-initializers -Werror)
++    add_compile_options(-Wall -Wextra -Wshadow -Wno-missing-field-initializers)
+ endif()
+ 
+ if(MESHOPT_BUILD_SHARED_LIBS)

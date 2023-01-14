@@ -1,0 +1,8 @@
+{
+  "name": "levmar",
+  "version": "2.6",
+  "port-version": 1,
+  "description": "Levenberg-Marquardt nonlinear least squares optimization algorithm",
+  "homepage": "http://users.ics.forth.gr/~lourakis/levmar/",
+  "supports": "windows & !uwp"
+}

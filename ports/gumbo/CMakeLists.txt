@@ -24,11 +24,19 @@ endif (MSVC)
 add_library(gumbo ${gumbo_srcs})
 
 install(
-  TARGETS gumbo
+  TARGETS gumbo  EXPORT unofficial-gumbo-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(EXPORT unofficial-gumbo-config
+    NAMESPACE unofficial::gumbo::
+    DESTINATION share/unofficial-gumbo
+    )
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gumbo.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" DESTINATION "lib/pkgconfig")
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES  src/gumbo.h src/tag_enum.h DESTINATION include)
 endif()

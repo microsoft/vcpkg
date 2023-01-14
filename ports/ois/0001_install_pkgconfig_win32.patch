@@ -1,0 +1,29 @@
+diff -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2021-05-14 03:09:42.000000000 +0800
++++ b/CMakeLists.txt	2022-03-08 12:48:17.012589000 +0800
+@@ -255,7 +255,12 @@
+   install(FILES $<TARGET_PDB_FILE:OIS> DESTINATION bin OPTIONAL)
+ endif(MSVC AND BUILD_SHARED_LIBS)
+ 
+-if(UNIX)
+-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OIS.pc.in ${CMAKE_BINARY_DIR}/OIS.pc @ONLY)
+-    install(FILES ${CMAKE_BINARY_DIR}/OIS.pc DESTINATION ${OIS_LIB_DIRECTORY}/pkgconfig)
++if (CMAKE_DEBUG_POSTFIX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(OIS_POSTFIX ${CMAKE_DEBUG_POSTFIX})
++else()
++    set(OIS_POSTFIX "")
+ endif()
++
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OIS.pc.in ${CMAKE_BINARY_DIR}/OIS.pc @ONLY)
++install(FILES ${CMAKE_BINARY_DIR}/OIS.pc DESTINATION ${OIS_LIB_DIRECTORY}/pkgconfig)
++
+diff -Naur a/OIS.pc.in b/OIS.pc.in
+--- a/OIS.pc.in	2021-05-14 03:09:42.000000000 +0800
++++ b/OIS.pc.in	2022-03-08 12:48:33.599696300 +0800
+@@ -6,5 +6,5 @@
+ Name: OIS
+ Description: Cross platform C++ Input Framework
+ Version: @OIS_VERSION@
+-Libs: -L${libdir} -lOIS
++Libs: -L${libdir} -lOIS@OIS_POSTFIX@
+ Cflags: -I${includedir} -I${includedir}/ois

@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0ce714554..f9f28b890 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,15 +18,7 @@ target_compile_features("${PROJECT_NAME}_compiler_flags" INTERFACE "c_std_${CMAK
+ set(gcc_like "$<COMPILE_LANG_AND_ID:C,CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
+ set(msvc "$<COMPILE_LANG_AND_ID:C,CXX,MSVC>")
+ # -g -fsanitize=address -fno-omit-frame-pointer
+-target_compile_options(
+-        "${PROJECT_NAME}_compiler_flags"
+-        INTERFACE
+-        "$<${gcc_like}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-pedantic>>"
+-        "$<${msvc}:$<BUILD_INTERFACE:-W3;-WX;-Zi;-permissive->>"
+-)
+ if (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
+-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+-    set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+ endif (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
+ 
+ # configure a header file to pass the version number only

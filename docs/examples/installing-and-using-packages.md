@@ -1,10 +1,12 @@
 ## Installing and Using Packages Example: SQLite
 
+_Note: this old example uses Classic Mode, but most developers will be happier with Manifest Mode. See [Manifest Mode: CMake Example](manifest-mode-cmake.md) for an example of converting to Manifest Mode._
+
   - [Step 1: Install](#install)
   - [Step 2: Use](#use)
     - [VS/MSBuild Project (User-wide integration)](#msbuild)
     - [CMake (Toolchain file)](#cmake)
-    - [Other integration options](../users/integration.md)
+    - [Other integration options](../users/buildsystems/integration.md)
 
 ---
 <a name="install"></a>
@@ -14,7 +16,7 @@ First, we need to know what name [SQLite](https://sqlite.org) goes by in the por
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg search sqlite
 libodb-sqlite        2.4.0            Sqlite support for the ODB ORM library
-sqlite3              3.15.0           SQLite is a software library that implements a se...
+sqlite3              3.32.1           SQLite is a software library that implements a se...
 
 If your library is not listed, please open an issue at:
     https://github.com/Microsoft/vcpkg/issues
@@ -24,38 +26,38 @@ Looking at the list, we can see that the port is named "sqlite3". You can also r
 Installing is then as simple as using the `install` command.
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg install sqlite3
--- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-windows
--- DOWNLOADS=D:/src/vcpkg/downloads
--- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/sqlite3_x86-windows
--- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/sqlite3
--- CURRENT_PORT_DIR=D:/src/vcpkg/ports/sqlite3/.
--- Downloading https://sqlite.org/2016/sqlite-amalgamation-3150000.zip...
--- Downloading https://sqlite.org/2016/sqlite-amalgamation-3150000.zip... OK
--- Testing integrity of downloaded file...
--- Testing integrity of downloaded file... OK
--- Extracting source D:/src/vcpkg/downloads/sqlite-amalgamation-3150000.zip
--- Extracting done
--- Configuring x86-windows-rel
--- Configuring x86-windows-rel done
--- Configuring x86-windows-dbg
--- Configuring x86-windows-dbg done
--- Build x86-windows-rel
--- Build x86-windows-rel done
--- Build x86-windows-dbg
--- Build x86-windows-dbg done
--- Package x86-windows-rel
--- Package x86-windows-rel done
--- Package x86-windows-dbg
--- Package x86-windows-dbg done
+Computing installation plan...
+The following packages will be built and installed:
+    sqlite3[core]:x86-windows
+Starting package 1/1: sqlite3:x86-windows
+Building package sqlite3[core]:x86-windows...
+-- Downloading https://sqlite.org/2020/sqlite-amalgamation-3320100.zip...
+-- Extracting source C:/src/vcpkg/downloads/sqlite-amalgamation-3320100.zip
+-- Applying patch fix-arm-uwp.patch
+-- Using source at C:/src/vcpkg/buildtrees/sqlite3/src/3320100-15aeda126a.clean
+-- Configuring x86-windows
+-- Building x86-windows-dbg
+-- Building x86-windows-rel
 -- Performing post-build validation
 -- Performing post-build validation done
-Package sqlite3:x86-windows is installed
+Building package sqlite3[core]:x86-windows... done
+Installing package sqlite3[core]:x86-windows...
+Installing package sqlite3[core]:x86-windows... done
+Elapsed time for package sqlite3:x86-windows: 12 s
+
+Total elapsed time: 12.04 s
+
+The package sqlite3:x86-windows provides CMake targets:
+
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3))
+
 ```
 
-We can check that sqlite3 was successfully installed for x86 windows desktop by running the `list` command.
+We can check that sqlite3 was successfully installed for x86 Windows desktop by running the `list` command.
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg list
-sqlite3:x86-windows         3.15.0           SQLite is a software library that implements a se...
+sqlite3:x86-windows         3.32.1           SQLite is a software library that implements a se...
 ```
 
 To install for other architectures and platforms such as Universal Windows Platform or x64 Desktop, you can suffix the package name with `:<target>`.
@@ -82,7 +84,7 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
-You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio 2017 and the library will be automatically available. For SQLite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
+You can now simply use File -> New Project in Visual Studio and the library will be automatically available. For SQLite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
 
 To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 
@@ -92,7 +94,7 @@ To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as:  
 `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
 
-If you are using CMake through Open Folder with Visual Studio 2017 you can define `CMAKE_TOOLCHAIN_FILE` by adding a "variables" section to each of your `CMakeSettings.json` configurations:
+If you are using CMake through Open Folder with Visual Studio you can define `CMAKE_TOOLCHAIN_FILE` by adding a "variables" section to each of your `CMakeSettings.json` configurations:
 
 ```json
 {
@@ -118,10 +120,11 @@ Now let's make a simple CMake project with a main file.
 cmake_minimum_required(VERSION 3.0)
 project(test)
 
-find_package(Sqlite3 REQUIRED)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
 add_executable(main main.cpp)
-target_link_libraries(main sqlite3)
+
+target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 ```cpp
 // main.cpp

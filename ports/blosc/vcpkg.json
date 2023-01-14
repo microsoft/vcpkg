@@ -1,0 +1,13 @@
+{
+  "name": "blosc",
+  "version-string": "1.18.1",
+  "port-version": 4,
+  "description": "A blocking, shuffling and loss-less compression library that can be faster than `memcpy()`",
+  "homepage": "https://github.com/Blosc/c-blosc",
+  "dependencies": [
+    "lz4",
+    "snappy",
+    "zlib",
+    "zstd"
+  ]
+}

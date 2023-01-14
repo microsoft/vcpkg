@@ -1,4 +1,0 @@
-Source: pixel
-Version: 0.3
-Description: Simple 2D Graphics based on standard and portable OpenGL.
-Build-Depends: glew, opengl, sdl2

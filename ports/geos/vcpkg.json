@@ -1,0 +1,17 @@
+{
+  "name": "geos",
+  "version": "3.11.1",
+  "description": "Geometry Engine Open Source",
+  "homepage": "https://libgeos.org/",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

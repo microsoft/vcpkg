@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "12acf62b792b5b9b406eea20f8b3b25e30a32eca",
+      "version-semver": "12.5.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2b2b58353093074eaa8b462d77cb62c667883673",
+      "version-semver": "12.4.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9a254add1b8a2c6f8d6a59760d6016af1e5c19a6",
+      "version-semver": "12.3.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b312efdf9afad6dc09ce91eb31e19e725a8c1a7a",
+      "version-semver": "12.3.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "36837d18b946ad07bcb95c44450509f1d04ba4ec",
+      "version-semver": "12.2.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2c8e48a165197468833b76c0825621ea408efb0a",
+      "version-semver": "12.1.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "649b055538511bad19442d11dd356688cac46370",
+      "version-semver": "12.0.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "305658dfe1b6b28abc8be014794e6b21e8ba5722",
+      "version-semver": "12.0.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "392c7e0294f16ed82323ccc8b5b7961f20b0b2e3",
+      "version-semver": "12.0.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "700c9eee3d84a215c27fb452e814da58d079086c",
+      "version-semver": "12.0.0-beta.11",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a067bf73d77aa871c394d7972db69939940c114f",
+      "version-semver": "12.0.0-beta.10",
+      "port-version": 1
+    },
+    {
+      "git-tree": "d76b0d95a42ff1a91e73cf46527284844c848f33",
+      "version-string": "12.0.0-beta.10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "98adbbf45b85de0cbabbc2c6f30f5b5dfc42d584",
+      "version-string": "12.0.0-beta.9",
+      "port-version": 0
+    },
+    {
+      "git-tree": "dd0c07c0dd83321a26293415f7a392092196f591",
+      "version-string": "12.0.0-beta.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "96e221ac9eb6246fa0ec743cb3cbcc47b932f8f3",
+      "version-string": "12.0.0-beta.7",
+      "port-version": 0
+    }
+  ]
+}

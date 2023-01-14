@@ -1,5 +1,0 @@
-Source: sdl2-ttf
-Version: 2.0.15-3
-Homepage: https://www.libsdl.org/projects/SDL_ttf/
-Description: A library for rendering TrueType fonts with SDL
-Build-Depends: sdl2, freetype

@@ -1,49 +1,68 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+set(UVATLAS_TAG dec2022)
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF 1a0a756e5ee4bc764ee89b1e30e6b73b24d2eb55 #dec2019
-    SHA512 810f320d51c11b79f211711d066873d4d082d88e0fdb662a15e105a05028b6e536f159730269865965b7eb33d8cdccb4622c5d945ab67df3e005569cb6df6e59
-    HEAD_REF master
+    REF dec2022b
+    SHA512 305985bee492a5fec85dd46e6e59200f88c963bc4e5e4f9f8319dd3a16f677de9d802db0407b85703e3e5274570bb41ac418c639a595640f6049fad595ba8046
+    HEAD_REF main
+    PATCHES openexr.patch
 )
 
-IF(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	SET(BUILD_ARCH "Win32")
-ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
+endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/UVAtlas/UVAtlas_2015.sln
-	PLATFORM ${BUILD_ARCH}
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        eigen ENABLE_USE_EIGEN
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Release/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Debug/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
 
-vcpkg_download_distfile(uvatlastool
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe"
-    FILENAME "uvatlastool.exe"
-    SHA512 2583ba8179d0a58fb85d871368b17571e36242436b5a5dbaf6f99ec2f2ee09f4e11e8f922b29563da3cb3b5bacdb771036c84d5b94f405c7988bfe5f2881c3df
+if(VCPKG_TARGET_IS_UWP)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+else()
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas)
 
-file(INSTALL
-	${DOWNLOADS}/uvatlastool.exe
-	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
+  vcpkg_download_distfile(
+    UVATLASTOOL_EXE
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
+    FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
+    SHA512 55c8458964ab7682718decf51e69ab3e2d2e3d56744af3dd4fc678acabbdc90ed663075e5d17e74af1f6a58bf439d314720b7ec1242d85d0e7991237d19265e1
+  )
 
-	# Handle copyright
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
+
+  file(INSTALL
+    ${UVATLASTOOL_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-${UVATLAS_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES uvatlastool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

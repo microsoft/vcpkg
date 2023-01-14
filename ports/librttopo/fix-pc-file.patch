@@ -1,0 +1,9 @@
+diff --git a/rttopo.pc.in b/rttopo.pc.in
+index 86c71dc..4064506 100644
+--- a/rttopo.pc.in
++++ b/rttopo.pc.in
+@@ -10,3 +10,4 @@ Description: the RT Topology library
+ Version: @VERSION@
+ Libs: -L${libdir} -lrttopo -lm
+ Cflags: -I${includedir} 
++Requires.private: geos

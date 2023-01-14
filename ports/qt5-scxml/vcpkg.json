@@ -1,0 +1,13 @@
+{
+  "name": "qt5-scxml",
+  "version": "5.15.8",
+  "description": "Qt5 SCXML Module - Provides classes and tools for creating state machines from SCXML files and embedding them in applications",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

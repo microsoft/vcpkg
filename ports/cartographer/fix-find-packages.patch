@@ -28,9 +28,9 @@ index 2e3a686..f36f15a 100644
 -PKG_SEARCH_MODULE(CAIRO REQUIRED cairo>=1.12.16)
 +#include(FindPkgConfig)
 +#PKG_SEARCH_MODULE(CAIRO REQUIRED cairo>=1.12.16)
-+if(CMAKE_BUILD_TYPE STREQUAL Debug)
-+    set(CAIRO_LIB_SUFFIX d)
-+endif()
++#if(CMAKE_BUILD_TYPE STREQUAL Debug)
++#    set(CAIRO_LIB_SUFFIX d)
++#endif()
 +find_library(CAIRO_LIBRARY cairo${CAIRO_LIB_SUFFIX})
  
  # Only build the documentation if we can find Sphinx.
@@ -88,7 +88,7 @@ index 2e3a686..f36f15a 100644
 -target_link_libraries(${PROJECT_NAME} PUBLIC gflags)
 +#target_link_libraries(${PROJECT_NAME} PUBLIC glog)
 +#target_link_libraries(${PROJECT_NAME} PUBLIC gflags)
-+target_link_libraries(${PROJECT_NAME} PUBLIC ${CAIRO_LIBRARY})
++#target_link_libraries(${PROJECT_NAME} PUBLIC ${CAIRO_LIBRARY})
  
  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
    "${CAIRO_INCLUDE_DIRS}")

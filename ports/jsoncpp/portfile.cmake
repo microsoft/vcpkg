@@ -1,41 +1,32 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
-    REF 1.9.1
-    SHA512 4a8352e1d32c0ba8a0aea4df1663279cb2256b334643c5b62be37dfb5951e06900ba38c010d1201511fcf7de09137d6a4b886edbb2b99160d2f62b5f4679f766
+    REF 1.9.5
+    SHA512 1d06e044759b1e1a4cc4960189dd7e001a0a4389d7239a6d59295af995a553518e4e0337b4b4b817e70da5d9731a4c98655af90791b6287870b5ff8d73ad8873
     HEAD_REF master
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(JSONCPP_STATIC OFF)
-    set(JSONCPP_DYNAMIC ON)
-else()
-    set(JSONCPP_STATIC ON)
-    set(JSONCPP_DYNAMIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSONCPP_STATIC)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
-    OPTIONS -DJSONCPP_WITH_CMAKE_PACKAGE:BOOL=ON
-            -DBUILD_STATIC_LIBS:BOOL=${JSONCPP_STATIC}
-            -DJSONCPP_WITH_PKGCONFIG_SUPPORT:BOOL=OFF
-            -DJSONCPP_WITH_TESTS:BOOL=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+        -DJSONCPP_WITH_CMAKE_PACKAGE=ON
+        -DBUILD_STATIC_LIBS=${JSONCPP_STATIC}
+        -DJSONCPP_STATIC_WINDOWS_RUNTIME=${STATIC_CRT}
+        -DJSONCPP_WITH_PKGCONFIG_SUPPORT=OFF
+        -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+        -DJSONCPP_WITH_TESTS=OFF
+        -DJSONCPP_WITH_EXAMPLE=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/jsoncpp)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/jsoncpp)
 
-# Remove includes in debug
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jsoncpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jsoncpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/jsoncpp/copyright)
-
-# Copy pdb files
 vcpkg_copy_pdbs()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

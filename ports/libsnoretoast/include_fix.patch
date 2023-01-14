@@ -1,0 +1,28 @@
+From 7564823f8f0bc4d647bf3470ab7a2d8612418f32 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wr=C3=B3bel?= <me@dawidwrobel.com>
+Date: Fri, 17 Sep 2021 12:30:41 +0000
+Subject: [PATCH] Use relative INTERFACE_INCLUDE location
+
+Using ${CMAKE_INSTALL_PREFIX} hardcodes the installation location,
+instead of having CMake
+use ${_IMPORT_PREFIX}
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index eef57f7..6c35b71 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ add_library(SnoreToastActions INTERFACE)
+ target_include_directories(SnoreToastActions INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/snoretoast>
++    $<INSTALL_INTERFACE:include/snoretoast>
+ )
+ add_library(SnoreToast::SnoreToastActions ALIAS SnoreToastActions)
+ 
+-- 
+GitLab
+

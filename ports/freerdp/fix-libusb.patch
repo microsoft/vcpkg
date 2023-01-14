@@ -1,0 +1,13 @@
+diff --git a/channels/urbdrc/client/libusb/libusb_udevman.c b/channels/urbdrc/client/libusb/libusb_udevman.c
+index 5f1e9e0d2..022be4e21 100644
+--- a/channels/urbdrc/client/libusb/libusb_udevman.c
++++ b/channels/urbdrc/client/libusb/libusb_udevman.c
+@@ -581,7 +581,7 @@ static BOOL device_is_filtered(struct libusb_device* dev,
+ 	return filtered;
+ }
+ 
+-static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev,
++static int LIBUSB_CALL hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev,
+                             libusb_hotplug_event event, void* user_data)
+ {
+ 	VID_PID_PAIR pair;

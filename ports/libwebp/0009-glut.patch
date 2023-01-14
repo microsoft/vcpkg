@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0799269..45b3306 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -532,7 +532,7 @@ if(WEBP_BUILD_VWEBP)
+     target_link_libraries(vwebp
+                           ${OPENGL_LIBRARIES}
+                           exampleutil
+-                          ${GLUT_glut_LIBRARY}
++                          GLUT::GLUT
+                           imageioutil
+                           webp
+                           webpdemux)

@@ -1,40 +1,88 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF d0a1f5a05a2b0f8315e5b3f17b8e34c730861b31
-    SHA512 7179751b0216368b4a4bf8c9b0c1c1e3b17d6aa4788b4aeaa7fbb2b6d9d50b34cf209082f3531a2e0994b5fc02416373666d4d12cee282cec2c3d02c13a640a8
-    PATCHES
-        comment-distutils.patch
-        CMake-targets.patch
+    REF v2022.4
+    SHA512 d93e97e168c50f545cc42418603ffc5fa6299bb3cc30d927444e4de0d955abc5dd481c9662a59cd49fc379da6bcc6df6fb747947e3dc144cee9b489aff7c4785
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_TARGET_IS_IOS)
+    message(STATUS "Using iOS trplet. Executables won't be created...")
+    set(TOOLS_INSTALL OFF)
+    set(SKIP_EXECUTABLES ON) 
+else()
+    set(TOOLS_INSTALL ON)
+    set(SKIP_EXECUTABLES OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSPIRV-Headers_SOURCE_DIR=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}
+        -DSPIRV-Headers_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DSPIRV_WERROR=OFF
+        -DSPIRV_SKIP_TESTS=ON
+        -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES}
+        -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
+        -DSPIRV_TOOLS_BUILD_STATIC=ON
+        -DENABLE_SPIRV_TOOLS_INSTALL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+ # the directory name is capitalized as opposed to the port name
+if(WIN32)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME SPIRV-Tools)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME SPIRV-Tools-link)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME SPIRV-Tools-lint)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME SPIRV-Tools-opt)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME SPIRV-Tools-reduce)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME SPIRV-Tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME SPIRV-Tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME SPIRV-Tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME SPIRV-Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME SPIRV-Tools-reduce) # now delete
+endif()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
-file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-file(REMOVE ${EXES})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(TOOLS_INSTALL)
+    vcpkg_copy_tools(
+        TOOL_NAMES 
+            spirv-as 
+            spirv-cfg 
+            spirv-dis 
+            spirv-link 
+            spirv-lint 
+            spirv-opt 
+            spirv-reduce 
+            spirv-val 
+        AUTO_CLEAN
+    )
+endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spirv-tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/spirv-tools/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-tools/copyright)
+if(WIN32)
+    file(REMOVE_RECURSE 
+        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools" 
+        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-link"
+        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-lint"  
+        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-opt"
+        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-reduce" 
+        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools" 
+        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-link" 
+        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-lint" 
+        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-opt" 
+        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-reduce"
+    )
+endif()
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # lesspipe.sh is the only file there
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-vcpkg_test_cmake(PACKAGE_NAME spirv-tools)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

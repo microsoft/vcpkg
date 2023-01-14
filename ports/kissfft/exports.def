@@ -1,0 +1,15 @@
+EXPORTS
+	kiss_fft_alloc
+	kiss_fft
+  kiss_fftr_alloc
+	kiss_fftr
+	kiss_fftri
+  kiss_fft
+  kiss_fftnd_alloc
+  kiss_fftnd
+  kiss_fftndr_alloc
+  kiss_fftndr
+  kiss_fftndri
+	kiss_fft_stride
+	kiss_fft_cleanup
+	kiss_fft_next_fast_size

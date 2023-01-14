@@ -1,16 +1,13 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_colony
-    REF 81fe8c4daf433491f14248837ee8ed5cf447c856
-    SHA512 a6ae03d383c94b0a758e7aedee2838d46b3665881e2c0823b064a3579140a351d96fec66d456de5843b6c4c8d2f6f6efac5f547841c08edd349b0f153e9c4871
+    REF 7243b4601b5d7e989550c158a9918ea5a05feaf4
+    SHA512 aaf898ac5a37720545a7b7226c8bd09be80dcdd03d9c77a2c64cfe0aedbb59ede4042001c616c4b5d29f13717ae5b637c0608d83819c2bceae5606c8555a64da
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/plf_colony.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${SOURCE_PATH}/plf_colony.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

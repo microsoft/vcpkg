@@ -1,0 +1,24 @@
+diff --git a/include/opc/ua/protocol/utils.h b/include/opc/ua/protocol/utils.h
+index e23bffe..5c8c2ad 100644
+--- a/include/opc/ua/protocol/utils.h
++++ b/include/opc/ua/protocol/utils.h
+@@ -22,6 +22,7 @@
+ #include <iomanip>
+ #include <sstream>
+ #include <vector>
++#include <algorithm>
+ 
+ namespace OpcUa
+ {
+diff --git a/src/core/model_impl.h b/src/core/model_impl.h
+index 0f548c5..c29626b 100644
+--- a/src/core/model_impl.h
++++ b/src/core/model_impl.h
+@@ -20,6 +20,7 @@
+ #pragma once
+ 
+ #include <opc/ua/model.h>
++#include <algorithm>
+ 
+ namespace OpcUa
+ {

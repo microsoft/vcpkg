@@ -1,0 +1,18 @@
+{
+  "name": "tinyfiledialogs",
+  "version": "3.8.8",
+  "port-version": 4,
+  "description": "Highly portable and cross-platform dialogs for native inputbox, passwordbox, colorpicker and more",
+  "homepage": "https://sourceforge.net/projects/tinyfiledialogs/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

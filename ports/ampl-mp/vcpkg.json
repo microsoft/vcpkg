@@ -1,0 +1,15 @@
+{
+  "name": "ampl-mp",
+  "version-date": "2020-11-11",
+  "port-version": 3,
+  "description": "An open-source library for mathematical programming",
+  "homepage": "https://github.com/ampl/mp",
+  "supports": "!uwp",
+  "dependencies": [
+    "ampl-asl",
+    {
+      "name": "ampl-mp",
+      "host": true
+    }
+  ]
+}

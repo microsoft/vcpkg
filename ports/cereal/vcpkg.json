@@ -1,0 +1,18 @@
+{
+  "name": "cereal",
+  "version": "1.3.2",
+  "port-version": 1,
+  "description": "a header-only C++11 serialization library (built in support for binary, XML and JSon)",
+  "homepage": "https://github.com/USCiLab/cereal",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

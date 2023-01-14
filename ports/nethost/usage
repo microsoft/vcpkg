@@ -1,6 +1,4 @@
 The package nethost can be used via CMake:
 
-    find_path(NETHOST_INCLUDE_DIRS nethost.h)
-    find_library(NETHOST_LIBRARY NAMES libnethost nethost)
-    target_include_directories(main PRIVATE ${NETHOST_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${NETHOST_LIBRARY})
+    find_package(unofficial-nethost CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::nethost::nethost)

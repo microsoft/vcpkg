@@ -1,0 +1,30 @@
+{
+  "name": "libgpg-error",
+  "version": "1.46",
+  "description": "A common dependency of all GnuPG components",
+  "homepage": "https://gnupg.org/software/libgpg-error/index.html",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "libgpg-error",
+      "host": true,
+      "default-features": false
+    }
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,161 @@
+ clang/cmake/modules/CMakeLists.txt              | 4 ++--
+ compiler-rt/cmake/Modules/CompilerRTUtils.cmake | 2 +-
+ flang/cmake/modules/CMakeLists.txt              | 4 ++--
+ lld/cmake/modules/CMakeLists.txt                | 4 ++--
+ llvm/cmake/modules/AddLLVM.cmake                | 2 +-
+ llvm/cmake/modules/CMakeLists.txt               | 2 +-
+ mlir/cmake/modules/CMakeLists.txt               | 4 ++--
+ mlir/test/CMakeLists.txt                        | 2 +-
+ openmp/tools/Modules/CMakeLists.txt             | 2 +-
+ polly/cmake/CMakeLists.txt                      | 4 ++--
+ 10 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/clang/cmake/modules/CMakeLists.txt b/clang/cmake/modules/CMakeLists.txt
+index c6f6ce9fe5d6..fc886b23a1a8 100644
+--- a/clang/cmake/modules/CMakeLists.txt
++++ b/clang/cmake/modules/CMakeLists.txt
+@@ -5,11 +5,11 @@ include(FindPrefixFromConfig)
+ # Generate a list of CMake library targets so that other CMake projects can
+ # link against them. LLVM calls its version of this file LLVMExports.cmake, but
+ # the usual CMake convention seems to be ${Project}Targets.cmake.
+-set(CLANG_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/clang)
++set(CLANG_INSTALL_PACKAGE_DIR share/clang)
+ set(clang_cmake_builddir "${CMAKE_BINARY_DIR}/${CLANG_INSTALL_PACKAGE_DIR}")
+ 
+ # Keep this in sync with llvm/cmake/CMakeLists.txt!
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ get_property(CLANG_EXPORTS GLOBAL PROPERTY CLANG_EXPORTS)
+diff --git a/compiler-rt/cmake/Modules/CompilerRTUtils.cmake b/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
+index 052095801aae..f3402793b60c 100644
+--- a/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
++++ b/compiler-rt/cmake/Modules/CompilerRTUtils.cmake
+@@ -376,7 +376,7 @@ macro(load_llvm_config)
+       file(TO_CMAKE_PATH ${LLVM_CMAKE_DIR_FROM_LLVM_CONFIG} LLVM_CMAKE_DIR)
+     else()
+       file(TO_CMAKE_PATH ${LLVM_BINARY_DIR} LLVM_BINARY_DIR_CMAKE_STYLE)
+-      set(LLVM_CMAKE_DIR "${LLVM_BINARY_DIR_CMAKE_STYLE}/lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
++      set(LLVM_CMAKE_DIR "${LLVM_BINARY_DIR_CMAKE_STYLE}/share/llvm")
+     endif()
+ 
+     set(LLVM_CMAKE_INCLUDE_FILE "${LLVM_CMAKE_DIR}/LLVMConfig.cmake")
+diff --git a/flang/cmake/modules/CMakeLists.txt b/flang/cmake/modules/CMakeLists.txt
+index 170568c80dde..1bf6d6a829e2 100644
+--- a/flang/cmake/modules/CMakeLists.txt
++++ b/flang/cmake/modules/CMakeLists.txt
+@@ -4,11 +4,11 @@ include(FindPrefixFromConfig)
+ # Generate a list of CMake library targets so that other CMake projects can
+ # link against them. LLVM calls its version of this file LLVMExports.cmake, but
+ # the usual CMake convention seems to be ${Project}Targets.cmake.
+-set(FLANG_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/flang)
++set(FLANG_INSTALL_PACKAGE_DIR share/flang)
+ set(flang_cmake_builddir "${CMAKE_BINARY_DIR}/${FLANG_INSTALL_PACKAGE_DIR}")
+ 
+ # Keep this in sync with llvm/cmake/CMakeLists.txt!
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ get_property(FLANG_EXPORTS GLOBAL PROPERTY FLANG_EXPORTS)
+diff --git a/lld/cmake/modules/CMakeLists.txt b/lld/cmake/modules/CMakeLists.txt
+index 760c9d5f8d87..acd8a65808f5 100644
+--- a/lld/cmake/modules/CMakeLists.txt
++++ b/lld/cmake/modules/CMakeLists.txt
+@@ -4,11 +4,11 @@ include(FindPrefixFromConfig)
+ # Generate a list of CMake library targets so that other CMake projects can
+ # link against them. LLVM calls its version of this file LLVMExports.cmake, but
+ # the usual CMake convention seems to be ${Project}Targets.cmake.
+-set(LLD_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/lld)
++set(LLD_INSTALL_PACKAGE_DIR share/lld)
+ set(lld_cmake_builddir "${CMAKE_BINARY_DIR}/${LLD_INSTALL_PACKAGE_DIR}")
+ 
+ # Keep this in sync with llvm/cmake/CMakeLists.txt!
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ get_property(LLD_EXPORTS GLOBAL PROPERTY LLD_EXPORTS)
+diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
+index 37bc98f9e021..7cbfa2a9a577 100644
+--- a/llvm/cmake/modules/AddLLVM.cmake
++++ b/llvm/cmake/modules/AddLLVM.cmake
+@@ -1049,7 +1049,7 @@ function(process_llvm_pass_plugins)
+ 
+       ## Part 1: Extension header to be included whenever we need extension
+       #  processing.
+-      set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++      set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+       set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+       file(WRITE
+           "${llvm_cmake_builddir}/LLVMConfigExtensions.cmake"
+diff --git a/llvm/cmake/modules/CMakeLists.txt b/llvm/cmake/modules/CMakeLists.txt
+index cea0c1df0a14..639c5422b04a 100644
+--- a/llvm/cmake/modules/CMakeLists.txt
++++ b/llvm/cmake/modules/CMakeLists.txt
+@@ -2,7 +2,7 @@ include(ExtendPath)
+ include(LLVMDistributionSupport)
+ include(FindPrefixFromConfig)
+ 
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ # First for users who use an installed LLVM, create the LLVMExports.cmake file.
+diff --git a/mlir/cmake/modules/CMakeLists.txt b/mlir/cmake/modules/CMakeLists.txt
+index d6703993bd74..e2f6cd3ea8cb 100644
+--- a/mlir/cmake/modules/CMakeLists.txt
++++ b/mlir/cmake/modules/CMakeLists.txt
+@@ -5,11 +5,11 @@ include(FindPrefixFromConfig)
+ # Generate a list of CMake library targets so that other CMake projects can
+ # link against them. LLVM calls its version of this file LLVMExports.cmake, but
+ # the usual CMake convention seems to be ${Project}Targets.cmake.
+-set(MLIR_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/mlir)
++set(MLIR_INSTALL_PACKAGE_DIR share/mlir)
+ set(mlir_cmake_builddir "${CMAKE_BINARY_DIR}/${MLIR_INSTALL_PACKAGE_DIR}")
+ 
+ # Keep this in sync with llvm/cmake/CMakeLists.txt!
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ get_property(MLIR_EXPORTS GLOBAL PROPERTY MLIR_EXPORTS)
+diff --git a/mlir/test/CMakeLists.txt b/mlir/test/CMakeLists.txt
+index 8e44a9c37cf1..f6edc7d77ffd 100644
+--- a/mlir/test/CMakeLists.txt
++++ b/mlir/test/CMakeLists.txt
+@@ -8,7 +8,7 @@ endif()
+ # Passed to lit.site.cfg.py.so that the out of tree Standalone dialect test
+ # can find MLIR's CMake configuration
+ set(MLIR_CMAKE_DIR
+-  "${CMAKE_BINARY_DIR}/lib${LLVM_LIBDIR_SUFFIX}/cmake/mlir")
++  "${CMAKE_BINARY_DIR}/share/mlir")
+ 
+ # Passed to lit.site.cfg.py.in to set up the path where to find the libraries
+ # for linalg integration tests.
+diff --git a/openmp/tools/Modules/CMakeLists.txt b/openmp/tools/Modules/CMakeLists.txt
+index 22d818eea72d..75aacc4468d4 100644
+--- a/openmp/tools/Modules/CMakeLists.txt
++++ b/openmp/tools/Modules/CMakeLists.txt
+@@ -12,4 +12,4 @@
+ 
+ 
+ install(FILES "FindOpenMPTarget.cmake"
+-              DESTINATION "${OPENMP_INSTALL_LIBDIR}/cmake/openmp")
++              DESTINATION "share/openmp")
+diff --git a/polly/cmake/CMakeLists.txt b/polly/cmake/CMakeLists.txt
+index 7a0190b69df6..cdd3b4f126bb 100644
+--- a/polly/cmake/CMakeLists.txt
++++ b/polly/cmake/CMakeLists.txt
+@@ -3,8 +3,8 @@
+ include(ExtendPath)
+ include(FindPrefixFromConfig)
+ 
+-set(LLVM_INSTALL_PACKAGE_DIR "lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
+-set(POLLY_INSTALL_PACKAGE_DIR "lib${LLVM_LIBDIR_SUFFIX}/cmake/polly")
++set(LLVM_INSTALL_PACKAGE_DIR "share/llvm")
++set(POLLY_INSTALL_PACKAGE_DIR "share/polly")
+ if (CMAKE_CONFIGURATION_TYPES)
+   set(POLLY_EXPORTS_FILE_NAME "PollyExports-$<LOWER_CASE:$<CONFIG>>.cmake")
+ else()

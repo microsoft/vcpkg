@@ -1,0 +1,38 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-safe-numerics",
+  "version": "1.81.0",
+  "description": "Boost safe_numerics module",
+  "homepage": "https://github.com/boostorg/safe_numerics",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-concept-check",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-logic",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

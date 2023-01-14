@@ -1,0 +1,21 @@
+diff --git a/libde265/CMakeLists.txt b/libde265/CMakeLists.txt
+index 749c7fb..45e7419 100644
+--- a/libde265/CMakeLists.txt
++++ b/libde265/CMakeLists.txt
+@@ -43,7 +43,7 @@ set (libde265_headers
+   bitstream.h
+   cabac.h
+   configparam.h
+-  de265-version.h
++  ${CMAKE_CURRENT_BINARY_DIR}/de265-version.h
+   contextmodel.h
+   de265.h
+   deblock.h
+@@ -119,7 +119,6 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config
+ )
+ 
+ install(FILES ${libde265_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/de265-version.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+ 
+ install(EXPORT ${PROJECT_NAME}Config DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+ 

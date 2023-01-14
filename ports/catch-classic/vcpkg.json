@@ -1,0 +1,11 @@
+{
+  "name": "catch-classic",
+  "version-string": "1.12.2",
+  "port-version": 1,
+  "description": [
+    "A modern, header-only test framework for unit tests",
+    "This is specifically the legacy 1.x branch provided for compatibility",
+    "with older compilers."
+  ],
+  "homepage": "https://github.com/catchorg/Catch2"
+}

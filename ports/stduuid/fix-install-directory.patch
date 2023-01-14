@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fffb92c..f45a7dc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,8 @@ option(UUID_USING_CXX20_SPAN "Using span from std instead of gsl" OFF)
+ add_library(${PROJECT_NAME} INTERFACE)
+ target_include_directories(${PROJECT_NAME} INTERFACE
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-        $<INSTALL_INTERFACE:include>)
++        $<INSTALL_INTERFACE:include>
++        $<INSTALL_INTERFACE:include/stduuid>)
+ 
+ # Using system uuid generator
+ if (UUID_SYSTEM_GENERATOR)
+@@ -44,7 +45,7 @@ if (NOT UUID_USING_CXX20_SPAN)
+ endif ()
+ 
+ # Install step and imported target
+-install(FILES include/uuid.h DESTINATION include)
++install(FILES include/uuid.h DESTINATION include/stduuid)
+ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets)
+ install(EXPORT ${PROJECT_NAME}-targets
+         DESTINATION lib/cmake/${PROJECT_NAME})

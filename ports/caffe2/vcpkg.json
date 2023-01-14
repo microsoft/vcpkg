@@ -1,0 +1,20 @@
+{
+  "name": "caffe2",
+  "version": "0.8.1",
+  "port-version": 7,
+  "description": "Caffe2 is a lightweight, modular, and scalable deep learning framework.",
+  "homepage": "https://github.com/caffe2/caffe2",
+  "license": "Apache-2.0",
+  "supports": "!x86",
+  "dependencies": [
+    "eigen3",
+    "gflags",
+    "glog",
+    "lmdb",
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

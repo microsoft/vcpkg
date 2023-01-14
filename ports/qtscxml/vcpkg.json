@@ -1,0 +1,32 @@
+{
+  "name": "qtscxml",
+  "version": "6.4.2",
+  "description": "SCXML (state machine notation) compiler and related tools",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "qtscxml",
+      "host": true,
+      "default-features": false
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

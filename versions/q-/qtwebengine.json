@@ -1,0 +1,89 @@
+{
+  "versions": [
+    {
+      "git-tree": "fcffeb632b2e30b7be572c5f50e5b40ee75e3bee",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "56c8290990699a0947a4583d9365feeeb3acad10",
+      "version": "6.4.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "d42fac47feb315e847b30c86520ddaf3a309e76e",
+      "version": "6.4.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "06385099cee48df733743655a3a7be54360042d3",
+      "version": "6.4.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "6a9606ce3a5531467f484accb11a2fe6e69f09a3",
+      "version": "6.3.2",
+      "port-version": 1
+    },
+    {
+      "git-tree": "ec3282a08fee4cdadb156aa5389d33d39d507ebc",
+      "version": "6.3.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a44c1faf17e5e071b28369731c24b766656a8a8e",
+      "version": "6.3.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "29b6cc23c91540debb74a38874cdd5985e7dbf59",
+      "version": "6.3.0",
+      "port-version": 3
+    },
+    {
+      "git-tree": "fb2bc02591f25285ed7e085bce22001d42ec5d87",
+      "version": "6.3.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "6562d0a0294290afd20da039ff60602c1f3f4701",
+      "version": "6.3.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "47cd0b321b5eda832afbb46e58159ca3adb65ce9",
+      "version": "6.3.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7972a7fa77f29d83f91787c942f4f85d50651c05",
+      "version": "6.2.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c09764532fe7b4367f6438db92b59f41cb3d4e52",
+      "version": "6.2.3",
+      "port-version": 1
+    },
+    {
+      "git-tree": "97ae42eec1de17a95e9d48132ee94dd80ab4a239",
+      "version": "6.2.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9a3f041f2f3f5fdb5e1304efbae7ae0e9abbef79",
+      "version-semver": "6.2.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4c69c49d9fe8599dd22538d9cef12e09cb29778e",
+      "version-semver": "6.2.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "47de546e07339c97ba827fa8b5ceba4d7198d561",
+      "version-semver": "6.2.0",
+      "port-version": 0
+    }
+  ]
+}

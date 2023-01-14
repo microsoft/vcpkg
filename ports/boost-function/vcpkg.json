@@ -1,0 +1,54 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-function",
+  "version": "1.81.0",
+  "description": "Boost function module",
+  "homepage": "https://github.com/boostorg/function",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-bind",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-throw-exception",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-index",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-typeof",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

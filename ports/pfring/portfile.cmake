@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ntop/PF_RING
@@ -8,32 +6,36 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         use-vcpkg-libpcap.patch
+        makefile.patch
 )
 
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    SKIP_CONFIGURE
-)
-
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+endif()
 set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
-
 vcpkg_build_make()
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
 # Install manually because pfring cannot set prefix
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    
+
     if (VCPKG_BUILD_TYPE STREQUAL debug)
         file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")
         file(INSTALL ${PFRING_KO_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
-        
+
         file(INSTALL ${SOURCE_PATH}/userland/lib/pfring.h DESTINATION ${CURRENT_PACKAGES_DIR}/debug/include)
     endif()
-    
+
     file(GLOB_RECURSE PFRING_LIBS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     file(INSTALL ${PFRING_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
+
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(GLOB_RECURSE PFRING_DLLS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
         file(INSTALL ${PFRING_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -42,18 +44,18 @@ endif()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    
+
     file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")
     file(INSTALL ${PFRING_KO_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    
+
     file(GLOB_RECURSE PFRING_LIBS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     file(INSTALL ${PFRING_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    
+
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(GLOB_RECURSE PFRING_DLLS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
         file(INSTALL ${PFRING_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     endif()
-    
+
     file(INSTALL ${SOURCE_PATH}/userland/lib/pfring.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endif()
 

@@ -1,0 +1,39 @@
+{
+  "name": "blend2d",
+  "version-date": "2022-05-02",
+  "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
+  "homepage": "https://github.com/blend2d/blend2d",
+  "documentation": "https://blend2d.com/doc/index.html",
+  "license": "Zlib",
+  "supports": "!arm & !uwp & !wasm32",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "futex",
+    "jit",
+    "logging",
+    "tls"
+  ],
+  "features": {
+    "futex": {
+      "description": "Default feature. Enables use of futex."
+    },
+    "jit": {
+      "description": "Default feature. Enables jit pipeline compilation. Not supported for ARM and UWP."
+    },
+    "logging": {
+      "description": "Default feature. Enables logging."
+    },
+    "tls": {
+      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported."
+    }
+  }
+}

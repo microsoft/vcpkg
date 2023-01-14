@@ -1,0 +1,26 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3dad12e5..e290a3be 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,7 +113,7 @@ include (${sdf_cmake_dir}/SDFUtils.cmake)
+ 
+ message (STATUS "\n\n====== Finding 3rd Party Packages ======")
+  # Use of tinyxml. System installation on UNIX. Internal copy on WIN
+-if (UNIX)
++if (true)
+   message (STATUS "Using system tinyxml")
+   set (USE_EXTERNAL_TINYXML True)
+ elseif(WIN32)
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 427e5e7a..655fafc0 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -9,7 +9,7 @@ if (USE_EXTERNAL_TINYXML)
+   #################################################
+   # Find tinyxml. Only debian distributions package tinyxml with a pkg-config
+   # Use pkg_check_modules and fallback to manual detection (needed, at least, for MacOS)
+-  pkg_check_modules(tinyxml tinyxml)
++  find_package(tinyxml CONFIG REQUIRED)
+   if (NOT tinyxml_FOUND)
+     find_path (tinyxml_INCLUDE_DIRS tinyxml.h ${tinyxml_INCLUDE_DIRS} ENV CPATH)
+     find_library(tinyxml_LIBRARIES NAMES tinyxml)

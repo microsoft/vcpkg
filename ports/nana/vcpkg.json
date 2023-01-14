@@ -1,0 +1,19 @@
+{
+  "name": "nana",
+  "version-string": "1.7.4",
+  "port-version": 2,
+  "description": "Cross-platform library for GUI programming in modern C++ style.",
+  "homepage": "https://github.com/cnjinhao/nana",
+  "dependencies": [
+    {
+      "name": "fontconfig",
+      "platform": "!uwp & !windows & !mingw"
+    },
+    {
+      "name": "freetype",
+      "platform": "!uwp & !windows & !mingw"
+    },
+    "libjpeg-turbo",
+    "libpng"
+  ]
+}

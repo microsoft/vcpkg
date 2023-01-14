@@ -1,11 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bfgroup/Lyra
-    REF 1.1
-    SHA512 afb1f97a3c72697a8739019e132758db270a9271b4be8f7e593f43155761550606d63795c657c586fb885bb61d78ad0fe1517537b8338c5e05ba74be5a8dc208
+    REF 1.6
+    SHA512 e357fd0e925b67a51ad7232035ac66842676837baebf7a69eb416807b11400c283d098a22bf3ae27ce904700c5b849953ede1873d6535a8b34c4704ebcb09748
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/include/lyra DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME lyra
+    CONFIG_PATH share/lyra/cmake
+)
 
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+# Library is header-only, so no debug content.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

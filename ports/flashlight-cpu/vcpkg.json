@@ -1,0 +1,103 @@
+{
+  "name": "flashlight-cpu",
+  "version": "0.3",
+  "port-version": 3,
+  "description": "A C++ standalone library for machine learning. CPU backend.",
+  "homepage": "https://github.com/facebookresearch/flashlight",
+  "license": "MIT",
+  "supports": "!(windows | osx)",
+  "default-features": [
+    "fl"
+  ],
+  "features": {
+    "asr": {
+      "description": "flashlight asr app",
+      "dependencies": [
+        {
+          "name": "flashlight-cpu",
+          "features": [
+            "fl",
+            "lib"
+          ]
+        },
+        "gflags",
+        {
+          "name": "libsndfile",
+          "default-features": false,
+          "features": [
+            "external-libs"
+          ]
+        }
+      ]
+    },
+    "fl": {
+      "description": "flashlight core autograd and neural net library",
+      "dependencies": [
+        {
+          "name": "arrayfire",
+          "features": [
+            "cpu"
+          ]
+        },
+        "cereal",
+        {
+          "name": "gloo",
+          "features": [
+            "mpi"
+          ]
+        },
+        "onednn",
+        "openmpi",
+        "stb"
+      ]
+    },
+    "imgclass": {
+      "description": "flashlight image classification app",
+      "dependencies": [
+        {
+          "name": "flashlight-cpu",
+          "features": [
+            "fl",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "lib": {
+      "description": "flashlight libraries",
+      "dependencies": [
+        "fftw3",
+        "intel-mkl",
+        "kenlm"
+      ]
+    },
+    "lm": {
+      "description": "flashlight lm app",
+      "dependencies": [
+        {
+          "name": "flashlight-cpu",
+          "features": [
+            "fl",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "objdet": {
+      "description": "flashlight object detection app",
+      "dependencies": [
+        {
+          "name": "flashlight-cpu",
+          "features": [
+            "fl",
+            "imgclass",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    }
+  }
+}

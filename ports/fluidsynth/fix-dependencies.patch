@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4ea71c..df37028 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -517,8 +517,9 @@ else(NOT enable-pkgconfig)
+     find_package ( PkgConfig REQUIRED )
+ 
+     # Mandatory libraries: glib and gthread
+-    pkg_check_modules ( GLIB REQUIRED glib-2.0>=2.6.5 gthread-2.0>=2.6.5 )
++    pkg_check_modules ( GLIB IMPORTED_TARGET REQUIRED glib-2.0>=2.6.5 gthread-2.0>=2.6.5 )
+     list( APPEND PC_REQUIRES_PRIV "glib-2.0" "gthread-2.0")
++    set(GLIB_LIBRARIES PkgConfig::GLIB) # To carry libs with absolute paths, https://gitlab.kitware.com/cmake/cmake/-/issues/16154
+ 
+     if ( GLIB_glib-2.0_VERSION AND GLIB_glib-2.0_VERSION VERSION_LESS "2.26.0" )
+         message ( WARNING "Your version of glib is very old. This may cause problems with fluidsynth's sample cache on Windows. Consider updating to glib 2.26 or newer!" )
+@@ -865,6 +866,7 @@ endif ()
+ if ( CMAKE_VERSION VERSION_EQUAL "3.12.0" OR CMAKE_VERSION VERSION_GREATER "3.12.0" )
+     # retrieve all the private libs we depend on
+     get_target_property ( LIBS_PRIVATE libfluidsynth INTERFACE_LINK_LIBRARIES)
++    list(FILTER LIBS_PRIVATE EXCLUDE REGEX "^PkgConfig::") # already in 'Requires.private'
+     # make a copy
+     set ( LIBS_PRIVATE_WITH_PATH ${LIBS_PRIVATE} )
+ 

@@ -1,0 +1,89 @@
+{
+  "versions": [
+    {
+      "git-tree": "01d1e9e884ca8dba08d864da357b30737c061894",
+      "version": "1.81.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "43b7947d031f7dc90e89e5ab20a942307bce299c",
+      "version": "1.80.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "b341b99d2ab5ebdd7722ee83fe57c5cad255a2ef",
+      "version": "1.80.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8f8a09f7b75cca0fe3cd7995f234ee35f985c3cf",
+      "version": "1.79.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e2c998753d319d94c00d3b3b3365e2a116bad23f",
+      "version": "1.78.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5d7b01d612075dfb3d89b799bec152785c838b84",
+      "version": "1.77.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "70b5734ed30839efbf4048f5749af11e292df641",
+      "version": "1.76.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "93abe1969976dcf265014b8e7f5463ee3b3b76d1",
+      "version-string": "1.75.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "bf878abd4682e1ade2169d87639d5aabb66571bf",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8935c84edc35077cf28149e42ffe6768a926a73b",
+      "version-string": "1.73.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "59dbb65ff0a083dd51c070f2d485f0b85a2f6b40",
+      "version-string": "1.72.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "82aafdeb7881bece44c278c6fae415b10fc8d709",
+      "version-string": "1.71.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "eb34d5101d14f066aef9b00dc43570693ad837cc",
+      "version-string": "1.70.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d61f5ff2c62184804fe18d07f3c9ca5dfbd2a469",
+      "version-string": "1.69.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "afcb1dc25280ca21ecf5f93adeecdd2fe5a806ea",
+      "version-string": "1.68.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1cc5002253146f8166c424a11ba4542090a69673",
+      "version-string": "1.67.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5db32bca005d838a106957200f46e93b85921fcf",
+      "version-string": "1.66.0",
+      "port-version": 0
+    }
+  ]
+}

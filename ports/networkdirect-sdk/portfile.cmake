@@ -1,14 +1,3 @@
-include(vcpkg_common_functions)
-
-#only supports windows
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "networkDirect-sdk only supports windows")
-endif()
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    message(FATAL_ERROR "networkDirect-sdk only supports x64 and x86")
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -39,4 +28,4 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
   file(COPY ${SOURCE_PATH}/lib/Win32/ndutil.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 endif()
 
-file(COPY ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/networkdirect-sdk/COPYRIGHT)
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

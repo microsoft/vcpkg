@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -120,9 +120,9 @@ if (WIN32)
+         PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
+ endif (WIN32)
+ 
+-add_subdirectory(trantor)
++find_package(Trantor CONFIG REQUIRED)
+ 
+-target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
++target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
+ 
+ if(${CMAKE_SYSTEM_NAME} STREQUAL "Haiku")
+     target_link_libraries(${PROJECT_NAME} PRIVATE network)
+@@ -316,11 +316,10 @@ endif (NOT WIN32)
+ 
+ if (BUILD_POSTGRESQL)
+     # find postgres
+-    find_package(pg)
+-    if (pg_FOUND)
+-        message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-        message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-        target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++    find_package(PostgreSQL REQUIRED)
++    if(PostgreSQL_FOUND)
++      set(pg_FOUND true)
++      target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
+             orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
+@@ -348,7 +348,7 @@ if (BUILD_POSTGRESQL)
+                 ${private_headers}
+                 orm_lib/src/postgresql_impl/PgConnection.h)
+         endif (libpq_supports_batch)
+-    endif (pg_FOUND)
++    endif (PostgreSQL_FOUND)
+ endif (BUILD_POSTGRESQL)
+ 
+ if (BUILD_MYSQL)
+diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
+index 9f2f1e7..09871f8 100755
+--- a/drogon_ctl/CMakeLists.txt
++++ b/drogon_ctl/CMakeLists.txt
+@@ -19,7 +19,7 @@ add_executable(_drogon_ctl
+ target_link_libraries(_drogon_ctl ${PROJECT_NAME})
+ if (WIN32 AND BUILD_SHARED_LIBS)
+   set(DROGON_FILE $<TARGET_FILE:drogon>)
+-  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
++  set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
+   add_custom_command(TARGET _drogon_ctl POST_BUILD
+           COMMAND ${CMAKE_COMMAND}
+           -DCTL_FILE=${DROGON_FILE}

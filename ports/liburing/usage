@@ -1,0 +1,6 @@
+The package liburing can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig)
+    pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
+    
+    target_link_libraries(main PRIVATE PkgConfig::liburing)

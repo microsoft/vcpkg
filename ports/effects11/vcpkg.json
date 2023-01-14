@@ -1,0 +1,25 @@
+{
+  "name": "effects11",
+  "version": "11.29",
+  "port-version": 1,
+  "description": "Effects for Direct3D 11 (FX11) is a management runtime for authoring HLSL shaders, render state, and runtime variables together.",
+  "homepage": "https://github.com/Microsoft/FX11",
+  "documentation": "https://github.com/microsoft/FX11/wiki",
+  "license": "MIT",
+  "supports": "windows & !mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    }
+  }
+}

@@ -1,6 +1,7 @@
-# Returns Windows SDK number via out variable "ret"
-function(vcpkg_get_windows_sdk ret)
-    set(WINDOWS_SDK $ENV{WindowsSDKVersion})
-    string(REPLACE "\\" "" WINDOWS_SDK "${WINDOWS_SDK}")
-    set(${ret} ${WINDOWS_SDK} PARENT_SCOPE)
+function(vcpkg_get_windows_sdk out_var)
+    if("$ENV{WindowsSDKVersion}" MATCHES [[^([0-9.]*)\\?$]])
+        set("${out_var}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
+    else()
+        message(FATAL_ERROR "Unexpected format for ENV{WindowsSDKVersion} ($ENV{WindowsSDKVersion})")
+    endif()
 endfunction()

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TankOs/SFGUI
@@ -8,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "001-fix-corefoundation-link.patch"
+	"002-add-limits-header.patch"
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)

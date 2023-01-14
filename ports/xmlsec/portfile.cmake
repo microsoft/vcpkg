@@ -1,27 +1,30 @@
-include(vcpkg_common_functions)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+string(REPLACE "." "_" release_tag "xmlsec-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
-    REF xmlsec-1_2_29
-    SHA512 b53eeac801cbcf4b18aa7f4fcec5fea5cae26e9cbef923d6e807ee98b988840943f00781ec6194b300403bd7f656c76ba96efce29c8b49920c9f0d67ba14ea57
+    REF "${release_tag}"
+    SHA512 c74c0854f0afdf97651cb8ae26430a43ebb7d849b7715fdec3abcd96e61f67f0d2bac82b68b10c97dc90ee52b14ba426bbf9413f71caa7de5fa6ecb945cba0d1
     HEAD_REF master
     PATCHES 
-        0001-uwp-fix.patch
+        pkgconfig_fixes.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-	OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DINSTALL_HEADERS_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
-
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-xmlsec)
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+# unofficial legacy usage
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/xmlsec-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

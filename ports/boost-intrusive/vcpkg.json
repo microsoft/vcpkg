@@ -1,0 +1,38 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-intrusive",
+  "version": "1.81.0",
+  "description": "Boost intrusive module",
+  "homepage": "https://github.com/boostorg/intrusive",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-container-hash",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-move",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

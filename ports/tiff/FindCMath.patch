@@ -1,0 +1,13 @@
+diff --git a/cmake/FindCMath.cmake b/cmake/FindCMath.cmake
+index ad92218..dd42aba 100644
+--- a/cmake/FindCMath.cmake
++++ b/cmake/FindCMath.cmake
+@@ -31,7 +31,7 @@ include(CheckSymbolExists)
+ include(CheckLibraryExists)
+ 
+ check_symbol_exists(pow "math.h" CMath_HAVE_LIBC_POW)
+-find_library(CMath_LIBRARY NAMES m)
++find_library(CMath_LIBRARY NAMES m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
+ 
+ if(NOT CMath_HAVE_LIBC_POW)
+     set(CMAKE_REQUIRED_LIBRARIES_SAVE ${CMAKE_REQUIRED_LIBRARIES})

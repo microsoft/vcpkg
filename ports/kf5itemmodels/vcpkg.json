@@ -1,0 +1,19 @@
+{
+  "name": "kf5itemmodels",
+  "version": "5.98.0",
+  "description": "Models for Qt Model/View system",
+  "homepage": "https://api.kde.org/frameworks/kitemmodels/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

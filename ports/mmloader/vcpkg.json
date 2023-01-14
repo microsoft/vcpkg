@@ -1,0 +1,20 @@
+{
+  "name": "mmloader",
+  "version": "1.0.1",
+  "port-version": 2,
+  "description": "A library for loading dll module bypassing windows PE loader from memory (x86/x64)",
+  "homepage": "http://tishion.github.io/mmLoader/",
+  "license": "MIT",
+  "supports": "(x86 | x64) & windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "shellcode": {
+      "description": "Generate mmLoader shell code headers"
+    }
+  }
+}

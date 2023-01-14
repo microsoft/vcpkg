@@ -1,92 +1,107 @@
-diff -ur a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
---- a/lang/c/CMakeLists.txt	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/CMakeLists.txt	2017-11-12 20:03:13.776973800 -0500
-@@ -50,7 +50,7 @@
- else(UNIX)
-     # Hard code for win32 -- need to figure out how to port version.sh for
-     # Windows.
--    set(LIBAVRO_VERSION "22:0:0")
-+    set(LIBAVRO_VERSION "23:0:0")
- endif(UNIX)
+diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
+index aa923e1..9ee7937 100644
+--- a/lang/c/CMakeLists.txt
++++ b/lang/c/CMakeLists.txt
+@@ -22,6 +22,9 @@ enable_testing()
  
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
  
-@@ -151,25 +151,24 @@
++option(BUILD_EXAMPLES "Build examples." OFF)
++option(BUILD_TESTS "Build tests." OFF)
++option(BUILD_DOCS "Build docs." OFF)
+ # Eliminates warning about linker paths when linking both zlib and
+ # liblzma.
+ cmake_policy(SET CMP0003 NEW)
+@@ -149,20 +152,25 @@ else (ZLIB_FOUND)
+     message("Disabled deflate codec. zlib not found.")
+ endif (ZLIB_FOUND)
+ 
+-find_package(Snappy)
+-if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
++find_package(Snappy CONFIG REQUIRED)
++if (Snappy_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
+     set(SNAPPY_PKG libsnappy)
+     add_definitions(-DSNAPPY_CODEC)
++    set(SNAPPY_LIBRARIES Snappy::snappy)
++    if (UNIX)
++        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
++    endif ()
+     include_directories(${SNAPPY_INCLUDE_DIRS})
+     message("Enabled snappy codec")
+-else (SNAPPY_FOUND AND ZLIB_FOUND)
++else (Snappy_FOUND AND ZLIB_FOUND)
+     set(SNAPPY_PKG "")
+     set(SNAPPY_LIBRARIES "")
      message("Disabled snappy codec. libsnappy not found or zlib not found.")
- endif (SNAPPY_FOUND AND ZLIB_FOUND)
+-endif (SNAPPY_FOUND AND ZLIB_FOUND)
++endif (Snappy_FOUND AND ZLIB_FOUND)
  
 -find_package(PkgConfig)
 -pkg_check_modules(LZMA liblzma)
--if (LZMA_FOUND)
-+find_package(LIBLZMA)
-+if (LIBLZMA_FOUND)
++find_package(LibLZMA REQUIRED)
++set(LZMA_FOUND 1)
++set(LZMA_LIBRARIES LibLZMA::LibLZMA)
+ if (LZMA_FOUND)
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)
--    include_directories(${LZMA_INCLUDE_DIRS})
--    link_directories(${LZMA_LIBRARY_DIRS})
-+    include_directories(${LIBLZMA_INCLUDE_DIRS})
-+    link_directories(${LIBLZMA_LIBRARY_DIRS})
-     message("Enabled lzma codec")
--else (LZMA_FOUND)
-+else (LIBLZMA_FOUND)
-     set(LZMA_PKG "")
-     set(LZMA_LIBRARIES "")
-     message("Disabled lzma codec. liblzma not found.")
--endif (LZMA_FOUND)
-+endif (LIBLZMA_FOUND)
- 
--set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
-+set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+@@ -179,20 +187,26 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
  set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
  
  # Jansson JSON library
 -pkg_check_modules(JANSSON jansson>=2.3)
-+find_package(JANSSON REQUIRED)
- if (JANSSON_FOUND)
+-if (JANSSON_FOUND)
++find_package(jansson CONFIG REQUIRED)
++if (jansson_FOUND)
      set(JANSSON_PKG libjansson)
-     include_directories(${JANSSON_INCLUDE_DIR})
-diff -ur a/lang/c/examples/quickstop.c b/lang/c/examples/quickstop.c
---- a/lang/c/examples/quickstop.c	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/examples/quickstop.c	2017-11-10 12:40:59.151301400 -0500
-@@ -16,6 +16,7 @@
-  */
++    set(JANSSON_LIBRARIES jansson::jansson)
+     include_directories(${JANSSON_INCLUDE_DIRS})
+     link_directories(${JANSSON_LIBRARY_DIRS})
+-else (JANSSON_FOUND)
++else (jansson_FOUND)
+     message(FATAL_ERROR "libjansson >=2.3 not found")
+-endif (JANSSON_FOUND)
++endif (jansson_FOUND)
  
- #include <avro.h>
-+#include <avro/platform.h>
- #include <stdio.h>
- #include <stdlib.h>
  
-@@ -102,7 +103,7 @@
- 
- 		if (avro_record_get(person, "ID", &id_datum) == 0) {
- 			avro_int64_get(id_datum, &i64);
--			fprintf(stdout, "%"PRId64" | ", i64);
-+			fprintf(stdout, "%" PRId64 " | ", i64);
- 		}
- 		if (avro_record_get(person, "First", &first_datum) == 0) {
- 			avro_string_get(first_datum, &p);
-diff -ur a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
---- a/lang/c/src/avro/msinttypes.h	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/avro/msinttypes.h	2017-11-10 12:37:30.372271300 -0500
-@@ -54,6 +54,9 @@
+ add_subdirectory(src)
++if(BUILD_EXAMPLES)
+ add_subdirectory(examples)
++endif()
++if(BUILD_TESTS)
+ add_subdirectory(tests)
++endif()
++if(BUILD_DOCS)
+ add_subdirectory(docs)
+-
++endif()
+ add_custom_target(pretty
+     "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake_pretty.cmake")
+diff --git a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
+index 29be14b..020346d 100644
+--- a/lang/c/src/avro/msinttypes.h
++++ b/lang/c/src/avro/msinttypes.h
+@@ -54,6 +54,10 @@
  
  // 7.8 Format conversion of integer types
  
 +#if (_MSC_VER >= 1900)
 +#   include <inttypes.h>
 +#else
++    
  typedef struct {
     intmax_t quot;
     intmax_t rem;
-@@ -311,5 +314,6 @@
+@@ -311,5 +315,6 @@ imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom)
  #define wcstoimax _wcstoi64
  #define wcstoumax _wcstoui64
  
-+#endif
++#endif // (_MSC_VER >= 1900)
  
  #endif // _MSC_INTTYPES_H_ ]
-diff -ur a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
---- a/lang/c/src/avro/msstdint.h	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/avro/msstdint.h	2017-11-10 10:44:14.011482500 -0500
+diff --git a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
+index d02608a..54e8972 100644
+--- a/lang/c/src/avro/msstdint.h
++++ b/lang/c/src/avro/msstdint.h
 @@ -42,6 +42,10 @@
  
  #include <limits.h>
@@ -98,28 +113,45 @@ diff -ur a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
  // For Visual Studio 6 in C++ mode and for many Visual Studio versions when
  // compiling for ARM we should wrap <wchar.h> include with 'extern "C++" {}'
  // or compiler give many errors like this:
-@@ -243,5 +247,6 @@
+@@ -243,5 +247,6 @@ typedef uint64_t  uintmax_t;
  
  #endif // __STDC_CONSTANT_MACROS ]
  
-+#endif // _MSC_VER < 1900
++#endif // (_MSC_VER >= 1900)
  
  #endif // _MSC_STDINT_H_ ]
-diff -ur a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
---- a/lang/c/src/avro_private.h	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/avro_private.h	2017-11-10 10:32:33.414879700 -0500
-@@ -34,7 +34,7 @@
+diff --git a/lang/c/src/avro/platform.h b/lang/c/src/avro/platform.h
+index 9293055..edfe1e0 100644
+--- a/lang/c/src/avro/platform.h
++++ b/lang/c/src/avro/platform.h
+@@ -35,8 +35,10 @@ extern "C" {
+ // Defines for printing size_t.
+ #if defined(_WIN64)
+   #define PRIsz PRIu64
++  typedef __int64  ssize_t;
+ #elif defined(_WIN32)
+   #define PRIsz PRIu32
++  typedef long   ssize_t;
+ #else // GCC
+   #define PRIsz "zu"
+ #endif
+diff --git a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
+index f97ef6b..9c47d26 100644
+--- a/lang/c/src/avro_private.h
++++ b/lang/c/src/avro_private.h
+@@ -34,7 +34,7 @@ extern "C" {
  #endif
  
  #ifdef _WIN32
 -#define snprintf _snprintf
-+    //#define snprintf _snprintf
++// #define snprintf _snprintf
  #endif
  
  /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
-diff -ur a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
---- a/lang/c/src/avroappend.c	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/avroappend.c	2017-11-10 12:15:14.878275800 -0500
+diff --git a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
+index 7243c60..39656ff 100644
+--- a/lang/c/src/avroappend.c
++++ b/lang/c/src/avroappend.c
 @@ -20,7 +20,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -129,10 +161,11 @@ diff -ur a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
  #endif
  
  #include "avro.h"
-diff -ur a/lang/c/src/codec.c b/lang/c/src/codec.c
---- a/lang/c/src/codec.c	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/codec.c	2017-11-10 11:09:08.033816100 -0500
-@@ -266,7 +266,7 @@
+diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
+index 613a914..8092326 100644
+--- a/lang/c/src/codec.c
++++ b/lang/c/src/codec.c
+@@ -272,7 +272,7 @@ static int encode_deflate(avro_codec_t c, void * data, int64_t len)
  	s->next_in = (Bytef*)data;
  	s->avail_in = (uInt)len;
  
@@ -141,7 +174,7 @@ diff -ur a/lang/c/src/codec.c b/lang/c/src/codec.c
  	s->avail_out = (uInt)c->block_size;
  
  	s->total_out = 0;
-@@ -310,10 +310,10 @@
+@@ -316,10 +316,10 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
  
  	c->used_size = 0;
  
@@ -154,7 +187,7 @@ diff -ur a/lang/c/src/codec.c b/lang/c/src/codec.c
  	s->avail_out = c->block_size;
  
  	s->total_out = 0;
-@@ -334,7 +334,7 @@
+@@ -340,7 +340,7 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
  		if (err == Z_BUF_ERROR)
  		{
  			c->block_data = avro_realloc(c->block_data, c->block_size, c->block_size * 2);
@@ -163,30 +196,31 @@ diff -ur a/lang/c/src/codec.c b/lang/c/src/codec.c
  			s->avail_out += c->block_size;
  			c->block_size = c->block_size * 2;
  		}
-@@ -437,7 +437,7 @@
+@@ -443,7 +443,7 @@ static int encode_lzma(avro_codec_t codec, void * data, int64_t len)
  		return 1;
  	}
  
 -	ret = lzma_raw_buffer_encode(filters, NULL, data, len, codec->block_data, &written, codec->block_size);
-+	ret = lzma_raw_buffer_encode(filters, NULL, (const uint8_t *)data, len, (uint8_t *)codec->block_data, &written, codec->block_size);
++	ret = lzma_raw_buffer_encode(filters, NULL, (const uint8_t*)data, len, (uint8_t*)codec->block_data, &written, codec->block_size);
  
  	codec->used_size = written;
  
-@@ -468,8 +468,8 @@
+@@ -474,8 +474,8 @@ static int decode_lzma(avro_codec_t codec, void * data, int64_t len)
  
  	do
  	{
 -		ret = lzma_raw_buffer_decode(filters, NULL, data,
 -			&read_pos, len, codec->block_data, &write_pos,
-+		ret = lzma_raw_buffer_decode(filters, NULL, (const uint8_t *)data,
-+			&read_pos, len, (uint8_t *)codec->block_data, &write_pos,
++		ret = lzma_raw_buffer_decode(filters, NULL, (const uint8_t*)data,
++			&read_pos, len, (uint8_t*)codec->block_data, &write_pos,
  			codec->block_size);
  
  		codec->used_size = write_pos;
-diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
---- a/lang/c/src/schema.c	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/src/schema.c	2017-11-10 11:45:45.268458000 -0500
-@@ -74,7 +74,7 @@
+diff --git a/lang/c/src/schema.c b/lang/c/src/schema.c
+index 7b38900..e3794d5 100644
+--- a/lang/c/src/schema.c
++++ b/lang/c/src/schema.c
+@@ -74,7 +74,7 @@ static int is_avro_id(const char *name)
   * namespace (as a newly allocated buffer using Avro's allocator). */
  static char *split_namespace_name(const char *fullname, const char **name_out)
  {
@@ -195,7 +229,7 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  	if (last_dot == NULL) {
  		*name_out = fullname;
  		return NULL;
-@@ -742,12 +742,12 @@
+@@ -770,12 +770,12 @@ avro_schema_t avro_schema_link_target(avro_schema_t schema)
  }
  
  static const char *
@@ -212,7 +246,7 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  	} else {
  		full_name = avro_strdup(name);
  	}
-@@ -758,20 +758,20 @@
+@@ -786,20 +786,20 @@ static int
  save_named_schemas(const avro_schema_t schema, st_table *st)
  {
  	const char *name = avro_schema_name(schema);
@@ -237,7 +271,7 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  	int rval = st_lookup(st, (st_data_t) full_name, &(val.data));
  	avro_str_free((char *)full_name);
  	if (rval) {
-@@ -784,7 +784,7 @@
+@@ -812,7 +812,7 @@ find_named_schemas(const char *name, const char *namespace, st_table *st)
  static int
  avro_type_from_json_t(json_t *json, avro_type_t *type,
  		      st_table *named_schemas, avro_schema_t *named_type,
@@ -246,7 +280,7 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  {
  	json_t *json_type;
  	const char *type_str;
-@@ -835,7 +835,7 @@
+@@ -863,7 +863,7 @@ avro_type_from_json_t(json_t *json, avro_type_t *type,
  		*type = AVRO_MAP;
  	} else if (strcmp(type_str, "fixed") == 0) {
  		*type = AVRO_FIXED;
@@ -255,7 +289,7 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  		*type = AVRO_LINK;
  	} else {
  		avro_set_error("Unknown Avro \"type\": %s", type_str);
-@@ -930,12 +930,12 @@
+@@ -954,15 +954,15 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
  			}
  
  			if (strchr(fullname, '.')) {
@@ -267,13 +301,18 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
 +				avro_str_free(namespaceX);
  			} else if (json_is_string(json_namespace)) {
 -				const char *namespace = json_string_value(json_namespace);
--				*schema = avro_schema_record(fullname, namespace);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
 +				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_record(fullname, namespace);
 +				*schema = avro_schema_record(fullname, namespaceX);
  			} else {
  				*schema = avro_schema_record(fullname, parent_namespace);
  			}
-@@ -1026,13 +1026,13 @@
+@@ -1053,16 +1053,16 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
  			}
  
  			if (strchr(fullname, '.')) {
@@ -282,18 +321,23 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
 -				*schema = avro_schema_enum_ns(name, namespace);
 -				avro_str_free(namespace);
 +				char *namespaceX;
-+                namespaceX = split_namespace_name(fullname, &name);
++				namespaceX = split_namespace_name(fullname, &name);
 +				*schema = avro_schema_enum_ns(name, namespaceX);
 +				avro_str_free(namespaceX);
  			} else if (json_is_string(json_namespace)) {
 -				const char *namespace = json_string_value(json_namespace);
--				*schema = avro_schema_enum_ns(fullname, namespace);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
 +				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_enum_ns(fullname, namespace);
 +				*schema = avro_schema_enum_ns(fullname, namespaceX);
  			} else {
  				*schema = avro_schema_enum_ns(fullname, parent_namespace);
  			}
-@@ -1160,13 +1160,13 @@
+@@ -1190,16 +1190,16 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
  			fullname = json_string_value(json_name);
  
  			if (strchr(fullname, '.')) {
@@ -302,18 +346,23 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
 -				*schema = avro_schema_fixed_ns(name, namespace, (int64_t) size);
 -				avro_str_free(namespace);
 +				char *namespaceX;
-+                namespaceX = split_namespace_name(fullname, &name);
++				namespaceX = split_namespace_name(fullname, &name);
 +				*schema = avro_schema_fixed_ns(name, namespaceX, (int64_t) size);
 +				avro_str_free(namespaceX);
  			} else if (json_is_string(json_namespace)) {
 -				const char *namespace = json_string_value(json_namespace);
--				*schema = avro_schema_fixed_ns(fullname, namespace, (int64_t) size);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
 +				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_fixed_ns(fullname, namespace, (int64_t) size);
 +				*schema = avro_schema_fixed_ns(fullname, namespaceX, (int64_t) size);
  			} else {
  				*schema = avro_schema_fixed_ns(fullname, parent_namespace, (int64_t) size);
  			}
-@@ -1749,9 +1749,9 @@
+@@ -1821,9 +1821,9 @@ static int write_link(avro_writer_t out, const struct avro_link_schema_t *link,
  {
  	int rval;
  	check(rval, avro_write_str(out, "\""));
@@ -326,24 +375,3 @@ diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
  		check(rval, avro_write_str(out, "."));
  	}
  	check(rval, avro_write_str(out, avro_schema_name(link->to)));
-diff -ur a/lang/c/tests/test_avro_data.c b/lang/c/tests/test_avro_data.c
---- a/lang/c/tests/test_avro_data.c	2017-04-17 19:56:17.000000000 -0400
-+++ b/lang/c/tests/test_avro_data.c	2017-11-10 12:41:29.924190100 -0500
-@@ -112,7 +112,7 @@
- 		if (size != avro_writer_tell(writer)) {
- 			fprintf(stderr,
- 				"Unable to calculate size %s validate=%d "
--				"(%"PRId64" != %"PRId64")\n  %s\n",
-+				"(%" PRId64 " != %" PRId64 ")\n  %s\n",
- 				type, validate, size, avro_writer_tell(writer),
- 				avro_strerror());
- 			exit(EXIT_FAILURE);
-@@ -142,7 +142,7 @@
- {
- 	char  *json = NULL;
- 	avro_datum_to_json(datum, 1, &json);
--	if (strcasecmp(json, expected) != 0) {
-+	if (stricmp(json, expected) != 0) {
- 		fprintf(stderr, "Unexpected JSON encoding: %s\n", json);
- 		exit(EXIT_FAILURE);
- 	}

@@ -1,0 +1,45 @@
+{
+  "name": "directxtk12",
+  "version-date": "2022-12-15",
+  "description": "A collection of helper classes for writing DirectX 12 code in C++.",
+  "homepage": "https://github.com/Microsoft/DirectXTK12",
+  "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "directx-dxc",
+      "host": true
+    },
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "xaudio2-9"
+  ],
+  "features": {
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    },
+    "xaudio2-9": {
+      "description": "Build with XAudio 2.9 support for Windows 10/11"
+    },
+    "xaudio2redist": {
+      "description": "Build with XAudio2Redist",
+      "dependencies": [
+        {
+          "name": "xaudio2redist",
+          "platform": "!uwp & !arm"
+        }
+      ]
+    }
+  }
+}

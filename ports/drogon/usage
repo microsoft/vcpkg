@@ -1,0 +1,4 @@
+The package drogon provides CMake targets:
+
+    find_package(Drogon CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Drogon::Drogon)

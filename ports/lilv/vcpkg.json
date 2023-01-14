@@ -1,0 +1,15 @@
+{
+  "name": "lilv",
+  "version": "0.24.10",
+  "port-version": 1,
+  "description": "Lilv is a C library for simple use of LV2 plugins in applications.",
+  "homepage": "https://drobilla.net/software/lilv",
+  "license": "ISC",
+  "supports": "!uwp",
+  "dependencies": [
+    "lv2",
+    "serd",
+    "sord",
+    "sratom"
+  ]
+}

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2775a3da..ef7ce14a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,6 +55,7 @@ endif (WITH_UNIX_SOCKETS AND NOT WIN32)
+ 
+ option(WITH_SOCKS "Include SOCKS5 support?" ON)
+ if (WITH_SOCKS)
++	find_package(Libwebsockets CONFIG REQUIRED)
+ 	add_definitions("-DWITH_SOCKS")
+ endif (WITH_SOCKS)
+ 

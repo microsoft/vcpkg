@@ -1,0 +1,168 @@
+diff --git a/Accelerators/Vtkm/Core/CMakeLists.txt b/Accelerators/Vtkm/Core/CMakeLists.txt
+index b889a771f..317d83f75 100644
+--- a/Accelerators/Vtkm/Core/CMakeLists.txt
++++ b/Accelerators/Vtkm/Core/CMakeLists.txt
+@@ -14,8 +14,9 @@
+ ##
+ ##=============================================================================
+ 
+-list(INSERT 0 CMAKE_MODULE_PATH
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
++#list(INSERT 0 CMAKE_MODULE_PATH
++#  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
+ 
+ set(private_headers
+   vtkmlib/DataArrayConverters.hxx
+@@ -77,9 +78,9 @@ vtkm_add_target_information(${vtkm_accel_target}
+                             MODIFY_CUDA_FLAGS
+                             DEVICE_SOURCES ${sources})
+ 
+-vtk_module_set_property(VTK::AcceleratorsVTKmCore
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
++#vtk_module_set_property(VTK::AcceleratorsVTKmCore
++#  PROPERTY  JOB_POOL_COMPILE
++#  VALUE     vtkm_pool)
+ 
+ if (TARGET vtkm::cuda)
+   vtk_module_set_property(VTK::AcceleratorsVTKmCore
+diff --git a/Accelerators/Vtkm/DataModel/CMakeLists.txt b/Accelerators/Vtkm/DataModel/CMakeLists.txt
+index 56307be8d..30fff98e8 100644
+--- a/Accelerators/Vtkm/DataModel/CMakeLists.txt
++++ b/Accelerators/Vtkm/DataModel/CMakeLists.txt
+@@ -14,8 +14,9 @@
+ ##
+ ##=============================================================================
+ 
+-list(INSERT 0 CMAKE_MODULE_PATH
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
++#list(INSERT 0 CMAKE_MODULE_PATH
++#  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
+ 
+ set(sources
+   vtkmlib/ArrayConvertersReal.cxx
+@@ -85,9 +86,9 @@ vtkm_add_target_information(${vtkm_accel_target}
+                             MODIFY_CUDA_FLAGS
+                             DEVICE_SOURCES ${sources})
+ 
+-vtk_module_set_property(VTK::AcceleratorsVTKmDataModel
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
++#vtk_module_set_property(VTK::AcceleratorsVTKmDataModel
++#  PROPERTY  JOB_POOL_COMPILE
++#  VALUE     vtkm_pool)
+ 
+ if (TARGET vtkm::cuda)
+   vtk_module_set_property(VTK::AcceleratorsVTKmDataModel
+diff --git a/Accelerators/Vtkm/Filters/CMakeLists.txt b/Accelerators/Vtkm/Filters/CMakeLists.txt
+index 14e84f1dd..0a931285d 100644
+--- a/Accelerators/Vtkm/Filters/CMakeLists.txt
++++ b/Accelerators/Vtkm/Filters/CMakeLists.txt
+@@ -14,8 +14,9 @@
+ ##
+ ##=============================================================================
+ 
+-list(INSERT 0 CMAKE_MODULE_PATH
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
++#list(INSERT 0 CMAKE_MODULE_PATH
++#  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
+ 
+ set(impl_classes
+   vtkmAverageToCells
+@@ -80,9 +81,9 @@ vtkm_add_target_information(${vtkm_accel_target}
+                             MODIFY_CUDA_FLAGS
+                             DEVICE_SOURCES ${sources})
+ 
+-vtk_module_set_property(VTK::AcceleratorsVTKmFilters
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
++#vtk_module_set_property(VTK::AcceleratorsVTKmFilters
++#  PROPERTY  JOB_POOL_COMPILE
++#  VALUE     vtkm_pool)
+ vtk_module_link(VTK::AcceleratorsVTKmFilters
+   PRIVATE
+     vtkm_worklet
+diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
+index 5a5e8b8df..96413875f 100644
+--- a/CMake/vtk-config.cmake.in
++++ b/CMake/vtk-config.cmake.in
+@@ -121,9 +121,7 @@ set("${CMAKE_FIND_PACKAGE_NAME}_AVAILABLE_COMPONENTS" "@vtk_all_components@")
+ unset("${CMAKE_FIND_PACKAGE_NAME}_FOUND")
+ set("${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm" "@vtk_has_vtkm@")
+ if (${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm)
+-  find_package(VTKm
+-    PATHS "${CMAKE_CURRENT_LIST_DIR}/vtkm"
+-    NO_DEFAULT_PATH)
++  find_package(VTKm CONFIG REQUIRED)
+   if (NOT VTKm_FOUND)
+     set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" 0)
+   endif ()
+diff --git a/ThirdParty/vtkm/CMakeLists.txt b/ThirdParty/vtkm/CMakeLists.txt
+index 5817d42f8..f21d17da8 100644
+--- a/ThirdParty/vtkm/CMakeLists.txt
++++ b/ThirdParty/vtkm/CMakeLists.txt
+@@ -1,6 +1,41 @@
+-vtk_module_third_party_internal(
+-  LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
+-  VERSION       "master"
+-  SUBDIRECTORY  vtkvtkm
+-  STANDARD_INCLUDE_DIRS
+-  INTERFACE)
++#vtk_module_third_party_internal(
++#  LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
++#  VERSION       "master"
++#  SUBDIRECTORY  vtkvtkm
++#  STANDARD_INCLUDE_DIRS
++#  INTERFACE)
++
++message(STATUS "VTK_MODULE_USE_EXTERNAL_VTK_vtkm: ${VTK_MODULE_USE_EXTERNAL_VTK_vtkm}")
++if(TRUE)
++    message(STATUS "Searching for external VTKm")
++    find_package(VTKm CONFIG REQUIRED)
++    if(TARGET vtkm_compiler_flags)
++        get_target_property(VTKm_INCLUDE_DIRS vtkm_compiler_flags INTERFACE_INCLUDE_DIRECTORIES)
++        message(STATUS "INCLUDE: ${VTKm_INCLUDE_DIRS}")
++        get_target_property(VTKm_DIY_INCLUDE_DIRS vtkm_diy INTERFACE_INCLUDE_DIRECTORIES)
++        get_target_property(VTKm_OPTION_INCLUDE_DIRS vtkm_optionparser INTERFACE_INCLUDE_DIRECTORIES)
++        if(MSVC)
++            set(VTKm_DEFINITIONS /bigobj)
++        endif()
++    else()
++        message(FATAL_ERROR "VTKM target missing")
++    endif()
++    if(VTKM_FOUND)
++        message(STATUS "Found VTKm")
++    endif()
++endif()
++
++vtk_module_third_party(
++  INTERNAL
++    HEADER_ONLY
++    LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
++    VERSION       "master"
++    SUBDIRECTORY  vtkvtkm
++    STANDARD_INCLUDE_DIRS
++    INTERFACE
++  EXTERNAL
++    PACKAGE VTKm
++    TARGETS vtkm_cont vtkm_filter vtkm_diy vtkm_optionparser vtkm_taotuple
++    #LIBRARIES vtkm_cont vtkm_filter vtkm_diy vtkm_optionparser vtkm_taotuple
++    INCLUDE_DIRS VTKm_INCLUDE_DIRS VTKm_DIY_INCLUDE_DIRS VTKm_OPTION_INCLUDE_DIRS
++)
+\ No newline at end of file
+diff --git a/ThirdParty/vtkm/vtk.module b/ThirdParty/vtkm/vtk.module
+index a8e4dad0f..c7bbbf0e8 100644
+--- a/ThirdParty/vtkm/vtk.module
++++ b/ThirdParty/vtkm/vtk.module
+@@ -3,5 +3,7 @@ NAME
+ PRIVATE_DEPENDS
+   # While not needed to satisfy symbols, this is necessary to guarantee that
+   # VTK_SMP_IMPLEMENTATION_TYPE is available when configuring vtk-m.
+-  VTK::CommonCore
++  # VTK::CommonCore
++LIBRARY_NAME
++  VTKm
+ THIRD_PARTY

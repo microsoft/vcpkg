@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "definitions": {
+    "sha256": {
+      "type": "string",
+      "pattern": "[A-Z0-9]{64}"
+    }
+  },
+  "required": [
+    "Applications",
+    "VagrantPlugins"
+  ],
+  "properties": {
+    "Applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "VersionCommand": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "VersionRegex": {
+            "type": "string",
+            "format": "regex"
+          },
+          "Version": {
+            "type": "string"
+          },
+          "DmgUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "Sha256": {
+            "$ref": "#/definitions/sha256"
+          },
+          "InstallerPath": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "VagrantPlugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "Name", "Version" ],
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Version": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

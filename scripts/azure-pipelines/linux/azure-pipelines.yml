@@ -1,0 +1,78 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
+  - name: poolName
+    type: string
+
+jobs:
+- job: x64_linux
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: WORKING_ROOT
+    value: /mnt/vcpkg-ci
+  - name: VCPKG_DOWNLOADS
+    value: /mnt/vcpkg-ci/downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
+
+  steps:
+    # Note: /mnt is the Azure machines' temporary disk.
+  - bash: |
+      sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
+      sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
+      sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      exit 0
+    displayName: 'Create working directories'
+  - bash: ./bootstrap-vcpkg.sh
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
+    displayName: "Build vcpkg with CMake"
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: failure logs for x64-linux'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
+      ArtifactName: 'failure logs for x64-linux'
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+  - bash: |
+      python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: always()
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: file lists for x64-linux'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: 'file lists for x64-linux'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    condition: ne(variables['XML_RESULTS_FILE'], '')
+    inputs:
+      testRunTitle: x64-linux
+      testResultsFormat: xUnit
+      testResultsFiles: $(XML_RESULTS_FILE)
+      platform: x64-linux
+      configuration: static

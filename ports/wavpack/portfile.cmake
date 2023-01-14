@@ -1,18 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 00d9a4ac58a52b52495736be614cb06ba102663c
-    SHA512 a0d08ac2ff46bd4cc606626c8e0da18a83392722a2e40df18f9e40710e5e147c0a24800174bfdf42ed7a12be4d9679f6302c51d8409724d31ca2a29ab4972481
+    REF 89ef99e84333534d9d43093a5264a398b5f1e14a #5.5.0
+    SHA512 6d8a46461ea1a9fab129d705dda6167332e98da27b24323cbfba1827339222956e288ca3947b9a1f513d7eb6f957548cfcef717aa5ba5c3d3e43d29f98de3879
     HEAD_REF master
-    PATCHES
-        OpenSSL.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWAVPACK_INSTALL_DOCS=OFF
         -DWAVPACK_BUILD_PROGRAMS=OFF
@@ -22,15 +17,25 @@ vcpkg_configure_cmake(
         -DWAVPACK_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WavPack)
+endif()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME wavpack)
+if(WIN32 AND (NOT MINGW))
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()

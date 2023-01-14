@@ -1,0 +1,51 @@
+From b05747aea79083106b27ac7d829db3e65e192682 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 29 Oct 2020 13:23:56 -0400
+Subject: [PATCH] cpp,python: Respect --disable-gpg-test for tests
+
+* lang/cpp/Makefile.am: Respect --disable-gpg-test
+* lang/python/Makefile.am: Respect --disable-gpg-test
+
+This is similar to the qt that had it already enabled
+---
+ lang/cpp/Makefile.am    | 8 +++++++-
+ lang/python/Makefile.am | 8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/lang/cpp/Makefile.am b/lang/cpp/Makefile.am
+index 724da6ca..70ca7462 100644
+--- a/lang/cpp/Makefile.am
++++ b/lang/cpp/Makefile.am
+@@ -18,6 +18,12 @@
+ # License along with this program; if not, see <https://gnu.org/licenses/>.
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ 
+-SUBDIRS = src tests
++if RUN_GPG_TESTS
++tests = tests
++else
++tests =
++endif
++
++SUBDIRS = src ${tests}
+ 
+ EXTRA_DIST = README
+diff --git a/lang/python/Makefile.am b/lang/python/Makefile.am
+index 845b7b17..68b98e8e 100644
+--- a/lang/python/Makefile.am
++++ b/lang/python/Makefile.am
+@@ -23,7 +23,13 @@ EXTRA_DIST = \
+ 	gpgme.i \
+ 	helpers.c helpers.h private.h
+ 
+-SUBDIRS = . tests examples doc src
++if RUN_GPG_TESTS
++tests = tests
++else
++tests =
++endif
++
++SUBDIRS = . ${tests} examples doc src
+ 
+ .PHONY: prepare
+ prepare: copystamp

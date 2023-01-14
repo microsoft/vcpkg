@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e87f3de..46892ee 100644
+index 6b39f0e..507eb4c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1570,7 +1570,7 @@ ADD_SUBDIRECTORY(docs)
+@@ -2028,7 +2028,7 @@ ADD_SUBDIRECTORY(docs)
  # install them in the binary dir. Grab all of the .libs, put them
  # in the libdir.
  ##

@@ -1,0 +1,46 @@
+{
+  "$comment": "When changing this file also update and run scripts/boost/generate-ports.ps1",
+  "name": "boost-poly-collection",
+  "version": "1.81.0",
+  "description": "Boost poly_collection module",
+  "homepage": "https://github.com/boostorg/poly_collection",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-assert",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-iterator",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-erasure",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-vcpkg-helpers",
+      "version>=": "1.81.0"
+    }
+  ]
+}

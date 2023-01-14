@@ -1,0 +1,12 @@
+diff --git a/src/backends/mysql/session.cpp b/src/backends/mysql/session.cpp
+index 383248c..86a5bfd 100644
+--- a/src/backends/mysql/session.cpp
++++ b/src/backends/mysql/session.cpp
+@@ -5,6 +5,7 @@
+ // (See accompanying file LICENSE_1_0.txt or copy at
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
++typedef bool my_bool;
+ 
+ #define SOCI_MYSQL_SOURCE
+ #include "soci/mysql/soci-mysql.h"

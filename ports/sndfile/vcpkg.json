@@ -1,0 +1,25 @@
+{
+  "name": "sndfile",
+  "version-string": "0",
+  "port-version": 1,
+  "description": "x Library to read, write and manipulate many soundfile types.",
+  "dependencies": [
+    "libsndfile"
+  ],
+  "default-features": [
+    "external-libs"
+  ],
+  "features": {
+    "external-libs": {
+      "description": "Support Ogg Vorbis and FLAC audio files",
+      "dependencies": [
+        {
+          "name": "libsndfile",
+          "features": [
+            "external-libs"
+          ]
+        }
+      ]
+    }
+  }
+}

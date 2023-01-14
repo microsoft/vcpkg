@@ -1,0 +1,27 @@
+From af09ca45ad71a540aafc4989676e9a0b88bf2948 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Fri, 16 Oct 2020 12:28:37 -0700
+Subject: [PATCH] add `-Wno-error=implicit-funciton-declaration` to cmake
+
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5b37adc..fead70c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,10 @@ SET(CMAKE_LEGACY_CYGWIN_WIN32 0)
+ PROJECT(CFITSIO)
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+ 
++if (NOT MSVC)
++  add_compile_options(-Wno-error=implicit-function-declaration)
++endif()
++
+ # Allow @rpath token in target install name on Macs.
+ # See "cmake --help-policy CMP0042" for more information.
+ IF(POLICY CMP0042)
+-- 
+2.28.0.windows.1
+

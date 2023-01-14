@@ -1,0 +1,116 @@
+{
+  "name": "ogre",
+  "version": "13.4.4",
+  "port-version": 4,
+  "description": "3D Object-Oriented Graphics Rendering Engine",
+  "homepage": "https://github.com/OGRECave/ogre",
+  "license": "MIT",
+  "dependencies": [
+    "pugixml",
+    {
+      "name": "sdl2",
+      "platform": "!android"
+    },
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "assimp",
+    "freeimage",
+    "overlay",
+    "zip"
+  ],
+  "features": {
+    "assimp": {
+      "description": "Build with assimp support",
+      "dependencies": [
+        "assimp"
+      ]
+    },
+    "bullet": {
+      "description": "Build with bullet physics support",
+      "dependencies": [
+        "bullet3"
+      ]
+    },
+    "csharp": {
+      "description": "Build csharp bindings",
+      "supports": "!static & !android & !ios & !emscripten"
+    },
+    "d3d9": {
+      "description": "Build Direct3D9 RenderSystem",
+      "supports": "windows"
+    },
+    "freeimage": {
+      "description": "Build with FreeImage support (no effect for Emscripten)",
+      "dependencies": [
+        {
+          "name": "freeimage",
+          "platform": "!emscripten"
+        }
+      ]
+    },
+    "java": {
+      "description": "Build Java (JNI) bindings",
+      "supports": "!static & !android & !ios & !emscripten"
+    },
+    "openexr": {
+      "description": "Build with OpenEXR support",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "overlay": {
+      "description": "Build overlay component",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
+    "python": {
+      "description": "Build Python bindings",
+      "supports": "!static & !android & !ios & !emscripten",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    "strict": {
+      "description": "Force Ogre resource manager to be strict with group names and resource names"
+    },
+    "tools": {
+      "description": "Build tools",
+      "supports": "!android & !emscripten"
+    },
+    "zip": {
+      "description": "Build ZIP archive support"
+    },
+    "zziplib": {
+      "description": "Obsolete, use zip feature instead",
+      "dependencies": [
+        {
+          "name": "ogre",
+          "default-features": false,
+          "features": [
+            "zip"
+          ]
+        }
+      ]
+    }
+  }
+}

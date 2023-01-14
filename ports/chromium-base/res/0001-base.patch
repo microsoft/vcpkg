@@ -1,0 +1,101 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 7b7cd51..2961688 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -155,6 +155,7 @@ if (is_android) {
+ # test code (test support and anything in the test directory) which should use
+ # source_set as is recommended for GN targets).
+ jumbo_component("base") {
++  output_name = "chromium_base"
+   if (is_nacl || is_ios) {
+     # Link errors related to malloc functions if libbase for nacl is
+     # compiled with jumbo: https://crbug.com/775959.
+@@ -162,6 +163,11 @@ jumbo_component("base") {
+     never_build_jumbo = true
+   }
+ 
++  if (!is_component_build) {
++    complete_static_lib = true
++    configs -= [ "//build/config/compiler:thin_archive" ]
++  }
++
+   sources = [
+     "allocator/allocator_check.cc",
+     "allocator/allocator_check.h",
+@@ -1638,7 +1644,7 @@ jumbo_component("base") {
+     "hash/md5_constexpr_internal.h",
+     "hash/sha1.h",
+   ]
+-  if (is_nacl) {
++  if (true) {
+     sources += [
+       "hash/md5_nacl.cc",
+       "hash/md5_nacl.h",
+@@ -2298,6 +2304,7 @@ buildflag_header("tracing_buildflags") {
+ # library. Note that this library cannot depend on base because base depends on
+ # base_static.
+ static_library("base_static") {
++  output_name = "chromium_base_static"
+   sources = [
+     "base_switches.cc",
+     "base_switches.h",
+@@ -2325,7 +2332,7 @@ static_library("base_static") {
+ }
+ 
+ component("i18n") {
+-  output_name = "base_i18n"
++  output_name = "chromium_base_i18n"
+   sources = [
+     "i18n/base_i18n_export.h",
+     "i18n/base_i18n_switches.cc",
+diff --git a/gtest_prod_util.h b/gtest_prod_util.h
+index 2ca267e..0a0b6df 100644
+--- a/gtest_prod_util.h
++++ b/gtest_prod_util.h
+@@ -5,7 +5,8 @@
+ #ifndef BASE_GTEST_PROD_UTIL_H_
+ #define BASE_GTEST_PROD_UTIL_H_
+ 
+-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
++#define FRIEND_TEST(test_case_name, test_name)\
++friend class test_case_name##_##test_name##_Test
+ 
+ // This is a wrapper for gtest's FRIEND_TEST macro that friends
+ // test with all possible prefixes. This is very helpful when changing the test
+diff --git a/hash/md5.h b/hash/md5.h
+index 8a49f08..24acdab 100644
+--- a/hash/md5.h
++++ b/hash/md5.h
+@@ -11,7 +11,7 @@
+ #include "base/strings/string_piece.h"
+ #include "build/build_config.h"
+ 
+-#if defined(OS_NACL)
++#if true
+ #include "base/hash/md5_nacl.h"
+ #else
+ #include "base/hash/md5_boringssl.h"
+diff --git a/hash/md5_nacl.cc b/hash/md5_nacl.cc
+index 827bbbd..4b22c59 100644
+--- a/hash/md5_nacl.cc
++++ b/hash/md5_nacl.cc
+@@ -22,6 +22,7 @@
+  */
+ 
+ #include <stddef.h>
++#include <string.h>
+ 
+ #include "base/hash/md5.h"
+ 
+diff --git a/profiler/stack_copier_signal.cc b/profiler/stack_copier_signal.cc
+index 5a7d8b9..f959f2f 100644
+--- a/profiler/stack_copier_signal.cc
++++ b/profiler/stack_copier_signal.cc
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/futex.h>
+ #include <signal.h>
++#include <string.h>
+ #include <sys/ucontext.h>
+ #include <syscall.h>
+ 

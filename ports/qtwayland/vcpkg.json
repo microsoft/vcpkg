@@ -1,0 +1,28 @@
+{
+  "name": "qtwayland",
+  "version": "6.4.2",
+  "description": "A toolbox for making Qt based Wayland compositors",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

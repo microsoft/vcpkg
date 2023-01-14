@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1024016..266e6d5 100644
+index 122fe93..b571c38 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -352,11 +352,6 @@ ENDIF()
+@@ -360,11 +360,6 @@ ENDIF()
  # embedded builds this is not an issue as they will only build the configuration
  # used in the host application.
  MARK_AS_ADVANCED(PA_LIBNAME_ADD_SUFFIX)

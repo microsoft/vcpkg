@@ -1,0 +1,143 @@
+{
+  "name": "opencv2",
+  "version": "2.4.13.7",
+  "port-version": 16,
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://github.com/opencv/opencv",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "cuda": {
+      "description": "CUDA support for opencv",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "eigen",
+            "jpeg",
+            "png",
+            "tiff"
+          ]
+        },
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "eigen": {
+      "description": "Eigen support for opencv",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "ffmpeg": {
+      "description": "ffmpeg support for opencv",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "dependencies": [
+        "gtk"
+      ]
+    },
+    "jasper": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "jasper"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG support for opencv",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "openexr": {
+      "description": "OpenEXR support for opencv",
+      "dependencies": [
+        "imath",
+        "openexr"
+      ]
+    },
+    "opengl": {
+      "description": "opengl support for opencv",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "png": {
+      "description": "PNG support for opencv",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv"
+    },
+    "qt": {
+      "description": "Qt GUI support for opencv",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    },
+    "tiff": {
+      "description": "TIFF support for opencv",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "world": {
+      "description": "Compile to a single package support for opencv"
+    }
+  }
+}

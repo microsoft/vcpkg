@@ -1,0 +1,18 @@
+{
+  "name": "quirc",
+  "version": "1.1",
+  "port-version": 3,
+  "description": "quirc is one of the C library available for scanning QR Codes",
+  "homepage": "https://github.com/dlbeer/quirc",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

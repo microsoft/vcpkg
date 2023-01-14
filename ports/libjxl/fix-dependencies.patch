@@ -1,0 +1,82 @@
+diff --git a/lib/jxl.cmake b/lib/jxl.cmake
+index 72c07f4..5675d1e 100644
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -3,6 +3,15 @@
+ # Use of this source code is governed by a BSD-style
+ # license that can be found in the LICENSE file.
+ 
++find_package(unofficial-brotli CONFIG REQUIRED)
++find_package(lcms2 CONFIG REQUIRED)
++
++foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
++  add_library(${brlib} ALIAS unofficial::brotli::${brlib}-static)
++  add_library(${brlib}-static ALIAS unofficial::brotli::${brlib}-static)
++endforeach()
++add_library(lcms2 ALIAS lcms2::lcms2)
++
+ # Lists all source files for the JPEG XL decoder library. These are also used
+ # by the encoder: the encoder uses both dec and enc ourse files, while the
+ # decoder uses only dec source files.
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 50cc72c..fed027e 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -45,36 +45,7 @@ else()
+ endif()
+ 
+ # brotli
+-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
+-    JPEGXL_FORCE_SYSTEM_BROTLI)
+-  find_package(Brotli)
+-  if (NOT Brotli_FOUND)
+-    message(FATAL_ERROR
+-        "Brotli not found, install brotli-dev or download brotli source code to"
+-        " third_party/brotli from https://github.com/google/brotli. You can use"
+-        " ${PROJECT_SOURCE_DIR}/deps.sh to download this dependency.")
+-  endif ()
+-  if(JPEGXL_DEP_LICENSE_DIR)
+-    configure_file("${JPEGXL_DEP_LICENSE_DIR}/libbrotli-dev/copyright"
+-                   ${PROJECT_BINARY_DIR}/LICENSE.brotli COPYONLY)
+-  endif()  # JPEGXL_DEP_LICENSE_DIR
+-else()
+-  # Compile brotli from sources.
+-  set(BROTLI_DISABLE_TESTS ON CACHE STRING "Disable Brotli tests")
+-  # Override default "no-install" policy.
+-  if((NOT SANITIZER STREQUAL "asan") AND (NOT SANITIZER STREQUAL "msan"))
+-    set(BROTLI_BUNDLED_MODE OFF CACHE INTERNAL "")
+-  endif()
+-  add_subdirectory(brotli)
+-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/brotli/LICENSE"
+-                 ${PROJECT_BINARY_DIR}/LICENSE.brotli COPYONLY)
+-  if(BROTLI_EMSCRIPTEN)
+-    # Brotli only defines the -static targets when using emscripten.
+-    foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
+-      add_library(${brlib} ALIAS ${brlib}-static)
+-    endforeach()
+-  endif()  # BROTLI_EMSCRIPTEN
+-endif()
++find_package(unofficial-brotli CONFIG REQUIRED)
+ 
+ # *cms
+ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+@@ -86,18 +57,7 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/skcms/LICENSE"
+                  ${PROJECT_BINARY_DIR}/LICENSE.skcms COPYONLY)
+ endif ()
+-if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS)
+-  if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lcms/.git" OR JPEGXL_FORCE_SYSTEM_LCMS2 )
+-    find_package(LCMS2 2.13)
+-    if ( NOT LCMS2_FOUND )
+-      message(FATAL_ERROR "Please install lcms2 or run git submodule update --init")
+-    endif ()
+-  else()
+-    include(lcms2.cmake)
+-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/lcms/COPYING"
+-                   ${PROJECT_BINARY_DIR}/LICENSE.lcms COPYONLY)
+-  endif()
+-endif()
++find_package(lcms2 CONFIG REQUIRED)
+ 
+ # libpng
+ if (JPEGXL_EMSCRIPTEN)

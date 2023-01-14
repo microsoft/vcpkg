@@ -1,23 +1,23 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO adah1972/libunibreak
-  REF 15b579aac410b7c11ba596f4a9abbf405a187e34
-  SHA512 a46196ad276134dad19fbc4ad49a2f4a4563137e30657b0f06cee9e6b4dab803723ae270f9682c4b8245c9d10297ce44b7bfb08bfa16894552cdb916fc758c02
+  REF libunibreak_5_0 # libunibreak_5_0
+  SHA512 909c12cf5df92f0374050fc7a0ef9e91bc1efe6a5dc5a80f4e2c81a507f1228ecaba417c3ee001e11b2422024bea68cc14eb66e08360ae69f830cdaa18764484
   HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/libunibreak-config.cmake.in"
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/libunibreak-config.cmake" @ONLY)
 
 file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libunibreak RENAME copyright)

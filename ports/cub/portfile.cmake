@@ -1,12 +1,31 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVlabs/cub
-    REF v1.8.0
-    SHA512 c4ba51ca4e369c8ef87bc411aa011470478fcc2526b667f088e9ac8c62e6532dc2368e869f5147b56f22b3e8718c7276434c3294d9d67cb3a92c700d163e8fa7
+    REF ed040d585c3237d706973d7ad290bfee40958270 #v1.16.0
+    SHA512 81e0bacb0aa4ee7a1c86f3c12e3135a133579678d3530e0e0b8310f716d0355e5096925ac6de5865140a7aac08d974ea5169d47e34951b932a23965f74fe4ee6
     HEAD_REF master
+    PATCHES fix-usage.patch
 )
 
-file(COPY ${SOURCE_PATH}/cub/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/cub)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCUB_ENABLE_INSTALL_RULES=ON
+        -DCUB_ENABLE_HEADER_TESTING=OFF
+        -DCUB_ENABLE_TESTING=OFF
+        -DCUB_ENABLE_EXAMPLES=OFF
+        -DCUB_ENABLE_CPP_DIALECT_IN_NAMES=ON
+)
 
-configure_file(${SOURCE_PATH}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/cub/copyright COPYONLY)
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cub)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/cub/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug"
+                    "${CURRENT_PACKAGES_DIR}/lib"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
