@@ -5770,7 +5770,7 @@
     },
     "pangolin": {
       "baseline": "0.8",
-      "port-version": 1
+      "port-version": 2
     },
     "pangomm": {
       "baseline": "2.50.1",
