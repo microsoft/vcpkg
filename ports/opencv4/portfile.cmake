@@ -167,8 +167,6 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
-      0013-fix-ceres.patch
-      0014-fix-ogre.patch
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
   )
