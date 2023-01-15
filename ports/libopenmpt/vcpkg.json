@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "a library to render tracker music",
   "homepage": "https://openmpt.org/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "libogg",
     "libvorbis",
