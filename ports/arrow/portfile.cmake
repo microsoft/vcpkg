@@ -12,6 +12,8 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         thrift.patch
         utf8proc.patch
+        fix-pkgconfig-windows.patch # needed for fix-dataset.patch (https://github.com/apache/arrow/pull/14900)
+        fix-dataset.patch # https://github.com/apache/arrow/pull/33665
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
