@@ -39,12 +39,14 @@ if("zlib" IN_LIST FEATURES)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DGLIB2_MKENUMS_PYTHON=${PYTHON3}"
         -DBUILD_GTK_TESTS=OFF
         -DBUILD_QT5_TESTS=OFF
         -DBUILD_QT6_TESTS=OFF

@@ -20,6 +20,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-live555)
 
 file(GLOB HEADERS
     "${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
@@ -31,4 +34,3 @@ file(GLOB HEADERS
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
-vcpkg_copy_pdbs()

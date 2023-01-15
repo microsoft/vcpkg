@@ -78,16 +78,6 @@ function(install_qt)
             endif()
         endif()
 
-        if(VCPKG_TARGET_IS_OSX)
-           # For some reason there will be an error on MacOSX without this clean!
-            message(STATUS "Cleaning before build ${_build_triplet}")
-            vcpkg_execute_required_process(
-                COMMAND ${INVOKE_SINGLE} clean
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-                LOGNAME cleaning-1-${_build_triplet}
-            )
-        endif()
-
         message(STATUS "Building ${_build_triplet}")
         vcpkg_execute_build_process(
             COMMAND ${INVOKE}
@@ -101,8 +91,8 @@ function(install_qt)
             message(STATUS "Cleaning after build before install ${_build_triplet}")
             vcpkg_execute_required_process(
                 COMMAND ${INVOKE_SINGLE} clean
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-                LOGNAME cleaning-2-${_build_triplet}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}/qmake
+                LOGNAME cleaning-after-build-${_build_triplet}
             )
         endif()
 
