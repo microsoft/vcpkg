@@ -8,6 +8,7 @@ vcpkg_from_git(
         python-executable.patch
         disable-msvc-env-setup.patch
         uwp.patch
+        core-opengl32.patch
 )
 
 # these following aren't available in vcpkg
