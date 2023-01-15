@@ -1,11 +1,9 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Teuniz/EDFlib
-    REF v1.21
-    SHA512 6153cec44e26c0b9cd2f7e00d014f38ee7bdc444015eaf6169fecaf4aa16b04a552d3755ac83d48728de8dac7fe22cb2d0c9566f0fdc967e15bc3f000f456106
+    REF e5083444be5e7b20aaadab4578dcbb7371a69745
+    SHA512 1c983937f97adb5d8c253c0d3382615c1ca4d8049ee6767cacf82420144380e9d6553cd5e73db23568a1098c8613b899982ae272ef218d303d7ea71f24b857ee
     HEAD_REF master
 )
 
@@ -25,7 +23,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/edflib.h"
+        "#if defined(EDFLIB_SO_DLL)"
+        "#if 1 // defined(EDFLIB_SO_DLL)"
+    )
+endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-EDFlib)
 
