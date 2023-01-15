@@ -43,7 +43,7 @@ function(vcpkg_build_nmake)
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH "${NMAKE}" DIRECTORY)
     # Load toolchains
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    z_vcpkg_get_cmake_vars(cmake_vars_file CALLER ${CMAKE_CURRENT_FUNCTION})
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
     # Set needed env

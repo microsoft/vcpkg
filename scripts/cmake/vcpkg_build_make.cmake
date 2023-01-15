@@ -1,5 +1,5 @@
 function(vcpkg_build_make)
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    z_vcpkg_get_cmake_vars(cmake_vars_file CALLER ${CMAKE_CURRENT_FUNCTION})
     include("${cmake_vars_file}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased

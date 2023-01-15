@@ -13,7 +13,7 @@ function(vcpkg_configure_qmake)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
 
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    z_vcpkg_get_cmake_vars(cmake_vars_file CALLER ${CMAKE_CURRENT_FUNCTION})
     include("${cmake_vars_file}")
 
     function(qmake_append_program var qmake_var value)

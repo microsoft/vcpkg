@@ -315,7 +315,7 @@ function(vcpkg_configure_meson)
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    z_vcpkg_get_cmake_vars(cmake_vars_file CALLER ${CMAKE_CURRENT_FUNCTION})
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 

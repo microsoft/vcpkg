@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 function(vcpkg_qmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "QMAKE_OPTIONS;QMAKE_OPTIONS_RELEASE;QMAKE_OPTIONS_DEBUG;OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG")
 
-    vcpkg_cmake_get_vars(detected_file)
+    vcpkg_cmake_get_vars(detected_file CALLER ${CMAKE_CURRENT_FUNCTION})
     include("${detected_file}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

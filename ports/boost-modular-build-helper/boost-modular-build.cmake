@@ -106,7 +106,7 @@ function(boost_modular_build)
         list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
 
-    vcpkg_cmake_get_vars(cmake_vars_file)
+    vcpkg_cmake_get_vars(cmake_vars_file CALLER "boost-modular-build")
 
     vcpkg_check_features(
         OUT_FEATURE_OPTIONS feature_options
