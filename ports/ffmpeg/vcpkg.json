@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "4.4.3",
+  "version": "5.0.2",
   "port-version": 1,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -38,7 +38,6 @@
             "avdevice",
             "avfilter",
             "avformat",
-            "avresample",
             "bzip2",
             "freetype",
             "iconv",
@@ -151,14 +150,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tensorflow"
-          ],
-          "platform": "x64 & !static & !uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "aom"
           ],
           "platform": "!(windows & arm & !uwp)"
@@ -183,9 +174,33 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp & !windows"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "amf"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm & windows))"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "qsv"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm & windows))"
         },
         {
           "name": "ffmpeg",
@@ -213,17 +228,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!(uwp | arm)"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!(arm & windows)"
+          "platform": "!uwp & !(arm & windows)"
         },
         {
           "name": "ffmpeg",
@@ -487,6 +502,12 @@
       "description": "JPEG 2000 de/encoding via OpenJPEG",
       "dependencies": [
         "openjpeg"
+      ]
+    },
+    "openmpt": {
+      "description": "Decoding tracked files via libopenmpt",
+      "dependencies": [
+        "libopenmpt"
       ]
     },
     "openssl": {

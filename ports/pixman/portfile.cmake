@@ -32,10 +32,13 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND OPTIONS
                 -Da64-neon=disabled
+                -Darm-simd=disabled
+                -Dneon=disabled
                 )
 endif()
 
 set(PIXMAN_VERSION "${VERSION}")
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
     FILENAME "pixman-${PIXMAN_VERSION}.tar.gz"

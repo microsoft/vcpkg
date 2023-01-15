@@ -11,6 +11,7 @@ vcpkg_from_github(
         config-path.patch
         include.patch
         fix-system-link.patch
+        math-h-polyfill.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"

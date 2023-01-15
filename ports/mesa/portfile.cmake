@@ -117,24 +117,34 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    # installed by egl-registry
+    "${CURRENT_PACKAGES_DIR}/include/KHR"
+    "${CURRENT_PACKAGES_DIR}/include/EGL"
+    # installed by opengl-registry
+    "${CURRENT_PACKAGES_DIR}/include/GL"
+    "${CURRENT_PACKAGES_DIR}/include/GLES"
+    "${CURRENT_PACKAGES_DIR}/include/GLES2"
+    "${CURRENT_PACKAGES_DIR}/include/GLES3"
+)
+file(GLOB remaining "${CURRENT_PACKAGES_DIR}/include/*")
+if(NOT remaining)
+    # All headers to be provided by egl-registry and/or opengl-registry
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+endif()
 
-#installed by egl-registry
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
-#installed by opengl-registry
-set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
-    include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
-    include/GLES2/gl2.h include/GLES2/gl2ext.h include/GLES2/gl2platform.h
-    include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
-list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
-file(REMOVE ${_double_files})
+if(VCPKG_TARGET_IS_WINDOWS)
+    # opengl32.lib is already installed by port opengl.
+    # Mesa claims to provide a drop-in replacement of opengl32.dll.
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
+    endif()
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
-# Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")
