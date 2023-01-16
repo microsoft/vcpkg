@@ -220,6 +220,18 @@ fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
+# fast-cpp-csv-parser conflicts with libcsv; we test libcsv rather than fast-cpp-csv-parser because
+# fast-cpp-csv-parser is a header only port.
+fast-cpp-csv-parser:arm-uwp=skip
+fast-cpp-csv-parser:arm64-windows=skip
+fast-cpp-csv-parser:x64-linux=skip
+fast-cpp-csv-parser:x64-osx=skip
+fast-cpp-csv-parser:arm64-osx=skip
+fast-cpp-csv-parser:x64-uwp=skip
+fast-cpp-csv-parser:x64-windows-static=skip
+fast-cpp-csv-parser:x64-windows-static-md=skip
+fast-cpp-csv-parser:x64-windows=skip
+fast-cpp-csv-parser:x86-windows=skip
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
