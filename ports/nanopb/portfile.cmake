@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 0.4.7
     SHA512 7fb46dad8a432898c8f9e7faa90a55276670dea3b13f15b68010fe126d7f6251ef5715d0dfe5bce66582e80cfdc5d4b1e7f5947e96a058fa7181f0a45da20860
     HEAD_REF master
+    PATCHES 
+        fix-python.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" nanopb_BUILD_STATIC_LIBS)
