@@ -4009,7 +4009,7 @@
       "port-version": 1
     },
     "liblzma": {
-      "baseline": "5.4.0",
+      "baseline": "5.4.1",
       "port-version": 0
     },
     "libmad": {
