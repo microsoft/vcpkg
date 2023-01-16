@@ -1,7 +1,4 @@
 # header-only library
-if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libcsv/copyright")
-    message(FATAL_ERROR "'${PORT}' conflicts with 'libcsv'. Please remove libcsv:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/csv.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/csv.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
