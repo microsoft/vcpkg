@@ -1,12 +1,14 @@
 diff --git a/cmake/FindLZ4.cmake b/cmake/FindLZ4.cmake
-index e581a80..8ce17c5 100644
+index 2ae6d5f..f6db1a5 100644
 --- a/cmake/FindLZ4.cmake
 +++ b/cmake/FindLZ4.cmake
-@@ -1,10 +1,13 @@
+@@ -1,12 +1,15 @@
 -find_path(LZ4_INCLUDE_DIR lz4.h)
 +find_path(LZ4_INCLUDE_DIRS NAMES lz4.h)
  
--find_library(LZ4_LIBRARY NAMES lz4)
+ # On Windows, the lz4 library is called liblz4.lib, which is not
+ # found by using the lz4 name.
+-find_library(LZ4_LIBRARY NAMES lz4 liblz4)
 +find_library(LZ4_LIBRARY_DEBUG NAMES lz4d)
 +find_library(LZ4_LIBRARY_RELEASE NAMES lz4)
  

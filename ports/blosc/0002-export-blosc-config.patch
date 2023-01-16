@@ -1,8 +1,8 @@
 diff --git a/blosc/CMakeLists.txt b/blosc/CMakeLists.txt
-index f4e5c29..24641ad 100644
+index 70f80a2..bc61f45 100644
 --- a/blosc/CMakeLists.txt
 +++ b/blosc/CMakeLists.txt
-@@ -122,14 +122,14 @@ endif (NOT DEACTIVATE_ZSTD)
+@@ -143,14 +143,14 @@ endif (NOT DEACTIVATE_ZSTD)
  
  # targets
  if (BUILD_SHARED)
@@ -21,7 +21,7 @@ index f4e5c29..24641ad 100644
          APPEND PROPERTY COMPILE_DEFINITIONS BLOSC_SHARED_LIBRARY)
  endif()
  
-@@ -192,8 +192,8 @@ if (BUILD_TESTS)
+@@ -206,8 +206,8 @@ if (BUILD_TESTS)
  endif()
  
  if (BUILD_SHARED)
@@ -32,7 +32,7 @@ index f4e5c29..24641ad 100644
  endif()
  
  if (BUILD_TESTS)
-@@ -202,22 +202,24 @@ if (BUILD_TESTS)
+@@ -216,13 +216,13 @@ if (BUILD_TESTS)
  endif()
  
  if(BUILD_STATIC)
@@ -51,16 +51,38 @@ index f4e5c29..24641ad 100644
  endif(BUILD_STATIC)
  
  # install
- if(BLOSC_INSTALL)
-     install(FILES blosc.h blosc-export.h DESTINATION include COMPONENT DEV)
+@@ -230,12 +230,14 @@ if(BLOSC_INSTALL)
+     install(FILES blosc.h blosc-export.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEV)
      if(BUILD_SHARED)
--        install(TARGETS blosc_shared LIBRARY DESTINATION ${lib_dir} ARCHIVE DESTINATION ${lib_dir} RUNTIME DESTINATION bin COMPONENT LIB)
-+        install(TARGETS blosc EXPORT blosc-config RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
+-        install(TARGETS blosc_shared
+-                LIBRARY COMPONENT LIB
+-                ARCHIVE COMPONENT DEV
+-                RUNTIME COMPONENT LIB)
++        install(TARGETS blosc EXPORT blosc-config
++                LIBRARY COMPONENT lib
++                ARCHIVE COMPONENT lib
++                RUNTIME COMPONENT bin)
      endif(BUILD_SHARED)
      if(BUILD_STATIC)
--        install(TARGETS blosc_static LIBRARY DESTINATION ${lib_dir} ARCHIVE DESTINATION ${lib_dir} RUNTIME DESTINATION bin COMPONENT DEV)
-+        install(TARGETS blosc EXPORT blosc-config RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
+-        install(TARGETS blosc_static COMPONENT DEV)
++        install(TARGETS blosc EXPORT blosc-config LIBRARY COMPONENT lib)
      endif(BUILD_STATIC)
  endif(BLOSC_INSTALL)
 +
 +install(EXPORT blosc-config DESTINATION share/cmake/blosc)
+diff --git a/tests/fuzz/CMakeLists.txt b/tests/fuzz/CMakeLists.txt
+index 81000dc..cf9f909 100644
+--- a/tests/fuzz/CMakeLists.txt
++++ b/tests/fuzz/CMakeLists.txt
+@@ -52,8 +52,8 @@ foreach(source ${SOURCES})
+         target_link_libraries(${target} ${FUZZING_ENGINE})
+     endif()
+ 
+-    target_link_libraries(${target} blosc_static)
+-    add_dependencies(${target} blosc_static)
++    target_link_libraries(${target} blosc)
++    add_dependencies(${target} blosc)
+ 
+     # run standalone fuzzer against each file
+     file(GLOB COMPAT_FILES ${PROJECT_SOURCE_DIR}/compat/*.cdata)
