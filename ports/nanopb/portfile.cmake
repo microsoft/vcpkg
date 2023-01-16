@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
-    REF 0.4.5
-    SHA512 2f24308440bd961a94449e253627fbe38f6c5217cd70c57e9b3ab702da3c2df03b087ccdd62518940acf6b480a1dbb440ca5681f1766a17b199010d3df7b17a1
+    REF 0.4.7
+    SHA512 7fb46dad8a432898c8f9e7faa90a55276670dea3b13f15b68010fe126d7f6251ef5715d0dfe5bce66582e80cfdc5d4b1e7f5947e96a058fa7181f0a45da20860
     HEAD_REF master
-    PATCHES 
-        fix-python.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" nanopb_BUILD_STATIC_LIBS)
