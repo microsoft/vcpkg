@@ -5148,6 +5148,10 @@
       "baseline": "1.0.2",
       "port-version": 3
     },
+    "mujoco": {
+      "baseline": "2.3.2",
+      "port-version": 0
+    },
     "mujs": {
       "baseline": "2018-07-30",
       "port-version": 2
