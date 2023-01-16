@@ -5357,11 +5357,11 @@
       "port-version": 0
     },
     "nspr": {
-      "baseline": "4.33",
+      "baseline": "4.35",
       "port-version": 2
     },
     "nss": {
-      "baseline": "3.78",
+      "baseline": "3.87",
       "port-version": 0
     },
     "nsync": {
@@ -7964,6 +7964,10 @@
       "baseline": "2022-04-16",
       "port-version": 0
     },
+    "vcpkg-tool-gyp-next": {
+      "baseline": "2022-10-15",
+      "port-version": 0
+    },
     "vcpkg-tool-gyp-nss": {
       "baseline": "2022-03-04",
       "port-version": 0
@@ -7977,7 +7981,7 @@
       "port-version": 0
     },
     "vcpkg-tool-mozbuild": {
-      "baseline": "3.3",
+      "baseline": "4.0.2",
       "port-version": 0
     },
     "vcpkg-tool-ninja": {
