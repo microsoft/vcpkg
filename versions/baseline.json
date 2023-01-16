@@ -1277,7 +1277,7 @@
       "port-version": 1
     },
     "c9y": {
-      "baseline": "0.6.0",
+      "baseline": "0.6.1",
       "port-version": 0
     },
     "caf": {
@@ -1993,8 +1993,8 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "2022-12-04",
-      "port-version": 1
+      "baseline": "2023-01-02",
+      "port-version": 0
     },
     "discount": {
       "baseline": "2.2.6",
@@ -4170,7 +4170,7 @@
     },
     "libphonenumber": {
       "baseline": "8.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libplist": {
       "baseline": "1.3.6",
@@ -6061,7 +6061,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.21.8",
+      "baseline": "3.21.12",
       "port-version": 0
     },
     "protobuf-c": {
