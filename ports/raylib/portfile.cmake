@@ -14,11 +14,15 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(patches fix-linkGlfw.patch)
 endif()
 
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+	set(ADDITIONAL_OPTIONS "-DPLATFORM=Web")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF bf2ad9df5fdcaa385b2a7f66fd85632eeebbadaa #v4.2.0
-    SHA512 f6b1738d96fef89059062f570f67aaa8b143ccfbee78abfe5fbb25083371a4c432f3d1d0d357e4b475b4b72a6db7823c2341b70ac947759603b033c2b0acec47
+    REF 387c06000618ef0aa3b15c5e46d1c525ba194c50 #v4.2.0
+    SHA512 df7640dcf2979128586c7b671da4f17b628bed8a4526f252469d2d25aee2c9b16695087c8766c10bfdf26a89ff1a8f7ff6005baa7c0dbf77dadc8a0c469e1217
     HEAD_REF master
     PATCHES ${patches}
 )
@@ -46,6 +50,7 @@ vcpkg_cmake_configure(
         -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
         ${FEATURE_OPTIONS}
+        ${ADDITIONAL_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
         -DENABLE_UBSAN=${DEBUG_ENABLE_SANITIZERS}

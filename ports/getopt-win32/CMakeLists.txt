@@ -10,6 +10,8 @@ endif()
 
 add_library(getopt getopt.c)
 
+TARGET_INCLUDE_DIRECTORIES(getopt INTERFACE $<INSTALL_INTERFACE:include>)
+
 install(
     TARGETS getopt
     EXPORT unofficial-getopt-win32
