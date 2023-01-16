@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 5.0.1
-    SHA512 9d05b97dfce248634b6b3ff69fac5cc344f0c8265bf05595b74b0b060049dba082d358184662b8ea045cd51c3d07e7c4a4804513052094566b777c33ec5af89c
+    REF "${VERSION}"
+    SHA512 cc9fe9e504d01c74c488a8720317edf5909008d71eb332cf9c69991cff474657d2c3643eb3a735c047e28d54568ab886e5fea1038e6573d932ac215c3a6746a5
     HEAD_REF master
     PATCHES
-      fix-win32-build.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -46,10 +45,9 @@ vcpkg_configure_meson(
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
-    ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES   glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_BINARIES
+        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()
