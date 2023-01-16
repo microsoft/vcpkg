@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        fix-find-package2.patch
+        libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -31,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
