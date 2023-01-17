@@ -1,3 +1,11 @@
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING [[
+openssl currently requires the following library from the system package manager:
+    linux-headers
+It can be installed on alpine systems via apk add linux-headers.
+]])
+endif()
+
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
@@ -7,35 +15,9 @@ else()
     if(NOT MAKE)
         message(FATAL_ERROR "Could not find make. Please install it through your package manager.")
     endif()
+    vcpkg_find_acquire_program(PERL)
 endif()
-
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(OPENSSL_SHARED shared)
-else()
-    set(OPENSSL_SHARED no-shared no-module)
-endif()
-
 set(INTERPRETER "${PERL}")
-
-set(CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
-    no-ssl2
-    no-tests
-    ${OPENSSL_SHARED}
-)
-
-if(DEFINED OPENSSL_USE_NOPINSHARED)
-    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
-endif()
-
-if(OPENSSL_NO_AUTOLOAD_CONFIG)
-    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-autoload-config)
-endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
@@ -149,5 +131,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_MINGW)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
     endif()
 endif()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
