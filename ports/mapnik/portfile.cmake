@@ -1,11 +1,10 @@
 # test application for this port: https://github.com/mathisloge/mapnik-vcpkg-test
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF d7b83c0f7d11397aff5b5d8e0bb294ef6ea4354d
-    SHA512 62b47cb753e9698e55fe88593009016676b6c0c0a90c3f29be6f44a45f9f783ec5beca6916e549f9adbdc750e2e0334a9e927fc0dcb6a88431e40c2e920ff962
+    REF 4e064b8b8e324c4df7f2ae21dd72ccb85e1d4140
+    SHA512 4db329cad90058abc1a3430fded6fac5a49334f8feffb8510bd965a28dee630adf150174c933e61c76e93f6f107397e97929c863c97603d8dcef28f1a25f4628
     HEAD_REF master
 )
 
