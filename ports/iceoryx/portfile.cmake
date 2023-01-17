@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -6,7 +5,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-iceoryx/iceoryx
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 a354ed59eab8730238c828a6477bc6d9f8a5c27009e72406dd2f081cd1d490888d6c1ef31609b35599d30da6e32c1d9ddfaad2f5f50360dcd95015febba3d1ff
     HEAD_REF master
     PATCHES
