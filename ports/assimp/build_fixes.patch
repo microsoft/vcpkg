@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 458a328..b8c2fc6 100644
+index 458a32834..b8c2fc68b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -56,7 +56,7 @@ IF(ASSIMP_HUNTER_ENABLED)
@@ -89,7 +89,7 @@ index 458a328..b8c2fc6 100644
      ENDIF()
    ENDIF ()
 diff --git a/cmake-modules/assimp-plain-config.cmake.in b/cmake-modules/assimp-plain-config.cmake.in
-index 6551dcb..0796448 100644
+index 6551dcb68..3e8cdde3c 100644
 --- a/cmake-modules/assimp-plain-config.cmake.in
 +++ b/cmake-modules/assimp-plain-config.cmake.in
 @@ -1,5 +1,20 @@
@@ -114,7 +114,7 @@ index 6551dcb..0796448 100644
  
  set(ASSIMP_ROOT_DIR ${PACKAGE_PREFIX_DIR})
 diff --git a/code/AssetLib/3MF/D3MFExporter.cpp b/code/AssetLib/3MF/D3MFExporter.cpp
-index 42cd991..640e2fb 100644
+index 42cd991e6..640e2fbf7 100644
 --- a/code/AssetLib/3MF/D3MFExporter.cpp
 +++ b/code/AssetLib/3MF/D3MFExporter.cpp
 @@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -127,7 +127,7 @@ index 42cd991..640e2fb 100644
  
  namespace Assimp {
 diff --git a/code/AssetLib/Blender/BlenderTessellator.h b/code/AssetLib/Blender/BlenderTessellator.h
-index 0d0ba32..c3703c4 100644
+index 87703f99d..ecc69d7e4 100644
 --- a/code/AssetLib/Blender/BlenderTessellator.h
 +++ b/code/AssetLib/Blender/BlenderTessellator.h
 @@ -147,7 +147,7 @@ namespace Assimp
@@ -140,7 +140,7 @@ index 0d0ba32..c3703c4 100644
  
  namespace Assimp
 diff --git a/code/AssetLib/IFC/IFCGeometry.cpp b/code/AssetLib/IFC/IFCGeometry.cpp
-index ef59542..17e00cd 100644
+index b3620fe81..19534d61e 100644
 --- a/code/AssetLib/IFC/IFCGeometry.cpp
 +++ b/code/AssetLib/IFC/IFCGeometry.cpp
 @@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -153,7 +153,7 @@ index ef59542..17e00cd 100644
  #endif
  
 diff --git a/code/AssetLib/IFC/IFCLoader.cpp b/code/AssetLib/IFC/IFCLoader.cpp
-index 0c20686..e6b20a3 100644
+index 90b627df8..9753664f6 100644
 --- a/code/AssetLib/IFC/IFCLoader.cpp
 +++ b/code/AssetLib/IFC/IFCLoader.cpp
 @@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -166,7 +166,7 @@ index 0c20686..e6b20a3 100644
  #endif
  
 diff --git a/code/AssetLib/IFC/IFCOpenings.cpp b/code/AssetLib/IFC/IFCOpenings.cpp
-index 3c4a0b3..3fab616 100644
+index b8b9b8e05..1d0a49b9e 100644
 --- a/code/AssetLib/IFC/IFCOpenings.cpp
 +++ b/code/AssetLib/IFC/IFCOpenings.cpp
 @@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -179,7 +179,7 @@ index 3c4a0b3..3fab616 100644
  #endif
  
 diff --git a/code/AssetLib/MMD/MMDPmxParser.cpp b/code/AssetLib/MMD/MMDPmxParser.cpp
-index ca37ba1..2ce7bdd 100644
+index ca37ba199..2ce7bdd81 100644
 --- a/code/AssetLib/MMD/MMDPmxParser.cpp
 +++ b/code/AssetLib/MMD/MMDPmxParser.cpp
 @@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -192,7 +192,7 @@ index ca37ba1..2ce7bdd 100644
  #include <assimp/Exceptional.h>
  
 diff --git a/code/AssetLib/SIB/SIBImporter.cpp b/code/AssetLib/SIB/SIBImporter.cpp
-index 7b66afa..5adbe1d 100644
+index 323a69a00..bbc62cf54 100644
 --- a/code/AssetLib/SIB/SIBImporter.cpp
 +++ b/code/AssetLib/SIB/SIBImporter.cpp
 @@ -59,7 +59,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -205,7 +205,7 @@ index 7b66afa..5adbe1d 100644
  #include <assimp/importerdesc.h>
  #include <assimp/scene.h>
 diff --git a/code/AssetLib/STEPParser/STEPFileEncoding.cpp b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
-index d4456e6..812f29b 100644
+index d4456e674..812f29b61 100644
 --- a/code/AssetLib/STEPParser/STEPFileEncoding.cpp
 +++ b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
 @@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -218,10 +218,10 @@ index d4456e6..812f29b 100644
  
  #include <memory>
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 5339454..45e07c0 100644
+index b87bc665f..46c5633db 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
-@@ -897,8 +897,8 @@ SET( Extra_SRCS
+@@ -898,8 +898,8 @@ SET( Extra_SRCS
  SOURCE_GROUP( Extra FILES ${Extra_SRCS})
  
  # pugixml
@@ -232,7 +232,7 @@ index 5339454..45e07c0 100644
    find_package(pugixml CONFIG REQUIRED)
  ELSE()
    SET( Pugixml_SRCS
-@@ -910,15 +910,15 @@ ELSE()
+@@ -911,15 +911,15 @@ ELSE()
  ENDIF()
  
  # utf8
@@ -251,7 +251,7 @@ index 5339454..45e07c0 100644
    hunter_add_package(polyclipping)
    find_package(polyclipping CONFIG REQUIRED)
  ELSE()
-@@ -930,8 +930,8 @@ ELSE()
+@@ -931,8 +931,8 @@ ELSE()
  ENDIF()
  
  # poly2tri
@@ -262,7 +262,7 @@ index 5339454..45e07c0 100644
    find_package(poly2tri CONFIG REQUIRED)
  ELSE()
    SET( Poly2Tri_SRCS
-@@ -951,8 +951,8 @@ ELSE()
+@@ -952,8 +952,8 @@ ELSE()
  ENDIF()
  
  # minizip/unzip
@@ -273,7 +273,7 @@ index 5339454..45e07c0 100644
    find_package(minizip CONFIG REQUIRED)
  ELSE()
    SET( unzip_SRCS
-@@ -969,9 +969,9 @@ ENDIF()
+@@ -970,9 +970,9 @@ ENDIF()
  # zip (https://github.com/kuba--/zip)
  separate_arguments(ASSIMP_EXPORTERS_LIST UNIX_COMMAND ${ASSIMP_EXPORTERS_ENABLED})
  IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
@@ -286,7 +286,7 @@ index 5339454..45e07c0 100644
    ELSE()
      SET( ziplib_SRCS
        ../contrib/zip/src/miniz.h
-@@ -991,7 +991,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
+@@ -992,7 +992,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
  ENDIF()
  
  # openddlparser
@@ -295,7 +295,7 @@ index 5339454..45e07c0 100644
    hunter_add_package(openddlparser)
    find_package(openddlparser CONFIG REQUIRED)
  ELSE()
-@@ -1014,7 +1014,7 @@ ELSE()
+@@ -1015,7 +1015,7 @@ ELSE()
  ENDIF()
  
  # Open3DGC
@@ -304,7 +304,7 @@ index 5339454..45e07c0 100644
    # Nothing to do, not available in Hunter yet.
  ELSE()
    SET ( open3dgc_SRCS
-@@ -1049,6 +1049,7 @@ ELSE()
+@@ -1050,6 +1050,7 @@ ELSE()
      ../contrib/Open3DGC/o3dgcVector.inl
    )
    SOURCE_GROUP( Contrib\\open3dgc FILES ${open3dgc_SRCS})
@@ -312,7 +312,7 @@ index 5339454..45e07c0 100644
  ENDIF()
  
  # Check dependencies for glTF importer with Open3DGC-compression.
-@@ -1057,7 +1058,7 @@ ENDIF()
+@@ -1058,7 +1059,7 @@ ENDIF()
  IF (NOT WIN32)
    FIND_PACKAGE(RT QUIET)
  ENDIF ()
@@ -321,7 +321,7 @@ index 5339454..45e07c0 100644
    SET( ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC 1 )
    ADD_DEFINITIONS( -DASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1 )
  ELSE ()
-@@ -1067,9 +1068,10 @@ ELSE ()
+@@ -1068,9 +1069,10 @@ ELSE ()
  ENDIF ()
  
  # RapidJSON
@@ -334,20 +334,18 @@ index 5339454..45e07c0 100644
  ELSE()
    INCLUDE_DIRECTORIES("../contrib/rapidjson/include")
    ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1)
-@@ -1080,9 +1082,9 @@ ELSE()
+@@ -1081,8 +1083,8 @@ ELSE()
  ENDIF()
  
  # stb
 -IF(ASSIMP_HUNTER_ENABLED)
 -  hunter_add_package(stb)
--  find_package(stb CONFIG REQUIRED)
 +IF(1)
 +  #hunter_add_package(stb)
-+  find_package(Stb REQUIRED)
+   find_package(stb CONFIG REQUIRED)
  ELSE()
    SET( stb_SRCS
-     ../contrib/stb/stb_image.h
-@@ -1106,7 +1108,7 @@ IF( MSVC OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC") # clang with MSVC ABI
+@@ -1105,7 +1107,7 @@ IF( MSVC OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC") # clang with MSVC ABI
    ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS )
  endif ()
  
@@ -356,7 +354,7 @@ index 5339454..45e07c0 100644
    if (UNZIP_FOUND)
      SET (unzip_compile_SRCS "")
    else ()
-@@ -1157,7 +1159,7 @@ SET( assimp_src
+@@ -1156,7 +1158,7 @@ SET( assimp_src
  )
  ADD_DEFINITIONS( -DOPENDDLPARSER_BUILD )
  
@@ -365,7 +363,7 @@ index 5339454..45e07c0 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1195,45 +1197,48 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1201,45 +1203,49 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -393,6 +391,7 @@ index 5339454..45e07c0 100644
 +      PUBLIC
        pugixml
 -      stb::stb
++      stb
    )
 -  if(TARGET zip::zip)
 -    target_link_libraries(assimp PUBLIC zip::zip)
@@ -430,7 +429,7 @@ index 5339454..45e07c0 100644
  ENDIF ()
  
  if( MSVC )
-@@ -1274,13 +1279,13 @@ if (MINGW)
+@@ -1280,13 +1286,13 @@ if (MINGW)
      ARCHIVE_OUTPUT_NAME assimp
    )
    if (NOT BUILD_SHARED_LIBS)
@@ -446,7 +445,7 @@ index 5339454..45e07c0 100644
  endif()
  
  SET_TARGET_PROPERTIES( assimp PROPERTIES
-@@ -1310,10 +1315,10 @@ ENDIF()
+@@ -1316,10 +1322,10 @@ ENDIF()
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -459,7 +458,7 @@ index 5339454..45e07c0 100644
    else ()
      INCLUDE_DIRECTORIES("../")
    endif ()
-@@ -1321,7 +1326,7 @@ ENDIF()
+@@ -1327,7 +1333,7 @@ ENDIF()
  
  # Add RT-extension library for glTF importer with Open3DGC-compression.
  IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
@@ -468,8 +467,32 @@ index 5339454..45e07c0 100644
  ENDIF ()
  
  
+diff --git a/code/Common/Assimp.cpp b/code/Common/Assimp.cpp
+index ee798238e..29a12b1e8 100644
+--- a/code/Common/Assimp.cpp
++++ b/code/Common/Assimp.cpp
+@@ -1287,6 +1287,5 @@ ASSIMP_API void aiQuaternionInterpolate(
+ #   ifdef ASSIMP_USE_STB_IMAGE_STATIC
+ #       define STB_IMAGE_STATIC
+ #   endif
+-#   define STB_IMAGE_IMPLEMENTATION
+ #   include "Common/StbCommon.h"
+ #endif
+diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
+index 587fa7bc1..830d0c57c 100644
+--- a/code/Common/BaseImporter.cpp
++++ b/code/Common/BaseImporter.cpp
+@@ -334,7 +334,7 @@ std::string BaseImporter::GetExtension(const std::string &file) {
+ #ifdef ASSIMP_USE_HUNTER
+ #include <utf8.h>
+ #else
+-#include "../contrib/utf8cpp/source/utf8.h"
++#include <utf8.h>
+ #endif
+ 
+ // ------------------------------------------------------------------------------------------------
 diff --git a/code/Common/StbCommon.h b/code/Common/StbCommon.h
-index 1265d25..18f4564 100644
+index 1265d25da..18f456492 100644
 --- a/code/Common/StbCommon.h
 +++ b/code/Common/StbCommon.h
 @@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -481,21 +504,8 @@ index 1265d25..18f4564 100644
  
  #if _MSC_VER
  #pragma warning(pop)
-diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
-index 383300e..03fdd9a 100644
---- a/code/Common/BaseImporter.cpp
-+++ b/code/Common/BaseImporter.cpp
-@@ -332,7 +332,7 @@ std::string BaseImporter::GetExtension(const std::string &file) {
- #ifdef ASSIMP_USE_HUNTER
- #include <utf8.h>
- #else
--#include "../contrib/utf8cpp/source/utf8.h"
-+#include <utf8.h>
- #endif
- 
- // ------------------------------------------------------------------------------------------------
 diff --git a/code/Common/ZipArchiveIOSystem.cpp b/code/Common/ZipArchiveIOSystem.cpp
-index 3d5c72e..770cb9d 100644
+index 3d5c72e27..770cb9d31 100644
 --- a/code/Common/ZipArchiveIOSystem.cpp
 +++ b/code/Common/ZipArchiveIOSystem.cpp
 @@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
