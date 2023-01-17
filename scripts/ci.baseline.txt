@@ -1126,7 +1126,6 @@ linenoise-ng:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
-quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
