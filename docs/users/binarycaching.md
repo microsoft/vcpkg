@@ -47,7 +47,7 @@ By default, zip-based archives will be cached at the first valid location of:
 
 | form                        | description
 |-----------------------------|---------------
-| `clear`                     | Removes all previous sources (including the default)
+| `clear`                     | Disable read all previous sources (including the default)
 | `default[,<rw>]`            | Adds the default file-based location
 | `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI

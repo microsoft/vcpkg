@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TartanLlama/ranges
-    REF f1aa65d89cee16071f1f5b21e32df5f8ff0d1688
-    SHA512 0b94ceba4aaa26a2aefff7837df7b832aea79a5822fb33f18ba47610aed7341ff173b23b8fe9dbf8060c144edd44ae916a3c71db440a66f3c1e8f7bdab27d767
+    REF 361dae81e48ea9d0099e8783b56b903c2a6cd01c
+    SHA512 cce7964d1e77544495ae07c62c1b9a5e7948ea3a6d090e2e9126d3cbc685359e48425e48ddd533ba874ac442855f358d4b24db5265e1584aac6c54d63f82b6a4
     HEAD_REF master
 )
 
@@ -14,5 +14,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/tl-ranges)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/cmake")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

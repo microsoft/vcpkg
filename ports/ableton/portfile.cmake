@@ -11,6 +11,7 @@ vcpkg_from_github(
         replace_local_asiostandalone_by_vcpkg_asio.patch
         replace_asiosdk_download_by_vcpkg_asiosdk.patch
         replace_local_catch_by_vcpkg_catch2.patch
+        no-werror.patch
 )
 # Note that the dependencies ASIO and ASIOSDK are completely different things:
 # -ASIO (ASyncronous IO) is a cross-platform C++ library for network and low-level I/O programming

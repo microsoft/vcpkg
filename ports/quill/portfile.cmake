@@ -1,10 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-11-10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
-    REF v2.4.2
-    SHA512 d7cfb7491f447ef17142d171cd138ed4cc0a00ef7de7a06686848a07412d16b9907ca59dd0effce99c37d27a8ceac6a98dde9f4cd33d3d9dec1aed922eb90bb5
+    REF v${VERSION}
+    SHA512 6125cacfca83c2b3789277713893f2289d9d537ee49e43007d2ab0162ab937766ccce6298d3c0ee4c71a6187c67388cb2506db345f5aa4d0fe748277a08b3888
     HEAD_REF master
 )
 
@@ -30,4 +31,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h" "// #define QUILL_FMT_EXTERNAL" "#define QUILL_FMT_EXTERNAL")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

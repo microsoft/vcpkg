@@ -1,7 +1,7 @@
 {
   "name": "physx",
   "version": "4.1.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs",
   "homepage": "https://github.com/NVIDIAGameWorks/PhysX",
   "license": null,

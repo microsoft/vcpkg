@@ -1,0 +1,24 @@
+{
+  "name": "libphonenumber",
+  "version": "8.13.1",
+  "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
+  "license": "Apache-2.0",
+  "supports": "!linux & !osx",
+  "dependencies": [
+    "abseil",
+    "boost-date-time",
+    "boost-system",
+    "boost-thread",
+    "icu",
+    "protobuf",
+    "re2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
