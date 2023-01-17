@@ -25,8 +25,3 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
-
-# remove `${SOURCE_PATH}` from the front of `#line` directives
-if(NOT QT_UPDATE_VERSION)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Qt6/QtQml/${QT_VERSION}/QtQml/private/qqmljsparser_p.h" "${SOURCE_PATH}" "")
-endif()

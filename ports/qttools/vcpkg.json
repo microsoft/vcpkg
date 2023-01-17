@@ -1,6 +1,6 @@
 {
   "name": "qttools",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -28,7 +28,9 @@
           "default-features": false,
           "features": [
             "network",
-            "sql-sqlite"
+            "png",
+            "sql-sqlite",
+            "widgets"
           ]
         }
       ]

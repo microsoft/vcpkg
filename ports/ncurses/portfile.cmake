@@ -30,6 +30,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         --without-normal
     )
 endif()
+
+if(NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --enable-mixed-case
+    )
+endif()
+
 if(VCPKG_TARGET_IS_MINGW)
     list(APPEND OPTIONS
         --disable-home-terminfo
@@ -54,6 +61,7 @@ set(OPTIONS_RELEASE
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}

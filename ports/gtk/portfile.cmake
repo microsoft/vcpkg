@@ -1,11 +1,9 @@
-set(GTK_VERSION 4.6.2)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  aec7ca82007dbe07faee6be084d20758ebac2b91 #v4.6.2
-    SHA512 05ebba53e71a997b4dc04bc018f420f62d569cb66a2f3e713bd2b48abd7c0051f67939e42c812388bd0565d12a3f82b45731a086d3ab0e75d16eee200a3be95f
+    REF  73bea05c3386075528542c2714790199f2bb5861 #v4.6.8
+    SHA512 5e7b994d1e26a4d97bd5788b61ca3a43a04c96c10161d29e185d5854b925e07b1bba5f1e35509d4df078f918bb6cc7149bcb720aaec8c04e5d8254280c0076ed
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch

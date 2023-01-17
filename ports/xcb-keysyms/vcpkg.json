@@ -1,0 +1,13 @@
+{
+  "name": "xcb-keysyms",
+  "version": "0.4.1",
+  "description": "Standard X key constants and conversion to/from keycodes",
+  "homepage": "https://xcb.freedesktop.org/",
+  "license": null,
+  "dependencies": [
+    "bzip2",
+    "xcb",
+    "xorg-macros",
+    "xproto"
+  ]
+}

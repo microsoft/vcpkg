@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,6 +9,7 @@ vcpkg_from_gitlab(
     PATCHES
         fix_build_error_windows.patch
         loaders-cache.patch
+        use-libtiff-4-pkgconfig.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -42,7 +44,7 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 set(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders)
-# gdk-pixbuf-thumbnailer is not compiled for cross-compiling 
+# gdk-pixbuf-thumbnailer is not compiled for cross-compiling
 # vcpkg-meson cross-build configuration differs from VCPKG_CROSSCOMPILING
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/gdk-pixbuf-thumbnailer${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     list(APPEND TOOL_NAMES gdk-pixbuf-thumbnailer)

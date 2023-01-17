@@ -1,13 +1,14 @@
+set(UVATLAS_TAG dec2022)
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF jul2022
-    SHA512 fe857766d598c73badba6eda3128775f9195d0a1a7658e9b48a77dd631da4bbd31ab946bc98f8e9b229a6bc99a785ac3da693cb655be0f6a1393ad176e26b688
+    REF dec2022b
+    SHA512 305985bee492a5fec85dd46e6e59200f88c963bc4e5e4f9f8319dd3a16f677de9d802db0407b85703e3e5274570bb41ac418c639a595640f6049fad595ba8046
     HEAD_REF main
-    PATCHES
-        openexr.patch
+    PATCHES openexr.patch
 )
 
 if (VCPKG_HOST_IS_LINUX)
@@ -18,12 +19,15 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         eigen ENABLE_USE_EIGEN
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 if(VCPKG_TARGET_IS_UWP)
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -37,9 +41,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jul2022/uvatlastool.exe"
-    FILENAME "uvatlastool-jul2022.exe"
-    SHA512 3c1f7d25f10a85895d75d4102e127af857c4eae1bb3773b84e0f48e30ba9be517469b1a7504c6859e5b75481fea427052af21f3491f6993bf3dc360829c086b8
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
+    FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
+    SHA512 55c8458964ab7682718decf51e69ab3e2d2e3d56744af3dd4fc678acabbdc90ed663075e5d17e74af1f6a58bf439d314720b7ec1242d85d0e7991237d19265e1
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -48,7 +52,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-jul2022.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-${UVATLAS_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

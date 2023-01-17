@@ -9,6 +9,7 @@ vcpkg_from_github(
         patch-relocatable-rpath.patch
         fix-aws-root.patch
         fix-openssl3.patch
+        lock-curl-http-and-tls-settings.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -49,7 +50,7 @@ vcpkg_cmake_install()
 
 foreach(TARGET IN LISTS BUILD_ONLY)
     vcpkg_cmake_config_fixup(PACKAGE_NAME "aws-cpp-sdk-${TARGET}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endforeach() 
+endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
 
 vcpkg_copy_pdbs()

@@ -1,8 +1,9 @@
 {
   "name": "trompeloeil",
-  "version": "41",
+  "version": "43",
   "description": "A thread-safe header-only mocking framework for C++11/14 using the Boost Software License 1.0",
   "homepage": "https://github.com/rollbear/trompeloeil",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

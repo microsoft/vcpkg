@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.6.0",
-  "port-version": 6,
+  "port-version": 10,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -130,8 +130,14 @@
     "freetype": {
       "description": "Freetype support for opencv",
       "dependencies": [
-        "freetype",
-        "harfbuzz"
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
       ]
     },
     "gdcm": {
@@ -143,13 +149,23 @@
     "gstreamer": {
       "description": "gstreamer support for opencv",
       "dependencies": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "gtk": {
       "description": "GTK support for opencv",
+      "supports": "!windows & !osx & !ios & !android",
       "dependencies": [
-        "gtk"
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
       ]
     },
     "halide": {

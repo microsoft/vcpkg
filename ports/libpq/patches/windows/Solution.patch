@@ -12,10 +12,10 @@ index 51711c2bf..d33fdc3b0 100644
  		$? >> 8 == 0 or die "cl command not found";
 -		$self->{platform} =
 -		  ($output =~ /^\/favor:<.+AMD64/m) ? 'x64' : 'Win32';
-+		if ($output =~ m/x64\n/) { $self->{platform} = 'x64';
-+		} elsif ($output =~ m/x86\n/) { $self->{platform} = 'Win32';
-+		} elsif ($output =~ m/ARM64\n/) { $self->{platform} = 'ARM64';
-+		} elsif ($output =~ m/ARM\n/) { $self->{platform} = 'ARM';
++		if ($output =~ m/x64\s/) { $self->{platform} = 'x64';
++		} elsif ($output =~ m/x86\s/) { $self->{platform} = 'Win32';
++		} elsif ($output =~ m/ARM64\s/) { $self->{platform} = 'ARM64';
++		} elsif ($output =~ m/ARM\s/) { $self->{platform} = 'ARM';
 +		} else { $self->{platform} = 'Unknown'
 +		}
  	}

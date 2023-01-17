@@ -1,0 +1,13 @@
+{
+  "name": "xcb-util-wm",
+  "version": "0.4.2",
+  "description": "XCB client and window-manager helpers for ICCCM & EWMH.",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcb-wm/",
+  "license": null,
+  "dependencies": [
+    "bzip2",
+    "xcb",
+    "xorg-macros",
+    "xproto"
+  ]
+}

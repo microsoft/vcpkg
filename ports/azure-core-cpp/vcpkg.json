@@ -1,6 +1,7 @@
 {
   "name": "azure-core-cpp",
   "version-semver": "1.7.2",
+  "port-version": 2,
   "description": [
     "Microsoft Azure Core SDK for C++",
     "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
@@ -64,6 +65,7 @@
     },
     "winhttp": {
       "description": "WinHTTP HTTP transport implementation",
+      "supports": "windows",
       "dependencies": [
         {
           "name": "azure-core-cpp",
