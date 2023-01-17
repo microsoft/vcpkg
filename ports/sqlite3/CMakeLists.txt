@@ -112,7 +112,7 @@ if(WITH_JSON1)
 endif()
 
 if (WIN32)
-    string(APPEND PKGCONFIG_DEFINES " -DQLITE_OS_WIN=1")
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_WIN=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WIN=1)
     
     string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_COLUMN_METADATA=1")
