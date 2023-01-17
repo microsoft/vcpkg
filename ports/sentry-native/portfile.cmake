@@ -23,13 +23,10 @@ if (NOT DEFINED SENTRY_BACKEND)
         set(SENTRY_BACKEND "breakpad")
     else()
         set(SENTRY_BACKEND "inproc")
-    endif()
-endif()
-
-vcpkg_list(SET FEATURE_OPTIONS)
-if(NOT "backend" IN_LIST FEATURES)
-    vcpkg_list(APPEND FEATURE_OPTIONS -DSENTRY_BACKEND=none)
-    message(STATUS "This build doesn't include a backend to handle crashes. It is primarily used for tests.")
+    else()
+        set(SENTRY_BACKEND "none")
+        message(STATUS "This build doesn't include a backend to handle crashes. It is primarily used for tests.")
+    endif(SENTRY_BACKEND "none")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -40,7 +37,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
