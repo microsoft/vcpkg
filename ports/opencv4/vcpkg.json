@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.6.0",
-  "port-version": 8,
+  "port-version": 10,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -149,7 +149,13 @@
     "gstreamer": {
       "description": "gstreamer support for opencv",
       "dependencies": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "gtk": {

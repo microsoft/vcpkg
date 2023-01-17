@@ -398,29 +398,6 @@ target_include_directories(7zip
         $<INSTALL_INTERFACE:include>/7zip/CPP
 )
 
-set(PUBLIC_HEADERS
-    C/7zTypes.h
-    C/Alloc.h
-    C/LzFind.h
-    C/LzFindMt.h
-    C/LzHash.h
-    C/LzmaDec.h
-    C/LzmaEnc.h
-    C/LzmaLib.h
-    C/Threads.h
-    CPP/7zip/Archive/IArchive.h
-    CPP/7zip/ICoder.h
-    CPP/7zip/IDecl.h
-    CPP/7zip/IPassword.h
-    CPP/7zip/IProgress.h
-    CPP/7zip/IStream.h
-    CPP/7zip/PropID.h
-    CPP/Common/Defs.h
-    CPP/Common/MyTypes.h
-    CPP/Common/MyUnknown.h
-    CPP/Common/MyWindows.h
-)
-
 install(
     TARGETS 7zip
     EXPORT 7zip-targets
@@ -430,14 +407,18 @@ install(
 )
 
 # Headers makes relative includes so directory structure must be kept
-foreach(HEADER ${PUBLIC_HEADERS})
-    get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
-    install(
-        FILES ${HEADER}
-        CONFIGURATIONS Release
-        DESTINATION include/7zip/${HEADER_DIR}
-    )
-endforeach()
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/C/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/C")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/Common/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/Common")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/Archive/*.h")
+install (FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip/Archive")
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(

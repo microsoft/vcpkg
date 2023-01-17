@@ -1,14 +1,18 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF v2.3.17.0
-    SHA512 25cb1a671e7cd5154e363eef178ab091fd7d55868746a4394340567a794f6c6f0295e58721a5b4ee8bf66b4cc0e6a01c3e82f9cc9de9953ae349d45738a04700
+    REF v${VERSION}
+    SHA512 c7a4283b78197c262d8da31460ce8b07b44546f822142e32e6c1ea22376e1c4b9cfe9c39cc0994987c6c4f653c1f2764057944da97a3a090bf1bcb74a2a0b2c2
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
         fix-openexr-dll.patch
         imath-version-guard.patch
+        fix-openimageio_include_dir.patch
+        fix-vs2019-encoding-conversion.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -59,12 +63,13 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
+        -DENABLE_INSTALL_testtex=OFF
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_INSTALL_testtex
 )
 
 vcpkg_cmake_install()
-
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 

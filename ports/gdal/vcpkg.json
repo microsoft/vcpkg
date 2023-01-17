@@ -1,6 +1,7 @@
 {
   "name": "gdal",
-  "version-semver": "3.5.3",
+  "version-semver": "3.6.2",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -56,14 +57,21 @@
     "default-features": {
       "description": "Default set of features, including recommended features",
       "dependencies": [
-        "expat",
         {
           "name": "gdal",
           "default-features": false,
           "features": [
-            "curl",
-            "geos",
-            "recommended-features"
+            "gif",
+            "iconv",
+            "libkml",
+            "libxml2",
+            "lzma",
+            "openjpeg",
+            "openssl",
+            "pcre2",
+            "recommended-features",
+            "webp",
+            "zstd"
           ]
         },
         {
@@ -83,19 +91,13 @@
             "netcdf"
           ],
           "platform": "!uwp & !(windows & arm64) & !android & !ios"
-        },
-        "giflib",
-        "libiconv",
-        "libjpeg-turbo",
-        "liblzma",
-        "libpng",
-        "libwebp",
-        "libxml2",
-        "openjpeg",
-        "openssl",
-        "pcre2",
-        "qhull",
-        "zstd"
+        }
+      ]
+    },
+    "expat": {
+      "description": "Use EXPAT library",
+      "dependencies": [
+        "expat"
       ]
     },
     "freexl": {
@@ -110,6 +112,12 @@
         "geos"
       ]
     },
+    "gif": {
+      "description": "Enable GIF support",
+      "dependencies": [
+        "giflib"
+      ]
+    },
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
@@ -122,16 +130,46 @@
         }
       ]
     },
+    "iconv": {
+      "description": "Use iconv library",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
+    "jpeg": {
+      "description": "Use JPEG compression library",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
     "lerc": {
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
       ]
     },
+    "libkml": {
+      "description": "Enable the LibKML driver",
+      "dependencies": [
+        "libkml"
+      ]
+    },
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
         "libspatialite"
+      ]
+    },
+    "libxml2": {
+      "description": "Use LibXML2 library",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "lzma": {
+      "description": "Use LZMA library",
+      "dependencies": [
+        "liblzma"
       ]
     },
     "mysql-libmariadb": {
@@ -147,6 +185,30 @@
           "name": "netcdf-c",
           "default-features": false
         }
+      ]
+    },
+    "openjpeg": {
+      "description": "Use OpenJPEG library",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "openssl": {
+      "description": "Use OpenSSL library",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "pcre2": {
+      "description": "Enable PCRE2 support for sqlite3",
+      "dependencies": [
+        "pcre2"
+      ]
+    },
+    "png": {
+      "description": "Use PNG compression library",
+      "dependencies": [
+        "libpng"
       ]
     },
     "poppler": {
@@ -167,10 +229,34 @@
         "libpq"
       ]
     },
+    "qhull": {
+      "description": "Use QHULL library",
+      "dependencies": [
+        "qhull"
+      ]
+    },
     "recommended-features": {
       "description": "Features that are explicity marked as recommended by GDAL.",
       "dependencies": [
-        "expat",
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "curl",
+            "expat",
+            "geos",
+            "jpeg",
+            "lerc",
+            "png",
+            "qhull",
+            "sqlite3"
+          ]
+        }
+      ]
+    },
+    "sqlite3": {
+      "description": "Enable SQLite3 support",
+      "dependencies": [
         {
           "name": "sqlite3",
           "features": [
@@ -196,6 +282,18 @@
     },
     "tools": {
       "description": "Builds gdal and ogr executables"
+    },
+    "webp": {
+      "description": "Enable WEBP support",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "zstd": {
+      "description": "Use ZSTD library",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }

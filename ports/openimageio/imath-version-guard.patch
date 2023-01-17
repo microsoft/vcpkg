@@ -1,10 +1,10 @@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index b50a923..cec6e43 100644
+index 4d7e11c..0f15ba9 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -168,6 +168,11 @@ set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
- if (NOT OPENCOLORIO_FOUND)
-     set (OPENCOLORIO_FOUND 0)
+@@ -184,6 +184,11 @@ set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
+ if (NOT OpenColorIO_FOUND)
+     set (OpenColorIO_FOUND 0)
  endif ()
 +if(USE_OPENCOLORIO AND TARGET Imath::Imath AND OIIO_USING_IMATH STREQUAL "2")
 +    message(FATAL_ERROR

@@ -1,6 +1,6 @@
 {
   "name": "qtdeclarative",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -9,6 +9,7 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "network",
         "testlib"
       ]
     },

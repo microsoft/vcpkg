@@ -1,6 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "port-version": 1,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
@@ -19,11 +19,8 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
-  ],
-  "features": {
-    "backend": {
-      "description": "This builds sentry-native without a backend, so it does not handle crashes at all. It is primarily used for tests."
+    {
+      "name": "zlib",
+      "platform": "ios | osx | windows"
     }
-  }
 }

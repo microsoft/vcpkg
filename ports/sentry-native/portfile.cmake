@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.2/sentry-native.zip"
-    FILENAME "sentry-native-0.5.2.zip"
-    SHA512 bbeff94c6795be737d1aee99a061dfb863eca5abbc2797b2bb4a2903354b25787f4808694bf24eee9bdeb419eeae7f6e4f236b7eb95bcb1d3821ad799d322f54
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.3/sentry-native.zip"
+    FILENAME "sentry-native-0.5.3.zip"
+    SHA512 5d8720a86d683b049d3e393a16b52fd2aea641714740222b473c18b986553c5657f939524670110438b79fb49440e44159a3c7f4470ae29140585df3d26fc34c
 )
 
 vcpkg_extract_source_archive(
@@ -11,7 +11,6 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        use-zlib-target.patch
 )
 
 # The ${SENTRY_BACKEND} of the following settings are the default values officially supported by different systems.
@@ -19,7 +18,7 @@ if (NOT DEFINED SENTRY_BACKEND)
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
         set(SENTRY_BACKEND "breakpad")
     elseif(APPLE OR WIN32)
-        set(SENTRY_BACKEND "crashpad")
+        set(SENTRY_BACKEND "crashpad") # needs zlib
     elseif(LINUX)
         set(SENTRY_BACKEND "breakpad")
     else()
