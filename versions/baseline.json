@@ -2292,6 +2292,10 @@
       "baseline": "2020-09-11",
       "port-version": 5
     },
+    "fastdds": {
+      "baseline": "2.9.0",
+      "port-version": 0
+    },
     "fastfeat": {
       "baseline": "391d5e9",
       "port-version": 2
@@ -2313,7 +2317,7 @@
       "port-version": 1
     },
     "fastrtps": {
-      "baseline": "2.7.0",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "fawdlstty-libfv": {
