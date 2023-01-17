@@ -1,6 +1,6 @@
 {
   "name": "directxmesh",
-  "version-date": "2022-10-17",
+  "version-date": "2022-12-15",
   "description": "DirectXMesh geometry processing library",
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
@@ -21,6 +21,9 @@
   "features": {
     "dx12": {
       "description": "Build with DirectX12 support for Windows 10"
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
     }
   }
 }

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif 
-    REF 5fb52b6134d5e034b51637a86c6e8a7418b35df1 #v1.13.0
-    SHA512 e1ebd5eb7ae436a604ae3bb50ea4d53b8efb97388081a0876c161927a8b31c48c03899075423048d3f10055332bf7f3472bb8a06b6d32312de1d88fbda760421
+    REF e04d8864b8778605f00e3bf0f2c1cea65abd60f2 #v1.14.2
+    SHA512 42d10500f7b1176fc6bd6afa783610a9a5b5be3db5c9b4d68b1102823153aee6f22194f8394e6c6a37df75e19f01e301dde783658067f67899410e8de07d19b5
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
@@ -34,5 +34,8 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "#ifdef LI
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libheif" "${CURRENT_PACKAGES_DIR}/debug/lib/libheif")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_version.h" "#define LIBHEIF_PLUGIN_DIRECTORY \"${CURRENT_PACKAGES_DIR}/lib/libheif\"" "")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
