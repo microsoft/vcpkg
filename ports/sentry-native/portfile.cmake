@@ -15,6 +15,8 @@ vcpkg_extract_source_archive(
 
 # The ${SENTRY_BACKEND} of the following settings are the default values officially supported by different systems.
 if (NOT DEFINED SENTRY_BACKEND)
+    set(SENTRY_BACKEND "none")
+    message(STATUS "This build doesn't include a backend to handle crashes. It is primarily used for tests.")
     if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
         set(SENTRY_BACKEND "breakpad")
     elseif(APPLE OR WIN32)
@@ -23,10 +25,6 @@ if (NOT DEFINED SENTRY_BACKEND)
         set(SENTRY_BACKEND "breakpad")
     else()
         set(SENTRY_BACKEND "inproc")
-    else()
-        set(SENTRY_BACKEND "none")
-        message(STATUS "This build doesn't include a backend to handle crashes. It is primarily used for tests.")
-    endif(SENTRY_BACKEND "none")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -69,3 +67,4 @@ file(
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
+
