@@ -21,24 +21,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPython_EXECUTABLE=${PYTHON3}
         -Dnanopb_BUILD_RUNTIME=ON
         -DBUILD_STATIC_LIBS=${nanopb_BUILD_STATIC_LIBS}
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
-        -Dnanopb_PROTOC_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
+        -Dnanopb_PROTOC_PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         ${FEATURE_OPTIONS}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(nanopb_BUILD_GENERATOR)
     file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/nanopb_generator.py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
@@ -54,4 +53,4 @@ if(nanopb_BUILD_STATIC_LIBS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
