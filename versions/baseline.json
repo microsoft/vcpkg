@@ -26,7 +26,7 @@
     },
     "acl": {
       "baseline": "2.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -198,7 +198,7 @@
     },
     "arrow": {
       "baseline": "10.0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ashes": {
       "baseline": "2022-06-08",
@@ -549,7 +549,7 @@
       "port-version": 0
     },
     "blend2d": {
-      "baseline": "2022-05-02",
+      "baseline": "2022-12-31",
       "port-version": 0
     },
     "blitz": {
@@ -2278,14 +2278,14 @@
     },
     "fast-cpp-csv-parser": {
       "baseline": "2021-01-03",
-      "port-version": 1
+      "port-version": 2
     },
     "fast-float": {
       "baseline": "3.5.1",
       "port-version": 0
     },
     "fastcdr": {
-      "baseline": "1.0.25",
+      "baseline": "1.0.26",
       "port-version": 0
     },
     "fastcgi": {
@@ -2586,7 +2586,7 @@
     },
     "gdal": {
       "baseline": "3.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.50.1",
+      "baseline": "1.51.1",
       "port-version": 0
     },
     "grppi": {
@@ -2913,8 +2913,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "5.0.1",
-      "port-version": 3
+      "baseline": "5.3.1",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
@@ -3970,7 +3970,7 @@
     },
     "libkml": {
       "baseline": "1.3.0",
-      "port-version": 9
+      "port-version": 10
     },
     "liblas": {
       "baseline": "1.8.1",
@@ -4009,7 +4009,7 @@
       "port-version": 1
     },
     "liblzma": {
-      "baseline": "5.4.0",
+      "baseline": "5.4.1",
       "port-version": 0
     },
     "libmad": {
@@ -4146,7 +4146,7 @@
     },
     "libosmium": {
       "baseline": "2.18.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libosmscout": {
       "baseline": "1.1.1",
@@ -4326,7 +4326,7 @@
     },
     "libsquish": {
       "baseline": "1.15",
-      "port-version": 12
+      "port-version": 13
     },
     "libsrt": {
       "baseline": "1.5.0",
@@ -4826,7 +4826,7 @@
     },
     "marisa-trie": {
       "baseline": "0.2.6+20200926",
-      "port-version": 1
+      "port-version": 2
     },
     "marl": {
       "baseline": "2022-03-02",
@@ -5901,8 +5901,8 @@
       "port-version": 1
     },
     "pixman": {
-      "baseline": "0.40.0",
-      "port-version": 5
+      "baseline": "0.42.2",
+      "port-version": 0
     },
     "pkgconf": {
       "baseline": "1.8.0",
@@ -6801,8 +6801,8 @@
       "port-version": 1
     },
     "rtabmap": {
-      "baseline": "0.20.13",
-      "port-version": 4
+      "baseline": "0.20.16",
+      "port-version": 0
     },
     "rtaudio": {
       "baseline": "2021-11-16",
@@ -7314,7 +7314,7 @@
     },
     "sqlite3": {
       "baseline": "3.40.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
@@ -7398,6 +7398,10 @@
     },
     "string-view-lite": {
       "baseline": "1.6.0",
+      "port-version": 0
+    },
+    "strong-type": {
+      "baseline": "8",
       "port-version": 0
     },
     "stronk": {
@@ -7562,7 +7566,7 @@
     },
     "tiff": {
       "baseline": "4.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -8081,7 +8085,7 @@
       "port-version": 0
     },
     "wavpack": {
-      "baseline": "5.5.0",
+      "baseline": "5.6.0",
       "port-version": 0
     },
     "wayland": {
@@ -8273,8 +8277,8 @@
       "port-version": 0
     },
     "xerces-c": {
-      "baseline": "3.2.3",
-      "port-version": 4
+      "baseline": "3.2.4",
+      "port-version": 0
     },
     "xeus": {
       "baseline": "0.24.3",
@@ -8454,7 +8458,7 @@
     },
     "zstd": {
       "baseline": "1.5.2",
-      "port-version": 2
+      "port-version": 3
     },
     "zstr": {
       "baseline": "1.0.4",
