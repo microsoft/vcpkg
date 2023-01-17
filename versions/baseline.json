@@ -1320,6 +1320,10 @@
       "baseline": "1.0.0",
       "port-version": 5
     },
+    "casbin-cpp": {
+      "baseline": "1.52.0",
+      "port-version": 0
+    },
     "casclib": {
       "baseline": "2021-11-16",
       "port-version": 1
