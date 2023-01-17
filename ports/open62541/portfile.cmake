@@ -1,13 +1,10 @@
-set(VERSION v1.2.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF "${VERSION}"
-    SHA512 ffcc697901ec978fb9d1f8996f8a4c5114c98a0ec19206cac95d1a84f8d0fcbe38bf73e88f1df59d53bc6be481102aa2f2a6a0efa29797e7ce11123bd23131c2
+    REF "v${VERSION}"
+    SHA512 3230355237a3c88351ddd1d291057ab0b1e4ab0a3a1218c90a0201d4d77769098e6fbced26efef7c8635020b6d64748d065fc707615c45487aa3502aa19b6687
     HEAD_REF master
-    PATCHES
-        openssl.patch
 )
 
 vcpkg_check_features(
@@ -28,6 +25,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOPEN62541_VERSION=${VERSION}
+        -DUA_FORCE_WERROR=OFF
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
