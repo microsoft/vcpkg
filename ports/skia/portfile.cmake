@@ -238,12 +238,9 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_gene
     )
 endif()
 
-find_program(python3_in_path NAMES python3 PATHS ENV PATH NO_DEFAULT_PATH)
-if(python3_in_path)
-    vcpkg_find_acquire_program(PYTHON3)
-    vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
-    vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
-endif()
+vcpkg_find_acquire_program(PYTHON3)
+vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
