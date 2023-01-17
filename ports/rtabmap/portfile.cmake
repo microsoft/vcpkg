@@ -1,16 +1,15 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF v${VERSION}
-    SHA512 6128fa483c1ebda5a9a211f144d930ed107d0fbcc2b47c2aeace1b54f363cdabab2ef472ff20c8b2030ca067936f032714b07320488892b6424fc068dcccf280
+    # rtabmap stops releasing, check their CMakeLists.txt for version.
+    # currently is 0.20.22, this ref contains latest fix for compiling with opencv 4.7
+    REF 0e908206d04149d3bb45f27fab026a5d27e09aa8
+    SHA512 9d1104f25df2301f87be02f65160dadc50b99e3a325444fa6457dabcfd8ed41b817797e6ed712a29b1653f0608115dfae5bd3df3c4f154dfc36985917eac74d9
     HEAD_REF master
     PATCHES
         0001-add-bigobj-for-msvc.patch
-        0002-fix-opencv47.patch
         0003-fix-qt.patch
 )
 
