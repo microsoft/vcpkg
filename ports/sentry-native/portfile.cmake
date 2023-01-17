@@ -25,6 +25,7 @@ if (NOT DEFINED SENTRY_BACKEND)
         set(SENTRY_BACKEND "breakpad")
     else()
         set(SENTRY_BACKEND "inproc")
+    endif()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
