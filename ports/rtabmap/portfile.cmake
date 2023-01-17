@@ -10,7 +10,7 @@ vcpkg_from_github(
         0001-add-bigobj-for-msvc.patch
         0002-fix-opencv47.patch
         0003-fix-qt.patch
-        python3.patch
+        #python3.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
