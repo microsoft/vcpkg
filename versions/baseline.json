@@ -222,7 +222,7 @@
     },
     "assimp": {
       "baseline": "5.2.5",
-      "port-version": 0
+      "port-version": 1
     },
     "asynch": {
       "baseline": "2019-09-21",
