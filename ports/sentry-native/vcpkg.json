@@ -23,4 +23,5 @@
       "name": "zlib",
       "platform": "ios | osx | windows"
     }
+  ]
 }
