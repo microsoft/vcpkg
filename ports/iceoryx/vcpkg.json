@@ -20,11 +20,12 @@
     }
   ],
   "default-features": [
+    "many-to-many",
     "toml-config"
   ],
   "features": {
-    "one-to-many-only": {
-      "description": "Restricts communication to 1:n pattern"
+    "many-to-many": {
+      "description": "Using the n:n pattern for communication"
     },
     "toml-config": {
       "description": "TOML support for RouDi with dynamic configuration",

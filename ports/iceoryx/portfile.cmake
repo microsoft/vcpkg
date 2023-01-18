@@ -14,8 +14,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "one-to-many-only"  ONE_TO_MANY_ONLY
         "toml-config"       TOML_CONFIG
+    INVERTED_FEATURES
+        "many-to-many"      ONE_TO_MANY_ONLY
 )
 
 vcpkg_cmake_configure(
