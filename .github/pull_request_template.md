@@ -7,8 +7,10 @@
 - [ ] Changes comply with the [maintainer guide](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md)
 - [ ] SHA512s are updated for each updated download
 - [ ] The "supports" clause reflects platforms that may be fixed by this new version
-- [ ] Any fixed [CI baseline](https://github.com/microsoft/vcpkg/blob/master/scripts/ci.baseline.txt) entries are removed from that file.'
+- [ ] Any fixed [CI baseline](https://github.com/microsoft/vcpkg/blob/master/scripts/ci.baseline.txt) entries are removed from that file.
+- [ ] Any patches that are no longer applied are deleted from the port's directory.
 - [ ] The version database is fixed by rerunning `./vcpkg x-add-version --all` and committing the result.
+- [ ] Only one version is added to each modified port's versions file.
 
 END OF PORT UPDATE CHECKLIST (delete this line) -->
 
@@ -23,5 +25,7 @@ END OF PORT UPDATE CHECKLIST (delete this line) -->
 - [ ] The source code of the component installed comes from an authoritative source.
 - [ ] The generated "usage text" is accurate. See docs/examples/adding-an-explicit-usage.md for context.
 - [ ] The version database is fixed by rerunning `./vcpkg x-add-version --all` and committing the result.
+- [ ] Only one version is in the new port's versions file.
+- [ ] Only one version is added to each modified port's versions file.
 
 END OF NEW PORT CHECKLIST (delete this line) -->
