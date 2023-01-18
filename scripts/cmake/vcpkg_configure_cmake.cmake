@@ -248,8 +248,6 @@ function(vcpkg_configure_cmake)
         vcpkg_list(APPEND arg_OPTIONS "-A${generator_arch}")
     endif()
 
-    vcpkg_list(PREPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
-
     # Sets configuration variables for macOS builds
     foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED "VCPKG_${config_var}")
