@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/libyuv/libyuv
-    REF 010dea8ba4158896e5608a52dd4372ca7f57cdca #2023-01-10
+    REF 0faf8dd0e004520a61a603a4d2996d5ecc80dc3f #2023-01-18
     PATCHES
         fix-cmakelists.patch
 )
