@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-symlink.patch
         fix-find-package-asio.patch
+        pdb-file.patch
 )
 
 vcpkg_cmake_configure(

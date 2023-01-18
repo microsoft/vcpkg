@@ -1,0 +1,18 @@
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index f4927a08a..c05216bfb 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -546,13 +546,6 @@ if(MSVC OR MSVC_IDE)
+             PDB_NAME_DEBUG "${PROJECT_NAME}d-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+             PDB_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/symbols"
+             )
+-    else()
+-        # Rename the library to have a "lib" before.
+-        set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME lib${PROJECT_NAME})
+-        set_target_properties(${PROJECT_NAME} PROPERTIES
+-            COMPILE_PDB_NAME_DEBUG "lib${PROJECT_NAME}d-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+-            COMPILE_PDB_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/symbols"
+-            )
+     endif()
+
+     if("${CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
