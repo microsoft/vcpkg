@@ -85,7 +85,7 @@ configure_file(libopenmpt/libopenmpt.pc.in libopenmpt.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libopenmpt.pc DESTINATION lib/pkgconfig)
 
 install(TARGETS libopenmpt EXPORT libopenmpt-targets)
-install(EXPORT libopenmpt-targets DESTINATION share/libopenmpt NAMESPACE libopenmpt::)
+install(EXPORT libopenmpt-targets DESTINATION share/libopenmpt NAMESPACE unofficial::libopenmpt::)
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/libopenmpt-config.cmake [[
 include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
