@@ -4,6 +4,7 @@
   "description": "Highly Optimized Graphics Math (glm) for C",
   "homepage": "https://github.com/recp/cglm",
   "license": "MIT",
+  "supports": "!(arm | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
