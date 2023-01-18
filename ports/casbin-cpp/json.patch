@@ -1,26 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c1428a9..572ac53 100644
+index c1428a9..ecfe068 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -48,7 +48,7 @@ project(
- # Forbid in-source build.
+@@ -85,7 +85,7 @@ set(CMAKE_CXX_STANDARD 17)
+ # don't generally produce global targets. To guarantee all imported targets are 
+ # global, this module is included at the project root level.
  
- if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
--    message(FATAL_ERROR 
-+    message(FATAL_ERROR
-             "In-source build not allowed. Please make a new sub-directory and run CMake from there.")
- endif()
- 
-@@ -79,13 +79,7 @@ endif()
- # Setting to C++ standard to C++17
- set(CMAKE_CXX_STANDARD 17)
- 
--###############################################################################
--# Install external dependencies
--# Some required targets may be created by third-party CMake configs, which 
--# don't generally produce global targets. To guarantee all imported targets are 
--# global, this module is included at the project root level.
--
 -include(FindExtPackages)
 +find_package(nlohmann_json CONFIG REQUIRED)
  
