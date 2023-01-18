@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 3aa341a94950b0d4f3351a6f62a4c34947b481bb59f1954dd8d031313e73d9c6add1017cf386c507b231b114d80cfc0739a50bed179bdbc31052c86e2f1321a3
     HEAD_REF master
     PATCHES
-        fix-wraning.patch
+        d77287e954f02706502028baadc8c87e7382301b.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
