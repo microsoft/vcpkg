@@ -5213,7 +5213,7 @@
       "port-version": 4
     },
     "nanopb": {
-      "baseline": "0.4.5",
+      "baseline": "0.4.7",
       "port-version": 0
     },
     "nanoprintf": {
