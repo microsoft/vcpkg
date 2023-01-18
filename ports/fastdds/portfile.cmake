@@ -36,6 +36,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds${SHELL_SUFFI
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery${SHELL_SUFFIX}" "$dir/../tools/fastdds/fastdds.py" "$dir/fastdds.py")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/discovery/parser.py" "tool_path / '../../../bin'" "tool_path / '..'")
 
-vcpkg_copy_tools(TOOL_NAMES fast-discovery-server fast-discovery-server-1.0.1 AUTO_CLEAN)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES fast-discovery-server AUTO_CLEAN)
+endif()
+vcpkg_copy_tools(TOOL_NAMES fast-discovery-server-1.0.1 AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
