@@ -5910,7 +5910,7 @@
     },
     "pkgconf": {
       "baseline": "1.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "plasma-wayland-protocols": {
       "baseline": "1.8.0",
