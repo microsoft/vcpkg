@@ -1,12 +1,11 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 080f5f94227e63ae075fabb92a897d0cbcbcd60fa54192936b85c8ad25620ad1c37b8767eb69e470fccdd9573c47f48c7402172c23f516befd13e1382b4e6819
     HEAD_REF master
     PATCHES
+        disable-symlink.patch
         fix-find-package-asio.patch
 )
 
