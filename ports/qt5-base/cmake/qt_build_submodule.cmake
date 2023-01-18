@@ -6,7 +6,7 @@ function(qt_build_submodule SOURCE_PATH)
         vcpkg_add_to_path("${PYTHON3_EXE_PATH}")
     endif()
 
-    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH} ${ARGV})
+    vcpkg_configure_qmake(SKIP_CMAKE_VARS SOURCE_PATH ${SOURCE_PATH} ${ARGV})
 
     vcpkg_build_qmake(SKIP_MAKEFILES)
 
