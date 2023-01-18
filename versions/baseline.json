@@ -7373,8 +7373,8 @@
       "port-version": 1
     },
     "stb": {
-      "baseline": "2021-09-10",
-      "port-version": 1
+      "baseline": "2022-09-09",
+      "port-version": 0
     },
     "stduuid": {
       "baseline": "1.2.2",
