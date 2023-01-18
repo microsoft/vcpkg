@@ -1,6 +1,6 @@
 {
   "name": "directxtk",
-  "version-date": "2022-10-17",
+  "version-date": "2022-12-15",
   "description": "A collection of helper classes for writing DirectX 11.x code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK",
   "documentation": "https://github.com/microsoft/DirectXTK/wiki",
@@ -18,6 +18,9 @@
     }
   ],
   "features": {
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    },
     "xaudio2-8": {
       "description": "Build with XAudio 2.8 support for Windows 8.x or later"
     },

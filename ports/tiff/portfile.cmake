@@ -15,11 +15,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cxx     cxx
         jpeg    jpeg
+        jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
         lzma    lzma
+        lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         tools   tiff-tools
         webp    webp
+        webp    CMAKE_REQUIRE_FIND_PACKAGE_WebP
         zip     zlib
+        zip     CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         zstd    zstd
+        zstd    CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
 )
 
 vcpkg_cmake_configure(
@@ -35,8 +40,11 @@ vcpkg_cmake_configure(
         -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
+        -DZSTD_HAVE_DECOMPRESS_STREAM=ON
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
+    MAYBE_UNUSED_VARIABLES
+        ZSTD_HAVE_DECOMPRESS_STREAM
 )
 
 vcpkg_cmake_install()

@@ -1,26 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/efsw
-    REF b62d04829bb0a6f3cacc7859e0b046a3c053bc50
-    SHA512 fc16ef6ad330941dc0a1112ce645b57bd126d353556d50f45fadf150f25edd42c1d4946bc54d629d94c208d67d4ce17dbf5d1079cbeed51f0f6b1ccbe2199132
+    REF 6b51944994b5c77dbd7edce66846e378a3bf4d8e
+    SHA512 f49a8e5f4ec2d05c3d7bcdbfc6b39a9f1bb9667881cb52c065d038b558af0bfe19079bc9937398fc15faab680c1b2a685d00321143a5c324c8a31137549a7d0f
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DVERBOSE=OFF
         -DBUILD_TEST_APP=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/efsw)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/efsw)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
