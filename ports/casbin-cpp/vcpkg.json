@@ -1,6 +1,6 @@
 {
   "name": "casbin-cpp",
-  "version-semver": "1.52.0",
+  "version": "1.52.0",
   "description": "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++",
   "homepage": "https://casbin.org",
   "license": "Apache-2.0",
