@@ -1,6 +1,7 @@
 {
   "name": "sentry-native",
-  "version": "0.5.2",
+  "version": "0.5.3",
+  "port-version": 1,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
@@ -18,6 +19,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    {
+      "name": "zlib",
+      "platform": "ios | osx | windows"
+    }
   ]
 }

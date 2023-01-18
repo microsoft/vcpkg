@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF 633f265f67f322cbe2c5fd11d3e46d968ac220f7  #2022-08-11
-    SHA512 0a1d79ab7d2de6894bcff33309e015fdba0ea67cf0425d75b9301a30006039e81b527178dbb3485e1adea177ffe062e6fcef74307f8e725678e70562d57d1a5b
+    REF 46aa45dcbd9f3843503ddf3e00f8dda89eac6789  #2022-11-22
+    SHA512 da369f3145ed3b85948e0095ba3dd720da10dcedf9a9b301efe7a035d59ce291bc286f8fa88f2073d4aea12f9cae43ae64152d1062b6f4df562bd3d914c8619d
     HEAD_REF master
     PATCHES
         003-do-not-set-macosx-deployment-target.patch
@@ -52,13 +52,14 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         endif()
         vcpkg_copy_pdbs()
     else()
+        set(MACOSX_DEPLOYMENT_TARGET "MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
         vcpkg_execute_build_process(
             COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile clean
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME clean-${TARGET_TRIPLET}-debug
         )
         vcpkg_execute_build_process(
-            COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile PREFIX=${CURRENT_PACKAGES_DIR}/debug CCDEBUG=-g3 CFLAGS=-O0 BUILDMODE=${VCPKG_LIBRARY_LINKAGE} install
+            COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile ${MACOSX_DEPLOYMENT_TARGET} PREFIX=${CURRENT_PACKAGES_DIR}/debug CCDEBUG=-g3 CFLAGS=-O0 BUILDMODE=${VCPKG_LIBRARY_LINKAGE} install
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-debug
         )
@@ -90,17 +91,18 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
 
         if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools)
+            vcpkg_copy_tools(TOOL_NAMES luajit SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools AUTO_CLEAN)
         endif()
         vcpkg_copy_pdbs()
     else()
+        set(MACOSX_DEPLOYMENT_TARGET "MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
         vcpkg_execute_build_process(
             COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile clean
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME clean-${TARGET_TRIPLET}-rel
         )
         vcpkg_execute_build_process(
-            COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile PREFIX=${CURRENT_PACKAGES_DIR} CCDEBUG= BUILDMODE=${VCPKG_LIBRARY_LINKAGE} install
+            COMMAND make -j${VCPKG_CONCURRENCY} -f ${SOURCE_PATH}/Makefile ${MACOSX_DEPLOYMENT_TARGET} PREFIX=${CURRENT_PACKAGES_DIR} CCDEBUG= BUILDMODE=${VCPKG_LIBRARY_LINKAGE} install
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
         )

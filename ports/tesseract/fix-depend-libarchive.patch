@@ -1,3 +1,5 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd2649d..c1801a6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -792,7 +792,8 @@ if(OpenCL_FOUND)
@@ -10,3 +12,12 @@
  endif(LibArchive_FOUND)
  if(CURL_FOUND)
    if(NOT CURL_LIBRARIES)
+@@ -854,7 +855,7 @@ endif()
+ # ##############################################################################
+ 
+ add_executable(tesseract src/tesseract.cpp)
+-target_link_libraries(tesseract libtesseract)
++target_link_libraries(tesseract libtesseract LibArchive::LibArchive)
+ if(HAVE_TIFFIO_H AND WIN32)
+   target_link_libraries(tesseract ${TIFF_LIBRARIES})
+ endif()

@@ -1,0 +1,22 @@
+diff --git a/version.rc b/version.rc
+index aa0596c..9c8231e 100644
+--- a/version.rc
++++ b/version.rc
+@@ -63,6 +63,17 @@
+ #      define  __PTW32_VERSIONINFO_NAME "pthreadVSE2.DLL\0"
+ #      define  __PTW32_VERSIONINFO_DESCRIPTION "MS C SEH x86\0"
+ #    endif
++#  elif defined (__PTW32_ARCHARM64)
++#    if defined(__PTW32_CLEANUP_C)
++#      define  __PTW32_VERSIONINFO_NAME "pthreadVC2.DLL\0"
++#      define  __PTW32_VERSIONINFO_DESCRIPTION "MS C arm64\0"
++#    elif defined(__PTW32_CLEANUP_CXX)
++#      define  __PTW32_VERSIONINFO_NAME "pthreadVCE2.DLL\0"
++#      define  __PTW32_VERSIONINFO_DESCRIPTION "MS C++ arm64\0"
++#    elif defined(__PTW32_CLEANUP_SEH)
++#      define  __PTW32_VERSIONINFO_NAME "pthreadVSE2.DLL\0"
++#      define  __PTW32_VERSIONINFO_DESCRIPTION "MS C SEH arm64\0"
++#    endif
+ #  endif
+ #elif defined(__GNUC__)
+ #  if defined(_M_X64)

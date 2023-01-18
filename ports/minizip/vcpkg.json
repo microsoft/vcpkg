@@ -1,9 +1,9 @@
 {
   "name": "minizip",
-  "version-semver": "1.2.11",
-  "port-version": 11,
+  "version-semver": "1.2.13",
   "description": "Zip compression library",
   "homepage": "https://github.com/madler/zlib",
+  "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
     {

@@ -1,9 +1,8 @@
 {
   "name": "tbb",
-  "version": "2021.5.0",
-  "port-version": 1,
+  "version": "2021.7.0",
   "description": "Intel's Threading Building Blocks.",
-  "homepage": "https://github.com/01org/tbb",
+  "homepage": "https://github.com/oneapi-src/oneTBB",
   "license": "Apache-2.0",
   "supports": "(windows & !uwp) | linux | osx | ios",
   "dependencies": [

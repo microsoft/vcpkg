@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-generation.patch
         Use-vcpkg-sdl2.patch
         Install-tools.patch
+        fix-osx-build.patch # from https://github.com/MyGUI/mygui/pull/244
 )
 
 if("opengl" IN_LIST FEATURES)
