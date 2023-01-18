@@ -1513,8 +1513,8 @@
       "port-version": 0
     },
     "cmakerc": {
-      "baseline": "2021-08-27",
-      "port-version": 1
+      "baseline": "2022-09-08",
+      "port-version": 0
     },
     "cmark": {
       "baseline": "0.30.1",
