@@ -1,0 +1,45 @@
+diff --git a/cli/getopt_long.c b/cli/getopt_long.c
+index c47215fae..4dcac3d7d 100644
+--- a/cli/getopt_long.c
++++ b/cli/getopt_long.c
+@@ -377,27 +376,28 @@ getopt_internal(int nargc, char * const *nargv, const char *options,
+ 
+ 	if (options == NULL)
+ 		return (-1);
+-
+ 	/*
+ 	 * Disable GNU extensions if POSIXLY_CORRECT is set or options
+ 	 * string begins with a '+'.
+ 	 */
+ 	posixly_correct = (getenv("POSIXLY_CORRECT") != NULL);
++    if(strcmp(options,"")!=0)
++    {
+ #ifdef GNU_COMPATIBLE
+-	if (*options == '-')
+-		flags |= FLAG_ALLARGS;
+-	else if (posixly_correct || *options == '+')
+-		flags &= ~FLAG_PERMUTE;
++        if (*options == '-')
++            flags |= FLAG_ALLARGS;
++        else if (posixly_correct || *options == '+')
++            flags &= ~FLAG_PERMUTE;
+ #else
+-	if (posixly_correct || *options == '+')
+-		flags &= ~FLAG_PERMUTE;
+-	else if (*options == '-')
+-		flags |= FLAG_ALLARGS;
++        if (posixly_correct || *options == '+')
++            flags &= ~FLAG_PERMUTE;
++        else if (*options == '-')
++            flags |= FLAG_ALLARGS;
+ #endif
+ 
+-	if (*options == '+' || *options == '-')
+-		options++;
+-
++        if (*options == '+' || *options == '-')
++            options++;
++    }
+ 	/*
+ 	 * XXX Some GNU programs (like cvs) set pkg_optind to 0 instead of
+ 	 * XXX using pkg_optreset.  Work around this braindamage.
