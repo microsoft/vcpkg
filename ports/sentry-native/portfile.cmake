@@ -12,7 +12,7 @@ vcpkg_extract_source_archive(
         fix-warningC5105.patch
         fix-config-cmake.patch
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib")
+file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
 vcpkg_list(SET options)
 
