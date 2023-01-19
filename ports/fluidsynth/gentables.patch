@@ -56,3 +56,4 @@ index 9cb69f2..b88d1d6 100644
  endif ()
 +
 +install(TARGETS make_tables DESTINATION bin)
+

@@ -56,7 +56,7 @@ vcpkg_cmake_configure(
         COREMIDI_FOUND
         VCPKG_BUILD_MAKE_TABLES
         enable-framework
-		enable-debug
+        enable-debug
 )
 
 vcpkg_cmake_install()
