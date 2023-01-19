@@ -27,7 +27,7 @@ function(vcpkg_configure_qmake)
         endif()
         unset(${qmake_var})
         unset(${qmake_var} CACHE)
-        set(${var} "${${var}}" PARENT_SCOPE)
+        set(${var} "${${var}}" PARENT_SCOPE) # Is this correct? Or is there a vcpkg_list command for that?
     endfunction()
     # Setup Build tools
     set(qmake_build_tools "")
@@ -39,7 +39,9 @@ function(vcpkg_configure_qmake)
     qmake_append_program(qmake_build_tools "QMAKE_NM" "${VCPKG_DETECTED_CMAKE_NM}")
     qmake_append_program(qmake_build_tools "QMAKE_RC" "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
     qmake_append_program(qmake_build_tools "QMAKE_MT" "${VCPKG_DETECTED_CMAKE_MT}")
-    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_DETECTED_CMAKE_AR MATCHES "ar$")
+    if(VCPKG_TARGET_IS_LINUX) 
+        # This is the reason why users should probably use a 
+        # customized qt.conf with more domain knowledge. 
         vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=qc")
     endif()
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -52,12 +54,14 @@ function(vcpkg_configure_qmake)
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     endif()
     set(qmake_comp_flags "")
+    # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
     macro(qmake_add_flags qmake_var operation flags)
         string(STRIP "${flags}" striped_flags)
         if(striped_flags)
             vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}")
         endif()
     endmacro()
+
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared" "CONFIG*=static")
@@ -74,6 +78,8 @@ function(vcpkg_configure_qmake)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} "${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif()
 
+
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
 
@@ -88,7 +94,7 @@ function(vcpkg_configure_qmake)
         file(MAKE_DIRECTORY "${current_binary_dir}")
 
         qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_RELEASE}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_RELEASE}") # not exported by vcpkg_cmake_get_vars yet
         qmake_add_flags("QMAKE_CFLAGS_RELEASE" "+=" "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
         qmake_add_flags("QMAKE_CXXFLAGS_RELEASE" "+=" "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
         qmake_add_flags("QMAKE_LFLAGS" "+=" "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
@@ -108,7 +114,6 @@ function(vcpkg_configure_qmake)
                     ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
             LOGNAME "config-${TARGET_TRIPLET}-rel"
-            SAVE_LOG_FILES config.log
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         if(EXISTS "${current_binary_dir}/config.log")
@@ -134,7 +139,7 @@ function(vcpkg_configure_qmake)
 
         set(qmake_comp_flags "")
         qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_DEBUG}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_DEBUG}") # not exported by vcpkg_cmake_get_vars yet
         qmake_add_flags("QMAKE_CFLAGS_DEBUG" "+=" "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
         qmake_add_flags("QMAKE_CXXFLAGS_DEBUG" "+=" "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
         qmake_add_flags("QMAKE_LFLAGS" "+=" "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
@@ -153,7 +158,6 @@ function(vcpkg_configure_qmake)
                     ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
             LOGNAME "config-${TARGET_TRIPLET}-dbg"
-            SAVE_LOG_FILES config.log
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
         if(EXISTS "${current_binary_dir}/config.log")

@@ -42,7 +42,7 @@ function(configure_qt)
         endif()
         unset(${qmake_var})
         unset(${qmake_var} CACHE)
-        set(${var} "${${var}}" PARENT_SCOPE)
+        set(${var} "${${var}}" PARENT_SCOPE) # Is this correct? Or is there a vcpkg_list command for that?
     endfunction()
     # Setup Build tools
     set(qmake_build_tools "")
@@ -54,9 +54,9 @@ function(configure_qt)
     qmake_append_program(qmake_build_tools "QMAKE_NM" "${VCPKG_DETECTED_CMAKE_NM}")
     qmake_append_program(qmake_build_tools "QMAKE_RC" "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
     qmake_append_program(qmake_build_tools "QMAKE_MT" "${VCPKG_DETECTED_CMAKE_MT}")
-    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_DETECTED_CMAKE_AR MATCHES "ar$")
-        # This is the reason why users should probably use a
-        # customized qt.conf with more domain knowledge.
+    if(VCPKG_TARGET_IS_LINUX) 
+        # This is the reason why users should probably use a 
+        # customized qt.conf with more domain knowledge. 
         vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=qc")
     endif()
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -68,7 +68,7 @@ function(configure_qt)
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     endif()
-
+    
     #Find and ad Perl to PATH
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
@@ -79,7 +79,7 @@ function(configure_qt)
     else()
         #list(APPEND _csc_OPTIONS_DEBUG -separate-debug-info)
     endif()
-
+   
     if(VCPKG_TARGET_IS_WINDOWS AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static-runtime)
     endif()
@@ -109,12 +109,12 @@ function(configure_qt)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
-
+    
     foreach(_buildname ${BUILDTYPES})
-        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-        set(PKGCONFIG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib/pkgconfig")
-        set(PKGCONFIG_PACKAGES_SHARE_DIR "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${_path_suffix_${_buildname}}/lib/pkgconfig")
+        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
+        set(PKGCONFIG_PACKAGES_DIR "${_VCPKG_PACKAGES_PKGCONF}${_path_suffix_${_buildname}}/lib/pkgconfig")
+        set(PKGCONFIG_PACKAGES_SHARE_DIR "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
         if(DEFINED ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_${_config} $ENV{PKG_CONFIG_PATH})
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
@@ -126,7 +126,7 @@ function(configure_qt)
         message(STATUS "Configuring ${_build_triplet}")
         set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
-
+        
         set(qmake_comp_flags "")
         # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
         macro(qmake_add_flags qmake_var operation flags)
@@ -135,16 +135,16 @@ function(configure_qt)
                 vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}")
             endif()
         endmacro()
-
+        
         qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_COMBINED_RC_FLAGS_${_buildname}}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_COMBINED_RC_FLAGS_${_buildname}}") # not exported by vcpkg_cmake_get_vars yet
         qmake_add_flags("QMAKE_CFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_C_FLAGS_${_buildname}}")
         qmake_add_flags("QMAKE_CXXFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_CXX_FLAGS_${_buildname}}")
         qmake_add_flags("QMAKE_LFLAGS" "+=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
         qmake_add_flags("QMAKE_LFLAGS_SHLIB" "+=" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${_buildname}}")
         qmake_add_flags("QMAKE_LFLAGS_PLUGIN" "+=" "${VCPKG_COMBINED_MODULE_LINKER_FLAGS_${_buildname}}")
         qmake_add_flags("QMAKE_LIBFLAGS_${_buildname}" "+=" "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${_buildname}}")
-
+        
         # These paths get hardcoded into qmake. So point them into the CURRENT_INSTALLED_DIR instead of CURRENT_PACKAGES_DIR
         # makefiles will be fixed to install into CURRENT_PACKAGES_DIR in install_qt
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
@@ -172,7 +172,7 @@ function(configure_qt)
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -platform ${_csc_TARGET_PLATFORM}
             )
-
+        
         if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake
             if(WIN32)
                 set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
