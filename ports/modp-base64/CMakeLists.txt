@@ -19,8 +19,9 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
+  file(GLOB HEADERS "${SOURCE_PATH}/src/*.h") 
   install(
-    FILES ${SOURCE_PATH}/src/modp_b64.h
+    FILES ${HEADERS}
     DESTINATION include
   )
 endif()
