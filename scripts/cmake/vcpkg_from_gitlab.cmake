@@ -1,5 +1,20 @@
 include(vcpkg_execute_in_download_mode)
 
+function(z_uri_encode input output_variable)
+    string(HEX "${input}" hex)
+    string(LENGTH "${hex}" length)
+    math(EXPR last "${length} - 1")
+    set(result "")
+    foreach(i RANGE ${last})
+        math(EXPR even "${i} % 2")
+        if("${even}" STREQUAL "0")
+            string(SUBSTRING "${hex}" "${i}" 2 char)
+            string(APPEND result "%${char}")
+        endif()
+    endforeach()
+    set("${output_variable}" ${result} PARENT_SCOPE)
+endfunction()
+
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
@@ -80,25 +95,23 @@ function(vcpkg_from_gitlab)
 
 
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
-    if(VCPKG_USE_HEAD_VERSION)
-        # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-        vcpkg_execute_in_download_mode(COMMAND ${GIT} ls-remote
-            "${gitlab_link}.git" "${arg_HEAD_REF}"
-            RESULT_VARIABLE git_result
-            OUTPUT_VARIABLE git_output
+    # When multiple vcpkg_from_gitlab's are used after each other, only use the version from the first (hopefully the primary one).
+    if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED VCPKG_HEAD_VERSION)
+        z_uri_encode("${arg_REPO}" encoded_repo_path)
+        set(version_url "${arg_GITLAB_URL}/api/v4/projects/${encoded_repo_path}/repository/branches/${arg_HEAD_REF}")
+        vcpkg_download_distfile(archive_version
+            URLS "${version_url}"
+            FILENAME "${downloaded_file_name}.version"
+            ${headers_param}
+            SKIP_SHA512
+            ALWAYS_REDOWNLOAD
         )
-        if(NOT git_result EQUAL 0)
-            message(FATAL_ERROR "git ls-remote failed to read ref data of repository: '${gitlab_link}'")
+        # Parse the gitlab response with regex.
+        file(READ "${archive_version}" version_contents)
+        if(NOT version_contents MATCHES [["id":(\ *)"([a-f0-9]+)"]])
+            message(FATAL_ERROR "Failed to parse API response from '${version_url}':\n${version_contents}\n")
         endif()
-        if(NOT git_output MATCHES "^([a-f0-9]*)\t")
-            message(FATAL_ERROR "git ls-remote returned unexpected result:
-${git_output}
-")
-        endif()
-        # When multiple vcpkg_from_gitlab's are used after each other, only use the version from the first (hopefully the primary one).
-        if(NOT DEFINED VCPKG_HEAD_VERSION)
-            set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_1}" PARENT_SCOPE)
-        endif()
+        set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_2}" PARENT_SCOPE)
     endif()
 
     # download the file information from gitlab

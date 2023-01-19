@@ -16,7 +16,6 @@ vcpkg_from_github(
         004-added-limits-include.patch
         openssl.patch
         Add-target-include-directories.patch
-        fix_pdb_install.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
@@ -102,6 +101,7 @@ vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/${PORT}")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
 file(RENAME "${CURRENT_PACKAGES_DIR}/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 if(NOT VCPKG_BUILD_TYPE)
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/${PORT}")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")

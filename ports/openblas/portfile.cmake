@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 0b678b19dc03f2a999d6e038814c4c50b9640a4e # v0.3.20
-    SHA512 6e32f7dfc5dde46570873810c1da09d102f76ccfce41a5adbaeef2fccada54f9ab07e1ee541a6d55e138e6500392a6f55236f4f3a7766803358e5a6205334946 
+    REF b89fb708caa5a5a32de8f4306c4ff132e0228e9a # v0.3.21
+    SHA512 495e885409f0c6178332cddd685f3c002dc92e7af251c4e4eb3da6935ef6e81565c2505d436245b9bf53ce58649764e0471dc43b7f5f30b6ed092366cbbc2d5c
     HEAD_REF develop
     PATCHES
         uwp.patch
@@ -53,6 +53,10 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
                 -DNOFORTRAN=ON
                 -DBU=_  #required for all blas functions to append extra _ using NAME
     )
+endif()
+
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
 endif()
 
 vcpkg_cmake_configure(

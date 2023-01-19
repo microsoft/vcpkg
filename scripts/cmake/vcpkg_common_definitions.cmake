@@ -20,6 +20,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
     set(VCPKG_TARGET_IS_WINDOWS ON)
     set(VCPKG_TARGET_IS_MINGW ON)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    set(VCPKG_TARGET_IS_EMSCRIPTEN ON)
 endif()
 
 #Helper variables to identify the host system name
@@ -63,7 +65,7 @@ else()
     set(VCPKG_HOST_BUNDLE_SUFFIX "")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(VCPKG_TARGET_BUNDLE_SUFFIX ".app")
 else()
     set(VCPKG_TARGET_BUNDLE_SUFFIX "")

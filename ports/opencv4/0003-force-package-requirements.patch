@@ -63,15 +63,6 @@
      if(PNG_FOUND)
        include(CheckIncludeFile)
        check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -257,7 +257,7 @@ if(WITH_OPENEXR)
-   ocv_clear_vars(HAVE_OPENEXR)
-   if(NOT BUILD_OPENEXR)
-     ocv_clear_internal_cache_vars(OPENEXR_INCLUDE_PATHS OPENEXR_LIBRARIES OPENEXR_ILMIMF_LIBRARY OPENEXR_VERSION)
--    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
-+    find_package(OpenEXR REQUIRED)
-   endif()
- 
-   if(OPENEXR_FOUND)
 @@ -275,7 +275,7 @@ endif()
  
  # --- GDAL (optional) ---

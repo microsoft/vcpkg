@@ -1,16 +1,13 @@
-set(JPEGXL_VERSION 0.6.1)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
-    REF "v${JPEGXL_VERSION}"
-    SHA512 302935d722160b0b288ac63301f9e95caf82eccf6ad76c4f4da6316a0314ee3562115932b1ceacb0d02708de0a07788992d3478cae73af0b90193f5769f9fb52
+    REF "v${VERSION}"
+    SHA512 c73039606acf7b2cbc331c6787af5167d711fd1af22bc616e1f478c531b087da82c98f2cb7e88c4d1f8bcfdc4e053ae0dc99cc9a811545b7f9658041489ed04b
     HEAD_REF main
     PATCHES
-        fix-install-directories.patch
         fix-dependencies.patch
-        fix-link-flags.patch
-        disable-jxl_extras.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -49,6 +46,7 @@ vcpkg_cmake_configure(
         "-DJPEGXL_VERSION=${JPEGXL_VERSION}"
         -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+        -DJPEGXL_FORCE_SYSTEM_LCMS2=ON
         ${FEATURE_OPTIONS}
         -DJPEGXL_ENABLE_FUZZERS=OFF
         -DJPEGXL_ENABLE_MANPAGES=OFF
@@ -74,31 +72,11 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
 endif()
 
-# libjxl always builds static and dynamic libraries, so we delete the variant that we don't need
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE_RECURSE
-            "${CURRENT_PACKAGES_DIR}/bin"
-            "${CURRENT_PACKAGES_DIR}/debug/bin"
-        )
-        set(FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/jxl.lib"
-            "${CURRENT_PACKAGES_DIR}/lib/jxl_threads.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_threads.lib"
-        )
-    else()
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*.so*"
-            "${CURRENT_PACKAGES_DIR}/lib/*.dylib*"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.dylib*"
-        )
-    endif()
-else()
+# libjxl always builds static libraries, so we delete them if we don't need them.
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(VCPKG_TARGET_IS_WINDOWS)
         file(GLOB FILES_TO_REMOVE
             "${CURRENT_PACKAGES_DIR}/lib/*-static.lib"
@@ -110,8 +88,8 @@ else()
             "${CURRENT_PACKAGES_DIR}/debug/lib/*.a"
         )
     endif()
+    file(REMOVE ${FILES_TO_REMOVE})
 endif()
-file(REMOVE ${FILES_TO_REMOVE})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

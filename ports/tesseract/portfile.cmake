@@ -1,11 +1,13 @@
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(tesseract_patch fix-depend-libarchive.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.1.1
-    SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
-    PATCHES
-        fix-tiff-linkage.patch
-        fix-timeval.patch # Remove this patch in the next update
+    REF 5ad5325a0aa8effc47ca033625b6a51682f82767 #v5.2.0
+    SHA512 c6ed442c9deb28772aeb918142dab08d5b55eeeeccb0c1d3f13cf51bb72af227afb7f14c19a5c8db40d6a7b8cfeccb3af08a78adfcd7431e4a06f65372709ceb
+    PATCHES ${tesseract_patch}
 )
 
 # The built-in cmake FindICU is better
@@ -30,29 +32,35 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSTATIC=${BUILD_STATIC}
         -DUSE_SYSTEM_ICU=True
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DTARGET_ARCHITECTURE=${TARGET_ARCHITECTURE}
+        -DSW_BUILD=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenCL
+        STATIC
+        TARGET_ARCHITECTURE
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tesseract)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake"
-    "find_package(Leptonica REQUIRED)"
+    "find_dependency(Leptonica)"
 [[
-find_package(Leptonica REQUIRED)
-find_package(LibArchive REQUIRED)
+find_dependency(CURL)
+find_dependency(Leptonica)
+find_dependency(LibArchive)
 ]]
 )
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract41" "-ltesseract41d")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract52" "-ltesseract52d")
 endif()
 vcpkg_fixup_pkgconfig()
 
@@ -68,6 +76,7 @@ endif()
 
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

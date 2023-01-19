@@ -48,8 +48,8 @@ At this time, the following helpers are deprecated:
 - `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
 - `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
 - `vcpkg_configure_cmake` should be replaced by [`vcpkg_cmake_configure()`](vcpkg_cmake_configure.md) after removing `PREFER_NINJA` (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
-- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](ports/vcpkg-cmake/vcpkg_cmake_build.md#vcpkg_cmake_build) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
-- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](ports/vcpkg-cmake/vcpkg_cmake_install.md#vcpkg_cmake_install) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](vcpkg_cmake_build.md) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
+- `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](vcpkg_cmake_install.md) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md))
 - `vcpkg_fixup_cmake_targets` should be replaced by [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md#vcpkg_cmake_config_fixup) (from port [`vcpkg-cmake-config`](ports/vcpkg-cmake-config.md#vcpkg-cmake-config))
 
 Some of the replacement helper functions are in "tools ports" to allow consumers to pin their
@@ -410,11 +410,11 @@ We require that the manifest file be formatted. Use the following command to for
 
 ### Portfiles are run in Script Mode
 
-While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core CMake language constructs, portfiles run in "Script Mode", whereas `CMakeLists.txt` files run in "Build Mode" (unofficial term). The most important difference between these two modes is that "Script Mode" does not have a concept of "Target" -- any behaviors that depend on the "target" machine (`CMAKE_CXX_COMPILER`, `CMAKE_EXECUTABLE_SUFFIX`, `CMAKE_SYSTEM_NAME`, etc) will not be correct.
+While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core CMake language constructs (aka "Scripting Commands"), portfiles run in "Script Mode", whereas `CMakeLists.txt` files run in "Project Mode". The most important difference between these two modes is that "Script Mode" does not have the concepts of "Toolchain", "Language" and "Target". Any behaviors, including scripting commands, which depend on these constructs (e.g. `CMAKE_CXX_COMPILER`, `CMAKE_EXECUTABLE_SUFFIX`, `CMAKE_SYSTEM_NAME`) will not be correct.
 
 Portfiles have direct access to variables set in the triplet file, but `CMakeLists.txt`s do not (though there is often a translation that happens -- `VCPKG_LIBRARY_LINKAGE` versus `BUILD_SHARED_LIBS`).
 
-Portfiles and CMake builds invoked by portfiles are run in different processes. Conceptually:
+Portfiles and Project builds invoked by portfiles are run in different processes. Conceptually:
 
 ```no-highlight
 +----------------------------+       +------------------------------------+

@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         tweak-install.patch
-        fix_rvalue_ref.patch
+        fix-build.patch
 )
 
 vcpkg_cmake_configure(

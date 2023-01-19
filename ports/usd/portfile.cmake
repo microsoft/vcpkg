@@ -1,6 +1,15 @@
 # Don't file if the bin folder exists. We need exe and custom files.
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+message(STATUS [=[
+The usd port does not work the the version of Threading Building Blocks (tbb) currently chosen by vcpkg's baselines,
+and does not expect to be updated to work with current versions soon. See
+https://github.com/PixarAnimationStudios/USD/issues/1600
+
+If you must use this port in your project, pin a version of tbb of 2020_U3 or older via a manifest file.
+See https://vcpkg.io/en/docs/examples/versioning.getting-started.html for instructions.
+]=])
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
@@ -20,9 +29,8 @@ ELSE()
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
 ENDIF()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
@@ -37,14 +45,14 @@ vcpkg_configure_cmake(
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(
     RENAME
         "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
         "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/pxr)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME pxr)
 
 vcpkg_copy_pdbs()
 

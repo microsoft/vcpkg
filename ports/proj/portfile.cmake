@@ -1,13 +1,13 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 9.0.1
-    SHA512 b92a196e6801dd8d77e6c2131e15a392077e8e049a6d9befdb39ee035a3cca5a725b95196b29a4c5d7bad4d826a285e40abc3fdc040b5e11ede5c04ba4f6dbb5
+    REF "${VERSION}"
+    SHA512 bdc3cba27f330829b30290f563cb1cded75d3861909399177334a354662f4cb54e05baef40b8d267978c746f41543c3de1c119ca08919c87fd9460506c5c566e
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
-        tools-cmake.patch
         remove-doc.patch
 )
 
@@ -32,11 +32,10 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DNLOHMANN_JSON=external
-        -DPROJ_LIB_SUBDIR=lib
-        -DPROJ_INCLUDE_SUBDIR=include
-        -DPROJ_DATA_SUBDIR=share/${PORT}/data
         -DBUILD_TESTING=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
+    OPTIONS_DEBUG
+        -DBUILD_APPS=OFF
 )
 
 vcpkg_cmake_install()

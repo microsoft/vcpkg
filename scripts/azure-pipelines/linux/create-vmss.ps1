@@ -98,6 +98,10 @@ $Vmss = Set-AzVmssStorageProfile `
   -DiffDiskSetting Local `
   -ImageReferenceId $Image.Id
 
+$Vmss = Set-AzVmssBootDiagnostic `
+  -VirtualMachineScaleSet $Vmss `
+  -Enabled $true
+
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `
   -Name $VmssName `

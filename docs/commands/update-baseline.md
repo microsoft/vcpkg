@@ -14,7 +14,7 @@ vcpkg x-update-baseline [options] [--add-initial-baseline] [--dry-run]
 
 Update baselines for all configured [registries][].
 
-In [Manifest Mode][], this command operates on all [registries][] in the `vcpkg.json` and the [`vcpkg-configuration.json`][]. In Classic Mode, this command operates on the [`vcpkg-configuration.json`][] in the vcpkg instance (`$VCPKG_ROOT`).
+In [Manifest Mode][], this command operates on all [registries][] in the `vcpkg.json` and the [`vcpkg-configuration.json`][vcj]. In Classic Mode, this command operates on the [`vcpkg-configuration.json`][vcj] in the vcpkg instance (`$VCPKG_ROOT`).
 
 See the [versioning documentation](../users/versioning.md#baselines) for more information about baselines.
 
@@ -32,11 +32,11 @@ Print the planned baseline upgrades, but do not modify the files on disk.
 
 **[Manifest Mode][] Only**
 
-Add a [`"builtin-baseline"`][] field to the `vcpkg.json` if it does not already have one.
+Add a [`"builtin-baseline"`][builtin-baseline] field to the `vcpkg.json` if it does not already have one.
 
 Without this flag, it is an error to run this command on a manifest that does not have any [registries][] configured.
 
 [Manifest Mode]: ../users/manifests.md
-[`"builtin-baseline"`]: ../users/manifests.md#builtin-baseline
-[`vcpkg-configuration.json`]: ../users/registries.md#vcpkg-configurationjson
+[builtin-baseline]: ../users/manifests.md#builtin-baseline
+[vcj]: ../users/registries.md#vcpkg-configurationjson
 [registries]: ../users/registries.md

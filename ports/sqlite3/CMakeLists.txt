@@ -39,7 +39,6 @@ target_compile_definitions(
         $<$<CONFIG:Debug>:SQLITE_ENABLE_WHERETRACE>
         ${SQLITE_API}
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
-        -DSQLITE_ENABLE_COLUMN_METADATA
 )
 
 if (BUILD_SHARED_LIBS)
@@ -113,14 +112,20 @@ if(WITH_JSON1)
 endif()
 
 if (WIN32)
-    string(APPEND PKGCONFIG_DEFINES " -DQLITE_OS_WIN=1")
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_WIN=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WIN=1)
-
+    
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_COLUMN_METADATA=1")
+    target_compile_definitions(sqlite3 PUBLIC -DSQLITE_ENABLE_COLUMN_METADATA=1)
+    
     if(CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_WINRT=1")
         target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WINRT=1)
     endif()
 else()
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_COLUMN_METADATA=1")
+    target_compile_definitions(sqlite3 PUBLIC -DSQLITE_ENABLE_COLUMN_METADATA=1)
+    
     string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_UNIX=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_UNIX=1)
 endif()

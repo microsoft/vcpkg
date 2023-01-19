@@ -1,0 +1,68 @@
+From f7482d96e640ebedaf0dc79e22901012f466b161 Mon Sep 17 00:00:00 2001
+From: Anthony Hu <anthony@wolfssl.com>
+Date: Wed, 31 Aug 2022 09:05:00 -0400
+Subject: [PATCH] Windows cl.exe does not support -Wextra other flags
+
+---
+ CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3937a6fab..c6f0ae5b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,7 +169,12 @@ find_package(Threads)
+ # Example for map file and custom linker script
+ #set(CMAKE_EXE_LINKER_FLAGS " -Xlinker -Map=output.map -T\"${CMAKE_CURRENT_SOURCE_DIR}/linker.ld\"")
+ 
++if(WIN32)
++# Windows cl.exe does not support the -Wextra, -Wno-unused and -Werror flags.
++set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS}")
++else()
+ set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unused -Werror ${CMAKE_C_FLAGS}")
++endif()
+ 
+ ####################################################
+ # Build Options
+-- 
+2.37.0
+
+From f0812fa21fb702ca823292d31e0cf28aacdf4d2c Mon Sep 17 00:00:00 2001
+From: David Garske <david@wolfssl.com>
+Date: Wed, 31 Aug 2022 11:41:43 -0700
+Subject: [PATCH] Added vcpkg instructions to the INSTALL file.
+
+---
+ INSTALL | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/INSTALL b/INSTALL
+index 49421ba6a..79d40e3a5 100644
+--- a/INSTALL
++++ b/INSTALL
+@@ -233,3 +233,22 @@
+           environments. All OIDs and codepoints are temporary and expected to
+           change in the future. You should have no expectation of backwards
+           compatibility.
++
++16. Building with vcpkg
++
++# Building wolfssl - Using vcpkg
++
++ You can download and install wolfssl using the [vcpkg](https://github.com/Microsoft/vcpkg):
++
++    git clone https://github.com/Microsoft/vcpkg.git
++    cd vcpkg
++    ./bootstrap-vcpkg.sh
++    OR for Windows
++    bootstrap-vcpkg.bat
++
++    ./vcpkg integrate install
++    ./vcpkg install wolfssl
++
++The wolfssl port in vcpkg is kept up to date by wolfSSL.
++
++We also have vcpkg ports for wolftpm, wolfmqtt and curl.
+-- 
+2.37.0
+

@@ -1,6 +1,6 @@
 {
   "name": "crow",
-  "version": "1.0-1",
+  "version": "1.0-5",
   "description": "Very fast and easy to use C++ micro web framework",
   "homepage": "https://github.com/CrowCpp/crow",
   "license": "BSD-3-Clause",

@@ -56,11 +56,11 @@ Specifies the path to lay out installed packages.
 
 In Classic Mode, defaults to `installed/` under the vcpkg root folder.
 
-In [Manifest Mode][../users/manifests.md], defaults to `vcpkg_installed/` under the manifest folder.
+In [Manifest Mode](../users/manifests.md), defaults to `vcpkg_installed/` under the manifest folder.
 
 <a name="manifest-root"></a>
 
-### `--x-manifest-root=<path>`
+## `--x-manifest-root=<path>`
 
 **Experimental: will change or be removed at any time**
 

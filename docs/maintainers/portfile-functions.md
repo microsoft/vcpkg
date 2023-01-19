@@ -1,12 +1,10 @@
-<!-- Run regenerate.ps1 to extract scripts documentation -->
-
 # Portfile helper functions
 - [execute\_process](execute_process.md)
 - [vcpkg\_acquire\_msys](vcpkg_acquire_msys.md)
 - [vcpkg\_add\_to\_path](vcpkg_add_to_path.md)
 - [vcpkg\_apply\_patches](vcpkg_apply_patches.md) (deprecated)
 - [vcpkg\_backup\_restore\_env\_vars](vcpkg_backup_restore_env_vars.md)
-- [vcpkg\_build\_cmake](vcpkg_build_cmake.md) (deprecated, use [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md))
+- [vcpkg\_build\_cmake](vcpkg_build_cmake.md) (deprecated, use [vcpkg\_cmake\_build](vcpkg_cmake_build.md))
 - [vcpkg\_build\_make](vcpkg_build_make.md)
 - [vcpkg\_build\_msbuild](vcpkg_build_msbuild.md)
 - [vcpkg\_build\_ninja](vcpkg_build_ninja.md)
@@ -46,7 +44,7 @@
 - [vcpkg\_get\_program\_files\_platform\_bitness](vcpkg_get_program_files_platform_bitness.md)
 - [vcpkg\_get\_windows\_sdk](vcpkg_get_windows_sdk.md)
 - [vcpkg\_host\_path\_list](vcpkg_host_path_list.md)
-- [vcpkg\_install\_cmake](vcpkg_install_cmake.md) (deprecated, use [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md))
+- [vcpkg\_install\_cmake](vcpkg_install_cmake.md) (deprecated, use [vcpkg\_cmake\_install](vcpkg_cmake_install.md))
 - [vcpkg\_install\_gn](vcpkg_install_gn.md) (deprecated, use [vcpkg\_gn\_install](ports/vcpkg-gn/vcpkg_gn_install.md))
 - [vcpkg\_install\_copyright](vcpkg_install_copyright.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
@@ -71,9 +69,9 @@
 
 ### [vcpkg-cmake](ports/vcpkg-cmake.md)
 
-- [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
+- [vcpkg\_cmake\_build](vcpkg_cmake_build.md)
 - [vcpkg\_cmake\_configure](vcpkg_cmake_configure.md)
-- [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
+- [vcpkg\_cmake\_install](vcpkg_cmake_install.md)
 
 ### [vcpkg-gn](ports/vcpkg-gn.md)
 

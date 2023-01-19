@@ -4,13 +4,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ableton/link
-    REF 2641130bca65cdfb95794b31a6453a825333bd28
-    SHA512 a7c2e2904fe3e0b10affd5482f057c39634cf8935a09732a7ac3b33096754e6a5dbb4545cd51c327c74383065d2dd046ec40ff68fda3013ad1bf8ff4165b469f
+    REF Link-3.0.6
+    SHA512 7dd811d3b7792722a8754cd0875777b8cf4902a0babff2822a6fd997137eb5feac576263169c71fca24358189e56b5106a32ae1313b33fb6148eb845691a6438
     HEAD_REF master
     PATCHES
         replace_local_asiostandalone_by_vcpkg_asio.patch
         replace_asiosdk_download_by_vcpkg_asiosdk.patch
         replace_local_catch_by_vcpkg_catch2.patch
+        no-werror.patch
 )
 # Note that the dependencies ASIO and ASIOSDK are completely different things:
 # -ASIO (ASyncronous IO) is a cross-platform C++ library for network and low-level I/O programming

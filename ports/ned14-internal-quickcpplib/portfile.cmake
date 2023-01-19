@@ -69,7 +69,7 @@ vcpkg_cmake_configure(
         -DPROJECT_IS_DEPENDENCY=On
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
-        -DCMAKE_INSTALL_DATADIR=${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib
+        "-DCMAKE_INSTALL_DATADIR=${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Doxygen
@@ -99,4 +99,4 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Licence.txt")

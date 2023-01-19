@@ -1,8 +1,8 @@
 diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
-index 58ca1eb..e2f2134 100644
+index 60b7637..a8b34ef 100644
 --- a/cmake/prebuild.cmake
 +++ b/cmake/prebuild.cmake
-@@ -490,14 +490,14 @@ else(NOT CMAKE_CROSSCOMPILING)
+@@ -1322,14 +1322,14 @@ else(NOT CMAKE_CROSSCOMPILING)
  
    set(GETARCH_DIR "${PROJECT_BINARY_DIR}/getarch_build")
    set(GETARCH_BIN "getarch${CMAKE_EXECUTABLE_SUFFIX}")
@@ -19,9 +19,9 @@ index 58ca1eb..e2f2134 100644
 -      COPY_FILE ${PROJECT_BINARY_DIR}/${GETARCH_BIN}
 +      COPY_FILE "${PROJECT_BINARY_DIR}/${GETARCH_BIN}"
      )
-   
+ 
      if (NOT ${GETARCH_RESULT})
-@@ -518,14 +518,14 @@ execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIA
+@@ -1367,14 +1367,14 @@ execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIA
  
    set(GETARCH2_DIR "${PROJECT_BINARY_DIR}/getarch2_build")
    set(GETARCH2_BIN "getarch_2nd${CMAKE_EXECUTABLE_SUFFIX}")

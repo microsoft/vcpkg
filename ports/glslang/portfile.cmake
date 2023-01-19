@@ -3,23 +3,23 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF 11.8.0
-  SHA512 b60d328fab6d5319e49fbf8aeb86c31a7c8dfb4bc75d39c081cbb72f90750fd98f2a4f3ab091614187ad9e0d2e27471f9dab7ca5547cabb856d17bff694f8c98
+  REF 11.13.0
+  SHA512 20c2a6543b002648f459f26bd36b5c445afd6d8eae175e400dbe45632f11ca8de1f9e6f6e98fd6f910aa75d90063e174c095e7df26d9d4982192b84d08b0dc8b
   HEAD_REF master
   PATCHES
     ignore-crt.patch
-    always-install-resource-limits.patch
+    install-to-datadir.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path("${PYTHON_PATH}")
 
-if(VCPKG_TARGET_IS_IOS)
+if("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_IOS)
+  set(BUILD_BINARIES ON)
+else()
   # this case will report error since all executable will require BUNDLE DESTINATION
   set(BUILD_BINARIES OFF)
-else()
-  set(BUILD_BINARIES ON)  
 endif()
 
 vcpkg_cmake_configure(
@@ -43,13 +43,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake")
-  message(FATAL_ERROR "glslang has been updated to provide a -config file -- please remove the vcpkg provided version from the portfile")
-endif()
-
-file(COPY
-  "${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
+# Install custom usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

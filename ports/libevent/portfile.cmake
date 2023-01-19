@@ -7,6 +7,7 @@ vcpkg_from_github(
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
         fix-usage.patch
+        fix-android-threads.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

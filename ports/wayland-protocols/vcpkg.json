@@ -1,0 +1,27 @@
+{
+  "name": "wayland-protocols",
+  "version": "1.31",
+  "port-version": 1,
+  "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
+  "homepage": "https://wayland.freedesktop.org",
+  "license": "MIT",
+  "dependencies": [
+    "wayland"
+  ],
+  "features": {
+    "force-build": {
+      "description": [
+        "Build wayland libraries instead of depending on system ones.",
+        "Requires triplet variable X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES to be set."
+      ],
+      "dependencies": [
+        {
+          "name": "wayland",
+          "features": [
+            "force-build"
+          ]
+        }
+      ]
+    }
+  }
+}

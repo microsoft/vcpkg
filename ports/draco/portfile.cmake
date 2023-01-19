@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF bd1e8de7dd0596c2cbe5929cbe1f5d2257cd33db #v1.5.2
-    SHA512 6ae7e72a9f6f55563f8f612084d38bff1d2e10934fa84aad59538d323e59d205764ed364c753a55d80e9ffc7c17f542f6475b3f922edcb9085cbd83a942759d0
+    REF 1.5.3
+    SHA512 8575ea78e0d8025facddbd42453b0251387f4e31eb0854135e050fc26aaf0d28ed30ccc3f93578fdc6cdb50369c2ef735291f1f5fb60238b289e0ee019446e1d
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 
 # Install tools and plugins
@@ -29,10 +29,8 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

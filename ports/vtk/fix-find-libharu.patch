@@ -1,5 +1,5 @@
 diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
-index c87bb9c..0c0133e 100644
+index bcb20446c2..24c06ed8ad 100644
 --- a/CMake/vtkInstallCMakePackage.cmake
 +++ b/CMake/vtkInstallCMakePackage.cmake
 @@ -62,7 +62,6 @@ set(vtk_cmake_module_files
@@ -11,7 +11,7 @@ index c87bb9c..0c0133e 100644
    FindLibXml2.cmake
    FindLZ4.cmake
 diff --git a/ThirdParty/libharu/CMakeLists.txt b/ThirdParty/libharu/CMakeLists.txt
-index bac8dce..c0b98cd 100644
+index bac8dce188..44004fd9bb 100644
 --- a/ThirdParty/libharu/CMakeLists.txt
 +++ b/ThirdParty/libharu/CMakeLists.txt
 @@ -4,16 +4,15 @@ vtk_module_third_party(
@@ -25,12 +25,12 @@ index bac8dce..c0b98cd 100644
      # https://github.com/libharu/libharu/pull/187
 -    VERSION 2.4.0
 -    TARGETS LibHaru::LibHaru
-+    TARGETS unofficial::libharu::haru
++    TARGETS unofficial::libharu::hpdf
      STANDARD_INCLUDE_DIRS)
  
  include(vtkDetectLibraryType)
 -vtk_detect_library_shared(vtklibharu LibHaru::LibHaru)
-+vtk_detect_library_shared(vtklibharu unofficial::libharu::haru)
++vtk_detect_library_shared(vtklibharu unofficial::libharu::hpdf)
  
  set(HPDF_DLL 0)
  if (WIN32 AND vtklibharu_is_shared)

@@ -3,10 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.79.0
-    SHA512 1243e4bdf5f2570c1f92e12dbe9cdef55d72d73d0e6abc6253eae928280ba913bfbc3a4d92d09a9c9b98e06ef95345c2c99dd0983d8dd2a7f1d8f0826530e1dd
+    REF boost-1.81.0
+    SHA512 8ff7a7c68444faeb19c5ceaf82bbb35720645dd7fae5f14b0da83deb1d21ee3fc3dc353fb3144625b0062cf058411d8f58011e4da6e75850208831829342bbfb
     HEAD_REF master
-    PATCHES 0001-json-array-erase-relocate.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 

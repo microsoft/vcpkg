@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF eefb26f82b233268fc98577d265352720d477ba4 # v1.15
     SHA512 5ce962e31b3c07b7110cbc645458dba9c0e26e693fbe3b4a7ffe8a28563827049a22fc5596a911fbcea4d88a9adbef3f82000ff61027ff4387f40e4a4045c26d
     HEAD_REF master
+    PATCHES
+        disable_warnings.patch # cl will simply ignore the other invalid options. 
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -15,7 +17,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    # PREFER_NINJA - See https://github.com/civetweb/civetweb/issues/1024
     OPTIONS
         -DCIVETWEB_BUILD_TESTING=OFF
         -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
@@ -25,6 +26,7 @@ vcpkg_cmake_configure(
         -DCIVETWEB_ENABLE_SERVER_EXECUTABLE=OFF
         -DCIVETWEB_ENABLE_SSL_DYNAMIC_LOADING=OFF
         -DCIVETWEB_ENABLE_WEBSOCKETS=ON
+        -DCIVETWEB_ALLOW_WARNINGS=ON
         ${FEATURE_OPTIONS}
 )
 

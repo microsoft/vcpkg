@@ -54,7 +54,7 @@ index 6eff1eb14..8827f6ac6 100644
  usage()
  {
 @@ -47,16 +49,16 @@ while test $# -gt 0; do
-       echo -L${libdir} -lgeos-@VERSION_RELEASE@
+       echo -L${libdir} -lgeos
        ;;
      --clibs)
 -      echo -L${libdir} -lgeos_c

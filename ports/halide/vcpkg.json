@@ -1,12 +1,15 @@
 {
   "name": "halide",
   "version": "14.0.0",
+  "port-version": 1,
   "description": "Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.",
   "homepage": "https://github.com/halide/Halide",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     {
       "name": "llvm",
+      "default-features": false,
       "features": [
         "clang",
         "enable-rtti",
