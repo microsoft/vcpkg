@@ -133,7 +133,12 @@
     "visualization": {
       "description": "Build visualization",
       "dependencies": [
-        "vtk"
+        {
+          "name": "vtk",
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "vtk": {
