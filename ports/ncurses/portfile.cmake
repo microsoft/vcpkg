@@ -30,6 +30,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         --without-normal
     )
 endif()
+
+if(NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --enable-mixed-case
+    )
+endif()
+
 if(VCPKG_TARGET_IS_MINGW)
     list(APPEND OPTIONS
         --disable-home-terminfo

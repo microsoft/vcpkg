@@ -12,6 +12,8 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         thrift.patch
         utf8proc.patch
+        fix-pkgconfig-windows.patch # needed for fix-dataset.patch (https://github.com/apache/arrow/pull/14900)
+        fix-dataset.patch # https://github.com/apache/arrow/pull/33665
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -70,6 +72,14 @@ vcpkg_fixup_pkgconfig()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
+endif()
+
+if("dataset" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowdataset
+        CONFIG_PATH lib/cmake/ArrowDataset
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
 endif()
 
 if("parquet" IN_LIST FEATURES)

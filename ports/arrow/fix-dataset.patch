@@ -1,0 +1,29 @@
+diff --git a/cpp/src/arrow/dataset/CMakeLists.txt b/cpp/src/arrow/dataset/CMakeLists.txt
+index b80370e63985..04f80ab6d1b3 100644
+--- a/cpp/src/arrow/dataset/CMakeLists.txt
++++ b/cpp/src/arrow/dataset/CMakeLists.txt
+@@ -31,6 +31,12 @@ set(ARROW_DATASET_SRCS
+     scanner.cc
+     scan_node.cc)
+ 
++if(ARROW_PARQUET)
++  set(ARROW_DATASET_PKG_CONFIG_REQUIRES parquet)
++else()
++  set(ARROW_DATASET_PKG_CONFIG_REQUIRES arrow)
++endif()
++
+ set(ARROW_DATASET_STATIC_LINK_LIBS)
+ set(ARROW_DATASET_SHARED_LINK_LIBS)
+ set(ARROW_DATASET_STATIC_INSTALL_INTERFACE_LIBS)
+diff --git a/cpp/src/arrow/dataset/arrow-dataset.pc.in b/cpp/src/arrow/dataset/arrow-dataset.pc.in
+index 3e474e3825c5..d587fd110c08 100644
+--- a/cpp/src/arrow/dataset/arrow-dataset.pc.in
++++ b/cpp/src/arrow/dataset/arrow-dataset.pc.in
+@@ -22,6 +22,6 @@ libdir=@ARROW_PKG_CONFIG_LIBDIR@
+ Name: Apache Arrow Dataset
+ Description: Apache Arrow Dataset provides an API to read and write semantic datasets stored in different locations and formats.
+ Version: @ARROW_VERSION@
+-Requires: arrow parquet
++Requires: @ARROW_DATASET_PKG_CONFIG_REQUIRES@
+ Libs: -L${libdir} -larrow_dataset
+ Cflags.private: -DARROW_DS_STATIC
