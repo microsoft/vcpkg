@@ -1,12 +1,13 @@
 # header-only library
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/immer
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 fc34242d36efdb9faa1f22ccc7591c1ace34c2b383e1266a290346baedc154e3d4a682d6dd5094460b75e123347194710072e996d19165cc5fd23c922fdfc4e8
     HEAD_REF master
+    PATCHES
+        fix-ExportConfigVersion.patch # Upstream PR https://github.com/arximboldi/immer/pull/250 has been merged, this patch need to be removed in next update.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

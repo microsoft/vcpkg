@@ -31,7 +31,7 @@ vcpkg_configure_make(
             --enable-debug
 )
 
-vcpkg_install_make(DISABLE_PARALLEL)
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
