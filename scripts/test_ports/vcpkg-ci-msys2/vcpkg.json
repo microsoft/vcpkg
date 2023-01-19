@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-ci-msys2",
+  "version": "1",
+  "description": "Test vcpkg msys2 freshness",
+  "license": "MIT",
+  "supports": "(windows | mingw) & native"
+}
