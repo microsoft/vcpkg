@@ -22,5 +22,6 @@ set(VCPKG_CMAKE_CONFIGURE_OPTIONS
       "-DCMAKE_TRY_COMPILE_CONFIGURATION=Release"
     )
 
+include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/download_llvm.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/extra_setup.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/port_specialization.cmake")
