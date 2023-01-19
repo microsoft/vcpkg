@@ -5026,7 +5026,7 @@
     },
     "modp-base64": {
       "baseline": "2020-09-26",
-      "port-version": 1
+      "port-version": 2
     },
     "mongo-c-driver": {
       "baseline": "1.22.2",
