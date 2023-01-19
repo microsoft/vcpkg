@@ -1,5 +1,15 @@
 include_guard(GLOBAL)
 
+option(VCPKG_USE_COMPILER_FOR_LINKAGE "Invoke the compiler for linking instead of the linker" OFF)
+option(VCPKG_USE_LTO "Enable full LTO for release builds" OFF)
+option(VCPKG_USE_SANITIZERS "Enable sanitizers for release builds" OFF)
+
+if(VCPKG_USE_COMPILER_FOR_LINKAGE)
+  set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_CURRENT_LIST_DIR}/Platform/Clang-CL-override.cmake")
+  set(CMAKE_USER_MAKE_RULES_OVERRIDE_C "${CMAKE_CURRENT_LIST_DIR}/Platform/Clang-CL-C.cmake")
+  set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX "${CMAKE_CURRENT_LIST_DIR}/Platform/Clang-CL-CXX.cmake")
+endif()
+
 function(get_vcpkg_triplet_variables)
   include("${CMAKE_CURRENT_LIST_DIR}/../${VCPKG_TARGET_TRIPLET}.cmake")
   # Be carefull here you don't want to pull in all variables from the triplet!
@@ -28,7 +38,6 @@ string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNING
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
 string(APPEND windows_defs " /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTDC_NAMES") # due to -D__STDC__=1 required for e.g. _fopen -> fopen and other not underscored functions/defines
 string(APPEND windows_defs " /D_FORCENAMELESSUNION") # Due to -D__STDC__ to access tagVARIANT members (ffmpeg)
-
 
 # Try to ignore /WX and -werror; A lot of ports mess up the compiler detection and add wrong flags!
 set(ignore_werror "/WX-")
@@ -61,9 +70,6 @@ endif()
 
 set(CMAKE_CL_NOLOGO "/nologo" CACHE STRING "")
 
-# Set compiler flags.
-set(CLANG_FLAGS "/clang:-fasm -fmacro-backtrace-limit=0") #/clang:-fopenmp-simd -openmp
-
 # Set compiler.
 find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
 find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" )
@@ -77,20 +83,69 @@ list(INSERT CMAKE_PROGRAM_PATH 0 "${LLVM_BIN_DIR}")
 
 set(CMAKE_C_COMPILER "${CLANG-CL_EXECUTBALE}" CACHE STRING "")
 set(CMAKE_CXX_COMPILER "${CLANG-CL_EXECUTBALE}" CACHE STRING "")
-set(CMAKE_AR "llvm-lib.exe" CACHE STRING "")
-
-set(CMAKE_LINKER "${LLVM_BIN_DIR}/lld-link.exe" CACHE STRING "") 
+set(CMAKE_AR "${LLVM_BIN_DIR}/llvm-lib.exe" CACHE STRING "")
+#set(CMAKE_AR "${LLVM_BIN_DIR}/llvm-ar.exe" CACHE STRING "")
+#set(CMAKE_RANLIB "${LLVM_BIN_DIR}/llvm-ranlib.exe" CACHE STRING "")
+set(CMAKE_LINKER "${LLVM_BIN_DIR}/lld-link.exe" CACHE STRING "")
+#set(CMAKE_LINKER "${CLANG-CL_EXECUTBALE}" CACHE STRING "")
 #set(CMAKE_LINKER "link.exe" CACHE STRING "" FORCE)
 set(CMAKE_ASM_MASM_COMPILER "ml64.exe" CACHE STRING "")
 #set(CMAKE_RC_COMPILER "${LLVM_BIN_DIR}/llvm-rc.exe" CACHE STRING "" FORCE)
 set(CMAKE_RC_COMPILER "rc.exe" CACHE STRING "")
 set(CMAKE_MT "mt.exe" CACHE STRING "")
 
+# Set compiler flags.
+#set(CLANG_FLAGS "/clang:-fasm -fmacro-backtrace-limit=0") #/clang:-fopenmp-simd -openmp
+
+set(CLANG_C_LTO_FLAGS "")
+set(CLANG_CXX_LTO_FLAGS "")
+if(VCPKG_USE_LTO)
+  set(CLANG_C_LTO_FLAGS "-flto -fuse-ld=lld")
+  set(CLANG_CXX_LTO_FLAGS "-flto -fuse-ld=lld -fwhole-program-vtables")
+endif()
+
+#https://devblogs.microsoft.com/cppblog/asan-for-windows-x64-and-debug-build-support/
+#dynamic CRT case is not allowed to have /wholearchive!
+set(sanitizer_path "")
+set(sanitizer_libs "")
+set(sanitizer_libs_exe "")
+set(sanitizer_libs_dll "")
+message(STATUS "VCPKG_USE_COMPILER_FOR_LINKAGE:${VCPKG_USE_COMPILER_FOR_LINKAGE}")
+if(VCPKG_USE_SANITIZERS)
+    set(sanitizers "undefined,alignment,null")
+    if(VCPKG_USE_LTO)
+      string(APPEND sanitizers ",cfi")
+    else()
+      string(APPEND sanitizers ",address") # lld-link: error: /alternatename: conflicts: __sanitizer_on_print=__sanitizer_on_print__def
+    endif()
+    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats /Oy-")
+    if(NOT DEFINED ENV{LLVMToolsVersion})
+      file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
+    else()
+      set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
+    endif()
+    set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
+    if(NOT VCPKG_USE_COMPILER_FOR_LINKAGE)
+      set(ENV{LINK} "$ENV{LINK} /LIBPATH:\"${clang_ver_path}/lib/windows\"")
+      #set(sanitizer_path "/LIBPATH:\\\\\"${clang_ver_path}/lib/windows\\\\\"" )
+      set(sanitizer_libs "clang_rt.ubsan_standalone-x86_64.lib clang_rt.ubsan_standalone_cxx-x86_64.lib")
+      if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(sanitizer_libs_exe "clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
+        set(sanitizer_libs_dll "${sanitizer_libs_exe}")
+      else()
+        set(sanitizer_libs_exe "/wholearchive:clang_rt.asan-x86_64.lib /wholearchive:clang_rt.asan_cxx-x86_64.lib")
+        set(sanitizer_libs_dll "clang_rt.asan_dll_thunk-x86_64.lib")
+      endif()
+      unset(clang_ver_path)
+    endif()
+    unset(sanitizers)
+endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} ${arch_flags} ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_MINSIZEREL "/O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "/O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELEASE "${CLANG_FLAGS_RELEASE} /O2 /Oi ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_MINSIZEREL "${CLANG_FLAGS_RELEASE} /O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CLANG_FLAGS_RELEASE} /O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CL_NOLOGO} /EHsc /GR ${windows_defs} ${arch_flags} ${VCPKG_CXX_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_cxx_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /FC ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
@@ -106,14 +161,42 @@ endforeach()
 unset(flag_suf)
 
 # Set linker flags.
-foreach(linker IN ITEMS "SHARED_LINKER;MODULE_LINKER;EXE_LINKER")
-  set(CMAKE_${linker}_FLAGS_INIT "${CMAKE_CL_NOLOGO} /INCREMENTAL:NO /Brepro ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_DEBUG "/DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_RELEASE "/DEBUG /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_MINSIZEREL "/DEBUG /OPT:REF /OPT:ICF" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_RELWITHDEBINFO "/DEBUG:FULL /OPT:REF /OPT:ICF" CACHE STRING "")
+foreach(linker IN ITEMS "SHARED" "MODULE" "EXE")
+  set(CMAKE_${linker}_LINKER_FLAGS_INIT "${CMAKE_CL_NOLOGO} /INCREMENTAL:NO /Brepro ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
+  set(CMAKE_${linker}_LINKER_FLAGS "${CMAKE_CL_NOLOGO} /INCREMENTAL:NO /Brepro ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
+  set(CMAKE_${linker}_LINKER_FLAGS_DEBUG "/DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
+  set(CMAKE_${linker}_LINKER_FLAGS_RELEASE "/DEBUG /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE} ${sanitizer_path} ${sanitizer_libs}" CACHE STRING "")
+  set(CMAKE_${linker}_LINKER_FLAGS_MINSIZEREL "/DEBUG /OPT:REF /OPT:ICF ${sanitizer_path} ${sanitizer_libs}" CACHE STRING "")
+  set(CMAKE_${linker}_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG:FULL /OPT:REF /OPT:ICF ${sanitizer_path} ${sanitizer_libs}" CACHE STRING "")
+endforeach()
+unset(sanitizer_path)
+unset(sanitizer_libs)
+
+if(VCPKG_USE_SANITIZERS)
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} ${sanitizer_libs_exe}" CACHE STRING "" FORCE)
+  set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} ${sanitizer_libs_exe}" CACHE STRING "" FORCE)
+  set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} ${sanitizer_libs_exe}" CACHE STRING "" FORCE)
+  set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+  set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+  set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+  set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+  set(CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL "${CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+  set(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO} ${sanitizer_libs_dll}" CACHE STRING "" FORCE)
+endif()
+unset(sanitizer_libs_dll)
+unset(sanitizer_libs_exe)
+
+foreach(lang IN ITEMS C CXX)
+  foreach(linker IN ITEMS "SHARED" "MODULE" "EXE")
+    set(CMAKE_${lang}_${linker}_LINKER_FLAGS "${CMAKE_${linker}_LINKER_FLAGS}" CACHE STRING "")
+    set(CMAKE_${lang}_${linker}_LINKER_FLAGS_DEBUG "${CMAKE_${linker}_LINKER_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_${lang}_${linker}_LINKER_FLAGS_RELEASE "${CMAKE_${linker}_LINKER_FLAGS_RELEASE}" CACHE STRING "")
+    set(CMAKE_${lang}_${linker}_LINKER_FLAGS_MINSIZEREL "${CMAKE_${linker}_LINKER_FLAGS_MINSIZEREL}" CACHE STRING "")
+    set(CMAKE_${lang}_${linker}_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_${linker}_LINKER_FLAGS_RELWITHDEBINFO}" CACHE STRING "")
+  endforeach()
 endforeach()
 unset(linker)
+unset(lang)
 
 # Set assembler flags.
 set(CMAKE_ASM_MASM_FLAGS_INIT "${CMAKE_CL_NOLOGO}")
@@ -129,6 +212,8 @@ list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE
                                                  VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
                                                  VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
                                                  VCPKG_SET_CHARSET_FLAG
+                                                 VCPKG_USE_SANITIZERS
+                                                 VCPKG_USE_LTO
                                                  )
 macro(toolchain_set_cmake_policy_new)
 if(POLICY ${ARGN})

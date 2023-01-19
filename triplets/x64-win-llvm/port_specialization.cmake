@@ -39,5 +39,10 @@ if(PORT MATCHES "^itk$" AND "rtk" IN_LIST FEATURES)
     set(ENV{PATH} "${LLVM_PATH_BACKUP}")
 endif()
 if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
-    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=lib.exe")
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=llvm-ar.exe")
+    set(ENV{AR} "llvm-ar.exe")
+endif()
+
+if(CMAKE_PARENT_LIST_FILE MATCHES "-lto(\\\.|-)" AND NOT PORT MATCHES "(benchmark|gtest|pkgconf|^qt[a-z]+)")
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_USE_LTO:BOOL=TRUE")
 endif()
