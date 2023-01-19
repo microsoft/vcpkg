@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 1633294bf6c714361c381151b62d9dd2c8f388490153e7964bfa14fd647a681db9ebfe1de0a06279972d6c5b30377f67361feb4db186b1faa235600f0ae02b22
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
+        gentables.patch
 )
 
 vcpkg_check_features(
