@@ -16,10 +16,20 @@ else()
     )
 endif()
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
-)
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE
+        OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=ON"
+    )
+else()
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE
+        OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=OFF"
+    )
+endif()
+
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
