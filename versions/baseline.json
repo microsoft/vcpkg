@@ -1434,7 +1434,7 @@
     },
     "chromium-base": {
       "baseline": "86.0.4199.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cimg": {
       "baseline": "2.9.9",
@@ -1754,7 +1754,7 @@
     },
     "crashpad": {
       "baseline": "2022-09-05",
-      "port-version": 1
+      "port-version": 2
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -7122,7 +7122,7 @@
     },
     "skia": {
       "baseline": "0.36.0",
-      "port-version": 5
+      "port-version": 6
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7918,7 +7918,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 4
+      "port-version": 5
     },
     "valijson": {
       "baseline": "0.6",
@@ -7966,7 +7966,7 @@
     },
     "vcpkg-gn": {
       "baseline": "2021-11-16",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
