@@ -5085,7 +5085,7 @@
       "port-version": 2
     },
     "mpfr": {
-      "baseline": "4.1.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "mpg123": {
