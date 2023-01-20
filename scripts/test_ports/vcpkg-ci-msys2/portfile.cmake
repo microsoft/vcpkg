@@ -1,11 +1,11 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(msys_repo_url    "https://mirror.msys2.org/msys/x86_64")
-set(mingw64_repo_url "https://mirror.msys2.org/mingw/x86_64")
+set(mingw64_repo_url "https://mirror.msys2.org/mingw/mingw64")
 
 # Temporarily ignore these packages.
 vcpkg_list(SET ignored_packages
-    https://mirror.msys2.org/mingw/x86_64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
+    https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
 )
 
 # Replace vcpkg name with msys2 names
