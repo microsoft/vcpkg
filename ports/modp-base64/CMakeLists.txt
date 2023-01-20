@@ -19,7 +19,6 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-
   install(
     FILES
       "${SOURCE_PATH}/src/extern_c_begin.h"
@@ -28,5 +27,4 @@ if(NOT DISABLE_INSTALL_HEADERS)
       "${SOURCE_PATH}/src/modp_stdint.h"
     DESTINATION include
   )
-  
 endif()
