@@ -7641,8 +7641,8 @@
       "port-version": 0
     },
     "tinyply": {
-      "baseline": "2020-05-22",
-      "port-version": 2
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "tinyspline": {
       "baseline": "0.4.0",
