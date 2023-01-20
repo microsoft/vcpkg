@@ -30,7 +30,7 @@ if(DEFINED CURRENT_PORT_DIR AND
     get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
     set(LLVM_PATH_BACKUP "$ENV{PATH}")
     set(ENV{PATH} "${LLVM_BIN_DIR};$ENV{PATH}")
-    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+    if(1)
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
             )
@@ -50,7 +50,7 @@ if(DEFINED CURRENT_PORT_DIR AND
         set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
     endif()
 else()
-    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+    if(1)
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
                     "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
