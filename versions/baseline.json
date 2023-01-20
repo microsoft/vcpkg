@@ -7514,7 +7514,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
@@ -7974,7 +7974,7 @@
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-gyp-nss": {
       "baseline": "2022-03-04",
