@@ -1,0 +1,34 @@
+diff --git a/Qt/Widgets/CMakeLists.txt b/Qt/Widgets/CMakeLists.txt
+index a8a9451..a638728 100644
+--- a/Qt/Widgets/CMakeLists.txt
++++ b/Qt/Widgets/CMakeLists.txt
+@@ -127,7 +127,7 @@ endif ()
+ 
+ vtk_module_find_package(
+   PACKAGE     Qt${VTK_QT_VERSION}
+-  COMPONENTS  ${qt_components})
++  COMPONENTS  ${qt_components} Core5Compat)
+ 
+ ##########################################################################
+ ## Add *.ui files to be uic processed.
+@@ -165,6 +165,7 @@ vtk_module_link(ParaView::pqWidgets
+     Qt${VTK_QT_VERSION}::Core
+     Qt${VTK_QT_VERSION}::Gui
+     Qt${VTK_QT_VERSION}::Widgets
++    Qt${VTK_QT_VERSION}::Core5Compat
+   PRIVATE
+     Qt${VTK_QT_VERSION}::Network)
+ vtk_module_definitions(ParaView::pqWidgets PRIVATE QT_NO_KEYWORDS)
+diff --git a/Qt/Widgets/pqCollapsedGroup.cxx b/Qt/Widgets/pqCollapsedGroup.cxx
+index 2c597dc..e912315 100644
+--- a/Qt/Widgets/pqCollapsedGroup.cxx
++++ b/Qt/Widgets/pqCollapsedGroup.cxx
+@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ static QStyleOptionGroupBox pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p)
+ {
+   QStyleOptionGroupBox option;
+-  option.init(p);
++  p->initStyleOption(&option);
+   option.text = p->title();
+   option.lineWidth = 1;
+   option.midLineWidth = 0;
