@@ -216,6 +216,7 @@ vcpkg_cmake_configure(
         -DVTK_QT_VERSION=6
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
     MAYBE_UNUSED_VARIABLES
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
