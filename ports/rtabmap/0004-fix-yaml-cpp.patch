@@ -1,0 +1,24 @@
+Subject: [PATCH] fix bigobj under MSVC, fix yaml-cpp link.
+---
+Index: tools/EurocDataset/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tools/EurocDataset/CMakeLists.txt b/tools/EurocDataset/CMakeLists.txt
+--- a/tools/EurocDataset/CMakeLists.txt	(revision 304f23cd2eb2f65500c0871193fc205e91bc3735)
++++ b/tools/EurocDataset/CMakeLists.txt	(revision d0a731ed6e3ce3415385c99dfc510d6a5934a4b4)
+@@ -45,11 +45,11 @@
+ 	${YAML_CPP_LIBRARIES}
+ )
+ 
+-INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
++INCLUDE_DIRECTORIES(${INCLUDE_DIRS} yaml-cpp)
+ 
+ ADD_EXECUTABLE(euroc_dataset main.cpp)
+   
+-TARGET_LINK_LIBRARIES(euroc_dataset ${LIBRARIES})
++TARGET_LINK_LIBRARIES(euroc_dataset ${LIBRARIES} yaml-cpp)
+ 
+ SET_TARGET_PROPERTIES( euroc_dataset 
+     PROPERTIES OUTPUT_NAME ${PROJECT_PREFIX}-euroc_dataset)

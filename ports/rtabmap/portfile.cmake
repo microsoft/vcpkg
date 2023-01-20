@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         0001-add-bigobj-for-msvc.patch
         0003-fix-qt.patch
+        0004-fix-yaml-cpp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -88,6 +89,8 @@ if("tools" IN_LIST FEATURES)
         rtabmap-reprocess
         rtabmap-rgbd_dataset
         rtabmap-euroc_dataset
+        rtabmap-cleanupLocalGrids
+        rtabmap-globalBundleAdjustment
     AUTO_CLEAN
   )
 endif()
