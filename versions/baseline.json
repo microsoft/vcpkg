@@ -4653,8 +4653,8 @@
       "port-version": 0
     },
     "live555": {
-      "baseline": "2022-12-01",
-      "port-version": 1
+      "baseline": "2023-01-19",
+      "port-version": 0
     },
     "llfio": {
       "baseline": "2022-09-18",
