@@ -1,11 +1,11 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(msys_repo_url    "https://repo.msys2.org/msys/x86_64")
-set(mingw64_repo_url "https://repo.msys2.org/mingw/x86_64")
+set(msys_repo_url    "https://mirror.msys2.org/msys/x86_64")
+set(mingw64_repo_url "https://mirror.msys2.org/mingw/x86_64")
 
 # Temporarily ignore these packages.
 vcpkg_list(SET ignored_packages
-    https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
+    https://mirror.msys2.org/mingw/x86_64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
 )
 
 # Replace vcpkg name with msys2 names
@@ -36,7 +36,7 @@ function(parse_download_arguments)
             message(FATAL_ERROR "internal error: z_vcpkg_acquire_msys_declare_package requires argument: ${required_arg}")
         endif()
     endforeach()
-    if(NOT arg_URL MATCHES [[^https://repo\.msys2\.org/.*/(([^-]+(-[^0-9][^-]*)*)-.+\.pkg\.tar\.(xz|zst))$]])
+    if(NOT arg_URL MATCHES [[^https://mirror\.msys2\.org/.*/(([^-]+(-[^0-9][^-]*)*)-.+\.pkg\.tar\.(xz|zst))$]])
         message(FATAL_ERROR "internal error: regex does not match supplied URL to vcpkg_acquire_msys: ${arg_URL}")
     endif()
     set(filename "${CMAKE_MATCH_1}")
@@ -112,7 +112,7 @@ foreach(repo IN ITEMS msys mingw64)
         set(repo_url "${${repo}_repo_url}/${repo}.files")
         set(all_urls "${repo_url}")
         foreach(mirror IN LISTS Z_VCPKG_ACQUIRE_MSYS_MIRRORS) # from vcpkg_acquire_msys2.cmake
-            string(REPLACE "https://repo.msys2.org/" "${mirror}" mirror_url "${repo_url}")
+            string(REPLACE "https://mirror.msys2.org/" "${mirror}" mirror_url "${repo_url}")
             list(APPEND all_urls "${mirror_url}")
         endforeach()
         vcpkg_download_distfile(archive
