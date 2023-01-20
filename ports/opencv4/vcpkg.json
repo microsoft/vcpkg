@@ -256,7 +256,8 @@
           "name": "qtbase",
           "features": ["gui","widgets","concurrent","testlib"],
           "default-features": false
-        }
+        },
+        "qt5compat"
       ]
     },
     "quirc": {
