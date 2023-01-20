@@ -21,6 +21,7 @@ vcpkg_from_github(
         add-tools-option.patch
         qt6.patch
         q6-2.patch
+        qt6_3.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
