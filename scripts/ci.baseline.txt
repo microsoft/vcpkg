@@ -243,7 +243,6 @@ fontconfig:arm-uwp=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
-forge:x86-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail

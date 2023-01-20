@@ -497,8 +497,8 @@
       "port-version": 0
     },
     "bgfx": {
-      "baseline": "1.118.8384-362",
-      "port-version": 1
+      "baseline": "1.118.8398-400",
+      "port-version": 0
     },
     "bigint": {
       "baseline": "2010.04.30",
@@ -1277,7 +1277,7 @@
       "port-version": 1
     },
     "c9y": {
-      "baseline": "0.6.1",
+      "baseline": "0.6.2",
       "port-version": 0
     },
     "caf": {
@@ -1290,7 +1290,7 @@
     },
     "cairo": {
       "baseline": "1.17.6",
-      "port-version": 4
+      "port-version": 5
     },
     "cairomm": {
       "baseline": "1.16.2",
@@ -1394,7 +1394,7 @@
     },
     "cgns": {
       "baseline": "4.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -1405,7 +1405,7 @@
       "port-version": 1
     },
     "charls": {
-      "baseline": "2.3.4",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "chartdir": {
@@ -2934,7 +2934,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 4
+      "port-version": 5
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -4653,8 +4653,8 @@
       "port-version": 0
     },
     "live555": {
-      "baseline": "2022-12-01",
-      "port-version": 1
+      "baseline": "2023-01-19",
+      "port-version": 0
     },
     "llfio": {
       "baseline": "2022-09-18",
@@ -4854,7 +4854,7 @@
     },
     "matio": {
       "baseline": "1.5.23",
-      "port-version": 0
+      "port-version": 1
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -5085,7 +5085,7 @@
       "port-version": 2
     },
     "mpfr": {
-      "baseline": "4.1.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "mpg123": {
@@ -5578,7 +5578,7 @@
     },
     "opencv4": {
       "baseline": "4.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5610,7 +5610,7 @@
     },
     "openimageio": {
       "baseline": "2.4.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.0",
@@ -5789,8 +5789,8 @@
       "port-version": 1
     },
     "paraview": {
-      "baseline": "5.9.1",
-      "port-version": 2
+      "baseline": "5.11.0",
+      "port-version": 0
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6769,7 +6769,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "7.8.3",
+      "baseline": "7.9.2",
       "port-version": 0
     },
     "rpclib": {
@@ -6963,6 +6963,10 @@
     "sdl2pp": {
       "baseline": "0.16.1",
       "port-version": 6
+    },
+    "seacas": {
+      "baseline": "2022-11-22",
+      "port-version": 0
     },
     "seal": {
       "baseline": "4.1.1",
@@ -7510,7 +7514,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
@@ -7637,8 +7641,8 @@
       "port-version": 0
     },
     "tinyply": {
-      "baseline": "2020-05-22",
-      "port-version": 2
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "tinyspline": {
       "baseline": "0.4.0",
@@ -7970,7 +7974,7 @@
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-gyp-nss": {
       "baseline": "2022-03-04",
@@ -8002,6 +8006,10 @@
     },
     "vectorclass": {
       "baseline": "2.02.00",
+      "port-version": 0
+    },
+    "verdict": {
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "vili": {
@@ -8041,16 +8049,16 @@
       "port-version": 1
     },
     "vtk": {
-      "baseline": "9.0.3-pv5.9.1",
-      "port-version": 12
+      "baseline": "9.2.0-pv5.11.0",
+      "port-version": 0
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
-      "port-version": 0
+      "port-version": 1
     },
     "vtk-m": {
-      "baseline": "1.6.0",
-      "port-version": 2
+      "baseline": "1.9.0",
+      "port-version": 0
     },
     "vulkan": {
       "baseline": "1.1.82.1",
