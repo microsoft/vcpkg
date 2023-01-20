@@ -44,7 +44,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       OIIO_BUILD_TOOLS
         tools       USE_OPENGL
         tools       USE_QT
-        tools       USE_QT5
 )
 
 vcpkg_cmake_configure(

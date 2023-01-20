@@ -24,3 +24,29 @@ index 8131672..7a6455e 100644
  endif ()
  
  
+diff --git a/src/iv/CMakeLists.txt b/src/iv/CMakeLists.txt
+index 88a2151..ad2246c 100644
+--- a/src/iv/CMakeLists.txt
++++ b/src/iv/CMakeLists.txt
+@@ -3,18 +3,18 @@
+ # https://github.com/OpenImageIO/oiio
+ 
+ set (CMAKE_AUTOMOC ON)
+-if (Qt5_POSITION_INDEPENDENT_CODE)
++if (Qt6_POSITION_INDEPENDENT_CODE)
+     set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+ check_is_enabled (iv iv_enabled)
+-if (iv_enabled AND Qt5_FOUND AND OPENGL_FOUND)
++if (iv_enabled AND Qt6_FOUND AND OPENGL_FOUND)
+     fancy_add_executable (
+         SYSTEM_INCLUDE_DIRS
+             ${OPENGL_INCLUDE_DIR}
+         LINK_LIBRARIES
+             OpenImageIO
+-            Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
++            Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL
+             ${OPENGL_LIBRARIES}
+         )
+     if (iv_enabled AND FORCE_OPENGL_1)
