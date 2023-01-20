@@ -13,6 +13,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-vs2019-encoding-conversion.patch
+        qt6.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

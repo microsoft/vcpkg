@@ -103,7 +103,7 @@
       "dependencies": [
         "opengl",
         {
-          "name": "qt5-base",
+          "name": "qtbase",
           "default-features": false
         }
       ]
