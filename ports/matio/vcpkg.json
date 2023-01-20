@@ -1,6 +1,7 @@
 {
   "name": "matio",
-  "version-semver": "1.5.23",
+  "version": "1.5.23",
+  "port-version": 1,
   "description": "MATLAB MAT File I/O Library",
   "homepage": "https://github.com/tbeu/matio",
   "license": "BSD-2-Clause",
@@ -21,7 +22,10 @@
     "hdf5": {
       "description": "Check for HDF5 library",
       "dependencies": [
-        "hdf5"
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
       ]
     },
     "mat73": {
