@@ -21,7 +21,7 @@ vcpkg_check_features(
         extensions MSDFGEN_CORE_ONLY
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(MSDFGEN_DYNAMIC_RUNTIME ON)
 else()
     set(MSDFGEN_DYNAMIC_RUNTIME OFF)
