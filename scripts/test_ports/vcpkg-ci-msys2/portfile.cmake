@@ -73,6 +73,27 @@ function(get_builddate arg_NAME)
     set(msys2_builddate_${arg_NAME} "${builddate}" PARENT_SCOPE)
 endfunction()
 
+function(update_msys_download name new_url)
+    message(STATUS "Updating vcpkg...")
+    if(NOT new_url MATCHES [[^https://repo\.msys2\.org/.*/(([^-]+(-[^0-9][^-]*)*)-.+\.pkg\.tar\.(xz|zst))$]])
+        message(FATAL_ERROR "internal error: regex does not match supplied URL to vcpkg_acquire_msys: ${arg_URL}")
+    endif()
+    set(filename "${CMAKE_MATCH_1}")
+    vcpkg_download_distfile(archive
+        URLS "${new_url}"
+        FILENAME "${filename}"
+        SKIP_SHA512
+    )
+    execute_process(
+        COMMAND "${CMAKE_COMMAND}" -E sha512sum "${archive}"
+        OUTPUT_VARIABLE sha512
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(REGEX REPLACE " .*" "" sha512 "${sha512}")
+    vcpkg_replace_string("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake" "${msys2_url_${name}}" "${new_url}")
+    vcpkg_replace_string("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake" "${msys2_sha512_${name}}" "${sha512}")
+endfunction()
+
 message(STATUS "+++ Collecting package list from vcpkg_acquire_msys.cmake")
 file(READ "${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake" vcpkg_acquire_msys)
 string(REGEX REPLACE "#[^\r\n]*" "" vcpkg_acquire_msys "${vcpkg_acquire_msys}")
@@ -170,9 +191,17 @@ foreach(name IN LISTS msys2_names)
             string(REGEX REPLACE "-[0-9]+-x86_64[.]pkg[.]t.*$" "" current_base "${current_url}")
             # Check the builddates
             if(vcpkg_builddate AND vcpkg_builddate LESS minimum_builddate)
-                vcpkg_list(APPEND critical "${name}")
+                if("update-critical" IN_LIST FEATURES)
+                    update_msys_download("${name}" "${current_url}")
+                else()
+                    vcpkg_list(APPEND critical "${name}")
+                endif()
             elseif(NOT vcpkg_builddate OR NOT vcpkg_base STREQUAL current_base)
-                vcpkg_list(APPEND upgradable "${name}")
+                if("update-all" IN_LIST FEATURES)
+                    update_msys_download("${name}" "${current_url}")
+                else()
+                    vcpkg_list(APPEND upgradable "${name}")
+                endif()
             endif()
         endif()
         # Check the dependencies

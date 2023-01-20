@@ -3,5 +3,22 @@
   "version": "1",
   "description": "Test vcpkg msys2 freshness",
   "license": "MIT",
-  "supports": "(windows | mingw) & native"
+  "supports": "(windows | mingw) & native",
+  "features": {
+    "update-all": {
+      "description": "Update all outdated packages in vcpkg_acquire_msys.cmake",
+      "dependencies": [
+        {
+          "name": "vcpkg-ci-msys2",
+          "default-features": false,
+          "features": [
+            "update-critical"
+          ]
+        }
+      ]
+    },
+    "update-critical": {
+      "description": "Update overdue outdated packages in vcpkg_acquire_msys.cmake"
+    }
+  }
 }
