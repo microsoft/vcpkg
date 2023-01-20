@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(libmodpbase64 C)
 
 if(MSVC)
-  add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
+  add_compile_options(/wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 configure_file(config.h.cmake config.h @ONLY)
@@ -19,9 +19,14 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  file(GLOB HEADERS "${SOURCE_PATH}/src/*.h") 
+
   install(
-    FILES ${HEADERS}
+    FILES
+      "${SOURCE_PATH}/src/extern_c_begin.h"
+      "${SOURCE_PATH}/src/extern_c_end.h"
+      "${SOURCE_PATH}/src/modp_b64.h"
+      "${SOURCE_PATH}/src/modp_stdint.h"
     DESTINATION include
   )
+  
 endif()
