@@ -2,13 +2,12 @@ diff --git a/GUISupport/Qt/QVTKOpenGLWindow.cxx b/GUISupport/Qt/QVTKOpenGLWindow
 index 9d14b1d..0ac2f95 100644
 --- a/GUISupport/Qt/QVTKOpenGLWindow.cxx
 +++ b/GUISupport/Qt/QVTKOpenGLWindow.cxx
-@@ -33,6 +33,7 @@
+@@ -33,5 +33,6 @@
  #include "vtkNew.h"
  #include "vtkObjectFactory.h"
  #include "vtkOpenGLState.h"
 +#include <GL/gl.h>
  
- VTK_ABI_NAMESPACE_BEGIN
  QVTKOpenGLWindow::QVTKOpenGLWindow(QOpenGLWindow::UpdateBehavior ub, QWindow* p)
 diff --git a/GUISupport/Qt/vtkQWidgetTexture.cxx b/GUISupport/Qt/vtkQWidgetTexture.cxx
 index 8cde5fc..9413d46 100644
