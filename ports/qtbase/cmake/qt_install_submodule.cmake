@@ -23,6 +23,37 @@ function(qt_download_submodule_impl)
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
+        if(PORT STREQUAL "qttools") # Keep this for beta & rc's
+            vcpkg_from_git(
+                OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
+                URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
+                REF "${${PORT}_qlitehtml_REF}"
+                FETCH_REF master
+                HEAD_REF master
+            )
+            # port 'litehtml' is not in vcpkg!
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
+                REPO litehtml/litehtml
+                REF "${${PORT}_litehtml_REF}"
+                SHA512 "${${PORT}_litehtml_HASH}"
+                HEAD_REF master
+            )
+            file(COPY "${SOURCE_PATH_QLITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml")
+            file(COPY "${SOURCE_PATH_LITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml/src/3rdparty/litehtml")
+        elseif(PORT STREQUAL "qtwebengine")
+            vcpkg_from_git(
+                OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
+                URL git://code.qt.io/qt/qtwebengine-chromium.git
+                REF "${${PORT}_chromium_REF}"
+            )
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
+            endif()
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
+            endif()
+        endif()
     else()
         if(VCPKG_USE_HEAD_VERSION)
             set(sha512 SKIP_SHA512)
@@ -219,15 +250,13 @@ function(qt_fixup_and_cleanup)
         vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}")
     endforeach()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
-        foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
-            # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
-            vcpkg_replace_string("${_plugin_target}"
-                                 [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
-                                 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
-        endforeach()
-    endif()
+    file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
+    foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
+        # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
+        vcpkg_replace_string("${_plugin_target}"
+                             [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
+                             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
+    endforeach()
 
     set(qt_tooldest "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
     set(qt_searchdir "${CURRENT_PACKAGES_DIR}/bin")
@@ -241,7 +270,7 @@ function(qt_fixup_and_cleanup)
     if(_qarg_TOOL_NAMES)
         set(tool_names ${_qarg_TOOL_NAMES})
         vcpkg_copy_tools(TOOL_NAMES ${tool_names} SEARCH_DIR "${qt_searchdir}" DESTINATION "${qt_tooldest}" AUTO_CLEAN)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${qt_plugindir}")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${qt_plugindir}" AND NOT PORT STREQUAL "qtdeclarative") #qmllint conflict
             file(COPY "${CURRENT_PACKAGES_DIR}/${qt_plugindir}/" DESTINATION "${qt_tooldest}")
         endif()
     endif()

@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
+        fix_include.patch
 )
 
 vcpkg_check_features(
@@ -32,7 +33,6 @@ endif()
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND OPTIONS
-        -DwxUSE_OPENGL=OFF
         -DwxUSE_STACKWALKER=OFF
     )
 endif()
@@ -67,6 +67,7 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
         -DwxUSE_NANOSVG=sys
+        -DwxUSE_GLCANVAS=ON
         -DwxUSE_LIBGNOMEVFS=OFF
         -DwxUSE_LIBNOTIFY=OFF
         -DwxUSE_SECRETSTORE=OFF

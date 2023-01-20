@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
-  "version": "4.4.1",
-  "port-version": 22,
+  "version": "5.0.2",
+  "port-version": 2,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -38,7 +38,6 @@
             "avdevice",
             "avfilter",
             "avformat",
-            "avresample",
             "bzip2",
             "freetype",
             "iconv",
@@ -151,14 +150,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tensorflow"
-          ],
-          "platform": "x64 & !static & !uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "aom"
           ],
           "platform": "!(windows & arm & !uwp)"
@@ -183,9 +174,33 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp & !windows"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "amf"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm & windows))"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "qsv"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm & windows))"
         },
         {
           "name": "ffmpeg",
@@ -213,17 +228,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!(uwp | arm)"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!(arm & windows)"
+          "platform": "!uwp & !(arm & windows)"
         },
         {
           "name": "ffmpeg",
@@ -254,6 +269,12 @@
       "description": "Enable ALSA support",
       "dependencies": [
         "alsa"
+      ]
+    },
+    "amf": {
+      "description": "AMD AMF codec support",
+      "dependencies": [
+        "amd-amf"
       ]
     },
     "aom": {
@@ -483,6 +504,12 @@
         "openjpeg"
       ]
     },
+    "openmpt": {
+      "description": "Decoding tracked files via libopenmpt",
+      "dependencies": [
+        "libopenmpt"
+      ]
+    },
     "openssl": {
       "description": "Needed for https support if gnutls, libtls or mbedtls is not used",
       "dependencies": [
@@ -512,6 +539,12 @@
             "gpl"
           ]
         }
+      ]
+    },
+    "qsv": {
+      "description": "Intel QSV Codec",
+      "dependencies": [
+        "mfx-dispatch"
       ]
     },
     "sdl2": {

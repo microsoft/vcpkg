@@ -1,0 +1,100 @@
+From 109a40a12019e28ecd60bbf9210f9c949c827d31 Mon Sep 17 00:00:00 2001
+From: Luke Elliott <luke.b.elliott@gmail.com>
+Date: Wed, 7 Dec 2022 11:57:57 +0000
+Subject: [PATCH] GH-14869: [C++] Add Cflags.private defining <lib>_STATIC to
+ <lib>.pc.in.
+
+Required for Windows usage of static builds via vcpkg & pkgconfig.
+---
+ cpp/src/arrow/arrow-testing.pc.in               | 1 +
+ cpp/src/arrow/arrow.pc.in                       | 1 +
+ cpp/src/arrow/dataset/arrow-dataset.pc.in       | 1 +
+ cpp/src/arrow/engine/arrow-substrait.pc.in      | 1 +
+ cpp/src/arrow/flight/arrow-flight.pc.in         | 1 +
+ cpp/src/arrow/flight/sql/arrow-flight-sql.pc.in | 1 +
+ cpp/src/gandiva/gandiva.pc.in                   | 1 +
+ cpp/src/parquet/parquet.pc.in                   | 1 +
+ python/pyarrow/src/arrow-python.pc.in           | 1 +
+ 9 files changed, 9 insertions(+)
+
+diff --git a/cpp/src/arrow/arrow-testing.pc.in b/cpp/src/arrow/arrow-testing.pc.in
+index 5a991e796d83..9a452a5d113f 100644
+--- a/cpp/src/arrow/arrow-testing.pc.in
++++ b/cpp/src/arrow/arrow-testing.pc.in
+@@ -27,3 +27,4 @@ Version: @ARROW_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -larrow_testing
+ Cflags: -I${gtest_includedir}
++Cflags.private: -DARROW_TESTING_STATIC
+diff --git a/cpp/src/arrow/arrow.pc.in b/cpp/src/arrow/arrow.pc.in
+index 3a5710ab6b88..90c98bf32b2b 100644
+--- a/cpp/src/arrow/arrow.pc.in
++++ b/cpp/src/arrow/arrow.pc.in
+@@ -30,3 +30,4 @@ Requires.private:@ARROW_PC_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -larrow
+ Libs.private:@ARROW_PC_LIBS_PRIVATE@
+ Cflags: -I${includedir}
++Cflags.private: -DARROW_STATIC
+diff --git a/cpp/src/arrow/dataset/arrow-dataset.pc.in b/cpp/src/arrow/dataset/arrow-dataset.pc.in
+index 7c433321c135..3e474e3825c5 100644
+--- a/cpp/src/arrow/dataset/arrow-dataset.pc.in
++++ b/cpp/src/arrow/dataset/arrow-dataset.pc.in
+@@ -24,3 +24,4 @@ Description: Apache Arrow Dataset provides an API to read and write semantic dat
+ Version: @ARROW_VERSION@
+ Requires: arrow parquet
+ Libs: -L${libdir} -larrow_dataset
++Cflags.private: -DARROW_DS_STATIC
+diff --git a/cpp/src/arrow/engine/arrow-substrait.pc.in b/cpp/src/arrow/engine/arrow-substrait.pc.in
+index 77ac510933f5..173e1c91efd8 100644
+--- a/cpp/src/arrow/engine/arrow-substrait.pc.in
++++ b/cpp/src/arrow/engine/arrow-substrait.pc.in
+@@ -24,3 +24,4 @@ Description: Apache Arrow's Substrait Consumer.
+ Version: @ARROW_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -larrow_substrait
++Cflags.private: -DARROW_ENGINE_STATIC
+diff --git a/cpp/src/arrow/flight/arrow-flight.pc.in b/cpp/src/arrow/flight/arrow-flight.pc.in
+index 955fc19b0df4..5a57a8922377 100644
+--- a/cpp/src/arrow/flight/arrow-flight.pc.in
++++ b/cpp/src/arrow/flight/arrow-flight.pc.in
+@@ -24,3 +24,4 @@ Description: Apache Arrow's RPC system built on gRPC
+ Version: @ARROW_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -larrow_flight
++Cflags.private: -DARROW_FLIGHT_STATIC
+diff --git a/cpp/src/arrow/flight/sql/arrow-flight-sql.pc.in b/cpp/src/arrow/flight/sql/arrow-flight-sql.pc.in
+index 4f8398bdd259..b76964b97c89 100644
+--- a/cpp/src/arrow/flight/sql/arrow-flight-sql.pc.in
++++ b/cpp/src/arrow/flight/sql/arrow-flight-sql.pc.in
+@@ -24,3 +24,4 @@ Description: Apache Arrow Flight SQL extension
+ Version: @ARROW_VERSION@
+ Requires: arrow-flight
+ Libs: -L${libdir} -larrow_flight_sql
++Cflags.private: -DARROW_FLIGHT_SQL_STATIC
+diff --git a/cpp/src/gandiva/gandiva.pc.in b/cpp/src/gandiva/gandiva.pc.in
+index 60034c285790..49260092d297 100644
+--- a/cpp/src/gandiva/gandiva.pc.in
++++ b/cpp/src/gandiva/gandiva.pc.in
+@@ -25,3 +25,4 @@ Version: @GANDIVA_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -lgandiva
+ Cflags: -I${includedir}
++Cflags.private: -DGANDIVA_STATIC
+diff --git a/cpp/src/parquet/parquet.pc.in b/cpp/src/parquet/parquet.pc.in
+index e510bb1d6bfc..b992eba81998 100644
+--- a/cpp/src/parquet/parquet.pc.in
++++ b/cpp/src/parquet/parquet.pc.in
+@@ -29,3 +29,4 @@ Version: @ARROW_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -lparquet
+ Cflags: -I${includedir}
++Cflags.private: -DPARQUET_STATIC
+diff --git a/python/pyarrow/src/arrow-python.pc.in b/python/pyarrow/src/arrow-python.pc.in
+index c077c7dc84c3..0efd0ad98309 100644
+--- a/python/pyarrow/src/arrow-python.pc.in
++++ b/python/pyarrow/src/arrow-python.pc.in
+@@ -25,3 +25,4 @@ Version: @ARROW_VERSION@
+ Requires: arrow
+ Libs: -L${libdir} -larrow_python
+ Cflags: -I${includedir} -I@PYTHON_INCLUDE_DIRS@
++Cflags.private: -DARROW_PYTHON_STATIC

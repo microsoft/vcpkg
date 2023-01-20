@@ -1,6 +1,7 @@
 {
   "name": "libwebp",
   "version": "1.2.4",
+  "port-version": 1,
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
   "license": "BSD-3-Clause",
@@ -83,6 +84,7 @@
     },
     "extras": {
       "description": "Build extras.",
+      "supports": "!osx",
       "dependencies": [
         {
           "name": "libwebp",
@@ -169,6 +171,7 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
+      "supports": "!osx",
       "dependencies": [
         {
           "name": "freeglut",
@@ -179,6 +182,7 @@
     },
     "vwebp-sdl": {
       "description": "Build the vwebp viewer tool.",
+      "supports": "!osx",
       "dependencies": [
         {
           "name": "libwebp",

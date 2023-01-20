@@ -1,6 +1,6 @@
 {
   "name": "blend2d",
-  "version-date": "2022-05-02",
+  "version-date": "2022-12-31",
   "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
@@ -27,7 +27,7 @@
       "description": "Default feature. Enables use of futex."
     },
     "jit": {
-      "description": "Default feature. Enables jit pipeline compilation. Not supported for ARM and UWP."
+      "description": "Default feature. Enables jit pipeline compilation."
     },
     "logging": {
       "description": "Default feature. Enables logging."

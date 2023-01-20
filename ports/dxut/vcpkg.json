@@ -1,6 +1,7 @@
 {
   "name": "dxut",
-  "version": "11.29",
+  "version": "11.30",
+  "port-version": 1,
   "description": "A \"GLUT\"-like framework for Direct3D 11.x Win32 desktop applications",
   "homepage": "https://github.com/Microsoft/DXUT",
   "documentation": "https://github.com/microsoft/DXUT/wiki",
@@ -23,6 +24,9 @@
       "dependencies": [
         "directxtk"
       ]
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
     }
   }
 }

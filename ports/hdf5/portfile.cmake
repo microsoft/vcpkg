@@ -139,6 +139,11 @@ endif()
 
 if(HDF5_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
+    foreach(tool h5cc h5pcc h5hlcc)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../..")
+        endif()
+    endforeach()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -152,3 +157,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
+endif()
