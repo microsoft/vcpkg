@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
-    REF 9ef58ff20df19e613c91c5f761e381c763da6810 # v0.15.1
-    SHA512 3409b3e6a546ed585b90180807383e8731b36b0db149b5ff92701a43164c4282b1cea4a551bf4c7b1edec7b264098575cf919faee8a2520bb10bbae62258d463
+    REF 8ee94e26804070e2279dc7451c5ac87d695dba13 # v0.19.2
+    SHA512 f69249528139d042fc99d094fd255b154a5661fd1847c5f5809854594fc9097318a4f06393ef171ae57acdbbd8e4a5c4b1e56fc342d4beb2d49b214c4a2ee476
     PATCHES
         fix-cmake-target-path.patch
-        fix-ios-build.patch
         no-werror.patch
 )
 

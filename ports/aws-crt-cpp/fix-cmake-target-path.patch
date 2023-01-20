@@ -1,28 +1,41 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4d935e2..7b0501c 100644
+index 733b18a..6ec8ddb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -338,7 +338,7 @@ else()
+@@ -381,7 +381,7 @@ else()
  endif()
  
  install(EXPORT "${PROJECT_NAME}-targets"
--        DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
-+        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
-         NAMESPACE AWS::
-         COMPONENT Development)
+-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
++    DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
+     NAMESPACE AWS::
+     COMPONENT Development)
  
 diff --git a/cmake/aws-crt-cpp-config.cmake b/cmake/aws-crt-cpp-config.cmake
-index 4b20a07..faac626 100644
+index 7469af5..faac626 100644
 --- a/cmake/aws-crt-cpp-config.cmake
 +++ b/cmake/aws-crt-cpp-config.cmake
-@@ -7,8 +7,4 @@ find_dependency(aws-c-auth)
+@@ -7,21 +7,4 @@ find_dependency(aws-c-auth)
  find_dependency(aws-c-event-stream)
  find_dependency(aws-c-s3)
  
+-macro(aws_load_targets type)
+-    include(${CMAKE_CURRENT_LIST_DIR}/${type}/@PROJECT_NAME@-targets.cmake)
+-endmacro()
+-
+-# try to load the lib follow BUILD_SHARED_LIBS. Fall back if not exist.
 -if (BUILD_SHARED_LIBS)
--    include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
--else ()
--    include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/shared")
+-        aws_load_targets(shared)
+-    else()
+-        aws_load_targets(static)
+-    endif()
+-else()
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/static")
+-        aws_load_targets(static)
+-    else()
+-        aws_load_targets(shared)
+-    endif()
 -endif()
 +include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
 \ No newline at end of file

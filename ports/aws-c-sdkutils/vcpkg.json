@@ -1,8 +1,8 @@
 {
-  "name": "aws-c-compression",
-  "version": "0.2.16",
-  "description": "C99 implementation of huffman encoding/decoding",
-  "homepage": "https://github.com/awslabs/aws-c-compression",
+  "name": "aws-c-sdkutils",
+  "version": "0.1.7",
+  "description": "C99 library implementing AWS SDK specific utilities. Includes utilities for ARN parsing, reading AWS profiles, etc...",
+  "homepage": "https://github.com/awslabs/aws-c-auth",
   "license": "Apache-2.0",
   "supports": "!(windows & arm) & !uwp",
   "dependencies": [

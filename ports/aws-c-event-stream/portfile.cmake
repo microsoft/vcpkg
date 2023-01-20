@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
-    REF e87537be561d753ec82e783bc0929b1979c585f8 # v0.2.7
-    SHA512 651b05ba6d87ad8f65f6cf7e8940b7ea500722848f3e65c2de0bf84d2e6321d0aa1631d4f64a78cf5ed5ed5adac6805a4e91e5c31b3ae86e8c37afb38da4c786
+    REF e812dd4df0fcc350ad7b5b7babe82cfe5664f4a4 # v0.2.17
+    SHA512 9f703384066f69e3a39c870c3e32ff91874eed24fcde02b69f7de570eccc26dcc2287eccfaf613f5550ea0987b10636f584f9c7dc8b190ce014955f62060db82
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
 )

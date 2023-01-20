@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-compression
-    REF 5fab8bc5ab5321d86f6d153b06062419080820ec # v0.2.14
-    SHA512 0063d0d644824d858211840115c17a33bfc2b67799e886c530ea8a42071b7bfc67bb6cf8135c538a292b8a7a6276b1d24bb7649f37ce335bc16938f2fca5cb7d
+    REF b517b7decd0dac30be2162f5186c250221c53aff # v0.2.16
+    SHA512 482cfaa85a3edddb4a266e6a8f2f0ca534461ecb20910bfd76fac82f0d9dc4b5663500134dca2961b805a29b64058266f3c34abebabdb274689c091d27f9fb5e
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
 )

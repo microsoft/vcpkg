@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6039819..b74b65c 100644
+index 3314dcc..63afd06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -158,7 +158,7 @@ else()
@@ -12,17 +12,32 @@ index 6039819..b74b65c 100644
      COMPONENT Development)
  
 diff --git a/cmake/aws-c-cal-config.cmake b/cmake/aws-c-cal-config.cmake
-index 73e7311..e87c43a 100644
+index 6f6b089..bea338f 100644
 --- a/cmake/aws-c-cal-config.cmake
 +++ b/cmake/aws-c-cal-config.cmake
-@@ -7,9 +7,5 @@ if (NOT BYO_CRYPTO AND NOT WIN32 AND NOT APPLE)
-     find_dependency(LibCrypto)
- endif()
+@@ -2,24 +2,7 @@ include(CMakeFindDependencyMacro)
  
+ find_dependency(aws-c-common)
+ 
+-macro(aws_load_targets type)
+-    include(${CMAKE_CURRENT_LIST_DIR}/${type}/@PROJECT_NAME@-targets.cmake)
+-endmacro()
+-
+-# try to load the lib follow BUILD_SHARED_LIBS. Fall back if not exist.
 -if (BUILD_SHARED_LIBS)
--    include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/shared")
+-        aws_load_targets(shared)
+-    else()
+-        aws_load_targets(static)
+-    endif()
 -else()
--    include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/static")
+-        aws_load_targets(static)
+-    else()
+-        aws_load_targets(shared)
+-    endif()
 -endif()
 +include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
  
+ if (NOT BYO_CRYPTO AND NOT WIN32 AND NOT APPLE)
+     get_target_property(AWS_C_CAL_DEPS AWS::aws-c-cal INTERFACE_LINK_LIBRARIES)

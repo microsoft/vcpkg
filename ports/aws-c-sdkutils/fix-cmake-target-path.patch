@@ -1,20 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e70e013..0639229 100644
+index bf35492..8be555d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -88,7 +88,7 @@ else()
+@@ -97,7 +97,7 @@ else()
  endif()
  
  install(EXPORT "${PROJECT_NAME}-targets"
--        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
-+        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
-         NAMESPACE AWS::
-         COMPONENT Development)
+-    DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/${TARGET_DIR}/"
++    DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
+     NAMESPACE AWS::
+     COMPONENT Development)
  
-diff --git a/cmake/aws-c-compression-config.cmake b/cmake/aws-c-compression-config.cmake
+diff --git a/cmake/aws-c-sdkutils-config.cmake b/cmake/aws-c-sdkutils-config.cmake
 index 69f0264..0bc37c9 100644
---- a/cmake/aws-c-compression-config.cmake
-+++ b/cmake/aws-c-compression-config.cmake
+--- a/cmake/aws-c-sdkutils-config.cmake
++++ b/cmake/aws-c-sdkutils-config.cmake
 @@ -2,21 +2,4 @@ include(CMakeFindDependencyMacro)
  
  find_dependency(aws-c-common)
