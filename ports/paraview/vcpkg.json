@@ -81,7 +81,9 @@
       ]
     },
     "tools": {
-      "description": "Build paraview tools"
+      "description": "Build paraview tools",
+      "dependencies": [ "qtsvg"
+      ]
     },
     "vtkm": {
       "description": "enables vtkm for the build of paraview",
