@@ -105,7 +105,7 @@ vcpkg_install_make(BUILD_TARGET build_sw)
 vcpkg_fixup_pkgconfig()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-foreach(script IN ITEMS "bin/c_rehash") # "misc/CA" "misc/tsget")
+foreach(script IN ITEMS "bin/c_rehash")
     file(COPY "${CURRENT_PACKAGES_DIR}/${script}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
 endforeach()
