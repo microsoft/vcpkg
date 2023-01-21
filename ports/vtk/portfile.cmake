@@ -38,6 +38,7 @@ vcpkg_from_github(
         iotr.patch
         ${STRING_PATCH}
         qt6.patch
+        reorder-includes.patch
 )
 
 # =============================================================================

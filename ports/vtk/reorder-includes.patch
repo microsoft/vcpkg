@@ -1,0 +1,17 @@
+diff --git a/GUISupport/Qt/vtkQWidgetTexture.cxx b/GUISupport/Qt/vtkQWidgetTexture.cxx
+index 9413d46ed..49c78c1d9 100644
+--- a/GUISupport/Qt/vtkQWidgetTexture.cxx
++++ b/GUISupport/Qt/vtkQWidgetTexture.cxx
+@@ -20,11 +20,11 @@
+ 
+ #include <QGraphicsProxyWidget>
+ #include <QGraphicsScene>
+-#include <QOpenGLPaintDevice>
+ #include <QPainter>
+ #include <QWidget>
+ 
+ #include "vtkOpenGLError.h"
++#include <QOpenGLPaintDevice>
+ 
+ //------------------------------------------------------------------------------
+ vtkStandardNewMacro(vtkQWidgetTexture);
