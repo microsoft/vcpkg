@@ -98,6 +98,8 @@ vcpkg_configure_make(
         ${CONFIGURE_OPTIONS}
         "--openssldir=/etc/ssl"
         "--libdir=lib"
+    OPTIONS_DEBUG
+        --debug
 )
 vcpkg_install_make(BUILD_TARGET build_sw)
 vcpkg_fixup_pkgconfig()

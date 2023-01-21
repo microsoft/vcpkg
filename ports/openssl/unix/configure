@@ -15,7 +15,7 @@ for OPTION; do
         INTERPRETER="${LAST_SEEN}"
         COPY_OPTIONS=yes
         ;;
-    --prefix=*|--openssldir=*|--libdir=*,yes)
+    --prefix=*|--openssldir=*|--libdir=*|--debug,*)
         OUT_OPTIONS+=("${OPTION}")
         ;;
     -*|*=*)
