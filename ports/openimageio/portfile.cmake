@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-openimageio_include_dir.patch
         fix-vs2019-encoding-conversion.patch
         qt6.patch
+        more_qt6.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
