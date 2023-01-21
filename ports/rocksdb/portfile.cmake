@@ -18,14 +18,17 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-      "lz4"     WITH_LZ4
-      "snappy"  WITH_SNAPPY
-      "zlib"    WITH_ZLIB
-      "zstd"    WITH_ZSTD
-      "bzip2"   WITH_BZ2
-      "tbb"     WITH_TBB
-  INVERTED_FEATURES
-      "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+    "jemalloc" WITH_JEMALLOC
+    "snappy" WITH_SNAPPY
+    "lz4" WITH_LZ4
+    "zlib" WITH_ZLIB
+    "zstd" WITH_ZSTD
+    "bzip2" WITH_BZ2
+    "numa" WITH_NUMA
+    "tbb" WITH_TBB
+    "force-sse42" FORCE_SSE42
+    "force-avx" FORCE_AVX
+    "force-avx2" FORCE_AVX2
 )
 
 vcpkg_cmake_configure(
@@ -35,16 +38,13 @@ vcpkg_cmake_configure(
     -DWITH_TESTS=OFF
     -DWITH_BENCHMARK_TOOLS=OFF
     -DWITH_TOOLS=OFF
-    -DWITH_FOLLY_DISTRIBUTED_MUTEX=OFF
-    -DUSE_RTTI=1
+    -DUSE_RTTI=ON
     -DROCKSDB_INSTALL_ON_WINDOWS=ON
     -DFAIL_ON_WARNINGS=OFF
     -DWITH_MD_LIBRARY=${WITH_MD_LIBRARY}
     -DPORTABLE=ON
     -DCMAKE_DEBUG_POSTFIX=d
     -DROCKSDB_BUILD_SHARED=${ROCKSDB_BUILD_SHARED}
-    -DCMAKE_DISABLE_FIND_PACKAGE_NUMA=TRUE
-    -DCMAKE_DISABLE_FIND_PACKAGE_gtest=TRUE
     -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
     ${FEATURE_OPTIONS}
 )

@@ -1,6 +1,7 @@
 {
   "name": "rocksdb",
   "version": "7.9.2",
+  "port-version": 1,
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
   "homepage": "https://github.com/facebook/rocksdb",
   "license": "GPL-2.0-only OR Apache-2.0",
@@ -15,41 +16,70 @@
     }
   ],
   "default-features": [
+    "liburing",
     "zlib"
   ],
   "features": {
     "bzip2": {
-      "description": "bzip2 support in rocksdb",
+      "description": "build with bzip2",
       "dependencies": [
         "bzip2"
       ]
     },
+    "force-avx": {
+      "description": "force building with AVX"
+    },
+    "force-avx2": {
+      "description": "force building with AVX2"
+    },
+    "force-sse42": {
+      "description": "force building with SSE 4.2"
+    },
+    "jemalloc": {
+      "description": "build with JeMalloc",
+      "dependencies": [
+        "jemalloc"
+      ]
+    },
+    "liburing": {
+      "description": "build with liburing",
+      "dependencies": [
+        {
+          "name": "liburing",
+          "platform": "linux"
+        }
+      ]
+    },
     "lz4": {
-      "description": "lz4 support in rocksdb",
+      "description": "build with lz4",
       "dependencies": [
         "lz4"
       ]
     },
+    "numa": {
+      "description": "build with NUMA policy support",
+      "supports": "linux"
+    },
     "snappy": {
-      "description": "snappy support in rocksdb",
+      "description": "build with SNAPPY",
       "dependencies": [
         "snappy"
       ]
     },
     "tbb": {
-      "description": "tbb support in rocksdb",
+      "description": "build with Threading Building Blocks (TBB)",
       "dependencies": [
         "tbb"
       ]
     },
     "zlib": {
-      "description": "zlib support in rocksdb",
+      "description": "build with zlib",
       "dependencies": [
         "zlib"
       ]
     },
     "zstd": {
-      "description": "zstd support in rocksdb",
+      "description": "build with zstd",
       "dependencies": [
         "zstd"
       ]
