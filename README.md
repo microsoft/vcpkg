@@ -55,11 +55,6 @@ and potentially add the port to vcpkg.
 After you've gotten vcpkg installed and working,
 you may wish to add [tab completion](#tab-completionauto-completion) to your shell.
 
-Finally, if you're interested in the future of vcpkg,
-check out the [manifest][getting-started:manifest-spec] guide!
-This is an experimental feature and will likely have bugs,
-so try it out and [open all the issues][contributing:submit-issue]!
-
 ## Quick Start: Windows
 
 Prerequisites:
@@ -271,7 +266,6 @@ but it will make the configure-build step slightly easier.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 

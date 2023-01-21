@@ -54,11 +54,6 @@ Vcpkg 팀과 커뮤니티가 이슈를 확인하면, 해당하는 port를 추가
 Vcpkg의 설치가 완료되었다면,
 셸에 [탭 완성](#탭-완성자동-완성)을 추가할 수 있습니다.
 
-마지막으로, vcpkg의 미래에 관심이 있다면,
-[manifest][getting-started:manifest-spec] 가이드를 확인하세요!
-이것은 실험적인 기능이며 버그가 있을 가능성이 높습니다.
-시도해보고 문제가 있다면 [이슈를 열어주세요][contributing:submit-issue]!
-
 ## 빠르게 시작하기: Windows
 
 필요조건:
@@ -270,7 +265,6 @@ vcpkg를 사용하지 않을 수 있습니다.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # 탭 완성/자동 완성
 

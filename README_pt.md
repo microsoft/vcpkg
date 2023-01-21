@@ -56,11 +56,6 @@ e potencialmente adicionar a porta ao vcpkg.
 Depois de ter vcpkg instalado e funcionando,
 você pode querer adicionar [tab-completion](#tab-completionauto-completion) ao seu shell.
 
-Finalmente, se você estiver interessado no futuro do vcpkg,
-confira o guia [manifesto][introdução: especificação do manifesto]!
-Este é um recurso experimental e provavelmente terá bugs,
-então experimente e [abra todos os problemas][contribuir: enviando-problema]!
-
 ## Início rápido: Windows
 
 Pré-requisitos:
@@ -264,7 +259,6 @@ Isso ainda permitirá que as pessoas não usem o vcpkg, passando o `CMAKE_TOOLCH
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 
