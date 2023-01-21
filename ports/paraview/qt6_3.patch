@@ -19,7 +19,7 @@ index 6373115..67017b2 100644
    bool Pressed;
  
  private:
-+  static QStyleOptionGroupBox pqCollapsedGroup::pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p);
++  static QStyleOptionGroupBox pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p);
    QRect textRect();
    QRect collapseRect();
  };
