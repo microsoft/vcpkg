@@ -325,4 +325,4 @@ Você pode cancelar a telemetria por
 - passando --disable-metrics para vcpkg na linha de comando
 - definir a variável de ambiente VCPKG_DISABLE_METRICS
 
-Leia mais sobre a telemetria vcpkg em <docs/about/privacy.md>.
+Leia mais sobre a telemetria vcpkg em [docs/about/privacy.md](docs/about/privacy.md).

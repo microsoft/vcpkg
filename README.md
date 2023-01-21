@@ -340,4 +340,4 @@ You can opt-out of telemetry by
 - passing --disable-metrics to vcpkg on the command line
 - setting the VCPKG_DISABLE_METRICS environment variable
 
-Read more about vcpkg telemetry at docs/about/privacy.md
+Read more about vcpkg telemetry at [docs/about/privacy.md](docs/about/privacy.md).
