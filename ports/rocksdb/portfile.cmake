@@ -19,6 +19,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     "jemalloc" WITH_JEMALLOC
+    "liburing" WITH_LIBURING
     "snappy" WITH_SNAPPY
     "lz4" WITH_LZ4
     "zlib" WITH_ZLIB
