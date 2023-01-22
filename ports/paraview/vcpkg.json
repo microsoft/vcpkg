@@ -10,6 +10,7 @@
     "boost-format",
     "cgns",
     "protobuf",
+    "qt5compat",
     {
       "name": "vcpkg-cmake",
       "host": true

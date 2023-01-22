@@ -7,7 +7,7 @@ index e912315..90040f2 100644
  #include <QStylePainter>
  
 -static QStyleOptionGroupBox pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p)
-+static QStyleOptionGroupBox pqCollapsedGroup::pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p)
++QStyleOptionGroupBox pqCollapsedGroup::pqCollapseGroupGetStyleOption(const pqCollapsedGroup* p)
  {
    QStyleOptionGroupBox option;
    p->initStyleOption(&option);
@@ -88,7 +88,7 @@ index 90a2139..927d544 100644
  {
    QStyleOptionViewItem option;
 -  option.init(this);
-+  this->initStyleOption(option);
++  option.initFrom(this);
    option.font = this->font();
    option.state &= ~QStyle::State_HasFocus;
    int iconSize = this->getIconSize();

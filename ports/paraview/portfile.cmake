@@ -22,6 +22,7 @@ vcpkg_from_github(
         qt6.patch
         q6-2.patch
         qt6_3.patch
+        qt6-4.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
