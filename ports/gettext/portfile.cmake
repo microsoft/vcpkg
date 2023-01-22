@@ -8,11 +8,10 @@ set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 #Based on https://github.com/winlibs/gettext
 
-set(GETTEXT_VERSION 0.21)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz"
-    FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
+    FILENAME "gettext-${VERSION}.tar.gz"
     SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
 )
 set(PATCHES "")
@@ -22,7 +21,7 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "${GETTEXT_VERSION}"
+    REF "${VERSION}"
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
