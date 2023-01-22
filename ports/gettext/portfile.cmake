@@ -14,20 +14,17 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "gettext-${VERSION}.tar.gz"
     SHA512 ccd43a43fab3c90ed99b3e27628c9aeb7186398153b137a4997f8c7ddfd9729b0ba9d15348567e5206af50ac027673d2b8a3415bb3fc65f87ad778f85dc03a05
 )
-set(PATCHES "")
-if(VCPKG_TARGET_IS_UWP)
-    set(PATCHES uwp_remove_localcharset.patch)
-endif()
+
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        0002-Fix-uwp-build.patch
-        0003-Fix-win-unicode-paths.patch
-        0004-Fix-uwp-tools-build.patch
-        rel_path.patch
         android.patch
-        ${PATCHES}
+        uwp.patch
+        win-gethostname.patch
+        0003-Fix-win-unicode-paths.patch
+        rel_path.patch
 )
+
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
