@@ -6,8 +6,6 @@ endif()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
-#Based on https://github.com/winlibs/gettext
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
@@ -69,6 +67,7 @@ function(build_libintl_and_tools)
             ${OPTIONS}
     )
     vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
 endfunction()
 
 function(build_libintl_only)
@@ -139,9 +138,6 @@ else()
     install_autopoint()
 endif()
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright" COPYONLY)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
@@ -150,9 +146,7 @@ if(NOT VCPKG_TARGET_IS_LINUX)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
 endif()
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/gettext/user-email")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
