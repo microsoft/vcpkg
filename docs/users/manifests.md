@@ -21,6 +21,7 @@ manifest mode.
 
 ## Table of Contents
 
+- [How does it work?](#how-does-it-work)
 - [Simple Example Manifest](#simple-example-manifest)
 - [Manifest Syntax Reference](#manifest-syntax-reference)
   - [`"name"`](#name)
@@ -39,6 +40,10 @@ manifest mode.
   - [`"features"`](#features)
   - [`"default-features"`](#default-features)
   - [`"vcpkg-configuration"`](#vcpkg-configuration)
+
+## How does it work?
+
+In manifest mode, vcpkg is integrated with CMake via a toolchain file ([`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html)), which must be specified when the project is configured. The toolchain file is evaluated by CMake (via `include()`) the first time CMake's [`project()`](https://cmake.org/cmake/help/latest/command/project.html) command is called. This evaluation sequence means that any vcpkg CMake variables must be set before the first call to `project()`. The toolchain file shells out to `vcpkg install`, with a project-local build tree, thus executing full builds of all manifest dependencies _during CMake configuration_.
 
 ## Simple Example Manifest
 
