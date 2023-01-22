@@ -4,14 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     # rtabmap stops releasing, check their CMakeLists.txt for version.
-    # currently is 0.20.22, this ref contains latest fix for compiling with opencv 4.7
-    REF 0e908206d04149d3bb45f27fab026a5d27e09aa8
-    SHA512 9d1104f25df2301f87be02f65160dadc50b99e3a325444fa6457dabcfd8ed41b817797e6ed712a29b1653f0608115dfae5bd3df3c4f154dfc36985917eac74d9
+    # currently is 0.20.23
+    REF 95e6a9f03936697a60be2c26e119c519e47c11f5
+    SHA512 082af7e15316bdeb89ff833a87a91916ddbf85de56bf4f38a0b5a40f4f330ecc057ae72a2f5ec901824e51d6f73c4a05a328116eaa5529551ffe4ca770fe0474
     HEAD_REF master
     PATCHES
-        0001-add-bigobj-for-msvc.patch
         0003-fix-qt.patch
-        0004-fix-yaml-cpp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
