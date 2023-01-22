@@ -12,23 +12,20 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
+    SHA512 ccd43a43fab3c90ed99b3e27628c9aeb7186398153b137a4997f8c7ddfd9729b0ba9d15348567e5206af50ac027673d2b8a3415bb3fc65f87ad778f85dc03a05
 )
 set(PATCHES "")
 if(VCPKG_TARGET_IS_UWP)
     set(PATCHES uwp_remove_localcharset.patch)
 endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "${VERSION}"
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
         0004-Fix-uwp-tools-build.patch
         rel_path.patch
         android.patch
-        gettext-tools_woe32dll_gettextsrc-exports.c.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)

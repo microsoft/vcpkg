@@ -60,7 +60,7 @@ diff --git "a/gettext-runtime/intl/localename.c" "b/gettext-runtime/intl/localen
 index 108dd6f1..ace3aa88 100644
 --- "a/gettext-runtime/intl/localename.c"
 +++ "b/gettext-runtime/intl/localename.c"
-@@ -75,10 +75,16 @@
+@@ -68,7 +68,13 @@ extern char * getlocalename_l(int, locale_t);
  #endif
  
  #if defined _WIN32 && !defined __CYGWIN__
@@ -75,6 +75,3 @@ index 108dd6f1..ace3aa88 100644
  # if !defined IN_LIBINTL
  #  include "glthread/lock.h"
  # endif
- #endif
- 
- #if defined WINDOWS_NATIVE || defined __CYGWIN__ /* Native Windows or Cygwin */
