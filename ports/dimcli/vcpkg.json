@@ -4,6 +4,7 @@
   "description": "C++ command line parser toolkit",
   "homepage": "https://github.com/gknowles/dimcli",
   "documentation": "https://gknowles.github.io/dimcli",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     {
