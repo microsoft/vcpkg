@@ -248,7 +248,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
 else()
-    string(APPEND OPTIONS_DBG " \
+    string(APPEND OPTIONS " \
         cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
         cxx=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()
