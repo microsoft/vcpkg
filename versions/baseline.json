@@ -1830,7 +1830,7 @@
     },
     "curl": {
       "baseline": "7.86.0",
-      "port-version": 1
+      "port-version": 2
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2913,8 +2913,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "5.3.1",
-      "port-version": 1
+      "baseline": "6.0.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
@@ -3634,7 +3634,7 @@
     },
     "libarchive": {
       "baseline": "3.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libass": {
       "baseline": "0.16.0",
@@ -4613,8 +4613,8 @@
       "port-version": 3
     },
     "libyuv": {
-      "baseline": "2021-04-15",
-      "port-version": 1
+      "baseline": "1857",
+      "port-version": 0
     },
     "libzen": {
       "baseline": "0.4.39",
@@ -5026,7 +5026,7 @@
     },
     "modp-base64": {
       "baseline": "2020-09-26",
-      "port-version": 1
+      "port-version": 2
     },
     "mongo-c-driver": {
       "baseline": "1.22.2",
@@ -5125,7 +5125,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.9.2",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "msgpack": {
@@ -8065,7 +8065,7 @@
       "port-version": 2
     },
     "vulkan-headers": {
-      "baseline": "1.3.238",
+      "baseline": "1.3.239",
       "port-version": 0
     },
     "vulkan-hpp": {
