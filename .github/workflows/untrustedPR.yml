@@ -24,6 +24,7 @@ jobs:
         run: |
           mkdir -p ./pr
           echo ${{ github.event.number }} > ./pr/NR
+          git log -1 --pretty=format:"%s" | grep -q "skip actions" && touch ./pr/.skip-actions
 
       - name: Formatting
         run: |

@@ -49,6 +49,7 @@ jobs:
             const { promises: fs } = require('fs')
             const event = (await fs.readFile('event', 'utf8')).trim()
             const body = (await fs.readFile('body', 'utf8')).trim()
+            const skip_actions = (await fs.stat('.skip-actions').then(() => true, () => false);
             const issue_number = Number(await fs.readFile('./NR'));
 
             var req = {
@@ -59,5 +60,8 @@ jobs:
             };
             if (body !== "") {
               req.body = body;
+            }
+            if (skip_actions && event === 'REQUEST_CHANGES') {
+              return;
             }
             await github.rest.pulls.createReview(req);
