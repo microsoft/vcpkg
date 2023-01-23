@@ -50,12 +50,11 @@ vcpkg_configure_make(
         --without-progs
         --without-tack
         --without-tests
+        --with-pkg-config-libdir=libdir
     OPTIONS_DEBUG
-        "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
         --with-debug
         --without-normal
     OPTIONS_RELEASE
-        "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
         --without-debug
         --with-normal
 )
