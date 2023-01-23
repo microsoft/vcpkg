@@ -17,15 +17,8 @@ option(WITH_JSON1 "Enable JSON functionality for sqlite3" OFF)
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 
-if(BUILD_SHARED_LIBS)
-    if(UNIX)
-        set(SQLITE_API "-DSQLITE_API=__attribute__((visibility(\"default\")))")
-    elseif(WIN32)
-        set(SQLITE_API "-DSQLITE_API=__declspec(dllexport)")
-    else()
-        message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
-    endif()
-endif()
+set(PKGCONFIG_DEFINES "")
+set(PKGCONFIG_LIBS_PRIVATE "")
 
 add_library(sqlite3 sqlite3.c)
 
@@ -37,17 +30,17 @@ target_compile_definitions(
         $<$<CONFIG:Debug>:SQLITE_DEBUG=1>
         $<$<CONFIG:Debug>:SQLITE_ENABLE_SELECTTRACE>
         $<$<CONFIG:Debug>:SQLITE_ENABLE_WHERETRACE>
-        ${SQLITE_API}
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
 )
 
 if (BUILD_SHARED_LIBS)
-    if (UNIX)
-        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__attribute__((visibility(\"default\")))")
-        target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__attribute__((visibility(\"default\")))")
-    elseif (WIN32)
+    if (WIN32)
         string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__declspec(dllimport)")
+        target_compile_definitions(sqlite3 PRIVATE "SQLITE_API=__declspec(dllexport)")
         target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__declspec(dllimport)")
+    else()
+        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__attribute__((visibility(\"default\")))")
+        target_compile_definitions(sqlite3 PUBLIC "SQLITE_API=__attribute__((visibility(\"default\")))")
     endif()
 endif()
 
@@ -111,8 +104,13 @@ if(WITH_JSON1)
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_JSON1)
 endif()
 
+if (WITH_ZLIB)
+    find_package(ZLIB REQUIRED)
+    target_link_libraries(sqlite3 PRIVATE ZLIB::ZLIB)
+endif()
+
 if (WIN32)
-    string(APPEND PKGCONFIG_DEFINES " -DQLITE_OS_WIN=1")
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_WIN=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WIN=1)
     
     string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_COLUMN_METADATA=1")
@@ -128,16 +126,18 @@ else()
     
     string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_UNIX=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_UNIX=1)
-endif()
 
-if(NOT WIN32)
     find_package(Threads REQUIRED)
-    target_link_libraries(sqlite3 PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
-endif()
+    target_link_libraries(sqlite3 PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+    string(APPEND PKGCONFIG_LIBS_PRIVATE " -pthread -ldl")
 
-if (WITH_ZLIB)
-    find_package(ZLIB REQUIRED)
-    target_link_libraries(sqlite3 PUBLIC ZLIB::ZLIB)
+    if(ENABLE_FTS5 OR ENABLE_MATH_FUNCTION)
+        find_library(HAVE_LIBM m)
+        if(HAVE_LIBM)
+            target_link_libraries(sqlite3 PRIVATE m)
+            string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
+        endif()
+    endif()
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
@@ -162,15 +162,6 @@ install(
 
 install(FILES sqlite3.h sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
 install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
-
-if(UNIX)
-    set(PKGCONFIG_LIBS_PRIVATE "-lm -ldl")
-    if(NOT ANDROID)
-        string(APPEND PKGCONFIG_LIBS_PRIVATE " -lpthread")
-    endif()
-else()
-    set(PKGCONFIG_LIBS_PRIVATE "")
-endif()
 
 configure_file(sqlite3.pc.in sqlite3.pc @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlite3.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")

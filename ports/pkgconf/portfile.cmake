@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF cef30268e1a3f79efd607c26abcf556aa314c9c4 
     SHA512 ea03b81d01521201bdc471a39cdc8b13f9452f7cc78706d5c57056595f3e4e8a3562c022ebb72ce6444f2c7a8dfc778114814ef5064eaef770a70cc294c7f7ee
     HEAD_REF master
+    PATCHES bufferoverflow.patch
 )
 
 vcpkg_configure_meson(
