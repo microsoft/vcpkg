@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF 6c3301111caa75c76e1b2acb1afb2d71341932ef      #v3.6.1
-    SHA512 2fd56ac20e4249807174a2ae29de1cbca55c8f8f247500845f56fd1fd9ebf48c17b8a25a93156df71df9526c0061415ec7d72a6b46bbaca776047e381a2321a7
+    REF "v${VERSION}"
+    SHA512 07339d54e8e82c0a13c69590e1653a5734fcd06ca3d01b2087a09c3d55e29e5ed4e16c5ef7ca44258f049c7b2de6245315be2c8b043f8db68515750649daafbe
     HEAD_REF master
     PATCHES
         disable-warnings.patch
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-deps.patch
-        pkgconfig-modules.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -48,6 +47,13 @@ vcpkg_cmake_configure(
         -DENABLE_LIBB2=OFF
         -DENABLE_TEST=OFF
         -DENABLE_WERROR=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_BZip2
+        CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
+        CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        CMAKE_REQUIRE_FIND_PACKAGE_lz4
+        CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
+        ENABLE_LibGCC
 )
 
 vcpkg_cmake_install()
