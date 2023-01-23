@@ -43,6 +43,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(libopenmpt ${SOURCES})
+set_target_properties(libopenmpt PROPERTIES OUTPUT_NAME openmpt)
 
 target_compile_definitions(libopenmpt PRIVATE
   -DMPT_WITH_MPG123 -DMPT_WITH_OGG
