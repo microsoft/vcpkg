@@ -243,7 +243,6 @@ fontconfig:arm-uwp=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
-forge:x86-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
@@ -1126,7 +1125,6 @@ linenoise-ng:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
-quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
@@ -1150,6 +1148,7 @@ dimcli:x64-windows-static=fail
 
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
+zeroc-ice:x64-windows-static-md=fail
 # ZeroC doesn't provide ARM tagets in project files.
 zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail

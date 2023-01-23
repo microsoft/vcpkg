@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
         mingw-dllexport.patch
+        fix-static-missing-lib-msimg32.patch
         ${PATCHES}
 )
 
@@ -86,4 +87,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

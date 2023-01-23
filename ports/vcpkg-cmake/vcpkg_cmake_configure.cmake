@@ -185,7 +185,6 @@ function(vcpkg_cmake_configure)
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
-        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     # Sets configuration variables for macOS builds
@@ -194,6 +193,8 @@ function(vcpkg_cmake_configure)
             vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
+
+    vcpkg_list(PREPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
 
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
