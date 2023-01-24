@@ -908,6 +908,7 @@ index 387cfe4a7..cbea4be71 100644
    <property name="geometry">
     <rect>
      <x>0</x>
+     diff --git a/Qt/Components/Resources/UI/pqAboutDialog.ui b/Qt/Components/Resources/UI/pqAboutDialog.ui
 diff --git a/Qt/Components/Testing/Cxx/CMakeLists.txt b/Qt/Components/Testing/Cxx/CMakeLists.txt
 index 73430cd93..720041a1c 100644
 --- a/Qt/Components/Testing/Cxx/CMakeLists.txt
@@ -2268,7 +2269,7 @@ index a02c2edc7..a63872864 100644
  
  ##########################################################################
  ## Add *.ui files to be uic processed.
-@@ -162,11 +162,12 @@ vtk_module_add_module(ParaView::pqWidgets
+@@ -162,27 +162,28 @@ vtk_module_add_module(ParaView::pqWidgets
    HEADERS ${headers})
  vtk_module_link(ParaView::pqWidgets
    PUBLIC
@@ -2285,6 +2286,26 @@ index a02c2edc7..a63872864 100644
  vtk_module_definitions(ParaView::pqWidgets PRIVATE QT_NO_KEYWORDS)
  
  if (APPLE)
+   vtk_module_link(ParaView::pqWidgets
+     PRIVATE
+-      Qt5::PrintSupport)
++      Qt${VTK_QT_VERSION}::PrintSupport)
+ endif ()
+ 
+ if (PARAVIEW_USE_QTHELP)
+   vtk_module_link(ParaView::pqWidgets
+     PRIVATE
+-      Qt5::Help)
++      Qt${VTK_QT_VERSION}::Help)
+ endif ()
+ 
+ if (PARAVIEW_USE_QTWEBENGINE)
+   vtk_module_link(ParaView::pqWidgets
+     PRIVATE
+-      Qt5::WebEngineWidgets)
++      Qt${VTK_QT_VERSION}::WebEngineWidgets)
+ endif ()
+ 
 diff --git a/Qt/Widgets/Testing/Cxx/CMakeLists.txt b/Qt/Widgets/Testing/Cxx/CMakeLists.txt
 index 97fafe359..f45fab710 100644
 --- a/Qt/Widgets/Testing/Cxx/CMakeLists.txt
