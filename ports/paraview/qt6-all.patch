@@ -892,9 +892,16 @@ diff --git a/Qt/Components/Resources/UI/pqAboutDialog.ui b/Qt/Components/Resourc
 index 387cfe4a7..cbea4be71 100644
 --- a/Qt/Components/Resources/UI/pqAboutDialog.ui
 +++ b/Qt/Components/Resources/UI/pqAboutDialog.ui
-@@ -1,7 +1,7 @@
+@@ -1,7 +1,14 @@
  <?xml version="1.0" encoding="UTF-8"?>
  <ui version="4.0">
++<customwidgets>
++  <customwidget>
++   <class>pqAboutDialog</class>
++   <extends>QDialog</extends>
++   <header>pqAboutDialog.h</header>
++  </customwidget>
++</customwidgets>
   <class>pqAboutDialog</class>
 - <widget class="QDialog" name="pqAboutDialog">
 + <widget class="pqAboutDialog" name="pqAboutDialog">
