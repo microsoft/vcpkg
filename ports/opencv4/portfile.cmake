@@ -150,7 +150,7 @@ endif()
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
-  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
+  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS OR (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_TARGET_IS_WINDOWS))
     set(BUILD_opencv_quality OFF)
     message(WARNING "The image quality module (quality) does not build for UWP or iOS, the module has been disabled.")
     # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
@@ -458,7 +458,6 @@ if (NOT VCPKG_BUILD_TYPE)
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
 if(${BUILD_opencv_dnn})
@@ -484,7 +483,7 @@ find_dependency(Threads)")
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
-  if(BUILD_opencv_quality)
+  if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
@@ -556,7 +555,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
 
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
