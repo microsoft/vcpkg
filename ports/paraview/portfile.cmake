@@ -19,10 +19,7 @@ vcpkg_from_github(
         python_include.patch
         python_wrapper.patch
         add-tools-option.patch
-        qt6.patch
-        q6-2.patch
-        qt6_3.patch
-        qt6-4.patch
+        qt6-all.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
