@@ -80,12 +80,8 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-foreach(header "${CURRENT_PACKAGES_DIR}/include/archive.h" "${CURRENT_PACKAGES_DIR}/include/archive_entry.h")
-    vcpkg_replace_string("${header}" "(!defined LIBARCHIVE_STATIC)" "0")
+foreach(header "include/archive.h" "include/archive_entry.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${header}" "(!defined LIBARCHIVE_STATIC)" "0")
 endforeach()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
