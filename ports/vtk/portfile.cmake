@@ -37,7 +37,7 @@ vcpkg_from_github(
         jsoncpp.patch
         iotr.patch
         ${STRING_PATCH}
-        qt6.patch
+        #qt6.patch
         reorder-includes.patch
 )
 
@@ -112,7 +112,13 @@ list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt5/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
 endif()
-
+if("qt" IN_LIST FEATURES)
+    file(READ "${CURRENT_INSTALLED_DIR}/share/qtbase/vcpkg_abi_info.txt" qtbase_abi_info)
+    if(qtbase_abi_info MATCHES "(^|;)gles2(;|$)")
+        message(FATAL_ERROR "VTK assumes qt to be build with desktop opengl. As such trying to build vtk with qt using GLES will fail.") 
+        # This should really be a configure error but using this approach doesn't require patching. 
+    endif()
+endif()
 
 if("python" IN_LIST FEATURES)
     set(python_ver "")
