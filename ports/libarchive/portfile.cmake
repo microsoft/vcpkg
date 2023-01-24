@@ -22,10 +22,25 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
-        openssl ENABLE_OPENSSL
-        openssl CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         zstd    ENABLE_ZSTD
 )
+# Default crypto backend is OpenSSL, but it is ignored for DARWIN
+if(NOT "crypto" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        -DLIBMD_FOUND=FALSE
+        -DENABLE_OPENSSL=OFF
+    )
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS
+        -DENABLE_MBEDTLS=ON
+        -DENABLE_OPENSSL=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_MbedTLS=ON
+    )
+else()
+    list(APPEND FEATURE_OPTIONS
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -52,7 +67,6 @@ vcpkg_cmake_configure(
         CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         CMAKE_REQUIRE_FIND_PACKAGE_lz4
-        CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         ENABLE_LibGCC
 )
 
