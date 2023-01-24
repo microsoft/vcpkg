@@ -5693,8 +5693,8 @@
       "port-version": 1
     },
     "openvr": {
-      "baseline": "1.16.8",
-      "port-version": 2
+      "baseline": "1.23.7",
+      "port-version": 0
     },
     "openxr-loader": {
       "baseline": "1.0.22",
