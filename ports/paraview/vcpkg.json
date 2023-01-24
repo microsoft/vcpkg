@@ -83,7 +83,8 @@
     },
     "tools": {
       "description": "Build paraview tools",
-      "dependencies": [ "qtsvg"
+      "dependencies": [
+        "qtsvg"
       ]
     },
     "vtkm": {

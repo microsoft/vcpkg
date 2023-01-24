@@ -252,12 +252,17 @@
     "qt": {
       "description": "Qt GUI support for opencv",
       "dependencies": [
+        "qt5compat",
         {
           "name": "qtbase",
-          "features": ["gui","widgets","concurrent","testlib"],
-          "default-features": false
-        },
-        "qt5compat"
+          "default-features": false,
+          "features": [
+            "concurrent",
+            "gui",
+            "testlib",
+            "widgets"
+          ]
+        }
       ]
     },
     "quirc": {

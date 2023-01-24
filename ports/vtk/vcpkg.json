@@ -198,17 +198,19 @@
     "qt": {
       "description": "Qt functionality for VTK",
       "dependencies": [
-        { "name": "qtbase",
+        {
+          "name": "qtbase",
           "default-features": false,
           "features": [
             "gui",
-            "widgets",
-            "opengl"
+            "opengl",
+            "widgets"
           ]
         },
         "qtdeclarative",
         "qtimageformats",
-        { "name": "qttools",
+        {
+          "name": "qttools",
           "default-features": false
         }
       ]
