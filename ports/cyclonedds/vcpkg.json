@@ -4,7 +4,7 @@
   "description": "Eclipse Cyclone DDS is a very performant and robust open-source implementation of the OMG DDS specification",
   "homepage": "https://cyclonedds.io",
   "license": "EPL-2.0 OR BSD-3-Clause",
-  "supports": "!uwp",
+  "supports": "!uwp & !(arm64 & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -27,7 +27,6 @@
   "features": {
     "ddsperf": {
       "description": "Build ddsperf tool",
-      "supports": "!(arm64 & windows)",
       "dependencies": [
         {
           "name": "cyclonedds",
@@ -42,8 +41,7 @@
       "description": "Enable Deadline Missed QoS suppor"
     },
     "idlc": {
-      "description": "Build IDL preprocessor",
-      "supports": "!(arm64 & windows)"
+      "description": "Build IDL preprocessor"
     },
     "ipv6": {
       "description": "Enable ipv6 support"
@@ -56,7 +54,7 @@
     },
     "shm": {
       "description": "Enable shared memory support",
-      "supports": "!uwp & !windows",
+      "supports": "!windows",
       "dependencies": [
         "iceoryx"
       ]
