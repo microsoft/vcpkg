@@ -141,8 +141,8 @@
       "port-version": 10
     },
     "apsi": {
-      "baseline": "0.8.2",
-      "port-version": 1
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "arb": {
       "baseline": "2.21.1",
