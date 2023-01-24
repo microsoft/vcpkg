@@ -2,12 +2,11 @@ diff --git a/src/iv/imageviewer.cpp b/src/iv/imageviewer.cpp
 index 79839dd5a..f49da67c0 100644
 --- a/src/iv/imageviewer.cpp
 +++ b/src/iv/imageviewer.cpp
-@@ -14,7 +14,7 @@
+@@ -14,7 +14,6 @@
  
  #include <QApplication>
  #include <QComboBox>
 -#include <QDesktopWidget>
-+//#include <QDesktopWidget>
  #include <QFileDialog>
  #include <QKeyEvent>
  #include <QLabel>
