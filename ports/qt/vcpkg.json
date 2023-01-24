@@ -211,13 +211,6 @@
           "platform": "windows"
         },
         {
-          "name": "qtbase",
-          "features": [
-            "gles2"
-          ],
-          "platform": "linux"
-        },
-        {
           "name": "qtwayland",
           "features": [
             "qml"
