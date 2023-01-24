@@ -6649,8 +6649,8 @@
       "port-version": 2
     },
     "re2": {
-      "baseline": "2021-11-01",
-      "port-version": 1
+      "baseline": "2022-12-01",
+      "port-version": 0
     },
     "reactiveplusplus": {
       "baseline": "0.2.2",
