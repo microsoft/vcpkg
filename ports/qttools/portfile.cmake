@@ -39,11 +39,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "linguist" FEATURE_linguist
     "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
     #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
+    "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6QuickWidgets
+    "qml"    FEATURE_distancefieldgenerator
     INVERTED_FEATURES
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_Clang
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
+    "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
     "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6QuickWidgets
     )

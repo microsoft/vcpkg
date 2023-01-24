@@ -28,6 +28,7 @@ vcpkg_from_github(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-angle-config.cmake" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/angle_commit.h" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/angle_commit.h" DESTINATION "${SOURCE_PATH}/src/common")
 
@@ -35,7 +36,7 @@ function(checkout_in_path_with_patches PATH URL REF PATCHES)
     if(EXISTS "${PATH}")
         return()
     endif()
-    
+
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
@@ -57,7 +58,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
-        -D${ANGLE_CPU_BITNESS}=1
+        "-D${ANGLE_CPU_BITNESS}=1"
+        "-DVCPKG_TARGET_IS_WINDOWS=${VCPKG_TARGET_IS_WINDOWS}"
 )
 
 vcpkg_cmake_install()
@@ -69,26 +71,26 @@ vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # File conflict with opengl-registry! Make sure headers are similar on Update!
-# angle defines some additional entrypoints. 
+# angle defines some additional entrypoints.
 # opengl-registry probably needs an upstream update to account for those
-# Due to that all angle headers get moved to include/angle. 
-# If you want to use those instead of the onces provided by opengl-registry make sure 
+# Due to that all angle headers get moved to include/angle.
+# If you want to use those instead of the onces provided by opengl-registry make sure
 # VCPKG_INSTALLED_DIR/include/angle is before VCPKG_INSTALLED_DIR/include
 file(GLOB_RECURSE angle_includes "${CURRENT_PACKAGES_DIR}/include")
 file(COPY ${angle_includes} DESTINATION "${CURRENT_PACKAGES_DIR}/include/angle")
 
 set(_double_files
-    include/GLES/egl.h
-    include/GLES/gl.h
-    include/GLES/glext.h
-    include/GLES/glplatform.h
-    include/GLES2/gl2.h
-    include/GLES2/gl2ext.h
-    include/GLES2/gl2platform.h
-    include/GLES3/gl3.h
-    include/GLES3/gl31.h
-    include/GLES3/gl32.h
-    include/GLES3/gl3platform.h)
+    "include/GLES/egl.h"
+    "include/GLES/gl.h"
+    "include/GLES/glext.h"
+    "include/GLES/glplatform.h"
+    "include/GLES2/gl2.h"
+    "include/GLES2/gl2ext.h"
+    "include/GLES2/gl2platform.h"
+    "include/GLES3/gl3.h"
+    "include/GLES3/gl31.h"
+    "include/GLES3/gl32.h"
+    "include/GLES3/gl3platform.h")
 foreach(_file ${_double_files})
     if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")

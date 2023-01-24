@@ -76,14 +76,6 @@ index b0c5ba3..27d7bd2 100644
    macro_log_feature(SDL2_FOUND "SDL2" "Simple DirectMedia Library needed for input handling in samples" "https://www.libsdl.org/")
    if(SDL2_FOUND AND NOT TARGET SDL2::SDL2)
      add_library(SDL2::SDL2 INTERFACE IMPORTED)
-@@ -315,6 +324,7 @@ if(NOT ANDROID AND NOT EMSCRIPTEN)
-   find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui QUIET CONFIG)
-   find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui QUIET CONFIG)
- 
-+  set(QT_FOUND FALSE)
-   macro_log_feature(QT_FOUND "Qt" "optional integration with the Qt Library for window creation and input" "http://www.qt.io/")
- endif()
- 
 diff --git a/CMake/Templates/OGREConfig.cmake.in b/CMake/Templates/OGREConfig.cmake.in
 index 2047f66..a5c7cd0 100644
 --- a/CMake/Templates/OGREConfig.cmake.in
@@ -213,3 +205,16 @@ index 663a1c3..e1452cb 100644
          
          // Register codecs
          String exts = "jpeg,jpg,png,bmp,psd,tga,gif,pic,ppm,pgm,hdr";
+diff --git a/Components/Bites/src/OgreImGuiInputListener.cpp b/Components/Bites/src/OgreImGuiInputListener.cpp
+index 2fce0dd0b..631735fb2 100644
+--- a/Components/Bites/src/OgreImGuiInputListener.cpp
++++ b/Components/Bites/src/OgreImGuiInputListener.cpp
+@@ -112,7 +112,7 @@ static bool keyEvent(const KeyboardEvent& arg)
+     if (key == ImGuiKey_None)
+         return io.WantCaptureKeyboard;
+ 
+-    io.AddKeyEvent(key, arg.type == OgreBites::KEYDOWN);
++    io.AddKeyEvent(static_cast<ImGuiKey>(key), arg.type == OgreBites::KEYDOWN);
+     return io.WantCaptureKeyboard;
+ }
+ 

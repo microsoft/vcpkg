@@ -27,6 +27,7 @@ vcpkg_configure_make(
         --without-java
         --without-python
         --without-qt
+        --without-xv
 )
 
 vcpkg_install_make()

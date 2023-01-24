@@ -45,12 +45,13 @@ string(REPLACE "datarootdir=\${prefix}/share/${PORT}" "datarootdir=\${prefix}/sh
 string(REPLACE "exec_prefix=\${prefix}" "exec_prefix=\${prefix}/tools/${PORT}" _contents "${_contents}")
 file(WRITE "${_file}" "${_contents}")
 
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontutil.pc")
-file(READ "${_file}" _contents)
-string(REPLACE "datarootdir=\${prefix}/share/${PORT}" "datarootdir=\${prefix}/../share/xorg" _contents "${_contents}")
-string(REPLACE "exec_prefix=\${prefix}" "exec_prefix=\${prefix}/../tools/${PORT}" _contents "${_contents}")
-file(WRITE "${_file}" "${_contents}")
-
+if(NOT VCPKG_BUILD_TYPE)
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontutil.pc")
+    file(READ "${_file}" _contents)
+    string(REPLACE "datarootdir=\${prefix}/share/${PORT}" "datarootdir=\${prefix}/../share/xorg" _contents "${_contents}")
+    string(REPLACE "exec_prefix=\${prefix}" "exec_prefix=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 endif()

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF v2022.2
-    SHA512 027819bb68a3cb42f086cab8089e0fe0b2ebcf40607811c6848d7d9f412ed3c977498d32dc7e37b828d0e6eb6924878e7c975c461fc5b171142a4ee1da2c1caa
+    REF v2022.4
+    SHA512 d93e97e168c50f545cc42418603ffc5fa6299bb3cc30d927444e4de0d955abc5dd481c9662a59cd49fc379da6bcc6df6fb747947e3dc144cee9b489aff7c4785
 )
 
 vcpkg_find_acquire_program(PYTHON3)

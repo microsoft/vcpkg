@@ -5,8 +5,8 @@ function(vcpkg_install_nmake)
         PRERUN_SHELL PRERUN_SHELL_DEBUG PRERUN_SHELL_RELEASE)
 
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_DEBUG"
-        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME"
+        "NO_DEBUG;PREFER_JOM"
+        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;CL_LANGUAGE"
         "${multi_value_args}"
     )
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -31,9 +31,12 @@ function(vcpkg_install_nmake)
     if(arg_NO_DEBUG)
         vcpkg_list(APPEND extra_args NO_DEBUG)
     endif()
+    if(arg_PREFER_JOM)
+        vcpkg_list(APPEND extra_args PREFER_JOM)
+    endif()
 
     # single args
-    foreach(arg IN ITEMS PROJECT_SUBPATH PROJECT_NAME)
+    foreach(arg IN ITEMS PROJECT_SUBPATH PROJECT_NAME CL_LANGUAGE)
         if(DEFINED "arg_${arg}")
             vcpkg_list(APPEND extra_args ${arg} "${arg_${arg}}")
         endif()

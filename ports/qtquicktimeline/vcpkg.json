@@ -1,6 +1,6 @@
 {
   "name": "qtquicktimeline",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "description": "Module for keyframe-based timeline construction.",
   "homepage": "https://www.qt.io/",
   "license": null,
