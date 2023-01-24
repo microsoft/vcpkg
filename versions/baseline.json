@@ -2521,8 +2521,8 @@
       "port-version": 0
     },
     "fruit": {
-      "baseline": "3.6.0",
-      "port-version": 1
+      "baseline": "3.7.0",
+      "port-version": 0
     },
     "ftgl": {
       "baseline": "2022-05-18",
