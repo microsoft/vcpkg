@@ -25,6 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zstd    ENABLE_ZSTD
 )
 # Default crypto backend is OpenSSL, but it is ignored for DARWIN
+set(WRAPPER_ENABLE_OPENSSL OFF)
 if(NOT "crypto" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         -DLIBMD_FOUND=FALSE
@@ -37,6 +38,7 @@ elseif(VCPKG_TARGET_IS_OSX)
         -DCMAKE_REQUIRE_FIND_PACKAGE_MbedTLS=ON
     )
 else()
+    set(WRAPPER_ENABLE_OPENSSL ON)
     list(APPEND FEATURE_OPTIONS
         -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
     )
