@@ -1,4 +1,13 @@
 set(VERSION_MAJOR_MINOR 5.11)
+
+set(plat_feat "")
+if(VCPKG_TARGET_IS_LINUX)
+    set(plat_feat "tools" VTK_USE_X) # required to build the client
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    set(plat_feat "tools" VTK_USE_COCOA) # required to build the client
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
@@ -6,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
     "tools"        PARAVIEW_BUILD_TOOLS
+    ${plat_feat}
 )
 
 vcpkg_from_github(
