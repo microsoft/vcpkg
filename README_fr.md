@@ -48,6 +48,9 @@ Si la bibliothèque dont vous avez besoin n'est pas présente dans la liste, vou
  
 Après avoir installé et lancé vcpkg vous pourriez vouloir ajouter [l'auto-complétion](auto-completion) à votre shell.
 
+Si vous êtes intéressé par le futur de vcpkg, regardez le guide du [manifeste][getting-started:manifest-spec] !
+C'est une fonctionnalité expérimentale et possiblement boguée, donc essayez d'[ouvrir des issues](contribuer:envoyer-une-issue) !
+
 # Introduction: Windows
 Prérequis :
   - Windows 7 ou plus
@@ -250,6 +253,7 @@ Cela permettra toujours aux gens de ne pas utiliser vcpkg, en passant directemen
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
+[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-complétion/Auto-complétion
 

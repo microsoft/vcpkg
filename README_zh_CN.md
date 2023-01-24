@@ -50,6 +50,10 @@ vcpkg 团队和贡献者可以在这里看到它，
 安装并运行 vcpkg 后，
 您可能希望将 [TAB 补全](#tab补全自动补全) 添加到您的 Shell 中。
 
+最后，如果您对 vcpkg 的未来感兴趣，请查看 [清单][getting-started:manifest-spec]！
+这是一项实验性功能，可能会出现错误。
+因此，请尝试一下并[打开所有问题][contributing:submit-issue]!
+
 ## 快速开始: Windows
 
 前置条件:
@@ -246,6 +250,7 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
+[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab 补全/自动补全
 
