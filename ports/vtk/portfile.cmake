@@ -37,8 +37,6 @@ vcpkg_from_github(
         jsoncpp.patch
         iotr.patch
         ${STRING_PATCH}
-        #qt6.patch
-        #reorder-includes.patch
 )
 
 # =============================================================================
