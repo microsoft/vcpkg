@@ -14,6 +14,14 @@
       "platform": "windows"
     },
     {
+      "name": "libwebp",
+      "default-features": false,
+      "features": [
+        "simd"
+      ],
+      "platform": "osx & x64"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
