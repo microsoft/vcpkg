@@ -1,7 +1,7 @@
 {
   "name": "capstone",
   "version": "5.0.0-rc2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/capstone-engine/capstone",
   "dependencies": [
@@ -55,15 +55,7 @@
       "description": "Capstone disassembly support for x86"
     },
     "x86-reduce": {
-      "description": "Capstone disassembly support for x86 without support for less used instructions",
-      "dependencies": [
-        {
-          "name": "capstone",
-          "features": [
-            "x86"
-          ]
-        }
-      ]
+      "description": "Capstone disassembly support for x86 without support for less used instructions"
     },
     "xcore": {
       "description": "Capstone disassembly support for XCore"
