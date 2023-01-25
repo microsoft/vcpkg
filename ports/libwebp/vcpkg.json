@@ -60,14 +60,14 @@
           "features": [
             "vwebp"
           ],
-          "platform": "!osx & !static"
+          "platform": "!osx"
         },
         {
           "name": "libwebp",
           "features": [
             "vwebp-sdl"
           ],
-          "platform": "!osx & !static & !uwp"
+          "platform": "!osx & !uwp"
         }
       ]
     },
@@ -184,7 +184,7 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
-      "supports": "!osx & !static",
+      "supports": "!osx",
       "dependencies": [
         "freeglut",
         "opengl"
