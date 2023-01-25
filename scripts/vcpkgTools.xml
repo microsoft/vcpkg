@@ -7,6 +7,13 @@
         <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
         <archiveName>python-3.10.7-embed-win32.zip</archiveName>
     </tool>
+    <tool name="python3" os="windows" arch="x64">
+        <version>3.10.7</version>
+        <exeRelativePath>python.exe</exeRelativePath>
+        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-amd64.zip</url>
+        <sha512>29b47f8073b54c092a2c8b39b09ab392f757a8c09149e8d2de043907fffb250b5f6801175e16fedb4fae7b6555822acdc57d81d13c2fea95ef0f6ed717f86cb9</sha512>
+        <archiveName>python-3.10.7-embed-amd64.zip</archiveName>
+    </tool>
     <tool name="python3_with_venv" os="windows">
         <version>3.10.7</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
@@ -14,12 +21,26 @@
         <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
         <archiveName>python-3.10.7.nupkg.zip</archiveName>
     </tool>
-    <tool name="cmake" os="windows">
+    <tool name="cmake" os="windows" arch="x86">
         <version>3.25.1</version>
         <exeRelativePath>cmake-3.25.1-windows-i386\bin\cmake.exe</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-i386.zip</url>
         <sha512>4a84abdb53781178a99046aa09cf6a6b2bfe159d6b6bbdd2449839d2f50b872b4cc783c44774343b6122ec9400bcfdec65fffd4a246575ba55d178bc180f6adc</sha512>
         <archiveName>cmake-3.25.1-windows-i386.zip</archiveName>
+    </tool>
+    <tool name="cmake" os="windows" arch="x64">
+        <version>3.25.1</version>
+        <exeRelativePath>cmake-3.25.1-windows-x86_64\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.zip</url>
+        <sha512>8a3e3ae4d2acadb3b6551ba344ea9ec80079fcfe0cf2c53e7eeece21dae1051e342957b87b5f8bc238f253f61a657bf5deed65892b748f8c08f8eb681a72cbf2</sha512>
+        <archiveName>cmake-3.25.1-windows-x86_64.zip</archiveName>
+    </tool>
+    <tool name="cmake" os="windows" arch="arm64">
+        <version>3.25.1</version>
+        <exeRelativePath>cmake-3.25.1-windows-arm64\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-arm64.zip</url>
+        <sha512>4a3bd9e4dd081a6512b0ce1053970d3df286caa2327ad4db7956009c3f115b5b84b0db2ed4017a7ea6d45fe9e7186385129f7c30a514225e48f04e9cbb562243</sha512>
+        <archiveName>cmake-3.25.1-windows-arm64.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
         <version>3.25.1</version>
@@ -28,12 +49,19 @@
         <sha512>6009ff799ee516c1ca3bf3a31bacdd59fc48f772a03c822f49e1e9b6a6582e64d75c6005a90574539d61b7094dfe36bfe4b4c1560a4fb7d1287be472c0fd146a</sha512>
         <archiveName>cmake-3.25.1-macos-universal.tar.gz</archiveName>
     </tool>
-    <tool name="cmake" os="linux">
+    <tool name="cmake" os="linux" arch="x64">
         <version>3.25.1</version>
         <exeRelativePath>cmake-3.25.1-linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.tar.gz</url>
         <sha512>df456fafa9e63ab0105a6355cc3f66d0567c43172fb424ba75b364f65c6da100dbb303ddd11abd68b42b3b52a90805dfda36aae2468c64c204446f4befda0c78</sha512>
         <archiveName>cmake-3.25.1-linux-x86_64.tar.gz</archiveName>
+    </tool>
+    <tool name="cmake" os="linux" arch="arm64">
+        <version>3.25.1</version>
+        <exeRelativePath>cmake-3.25.1-linux-aarch64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-aarch64.tar.gz</url>
+        <sha512>e1a944a6db1531b94f909e6a7806225047ae8c582de69ae510ad1aa979ba35a7fb2dad8316f7e4e21c5573fc390db2efd79c3dcca9899573ed0493525e2a55ff</sha512>
+        <archiveName>cmake-3.25.1-linux-aarch64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
@@ -48,6 +76,13 @@
         <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
         <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
         <archiveName>PortableGit-2.35.1.2-32-bit.7z.exe</archiveName>
+    </tool>
+    <tool name="git" os="windows" arch="x64">
+        <version>2.7.4</version>
+        <exeRelativePath>mingw64\bin\git.exe</exeRelativePath>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-64-bit.7z.exe</url>
+        <sha512>f8f56e103ae02b935604731d76de2659dd40a00cc027e6077b9b86f440669fb69dd4a2c8bd971646b861d7c15b084247424e6109ef295addb1452059758b22af</sha512>
+        <archiveName>PortableGit-2.35.1.2-64-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -68,6 +103,13 @@
         <sha512></sha512>
     </tool>
     <tool name="gsutil" os="windows">
+        <version>4.65</version>
+        <exeRelativePath>google-cloud-sdk\bin\gsutil.cmd</exeRelativePath>
+        <url>https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-347.0.0-windows-x86-bundled-python.zip</url>
+        <sha512>96655820f5a9b732b23ab986aa2070240e4f2237cd5775f622f611b9acd6dc106474d2a6dceceeb161aa6ef49a4f5779f6d19539c353a1943c35908b8b2b5224</sha512>
+        <archiveName>google-cloud-sdk-347.0.0-windows-x86-bundled-python.zip</archiveName>
+    </tool>
+    <tool name="gsutil" os="windows" arch="x64">
         <version>4.65</version>
         <exeRelativePath>google-cloud-sdk\bin\gsutil.cmd</exeRelativePath>
         <url>https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-347.0.0-windows-x86_64-bundled-python.zip</url>
@@ -140,6 +182,13 @@
     <tool name="7zip_msi" os="windows">
         <version>21.07</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z2107.msi</url>
+        <sha512>103210153e60b4234015796bb5f12483f99b5909df8c2fe5c9d3a823d4bdc721602a5261ad794e5280ff9f0d5f79add4e2a732dfb087fe8b4844d789acb8ea42</sha512>
+        <archiveName>7z2107.msi</archiveName>
+    </tool>
+    <tool name="7zip_msi" os="windows" arch="x64">
+        <version>21.07</version>
+        <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
         <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
         <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
         <archiveName>7z2107-x64.msi</archiveName>
@@ -157,6 +206,13 @@
         <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-win-32bit-build1.zip</url>
         <sha512>933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4</sha512>
         <archiveName>aria2-1.35.0-win-32bit-build1.zip</archiveName>
+    </tool>
+    <tool name="aria2" os="windows" arch="x64">
+        <version>1.35.0</version>
+        <exeRelativePath>aria2-1.35.0-win-64bit-build1\aria2c.exe</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-win-64bit-build1.zip</url>
+        <sha512>314da6cf95713b1a6285adf54a9c385b5f4b892f032566257bf9d895525d42136af3ee65298d5c6138fd4a4dd8f6385687d13254c65ca0e53e26fb75f4a44593</sha512>
+        <archiveName>aria2-1.35.0-win-64bit-build1.zip</archiveName>
     </tool>
     <tool name="aria2" os="osx">
         <version>1.35.0</version>
@@ -193,32 +249,67 @@
         <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
-    <tool name="powershell-core" os="windows">
+    <tool name="powershell-core" os="windows" arch="x86">
         <version>7.2.8</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
         <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.8/PowerShell-7.2.8-win-x86.zip</url>
         <sha512>b91ad901837099b34f689ae654b238a1171141adce8be6fc52f48373a7e79117072e84ab38e427c1ac66647dd86a19f1c6c6cba2b8e365d656c65c8447069c72</sha512>
         <archiveName>PowerShell-7.2.8-win-x86.zip</archiveName>
     </tool>
+    <tool name="powershell-core" os="windows" arch="x64">
+        <version>7.2.8</version>
+        <exeRelativePath>pwsh.exe</exeRelativePath>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.8/PowerShell-7.2.8-win-x64.zip</url>
+        <sha512>392f314662b1293a7ac70de60c53ba03369a4524d4f3a256794f873e22da641ed5fb8eb401052347ac525cb41b10dde1b9d904df7c92d66b347cf5fbaf6bf1fa</sha512>
+        <archiveName>PowerShell-7.2.8-win-x64.zip</archiveName>
+    </tool>
+    <tool name="powershell-core" os="windows" arch="arm64">
+        <version>7.2.8</version>
+        <exeRelativePath>pwsh.exe</exeRelativePath>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.8/PowerShell-7.2.8-win-arm64.zip</url>
+        <sha512>3c94ba269d6abc8bc0143e170ae23a7981a18520c0d58321492ce53f3c310884a4b9a5403865656b876585354e7e4a354c197661b145b8b64002fc7af2fa3680</sha512>
+        <archiveName>PowerShell-7.2.8-win-arm64.zip</archiveName>
+    </tool>
     <tool name="node" os="windows">
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-win-x86\node.exe</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-win-x86.7z</url>
+        <sha512>13fb7e889552cc562c91ee2efdd81abbd46bcb54abd8db1ddd4f318bdfcc0af3a2bd50eddded9168bb036dded6c14de1c2fb455cef256fb5f8873bb1b4d3102b</sha512>
+        <archiveName>node-v16.15.1-win-x86.7z</archiveName>
+    </tool>
+    <tool name="node" os="windows" arch="x64">
         <version>16.15.1</version>
         <exeRelativePath>node-v16.15.1-win-x64\node.exe</exeRelativePath>
         <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-win-x64.7z</url>
         <sha512>7ec4bfe2ea6034e1461e306b6372d62c0c5d1060c453ba76a73a5cec38ac26b5952a744caa9071455329caa58eb0a96d26c68854c8915c17610ff27b0cf2c1cf</sha512>
         <archiveName>node-v16.15.1-win-x64.7z</archiveName>
     </tool>
-    <tool name="node" os="linux">
+    <tool name="node" os="linux" arch="x64">
         <version>16.15.1</version>
         <exeRelativePath>node-v16.15.1-linux-x64/bin/node</exeRelativePath>
         <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-linux-x64.tar.gz</url>
         <sha512>5ad3b4b9caeaa8d31503efa99f5a593118a267dec9d4181d019732126ba248ce9a901207115b3f6b899eb5b3f0373c7f77ea95cc92ac625cddf437ee9b8b8919</sha512>
         <archiveName>node-v16.15.1-linux-x64.tar.gz</archiveName>
     </tool>
-    <tool name="node" os="osx">
+    <tool name="node" os="linux" arch="arm64">
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-linux-arm64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-linux-arm64.tar.gz</url>
+        <sha512>7c939910135cfed9520a8f0a80e0e42b05de4f2c9a1a81d064fba8e68bd04fcfbe98d9fc60516803d73bef1e6ecd9508959a4bc5b2e222e048284ad572f68d2b</sha512>
+        <archiveName>node-v16.15.1-linux-arm64.tar.gz</archiveName>
+    </tool>
+    <tool name="node" os="osx" arch="x64">
         <version>16.15.1</version>
         <exeRelativePath>node-v16.15.1-darwin-x64/bin/node</exeRelativePath>
         <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-darwin-x64.tar.gz</url>
         <sha512>90d0612bbe5467b6cf385c91a68b8daad0057e3e0ccacea44567f5b95b14f7481cb79784185ab1463b4bd990e092ff0f9109576d1a1934b84e1c816582929611</sha512>
         <archiveName>node-v16.15.1-darwin-x64.tar.gz</archiveName>
+    </tool>
+    <tool name="node" os="osx" arch="arm64">
+        <version>16.15.1</version>
+        <exeRelativePath>node-v16.15.1-darwin-arm64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.15.1/node-v16.15.1-darwin-arm64.tar.gz</url>
+        <sha512>687e5baaf636a0f0d5c86b722d2c8e97f4a5b1cce71dd2df081bff2c3670120fb309b541c8fc6c94bc1d3cdabdb073ffa1164516db6c612835a177d41a0bf7ad</sha512>
+        <archiveName>node-v16.15.1-darwin-arm64.tar.gz</archiveName>
     </tool>
 </tools>
