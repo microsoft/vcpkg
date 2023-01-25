@@ -43,7 +43,7 @@ manifest mode.
 
 ## How does it work?
 
-In manifest mode, vcpkg is integrated with CMake via a toolchain file ([`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html)), which must be specified when the project is configured. The toolchain file is evaluated by CMake (via `include()`) the first time CMake's [`project()`](https://cmake.org/cmake/help/latest/command/project.html) command is called. This evaluation sequence means that any vcpkg CMake variables must be set before the first call to `project()`. The toolchain file shells out to `vcpkg install`, with a project-local build tree, thus executing full builds of all manifest dependencies _during CMake configuration_.
+In manifest mode, vcpkg is integrated with CMake via a [toolchain](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html), which must be [specified](https://github.com/microsoft/vcpkg#using-vcpkg-with-cmake) when the project is configured. The toolchain file is evaluated by CMake via [`include()`](https://cmake.org/cmake/help/latest/command/include.html) the first time CMake's [`project()`](https://cmake.org/cmake/help/latest/command/project.html) command is called. This evaluation sequence means that any vcpkg CMake variables must be set before the first call to `project()`. Note that changing the triplet requires a clean reconfigure since the results of `find_*` calls are stored in cache variables which won't get refreshed. During configuration, the toolchain CMake file effectively runs `vcpkg install`, with a project-local build tree, thus executing full builds of all manifest dependencies _during CMake configuration_.
 
 ## Simple Example Manifest
 
