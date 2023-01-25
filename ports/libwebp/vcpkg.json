@@ -45,6 +45,7 @@
             "anim",
             "cwebp",
             "dwebp",
+            "extras",
             "gif2webp",
             "img2webp",
             "info",
@@ -57,22 +58,25 @@
         {
           "name": "libwebp",
           "features": [
-            "extras"
+            "vwebp"
           ],
-          "platform": "!osx"
+          "platform": "!osx & !static"
         },
         {
           "name": "libwebp",
           "features": [
             "vwebp-sdl"
           ],
-          "platform": "!osx"
+          "platform": "!osx & !static & !uwp"
         }
       ]
     },
     "anim": {
       "description": "Build animation utilities.",
       "dependencies": [
+        "giflib",
+        "libjpeg-turbo",
+        "libpng",
         {
           "name": "libwebp",
           "default-features": false,
@@ -80,30 +84,32 @@
             "img2webp",
             "mux"
           ]
-        }
+        },
+        "tiff"
       ]
     },
     "cwebp": {
-      "description": "Build the cwebp command line tool."
+      "description": "Build the cwebp command line tool.",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        "tiff"
+      ]
     },
     "dwebp": {
-      "description": "Build the dwebp command line tool."
+      "description": "Build the dwebp command line tool.",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        "tiff"
+      ]
     },
     "extras": {
-      "description": "Build extras.",
-      "supports": "!osx",
+      "description": "Build extras. (Doesn't include vwebp-sdl.)",
       "dependencies": [
-        {
-          "name": "libwebp",
-          "default-features": false,
-          "features": [
-            "vwebp"
-          ]
-        },
-        {
-          "name": "sdl1",
-          "platform": "windows"
-        }
+        "libjpeg-turbo",
+        "libpng",
+        "tiff"
       ]
     },
     "gif2webp": {
@@ -178,30 +184,24 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
-      "supports": "!osx",
+      "supports": "!osx & !static",
       "dependencies": [
-        {
-          "name": "freeglut",
-          "platform": "!osx"
-        },
+        "freeglut",
         "opengl"
       ]
     },
     "vwebp-sdl": {
-      "description": "Build the vwebp viewer tool.",
-      "supports": "!osx",
+      "description": "Build the vwebp viewer tool for SDL.",
       "dependencies": [
         {
           "name": "libwebp",
           "default-features": false,
           "features": [
+            "extras",
             "vwebp"
           ]
         },
-        {
-          "name": "sdl1",
-          "platform": "windows"
-        }
+        "sdl1"
       ]
     }
   }

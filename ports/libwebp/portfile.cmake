@@ -8,37 +8,37 @@ vcpkg_from_github(
         0002-cmake-config.patch
         0007-fix-arm-build.patch
         0008-sdl.patch
+        0010-fix_build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         anim         WEBP_BUILD_ANIM_UTILS
-        gif2webp     WEBP_BUILD_GIF2WEBP
-        img2webp     WEBP_BUILD_IMG2WEBP
-        vwebp        WEBP_BUILD_VWEBP
-        vwebp-sdl    WEBP_HAVE_SDL
-        info         WEBP_BUILD_WEBPINFO
-        mux          WEBP_BUILD_WEBPMUX
-        extras       WEBP_BUILD_EXTRAS
-        nearlossless WEBP_NEAR_LOSSLESS
-        simd         WEBP_ENABLE_SIMD
         cwebp        WEBP_BUILD_CWEBP
         dwebp        WEBP_BUILD_DWEBP
+        extras       WEBP_BUILD_EXTRAS
+        gif2webp     WEBP_BUILD_GIF2WEBP
+        img2webp     WEBP_BUILD_IMG2WEBP
+        info         WEBP_BUILD_WEBPINFO
+        libwebpmux   WEBP_BUILD_LIBWEBPMUX
+        mux          WEBP_BUILD_WEBPMUX
+        nearlossless WEBP_NEAR_LOSSLESS
+        simd         WEBP_ENABLE_SIMD
         swap16bitcsp WEBP_ENABLE_SWAP_16BIT_CSP
         unicode      WEBP_UNICODE
-        libwebpmux   WEBP_BUILD_LIBWEBPMUX
+        vwebp        WEBP_BUILD_VWEBP
+        vwebp-sdl    CMAKE_REQUIRE_FIND_PACKAGE_SDL
+    INVERTED_FEATURES
+        vwebp-sdl    CMAKE_DISABLE_FIND_PACKAGE_SDL
 )
-
-if(VCPKG_TARGET_IS_OSX)
-    if("vwebp" IN_LIST FEATURES OR "extras" IN_LIST FEATURES)
-        message(FATAL_ERROR "Due to GLUT Framework problems with CMake, at the moment it's not possible to build VWebP or extras on Mac!")
-    endif()
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_SDL
+        CMAKE_REQUIRE_FIND_PACKAGE_SDL
 )
 
 vcpkg_cmake_install()
