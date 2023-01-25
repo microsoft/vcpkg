@@ -1,9 +1,9 @@
 # Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO polycam/tinygltf
-    REF d672805a92c7725ebfac7a75898b7f21bddbe1c6
-    SHA512 aced90bfea1398a6ccdfd63896c7570ea553fe6904409e7b51a2f1bee7241d74d5d293833cfbf53ac589346a84141e2c14448f093d55c9c3e8db7f3eb1ec76e8
+    REPO polycam/open3d
+    REF 34703600156b8ad8087fb08d1fd6b9dc1d66b571
+    SHA512 de9111fff7e8f9575de495f4544ec871b452542d4592e75092b0d0af2600a4c46150305eb16d88b2d645628e152f2b2b1596b60f8c08797b4afec54ccc7e3549
     HEAD_REF main
 )
 

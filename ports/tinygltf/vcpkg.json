@@ -2,9 +2,16 @@
   "name": "tinygltf",
   "version": "2.5.0",
   "description": "A header only C++11 glTF 2.0 library.",
-  "homepage": "https://github.com/syoyo/tinygltf",
+  "homepage": "https://github.com/polycam/tinygltf",
   "dependencies": [
-    "nlohmann-json",
-    "stb"
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

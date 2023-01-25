@@ -1,0 +1,25 @@
+{
+  "name": "open3d",
+  "version": "0.16",
+  "description": "Open3D: A Modern Library for 3D Data Processing",
+  "homepage": "https://github.com/polycam/open3d",
+  "dependencies": [
+    "libpng",
+    "tinygltf",
+    "eigen3",
+    "fmt",
+    "jsoncpp",
+    "qhull",
+    "rply",
+    "tinyobjloader",
+    "lz4",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
