@@ -3,6 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
+    # rtabmap stops releasing, check their CMakeLists.txt for version.
+    # currently is 0.20.23
     REF 95e6a9f03936697a60be2c26e119c519e47c11f5
     SHA512 082af7e15316bdeb89ff833a87a91916ddbf85de56bf4f38a0b5a40f4f330ecc057ae72a2f5ec901824e51d6f73c4a05a328116eaa5529551ffe4ca770fe0474
     HEAD_REF master
