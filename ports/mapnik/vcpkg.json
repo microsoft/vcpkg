@@ -51,7 +51,10 @@
     "mapbox-geometry",
     "mapbox-polylabel",
     "mapbox-variant",
-    "pkgconf",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "protozero",
     {
       "name": "vcpkg-cmake",

@@ -40,10 +40,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "utility-svg2png"           BUILD_UTILITY_SVG2PNG
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    set(BUILD_SHARED_CRT OFF)
-else()
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(BUILD_SHARED_CRT ON)
+else()
+    set(BUILD_SHARED_CRT OFF)
 endif()
 
 
