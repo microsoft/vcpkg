@@ -45,7 +45,7 @@ if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
 else()
     set(BUILD_SHARED_CRT OFF)
 endif()
-
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -64,6 +64,7 @@ vcpkg_cmake_configure(
         -DMAPNIK_CMAKE_DIR=share/mapnik/cmake
         -DFONTS_INSTALL_DIR=share/mapnik/fonts
         -DMAPNIK_PKGCONF_DIR=lib/pkgconfig
+        -DPKG_CONFIG_EXECUTABLE="${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
