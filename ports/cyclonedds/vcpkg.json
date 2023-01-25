@@ -30,6 +30,7 @@
       "dependencies": [
         {
           "name": "cyclonedds",
+          "host": true,
           "default-features": false,
           "features": [
             "idlc"
