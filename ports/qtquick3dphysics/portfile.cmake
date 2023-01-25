@@ -3,7 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES)
 
-set(TOOL_NAMES)
+set(TOOL_NAMES cooker)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

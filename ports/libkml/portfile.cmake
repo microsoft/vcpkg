@@ -25,6 +25,8 @@ file(REMOVE
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_POLICY_DEFAULT_CMP0022=NEW
 )
 
 vcpkg_cmake_install()

@@ -3,12 +3,14 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v${VERSION}
-    SHA512 5213f112730ce87b0ee432ad919480d6fc2ee1aeffd61e6485dd466bb8c269fe26e0df24ff955d0c21c13c1d95f3f4d9222a15604d5720db0f5570cc5cbfbb8d
+    REF "v${VERSION}"
+    SHA512 65a4cbc14f2a972662435ebf4c3be60355f7d57da251590f75b65ded113dda2c89c4a047e3b337841cbaddcf3966c879f448c832687979017df8ab1aaddfbb88
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        fix-find-package2.patch
+        libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -31,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
@@ -76,7 +78,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF

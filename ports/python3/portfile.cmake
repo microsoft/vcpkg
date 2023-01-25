@@ -16,6 +16,8 @@ set(PATCHES
     0008-python.pc.patch
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
+    0012-force-disable-curses.patch
+    0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -83,8 +85,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD libexpatdMT PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)

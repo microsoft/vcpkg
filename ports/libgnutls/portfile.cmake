@@ -7,7 +7,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 72c78d7fcb024393c1d15f2a1856608ae4460ba43cc5bbbb4c29b80508cae6cb822df4638029de2363437d110187e0a3cc19a7288c3b2f44b2f648399a028438
+    SHA512 4199bcf7c9e3aab2f52266aadceefc563dfe2d938d0ea1f3ec3be95d66f4a8c8e5494d3a800c03dd02ad386dec1738bd63e1fe0d8b394a2ccfc7d6c6a0cc9359
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
@@ -45,8 +45,11 @@ vcpkg_configure_make(
         --disable-silent-rules
         --disable-rpath
         --disable-tests
-        --without-p11-kit
-        --without-tpm
+        --with-brotli=no
+        --with-p11-kit=no
+        --with-tpm=no
+        --with-tpm2=no
+        --with-zstd=no
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG

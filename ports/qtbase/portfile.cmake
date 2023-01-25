@@ -18,7 +18,6 @@ set(${PORT}_PATCHES
         fix_egl_2.patch
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
-        cb2a812.diff
         GLIB2-static.patch # alternative is to force pkg-config
         )
 
@@ -447,3 +446,6 @@ if(EXISTS "${configfile}")
     file(WRITE "${configfile}" "${_contents}")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+endif()

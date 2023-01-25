@@ -5,6 +5,8 @@ includedir=${prefix}/include
 Name: EGL
 Description: EGL library and headers.
 Version: @VERSION@
-Requires: zlib opengl # angle
-Libs: -L${libdir} -llibEGL -llibGLESv2 -llibANGLE -lD3d9 -ldxguid -lDXGI
-Cflags: -I${includedir} @KHRONOS_STATIC@
+Requires.private: zlib opengl # angle
+Libs: -L${libdir} -llibEGL
+Libs.private: -llibGLESv2 -llibANGLE -ld3d9 -ldxguid -ldxgi
+Cflags: -I${includedir}
+Cflags.private: -DKHRONOS_STATIC
