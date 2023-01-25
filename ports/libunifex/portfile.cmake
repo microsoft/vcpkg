@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_CXX_STANDARD:STRING=20
+        -DCXX_COROUTINES_HAVE_COROUTINES=OFF
 )
 
 vcpkg_cmake_install()
