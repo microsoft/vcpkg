@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 c73039606acf7b2cbc331c6787af5167d711fd1af22bc616e1f478c531b087da82c98f2cb7e88c4d1f8bcfdc4e053ae0dc99cc9a811545b7f9658041489ed04b
+    SHA512 ef472ddc5e277f3d41491c2acc03ed0152ec3ea87efb9e3320cfd830ceb383728658318444b06a3e9f8662bc11c0014675966572ce33f49c8e5cb13c5ed48de1
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
@@ -92,4 +90,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
