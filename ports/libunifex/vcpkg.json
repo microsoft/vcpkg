@@ -18,6 +18,9 @@
     }
   ],
   "features": {
+    "coroutines": {
+      "description": "Support coroutine"
+    },
     "test": {
       "description": "Build test/example programs",
       "dependencies": [

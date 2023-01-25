@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test    BUILD_TESTING
         test    UNIFEX_BUILD_EXAMPLES
+        coroutines CXX_COROUTINES_HAVE_COROUTINES
 )
 
 vcpkg_cmake_configure(
