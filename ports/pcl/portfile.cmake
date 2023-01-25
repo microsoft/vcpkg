@@ -13,6 +13,7 @@ vcpkg_from_github(
         install-examples.patch
         no-absolute.patch
         add_bigobj_option.patch
+        outofcore_viewer_remove_include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
