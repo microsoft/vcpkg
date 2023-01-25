@@ -36,6 +36,16 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DWEBP_BUILD_ANIM_UTILS=OFF
+        -DWEBP_BUILD_CWEBP=OFF
+        -DWEBP_BUILD_DWEBP=OFF
+        -DWEBP_BUILD_EXTRAS=OFF
+        -DWEBP_BUILD_GIF2WEBP=OFF
+        -DWEBP_BUILD_IMG2WEBP=OFF
+        -DWEBP_BUILD_VWEBP=OFF
+        -DWEBP_BUILD_WEBPINFO=OFF
+        -DWEBP_BUILD_WEBPMUX=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_SDL
         CMAKE_REQUIRE_FIND_PACKAGE_SDL
@@ -51,28 +61,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
-set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/webp/")
-foreach(tool ${BIN_NAMES})
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    endif()
-
+vcpkg_list(SET BIN_NAMES)
+foreach(tool IN ITEMS get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/webp/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        vcpkg_list(APPEND BIN_NAMES "${tool}")
     endif()
 endforeach()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/webp")
-
-#No tools
-file(GLOB_RECURSE RESULT "${CURRENT_PACKAGES_DIR}/tools/")
-list(LENGTH RESULT RES_LEN)
-if(RES_LEN EQUAL 0)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(NOT BIN_NAMES STREQUAL "")
+    vcpkg_copy_tools(TOOL_NAMES ${BIN_NAMES} AUTO_CLEAN)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
