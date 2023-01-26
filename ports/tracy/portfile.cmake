@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         001-fix-vcxproj-vcpkg.patch
         002-fix-capstone-5.patch
+        003-fix-imgui-path.patch
 )
 
 vcpkg_cmake_configure(

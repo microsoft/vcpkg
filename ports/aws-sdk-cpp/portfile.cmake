@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-aws-root.patch
         fix-openssl3.patch
         lock-curl-http-and-tls-settings.patch
+        no-werror.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)

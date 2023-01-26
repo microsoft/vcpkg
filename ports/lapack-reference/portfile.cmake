@@ -10,8 +10,6 @@ endif()
 
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(lapack_ver 3.10.1)
-
 x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
                      OUT_OPTIONS_RELEASE Fortran_opts_rel 
                      OUT_OPTIONS_DEBUG Fortran_opts_dbg)
@@ -20,13 +18,15 @@ if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL OR VCPKG_DETECTED_CMAKE_Fortran_COMPILER MA
     set(PATCHES intel.patch)
 endif()
 
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
-    REF "v${lapack_ver}"
-    SHA512 0500bbbb48483208c0a35b74972ff0059c389da6032824a2079637266a99fa980882eedf7f1fc490219ee4ff27812ac8c6afe118e25f40a9c2387e7b997762fb
+    REF "v${VERSION}"
+    SHA512 fc3258b9d91a833149a68a89c5589b5113e90a8f9f41c3a73fbfccb1ecddd92d9462802c0f870f1c3dab392623452de4ef512727f5874ffdcba6a4845f78fc9a
     HEAD_REF master
     PATCHES ${PATCHES}
+            cmake-config.patch
             lapacke.patch
             time_test.patch
 )
@@ -49,28 +49,30 @@ if("noblas" IN_LIST FEATURES)
 endif()
 
 # Python3 for testing summary. 
-#vcpkg_find_acquire_program(PYTHON3)
-#get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-#vcpkg_add_to_path("${PYTHON3_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         "-DCMAKE_POLICY_DEFAULT_CMP0065=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
         ${Fortran_opts}
         "-DBUILD_TESTING:BOOL=ON"
-        #"-DPYTHON_EXECUTABLE=${PYTHON3}"
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
     OPTIONS_DEBUG ${Fortran_opts_rel}
-    OPTIONS_RELEASE ${Fortran_opts_dbg}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${lapack_ver} CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${VERSION} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
@@ -115,7 +117,7 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 if(NOT "noblas" IN_LIST FEATURES)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas-reference.pc")
     if(NOT VCPKG_BUILD_TYPE)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
     endif()
@@ -153,3 +155,7 @@ set(BLA_VENDOR Generic)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+

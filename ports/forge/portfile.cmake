@@ -1,6 +1,3 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    message(FATAL_ERROR "This port currently only supports x64 architecture")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,28 +7,28 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES cmake_config.patch
 )
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindOpenGL.cmake)
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindOpenGL.cmake")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DFG_BUILD_DOCS=OFF
         -DFG_BUILD_EXAMPLES=OFF
         -DFG_INSTALL_BIN_DIR=bin
-        -DFG_INSTALL_CMAKE_DIR=share/Forge
+        -DFG_INSTALL_CMAKE_DIR=share/forge
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/Forge TARGET_PATH share/Forge)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/bin/* ${CURRENT_PACKAGES_DIR}/debug/bin/*)
 list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/examples
-    ${CURRENT_PACKAGES_DIR}/examples
+    ${CURRENT_PACKAGES_DIR}/debug/forge/examples
+    ${CURRENT_PACKAGES_DIR}/forge/examples
     ${DLLS}
 )
 
-file(INSTALL ${SOURCE_PATH}/.github/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/.github/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

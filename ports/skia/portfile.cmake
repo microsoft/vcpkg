@@ -5,9 +5,9 @@ vcpkg_from_git(
     URL https://github.com/google/skia
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
     PATCHES
-        python-executable.patch
         disable-msvc-env-setup.patch
         uwp.patch
+        core-opengl32.patch
 )
 
 # these following aren't available in vcpkg
@@ -239,7 +239,8 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_gene
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-string(APPEND OPTIONS " script_executable=\"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
@@ -247,7 +248,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
 else()
-    string(APPEND OPTIONS_DBG " \
+    string(APPEND OPTIONS " \
         cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
         cxx=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()

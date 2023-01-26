@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-openexr-dll.patch
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
+        fix-vs2019-encoding-conversion.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -24,6 +25,8 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/Findfmt.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -63,6 +66,7 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
         -DENABLE_INSTALL_testtex=OFF
+        "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
         "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
