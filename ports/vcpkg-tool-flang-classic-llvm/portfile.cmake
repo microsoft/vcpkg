@@ -1,18 +1,18 @@
-set(LLVM_VERSION "13.0.1")
+set(LLVM_VERSION "15.0.1")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/classic-flang-llvm-project
-    REF eafb7696e6f1cbf00f19d3c418f71cdac574bad3
-    SHA512 8008c11145cacd2d5237af3c5d00b86fba922d67a444b67a05fd5a20162dec4e8d187016a28c1bdc008ce42dfce0254fa5b0635a50bc8fc8af3281de97a76951
-    HEAD_REF release_13x 
+    REF 5c53824d84104bf9d409456b76b121365138fe7a
+    SHA512 557b3b57c85b2d8dbdc72713babd59f9e52110712dab414131fc91ee0a398742c2ada4894d9fd8d7d872c50869330106a17be03ede1b5923899a3ea697262110
+    HEAD_REF release_15x
     PATCHES
         0004-fix-dr-1734.patch
-        0010-fix-libffi.patch
-        0011-fix-libxml2.patch
-        65.diff
+        #0010-fix-libffi.patch
+        #0011-fix-libxml2.patch
+        #65.diff
 )
 
 # Force enable or disable external libraries
@@ -36,6 +36,21 @@ get_filename_component(PERL_DIR "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_DIR}")
 
 set(VCPKG_BUILD_TYPE release) # Only need release tools
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC") # VS ICEs when building libflang
+        vcpkg_find_acquire_program(CLANG)
+        cmake_path(GET CLANG PARENT_PATH CLANG_PARENT_PATH)
+        set(CLANG_CL "${CLANG_PARENT_PATH}/clang-cl.exe")
+        list(APPEND FEATURE_OPTIONS "-DCMAKE_C_COMPILER=${CLANG_CL}"
+                                    "-DCMAKE_CXX_COMPILER=${CLANG_CL}"
+                                    "-DCMAKE_LINKER=${VCPKG_DETECTED_CMAKE_LINKER}"
+            )
+    endif()
+endif()
+
 set(CURRENT_PACKAGES_DIR_BAK "${CURRENT_PACKAGES_DIR}")
 set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang-classic")
 vcpkg_cmake_configure(
@@ -52,7 +67,7 @@ vcpkg_cmake_configure(
         -DLLVM_INSTALL_UTILS=ON
         -DLLVM_TOOL_BUGPOINT_BUILD=OFF
         -DLLVM_TOOL_BUGPOINT_PASSES_BUILD=OFF
-        -DLLVM_TOOL_DSYMÙTIL_BUILD=OFF
+        -DLLVM_TOOL_DSYMUTIL_BUILD=OFF
         -DLLVM_TOOL_GOLD_BUILD=OFF
         -DLLVM_TOOL_LLC_BUILD=OFF
         -DLLVM_TOOL_LLVM_AS_FUZZER_BUILD=OFF
@@ -149,10 +164,10 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         #"-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         -DLLVM_ENABLE_CLASSIC_FLANG=ON 
-        "-DLLVM_ENABLE_PROJECTS=clang;flang;openmp"
+        "-DLLVM_ENABLE_PROJECTS=clang;openmp"
         "-DLLVM_TARGETS_TO_BUILD=X86;AArch64"
-        -DFLANG_BUILD_NEW_DRIVER=OFF
-        -DFLANG_INCLUDE_DOCS=OFF
+        #-DFLANG_BUILD_NEW_DRIVER=OFF
+        #-DFLANG_INCLUDE_DOCS=OFF
         #-DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
@@ -161,7 +176,6 @@ vcpkg_cmake_configure(
         #-DLLVM_TOOLS_INSTALL_DIR=tools/flang
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
 )
-
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 

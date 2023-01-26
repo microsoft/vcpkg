@@ -1,40 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # unresolved symbol interr
 
-vcpkg_download_distfile(
-    PATCH_572
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/572.diff"
-    FILENAME 572.diff
-    SHA512 7bc8038f548ab141c1d5d8e7a93ffd72b0412a5ce3978831de0dd06e7e33ac2839924f8d97b56563cf6bc7e7bda005bc936c51ae15c5ffc4a4aceccc3f55a995
-)
-
-vcpkg_download_distfile(
-    PATCH_1163
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1163.diff"
-    FILENAME 1163.diff
-    SHA512 e6c7be92dc2fcbe77056e58647d9f2074cc3dac81b25d15241ec0cbdc5d45658000c4764b1828e997d93738d839b1cccc2cfe7806d77ad8b4d0ea6107a7a15dc
-)
-
-vcpkg_download_distfile(
-    PATCH_1165
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1165.diff"
-    FILENAME 1165.diff
-    SHA512 4202b5a9f9ea5c84525939e44bea6cf3514d1d948768d899fdf0db6f0d71ee45ce187bfea68742f7a332878335f43103df1e215fb70e1b60035f48d93f04db64
-)
-
-vcpkg_download_distfile(
-    PATCH_1166
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1166.diff"
-    FILENAME 1166.diff
-    SHA512 68cb37acbabd69285481c6baa38bb3ea61497268f39bb90e2384c6a6cbea9860d54554d5dd206ebfe77ef5610fd9dc93cd6da6000d6c22e274c2e635e23ff997
-)
-
-vcpkg_download_distfile(
-    PATCH_1168
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1168.diff"
-    FILENAME 1168.diff
-    SHA512 1efe6e8db18dd3834386801fb055bdcdb4a65987855a95175c6817ba30f3f34e8677e35836dc5b934edcd28e34ccf42273409970fa5bd6de85beb3e1d60d90d4
-)
-
 # Needs a rebase
 #vcpkg_download_distfile( 
 #    PATCH_1177
@@ -43,29 +8,65 @@ vcpkg_download_distfile(
 #    SHA512 e00dfbf70449a407919cdf4737beeb87614e009519abe20dd9213117447485e551e094c33460104378b925f1ba889e112c6ce86cc994338a4a9e028d587a59e2
 #)
 
-vcpkg_download_distfile(
-    PATCH_1178
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1178.diff"
-    FILENAME 1178.diff
-    SHA512 68b66f69c796cdfcf952e820ba47c02f9239ad0b59779fa364f7f58028e7771a3ca5b72c70386203f41ed3b85309473c7d2116d81c2c2ef15130ffa047ead863
+vcpkg_download_distfile( 
+   PATCH_1346
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1346.diff"
+   FILENAME 1346.diff
+   SHA512 367fe2a6bfe36ef27b0a534f516a4bba20128967bae366dd5d3943913ad487faa83270adacecee1d42ba7e65d84a420a12ee9bb614e6eb4102f59f66b301608d
+)
+
+vcpkg_download_distfile( 
+   PATCH_1345
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1345.diff"
+   FILENAME 1345.diff
+   SHA512 6387c96c075428b389b71f701fb79f6e2f676014f86d4229dcb3bdc3b188191780dcc53b354281b064b618886b3281fa432ecfb01872d7ba73fdf3b3e4a234a3
+)
+
+vcpkg_download_distfile( 
+   PATCH_1344
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1344.diff"
+   FILENAME 1344.diff
+   SHA512 0b7432949aaae1ade0927e1c2d4c320bddc64bc65a901aba8451eae21475f16f72b2171904f69827e277aeea2f0d9cc0a40cbf11c7b99e4d09860f6c093f997a
+)
+
+vcpkg_download_distfile( 
+   PATCH_1341
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1341.diff"
+   FILENAME 1341.diff
+   SHA512 ab3a2025d0e28b795d31e8907f1c36a4e282126751f7c74bc1896fa9176adc8574166d0facce25f7affa6f46e7c0636139ceeb08bc65b4d58c57d709d918875a
+)
+
+vcpkg_download_distfile( 
+   PATCH_1340
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1340.diff"
+   FILENAME 1340.diff
+   SHA512 0843c91b957e7fd0680577e83c68ca8d68ea59775e59fdc4c2fd407d4a8f26dc8ea7335262636050783929e975ab0e548f6fdc770aa30996da1ec120c9619d6c
+)
+
+vcpkg_download_distfile( 
+   PATCH_1335
+   URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1335.diff"
+   FILENAME 1335.diff
+   SHA512 34b64481e97d1fc5b1e8739bba3af18d83b7d9905f078be4fd21ab1617806ba5f432975928de0d8fa9d512507a4324724900843f1db9b4479b0b974e6bd42cf2
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/flang
-    REF 0df85a22ae141078658569a0e1b3745afd702e45
-    SHA512 f7195fbf0885dd767ff7f8ab48688586f4c9995dc81d619d4a315e3a3a8b1af019232410aa4eff1e85ed910281338dc6ebb54f55d34534c3d92766b6e1a74149
+    REF 2d211cfe258c23cdc197cba8c4df1e6a116b9764
+    SHA512 a7b4c7959f086d0d0bbc6b775d714d6dbe355c3cd3a389f815df3e87aee6850f3a278896b2ba8ffb0a3b022d8c9a6bea6ebce0b5cc505fc41b511ebc033dc7d8
     PATCHES awk.patch
-            "${PATCH_572}"
-            "${PATCH_1163}"
-            "${PATCH_1165}"
-            "${PATCH_1166}"
-            "${PATCH_1168}"
             "1177.diff"
-            "${PATCH_1178}"
             move_flang2.patch
             cross.patch
             sep_runtime_from_compiler.patch
+            ${PATCH_1335}
+            ${PATCH_1340}
+            ${PATCH_1341}
+            ${PATCH_1344}
+            #${PATCH_1345}
+            ${PATCH_1346}
+            #fix-build.patch
 )
 
 set(NINJA "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja/ninja${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -109,6 +110,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DWITH_WERROR:BOOL=OFF"
         #"-DLLVM_TARGETS_TO_BUILD=X86;AArch64"
         "-DFLANG_BUILD_RUNTIME=ON"
         "-DFLANG_LLVM_EXTENSIONS=ON"

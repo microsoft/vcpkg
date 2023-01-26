@@ -1,0 +1,209 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a4ede76dc..f92f1bc8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,11 @@
+ 
+ cmake_minimum_required(VERSION 3.3)
+ 
++set(CMAKE_C_STANDARD 99)
++set(CMAKE_C_STANDARD_REQUIRED ON)
++set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++#add_compile_options(-std:c11 -D__STDC__=1 /D_CRT_INTERNAL_NONSTDC_NAMES /D_CRT_DECLARE_NONSTDC_NAMES)
+ # If we are not building as a part of LLVM, build Flang as a
+ # standalone project, using LLVM as an external library:
+ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+@@ -304,7 +309,7 @@ if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
+      endif()
+   endif ()
+ elseif(MSVC)
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xclang -mlong-double-128")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xclang -mlong-double-128")
+   option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" ON)
+   if (WITH_WERROR)
+     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Werror -Wno-error=unused-but-set-variable -Wno-error=fortify-source -Wno-error=comment -Wno-error=array-bounds -Wno-error=tautological-constant-out-of-range-compare -Wno-error=switch -Wno-error=enum-compare -Wno-error=deprecated-register -Wno-error=char-subscripts -Wno-error=parentheses -Wno-error=format -Wno-error=incompatible-pointer-types -Wno-error=sign-compare -Wno-error=string-conversion -Wno-error=microsoft-enum-forward-reference -Wno-error=void-pointer-to-int-cast -Wno-error=implicit-function-declaration -Wno-error=missing-field-initializers -Wno-error=missing-braces -Wno-error=pointer-to-int-cast -Wno-error=unused-variable -Wno-error=inconsistent-dllimport -Wno-error=int-conversion -Wno-error=unused-function -Wno-error=int-to-pointer-cast -Wno-error=constant-conversion -Wno-error=macro-redefined -Wno-error=compare-distinct-pointer-types -Wno-error=pointer-sign -Wno-error=sometimes-uninitialized -Wno-error=return-type -Wno-error=unsequenced -Wno-error=infinite-recursion -Wno-error=shift-count-overflow")
+diff --git a/include/fp-folding.h b/include/fp-folding.h
+index 8378f6aa1..bbfbaae5a 100644
+--- a/include/fp-folding.h
++++ b/include/fp-folding.h
+@@ -165,6 +165,7 @@ enum fold_status fold_real128_exp(float128_t *res, const float128_t *arg);
+ enum fold_status fold_real128_log(float128_t *res, const float128_t *arg);
+ enum fold_status fold_real128_log10(float128_t *res, const float128_t *arg);
+ 
++#ifndef _MSC_VER
+ enum fold_status fold_complex32_pow(float complex *res, const float complex *x,
+                                     const float complex *y);
+ enum fold_status fold_complex64_pow(double complex *res,
+@@ -173,7 +174,16 @@ enum fold_status fold_complex64_pow(double complex *res,
+ enum fold_status fold_complex128_pow(long double complex *res,
+                                      const long double complex *x,
+                                      const long double complex *y);
+-
++#else
++enum fold_status fold_complex32_pow(_Fcomplex *res, const _Fcomplex *x,
++                                    const _Fcomplex *y);
++enum fold_status fold_complex64_pow(_Dcomplex *res,
++                                    const _Dcomplex *x,
++                                    const _Dcomplex *y);
++enum fold_status fold_complex128_pow(_Lcomplex *res,
++                                     const _Lcomplex *x,
++                                     const _Lcomplex  *y);
++#endif
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/lib/scutil/host-fp-folding.c b/lib/scutil/host-fp-folding.c
+index d4e04d1d9..f3eb06c5c 100644
+--- a/lib/scutil/host-fp-folding.c
++++ b/lib/scutil/host-fp-folding.c
+@@ -908,6 +908,7 @@ fold_real128_log10(float128_t *res, const float128_t *arg)
+   return check_and_restore_floating_point_environment(&saved_fenv);
+ }
+ 
++#ifndef _MSC_VER
+ enum fold_status
+ fold_complex32_pow(float complex *res, const float complex *x, const float complex *y)
+ {
+@@ -936,3 +937,31 @@ fold_complex128_pow(long double complex *res, const long double complex *x, cons
+   *res = cpowl(*x, *y);
+   return check_and_restore_floating_point_environment(&saved_fenv);
+ }
++#else
++enum fold_status
++fold_complex32_pow(_Fcomplex *res, const _Fcomplex *x, const _Fcomplex *y)
++{
++  fenv_t saved_fenv;
++  set_up_floating_point_environment(&saved_fenv);
++  *res = cpowf(*x, *y);
++  return check_and_restore_floating_point_environment(&saved_fenv);
++}
++
++enum fold_status
++fold_complex64_pow(_Dcomplex *res, const _Dcomplex *x, const _Dcomplex *y)
++{
++  fenv_t saved_fenv;
++  set_up_floating_point_environment(&saved_fenv);
++  *res = cpow(*x, *y);
++  return check_and_restore_floating_point_environment(&saved_fenv);
++}
++
++enum fold_status
++fold_complex128_pow(_Lcomplex *res, const _Lcomplex *x, const _Lcomplex *y)
++{
++  fenv_t saved_fenv;
++  set_up_floating_point_environment(&saved_fenv);
++  *res = cpowl(*x, *y);
++  return check_and_restore_floating_point_environment(&saved_fenv);
++}
++#endif
+\ No newline at end of file
+diff --git a/lib/scutil/legacy-folding-api.c b/lib/scutil/legacy-folding-api.c
+index 2518484ea..648db1a46 100644
+--- a/lib/scutil/legacy-folding-api.c
++++ b/lib/scutil/legacy-folding-api.c
+@@ -2436,7 +2436,11 @@ cprintf(char *buffer, const char *format, INT *val)
+ void
+ xcfpow(IEEE32 r1, IEEE32 i1, IEEE32 r2, IEEE32 i2, IEEE32 *rr, IEEE32 *ir)
+ {
++#ifndef _MSC_VER
+   float complex x, y, z;
++#else
++  _Fcomplex x, y, z;
++#endif
+   float32_t rx, ix, ry, iy, rz, iz;
+   unwrap_f(&rx, &r1);
+   unwrap_f(&ix, &i1);
+@@ -2446,8 +2450,13 @@ xcfpow(IEEE32 r1, IEEE32 i1, IEEE32 r2, IEEE32 i2, IEEE32 *rr, IEEE32 *ir)
+     rz = 1.0;
+     iz = 0.0;
+   } else {
++#ifndef _MSC_VER
+     x = rx + ix * I;
+     y = ry + iy * I;
++#else
++    x = _FCbuild(rx,ix);
++    y = _FCbuild(ry,iy);
++#endif
+     check(fold_complex32_pow(&z, &x, &y));
+     rz = crealf(z);
+     iz = cimagf(z);
+@@ -2459,7 +2468,11 @@ xcfpow(IEEE32 r1, IEEE32 i1, IEEE32 r2, IEEE32 i2, IEEE32 *rr, IEEE32 *ir)
+ void
+ xcdpow(IEEE64 r1, IEEE64 i1, IEEE64 r2, IEEE64 i2, IEEE64 rr, IEEE64 ir)
+ {
++#ifndef _MSC_VER
+   double complex x, y, z;
++#else
++  _Dcomplex x, y, z;
++#endif
+   float64_t rx, ix, ry, iy, rz, iz;
+   unwrap_d(&rx, r1);
+   unwrap_d(&ix, i1);
+@@ -2469,8 +2482,13 @@ xcdpow(IEEE64 r1, IEEE64 i1, IEEE64 r2, IEEE64 i2, IEEE64 rr, IEEE64 ir)
+     rz = 1.0;
+     iz = 0.0;
+   } else {
++#ifndef _MSC_VER
+     x = rx + ix * I;
+     y = ry + iy * I;
++#else
++    x = _Cbuild(rx,ix);
++    y = _Cbuild(ry,iy);
++#endif
+     check(fold_complex64_pow(&z, &x, &y));
+     rz = creal(z);
+     iz = cimag(z);
+@@ -2482,7 +2500,11 @@ xcdpow(IEEE64 r1, IEEE64 i1, IEEE64 r2, IEEE64 i2, IEEE64 rr, IEEE64 ir)
+ void
+ xcqpow(IEEE128 r1, IEEE128 i1, IEEE128 r2, IEEE128 i2, IEEE128 rr, IEEE128 ir)
+ {
++#ifndef _MSC_VER
+   long double complex x, y, z;
++#else
++  _Lcomplex x, y, z;
++#endif
+   float128_t rx, ix, ry, iy, rz, iz;
+   unwrap_q(&rx, r1);
+   unwrap_q(&ix, i1);
+@@ -2492,8 +2514,13 @@ xcqpow(IEEE128 r1, IEEE128 i1, IEEE128 r2, IEEE128 i2, IEEE128 rr, IEEE128 ir)
+     rz = 1.0;
+     iz = 0.0;
+   } else {
++#ifndef _MSC_VER
+     x = rx + ix * I;
+     y = ry + iy * I;
++#else
++    x = _LCbuild(rx,ix);
++    y = _LCbuild(ry,iy);
++#endif
+     check(fold_complex128_pow(&z, &x, &y));
+     rz = creall(z);
+     iz = cimagl(z);
+diff --git a/lib/scutil/lockfile.c b/lib/scutil/lockfile.c
+index 93c442804..d7a7e423c 100644
+--- a/lib/scutil/lockfile.c
++++ b/lib/scutil/lockfile.c
+@@ -60,9 +61,6 @@ static char *udir = NULL;
+  */
+ static long uwaiting;
+ 
+-#ifdef _WIN64
+-#define pid_t int
+-#endif
+ int
+ __pg_make_lock_file(char *dir)
+ {
+diff --git a/runtime/include/float128.h b/runtime/include/float128.h
+index 61a01dc72..4bbf6b427 100644
+--- a/runtime/include/float128.h
++++ b/runtime/include/float128.h
+@@ -8,7 +8,7 @@
+ #ifndef _FLOAT128_H_
+ #define _FLOAT128_H_
+ 
+-#if defined(TARGET_POWER) || (defined(TARGET_X8664) && !defined(TARGET_WIN))
++#if defined(TARGET_POWER) || (defined(TARGET_X8664) && !defined(TARGET_WIN))
+ typedef __float128 float128_t;
+ #else
+ /* __float128 is not available on AArch64 or other generic targets;

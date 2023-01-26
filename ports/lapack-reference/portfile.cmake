@@ -28,6 +28,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES ${PATCHES}
             lapacke.patch
+            time_test.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -61,7 +62,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
         ${Fortran_opts}
-        #"-DBUILD_TESTING:BOOL=ON"
+        "-DBUILD_TESTING:BOOL=ON"
         #"-DPYTHON_EXECUTABLE=${PYTHON3}"
     OPTIONS_DEBUG ${Fortran_opts_rel}
     OPTIONS_RELEASE ${Fortran_opts_dbg}

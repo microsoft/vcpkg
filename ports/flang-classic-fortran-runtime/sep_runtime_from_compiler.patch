@@ -2,15 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 000055e73..28a738269 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -292,7 +292,7 @@ endif()
- # Add appropriate flags for GCC
- if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing -pedantic -Wno-long-long -Wall -W -Wno-unused-parameter -Wwrite-strings")
--  option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" ON)
-+  option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" OFF)
- elseif (MSVC)
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14 -Woverloaded-virtual -Wno-long-long -Wno-unused-parameter -Wwrite-strings")
-   option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" OFF)
 @@ -350,6 +350,7 @@ include_directories(BEFORE
  set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
  

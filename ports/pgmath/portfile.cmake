@@ -1,25 +1,17 @@
 #vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # requires same linkage as vcpkg-tool-flang
 
-vcpkg_download_distfile(
-    PGMATH_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/flang-compiler/flang/pull/1167.diff" # stable?
-    FILENAME 1167.diff
-    SHA512 4a795e59c1c930a1f19963336881134037332eadc8bdd3206205f8affdbac938a177db603bfd03f0783a84be38818e21c8ec09a0f1089252e1328cecd8f26ff1
-)
-
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(PATCHES clang-cl-flags.patch)
+    #set(PATCHES clang-cl-flags.patch)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/flang
-    REF 0df85a22ae141078658569a0e1b3745afd702e45
-    SHA512 f7195fbf0885dd767ff7f8ab48688586f4c9995dc81d619d4a315e3a3a8b1af019232410aa4eff1e85ed910281338dc6ebb54f55d34534c3d92766b6e1a74149
-    PATCHES "${PGMATH_PATCH}"
-            ${PATCHES}
+    REF 2d211cfe258c23cdc197cba8c4df1e6a116b9764
+    SHA512 a7b4c7959f086d0d0bbc6b775d714d6dbe355c3cd3a389f815df3e87aee6850f3a278896b2ba8ffb0a3b022d8c9a6bea6ebce0b5cc505fc41b511ebc033dc7d8
+    PATCHES ${PATCHES}
             build_only_one_kind.patch
-            werror.patch
+            #werror.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -61,7 +53,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/runtime/libpgmath"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
-            "-DWITH_WERROR=OFF"
+            "-DWITH_WERROR:BOOL=OFF"
     MAYBE_UNUSED_VARIABLES
             WITH_WERROR
 
