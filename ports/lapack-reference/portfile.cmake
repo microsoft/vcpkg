@@ -11,13 +11,12 @@ endif()
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
-                     OUT_OPTIONS_RELEASE Fortran_opts_rel 
+                     OUT_OPTIONS_RELEASE Fortran_opts_rel
                      OUT_OPTIONS_DEBUG Fortran_opts_dbg)
 
 if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL OR VCPKG_DETECTED_CMAKE_Fortran_COMPILER MATCHES "ifort${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(PATCHES intel.patch)
 endif()
-
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -28,7 +27,6 @@ vcpkg_from_github(
     PATCHES ${PATCHES}
             cmake-config.patch
             lapacke.patch
-            time_test.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -48,10 +46,19 @@ if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "tests"  BUILD_TESTING
+    )
+
 # Python3 for testing summary. 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+if(BUILD_TESTING)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+    # export NO_STOP_MESSAGE=yes to avoid the signaling warning in the tests
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -62,10 +69,11 @@ vcpkg_cmake_configure(
         "-DCMAKE_POLICY_DEFAULT_CMP0065=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
         "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
+        "-DTEST_FORTRAN_COMPILER=OFF"
         ${Fortran_opts}
-        "-DBUILD_TESTING:BOOL=ON"
-        "-DPYTHON_EXECUTABLE=${PYTHON3}"
-    OPTIONS_DEBUG ${Fortran_opts_rel}
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG ${Fortran_opts_dbg}
+    OPTIONS_RELEASE ${Fortran_opts_rel}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
