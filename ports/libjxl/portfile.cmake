@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        trim-shared-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -74,21 +75,6 @@ if(JPEGXL_ENABLE_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
 endif()
 
-# libjxl always builds static libraries, so we delete them if we don't need them.
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*-static.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib"
-        )
-    else()
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*.a"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.a"
-        )
-    endif()
-    file(REMOVE ${FILES_TO_REMOVE})
-endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
