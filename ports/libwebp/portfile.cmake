@@ -36,7 +36,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DWEBP_LINK_STATIC=OFF # lift restriction for vwebp tool
     OPTIONS_DEBUG
         -DWEBP_BUILD_ANIM_UTILS=OFF
         -DWEBP_BUILD_CWEBP=OFF
