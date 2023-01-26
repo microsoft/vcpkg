@@ -8,7 +8,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build gettext tools"
+      "description": "Build gettext tools",
+      "supports": "!uwp"
     }
   }
 }

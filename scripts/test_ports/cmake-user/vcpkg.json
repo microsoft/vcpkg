@@ -26,14 +26,6 @@
             "cmake-3-7"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
-        },
-        {
-          "$comment": "This is to test cross-builds for gettext tools.",
-          "name": "gettext",
-          "features": [
-            "tools"
-          ],
-          "platform": "uwp"
         }
       ]
     },
