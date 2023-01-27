@@ -1949,8 +1949,8 @@
       "port-version": 9
     },
     "dimcli": {
-      "baseline": "5.0.2",
-      "port-version": 3
+      "baseline": "7.1.0",
+      "port-version": 0
     },
     "directx-dxc": {
       "baseline": "2022-12-16",
