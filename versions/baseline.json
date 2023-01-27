@@ -7988,10 +7988,6 @@
       "baseline": "2022-10-15",
       "port-version": 0
     },
-    "vcpkg-tool-gyp-nss": {
-      "baseline": "2022-03-04",
-      "port-version": 0
-    },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
       "port-version": 0
