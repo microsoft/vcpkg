@@ -37,12 +37,6 @@
     "zlib"
   ],
   "features": {
-    "libheif": {
-      "description": "Enable heif support for openimageio",
-      "dependencies": [
-        "libheif"
-      ]
-    },
     "ffmpeg": {
       "description": "Enable ffmpeg support for openimageio",
       "dependencies": [
@@ -65,6 +59,12 @@
       "description": "Enable giflib support for openimageio",
       "dependencies": [
         "giflib"
+      ]
+    },
+    "libheif": {
+      "description": "Enable heif support for openimageio",
+      "dependencies": [
+        "libheif"
       ]
     },
     "libraw": {
