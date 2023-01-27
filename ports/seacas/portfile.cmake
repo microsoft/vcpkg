@@ -114,5 +114,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/SeacasConfig.cmake")
 
+file(GLOB_RECURSE python_files LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/lib/*.py" "${CURRENT_PACKAGES_DIR}/debug/lib/*.py")
+if(python_files)
+    file(REMOVE ${python_files})
+endif()
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 

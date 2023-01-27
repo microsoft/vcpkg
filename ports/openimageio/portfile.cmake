@@ -13,6 +13,8 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-vs2019-encoding-conversion.patch
+        qt6.patch
+        more_qt6.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -43,7 +45,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       OIIO_BUILD_TOOLS
         tools       USE_OPENGL
         tools       USE_QT
-        tools       USE_QT5
 )
 
 vcpkg_cmake_configure(

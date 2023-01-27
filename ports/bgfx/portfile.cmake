@@ -1,31 +1,31 @@
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8398-400.tar.gz"
+  URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8415-411.tar.gz"
   FILENAME "bgfx.cmake.tar.gz"
-  SHA512 bfd3a00c1e39fddd549a594bcd0292aebbc8f3c4bae6938b9cb7c2b9ddc880e720cac4d7a42460567679b61901cc127c58e045a4bb7d03f4bb529c99f5375df9
+  SHA512 7a956a2d08e0e5b26b1a91931966234761f8dc6f9475b4b3fb4bb0045c0cf38f237bc34c4f74ca21f273b36367f3ffd0c17d379687e947bc9e4b779faf269cd4
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BX
   REPO "bkaradzic/bx"
   HEAD_REF master
-  REF aed1086c48884b1b4f1c2f9af34c5198624263f6
-  SHA512 63bc5c6358f6a760bd5d8d056ef6fc6de175dcf8b940d5490225f13dfdd791c6b1d6bd2087d5d48a34955649bc12cbcc92f5221188ba0df5eb5c5d00eb389e94
+  REF fa1411e4aa111c8b004c97660ab31ba1a5287835
+  SHA512 0c6bd7e41c6dd3263c01d761aefdd55d2ed527ca694b52f563c6ded3ba5569df1492c8d04e5f76de3b1bdf7c5ca2978b8ec394d48ea29593535979f204d3ad0c
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BIMG
   REPO "bkaradzic/bimg"
   HEAD_REF master
-  REF 1af90543ca262c1cfa10aa477aef9dc1b11419f4
-  SHA512 309b1e1aeb5fc1bdd189e848b642a209d27602ea5f5cdc405cc0ab8f17bc426f5a331fb396424b0ebad49407638c85d0d97fee51faf10750e512a30b49cabd23
+  REF 7afa2419254fd466c013a51bdeb0bee3022619c4
+  SHA512 514deed00f8bc4106f67b777dca72d0ed0accb1ae057ad37d22a21c83ad3a85ad23d220ac0cf40b6a8006d43c308b1acfad464b51e64075aa01598731a1557df
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BGFX
   REPO "bkaradzic/bgfx"
   HEAD_REF master
-  REF 5f435ea56b29c3dd3ebdf9fab1a8f408681ff919
-  SHA512 5d072fad3c1bfdf0c805f9cf18f34e10cbeb602e9bb7440c962fed58c400b89e9e6487e9986cfcd16d3ab65916a37ef62ebc6b43560ce132364a4e2466138f63
+  REF bea82a13436a42a339e26354c8106dc28dedc178
+  SHA512 2a758891b362ee6d22e1ec1038075fb9e7f19911868f182aa3f2264150cffe1795a87fc959c566b89400f0c2fe4277d5dba8beb4e7c7e1374644b91ad7979b73
 )
 
 vcpkg_check_features(

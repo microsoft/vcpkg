@@ -1,7 +1,7 @@
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
-set(USE_QT_VERSION "5")
+set(USE_QT_VERSION "6")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -525,7 +525,7 @@ find_dependency(Tesseract)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent Core5Compat)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")

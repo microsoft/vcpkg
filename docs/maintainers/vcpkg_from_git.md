@@ -12,7 +12,7 @@ vcpkg_from_git(
     REF <59f7335e4d...>
     [HEAD_REF <ref>]
     [PATCHES <patch1.patch> <patch2.patch>...]
-    [LFS]
+    [LFS [url]]
 )
 ```
 
@@ -46,6 +46,8 @@ Relative paths are based on the port directory.
 ### LFS
 Enable fetching files stored using Git LFS.
 Only files pointed to by `REF` are fetched.
+
+The LFS url is optional. By default the Git url is used.
 
 This makes Git LFS mandatory for the port.
 It's a fatal error if the extension is not installed.
