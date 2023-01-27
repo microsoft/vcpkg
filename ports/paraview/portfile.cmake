@@ -1,4 +1,13 @@
 set(VERSION_MAJOR_MINOR 5.11)
+
+set(plat_feat "")
+if(VCPKG_TARGET_IS_LINUX)
+    set(plat_feat "tools" VTK_USE_X) # required to build the client
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    set(plat_feat "tools" VTK_USE_COCOA) # required to build the client
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
@@ -6,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
     "tools"        PARAVIEW_BUILD_TOOLS
+    ${plat_feat}
 )
 
 vcpkg_from_github(
@@ -19,6 +29,7 @@ vcpkg_from_github(
         python_include.patch
         python_wrapper.patch
         add-tools-option.patch
+        qt6-all.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -47,6 +58,7 @@ vcpkg_from_gitlab(
     REPO paraview/qttesting
     REF 08d96e9277bc4c26804fd77ce1b4fa5c791605ae # https://gitlab.kitware.com/paraview/qttesting/-/merge_requests/53 for Qt6
     SHA512  cb4acdfe1206bd8bae4f70185c8ca1ce555cf983a1d1e97293dac544ab13b039638bfe0d1e448f9589db92b6ed23b9b940157e72d9ec9e3994ea9858ab1722ec
+    PATCHES 53.diff
 )
 
 vcpkg_from_gitlab(
@@ -83,7 +95,6 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
-
         # A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
 

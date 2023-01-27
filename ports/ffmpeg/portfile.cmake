@@ -48,14 +48,22 @@ endif()
 
 set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+if(VCPKG_TARGET_IS_ANDROID)
+    # Disable asm and x86asm on all android targets because they trigger build failures:
+    # arm64 Android build fails with 'relocation R_AARCH64_ADR_PREL_PG_HI21 cannot be used against symbol ff_cos_32; recompile with -fPIC'
+    # x86 Android build fails with 'error: inline assembly requires more registers than available'.
+    # x64 Android build fails with 'relocation R_X86_64_PC32 cannot be used against symbol ff_h264_cabac_tables; recompile with -fPIC'
+    set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+else()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+    endif()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

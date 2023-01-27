@@ -1,5 +1,5 @@
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 72c07f4..5675d1e 100644
+index a8a96e1..98d69d6 100644
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
 @@ -3,6 +3,15 @@
@@ -19,10 +19,10 @@ index 72c07f4..5675d1e 100644
  # by the encoder: the encoder uses both dec and enc ourse files, while the
  # decoder uses only dec source files.
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 50cc72c..fed027e 100644
+index 8ee9864..57993ea 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
-@@ -45,36 +45,7 @@ else()
+@@ -45,59 +45,7 @@ else()
  endif()
  
  # brotli
@@ -55,12 +55,35 @@ index 50cc72c..fed027e 100644
 -      add_library(${brlib} ALIAS ${brlib}-static)
 -    endforeach()
 -  endif()  # BROTLI_EMSCRIPTEN
+-  if(APPLE)
+-    if(NOT DEFINED CMAKE_MACOSX_RPATH)
+-      # Use @rpath in install_name when CMAKE_MACOSX_RPATH is not set.
+-      set_property(TARGET brotlienc PROPERTY MACOSX_RPATH TRUE)
+-      set_property(TARGET brotlidec PROPERTY MACOSX_RPATH TRUE)
+-      set_property(TARGET brotlicommon PROPERTY MACOSX_RPATH TRUE)
+-    endif()
+-    if((NOT DEFINED CMAKE_MACOSX_RPATH) OR CMAKE_MACOSX_RPATH)
+-      # Set library search path when @rpath is used.
+-      if(NOT DEFINED CMAKE_INSTALL_RPATH)
+-        set_property(TARGET brotlienc PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+-        set_property(TARGET brotlidec PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+-        set_property(TARGET brotlicommon PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+-      endif()
+-    else()
+-      # Set conventional install_name when @rpath is not used.
+-      if(NOT DEFINED CMAKE_INSTALL_NAME_DIR)
+-        set_property(TARGET brotlienc PROPERTY INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+-        set_property(TARGET brotlidec PROPERTY INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+-        set_property(TARGET brotlicommon PROPERTY INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+-      endif()
+-    endif()
+-  endif()  # APPLE
 -endif()
 +find_package(unofficial-brotli CONFIG REQUIRED)
  
  # *cms
  if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
-@@ -86,18 +57,7 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+@@ -109,18 +57,7 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/skcms/LICENSE"
                   ${PROJECT_BINARY_DIR}/LICENSE.skcms COPYONLY)
  endif ()
@@ -79,4 +102,4 @@ index 50cc72c..fed027e 100644
 +find_package(lcms2 CONFIG REQUIRED)
  
  # libpng
- if (JPEGXL_EMSCRIPTEN)
+ if (JPEGXL_BUNDLE_LIBPNG AND JPEGXL_EMSCRIPTEN)

@@ -1,12 +1,10 @@
-set(LLVM_VERSION "14.0.4")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-${LLVM_VERSION}
-    SHA512 e14e6c3a1915a96e9ddc609f16ca3a398ca6f7fd0a691dadaa24490078a661340e845cb2d18f3679de4f47300bb822c33ae69548af6a0370d55737831a28b959
+    REF llvmorg-${VERSION}
+    SHA512 d64f97754c24f32deb5f284ebbd486b3a467978b7463d622f50d5237fff91108616137b4394f1d1ce836efa59bf7bec675b6dee257a79b241c15be52d4697460
     HEAD_REF main
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
@@ -111,7 +109,7 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
     # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
     # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${LLVM_VERSION})
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${VERSION})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -245,7 +243,7 @@ vcpkg_cmake_configure(
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
-        -DPACKAGE_VERSION=${LLVM_VERSION}
+        -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
