@@ -142,6 +142,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         execute_process(
             COMMAND uname -m
             OUTPUT_VARIABLE MACHINE
+            OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation

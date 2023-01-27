@@ -242,7 +242,6 @@ function(vcpkg_configure_cmake)
         "-DZ_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
-        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     if(NOT "${generator_arch}" STREQUAL "")
