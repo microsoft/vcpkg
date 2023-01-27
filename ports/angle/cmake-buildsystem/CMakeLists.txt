@@ -151,6 +151,8 @@ set(ANGLE_PRIVATE_INCLUDE_DIRECTORIES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/KHR"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/base"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/xxhash"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib/google"
     "${CMAKE_CURRENT_BINARY_DIR}/include"
 )
@@ -172,6 +174,7 @@ endif()
 
 set(ANGLE_SOURCES
     ${libangle_common_sources}
+    ${libangle_common_shader_state_sources}
     ${angle_preprocessor_sources}
     ${angle_translator_glsl_base_sources}
     ${angle_translator_essl_sources}
@@ -182,7 +185,7 @@ set(ANGLE_SOURCES
     ${angle_system_utils_sources}
     src/common/angle_version_info.cpp
     src/libANGLE/capture/FrameCapture_mock.cpp
-    src/libANGLE/capture/frame_capture_utils_mock.cpp
+    src/libANGLE/capture/serialize_mock.cpp
 )
 
 if (WIN32)
@@ -215,10 +218,10 @@ set(zlib_wrapper_sources
 )
 
 set(angle_gl_enum_utils # VCPKG EDIT: Update paths
-    "src/libANGLE/capture/gl_enum_utils.cpp"
-    "src/libANGLE/capture/gl_enum_utils.h"
-    "src/libANGLE/capture/gl_enum_utils_autogen.cpp"
-    "src/libANGLE/capture/gl_enum_utils_autogen.h"
+    "src/common/gl_enum_utils.cpp"
+    "src/common/gl_enum_utils.h"
+    "src/common/gl_enum_utils_autogen.cpp"
+    "src/common/gl_enum_utils_autogen.h"
 )
 
 set(angle_glslang_wrapper
