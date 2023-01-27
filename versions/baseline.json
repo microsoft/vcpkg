@@ -4737,7 +4737,7 @@
       "port-version": 2
     },
     "luajit": {
-      "baseline": "2022-11-22",
+      "baseline": "2023-01-04",
       "port-version": 0
     },
     "luasec": {
