@@ -1,0 +1,22 @@
+diff --git a/src/gui/rhi/qrhigles2.cpp b/src/gui/rhi/qrhigles2.cpp
+index 89c5d75f..41e3783e 100644
+--- a/src/gui/rhi/qrhigles2.cpp
++++ b/src/gui/rhi/qrhigles2.cpp
+@@ -2446,10 +2446,17 @@ static inline GLenum toGlBlendOp(QRhiGraphicsPipeline::BlendOp op)
+         return GL_FUNC_SUBTRACT;
+     case QRhiGraphicsPipeline::ReverseSubtract:
+         return GL_FUNC_REVERSE_SUBTRACT;
++#if defined(Q_OS_IOS)
++    case QRhiGraphicsPipeline::Min:
++        return GL_MIN_EXT;
++    case QRhiGraphicsPipeline::Max:
++        return GL_MAX_EXT;
++#else
+     case QRhiGraphicsPipeline::Min:
+         return GL_MIN;
+     case QRhiGraphicsPipeline::Max:
+         return GL_MAX;
++#endif
+     default:
+         Q_UNREACHABLE();
+         return GL_FUNC_ADD;

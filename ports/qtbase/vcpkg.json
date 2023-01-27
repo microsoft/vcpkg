@@ -1,6 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.4.2",
+  "port-version": 1,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -8,7 +9,7 @@
   "dependencies": [
     {
       "name": "libb2",
-      "platform": "!windows"
+      "platform": "!windows & !ios"
     },
     "pcre2",
     {
@@ -108,6 +109,14 @@
     "default-features": {
       "description": "Platform-dependent default features",
       "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ],
+          "platform": "ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,

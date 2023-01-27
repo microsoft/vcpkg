@@ -19,6 +19,7 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
         GLIB2-static.patch # alternative is to force pkg-config
+        fix_glminmax_ios.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
