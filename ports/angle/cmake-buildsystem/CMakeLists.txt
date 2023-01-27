@@ -409,7 +409,8 @@ install(TARGETS ${_installableTargets} EXPORT ANGLEExport
     ARCHIVE DESTINATION lib
 )
 
-install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(EXPORT ANGLEExport FILE unofficial-angle-targets.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(FILES unofficial-angle-config.cmake DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
