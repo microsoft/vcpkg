@@ -1,7 +1,9 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n5.0.2
+    REF n${VERSION}
     SHA512 76f892f15b65574c01a98eb6e8e0fa8a6c9febd9419f3f2a91bbd275762934d65bd809c6dbe67e047a475e1c8510b3e8d503fb0016e979a52edb7a02722788ca
     HEAD_REF master
     PATCHES
@@ -46,14 +48,22 @@ endif()
 
 set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+if(VCPKG_TARGET_IS_ANDROID)
+    # Disable asm and x86asm on all android targets because they trigger build failures:
+    # arm64 Android build fails with 'relocation R_AARCH64_ADR_PREL_PG_HI21 cannot be used against symbol ff_cos_32; recompile with -fPIC'
+    # x86 Android build fails with 'error: inline assembly requires more registers than available'.
+    # x64 Android build fails with 'relocation R_X86_64_PC32 cannot be used against symbol ff_h264_cabac_tables; recompile with -fPIC'
+    set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+else()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+    endif()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -868,4 +878,5 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/${LICENSE_FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")

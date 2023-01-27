@@ -1,32 +1,31 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8384-362.tar.gz"
-    FILENAME "v1.118.8384-362.tar.gz"
-    SHA512 56203c40a724cd9e225d1c3142a30f8dd2e2f8cfc869a19cfa512bc69f0f62cd9460d016f1345a21bae9ef81323571d30dc588fde53f0fd0ba8628f7bbbab563
+  URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8415-411.tar.gz"
+  FILENAME "bgfx.cmake.tar.gz"
+  SHA512 7a956a2d08e0e5b26b1a91931966234761f8dc6f9475b4b3fb4bb0045c0cf38f237bc34c4f74ca21f273b36367f3ffd0c17d379687e947bc9e4b779faf269cd4
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BX
   REPO "bkaradzic/bx"
   HEAD_REF master
-  REF aed1086c48884b1b4f1c2f9af34c5198624263f6
-  SHA512 63bc5c6358f6a760bd5d8d056ef6fc6de175dcf8b940d5490225f13dfdd791c6b1d6bd2087d5d48a34955649bc12cbcc92f5221188ba0df5eb5c5d00eb389e94
+  REF fa1411e4aa111c8b004c97660ab31ba1a5287835
+  SHA512 0c6bd7e41c6dd3263c01d761aefdd55d2ed527ca694b52f563c6ded3ba5569df1492c8d04e5f76de3b1bdf7c5ca2978b8ec394d48ea29593535979f204d3ad0c
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BIMG
   REPO "bkaradzic/bimg"
   HEAD_REF master
-  REF 85109d7cdbe775a0ab72cf38510df525d5e8d3da
-  SHA512 b3e082cd249e802e6d209ed45a552843604713a06597277b2855d1fa1c39b3d5136d5589599a85126eda218ccfee0ce6177f004cb5dccb912fe64ea7e07af2a8
-  PATCHES fix-headerfile.patch
+  REF 7afa2419254fd466c013a51bdeb0bee3022619c4
+  SHA512 514deed00f8bc4106f67b777dca72d0ed0accb1ae057ad37d22a21c83ad3a85ad23d220ac0cf40b6a8006d43c308b1acfad464b51e64075aa01598731a1557df
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BGFX
   REPO "bkaradzic/bgfx"
   HEAD_REF master
-  REF 66de825e6f9de21890b336994141ab5dbc214dec
-  SHA512 16ee1d3897dce5fcee7e658f793e078a1f3547b5d3512ebb860819d5105df99f87e4389ee1c66c1d24df04e0e589b6842cf36a52581e21732164017098f36f60
+  REF bea82a13436a42a339e26354c8106dc28dedc178
+  SHA512 2a758891b362ee6d22e1ec1038075fb9e7f19911868f182aa3f2264150cffe1795a87fc959c566b89400f0c2fe4277d5dba8beb4e7c7e1374644b91ad7979b73
 )
 
 vcpkg_check_features(
@@ -45,8 +44,9 @@ endif ()
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES fix-dependencies.patch
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-inject-packages.cmake" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -58,6 +58,7 @@ vcpkg_cmake_configure(
           -DBGFX_AMALGAMATED=ON
           -DBGFX_BUILD_EXAMPLES=OFF
           -DBGFX_OPENGLES_VERSION=30
+          -DBGFX_CMAKE_USER_SCRIPT=vcpkg-inject-packages.cmake
           ${FEATURE_OPTIONS}
 )
 
@@ -67,7 +68,7 @@ vcpkg_copy_pdbs()
 
 if (BGFX_BUILD_TOOLS)
   vcpkg_copy_tools(
-    TOOL_NAMES shaderc geometryc geometryv texturec texturev AUTO_CLEAN
+    TOOL_NAMES bin2c shaderc geometryc geometryv texturec texturev AUTO_CLEAN
   )
 endif ()
 

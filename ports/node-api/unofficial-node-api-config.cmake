@@ -13,6 +13,12 @@ set_target_properties(unofficial::node-api::node-api PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${node-api_INCLUDE_DIR}"
 )
 
+if(APPLE)
+  set_target_properties(unofficial::node-api::node-api PROPERTIES
+    INTERFACE_LINK_OPTIONS "LINKER:SHELL:-undefined dynamic_lookup"
+  )
+endif()
+
 if(WIN32)
   find_library(node-api_LIBRARY_RELEASE NAMES node PATHS "${CMAKE_CURRENT_LIST_DIR}/../../lib" NO_DEFAULT_PATH REQUIRED)
   find_library(node-api_LIBRARY_DEBUG NAMES node PATHS "${CMAKE_CURRENT_LIST_DIR}/../../debug/lib" NO_DEFAULT_PATH REQUIRED)
