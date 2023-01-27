@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "port-version": 1,
   "description": "Qt",
   "homepage": "https://www.qt.io/",
@@ -63,6 +63,7 @@
       ]
     },
     "qtinterfaceframework",
+    "qtlanguageserver",
     {
       "name": "qtlottie",
       "default-features": false,
@@ -85,7 +86,16 @@
       "features": [
         "gstreamer"
       ],
-      "platform": "!(static & windows)"
+      "platform": "!windows"
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "ffmpeg",
+        "gstreamer"
+      ],
+      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
@@ -130,6 +140,11 @@
     "qtserialbus",
     "qtserialport",
     "qtshadertools",
+    {
+      "name": "qtspeech",
+      "default-features": false,
+      "platform": "!(windows & x86)"
+    },
     "qtsvg",
     {
       "name": "qttools",
@@ -195,13 +210,6 @@
             "qml"
           ],
           "platform": "windows"
-        },
-        {
-          "name": "qtbase",
-          "features": [
-            "gles2"
-          ],
-          "platform": "linux"
         },
         {
           "name": "qtwayland",

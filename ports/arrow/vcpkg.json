@@ -1,6 +1,7 @@
 {
   "name": "arrow",
-  "version": "9.0.0",
+  "version": "10.0.1",
+  "port-version": 3,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -62,6 +63,18 @@
         "c-ares",
         "grpc",
         "protobuf"
+      ]
+    },
+    "gcs": {
+      "description": "GCS support",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        }
       ]
     },
     "jemalloc": {

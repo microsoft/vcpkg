@@ -1,10 +1,10 @@
-set(VERSION 3.4.2)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
     REF "v${VERSION}"
-    SHA512 d399319efcca375fe901b05722e25eca31d11a4261c6a5d5079480bbc552d4e4b42de2026912689d3b2f886ebb3c8bebbea47102e38a2f6acbc526b8d5bba388
+    SHA512 e3b261a7900cec61225c768ebd443884465669e0904db3f523aaaeeed74b4c03dbe23d74ff8bb69554791a798e25894a5fcbe2b13b883d3ee38aeff4c1e16a49
     HEAD_REF master
 )
 

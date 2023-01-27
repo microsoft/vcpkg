@@ -1,10 +1,10 @@
 {
   "name": "quill",
-  "version": "2.3.0",
+  "version": "2.6.0",
   "description": "C++14 Asynchronous Low Latency Logging Library",
   "homepage": "https://github.com/odygrd/quill/",
   "license": "MIT",
-  "supports": "!(uwp | android)",
+  "supports": "!android",
   "dependencies": [
     "fmt",
     {

@@ -7,7 +7,9 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.3.2)
+set(QT_VERSION 6.4.2)
+set(QT_DEV_BRANCH 0)
+
 set(QT_UPDATE_VERSION 0)
 
 if(PORT MATCHES "(qtquickcontrols2)")
@@ -73,14 +75,28 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2.2)
              qtinterfaceframework
              qtapplicationmanager)
 endif()
-
+if(QT_VERSION VERSION_GREATER_EQUAL 6.3.0)
+    list(APPEND QT_PORTS
+             ## New in 6.3.0
+             qtlanguageserver)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.4.0)
+    list(APPEND QT_PORTS
+             ## New in 6.4.0
+             qthttpserver
+             qtquick3dphysics
+             qtspeech)
+endif()
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
-set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
+set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager qthttpserver)
 # 3. These modules are mirrored to github and have branches matching the release
 set(QT_FROM_GITHUB_BRANCH qtdeviceutilities qtlocation)
 # 4. These modules are not mirrored to github and not part of the release
-set(QT_FROM_QT_GIT qtinterfaceframework)
+set(QT_FROM_QT_GIT qtinterfaceframework qtquick3dphysics)
+# For beta releases uncomment the next two lines and comment the lines with QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, QT_FROM_QT_GIT
+#set(QT_FROM_QT_GIT ${QT_PORTS})
+#list(POP_FRONT QT_FROM_QT_GIT)
 
 function(qt_get_url_filename qt_port out_url out_filename)
     if("${qt_port}" IN_LIST QT_FROM_GITHUB)
@@ -91,7 +107,11 @@ function(qt_get_url_filename qt_port out_url out_filename)
         set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
     else()
         string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
-        set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        if(NOT QT_DEV_BRANCH)
+            set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        else()
+            set(url "https://download.qt.io/development_releases/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        endif()
         set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
     endif()
     set(${out_url} "${url}" PARENT_SCOPE)

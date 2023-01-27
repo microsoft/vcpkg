@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
-  "version": "4.6.0",
-  "port-version": 7,
+  "version": "4.7.0",
+  "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -149,7 +149,13 @@
     "gstreamer": {
       "description": "gstreamer support for opencv",
       "dependencies": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "gtk": {
@@ -246,9 +252,16 @@
     "qt": {
       "description": "Qt GUI support for opencv",
       "dependencies": [
+        "qt5compat",
         {
-          "name": "qt5-base",
-          "default-features": false
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "concurrent",
+            "gui",
+            "testlib",
+            "widgets"
+          ]
         }
       ]
     },

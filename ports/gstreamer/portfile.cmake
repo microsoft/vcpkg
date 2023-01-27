@@ -1,88 +1,35 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
-    REPO gstreamer/gst-build
-    REF 1.19.2
-    SHA512 d6b8e9fc195a60dfb83fe8a49040c21ca5603e3ada2036d56851e6e61a1cd2653ad45f33e39388bde859dfb4806f4a60d9dbfac5fe41b6d2a8b395c44d4525e3
-    HEAD_REF master
-    PATCHES gstreamer-disable-hot-doc.patch fix-clang-cl.patch
-)
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_SOURCE_PATH
-    REPO gstreamer/gstreamer
-    REF 1.19.2
-    SHA512 6070f1febf2a1bcc6e68f1e03c1b76891db210773065696e26fac20f0bd3ff47e1634222a49f93a10f6e47717ff21084c9ae0feed6a20facb9650aeb879cc380
-    HEAD_REF master
-    PATCHES gstreamer-disable-no-unused.patch fix-clang-cl-gstreamer.patch
-)
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch plugins-base-x11.patch)
-    list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
-    list(APPEND PLUGIN_UGLY_PATCHES plugins-ugly-disable-doc.patch)
+    set(PATCHES
+        plugin-base-disable-no-unused.patch
+    )
 endif()
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_PLUGIN_BASE_SOURCE_PATH
-    REPO gstreamer/gst-plugins-base
-    REF 1.19.2
-    SHA512 d2005e6a3bda5f08395b131347e8f4054c2469e04e65d1acc1a1572bf10d81d4dad4e43d6a8600346b6175a2310f81157a0cd27398ef69b5363b16346febfb39
-    HEAD_REF master
-    PATCHES ${PLUGIN_BASE_PATCHES} fix-clang-cl-base.patch
-)
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_PLUGIN_GOOD_SOURCE_PATH
-    REPO gstreamer/gst-plugins-good
-    REF 1.19.2
-    SHA512 71e9f36d407db3b75d9a68f6447093aa011b2b586b06e0a1bb79c7db37c9114de505699e99a4dad06d8d9c742e91f48dd35457283babe440f88a9e40d3da465b
-    HEAD_REF master
-    PATCHES ${PLUGIN_GOOD_PATCHES} fix-clang-cl-good.patch
-)
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_PLUGIN_BAD_SOURCE_PATH
-    REPO gstreamer/gst-plugins-bad
-    REF 1.19.2
-    SHA512 f63ca3abf380bba92dca4ac3a51cba5ea95093693cf64d167a7a9c0bf6341c35a74fd42332673dbd1581ea70da0a35026aa3e2ce99b5e573268ccb55b5491c1d
-    HEAD_REF master
-    PATCHES fix-clang-cl-bad.patch
-)
-vcpkg_from_github(
-    OUT_SOURCE_PATH GST_PLUGIN_UGLY_SOURCE_PATH
-    REPO gstreamer/gst-plugins-ugly
-    REF 1.19.2
-    SHA512 70dcd4a36d3bd35f680eaa3c980842fbb57f55f17d1453c6a95640709b1b33a263689bf54caa367154267d281e5474686fedaa980de24094de91886a57b6547a
-    HEAD_REF master
-    PATCHES ${PLUGIN_UGLY_PATCHES} fix-clang-cl-ugly.patch remove_x264_define.patch
-)
+
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org
-    OUT_SOURCE_PATH GST_MESON_PORTS_SOURCE_PATH
-    REPO gstreamer/meson-ports/gl-headers
-    REF 5c8c7c0d3ca1f0b783272dac0b95e09414e49bc8 # master commit. Date 2021-04-21
-    SHA512 d001535e1c1b5bb515ac96c7d15b25ca51460a5af0c858df53b11c7bae87c4a494e4a1b1b9c3c41a5989001db083645dde2054b82acbbeab7f9939308b676f9c
+    GITLAB_URL https://gitlab.freedesktop.org/
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO gstreamer/gstreamer
+    REF 1.20.5
+    SHA512 2a996d8ac0f70c34dbbc02c875026df6e89346f0844fbaa25475075bcb6e57c81ceb7d71e729c3259eace851e3d7222cb3fe395e375d93eb45b1262a6ede1fdb
     HEAD_REF master
+    PATCHES
+        fix-clang-cl.patch
+        fix-clang-cl-gstreamer.patch
+        fix-clang-cl-base.patch
+        fix-clang-cl-good.patch
+        fix-clang-cl-bad.patch
+        fix-clang-cl-ugly.patch
+        gstreamer-disable-no-unused.patch
+        srtp_fix.patch
+        ${PATCHES}
 )
 
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer")
-    file(RENAME "${GST_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer")
-endif()
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base")
-    file(RENAME "${GST_PLUGIN_BASE_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base")
-endif()
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good")
-    file(RENAME "${GST_PLUGIN_GOOD_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good")
-endif()
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad")
-    file(RENAME "${GST_PLUGIN_BAD_SOURCE_PATH}"  "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad")
-endif()
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly")
-    file(RENAME "${GST_PLUGIN_UGLY_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly")
-endif()
-if (NOT EXISTS "${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers")
-    file(RENAME "${GST_MESON_PORTS_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers")
-endif()
+vcpkg_find_acquire_program(FLEX)
+vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(NASM)
 
 if(VCPKG_TARGET_IS_OSX)
     # In Darwin platform, there can be an old version of `bison`,
     # Which can't be used for `gst-build`. It requires 2.4+
-    vcpkg_find_acquire_program(BISON)
     execute_process(
         COMMAND ${BISON} --version
         OUTPUT_VARIABLE BISON_OUTPUT
@@ -96,15 +43,18 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
-# make tools like 'glib-mkenums' visible
-get_filename_component(GLIB_TOOL_DIR "${CURRENT_INSTALLED_DIR}/tools/glib" ABSOLUTE)
-message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
-vcpkg_add_to_path(PREPEND "${GLIB_TOOL_DIR}")
+# General features
 
-if ("x264" IN_LIST FEATURES)
-    set(PLUGIN_UGLY_X264 enabled)
+if("gpl" IN_LIST FEATURES)
+    set(LICENSE_GPL enabled)
 else()
-    set(PLUGIN_UGLY_X264 disabled)
+    set(LICENSE_GPL disabled)
+endif()
+
+if("nls" IN_LIST FEATURES)
+    set(NLS enabled)
+else()
+    set(NLS disabled)
 endif()
 
 if("plugins-base" IN_LIST FEATURES)
@@ -112,142 +62,348 @@ if("plugins-base" IN_LIST FEATURES)
 else()
     set(PLUGIN_BASE_SUPPORT disabled)
 endif()
-if("plugins-bad" IN_LIST FEATURES)
-    # requires 'libdrm', 'dssim', 'libmicrodns'
-    message(FATAL_ERROR "The feature 'plugins-bad' is not supported in this port version")
-    set(PLUGIN_BAD_SUPPORT enabled)
+
+if("plugins-good" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_SUPPORT enabled)
 else()
-    set(PLUGIN_BAD_SUPPORT disabled)
+    set(PLUGIN_GOOD_SUPPORT disabled)
 endif()
+
 if("plugins-ugly" IN_LIST FEATURES)
     set(PLUGIN_UGLY_SUPPORT enabled)
 else()
     set(PLUGIN_UGLY_SUPPORT disabled)
 endif()
 
-if ("gl-graphene" IN_LIST FEATURES)
+if("plugins-bad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SUPPORT enabled)
+else()
+    set(PLUGIN_BAD_SUPPORT disabled)
+endif()
+
+if("gl-graphene" IN_LIST FEATURES)
     set(GL_GRAPHENE enabled)
 else()
     set(GL_GRAPHENE disabled)
 endif()
 
-if ("flac" IN_LIST FEATURES)
-    set(PLUGIN_GOOD_FLAC enabled)
+# Base optional plugins
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BASE_WINDOW_SYSTEM win32)
+    set(PLUGIN_BASE_GL_PLATFORM wgl)
 else()
-    set(PLUGIN_GOOD_FLAC disabled)
+    set(PLUGIN_BASE_WINDOW_SYSTEM auto)
+    set(PLUGIN_BASE_GL_PLATFORM auto)
 endif()
 
-if ("x11" IN_LIST FEATURES)
-    set(PLUGIN_BASE_X11 enabled)
+if("alsa" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
+    set(PLUGIN_BASE_ALSA enabled)
 else()
-    set(PLUGIN_BASE_X11 disabled)
+    set(PLUGIN_BASE_ALSA disabled)
 endif()
 
-if ("opus" IN_LIST FEATURES)
+if("ogg" IN_LIST FEATURES)
+    set(PLUGIN_BASE_OGG enabled)
+else()
+    set(PLUGIN_BASE_OGG disabled)
+endif()
+
+if("opus-base" IN_LIST FEATURES)
     set(PLUGIN_BASE_OPUS enabled)
 else()
     set(PLUGIN_BASE_OPUS disabled)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(LIBRARY_LINKAGE "shared")
+if("pango" IN_LIST FEATURES)
+    set(PLUGIN_BASE_PANGO enabled)
 else()
-    set(LIBRARY_LINKAGE "static")
+    set(PLUGIN_BASE_PANGO disabled)
 endif()
 
-# gst-build's meson configuration needs git. Make the tool visible.
-vcpkg_find_acquire_program(GIT)
-get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
-vcpkg_add_to_path("${GIT_DIR}")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PLUGIN_BASE_WIN
-        -Dgst-plugins-base:xvideo=disabled
-        -Dgst-plugins-base:xshm=disabled
-        -Dgst-plugins-base:gl_winsys=win32)
+if("vorbis" IN_LIST FEATURES)
+    set(PLUGIN_BASE_VORBIS enabled)
+else()
+    set(PLUGIN_BASE_VORBIS disabled)
 endif()
 
-#
-# check scripts/cmake/vcpkg_configure_meson.cmake
-#   --wrap-mode=nodownload
+if("x11-base" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BASE_X11 enabled)
+else()
+    set(PLUGIN_BASE_X11 disabled)
+endif()
+
+# Good optional plugins
+
+if("cairo" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_CAIRO enabled)
+else()
+    set(PLUGIN_GOOD_CAIRO disabled)
+endif()
+
+if("flac" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_FLAC enabled)
+else()
+    set(PLUGIN_GOOD_FLAC disabled)
+endif()
+
+if("gdk-pixbuf" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_GDK_PIXBUF enabled)
+else()
+    set(PLUGIN_GOOD_GDK_PIXBUF disabled)
+endif()
+
+if("jpeg" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_JPEG enabled)
+else()
+    set(PLUGIN_GOOD_JPEG disabled)
+endif()
+
+if("mpg123" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_MPG123 enabled)
+else()
+    set(PLUGIN_GOOD_MPG123 disabled)
+endif()
+
+if("png" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_PNG enabled)
+else()
+    set(PLUGIN_GOOD_PNG disabled)
+endif()
+
+if("speex" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_SPEEX enabled)
+else()
+    set(PLUGIN_GOOD_SPEEX disabled)
+endif()
+
+if("taglib" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_TAGLIB enabled)
+else()
+    set(PLUGIN_GOOD_TAGLIB disabled)
+endif()
+
+if("vpx" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_VPX enabled)
+else()
+    set(PLUGIN_GOOD_VPX disabled)
+endif()
+
+# Ugly optional plugins
+
+if("gpl" IN_LIST FEATURES AND "x264" IN_LIST FEATURES)
+    set(PLUGIN_UGLY_X264 enabled)
+else()
+    set(PLUGIN_UGLY_X264 disabled)
+endif()
+
+# Bad optional plugins
+
+if("aes" IN_LIST FEATURES)
+    set(PLUGIN_BAD_AES enabled)
+else()
+    set(PLUGIN_BAD_AES disabled)
+endif()
+
+if("asio" IN_LIST FEATURES)
+    set(PLUGIN_BAD_ASIO enabled)
+    set(PLUGIN_BAD_ASIO_SDK_PATH ${CURRENT_INSTALLED_DIR}/include/asiosdk)
+else()
+    set(PLUGIN_BAD_ASIO disabled)
+    set(PLUGIN_BAD_ASIO_SDK_PATH "")
+endif()
+
+if("assrender" IN_LIST FEATURES)
+    set(PLUGIN_BAD_ASSRENDER enabled)
+else()
+    set(PLUGIN_BAD_ASSRENDER disabled)
+endif()
+
+if("chromaprint" IN_LIST FEATURES)
+    set(PLUGIN_BAD_CHROMAPRINT enabled)
+else()
+    set(PLUGIN_BAD_CHROMAPRINT disabled)
+endif()
+
+if("closedcaption" IN_LIST FEATURES)
+    set(PLUGIN_BAD_CLOSEDCAPTION enabled)
+else()
+    set(PLUGIN_BAD_CLOSEDCAPTION disabled)
+endif()
+
+if("colormanagement" IN_LIST FEATURES)
+    set(PLUGIN_BAD_COLORMANAGEMENT enabled)
+else()
+    set(PLUGIN_BAD_COLORMANAGEMENT disabled)
+endif()
+
+if("dash" IN_LIST FEATURES)
+    set(PLUGIN_BAD_DASH enabled)
+else()
+    set(PLUGIN_BAD_DASH disabled)
+endif()
+
+if("dc1394" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BAD_DC1394 enabled)
+else()
+    set(PLUGIN_BAD_DC1394 disabled)
+endif()
+
+if("dtls" IN_LIST FEATURES)
+    set(PLUGIN_BAD_DTLS enabled)
+else()
+    set(PLUGIN_BAD_DTLS disabled)
+endif()
+
+if("gpl" IN_LIST FEATURES AND "faad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_FAAD enabled)
+else()
+    set(PLUGIN_BAD_FAAD disabled)
+endif()
+
+if("fdkaac" IN_LIST FEATURES)
+    set(PLUGIN_BAD_FDKAAC enabled)
+else()
+    set(PLUGIN_BAD_FDKAAC disabled)
+endif()
+
+# Plugin requires unistd.h header, which doesn't exist on Windows
+if("fluidsynth" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BAD_FLUIDSYNTH enabled)
+else()
+    set(PLUGIN_BAD_FLUIDSYNTH disabled)
+endif()
+
+if("libde265" IN_LIST FEATURES)
+    set(PLUGIN_BAD_LIBDE265 enabled)
+else()
+    set(PLUGIN_BAD_LIBDE265 disabled)
+endif()
+
+if("microdns" IN_LIST FEATURES)
+    set(PLUGIN_BAD_MICRODNS enabled)
+else()
+    set(PLUGIN_BAD_MICRODNS disabled)
+endif()
+
+if("modplug" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP)
+    set(PLUGIN_BAD_MODPLUG enabled)
+else()
+    set(PLUGIN_BAD_MODPLUG disabled)
+endif()
+
+if("openal" IN_LIST FEATURES)
+    set(PLUGIN_BAD_OPENAL enabled)
+else()
+    set(PLUGIN_BAD_OPENAL disabled)
+endif()
+
+if("openh264" IN_LIST FEATURES)
+    set(PLUGIN_BAD_OPENH264 enabled)
+else()
+    set(PLUGIN_BAD_OPENH264 disabled)
+endif()
+
+if("openjpeg" IN_LIST FEATURES)
+    set(PLUGIN_BAD_OPENJPEG enabled)
+else()
+    set(PLUGIN_BAD_OPENJPEG disabled)
+endif()
+
+if("openmpt" IN_LIST FEATURES)
+    set(PLUGIN_BAD_OPENMPT enabled)
+else()
+    set(PLUGIN_BAD_OPENMPT disabled)
+endif()
+
+if("opus-bad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_OPUS enabled)
+else()
+    set(PLUGIN_BAD_OPUS disabled)
+endif()
+
+if("smoothstreaming" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SMOOTHSTREAMING enabled)
+else()
+    set(PLUGIN_BAD_SMOOTHSTREAMING disabled)
+endif()
+
+if("sndfile" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SNDFILE enabled)
+else()
+    set(PLUGIN_BAD_SNDFILE disabled)
+endif()
+
+if("soundtouch" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SOUNDTOUCH enabled)
+else()
+    set(PLUGIN_BAD_SOUNDTOUCH disabled)
+endif()
+
+if("srt" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SRT enabled)
+else()
+    set(PLUGIN_BAD_SRT disabled)
+endif()
+
+if("srtp" IN_LIST FEATURES)
+    set(PLUGIN_BAD_SRTP enabled)
+else()
+    set(PLUGIN_BAD_SRTP disabled)
+endif()
+
+if("webp" IN_LIST FEATURES)
+    set(PLUGIN_BAD_WEBP enabled)
+else()
+    set(PLUGIN_BAD_WEBP disabled)
+endif()
+
+if("webrtc" IN_LIST FEATURES)
+    set(PLUGIN_BAD_WEBRTC enabled)
+else()
+    set(PLUGIN_BAD_WEBRTC disabled)
+endif()
+
+if("wildmidi" IN_LIST FEATURES)
+    set(PLUGIN_BAD_WILDMIDI enabled)
+else()
+    set(PLUGIN_BAD_WILDMIDI disabled)
+endif()
+
+if("x11-bad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_X11 enabled)
+else()
+    set(PLUGIN_BAD_X11 disabled)
+endif()
+
+if("gpl" IN_LIST FEATURES AND "x265" IN_LIST FEATURES)
+    set(PLUGIN_BAD_X265 enabled)
+else()
+    set(PLUGIN_BAD_X265 disabled)
+endif()
+
 #
 # References
-#   https://github.com/GStreamer/gst-build/blob/1.18.4/meson_options.txt
-#   https://github.com/GStreamer/gst-plugins-base/blob/1.18.4/meson_options.txt
-#   https://github.com/GStreamer/gst-plugins-good/blob/1.18.4/meson_options.txt
-#   https://github.com/GStreamer/gst-plugins-bad/blob/1.18.4/meson_options.txt
-#   https://github.com/GStreamer/gst-plugins-ugly/blob/1.18.4/meson_options.txt
+#   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gstreamer/meson_options.txt
+#   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gst-plugins-base/meson_options.txt
+#   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gst-plugins-good/meson_options.txt
+#   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gst-plugins-ugly/meson_options.txt
+#   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gst-plugins-bad/meson_options.txt
 #
+# Rationale for added options
+#   Common options are added below systematically
+#   Feature options are added below only if the feature needs an external dependency
+#   Feature options that are dependent on the operating system type (like wasapi or osxaudio) are set to auto
+#   Every other feature options are made available if the dependency is available on vcpkg and if the plugin has managed to build during tests
+#
+
 vcpkg_configure_meson(
-    SOURCE_PATH "${GST_BUILD_SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # gstreamer
-        -Dgstreamer:default_library=${LIBRARY_LINKAGE}
-        -Dgstreamer:check=disabled
-        -Dgstreamer:libunwind=disabled
-        -Dgstreamer:libdw=disabled
-        -Dgstreamer:dbghelp=disabled
-        -Dgstreamer:bash-completion=disabled
-        -Dgstreamer:coretracers=disabled
-        -Dgstreamer:examples=disabled
-        -Dgstreamer:tests=disabled
-        -Dgstreamer:benchmarks=disabled
-        -Dgstreamer:tools=disabled
-        -Dgstreamer:doc=disabled
-        -Dgstreamer:introspection=disabled
-        -Dgstreamer:nls=disabled
-        # gst-plugins-base
-        -Dbase=${PLUGIN_BASE_SUPPORT}
-        -Dgst-plugins-base:default_library=${LIBRARY_LINKAGE}
-        -Dgst-plugins-base:examples=disabled
-        -Dgst-plugins-base:tests=disabled
-        -Dgst-plugins-base:doc=disabled
-        -Dgst-plugins-base:tools=disabled
-        -Dgst-plugins-base:introspection=disabled
-        -Dgst-plugins-base:nls=disabled
-        -Dgst-plugins-base:orc=disabled
-        -Dgst-plugins-base:pango=disabled
-        -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
-        -Dgst-plugins-base:x11=${PLUGIN_BASE_X11}
-        -Dgst-plugins-base:opus=${PLUGIN_BASE_OPUS}
-        ${PLUGIN_BASE_WIN}
-        # gst-plugins-good
-        -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
-        -Dgst-plugins-good:qt5=disabled
-        -Dgst-plugins-good:soup=disabled
-        -Dgst-plugins-good:cairo=auto # cairo[gobject]
-        -Dgst-plugins-good:speex=auto # speex
-        -Dgst-plugins-good:taglib=auto # taglib
-        -Dgst-plugins-good:vpx=auto # libvpx
-        -Dgst-plugins-good:examples=disabled
-        -Dgst-plugins-good:tests=disabled
-        -Dgst-plugins-good:doc=disabled
-        -Dgst-plugins-good:nls=disabled
-        -Dgst-plugins-good:orc=disabled
-        -Dgst-plugins-good:flac=${PLUGIN_GOOD_FLAC}
-        # gst-plugins-bad
-        -Dbad=${PLUGIN_BAD_SUPPORT}
-        -Dgst-plugins-bad:default_library=${LIBRARY_LINKAGE}
-        -Dgst-plugins-bad:opencv=disabled
-        -Dgst-plugins-bad:hls-crypto=openssl
-        -Dgst-plugins-bad:examples=disabled
-        -Dgst-plugins-bad:tests=disabled
-        -Dgst-plugins-bad:doc=disabled
-        -Dgst-plugins-bad:introspection=disabled
-        -Dgst-plugins-bad:nls=${LIBRARY_LINKAGE}
-        -Dgst-plugins-bad:orc=disabled
-        # gst-plugins-ugly
-        -Dugly=${PLUGIN_UGLY_SUPPORT}
-        -Dgst-plugins-ugly:default_library=${LIBRARY_LINKAGE}
-        -Dgst-plugins-ugly:tests=disabled
-        -Dgst-plugins-ugly:doc=disabled
-        -Dgst-plugins-ugly:nls=disabled
-        -Dgst-plugins-ugly:orc=disabled
-        -Dgst-plugins-ugly:x264=${PLUGIN_UGLY_X264}
-        # see ${GST_BUILD_SOURCE_PATH}/meson_options.txt
+        # General options
         -Dpython=disabled
         -Dlibav=disabled
-        -Dlibnice=disabled # libnice
+        -Dlibnice=disabled
         -Ddevtools=disabled
         -Dges=disabled
         -Drtsp_server=disabled
@@ -257,31 +413,198 @@ vcpkg_configure_meson(
         -Drs=disabled
         -Dgst-examples=disabled
         -Dtls=disabled
-        -Dtests=disabled    # common options
+        -Dqt5=disabled
+        -Dgpl=${LICENSE_GPL}
+        # Common options
+        -Dtests=disabled
         -Dexamples=disabled
         -Dintrospection=disabled
-        -Dnls=disabled
-        -Dorc=disabled
+        -Dnls=${NLS}
+        -Dorc=disabled # gstreamer requires a specific version of orc which is not available in vcpkg
         -Ddoc=disabled
         -Dgtk_doc=disabled
-        -Ddevtools=disabled
-    OPTIONS_DEBUG
-        -Dgstreamer:gst_debug=true # plugins will reference this value
+        # gstreamer
+        -Dgstreamer:check=disabled
+        -Dgstreamer:libunwind=disabled
+        -Dgstreamer:libdw=disabled
+        -Dgstreamer:dbghelp=disabled
+        -Dgstreamer:bash-completion=disabled
+        -Dgstreamer:coretracers=disabled
+        -Dgstreamer:benchmarks=disabled
+        -Dgstreamer:gst_debug=true
+        # gst-plugins-base
+        -Dbase=${PLUGIN_BASE_SUPPORT}
+        -Dgst-plugins-base:gl_winsys=${PLUGIN_BASE_WINDOW_SYSTEM}
+        -Dgst-plugins-base:gl_platform=${PLUGIN_BASE_GL_PLATFORM}
+        -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
+        -Dgst-plugins-base:alsa=${PLUGIN_BASE_ALSA}
+        -Dgst-plugins-base:cdparanoia=disabled
+        -Dgst-plugins-base:libvisual=disabled
+        -Dgst-plugins-base:ogg=${PLUGIN_BASE_OGG}
+        -Dgst-plugins-base:opus=${PLUGIN_BASE_OPUS}
+        -Dgst-plugins-base:pango=${PLUGIN_BASE_PANGO}
+        -Dgst-plugins-base:theora=disabled
+        -Dgst-plugins-base:tremor=disabled
+        -Dgst-plugins-base:vorbis=${PLUGIN_BASE_VORBIS}
+        -Dgst-plugins-base:x11=${PLUGIN_BASE_X11}
+        -Dgst-plugins-base:xshm=${PLUGIN_BASE_X11}
+        -Dgst-plugins-base:xvideo=disabled
+        # gst-plugins-good
+        -Dgood=${PLUGIN_GOOD_SUPPORT}
+        -Dgst-plugins-good:aalib=disabled
+        -Dgst-plugins-good:bz2=disabled
+        -Dgst-plugins-good:directsound=auto
+        -Dgst-plugins-good:dv=disabled
+        -Dgst-plugins-good:dv1394=disabled
+        -Dgst-plugins-good:flac=${PLUGIN_GOOD_FLAC}
+        -Dgst-plugins-good:gdk-pixbuf=${PLUGIN_GOOD_GDK_PIXBUF}
+        -Dgst-plugins-good:gtk3=disabled # GTK version 3 only
+        -Dgst-plugins-good:jack=disabled
+        -Dgst-plugins-good:jpeg=${PLUGIN_GOOD_JPEG}
+        -Dgst-plugins-good:lame=disabled
+        -Dgst-plugins-good:libcaca=disabled
+        -Dgst-plugins-good:mpg123=${PLUGIN_GOOD_MPG123}
+        -Dgst-plugins-good:oss=disabled
+        -Dgst-plugins-good:oss4=disabled
+        -Dgst-plugins-good:osxaudio=auto
+        -Dgst-plugins-good:osxvideo=auto
+        -Dgst-plugins-good:png=${PLUGIN_GOOD_PNG}
+        -Dgst-plugins-good:pulse=auto
+        -Dgst-plugins-good:qt5=disabled
+        -Dgst-plugins-good:shout2=disabled
+        -Dgst-plugins-good:soup=disabled
+        -Dgst-plugins-good:speex=${PLUGIN_GOOD_SPEEX}
+        -Dgst-plugins-good:taglib=${PLUGIN_GOOD_TAGLIB}
+        -Dgst-plugins-good:twolame=disabled
+        -Dgst-plugins-good:vpx=${PLUGIN_GOOD_VPX}
+        -Dgst-plugins-good:waveform=auto
+        -Dgst-plugins-good:wavpack=disabled # Error during plugin build
+        # gst-plugins-ugly
+        -Dugly=${PLUGIN_UGLY_SUPPORT}
+        -Dgst-plugins-ugly:a52dec=disabled
+        -Dgst-plugins-ugly:amrnb=disabled
+        -Dgst-plugins-ugly:amrwbdec=disabled
+        -Dgst-plugins-ugly:cdio=disabled
+        -Dgst-plugins-ugly:dvdread=disabled
+        -Dgst-plugins-ugly:mpeg2dec=disabled # libmpeg2 not found
+        -Dgst-plugins-ugly:sidplay=disabled
+        -Dgst-plugins-ugly:x264=${PLUGIN_UGLY_X264}
+        # gst-plugins-bad
+        -Dbad=${PLUGIN_BAD_SUPPORT}
+        -Dgst-plugins-bad:aes=${PLUGIN_BAD_AES}
+        -Dgst-plugins-bad:aom=disabled # Error during plugin build
+        -Dgst-plugins-bad:avtp=disabled
+        -Dgst-plugins-bad:androidmedia=auto
+        -Dgst-plugins-bad:applemedia=auto
+        -Dgst-plugins-bad:asio=${PLUGIN_BAD_ASIO}
+        -Dgst-plugins-bad:asio-sdk-path=${PLUGIN_BAD_ASIO_SDK_PATH}
+        -Dgst-plugins-bad:assrender=${PLUGIN_BAD_ASSRENDER}
+        -Dgst-plugins-bad:bluez=disabled
+        -Dgst-plugins-bad:bs2b=disabled
+        -Dgst-plugins-bad:bz2=disabled # Error during plugin configuration
+        -Dgst-plugins-bad:chromaprint=${PLUGIN_BAD_CHROMAPRINT}
+        -Dgst-plugins-bad:closedcaption=${PLUGIN_BAD_CLOSEDCAPTION}
+        -Dgst-plugins-bad:colormanagement=${PLUGIN_BAD_COLORMANAGEMENT}
+        -Dgst-plugins-bad:curl=disabled # Error during plugin build
+        -Dgst-plugins-bad:curl-ssh2=disabled
+        -Dgst-plugins-bad:d3dvideosink=auto
+        -Dgst-plugins-bad:d3d11=auto
+        -Dgst-plugins-bad:dash=${PLUGIN_BAD_DASH}
+        -Dgst-plugins-bad:dc1394=${PLUGIN_BAD_DC1394}
+        -Dgst-plugins-bad:decklink=disabled
+        -Dgst-plugins-bad:directfb=disabled
+        -Dgst-plugins-bad:directsound=auto
+        -Dgst-plugins-bad:dtls=${PLUGIN_BAD_DTLS}
+        -Dgst-plugins-bad:dts=disabled
+        -Dgst-plugins-bad:dvb=auto
+        -Dgst-plugins-bad:faac=disabled
+        -Dgst-plugins-bad:faad=${PLUGIN_BAD_FAAD}
+        -Dgst-plugins-bad:fbdev=auto
+        -Dgst-plugins-bad:fdkaac=${PLUGIN_BAD_FDKAAC}
+        -Dgst-plugins-bad:flite=disabled
+        -Dgst-plugins-bad:fluidsynth=${PLUGIN_BAD_FLUIDSYNTH}
+        -Dgst-plugins-bad:gl=auto
+        -Dgst-plugins-bad:gme=disabled
+        -Dgst-plugins-bad:gs=disabled # Error during plugin configuration (abseil pkg-config file missing)
+        -Dgst-plugins-bad:gsm=disabled
+        -Dgst-plugins-bad:ipcpipeline=auto
+        -Dgst-plugins-bad:iqa=disabled
+        -Dgst-plugins-bad:kate=disabled
+        -Dgst-plugins-bad:kms=disabled
+        -Dgst-plugins-bad:ladspa=disabled
+        -Dgst-plugins-bad:ldac=disabled
+        -Dgst-plugins-bad:libde265=${PLUGIN_BAD_LIBDE265}
+        -Dgst-plugins-bad:lv2=disabled # Error during plugin configuration (lilv pkg-config file missing)
+        -Dgst-plugins-bad:mediafoundation=auto
+        -Dgst-plugins-bad:microdns=${PLUGIN_BAD_MICRODNS}
+        -Dgst-plugins-bad:modplug=${PLUGIN_BAD_MODPLUG}
+        -Dgst-plugins-bad:mpeg2enc=disabled
+        -Dgst-plugins-bad:mplex=disabled
+        -Dgst-plugins-bad:msdk=disabled
+        -Dgst-plugins-bad:musepack=disabled
+        -Dgst-plugins-bad:neon=disabled
+        -Dgst-plugins-bad:nvcodec=disabled
+        -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
+        -Dgst-plugins-bad:openal=${PLUGIN_BAD_OPENAL}
+        -Dgst-plugins-bad:openaptx=disabled
+        -Dgst-plugins-bad:opencv=disabled # opencv not found
+        -Dgst-plugins-bad:openexr=disabled # OpenEXR::IlmImf target not found
+        -Dgst-plugins-bad:openh264=${PLUGIN_BAD_OPENH264}
+        -Dgst-plugins-bad:openjpeg=${PLUGIN_BAD_OPENJPEG}
+        -Dgst-plugins-bad:openmpt=${PLUGIN_BAD_OPENMPT}
+        -Dgst-plugins-bad:openni2=disabled # libopenni2 not found
+        -Dgst-plugins-bad:opensles=disabled
+        -Dgst-plugins-bad:opus=${PLUGIN_BAD_OPUS}
+        -Dgst-plugins-bad:qroverlay=disabled
+        -Dgst-plugins-bad:resindvd=disabled
+        -Dgst-plugins-bad:rsvg=disabled # librsvg-2.0 not found
+        -Dgst-plugins-bad:rtmp=disabled # librtmp not found
+        -Dgst-plugins-bad:sbc=disabled
+        -Dgst-plugins-bad:sctp=auto
+        -Dgst-plugins-bad:shm=disabled
+        -Dgst-plugins-bad:smoothstreaming=${PLUGIN_BAD_SMOOTHSTREAMING}
+        -Dgst-plugins-bad:sndfile=${PLUGIN_BAD_SNDFILE}
+        -Dgst-plugins-bad:soundtouch=${PLUGIN_BAD_SOUNDTOUCH}
+        -Dgst-plugins-bad:spandsp=disabled
+        -Dgst-plugins-bad:srt=${PLUGIN_BAD_SRT}
+        -Dgst-plugins-bad:srtp=${PLUGIN_BAD_SRTP}
+        -Dgst-plugins-bad:svthevcenc=disabled
+        -Dgst-plugins-bad:teletext=disabled
+        -Dgst-plugins-bad:tinyalsa=disabled
+        -Dgst-plugins-bad:transcode=disabled
+        -Dgst-plugins-bad:ttml=disabled
+        -Dgst-plugins-bad:uvch264=disabled
+        -Dgst-plugins-bad:va=disabled
+        -Dgst-plugins-bad:voaacenc=disabled
+        -Dgst-plugins-bad:voamrwbenc=disabled
+        -Dgst-plugins-bad:vulkan=auto
+        -Dgst-plugins-bad:wasapi=auto
+        -Dgst-plugins-bad:wasapi2=auto
+        -Dgst-plugins-bad:wayland=auto
+        -Dgst-plugins-bad:webp=${PLUGIN_BAD_WEBP}
+        -Dgst-plugins-bad:webrtc=${PLUGIN_BAD_WEBRTC}
+        -Dgst-plugins-bad:wildmidi=${PLUGIN_BAD_WILDMIDI}
+        -Dgst-plugins-bad:winks=disabled
+        -Dgst-plugins-bad:winscreencap=auto
+        -Dgst-plugins-bad:x11=${PLUGIN_BAD_X11}
+        -Dgst-plugins-bad:x265=${PLUGIN_BAD_X265}
+        -Dgst-plugins-bad:zbar=disabled # Error during plugin build
+        -Dgst-plugins-bad:zxing=disabled # Error during plugin build
+        -Dgst-plugins-bad:wpe=disabled
+        -Dgst-plugins-bad:magicleap=disabled
+        -Dgst-plugins-bad:v4l2codecs=disabled
+        -Dgst-plugins-bad:isac=disabled
     OPTIONS_RELEASE
-        -Dgstreamer:gst_debug=false
-        -Dgstreamer:gobject-cast-checks=disabled
-        -Dgstreamer:glib-asserts=disabled
-        -Dgstreamer:glib-checks=disabled
+        -Dgobject-cast-checks=disabled
+        -Dglib-asserts=disabled
+        -Dglib-checks=disabled
         -Dgstreamer:extra-checks=disabled
-        -Dgst-plugins-base:gobject-cast-checks=disabled
-        -Dgst-plugins-base:glib-asserts=disabled
-        -Dgst-plugins-base:glib-checks=disabled
-        -Dgst-plugins-good:gobject-cast-checks=disabled
-        -Dgst-plugins-good:glib-asserts=disabled
-        -Dgst-plugins-good:glib-checks=disabled
-        -Dgst-plugins-bad:gobject-cast-checks=disabled
-        -Dgst-plugins-bad:glib-asserts=disabled
-        -Dgst-plugins-bad:glib-checks=disabled
+    ADDITIONAL_BINARIES
+        flex='${FLEX}'
+        bison='${BISON}'
+        nasm='${NASM}'
+        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()
@@ -290,11 +613,47 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-if(NOT VCPKG_TARGET_IS_LINUX)
+
+if(NOT VCPKG_TARGET_IS_LINUX AND "plugins-base" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
                 "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
     )
 endif()
+
+list(APPEND GST_BIN_TOOLS
+    gst-inspect-1.0
+    gst-launch-1.0
+    gst-stats-1.0
+    gst-typefind-1.0
+)
+list(APPEND GST_LIBEXEC_TOOLS
+    gst-plugin-scanner
+)
+
+if("plugins-base" IN_LIST FEATURES)
+    list(APPEND GST_BIN_TOOLS
+        gst-device-monitor-1.0
+        gst-discoverer-1.0
+        gst-play-1.0
+    )
+endif()
+
+if("plugins-bad" IN_LIST FEATURES)
+    list(APPEND GST_BIN_TOOLS
+        gst-transcoder-1.0
+    )
+endif()
+
+vcpkg_copy_tools(
+    TOOL_NAMES ${GST_BIN_TOOLS}
+    AUTO_CLEAN
+)
+
+vcpkg_copy_tools(
+    TOOL_NAMES ${GST_LIBEXEC_TOOLS}
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0"
+    AUTO_CLEAN
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/libexec"
@@ -321,10 +680,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
                 "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
     )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if (NOT VCPKG_BUILD_TYPE)
+    if(NOT VCPKG_BUILD_TYPE)
         file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
                            "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
         )
@@ -339,4 +699,4 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${GST_BUILD_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,6 @@
 {
   "name": "qt5",
-  "version": "5.15.7",
+  "version": "5.15.8",
   "description": "Qt5 Application Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -142,9 +142,12 @@
             "imageformats",
             "multimedia",
             "networkauth",
+            "quickcontrols",
             "quickcontrols2",
             "svg",
-            "tools"
+            "tools",
+            "translations",
+            "websockets"
           ]
         }
       ]

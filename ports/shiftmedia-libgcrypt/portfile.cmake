@@ -1,13 +1,10 @@
-set(PACKAGE_VERSION_MAJOR 1)
-set(PACKAGE_VERSION_MINOR 10)
-set(PACKAGE_VERSION_PATCH 1)
-set(PACKAGE_VERSION ${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH})
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/libgcrypt
-    REF libgcrypt-${PACKAGE_VERSION}
-    SHA512 6da8225ec73c51562cd76a0c0abc19506a7378750ed2a9ea45f03df3c8d7cf500840459deb9b0a694a5602fe77ee2b0dd5b2e37376745233350b0f218dff4f1c
+    REF libgcrypt-${VERSION}
+    SHA512 9b09c9e598c2f3916d45374d40e1bbc4f69f65c1c64bae2f979d7cfde85d8ca5668624e1193a4e38afea3056a4f84477695bbf61454e8c194bc06119ab8da621
     HEAD_REF master
 )
 
@@ -54,7 +51,8 @@ endforeach()
 # patch gpg-error library file name
 foreach(VCXPROJ IN ITEMS
     "${SOURCE_PATH}/SMP/libgcrypt.vcxproj"
-    "${SOURCE_PATH}/SMP/libgcrypt_winrt.vcxproj")
+    "${SOURCE_PATH}/SMP/libgcrypt_winrt.vcxproj"
+)
     vcpkg_replace_string(
         "${VCXPROJ}"
         "_winrt.lib"
@@ -87,17 +85,17 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
+string(REGEX REPLACE "-.*" "" PACKAGE_VERSION "${VERSION}")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(LIBGCRYPT_CONFIG_LIBS "-lgcrypt")
 configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libgcrypt.pc" @ONLY)
-
-set(exec_prefix "\${prefix}")
-set(libdir "\${prefix}/lib")
-set(includedir "\${prefix}/../include")
-set(LIBGCRYPT_CONFIG_LIBS "-lgcryptd")
-configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libgcrypt.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+    set(includedir "\${prefix}/../include")
+    set(LIBGCRYPT_CONFIG_LIBS "-lgcryptd")
+    configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libgcrypt.pc" @ONLY)
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
@@ -105,3 +103,11 @@ vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/src/libgcrypt.m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libgcrypt/aclocal/")
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
+vcpkg_install_copyright(COMMENT [[
+The library is distributed under the terms of the GNU Lesser General Public License (LGPL).
+There are additonal notices about contributions that require these additional notices are distributed.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING.LIB"
+        "${SOURCE_PATH}/LICENSES"
+)

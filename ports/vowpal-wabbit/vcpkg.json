@@ -1,13 +1,13 @@
 {
   "name": "vowpal-wabbit",
-  "version": "9.5.0",
-  "port-version": 1,
+  "version": "9.6.0",
   "description": "Reduction based online learning framework with a focus on contextual bandits and reinforcement learning.",
   "homepage": "https://github.com/vowpalwabbit/vowpal_wabbit",
   "license": "BSD-3-Clause",
   "supports": "!x86 & !uwp & !(windows & arm)",
   "dependencies": [
     "boost-math",
+    "eigen3",
     "flatbuffers",
     "fmt",
     "rapidjson",
