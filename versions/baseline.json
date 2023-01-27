@@ -1938,7 +1938,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 7
+      "port-version": 8
     },
     "devicenameresolver": {
       "baseline": "2016-06-26",
