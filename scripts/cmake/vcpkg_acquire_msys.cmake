@@ -191,7 +191,7 @@ function(vcpkg_acquire_msys out_msys_root)
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/file-5.44-2-x86_64.pkg.tar.zst"
         SHA512 8315cb601f534aa67b8c8a8d0167666ccb50aeb35c16ec16db43869c027bb78f01ed5d6f69fc1ad9786ca259428800bac7f8277bdca95a341262464052ab65de
-        DEPS gcc-libs zlib libbz2
+        DEPS gcc-libs libbz2 liblzma zlib
     )
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/zlib-1.2.13-1-x86_64.pkg.tar.zst"
