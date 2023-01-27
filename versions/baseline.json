@@ -3113,7 +3113,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "iir1": {
