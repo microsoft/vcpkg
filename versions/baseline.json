@@ -5586,7 +5586,7 @@
     },
     "opencv4": {
       "baseline": "4.7.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5618,7 +5618,7 @@
     },
     "openimageio": {
       "baseline": "2.4.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openjpeg": {
       "baseline": "2.5.0",
@@ -5798,7 +5798,7 @@
     },
     "paraview": {
       "baseline": "5.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6178,7 +6178,7 @@
     },
     "qt": {
       "baseline": "6.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.8.2",
@@ -6814,7 +6814,7 @@
     },
     "rtabmap": {
       "baseline": "0.20.23",
-      "port-version": 0
+      "port-version": 1
     },
     "rtaudio": {
       "baseline": "2021-11-16",
@@ -8058,7 +8058,7 @@
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
