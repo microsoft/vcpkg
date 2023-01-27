@@ -388,6 +388,16 @@ We require that the manifest file be formatted. Use the following command to for
 > vcpkg format-manifest --all
 ```
 
+## Triplets
+
+We are not accepting requests to add non-community triplets at this time. Promotion from community to full triplet status is primarily based on budget for the hardware to test such triplets, and will be driven by metrics submitted by vcpkg to maximize the likelihood what people actually use is fully tested.
+
+We will add community triplets if:
+* It is demonstrated that people will actually use that community triplet; and,
+* we don't know that such a triplet is broken.
+
+For example, we did not add a triplet in https://github.com/microsoft/vcpkg/pull/29034 because the author was just trying to "complete the set" rather than indicating they would actually use such a thing, and we did not add linux-dynamic until the patchelf solution to make the results relocatable was created.
+
 ## Useful implementation notes
 
 ### Portfiles are run in Script Mode
