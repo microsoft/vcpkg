@@ -69,7 +69,7 @@ vcpkg_cmake_configure(
         -DINSTALL_DOCS=OFF
         -DENABLE_INSTALL_testtex=OFF
         "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
-        "-DREQUIRED_DEPS=fmt;JPEG;Libsquish;PNG;Robinmap"
+        "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
 )

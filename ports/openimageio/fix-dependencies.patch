@@ -2,7 +2,7 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index 0a6afeb..2a67ee3 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -2,6 +2,24 @@
+@@ -2,6 +2,23 @@
  
  include(CMakeFindDependencyMacro)
  
@@ -10,7 +10,6 @@ index 0a6afeb..2a67ee3 100644
 +    find_dependency(libheif CONFIG)
 +endif()
 +find_dependency(PNG)
-+find_dependency(unofficial-libsquish CONFIG)
 +if(@USE_OPENCV@)
 +    find_dependency(OpenCV CONFIG)
 +endif()

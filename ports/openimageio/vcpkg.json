@@ -22,7 +22,6 @@
     "fmt",
     "libjpeg-turbo",
     "libpng",
-    "libsquish",
     "openexr",
     "robin-map",
     "tiff",
