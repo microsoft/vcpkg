@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "create_package.patch"
+        "include_algorithm_for_std_min.patch"
 )
 
 vcpkg_cmake_configure(
