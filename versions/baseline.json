@@ -3990,7 +3990,7 @@
     },
     "libleidenalg": {
       "baseline": "0.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "liblemon": {
       "baseline": "2019-06-13",
