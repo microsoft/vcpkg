@@ -1,5 +1,17 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(EXTRA_PATCHES "")
+if(VCPKG_DETECTED_MSVC)
+    # only msvc need this patch, because we cannot make the
+    # `$(HOSTLD) $(HOSTLDFLAGS) $(HOSTLD_O) $^ $(HOSTEXTRALIBS)`
+    # to a valid msvc command form, and bin2c is failed to compile
+    # bin2c is only compiled if cuda is enabled
+    list(APPEND EXTRA_PATCHES "0024-fix-bin2c-msvc.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
@@ -21,6 +33,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        ${EXTRA_PATCHES}
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -88,8 +101,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
 else()
 endif()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 if(VCPKG_DETECTED_MSVC)
     string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
@@ -306,6 +317,31 @@ if("bzip2" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-bzlib")
 else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
+
+if("cuda-nvcc" IN_LIST FEATURES AND "cuda-llvm" IN_LIST FEATURES)
+    message(FATAL_ERROR "cuda-nvcc, cuda-llvm cannot be enabled at the same time.")
+endif()
+
+if("cuda-nvcc" IN_LIST FEATURES)
+    include("${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake")
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
+    vcpkg_add_to_path(PREPEND "${CUDA_TOOLKIT_ROOT}/bin")
+    set(OPTIONS "${OPTIONS} --enable-cuda-nvcc --nvcc='nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}'")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda-nvcc")
+endif()
+
+if("cuda-llvm" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(CLANG)
+    if (CLANG MATCHES "-NOTFOUND")
+        message(FATAL_ERROR "Clang is required to compile CUDA ptx files.")
+    endif ()
+    cmake_path(GET CLANG PARENT_PATH CLANG_DIR)
+    vcpkg_add_to_path(PREPEND "${CLANG_DIR}")
+    set(OPTIONS "${OPTIONS} --enable-cuda-llvm --nvcc='clang${VCPKG_HOST_EXECUTABLE_SUFFIX}'")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda-llvm")
 endif()
 
 if("dav1d" IN_LIST FEATURES)

@@ -40,6 +40,7 @@
             "avfilter",
             "avformat",
             "bzip2",
+            "cuda-llvm",
             "freetype",
             "iconv",
             "lzma",
@@ -337,6 +338,23 @@
         "bzip2"
       ]
     },
+    "cuda-llvm": {
+      "description": "Use LLVM clang ptx backend to compile CUDA files"
+    },
+    "cuda-nvcc": {
+      "description": "Use CUDA nvcc to compile CUDA files",
+      "supports": "windows | linux",
+      "dependencies": [
+        "cuda",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nonfree"
+          ]
+        }
+      ]
+    },
     "dav1d": {
       "description": "AV1 decoding via libdav1d",
       "supports": "!osx",
@@ -462,7 +480,7 @@
       ]
     },
     "nonfree": {
-      "description": "Allow use of nonfree code, the resulting libs and binaries will be unredistributable"
+      "description": "Allow use of nonfree code, the resulting libs and binaries will be un-redistributable"
     },
     "nvcodec": {
       "description": "Nvidia video decoding/encoding acceleration",
