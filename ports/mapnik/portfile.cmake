@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF 4e064b8b8e324c4df7f2ae21dd72ccb85e1d4140
     SHA512 4db329cad90058abc1a3430fded6fac5a49334f8feffb8510bd965a28dee630adf150174c933e61c76e93f6f107397e97929c863c97603d8dcef28f1a25f4628
     HEAD_REF master
-    PATCHES
-        fix-libwebp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
