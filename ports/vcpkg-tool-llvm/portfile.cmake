@@ -10,11 +10,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             set(name LLVM-${version}-win32.exe)
             set(url "https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/${name}")
-            set(hash 82bebd0c0912fd000602f5961492ada913e3b6cb63001b63e2de3e070a168c65a628ebb1a443403b272210af131240f3a3032e03478037b5a8200cc243f27b74)
+            set(hash 0)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             set(name LLVM-${version}-win64.exe)
             set(url "https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/${name}")
-            set(hash 96916ef4838e2b43debbf6e92c3b3b1a862051348771df9de6c7c1b0d839ef04c057bddde7e59c2f08e1483d7609dd7a5e77616ed1072047404caa974841a668)
+            set(hash 5aa6f9345a194faf22cafbc3ad817232cf1250737ebbbbea89d7d064c81ad0b051ddd5346021772997c98fd477215d369a5b4644c89631856ac1718978fd4bd8)
         endif()
         vcpkg_download_distfile(archive_path
             URLS "${url}"
