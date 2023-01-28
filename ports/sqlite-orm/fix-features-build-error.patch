@@ -31,15 +31,3 @@ index 2857b659e..3ee46e625 100644
 -    target_link_libraries(${file_basename} PRIVATE sqlite_orm sqlite3)
 +    target_link_libraries(${file_basename} PRIVATE sqlite_orm)
  endforeach()
-diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index f1095b369..2b0d188dd 100644
---- a/tests/CMakeLists.txt
-+++ b/tests/CMakeLists.txt
-@@ -1,5 +1,7 @@
- cmake_minimum_required (VERSION 3.2)
- 
-+find_package(Catch2 CONFIG REQUIRED)
-+
- option(SQLITE_ORM_OMITS_CODECVT "Omits codec testing" OFF)
- 
- add_executable(unit_tests
