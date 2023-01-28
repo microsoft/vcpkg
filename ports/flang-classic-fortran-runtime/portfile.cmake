@@ -66,7 +66,7 @@ vcpkg_from_github(
             ${PATCH_1344}
             #${PATCH_1345}
             ${PATCH_1346}
-            #fix-build.patch
+			fix_win11_sdk.patch
 )
 
 set(NINJA "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja/ninja${VCPKG_HOST_EXECUTABLE_SUFFIX}")
