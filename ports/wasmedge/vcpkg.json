@@ -4,15 +4,11 @@
   "description": "WasmEdge is a high-performance WebAssembly runtime for edge computing.",
   "homepage": "WasmEdge.org",
   "license": "Apache-2.0",
+  "supports": "!windows",
   "dependencies": [
     "boost-algorithm",
     "boost-align",
     "boost-predef",
-    "boost-winapi",
-    {
-      "name": "llvm",
-      "platform": "windows"
-    },
     "spdlog",
     {
       "name": "vcpkg-cmake",

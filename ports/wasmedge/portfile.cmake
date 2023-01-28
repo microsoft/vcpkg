@@ -1,17 +1,3 @@
-# Find the directory that contains "bin/clang"
-# Note: Only clang-cl is supported on Windows
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(CLANG)
-    if(CLANG MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Clang is required.")
-    endif()
-    get_filename_component(CLANG "${CLANG}" DIRECTORY)
-    get_filename_component(CLANG "${CLANG}" DIRECTORY)
-    if(NOT EXISTS "${CLANG}/bin/clang-cl.exe")
-        message(FATAL_ERROR "Clang needs to be inside a bin directory.")
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WasmEdge/WasmEdge
@@ -61,11 +47,6 @@ endif()
 if(NOT WASMEDGE_PLUGIN_WASI_NN_BACKEND STREQUAL "")
     list(JOIN WASMEDGE_PLUGIN_WASI_NN_BACKEND "," WASMEDGE_PLUGIN_WASI_NN_BACKEND)
     list(APPEND WASMEDGE_CMAKE_OPTIONS "-WASMEDGE_PLUGIN_WASI_NN_BACKEND=${WASMEDGE_PLUGIN_WASI_NN_BACKEND}")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND WASMEDGE_CMAKE_OPTIONS "-DCMAKE_CXX_COMPILER=${CURRENT_INSTALLED_DIR}/tools/llvm/clang-cl.exe")
-    list(APPEND WASMEDGE_CMAKE_OPTIONS "-DCMAKE_C_COMPILER=${CURRENT_INSTALLED_DIR}/tools/llvm/clang-cl.exe")
 endif()
 
 vcpkg_cmake_configure(
