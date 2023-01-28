@@ -1,8 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index daf434c..32d7851 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -91,7 +91,7 @@ else()
+--- a/CMakeLists.txt	(revision 208a701fa01e99c7c8cc3dcebc8317da71362972)
++++ b/CMakeLists.txt	(date 1674932476716)
+@@ -97,7 +97,7 @@
  endif()
  
  install(EXPORT "${PROJECT_NAME}-targets"
@@ -10,4 +9,4 @@ index daf434c..32d7851 100644
 +    DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
      NAMESPACE AWS::
      COMPONENT Development)
-
+ 

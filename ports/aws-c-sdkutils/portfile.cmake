@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO awslabs/aws-c-http
-    REF dd34461987947672444d0bc872c5a733dfdb9711 # v0.7.3
-    SHA512 3b5acab7d43b8b7e531f8dc85bbb4b86d9c24957c2044d3ab7a360e883da3f77169fbd403e56c5ac428ef48c2d44af7c5d328e19dde0cae34af923f486b9a1e1
+    REPO awslabs/aws-c-sdkutils
+    REF 208a701fa01e99c7c8cc3dcebc8317da71362972 # v0.1.17
+    SHA512 a3d06c4f862e043b5dcfe1b95be43e25c50937558c157422520e77c381d3f570dc00997e79a7eff9583283ff2fb12e97373ce9260e5c6094e7d7d65da863980c
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
 		fix-cmake-config-file.patch
@@ -17,19 +17,19 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-http/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-sdkutils/cmake)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 
-        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/bin" 
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
 
 file(REMOVE_RECURSE
 	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-http"
-	"${CURRENT_PACKAGES_DIR}/lib/aws-c-http"
+	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-sdkutils"
+	"${CURRENT_PACKAGES_DIR}/lib/aws-c-sdkutils"
 	)
 
 vcpkg_copy_pdbs()

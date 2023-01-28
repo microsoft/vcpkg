@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF 68f28f8df258390744f3c5b460250f8809161041 # v0.6.20
-    SHA512 a8be405e0e1586a06db038a0068df2c9277772ff7b8df2c542d18d2aae4b2bc0fd89de668ab10d84476446834390e4e27383b68d86c7d9f0d0749b57802866f1
+    REF 5e64b039356c72d17fcf1fb0bfc7637f8c2270f7 # v0.8.9
+    SHA512 b9e414cb2b87beb7b7b239e4a7e51a10555f0c154669c0fbeff2117683776734d83e70f4449f0e8d1eaec9c0e20c871cf2abd466850e84b4ec3c0cca84d4fcd5
     HEAD_REF master
     PATCHES
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
+        fix-cmake-config-file.patch
 )
 
 vcpkg_cmake_configure(

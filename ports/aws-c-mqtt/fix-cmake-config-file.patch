@@ -1,0 +1,12 @@
+diff --git a/cmake/aws-c-mqtt-config.cmake b/cmake/aws-c-mqtt-config.cmake
+--- a/cmake/aws-c-mqtt-config.cmake	(revision 6668ffd60607bf070c078d46b8c8f4b2cecfc1db)
++++ b/cmake/aws-c-mqtt-config.cmake	(date 1674933513261)
+@@ -7,7 +7,7 @@
+ endif()
+ 
+ macro(aws_load_targets type)
+-    include(${CMAKE_CURRENT_LIST_DIR}/${type}/@PROJECT_NAME@-targets.cmake)
++    include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+ endmacro()
+ 
+ # try to load the lib follow BUILD_SHARED_LIBS. Fall back if not exist.

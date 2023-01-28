@@ -1,8 +1,7 @@
-diff --git a/aws-cpp-sdk-core/CMakeLists.txt b/aws-cpp-sdk-core/CMakeLists.txt
-index c44546b0e..b66888362 100644
---- a/aws-cpp-sdk-core/CMakeLists.txt
-+++ b/aws-cpp-sdk-core/CMakeLists.txt
-@@ -113,13 +113,8 @@ if(ENABLE_CURL_CLIENT)
+diff --git a/src/aws-cpp-sdk-core/CMakeLists.txt b/src/aws-cpp-sdk-core/CMakeLists.txt
+--- a/src/aws-cpp-sdk-core/CMakeLists.txt	(revision 276ee83080fcc521d41d456dbbe61d49392ddf77)
++++ b/src/aws-cpp-sdk-core/CMakeLists.txt	(date 1674942133806)
+@@ -123,13 +123,8 @@
      int main() {
      CURL* handle = curl_easy_init();
      return curl_easy_setopt(handle, CURLOPT_PROXY_SSLCERT, \"client.pem\"); }")

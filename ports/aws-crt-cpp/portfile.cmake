@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
-    REF 9ef58ff20df19e613c91c5f761e381c763da6810 # v0.15.1
-    SHA512 3409b3e6a546ed585b90180807383e8731b36b0db149b5ff92701a43164c4282b1cea4a551bf4c7b1edec7b264098575cf919faee8a2520bb10bbae62258d463
+    REF 3e0083069723aa263353edaec6fc635b6c85e182 # v0.19.3
+    SHA512 28ad8be9e5c417a281ee6045e0c73f5c48fbb9d98815bc85d0698c5da4b9b5c6c3d96f13bee5fc12433f50bf1782cf1135be11cadf5df0ef78df7508dd74fa24
     PATCHES
         fix-cmake-target-path.patch
-        fix-ios-build.patch
         no-werror.patch
+        fix-cmake-config-file.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)

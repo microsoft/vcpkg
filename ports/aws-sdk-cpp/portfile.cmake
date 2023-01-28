@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF a72b841c91bd421fbb6deb516400b51c06bc596c # 1.9.220
-    SHA512 9b7fa80ee155fa3c15e3e86c30b75c6019dc1672df711c4f656133fe005f104e4a30f5a99f1c0a0c6dab42007b5695169cd312bd0938b272c4c7b05765ce3421
+    REF 276ee83080fcc521d41d456dbbe61d49392ddf77 # 1.11.0
+    SHA512 10b930ab4acbb2249c2c3bc5c065af0483c911805a6f5873026e411c63105acd3736e758c7cd6e6142d86676ba0c89f000b42e5f7e0747b9e2b4be0a22798fdf
     PATCHES
         patch-relocatable-rpath.patch
         fix-aws-root.patch
