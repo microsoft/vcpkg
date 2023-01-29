@@ -7,9 +7,9 @@ index 3f80e4de3..ed66b318f 100644
  endif()
  
 +if (BUILD_SHARED_LIBS)
-+  target_compile_definitions(${PROJECT_NAME} PRIVATE -DRKCOMMON_SHARED)
++  target_compile_definitions(${PROJECT_NAME} PUBLIC -DRKCOMMON_SHARED)
 +else()
-+  target_compile_definitions(${PROJECT_NAME} PRIVATE -DRKCOMMON_STATIC)
++  target_compile_definitions(${PROJECT_NAME} PUBLIC -DRKCOMMON_STATIC)
 +endif()
 +
  set_property(TARGET rkcommon PROPERTY POSITION_INDEPENDENT_CODE ON)
