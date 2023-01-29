@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
-    REF ad53be196a25bbefa3700a01187fdce573a7d2d0 # v0.1.11
-    SHA512 f8a1554d21ff1fc3bcb80d59219da8759056a5c4e01803793b483c3465880b0ab622717cc8a03b4d2a3682116b5b2029c8925cc66f47b38e165855dbdc542398
+    REF "v${VERSION}"
+    SHA512 3aae2e9818a1cec3e002c480a7979780b613c9f2389e719c6b35df9d118cd789bad48d9fbe348e20988cffafaee85f766a828be673a34d1963e775a1b951737b
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
-		fix-cmake-config-file.patch
+    PATCHES
+        fix-cmake-target-path.patch
+	fix-cmake-config-file.patch
+
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)

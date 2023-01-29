@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-sdkutils
-    REF 208a701fa01e99c7c8cc3dcebc8317da71362972 # v0.1.17
-    SHA512 a3d06c4f862e043b5dcfe1b95be43e25c50937558c157422520e77c381d3f570dc00997e79a7eff9583283ff2fb12e97373ce9260e5c6094e7d7d65da863980c
+    REF "v${VERSION}"
+    SHA512 3c94a985a8952441eb5453ceea41ebb3aa3e075a6f2dcb3b013f2336a7c36dbcbc022696ac9e807bb25f563f969dd604a89b7ed7ef746170dda3cae0fc06262c
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
-		fix-cmake-config-file.patch
+    PATCHES
+        fix-cmake-target-path.patch
+	fix-cmake-config-file.patch
 )
 
 vcpkg_cmake_configure(
@@ -37,4 +38,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

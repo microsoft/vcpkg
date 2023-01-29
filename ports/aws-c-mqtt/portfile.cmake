@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-mqtt
-    REF 6668ffd60607bf070c078d46b8c8f4b2cecfc1db # v0.8.5
-    SHA512 45d594de6877859923351c6268a6beff9cff8c319fb982888e04101e8e25f686619b9fd85d6de45d09eda2ada9288f9f7a31d869e27ebb0045eb7da5254addd4
+    REF "v${VERSION}"
+    SHA512 7610494ef3cb56c89f7a70de7918a17a0674ed1686bfd7a0d72d45e53cbf93e68667f5b8ac4df104cafb394dc5d9f2f2fdea608ebd227ea63658859cc0cd5c8b
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
-		fix-cmake-config-file.patch
+    PATCHES
+        fix-cmake-target-path.patch
+	fix-cmake-config-file.patch
 )
 
 vcpkg_cmake_configure(

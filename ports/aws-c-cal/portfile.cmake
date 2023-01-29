@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-cal
-    REF ac4216b78d5323b5b8ce95a3dd4a8fc0f95e2d33 # v0.5.12
-    SHA512 e67f7c12b12090fec55be9d15b4f339aebf8e58fe7425c9c3f33477cdd746954bcc07a119c2f67b9d9a9c3febd239b6c929fdefc50768852ac14d3f42223cbd3
+    REF "v${VERSION}"
+    SHA512 7cb52b0f000e38f4e4af392f67efbece607b2643cb9de8ca267d4416192e2c61f8f0bbcddbdb0f8e511cfe3feb890b00d69427b154c0f5e3853684e895f3b935
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
+    PATCHES
+        fix-cmake-target-path.patch
         fix-cmake-config-file.patch
 )
 
