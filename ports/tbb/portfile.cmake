@@ -22,8 +22,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TBB")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+set(arch_suffix "")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+  set(arch_suffix "32")
+endif()
+
+
 if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb.pc" "-ltbb12" "-ltbb12_debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb12" "-ltbb12_debug")
 endif()
 
 file(REMOVE_RECURSE
