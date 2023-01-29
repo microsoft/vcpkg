@@ -15,6 +15,7 @@ vcpkg_from_github(
         add_bigobj_option.patch
         outofcore_viewer_remove_include.patch
         fix_opennurbs_win32.patch
+        disable_kinfu_for_cuda12.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
