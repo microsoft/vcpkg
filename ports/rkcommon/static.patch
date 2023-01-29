@@ -1,0 +1,30 @@
+diff --git a/rkcommon/CMakeLists.txt b/rkcommon/CMakeLists.txt
+index 3f80e4de3..ed66b318f 100644
+--- a/rkcommon/CMakeLists.txt
++++ b/rkcommon/CMakeLists.txt
+@@ -63,6 +63,12 @@ if (RKCOMMON_NO_SIMD)
+   target_compile_definitions(${PROJECT_NAME} PUBLIC -DRKCOMMON_NO_SIMD)
+ endif()
+ 
++if (BUILD_SHARED_LIBS)
++  target_compile_definitions(${PROJECT_NAME} PRIVATE -DRKCOMMON_SHARED)
++else()
++  target_compile_definitions(${PROJECT_NAME} PRIVATE -DRKCOMMON_STATIC)
++endif()
++
+ set_property(TARGET rkcommon PROPERTY POSITION_INDEPENDENT_CODE ON)
+ 
+ ## Install library + targets ##################################################
+diff --git a/rkcommon/common.h b/rkcommon/common.h
+index 175ecfa84..69e115d85 100644
+--- a/rkcommon/common.h
++++ b/rkcommon/common.h
+@@ -26,7 +26,7 @@ typedef int ssize_t;
+ #include "unistd.h"
+ #endif
+ 
+-#ifdef _WIN32
++#if defined(_WIN32) && defined(RKCOMMON_SHARED)
+ #ifdef rkcommon_EXPORTS
+ #define RKCOMMON_INTERFACE __declspec(dllexport)
+ #else

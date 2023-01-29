@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 0b8856cd9278474b56dc5bcff516a4b9482cf147
     SHA512 836e888e33406f6825b8f5570894402460b3ae65a68ca8aeecf2c8e712f70e9392fdbb2131d538dbf47fc48a0664568e1fd60968452c7517cfeb17c0e608fecf
     HEAD_REF master
+    PATCHES static.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/rkcommon_redist_deps.cmake")
