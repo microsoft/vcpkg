@@ -4,9 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 3c94a985a8952441eb5453ceea41ebb3aa3e075a6f2dcb3b013f2336a7c36dbcbc022696ac9e807bb25f563f969dd604a89b7ed7ef746170dda3cae0fc06262c
     HEAD_REF master
-    PATCHES
-        fix-cmake-target-path.patch
-	fix-cmake-config-file.patch
+    PATCHES fix-cmake-target-path.patch
 )
 
 vcpkg_cmake_configure(
@@ -38,4 +36,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -4,9 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 7cb52b0f000e38f4e4af392f67efbece607b2643cb9de8ca267d4416192e2c61f8f0bbcddbdb0f8e511cfe3feb890b00d69427b154c0f5e3853684e895f3b935
     HEAD_REF master
-    PATCHES
-        fix-cmake-target-path.patch
-        fix-cmake-config-file.patch
+    PATCHES fix-cmake-target-path.patch
+            remove-libcrypto-messages.patch
 )
 
 vcpkg_cmake_configure(

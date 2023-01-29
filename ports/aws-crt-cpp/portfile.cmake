@@ -6,7 +6,6 @@ vcpkg_from_github(
     PATCHES
         fix-cmake-target-path.patch
         no-werror.patch
-        fix-cmake-config-file.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)

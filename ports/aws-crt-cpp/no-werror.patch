@@ -1,7 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	(revision 3e0083069723aa263353edaec6fc635b6c85e182)
-+++ b/CMakeLists.txt	(date 1674934185979)
-@@ -335,9 +335,9 @@
+index 733b18a..1021c7c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -335,9 +335,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "" OR CMAKE_BUILD_TYPE MATCHES Debug)
  
      # set extra warning flags for debug build
      if(MSVC)

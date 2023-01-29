@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
-        fix-cmake-config-file.patch
 )
 
 vcpkg_cmake_configure(
