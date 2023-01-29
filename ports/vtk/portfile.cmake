@@ -4,20 +4,20 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 #https://kitware.github.io/paraview-docs/latest/cxx/Offscreen.html
 
-#vcpkg_download_distfile(
-#    STRING_PATCH
-#    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
-#    FILENAME vtk-string-bfa3e4.diff
-#    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
-#)
+vcpkg_download_distfile(
+    STRING_PATCH
+    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
+    FILENAME vtk-string-bfa3e4.diff
+    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
+)
 
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF d0038743d4533d6eb9f3375a4ad22a4d7d77acbb # v9.2.5
-    SHA512 75bd3312b482302c944d34d4dfe1cf6e9b4c5567d3dc60d3e80c39dce70fcb6b4ab134c8e0cde44c378acf88389b335f9ded764f59964555962fc08b6c3377fb
+    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.11.0
+    SHA512 70662670622082bb8d8b16765bbdf645cfbe62151e93b9673c6f94b356df66ca003e5c78b45e99385f1630aed39c3a8eddecd1d9f5bc0cfb92f5e7e8c06e4dbb
     HEAD_REF master
     PATCHES
         FindLZMA.patch
@@ -73,7 +73,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-		"qt-quick"    VTK_MODULE_ENABLE_VTK_GUISupportQtQuick
+        "qt-quick"    VTK_MODULE_ENABLE_VTK_GUISupportQtQuick
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
@@ -332,12 +332,11 @@ if("paraview" IN_LIST FEATURES)
 
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python") #python headers
-        file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
-        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    endif()
-endif()
+  if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python") #python headers
+      file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
+      file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+  endif()
+
 
 #remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
 set(filenames_fix_prefix vtk-prefix VTK-vtk-module-properties vtk-python)

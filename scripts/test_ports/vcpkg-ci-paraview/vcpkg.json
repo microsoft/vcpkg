@@ -46,7 +46,14 @@
         "all"
       ],
       "platform": "!x86 & !(windows & staticcrt)"
-    }
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "qt-quick"
+      ]
+    },
     {
       "name": "paraview",
       "default-features": false,
