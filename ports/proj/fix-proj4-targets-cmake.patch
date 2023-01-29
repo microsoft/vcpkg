@@ -34,14 +34,6 @@ index 7d736d129..2be8f8be9 100644
    else()
      message(SEND_ERROR
        "libtiff dependency not found! Use ENABLE_TIFF=OFF to force it off")
-@@ -171,6 +188,7 @@ if(ENABLE_CURL)
-   find_package(CURL REQUIRED)
-   if(CURL_FOUND)
-     set(CURL_ENABLED TRUE)
-+    set(CURL_LIBRARY CURL::libcurl)
-   else()
-     message(SEND_ERROR "curl dependency not found!")
-   endif()
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
 index 7d5579ae..0cf96252 100644
 --- a/cmake/project-config.cmake.in

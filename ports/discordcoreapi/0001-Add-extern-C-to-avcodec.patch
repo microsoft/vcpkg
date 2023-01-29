@@ -1,0 +1,26 @@
+diff --git a/Source/AudioDecoder.cpp b/Source/AudioDecoder.cpp
+index 42bd4543..ff210878 100644
+--- a/Source/AudioDecoder.cpp
++++ b/Source/AudioDecoder.cpp
+@@ -25,7 +25,9 @@
+ 
+ #include <discordcoreapi/Utilities.hpp>
+ #include <discordcoreapi/AudioDecoder.hpp>
++extern "C" {
+ #include <libavcodec/avcodec.h>
++}
+ 
+ namespace DiscordCoreInternal {
+ 
+diff --git a/Include/discordcoreapi/AudioDecoder.hpp b/Include/discordcoreapi/AudioDecoder.hpp
+--- a/Include/discordcoreapi/AudioDecoder.hpp	(revision 1ecbbc1b3a7f6bd3ff5e6ca0be8606ec50f17ec1)
++++ b/Include/discordcoreapi/AudioDecoder.hpp	(revision 3c80cf0c54719008610fc96bb457345bf0170701)
+@@ -29,6 +29,7 @@
+ #include <opus/opus.h>
+
+ extern "C" {
++#include <libavcodec/avcodec.h>
+ #include <libavformat/avformat.h>
+ #include <libswresample/swresample.h>
+ }
+ 

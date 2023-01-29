@@ -1,3 +1,6 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) #Upstream only support static compilation: https://github.com/uNetworking/uSockets/commit/b950efd6b10f06dd3ecb5b692e5d415f48474647
+
 if(NOT VCPKG_TARGET_IS_LINUX)
    set(USE_LIBUV ON)
 endif()
@@ -9,8 +12,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uSockets
-    REF 917ea86baad640967f62c4a92290e5211bb7966c  #v0.8.2
-    SHA512 bc7850d9e7e79a390817b7ce530d79d9dc0f04386da81abbd616f06a9108dc18f928b29f1e31ef99600fb3a18ed28e8d9815fc9c3bc6c0ea66b7fe81a2fa19ff
+    REF "v${VERSION}"
+    SHA512 89aadb2d077f58e5450ff62e685b894925113cedfa15cda03a9331fb9adcedcdd2f5fd51a8eae0719143566bef89c658bd75a2553282479d20b40c1d3042d273
     HEAD_REF master
 )
 
@@ -34,6 +37,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()
