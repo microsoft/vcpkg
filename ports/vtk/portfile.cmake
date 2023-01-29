@@ -1,24 +1,23 @@
 set(VTK_SHORT_VERSION 9.2)
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
-endif()
 
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
-vcpkg_download_distfile(
-    STRING_PATCH
-    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
-    FILENAME vtk-string-bfa3e4.diff
-    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
-)
+#https://kitware.github.io/paraview-docs/latest/cxx/Offscreen.html
+
+#vcpkg_download_distfile(
+#    STRING_PATCH
+#    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
+#    FILENAME vtk-string-bfa3e4.diff
+#    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
+#)
 
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.11.0
-    SHA512 70662670622082bb8d8b16765bbdf645cfbe62151e93b9673c6f94b356df66ca003e5c78b45e99385f1630aed39c3a8eddecd1d9f5bc0cfb92f5e7e8c06e4dbb
+    REF d0038743d4533d6eb9f3375a4ad22a4d7d77acbb # v9.2.5
+    SHA512 75bd3312b482302c944d34d4dfe1cf6e9b4c5567d3dc60d3e80c39dce70fcb6b4ab134c8e0cde44c378acf88389b335f9ded764f59964555962fc08b6c3377fb
     HEAD_REF master
     PATCHES
         FindLZMA.patch
@@ -38,6 +37,7 @@ vcpkg_from_github(
         vtkioss.patch
         jsoncpp.patch
         iotr.patch
+        fix-all-feature.patch
         ${STRING_PATCH}
 )
 
@@ -73,6 +73,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
+		"qt-quick"    VTK_MODULE_ENABLE_VTK_GUISupportQtQuick
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
@@ -109,9 +110,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
-if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt5/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
-endif()
 if("qt" IN_LIST FEATURES)
     file(READ "${CURRENT_INSTALLED_DIR}/share/qtbase/vcpkg_abi_info.txt" qtbase_abi_info)
     if(qtbase_abi_info MATCHES "(^|;)gles2(;|$)")
@@ -196,7 +194,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # =============================================================================
 # Configure & Install
 
-
+if(VCPKG_TARGET_IS_WINDOWS)
+  list(APPEND FEATURE_OPTIONS "-DVTK_USE_MICROSOFT_MEDIA_FOUNDATION=ON"
+                              "-DVTK_USE_VIDEO_FOR_WINDOWS=ON"
+                              "-DVTK_USE_VIDEO_FOR_WINDOWS_CAPTURE=ON")
+endif()
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(

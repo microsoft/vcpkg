@@ -1,0 +1,21 @@
+{
+  "name": "ospray",
+  "version": "2.10.0",
+  "description": "An Open, Scalable, Portable, Ray Tracing Based Rendering Engine for High-Fidelity Visualization",
+  "homepage": "http://www.ospray.org",
+  "license": null,
+  "dependencies": [
+    "embree3",
+    "onednn",
+    "openvkl",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

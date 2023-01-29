@@ -1,0 +1,25 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ospray/ospray
+    REF fdda0889f9143a8b20f26389c22d1691f1a6a527
+    SHA512 68a56a2a10052ee808b6a06979c30182931abb98c41032c136c4679cfb830c9532e25a10ad70c638f2f2ee3dc284678f650088525160320140075a52b8b84a4c
+    HEAD_REF master
+)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DOSPRAY_ENABLE_APPS_TESTING=OFF
+        -DOSPRAY_ENABLE_APPS_BENCHMARK=OFF
+        -DOSPRAY_ENABLE_APPS_EXAMPLES=OFF
+        -DOSPRAY_ENABLE_APPS_TUTORIALS=OFF
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}-${VERSION}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ospray/osprayConfig.cmake" "${CURRENT_CONFIG_INSTALL_DIR}/../../../" "${CURRENT_CONFIG_INSTALL_DIR}/../../")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")

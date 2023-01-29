@@ -1,14 +1,13 @@
-set(EMBREE3_VERSION 3.12.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v${EMBREE3_VERSION}
-    SHA512 a63b483a92f4653e07a21ed3b545d86003295e0aacd8ec7a40ee72bad7bb70c6ea019af511e78c5c598336b162d53e296e9c87150c0adce6463b058e7a5394d4
+    REF v${VERSION}
+    SHA512 13ae19b1750197fb4887ba601c75d1b54b3c388224672b6561dd922bc9b9747139cf46ce554727e3afa13dcf152ce4d703935cb9105ced792b011f2d05fa3e95
     HEAD_REF master
     PATCHES
-        fix-path.patch
-        fix-static-usage.patch
+        #fix-path.patch
+        #fix-static-usage.patch
         cmake_policy.patch
         fix-targets-file-not-found.patch
 )
@@ -51,7 +50,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
-        -DEMBREE_ISPC_SUPPORT=OFF
+        -DEMBREE_ISPC_SUPPORT=ON
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}

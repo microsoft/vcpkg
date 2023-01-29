@@ -1,0 +1,27 @@
+{
+  "name": "ispc",
+  "version": "1.18.1",
+  "description": "Intel® Open Volume Kernel Library (Intel® Open VKL) is a collection of high-performance volume computation kernels, developed at Intel.",
+  "homepage": "http://www.openvkl.org",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "llvm",
+      "features": [
+        "enable-assertions",
+        "openmp",
+        "target-aarch64",
+        "target-arm",
+        "target-x86"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

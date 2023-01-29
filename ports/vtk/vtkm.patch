@@ -12,7 +12,7 @@ index 397dca9f6..bc9c62ac5 100644
  
  set(private_headers
    vtkmFilterPolicy.h
-@@ -65,9 +64,6 @@ vtkm_add_target_information(${vtkm_accel_target}
+@@ -65,7 +64,4 @@ vtkm_add_target_information(${vtkm_accel_target}
                              EXTENDS_VTKM
                              MODIFY_CUDA_FLAGS
                              DEVICE_SOURCES ${sources})
@@ -20,8 +20,6 @@ index 397dca9f6..bc9c62ac5 100644
 -  PROPERTY  JOB_POOL_COMPILE
 -  VALUE     vtkm_pool)
  
- if (TARGET vtkm::kokkos_hip)
-   list(TRANSFORM nowrap_classes APPEND ".cxx" OUTPUT_VARIABLE hip_impl)
 diff --git a/Accelerators/Vtkm/DataModel/CMakeLists.txt b/Accelerators/Vtkm/DataModel/CMakeLists.txt
 index 9d5dfe100..7fea257b7 100644
 --- a/Accelerators/Vtkm/DataModel/CMakeLists.txt

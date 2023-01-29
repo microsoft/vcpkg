@@ -1,0 +1,61 @@
+diff --git a/IO/MySQL/vtkMySQLDatabase.cxx b/IO/MySQL/vtkMySQLDatabase.cxx
+index 300b12299..b6123a300 100644
+--- a/IO/MySQL/vtkMySQLDatabase.cxx
++++ b/IO/MySQL/vtkMySQLDatabase.cxx
+@@ -139,7 +139,7 @@ bool vtkMySQLDatabase::Open(const char* password)
+ 
+   if (this->Reconnect)
+   {
+-    my_bool recon = true;
++    bool recon = true;
+     mysql_options(&this->Private->NullConnection, MYSQL_OPT_RECONNECT, &recon);
+   }
+ 
+diff --git a/IO/MySQL/vtkMySQLQuery.cxx b/IO/MySQL/vtkMySQLQuery.cxx
+index 0af9cce6e..65c65573c 100644
+--- a/IO/MySQL/vtkMySQLQuery.cxx
++++ b/IO/MySQL/vtkMySQLQuery.cxx
+@@ -101,13 +101,13 @@ public:
+     return output;
+   }
+ 
+-  my_bool IsNull;                 // Is this parameter nullptr?
+-  my_bool IsUnsigned;             // For integer types, is it unsigned?
++  bool IsNull;                 // Is this parameter nullptr?
++  bool IsUnsigned;             // For integer types, is it unsigned?
+   char* Data;                     // Buffer holding actual data
+   unsigned long BufferSize;       // Buffer size
+   unsigned long DataLength;       // Size of the data in the buffer (must
+                                   // be less than or equal to BufferSize)
+-  my_bool HasError;               // for the server to report truncation
++  bool HasError;               // for the server to report truncation
+   enum enum_field_types DataType; // MySQL data type for the contained data
+ };
+ 
+diff --git a/IO/PDAL/CMakeLists.txt b/IO/PDAL/CMakeLists.txt
+index d6cd57cdc..86a7b460e 100644
+--- a/IO/PDAL/CMakeLists.txt
++++ b/IO/PDAL/CMakeLists.txt
+@@ -3,11 +3,21 @@ vtk_module_find_package(PACKAGE PDAL)
+ set(classes
+   vtkPDALReader)
+ 
++if(APPLE OR WIN32)
++  set(pdal_target pdalcpp)
++else()
++  set(pdal_target pdal_base)
++endif()
++
++if(NOT TARGET ${pdal_target})
++  message(FATAL_ERROR "PDAL target '${pdal_target}' not available but required!")
++endif()
++
+ vtk_module_add_module(VTK::IOPDAL
+   CLASSES ${classes})
+ vtk_module_link(VTK::IOPDAL
+   PRIVATE
+-    pdal_base)
++    ${pdal_target} pdal_util)
+ # XXX(pdal): PDAL should add include interfaces to its exported targets. See
+ # https://github.com/PDAL/PDAL/issues/2262.
+ vtk_module_include(VTK::IOPDAL

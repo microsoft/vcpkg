@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 867b46dca..853159bf0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -313,6 +313,7 @@ if (XE_ENABLED)
+ endif()
+ 
+ get_llvm_libfiles(LLVM_LIBRARY_LIST ${LLVM_COMPONENTS})
++list(TRANSFORM LLVM_LIBRARY_LIST REPLACE "/lib/" "$<$<CONFIG:DEBUG>:/debug/lib/")
+ get_llvm_cppflags(LLVM_CPP_FLAGS)
+ 
+ generate_target_builtins(BUILTIN_FILES ${ISPC_TARGETS})
+@@ -502,14 +503,11 @@ if (NOT WIN32 AND NOT APPLE)
+ endif()
+ 
+ # Link against Clang libraries
+-foreach(clangLib ${CLANG_LIBRARY_LIST})
+-    find_library(${clangLib}Path NAMES ${clangLib} HINTS ${LLVM_LIBRARY_DIRS})
+-    list(APPEND CLANG_LIBRARY_FULL_PATH_LIST ${${clangLib}Path})
+-endforeach()
+-target_link_libraries(${PROJECT_NAME} ${CLANG_LIBRARY_FULL_PATH_LIST})
++find_package(Clang REQUIRED)
++target_link_libraries(${PROJECT_NAME} libclang clangInterpreter clangFrontend)
+ 
+ # Link against LLVM libraries
+-target_link_libraries(${PROJECT_NAME} ${LLVM_LIBRARY_LIST} ${CMAKE_DL_LIBS})
++target_link_libraries(${PROJECT_NAME} ${LLVM_AVAILABLE_LIBS} ${CMAKE_DL_LIBS})
+ 
+ if (XE_ENABLED)
+     # Link against Xe libraries
