@@ -41,7 +41,12 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-vcpkg_copy_tools(TOOL_NAMES adios2_iotest adios2_reorganize adios2_reorganize_mpi bpls AUTO_CLEAN)
+set(tools "adios2_reorganize" "bpls")
+if(ADIOS2_USE_MPI)
+  list(APPEND tools "adios2_reorganize_mpi" "adios2_iotest")
+endif()
+
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
