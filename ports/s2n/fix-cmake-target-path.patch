@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision 4aec93c6a74aacf60cec6229b35094f56cb0f87b)
++++ b/CMakeLists.txt	(date 1675011451052)
+@@ -670,7 +670,7 @@
+ endif()
+
+ install(EXPORT "${PROJECT_NAME}-targets"
+-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake"
+         NAMESPACE AWS::
+         COMPONENT Development)
+
+diff --git a/cmake/s2n-config.cmake b/cmake/s2n-config.cmake
+--- a/cmake/s2n-config.cmake	(revision 4aec93c6a74aacf60cec6229b35094f56cb0f87b)
++++ b/cmake/s2n-config.cmake	(date 1675011032538)
+@@ -6,21 +6,6 @@
+ endif()
+
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
+-find_dependency(crypto)
+-
+-# Allow static or shared lib to be used.
+-# If both are installed, choose based on BUILD_SHARED_LIBS.
+-if (BUILD_SHARED_LIBS)
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/shared")
+-        include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
+-    else()
+-        include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
+-    endif()
+-else()
+-    if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/static")
+-        include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
+-    else()
+-        include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
+-    endif()
+-endif()
++find_dependency(OpenSSL COMPONENTS Crypto)
+
++include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
+\ No newline at end of file
