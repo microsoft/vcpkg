@@ -1,8 +1,8 @@
 {
   "name": "ispc",
   "version": "1.18.1",
-  "description": "Intel® Open Volume Kernel Library (Intel® Open VKL) is a collection of high-performance volume computation kernels, developed at Intel.",
-  "homepage": "http://www.openvkl.org",
+  "description": "ispc is a compiler for a variant of the C programming language, with extensions for single program, multiple data programming. Under the SPMD model, the programmer writes a program that generally appears to be a regular serial program, though the execution model is actually that a number of program instances execute in parallel on the hardware.",
+  "homepage": "https://ispc.github.io/",
   "license": "Apache-2.0",
   "dependencies": [
     {
