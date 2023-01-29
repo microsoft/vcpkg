@@ -35,7 +35,6 @@ target_compile_definitions(
 
 if (BUILD_SHARED_LIBS)
     if (WIN32)
-        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__declspec(dllimport)")
         target_compile_definitions(sqlite3 PRIVATE "SQLITE_API=__declspec(dllexport)")
         target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__declspec(dllimport)")
     else()
