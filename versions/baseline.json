@@ -333,7 +333,7 @@
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.1.17",
+      "baseline": "0.1.7",
       "port-version": 0
     },
     "aws-checksums": {
@@ -349,7 +349,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.10.57",
+      "baseline": "1.11.4",
       "port-version": 0
     },
     "azmq": {
