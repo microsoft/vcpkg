@@ -8481,8 +8481,8 @@
       "port-version": 3
     },
     "zstr": {
-      "baseline": "1.0.4",
-      "port-version": 2
+      "baseline": "1.0.7",
+      "port-version": 0
     },
     "ztd-text": {
       "baseline": "2022-03-21",
