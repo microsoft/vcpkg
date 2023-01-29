@@ -1,10 +1,12 @@
 diff --git a/cmake/s2n-config.cmake b/cmake/s2n-config.cmake
 --- a/cmake/s2n-config.cmake	(revision 4aec93c6a74aacf60cec6229b35094f56cb0f87b)
-+++ b/cmake/s2n-config.cmake	(date 1675009869008)
-@@ -8,19 +8,4 @@
- list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
- find_dependency(crypto)
++++ b/cmake/s2n-config.cmake	(date 1675011032538)
+@@ -6,21 +6,6 @@
+ endif()
  
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
+-find_dependency(crypto)
+-
 -# Allow static or shared lib to be used.
 -# If both are installed, choose based on BUILD_SHARED_LIBS.
 -if (BUILD_SHARED_LIBS)
@@ -20,6 +22,7 @@ diff --git a/cmake/s2n-config.cmake b/cmake/s2n-config.cmake
 -        include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
 -    endif()
 -endif()
--
++find_dependency(OpenSSL COMPONENTS Crypto)
+ 
 +include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
 \ No newline at end of file
