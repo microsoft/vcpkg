@@ -52,3 +52,137 @@ index 688d4d5..c8b9a05 100644
 +    SNAPPY DEFAULT_MSG
 +    SNAPPY_LIBRARY SNAPPY_INCLUDE_DIR
 +)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 54d4817..9b7203d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,7 @@ include(GNUInstallDirs)
+ 
+ if(NOT DEACTIVATE_LZ4)
+     if(PREFER_EXTERNAL_LZ4)
+-        find_package(LZ4)
++        find_package(lz4 CONFIG REQUIRED)
+     else()
+         message(STATUS "Using LZ4 internal sources.")
+     endif()
+@@ -144,7 +144,7 @@ if(NOT DEACTIVATE_LZ4)
+ endif()
+ 
+ if(NOT DEACTIVATE_SNAPPY)
+-    find_package(Snappy)
++    find_package(Snappy CONFIG REQUIRED)
+     if(SNAPPY_FOUND)
+         message(STATUS "Activating support for SNAPPY.")
+         set(HAVE_SNAPPY TRUE)
+@@ -157,7 +157,7 @@ if(NOT DEACTIVATE_ZLIB)
+     # import the ZLIB_ROOT environment variable to help finding the zlib library
+     if(PREFER_EXTERNAL_ZLIB)
+         set(ZLIB_ROOT $ENV{ZLIB_ROOT})
+-        find_package(ZLIB)
++        find_package(ZLIB REQUIRED)
+         if(NOT ZLIB_FOUND )
+             message(STATUS "No zlib found.  Using internal sources.")
+         endif()
+@@ -171,7 +171,7 @@ endif()
+ 
+ if(NOT DEACTIVATE_ZSTD)
+     if(PREFER_EXTERNAL_ZSTD)
+-        find_package(Zstd)
++        find_package(zstd CONFIG REQUIRED)
+     else()
+         message(STATUS "Using ZSTD internal sources.")
+     endif()
+diff --git a/blosc/CMakeLists.txt b/blosc/CMakeLists.txt
+index 392ad1d..495f526 100644
+--- a/blosc/CMakeLists.txt
++++ b/blosc/CMakeLists.txt
+@@ -9,7 +9,7 @@ endif(HIDE_SYMBOLS)
+ 
+ # includes
+ set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
+-if(NOT DEACTIVATE_LZ4)
++if(0)
+     if (LZ4_FOUND)
+         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${LZ4_INCLUDE_DIR})
+     else(LZ4_FOUND)
+@@ -18,7 +18,7 @@ if(NOT DEACTIVATE_LZ4)
+     endif(LZ4_FOUND)
+ endif(NOT DEACTIVATE_LZ4)
+ 
+-if(NOT DEACTIVATE_SNAPPY)
++if(0)
+     if (SNAPPY_FOUND)
+         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${SNAPPY_INCLUDE_DIR})
+     else(SNAPPY_FOUND)
+@@ -27,7 +27,7 @@ if(NOT DEACTIVATE_SNAPPY)
+     endif(SNAPPY_FOUND)
+ endif(NOT DEACTIVATE_SNAPPY)
+ 
+-if(NOT DEACTIVATE_ZLIB)
++if(0)
+     if (ZLIB_FOUND)
+         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
+     else(ZLIB_FOUND)
+@@ -36,7 +36,7 @@ if(NOT DEACTIVATE_ZLIB)
+     endif(ZLIB_FOUND)
+ endif(NOT DEACTIVATE_ZLIB)
+ 
+-if (NOT DEACTIVATE_ZSTD)
++if (0)
+     if (ZSTD_FOUND)
+         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${ZSTD_INCLUDE_DIR})
+     else (ZSTD_FOUND)
+@@ -88,37 +88,40 @@ endif(WIN32)
+ 
+ if(NOT DEACTIVATE_LZ4)
+     if(LZ4_FOUND)
+-        set(LIBS ${LIBS} ${LZ4_LIBRARY})
++        set(LIBS ${LIBS} lz4::lz4)
+     else(LZ4_FOUND)
+         file(GLOB LZ4_FILES ${LZ4_LOCAL_DIR}/*.c)
+         set(SOURCES ${SOURCES} ${LZ4_FILES})
++        set(LIBS ${LIBS} lz4::lz4)
+         source_group("LZ4" FILES ${LZ4_FILES})
+     endif(LZ4_FOUND)
+ endif(NOT DEACTIVATE_LZ4)
+ 
+ if(NOT DEACTIVATE_SNAPPY)
+     if(SNAPPY_FOUND)
+-        set(LIBS ${LIBS} ${SNAPPY_LIBRARY})
++        set(LIBS ${LIBS} Snappy::snappy)
+     else(SNAPPY_FOUND)
+         file(GLOB SNAPPY_FILES ${SNAPPY_LOCAL_DIR}/*.cc)
+         set(SOURCES ${SOURCES} ${SNAPPY_FILES})
++        set(LIBS ${LIBS} Snappy::snappy)
+         source_group("Snappy" FILES ${SNAPPY_FILES})
+     endif(SNAPPY_FOUND)
+ endif(NOT DEACTIVATE_SNAPPY)
+ 
+ if(NOT DEACTIVATE_ZLIB)
+     if(ZLIB_FOUND)
+-        set(LIBS ${LIBS} ${ZLIB_LIBRARY})
++        set(LIBS ${LIBS} ZLIB::ZLIB)
+     else(ZLIB_FOUND)
+         file(GLOB ZLIB_FILES ${ZLIB_LOCAL_DIR}/*.c)
+         set(SOURCES ${SOURCES} ${ZLIB_FILES})
++        set(LIBS ${LIBS} ZLIB::ZLIB)
+         source_group("Zlib" FILES ${ZLIB_FILES})
+     endif(ZLIB_FOUND)
+ endif(NOT DEACTIVATE_ZLIB)
+ 
+ if (NOT DEACTIVATE_ZSTD)
+     if (ZSTD_FOUND)
+-        set(LIBS ${LIBS} ${ZSTD_LIBRARY})
++        set(LIBS ${LIBS} $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
+     else (ZSTD_FOUND)
+         # Enable assembly code only when not using MSVC *and* x86 is there
+         if((NOT MSVC) AND COMPILER_SUPPORT_SSE2)   # if SSE2 is here, this is an x86 platform
+@@ -136,6 +139,7 @@ if (NOT DEACTIVATE_ZSTD)
+         set(ZSTD_FILES ${ZSTD_COMMON_FILES} ${ZSTD_COMPRESS_FILES}
+             ${ZSTD_DECOMPRESS_FILES} ${ZSTD_DICT_FILES})
+         set(SOURCES ${SOURCES} ${ZSTD_FILES})
++        set(LIBS ${LIBS} $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
+         source_group("Zstd" FILES ${ZSTD_FILES})
+     endif (ZSTD_FOUND)
+ endif (NOT DEACTIVATE_ZSTD)
+
