@@ -1,10 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 733b18a..1021c7c 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -335,9 +335,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "" OR CMAKE_BUILD_TYPE MATCHES Debug)
- 
-     # set extra warning flags for debug build
+--- a/CMakeLists.txt	(revision f2adef31d778cfe90b8a5bb377425f825ebf92f0)
++++ b/CMakeLists.txt	(date 1675009099302)
+@@ -337,9 +337,9 @@
+  # set extra warning flags
+ if(AWS_WARNINGS_ARE_ERRORS)
      if(MSVC)
 -        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /wd4068)
 +        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /wd4068)
