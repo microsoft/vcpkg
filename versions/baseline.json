@@ -3216,6 +3216,10 @@
       "baseline": "1.13.2",
       "port-version": 0
     },
+    "ispc": {
+      "baseline": "1.18.1",
+      "port-version": 0
+    },
     "itk": {
       "baseline": "5.2.1",
       "port-version": 4
