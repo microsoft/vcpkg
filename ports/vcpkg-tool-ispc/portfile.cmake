@@ -4,8 +4,8 @@ set(ispc_ver "${VERSION}")
 set(file_suffix ".tar.gz")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(archive_suffix "-windows")
-    set(file_suffix ".msi")
-    set(download_sha512 114601db7b787555b1273cad319046d5bb00d5d48f6d449642ad89f04680a780185e599728a0e34706da7c6d32a8a588707427c55e03e9b32850591df8e5d7a4)
+    set(file_suffix ".zip")
+    set(download_sha512 97d5d7bba9933f2bcda7374c738ff8a48371487df1720b803767cc9f6fffeaf06424f713360356e7ba57ca7766a1caefe01133a5657cde59ab0bde0e35988409)
 elseif(VCPKG_TARGET_IS_OSX)
     set(archive_suffix "-macOS")
     set(download_sha512 44abfd63b4e05bd80f67adfa9051a61815abe58aaa96277d8a54fe9e05788d54a4a6c4b02ee129245fe66a52a35e4a904a629cda5a6d9474e663ba3262b96d6c)
@@ -27,28 +27,12 @@ vcpkg_download_distfile(archive_path
 
 set(output_path "${CURRENT_PACKAGES_DIR}/manual-tools")
 file(MAKE_DIRECTORY "${output_path}")
-if(VCPKG_TARGET_IS_WINDOWS)
+message(STATUS "Extracting ispc ...")
+vcpkg_extract_source_archive(src_path 
+                             ARCHIVE "${archive_path}"
+                              )
+file(RENAME "${src_path}/" "${output_path}/ispc/")
+message(STATUS "Extracting ispc ... finished!")
 
-    cmake_path(NATIVE_PATH archive_path archive_path_native) # lessmsi is a bit picky about path formats.
-    message(STATUS "Extracting ispc ...")
-    vcpkg_execute_in_download_mode(
-                    COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-lessmsi/lessmsi.exe" x "${archive_path_native}" # Using output_path here does not work in bash
-                    WORKING_DIRECTORY "${output_path}"
-                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-out.log"
-                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-err.log"
-                    RESULT_VARIABLE error_code
-                )
-    if(error_code)
-        message(FATAL_ERROR "Couldn't extract ispc with lessmsi!")
-    endif()
-    message(STATUS "Extracting ispc ... finished!")
-    file(RENAME "${output_path}/${subfolder_name}/SourceDir/ISPC/${subfolder_name}" "${output_path}/ispc/")
-    file(REMOVE "${output_path}/${subfolder_name}")
-else()
-    vcpkg_extract_source_archive(src_path 
-                                 ARCHIVE "${archive_path}"
-                                  )
-    file(RENAME "${src_path}/" "${output_path}/ispc/")
-endif()
 
 
