@@ -224,7 +224,7 @@ index 2aefcd64..c8de8f90 100644
  
  # 5. Dependencies
 -include(eigen)
-+find_package(eigen3)
++find_package(eigen3 CONFIG REQUIRED)
  find_package(Threads REQUIRED)
  target_link_libraries(igl_core ${IGL_SCOPE}
      Eigen3::Eigen
@@ -240,7 +240,7 @@ index 6f223192..f50ea544 100644
  
  # 4. Dependencies
 -include(embree)
-+find_package(embree 3.12)
++find_package(embree 3 CONFIG REQUIRED)
  target_link_libraries(igl_embree ${IGL_SCOPE}
      igl::core
      embree::embree
@@ -256,7 +256,7 @@ index 151338e4..07068c62 100644
  
  # 4. Dependencies
 -include(glfw)
-+find_package(glfw3)
++find_package(glfw3 CONFIG REQUIRED)
  igl_include(opengl)
  target_link_libraries(igl_glfw ${IGL_SCOPE}
      igl::core
@@ -272,7 +272,7 @@ index 3763b771..bdc89d77 100644
  
  # 4. Dependencies
 -include(tinyxml2)
-+find_package(tinyxml2)
++find_package(tinyxml2 CONFIG REQUIRED)
  target_link_libraries(igl_xml ${IGL_SCOPE}
      igl::core
      tinyxml2::tinyxml2
@@ -289,8 +289,8 @@ index d7ffb9d4..5c4c9d30 100644
  # 4. Dependencies
 -include(imgui)
 -include(imguizmo)
-+find_package(imgui)
-+find_package(imguizmo)
++find_package(imgui CONFIG REQUIRED)
++find_package(imguizmo CONFIG REQUIRED)
  include(libigl_imgui_fonts)
  igl_include(glfw)
  target_link_libraries(igl_imgui ${IGL_SCOPE}
@@ -306,13 +306,11 @@ index f6abe8c3..5485a0de 100644
  
  # 4. Dependencies
 -include(cgal)
-+find_package(PkgConfig REQUIRED)
-+pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp)
-+pkg_check_modules(mpfr REQUIRED IMPORTED_TARGET mpfr)
 +find_package(cgal CONFIG REQUIRED)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(gmp CONFIG REQUIRED IMPORTED_TARGET gmp)
++pkg_check_modules(mpfr CONFIG REQUIRED IMPORTED_TARGET mpfr)
  igl_include(copyleft core)
  target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
      igl::core
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/copyleft/cgal.cmake.
-The file will have its original line endings in your working directory
