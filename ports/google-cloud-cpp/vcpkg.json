@@ -1,12 +1,13 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.4.0",
+  "version": "2.6.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
+    "grpc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -260,6 +261,18 @@
     },
     "composer": {
       "description": "Cloud Composer C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "connectors": {
+      "description": "Connectors API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1130,6 +1143,18 @@
     },
     "vmmigration": {
       "description": "VM Migration API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "vmwareengine": {
+      "description": "VMware Engine API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

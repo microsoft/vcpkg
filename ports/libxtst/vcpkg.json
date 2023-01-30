@@ -1,0 +1,13 @@
+{
+  "name": "libxtst",
+  "version": "1.2.4",
+  "description": "Xlib-based library for XTEST & RECORD extensions",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxtst",
+  "license": null,
+  "dependencies": [
+    "libx11",
+    "libxext",
+    "libxi",
+    "xproto"
+  ]
+}

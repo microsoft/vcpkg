@@ -1,8 +1,7 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.3.2",
-  "port-version": 1,
+  "version": "6.4.2",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -64,7 +63,7 @@
       "name": "minizip",
       "platform": "!windows"
     },
-    "opengl-registry",
+    "opengl",
     {
       "name": "opus",
       "platform": "!windows"

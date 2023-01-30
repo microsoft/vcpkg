@@ -1,9 +1,9 @@
 diff --git a/src/core/ext/transport/chttp2/transport/hpack_parser.cc b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
-index cb17759bba..a3c3598430 100644
+index b0d3a6465b..5c48f1aa30 100644
 --- a/src/core/ext/transport/chttp2/transport/hpack_parser.cc
 +++ b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
-@@ -1032,7 +1032,7 @@ class HPackParser::Parser {
-
+@@ -1037,7 +1037,7 @@ class HPackParser::Parser {
+ 
   private:
    void GPR_ATTRIBUTE_NOINLINE LogHeader(const HPackTable::Memento& memento) {
 -    const char* type;
@@ -12,10 +12,10 @@ index cb17759bba..a3c3598430 100644
        case LogInfo::kHeaders:
          type = "HDR";
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index 2e78b4de9e..77e88cab70 100644
+index 898a62823c..6b31cdc082 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
-@@ -181,6 +181,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
+@@ -188,6 +188,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
                                          size_t len) {
    uint8_t* ptr = reinterpret_cast<uint8_t*>(p.get());
    grpc_slice slice;
@@ -23,9 +23,9 @@ index 2e78b4de9e..77e88cab70 100644
    if (len <= sizeof(slice.data.inlined.bytes)) {
      slice.refcount = nullptr;
      slice.data.inlined.length = len;
-@@ -199,7 +200,7 @@ grpc_slice grpc_slice_from_moved_string(grpc_core::UniquePtr<char> p) {
+@@ -206,7 +207,7 @@ grpc_slice grpc_slice_from_moved_string(grpc_core::UniquePtr<char> p) {
  }
-
+ 
  grpc_slice grpc_slice_from_cpp_string(std::string str) {
 -  grpc_slice slice;
 +  grpc_slice slice = { 0 };
@@ -33,11 +33,11 @@ index 2e78b4de9e..77e88cab70 100644
      slice.refcount = nullptr;
      slice.data.inlined.length = str.size();
 diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
-index 4c0220837e..bb5a367107 100644
+index 141b16e345..89d9d6dafd 100644
 --- a/src/core/lib/surface/server.cc
 +++ b/src/core/lib/surface/server.cc
 @@ -902,7 +902,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {
-              GRPC_ERROR_CREATE_FROM_STATIC_STRING("Server Shutdown"));
+     FailCall(cq_idx, rc, GRPC_ERROR_CREATE("Server Shutdown"));
      return GRPC_CALL_OK;
    }
 -  RequestMatcherInterface* rm;

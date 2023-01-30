@@ -1,13 +1,11 @@
 {
   "name": "qtbase",
-  "version": "6.3.2",
-  "port-version": 3,
+  "version": "6.4.2",
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "freetype",
     {
       "name": "libb2",
       "platform": "!windows"
@@ -23,8 +21,15 @@
       "default-features": false,
       "features": [
         "doubleconversion"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "thread"
       ],
-      "platform": "windows"
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -56,6 +61,7 @@
     "icu",
     "jpeg",
     "network",
+    "opengl",
     "openssl",
     "pcre2",
     "png",
@@ -141,8 +147,9 @@
     },
     "egl": {
       "description": "EGL",
+      "supports": "linux",
       "dependencies": [
-        "egl-registry"
+        "egl"
       ]
     },
     "fontconfig": {
@@ -173,7 +180,16 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "glib": {
       "description": "GLib",
@@ -184,6 +200,7 @@
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
+        "opengl",
         {
           "name": "qtbase",
           "default-features": false,
@@ -236,6 +253,19 @@
     "network": {
       "description": "Qt Network"
     },
+    "opengl": {
+      "description": "OpenGL",
+      "dependencies": [
+        "opengl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
@@ -276,6 +306,32 @@
           "default-features": false,
           "features": [
             "concurrent"
+          ]
+        }
+      ]
+    },
+    "sql-mysql": {
+      "description": "Enable SQL Driver MySQL",
+      "dependencies": [
+        "libmysql",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "sql-oci": {
+      "description": "Enable SQL Driver Oracle OCI",
+      "dependencies": [
+        "ocilib",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
           ]
         }
       ]
