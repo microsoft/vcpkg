@@ -9,7 +9,6 @@
       "name": "llvm",
       "features": [
         "enable-assertions",
-        "openmp",
         "target-aarch64",
         "target-arm",
         "target-x86"

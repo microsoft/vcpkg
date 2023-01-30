@@ -22,12 +22,19 @@ vcpkg_add_to_path("${BISON_DIR}")
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES m4)
 vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ISPCRT_BUILD_STATIC)
+
+vcpkg_replace_string("${SOURCE_PATH}/ispcrt/CMakeLists.txt" [[build_ispcrt(SHARED ${PROJECT_NAME})]] 
+                                                            [[if(BUILD_SHARED_LIBS)\nbuild_ispcrt(SHARED ${PROJECT_NAME})\nendif()]]
+                    )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DISPC_INCLUDE_TESTS=OFF
       -DISPC_INCLUDE_EXAMPLES=OFF
+      -DISPCRT_BUILD_TASK_MODEL=Threads
+      -DISPCRT_BUILD_STATIC=${ISPCRT_BUILD_STATIC}
 )
 
 vcpkg_cmake_install()
