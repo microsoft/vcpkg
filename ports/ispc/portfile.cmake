@@ -25,7 +25,7 @@ vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ISPCRT_BUILD_STATIC)
 
 vcpkg_replace_string("${SOURCE_PATH}/ispcrt/CMakeLists.txt" [[build_ispcrt(SHARED ${PROJECT_NAME})]] 
-                                                            [[if(BUILD_SHARED_LIBS)\nbuild_ispcrt(SHARED ${PROJECT_NAME})\nendif()]]
+                                                            "if(BUILD_SHARED_LIBS)\nbuild_ispcrt(SHARED \${PROJECT_NAME})\nendif()"
                     )
 
 vcpkg_cmake_configure(
