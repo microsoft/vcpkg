@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pboettch/json-schema-validator
-    REF 2.2.0
+    REF "${VERSION}"
     SHA512 8d7fe6775774040099aa8d8b10fa18c4ccebe4437ecf9670710a0f64443d3588ca3e1bf1bc32a800518b748aa3acd89ecc61d1568b6dd8bf54273b33c5ab5d5a
     HEAD_REF master
-    PATCHES
-        cmake-find-package.patch
 )
 
 vcpkg_cmake_configure(
@@ -17,7 +15,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nlohmann_json_schema_validator)
+vcpkg_cmake_config_fixup(PACKAGE_NAME nlohmann_json_schema_validator CONFIG_PATH lib/cmake/nlohmann_json_schema_validator)
 
 vcpkg_copy_pdbs()
 
