@@ -247,6 +247,7 @@ vcpkg_cmake_configure(
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLDB_INCLUDE_TESTS=OFF
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
