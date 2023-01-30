@@ -3,6 +3,7 @@
   "version": "0.2.8",
   "description": "C++ Runtime for AWS Lambda.",
   "supports": "linux",
+  "license": "Apache-2.0",
   "dependencies": [
     "curl",
     {

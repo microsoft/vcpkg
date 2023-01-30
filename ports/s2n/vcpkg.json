@@ -4,6 +4,7 @@
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
   "supports": "!uwp & !windows",
+  "license": "Apache-2.0",
   "dependencies": [
     "openssl",
     {
