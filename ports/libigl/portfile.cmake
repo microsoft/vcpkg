@@ -22,6 +22,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         predicates      LIBIGL_PREDICATES
 )
 
+# remove custom FindGMP and FildMPFR
+file(REMOVE "${SOURCE_PATH}/cmake/find/FindGMP.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/find/FindMPFR.cmake")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
