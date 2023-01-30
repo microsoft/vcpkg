@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-tool-ispc",
+  "version": "1.18.0",
+  "description": "ispc is a compiler for a variant of the C programming language, with extensions for single program, multiple data programming.",
+  "homepage": "https://ispc.github.io/",
+  "license": " BSD-3-Clause",
+  "supports": "x64",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}
