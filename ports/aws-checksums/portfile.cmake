@@ -28,12 +28,12 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE
-		"${CURRENT_PACKAGES_DIR}/debug/include"
-		"${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
-		"${CURRENT_PACKAGES_DIR}/debug/share"
-		"${CURRENT_PACKAGES_DIR}/lib/${PORT}"
-		)
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
+)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
