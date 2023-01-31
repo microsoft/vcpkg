@@ -7414,7 +7414,7 @@
     },
     "string-view-lite": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "strong-type": {
       "baseline": "8",
