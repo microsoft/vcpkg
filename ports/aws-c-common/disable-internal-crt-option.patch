@@ -1,8 +1,8 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index b717bca..bfbe320 100644
+index 249b7d5..41a31e2 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -79,15 +79,6 @@ function(aws_set_common_properties target)
+@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
              list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
          endif()
  
