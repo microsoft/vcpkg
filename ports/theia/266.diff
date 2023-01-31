@@ -1,0 +1,12 @@
+diff --git a/libraries/vlfeat/CMakeLists.txt b/libraries/vlfeat/CMakeLists.txt
+index 7f4ffc796..9535d0c22 100644
+--- a/libraries/vlfeat/CMakeLists.txt
++++ b/libraries/vlfeat/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ project(vlfeat)
+ 
+-include("${CMAKE_MODULE_PATH}/OptimizeTheiaCompilerFlags.cmake")
++include(OptimizeTheiaCompilerFlags)
+ optimizetheiacompilerflags()
+ 
+ include_directories(./vl)

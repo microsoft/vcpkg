@@ -6,5 +6,5 @@ includedir=${prefix}/include
 Name: @name@
 Description: @description@
 Version: @version@
-Libs: -L${libdir} -l@libname@
+Libs: -L${libdir} -l@name@
 Cflags: -I${includedir}

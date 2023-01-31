@@ -9,6 +9,9 @@ vcpkg_from_github(
     REF v0.8
     SHA512 d4ca405097e8c439a4f74495f374bc5d5e4febafcf59ee88d985a8764ed36da1753ca4a3a73476dfb74c7d92df31a99242df6e1b47c648e860eee835a6f4f434
     HEAD_REF master
+    PATCHES
+        devendor-palsigslot.patch
+        ffmpeg-vxmc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/components/pango_core/include/sigslot")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
@@ -56,7 +60,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Pangolin)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinConfig.cmake" "SET( Pangolin_CMAKEMODULES ${SOURCE_PATH}/src/../CMakeModules )" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinConfig.cmake" "Pangolin_CMAKEMODULES ${SOURCE_PATH}/" "Pangolin_CMAKEMODULES \${CMAKE_CURRENT_LIST_DIR}/")
 
 vcpkg_copy_pdbs()
 
