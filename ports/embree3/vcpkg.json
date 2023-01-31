@@ -1,7 +1,6 @@
 {
   "name": "embree3",
-  "version-semver": "3.12.2",
-  "port-version": 3,
+  "version": "3.13.5",
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/embree/embree",
   "license": "Apache-2.0",

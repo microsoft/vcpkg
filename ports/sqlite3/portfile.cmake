@@ -1,12 +1,10 @@
-# Be sure to update both of these versions together.
-set(SQLITE_VERSION 3400000)
-set(PKGCONFIG_VERSION 3.40.0)
-set(SQLITE_HASH db099793e05ac0f37355c9bd41173fb63cfe20fe4eea49de227d06f6d22064ded38bb8369c495ce06a1ef1e687d41169d93d74359367333622c6893720f3c1f0)
+string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3,0\\4," SQLITE_VERSION "${VERSION}.0")
+string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 ${SQLITE_HASH}
+    SHA512 863afdabbdbe27baaccc13477e08437ce3b4d7e6f0c51a294d1d71252476af474b6c275729ebe1bc801f004da7ca6775591a30fed1930c3a1920d8118864f1d2
 )
 
 vcpkg_extract_source_archive(
@@ -41,7 +39,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPKGCONFIG_VERSION=${PKGCONFIG_VERSION}
+        -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
 )

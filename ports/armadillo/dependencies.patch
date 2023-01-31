@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index da1ff3a..5a7ede9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,7 +265,6 @@ message(STATUS "*** Looking for external libraries")
+ ## Find LAPACK and BLAS libraries, or their optimised versions
+ ##
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_aux/Modules/")
+ 
+ if(APPLE)
+   message(STATUS "Detected macOS")
+@@ -336,11 +335,16 @@ else()
+     set(FlexiBLAS_FOUND false)
+   endif()
+   
++  if(0)
+   include(ARMA_FindMKL)
+   include(ARMA_FindOpenBLAS)
+   include(ARMA_FindATLAS)     # TODO: remove support for ATLAS in next major version
+   include(ARMA_FindBLAS)
+   include(ARMA_FindLAPACK)
++  else()
++    find_package(BLAS REQUIRED)
++    find_package(LAPACK REQUIRED)
++  endif()
+   
+   message(STATUS "FlexiBLAS_FOUND = ${FlexiBLAS_FOUND}" )
+   message(STATUS "      MKL_FOUND = ${MKL_FOUND}"       )
+@@ -503,7 +507,6 @@ if(DETECT_HDF5)
+   endif()
+ endif()
+ 
+-include(ARMA_FindARPACK)
+ message(STATUS "ARPACK_FOUND = ${ARPACK_FOUND}")
+ 
+ if(ARPACK_FOUND)
+@@ -511,7 +514,6 @@ if(ARPACK_FOUND)
+   set(ARMA_LIBS ${ARMA_LIBS} ${ARPACK_LIBRARY})
+ endif()
+ 
+-include(ARMA_FindSuperLU5)
+ message(STATUS "SuperLU_FOUND = ${SuperLU_FOUND}")
+ 
+ if(SuperLU_FOUND)

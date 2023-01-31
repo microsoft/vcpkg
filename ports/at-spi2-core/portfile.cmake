@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libdbus-1\n    libxi-dev\n    libxtst-dev\n\nThese can be installed on Ubuntu systems via apt-get install libdbus-1-dev libxi-dev libxtst-dev")
+    message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libdbus-1-dev\n    libxi-dev\n    libxtst-dev\n\nThese can be installed on Ubuntu systems via apt-get install libdbus-1-dev libxi-dev libxtst-dev")
 endif()
 
 vcpkg_from_gitlab(
@@ -41,7 +41,7 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/defaults")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

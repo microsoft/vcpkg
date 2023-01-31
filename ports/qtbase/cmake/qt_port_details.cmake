@@ -7,18 +7,14 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.5.0-beta1)
-
-set(QT_UPDATE_VERSION 0)
+set(QT_VERSION 6.5.0-beta2)
 set(QT_DEV_BRANCH 1)
+
+set(QT_UPDATE_VERSION 1)
 
 if(PORT MATCHES "(qtquickcontrols2)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
-endif()
-
-if(PORT MATCHES "qtlocation") # No 6.3.1 tag/branch
-    #set(QT_VERSION 6.3.0)
 endif()
 
 ### Setting up the git tag.
@@ -78,14 +74,14 @@ endif()
 if(QT_VERSION VERSION_GREATER_EQUAL 6.3.0)
     list(APPEND QT_PORTS
              ## New in 6.3.0
-             qtlanguageserver) # TODO
+             qtlanguageserver)
 endif()
 if(QT_VERSION VERSION_GREATER_EQUAL 6.4.0)
     list(APPEND QT_PORTS
              ## New in 6.4.0
              qthttpserver
              qtquick3dphysics
-             qtspeech # TODO
+             qtspeech
              )
 endif()
 if(QT_VERSION VERSION_GREATER_EQUAL 6.5.0)
