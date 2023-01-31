@@ -1,9 +1,8 @@
-set(AR_VERSION 1.1.0)
-set(ARCHIVE_NAME arg_router-${AR_VERSION}.zip)
+set(ARCHIVE_NAME arg_router-${VERSION}.zip)
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS https://github.com/cmannett85/arg_router/releases/download/v${AR_VERSION}/${ARCHIVE_NAME}
+    URLS https://github.com/cmannett85/arg_router/releases/download/v${VERSION}/${ARCHIVE_NAME}
     FILENAME ${ARCHIVE_NAME}
     SHA512 9cb75dafbdcbc02c774d5dcf17af126b7b1fc032b10cc0a2b5075897fbb80cdb0b84b631d265295210c3a7bdae682065f417d8ca70937118de97f14ed46bd31b
 )
