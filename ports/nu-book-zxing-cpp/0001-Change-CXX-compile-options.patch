@@ -1,0 +1,25 @@
+From 3b8b151d4a432e6e5f61a0540150b3c5b98b27db Mon Sep 17 00:00:00 2001
+From: Qingnan Duan <duanqn_own_1@yeah.net>
+Date: Tue, 31 Jan 2023 14:09:04 +0800
+Subject: [PATCH] Change CXX compile options
+
+---
+ CMakeLists.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab3dcafc..988f80ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,8 +21,6 @@ if (MSVC)
+ 
+     add_definitions (-DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS)
+     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+-    set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Oi /GS-")
+-    set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Oi /GS-")
+     if (LINK_CPP_STATICALLY)
+         set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+         set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+-- 
+2.37.0.windows.1
+

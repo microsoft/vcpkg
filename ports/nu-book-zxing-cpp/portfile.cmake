@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2.0.0
     SHA512 fa22164f834a42194eafd0d3e9c09d953233c69843ac6e79c8d6513314be28d8082382b436c379368e687e0eed05cb5e566d2893ec6eb29233a36643904ae083
     HEAD_REF master
+    PATCHES
+        0001-Change-CXX-compile-options.patch
 )
 
 if (VCPKG_TARGET_IS_UWP)
