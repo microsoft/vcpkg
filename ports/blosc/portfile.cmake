@@ -37,7 +37,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/blosc-config.cmake"
 include(CMakeFindDependencyMacro)
 find_dependency(lz4 CONFIG)
 find_dependency(zstd CONFIG)
-find_dependency(snappy CONFIG)
+find_dependency(Snappy CONFIG)
 find_dependency(ZLIB)
 find_dependency(Threads)]]
 )
