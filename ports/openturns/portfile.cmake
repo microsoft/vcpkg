@@ -29,16 +29,7 @@ vcpkg_add_to_path("${BISON_DIR}")
 # option (USE_PRIMESIEVE               "Use primesieve for prime numbers generation"                           ON)
 # option (USE_OPENMP                   "Use OpenMP to disable threading"                                       ON)
 # option (USE_OPENBLAS                 "Use OpenBLAS to disable threading"                                     ON)
-
 # option (BUILD_PYTHON                 "Build the python module for the library"                               ON)
-
-
-#vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#    FEATURES
-#        mpi     ADIOS2_USE_MPI
-#        cuda    ADIOS2_USE_CUDA
-#        python  ADIOS2_USE_Python # requires numpy / mpi4py
-#)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -7,6 +7,7 @@
   "dependencies": [
     "blas",
     "boost-random",
+    "boost-multiprecision",
     "ceres",
     "cminpack",
     "dlib",
