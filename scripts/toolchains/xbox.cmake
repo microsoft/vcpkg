@@ -27,6 +27,27 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     set(_vcpkg_core_libs onecore_apiset.lib)
 
+    # Add the Microsoft GDK if present
+    if (DEFINED ENV{GRDKLatest})
+        set(_vcpkg_incpaths " /I\"$ENV{GRDKLatest}/gameKit/Include\"")
+        set(_vcpkg_libpaths " /LIBPATH:\"$ENV{GRDKLatest}/gameKit/Lib/amd64\"")
+    endif()
+
+    # Add the Microsoft GDK Xbox Extensions if present
+    if (DEFINED ENV{GXDKLatest})
+        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+            set(_vcpkg_incpaths "/I\"$ENV{GXDKLatest}/gameKit/Include\" /I\"$ENV{GXDKLatest}/gameKit/Include/Scarlett\" ${_vcpkg_incpaths}")
+            set(_vcpkg_libpaths "/LIBPATH:\"$ENV{GXDKLatest}/gameKit/Lib/amd64\" /LIBPATH:\"$ENV{GXDKLatest}/gameKit/Include/Lib/amd64/Scarlett\" ${_vcpkg_libpaths}")
+
+            set(_vcpkg_core_libs xgameplatform.lib)
+        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+            set(_vcpkg_incpaths "/I\"$ENV{GXDKLatest}/gameKit/Include\" /I\"$ENV{GXDKLatest}/gameKit/Include/XboxOne\" ${_vcpkg_incpaths}")
+            set(_vcpkg_libpaths "/LIBPATH:\"$ENV{GXDKLatest}/gameKit/Lib/amd64\" /LIBPATH:\"$ENV{GXDKLatest}/gameKit/Include/Lib/amd64/XboxOne\" ${_vcpkg_libpaths}")
+
+            set(_vcpkg_core_libs xgameplatform.lib)
+        endif()
+    endif()
+
     set(CMAKE_C_STANDARD_LIBRARIES_INIT "${_vcpkg_core_libs}" CACHE STRING "" FORCE)
     set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "${_vcpkg_core_libs}" CACHE STRING "" FORCE)
 
@@ -43,16 +64,6 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    if (DEFINED ENV{GameDKLatest})
-        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
-            set(_vcpkg_incpaths "/I\"$ENV{GameDKLatest}/GXDK/gameKit/Include\" /I\"$ENV{GameDKLatest}/GXDK/gameKit/Include/Scarlett\"")
-        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
-            set(_vcpkg_incpaths "/I\"$ENV{GameDKLatest}/GXDK/gameKit/Include\" /I\"$ENV{GameDKLatest}/GXDK/gameKit/Include/XboxOne\"")
-        endif()
-
-        string(APPEND _vcpkg_incpaths " /I\"$ENV{GameDKLatest}/GRDK/gameKit/Include\"")
-    endif()
-
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWIN32_LEAN_AND_MEAN /DWINAPI_FAMILY=WINAPI_FAMILY_GAMES /D_WIN32_WINNT=0x0A00 /D_ATL_NO_DEFAULT_LIBS /D__WRL_NO_DEFAULT_LIB__ /D__WRL_CLASSIC_COM_STRICT__ /D_UITHREADCTXT_SUPPORT=0 /D_CRT_USE_WINAPI_PARTITION_APP")
     set(_vcpkg_common_flags "/nologo /utf-8 /MP /GS /Gd /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
 
@@ -61,15 +72,15 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(VCPKG_TARGET_IS_XBOX_SCARLETT ON CACHE BOOL "" FORCE)
 
         string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_SCARLETT")
-        string(APPEND _vcpkg_cpp_flags " /favor:AMD64 /arch:AVX2")
+        string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX2")
     elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
         set(VCPKG_TARGET_IS_XBOX ON CACHE BOOL "" FORCE)
         set(VCPKG_TARGET_IS_XBOX_XBOXONE ON CACHE BOOL "" FORCE)
 
         string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_XBOXONE")
-        string(APPEND _vcpkg_cpp_flags " /favor:AMD64 /arch:AVX")
+        string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX")
     endif()
-    
+
     set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_incpaths} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
     set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_incpaths} ${VCPKG_C_FLAGS}" CACHE STRING "")
     set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
@@ -94,9 +105,10 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     set(_vcpkg_common_lflags "/MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /MANIFESTUAC:NO /SUBSYSTEM:WINDOWS,10.0")
 
-    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${_vcpkg_libpaths} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${_vcpkg_libpaths} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
 
+    unset(_vcpkg_libpaths)
     unset(_vcpkg_unsupported)
     unset(_vcpkg_nodefaultlib)
     unset(_vcpkg_common_lflags)
