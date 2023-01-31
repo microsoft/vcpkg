@@ -3857,8 +3857,8 @@
       "port-version": 1
     },
     "libevent": {
-      "baseline": "2.1.12",
-      "port-version": 7
+      "baseline": "2.1.12+20230128",
+      "port-version": 0
     },
     "libevhtp": {
       "baseline": "1.2.18",
