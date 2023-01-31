@@ -1,0 +1,25 @@
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index 4310d60..bd32897 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -2652,11 +2652,15 @@ macro(build_utf8proc)
+ endmacro()
+ 
+ if(ARROW_WITH_UTF8PROC)
+-  resolve_dependency(utf8proc
+-                     REQUIRED_VERSION
+-                     "2.2.0"
+-                     PC_PACKAGE_NAMES
+-                     libutf8proc)
++  if(ARROW_PACKAGE_KIND STREQUAL "vcpkg")
++    # We can't specify required version because vcpkg's
++    # unofficial-utf8proc CMake package doesn't provide version
++    # information.
++    set(utf8proc_required_version "")
++  else()
++    set(utf8proc_required_version REQUIRED_VERSION "2.2.0")
++  endif()
++  resolve_dependency(utf8proc ${utf8proc_required_version} PC_PACKAGE_NAMES libutf8proc)
+   add_definitions(-DARROW_WITH_UTF8PROC)
+ endif()
+ 
