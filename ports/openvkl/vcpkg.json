@@ -7,7 +7,7 @@
   "dependencies": [
     "embree3",
     {
-      "name": "ispc",
+      "name": "vcpkg-tool-ispc",
       "host": true
     },
     "rkcommon",

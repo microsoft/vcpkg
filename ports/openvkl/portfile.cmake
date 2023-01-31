@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        "-DISPC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/ispc/ispc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DISPC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/ispc/bin/ispc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
 
 vcpkg_cmake_install()
