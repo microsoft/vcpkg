@@ -11,8 +11,6 @@ index 4580c037..26f2a8ca 100644
  target_link_libraries(igl_opengl ${IGL_SCOPE}
      igl::core
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/opengl.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
 index 2aefcd64..c8de8f90 100644
 --- a/cmake/igl/modules/core.cmake
@@ -22,13 +20,11 @@ index 2aefcd64..c8de8f90 100644
  
  # 5. Dependencies
 -include(eigen)
-+find_package(eigen3 CONFIG REQUIRED)
++find_package(Eigen3 CONFIG REQUIRED)
  find_package(Threads REQUIRED)
  target_link_libraries(igl_core ${IGL_SCOPE}
      Eigen3::Eigen
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/core.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
 index 6f223192..f50ea544 100644
 --- a/cmake/igl/modules/embree.cmake
@@ -43,8 +39,6 @@ index 6f223192..f50ea544 100644
      igl::core
      embree::embree
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/embree.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
 index 151338e4..07068c62 100644
 --- a/cmake/igl/modules/glfw.cmake
@@ -59,8 +53,6 @@ index 151338e4..07068c62 100644
  target_link_libraries(igl_glfw ${IGL_SCOPE}
      igl::core
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/glfw.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
 index 3763b771..bdc89d77 100644
 --- a/cmake/igl/modules/xml.cmake
@@ -75,8 +67,6 @@ index 3763b771..bdc89d77 100644
      igl::core
      tinyxml2::tinyxml2
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/xml.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
 index d7ffb9d4..5c4c9d30 100644
 --- a/cmake/igl/modules/imgui.cmake
@@ -93,8 +83,6 @@ index d7ffb9d4..5c4c9d30 100644
  igl_include(glfw)
  target_link_libraries(igl_imgui ${IGL_SCOPE}
 
-warning: LF will be replaced by CRLF in cmake/igl/modules/imgui.cmake.
-The file will have its original line endings in your working directory
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
 index f6abe8c3..5485a0de 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
