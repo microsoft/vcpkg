@@ -15,8 +15,6 @@ vcpkg_extract_source_archive(
 file(
     COPY "${SOURCE_PATH}/include/arg_router/arg_router-config.cmake"
          "${SOURCE_PATH}/include/arg_router/arg_router-config-version.cmake"
-         "${SOURCE_PATH}/include/arg_router/README.md"
-         "${SOURCE_PATH}/include/arg_router/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/arg_router"
 )
 file(
@@ -29,6 +27,6 @@ file(
 )
 
 vcpkg_install_copyright(
-    FILE_LIST "${CURRENT_PACKAGES_DIR}/share/arg_router/LICENSE"
+    FILE_LIST "${SOURCE_PATH}/include/arg_router/LICENSE"
 )
 
