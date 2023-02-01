@@ -8,8 +8,10 @@ vcpkg_from_github(
         find_package_required.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
+
 vcpkg_check_features(
-    OUT_FEATURE_OPTIONS 
+    OUT_FEATURE_OPTIONS
         FEATURE_OPTIONS
     FEATURES
         irrlicht    ENABLE_MODULE_IRRLICHT
