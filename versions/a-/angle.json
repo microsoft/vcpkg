@@ -6,11 +6,6 @@
       "port-version": 0
     },
     {
-      "git-tree": "31797950b5bcfdf763d0e766a28aa0bb4c2ebd3f",
-      "version-string": "chromium_5249",
-      "port-version": 0
-    },
-    {
       "git-tree": "96213b303b5b0804d7c8e9b6b94aa3cd3cc90660",
       "version-string": "chromium_4472",
       "port-version": 7
