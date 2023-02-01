@@ -1,0 +1,13 @@
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index da35d03..343f038 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -195,7 +195,7 @@ elseif(NOT EPROSIMA_INSTALLER)
+         endif()
+ 
+         # install symbols if any
+-        if(PDB_FILE)
++        if(PDB_FILE AND BUILD_SHARED_LIBS)
+             install(FILES ${PDB_FILE}
+                 DESTINATION ${LIB_INSTALL_DIR}${MSVCARCH_DIR_EXTENSION}
+                 COMPONENT symbols

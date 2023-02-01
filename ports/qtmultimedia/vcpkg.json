@@ -1,7 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version": "6.3.2",
-  "port-version": 1,
+  "version": "6.4.2",
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -10,13 +9,13 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "concurrent",
         "gui",
         "network"
       ]
     },
     {
       "name": "qtshadertools",
-      "host": true,
       "default-features": false
     }
   ],
@@ -24,14 +23,34 @@
     "widgets"
   ],
   "features": {
+    "ffmpeg": {
+      "description": "Build with ffmpeg",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avdevice",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
+        "egl",
         {
-          "name": "angle",
-          "platform": "windows"
-        },
-        "gstreamer"
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "qml": {

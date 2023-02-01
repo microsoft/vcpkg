@@ -1,6 +1,6 @@
 {
   "name": "elfio",
-  "version": "3.10",
+  "version": "3.11",
   "description": "A header-only C++ library intended for reading and generating files in the ELF binary format.",
   "homepage": "https://github.com/serge1/ELFIO",
   "license": "MIT",

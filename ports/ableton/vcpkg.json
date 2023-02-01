@@ -1,7 +1,6 @@
 {
   "name": "ableton",
-  "version": "3.0.5",
-  "port-version": 1,
+  "version": "3.0.6",
   "description": "Ableton Link, a technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices.",
   "homepage": "https://www.ableton.com/en/link/",
   "documentation": "http://ableton.github.io/link/",

@@ -1,0 +1,8 @@
+{
+  "name": "sse2neon",
+  "version-semver": "1.5.1",
+  "port-version": 1,
+  "description": "A translator from Intel SSE intrinsics to Arm/Aarch64 NEON implementation",
+  "homepage": "https://github.com/DLTcollab/sse2neon",
+  "license": "MIT"
+}

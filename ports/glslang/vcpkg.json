@@ -1,9 +1,9 @@
 {
   "name": "glslang",
-  "version": "11.11.0",
-  "port-version": 1,
+  "version": "11.13.0",
   "description": "Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator",
   "homepage": "https://github.com/KhronosGroup/glslang",
+  "license": "Apache-2.0 AND BSD-3-Clause AND MIT AND GPL-3.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,0 +1,13 @@
+diff --git a/Source/Projects/VS2019/MACDll/MACDll.vcxproj b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
+index 4dfa820..7ac4bce 100644
+--- a/Source/Projects/VS2019/MACDll/MACDll.vcxproj
++++ b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
+@@ -108,7 +108,7 @@
+       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+       <PrecompiledHeader>Use</PrecompiledHeader>
+       <WarningLevel>Level3</WarningLevel>
+-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
++      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+     </ClCompile>
+     <ResourceCompile>
+       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
