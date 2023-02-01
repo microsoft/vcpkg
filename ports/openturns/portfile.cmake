@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF ad8482ece23d98802edc6258683e8353f9ff8b08
     SHA512 b0bc88bcf54945b5e786b480e640ee182926c75f1d871f70690d9609c98745b1907b3d9184c07586591fa45238c837da5a893a00d9c576a9e10232bcc9adc593
     HEAD_REF master
-    PATCHES link-gmp.patch
+    PATCHES
+      link-gmp.patch
+      reorder-mpc.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
