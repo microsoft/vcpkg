@@ -23,5 +23,9 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
 
+if("build-decoder" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES faad_decoder AUTO_CLEAN)
+endif()
+
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

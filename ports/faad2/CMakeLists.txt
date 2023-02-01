@@ -28,6 +28,7 @@ if (FAAD_BUILD_BINARIES)
         "${CMAKE_SOURCE_DIR}/frontend/unicode_support.c"
     )
     target_link_libraries(faad_decoder PRIVATE faad shell32)
+    install(TARGETS faad_decoder DESTINATION "bin")
 endif ()
 
 install(
