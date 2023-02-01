@@ -8,6 +8,10 @@
       "baseline": "22.01",
       "port-version": 0
     },
+    "ableton": {
+      "baseline": "3.0.6",
+      "port-version": 1
+    },
     "abletonlink": {
       "baseline": "3.0.6",
       "port-version": 0
