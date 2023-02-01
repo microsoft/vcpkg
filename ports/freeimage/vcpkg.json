@@ -15,7 +15,10 @@
       "name": "libwebp",
       "platform": "!uwp"
     },
-    "openexr",
+    {
+      "name": "openexr",
+      "platform": "!uwp"
+    },
     "openjpeg",
     "tiff",
     "zlib"
