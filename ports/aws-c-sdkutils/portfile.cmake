@@ -1,20 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO awslabs/aws-crt-cpp
+    REPO awslabs/aws-c-sdkutils
     REF "v${VERSION}"
-    SHA512 497bd9a127caaafe4b2a97c8f16fe3847085c59ac5ef43d1819bcb9cc6ad32fbd3d1ec507cb42810871a5e5ce08033a1a36aced0e250b2538bf905bf61459950
-    PATCHES
-        no-werror.patch
+    SHA512 3c94a985a8952441eb5453ceea41ebb3aa3e075a6f2dcb3b013f2336a7c36dbcbc022696ac9e807bb25f563f969dd604a89b7ed7ef746170dda3cae0fc06262c
+    HEAD_REF master
 )
-
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        "-DSTATIC_CRT=${STATIC_CRT}"
-        -DBUILD_DEPS=OFF
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
