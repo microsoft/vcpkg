@@ -26,3 +26,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
 
 # Install license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ptc-print" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
