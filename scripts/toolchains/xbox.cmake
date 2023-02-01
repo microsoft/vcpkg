@@ -32,29 +32,37 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     # Add the Microsoft GDK if present
     if (DEFINED ENV{GRDKLatest})
-        set(_vcpkg_incpaths " /I\"$ENV{GRDKLatest}/gameKit/Include\"")
-        set(_vcpkg_libpaths " /LIBPATH:\"$ENV{GRDKLatest}/gameKit/Lib/amd64\"")
+        cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
+
+        set(_vcpkg_incpaths " /I\"${_vcpkg_grdk}/gameKit/Include\"")
+        set(_vcpkg_libpaths " /LIBPATH:\"${_vcpkg_grdk}/gameKit/Lib/amd64\"")
 
         string(APPEND _vcpkg_core_libs " xgameruntime.lib")
+
+        unset(_vcpkg_grdk)
     endif()
 
     # Add the Microsoft GDK Xbox Extensions if present
     if (DEFINED ENV{GXDKLatest})
+        cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
+
         if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_SCARLETT")
 
-            set(_vcpkg_incpaths "/I\"$ENV{GXDKLatest}/gameKit/Include\" /I\"$ENV{GXDKLatest}/gameKit/Include/Scarlett\" ${_vcpkg_incpaths}")
-            set(_vcpkg_libpaths "/LIBPATH:\"$ENV{GXDKLatest}/gameKit/Lib/amd64\" /LIBPATH:\"$ENV{GXDKLatest}/gameKit/Include/Lib/amd64/Scarlett\" ${_vcpkg_libpaths}")
+            set(_vcpkg_incpaths "/I\"${_vcpkg_gxdk}/gameKit/Include\" /I\"${_vcpkg_gxdk}/gameKit/Include/Scarlett\" ${_vcpkg_incpaths}")
+            set(_vcpkg_libpaths "/LIBPATH:\"${_vcpkg_gxdk}/gameKit/Lib/amd64\" /LIBPATH:\"${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett\" ${_vcpkg_libpaths}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
         elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_XBOXONE")
 
-            set(_vcpkg_incpaths "/I\"$ENV{GXDKLatest}/gameKit/Include\" /I\"$ENV{GXDKLatest}/gameKit/Include/XboxOne\" ${_vcpkg_incpaths}")
-            set(_vcpkg_libpaths "/LIBPATH:\"$ENV{GXDKLatest}/gameKit/Lib/amd64\" /LIBPATH:\"$ENV{GXDKLatest}/gameKit/Include/Lib/amd64/XboxOne\" ${_vcpkg_libpaths}")
+            set(_vcpkg_incpaths "/I\"${_vcpkg_gxdk}/gameKit/Include\" /I\"${_vcpkg_gxdk}/gameKit/Include/XboxOne\" ${_vcpkg_incpaths}")
+            set(_vcpkg_libpaths "/LIBPATH:\"${_vcpkg_gxdk}/gameKit/Lib/amd64\" /LIBPATH:\"${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne\" ${_vcpkg_libpaths}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
         endif()
+
+        unset(_vcpkg_gxdk)
     endif()
 
     set(CMAKE_C_STANDARD_LIBRARIES_INIT "${_vcpkg_core_libs}" CACHE STRING "" FORCE)
