@@ -4,11 +4,9 @@ vcpkg_from_github(
     REF ad8482ece23d98802edc6258683e8353f9ff8b08
     SHA512 b0bc88bcf54945b5e786b480e640ee182926c75f1d871f70690d9609c98745b1907b3d9184c07586591fa45238c837da5a893a00d9c576a9e10232bcc9adc593
     HEAD_REF master
+    PATCHES link-gmp.patch
 )
 
-#vcpkg_find_acquire_program(PYTHON3)
-#get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-#vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path("${FLEX_DIR}")
@@ -16,29 +14,33 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_DIR}")
 
-# option (USE_HMAT                     "Use HMat library"                                                      ON)
-# option (USE_R                        "Use R for graph output support"                                        ON)
-# option (USE_NLOPT                    "Use NLopt for additional optimization algorithms"                      ON)
-# option (USE_CERES                    "Use Ceres Solver for additional optimization algorithms"               ON)
-# option (USE_CMINPACK                 "Use CMinpack for additional optimization algorithms"                   ON)
-# option (USE_DLIB                     "Use dlib for additional optimization algorithms"                       ON)
-# option (USE_IPOPT                    "Use Ipopt for nonlinear optimization"                                  ON)
-# option (USE_BONMIN                   "Use Bonmin for MINLP problems"                                         ON)
-# option (USE_PAGMO                    "Use Pagmo for multi-objective optimization"                            ON)
-# option (USE_SPECTRA                  "Use Spectra for eigenvalues computation"                               ON)
-# option (USE_PRIMESIEVE               "Use primesieve for prime numbers generation"                           ON)
-# option (USE_OPENMP                   "Use OpenMP to disable threading"                                       ON)
-# option (USE_OPENBLAS                 "Use OpenBLAS to disable threading"                                     ON)
-# option (BUILD_PYTHON                 "Build the python module for the library"                               ON)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       ${FEATURE_OPTIONS}
-      -DBUILD_PYTHON:BOOL=ON
+      -DBUILD_PYTHON:BOOL=OFF # Requires additional python modules
       -DUSE_BOOST:BOOL=ON # Required to make the distributions cross platform
       -DUSE_DOXYGEN:BOOL=OFF
       -DUSE_OPENMP:BOOL=OFF
+      -DCMAKE_REQUIRE_FIND_PACKAGE_Spectra:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_Eigen3:BOOL=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_primesieve:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_BISON:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_FLEX:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_TBB:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_muParser:BOOL=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_HMAT:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_LibXml2:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_HDF5:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_MPFR:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_MPC:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_NLopt:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_dlib:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_Ceres:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_CMinpack:BOOL=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Bonmin:BOOL=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Ipopt:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_Pagmo:BOOL=ON
 )
 
 vcpkg_cmake_install()

@@ -6,13 +6,19 @@
   "license": null,
   "dependencies": [
     "blas",
-    "boost-random",
     "boost-multiprecision",
+    "boost-random",
     "ceres",
     "cminpack",
     "dlib",
     "exprtk",
-    "hdf5",
+    {
+      "name": "hdf5",
+      "default-features": false,
+      "features": [
+        "cpp"
+      ]
+    },
     "lapack",
     "libxml2",
     "mpc",
