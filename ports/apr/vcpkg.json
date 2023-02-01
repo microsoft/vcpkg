@@ -1,9 +1,8 @@
 {
   "name": "apr",
-  "version": "1.7.0",
-  "port-version": 11,
+  "version": "1.7.1",
   "description": "The Apache Portable Runtime (APR) is a C library that forms a system portability layer that covers many operating systems.",
-  "homepage": "https://apr.apache.org/",
+  "homepage": "https://github.com/apache/apr",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [

@@ -1,15 +1,9 @@
-
-set(VERSION 1.7.0)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
-    FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 3dc42d5caf17aab16f5c154080f020d5aed761e22db4c5f6506917f6bfd2bf8becfb40af919042bd4ce1077d5de74aa666f5edfba7f275efba78e8893c115148
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+    REPO apache/apr
+    REF "${VERSION}"
+    SHA512 d214cf7bdf479b6213e71b09e7bd817720c5f46284b5c1518805890e8755229b4e7259d516926ea7420676d5414c4fab8c349d45e028f25bfea893a13579ea67
+    HEAD_REF trunk
     PATCHES
         fix-configcmake.patch
         unglue.patch
@@ -90,4 +84,4 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
