@@ -41,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
+        libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
         tools       USE_OPENGL
@@ -68,7 +69,7 @@ vcpkg_cmake_configure(
         -DINSTALL_DOCS=OFF
         -DENABLE_INSTALL_testtex=OFF
         "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
-        "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
+        "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
 )
