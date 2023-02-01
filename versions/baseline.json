@@ -1229,8 +1229,8 @@
       "port-version": 0
     },
     "buck-yeh-bux": {
-      "baseline": "1.6.6",
-      "port-version": 1
+      "baseline": "1.6.7",
+      "port-version": 0
     },
     "buck-yeh-bux-mariadb-client": {
       "baseline": "1.0.3",
@@ -1406,7 +1406,7 @@
     },
     "chakracore": {
       "baseline": "2022-11-09",
-      "port-version": 1
+      "port-version": 2
     },
     "charls": {
       "baseline": "2.4.1",
@@ -1737,12 +1737,12 @@
       "port-version": 0
     },
     "cpu-features": {
-      "baseline": "0.6.0",
-      "port-version": 2
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "cpuid": {
-      "baseline": "0.5.1",
-      "port-version": 4
+      "baseline": "0.6.2",
+      "port-version": 0
     },
     "cpuinfo": {
       "baseline": "2022-07-19",
@@ -1833,8 +1833,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "7.86.0",
-      "port-version": 2
+      "baseline": "7.87.0",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -1938,7 +1938,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 7
+      "port-version": 8
     },
     "devicenameresolver": {
       "baseline": "2016-06-26",
@@ -2185,8 +2185,8 @@
       "port-version": 4
     },
     "embree3": {
-      "baseline": "3.12.2",
-      "port-version": 3
+      "baseline": "3.13.5",
+      "port-version": 0
     },
     "enet": {
       "baseline": "1.3.17",
@@ -2201,7 +2201,7 @@
       "port-version": 3
     },
     "entt": {
-      "baseline": "3.11.0",
+      "baseline": "3.11.1",
       "port-version": 0
     },
     "epsilon": {
@@ -2389,11 +2389,11 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "23.1.4",
+      "baseline": "23.1.21",
       "port-version": 0
     },
     "flecs": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.4",
       "port-version": 0
     },
     "flint": {
@@ -2590,7 +2590,7 @@
     },
     "gdal": {
       "baseline": "3.6.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gdcm": {
       "baseline": "3.0.12",
@@ -2641,8 +2641,8 @@
       "port-version": 7
     },
     "gettext": {
-      "baseline": "0.21",
-      "port-version": 9
+      "baseline": "0.21.1",
+      "port-version": 0
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -2710,7 +2710,7 @@
     },
     "glm": {
       "baseline": "0.9.9.8",
-      "port-version": 1
+      "port-version": 2
     },
     "globjects": {
       "baseline": "1.1.0",
@@ -2969,7 +2969,7 @@
       "port-version": 0
     },
     "highway": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "hikogui": {
@@ -3033,8 +3033,8 @@
       "port-version": 7
     },
     "if97": {
-      "baseline": "2.1.2",
-      "port-version": 1
+      "baseline": "2.1.3",
+      "port-version": 0
     },
     "igloo": {
       "baseline": "1.1.1",
@@ -3181,7 +3181,7 @@
       "port-version": 0
     },
     "inja": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "intel-ipsec": {
@@ -3262,7 +3262,7 @@
     },
     "joltphysics": {
       "baseline": "2.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
@@ -3281,8 +3281,8 @@
       "port-version": 0
     },
     "json-schema-validator": {
-      "baseline": "2.1.0",
-      "port-version": 1
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "json-spirit": {
       "baseline": "4.1.0",
@@ -3750,7 +3750,7 @@
     },
     "libde265": {
       "baseline": "1.0.8",
-      "port-version": 5
+      "port-version": 6
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -4477,8 +4477,8 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.2.4",
-      "port-version": 1
+      "baseline": "1.3.0",
+      "port-version": 0
     },
     "libwebsockets": {
       "baseline": "4.3.2",
@@ -5505,7 +5505,7 @@
       "port-version": 5
     },
     "onednn": {
-      "baseline": "2.6.1",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "oniguruma": {
@@ -5825,8 +5825,8 @@
       "port-version": 1
     },
     "pcl": {
-      "baseline": "1.12.0",
-      "port-version": 7
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "pcre": {
       "baseline": "8.45",
@@ -6013,8 +6013,8 @@
       "port-version": 4
     },
     "poppler": {
-      "baseline": "22.8.0",
-      "port-version": 1
+      "baseline": "23.1.0",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
@@ -6242,7 +6242,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.8",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.8",
@@ -7325,7 +7325,7 @@
       "port-version": 1
     },
     "sqlite-orm": {
-      "baseline": "1.7.1",
+      "baseline": "1.8.1",
       "port-version": 0
     },
     "sqlite3": {
@@ -7414,7 +7414,7 @@
     },
     "string-view-lite": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "strong-type": {
       "baseline": "8",
@@ -7485,7 +7485,7 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2021.7.0",
+      "baseline": "2021.8.0",
       "port-version": 0
     },
     "tcb-span": {
@@ -8081,7 +8081,7 @@
       "port-version": 0
     },
     "vulkan-memory-allocator": {
-      "baseline": "3.0.0",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "vulkan-memory-allocator-hpp": {
@@ -8141,7 +8141,7 @@
       "port-version": 0
     },
     "wildmidi": {
-      "baseline": "0.4.4",
+      "baseline": "0.4.5",
       "port-version": 0
     },
     "wincrypt": {
@@ -8181,15 +8181,15 @@
       "port-version": 3
     },
     "wolfmqtt": {
-      "baseline": "1.14.1",
+      "baseline": "1.15.0",
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.5.0",
+      "baseline": "5.5.4",
       "port-version": 0
     },
     "wolftpm": {
-      "baseline": "2.6.0",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "wordnet": {
@@ -8481,8 +8481,8 @@
       "port-version": 3
     },
     "zstr": {
-      "baseline": "1.0.4",
-      "port-version": 2
+      "baseline": "1.0.7",
+      "port-version": 0
     },
     "ztd-text": {
       "baseline": "2022-03-21",
