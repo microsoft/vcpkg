@@ -1,59 +1,5 @@
-diff --git a/cmake/FindLZ4.cmake b/cmake/FindLZ4.cmake
-index 2ae6d5f..f6db1a5 100644
---- a/cmake/FindLZ4.cmake
-+++ b/cmake/FindLZ4.cmake
-@@ -1,12 +1,15 @@
--find_path(LZ4_INCLUDE_DIR lz4.h)
-+find_path(LZ4_INCLUDE_DIRS NAMES lz4.h)
- 
- # On Windows, the lz4 library is called liblz4.lib, which is not
- # found by using the lz4 name.
--find_library(LZ4_LIBRARY NAMES lz4 liblz4)
-+find_library(LZ4_LIBRARY_DEBUG NAMES lz4d)
-+find_library(LZ4_LIBRARY_RELEASE NAMES lz4)
- 
--if (LZ4_INCLUDE_DIR AND LZ4_LIBRARY)
--    set(LZ4_FOUND TRUE)
--    message(STATUS "Found LZ4 library: ${LZ4_LIBRARY}")
--else ()
--    message(STATUS "No LZ4 library found.  Using internal sources.")
--endif ()
-+include(SelectLibraryConfigurations)
-+select_library_configurations(LZ4)
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(
-+    LZ4
-+    REQUIRED_VARS LZ4_LIBRARIES LZ4_INCLUDE_DIRS
-+)
-diff --git a/cmake/FindSnappy.cmake b/cmake/FindSnappy.cmake
-index 688d4d5..c8b9a05 100644
---- a/cmake/FindSnappy.cmake
-+++ b/cmake/FindSnappy.cmake
-@@ -1,10 +1,13 @@
--find_path(SNAPPY_INCLUDE_DIR snappy-c.h)
-+find_path(SNAPPY_INCLUDE_DIR snappy.h)
- 
--find_library(SNAPPY_LIBRARY NAMES snappy)
-+find_library(SNAPPY_LIBRARY_DEBUG NAMES snappyd)
-+find_library(SNAPPY_LIBRARY_RELEASE NAMES snappy)
- 
--if (SNAPPY_INCLUDE_DIR AND SNAPPY_LIBRARY)
--    set(SNAPPY_FOUND TRUE)
--    message(STATUS "Found SNAPPY library: ${SNAPPY_LIBRARY}")
--else ()
--    message(STATUS "No snappy found.  Using internal sources.")
--endif ()
-+include(SelectLibraryConfigurations)
-+select_library_configurations(SNAPPY)
-+
-+include(FindPackageHandleStandardArgs)
-+FIND_PACKAGE_HANDLE_STANDARD_ARGS(
-+    SNAPPY DEFAULT_MSG
-+    SNAPPY_LIBRARY SNAPPY_INCLUDE_DIR
-+)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 54d4817..9b7203d 100644
+index 54d4817..07b551a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -134,7 +134,7 @@ include(GNUInstallDirs)
@@ -61,7 +7,7 @@ index 54d4817..9b7203d 100644
  if(NOT DEACTIVATE_LZ4)
      if(PREFER_EXTERNAL_LZ4)
 -        find_package(LZ4)
-+        find_package(lz4 CONFIG REQUIRED)
++        find_package(LZ4 NAMES lz4 CONFIG REQUIRED)
      else()
          message(STATUS "Using LZ4 internal sources.")
      endif()
@@ -93,46 +39,10 @@ index 54d4817..9b7203d 100644
          message(STATUS "Using ZSTD internal sources.")
      endif()
 diff --git a/blosc/CMakeLists.txt b/blosc/CMakeLists.txt
-index 392ad1d..495f526 100644
+index 70f80a2..83d90d8 100644
 --- a/blosc/CMakeLists.txt
 +++ b/blosc/CMakeLists.txt
-@@ -9,7 +9,7 @@ endif(HIDE_SYMBOLS)
- 
- # includes
- set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
--if(NOT DEACTIVATE_LZ4)
-+if(0)
-     if (LZ4_FOUND)
-         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${LZ4_INCLUDE_DIR})
-     else(LZ4_FOUND)
-@@ -18,7 +18,7 @@ if(NOT DEACTIVATE_LZ4)
-     endif(LZ4_FOUND)
- endif(NOT DEACTIVATE_LZ4)
- 
--if(NOT DEACTIVATE_SNAPPY)
-+if(0)
-     if (SNAPPY_FOUND)
-         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${SNAPPY_INCLUDE_DIR})
-     else(SNAPPY_FOUND)
-@@ -27,7 +27,7 @@ if(NOT DEACTIVATE_SNAPPY)
-     endif(SNAPPY_FOUND)
- endif(NOT DEACTIVATE_SNAPPY)
- 
--if(NOT DEACTIVATE_ZLIB)
-+if(0)
-     if (ZLIB_FOUND)
-         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
-     else(ZLIB_FOUND)
-@@ -36,7 +36,7 @@ if(NOT DEACTIVATE_ZLIB)
-     endif(ZLIB_FOUND)
- endif(NOT DEACTIVATE_ZLIB)
- 
--if (NOT DEACTIVATE_ZSTD)
-+if (0)
-     if (ZSTD_FOUND)
-         set(BLOSC_INCLUDE_DIRS ${BLOSC_INCLUDE_DIRS} ${ZSTD_INCLUDE_DIR})
-     else (ZSTD_FOUND)
-@@ -88,37 +88,40 @@ endif(WIN32)
+@@ -88,7 +88,7 @@ endif(WIN32)
  
  if(NOT DEACTIVATE_LZ4)
      if(LZ4_FOUND)
@@ -141,10 +51,7 @@ index 392ad1d..495f526 100644
      else(LZ4_FOUND)
          file(GLOB LZ4_FILES ${LZ4_LOCAL_DIR}/*.c)
          set(SOURCES ${SOURCES} ${LZ4_FILES})
-+        set(LIBS ${LIBS} lz4::lz4)
-         source_group("LZ4" FILES ${LZ4_FILES})
-     endif(LZ4_FOUND)
- endif(NOT DEACTIVATE_LZ4)
+@@ -98,7 +98,7 @@ endif(NOT DEACTIVATE_LZ4)
  
  if(NOT DEACTIVATE_SNAPPY)
      if(SNAPPY_FOUND)
@@ -153,10 +60,7 @@ index 392ad1d..495f526 100644
      else(SNAPPY_FOUND)
          file(GLOB SNAPPY_FILES ${SNAPPY_LOCAL_DIR}/*.cc)
          set(SOURCES ${SOURCES} ${SNAPPY_FILES})
-+        set(LIBS ${LIBS} Snappy::snappy)
-         source_group("Snappy" FILES ${SNAPPY_FILES})
-     endif(SNAPPY_FOUND)
- endif(NOT DEACTIVATE_SNAPPY)
+@@ -108,7 +108,7 @@ endif(NOT DEACTIVATE_SNAPPY)
  
  if(NOT DEACTIVATE_ZLIB)
      if(ZLIB_FOUND)
@@ -165,19 +69,7 @@ index 392ad1d..495f526 100644
      else(ZLIB_FOUND)
          file(GLOB ZLIB_FILES ${ZLIB_LOCAL_DIR}/*.c)
          set(SOURCES ${SOURCES} ${ZLIB_FILES})
-+        set(LIBS ${LIBS} ZLIB::ZLIB)
-         source_group("Zlib" FILES ${ZLIB_FILES})
-     endif(ZLIB_FOUND)
- endif(NOT DEACTIVATE_ZLIB)
- 
- if (NOT DEACTIVATE_ZSTD)
-     if (ZSTD_FOUND)
--        set(LIBS ${LIBS} ${ZSTD_LIBRARY})
-+        set(LIBS ${LIBS} $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
-     else (ZSTD_FOUND)
-         # Enable assembly code only when not using MSVC *and* x86 is there
-         if((NOT MSVC) AND COMPILER_SUPPORT_SSE2)   # if SSE2 is here, this is an x86 platform
-@@ -136,6 +139,7 @@ if (NOT DEACTIVATE_ZSTD)
+@@ -136,6 +136,7 @@ if (NOT DEACTIVATE_ZSTD)
          set(ZSTD_FILES ${ZSTD_COMMON_FILES} ${ZSTD_COMPRESS_FILES}
              ${ZSTD_DECOMPRESS_FILES} ${ZSTD_DICT_FILES})
          set(SOURCES ${SOURCES} ${ZSTD_FILES})
@@ -185,4 +77,41 @@ index 392ad1d..495f526 100644
          source_group("Zstd" FILES ${ZSTD_FILES})
      endif (ZSTD_FOUND)
  endif (NOT DEACTIVATE_ZSTD)
-
+@@ -207,7 +208,7 @@ endif()
+ 
+ if (BUILD_SHARED)
+     target_link_libraries(blosc_shared ${LIBS})
+-    target_include_directories(blosc_shared PUBLIC ${BLOSC_INCLUDE_DIRS})
++    target_include_directories(blosc_shared PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+ endif()
+ 
+ if (BUILD_TESTS)
+@@ -222,7 +223,7 @@ if(BUILD_STATIC)
+         set_target_properties(blosc_static PROPERTIES PREFIX lib)
+     endif()
+     target_link_libraries(blosc_static ${LIBS})
+-    target_include_directories(blosc_static PUBLIC ${BLOSC_INCLUDE_DIRS})
++    target_include_directories(blosc_static PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+ endif(BUILD_STATIC)
+ 
+ # install
+@@ -230,12 +231,14 @@ if(BLOSC_INSTALL)
+     install(FILES blosc.h blosc-export.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEV)
+     if(BUILD_SHARED)
+-        install(TARGETS blosc_shared
++        install(TARGETS blosc_shared EXPORT blosc-config
+                 LIBRARY COMPONENT LIB
+-                ARCHIVE COMPONENT DEV
+-                RUNTIME COMPONENT LIB)
++                ARCHIVE COMPONENT LIB
++                RUNTIME COMPONENT BIN)
+     endif(BUILD_SHARED)
+     if(BUILD_STATIC)
+-        install(TARGETS blosc_static COMPONENT DEV)
++        install(TARGETS blosc_static EXPORT blosc-config LIBRARY COMPONENT LIB)
+     endif(BUILD_STATIC)
+ endif(BLOSC_INSTALL)
++
++install(EXPORT blosc-config DESTINATION share/blosc)
+\ No newline at end of file
