@@ -1436,6 +1436,10 @@
       "baseline": "86.0.4199.1",
       "port-version": 5
     },
+    "chronoengine": {
+      "baseline": "8.0.0",
+      "port-version": 0
+    },
     "cimg": {
       "baseline": "2.9.9",
       "port-version": 0
