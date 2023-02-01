@@ -1,6 +1,6 @@
 {
   "name": "cdt",
-  "version-semver": "1.2.0",
+  "version": "1.2.0",
   "description": "Constrained Delaunay Triangulation",
   "homepage": "https://github.com/artem-ogre/CDT.git",
   "license": "MPL-2.0",
