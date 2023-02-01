@@ -34,8 +34,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     if (DEFINED ENV{GRDKLatest})
         cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
-        set(_vcpkg_incpaths " /I\"${_vcpkg_grdk}/gameKit/Include\"")
-        set(_vcpkg_libpaths " /LIBPATH:\"${_vcpkg_grdk}/gameKit/Lib/amd64\"")
+        include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
+        link_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Lib/amd64")
 
         string(APPEND _vcpkg_core_libs " xgameruntime.lib")
 
@@ -49,15 +49,15 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_SCARLETT")
 
-            set(_vcpkg_incpaths "/I\"${_vcpkg_gxdk}/gameKit/Include\" /I\"${_vcpkg_gxdk}/gameKit/Include/Scarlett\" ${_vcpkg_incpaths}")
-            set(_vcpkg_libpaths "/LIBPATH:\"${_vcpkg_gxdk}/gameKit/Lib/amd64\" /LIBPATH:\"${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett\" ${_vcpkg_libpaths}")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
+            link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
         elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_XBOXONE")
 
-            set(_vcpkg_incpaths "/I\"${_vcpkg_gxdk}/gameKit/Include\" /I\"${_vcpkg_gxdk}/gameKit/Include/XboxOne\" ${_vcpkg_incpaths}")
-            set(_vcpkg_libpaths "/LIBPATH:\"${_vcpkg_gxdk}/gameKit/Lib/amd64\" /LIBPATH:\"${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne\" ${_vcpkg_libpaths}")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
+            link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
         endif()
@@ -93,11 +93,10 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX")
     endif()
 
-    set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_incpaths} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
-    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_incpaths} ${VCPKG_C_FLAGS}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
+    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${VCPKG_C_FLAGS}" CACHE STRING "")
     set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
-    unset(_vcpkg_incpaths)
     unset(_vcpkg_cpp_flags)
     unset(_vcpkg_common_flags)
 
@@ -117,10 +116,9 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     set(_vcpkg_common_lflags "/MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /MANIFESTUAC:NO /SUBSYSTEM:WINDOWS,10.0")
 
-    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${_vcpkg_libpaths} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${_vcpkg_libpaths} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
 
-    unset(_vcpkg_libpaths)
     unset(_vcpkg_unsupported)
     unset(_vcpkg_nodefaultlib)
     unset(_vcpkg_common_lflags)
