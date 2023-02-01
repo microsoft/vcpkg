@@ -1,8 +1,9 @@
 {
   "name": "s2n",
-  "version": "1.3.5",
+  "version": "1.3.34",
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
+  "license": "Apache-2.0",
   "supports": "!uwp & !windows",
   "dependencies": [
     "openssl",
