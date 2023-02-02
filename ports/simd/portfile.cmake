@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
-    REF 9540f20fa1560be1d2adcf3a42093511bec108f0 # v5.2.121
-    SHA512 a494509932c0fa3106d75064b091b51845e77d1122ac2371c50a8aedeeaf2791a467c115b4f1e2802315162895335466cc43767c22d2bd209e011ca45739b9df
+    REF "v${VERSION}"
+    SHA512 403d11724e9054648d6382bdd3f74123df1e13217cbdaa513d2ce627474646d0ff8aab9fee0181fcbda414f60206bc3f688d0614d0c5efbb111f4dbce4db970c
     HEAD_REF master
     PATCHES
         fix-CMakeLists-install.patch
@@ -80,4 +80,4 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
