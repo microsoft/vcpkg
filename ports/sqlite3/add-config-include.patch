@@ -1,0 +1,12 @@
+diff --git a/sqlite3.h b/sqlite3.h
+index 24b9167..9fd81b9 100644
+--- a/sqlite3.h
++++ b/sqlite3.h
+@@ -32,6 +32,7 @@
+ */
+ #ifndef SQLITE3_H
+ #define SQLITE3_H
++#include "./sqlite3-vcpkg-config.h"
+ #include <stdarg.h>     /* Needed for the definition of va_list */
+ 
+ /*

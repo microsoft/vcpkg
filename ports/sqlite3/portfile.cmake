@@ -10,30 +10,53 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES fix-arm-uwp.patch
+    PATCHES
+        fix-arm-uwp.patch
+        add-config-include.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(SQLITE_API "__declspec(dllimport)")
+    else()
+        set(SQLITE_API "__attribute__((visibility(\"default\")))")
+    endif()
+else()
+    set(SQLITE_API "")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fts3                ENABLE_FTS3
-        fts4                ENABLE_FTS4
-        fts5                ENABLE_FTS5
-        memsys3             ENABLE_MEMSYS3
-        memsys5             ENABLE_MEMSYS5
-        math                ENABLE_MATH_FUNCTION
-        limit               ENABLE_LIMIT
-        rtree               ENABLE_RTREE
-        session             ENABLE_SESSION
-        omit-load-extension ENABLE_OMIT_LOAD_EXT
-        geopoly             WITH_GEOPOLY
-        json1               WITH_JSON1
+        fts3                SQLITE_ENABLE_FTS3
+        fts4                SQLITE_ENABLE_FTS4
+        fts5                SQLITE_ENABLE_FTS5
+        memsys3             SQLITE_ENABLE_MEMSYS3
+        memsys5             SQLITE_ENABLE_MEMSYS5
+        math                SQLITE_ENABLE_MATH_FUNCTIONS
+        limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
+        rtree               SQLITE_ENABLE_RTREE
+        session             SQLITE_ENABLE_SESSION
+        session             SQLITE_ENABLE_PREUPDATE_HOOK
+        omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
+        geopoly             SQLITE_ENABLE_GEOPOLY
+        json1               SQLITE_ENABLE_JSON1
         zlib                WITH_ZLIB
         INVERTED_FEATURES
         tool                SQLITE3_SKIP_TOOLS
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(SQLITE_OS_WIN "1")
+    if(VCPKG_TARGET_IS_UWP)
+        set(SQLITE_OS_WINRT "1")
+    endif()
+else()
+    set(SQLITE_OS_UNIX "1")
+endif()
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/sqlite3-vcpkg-config.h.in" "${SOURCE_PATH}/sqlite3-vcpkg-config.h" @ONLY)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -42,6 +65,20 @@ vcpkg_cmake_configure(
         -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
+    MAYBE_UNUSED_VARIABLES
+      SQLITE_ENABLE_FTS3
+      SQLITE_ENABLE_FTS4
+      SQLITE_ENABLE_FTS5
+      SQLITE_ENABLE_GEOPOLY
+      SQLITE_ENABLE_JSON1
+      SQLITE_ENABLE_MATH_FUNCTIONS
+      SQLITE_ENABLE_MEMSYS3
+      SQLITE_ENABLE_MEMSYS5
+      SQLITE_ENABLE_PREUPDATE_HOOK
+      SQLITE_ENABLE_RTREE
+      SQLITE_ENABLE_SESSION
+      SQLITE_ENABLE_UPDATE_DELETE_LIMIT
+      SQLITE_OMIT_LOAD_EXTENSION
 )
 
 vcpkg_cmake_install()
@@ -62,8 +99,5 @@ configure_file(
 
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sqlite3.h" "# define SQLITE_API\n" "# define SQLITE_API __declspec(dllimport)\n")
-endif()
-
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
