@@ -47,9 +47,10 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver
 file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake)
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
+                    )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"

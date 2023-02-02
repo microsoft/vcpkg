@@ -9,6 +9,7 @@
     "zlib",
     "bzip2",
     "lapack",
-    "glpk"
+    "glpk",
+    "coin-or-buildtools"
    ]
 }
