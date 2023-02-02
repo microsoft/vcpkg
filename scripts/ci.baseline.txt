@@ -732,6 +732,7 @@ openscap:x64-windows-static=fail
 openscap:x64-osx=fail
 # https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
 # openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
+openturns:x64-osx=fail
 openvdb:x64-windows-static=fail
 openvdb:x64-windows-static-md=fail
 openvpn3:x64-osx=fail
