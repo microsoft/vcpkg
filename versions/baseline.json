@@ -30,7 +30,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 9
+      "port-version": 10
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -134,7 +134,7 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 11
+      "port-version": 12
     },
     "apr-util": {
       "baseline": "1.6.1",
@@ -198,7 +198,7 @@
     },
     "arrow": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "ashes": {
       "baseline": "2022-06-08",
