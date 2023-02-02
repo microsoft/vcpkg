@@ -1,5 +1,14 @@
 {
   "name": "coinutils",
   "version-date": "2023-02-02",
-  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project"
+  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project",
+  "license": null,
+  "homepage": "https://www.coin-or.org/",
+  "dependencies" :
+   [
+    "zlib",
+    "bzip2",
+    "lapack",
+    "glpk"
+   ]
 }
