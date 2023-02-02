@@ -1,0 +1,20 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO coin-or/Ipopt
+    REF a34c8531301d66334a993fe5630ecb707994142f
+    SHA512 01a9a95b8168fb17c9c22ddd9c5a978b9a9ae227b157a0f0ff22de7ec10062fc370826502232ead4d73f1681908e081818e58392158c729d9165231192bb3811
+    HEAD_REF master
+)
+
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+      )
+
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")

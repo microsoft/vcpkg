@@ -3,22 +3,29 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CoinUtils
-    REF f709081c9b57cc2dd32579d804b30689ca789982 # releases/2.11.4
-    SHA512 1c2e7f796524d67d87253bc7938c1a6db3c8266acec6b6399aeb83c0fb253b77507e6b5e84f16b0b8e40098aef94676499f396d1c7f653b1e04cbadca7620185
+    REF aae9b0b807a920c41d7782d7bf2775afb17a12c6 # I don't trust the release tags. They seem to point to a different fork with an outdates file structure?
+    SHA512 a515e62846698bcc3df15aabcce89d9052e30dffe2112ab5eb54c0c5def199140bd25435ef17e453c873239ab63fd03dd4cee5e4c4bfae5521f549917e025efe
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_from_github(
+    OUT_SOURCE_PATH BUILD_SCRIPTS_PATH
+    REPO coin-or-tools/BuildTools
+    REF 1e473af11438bc0a9e8506252e31fc14b902a31e
+    SHA512 c142163a270848d1e1300a70713ee03ec822cc9d7583ba7aa685c02b7c25e0d4c0f7d958aad320dbf1824cc88fe0a49dc3357e0fe11588dc8c30e7fec8d239f6
 )
 
-vcpkg_install_cmake()
+file(COPY "${BUILD_SCRIPTS_PATH}/" DESTINATION "${SOURCE_PATH}/BuildTools")
+
+set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+)
+
+vcpkg_install_make()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/coinutils RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)

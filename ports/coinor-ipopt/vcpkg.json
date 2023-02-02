@@ -1,0 +1,10 @@
+{
+  "name": "coinor-ipopt",
+  "version": "3.14.10",
+  "description": "Ipopt (Interior Point OPTimizer, pronounced eye-pea-Opt) is a software package for large-scale nonlinear optimization",
+  "homepage": "https://github.com/coin-or/Ipopt",
+  "license": null,
+  "dependencies": [
+    "intel-mkl"
+  ]
+}
