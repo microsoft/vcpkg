@@ -550,7 +550,7 @@
     },
     "blend2d": {
       "baseline": "2022-12-31",
-      "port-version": 0
+      "port-version": 1
     },
     "blitz": {
       "baseline": "2020-03-25",
