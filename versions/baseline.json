@@ -8314,7 +8314,7 @@
     },
     "xcb-util-wm": {
       "baseline": "0.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "xerces-c": {
       "baseline": "3.2.4",
