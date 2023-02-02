@@ -27,11 +27,6 @@ if (BUILD_SHARED_LIBS)
     endif()
 endif()
 
-if (WITH_ZLIB)
-    find_package(ZLIB REQUIRED)
-    target_link_libraries(sqlite3 PRIVATE ZLIB::ZLIB)
-endif()
-
 if (NOT WIN32)
     find_package(Threads REQUIRED)
     target_link_libraries(sqlite3 PRIVATE Threads::Threads)
@@ -54,6 +49,11 @@ if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
 
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
+    if (WITH_ZLIB)
+        find_package(ZLIB REQUIRED)
+        target_link_libraries(sqlite3-bin PRIVATE ZLIB::ZLIB)
+        target_compile_definitions(sqlite3-bin PRIVATE SQLITE_HAVE_ZLIB)
+    endif()
 
     install(TARGETS sqlite3-bin sqlite3
       RUNTIME DESTINATION tools

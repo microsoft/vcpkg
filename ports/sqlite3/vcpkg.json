@@ -56,7 +56,7 @@
       "description": "Build sqlite3 executable"
     },
     "zlib": {
-      "description": "Build sqlite3 with zlib support",
+      "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",
       "dependencies": [
         "zlib"
       ]
