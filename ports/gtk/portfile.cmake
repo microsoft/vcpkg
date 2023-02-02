@@ -2,7 +2,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  f7fb069e2f824fa9df4146fc95d5667752945c7e #v4.9.2
+    REF  12bd668f4debe6000b5e2aaa0aa2fe7031045a84 #v4.9.2
     SHA512 c81d97bd207c067c89cabaf6835df698d550bd37c91e8f8d2cf12b62c5ca3076f0e317a1e946492c5c9eebdea8a031699c8005c28e32e0563197729f375c71a6
     HEAD_REF master # branch name
     PATCHES
