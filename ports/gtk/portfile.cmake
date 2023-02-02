@@ -132,7 +132,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
