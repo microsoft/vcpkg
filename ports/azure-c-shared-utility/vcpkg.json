@@ -24,32 +24,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "public-preview": {
-      "description": "Azure C SDKs common code (public preview)",
-      "dependencies": [
-        {
-          "name": "azure-macro-utils-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "curl",
-          "platform": "linux"
-        },
-        {
-          "name": "openssl",
-          "platform": "linux"
-        },
-        {
-          "name": "umock-c",
-          "features": [
-            "public-preview"
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }
