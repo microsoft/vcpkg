@@ -16,30 +16,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "public-preview": {
-      "description": "Azure HTTP Library written in C (public preview)",
-      "dependencies": [
-        {
-          "name": "azure-c-shared-utility",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "azure-macro-utils-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "umock-c",
-          "features": [
-            "public-preview"
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }
