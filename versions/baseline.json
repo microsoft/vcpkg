@@ -2265,8 +2265,8 @@
       "port-version": 0
     },
     "faad2": {
-      "baseline": "2.9.1",
-      "port-version": 5
+      "baseline": "2.10.1",
+      "port-version": 0
     },
     "fadbad": {
       "baseline": "2.1.0",
