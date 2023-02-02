@@ -57,7 +57,6 @@ vcpkg_configure_meson(
         -Ddemos=false
         -Dbuild-examples=false
         -Dbuild-tests=false
-        -Dinstall-tests=false
         -Dgtk_doc=false
         -Dman-pages=false
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
