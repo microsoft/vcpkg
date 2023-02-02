@@ -212,4 +212,4 @@ if("rtk" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${SOURCE_PATH}/Modules/Remote/RTK/utilities/lp_solve" "\${ITK_INSTALL_PREFIX}/include/RTK/lpsolve")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
