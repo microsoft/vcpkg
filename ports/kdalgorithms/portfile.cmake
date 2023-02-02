@@ -7,8 +7,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/src/kdalgorithms.h ${SOURCE_PATH}/src/bits
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL "${SOURCE_PATH}/src/kdalgorithms.h" "${SOURCE_PATH}/src/bits"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
