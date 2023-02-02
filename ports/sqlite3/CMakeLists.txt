@@ -17,8 +17,6 @@ target_compile_definitions(
         $<$<CONFIG:Debug>:SQLITE_DEBUG=1>
         $<$<CONFIG:Debug>:SQLITE_ENABLE_SELECTTRACE>
         $<$<CONFIG:Debug>:SQLITE_ENABLE_WHERETRACE>
-        -DSQLITE_ENABLE_UNLOCK_NOTIFY
-        -DSQLITE_ENABLE_COLUMN_METADATA
 )
 
 if (BUILD_SHARED_LIBS)

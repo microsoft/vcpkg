@@ -9,6 +9,7 @@
 #cmakedefine SQLITE_API @SQLITE_API@
 #endif
 
+#define SQLITE_ENABLE_UNLOCK_NOTIFY 1
 #cmakedefine SQLITE_ENABLE_FTS3
 #cmakedefine SQLITE_ENABLE_FTS4
 #cmakedefine SQLITE_ENABLE_FTS5

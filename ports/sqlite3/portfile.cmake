@@ -25,7 +25,7 @@ else()
     set(SQLITE_API "")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
     FEATURES
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
@@ -40,9 +40,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
         json1               SQLITE_ENABLE_JSON1
-        zlib                WITH_ZLIB
-        INVERTED_FEATURES
-        tool                SQLITE3_SKIP_TOOLS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -58,6 +55,13 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/sqlite3-vcpkg-config.h.in" "${SOURCE_PATH}/sqlite3-vcpkg-config.h" @ONLY)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        zlib                WITH_ZLIB
+    INVERTED_FEATURES
+        tool                SQLITE3_SKIP_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -65,20 +69,6 @@ vcpkg_cmake_configure(
         -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
-    MAYBE_UNUSED_VARIABLES
-      SQLITE_ENABLE_FTS3
-      SQLITE_ENABLE_FTS4
-      SQLITE_ENABLE_FTS5
-      SQLITE_ENABLE_GEOPOLY
-      SQLITE_ENABLE_JSON1
-      SQLITE_ENABLE_MATH_FUNCTIONS
-      SQLITE_ENABLE_MEMSYS3
-      SQLITE_ENABLE_MEMSYS5
-      SQLITE_ENABLE_PREUPDATE_HOOK
-      SQLITE_ENABLE_RTREE
-      SQLITE_ENABLE_SESSION
-      SQLITE_ENABLE_UPDATE_DELETE_LIMIT
-      SQLITE_OMIT_LOAD_EXTENSION
 )
 
 vcpkg_cmake_install()
