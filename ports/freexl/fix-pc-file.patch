@@ -1,0 +1,26 @@
+diff --git a/configure.ac b/configure.ac
+index a44dbf4..55bd768 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -64,9 +64,11 @@ AC_CONFIG_FILES([Makefile \
+ AC_CHECK_HEADERS(iconv.h,, [AC_MSG_ERROR([cannot find iconv.h, bailing out])])
+ # on some systems "iconv()" lives in libc. On others it lives in libiconv
+ #  on older systems "libiconv()" lives in libiconv
++SAVED_LIBS="${LIBS}"
+ AC_SEARCH_LIBS(iconv,iconv,,
+ 	AC_SEARCH_LIBS(libiconv,iconv,,AC_MSG_ERROR(['libiconv' is required but it doesn't seem to be installed on this system.]),))
+ AC_SEARCH_LIBS(locale_charset,charset,,
+ 	AC_SEARCH_LIBS(nl_langinfo,c,,AC_MSG_ERROR(['libcharset' is required but it doesn't seem to be installed on this system.]),))
++AC_SUBST(ICONV_LIBS, "${LIBS%${SAVED_LIBS}}")
+ 
+ AC_OUTPUT
+
+diff --git a/freexl.pc.in b/freexl.pc.in
+index 5813e68..8fc671d 100644
+--- a/freexl.pc.in
++++ b/freexl.pc.in
+@@ -10,3 +10,4 @@ Description: a simple library extracting data from .xls (Excel BIFF) files
+ Version: @VERSION@
+ Libs: -L${libdir} -lfreexl -lm
+ Cflags: -I${includedir} 
++Libs.private: @ICONV_LIBS@

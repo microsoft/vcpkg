@@ -1,5 +1,0 @@
-Source: libilbc
-Version: 3.0.3
-Description: Open source implementation of the Internet Low Bit Rate Codec (iLBC) / RFC 3951 codec from the WebRTC project.
-Homepage: https://github.com/TimothyGu/libilbc
-Supports: !(arm&uwp)

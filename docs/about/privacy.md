@@ -1,4 +1,4 @@
-# Vcpkg telemetry and privacy
+# Vcpkg Telemetry and Privacy
 
 vcpkg collects telemetry data to understand usage issues, such as failing packages, and to guide tool improvements. The collected data is anonymous.
 For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-US/privacystatement#mainenterprisedeveloperproductsmodule

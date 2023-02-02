@@ -1,0 +1,13 @@
+{
+  "name": "fruit",
+  "version": "3.7.0",
+  "description": "Fruit, a dependency injection framework for C++ by Google",
+  "homepage": "https://github.com/google/fruit",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

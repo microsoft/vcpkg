@@ -1,0 +1,47 @@
+{
+  "name": "vcpkg-ci-llvm",
+  "version-string": "0",
+  "description": "LLVM features testing within CI.",
+  "license": null,
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "bolt",
+        "clang",
+        "disable-assertions",
+        "disable-clang-static-analyzer",
+        "enable-abi-breaking-checks",
+        "enable-bindings",
+        "enable-eh",
+        "enable-rtti",
+        "enable-terminfo",
+        "enable-threads",
+        "enable-zlib",
+        "lld",
+        "lldb",
+        "openmp",
+        "polly",
+        "target-aarch64",
+        "target-amdgpu",
+        "target-arm",
+        "target-webassembly",
+        "target-x86",
+        "tools"
+      ]
+    },
+    {
+      "$comment": "Only for osx artifact upload in CI succeeds when these features are enabled",
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "flang",
+        "target-all",
+        "utils"
+      ],
+      "platform": "osx"
+    }
+  ]
+}

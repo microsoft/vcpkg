@@ -3,22 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.76.0
-    SHA512 86807c1efafc582d41d6d46b0d83f95dcb4eebe071e8b6f25cb6c2706ee4c1f5be6dc70c5a28d76877390654889b3c02a77f655a132f715690f794be0336a00e
+    REF boost-1.81.0
+    SHA512 8ff7a7c68444faeb19c5ceaf82bbb35720645dd7fae5f14b0da83deb1d21ee3fc3dc353fb3144625b0062cf058411d8f58011e4da6e75850208831829342bbfb
     HEAD_REF master
 )
 
-# see https://github.com/boostorg/json/issues/556 fore more details
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "\n      <library>/boost//container/<warnings-as-errors>off" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "import ../config/checks/config" "import build/config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "..//check_basic_alignas" "..//..//..//check_basic_alignas")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
-endif()
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

@@ -1,0 +1,14 @@
+{
+  "name": "qt5-declarative",
+  "version": "5.15.8",
+  "description": "Qt5 Declarative (Quick 2) Module. Includes QtQuick, QtQuickParticles, QtQuickWidgets, QtQml, and QtPacketProtocol.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-imageformats",
+    "qt5-svg"
+  ]
+}

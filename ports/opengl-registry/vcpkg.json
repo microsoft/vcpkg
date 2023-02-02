@@ -1,0 +1,9 @@
+{
+  "name": "opengl-registry",
+  "version-date": "2022-09-29",
+  "description": "the API and Extension registries for the OpenGL family APIs",
+  "homepage": "https://github.com/KhronosGroup/OpenGL-Registry",
+  "dependencies": [
+    "egl-registry"
+  ]
+}

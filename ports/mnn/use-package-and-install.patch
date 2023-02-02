@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 993f15d..53f24ae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -270,18 +270,24 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "^Linux")
@@ -11,7 +9,7 @@ index 993f15d..53f24ae 100644
 +  find_package(OpenCL REQUIRED)
 +endif()
 +find_package(RapidJSON CONFIG REQUIRED)
-+find_path(STB_INCLUDE_DIRS "stb.h")
++find_path(STB_INCLUDE_DIRS stb_image.h)
 +find_package(Flatbuffers CONFIG REQUIRED)
  include_directories(${CMAKE_CURRENT_LIST_DIR}/include/
                      ${CMAKE_CURRENT_LIST_DIR}/source/

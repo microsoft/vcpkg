@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF e03900b038a274ee2f1341039e9003875c11e47d # v6.9.4
-    SHA512 77772e3994acbdde86a7405d24423fff101061e24cc8cd85975d3ab092935fc91c0c3b991fe2fa9e9a857b5254db7d923256cdb29a2e2d8a3cdd41837ed690f6
+    REF v6.9.7.1
+    SHA512 CE22050E04E51843E894D2D534D062FDD23CC2BAAC9BA43DA1843EC928F6CE5ED3D4407FE945F4D34ADADF3167DFD943CD81AE4556F7C5EC51E7331C35EAD479
     HEAD_REF master
     PATCHES fix-uwp.patch
 )
@@ -12,36 +12,43 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "non-posix" ENABLE_POSIX_API
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(MSVC_STATIC_RUNTIME ON)
+else()
+    set(MSVC_STATIC_RUNTIME OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DMSVC_STATIC_RUNTIME=${MSVC_STATIC_RUNTIME}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/oniguruma.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/oniguruma.h"
         "#if defined(ONIGURUMA_EXPORT)"
         "#if 0 // defined(ONIGURUMA_EXPORT)"
     )
 else()
     # oniguruma.h uses `\n` as line break.
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/oniguruma.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/oniguruma.h"
         "#ifndef ONIG_EXTERN\n#if defined(_WIN32) && !defined(__GNUC__)"
         "#if 0\n#if defined(_WIN32) && !defined(__GNUC__)"
     )
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

@@ -5,7 +5,7 @@ endif()
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "http://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz"
+  URLS "https://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz"
   FILENAME "clapack-3.2.1.tgz"
   SHA512 cf19c710291ddff3f6ead7d86bdfdeaebca21291d9df094bf0a8ef599546b007757fb2dbb19b56511bb53ef7456eac0c73973b9627bf4d02982c856124428b49
 )

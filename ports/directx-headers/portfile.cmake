@@ -1,21 +1,20 @@
-vcpkg_fail_port_install(ON_TARGET "OSX")
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectX-Headers
-    REF v1.4.9
-    SHA512 439d28a8344ef3a012428f53fcb9d2d9823d51c61786363d87f8ba15921326c220478b2557aab3f641a2406f1e5f299a8e21a82547febff3b9cd7b26b09b1c22
-    HEAD_REF master
+    REF v1.608.2b
+    SHA512 d4e82615751d9ee46c456c676bfd6831c47d159ee58634531fc1acd09927f00c4e8d379cb233a1f89e3489a6a30d8edc0552b76945071badaed6a9c8591cbb0c
+    HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DDXHEADERS_BUILD_TEST=OFF
+    OPTIONS -DDXHEADERS_BUILD_TEST=OFF -DDXHEADERS_BUILD_GOOGLE_TEST=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/directx-headers/cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/directx-headers/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

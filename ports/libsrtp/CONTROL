@@ -1,3 +1,0 @@
-Source: libsrtp
-Version: 2.2.0
-Description: This package provides an implementation of the Secure Real-time Transport Protocol (SRTP), the Universal Security Transform (UST), and a supporting cryptographic kernel.

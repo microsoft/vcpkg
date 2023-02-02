@@ -1,18 +1,3 @@
-#[===[.md:
-# vcpkg_minimum_required
-
-Asserts that the version of the vcpkg program being used to build a port is later than the supplied date, inclusive.
-
-## Usage
-```cmake
-vcpkg_minimum_required(VERSION 2021-01-13)
-```
-
-## Parameters
-### VERSION
-The date-version to check against.
-#]===]
-
 function(vcpkg_minimum_required)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "VERSION" "")
     if(NOT DEFINED VCPKG_BASE_VERSION)

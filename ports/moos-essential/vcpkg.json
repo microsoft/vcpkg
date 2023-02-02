@@ -1,0 +1,10 @@
+{
+  "name": "moos-essential",
+  "version-string": "10.0.1",
+  "port-version": 3,
+  "description": "a set of useful applications that leverage the core-moos communications layer.",
+  "homepage": "https://sites.google.com/site/moossoftware/",
+  "dependencies": [
+    "moos-core"
+  ]
+}

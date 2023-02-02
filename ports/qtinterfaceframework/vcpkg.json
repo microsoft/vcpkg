@@ -1,0 +1,40 @@
+{
+  "name": "qtinterfaceframework",
+  "version": "6.4.2",
+  "description": "Qt Interface Framework",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtinterfaceframework",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false
+    },
+    {
+      "name": "qtremoteobjects",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    "taglib",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true,
+      "default-features": false
+    }
+  ]
+}

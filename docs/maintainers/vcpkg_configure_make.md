@@ -9,13 +9,14 @@ Configure configure for Debug and Release builds of a project.
 vcpkg_configure_make(
     SOURCE_PATH <${SOURCE_PATH}>
     [AUTOCONFIG]
-    [USE_WRAPPERS]
+    [USE_WRAPPERS] [NO_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
+    [DISABLE_VERBOSE_FLAGS]
     [NO_DEBUG]
     [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -41,6 +42,9 @@ Skip configure process
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
 
+### NO_WRAPPERS
+Deactivate the use of autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+
 ### BUILD_TRIPLET
 Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
 
@@ -59,8 +63,8 @@ Script that needs to be called before configuration (do not use for batch files 
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
 
-## DISABLE_VERBOSE_FLAGS
-do not pass '--disable-silent-rules --verbose' to configure
+### DISABLE_VERBOSE_FLAGS
+Do not pass '--disable-silent-rules --verbose' to configure.
 
 ### OPTIONS
 Additional options passed to configure during the configuration.

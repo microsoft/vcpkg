@@ -1,0 +1,19 @@
+{
+  "name": "aws-c-common",
+  "version": "0.8.9",
+  "description": "AWS common library for C",
+  "homepage": "https://github.com/awslabs/aws-c-common",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

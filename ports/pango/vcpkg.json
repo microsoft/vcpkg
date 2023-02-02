@@ -1,8 +1,10 @@
 {
   "name": "pango",
-  "version": "1.48.4",
+  "version": "1.50.12",
+  "port-version": 2,
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
+  "license": "LGPL-2.0-only",
   "dependencies": [
     {
       "name": "cairo",
@@ -26,6 +28,31 @@
         "coretext"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        },
+        {
+          "name": "harfbuzz",
+          "features": [
+            "introspection"
+          ]
+        }
+      ]
+    }
+  }
 }

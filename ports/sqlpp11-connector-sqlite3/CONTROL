@@ -1,4 +1,0 @@
-Source: sqlpp11-connector-sqlite3
-Version: 0.30
-Description: A C++ wrapper for sqlite3 meant to be used in combination with sqlpp11.
-Build-Depends: date, sqlite3, sqlpp11

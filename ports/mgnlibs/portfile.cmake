@@ -7,10 +7,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/mgnlibs/README.md)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/mgnlibs/README.md ${CURRENT_PACKAGES_DIR}/share/mgnlibs/copyright)
-
 # Copy the header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/mgnlibs)
+
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

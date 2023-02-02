@@ -1,0 +1,33 @@
+
+get_filename_component(_dstorage_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_dstorage_root "${_dstorage_root}" PATH)
+get_filename_component(_dstorage_root "${_dstorage_root}" PATH)
+
+set(_dstorage_root_lib "${_dstorage_root}/lib/dstorage.lib")
+if (EXISTS "${_dstorage_root_lib}")
+
+   add_library(Microsoft::DirectStorage SHARED IMPORTED)
+   set_target_properties(Microsoft::DirectStorage PROPERTIES
+      IMPORTED_LOCATION                    "${_dstorage_root}/bin/dstorage.dll"
+      IMPORTED_IMPLIB                      "${_dstorage_root_lib}"
+      INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include"
+      IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+   add_library(Microsoft::DirectStorageCore SHARED IMPORTED)
+   set_target_properties(Microsoft::DirectStorageCore PROPERTIES
+      IMPORTED_LOCATION                    "${_dstorage_root}/bin/dstoragecore.dll"
+      IMPORTED_IMPLIB                      "${_dstorage_root_lib}"
+      IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+   target_link_libraries(Microsoft::DirectStorage INTERFACE Microsoft::DirectStorageCore)
+
+   set(dstorage_FOUND TRUE)
+
+else()
+
+    set(dstorage_FOUND FALSE)
+
+endif()
+
+unset(_dstorage_root_lib)
+unset(_dstorage_root)

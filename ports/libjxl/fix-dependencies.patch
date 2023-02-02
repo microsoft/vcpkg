@@ -1,0 +1,32 @@
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 8ee9864..b8a22a5 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -47,7 +47,16 @@ endif()
+ # brotli
+ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
+     JPEGXL_FORCE_SYSTEM_BROTLI)
+-  find_package(Brotli)
++  find_package(Brotli NAMES unofficial-brotli REQUIRED)
++  foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
++    if(TARGET unofficial::brotli::${brlib})
++      add_library(${brlib} ALIAS unofficial::brotli::${brlib})
++      add_library(${brlib}-static ALIAS unofficial::brotli::${brlib})
++    else()
++      add_library(${brlib} ALIAS unofficial::brotli::${brlib}-static)
++      add_library(${brlib}-static ALIAS unofficial::brotli::${brlib}-static)
++    endif()
++  endforeach()
+   if (NOT Brotli_FOUND)
+     message(FATAL_ERROR
+         "Brotli not found, install brotli-dev or download brotli source code to"
+@@ -111,7 +120,8 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+ endif ()
+ if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS)
+   if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lcms/.git" OR JPEGXL_FORCE_SYSTEM_LCMS2 )
+-    find_package(LCMS2 2.13)
++    find_package(LCMS2 NAMES lcms2 REQUIRED)
++    add_library(lcms2 ALIAS lcms2::lcms2)
+     if ( NOT LCMS2_FOUND )
+       message(FATAL_ERROR "Please install lcms2 or run git submodule update --init")
+     endif ()

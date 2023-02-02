@@ -1,4 +1,0 @@
-Source: trompeloeil
-Version: 38
-Description: A thread-safe header-only mocking framework for C++11/14 using the Boost Software License 1.0
-Homepage: https://github.com/rollbear/trompeloeil

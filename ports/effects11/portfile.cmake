@@ -1,23 +1,25 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "ANDROID")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
-    REF feb2021
-    SHA512 bdf35347582646e782c20a96180c8286786da46583527b76b2d348cd76a75285a31ebb88297962cd279c09bbd416c15c0d25ae91881ffebbf9e8ce2f21912f16
-    HEAD_REF master
-    FILE_DISAMBIGUATOR 1
+    REF dec2022b
+    SHA512 5dc209c830d940aba9378d1442b0fb236d5e1f63bb4e073ce8db5a832da22cb2e575c171aff0b641201b34b4362b9274b106f93518b09d57d231386d0b4bdf58
+    HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+         spectre ENABLE_SPECTRE_MITIGATION
+)
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/effects11)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

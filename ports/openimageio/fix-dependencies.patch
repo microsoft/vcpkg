@@ -1,0 +1,96 @@
+diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
+index 0a6afeb..2a67ee3 100644
+--- a/src/cmake/Config.cmake.in
++++ b/src/cmake/Config.cmake.in
+@@ -2,6 +2,23 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
++if (@USE_LIBHEIF@)
++    find_dependency(libheif CONFIG)
++endif()
++find_dependency(PNG)
++if(@USE_OPENCV@)
++    find_dependency(OpenCV CONFIG)
++endif()
++if(@USE_OPENCOLORIO@)
++    find_dependency(OpenColorIO CONFIG)
++endif()
++if(@USE_OPENJPEG@)
++    find_dependency(OpenJPEG CONFIG)
++endif()
++if(@USE_WEBP@)
++    find_dependency(WebP CONFIG)
++endif()
++
+ # add here all the find_dependency() whenever switching to config based dependencies
+ if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
+     if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index 3ca046b..dad053c 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -174,14 +174,19 @@ endif ()
+ checked_find_package (Freetype
+                    DEFINITIONS  -DUSE_FREETYPE=1 )
+ 
+-checked_find_package (OpenColorIO
++set(OPENCOLORIO_INCLUDES "")
++set(OPENCOLORIO_LIBRARIES OpenColorIO::OpenColorIO)
++checked_find_package (OpenColorIO CONFIG
+                       DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
+                       # PREFER_CONFIG
+                       )
++set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
+ if (NOT OpenColorIO_FOUND)
+     set (OpenColorIO_FOUND 0)
+ endif ()
+-checked_find_package (OpenCV 3.0
++set(OPENCV_INCLUDES "")
++set(OPENCV_LIBRARIES opencv_core)
++checked_find_package (OpenCV CONFIG
+                    DEFINITIONS  -DUSE_OPENCV=1)
+ 
+ # Intel TBB
+@@ -191,14 +196,18 @@ checked_find_package (TBB 2017
+                       PREFER_CONFIG)
+ 
+ checked_find_package (DCMTK VERSION_MIN 3.6.1)  # For DICOM images
+-checked_find_package (FFmpeg VERSION_MIN 3.0)
++checked_find_package (FFmpeg)
++set(FFmpeg_FOUND "${FFMPEG_FOUND}")
++set(FFMPEG_INCLUDES "${FFMPEG_INCLUDE_DIRS}")
+ checked_find_package (GIF
+                       VERSION_MIN 4
+                       RECOMMEND_MIN 5.0
+                       RECOMMEND_MIN_REASON "for stability and thread safety")
+ 
+ # For HEIF/HEIC/AVIF formats
+-checked_find_package (Libheif VERSION_MIN 1.3
++set(LIBHEIF_INCLUDES "")
++set(LIBHEIF_LIBRARIES heif)
++checked_find_package (Libheif CONFIG
+                       RECOMMEND_MIN 1.7
+                       RECOMMEND_MIN_REASON "for AVIF support")
+ if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
+@@ -219,9 +228,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+     # set (LIBRAW_FOUND 0)
+ endif ()
+ 
+-checked_find_package (OpenJPEG VERSION_MIN 2.0
+-                      RECOMMEND_MIN 2.2
+-                      RECOMMEND_MIN_REASON "for multithreading support")
++set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG ${USE_OPENJPEG})
++checked_find_package (OpenJPEG CONFIG)
+ # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
+ # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
+ 
+@@ -238,6 +246,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+     checked_find_package (Ptex)
+ endif ()
+ 
++set(WEBP_INCLUDES "")
++set(WEBP_LIBRARIES WebP::webp WebP::webpdemux)
+ checked_find_package (WebP)
+ 
+ option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)

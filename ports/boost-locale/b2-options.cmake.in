@@ -1,41 +1,40 @@
 set(_B2_OPTIONS_FEATURES "@FEATURES@")
 if("icu" IN_LIST _B2_OPTIONS_FEATURES)
-    set(BOOST_LOCALE_ICU_FEATURE on)
+    set(BOOST_LOCALE_ENABLE_ICU on)
 else()
-    set(BOOST_LOCALE_ICU_FEATURE off)
+    set(BOOST_LOCALE_ENABLE_ICU off)
 endif()
 
 if(@VCPKG_TARGET_IS_WINDOWS@)
-    list(APPEND B2_OPTIONS
-        boost.locale.iconv=off
-        boost.locale.posix=off
-        /boost/locale//boost_locale
-        boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
-    )
-elseif(@VCPKG_TARGET_IS_ANDROID@)
-    find_library(LIBICONV_LIBRARY iconv)
-    get_filename_component(LIBICONV_DIR "${LIBICONV_LIBRARY}" DIRECTORY)
-    get_filename_component(LIBICONV_DIR "${LIBICONV_DIR}" DIRECTORY)
-
-    list(APPEND B2_OPTIONS
-        boost.locale.iconv=on
-        boost.locale.posix=off
-        /boost/locale//boost_locale
-        boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
-        -sICONV_PATH=${LIBICONV_DIR}
-    )
+    set(BOOST_LOCALE_ENABLE_ICONV off)
+    set(BOOST_LOCALE_ENABLE_POSIX off)
+    set(BOOST_LOCALE_ENABLE_WINAPI on)
 else()
-    find_library(LIBICONV_LIBRARY iconv)
-    get_filename_component(LIBICONV_DIR "${LIBICONV_LIBRARY}" DIRECTORY)
+    find_library(VCPKG_ICONV_LIBRARY_RELEASE iconv PATHS "${CURRENT_INSTALLED_DIR}/lib/" NO_DEFAULT_PATH)
+    find_library(VCPKG_ICONV_LIBRARY_DEBUG iconv PATHS "${CURRENT_INSTALLED_DIR}/debug/lib/" NO_DEFAULT_PATH)
+    set(BOOST_LOCALE_ENABLE_ICONV on)
+    if(@VCPKG_TARGET_IS_ANDROID@)
+        set(BOOST_LOCALE_ENABLE_POSIX off)
+    else()
+        set(BOOST_LOCALE_ENABLE_POSIX on)
+    endif()
+    set(BOOST_LOCALE_ENABLE_WINAPI off)
+endif()
 
+list(APPEND B2_OPTIONS
+    boost.locale.iconv=${BOOST_LOCALE_ENABLE_ICONV}
+    boost.locale.icu=${BOOST_LOCALE_ENABLE_ICU}
+    boost.locale.posix=${BOOST_LOCALE_ENABLE_POSIX}
+    boost.locale.winapi=${BOOST_LOCALE_ENABLE_WINAPI}
+    /boost/locale//boost_locale
+)
+
+if(BOOST_LOCALE_ENABLE_ICONV)
     list(APPEND B2_OPTIONS
-        boost.locale.iconv=on
-        boost.locale.posix=on
-        /boost/locale//boost_locale
-        boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
-        -sICONV_PATH=${LIBICONV_DIR}
+        -sICONV_PATH=${CURRENT_INSTALLED_DIR}
     )
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
         list(APPEND B2_OPTIONS
             boost.locale.force-found-iconv=on
         )

@@ -1,10 +1,10 @@
 diff --git a/cmake/sol2-config.cmake.in b/cmake/sol2-config.cmake.in
-index 70c448d..7965bc6 100644
+index 0c48a99..62930db 100644
 --- a/cmake/sol2-config.cmake.in
 +++ b/cmake/sol2-config.cmake.in
-@@ -26,11 +26,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/sol2-targets.cmake")
+@@ -24,9 +24,9 @@
  
- MESSAGE(STATUS ${CMAKE_CURRENT_LIST_DIR})
+ include("${CMAKE_CURRENT_LIST_DIR}/sol2-targets.cmake")
  
 -if (TARGET sol2)
 +if (TARGET sol2::sol2)
@@ -15,5 +15,3 @@ index 70c448d..7965bc6 100644
 -    set(SOL2_LIBRARIES sol2)
 +    set(SOL2_LIBRARIES sol2::sol2)
  endif()
- 
- if(TARGET sol2_single)

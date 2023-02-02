@@ -1,0 +1,44 @@
+diff --git a/profiler/build/win32/Tracy.vcxproj b/profiler/build/win32/Tracy.vcxproj
+index 7be39025..ddb49fbc 100644
+--- a/profiler/build/win32/Tracy.vcxproj
++++ b/profiler/build/win32/Tracy.vcxproj
+@@ -60,7 +60,7 @@
+       <Optimization>Disabled</Optimization>
+       <SDLCheck>true</SDLCheck>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32_LEAN_AND_MEAN;NOMINMAX;_USE_MATH_DEFINES;IMGUI_ENABLE_FREETYPE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories>..\..\..\imgui;$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\include;$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\include\capstone;$(VcpkgManifestRoot)\vcpkg_installed\$(VcpkgTriplet)\$(VcpkgTriplet)\include\capstone;$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\capstone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>..\..\..\imgui;$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\capstone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <MinimalRebuild>false</MinimalRebuild>
+       <ConformanceMode>true</ConformanceMode>
+@@ -70,9 +70,8 @@
+       <FloatingPointModel>Fast</FloatingPointModel>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>brotlicommon-static.lib;brotlidec-static.lib;ws2_32.lib;freetyped.lib;glfw3.lib;libpng16d.lib;zlibd.lib;bz2d.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\debug\lib</AdditionalLibraryDirectories>
+     </Link>
+     <Manifest>
+       <EnableDpiAwareness>true</EnableDpiAwareness>
+@@ -86,7 +85,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <SDLCheck>true</SDLCheck>
+       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32_LEAN_AND_MEAN;NOMINMAX;_USE_MATH_DEFINES;IMGUI_ENABLE_FREETYPE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories>..\..\..\imgui;$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\include;$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\include\capstone;$(VcpkgManifestRoot)\vcpkg_installed\$(VcpkgTriplet)\$(VcpkgTriplet)\include\capstone;$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\capstone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>..\..\..\imgui;$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\capstone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <ConformanceMode>true</ConformanceMode>
+       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+@@ -97,9 +96,8 @@
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+       <OptimizeReferences>true</OptimizeReferences>
+-      <AdditionalDependencies>brotlicommon-static.lib;brotlidec-static.lib;ws2_32.lib;freetype.lib;glfw3.lib;libpng16.lib;zlib.lib;bz2.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <SubSystem>Windows</SubSystem>
+-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\lib</AdditionalLibraryDirectories>
+     </Link>
+     <Manifest>
+       <EnableDpiAwareness>true</EnableDpiAwareness>

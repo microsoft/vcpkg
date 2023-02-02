@@ -25,7 +25,7 @@ To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make au
 ### NO_DEFAULT_PACKAGES
 Exclude the normal base packages.
 
-The list of base packages includes: bash, coreutils, sed, grep, gawk, diffutils, make, and pkg-config
+The list of base packages includes: bash, coreutils, sed, grep, gawk, gzip, diffutils, make, and pkg-config
 
 ### DIRECT_PACKAGES
 A list of URL/SHA512 pairs to acquire in msys.

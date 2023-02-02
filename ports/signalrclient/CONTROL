@@ -1,5 +1,0 @@
-Source: signalrclient
-Version: 1.0.0-beta1-9
-Build-Depends: cpprestsdk[default-features,websockets], openssl
-Homepage: https://github.com/aspnet/SignalR-Client-Cpp
-Description: C++ client for SignalR.

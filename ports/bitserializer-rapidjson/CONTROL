@@ -1,4 +1,0 @@
-Source: bitserializer-rapidjson
-Version: alias
-Build-Depends: bitserializer[rapidjson-archive]
-Description: Deprecated alias for bitserializer-rapidjson

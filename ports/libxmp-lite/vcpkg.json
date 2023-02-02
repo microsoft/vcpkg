@@ -1,0 +1,14 @@
+{
+  "name": "libxmp-lite",
+  "version": "4.4.1",
+  "port-version": 8,
+  "description": "Lightweight version of libxmp that supports MOD, S3M, XM and IT modules.",
+  "homepage": "https://sourceforge.net/projects/xmp/",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

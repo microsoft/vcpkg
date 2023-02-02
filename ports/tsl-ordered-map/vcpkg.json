@@ -1,0 +1,6 @@
+{
+  "name": "tsl-ordered-map",
+  "version-string": "1.0.0",
+  "port-version": 1,
+  "description": "C++ hash map and hash set which preserve the order of insertion"
+}

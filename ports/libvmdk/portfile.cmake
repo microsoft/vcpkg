@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(LIB_VERSION 20200926)
 set(LIB_FILENAME libvmdk-alpha-${LIB_VERSION}.tar.gz)
 

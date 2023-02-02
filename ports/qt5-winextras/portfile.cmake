@@ -1,5 +1,12 @@
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "qt5-winextras only support Windows.")
+include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
+
+vcpkg_list(SET _patches
+    "patches/unrequire_quick.patch"
+)
+if("declarative" IN_LIST FEATURES)
+    list(APPEND _patches
+        "patches/require_quick.patch"
+    )
 endif()
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
-qt_submodule_installation()
+
+qt_submodule_installation(PATCHES ${_patches})

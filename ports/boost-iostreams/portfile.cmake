@@ -3,16 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iostreams
-    REF boost-1.76.0
-    SHA512 3107bc329adf835b4f8592ec2c8988b377910bc6a724ba2f378dccf9e050da14ef593e5927ad53029e3ed8a51febbbef36af3dc6e889999c4768d8b9c1616393
+    REF boost-1.81.0
+    SHA512 102adfd8c31e0b00d74914fc0c2a812ec0d5af53184f9caf4260b40028ccd4bd084b0916ad937a11c3af14580c004bc143479d09e55362f27b37033eaeb2ee1c
     HEAD_REF master
     PATCHES Removeseekpos.patch
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-iostreams requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

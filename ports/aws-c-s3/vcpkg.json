@@ -1,0 +1,28 @@
+{
+  "name": "aws-c-s3",
+  "version": "0.2.3",
+  "description": "C99 library implementation for communicating with the S3 service, designed for maximizing throughput on high bandwidth EC2 instances.",
+  "homepage": "https://github.com/awslabs/aws-c-s3",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-c-auth",
+    "aws-c-cal",
+    "aws-c-common",
+    "aws-c-compression",
+    "aws-c-http",
+    "aws-c-io",
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

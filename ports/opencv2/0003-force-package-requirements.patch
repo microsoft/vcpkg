@@ -1,5 +1,3 @@
-diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
-index 43c3b16..9b43066 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -6,7 +6,7 @@
@@ -47,12 +45,3 @@ index 43c3b16..9b43066 100644
      if(PNG_FOUND)
        include(CheckIncludeFile)
        check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -151,7 +151,7 @@ if(WITH_OPENEXR)
-   if(BUILD_OPENEXR)
-     ocv_clear_vars(OPENEXR_FOUND)
-   else()
--    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
-+    find_package(OpenEXR REQUIRED)
-   endif()
- 
-   if(NOT OPENEXR_FOUND)

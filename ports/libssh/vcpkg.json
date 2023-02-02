@@ -1,0 +1,71 @@
+{
+  "name": "libssh",
+  "version": "0.10.4+20221123",
+  "port-version": 1,
+  "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
+  "homepage": "https://www.libssh.org/",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libssh",
+      "default-features": false,
+      "features": [
+        "mbedtls"
+      ],
+      "platform": "android"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "crypto"
+  ],
+  "features": {
+    "crypto": {
+      "description": "Default crypto backend",
+      "dependencies": [
+        {
+          "name": "libssh",
+          "features": [
+            "mbedtls"
+          ]
+        }
+      ]
+    },
+    "mbedtls": {
+      "description": "Crypto support (mbedTLS)",
+      "dependencies": [
+        {
+          "name": "mbedtls",
+          "default-features": false
+        },
+        {
+          "name": "mbedtls",
+          "features": [
+            "pthreads"
+          ],
+          "platform": "!android"
+        }
+      ]
+    },
+    "openssl": {
+      "description": "Crypto support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "zlib": {
+      "description": "libssh with zlib",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

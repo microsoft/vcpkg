@@ -1,5 +1,0 @@
-Source: hypre
-Version: 2.19.0
-Homepage: https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods
-Description: SCALABLE LINEAR SOLVERS AND MULTIGRID METHODS
-Build-Depends: mpi, blas, lapack

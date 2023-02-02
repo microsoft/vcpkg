@@ -1,5 +1,0 @@
-Source: nano-signal-slot
-Version: 2.0.1
-Homepage: https://github.com/NoAvailableAlias/nano-signal-slot
-Description: Pure C++17 Signals and Slots
-Supports: !uwp

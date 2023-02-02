@@ -1,12 +1,10 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
-    REF 3d5e4eb6ca11a0827bff68a04f4bf68ca9820e20
-    SHA512 670b0e5d95f7e6132ca7115005efdb1dee645146af82566af3e48bfff64d82dbc058c2f524b8b9d1d92182e4835ff6024067f0eab8dd6204514efa0207b3d33c
+    REF c033ca61ae8fb264542d0326d1309e0a3bde945a # 3.0.0
+    SHA512 ca1468f30f90c3a886fbb6dea113699623d601da10b39a6a33d89780cd825bec8deb431872a2515fce05c7a5d581d4b56860b19654df8cf90e389dfa964f013c
     HEAD_REF master
 )
 

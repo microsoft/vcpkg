@@ -1,18 +1,12 @@
-set(SDL2_VERSION 2.0.14)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz"
-    FILENAME "SDL2-${SDL2_VERSION}.tar.gz"
-    SHA512 ebc482585bd565bf3003fbcedd91058b2183e333b9ea566d2f386da0298ff970645d9d25c1aa4459c7c96e9ea839fd1c5f2da0242a56892865b2e456cdd027ee
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libsdl-org/SDL
+    REF release-${VERSION}
+    SHA512 86620a8f24e054a47e53435ed620bde2c7fb8ffd7db99dcd8a91bac70ea733163b95ae3b77b04d1ef5f098730dfd385cf4bcf85f45d5234cddd7c9581b513af4
+    HEAD_REF main
     PATCHES
-        0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
-        0002-sdl2-skip-ibus-on-linux.patch
-        0003-sdl2-fix-uwp-build.patch
-        0004-sdl2-macos-thread-detection-fix.patch
+        deps.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -21,64 +15,78 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    vulkan  VIDEO_VULKAN
+        vulkan   SDL_VULKAN
+        x11      SDL_X11
+        wayland  SDL_WAYLAND
+        samplerate SDL_LIBSAMPLERATE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if ("x11" IN_LIST FEATURES)
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
+endif()
+if ("wayland" IN_LIST FEATURES)
+    message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev\n")
+endif()
+
+if(VCPKG_TARGET_IS_UWP)
+    set(configure_opts WINDOWS_USE_MSBUILD)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    ${configure_opts}
     OPTIONS ${FEATURE_OPTIONS}
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
-        -DLIBC=ON
+        -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
+        -DSDL_LIBC=ON
+        -DSDL_TEST=OFF
+        -DSDL_IBUS=OFF
+        -DSDL_INSTALL_CMAKEDIR="cmake"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DSDL_LIBSAMPLERATE_SHARED=OFF
+    MAYBE_UNUSED_VARIABLES
+        SDL_FORCE_STATIC_VCRT
 )
 
-vcpkg_install_cmake()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SDL2)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH SDL2.framework/Resources)
-endif()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/bin/sdl2-config
-    ${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config
-    ${CURRENT_PACKAGES_DIR}/SDL2.framework
-    ${CURRENT_PACKAGES_DIR}/debug/SDL2.framework
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/bin/sdl2-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config"
+    "${CURRENT_PACKAGES_DIR}/SDL2.framework"
+    "${CURRENT_PACKAGES_DIR}/debug/SDL2.framework"
+    "${CURRENT_PACKAGES_DIR}/share/licenses"
+    "${CURRENT_PACKAGES_DIR}/share/aclocal"
 )
 
-file(GLOB BINS ${CURRENT_PACKAGES_DIR}/debug/bin/* ${CURRENT_PACKAGES_DIR}/bin/*)
+file(GLOB BINS "${CURRENT_PACKAGES_DIR}/debug/bin/*" "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT BINS)
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2maind.lib)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/SDL2maind.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2maind.lib")
     endif()
 
-    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/sdl2/*.cmake)
+    file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/sdl2/*.cmake")
     foreach(SHARE_FILE ${SHARE_FILES})
         vcpkg_replace_string("${SHARE_FILE}" "lib/SDL2main" "lib/manual-link/SDL2main")
     endforeach()
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 vcpkg_copy_pdbs()
 
 set(DYLIB_COMPATIBILITY_VERSION_REGEX "set\\(DYLIB_COMPATIBILITY_VERSION (.+)\\)")
@@ -91,6 +99,30 @@ string(REGEX REPLACE ${DYLIB_CURRENT_VERSION_REGEX} "\\1" DYLIB_CURRENT_VERSION 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2main" "-lSDL2maind")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2 " "-lSDL2d ")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-static " "-lSDL2-staticd ")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "-lSDL2-static " " ")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-staticd " " ")
+    endif()
+endif()
+
+if(VCPKG_TARGET_IS_UWP)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "$<$<CONFIG:Debug>:d>.lib" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "-l-nodefaultlib:" "-nodefaultlib:")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "$<$<CONFIG:Debug>:d>.lib" "d")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-l-nodefaultlib:" "-nodefaultlib:")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

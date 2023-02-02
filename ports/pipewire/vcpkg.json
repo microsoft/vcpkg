@@ -1,0 +1,15 @@
+{
+  "name": "pipewire",
+  "version": "0.3.62",
+  "description": "Low-latency audio/video router and processor. This port only builds the client library, not the server.",
+  "homepage": "https://pipewire.org",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    "glib",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

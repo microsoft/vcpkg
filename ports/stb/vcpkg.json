@@ -1,0 +1,7 @@
+{
+  "name": "stb",
+  "version-date": "2022-09-09",
+  "description": "public domain header-only libraries",
+  "homepage": "https://github.com/nothings/stb",
+  "license": "MIT OR CC-PDDC"
+}

@@ -1,0 +1,44 @@
+{
+  "name": "ace",
+  "version": "7.0.11",
+  "port-version": 2,
+  "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
+  "description": "The ADAPTIVE Communication Environment",
+  "homepage": "https://github.com/DOCGroup/ACE_TAO",
+  "license": "DOC",
+  "features": {
+    "ssl": {
+      "description": "Enable SSL/TLS features in ACE",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tao": {
+      "description": "The ACE ORB"
+    },
+    "wchar": {
+      "description": "Enable extra wide char functions in ACE",
+      "supports": "!osx"
+    },
+    "xml": {
+      "description": "Enable XML features in ACE"
+    },
+    "xml-utils": {
+      "description": "Include the ACE_XML_Utils library",
+      "dependencies": [
+        {
+          "name": "xerces-c",
+          "features": [
+            "xmlch-wchar"
+          ]
+        }
+      ]
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

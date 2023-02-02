@@ -1,5 +1,0 @@
-Source: tgbot-cpp
-Version: 1.2.1
-Homepage: https://github.com/reo7sp/tgbot-cpp
-Description: C++14 library for Telegram bot API.
-Build-Depends:  boost-algorithm, boost-asio, boost-lexical-cast, boost-property-tree, boost-system, boost-test, boost-variant, curl, openssl, zlib

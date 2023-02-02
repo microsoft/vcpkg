@@ -1,5 +1,14 @@
+From 6f4e2fea829b5986863403d6a611c52c5ac8b2a9 Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:00:30 -0400
+Subject: [PATCH] pcl_utils
+
+---
+ cmake/pcl_utils.cmake | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
 diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index d87d02d..7c951bf 100644
+index d87d02da9..7c951bfd5 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
 @@ -94,21 +94,12 @@ macro(SET_INSTALL_DIRS)
@@ -26,3 +35,6 @@ index d87d02d..7c951bf 100644
  endmacro()
  
  
+-- 
+2.32.0.windows.1
+

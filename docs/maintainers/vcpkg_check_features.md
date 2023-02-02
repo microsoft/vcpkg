@@ -56,9 +56,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         secure    MI_SECURE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         # Expands to "-DMI_SEE_ASM=ON;-DMI_OVERRIDE=OFF;-DMI_SECURE=ON"
         ${FEATURE_OPTIONS}
@@ -71,15 +70,14 @@ vcpkg_configure_cmake(
 $ ./vcpkg install cpprestsdk[websockets]
 
 # ports/cpprestsdk/portfile.cmake
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         brotli      CPPREST_EXCLUDE_BROTLI
         websockets  CPPREST_EXCLUDE_WEBSOCKETS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         # Expands to "-DCPPREST_EXCLUDE_BROTLI=ON;-DCPPREST_EXCLUDE_WEBSOCKETS=OFF"
         ${FEATURE_OPTIONS}
@@ -92,16 +90,15 @@ vcpkg_configure_cmake(
 $ ./vcpkg install pcl[cuda]
 
 # ports/pcl/portfile.cmake
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda  WITH_CUDA
         cuda  BUILD_CUDA
         cuda  BUILD_GPU
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         # Expands to "-DWITH_CUDA=ON;-DBUILD_CUDA=ON;-DBUILD_GPU=ON"
         ${FEATURE_OPTIONS}
@@ -114,16 +111,15 @@ vcpkg_configure_cmake(
 $ ./vcpkg install rocksdb[tbb]
 
 # ports/rocksdb/portfile.cmake
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tbb   WITH_TBB
     INVERTED_FEATURES
         tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         # Expands to "-DWITH_TBB=ON;-DROCKSDB_IGNORE_PACKAGE_TBB=OFF"
         ${FEATURE_OPTIONS}

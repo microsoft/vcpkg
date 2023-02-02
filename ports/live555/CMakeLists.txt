@@ -8,6 +8,10 @@ include_directories(
     UsageEnvironment/include
 )
 
+if (WIN32)
+    add_definitions(-DNO_GETIFADDRS)
+endif(WIN32)
+
 if (NOT MSVC)
     add_compile_options(-DSOCKLEN_T=socklen_t)
 endif()
@@ -26,8 +30,28 @@ target_include_directories(liveMedia PRIVATE "${OPENSSL_INCLUDE_DIR}")
 file(GLOB USAGE_ENVIRONMENT_SRCS UsageEnvironment/*.c UsageEnvironment/*.cpp)
 add_library(UsageEnvironment ${USAGE_ENVIRONMENT_SRCS})
 
+file(WRITE "${CMAKE_BINARY_DIR}/unofficial-live555-config.cmake"
+[[
+include(CMakeFindDependencyMacro)
+
+find_dependency(OpenSSL)
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-live555-targets.cmake")
+]]
+)
+
+install(FILES "${CMAKE_BINARY_DIR}/unofficial-live555-config.cmake" DESTINATION share/unofficial-live555)
+
 install(TARGETS groupsock BasicUsageEnvironment liveMedia UsageEnvironment
+    EXPORT unofficial-live555-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+install(
+    EXPORT unofficial-live555-targets
+    FILE unofficial-live555-targets.cmake
+    NAMESPACE unofficial::
+    DESTINATION share/unofficial-live555
 )

@@ -1,49 +1,66 @@
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "${PORT} only supports windows")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yasm/yasm
-    REF v1.3.0
-    SHA512 f5053e2012e0d2ce88cc1cc06e3bdb501054aed5d1f78fae40bb3e676fe2eb9843d335a612d7614d99a2b9e49dca998d57f61b0b89fac8225afa4ae60ae848f1
+    REF 009450c7ad4d425fa5a10ac4bd6efbd25248d823 # 1.3.0 plus bugfixes for https://github.com/yasm/yasm/issues/153
+    SHA512 a542577558676d11b52981925ea6219bffe699faa1682c033b33b7534f5a0dfe9f29c56b32076b68c48f65e0aef7c451be3a3af804c52caa4d4357de4caad83c
     HEAD_REF master
+    PATCHES
+        add-feature-tools.patch
+        fix-arm-cross-build.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON_PATH ${PYTHON2} DIRECTORY)
-vcpkg_add_to_path("${PYTHON_PATH}")
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
 )
 
-vcpkg_install_cmake()
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
-file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/debug/bin/vsyasm.exe
-    ${CURRENT_PACKAGES_DIR}/debug/bin/yasm.exe
-    ${CURRENT_PACKAGES_DIR}/debug/bin/ytasm.exe
-)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vsyasm.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vsyasm.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/yasm.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/yasm.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ytasm.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/ytasm.exe)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+set(HOST_TOOLS_OPTIONS "")
+if (VCPKG_CROSSCOMPILING)
+    list(APPEND HOST_TOOLS_OPTIONS
+        "-D_tmp_RE2C_EXE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/re2c${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-D_tmp_GENPERF_EXE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/genperf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-D_tmp_GENMACRO_EXE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/genmacro${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-D_tmp_GENVERSION_EXE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/genversion${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${HOST_TOOLS_OPTIONS}
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        -DENABLE_NLS=OFF
+        -DYASM_BUILD_TESTS=OFF
+)
 
+vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
+
+if (BUILD_TOOLS)
+    set(EXTRA_BUILD_TOOLS "")
+    if (NOT VCPKG_CROSSCOMPILING)
+        list(APPEND EXTRA_BUILD_TOOLS re2c genmacro genperf genversion)
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin/yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+configure_file("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

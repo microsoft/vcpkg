@@ -1,7 +1,0 @@
-Source: libgcrypt
-Version: 1.8.7
-Port-Version: 1
-Homepage: https://gnupg.org/software/libgcrypt/index.html
-Description: A library implementing the so-called Assuan protocol
-Build-Depends: libgpg-error
-Supports: linux|osx

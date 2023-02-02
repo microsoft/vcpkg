@@ -5,16 +5,18 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/jsonnet
-  REF 3f58aa551c917d6a7a2c6d042ee27f93d895ac0b # v0.16.0
-  SHA512 448f4ff433a43ec21c3b67ea508d624e03dac420878e453e908a465cd517c79ae657f107c92e28a4ae2d2527baaf9a3ae1c6ea4c7e7e4f5062d3fad4e76e668c
+  REF v0.18.0
+  SHA512 08a64a4b132df1519292378cef93deb3c60d21636b2a71bce6c13e29cfd93cab465cad77e11f000fb984c5c75a4ca1c92504654fd2e5201343df767ea0e610d1
   HEAD_REF master
   PATCHES
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
     0003-use-upstream-nlohmann-json.patch
     0004-incorporate-md5.patch
+    0005-use-upstream-rapidyaml.patch
 )
 
+# see https://github.com/google/jsonnet/blob/v0.18.0/Makefile#L220
 if(VCPKG_TARGET_IS_WINDOWS)
   find_program(PWSH_PATH pwsh)
   vcpkg_execute_required_process(
@@ -30,17 +32,11 @@ else()
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED ON)
-    set(BUILD_STATIC OFF)
-else()
-    set(BUILD_SHARED OFF)
-    set(BUILD_STATIC ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_SHARED_BINARIES=${BUILD_SHARED}
     -DBUILD_STATIC_LIBS=${BUILD_STATIC}
@@ -48,12 +44,13 @@ vcpkg_configure_cmake(
     -DBUILD_JSONNETFMT=OFF
     -DBUILD_TESTS=OFF
     -DUSE_SYSTEM_JSON=ON
+    -DUSE_SYSTEM_RYML=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/jsonnet)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/jsonnet")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

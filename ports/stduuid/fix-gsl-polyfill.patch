@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f45a7dc..039ee53 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,11 +37,11 @@ if (UUID_TIME_GENERATOR)
+ endif()
+ 
+ # Using span from std
+-if (NOT UUID_USING_CXX20_SPAN)
+-    target_include_directories(${PROJECT_NAME} INTERFACE
+-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gsl>
+-            $<INSTALL_INTERFACE:include/gsl>)
+-    install(DIRECTORY gsl DESTINATION include)
++if (UUID_USING_CXX20_SPAN)
++    target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
++else()
++    find_package(Microsoft.GSL CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} INTERFACE Microsoft.GSL::GSL)
+ endif ()
+ 
+ # Install step and imported target
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 7217b72..fb981d2 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -9,6 +9,10 @@ if (@UUID_SYSTEM_GENERATOR@)
+     endif ()
+ endif ()
+ 
++if (NOT "@UUID_USING_CXX20_SPAN@")
++    find_dependency(Microsoft.GSL)
++endif ()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
+ 
+ check_required_components(@PROJECT_NAME@)
+\ No newline at end of file

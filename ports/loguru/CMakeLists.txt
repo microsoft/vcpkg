@@ -4,6 +4,7 @@ project(loguru CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 option(INSTALL_HEADERS "Install header files" ON)
+option(BUILD_WITH_FMT  "Build with fmt support" OFF)
 
 set(loguru_headers
   loguru.hpp
@@ -16,6 +17,12 @@ add_library(loguru ${loguru_sources})
 target_include_directories(loguru PUBLIC 
                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                $<INSTALL_INTERFACE:include/loguru>)
+
+if(BUILD_WITH_FMT)
+    target_compile_definitions(loguru PRIVATE LOGURU_USE_FMTLIB=1)
+    find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(loguru PUBLIC fmt::fmt)
+endif()
 
 if(UNIX)
     set(THREADS_PREFER_PTHREAD_FLAG ON)

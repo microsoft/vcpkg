@@ -1,6 +1,0 @@
-Source: networkdirect-sdk
-Version: 2.0.1
-Port-Version: 1
-Description: The Network Direct architecture allows hardware vendors to expose the advanced capabilities of their networking devices.
-Homepage: https://www.nuget.org/packages/NetworkDirect
-Supports: windows & (x64|x86) & !uwp

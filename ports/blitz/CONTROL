@@ -1,5 +1,0 @@
-Source: blitz
-Version: 2020-03-25
-Homepage: https://github.com/blitzpp/blitz
-Description: Blitz++ is a C++ template class library that provides high-performance multidimensional array containers for scientific computing.
-Supports: !(arm|arm64|uwp)

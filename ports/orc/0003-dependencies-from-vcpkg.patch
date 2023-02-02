@@ -1,16 +1,16 @@
 diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
-index 3d4a162..6926bc3 100644
+index d4cd035..0701a7d 100644
 --- a/c++/src/CMakeLists.txt
 +++ b/c++/src/CMakeLists.txt
-@@ -230,12 +230,13 @@ endif(BUILD_LIBHDFSPP)
+@@ -239,12 +239,13 @@ endif(BUILD_LIBHDFSPP)
  add_library (orc STATIC ${SOURCE_FILES})
  
  target_link_libraries (orc
--  protobuf
--  zlib
--  snappy
--  lz4
--  zstd
+-  orc::protobuf
+-  orc::zlib
+-  orc::snappy
+-  orc::lz4
+-  orc::zstd
 -  ${LIBHDFSPP_LIBRARIES}
 +  PRIVATE
 +    protobuf::libprotobuf
@@ -23,10 +23,10 @@ index 3d4a162..6926bc3 100644
  
  install(TARGETS orc DESTINATION lib)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 3a35325..56ffd74 100644
+index 6919847..ad52cf2 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -59,8 +59,8 @@ endif ()
+@@ -66,8 +66,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Snappy
  
@@ -37,18 +37,23 @@ index 3a35325..56ffd74 100644
    set(SNAPPY_VENDORED FALSE)
  else ()
    set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
-@@ -78,10 +78,6 @@ else ()
+@@ -90,15 +90,6 @@ else ()
    set(SNAPPY_VENDORED TRUE)
  endif ()
  
--include_directories (SYSTEM ${SNAPPY_INCLUDE_DIR})
--add_library (snappy STATIC IMPORTED)
--set_target_properties (snappy PROPERTIES IMPORTED_LOCATION ${SNAPPY_STATIC_LIB})
+-add_library (orc_snappy INTERFACE)
+-add_library (orc::snappy ALIAS orc_snappy)
+-if (ORC_PREFER_STATIC_SNAPPY AND ${SNAPPY_STATIC_LIB})
+-  target_link_libraries(orc_snappy INTERFACE ${SNAPPY_STATIC_LIB})
+-else ()
+-  target_link_libraries(orc_snappy INTERFACE ${SNAPPY_LIBRARY})
+-endif ()
+-target_include_directories (orc_snappy SYSTEM INTERFACE ${SNAPPY_INCLUDE_DIR})
 -
  if (SNAPPY_VENDORED)
-   add_dependencies (snappy snappy_ep)
+   add_dependencies (orc_snappy snappy_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -93,7 +89,7 @@ endif ()
+@@ -110,7 +101,7 @@ endif ()
  # ----------------------------------------------------------------------
  # ZLIB
  
@@ -57,62 +62,86 @@ index 3a35325..56ffd74 100644
    find_package (ZLIB REQUIRED)
    set(ZLIB_VENDORED FALSE)
  else ()
-@@ -120,10 +116,6 @@ else ()
+@@ -142,15 +133,6 @@ else ()
    set(ZLIB_VENDORED TRUE)
  endif ()
  
--include_directories (SYSTEM ${ZLIB_INCLUDE_DIR})
--add_library (zlib STATIC IMPORTED)
--set_target_properties (zlib PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC_LIB})
+-add_library (orc_zlib INTERFACE)
+-add_library (orc::zlib ALIAS orc_zlib)
+-if (ORC_PREFER_STATIC_ZLIB AND ${ZLIB_STATIC_LIB})
+-  target_link_libraries (orc_zlib INTERFACE ${ZLIB_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_zlib INTERFACE ${ZLIB_LIBRARY})
+-endif ()
+-target_include_directories (orc_zlib SYSTEM INTERFACE ${ZLIB_INCLUDE_DIR})
 -
  if (ZLIB_VENDORED)
-   add_dependencies (zlib zlib_ep)
+   add_dependencies (orc_zlib zlib_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -135,8 +127,8 @@ endif ()
+@@ -162,8 +144,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Zstd
  
 -if (NOT "${ZSTD_HOME}" STREQUAL "")
 -  find_package (ZSTD REQUIRED)
 +if (1)
-+  find_package (zstd CONFIG REQUIRED)
++  find_package (ZSTD CONFIG REQUIRED)
    set(ZSTD_VENDORED FALSE)
  else ()
    set(ZSTD_HOME "${THIRDPARTY_DIR}/zstd_ep-install")
-@@ -169,10 +161,6 @@ else ()
+@@ -201,15 +183,6 @@ else ()
    set(ZSTD_VENDORED TRUE)
  endif ()
  
--include_directories (SYSTEM ${ZSTD_INCLUDE_DIR})
--add_library (zstd STATIC IMPORTED)
--set_target_properties (zstd PROPERTIES IMPORTED_LOCATION ${ZSTD_STATIC_LIB})
+-add_library (orc_zstd INTERFACE)
+-add_library (orc::zstd ALIAS orc_zstd)
+-if (ORC_PREFER_STATIC_ZSTD AND ${ZSTD_STATIC_LIB})
+-  target_link_libraries (orc_zstd INTERFACE ${ZSTD_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_zstd INTERFACE ${ZSTD_LIBRARY})
+-endif ()
+-target_include_directories (orc_zstd SYSTEM INTERFACE ${ZSTD_INCLUDE_DIR})
 -
  if (ZSTD_VENDORED)
-   add_dependencies (zstd zstd_ep)
+   add_dependencies (orc_zstd zstd_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -184,8 +172,8 @@ endif ()
+@@ -221,8 +194,8 @@ endif ()
  # ----------------------------------------------------------------------
  # LZ4
  
 -if (NOT "${LZ4_HOME}" STREQUAL "")
 -  find_package (LZ4 REQUIRED)
 +if (1)
-+  find_package (lz4 CONFIG REQUIRED)
++  find_package (LZ4 CONFIG REQUIRED)
    set(LZ4_VENDORED FALSE)
  else ()
    set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
-@@ -211,10 +199,6 @@ else ()
+@@ -253,15 +226,6 @@ else ()
    set(LZ4_VENDORED TRUE)
  endif ()
  
--include_directories (SYSTEM ${LZ4_INCLUDE_DIR})
--add_library (lz4 STATIC IMPORTED)
--set_target_properties (lz4 PROPERTIES IMPORTED_LOCATION ${LZ4_STATIC_LIB})
+-add_library (orc_lz4 INTERFACE)
+-add_library (orc::lz4 ALIAS orc_lz4)
+-if (ORC_PREFER_STATIC_LZ4 AND ${LZ4_STATIC_LIB})
+-  target_link_libraries (orc_lz4 INTERFACE ${LZ4_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_lz4 INTERFACE ${LZ4_LIBRARY})
+-endif ()
+-target_include_directories (orc_lz4 SYSTEM INTERFACE ${LZ4_INCLUDE_DIR})
 -
  if (LZ4_VENDORED)
-   add_dependencies (lz4 lz4_ep)
+   add_dependencies (orc_lz4 lz4_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -288,8 +272,8 @@ endif ()
+@@ -273,7 +237,7 @@ endif ()
+ # ----------------------------------------------------------------------
+ # IANA - Time Zone Database
+ 
+-if (WIN32)
++if (WIN32 AND TEST_VALGRIND_MEMCHECK)
+   SET(CURRENT_TZDATA_FILE "")
+   SET(CURRENT_TZDATA_SHA512 "")
+   File(DOWNLOAD "https://ftp.osuosl.org/pub/cygwin/noarch/release/tzdata/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)
+@@ -372,8 +336,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Protobuf
  
@@ -123,40 +152,41 @@ index 3a35325..56ffd74 100644
    set(PROTOBUF_VENDORED FALSE)
  else ()
    set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
-@@ -327,12 +311,6 @@ endif ()
+@@ -421,19 +385,7 @@ add_library (orc::protobuf ALIAS orc_protobuf)
+ add_library (orc_protoc INTERFACE)
+ add_library (orc::protoc ALIAS orc_protoc)
  
- include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
+-if (ORC_PREFER_STATIC_PROTOBUF AND ${PROTOBUF_STATIC_LIB})
+-  target_link_libraries (orc_protobuf INTERFACE ${PROTOBUF_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_protobuf INTERFACE ${PROTOBUF_LIBRARY})
+-endif()
+-target_include_directories (orc_protobuf SYSTEM INTERFACE ${PROTOBUF_INCLUDE_DIR})
+-
+-if (ORC_PREFER_STATIC_PROTOBUF AND ${PROTOC_STATIC_LIB})
+-  target_link_libraries (orc_protoc INTERFACE ${PROTOC_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_protoc INTERFACE ${PROTOC_LIBRARY})
+-endif()
+-target_include_directories (orc_protoc SYSTEM INTERFACE ${PROTOBUF_INCLUDE_DIR})
++include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
  
--add_library (protobuf STATIC IMPORTED)
--set_target_properties (protobuf PROPERTIES IMPORTED_LOCATION ${PROTOBUF_STATIC_LIB})
--
--add_library (protoc STATIC IMPORTED)
--set_target_properties (protoc PROPERTIES IMPORTED_LOCATION ${PROTOC_STATIC_LIB})
--
  if (PROTOBUF_VENDORED)
-   add_dependencies (protoc protobuf_ep)
-   add_dependencies (protobuf protobuf_ep)
+   add_dependencies (orc_protoc protobuf_ep)
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index f5a53ca..ec22e7a 100644
+index d55581b..701fd7c 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
-@@ -51,7 +51,6 @@ add_executable (orc-metadata
- 
- target_link_libraries (orc-metadata
-   orc
--  protobuf
-   ${CMAKE_THREAD_LIBS_INIT}
-   )
- 
-@@ -92,7 +91,7 @@ target_link_libraries (csv-import
+@@ -95,11 +95,7 @@ target_link_libraries (csv-import
    )
  
  install(TARGETS
 -   orc-contents
 -   orc-metadata
 -   orc-statistics
+    orc-scan
+    orc-memory
+-   timezone-dump
+    csv-import
 -   DESTINATION bin)
-+    orc-scan
-+    orc-memory
-+    csv-import
 +   DESTINATION tools/orc)

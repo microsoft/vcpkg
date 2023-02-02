@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         disable_x86_intrinsics_on_arm.patch
         tiff-deprecated-typedefs.patch
+        trivial-pixel.patch
 )
 
 vcpkg_check_features(
@@ -20,6 +21,7 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSELENE_ARCH_NATIVE=OFF
         ${FEATURE_OPTIONS}
 )
 

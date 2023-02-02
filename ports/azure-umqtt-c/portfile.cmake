@@ -7,35 +7,37 @@ if("public-preview" IN_LIST FEATURES)
         REF 7557db6de094b67818d3c410dc95a3cf07cd86a6
         SHA512 f2577379f711e2576fdd6dfecbc4d8a0b26c7670a77bc468238e8dd5fa43f208db85eddd06dd570fde4219ba19304338c712f671c059c6cc10abb4892d58ae40
         HEAD_REF master
+        PATCHES
+            package-location-fix-preview.patch
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF 478fd8e757dadfe2ca5fcd3953aeba24a14a98e1
-        SHA512 bece2a30abb88dd97b97e399b8e63f6833b052c01c2f779070d52bbc916af604568bf5098d5f994d278d70591b11c45a5fcca9350226eb6e59b04e53c2780bc4
+        REF 566127ad605172735b9ac5cc6797261f3dd6c45c
+        SHA512 19e997e1dd7ecfbf5e8f11f44daa89cee7aa793f95aaed4bdaf792f5443173e0ca434d69f68a6633ee7cdc504d03a42f4b4e8aeec549c7ffdbd5e03db8cce6b5
         HEAD_REF master
     )
 endif()
 
-file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake" DESTINATION "${SOURCE_PATH}/deps/c-utility/configs/")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Dbuild_as_dynamic=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/umqtt)
+vcpkg_cmake_config_fixup(PACKAGE_NAME umqtt CONFIG_PATH "lib/cmake/umqtt")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()
-

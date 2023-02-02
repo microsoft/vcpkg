@@ -1,0 +1,37 @@
+--- opensp-1.5.2.orig/sx/XmlOutputEventHandler.cxx
++++ opensp-1.5.2/sx/XmlOutputEventHandler.cxx
+@@ -1199,12 +1199,22 @@
+           // Check to make sure we haven't passed outside of the
+           // output directory
+ 	  char *dirs = strdup (filePath);
++#ifdef MAXPATHLEN
+           char realDirs[MAXPATHLEN];
+           char realOutputDir[MAXPATHLEN];
++#else
++          char *realDirs;
++          char *realOutputDir;
++#endif
+           char *outputDir = strdup(outputDir_);
+ 
++#ifdef MAXPATHLEN
+           realpath((const char *)dirname(dirs), realDirs);
+           realpath((const char *)dirname(outputDir), realOutputDir);
++#else
++          realDirs = realpath((const char *)dirname(dirs), NULL);
++          realOutputDir = realpath((const char *)dirname(outputDir), NULL);
++#endif
+ 
+           if (strncmp(realDirs, realOutputDir, strlen (realOutputDir)) != 0) {
+             app_->message(XmlOutputMessages::pathOutsideOutputDirectory,
+@@ -1214,6 +1224,11 @@
+             }
+           }
+ 
++#ifndef MAXPATHLEN
++	  free(realDirs);
++	  free(realOutputDir);
++#endif
++
+ 	  // Make the necessary directories
+ 	  maybeCreateDirectories(dirname(dirs));
+ 

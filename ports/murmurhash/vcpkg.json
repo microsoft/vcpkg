@@ -1,0 +1,8 @@
+{
+  "name": "murmurhash",
+  "version-date": "2016-01-09",
+  "port-version": 5,
+  "description": "MurmurHash a family of hash functions.",
+  "homepage": "https://github.com/aappleby/smhasher",
+  "supports": "!uwp & !arm"
+}

@@ -1,5 +1,0 @@
-Source: quaternions
-Version: 1.0.0
-Description: A C++11 library to work with quaternions, as a single header file.
-Homepage: https://github.com/ferd36/quaternions
-Build-Depends: boost-mpl

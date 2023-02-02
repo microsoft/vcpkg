@@ -1,0 +1,25 @@
+{
+  "name": "xsimd",
+  "version": "9.0.1",
+  "description": "Modern, portable C++ wrappers for SIMD intrinsics",
+  "homepage": "https://github.com/xtensor-stack/xsimd",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "xcomplex": {
+      "description": "xtl complex support",
+      "dependencies": [
+        "xtl"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "librsync",
+  "version-semver": "2.3.2",
+  "port-version": 1,
+  "description": "librsync is a library for calculating and applying network deltas, with an interface designed to ease integration into diverse network applications.",
+  "homepage": "http://librsync.sourcefrog.net/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

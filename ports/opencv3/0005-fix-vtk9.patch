@@ -1,5 +1,3 @@
-diff --git a/cmake/OpenCVDetectVTK.cmake b/cmake/OpenCVDetectVTK.cmake
-index 1495688..e5c6049 100644
 --- a/cmake/OpenCVDetectVTK.cmake
 +++ b/cmake/OpenCVDetectVTK.cmake
 @@ -1,12 +1,30 @@
@@ -111,8 +109,6 @@ index 65571a1..e9a470c 100644
      while (polygons->GetNextCell(nr_cell_points, cell_points))
      {
          *poly_ptr++ = nr_cell_points;
-diff --git a/modules/viz/src/vizimpl.cpp b/modules/viz/src/vizimpl.cpp
-index 23cba75..89f1249 100644
 --- a/modules/viz/src/vizimpl.cpp
 +++ b/modules/viz/src/vizimpl.cpp
 @@ -55,8 +55,17 @@ cv::viz::Viz3d::VizImpl::VizImpl(const String &name) : spin_once_state_(false),
@@ -135,8 +131,6 @@ index 23cba75..89f1249 100644
      window_->AddRenderer(renderer_);
  
      // Create the interactor style
-diff --git a/modules/viz/src/vtk/vtkOBJWriter.cpp b/modules/viz/src/vtk/vtkOBJWriter.cpp
-index 296b6eb..2e5764f 100644
 --- a/modules/viz/src/vtk/vtkOBJWriter.cpp
 +++ b/modules/viz/src/vtk/vtkOBJWriter.cpp
 @@ -72,7 +72,7 @@ void cv::viz::vtkOBJWriter::WriteData()
@@ -188,8 +182,6 @@ index 296b6eb..2e5764f 100644
          vtkCellArray *cells = input->GetStrips();
          for (cells->InitTraversal(); cells->GetNextCell(npts, index); )
          {
-diff --git a/modules/viz/src/vtk/vtkXYZReader.cpp b/modules/viz/src/vtk/vtkXYZReader.cpp
-index 57726ea..3b9265f 100644
 --- a/modules/viz/src/vtk/vtkXYZReader.cpp
 +++ b/modules/viz/src/vtk/vtkXYZReader.cpp
 @@ -77,7 +77,7 @@ int cv::viz::vtkXYZReader::RequestData(vtkInformation*, vtkInformationVector**,
@@ -201,8 +193,6 @@ index 57726ea..3b9265f 100644
      if(!fin)
      {
          vtkErrorMacro("Error opening file " << this->FileName);
-diff --git a/modules/viz/src/vtk/vtkXYZWriter.cpp b/modules/viz/src/vtk/vtkXYZWriter.cpp
-index cf95e3c..56a26b3 100644
 --- a/modules/viz/src/vtk/vtkXYZWriter.cpp
 +++ b/modules/viz/src/vtk/vtkXYZWriter.cpp
 @@ -69,7 +69,7 @@ void cv::viz::vtkXYZWriter::WriteData()
@@ -214,8 +204,6 @@ index cf95e3c..56a26b3 100644
      if (outfilep->fail())
      {
          vtkErrorMacro(<< "Unable to open file: "<< this->FileName);
-diff --git a/modules/viz/test/test_tutorial2.cpp b/modules/viz/test/test_tutorial2.cpp
-index 6b2972f..a4b5b99 100644
 --- a/modules/viz/test/test_tutorial2.cpp
 +++ b/modules/viz/test/test_tutorial2.cpp
 @@ -28,7 +28,7 @@ static void tutorial2()
@@ -236,8 +224,6 @@ index 6b2972f..a4b5b99 100644
      }
  }
  
-diff --git a/modules/viz/test/test_tutorial3.cpp b/modules/viz/test/test_tutorial3.cpp
-index 232130f..32e33b1 100644
 --- a/modules/viz/test/test_tutorial3.cpp
 +++ b/modules/viz/test/test_tutorial3.cpp
 @@ -48,7 +48,7 @@ static void tutorial3(bool camera_pov)
@@ -249,8 +235,6 @@ index 232130f..32e33b1 100644
  }
  
  TEST(Viz, tutorial3_global_view)
-diff --git a/modules/viz/test/test_viz3d.cpp b/modules/viz/test/test_viz3d.cpp
-index cdf8a00..4ab05c3 100644
 --- a/modules/viz/test/test_viz3d.cpp
 +++ b/modules/viz/test/test_viz3d.cpp
 @@ -59,7 +59,7 @@ TEST(Viz_viz3d, DISABLED_develop)
@@ -262,8 +246,6 @@ index cdf8a00..4ab05c3 100644
  }
  
  }} // namespace
-diff --git a/modules/viz/test/tests_simple.cpp b/modules/viz/test/tests_simple.cpp
-index 12d696d..5584483 100644
 --- a/modules/viz/test/tests_simple.cpp
 +++ b/modules/viz/test/tests_simple.cpp
 @@ -56,7 +56,7 @@ TEST(Viz, show_cloud_bluberry)

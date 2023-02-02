@@ -1,0 +1,13 @@
+diff --git a/plugins/compress/CMakeLists.txt b/plugins/compress/CMakeLists.txt
+index f6dab85..0bbdf47 100644
+--- a/plugins/compress/CMakeLists.txt
++++ b/plugins/compress/CMakeLists.txt
+@@ -12,7 +12,7 @@ REGISTER_PLUGIN(TARGET zlib
+                 SOURCES ${COMPRESS_PLUGIN_DIR}/c_zlib.c)
+ 
+ #zstd compression
+-IF(${ZSTD_FOUND})
++IF(${WITH_ZSTD})
+   INCLUDE_DIRECTORIES(${ZSTD_INCLUDE_DIRS})
+   REGISTER_PLUGIN(TARGET zstd
+                   TYPE MARIADB_CLIENT_COMPRESSION_PLUGIN

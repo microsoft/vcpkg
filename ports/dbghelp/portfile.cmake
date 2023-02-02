@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_get_windows_sdk(WINDOWS_SDK)

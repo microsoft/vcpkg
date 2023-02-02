@@ -42,8 +42,8 @@ index 5ecd2df..8565044 100644
      "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo")
  ENDIF()
 -TARGET_LINK_LIBRARIES(nnpack PRIVATE cpuinfo)
-+find_package(unofficial-cpuinfo CONFIG REQUIRED)
-+target_link_libraries(nnpack PUBLIC unofficial::cpuinfo::cpuinfo)
++find_package(cpuinfo CONFIG REQUIRED)
++target_link_libraries(nnpack PUBLIC cpuinfo::cpuinfo)
  
  # ---[ Configure pthreadpool
 -IF(NOT TARGET pthreadpool)

@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 47eb0a6..d325df7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,7 +53,9 @@ if (UNIX)
+     list(APPEND DEPENDENT_INCLUDE_DIRS "${GLOG_INCLUDE_DIRS}/../")
+     SET(DEPENDENT_LIBRARIES libevent::core libevent::extra libevent::openssl glog::glog pthread)
+ else (UNIX)
+-    SET(DEPENDENT_LIBRARIES event glog)
++    find_package(glog CONFIG REQUIRED)
++    find_package(Libevent CONFIG REQUIRED)
++    SET(DEPENDENT_LIBRARIES libevent::core libevent::extra libevent::openssl glog::glog)
+ endif (UNIX)
+ 
+ if (CMAKE_BENCHMARK_TESTING)
+diff --git a/evpp/CMakeLists.txt b/evpp/CMakeLists.txt
+index b2e470d..031659f 100644
+--- a/evpp/CMakeLists.txt
++++ b/evpp/CMakeLists.txt
+@@ -15,9 +15,11 @@ include_directories(${PROJECT_SOURCE_DIR})
+ 
+ add_library(evpp_static STATIC ${evpp_SRCS})
+ target_link_libraries(evpp_static ${DEPENDENT_LIBRARIES})
++target_compile_features(evpp_static PRIVATE cxx_std_11)
+ 
+ add_library(evpp_lite_static STATIC ${evpp_lite_SRCS})
+ target_link_libraries(evpp_lite_static ${DEPENDENT_LIBRARIES})
++target_compile_features(evpp_lite_static PRIVATE cxx_std_11)
+ 
+ if (UNIX)
+     add_library(evpp SHARED ${evpp_SRCS})

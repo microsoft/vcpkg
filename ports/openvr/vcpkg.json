@@ -1,0 +1,8 @@
+{
+  "name": "openvr",
+  "version": "1.23.7",
+  "description": "An API and runtime that allows access to VR hardware from multiple vendors without requiring that applications have specific knowledge of the hardware they are targeting.",
+  "homepage": "https://github.com/ValveSoftware/openvr",
+  "license": "BSD-3-Clause",
+  "supports": "!(arm | uwp | osx | android)"
+}

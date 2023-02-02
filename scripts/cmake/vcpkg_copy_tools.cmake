@@ -1,37 +1,3 @@
-#[===[.md:
-# vcpkg_copy_tools
-
-Copy tools and all their DLL dependencies into the `tools` folder.
-
-## Usage
-```cmake
-vcpkg_copy_tools(
-    TOOL_NAMES <tool1>...
-    [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
-    [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
-    [AUTO_CLEAN]
-)
-```
-## Parameters
-### TOOL_NAMES
-A list of tool filenames without extension.
-
-### SEARCH_DIR
-The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if omitted.
-
-### DESTINATION
-Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
-
-### AUTO_CLEAN
-Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
-
-## Examples
-
-* [cpuinfo](https://github.com/microsoft/vcpkg/blob/master/ports/cpuinfo/portfile.cmake)
-* [nanomsg](https://github.com/microsoft/vcpkg/blob/master/ports/nanomsg/portfile.cmake)
-* [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
-#]===]
-
 function(vcpkg_copy_tools)
     cmake_parse_arguments(PARSE_ARGV 0 arg "AUTO_CLEAN" "SEARCH_DIR;DESTINATION" "TOOL_NAMES")
 
@@ -58,6 +24,14 @@ function(vcpkg_copy_tools)
         set(tool_pdb "${arg_SEARCH_DIR}/${tool_name}.pdb")
         if(EXISTS "${tool_path}")
             file(COPY "${tool_path}" DESTINATION "${arg_DESTINATION}")
+        elseif(NOT "${VCPKG_TARGET_BUNDLE_SUFFIX}" STREQUAL "" AND NOT "${VCPKG_TARGET_BUNDLE_SUFFIX}" STREQUAL "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+            set(bundle_path "${arg_SEARCH_DIR}/${tool_name}${VCPKG_TARGET_BUNDLE_SUFFIX}")
+            if(EXISTS "${bundle_path}")
+                file(COPY "${bundle_path}" DESTINATION "${arg_DESTINATION}")
+            else()
+                message(FATAL_ERROR "Couldn't find tool \"${tool_name}\":
+    neither \"${tool_path}\" nor \"${bundle_path}\" exists")
+            endif()
         else()
             message(FATAL_ERROR "Couldn't find tool \"${tool_name}\":
     \"${tool_path}\" does not exist")

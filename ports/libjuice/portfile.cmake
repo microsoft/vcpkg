@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libjuice
-    REF v0.7.1
-    SHA512 4a8a8705d8ee5f6d242e4463e13fbd45ec86145bf17f9c4f755e60922166b3cb12773296fac34f02cbe4ac79f91d73f2bc6406445cfe9520bf09e10d1606bc7e
+    REF eff89f7ae3450d66fcebe4d3d1d2aacca527eb8c #v1.0.6
+    SHA512 f28e8116e9437f7e2c114c0b6e296ec2c4bda264428ca94c3aa7356bfc3c76ac77f4664678579c933f70e6cb380c68ad42c03a83d5140bf41e20fc4272f1ae54
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch
@@ -10,22 +10,21 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    nettle USE_NETTLE
+        nettle USE_NETTLE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DNO_TESTS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libjuice)
+vcpkg_cmake_config_fixup(PACKAGE_NAME LibJuice CONFIG_PATH lib/cmake/LibJuice)
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

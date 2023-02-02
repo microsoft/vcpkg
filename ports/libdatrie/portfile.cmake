@@ -1,52 +1,40 @@
-set(LIBDATRIE_VERSION 0.2.10)
+set(LIBDATRIE_VERSION 0.2.13)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://linux.thai.net/pub/ThaiLinux/software/libthai/libdatrie-${LIBDATRIE_VERSION}.tar.xz"
-    FILENAME "libdatrie-${LIBDATRIE_VERSION}.tar.xz"
-    SHA512 ee68ded9d6e06c562da462d42e7e56098a82478d7b8547506200c3018b72536c4037a4e518924f779dc77d3ab139d93216bdb29ab4116b9dc9efd1a5d1eb9e31
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO tlwg/libdatrie
+    REF v${LIBDATRIE_VERSION}
+    SHA512 38f5a3ee1f3ca0f0601a5fcfeec3892cb34857d4b4720b8e018ca1beb6520c4c10af3bd2f0e4d64367cb256e8e2bca4d0a59b1c81fb36782613d2c258b64df59
+    HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-exports.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-trietool.patch"
+        fix-exports.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.cmake DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h.cmake" DESTINATION "${SOURCE_PATH}")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(SKIP_TOOL ON)
-else()
-    set(SKIP_TOOL OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+       tool     SKIP_TOOL
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DVERSION=${LIBDATRIE_VERSION}
-    OPTIONS_RELEASE
-        -DSKIP_TOOL=${SKIP_TOOL}
-        -DSKIP_HEADERS=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_TOOL=ON
         -DSKIP_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/trietool.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/trietool.exe)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+if(NOT SKIP_TOOL)
+    vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libdatrie RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

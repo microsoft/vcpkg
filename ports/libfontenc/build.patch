@@ -1,0 +1,38 @@
+diff --git a/src/encparse.c b/src/encparse.c
+index 548110ede..61952b9ce 100644
+--- a/src/encparse.c	
++++ b/src/encparse.c
+@@ -28,12 +28,16 @@ THE SOFTWARE.
+    to be pure ASCII.  Bloody ``Code Set Independence''. */
+ 
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#endif
+ #include <stdio.h>
+ 
+ #include <stdlib.h>
+ 
+-#include "zlib.h"
++#include <zlib.h>
+ typedef gzFile FontFilePtr;
+ 
+ #define FontFileGetc(f) gzgetc(f)
+diff --git a/src/fontenc.c b/src/fontenc.c
+index c4ccd5eb0..e87d1089d 100644
+--- a/src/fontenc.c	
++++ b/src/fontenc.c
+@@ -23,7 +23,11 @@ THE SOFTWARE.
+ /* Backend-independent encoding code */
+ 
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#endif
+ #include <stdlib.h>
+ 
+ #define FALSE 0

@@ -1,66 +1,45 @@
-#[===[.md:
-# vcpkg_install_qmake
-
-Build and install a qmake project.
-
-## Usage:
-```cmake
-vcpkg_install_qmake(...)
-```
-
-## Parameters:
-See [`vcpkg_build_qmake()`](vcpkg_build_qmake.md).
-
-## Notes:
-This command transparently forwards to [`vcpkg_build_qmake()`](vcpkg_build_qmake.md).
-
-Additionally, this command will copy produced .libs/.dlls/.as/.dylibs/.sos to the appropriate
-staging directories.
-
-## Examples
-
-* [libqglviewer](https://github.com/Microsoft/vcpkg/blob/master/ports/libqglviewer/portfile.cmake)
-#]===]
-
 function(vcpkg_install_qmake)
-    vcpkg_build_qmake(${ARGN})
-    file(GLOB_RECURSE RELEASE_LIBS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.a
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.so
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.so.*
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dylib
+    z_vcpkg_function_arguments(args)
+
+    vcpkg_build_qmake(${args})
+
+    file(GLOB_RECURSE release_libs
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.so"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.so.*"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dylib"
     )
-    file(GLOB_RECURSE RELEASE_BINS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll
+    file(GLOB_RECURSE release_bins
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
     )
-    file(GLOB_RECURSE DEBUG_LIBS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.a
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.so
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.so.*
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dylib
+    file(GLOB_RECURSE debug_libs
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.so"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.so.*"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dylib"
     )
-    file(GLOB_RECURSE DEBUG_BINS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll
+    file(GLOB_RECURSE debug_bins
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
     )
-    if(NOT RELEASE_LIBS AND NOT DEBUG_LIBS)
+    if("${release_libs}" STREQUAL "" AND "${debug_libs}" STREQUAL "")
         message(FATAL_ERROR "Build did not appear to produce any libraries. If this is intended, use `vcpkg_build_qmake()` directly.")
     endif()
-    if(RELEASE_LIBS)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-        file(COPY ${RELEASE_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    if(NOT "${release_libs}" STREQUAL "")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+        file(COPY ${release_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
     endif()
-    if(DEBUG_LIBS)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-        file(COPY ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    if(NOT "${debug_libs}" STREQUAL "")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(COPY ${debug_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     endif()
-    if(RELEASE_BINS)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-        file(COPY ${RELEASE_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    if(NOT "${release_bins}" STREQUAL "")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY ${release_bins} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     endif()
-    if(DEBUG_BINS)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(COPY ${DEBUG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if(NOT "${debug_bins}" STREQUAL "")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY ${debug_bins} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endfunction()

@@ -3,14 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/thread
-    REF boost-1.76.0
-    SHA512 ed833316025be8a52ccfb620b874f9b9956c778e453de01a657745563184efc123f461dd54dc048946df3319c1b512810a9ce1fb8940fd75771a171c95349e28
+    REF boost-1.81.0
+    SHA512 d4550a68438d97996c07967cef47eb9ddb39049d85adb939c4c38161152460f9768f62a588bafd0c7da2e9f5696a371c2609915f182a77c2d065f602f934487d
     HEAD_REF master
 )
 
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-thread requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}

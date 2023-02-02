@@ -1,0 +1,19 @@
+{
+  "name": "freetype-gl",
+  "version-date": "2022-01-17",
+  "port-version": 1,
+  "description": "OpenGL text using one vertex buffer, one texture and FreeType",
+  "homepage": "https://github.com/rougier/freetype-gl",
+  "dependencies": [
+    "freetype",
+    "glew",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

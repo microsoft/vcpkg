@@ -3,9 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF ed4316166f67ec892603014634840d29f460f611 # v6.14.6
-  SHA512 a880a760f6f5a0a591c14fe942914a3ea85c387a901a922955bb2373ae903f96c6035cac8732d3000a3cbe6313016bfb21168bd3d8a7debf5a28c6e5c0aefb3f
-  HEAD_REF master
+  REF 444b3f4845dd01b0d127c4b420fdd3b50ad56682 # v7.9.2
+  SHA512 a987abbedcc74d0633977ef3953c50824e1f1afdb2deb52db078a63ce9f0c39d5980fbc5127bbd9d7b6aebdc5268ab0f52b5b476d6cff47fb469a8c567ae70a1
+  HEAD_REF main
   PATCHES
     0002-only-build-one-flavor.patch
     0003-use-find-package.patch
@@ -18,19 +18,18 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    "lz4"     WITH_LZ4
-    "snappy"  WITH_SNAPPY
-    "zlib"    WITH_ZLIB
-    "zstd"    WITH_ZSTD
-    "bzip2"   WITH_BZ2
-    "tbb"     WITH_TBB
+      "lz4"     WITH_LZ4
+      "snappy"  WITH_SNAPPY
+      "zlib"    WITH_ZLIB
+      "zstd"    WITH_ZSTD
+      "bzip2"   WITH_BZ2
+      "tbb"     WITH_TBB
   INVERTED_FEATURES
-    "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+      "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DWITH_GFLAGS=OFF
     -DWITH_TESTS=OFF
@@ -50,13 +49,16 @@ vcpkg_configure_cmake(
     ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rocksdb)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

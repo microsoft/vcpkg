@@ -1,0 +1,12 @@
+{
+  "name": "qt5-x11extras",
+  "version": "5.15.8",
+  "description": "Qt5 x11extras Module;",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

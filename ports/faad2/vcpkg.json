@@ -1,0 +1,19 @@
+{
+  "name": "faad2",
+  "version": "2.10.1",
+  "description": "Freeware Advanced Audio (AAC) Decoder",
+  "homepage": "https://sourceforge.net/projects/faac/",
+  "license": "GPL-2.0-or-later",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "build-decoder": {
+      "description": "Build the embedded decoder executable"
+    }
+  }
+}

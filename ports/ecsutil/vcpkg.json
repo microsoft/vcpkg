@@ -1,0 +1,14 @@
+{
+  "name": "ecsutil",
+  "version": "1.0.7.15",
+  "port-version": 3,
+  "description": "Native Windows SDK for accessing ECS via the S3 HTTP protocol.",
+  "homepage": "https://github.com/EMCECS/ecs-object-client-windows-cpp",
+  "supports": "windows & (x64 | x86) & !uwp",
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    }
+  ]
+}

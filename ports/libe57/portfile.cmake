@@ -1,11 +1,11 @@
-set(VERSION 1.1.312)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/E57RefImpl_src-${VERSION})
+set(VERSION 1.1.332)
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/E57RefImpl_src-${VERSION}")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO e57-3d-imgfmt
     FILENAME "E57RefImpl_src-${VERSION}.zip"
-    SHA512 c729cc3094131f115ddf9b8c24a9420c4ab9d16a4343acfefb42f997f4bf25247cd5563126271df2af95f103093b7f6b360dbade52c9e66ec39dd2f06e041eb7
+    SHA512 86adb88cff32d72905e923b1205d609a2bce2eabd78995c59a7957395b233766a5ce31481db08977117abc1a70bbed90d2ce0cdb9897704a8c63d992e91a3907
     PATCHES 
         "0001_cmake.patch"
         "0002_replace_tr1_with_cpp11.patch"
@@ -13,11 +13,12 @@ vcpkg_from_sourceforge(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share/libe57)
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/libe57")
+endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
@@ -28,5 +29,7 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/CHANGES.TXT")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/README.TXT")

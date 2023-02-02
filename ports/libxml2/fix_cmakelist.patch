@@ -1,16 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a437717ba..0a11039d1 100644
+index f922d5ab..685964b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,6 +1,6 @@
- cmake_minimum_required(VERSION 3.15)
- 
--project(libxml2 VERSION 2.9.10 LANGUAGES C)
-+project(libxml2 VERSION 2.9.12 LANGUAGES C)
- 
- include(CheckCSourceCompiles)
- include(CheckFunctionExists)
-@@ -465,15 +465,15 @@ endif()
+@@ -420,15 +420,15 @@ endif()
  if(LIBXML2_WITH_ICU)
  	target_link_libraries(LibXml2 PRIVATE ICU::data ICU::i18n ICU::uc)
  	if(WIN32)
@@ -29,7 +21,7 @@ index a437717ba..0a11039d1 100644
  endif()
  
  if(LIBXML2_WITH_THREADS)
-@@ -483,7 +483,7 @@ endif()
+@@ -438,7 +438,7 @@ endif()
  
  if(LIBXML2_WITH_ZLIB)
  	target_link_libraries(LibXml2 PRIVATE ZLIB::ZLIB)
@@ -38,11 +30,10 @@ index a437717ba..0a11039d1 100644
  endif()
  
  set_target_properties(
-@@ -495,24 +495,9 @@ set_target_properties(
- 	PREFIX lib
- 	VERSION ${PROJECT_VERSION}
+@@ -490,23 +490,9 @@ set_target_properties(
+         SOVERSION ${LIBXML_MAJOR_VERSION}
  )
--
+ 
 +set(XML_LIB_NAME xml2)
  if(MSVC)
 -	if(BUILD_SHARED_LIBS)
@@ -61,11 +52,11 @@ index a437717ba..0a11039d1 100644
 -			RELWITHDEBINFO_POSTFIX s
 -		)
 -	endif()
-+    set(XML_LIB_NAME libxml2)
++	set(XML_LIB_NAME libxml2)
  endif()
  
  install(FILES ${LIBXML2_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libxml2/libxml COMPONENT development)
-@@ -659,30 +644,30 @@ install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxml2 COMPONEN
+@@ -654,30 +640,30 @@ install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxml2 COMPONEN
  
  configure_package_config_file(
  	libxml2-config.cmake.cmake.in libxml2-config.cmake
@@ -102,18 +93,16 @@ index a437717ba..0a11039d1 100644
  	FILE libxml2-export.cmake
  	COMPONENT development
 diff --git a/libxml-2.0.pc.in b/libxml-2.0.pc.in
-index 2653a7c56..d1bff5bcc 100644
+index 2653a7c5..2eb2f362 100644
 --- a/libxml-2.0.pc.in
 +++ b/libxml-2.0.pc.in
-@@ -7,7 +7,8 @@ modules=@WITH_MODULES@
- Name: libXML
+@@ -8,6 +8,7 @@ Name: libXML
  Version: @VERSION@
  Description: libXML library version2.
--Requires:
--Libs: -L${libdir} -lxml2
--Libs.private: @ICU_LIBS@ @THREAD_LIBS@ @Z_LIBS@ @LZMA_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
-+Requires: 
+ Requires:
+-Libs: -L${libdir} @XML_LIBS@
+-Libs.private: @XML_PRIVATE_LIBS@ @LIBS@
 +Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
 +Libs: -L${libdir} -l@XML_LIB_NAME@
-+Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WIN32_EXTRA_LIBADD@ @LIBS@
  Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@

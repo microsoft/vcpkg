@@ -1,11 +1,13 @@
 {
   "name": "cpprestsdk",
-  "version-string": "2.10.18",
+  "version": "2.10.18",
+  "port-version": 2,
   "description": [
     "C++11 JSON, REST, and OAuth library",
     "The C++ REST SDK is a Microsoft project for cloud-based client-server communication in native code using a modern asynchronous C++ API design. This project aims to help C++ developers connect to and interact with services."
   ],
   "homepage": "https://github.com/Microsoft/cpprestsdk",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "boost-asio",
@@ -42,6 +44,14 @@
     {
       "name": "openssl",
       "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "default-features": [

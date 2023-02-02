@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49faf30..e590001 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ project ( rxspencer C )
+ cmake_minimum_required ( VERSION 3.0 )
+ option ( rxshared "build shared library instead of static" OFF )
+-enable_testing()
++#enable_testing()
+ 
+ # Define POSIX_MISTAKE to allow unmatched right parentheses as literals, as
+ # required by POSIX 1003.2.
+@@ -47,10 +47,12 @@ install ( TARGETS rxspencer
+   PUBLIC_HEADER DESTINATION ${RXSPENCER_INCLUDE_DIR} )
+ 
+ # Install docs
++if(FALSE)
+ set ( RXSPENCER_DATA_FILES "COPYRIGHT;README;WHATSNEW" )
+ install ( FILES ${RXSPENCER_DATA_FILES} DESTINATION ${RXSPENCER_DATA_DIR} )
+ install ( FILES rxspencer.3 DESTINATION ${RXSPENCER_MAN3_DIR} )
+ install ( FILES rxspencer.7 DESTINATION ${RXSPENCER_MAN7_DIR} )
++endif()
+ 
+ # generate cmake configuration file
+ include ( CMakePackageConfigHelpers )
+@@ -69,8 +71,9 @@ install ( EXPORT RXSpencerTargets DESTINATION ${CMAKE_CONFIG_DEST} )
+ install ( FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/RXSpencerConfig.cmake
+   DESTINATION ${CMAKE_CONFIG_DEST} )
+-
++if(FALSE)
+ add_executable(tester ${RXSPENCER_SRCS} debug.c main.c split.c)
+ add_test(NAME test1 COMMAND sh -c "./tester -f ${CMAKE_CURRENT_SOURCE_DIR}/tests")
+ add_test(NAME test2 COMMAND sh -c "./tester -el -f ${CMAKE_CURRENT_SOURCE_DIR}/tests")
+ add_test(NAME test3 COMMAND sh -c "./tester -er -f ${CMAKE_CURRENT_SOURCE_DIR}/tests")
++endif()

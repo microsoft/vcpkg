@@ -1,6 +1,4 @@
-The package libbson is compatible with built-in CMake targets:
+libbson provides CMake targets:
 
-    find_package(libbson-1.0 CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${BSON_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${BSON_LIBRARIES})
-    target_compile_definitions(main PRIVATE ${BSON_DEFINITIONS})
+    find_package(bson-1.0 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mongo::bson_static>,mongo::bson_static,mongo::bson_shared>)

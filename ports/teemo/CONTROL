@@ -1,5 +1,0 @@
-Source: teemo
-Version: 2.2
-Build-Depends: curl[core]
-Description: C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed. 
-Homepage: https://github.com/winsoft666/teemo

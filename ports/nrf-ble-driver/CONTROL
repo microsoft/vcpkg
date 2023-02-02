@@ -1,4 +1,0 @@
-Source: nrf-ble-driver
-Version: 4.1.2
-Description: BLE driver is a library for Bluetooth Low Energy communication using Nordic Semiconductor development kits.
-Build-Depends: spdlog, catch2, cli11, asio

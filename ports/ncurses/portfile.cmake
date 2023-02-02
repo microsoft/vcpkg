@@ -1,29 +1,21 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-
 vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS
-        "https://invisible-mirror.net/archives/ncurses/ncurses-6.2.tar.gz"
-        "ftp://ftp.invisible-island.net/ncurses/ncurses-6.2.tar.gz"
-        "https://ftp.gnu.org/gnu/ncurses/ncurses-6.2.tar.gz"
-    FILENAME "ncurses-6.2.tgz"
-    SHA512 4c1333dcc30e858e8a9525d4b9aefb60000cfc727bc4a1062bace06ffc4639ad9f6e54f6bdda0e3a0e5ea14de995f96b52b3327d9ec633608792c99a1e8d840d
+        "https://invisible-mirror.net/archives/ncurses/ncurses-${VERSION}.tar.gz"
+        "ftp://ftp.invisible-island.net/ncurses/ncurses-${VERSION}.tar.gz"
+        "https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
+    FILENAME "ncurses-${VERSION}.tgz"
+    SHA512 1c2efff87a82a57e57b0c60023c87bae93f6718114c8f9dc010d4c21119a2f7576d0225dab5f0a227c2cfc6fb6bdbd62728e407f35fce5bf351bb50cf9e0fd34
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE_PATH}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE_PATH}"
 )
 
-set(OPTIONS
-    --disable-db-install
-    --enable-pc-files
-    --without-manpages
-    --without-progs
-    --without-tack
-    --without-tests
-)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+vcpkg_list(SET OPTIONS)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS
         --with-shared
         --with-cxx-shared
@@ -31,21 +23,40 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-set(OPTIONS_DEBUG
-    --with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig
-    --with-debug
-)
-set(OPTIONS_RELEASE
-    --with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/lib/pkgconfig
-    --without-debug
-)
+if(NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --enable-mixed-case
+    )
+endif()
+
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --disable-home-terminfo
+        --enable-term-driver
+        --disable-termcap
+    )
+endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${OPTIONS}
-    OPTIONS_DEBUG ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE ${OPTIONS_RELEASE}
+    SOURCE_PATH "${SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
     NO_ADDITIONAL_PATHS
+    OPTIONS
+        ${OPTIONS}
+        --disable-db-install
+        --enable-pc-files
+        --without-ada
+        --without-manpages
+        --without-progs
+        --without-tack
+        --without-tests
+        --with-pkg-config-libdir=libdir
+    OPTIONS_DEBUG
+        --with-debug
+        --without-normal
+    OPTIONS_RELEASE
+        --without-debug
+        --with-normal
 )
 vcpkg_install_make()
 
@@ -56,4 +67,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,20 @@
+diff --git a/src/chm_lib.c b/src/chm_lib.c
+index 6c6736c..d532691 100644
+--- a/src/chm_lib.c
++++ b/src/chm_lib.c
+@@ -175,8 +175,13 @@ typedef unsigned long           UInt64;
+ 
+ #else
+ 
+-/* yielding an error is preferable to yielding incorrect behavior */
+-#error "Please define the sized types for your platform in chm_lib.c"
++typedef unsigned char           UChar;
++typedef int16_t                 Int16;
++typedef uint16_t                UInt16;
++typedef int32_t                 Int32;
++typedef uint32_t                UInt32;
++typedef int64_t                 Int64;
++typedef uint64_t                UInt64;
+ #endif
+ 
+ /* GCC */

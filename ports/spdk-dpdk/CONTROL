@@ -1,4 +1,0 @@
-Source: spdk-dpdk
-Version: 20181124
-Description: SPDK mirror of DPDK. A set of libraries and drivers for fast packet processing
-Supports: linux

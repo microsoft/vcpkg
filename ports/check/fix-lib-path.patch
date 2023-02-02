@@ -29,17 +29,15 @@ index 38cbc53..d8a4272 100644
  # vim: shiftwidth=2:softtabstop=2:tabstop=2:expandtab:autoindent
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4a02dbe..ade4cfd 100644
+index 4a02dbe..3bf2fa6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -191,8 +191,8 @@ if(NOT THIS_IS_SUBPROJECT)
+@@ -191,7 +191,7 @@ if(NOT THIS_IS_SUBPROJECT)
    install(TARGETS check checkShared
      EXPORT check-targets
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 -    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
--    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
-+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/manual-link
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
    )
- endif()

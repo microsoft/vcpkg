@@ -1,4 +1,0 @@
-Source: readerwriterqueue
-Version: 1.0.3
-Homepage: https://github.com/cameron314/readerwriterqueue
-Description: A single-producer, single-consumer lock-free queue

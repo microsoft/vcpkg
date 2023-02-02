@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm" "arm64")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -31,27 +30,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT EXISTS ${SOURCE_PATH}/src/Inventor/Qt/common)
+if(NOT EXISTS "${SOURCE_PATH}/src/Inventor/Qt/common")
     file(RENAME "${SOGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/Inventor/Qt/common")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(SOQT_BUILD_SHARED_LIBS OFF)
-else()
-    set(SOQT_BUILD_SHARED_LIBS ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOQT_BUILD_SHARED_LIBS)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSOQT_BUILD_DOCUMENTATION=OFF
         -DSOQT_BUILD_SHARED_LIBS=${SOQT_BUILD_SHARED_LIBS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SoQt-1.6.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoQt-1.6.0)
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

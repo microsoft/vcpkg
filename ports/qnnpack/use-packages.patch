@@ -123,8 +123,8 @@ index a5ddc49..05e1279 100644
  ENDIF()
 -TARGET_LINK_LIBRARIES(qnnpack PRIVATE cpuinfo)
 +
-+find_package(unofficial-cpuinfo CONFIG REQUIRED)
-+target_link_libraries(qnnpack PUBLIC unofficial::cpuinfo::clog unofficial::cpuinfo::cpuinfo)
++find_package(cpuinfo CONFIG REQUIRED)
++target_link_libraries(qnnpack PUBLIC cpuinfo::clog cpuinfo::cpuinfo)
  
  # ---[ Configure pthreadpool
 -IF(NOT TARGET pthreadpool)

@@ -18,9 +18,9 @@ install(FILES lv2/core/lv2.h DESTINATION include)
 
 # Install headers to old URI-style paths, using mapping from wscript
 file(READ wscript WSCRIPT)
-string(REGEX MATCHALL "'[^']+' *: 'lv2/[^']+'" SPEC_MAP "${WSCRIPT}")
+string(REGEX MATCHALL "'[^']+' *: *'lv2/[^']+'" SPEC_MAP "${WSCRIPT}")
 foreach(PAIR ${SPEC_MAP})
-    string(REGEX MATCH "'([^']+)' *: '([^']+)'" _ "${PAIR}")
+    string(REGEX MATCH "'([^']+)' *: *'([^']+)'" _ "${PAIR}")
     install(
         DIRECTORY "lv2/${CMAKE_MATCH_1}/"
         DESTINATION "include/${CMAKE_MATCH_2}"
@@ -31,5 +31,5 @@ endforeach()
 install(
     EXPORT lv2-config
     NAMESPACE lv2::
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lv2"
+    DESTINATION share/lv2
 )

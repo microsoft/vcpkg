@@ -1,5 +1,5 @@
 diff --git a/CMake/abslConfig.cmake.in b/CMake/abslConfig.cmake.in
-index 62d246d..00947cf 100644
+index 62d246d..afcec1f 100644
 --- a/CMake/abslConfig.cmake.in
 +++ b/CMake/abslConfig.cmake.in
 @@ -6,3 +6,5 @@ find_dependency(Threads)
@@ -8,12 +8,11 @@ index 62d246d..00947cf 100644
  include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
 +
 +set(ABSL_USE_CXX17 @ABSL_USE_CXX17@)
-\ No newline at end of file
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f0af6f6..927f4ed 100644
+index 750a475..239977f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -57,6 +57,23 @@ else()
+@@ -67,6 +67,23 @@ else()
    option(ABSL_ENABLE_INSTALL "Enable install rule" ON)
  endif()
  
@@ -34,28 +33,27 @@ index f0af6f6..927f4ed 100644
 +    set(STD_VARIANT 0)
 +endif()
 +
- list(APPEND CMAKE_MODULE_PATH
-   ${CMAKE_CURRENT_LIST_DIR}/CMake
-   ${CMAKE_CURRENT_LIST_DIR}/absl/copts
+ option(ABSL_PROPAGATE_CXX_STD
+   "Use CMake C++ standard meta features (e.g. cxx_std_11) that propagate to targets that link to Abseil"
+   OFF)  # TODO: Default to ON for CMake 3.8 and greater.
 diff --git a/absl/base/CMakeLists.txt b/absl/base/CMakeLists.txt
-index 9ff5aa2..315bee4 100644
+index c7233cb..65a9076 100644
 --- a/absl/base/CMakeLists.txt
 +++ b/absl/base/CMakeLists.txt
-@@ -87,6 +87,12 @@ absl_cc_library(
-     absl::errno_saver
+@@ -38,6 +38,11 @@ absl_cc_library(
+   COPTS
+     ${ABSL_DEFAULT_COPTS}
  )
- 
 +if (NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/options.h.in)
 +    file(RENAME ${CMAKE_CURRENT_LIST_DIR}/options.h ${CMAKE_CURRENT_LIST_DIR}/options.h.in)
 +endif()
 +file(REMOVE ${CMAKE_CURRENT_LIST_DIR}/options.h)
 +configure_file(${CMAKE_CURRENT_LIST_DIR}/options.h.in ${CMAKE_CURRENT_LIST_DIR}/options.h @ONLY)
-+
+ 
  absl_cc_library(
    NAME
-     config
 diff --git a/absl/base/options.h b/absl/base/options.h
-index 6a0fb07..54a9780 100644
+index 56b4e36..0b098ed 100644
 --- a/absl/base/options.h
 +++ b/absl/base/options.h
 @@ -100,7 +100,7 @@

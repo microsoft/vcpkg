@@ -1,0 +1,14 @@
+{
+  "name": "libexif",
+  "version": "0.6.24",
+  "description": "a library for parsing, editing, and saving EXIF data",
+  "homepage": "https://libexif.github.io/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

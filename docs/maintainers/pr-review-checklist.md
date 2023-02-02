@@ -13,7 +13,7 @@ You can link any of these checklist items in a GitHub comment by copying the lin
 <details id="c000001">
 <summary><a href="#c000001">c000001</a>: No deprecated helper functions are used</summary>
 
-See our [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-deprecated-helper-functions) for more information.
+See our [Maintainer Guidelines and Policies](maintainer-guide.md#avoid-deprecated-helper-functions) for more information.
 
 </details>
 
@@ -36,7 +36,7 @@ See our [manifest file documentation](manifest-files.md#description) for more in
 <details id="c000004">
 <summary><a href="#c000004">c000004</a>: No unnecessary comments are present in the changeset</summary>
 
-See our [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-excessive-comments-in-portfiles) for more information.
+See our [Maintainer Guidelines and Policies](maintainer-guide.md#avoid-excessive-comments-in-portfiles) for more information.
 
 </details>
 

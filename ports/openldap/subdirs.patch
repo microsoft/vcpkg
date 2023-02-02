@@ -1,0 +1,34 @@
+diff --git a/Makefile.in b/Makefile.in
+index 5c6bec0..c654210 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -13,7 +13,11 @@
+ ## top-level directory of the distribution or, alternatively, at
+ ## <http://www.OpenLDAP.org/license.html>.
+ 
+-SUBDIRS= include libraries clients servers tests doc
++ifeq ($(patsubst %/debug,DEBUG,$(prefix)),DEBUG)
++SUBDIRS= include libraries
++else
++SUBDIRS= include libraries @TOOLS_SUBDIRS@
++endif
+ CLEANDIRS=
+ INSTALLDIRS= 
+ 
+diff --git a/configure.ac b/configure.ac
+index e97f548..71dd7a6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -235,6 +235,12 @@ dnl OL_ARG_ENABLE(referrals,[AS_HELP_STRING([--enable-referrals], [enable LDAPv2
+ ol_enable_referrals=${ol_enable_referrals-no}
+ OL_ARG_ENABLE(ipv6, [AS_HELP_STRING([--enable-ipv6], [enable IPv6 support])], auto)dnl
+ OL_ARG_ENABLE(local, [AS_HELP_STRING([--enable-local], [enable AF_LOCAL (AF_UNIX) socket support])], auto)dnl
++OL_ARG_ENABLE(tools, [AS_HELP_STRING([--enable-tools], [Build client tools])],no,[no yes])
++TOOLS_SUBDIRS=""
++if test "$ol_enable_tools" = "yes" ; then
++	TOOLS_SUBDIRS="clients"
++fi
++AC_SUBST(TOOLS_SUBDIRS)
+ 
+ dnl ----------------------------------------------------------------
+ dnl General "with" options

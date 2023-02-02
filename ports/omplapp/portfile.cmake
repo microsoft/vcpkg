@@ -12,37 +12,49 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(STATIC_PATCH fix_boost_static_link.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${OMPL_VERSION}
+    SOURCE_BASE ${OMPL_VERSION}
     PATCHES
         fix_dependency.patch
         ${STATIC_PATCH}
 )
 
-# Based on selected features different files get downloaded, so use the following command instead of patch.
-file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
-string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)" _contents "${_contents}")
-string(REPLACE "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" _contents "${_contents}")
-file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ode     OMPLAPP_WITH_ODE
+        opengl  OMPLAPP_WITH_OPENGL
+        threads OMPLAPP_WITH_THREADS
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOMPL_VERSIONED_INSTALL=OFF
         -DOMPL_REGISTRATION=OFF
         -DOMPL_BUILD_DEMOS=OFF
         -DOMPL_BUILD_TESTS=OFF
         -DOMPL_BUILD_PYBINDINGS=OFF
         -DOMPL_BUILD_PYTESTS=OFF
+        # Not implement
+        -DOMPLAPP_WITH_PYTHON=OFF
+        -DOMPLAPP_WITH_TRIANGLE=OFF
+        -DOMPLAPP_WITH_OCTOMAP=OFF
+        -DOMPLAPP_WITH_FLANN=OFF # Requires 1.8.3
+        # Missing dependencies in vcpkg
+        -DOMPLAPP_WITH_SPOT=OFF
+        -DOMPLAPP_WITH_MORSE=OFF
+        -DOMPLAPP_WITH_DRAWSTUFF=OFF
+        -DOMPLAPP_WITH_PQP=OFF
+        -DOMPLAPP_WITH_DOXYGEN=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ompl/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
 
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
 vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
@@ -59,9 +71,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/omplapp/config.h" "#define OMPLAPP_RESOURCE_DIR \"${CURRENT_PACKAGES_DIR}/share/ompl/resources\"" "")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

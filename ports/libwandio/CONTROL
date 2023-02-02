@@ -1,7 +1,0 @@
-Source: libwandio
-Version: 4.2.1
-Port-Version: 3
-Homepage: https://github.com/wanduow/wandio
-Description: C library for simple and efficient file IO.
-Build-Depends: zlib, zstd, liblzma, lzo, lz4, curl, pthread, bzip2
-Supports: !windows

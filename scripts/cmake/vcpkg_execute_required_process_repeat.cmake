@@ -1,20 +1,3 @@
-#[===[.md:
-# vcpkg_execute_required_process_repeat
-
-Execute a process until the command succeeds, or until the COUNT is reached.
-
-## Usage
-```cmake
-vcpkg_execute_required_process_repeat(
-    COMMAND <cmd> [<arguments>]
-    COUNT <num>
-    WORKING_DIRECTORY <directory>
-    LOGNAME <name>
-    [ALLOW_IN_DOWNLOAD_MODE]
-)
-```
-#]===]
-
 function(vcpkg_execute_required_process_repeat)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE"
@@ -42,6 +25,10 @@ function(vcpkg_execute_required_process_repeat)
 This command cannot be executed in Download Mode.
 Halting portfile execution.
 ]])
+    endif()
+
+    if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
     endif()
 
     set(all_logs "")
@@ -79,6 +66,6 @@ Halting portfile execution.
         "  Command failed: ${pretty_command}\n"
         "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
         "  See logs for more information:\n"
-        "${stringifed_logs}"
+        "${stringified_logs}"
     )
 endfunction()

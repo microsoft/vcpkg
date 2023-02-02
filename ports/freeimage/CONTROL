@@ -1,6 +1,0 @@
-Source: freeimage
-Version: 3.18.0
-Port-Version: 19
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openjpeg, libwebp (!uwp), libraw, jxrlib, openexr
-Homepage: https://sourceforge.net/projects/freeimage/
-Description: Support library for graphics image formats

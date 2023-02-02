@@ -1,0 +1,19 @@
+{
+  "name": "directx-dxc",
+  "version-date": "2022-12-16",
+  "description": "DirectX Shader Compiler (LLVM/Clang)",
+  "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
+  "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",
+  "license": null,
+  "supports": "(windows & !arm32 & !uwp) | (linux & x64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

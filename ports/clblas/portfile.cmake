@@ -7,17 +7,17 @@ vcpkg_from_github(
     PATCHES
         cmake.patch
         Fix-BuildDLL.patch
+        abs-arm.patch
 )
 
 # v2.12 has a very old FindOpenCL.cmake using OPENCL_ vs. OpenCL_ var names
 # conflicting with the built-in, more modern FindOpenCL.cmake
-file(REMOVE ${SOURCE_PATH}/src/FindOpenCL.cmake)
+file(REMOVE "${SOURCE_PATH}/src/FindOpenCL.cmake")
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS
         -DBUILD_TEST=OFF
         -DBUILD_KTEST=OFF
@@ -25,26 +25,27 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
-        ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
-        ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe
+        "${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe"
+        "${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe"
     )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clBLAS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/clBLAS)
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/clblas RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/clblas" RENAME copyright)

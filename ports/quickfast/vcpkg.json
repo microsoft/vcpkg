@@ -1,0 +1,11 @@
+{
+  "name": "quickfast",
+  "version-string": "1.5",
+  "port-version": 1,
+  "description": "QuickFAST is an Open Source native C++ implementation of the FAST Protocol [SM].",
+  "homepage": "https://github.com/objectcomputing/quickfast",
+  "dependencies": [
+    "boost-asio",
+    "xerces-c"
+  ]
+}

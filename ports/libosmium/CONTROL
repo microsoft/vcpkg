@@ -1,5 +1,0 @@
-Source: libosmium
-Version: 2.15.5
-Homepage: https://osmcode.org/libosmium/
-Description: A fast and flexible C++ library for working with OpenStreetMap data
-Build-Depends: utfcpp, expat, zlib, proj4, bzip2, protozero, boost

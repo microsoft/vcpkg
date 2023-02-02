@@ -1,41 +1,28 @@
-if(VCPKG_TARGET_IS_LINUX)
-    if (NOT EXISTS "/usr/include/libintl.h")
-        message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-                            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
-        )
-    endif()
-    if(NOT "tools" IN_LIST FEATURES)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-        return()
-    endif()
+if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/include/libintl.h")
+    message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
+                        "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+    )
 endif()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
-#Based on https://github.com/winlibs/gettext
-
-set(GETTEXT_VERSION 0.21)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz"
-    FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
-    SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
+    FILENAME "gettext-${VERSION}.tar.gz"
+    SHA512 ccd43a43fab3c90ed99b3e27628c9aeb7186398153b137a4997f8c7ddfd9729b0ba9d15348567e5206af50ac027673d2b8a3415bb3fc65f87ad778f85dc03a05
 )
-set(PATCHES "")
-if(VCPKG_TARGET_IS_UWP)
-    set(PATCHES uwp_remove_localcharset.patch)
-endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "${GETTEXT_VERSION}"
     PATCHES
-        0002-Fix-uwp-build.patch
+        android.patch
+        uwp.patch
+        win-gethostname.patch
         0003-Fix-win-unicode-paths.patch
         rel_path.patch
-        android.patch
-        ${PATCHES}
 )
+
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
@@ -61,6 +48,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ac_cv_func_memset=yes             # not detected in release builds
         ac_cv_header_pthread_h=no
         ac_cv_header_dirent_h=no
+        ac_cv_header_getopt_h=no
     )
 endif()
 
@@ -79,6 +67,7 @@ function(build_libintl_and_tools)
             ${OPTIONS}
     )
     vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
 endfunction()
 
 function(build_libintl_only)
@@ -93,7 +82,11 @@ function(build_libintl_only)
         OPTIONS
             ${OPTIONS}
     )
-    vcpkg_install_make(SUBPATH "/intl")
+    vcpkg_install_make(
+        MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile"
+        BUILD_TARGET   build-intl
+        INSTALL_TARGET install-intl
+    )
 endfunction()
 
 if("tools" IN_LIST FEATURES)
@@ -134,12 +127,16 @@ if("tools" IN_LIST FEATURES)
         file(RENAME "${CURRENT_PACKAGES_DIR}.release" "${CURRENT_PACKAGES_DIR}")
     endif()
 else()
-    list(APPEND OPTIONS "--config-cache")
-    build_libintl_only()
+    if(VCPKG_TARGET_IS_LINUX)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    else()
+        list(APPEND OPTIONS "--config-cache")
+        build_libintl_only()
+    endif()
+    # A fast installation of the autopoint tool and data, needed for autotools
+    include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
+    install_autopoint()
 endif()
-
-# Handle copyright
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright" COPYONLY)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -149,5 +146,7 @@ if(NOT VCPKG_TARGET_IS_LINUX)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
 endif()
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")

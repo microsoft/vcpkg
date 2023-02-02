@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 71dd7a6..6741ec6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -38,6 +38,7 @@ m4_ifndef([PKG_PREREQ],
+ 
+ AC_CONFIG_AUX_DIR(build)dnl
+ AC_CONFIG_MACRO_DIRS([build])
++AC_CONFIG_MACRO_DIR([m4])
+ 
+ eval `$ac_aux_dir/version.sh`
+ if test -z "$OL_STRING"; then

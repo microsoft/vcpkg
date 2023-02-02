@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/coin
@@ -45,3 +43,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Coin/profiler)
+
+vcpkg_fixup_pkgconfig()

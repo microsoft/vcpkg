@@ -1,0 +1,8 @@
+--- a/CMakeLists.txt
++++ a/CMakeLists.txt
+@@ -115,3 +115,4 @@
++target_compile_features(caf_internal INTERFACE cxx_std_17)
+ # TODO: simply set CXX_STANDARD when switching to CMake ≥ 3.9.6
+-if(NOT CMAKE_CROSSCOMPILING)
++if(0)
+   try_compile(caf_has_cxx_17

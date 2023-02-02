@@ -1,5 +1,0 @@
-Source: dataframe
-Version: 1.17.0
-Description: This is a C++ statistical library that provides an interface similar to Pandas package in Python
-Homepage: https://github.com/hosseinmoein/DataFrame
-Supports: !uwp

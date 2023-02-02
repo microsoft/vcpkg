@@ -1,16 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF b37f03f16b39d397a626f097858e9ae550234ca0 # 2.8.1
-    SHA512 3eef62df397bc1fe1d08d7d91ff7d38d7af54bb85562915bba65d86cf6862384f5b4538f685d93eead595389d2f417176827fd2f72b3ce71a5562a8ff80f17f4
+    REF "${VERSION}"
+    SHA512 7a96b5ffc1c15c919275dad9456575fe12dfa54883fecad5fd42c0e3c64360178425f70d2fbe3c44f39a61361320b4a6ec8af7c4f8378ad788d460a609f3e224
     HEAD_REF master
     PATCHES
-        # This patch is a workaround that is needed until the following issues are resolved upstream:
-        # - https://github.com/mesonbuild/meson/issues/8375
-        # - https://github.com/harfbuzz/harfbuzz/issues/2870
-        # Details: https://github.com/microsoft/vcpkg/issues/16262
-        0001-circumvent-samefile-error.patch
-        0002-fix-uwp-build.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -25,9 +19,6 @@ else()
 endif()
 if("coretext" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dcoretext=enabled) # Enable CoreText shaper backend on macOS
-    if(NOT VCPKG_TARGET_IS_OSX)
-        message(FATAL_ERROR "Feature 'coretext' os only available on OSX")
-    endif()
 else()
     list(APPEND FEATURE_OPTIONS -Dcoretext=disabled)
 endif()
@@ -44,36 +35,69 @@ list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
     #list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
 #endif()
 
+if("introspection" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
+    endif()
+    list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+else()
+    list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -Dcairo=disabled # Use Cairo graphics library
-        -Dfontconfig=disabled    # Use fontconfig
-        -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
-    ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES   glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        ${OPTIONS}
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    ADDITIONAL_BINARIES
+        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+	file(GLOB PC_FILES 
+		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+	
+	foreach(PC_FILE IN LISTS PC_FILES)
+		file(READ "${PC_FILE}" PC_FILE_CONTENT)
+		string(REGEX REPLACE 
+			"\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+			"-l\\1" PC_FILE_CONTENT 
+			"${PC_FILE_CONTENT}")
+		file(WRITE "${PC_FILE}" ${PC_FILE_CONTENT})
+	endforeach()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/harfbuzzConfig.cmake" @ONLY)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -82,3 +106,5 @@ endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

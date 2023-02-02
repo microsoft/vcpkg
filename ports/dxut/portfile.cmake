@@ -1,22 +1,27 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/DXUT
-    REF jun2021
-    SHA512 4c95cefcf685e95b26677d0aba3d118df7860e3bf1b99b567013d326f890a3f67657be2c60677d3d996cccacce30f70d0c2fc60a692372053cce50318fa79a70
-    HEAD_REF master
+    REF dec2022b
+    SHA512 2af04127e40d6037e19fe396993f332b36de15264ddf9690414a377816824a4b5b238263b0fd65592911237b25d8fddb1c1d32c968c3516ca3672b0454cd6d0b
+    HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dxtk DIRECTXTK_INTEGRATION
+        spectre ENABLE_SPECTRE_MITIGATION
+)
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/dxut)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

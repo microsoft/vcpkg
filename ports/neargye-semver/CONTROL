@@ -1,4 +1,0 @@
-Source: neargye-semver
-Version: 0.2.2
-Description: C++17 header-only dependency-free versioning library complying with Semantic Versioning 2.0.0
-Homepage: https://github.com/Neargye/semver

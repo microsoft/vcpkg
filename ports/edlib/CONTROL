@@ -1,4 +1,0 @@
-Source: edlib
-Version: 1.2.6
-Homepage: https://github.com/Martinsos/edlib
-Description: Lightweight, super fast C/C++ (& Python) library for sequence alignment using edit (Levenshtein) distance.

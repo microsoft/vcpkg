@@ -1,0 +1,20 @@
+{
+  "name": "superlu",
+  "version-date": "2020-01-07",
+  "port-version": 6,
+  "description": "Supernodal sparse direct solver.",
+  "homepage": "https://github.com/xiaoyeli/superlu",
+  "license": "BSD-4-Clause-UC",
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    "blas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

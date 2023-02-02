@@ -2,30 +2,37 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF 268c873d20b5cddedcf1d36fe9c2af8338353a98
-        SHA512 07b61657e34c1bce1f0fb8314e9d531e43dd9bf6004d6c67aaad9fcafa2073e05b835b85e87c82c26ca828edca08e9960a25578830657b9909b28bfa75cac6cc
+        REF v0.10.5-win
+        SHA512 4299b2c8bc545676b5437086c666a7b0955524aae758a8753719439697b3dd4d5b46c0a8eba9dba80c0daa9ee9c4188e46fd085f0d2f68f61b33fad1f903c4c2
         HEAD_REF windows
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF v0.9.5
-        SHA512 3ce11817a7e7f5c168bfd8d4918d641e51c478b6e4137080530c6163c5c405b02edcf5fb675d6f582ae71450601a7c6e295d9664a69635d6925b0cf4c2283a16
+        REF v0.10.5
+        SHA512 696e82a1f6a7e6c339fbabb7b1f98ffe40f5f5ee7e77f4c947c0c1532817409e7a61f020c6238a32acd9eb3e06cf3e522e6d67beda32d5bbb08ea1080c20277d
         HEAD_REF master
     )
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
-)
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(CONFIGURE_OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=ON")
+else()
+    set(CONFIGURE_OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=OFF")
+endif()
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS ${CONFIGURE_OPTIONS}
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

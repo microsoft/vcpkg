@@ -1,7 +1,0 @@
-Source: zookeeper
-Version: 3.5.5-1
-Description: ZooKeeper C bindings
-Default-Features: sync
-
-Feature: sync
-Description: ZooKeeper with the sync API

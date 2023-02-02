@@ -11,21 +11,21 @@ vcpkg_from_github(
         0004_fix-config-expected-paths.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DOPTION_BUILD_TESTS=OFF
-        -DOPTION_BUILD_GPU_TESTS=OFF
         -DOPTION_BUILD_TOOLS=OFF
         -DOPTION_BUILD_EXAMPLES=OFF
         -DGIT_REV=0
         -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
         -DOPTION_BUILD_EXAMPLES=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_cpplocate
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 ## _IMPORT_PREFIX needs to go up one extra level in the directory tree.
@@ -48,12 +48,12 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
     file(WRITE ${TARGET_CMAKE} "${_contents}")
 endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Remove files already published by egl-registry
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/glbinding/usage @ONLY)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

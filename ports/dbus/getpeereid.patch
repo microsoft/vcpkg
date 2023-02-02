@@ -1,0 +1,25 @@
+diff --git a/cmake/ConfigureChecks.cmake b/cmake/ConfigureChecks.cmake
+index 7bc789f0e..ec476d9ed 100644
+--- a/cmake/ConfigureChecks.cmake	
++++ b/cmake/ConfigureChecks.cmake
+@@ -44,5 +44,6 @@ check_include_file(sys/inotify.h DBUS_BUS_ENABLE_INOTIFY)
+ 
+ check_symbol_exists(getgrouplist "grp.h"            HAVE_GETGROUPLIST)       #  dbus-sysdeps.c
++check_symbol_exists(getpeereid   "sys/types.h;unistd.h" HAVE_GETPEEREID)     #  dbus-sysdeps.c,
+ check_symbol_exists(getpeerucred "ucred.h"          HAVE_GETPEERUCRED)       #  dbus-sysdeps.c, dbus-sysdeps-win.c
+ check_symbol_exists(nanosleep    "time.h"           HAVE_NANOSLEEP)          #  dbus-sysdeps.c
+ check_symbol_exists(getpwnam_r   "errno.h;pwd.h"    HAVE_GETPWNAM_R)         #  dbus-sysdeps-util-unix.c
+diff --git a/cmake/config.h.cmake b/cmake/config.h.cmake
+index cbffcfa91..1f055ddb9 100644
+--- a/cmake/config.h.cmake	
++++ b/cmake/config.h.cmake
+@@ -169,6 +169,9 @@
+ /* Define to 1 if you have getgrouplist */
+ #cmakedefine   HAVE_GETGROUPLIST 1
+ 
++/* Define to 1 if you have getpeereid */
++#cmakedefine   HAVE_GETPEEREID 1
++
+ /* Define to 1 if you have getpeerucred */
+ #cmakedefine   HAVE_GETPEERUCRED 1
+ 

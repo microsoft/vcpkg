@@ -1,0 +1,57 @@
+{
+  "name": "proj",
+  "version": "9.1.1",
+  "description": "PROJ library for cartographic projections",
+  "homepage": "https://proj.org/",
+  "license": "MIT",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
+    {
+      "name": "sqlite3",
+      "host": true,
+      "features": [
+        "tool"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "net",
+    "tiff"
+  ],
+  "features": {
+    "net": {
+      "description": "Enable network support",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF support to read some grids",
+      "dependencies": [
+        {
+          "name": "tiff",
+          "default-features": false,
+          "features": [
+            "lzma",
+            "zip"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

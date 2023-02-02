@@ -1,0 +1,17 @@
+{
+  "name": "cpp-netlib",
+  "version-string": "0.13.0",
+  "port-version": 6,
+  "description": "A collection of network-related routines/implementations geared towards providing a robust cross-platform networking library",
+  "homepage": "https://cpp-netlib.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-assign",
+    "boost-logic",
+    "boost-program-options",
+    "boost-scope-exit",
+    "boost-smart-ptr",
+    "boost-spirit"
+  ]
+}

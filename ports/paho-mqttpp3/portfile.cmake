@@ -6,7 +6,6 @@ vcpkg_from_github(
   SHA512 3f4a91987e0106e50e637d8d4fb13a4f8aca14eea168102664fdcebd1260609434e679f5986a1c4d71746735530f1b72fc29d2ac05cb35b3ce734a6aab1a0a55
   HEAD_REF master
   PATCHES
-    fix-include-path.patch
     fix-dependency.patch
 )
 
@@ -43,9 +42,8 @@ else()
   set(PAHO_OPTIONS)
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
     -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
@@ -55,13 +53,13 @@ vcpkg_configure_cmake(
 )
 
 # Run the build, copy pdbs and fixup the cmake targets
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/PahoMqttCpp" TARGET_PATH "share/pahomqttcpp")
+vcpkg_cmake_config_fixup(PACKAGE_NAME PahoMqttCpp CONFIG_PATH "lib/cmake/PahoMqttCpp")
 
 # Remove the include and share folders in debug folder
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Add copyright
-file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/about.html" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

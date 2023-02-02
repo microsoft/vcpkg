@@ -18,7 +18,7 @@ index ead87caff..47abb90f0 100644
    AC_SUBST([GEOS_LDFLAGS])
    AC_SUBST([GEOS_CFLAGS])	
    # Ensure that we can parse geos_c.h
-@@ -335,11 +337,14 @@ if test x"$enable_geos" != "xno"; then
+@@ -335,11 +337,13 @@ if test x"$enable_geos" != "xno"; then
    AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
    CPPFLAGS="$CPPFLAGS_SAVE"	
    # Ensure we can link against libgeos_c
@@ -29,34 +29,6 @@ index ead87caff..47abb90f0 100644
    LIBS="$LIBS_SAVE"
    LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
 + fi
-+  LIBS="$LIBS $GEOS_LDFLAGS"
  
    #-----------------------------------------------------------------------
    #   --enable-controlpoints
-@@ -358,7 +363,7 @@ if test x"$enable_geos" != "xno"; then
- 	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
- 	  [], [enable_geosadvanced=yes])
-   if test x"$enable_geosadvanced" != "xno"; then
--	  AC_SEARCH_LIBS(GEOSDelaunayTriangulation,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.4.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosadvanced parameter.]))
-+	  #AC_SEARCH_LIBS(GEOSDelaunayTriangulation,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.4.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosadvanced parameter.]))
- 	  AC_DEFINE(GEOS_ADVANCED)
-   fi
- 
-@@ -369,7 +374,7 @@ if test x"$enable_geos" != "xno"; then
- 	  [--enable-geosreentrant], [enables GEOS reentrant (fully thread safe) [default=yes]])],
- 	  [], [enable_geosreentrant=yes])
-   if test x"$enable_geosreentrant" != "xno"; then
--	  AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.5.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosreentrant parameter.]))
-+	  #AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.5.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosreentrant parameter.]))
- 	  AC_DEFINE(GEOS_REENTRANT)
-   fi
- 
-@@ -390,7 +395,7 @@ if test x"$enable_geos" != "xno"; then
- 	  [--enable-geos370], [enables GEOS 3.7.0 features [default=yes]])],
- 	  [], [enable_geos370=yes])
-   if test x"$enable_geos370" != "xno"; then
--	  AC_SEARCH_LIBS(GEOSFrechetDistance_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.7.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geos370 parameter.]))
-+	  #AC_SEARCH_LIBS(GEOSFrechetDistance_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.7.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geos370 parameter.]))
- 	  AC_DEFINE(GEOS_370)
-   fi
- 

@@ -1,0 +1,22 @@
+{
+  "name": "qt5-winextras",
+  "version": "5.15.8",
+  "description": "Qt5 Windows Extras Module. Provides platform-specific APIs for Windows.",
+  "license": null,
+  "supports": "windows",
+  "dependencies": [
+    "atlmfc",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ],
+  "features": {
+    "declarative": {
+      "description": "Build Qt.Quick imports",
+      "dependencies": [
+        "qt5-declarative"
+      ]
+    }
+  }
+}

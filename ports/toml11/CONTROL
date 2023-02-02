@@ -1,5 +1,0 @@
-Source: toml11
-Version: 3.5.0
-Port-Version: 1
-Homepage: https://github.com/ToruNiina/toml11
-Description: A C++11 header-only toml parser/encoder depending only on C++ standard library.

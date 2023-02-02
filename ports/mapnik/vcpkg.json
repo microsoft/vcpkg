@@ -1,0 +1,223 @@
+{
+  "name": "mapnik",
+  "version-date": "2023-01-17",
+  "description": "Mapnik is an open source toolkit for developing mapping applications.",
+  "homepage": "https://github.com/mapnik/mapnik",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    "boost-assign",
+    "boost-bimap",
+    "boost-filesystem",
+    "boost-geometry",
+    "boost-gil",
+    "boost-interprocess",
+    {
+      "name": "boost-locale",
+      "features": [
+        "icu"
+      ]
+    },
+    "boost-msm",
+    "boost-property-tree",
+    {
+      "name": "boost-regex",
+      "features": [
+        "icu"
+      ]
+    },
+    "boost-spirit",
+    "boost-system",
+    {
+      "name": "freetype",
+      "features": [
+        "bzip2",
+        "png"
+      ]
+    },
+    {
+      "name": "harfbuzz",
+      "features": [
+        "icu"
+      ]
+    },
+    {
+      "name": "harfbuzz",
+      "features": [
+        "coretext"
+      ],
+      "platform": "osx"
+    },
+    "icu",
+    "mapbox-geometry",
+    "mapbox-polylabel",
+    "mapbox-variant",
+    "protozero",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "grid-renderer",
+    "jpeg",
+    "png",
+    "proj",
+    "svg-renderer",
+    "tiff",
+    "webp"
+  ],
+  "features": {
+    "cairo": {
+      "description": "Cairo renderer",
+      "dependencies": [
+        "cairo",
+        "cairomm"
+      ]
+    },
+    "grid-renderer": {
+      "description": "Grid renderer"
+    },
+    "input-csv": {
+      "description": "CSV input plugin"
+    },
+    "input-gdal": {
+      "description": "GDAL input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "input-geobuf": {
+      "description": "GEOBUF input plugin",
+      "dependencies": [
+        "protozero"
+      ]
+    },
+    "input-geojson": {
+      "description": "GEOJSON input plugin"
+    },
+    "input-ogr": {
+      "description": "OGR input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "input-pgraster": {
+      "description": "PGRASTER input plugin",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "input-postgis": {
+      "description": "POSTGIS input plugin",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "input-raster": {
+      "description": "RASTER input plugin"
+    },
+    "input-shape": {
+      "description": "SHAPE input plugin"
+    },
+    "input-sqlite": {
+      "description": "SQLITE input plugin",
+      "dependencies": [
+        "sqlite3"
+      ]
+    },
+    "input-topojson": {
+      "description": "TOPOJSON input plugin"
+    },
+    "jpeg": {
+      "description": "add jpeg support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "libxml2": {
+      "description": "use libxml2 instead of rapidxml",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "png": {
+      "description": "add png support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "proj": {
+      "description": "PROJ Functionalities",
+      "dependencies": [
+        "proj"
+      ]
+    },
+    "svg-renderer": {
+      "description": "SVG renderer"
+    },
+    "tiff": {
+      "description": "add tiff support",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "utility-geometry-to-wkb": {
+      "description": "utility application geometry-to-wkb",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-mapnik-index": {
+      "description": "utility application mapnik-index",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-mapnik-render": {
+      "description": "utility application mapnik-render",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-ogrindex": {
+      "description": "utility application ogrindex"
+    },
+    "utility-pgsql2sqlite": {
+      "description": "utility application pgsql2sqlite",
+      "dependencies": [
+        "boost-program-options",
+        "libpq",
+        "sqlite3"
+      ]
+    },
+    "utility-shapeindex": {
+      "description": "utility application shapeindex",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-svg2png": {
+      "description": "utility application svg2png",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "viewer": {
+      "description": "Make demo viewer application",
+      "dependencies": [
+        "qt5-base"
+      ]
+    },
+    "webp": {
+      "description": "add webp support",
+      "dependencies": [
+        "libwebp"
+      ]
+    }
+  }
+}

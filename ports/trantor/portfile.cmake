@@ -1,22 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/trantor
-    REF v1.5.0
-    SHA512 3e9e0f15aa7e039b70141b1ede16fcfe854af961cc787a0a51d4b020581e2b4ae1b51497e3ca31cfc4b5ed11dd9028a1438339cb726d83588f656c99d9938493
+    REF v1.5.8
+    SHA512 6c90d3dbbc4e175500dfa8365dd42b1e260c5401b6551fb8f28e3673a6540b0937a66ca9f2ae0cc1ef6b1ba27c6232a053ef5402e5ef36835a51f841354de5c9
     HEAD_REF master
     PATCHES
-        vcpkg.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Trantor)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Trantor)
 
 vcpkg_fixup_pkgconfig()
 
@@ -24,7 +22,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/License DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/License" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Copy pdb files
 vcpkg_copy_pdbs()

@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF df522812ba4114f1dd3386b81afc2369c82b717d # 1.2.3
-    SHA512 2ac59c5416ba85a60061d941787cb3bc2e43042ca0a53829f866448015ed6800c38ecbde3319d9756a70bfba2860732136d89d296382a6b9a675bbe32173f22b
+    REF f3b19a8a1f609d1a1b79002802e5cf8c336dc262 # 1.3.7
+    SHA512 c99a4506be06224ebc4adaa29d5eeff0f6efae8b99e48ac02c26cec4a86fb46237a7d380ddb89eddc3d2e75c0c567e9b68610bcf271a0c708bca8ca6a5641075
     HEAD_REF master
     PATCHES
-        fix-ws2-linking-windows.patch
         fix-conversion.patch
+        fix-dependency-libuv.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
@@ -15,31 +15,36 @@ else()
     set(REDIS_PLUS_PLUS_CXX_STANDARD 11)
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(REDIS_PLUS_PLUS_BUILD_STATIC ON)
-    set(REDIS_PLUS_PLUS_BUILD_SHARED OFF)
-else()
-    set(REDIS_PLUS_PLUS_BUILD_STATIC OFF)
-    set(REDIS_PLUS_PLUS_BUILD_SHARED ON)
+set(EXTRA_OPT "")
+if ("async" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_BUILD_ASYNC="libuv")
+endif()
+if ("async-std" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_ASYNC_FUTURE="std")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" REDIS_PLUS_PLUS_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" REDIS_PLUS_PLUS_BUILD_SHARED)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DREDIS_PLUS_PLUS_USE_TLS=OFF
         -DREDIS_PLUS_PLUS_BUILD_STATIC=${REDIS_PLUS_PLUS_BUILD_STATIC}
         -DREDIS_PLUS_PLUS_BUILD_SHARED=${REDIS_PLUS_PLUS_BUILD_SHARED}
         -DREDIS_PLUS_PLUS_BUILD_TEST=OFF
         -DREDIS_PLUS_PLUS_CXX_STANDARD=${REDIS_PLUS_PLUS_CXX_STANDARD}
+        ${EXTRA_OPT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright )
+
+vcpkg_fixup_pkgconfig()

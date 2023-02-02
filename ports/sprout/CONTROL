@@ -1,5 +1,0 @@
-Source: sprout
-Version: 2019-06-20
-Homepage: https://github.com/bolero-MURAKAMI/Sprout
-Description: C++11/14 constexpr based Containers, Algorithms, Random numbers, Parsing, Ray tracing, Synthesizer, and others
-Build-Depends: boost-array, boost-mpl

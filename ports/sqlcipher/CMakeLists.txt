@@ -42,6 +42,9 @@ if(NOT WIN32)
     find_package(Threads REQUIRED)
     target_link_libraries(sqlcipher PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 endif()
+if (UNIX AND NOT APPLE)
+    target_link_libraries(sqlcipher PRIVATE m)
+endif()
 
 target_link_libraries(sqlcipher PRIVATE ${OPENSSL_CRYPTO_LIBRARY})
 

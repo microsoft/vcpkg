@@ -1,4 +1,0 @@
-Source: nameof
-Version: 0.10.1
-Description: Nameof operator for modern C++, simply obtain the name of a variable, type, function, macro, and enum.
-Homepage: https://github.com/Neargye/nameof

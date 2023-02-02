@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platforms" ON_TARGET "Windows")
-
 set(VERSION_MAJOR 5)
 set(VERSION_MINOR 6)
 set(VERSION_PATCH 0)
@@ -13,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
     REF ${VERSION}
 )
 
@@ -39,7 +37,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-silent-rules
-        --disable-binreloc 
+        --disable-binreloc
         --with-guis=${GUIS}
         --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
         --with-libgcrypt-prefix=${CURRENT_INSTALLED_DIR}/tools/libgcrypt
@@ -55,13 +53,19 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 foreach(GUI IN LISTS FEATURES_GUI)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gwengui-${GUI}-${VERSION_MAJOR}.${VERSION_MINOR} TARGET_PATH share/gwengui-${GUI}-${VERSION_MAJOR}.${VERSION_MINOR} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME  gwengui-cpp CONFIG_PATH lib/cmake/gwengui-${GUI}-${VERSION_MAJOR}.${VERSION_MINOR} DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gwenhywfar-${VERSION_MAJOR}.${VERSION_MINOR})
+vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH lib/cmake/gwenhywfar-${VERSION_MAJOR}.${VERSION_MINOR})
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin TOOL_NAMES gct-tool gsa mklistdoc typemaker typemaker2 xmlmerge AUTO_CLEAN)
-endif()    
+endif()
+
+# the `dir` variable is not used in the script
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgwenhywfar/bin/gwenhywfar-config" "dir=\"${CURRENT_INSTALLED_DIR}\"" "")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgwenhywfar/debug/bin/gwenhywfar-config" "dir=\"${CURRENT_INSTALLED_DIR}/debug\"" "")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

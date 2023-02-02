@@ -1,0 +1,12 @@
+diff --git a/cmake/download_archive.cmake b/cmake/download_archive.cmake
+index 820aafafb7..a59b785c7e 100644
+--- a/cmake/download_archive.cmake
++++ b/cmake/download_archive.cmake
+@@ -19,6 +19,7 @@ file(MAKE_DIRECTORY ${_download_archive_TEMPORARY_DIR})
+ # Note that strip_prefix strips the directory path prefix of the extracted
+ # archive content, and it may strip multiple directories.
+ function(download_archive destination url hash strip_prefix)
++  return()
+   # Fetch and validate
+   set(_TEMPORARY_FILE ${_download_archive_TEMPORARY_DIR}/${strip_prefix}.tar.gz)
+   message(STATUS "Downloading from ${url}, if failed, please try configuring again")

@@ -1,0 +1,32 @@
+{
+  "name": "aws-crt-cpp",
+  "version": "0.19.5",
+  "description": "C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++.",
+  "homepage": "https://github.com/awslabs/aws-crt-cpp",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-c-auth",
+    "aws-c-cal",
+    "aws-c-common",
+    "aws-c-compression",
+    "aws-c-event-stream",
+    "aws-c-http",
+    "aws-c-io",
+    "aws-c-mqtt",
+    "aws-c-s3",
+    "aws-checksums",
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

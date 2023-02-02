@@ -1,80 +1,82 @@
-if("field3d" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        ON_TARGET WINDOWS UWP
-        MESSAGE "The field3d feature is not supported on Windows"
-    )
-endif()
+vcpkg_minimum_required(VERSION 2022-10-12)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 5167b11277fffcd9fe18fe4dc35b3eb2669d8c44 # 2.2.10
-    SHA512 d5812cf93bbaf8a384e8ee9f443db95a92320b4c35959a528dff40eac405355d1dec924a975bef7f367d3a2179ded0a15b4be9737d37521719739958bb7f3123
+    REF v${VERSION}
+    SHA512 c7a4283b78197c262d8da31460ce8b07b44546f822142e32e6c1ea22376e1c4b9cfe9c39cc0994987c6c4f653c1f2764057944da97a3a090bf1bcb74a2a0b2c2
     HEAD_REF master
     PATCHES
-        fix-config-cmake.patch
-        fix-dependency.patch
-        fix_static_build.patch
+        fix-dependencies.patch
+        fix-static-ffmpeg.patch
+        fix-openexr-dll.patch
+        imath-version-guard.patch
+        fix-openimageio_include_dir.patch
+        fix-vs2019-encoding-conversion.patch
+        qt6.patch
+        more_qt6.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
-file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindWebp.cmake")
-
-file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(LINKSTATIC ON)
-else()
-    set(LINKSTATIC OFF)
-endif()
+file(REMOVE
+    "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibheif.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibsquish.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/Findfmt.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libraw      USE_LIBRAW
-        opencolorio USE_OCIO
+        opencolorio USE_OPENCOLORIO
         ffmpeg      USE_FFMPEG
-        field3d     USE_FIELD3D
         freetype    USE_FREETYPE
         gif         USE_GIF
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
+        libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
+        tools       USE_OPENGL
+        tools       USE_QT
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DOIIO_BUILD_TESTS=OFF
-        -DHIDE_SYMBOLS=ON
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_QT=OFF
+        -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
-        -DLINKSTATIC=${LINKSTATIC}
+        -DUSE_TBB=OFF
+        -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
         -DVERBOSE=ON
+        -DBUILD_DOCS=OFF
+        -DINSTALL_DOCS=OFF
+        -DENABLE_INSTALL_testtex=OFF
+        "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
+        "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_INSTALL_testtex
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/OpenImageIO)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
@@ -84,13 +86,19 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/THIRD-PARTY.md" third_party)
+string(REGEX REPLACE
+    "^.*The remainder of this file"
+    "\n-------------------------------------------------------------------------\n\nThe remainder of this file"
+    third_party
+    "${third_party}"
+)
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${third_party}")

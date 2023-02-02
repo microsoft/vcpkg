@@ -1,0 +1,35 @@
+
+get_filename_component(_xaudio2_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_xaudio2_root "${_xaudio2_root}" PATH)
+get_filename_component(_xaudio2_root "${_xaudio2_root}" PATH)
+
+set(_xaudio2_root_lib "${_xaudio2_root}/lib/xaudio2_9redist.lib")
+if (EXISTS "${_xaudio2_root_lib}")
+
+   add_library(Microsoft::XAudio2Redist SHARED IMPORTED)
+   set_target_properties(Microsoft::XAudio2Redist PROPERTIES
+      IMPORTED_LOCATION_RELEASE            "${_xaudio2_root}/bin/xaudio2_9redist.dll"
+      IMPORTED_IMPLIB_RELEASE              "${_xaudio2_root_lib}"
+      IMPORTED_LOCATION_DEBUG              "${_xaudio2_root}/debug/bin/xaudio2_9redist.dll"
+      IMPORTED_IMPLIB_DEBUG                "${_xaudio2_root}/debug/lib/xaudio2_9redist.lib"
+      INTERFACE_INCLUDE_DIRECTORIES        "${_xaudio2_root}/include/xaudio2redist"
+      IMPORTED_CONFIGURATIONS              "Debug;Release"
+      IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+   add_library(Microsoft::XApoBase STATIC IMPORTED)
+   set_target_properties(Microsoft::XApoBase PROPERTIES
+      IMPORTED_LOCATION_RELEASE            "${_xaudio2_root}/lib/xapobaseredist@lib_suffix@.lib"
+      IMPORTED_LOCATION_DEBUG              "${_xaudio2_root}/debug/lib/xapobaseredist@lib_suffix@.lib"
+      INTERFACE_INCLUDE_DIRECTORIES        "${_xaudio2_root}/include/xaudio2redist"
+      IMPORTED_CONFIGURATIONS              "Debug;Release")
+
+    set(xaudio2redist_FOUND TRUE)
+
+else()
+
+    set(xaudio2redist_FOUND FALSE)
+
+endif()
+
+unset(_xaudio2_root_lib)
+unset(_xaudio2_root)

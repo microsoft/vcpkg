@@ -1,5 +1,0 @@
-Source: lapack
-Version: 3
-Port-Version: 1
-Description: Metapackage for packages which provide LAPACK
-Build-Depends: clapack(arm&windows), lapack-reference(!arm|!windows)

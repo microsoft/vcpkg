@@ -1,5 +1,0 @@
-Source: libmediainfo
-Version: 20.09
-Homepage: https://github.com/MediaArea/MediaInfoLib
-Description: Get most relevant technical and tag data from video and audio files
-Build-Depends: libzen, curl, zlib

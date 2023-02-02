@@ -13,6 +13,7 @@ vcpkg_execute_required_process(
     [TIMEOUT <seconds>]
     [OUTPUT_VARIABLE <var>]
     [ERROR_VARIABLE <var>]
+    [SAVE_LOG_FILES <relative-path> [ALIAS <unique-alias>] [<relative-path>...]]
 )
 ```
 ## Parameters
@@ -40,12 +41,22 @@ Optional variable to receive stderr of the command.
 
 This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
 
+### SAVE_LOG_FILES
+
+Optional files to be moved from the working directory to `${CURRENT_BUILDTREES_DIR}`.
+The files are copied even if the process failed. 
+This helps to collect relevant log files in CI setups.
+
+The target filename is constructed from the `LOGNAME` parameter and the parameter of the `ALIAS` keyword following the source path.
+If `ALIAS` is absent, the target filename is constructed from the `LOGNAME` parameter, the source filename,
+and the suffix `.log` if the source filename doesn't already end with this suffix.
+
 ## Examples
 
+* [boost-build](https://github.com/Microsoft/vcpkg/blob/master/ports/boost-build/portfile.cmake)
 * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-* [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
-* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+* [qt5-base](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5-base/cmake/configure_qt.cmake)
+* [vcpkg-cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_configure.cmake)
 
 ## Source
 [scripts/cmake/vcpkg\_execute\_required\_process.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_required_process.cmake)

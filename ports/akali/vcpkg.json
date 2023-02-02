@@ -1,0 +1,19 @@
+{
+  "name": "akali",
+  "version": "1.43",
+  "port-version": 1,
+  "description": "C++ Common Library.",
+  "homepage": "https://github.com/winsoft666/akali",
+  "license": "MIT",
+  "supports": "!(arm | arm64 | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

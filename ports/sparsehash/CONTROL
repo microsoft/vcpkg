@@ -1,4 +1,0 @@
-Source: sparsehash
-Version: 2.0.3
-Homepage: https://github.com/sparsehash/sparsehash
-Description: The sparsehash package consists of two hashtable implementations: sparse, which is designed to be very space efficient, and dense, which is designed to be very time efficient.

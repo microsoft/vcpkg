@@ -1,7 +1,7 @@
 #! /bin/sh
 # Wrapper for windres to rc which do not understand '-i -o --output-format'.
 # cvtres is invoked by the linker
-scriptversion=2021-04-02.18; # UTC
+scriptversion=2022-08-24.12; # UTC
 
 
 nl='
@@ -59,56 +59,61 @@ func_file_conv ()
 func_windres_wrapper ()
 {
   # Assume a capable shell
+  bin=
   in=
   out=
 
   for arg
   do
-    if test -n "$eat"; then
+    if test -z "$bin"; then
+      bin=$1
+    elif test -n "$eat"; then
       eat=
     else
       case $1 in
+	--output-format=*)
+	  ;;
+	--define*)
+	  eat=1
+	  set -- "$@" "-d $2"
+	  ;;
+	--include-dir*)
+	  eat=1
+	  func_file_conv "$2"
+	  set -- "$@" "-I $file"
+	  ;;
 	-o)
 	  eat=1
 	  func_file_conv "$2"
 	  out="$file"
 	  echo "OUTPUT:$file"
-	  set x "$@"
-	  shift
 	  ;;
 	*.obj)
 	  func_file_conv "$1"
 	  out="$file"
 	  echo "OUTPUT:$file"
-	  set x "$@"
-	  shift
-	  ;;
-	--output-format=*)
-	  set x "$@"
-	  shift
 	  ;;
 	-i)
 	  eat=1
 	  func_file_conv "$2" mingw
 	  in="$file"
 	  echo "INPUT:$file"
-	  set x "$@"
-	  shift
 	  ;;
 	-*)
-	  set x "$@" "${1//\\\"/\"}"
-	  shift
+	  set -- "$@" "${1//\\\"/\"}"
 	  ;;
 	*)
-	  set x "$@" "$1"
-	  shift
+	  # libtool reorders arguments; save unqualified one as input
+	  func_file_conv "$1"
+	  in="$file"
+	  echo "INPUT:$file"
 	  ;;
       esac
     fi
     shift
   done
-  echo "$@" -fo "$out" "$in"
-  exec "$@" -fo "$out" "$in"
+  echo "$bin" "$@" -fo "$out" "$in"
+  exec "$bin" "$@" -fo "$out" "$in"
   exit 1
 }
 

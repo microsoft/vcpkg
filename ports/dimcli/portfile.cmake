@@ -1,25 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF a4dbb4b1c8a3825fc304bbbad3438dbe1840feae # v5.0.2
-    SHA512 25cc9002fd46856854545934f385d8578f207b1ce01802a172e49e008cdf1db0db11db7cefeef18258b99c13570af9193e83f5826613d8b0a118d7bae3f0d03f
+    REF v7.1.0
+    SHA512 3fad1c68e116c65df453a545fe9def6dc05941675900fd81728531d7638fc1814b82ee1f613ec451bc6c31702a3d5e31f275e605fe6bd62c61513ecd78a172cc
     HEAD_REF master
 )
 
-set(staticCrt OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(staticCrt ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" staticCrt)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DLINK_STATIC_RUNTIME:BOOL=${staticCrt}
         -DINSTALL_LIBS:BOOL=ON
         -DBUILD_PROJECT_NAME=dimcli
+        -DBUILD_TESTING=OFF
+        -DINSTALL_TOOLS=OFF
+        -DINSTALL_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 # Remove includes from ${CMAKE_INSTALL_PREFIX}/debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,9 +1,14 @@
-diff --git a/cmake/common/simple-config.cmake.in b/cmake/common/simple-config.cmake.in
-index f40ebfa88..d521e0ba8 100644
---- a/cmake/common/simple-config.cmake.in
-+++ b/cmake/common/simple-config.cmake.in
-@@ -1 +1,4 @@
-+include(CMakeFindDependencyMacro)
+diff --git a/src/mp-unitsConfig.cmake b/src/mp-unitsConfig.cmake
+--- a/src/mp-unitsConfig.cmake
++++ b/src/mp-unitsConfig.cmake
+@@ -39,8 +39,8 @@ function(__check_libcxx_in_use variable)
+ endfunction()
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(fmt)
+-find_dependency(gsl-lite)
 +find_dependency(fmt CONFIG)
-+find_dependency(Microsoft.GSL CONFIG)
- include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
++find_dependency(gsl-lite CONFIG)
+ 
+ # add range-v3 dependency only for clang + libc++
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

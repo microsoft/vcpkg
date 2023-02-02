@@ -1,0 +1,35 @@
+{
+  "name": "hyperscan",
+  "version": "5.4.0",
+  "description": "A regular expression library with O(length of input) match times that takes advantage of Intel hardware to provide blazing speed.",
+  "homepage": "https://www.hyperscan.io",
+  "license": "BSD-3-Clause",
+  "supports": "!arm",
+  "dependencies": [
+    "boost-array",
+    "boost-chrono",
+    "boost-config",
+    "boost-core",
+    "boost-crc",
+    "boost-detail",
+    "boost-dynamic-bitset",
+    "boost-functional",
+    "boost-graph",
+    "boost-icl",
+    "boost-multi-array",
+    "boost-ptr-container",
+    "boost-random",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility",
+    "pcre",
+    "ragel",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

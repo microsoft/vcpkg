@@ -8,7 +8,7 @@ jobs:
     name: $(unstable-pool)
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: D:\
@@ -24,7 +24,7 @@ jobs:
     inputs:
       buildType: specific
       project: '0bdbc590-a062-4c3f-b0f6-9383f67865ee'
-      pipeline: 8136
+      pipeline: 16549
       buildVersionToDownload: latestFromBranch
       branchName: 'refs/heads/$(MSVCBranchName)'
       artifactName: BuildNumber
@@ -59,45 +59,18 @@ jobs:
       filePath: 'scripts/azure-pipelines/windows-unstable/rearrange-msvc-drop-layout.ps1'
       arguments: '-DropRoot "D:\msvc-drops\$(DropBuildNumber)" -BuildType ret'
       pwsh: true
-  - task: PowerShell@2
-    displayName: 'Report on Disk Space'
-    condition: always()
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
-      pwsh: true
   - script: .\bootstrap-vcpkg.bat
-    displayName: 'Build vcpkg'
+    displayName: 'Bootstrap vcpkg'
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
       arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -PassingIsPassing'
-      pwsh: true
-  - task: PowerShell@2
-    displayName: 'Report on Disk Space After Build'
-    condition: always()
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
-    condition: always()
-  - task: PowerShell@2
-    displayName: 'Build a file list for all packages'
-    condition: always()
-    inputs:
-      targetType: inline
-      script: |
-        ./vcpkg.exe fetch python3
-        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
-      pwsh: true
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
-    condition: always()
-    inputs:
-      PathtoPublish: scripts/list_files
-      ArtifactName: 'file lists for ${{ parameters.triplet }}'
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')

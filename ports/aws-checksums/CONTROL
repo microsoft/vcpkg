@@ -1,5 +1,0 @@
-Source: aws-checksums
-Version: 0.1.9
-Description: Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.
-Build-Depends: aws-c-common
-Supports: !(arm&windows)

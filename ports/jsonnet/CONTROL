@@ -1,6 +1,0 @@
-Source: jsonnet
-Version: 0.16.0
-Port-Version: 2
-Homepage: https://github.com/google/jsonnet
-Description: Jsonnet - The data templating language
-Build-Depends: nlohmann-json

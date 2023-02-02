@@ -1,17 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4573027..4615602 100644
+index 25990a5d8a..ba8df92858 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -271,6 +271,12 @@ include(cmake/upb.cmake)
- include(cmake/xxhash.cmake)
+@@ -326,6 +326,11 @@ include(cmake/xxhash.cmake)
  include(cmake/zlib.cmake)
- 
-+ 
+ include(cmake/download_archive.cmake)
+
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)
 +endif()
 +
- if(_gRPC_PLATFORM_MAC OR _gRPC_PLATFORM_IOS)
-   set(_gRPC_ALLTARGETS_LIBRARIES ${CMAKE_DL_LIBS} m pthread)
- elseif(_gRPC_PLATFORM_ANDROID)
+ # Setup external proto library at third_party/envoy-api with 2 download URLs
+ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/envoy-api)
+   # Download the archive via HTTP, validate the checksum, and extract to third_party/envoy-api.

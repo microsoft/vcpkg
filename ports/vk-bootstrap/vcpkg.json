@@ -1,0 +1,15 @@
+{
+  "name": "vk-bootstrap",
+  "version": "0.5",
+  "port-version": 1,
+  "description": "Vulkan bootstraping library",
+  "homepage": "https://github.com/charles-lunarg/vk-bootstrap",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "vulkan"
+  ]
+}
