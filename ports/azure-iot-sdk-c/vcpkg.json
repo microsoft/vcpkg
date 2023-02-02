@@ -20,8 +20,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "use-prov-client": {
-      "description": "Enables device provisioning client for DPS"
-  }
+  ]
 }
