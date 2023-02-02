@@ -273,7 +273,7 @@ index e7dfbfd..65224c4 100644
  # unsets all public (designed to be used externally) variables and reports
  # error message at priority depending upon [REQUIRED/QUIET/<NONE>] argument.
  macro(OPENMVG_REPORT_NOT_FOUND REASON_MSG)
-@@ -58,10 +58,20 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
+@@ -58,10 +58,17 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
  # Reset CMake module path to the installation directory of this
  # script.
  set(CMAKE_MODULE_PATH ${CURRENT_CONFIG_INSTALL_DIR})
