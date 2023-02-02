@@ -1,14 +1,14 @@
-diff --git a/cmake/modules/FindLibCrypto.cmake b/cmake/modules/FindLibCrypto.cmake
-index 564ba97..f748212 100644
---- a/cmake/modules/FindLibCrypto.cmake
-+++ b/cmake/modules/FindLibCrypto.cmake
-@@ -89,9 +89,6 @@ else()
-         set(LIBCRYPTO_FOUND true)
-         set(LibCrypto_FOUND true)
+diff --git a/cmake/modules/Findcrypto.cmake b/cmake/modules/Findcrypto.cmake
+index fed83bb..9c1ae28 100644
+--- a/cmake/modules/Findcrypto.cmake
++++ b/cmake/modules/Findcrypto.cmake
+@@ -105,9 +105,6 @@ else()
+         set(CRYPTO_FOUND true)
+         set(crypto_FOUND true)
  
--        message(STATUS "LibCrypto Include Dir: ${LibCrypto_INCLUDE_DIR}")
--        message(STATUS "LibCrypto Shared Lib:  ${LibCrypto_SHARED_LIBRARY}")
--        message(STATUS "LibCrypto Static Lib:  ${LibCrypto_STATIC_LIBRARY}")
-         if (NOT TARGET crypto AND
-             (EXISTS "${LibCrypto_LIBRARY}")
+-        message(STATUS "LibCrypto Include Dir: ${crypto_INCLUDE_DIR}")
+-        message(STATUS "LibCrypto Shared Lib:  ${crypto_SHARED_LIBRARY}")
+-        message(STATUS "LibCrypto Static Lib:  ${crypto_STATIC_LIBRARY}")
+         if (NOT TARGET AWS::crypto AND
+             (EXISTS "${crypto_LIBRARY}")
              )
