@@ -1,0 +1,24 @@
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index 3eda538fb..0a1a29f25 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -1481,15 +1481,14 @@ macro(build_thrift)
+   if(DEFINED Boost_NAMESPACE)
+     list(APPEND THRIFT_CMAKE_ARGS "-DBoost_NAMESPACE=${Boost_NAMESPACE}")
+   endif()
+-
+   if(MSVC)
+-    if(ARROW_USE_STATIC_CRT)
+-      set(THRIFT_LIB_SUFFIX "mt")
+-      list(APPEND THRIFT_CMAKE_ARGS "-DWITH_MT=ON")
++    if(${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
++      set(THRIFT_LIB_SUFFIX "mdd")
+     else()
+       set(THRIFT_LIB_SUFFIX "md")
+-      list(APPEND THRIFT_CMAKE_ARGS "-DWITH_MT=OFF")
+     endif()
++    list(APPEND THRIFT_CMAKE_ARGS "-DWITH_MT=OFF")
++
+     set(THRIFT_LIB
+         "${THRIFT_PREFIX}/bin/${CMAKE_IMPORT_LIBRARY_PREFIX}thrift${THRIFT_LIB_SUFFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+     )
