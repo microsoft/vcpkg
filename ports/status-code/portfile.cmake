@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
 )
 
 vcpkg_cmake_install()
