@@ -15,6 +15,8 @@ vcpkg_list(SET options)
 if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
+    set(ENV{AUTOPOINT} true) # true, the program
+    file(TOUCH "${SOURCE_PATH}/po/Makefile.in.in")
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 
