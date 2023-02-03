@@ -17,6 +17,8 @@ if("nls" IN_LIST FEATURES)
 else()
     set(ENV{AUTOPOINT} true) # true, the program
     file(TOUCH "${SOURCE_PATH}/po/Makefile.in.in")
+    file(WRITE "${SOURCE_PATH}/config/iconv.m4" "AC_DEFUN([AM_ICONV],[])\n")
+    file(WRITE "${SOURCE_PATH}/config/gettext.m4" "AC_DEFUN([AM_GNU_GETTEXT],[])\nAC_DEFUN([AM_GNU_GETTEXT_VERSION],[])\nAC_DEFUN([AM_GNU_GETTEXT_REQUIRE_VERSION],[])\n")
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 
