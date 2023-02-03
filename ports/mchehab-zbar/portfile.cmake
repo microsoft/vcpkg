@@ -15,6 +15,7 @@ vcpkg_list(SET options)
 if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
+    vcpkg_list(APPEND options "--disable-nls")
     set(ENV{AUTOPOINT} true) # true, the program
     file(TOUCH "${SOURCE_PATH}/po/Makefile.in.in")
     # Get missing build-time m4 files from gettext source
@@ -29,6 +30,9 @@ else()
         DESTINATION "${SOURCE_PATH}/gettext-autoconf"
         PATTERNS "*/gettext-runtime/m4/gettext.m4"
                  "*/gettext-runtime/m4/iconv.m4"
+                 "*/gettext-runtime/m4/nls.m4"
+                 "*/gettext-runtime/m4/po.m4"
+                 "*/gettext-runtime/gnulib-m4/lib-link.m4"
                  "*/gettext-runtime/gnulib-m4/lib-prefix.m4"
     )
     file(GLOB_RECURSE m4_files "${SOURCE_PATH}/gettext-autoconf/*/*.m4")
