@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO polycam/open3d
-    REF 941f8126f694d2ead561a51710cbc6cc33f043bb
+    REF fb0468c8c1f56a9d07747803d177beef8cfb9fa4
     SHA512 e4ac8f9d98df541d6aefcf85c13167fd783c18c6c0aa51da818f04244f88830ebced0b55aedf02c674572938a02aa747ef7cf21e67f886c7633bcba6db788026
     HEAD_REF main
 )
