@@ -1549,7 +1549,7 @@
       "port-version": 1
     },
     "cnats": {
-      "baseline": "3.5.0",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "cnl": {
