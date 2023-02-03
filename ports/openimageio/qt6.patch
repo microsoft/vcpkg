@@ -1,0 +1,65 @@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index 8131672..7a6455e 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -264,15 +264,15 @@ checked_find_package (Nuke)
+ checked_find_package (OpenGL)   # used for iv
+ 
+ # Qt -- used for iv
+-set (qt5_modules Core Gui Widgets)
++set (qt6_modules Core Gui Widgets)
+ if (OPENGL_FOUND)
+-    list (APPEND qt5_modules OpenGL)
++    list (APPEND qt6_modules OpenGL OpenGLWidgets)
+ endif ()
+ option (USE_QT "Use Qt if found" ON)
+-checked_find_package (Qt5 COMPONENTS ${qt5_modules})
+-if (USE_QT AND NOT Qt5_FOUND AND APPLE)
+-    message (STATUS "  If you think you installed qt5 with Homebrew and it still doesn't work,")
+-    message (STATUS "  try:   export PATH=/usr/local/opt/qt5/bin:$PATH")
++checked_find_package (Qt6 COMPONENTS ${qt6_modules})
++if (USE_QT AND NOT Qt6_FOUND AND APPLE)
++    message (STATUS "  If you think you installed qt6 with Homebrew and it still doesn't work,")
++    message (STATUS "  try:   export PATH=/usr/local/opt/qt6/bin:$PATH")
+ endif ()
+ 
+ 
+diff --git a/src/iv/CMakeLists.txt b/src/iv/CMakeLists.txt
+index 88a2151..cbc4a54 100644
+--- a/src/iv/CMakeLists.txt
++++ b/src/iv/CMakeLists.txt
+@@ -3,18 +3,18 @@
+ # https://github.com/OpenImageIO/oiio
+ 
+ set (CMAKE_AUTOMOC ON)
+-if (Qt5_POSITION_INDEPENDENT_CODE)
++if (Qt6_POSITION_INDEPENDENT_CODE)
+     set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+ check_is_enabled (iv iv_enabled)
+-if (iv_enabled AND Qt5_FOUND AND OPENGL_FOUND)
++if (iv_enabled AND Qt6_FOUND AND OPENGL_FOUND)
+     fancy_add_executable (
+         SYSTEM_INCLUDE_DIRS
+             ${OPENGL_INCLUDE_DIR}
+         LINK_LIBRARIES
+             OpenImageIO
+-            Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
++            Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGLWidgets
+             ${OPENGL_LIBRARIES}
+         )
+     if (iv_enabled AND FORCE_OPENGL_1)
+diff --git a/src/iv/imageviewer.h b/src/iv/imageviewer.h
+index f20b79a..ca67b52 100644
+--- a/src/iv/imageviewer.h
++++ b/src/iv/imageviewer.h
+@@ -23,7 +23,7 @@
+ #include <QAction>
+ #include <QCheckBox>
+ #include <QDialog>
+-#include <QGLWidget>
++#include <QOpenGLWidget>
+ #include <QMainWindow>
+ 
+ #ifndef QT_NO_PRINTER

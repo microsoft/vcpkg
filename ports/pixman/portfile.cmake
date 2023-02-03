@@ -37,6 +37,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
                 )
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    # https://github.com/microsoft/vcpkg/issues/29168
+    list(APPEND OPTIONS -Da64-neon=disabled)
+endif()
+
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org

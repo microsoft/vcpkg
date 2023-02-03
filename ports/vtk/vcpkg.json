@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.2.0-pv5.11.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -198,12 +198,20 @@
     "qt": {
       "description": "Qt functionality for VTK",
       "dependencies": [
-        "qt5-declarative",
-        "qt5-imageformats",
-        "qt5-tools",
         {
-          "name": "qt5-x11extras",
-          "platform": "linux"
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "opengl",
+            "widgets"
+          ]
+        },
+        "qtdeclarative",
+        "qtimageformats",
+        {
+          "name": "qttools",
+          "default-features": false
         }
       ]
     },
