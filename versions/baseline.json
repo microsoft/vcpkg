@@ -156,6 +156,10 @@
       "baseline": "4.10.0",
       "port-version": 2
     },
+    "arg-router": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "argagg": {
       "baseline": "0.4.6",
       "port-version": 1
