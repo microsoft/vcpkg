@@ -2,6 +2,6 @@
   "name": "coin-or-buildtools",
   "version-date": "2023-02-02",
   "description": "Macros and patches for GNU autotools ",
-  "license": null,
-  "homepage": "https://coin-or-tools.github.io/BuildTools/"
+  "homepage": "https://coin-or-tools.github.io/BuildTools/",
+  "license": "EPL-2.0"
 }

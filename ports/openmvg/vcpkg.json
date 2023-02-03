@@ -15,13 +15,13 @@
       ]
     },
     "coin-or-clp",
+    "coin-or-osi",
     "coinutils",
     "eigen3",
     "flann",
     "libjpeg-turbo",
     "liblemon",
     "libpng",
-    "coin-or-osi",
     "tiff",
     {
       "name": "vcpkg-cmake",

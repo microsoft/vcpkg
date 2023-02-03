@@ -3,9 +3,9 @@
   "version-date": "2023-02-01",
   "description": "Ipopt (Interior Point OPTimizer, pronounced eye-pea-Opt) is a software package for large-scale nonlinear optimization",
   "homepage": "https://github.com/coin-or/Ipopt",
-  "license": null,
+  "license": "EPL-2.0",
   "dependencies": [
-    "intel-mkl",
-    "coinutils"
+    "coinutils",
+    "intel-mkl"
   ]
 }
