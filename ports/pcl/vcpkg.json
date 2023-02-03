@@ -1,7 +1,6 @@
 {
   "name": "pcl",
-  "version": "1.12.0",
-  "port-version": 7,
+  "version": "1.13.0",
   "description": "Point Cloud Library (PCL) is open source library for 2D/3D image and point cloud processing.",
   "homepage": "https://github.com/PointCloudLibrary/pcl",
   "license": "BSD-3-Clause",
@@ -134,7 +133,12 @@
     "visualization": {
       "description": "Build visualization",
       "dependencies": [
-        "vtk"
+        {
+          "name": "vtk",
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "vtk": {

@@ -1,0 +1,24 @@
+diff --git a/iceoryx_hoofs/platform/CMakeLists.txt b/iceoryx_hoofs/platform/CMakeLists.txt
+index 78bad09f8..293784c06 100644
+--- a/iceoryx_hoofs/platform/CMakeLists.txt
++++ b/iceoryx_hoofs/platform/CMakeLists.txt
+@@ -55,6 +55,19 @@ target_link_libraries(iceoryx_platform PRIVATE ${ICEORYX_SANITIZER_FLAGS})
+ target_compile_options(iceoryx_platform PRIVATE ${ICEORYX_WARNINGS} ${ICEORYX_SANITIZER_FLAGS})
+ 
+ if(LINUX)
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(ACL REQUIRED libacl)
++
++    target_include_directories(iceoryx_platform
++        PUBLIC
++        ${ACL_INCLUDE_DIRS}
++    )
++
++    target_link_directories(iceoryx_platform
++        PUBLIC
++        ${ACL_LIBRARY_DIRS}
++    )
++
+     target_link_libraries(iceoryx_platform
+         PUBLIC
+         rt

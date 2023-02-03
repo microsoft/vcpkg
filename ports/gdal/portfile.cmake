@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        fix-find-package2.patch
+        libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -31,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
@@ -89,6 +91,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
+        -DCMAKE_PROJECT_INCLUDE="${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
     MAYBE_UNUSED_VARIABLES
