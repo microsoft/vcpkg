@@ -53,7 +53,7 @@ vcpkg_cmake_configure(
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
-		-DEMBREE_INSTALL_DEPENDENCIES=OFF
+        -DEMBREE_INSTALL_DEPENDENCIES=OFF
 )
 
 vcpkg_cmake_install()
@@ -64,12 +64,12 @@ set(config_file "${CURRENT_PACKAGES_DIR}/share/embree/embree-config.cmake")
 file(READ "${config_file}" contents)
 string(REPLACE "SET(EMBREE_BUILD_TYPE Release)" "" contents "${contents}")
 string(REPLACE "/../../../" "/../../" contents "${contents}")
-string(REPLACE "FIND_PACKAGE" "find_dependency" contents "${contents}")
-string(REPLACE "REQUIRED" "" contents "${contents}")
+string(REPLACE "FIND_PACKAGE" "include(CMakeFindDependencyMacro)\n  find_dependency" contents "${contents}")
+string(REPLACE "REQUIRED" "COMPONENTS" contents "${contents}")
 string(REPLACE "/lib/cmake/embree-${VERSION}" "/share/embree" contents "${contents}")
 
 if(NOT VCPKG_BUILD_TYPE)
-	string(REPLACE "/lib/embree3.lib" "$<$<CONFIG:DEBUG>:/debug>/lib/embree3.lib" contents "${contents}")
+    string(REPLACE "/lib/embree3.lib" "$<$<CONFIG:DEBUG>:/debug>/lib/embree3.lib" contents "${contents}")
 endif()
 file(WRITE "${config_file}" "${contents}")
 
