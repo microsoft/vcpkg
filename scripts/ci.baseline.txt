@@ -409,6 +409,9 @@ libigl:x64-uwp=fail
 libirecovery:x64-windows-static-md=fail
 # 120 min build time for libjxl arm-uwp-rel, reason unknown
 libjxl:arm-uwp=skip
+# Port is currently broken since upstream removed the tag so no way for contributors to reproduce CI failures. 
+libleidenalg:x64-uwp=fail
+libleidenalg:arm64-windows=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
