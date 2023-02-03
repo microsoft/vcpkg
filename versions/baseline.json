@@ -1512,6 +1512,10 @@
       "baseline": "2019-04-30",
       "port-version": 2
     },
+    "clipper2": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "clockutils": {
       "baseline": "1.1.1",
       "port-version": 1
@@ -3348,6 +3352,10 @@
       "baseline": "1.9.0",
       "port-version": 1
     },
+    "kdalgorithms": {
+      "baseline": "2023-01-31",
+      "port-version": 0
+    },
     "kdbindings": {
       "baseline": "1.0.0",
       "port-version": 0
@@ -3722,7 +3730,7 @@
     },
     "libcopp": {
       "baseline": "1.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libcorrect": {
       "baseline": "2018-10-11",
@@ -3977,7 +3985,7 @@
       "port-version": 6
     },
     "libjpeg-turbo": {
-      "baseline": "2.1.4",
+      "baseline": "2.1.5",
       "port-version": 0
     },
     "libjuice": {
@@ -4565,7 +4573,7 @@
       "port-version": 0
     },
     "libxlsxwriter": {
-      "baseline": "1.1.4",
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "libxml2": {
@@ -5225,7 +5233,7 @@
       "port-version": 6
     },
     "nanoflann": {
-      "baseline": "1.4.2",
+      "baseline": "1.4.3",
       "port-version": 0
     },
     "nanogui": {
@@ -6656,6 +6664,10 @@
       "baseline": "1.9",
       "port-version": 2
     },
+    "raygui": {
+      "baseline": "3.2",
+      "port-version": 0
+    },
     "raylib": {
       "baseline": "4.2.0",
       "port-version": 1
@@ -6725,7 +6737,7 @@
       "port-version": 1
     },
     "rendergraph": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "replxx": {
@@ -7878,7 +7890,7 @@
     },
     "urho3d": {
       "baseline": "2021-03-01",
-      "port-version": 2
+      "port-version": 3
     },
     "uriparser": {
       "baseline": "0.9.7",
@@ -8165,7 +8177,7 @@
       "port-version": 1
     },
     "wil": {
-      "baseline": "2022-09-23",
+      "baseline": "2023-02-02",
       "port-version": 0
     },
     "wildmidi": {
@@ -8322,7 +8334,7 @@
     },
     "xcb-util-wm": {
       "baseline": "0.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "xerces-c": {
       "baseline": "3.2.4",
