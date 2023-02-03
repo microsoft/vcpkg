@@ -4997,8 +4997,8 @@
       "port-version": 3
     },
     "minifb": {
-      "baseline": "2019-08-20",
-      "port-version": 2
+      "baseline": "2023-02-03",
+      "port-version": 0
     },
     "minimp3": {
       "baseline": "2021-11-30",
