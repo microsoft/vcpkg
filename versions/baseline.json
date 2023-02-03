@@ -10,9 +10,9 @@
     },
     "ableton": {
       "baseline": "3.0.6",
-      "port-version": 1
+      "port-version": 2
     },
-    "abletonlink": {
+    "ableton-link": {
       "baseline": "3.0.6",
       "port-version": 0
     },
