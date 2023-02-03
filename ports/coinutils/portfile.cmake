@@ -34,6 +34,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin-or/CoinMpsIO.hpp" "\"glpk.h\"" "\"../glpk.h\"")
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)
 
 file(COPY "${SOURCE_PATH}/m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
