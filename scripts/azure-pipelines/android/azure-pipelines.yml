@@ -48,5 +48,5 @@ jobs:
     displayName: 'docker build'
   - bash: docker run --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" /vcpkg/vcpkg install zlib:x64-android
     displayName: 'test install zlib for android'
-  - bash: docker run --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+  - bash: docker run --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
     displayName: 'docker run'
