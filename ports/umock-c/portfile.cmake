@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Drun_unittests=OFF
         -Drun_int_tests=OFF
@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/umock_c)
+vcpkg_cmake_config_fixup(PACKAGE_NAME umock_c CONFIG_PATH "cmake")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
