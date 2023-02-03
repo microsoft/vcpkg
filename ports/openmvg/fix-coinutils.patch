@@ -1,3 +1,18 @@
+diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
+index cc5212fda..0fb59c44c 100644
+--- a/src/openMVG/linearProgramming/CMakeLists.txt
++++ b/src/openMVG/linearProgramming/CMakeLists.txt
+@@ -16,8 +16,8 @@ target_link_libraries(openMVG_linearProgramming
+     openMVG_numeric
+   PRIVATE
+     ${CLP_LIBRARIES}     # clp + solver wrapper
+-    ${COINUTILS_LIBRARY} # container tools
+-    ${OSI_LIBRARY}       # generic LP
++    ${COINUTILS_LIBRARIES} # container tools
++    ${OSI_LIBRARIES}       # generic LP
+ )
+ 
+ target_include_directories(openMVG_linearProgramming
 diff --git a/src/cmakeFindModules/FindCoinUtils.cmake b/src/cmakeFindModules/FindCoinUtils.cmake
 index 5b64ce14c..595fb7dc8 100644
 --- a/src/cmakeFindModules/FindCoinUtils.cmake
