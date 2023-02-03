@@ -5,6 +5,7 @@ variables:
   windows-pool: 'PrWin-2023-01-12'
   linux-pool: 'PrLin-2023-01-12'
   osx-pool: 'PrOsx-2022-02-04'
+  android-pool: 'PrAnd-2023-02-02'
 
 parameters:
   - name: vcpkgToolSha
@@ -70,4 +71,9 @@ jobs:
 - template: linux/azure-pipelines.yml
   parameters:
     poolName: $(linux-pool)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+
+- template: android/azure-pipelines.yml
+  parameters:
+    poolName: $(android-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}

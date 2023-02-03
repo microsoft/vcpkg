@@ -1,0 +1,52 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
+  - name: poolName
+    type: string
+
+jobs:
+- job: x64_android
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: WORKING_ROOT
+    value: /mnt/vcpkg-ci
+  - name: VCPKG_DOWNLOADS
+    value: /mnt/vcpkg-ci/downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
+
+  steps:
+    # Note: /mnt is the Azure machines' temporary disk.
+  - bash: |
+      sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
+      sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
+      sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      exit 0
+    displayName: 'Create working directories'
+  - bash: ./bootstrap-vcpkg.sh
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
+    displayName: "Build vcpkg with CMake"
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - bash: docker build ./scripts/azure-pipelines/android -t "vcpkg-android"
+    displayName: 'docker build'
+  - bash: docker run --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" /vcpkg/vcpkg install zlib:x64-android
+    displayName: 'test install zlib for android'
+  - bash: docker run --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+    displayName: 'docker run'
