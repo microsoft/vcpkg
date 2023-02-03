@@ -361,7 +361,7 @@
       "port-version": 0
     },
     "azure-c-shared-utility": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-core-cpp": {
@@ -377,8 +377,8 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2022-09-15",
-      "port-version": 1
+      "baseline": "2023-01-18",
+      "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
@@ -386,7 +386,7 @@
     },
     "azure-macro-utils-c": {
       "baseline": "2022-01-21",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.0.0",
@@ -429,15 +429,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "b64": {
@@ -7846,7 +7846,7 @@
     },
     "umock-c": {
       "baseline": "2022-01-21",
-      "port-version": 0
+      "port-version": 1
     },
     "unicorn": {
       "baseline": "1.0.3",
