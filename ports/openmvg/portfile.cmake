@@ -70,6 +70,9 @@ vcpkg_cmake_configure(
         -DOpenMVG_USE_INTERNAL_CERES=OFF
         -DOpenMVG_USE_INTERNAL_FLANN=OFF
         -DOpenMVG_USE_INTERNAL_LEMON=OFF
+        "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        "-DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
 )
 
 vcpkg_cmake_install()

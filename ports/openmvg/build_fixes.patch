@@ -141,6 +141,24 @@ index 5d909ec..ab7eb6f 100644
  
  # ==============================================================================
  # Flann
+@@ -288,6 +303,7 @@ endif()
+ # - internal by default (flann),
+ # - external if FLANN_INCLUDE_DIR_HINTS and a valid Flann setup is found
+ # ==============================================================================
++if(0)
+ if (NOT DEFINED FLANN_INCLUDE_DIR_HINTS)
+   set(FLANN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
+   set(OpenMVG_USE_INTERNAL_FLANN ON)
+@@ -296,6 +312,9 @@ find_package(Flann QUIET)
+ if (NOT FLANN_FOUND OR OpenMVG_USE_INTERNAL_FLANN)
+   set(FLANN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
+ endif()
++endif()
++ 
++find_package(flann REQUIRED)
+
+ # ==============================================================================
+ # CoinUtils
 @@ -364,6 +395,7 @@ endif()
  # - internal by default (Lemon),
  # - external if LEMON_INCLUDE_DIR_HINTS and a valid Lemon setup is found
@@ -608,3 +626,16 @@ index b8928083..1d10f939 100644
      ${OPENMVG_LIBRARY_DEPENDENCIES}
  )
  
+diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
+index 8a69c2344..1ed9a21fe 100644
+--- a/src/cmakeFindModules/FindClp.cmake
++++ b/src/cmakeFindModules/FindClp.cmake
+@@ -51,7 +51,7 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
+         SET(CLP_INCLUDE_DIR ${CLP_DIR})
+ 
+         FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
+-        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
++        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp)
+         FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
+ 
+         # locate Clp libraries
