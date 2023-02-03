@@ -48,5 +48,11 @@ jobs:
     displayName: 'docker build'
   - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" /vcpkg/vcpkg install zlib:x64-android
     displayName: 'test install zlib for android'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
     displayName: 'docker run'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: failure logs for x64-android'
+    inputs:
+      PathtoPublish: './failure-logs'
+      ArtifactName: 'failure logs for x64-android'
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
