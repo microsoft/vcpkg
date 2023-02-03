@@ -7878,7 +7878,7 @@
     },
     "urho3d": {
       "baseline": "2021-03-01",
-      "port-version": 2
+      "port-version": 3
     },
     "uriparser": {
       "baseline": "0.9.7",
@@ -8322,7 +8322,7 @@
     },
     "xcb-util-wm": {
       "baseline": "0.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "xerces-c": {
       "baseline": "3.2.4",
