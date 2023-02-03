@@ -374,7 +374,6 @@ leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
-libcopp:arm64-windows=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
