@@ -11,11 +11,7 @@ vcpkg_from_gitlab(
         0004-macos-build.patch
 )
 
-find_program(XMLLINT_PATH NAMES xmllint PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/libxml2")
-string(REGEX REPLACE "/[^/]+$" "" XMLLINT_DIR "${XMLLINT_PATH}")
-file(TO_NATIVE_PATH "${XMLLINT_DIR}" XMLLINT_DIR_NATIVE)
-message(STATUS "Using xmlling at: ${XMLLINT_PATH}")
-vcpkg_add_to_path("${XMLLINT_DIR_NATIVE}")
+vcpkg_add_to_path("{CURRENT_HOST_INSTALLED_DIR}/tools/libxml2") # for xmllint
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
