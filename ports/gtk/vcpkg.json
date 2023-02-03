@@ -7,13 +7,6 @@
   "dependencies": [
     "atk",
     {
-      "name": "libxml2",
-      "default-features": true,
-      "features":[
-        "tools"
-      ]
-    },
-    {
       "name": "cairo",
       "default-features": false,
       "features": [
@@ -45,6 +38,12 @@
     },
     "graphene",
     "libepoxy",
+    {
+      "name": "libxml2",
+      "features": [
+        "tools"
+      ]
+    },
     "pango",
     {
       "name": "sassc",
