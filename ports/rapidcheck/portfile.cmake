@@ -9,15 +9,18 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRC_INSTALL_ALL_EXTRAS=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}/cmake")
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
