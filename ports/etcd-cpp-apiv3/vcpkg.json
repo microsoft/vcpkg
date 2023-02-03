@@ -5,14 +5,6 @@
   "homepage": "https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3",
   "license": "BSD-3-Clause",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
     "boost-asio",
     "boost-random",
     "boost-system",
@@ -20,6 +12,14 @@
     "cpprestsdk",
     "grpc",
     "openssl",
-    "protobuf"
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
