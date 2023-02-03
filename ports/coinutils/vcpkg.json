@@ -4,6 +4,7 @@
   "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project",
   "license": null,
   "homepage": "https://www.coin-or.org/",
+  "supports": "!uwp",
   "dependencies" :
    [
     "zlib",
