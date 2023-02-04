@@ -46,9 +46,7 @@ jobs:
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   - bash: docker build ./scripts/azure-pipelines/android -t "vcpkg-android"
     displayName: 'docker build'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg "vcpkg-android" /vcpkg/vcpkg install zlib:x64-android
-    displayName: 'test install zlib for android'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=${{ variables.WORKING_ROOT }},target=${{ variables.WORKING_ROOT }} --env X_VCPKG_ASSET_SOURCES=${{ variables.X_VCPKG_ASSET_SOURCES }} "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "vcpkg-android" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
     displayName: 'docker run'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for x64-android'
