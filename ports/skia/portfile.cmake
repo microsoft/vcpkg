@@ -103,7 +103,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
     message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
 endif()
 
-set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+set(OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
 vcpkg_list(SET SKIA_TARGETS ":skia")
