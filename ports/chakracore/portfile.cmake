@@ -126,6 +126,11 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-chakracore-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
+)
+
+file(INSTALL
     "${SOURCE_PATH}/LICENSE.txt"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/chakracore"
     RENAME copyright

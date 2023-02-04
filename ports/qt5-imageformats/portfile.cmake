@@ -28,27 +28,13 @@ if(FREEGLUT_NEEDED)
     find_library(FREEGLUT_DEBUG NAMES freeglutd freeglut glutd glut PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 endif()
 
-find_library(WEBP_RELEASE NAMES webp PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBP_DEBUG NAMES webp PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(WEBPDEMUX_RELEASE NAMES webpdemux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPDEMUX_DEBUG NAMES webpdemux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(WEBPMUX_RELEASE NAMES webpmux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPMUX_DEBUG NAMES webpmux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(WEBPDECODER_RELEASE NAMES webpdecoder PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-find_library(WEBPDECODER_DEBUG NAMES webpdecoder PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-# Depends on opengl in default build but might depend on giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), sdl1 (windows) 
-# which would require extra libraries to be linked e.g. giflib freeglut sdl1 other ones are already linked
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND WEBP_RELEASE " -pthread")
-    string(APPEND WEBP_DEBUG " -pthread")
-endif()
+x_vcpkg_pkgconfig_get_modules(PREFIX webp MODULES libwebp libwebpdemux libwebpmux libwebpdecoder LIBS)
 
 set(OPT_REL "TIFF_LIBS=${tiff_LIBS_RELEASE}"
-            "WEBP_LIBS=${WEBPDECODER_RELEASE} ${WEBPDEMUX_RELEASE} ${WEBPMUX_RELEASE} ${WEBP_RELEASE}" 
+            "WEBP_LIBS=${webp_LIBS_RELEASE}"
             "JASPER_LIBS=${JASPER_RELEASE} ${JPEG_RELEASE} ${ZLIB_RELEASE}") # This will still fail if LIBWEBP is installed with all available features due to the missing additional dependencies
 set(OPT_DBG "TIFF_LIBS=${tiff_LIBS_DEBUG}"
-            "WEBP_LIBS=${WEBPDECODER_DEBUG} ${WEBPDEMUX_DEBUG} ${WEBPMUX_DEBUG} ${WEBP_DEBUG}"
+            "WEBP_LIBS=${webp_LIBS_DEBUG}"
             "JASPER_LIBS=${JASPER_DEBUG}  ${JPEG_DEBUG} ${ZLIB_DEBUG}")
 
 if(FREEGLUT_NEEDED)

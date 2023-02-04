@@ -2,23 +2,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mandreyel/mio
-    REF cafa31360fee8866be89b4c602d8b9a7a18dbf5e
-    SHA512 21a5e6c6b90b9ac39bfe7fef59b6dc9c6dc3516b850de5897df63672e81e22abea7bdd7e363e8206dcb72697af797af2501b1c14480bbb8a9284f28c70ca9d67
+    REF 3f86a95c0784d73ce6815237ec33ed25f233b643
+    SHA512 18bbc41d5c3b29ecafe19cef29687380d8f4f27279af08edb0d5e65ee1d71162f3cf75d8efaa324cd11301f3f49fadaec3e4c1514607d5065ddd7a65bf32ee2a
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dmio.tests=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/mio)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/mio)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/mio RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
