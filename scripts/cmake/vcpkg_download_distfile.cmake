@@ -46,7 +46,9 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
         "    \n"
         "    3. Your proxy's remote server is out of service.\n"
         "    \n"
-        "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
+        "    If you've tried directly download the link, and believe this is not a temporary\n"
+        "    download server failure, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
+        "    to report this upstream download server failure.\n"
         "    \n")
 endfunction()
 
