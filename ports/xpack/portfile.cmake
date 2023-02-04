@@ -8,10 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
-# Copy the single reusable library header
-# file(COPY "${SOURCE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(GLOB header_files 
     "${SOURCE_PATH}/*.h"
     "${SOURCE_PATH}/*.hpp") 
