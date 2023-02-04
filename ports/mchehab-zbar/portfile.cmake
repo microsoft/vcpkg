@@ -46,6 +46,7 @@ endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    ADD_BIN_TO_PATH # checking for working iconv
     OPTIONS
         ${options}
         --without-dbus
