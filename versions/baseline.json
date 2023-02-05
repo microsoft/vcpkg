@@ -4332,6 +4332,10 @@
       "baseline": "1.2.3",
       "port-version": 1
     },
+    "libsmacker": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 1
