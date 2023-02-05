@@ -36,7 +36,12 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
         include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
+        cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+        set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
+
         link_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Lib/amd64")
+        cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Lib/amd64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+        set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
         string(APPEND _vcpkg_core_libs " xgameruntime.lib")
 
@@ -51,7 +56,12 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_SCARLETT")
 
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+            set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
+
             link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+            set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
             set(_vcpkg_default_lib xgameplatform.lib)
@@ -59,7 +69,12 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_XBOXONE")
 
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+            set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
+
             link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+            set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
             set(_vcpkg_default_lib xgameplatform.lib)
@@ -67,6 +82,9 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
         unset(_vcpkg_gxdk)
     endif()
+
+    unset(_vcpkg_inc)
+    unset(_vcpkg_lib)
 
     set(CMAKE_C_STANDARD_LIBRARIES_INIT "${_vcpkg_core_libs}" CACHE STRING "" FORCE)
     set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "${_vcpkg_core_libs}" CACHE STRING "" FORCE)
@@ -84,15 +102,11 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
-        set(VCPKG_TARGET_IS_XBOX ON CACHE BOOL "" FORCE)
-        set(VCPKG_TARGET_IS_XBOX_SCARLETT ON CACHE BOOL "" FORCE)
+    set(VCPKG_TARGET_IS_XBOX ON CACHE BOOL "" FORCE)
 
+    if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX2")
     elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
-        set(VCPKG_TARGET_IS_XBOX ON CACHE BOOL "" FORCE)
-        set(VCPKG_TARGET_IS_XBOX_XBOXONE ON CACHE BOOL "" FORCE)
-
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX")
     endif()
 
