@@ -151,6 +151,10 @@ function(boost_modular_build)
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd"
     )
 
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+        
+    endif()
+
     file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     foreach(LIB IN LISTS INSTALLED_LIBS)
         get_filename_component(OLD_FILENAME ${LIB} NAME)
