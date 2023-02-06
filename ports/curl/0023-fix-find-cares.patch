@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6e1071..62aed82 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,8 +169,8 @@ set(CURL_LIBS "")
+ 
+ if(ENABLE_ARES)
+   set(USE_ARES 1)
+-  find_package(CARES REQUIRED)
+-  list(APPEND CURL_LIBS ${CARES_LIBRARY})
++  find_package(c-ares CONFIG REQUIRED)
++  list(APPEND CURL_LIBS c-ares::cares)
+ endif()
+ 
+ include(CurlSymbolHiding)

@@ -1,6 +1,7 @@
 {
   "name": "iceoryx",
   "version": "2.0.2",
+  "port-version": 1,
   "description": "True zero-copy inter-process-communication",
   "homepage": "https://iceoryx.io",
   "license": "Apache-2.0",
@@ -25,7 +26,7 @@
   ],
   "features": {
     "many-to-many": {
-      "description": "Using the n:n pattern for communication"
+      "description": "Using the m:n pattern for communication"
     },
     "toml-config": {
       "description": "TOML support for RouDi with dynamic configuration",
