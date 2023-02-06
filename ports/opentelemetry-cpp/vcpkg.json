@@ -41,6 +41,13 @@
         "protobuf"
       ]
     },
+    "otlp-http": {
+      "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
+      "dependencies": [
+        "curl",
+        "protobuf"
+      ]
+    },
     "prometheus": {
       "description": "Whether to include the Prometheus Client in the SDK",
       "dependencies": [
