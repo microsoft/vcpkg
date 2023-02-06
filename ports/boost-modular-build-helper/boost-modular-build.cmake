@@ -67,6 +67,10 @@ function(boost_modular_build)
             set(BOOST_LIB_DEBUG_SUFFIX .so)
         endif()
     endif()
+    
+    message(STATUS "\n\n[!!!] BOOST_LIB_PREFIX=${BOOST_LIB_PREFIX}")
+    message(STATUS "BOOST_LIB_RELEASE_SUFFIX=${BOOST_LIB_RELEASE_SUFFIX}")
+    message(STATUS "BOOST_LIB_DEBUG_SUFFIX=${BOOST_LIB_DEBUG_SUFFIX}")
 
     set(_jamfile)
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
