@@ -10,9 +10,9 @@
     },
     "ableton": {
       "baseline": "3.0.6",
-      "port-version": 1
+      "port-version": 2
     },
-    "abletonlink": {
+    "ableton-link": {
       "baseline": "3.0.6",
       "port-version": 0
     },
@@ -118,7 +118,7 @@
     },
     "antlr4": {
       "baseline": "4.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "any-lite": {
       "baseline": "0.4.0",
@@ -155,6 +155,10 @@
     "arcus": {
       "baseline": "4.10.0",
       "port-version": 2
+    },
+    "arg-router": {
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "argagg": {
       "baseline": "0.4.6",
@@ -361,15 +365,15 @@
       "port-version": 0
     },
     "azure-c-shared-utility": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.7.2",
-      "port-version": 2
+      "baseline": "1.8.0",
+      "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
-      "baseline": "1.0.0-beta.3",
+      "baseline": "1.0.0-beta.4",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -377,8 +381,8 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2022-09-15",
-      "port-version": 1
+      "baseline": "2023-01-18",
+      "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
@@ -386,7 +390,7 @@
     },
     "azure-macro-utils-c": {
       "baseline": "2022-01-21",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.0.0",
@@ -429,15 +433,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2022-09-15",
+      "baseline": "2023-01-18",
       "port-version": 0
     },
     "b64": {
@@ -558,15 +562,15 @@
     },
     "blend2d": {
       "baseline": "2022-12-31",
-      "port-version": 0
+      "port-version": 1
     },
     "blitz": {
       "baseline": "2020-03-25",
       "port-version": 5
     },
     "blosc": {
-      "baseline": "1.18.1",
-      "port-version": 4
+      "baseline": "1.21.3",
+      "port-version": 0
     },
     "boinc": {
       "baseline": "7.22.0",
@@ -1378,7 +1382,7 @@
     },
     "ceres": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1798,7 +1802,7 @@
     },
     "cryptopp": {
       "baseline": "8.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "cserialport": {
       "baseline": "4.2.1",
@@ -1870,6 +1874,10 @@
     },
     "cxxopts": {
       "baseline": "3.0.0",
+      "port-version": 0
+    },
+    "cyclonedds": {
+      "baseline": "0.10.2",
       "port-version": 0
     },
     "czmq": {
@@ -2773,7 +2781,7 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "2.6.0",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2954,7 +2962,7 @@
     },
     "hdf5": {
       "baseline": "1.12.2",
-      "port-version": 5
+      "port-version": 6
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -3034,7 +3042,7 @@
     },
     "iceoryx": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "icu": {
       "baseline": "72.1",
@@ -4458,7 +4466,7 @@
     },
     "libusb": {
       "baseline": "1.0.26",
-      "port-version": 2
+      "port-version": 3
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
@@ -4997,8 +5005,8 @@
       "port-version": 3
     },
     "minifb": {
-      "baseline": "2019-08-20",
-      "port-version": 2
+      "baseline": "2023-02-03",
+      "port-version": 0
     },
     "minimp3": {
       "baseline": "2021-11-30",
@@ -5342,7 +5350,7 @@
     },
     "nifticlib": {
       "baseline": "2020-04-30",
-      "port-version": 2
+      "port-version": 3
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
@@ -5562,7 +5570,7 @@
     },
     "openal-soft": {
       "baseline": "1.22.2",
-      "port-version": 4
+      "port-version": 5
     },
     "openblas": {
       "baseline": "0.3.21",
@@ -5714,7 +5722,7 @@
     },
     "openvdb": {
       "baseline": "10.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -5766,7 +5774,7 @@
     },
     "osgearth": {
       "baseline": "3.3",
-      "port-version": 4
+      "port-version": 5
     },
     "osi": {
       "baseline": "0.108.6",
@@ -5908,6 +5916,10 @@
       "baseline": "2020-12-21",
       "port-version": 0
     },
+    "physac": {
+      "baseline": "1.1",
+      "port-version": 0
+    },
     "physfs": {
       "baseline": "3.2.0",
       "port-version": 1
@@ -5953,7 +5965,7 @@
       "port-version": 0
     },
     "platform-folders": {
-      "baseline": "4.1.0",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "plf-colony": {
@@ -6637,7 +6649,7 @@
       "port-version": 1
     },
     "rapidcheck": {
-      "baseline": "2021-12-20",
+      "baseline": "2023-01-13",
       "port-version": 0
     },
     "rapidcsv": {
@@ -7569,8 +7581,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.2.0",
-      "port-version": 3
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "tfhe": {
       "baseline": "1.0.1",
@@ -7766,7 +7778,7 @@
     },
     "tracy": {
       "baseline": "0.9.0",
-      "port-version": 1
+      "port-version": 2
     },
     "transwarp": {
       "baseline": "2.2.2",
@@ -7846,7 +7858,7 @@
     },
     "umock-c": {
       "baseline": "2022-01-21",
-      "port-version": 0
+      "port-version": 1
     },
     "unicorn": {
       "baseline": "1.0.3",
@@ -7945,7 +7957,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.34.0",
+      "baseline": "20.36.0",
       "port-version": 0
     },
     "v-hacd": {
