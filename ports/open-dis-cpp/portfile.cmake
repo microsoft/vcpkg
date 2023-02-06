@@ -13,6 +13,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME OpenDIS CONFIG_PATH lib/cmake/OpenDIS)
 
 # Handle copyright
