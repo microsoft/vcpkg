@@ -1,0 +1,160 @@
+{
+  "name": "cyclonedds-cxx",
+  "version": "0.10.2",
+  "description": "C++ binding for Eclipse Cyclone DDS",
+  "homepage": "https://cyclonedds.io",
+  "license": "EPL-2.0",
+  "dependencies": [
+    {
+      "name": "cyclonedds",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "deadline-missed",
+    "ipv6",
+    "lifespan",
+    "security",
+    "source-specific-multicast",
+    "topic-discovery",
+    "type-discovery"
+  ],
+  "features": {
+    "deadline-missed": {
+      "description": "Enable Deadline Missed QoS suppor",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "deadline-missed"
+          ]
+        }
+      ]
+    },
+    "idllib": {
+      "description": "Build IDL preprocessor lib",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "idlc"
+          ]
+        }
+      ]
+    },
+    "ipv6": {
+      "description": "Enable ipv6 support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "ipv6"
+          ]
+        }
+      ]
+    },
+    "lifespan": {
+      "description": "Enable Lifespan QoS support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "lifespan"
+          ]
+        }
+      ]
+    },
+    "security": {
+      "description": "Enable OMG DDS Security support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "security"
+          ]
+        }
+      ]
+    },
+    "shm": {
+      "description": "Enable shared memory support",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "shm"
+          ]
+        }
+      ]
+    },
+    "source-specific-multicast": {
+      "description": "Enable support for source-specific multicast",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "security"
+          ]
+        }
+      ]
+    },
+    "ssl": {
+      "description": "Enable OpenSSL support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
+    "topic-discovery": {
+      "description": "Enable Topic Discovery support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "topic-discovery"
+          ]
+        },
+        {
+          "name": "cyclonedds-cxx",
+          "default-features": false,
+          "features": [
+            "type-discovery"
+          ]
+        }
+      ]
+    },
+    "type-discovery": {
+      "description": "Enable Type Discovery support",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "type-discovery"
+          ]
+        }
+      ]
+    }
+  }
+}
