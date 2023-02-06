@@ -1,21 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/libideviceactivation
-    REF fbe0476cfeddc2fc317ceb900eec12302c1d4c11 # v1.3.17
-    SHA512 18fdf1b42744da33e0f0f037e83a72b76cc0b63a0b712e78d9736adcde113582327f3712bc2bfa7b6fdb692465700a9106286f383fd7d11f9351ca7939b20e24
-    HEAD_REF msvc-master
+    REPO libimobiledevice/libideviceactivation
+    REF be6ffe8788cbb633bff0526f4e7a69625f0cdad6 # v1.1.1-20220824
+    SHA512 52331d7772526efec58d8b85924bcda1b8ba12977dc74685e2b6b5ccd87e5ca2a7021e74256d3ffc07ce646dbbf73a8bd1f3843ec1c98feafef3d1bfbdc824ab
+    HEAD_REF master
 )
 
-configure_file("${CURRENT_PORT_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES ideviceactivation AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,0 +1,4 @@
+libideviceactivation provides usage:
+
+    find_package(libideviceactivation CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libideviceactivation::ideviceactivation)
