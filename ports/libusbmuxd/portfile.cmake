@@ -1,23 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/libusbmuxd
-    REF ac86b23f57879b8b702f3712ba66729008d059a3 # v1.2.219
-    SHA512 ced85088bc6ebb416ccb635d6b4e79662fb34f427d869b64b61847e5fde7b4ae094cebb1f7916d9387c314aeb84106a618fbd7497dc4b36151b236dcb55bd0e4
-    HEAD_REF msvc-master
-    PATCHES fix-win-build.patch
+    REPO libimobiledevice/libusbmuxd
+    REF 6426362e5cbad7284368b7fe70363f6b3251f94c # v2.0.2-20220905
+    SHA512 cd37196f5de9411eee02b3407eabb13a4139c214c825a1044d20b34e527a4d5c64db5a85b832f401b7bd16e772115c7044d375f1a6ddfb6209b539e21f06aae6
+    HEAD_REF master
 )
 
-configure_file(${CURRENT_PORT_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES iproxy inetcat AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
