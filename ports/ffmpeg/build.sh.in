@@ -2,7 +2,7 @@
 
 set -e
 
-export PATH="/usr/bin:$PATH"
+export PATH="$PATH:/usr/bin"
 
 command -v cygpath >/dev/null && have_cygpath=1
 
@@ -91,7 +91,7 @@ OSX_ARCH_COUNT=0@OSX_ARCH_COUNT@
 build_ffmpeg() {
     echo "=== CONFIGURING ==="
 
-    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" "--cc=$CC" @CONFIGURE_OPTIONS@ $@
+    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ $@
 
     echo "=== BUILDING ==="
 
