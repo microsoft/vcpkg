@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "windows | linux | xbox",
   "dependencies": [
     "directx-headers",
     "directxmath",

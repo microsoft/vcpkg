@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "windows | linux | xbox",
   "dependencies": [
     "directx-headers",
     "directxmath",

@@ -4,6 +4,7 @@
   "description": "Vulkan header files and API registry",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Headers",
   "license": "Apache-2.0",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

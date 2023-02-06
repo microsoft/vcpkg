@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows | xbox",
   "dependencies": [
     {
       "name": "directx-dxc",

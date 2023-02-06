@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "windows | linux | xbox",
   "dependencies": [
     "directx-headers",
     "directxmath",
