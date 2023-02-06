@@ -19,27 +19,10 @@
     }
   ],
   "default-features": [
-    "deadline-missed",
-    "ipv6",
-    "lifespan",
-    "security",
-    "source-specific-multicast",
     "topic-discovery",
     "type-discovery"
   ],
   "features": {
-    "deadline-missed": {
-      "description": "Enable Deadline Missed QoS suppor",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "deadline-missed"
-          ]
-        }
-      ]
-    },
     "idllib": {
       "description": "Build IDL preprocessor lib",
       "dependencies": [
@@ -48,42 +31,6 @@
           "default-features": false,
           "features": [
             "idlc"
-          ]
-        }
-      ]
-    },
-    "ipv6": {
-      "description": "Enable ipv6 support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "ipv6"
-          ]
-        }
-      ]
-    },
-    "lifespan": {
-      "description": "Enable Lifespan QoS support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "lifespan"
-          ]
-        }
-      ]
-    },
-    "security": {
-      "description": "Enable OMG DDS Security support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "security"
           ]
         }
       ]
@@ -97,30 +44,6 @@
           "default-features": false,
           "features": [
             "shm"
-          ]
-        }
-      ]
-    },
-    "source-specific-multicast": {
-      "description": "Enable support for source-specific multicast",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "security"
-          ]
-        }
-      ]
-    },
-    "ssl": {
-      "description": "Enable OpenSSL support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "ssl"
           ]
         }
       ]
