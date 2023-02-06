@@ -1,0 +1,58 @@
+diff --git a/include/plist/Date.h b/include/plist/Date.h
+index 3cfb7d1..a4fa3c0 100644
+--- a/include/plist/Date.h
++++ b/include/plist/Date.h
+@@ -24,7 +24,12 @@
+ 
+ #include <plist/Node.h>
+ #include <ctime>
++
++#ifdef _MSC_VER
++#include <winsock2.h>
++#else
+ #include <sys/time.h>
++#endif
+ 
+ namespace PList
+ {
+diff --git a/src/plist.c b/src/plist.c
+index 0fcd926..bf4234e 100644
+--- a/src/plist.c
++++ b/src/plist.c
+@@ -104,6 +104,8 @@ static pthread_once_t deinit_once = PTHREAD_ONCE_INIT;
+   #endif
+ #endif
+ 
++#ifdef LIBPLIST_EXPORTS
++
+ #ifdef HAVE_ATTRIBUTE_CONSTRUCTOR
+ static void __attribute__((constructor)) libplist_initialize(void)
+ {
+@@ -133,6 +135,8 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+ #warning No compiler support for constructor/destructor attributes, some features might not be available.
+ #endif
+ 
++#endif
++
+ #ifndef HAVE_MEMMEM
+ // see https://sourceware.org/legacy-ml/libc-alpha/2007-12/msg00000.html
+ 
+diff --git a/src/plist.h b/src/plist.h
+index 95d2a3e..044a9c8 100644
+--- a/src/plist.h
++++ b/src/plist.h
+@@ -30,11 +30,13 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/time.h>
+ 
+ #ifdef _MSC_VER
+ #pragma warning(disable:4996)
+ #pragma warning(disable:4244)
++#include <winsock2.h>
++#else
++#include <sys/time.h>
+ #endif
+ 
+ #ifdef WIN32

@@ -1,0 +1,4 @@
+libplist provides CMake targets:
+
+    find_package(libplist CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libplist::plist unofficial::libplist::plist++)
