@@ -67,8 +67,17 @@ vcpkg_download_distfile(archive_path
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 
 set(interface "lp64") # or ilp64; ilp == 64 bit int api
-set(threading "sequential") #sequential or intel_thread or tbb_thread or pgi_thread
-string(SUBSTRING "${threading}" "0" "3" short_thread) # for pc file
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(threading "intel_thread") #sequential or intel_thread or tbb_thread or pgi_thread
+else()
+    set(threading "sequential")
+endif()
+if(threading STREQUAL "intel_thread")
+    set(short_thread "iomp")
+else()
+    string(SUBSTRING "${threading}" "0" "3" short_thread)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_find_acquire_program(7Z)
   vcpkg_execute_in_download_mode(
@@ -81,7 +90,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "intel.oneapi.win.mkl.devel,v=2023.0.0-25930/oneapi-mkl-devel-for-installer_p_2023.0.0.25930.msi" # has the required libs. 
       "intel.oneapi.win.mkl.runtime,v=2023.0.0-25930/oneapi-mkl-for-installer_p_2023.0.0.25930.msi" # has the required DLLs
       #"intel.oneapi.win.compilers-common-runtime,v=2023.0.0-25922" # SVML
-      #"intel.oneapi.win.openmp,v=2023.0.0-25922" # openMP
+      "intel.oneapi.win.openmp,v=2023.0.0-25922/oneapi-comp-openmp-for-installer_p_2023.0.0.25922.msi" # OpenMP
       #"intel.oneapi.win.tbb.runtime,v=2021.8.0-25874" #TBB
       )
 
@@ -130,6 +139,24 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endforeach()
 
+  if(threading STREQUAL "intel_thread")
+    file(COPY "${basepath2}windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY "${basepath2}windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
+    configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/windows/compiler/lib/intel64_win/" "/lib/intel64/")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY "${basepath2}windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY "${basepath2}windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
+        configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" @ONLY)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "/windows/compiler/lib/intel64_win/" "/lib/intel64/")
+    endif()
+    configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
+    if(NOT VCPKG_BUILD_TYPE)
+      configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
+    endif()
+  endif()
 
   configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
   if(NOT VCPKG_BUILD_TYPE)
