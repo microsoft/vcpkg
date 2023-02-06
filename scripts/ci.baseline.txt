@@ -168,9 +168,7 @@ cppcoro:x64-uwp=fail
 # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
-crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
-crashpad:x86-windows=fail
 cuda:x64-osx=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
@@ -376,8 +374,6 @@ leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
-libcopp:arm64-windows=fail
-libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
@@ -560,8 +556,6 @@ mfl:x64-linux=skip
 mfl:x64-osx=skip
 mfl:arm64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
-minifb:arm-uwp=fail
-minifb:x64-uwp=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
