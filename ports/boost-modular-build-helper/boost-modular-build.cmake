@@ -152,10 +152,27 @@ function(boost_modular_build)
     )
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+        # install .bc files
         file(GLOB WASM_LIBS_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/${BOOST_LIB_PREFIX}*${BOOST_LIB_RELEASE_SUFFIX}")
         file(GLOB WASM_LIBS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/${BOOST_LIB_PREFIX}*${BOOST_LIB_DEBUG_SUFFIX}")
         file(COPY ${WASM_LIBS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         file(COPY ${WASM_LIBS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+        # rename .bc to .a
+        file(GLOB WASM_LIBS_RELEASE "${CURRENT_PACKAGES_DIR}/lib/*.bc")
+        file(GLOB WASM_LIBS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/*.bc")
+        foreach(LIB IN LISTS WASM_LIBS_RELEASE)
+            get_filename_component(OLD_FILENAME ${LIB} NAME)
+            get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+            string(REPLACE ".bc" ".a" NEW_FILENAME ${OLD_FILENAME})
+            file(RENAME ${LIB} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        endforeach()
+        foreach(LIB IN LISTS WASM_LIBS_DEBUG)
+            get_filename_component(OLD_FILENAME ${LIB} NAME)
+            get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+            string(REPLACE ".bc" ".a" NEW_FILENAME ${OLD_FILENAME})
+            file(RENAME ${LIB} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        endforeach()
     endif()
 
     file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
