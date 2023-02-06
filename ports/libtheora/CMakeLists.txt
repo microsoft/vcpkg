@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(theora LANGUAGES C)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-FIND_PACKAGE(Ogg REQUIRED)
+find_package(Ogg CONFIG REQUIRED)
 
 file(GLOB HEADERS
   "include/theora/codec.h"

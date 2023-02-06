@@ -1,0 +1,7 @@
+eve provides CMake targets:
+
+    find_package(eve CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE eve::eve)
+
+Using eve requires a C++20 compliant compiler.
+GCC-11 and clang-12 are known to work.

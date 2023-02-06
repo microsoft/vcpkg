@@ -3,8 +3,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF release-${VERSION}
-    SHA512 34088a7ceea7823941fc3d16d6c5add85500d0cc30519f0fadb739939a6a87f2509f2305564a4e35a3a533db41fdb8fab95cb51143240f5fb888535e36130b82
+    SHA512 86620a8f24e054a47e53435ed620bde2c7fb8ffd7db99dcd8a91bac70ea733163b95ae3b77b04d1ef5f098730dfd385cf4bcf85f45d5234cddd7c9581b513af4
     HEAD_REF main
+    PATCHES
+        deps.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -14,8 +16,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         vulkan   SDL_VULKAN
-        x11      SDL_X11_SHARED
+        x11      SDL_X11
         wayland  SDL_WAYLAND
+        samplerate SDL_LIBSAMPLERATE
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -37,10 +40,11 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
-        -DSDL_HIDAPI_JOYSTICK=ON
         -DSDL_TEST=OFF
         -DSDL_IBUS=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
@@ -55,6 +59,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config"
     "${CURRENT_PACKAGES_DIR}/SDL2.framework"
     "${CURRENT_PACKAGES_DIR}/debug/SDL2.framework"
+    "${CURRENT_PACKAGES_DIR}/share/licenses"
+    "${CURRENT_PACKAGES_DIR}/share/aclocal"
 )
 
 file(GLOB BINS "${CURRENT_PACKAGES_DIR}/debug/bin/*" "${CURRENT_PACKAGES_DIR}/bin/*")
