@@ -2,6 +2,12 @@ set(DIRECTXTEX_TAG jan2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_TARGET_IS_XBOX)
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
+elseif(VCPKG_TARGET_IS_MINGW)
+    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
@@ -30,9 +36,7 @@ endif()
 set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON)
 
 
-if(VCPKG_TARGET_IS_XBOX)
-  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF -DBUILD_DX11=OFF)
-elseif(VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_XBOX)
   list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
   list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)

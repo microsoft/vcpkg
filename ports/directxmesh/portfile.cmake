@@ -2,6 +2,10 @@ set(DIRECTXMESH_TAG dec2022)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_TARGET_IS_XBOX)
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
@@ -53,7 +57,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
 
   file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 
-elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP) AND (NOT VCPKG_TARGET_IS_XBOX))
 
   vcpkg_copy_tools(
         TOOL_NAMES meshconvert

@@ -21,8 +21,10 @@ vcpkg_check_features(
 set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
 
 if(VCPKG_TARGET_IS_XBOX AND (VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES ".*=scarlett.*"))
+  message(NOTICE "Use of ${PORT} for Xbox Series X|S requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
   list(APPEND EXTRA_OPTIONS -DBUILD_SCARLETT_SHADERS=ON)
 elseif(VCPKG_TARGET_IS_XBOX AND (VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES ".*=xboxone.*"))
+  message(NOTICE "Use of ${PORT} for Xbox One requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
   list(APPEND EXTRA_OPTIONS -DBUILD_XBOXONE_SHADERS=ON -DBUILD_DXIL_SHADERS=ON)
 else()
   set(DXCPATH ${CURRENT_HOST_INSTALLED_DIR}/tools/directx-dxc)

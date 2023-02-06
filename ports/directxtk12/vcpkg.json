@@ -12,7 +12,10 @@
       "name": "directx-dxc",
       "host": true
     },
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "windows & !xbox"
+    },
     "directxmath",
     {
       "name": "vcpkg-cmake",

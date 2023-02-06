@@ -8,7 +8,10 @@
   "license": "MIT",
   "supports": "windows | linux | xbox",
   "dependencies": [
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "windows & !xbox"
+    },
     "directxmath",
     {
       "name": "vcpkg-cmake",
