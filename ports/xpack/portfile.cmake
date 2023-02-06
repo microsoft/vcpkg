@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xyz347/xpack
-    REF fc9b7808b1f0de81d8c1fa307a04ebe122b30650
-    SHA512 d989da44e5e2f8e32202e5f5d6f5292f88b386cb6cf9d898e74267977f1254d08672773a62378c2cf4c2d72c724ad1e87d019a170d14acbd675c0ca1edbe5e77
+    REF 137467c05badd88b8569d161f27afb498ea4ff9a
+    SHA512 349ff9fb9ca74bd1401d8f0f121b263e40c021fde57a500d31eb14eeba8f3d3e8d7f6f629fc696d3052095d311700aa42b7b3a0a19c61787246e6680ea27928e
     HEAD_REF master
 )
 
@@ -12,9 +12,8 @@ file(GLOB header_files
     "${SOURCE_PATH}/*.h"
     "${SOURCE_PATH}/*.hpp") 
 file(COPY ${header_files}
-    "${SOURCE_PATH}/thirdparty"
 	"${SOURCE_PATH}/xpack.pri"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
