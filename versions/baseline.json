@@ -5564,6 +5564,10 @@
       "baseline": "2021-11-23",
       "port-version": 0
     },
+    "open-dis-cpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "open62541": {
       "baseline": "1.2.3",
       "port-version": 1
