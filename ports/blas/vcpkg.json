@@ -1,22 +1,12 @@
 {
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "blas",
-  "version-string": "default",
+  "version-string": "mkl",
   "description": "Metapackage for packages which provide BLAS",
   "license": null,
   "dependencies": [
     {
-      "$comment": "Will use internal generic BLAS of lapack-reference",
-      "name": "lapack-reference",
-      "platform": "static & windows"
-    },
-    {
-      "name": "openblas",
-      "platform": "!(osx | (static & windows))"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
+      "name": "intel-mkl"
     }
   ]
 }
