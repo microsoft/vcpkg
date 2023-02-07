@@ -25,6 +25,9 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSDL2MIXER_VENDORED=OFF
         -DSDL2MIXER_SAMPLES=OFF
+        -DSDL2MIXER_DEPS_SHARED=OFF
+        -DSDL2MIXER_OPUS_SHARED=OFF
+        -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF
 )
 
 vcpkg_cmake_install()
