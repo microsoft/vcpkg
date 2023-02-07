@@ -183,7 +183,7 @@ if(sha)
     set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
     file(MAKE_DIRECTORY "${output_path}")
     vcpkg_execute_in_download_mode(
-                            COMMAND "${archive_path}" "--extract-only" "-a" "-s"
+                            COMMAND "${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
                             WORKING_DIRECTORY "${output_path}"
                             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-out.log"
                             ERROR_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-err.log"
@@ -200,9 +200,9 @@ if(sha)
     message(STATUS "Folders: ${folders}")
     message(STATUS "Files: ${files}")
     foreach(pack IN LISTS packages)
-        set(archive_path "${CURRENT_PACKAGES_DIR}/intel-extract/packages/${pack}")
+        set(archive_path "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages/${pack}")
             vcpkg_execute_in_download_mode(
-                            COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages/${pack}/cupPayload.cup"
+                            COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${archive_path}/cupPayload.cup"
                             WORKING_DIRECTORY "${output_path}"
                             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/mkl-extract-${TARGET_TRIPLET}-out.log"
                             ERROR_FILE "${CURRENT_BUILDTREES_DIR}/mkl-extract-${TARGET_TRIPLET}-err.log"
