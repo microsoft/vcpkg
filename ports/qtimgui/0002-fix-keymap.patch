@@ -1,0 +1,13 @@
+diff --git a/src/ImGuiRenderer.cpp b/src/ImGuiRenderer.cpp
+index 92a4fb3..ad62349 100644
+--- a/src/ImGuiRenderer.cpp
++++ b/src/ImGuiRenderer.cpp
+@@ -45,7 +45,7 @@ const QHash<int, ImGuiKey> keyMap = {
+     { Qt::Key_X, ImGuiKey_X },
+     { Qt::Key_Y, ImGuiKey_Y },
+     { Qt::Key_Z, ImGuiKey_Z },
+-    { Qt::MiddleButton, ImGuiMouseButton_Middle }
++    { Qt::MiddleButton, ImGuiKey_MouseMiddle }
+ };
+ 
+ #ifndef QT_NO_CURSOR

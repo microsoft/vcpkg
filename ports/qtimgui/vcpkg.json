@@ -1,0 +1,19 @@
+{
+  "name": "qtimgui",
+  "version-date": "2022-12-10",
+  "description": "Qt (QOpenGLWidget / QOpenGLWindow) backend for ImGui",
+  "homepage": "https://github.com/seanchas116/qtimgui",
+  "license": "MIT",
+  "dependencies": [
+    "imgui",
+    "qt5-base",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
