@@ -29,6 +29,22 @@ vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+# Create the pkg-config files
+set(prefix "")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+set(PACKAGE_VERSION "${VERSION}")
+set(lrintf_lib "")
+configure_file("${SOURCE_PATH}/opusfile.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusfile.pc" @ONLY)
+
+if(opusurl IN_LIST FEATURES)
+    set(openssl "openssl")
+    configure_file("${SOURCE_PATH}/opusurl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusurl.pc" @ONLY)
+endif()
+
+vcpkg_fixup_pkgconfig()
+
 # make includes work with MSBuild integration
 file(READ ${CURRENT_PACKAGES_DIR}/include/opus/opusfile.h OPUSFILE_H)
     string(REPLACE "# include <opus_multistream.h>" "# include \"opus_multistream.h\"" OPUSFILE_H "${OPUSFILE_H}")
