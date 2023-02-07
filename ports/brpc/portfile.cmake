@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/incubator-brpc
-    REF 29491107cbf405a494aaf80ee32344ba34e1d7e4 #1.2.0
-    SHA512 bd4c67967796592030903041ddb9205e24c9f196e63ebc153e08fbce723d93d27cd4f30f3c2cf904a93cda66ffa9db7d465d6e5fdac27a045ae84afad3dd1dc3
+    REF "${VERSION}"
+    SHA512 c9779e2bf4a69228ba37960101844f2d33c1a442204d5630e7e191d11b496831a61f1d5da37813b135f24c491bd7d23eb18fa0de9423ac7e13bbf84d8fc48fb8
     HEAD_REF master
     PATCHES
         fix-build.patch
         fix-boost-ptr.patch
-        brpc-1783.diff #https://github.com/apache/incubator-brpc/pull/1783
 )
 
 vcpkg_cmake_configure(
