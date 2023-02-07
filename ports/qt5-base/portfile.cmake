@@ -65,6 +65,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/create_cmake.patch
                             patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
                             patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
+                            patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -173,8 +174,8 @@ find_library(ICUDATA_DEBUG NAMES icudatad libicudatad icudata libicudata icudtd 
 set(ICU_RELEASE "${ICUIN_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
 set(ICU_DEBUG "${ICUIN_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(ICU_RELEASE "${ICU_RELEASE} Advapi32.lib")
-    set(ICU_DEBUG "${ICU_DEBUG} Advapi32.lib" )
+    set(ICU_RELEASE "${ICU_RELEASE} -ladvapi32")
+    set(ICU_DEBUG "${ICU_DEBUG} -ladvapi32" )
 endif()
 
 find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -232,7 +233,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch
     endif()
-    set(ADDITIONAL_WINDOWS_LIBS "ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
+    set(ADDITIONAL_WINDOWS_LIBS "-lws2_32 -lsecur32 -ladvapi32 -lshell32 -lcrypt32 -luser32 -lgdi32")
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
