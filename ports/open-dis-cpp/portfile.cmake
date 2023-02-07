@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-dis/open-dis-cpp
     REF "v${VERSION}"
-    SHA512 0
+    SHA512 e6d38f55beabf85d0319be21d9cec07f818b833dfa14dcb649cacbc8ea86779c29ac2717579239378ace1ae62054864851ecb55402e82fe4d083ab483218260e
     HEAD_REF master
 )
 
