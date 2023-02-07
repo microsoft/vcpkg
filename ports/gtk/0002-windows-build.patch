@@ -5,7 +5,7 @@ diff -ru /gdk/win32/gdkinput-winpointer.c b/gdk/win32/gdkinput-winpointer.c
  #include "config.h"
 
  #include <gdk/gdk.h>
-+#include "gdk-private.h"
++#include "gdkprivate.h"
  #include "gdkwin32.h"
  #include "gdkprivate-win32.h"
  #include "gdkdevicemanager-win32.h"
