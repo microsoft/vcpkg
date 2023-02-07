@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SergiusTheBest/plog
-    REF 1.1.8
-    SHA512 09bf6e0cae7f20c1b42e68a174b4cd6a2fb8751db9758efb87449cbff48375708e43c147c72b7ed17fb9334acaf7802441f61578356284a8ed337fd886a45e79
+    REF 1.1.9
+    SHA512 d979fdf0011ef9bb94a2271da5d17058dbab5bc47438a13769d084fdebe5e169e7c05a043d69acceb752896df7cdae4433f32bfbcc81e055dffd9c701be88003
     HEAD_REF master
 )
 
@@ -17,4 +17,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Put the licence file where vcpkg expects it
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

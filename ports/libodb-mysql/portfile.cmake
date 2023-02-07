@@ -5,7 +5,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         adapter_mysql_8.0.patch
@@ -14,16 +14,16 @@ vcpkg_extract_source_archive_ex(
 file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
-  ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-  ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
-  DESTINATION ${SOURCE_PATH})
+  "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+  "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
+  DESTINATION "${SOURCE_PATH}")
 
 set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
 find_library(MYSQL_LIB NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}" NO_DEFAULT_PATH REQUIRED)
-find_library(MYSQL_LIB_DEBUG NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH REQUIRED)
+find_library(MYSQL_LIB_DEBUG NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -41,5 +41,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/odb TARGET_PATH share/odb)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

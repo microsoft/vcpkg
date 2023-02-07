@@ -1,0 +1,20 @@
+diff --git a/src/libutil/strutil.cpp b/src/libutil/strutil.cpp
+index 129a9b5..09baea8 100644
+--- a/src/libutil/strutil.cpp
++++ b/src/libutil/strutil.cpp
+@@ -914,8 +914,15 @@ std::string
+ Strutil::utf16_to_utf8(const std::u16string& str) noexcept
+ {
+     try {
++        // https://stackoverflow.com/a/35103224
++#if defined _MSC_VER && _MSC_VER >= 1900 && _MSC_VER < 1930
++        std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
++        auto p = reinterpret_cast<const int16_t *>(str.data());
++        return convert.to_bytes(p, p + str.size());
++#else
+         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
+         return conv.to_bytes(str);
++#endif
+     } catch (const std::exception&) {
+         return std::string();
+     }

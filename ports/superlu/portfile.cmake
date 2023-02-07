@@ -5,11 +5,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiaoyeli/superlu
-    REF a3d5233770f0caad4bc4578b46d3b26af99e9c19
-    SHA512 c07e64be51ddef7774a367e1309ef4e596e93571531ec58a0c7b9db60a3db8b3a4a8b1262d66fcd512ad467db5df59a3726db342b259e392a08f56f5dd67c6ef
+    REF v${VERSION}
+    SHA512 1461b52bc18a8b0345beb70fdd46e07df497a13be840bcc061158ea1d0e61c8745806d1ad21cb2723db80f5ed762c3741f9c0ded2b2013df46da0e8bb6b77b83
     HEAD_REF master
     PATCHES
-      fix-libm.patch
       remove-make.inc.patch
 )
 

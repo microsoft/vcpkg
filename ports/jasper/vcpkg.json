@@ -1,9 +1,8 @@
 {
   "name": "jasper",
-  "version": "2.0.33",
-  "port-version": 6,
+  "version": "4.0.0",
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
-  "homepage": "https://github.com/mdadams/jasper",
+  "homepage": "https://github.com/jasper-software/jasper",
   "license": null,
   "dependencies": [
     "libjpeg-turbo",

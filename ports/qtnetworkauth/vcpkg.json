@@ -1,6 +1,6 @@
 {
   "name": "qtnetworkauth",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "description": "Qt Network Authenticators; QtOAuth in particular",
   "homepage": "https://www.qt.io/",
   "license": null,

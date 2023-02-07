@@ -12,10 +12,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         avx AVX_SUPPORTED
 )
 
+set(ADDITIONAL_OPUS_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(STACK_PROTECTOR OFF)
     string(APPEND VCPKG_C_FLAGS "-D_FORTIFY_SOURCE=0")
     string(APPEND VCPKG_CXX_FLAGS "-D_FORTIFY_SOURCE=0")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_USE_NEON=OFF") # for version 1.3.1 (remove for future Opus release)
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_DISABLE_INTRINSICS=ON") # for HEAD (and future Opus release)
+    endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(STACK_PROTECTOR OFF)
 else()
@@ -31,6 +36,10 @@ vcpkg_cmake_configure(
         -DOPUS_INSTALL_CMAKE_CONFIG_MODULE=ON
         -DOPUS_BUILD_PROGRAMS=OFF
         -DOPUS_BUILD_TESTING=OFF
+        ${ADDITIONAL_OPUS_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        OPUS_USE_NEON
+        OPUS_DISABLE_INTRINSICS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

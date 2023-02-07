@@ -1,5 +1,5 @@
 diff --git a/cmake/SqliteOrmConfig.cmake.in b/cmake/SqliteOrmConfig.cmake.in
-index e0635d2..30403cd 100644
+index e0635d28a..30403cd41 100644
 --- a/cmake/SqliteOrmConfig.cmake.in
 +++ b/cmake/SqliteOrmConfig.cmake.in
 @@ -1,4 +1,4 @@
