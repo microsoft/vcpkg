@@ -184,7 +184,7 @@ if(sha)
     message(STATUS "${archive_path}")
     file(MAKE_DIRECTORY "${output_path}")
     vcpkg_execute_in_download_mode(
-                            COMMAND "./${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
+                            COMMAND ".${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
                             WORKING_DIRECTORY "${output_path}"
                             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-out.log"
                             ERROR_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-err.log"
