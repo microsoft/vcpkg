@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Forceflow/libmorton
-    REF v0.2.11
+    REF "v${VERSION}"
     SHA512 ff1b0ebca3d38e886b4320bab38360dd537c3f63bf02aedfe5b00a81e026e52aff1a929361f8e2c4de9a18272a9e2a24c0085d7beb1be0adf6434777aad02ae5
     HEAD_REF master
 )
