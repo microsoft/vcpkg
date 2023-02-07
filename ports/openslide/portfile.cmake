@@ -6,7 +6,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openslide/openslide
-    REF 4cd4b83c3ffff0382126d0618c85407f2c469b28 
+    REF "v${VERSION}" 
     SHA512 1b6bc4722fd6901d7c929ec332177d4892ea15700133c1a1339c6bdcace174064b5e063d3bcb2044e2ca56801c044f7b3d1c774c0b29f9005361a8336e297e4b
     HEAD_REF master
     PATCHES remove-w-flags.patch
@@ -54,4 +54,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
