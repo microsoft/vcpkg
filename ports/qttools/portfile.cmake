@@ -37,6 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "assistant" FEATURE_assistant
     "designer" FEATURE_designer
     "linguist" FEATURE_linguist
+    "qdbus" FEATURE_qdbus
     "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
     #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
@@ -90,7 +91,11 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
 
 if(VCPKG_TARGET_IS_OSX)
-    set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app qdbusviewer.app)
+    set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app)
+    if (FEATURE_qdbus)
+        message(STATUS "Built qdbusviewer")
+        list(APPEND OSX_APP_FOLDERS qdbusviewer.app)
+    endif()
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
         message(STATUS "Moving: ${_appfolder}")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")

@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "4.4.3",
+  "version": "5.1.2",
   "port-version": 2,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -34,17 +34,18 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "aom",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
-            "avresample",
             "bzip2",
             "freetype",
             "iconv",
             "lzma",
             "mp3lame",
             "openjpeg",
+            "openmpt",
             "opus",
             "snappy",
             "soxr",
@@ -151,25 +152,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tensorflow"
+            "amf"
           ],
-          "platform": "x64 & !static & !uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "aom"
-          ],
-          "platform": "!(windows & arm & !uwp)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "dav1d"
-          ],
-          "platform": "!(uwp | arm | x86 | osx)"
+          "platform": "!osx & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -183,9 +168,33 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp & !windows"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ],
+          "platform": "!(uwp | (windows & x86 & !static))"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "qsv"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm & windows))"
         },
         {
           "name": "ffmpeg",
@@ -487,6 +496,12 @@
       "description": "JPEG 2000 de/encoding via OpenJPEG",
       "dependencies": [
         "openjpeg"
+      ]
+    },
+    "openmpt": {
+      "description": "Decoding tracked files via libopenmpt",
+      "dependencies": [
+        "libopenmpt"
       ]
     },
     "openssl": {
