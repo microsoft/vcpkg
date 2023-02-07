@@ -225,7 +225,7 @@ if(sha)
     else()
       set(to_remove_suffix .so)
     endif()
-    file(GLOB_RECURSE files_to_remove "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}")
+    file(GLOB_RECURSE files_to_remove "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}" "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}.?")
     file(REMOVE ${files_to_remove})
     
     configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
