@@ -188,6 +188,7 @@ if(sha)
     set(packages 
       "intel.oneapi.lin.mkl.devel,v=2023.0.0-25398" # has the required staic libs. 
       "intel.oneapi.lin.mkl.runtime,v=2023.0.0-25398" # has the required dynamic so.
+      "intel.oneapi.lin.openmp,v=2023.0.0-25370" #OpenMP
       )
     set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
     file(MAKE_DIRECTORY "${output_path}")
@@ -200,6 +201,7 @@ if(sha)
     endforeach()
 
     set(basepath "${output_path}/_installdir/mkl/2023.0.0/")
+    set(basepath2 "${output_path}/_installdir/compiler/2023.0.0/")
     file(REMOVE_RECURSE "${basepath}../../conda_channel/"
                         "${basepath}tools"
                         "${basepath}interfaces"
@@ -217,6 +219,23 @@ if(sha)
     if(NOT VCPKG_BUILD_TYPE)
       configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "/lib/intel64" "/../lib/intel64")
+    endif()
+
+    if(threading STREQUAL "intel_thread")
+      file(COPY "${basepath2}linux/compiler/lib/intel64_lin/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
+      configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64_lin/" "/lib/intel64/")
+      if(NOT VCPKG_BUILD_TYPE)
+          file(COPY "${basepath2}linux/compiler/lib/intel64_lin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
+          configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" @ONLY)
+          vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64_lin/" "/lib/intel64/")
+      endif()
+      configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
+      if(NOT VCPKG_BUILD_TYPE)
+        configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
+      endif()
     endif()
 
     file(COPY "${basepath}lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
