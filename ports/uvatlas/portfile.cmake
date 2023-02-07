@@ -3,7 +3,7 @@ set(UVATLAS_TAG feb2023)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx"
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
 endif()
 
 vcpkg_from_github(
