@@ -1,7 +1,7 @@
 {
   "name": "restc-cpp",
   "version-semver": "0.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Modern C++ REST Client library",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
@@ -15,7 +15,15 @@
     "boost-program-options",
     "boost-system",
     "boost-uuid",
-    "rapidjson"
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "openssl",

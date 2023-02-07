@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v2.1.0
-    SHA512 a1c4a54b420e64bd12c4a85943c6617b310dff359f9b1b744fcaf7ece92c9327d77ab36b6dacf94b3e2b3d6c2a183a46089437736c34e1af55e3c319544c14b3
+    REF v2.7.0
+    SHA512 d87b79b64dd224088ae9473a828909313f4c7c64abc815ebf9105eca5ff2dee11199f2fecff2862559b16cd96550bc9f7b7a30299aae7a32fbea1fdce101897d
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -59,7 +59,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal)
+foreach(suffix common googleapis grpc_utils rest_internal dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()

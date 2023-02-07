@@ -5,8 +5,6 @@
 set(PATCHES
     # Fix symbols exporting for MinGW GCC x86
     def-fixes.patch
-    # Fix MinGW clang build
-    clang.patch
     # Clover build on Windows
     clover.patch
 )
@@ -20,8 +18,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.0.2
-    SHA512 1139bae1fa9f9b49727c5aaddad9b2908c7643d7c6c435544e8322c84d17c012f04aa73876bef8cab9b517e36957eb2a678b3001da2d69a32497ef4569f6172e
+    REF mesa-22.1.7
+    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
@@ -63,7 +61,12 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dglvnd=false)
 list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
-list(APPEND MESA_OPTIONS -Dosmesa=true)
+
+if("offscreen" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dosmesa=true)
+else()
+    list(APPEND MESA_OPTIONS -Dosmesa=false)
+endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
@@ -114,24 +117,34 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    # installed by egl-registry
+    "${CURRENT_PACKAGES_DIR}/include/KHR"
+    "${CURRENT_PACKAGES_DIR}/include/EGL"
+    # installed by opengl-registry
+    "${CURRENT_PACKAGES_DIR}/include/GL"
+    "${CURRENT_PACKAGES_DIR}/include/GLES"
+    "${CURRENT_PACKAGES_DIR}/include/GLES2"
+    "${CURRENT_PACKAGES_DIR}/include/GLES3"
+)
+file(GLOB remaining "${CURRENT_PACKAGES_DIR}/include/*")
+if(NOT remaining)
+    # All headers to be provided by egl-registry and/or opengl-registry
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+endif()
 
-#installed by egl-registry
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
-#installed by opengl-registry
-set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
-    include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
-    include/GLES2/gl2.h include/GLES2/gl2ext.h include/GLES2/gl2platform.h
-    include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
-list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
-file(REMOVE ${_double_files})
+if(VCPKG_TARGET_IS_WINDOWS)
+    # opengl32.lib is already installed by port opengl.
+    # Mesa claims to provide a drop-in replacement of opengl32.dll.
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
+    endif()
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
-# Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

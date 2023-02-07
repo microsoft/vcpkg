@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taskflow/taskflow
-    REF bfad4b9a0cc5acad5fc99fb6ff6b904b79f27f93 #v3.3.0
-    SHA512 489807c84438a727832e9d530c9b2948240bebee48f210ce4a8c69917cbb71306df378440621b1bf091e4aa62c86681d71afd38a3343c8ea872a4eefcabc496e
+    REF v3.5.0
+    SHA512 0e80a96eacce05cb09eb3e75634ba9f27c86d84b56903897e954e04fa68cadc3c2fe69857f8dc60da330c9abd5e4c7e1164f3c5f695ad8bb38a1ccbc001f8652
     HEAD_REF master
 )
 

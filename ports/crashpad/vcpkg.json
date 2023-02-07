@@ -1,6 +1,6 @@
 {
   "name": "crashpad",
-  "version-date": "2022-04-16",
+  "version-date": "2022-09-05",
   "port-version": 2,
   "description": [
     "Crashpad is a crash-reporting system.",
@@ -12,6 +12,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gn",
       "host": true
     },
     {

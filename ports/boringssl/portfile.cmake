@@ -41,6 +41,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
+
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/boringssl)
   vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/boringssl")
 endif()

@@ -23,8 +23,8 @@ This environment variable can be set to the full path of an executable to be use
 
 #### VCPKG_ROOT
 
-This environment variable can be set to a directory to use as the root of the vcpkg instance. Note that mixing vcpkg
-repo versions and executable versions can cause issues.
+This environment variable can be set to a directory to use as the root of the vcpkg instance. This will only be used if
+the vcpkg executable is not located within a valid root and the command line switch `--vcpkg-root` is unused.
 
 #### VCPKG_VISUAL_STUDIO_PATH
 
@@ -99,3 +99,7 @@ This environment variable allows using NuGet's cache for every nuget-based binar
 > Note: This is an experimental feature and may change or be removed at any time
 
 This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.
+
+#### VCPKG_NO_CI
+
+Setting `VCPKG_NO_CI` disables vcpkg's CI environment detection heuristics.

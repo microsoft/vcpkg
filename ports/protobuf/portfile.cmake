@@ -1,10 +1,10 @@
-set(version 3.21.4)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF c9869dc7803eb0a21d7e589c40ff4f9288cd34ae #v3.21.4
-    SHA512 99f90020bfc21f717341cf88b43950ede4ba4bd75357397eb2517cb4f6699ae88dcabd65e666df7321b9ba5203b18603fa1c4e97d924aa7978b1ba6b63216fbb
+    REF v3.21.12
+    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -80,7 +80,7 @@ if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${version}.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${VERSION}.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")

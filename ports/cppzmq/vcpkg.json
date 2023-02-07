@@ -1,8 +1,9 @@
 {
   "name": "cppzmq",
-  "version": "4.8.1",
-  "description": "lightweight messaging kernel, C++ bindings",
+  "version": "4.9.0",
+  "description": "Header-only C++ binding for ZeroMQ",
   "homepage": "https://github.com/zeromq/cppzmq",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

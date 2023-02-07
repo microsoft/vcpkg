@@ -14,12 +14,15 @@ vcpkg_from_github(
         plugin-pdb-install.patch
         use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
+        openexr3.patch
         unofficial-export.patch
 )
 
 file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindFontconfig.cmake"
     "${SOURCE_PATH}/CMakeModules/FindFreetype.cmake"
+    "${SOURCE_PATH}/CMakeModules/Findilmbase.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindOpenEXR.cmake"
     "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake"
 )
 
@@ -29,26 +32,43 @@ set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
 endif()
+# Skip try_run checks
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED=0 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS=1)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -D_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED=1 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS=0)
+elseif(VCPKG_TARGET_IS_IOS)
+    # handled by osg
+elseif(VCPKG_CROSSCOMPILING)
+    message(WARNING "Atomics detection may fail for cross builds. You can set osg cmake variables in a custom triplet.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       BUILD_OSG_APPLICATIONS
         examples    BUILD_OSG_EXAMPLES
         plugins     BUILD_OSG_PLUGINS_BY_DEFAULT
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_CURL
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_Jasper
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_GDAL
+        plugins     CMAKE_REQUIRE_FIND_PACKAGE_GTA
         packages    BUILD_OSG_PACKAGES
         docs        BUILD_DOCUMENTATION
         docs        BUILD_REF_DOCS_SEARCHENGINE
         docs        BUILD_REF_DOCS_TAGFILE
         fontconfig  OSG_TEXT_USE_FONTCONFIG
         freetype    BUILD_OSG_PLUGIN_FREETYPE
+        freetype    CMAKE_REQUIRE_FIND_PACKAGE_Freetype
         collada     BUILD_OSG_PLUGIN_DAE
+        collada     CMAKE_REQUIRE_FIND_PACKAGE_COLLADA
         nvtt        BUILD_OSG_PLUGIN_NVTT
+        nvtt        CMAKE_REQUIRE_FIND_PACKAGE_NVTT
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
-        sdl         BUILD_OSG_PLUGIN_SDL
+        sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
-        sdl         CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
+        sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
@@ -96,6 +116,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         ${OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_OSG_APPLICATIONS=OFF
@@ -117,18 +138,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
-# Move all osg plugins to [/debug]/plugins/osgPlugins-${OSG_VER},
-# as a staging area for later deployment.
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}")
-    endif()
-endif()
-
 if("tools" IN_LIST FEATURES)
     set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
     file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")

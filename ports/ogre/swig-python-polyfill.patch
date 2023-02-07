@@ -1,0 +1,19 @@
+diff --git a/Components/Python/CMakeLists.txt b/Components/Python/CMakeLists.txt
+index b6062c6..df955e3 100644
+--- a/Components/Python/CMakeLists.txt
++++ b/Components/Python/CMakeLists.txt
+@@ -22,7 +22,14 @@ if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
+     list(APPEND CMAKE_SWIG_FLAGS -DHAVE_IMGUI -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS)
+ endif()
+ 
++# cf. https://github.com/swig/swig/pull/1587
++file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pyobject_gc_polyfill.h" CONTENT [[
++#define _PyObject_GC_UNTRACK(x) PyObject_GC_UnTrack(x)
++]])
+ macro(ogre_python_module target)
++    if(SWIG_FOUND AND SWIG_VERSION VERSION_LESS "4.0.1" AND Python3_VERSION VERSION_GREATER_EQUAL "3.8")
++        target_precompile_headers(${SWIG_MODULE_${target}_REAL_NAME} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/pyobject_gc_polyfill.h")
++    endif()
+     set_target_properties(${SWIG_MODULE_${target}_REAL_NAME} PROPERTIES 
+                         DEBUG_POSTFIX "")
+     install(TARGETS ${SWIG_MODULE_${target}_REAL_NAME} LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})

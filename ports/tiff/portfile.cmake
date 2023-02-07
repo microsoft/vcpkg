@@ -1,50 +1,50 @@
-set(LIBTIFF_VERSION 4.4.0)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
-    REF v${LIBTIFF_VERSION}
-    SHA512 93955a2b802cf243e41d49048499da73862b5d3ffc005e3eddf0bf948a8bd1537f7c9e7f112e72d082549b4c49e256b9da9a3b6d8039ad8fc5c09a941b7e75d7
+    REF "v${VERSION}"
+    SHA512 5227cb7b496ac6829601d8d689233bd8f318c1d04e5ce3457cdd6eac9e4f8c80cd7211d90cd092c61ad38bc8a4949169a13eabd788c46c15bcee1f72519fa022
     HEAD_REF master
     PATCHES
-        cmakelists.patch
         FindCMath.patch
-        android-libm.patch
 )
-
-set(EXTRA_OPTIONS "")
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cxx     cxx
         jpeg    jpeg
+        jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
         lzma    lzma
-        tools   BUILD_TOOLS
+        lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
+        tools   tiff-tools
         webp    webp
+        webp    CMAKE_REQUIRE_FIND_PACKAGE_WebP
         zip     zlib
+        zip     CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         zstd    zstd
+        zstd    CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${EXTRA_OPTIONS}
-        -DBUILD_DOCS=OFF
-        -DBUILD_CONTRIB=OFF
-        -DBUILD_TESTS=OFF
+        -Dtiff-docs=OFF
+        -Dtiff-contrib=OFF
+        -Dtiff-tests=OFF
         -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
+        -DZSTD_HAVE_DECOMPRESS_STREAM=ON
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
+    MAYBE_UNUSED_VARIABLES
+        ZSTD_HAVE_DECOMPRESS_STREAM
 )
 
 vcpkg_cmake_install()
@@ -64,10 +64,9 @@ file(REMOVE_RECURSE
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if ("tools" IN_LIST FEATURES)
-    set(_tools
+    vcpkg_copy_tools(TOOL_NAMES
         fax2ps
         fax2tiff
         pal2rgb
@@ -86,10 +85,9 @@ if ("tools" IN_LIST FEATURES)
         tiffmedian
         tiffset
         tiffsplit
+        AUTO_CLEAN
     )
-    vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

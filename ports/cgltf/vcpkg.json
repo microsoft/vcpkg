@@ -1,6 +1,7 @@
 {
   "name": "cgltf",
-  "version": "1.11",
+  "version": "1.13",
   "description": "Single-file glTF 2.0 loader and writer written in C99",
-  "homepage": "https://github.com/jkuhlmann/cgltf"
+  "homepage": "https://github.com/jkuhlmann/cgltf",
+  "license": "MIT"
 }

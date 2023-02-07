@@ -1,8 +1,9 @@
 {
   "name": "mdspan",
-  "version-date": "2021-11-03",
+  "version": "0.5.0",
   "description": "A non-owning multi-dimensional array reference type.",
   "homepage": "https://github.com/kokkos/mdspan",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

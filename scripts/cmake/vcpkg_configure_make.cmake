@@ -1,19 +1,3 @@
-macro(z_vcpkg_determine_host_mingw out_var)
-    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-        set(host_arch $ENV{PROCESSOR_ARCHITEW6432})
-    else()
-        set(host_arch $ENV{PROCESSOR_ARCHITECTURE})
-    endif()
-    if(host_arch MATCHES "(amd|AMD)64")
-        set(${out_var} mingw64)
-    elseif(host_arch MATCHES "(x|X)86")
-        set(${out_var} mingw32)
-    else()
-        message(FATAL_ERROR "Unsupported mingw architecture ${host_arch} in z_vcpkg_determine_autotools_host_cpu!" )
-    endif()
-    unset(host_arch)
-endmacro()
-
 macro(z_vcpkg_determine_autotools_host_cpu out_var)
     # TODO: the host system processor architecture can differ from the host triplet target architecture
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -74,8 +58,8 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
 endmacro()
 
 macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-    string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
+    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
     list(JOIN CXXPPFLAGS_${flag_suffix} "|" CXXREGEX)
     if(CXXREGEX)
         list(FILTER CPPFLAGS_${flag_suffix} INCLUDE REGEX "(${CXXREGEX})")
@@ -95,14 +79,25 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     string(REGEX REPLACE " +" " " CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
     string(REGEX REPLACE " +" " " CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
     string(REGEX REPLACE " +" " " CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
-    # libtool has and -R option so we need to guard against -RTC by using -Xcompiler
-    # while configuring there might be a lot of unknown compiler option warnings due to that
-    # just ignore them. 
-    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
-    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
     string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
     string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
     string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
+    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # that approach is flawed since it fails to pass flags unknown to libtool
+    # but required for linking to the link stage (e.g. -fsanitize=<x>).
+    # libtool has an -R option so we need to guard against -RTC by using -Xcompiler
+    # while configuring there might be a lot of unknown compiler option warnings due to that
+    # just ignore them.
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+      separate_arguments(CFLAGS_LIST NATIVE_COMMAND "${CFLAGS_${flag_suffix}}")
+      list(JOIN CFLAGS_LIST " -Xcompiler " CFLAGS_${var_suffix})
+      string(PREPEND CFLAGS_${var_suffix} "-Xcompiler ")
+    endif()
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+      separate_arguments(CXXFLAGS_LIST NATIVE_COMMAND "${CXXFLAGS_${flag_suffix}}")
+      list(JOIN CXXFLAGS_LIST " -Xcompiler " CXXFLAGS_${var_suffix})
+      string(PREPEND CXXFLAGS_${var_suffix} "-Xcompiler ")
+    endif()
     debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
     debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
@@ -151,7 +146,7 @@ function(vcpkg_configure_make)
     set(requires_autoconfig OFF) # use autotools and configure.ac
     if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
         set(requires_autoconfig ON)
-        file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
+        file(REMOVE "${SRC_DIR}/configure") # remove possible outdated configure scripts
     elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
@@ -208,7 +203,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         if(CMAKE_HOST_WIN32)
-            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
+            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4 which)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
         endif()
         if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
@@ -220,8 +215,16 @@ function(vcpkg_configure_make)
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
             if(CMAKE_HOST_WIN32)
-                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                # Respect host triplet when determining --build
+                if(NOT VCPKG_CROSSCOMPILING)
+                    set(_win32_build_arch "${TARGET_ARCH}")
+                else()
+                    set(_win32_build_arch "${BUILD_ARCH}")
+                endif()
+
+                # This is required since we are running in a msys
+                # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                set(arg_BUILD_TRIPLET "--build=${_win32_build_arch}-pc-mingw32")
             endif()
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32) # we don't need to specify the additional flags if we build nativly, this does not hold when we are not on windows
                 string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
@@ -384,7 +387,7 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
-    elseif(NOT VCPKG_TARGET_IS_OSX)
+    else()
         # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
         function(z_vcpkg_make_set_env envvar cmakevar)
             set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
@@ -432,7 +435,7 @@ function(vcpkg_configure_make)
     endif()
 
     # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -441,7 +444,7 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
                 set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
@@ -754,10 +757,14 @@ function(vcpkg_configure_make)
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
+        set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
+        set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${current_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
+        #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${current_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${current_buildtype}}")
+        set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${current_buildtype}}")
         if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
@@ -767,6 +774,13 @@ function(vcpkg_configure_make)
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
         if(VCPKG_TARGET_IS_ANDROID)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
+        endif()
+
+        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # configure not using all flags to check if compiler works ...
+            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
         endif()
 
         if(LINK_ENV_${current_buildtype})

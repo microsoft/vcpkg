@@ -102,11 +102,11 @@ Examples:
 
 ### Baselines
 
-Baselines define a global version floor for what versions will be considered. This enables top-level manifests to keep the entire graph of dependencies up-to-date without needing to individually specify direct [`"version>="`][] constraints.
+Baselines define a global version floor for what versions will be considered. This enables top-level manifests to keep the entire graph of dependencies up-to-date without needing to individually specify direct [`"version>="`][version-gte] constraints.
 
-Every configured registry has an associated baseline. For manifests that don't configure any registries, the [`"builtin-baseline"`][] field defines the baseline for the built-in registry. If a manifest does not configure any registries and does not have a [`"builtin-baseline"`][], the install operates according to the Classic Mode algorithm and ignores all versioning information.
+Every configured registry has an associated baseline. For manifests that don't configure any registries, the [`"builtin-baseline"`][builtin-baseline] field defines the baseline for the built-in registry. If a manifest does not configure any registries and does not have a [`"builtin-baseline"`][builtin-baseline], the install operates according to the Classic Mode algorithm and ignores all versioning information.
 
-Baselines, like other registry settings, are ignored from ports consumed as a dependency. If a minimum version is required during transitive version resolution the port should use [`"version>="`][].
+Baselines, like other registry settings, are ignored from ports consumed as a dependency. If a minimum version is required during transitive version resolution the port should use [`"version>="`][version-gte].
 
 **Example**
 ```json
@@ -170,5 +170,5 @@ For an override to take effect, the overridden package must form part of the dep
 * The [implementation details](versioning.implementation-details.md)
 * The [original specification](../specifications/versioning.md)
 
-[`"version>="`]: #version-gte
-[`"builtin-baseilne"`]: manifests.md#builtin-baseline
+[version-gte]: #version-gte
+[builtin-baseline]: manifests.md#builtin-baseline

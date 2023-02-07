@@ -35,11 +35,25 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"             GFLAGS
         "cuda"              CUDA
 )
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
+endif()
+
+foreach (FEATURE ${FEATURE_OPTIONS})
+    message(STATUS "${FEATURE}")
+endforeach()
+
+set(TARGET_OPTIONS )
+if(VCPKG_TARGET_IS_IOS)
+    # Note: CMake uses "OSX" not just for macOS, but also iOS, watchOS and tvOS.
+    list(APPEND TARGET_OPTIONS "-DIOS_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${TARGET_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF

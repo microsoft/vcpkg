@@ -1,7 +1,7 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
         "PATCHES"
     )
 
@@ -11,7 +11,6 @@ function(vcpkg_from_git)
     if(DEFINED arg_TAG)
         message(WARNING "The TAG argument to vcpkg_from_git has been deprecated and has no effect.")
     endif()
-
 
     if(NOT DEFINED arg_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
@@ -24,6 +23,9 @@ function(vcpkg_from_git)
     endif()
     if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
         message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
+    endif()
+    if(NOT DEFINED arg_LFS AND "LFS" IN_LIST arg_KEYWORDS_MISSING_VALUES)
+        set(arg_LFS "${arg_URL}")
     endif()
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
@@ -87,6 +89,32 @@ function(vcpkg_from_git)
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
+        if(arg_LFS)
+            # Running "git lfs" searches for "git-lfs[.exe]" on the path
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" lfs --version
+                OUTPUT_VARIABLE lfs_version_output
+                ERROR_VARIABLE lfs_version_error
+                RESULT_VARIABLE lfs_version_result
+                WORKING_DIRECTORY "${git_working_directory}"
+            )
+            if(lfs_version_result)
+                message(FATAL_ERROR "Git LFS is required for ${PORT}")
+            endif()
+
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND ${GIT} lfs install --local --force
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
+            )
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND ${GIT} lfs fetch "${arg_LFS}" "${ref_to_fetch}"
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-fetch-${TARGET_TRIPLET}"
+            )
+        endif()
 
         if(VCPKG_USE_HEAD_VERSION)
             vcpkg_execute_in_download_mode(

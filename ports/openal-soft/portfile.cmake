@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF dc83d99c95a42c960150ddeee06c124134b52208 # openal-soft-1.22.2
     SHA512 3fbbdfbb2609ef8187d20ce74b2fb8082037288f3fd80df71d360705d8efdadfe8f62811af1cd824cb6572c8c3479b370f8ae3819b8b8bb0b20c34f7a73cc530
     HEAD_REF master
+    PATCHES
+        0001-fix-mingw-x86-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -75,6 +77,8 @@ vcpkg_cmake_configure(
         ALSOFT_CONFIG
         ALSOFT_CPUEXT_NEON
         ALSOFT_HRTF_DEFS
+        ALSOFT_BACKEND_WINMM
+        ALSOFT_BACKEND_DSOUND
         CMAKE_DISABLE_FIND_PACKAGE_WindowsSDK
 )
 

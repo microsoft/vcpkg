@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
-    REF 3.0.5
-    SHA512 da0c230951caafd986331300b840d09a4c27a677183174f8b1782c2515209b51cf00133dd5fc5f9fc88a349134db7f93d3daa7c05b7d0270be99b9cf85a6c133
+    REF 241428886216f0f0efd6926efcaaaa13794e51bd #v3.0.7
+    SHA512 779a53fafe63b64f5f703448262871c323f5753cbb58001dd0d0ef10de8d3bd7bb6055db4e763e664ccb5b781ce8dd06bf7c3e6b38eca019de835322a833fa06
     HEAD_REF master
     PATCHES 
         Modify-header-file-path.patch

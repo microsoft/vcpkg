@@ -1,6 +1,7 @@
 {
   "name": "sciplot",
   "version": "0.3.1",
+  "port-version": 1,
   "description": "A modern c++ scientific plotting library powered by gnuplot",
   "homepage": "https://github.com/sciplot/sciplot",
   "license": "MIT",

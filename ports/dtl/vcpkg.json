@@ -1,6 +1,6 @@
 {
   "name": "dtl",
-  "version-string": "1.19",
-  "port-version": 1,
-  "description": "Diff template library"
+  "version": "1.20",
+  "description": "Diff template library",
+  "license": "BSD-4-Clause"
 }

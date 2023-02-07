@@ -9,11 +9,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
-    REF v4.1.2
-    SHA512 625a52151f2c78421e48e90ff60292c6106e8504b55a26c7df716df75e051a40d2ee4a26c57b5daaa370e53a79002fe965aee8a0d8749f7dce380e8e4a617c95
+    REF v4.1.4
+    SHA512 8f35e757dddc27c9b11cdb3b9920562bbe09ceac715d65957e56ec8479e8ffedf12df2f976e484ed0d24b9325d9ef2b8ad6576cccefd2de8d7fa6fa8d58b03e5
     HEAD_REF master
     PATCHES
         001-arm64-support.patch
+        support-arm64-osx.diff # from https://github.com/NordicSemiconductor/pc-ble-driver/pull/271
 )
 
 # Ensure that git is found within CMakeLists.txt by appending vcpkg's git executable dirpath to $PATH.
@@ -23,6 +24,11 @@ vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 vcpkg_add_to_path("${GIT_EXE_PATH}")
 
+set(OPTIONS)
+if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OPTIONS "-DARCH=${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -30,6 +36,7 @@ vcpkg_cmake_configure(
         -DDISABLE_TESTS=ON
         -DNRF_BLE_DRIVER_VERSION=4.1.2
         -DCONNECTIVITY_VERSION=4.1.2
+        ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         DISABLE_EXAMPLES
         DISABLE_TESTS

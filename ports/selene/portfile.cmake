@@ -21,6 +21,7 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSELENE_ARCH_NATIVE=OFF
         ${FEATURE_OPTIONS}
 )
 
