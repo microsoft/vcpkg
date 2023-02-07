@@ -1,0 +1,13 @@
+diff --git a/cmake/Findwebp.cmake b/cmake/Findwebp.cmake
+index 23982dd..c81c4b9 100644
+--- a/cmake/Findwebp.cmake
++++ b/cmake/Findwebp.cmake
+@@ -1,7 +1,7 @@
+ include(FindPackageHandleStandardArgs)
+ 
+ find_library(webp_LIBRARY
+-    NAMES webp
++    NAMES webp libwebp
+ )
+ 
+ find_path(webp_INCLUDE_PATH
