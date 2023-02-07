@@ -180,20 +180,22 @@ if(sha)
     #./l_onemkl_p_2023.0.0.25398_offline.sh --extract-only -a -s
     # cmake -E tar -xf <payload>
     
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/intel-extract")
+    set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
+    file(MAKE_DIRECTORY "${output_path}")
     vcpkg_execute_in_download_mode(
                             COMMAND "${archive_path}" "--extract-only" "-a" "-s"
-                            WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/intel-extract"
+                            WORKING_DIRECTORY "${output_path}"
+                            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-out.log"
+                            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-err.log"
                         )
     set(packages 
       "intel.oneapi.lin.mkl.devel,v=2023.0.0-25398" # has the required staic libs. 
       "intel.oneapi.lin.mkl.runtime,v=2023.0.0-25398" # has the required dynamic so.
       "intel.oneapi.lin.openmp,v=2023.0.0-25370" #OpenMP
       )
-    set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
-    file(MAKE_DIRECTORY "${output_path}")
-    file(GLOB_RECURSE folders LIST_DIRECTORIES true "${output_path}/*")
-    file(GLOB_RECURSE files LIST_DIRECTORIES false "${output_path}/*")
+
+    file(GLOB_RECURSE folders LIST_DIRECTORIES true "${output_path}/**/*")
+    file(GLOB_RECURSE files LIST_DIRECTORIES false "${output_path}/**/*")
     list(REMOVE_ITEM folders ${files})
     message(STATUS "Folders: ${folders}")
     message(STATUS "Files: ${files}")
@@ -201,7 +203,9 @@ if(sha)
         set(archive_path "${CURRENT_PACKAGES_DIR}/intel-extract/packages/${pack}")
             vcpkg_execute_in_download_mode(
                             COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages/${pack}/cupPayload.cup"
-                            WORKING_DIRECTORY "${output_path}" 
+                            WORKING_DIRECTORY "${output_path}"
+                            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/mkl-extract-${TARGET_TRIPLET}-out.log"
+                            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/mkl-extract-${TARGET_TRIPLET}-err.log"
             )
     endforeach()
 
@@ -216,8 +220,8 @@ if(sha)
                         "${basepath}env"
                         "${basepath}modulefiles"
                         )
-    file(GLOB_RECURSE folders LIST_DIRECTORIES true "${output_path}/*")
-    file(GLOB_RECURSE files LIST_DIRECTORIES false "${output_path}/*")
+    file(GLOB_RECURSE folders LIST_DIRECTORIES true "${output_path}/**/*")
+    file(GLOB_RECURSE files LIST_DIRECTORIES false "${output_path}/**/*")
     list(REMOVE_ITEM folders ${files})
     message(STATUS "Folders: ${folders}")
     message(STATUS "Files: ${files}")
