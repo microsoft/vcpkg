@@ -1,4 +1,5 @@
 Subject: [PATCH] fix
+fix
 Remove linux sources
 Fix for porting this repo in vcpkg, and use as a dependency of ffmpeg.
 ---
@@ -84,8 +85,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 ===================================================================
 diff --git a/libmfx.pc.win.cmake b/libmfx.pc.win.cmake
 new file mode 100644
---- /dev/null	(revision 6a863c1a050359a3b82ec290a202feddb3e16fbd)
-+++ b/libmfx.pc.win.cmake	(revision 6a863c1a050359a3b82ec290a202feddb3e16fbd)
+--- /dev/null	(revision f17d65c93a28f40cedf4aa266883ca4b59f40eac)
++++ b/libmfx.pc.win.cmake	(revision f17d65c93a28f40cedf4aa266883ca4b59f40eac)
 @@ -0,0 +1,14 @@
 +prefix=@CMAKE_INSTALL_PREFIX@
 +exec_prefix=${prefix}
@@ -100,7 +101,7 @@ new file mode 100644
 +Conflicts:
 +Libs: -L${libdir} -lsupc++ ${libdir}/libmfx.lib
 +Libs.private:
-+Cflags: -I${includedir} -I@INTELMEDIASDK_PATH@
++Cflags: -I${includedir}
 Index: src/mfx_driver_store_loader.cpp
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
