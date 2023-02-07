@@ -8,6 +8,7 @@ vcpkg_from_github(
     SHA512 a52356410c95ec6d7128b856dcf4c20a17cdd041270d2c4d700ef02ea715c87a00a87c2ad560277424b300435c6e9b196c8bc9c9f50ae5b6804d8214b4d397d0
     PATCHES
         fix_build_4.11.1.patch
+        set-export-macro-define-as-private.patch
 )
 
 set(RUNTIME_PATH "${SOURCE_PATH}/runtime/Cpp")
