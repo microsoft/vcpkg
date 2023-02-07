@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
         0004-macos-build.patch
 )
 
-vcpkg_add_to_path("{CURRENT_HOST_INSTALLED_DIR}/tools/libxml2") # for xmllint
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/libxml2") # for xmllint
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )

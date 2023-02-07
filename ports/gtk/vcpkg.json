@@ -40,6 +40,8 @@
     "libepoxy",
     {
       "name": "libxml2",
+      "host": true,
+      "default-features": false,
       "features": [
         "tools"
       ]
