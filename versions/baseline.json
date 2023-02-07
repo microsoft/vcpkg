@@ -2370,7 +2370,7 @@
     },
     "ffmpeg": {
       "baseline": "5.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -7145,7 +7145,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.0.1",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "simdutf": {
@@ -7170,7 +7170,7 @@
     },
     "skia": {
       "baseline": "0.36.0",
-      "port-version": 6
+      "port-version": 7
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7378,11 +7378,11 @@
     },
     "sqlite3": {
       "baseline": "3.40.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlpp11": {
       "baseline": "0.61",
@@ -7493,8 +7493,8 @@
       "port-version": 0
     },
     "superlu": {
-      "baseline": "2020-01-07",
-      "port-version": 6
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "symengine": {
       "baseline": "0.9.0",

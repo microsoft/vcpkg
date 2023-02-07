@@ -178,7 +178,8 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
-    string(APPEND OPTIONS "${OPTIONS} skia_use_vulkan=true")
+    string(APPEND OPTIONS " skia_use_vulkan=true")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/vulkanmemoryallocator")
 endif()
 
 if("direct3d" IN_LIST FEATURES)
