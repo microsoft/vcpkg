@@ -1,8 +1,7 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  libsdl-org/SDL_ttf
-    REF release-${VERSION}
+    REF "release-${VERSION}"
     SHA512 ea059fce879f8ddb3b36f8364d65ef922c389db67383d8a5c42c0ebf8a407d55adce42620b4d04caa0b297847362cc733a9d3d9acb843897a535c875fd0c471f
     HEAD_REF main
     PATCHES
