@@ -19,6 +19,12 @@ vcpkg_check_features(
         opusfile SDL2MIXER_OPUS
 )
 
+if(FEATURE_OPTIONS MATCHES "SDL2MIXER_VORBIS_VORBISFILE=ON")
+    set(VORBIS_BACKEND "VORBISFILE")
+else()
+    set(VORBIS_BACKEND "STB")    
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -28,6 +34,7 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_DEPS_SHARED=OFF
         -DSDL2MIXER_OPUS_SHARED=OFF
         -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF
+        -DSDL2MIXER_VORBIS=${VORBIS_BACKEND}
 )
 
 vcpkg_cmake_install()
