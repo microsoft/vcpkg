@@ -211,7 +211,10 @@ if(sha)
                         "${basepath}env"
                         "${basepath}modulefiles"
                         )
-
+    file(GLOB_RECURSE folders LIST_DIRECTORIES true "${output_path}/*")
+    file(GLOB_RECURSE files LIST_DIRECTORIES false "${output_path}/*")
+    list(REMOVE_ITEM folders ${files})
+    message(STATUS "${folders}")
     file(COPY "${basepath}include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     file(COPY "${basepath}lib/intel64/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
 
@@ -226,9 +229,8 @@ if(sha)
       configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64_lin/" "/lib/intel64/")
       if(NOT VCPKG_BUILD_TYPE)
-          file(COPY "${basepath2}linux/compiler/lib/intel64_lin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
           configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" @ONLY)
-          vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64_lin/" "/lib/intel64/")
+          vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64_lin/" "/../lib/intel64/")
       endif()
       configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
