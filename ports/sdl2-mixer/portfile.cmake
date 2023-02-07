@@ -1,8 +1,9 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_mixer
-    REF 1cf51b6e16552e4118d90799ef752f7644efb9fd # release-2.6.1
-    SHA512 c18c5d374ba1db8b07c796be5acae3e82b2191c43f9e1156b86f5ce6a088bd8200d9b7feee36de88d518f1ee2a6ff7410e911d37ac641ee4b46f7b098bf916fe
+    REF release-${VERSION}
+    SHA512 74c2b449e8a9928679d42e25bd7a5967e41fe9d51732f26197c6bbe1db9170be784125b7f268476050017f3dc970497e09a0409d50731026a18355375d0369ce
     PATCHES fix-pkg-prefix.patch fix-pkgconfig.patch
 )
 
