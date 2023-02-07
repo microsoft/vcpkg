@@ -21,12 +21,6 @@
     "cfp": {
       "description": "cfp support for cfp"
     },
-    "example": {
-      "description": "Build example"
-    },
-    "test": {
-      "description": "Build test"
-    },
     "utility": {
       "description": "Build utility"
     }

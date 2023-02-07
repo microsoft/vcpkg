@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2d0615a..2429f87 100644
+index 2d0615a..18621a7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -284,8 +284,8 @@ add_subdirectory(src)
+@@ -284,10 +284,10 @@ add_subdirectory(src)
  option(BUILD_ALL "Build all subdirectories" OFF)
  if(BUILD_ALL)
    set(BUILD_CFP ON CACHE BOOL "Build CFP arrays library" FORCE)
@@ -11,67 +11,8 @@ index 2d0615a..2429f87 100644
 +  set(BUILD_ZFORP OFF CACHE BOOL "Build Fortran library" FORCE)
 +  set(BUILD_ZFPY OFF CACHE BOOL "Build python bindings for zfp" FORCE)
    set(BUILD_UTILITIES ON CACHE BOOL "Build command line utilities for zfp" FORCE)
-   set(BUILD_EXAMPLES ON CACHE BOOL "Build Examples" FORCE)
- endif()
-diff --git a/cfp/CMakeLists.txt b/cfp/CMakeLists.txt
-index 3d8af6e..b669601 100644
---- a/cfp/CMakeLists.txt
-+++ b/cfp/CMakeLists.txt
-@@ -34,3 +34,5 @@ install(TARGETS cfp EXPORT cfp-targets
-   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  
-+install(DIRECTORY ${ZFP_SOURCE_DIR}/include DESTINATION include)
-diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 7313722..bc08631 100644
---- a/examples/CMakeLists.txt
-+++ b/examples/CMakeLists.txt
-@@ -53,3 +53,20 @@ if(HAVE_LIBM_MATH)
-   target_link_libraries(ppm m)
-   target_link_libraries(simple m)
- endif()
-+
-+install(TARGETS diffusion 
-+    RUNTIME DESTINATION tools)
-+ if(BUILD_CFP)
-+   install(TARGETS diffusionC 
-+       RUNTIME DESTINATION tools)
-+ endif()
-+install(TARGETS inplace 
-+    RUNTIME DESTINATION tools)
-+install(TARGETS iterator 
-+    RUNTIME DESTINATION tools)
-+install(TARGETS pgm 
-+    RUNTIME DESTINATION tools)
-+install(TARGETS simple 
-+    RUNTIME DESTINATION tools)
-+install(TARGETS speed 
-+    RUNTIME DESTINATION tools)
-\ No newline at end of file
-diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index d15246e..186bc4e 100644
---- a/tests/CMakeLists.txt
-+++ b/tests/CMakeLists.txt
-@@ -19,3 +19,6 @@ if(ZFP_BUILD_TESTING_LARGE)
-     endforeach()
-   endforeach()
- endif()
-+
-+install(TARGETS testzfp 
-+    RUNTIME DESTINATION tools)
-\ No newline at end of file
-diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
-index 1aa7a93..1e92091 100644
---- a/utils/CMakeLists.txt
-+++ b/utils/CMakeLists.txt
-@@ -10,6 +10,9 @@ if(HAVE_LIBM_MATH)
-   target_link_libraries(zfpcmd m)
+-  set(BUILD_EXAMPLES ON CACHE BOOL "Build Examples" FORCE)
++  set(BUILD_EXAMPLES OFF CACHE BOOL "Build Examples" FORCE)
  endif()
  
-+install(TARGETS zfpcmd 
-+    RUNTIME DESTINATION tools)
-+
- if(BUILD_UTILITIES)
-   install(TARGETS zfpcmd
-     DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ option(BUILD_CFP "Build CFP arrays library" OFF)

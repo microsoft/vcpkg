@@ -12,8 +12,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         all     BUILD_ALL
         cfp     BUILD_CFP
-        test    BUILD_TESTING
-        example BUILD_EXAMPLES
         utility BUILD_UTILITIES
 )
 
@@ -22,6 +20,8 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
       -DBUILD_ZFPY=OFF
       -DBUILD_ZFORP=OFF
+      -DBUILD_TESTING=OFF
+      -DBUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()
