@@ -11,6 +11,7 @@ vcpkg_check_features(
     FEATURES
         fluidsynth SDL2MIXER_MIDI_FLUIDSYNTH
         libflac SDL2MIXER_FLAC_LIBFLAC
+        libmodplug SDL2MIXER_MOD
         libmodplug SDL2MIXER_MOD_MODPLUG
         libvorbis SDL2MIXER_VORBIS_VORBISFILE
         mpg123 SDL2MIXER_MP3_MPG123
