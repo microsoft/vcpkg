@@ -15,7 +15,7 @@ add_library(mujs ${mujs_sources})
 set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
 set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-set(NAMESPACE "mujs::")
+set(NAMESPACE "unofficial::mujs::")
 
 install(
   TARGETS mujs
@@ -25,7 +25,7 @@ install(
   ARCHIVE DESTINATION lib
 )
 
-export(TARGETS mujs NAMESPACE mujs:: FILE mujsTargets.cmake)
+export(TARGETS mujs NAMESPACE ${NAMESPACE} FILE mujsTargets.cmake)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
