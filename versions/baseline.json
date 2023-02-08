@@ -8396,6 +8396,10 @@
       "baseline": "2021-11-20",
       "port-version": 0
     },
+    "xpack": {
+      "baseline": "2023-02-06",
+      "port-version": 0
+    },
     "xproperty": {
       "baseline": "0.8.1",
       "port-version": 1
