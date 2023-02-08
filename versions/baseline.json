@@ -2657,8 +2657,8 @@
       "port-version": 0
     },
     "geotrans": {
-      "baseline": "3.8",
-      "port-version": 2
+      "baseline": "3.9",
+      "port-version": 0
     },
     "getdns": {
       "baseline": "1.7.0",
