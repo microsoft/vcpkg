@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(libmupdf C)
+project(libmupdf C VERSION 1.19.0) #1.19.0-rc2#1
 
 set(CMAKE_DEBUG_POSTFIX d)
 
@@ -15,15 +15,6 @@ else()
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
   )
 endif() 
-
-
-find_package(freetype NO_MODULE REQUIRED)
-find_package(JPEG REQUIRED)
-find_path(HARFBUZZ_INCLUDE hb.h PATH_SUFFIXES harfbuzz)
-find_library(HARFBUZZ_LIBRARIES harfbuzz)
-find_package(ZLIB REQUIRED)
-find_package(OpenJPEG CONFIG REQUIRED)
-find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
 file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
@@ -54,13 +45,32 @@ target_link_libraries(libmupdf PRIVATE
   ZLIB::ZLIB
 )
 
+export(TARGETS libmupdf NAMESPACE libmupdf:: FILE libmupdfTargets.cmake)
+
 install(TARGETS libmupdf
+  EXPORT libmupdfTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    libmupdfConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(EXPORT libmupdfTargets
+        FILE libmupdfTargets.cmake
+        NAMESPACE libmupdf::
+        DESTINATION lib/cmake/libmupdf
+)
+
+configure_file(libmupdfConfig.cmake.in libmupdfConfig.cmake @ONLY)
+
 if(BUILD_EXAMPLES)
   add_executable(mu-office-test source/tests/mu-office-test.c)
   target_link_libraries(mu-office-test PRIVATE libmupdf)
 endif()
+        
