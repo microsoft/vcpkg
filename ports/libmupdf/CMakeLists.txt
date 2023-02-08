@@ -59,9 +59,9 @@ target_link_libraries(libmupdf PRIVATE
 set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
 set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-set(NAMESPACE "libmupdf::")
+set(NAMESPACE "unofficial::libmupdf::")
 
-export(TARGETS libmupdf NAMESPACE libmupdf:: FILE libmupdfTargets.cmake)
+export(TARGETS libmupdf NAMESPACE ${NAMESPACE} FILE libmupdfTargets.cmake)
 
 install(TARGETS libmupdf
   EXPORT ${TARGETS_EXPORT_NAME}
