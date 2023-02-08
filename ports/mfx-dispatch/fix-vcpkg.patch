@@ -29,18 +29,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 
  set(SOURCES
    src/main.cpp
-@@ -23,11 +14,6 @@
-
- if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-   add_definitions(-fPIC)
--  list(APPEND SOURCES
--    src/mfx_library_iterator_linux.cpp
--    src/mfx_load_dll_linux.cpp
--    src/mfx_critical_section_linux.cpp
--  )
- endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
-
- if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 @@ -40,6 +26,10 @@
      src/mfx_load_plugin.cpp
      src/mfx_plugin_hive.cpp
