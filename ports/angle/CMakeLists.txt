@@ -85,7 +85,7 @@ else()
     set(ANGLE_COMMON_PLATFORM_SOURCES )
 endif()
 
-file(GLOB ANGLE_COMMON_SOURCES 
+file(GLOB ANGLE_COMMON_SOURCES
     ${ANGLE_COMMON_PLATFORM_SOURCES}
     "src/common/*.h"
     "src/common/*.inc"
@@ -250,13 +250,13 @@ file(GLOB TRANSLATOR_GLSL_BASE_SOURCES
     "src/compiler/translator/OutputGLSLBase.cpp"
     "src/compiler/translator/OutputGLSLBase.h"
 )
-file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES 
+file(GLOB TRANSLATOR_GLSL_AND_VULKAN_BASE_SOURCES
     "src/compiler/translator/BuiltinsWorkaroundGLSL.cpp"
     "src/compiler/translator/BuiltinsWorkaroundGLSL.h"
     "src/compiler/translator/OutputGLSL.cpp"
     "src/compiler/translator/OutputGLSL.h"
 )
-file(GLOB TRANSLATOR_ESSL_SOURCES 
+file(GLOB TRANSLATOR_ESSL_SOURCES
     "src/compiler/translator/OutputESSL.cpp"
     "src/compiler/translator/OutputESSL.h"
     "src/compiler/translator/TranslatorESSL.cpp"
@@ -347,12 +347,12 @@ add_library(angle::preprocessor ALIAS angle_preprocessor)
 ## OpenGL Renderer
 if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     if(WINDOWS_DESKTOP)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/wgl/*.cpp"
             "src/libANGLE/renderer/gl/wgl/*.h"
         )
     elseif(APPLE)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/cgl/*.mm"
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.h"
@@ -362,7 +362,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
             "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
-        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM
             "src/libANGLE/renderer/gl/glx/*.cpp"
             "src/libANGLE/renderer/gl/glx/*.h"
             "src/libANGLE/renderer/gl/egl/*.cpp"
@@ -574,9 +574,9 @@ target_link_libraries(libANGLE PRIVATE
 target_include_directories(libANGLE PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/khronos>")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
-    PUBLIC 
-        -DLIBANGLE_IMPLEMENTATION 
-        ${LIBANGLE_RENDERER_COMPILEDEF} 
+    PUBLIC
+        -DLIBANGLE_IMPLEMENTATION
+        ${LIBANGLE_RENDERER_COMPILEDEF}
         -DANGLE_EXPORT=
         -DANGLE_UTIL_EXPORT=
         -DEGLAPI=
@@ -625,6 +625,9 @@ list(APPEND LIBGLESV2_SOURCES
 )
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libGLESv2 PROPERTY OUTPUT_NAME libGLESv2_angle)
+endif()
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
@@ -669,6 +672,9 @@ add_library(libEGL
 )
 
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+set_property(TARGET libEGL PROPERTY OUTPUT_NAME libEGL_angle)
+endif()
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 target_compile_definitions(libEGL
     PRIVATE
@@ -736,7 +742,8 @@ else()
     )
 endif()
 
-install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(EXPORT ANGLEExport FILE unofficial-angle-targets.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(FILES unofficial-angle-config.cmake DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(

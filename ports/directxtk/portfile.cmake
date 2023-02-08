@@ -1,3 +1,5 @@
+set(DIRECTXTK_TAG dec2022)
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(VCPKG_TARGET_IS_MINGW)
@@ -7,23 +9,26 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF jul2022
-    SHA512 1f16d682e2ed7d177ec7ab0f5ecbcfd11f85478eff52db781403c6c1dca8945521da3a5fd926ea46a4d319c94bc0f21eacea7b456da4283ccac21614e3338f58
+    REF ${DIRECTXTK_TAG}
+    SHA512 4830becb1100566a1f0d176c1eb08f94ce3f36600b7a8e0c55b423e0f9d40bafb5018914be4903b9a21682f04a92571019e2d6c4549a145f0b3f0198c50c639a
     HEAD_REF main
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        spectre ENABLE_SPECTRE_MITIGATION
         xaudio2-9 BUILD_XAUDIO_WIN10
         xaudio2-8 BUILD_XAUDIO_WIN8
         xaudio2redist BUILD_XAUDIO_WIN7
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 if(VCPKG_TARGET_IS_UWP)
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -37,16 +42,16 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/directxtk)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MAKESPRITEFONT_EXE
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/jul2022/MakeSpriteFont.exe"
-    FILENAME "makespritefont-jul2022.exe"
-    SHA512 fd039070fad3dee3fe146d2cd4950f599f680cb4abd370e7c21bedeb8c0a970455ad2eac463fc6d198505b6bbdabebfcc453bf74c317f6a10bf2e2f9a0bfc418
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
+    FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
+    SHA512 6cb4351206707308382f2fe152c10dd2c99f300d960e6feac09f63e64c38225381d95f77ec557ec3dc60031227b4b878cfb18059c1bc2122e87cda1f1d25d7e2
   )
 
   vcpkg_download_distfile(
     XWBTOOL_EXE
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/jul2022/XWBTool.exe"
-    FILENAME "xwbtool-jul2022.exe"
-    SHA512 6276e17241afc8c0b82789b99667577394eedf001fa2d4b3acdfac847744c3ac5ec9a8072a1e3e9f247386711232aab93f066a0689f4f9f7d84744dc3862ea05
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
+    FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
+    SHA512 901b326b8c86a94c5867e26ca35fa355cadcb283bb81c1fd630385a2ed68ffb43b00ed702953781db660d184ef221184bac0cc905e8502e4d484b01c5b3ff124
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -56,8 +61,8 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${XWBTOOL_EXE}
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-jul2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-jul2022.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
 
 elseif(NOT VCPKG_TARGET_IS_UWP)
 

@@ -1,8 +1,8 @@
 # Keep distfile, don't use GitLab!
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.50/pangomm-2.50.0.tar.xz"
-    FILENAME "pangomm-2.50.0.tar.xz"
-    SHA512 844850db93b8c4dab19dd364e674ee3d61b2fcb8e020ab3d314f240065ee17aeceea21e9ddc438a7d09d56410e3f82147a57425f76bb01e26d82872934269477
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.50/pangomm-2.50.1.tar.xz"
+    FILENAME "pangomm-2.50.1.tar.xz"
+    SHA512 bffc55eedc4f278480a74afcf119b79a295bf5775123f582746ba425e19e2690d627baa9a9813b70db9e063db7efe959f365567dd7bcbc1fc862212ba8225a98
 )
 
 vcpkg_extract_source_archive_ex(

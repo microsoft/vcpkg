@@ -62,8 +62,11 @@
   <BoolProperty Name="VcpkgUseStatic" DisplayName="Use Static Libraries" Category="Conditional" Default="false"
                 Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries by appending -static to $(VcpkgTriplet). This will not be shown in the evaluation of the Triplet within the UI." />
 
+  <BoolProperty Name="VcpkgUseMD" DisplayName="Use Dynamic CRT" Category="Conditional" Default="false"
+                Description="Only effective if 'Use Static Libraries' is selected. Vcpkg can build static libraries compiled against MSVC runtime (e.g. x64-windows-static-md). This options changes the default triplet to use these static libraries by appending -md to $(VcpkgTriplet). This will not be shown in the evaluation of the Triplet within the UI." />
+
   <StringProperty Name="VcpkgTriplet" DisplayName="Triplet" Category="Conditional" Subtype="Text"
-                  Description="Specifies the triplet used by Vcpkg. Does not include the '-static' suffix that may be added by the 'Use static libraries' flag." />
+                  Description="Specifies the triplet used by Vcpkg. Does not include the '-static' or '-static-md' suffixes that may be added by the 'Use static libraries' and 'Use Dynamic CRT' flags." />
 
   <StringProperty Name="VcpkgHostTriplet" DisplayName="Host Triplet" Category="Conditional" Subtype="Text"
                   Description="Specifies the host triplet used by Vcpkg. If empty, this will be automatically determined." />

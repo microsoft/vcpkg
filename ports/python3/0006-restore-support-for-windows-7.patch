@@ -10,6 +10,24 @@ pathcch.
 The same mechanism is applied to fix posixmodule.c
 ---
 index 25ddc82..ff51042 100644
+--- a/Modules/_winapi.c
++++ b/Modules/_winapi.c
+@@ -44,6 +44,15 @@
+ #include <crtdbg.h>
+ #include "winreparse.h"
+ 
++// The Windws 7 patch lowers the API version such that these constants
++// are no longer defined by the Windows SDK. Debounce that.
++#ifndef LCMAP_SORTHANDLE
++#   define LCMAP_SORTHANDLE   0x20000000
++#endif
++#ifndef LCMAP_HASH
++#   define LCMAP_HASH         0x00040000
++#endif
++
+ #if defined(MS_WIN32) && !defined(MS_WIN64)
+ #define HANDLE_TO_PYNUM(handle) \
+     PyLong_FromUnsignedLong((unsigned long) handle)
 diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c

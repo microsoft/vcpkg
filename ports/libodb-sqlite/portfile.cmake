@@ -6,17 +6,17 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
 )
 file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
-  ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-  ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
-  DESTINATION ${SOURCE_PATH})
+  "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+  "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
+  DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
@@ -24,11 +24,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_sqliteConfig-debug.cmake LIBODB_DEBUG_TARGETS)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/odb/odb_sqliteConfig-debug.cmake "${LIBODB_DEBUG_TARGETS}")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if(NOT VCPKG_BUILD_TYPE)
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_sqliteConfig-debug.cmake" LIBODB_DEBUG_TARGETS)
+    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/odb/odb_sqliteConfig-debug.cmake" "${LIBODB_DEBUG_TARGETS}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -5,7 +5,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-get-vars/vcpkg-port-config.cma
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
 
-set(BOOST_VERSION 1.80.0)
+set(BOOST_VERSION 1.81.0)
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
 if("${CMAKE_MATCH_3}" GREATER 0)
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
@@ -53,7 +53,10 @@ function(boost_modular_build)
         endif()
     else()
         set(BOOST_LIB_PREFIX lib)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+            set(BOOST_LIB_RELEASE_SUFFIX .bc)
+            set(BOOST_LIB_DEBUG_SUFFIX .bc)
+        elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             set(BOOST_LIB_RELEASE_SUFFIX .a)
             set(BOOST_LIB_DEBUG_SUFFIX .a)
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -116,7 +119,7 @@ function(boost_modular_build)
     )
 
     vcpkg_cmake_configure(
-        SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
+        SOURCE_PATH "${BOOST_BUILD_INSTALLED_DIR}/share/boost-build"
         GENERATOR Ninja
         OPTIONS
             "-DPORT=${PORT}"
@@ -128,6 +131,7 @@ function(boost_modular_build)
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
             "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
+            "-DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES
@@ -142,6 +146,30 @@ function(boost_modular_build)
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd"
     )
+
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+        # install .bc files
+        file(GLOB WASM_LIBS_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/${BOOST_LIB_PREFIX}*${BOOST_LIB_RELEASE_SUFFIX}")
+        file(GLOB WASM_LIBS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/${BOOST_LIB_PREFIX}*${BOOST_LIB_DEBUG_SUFFIX}")
+        file(COPY ${WASM_LIBS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(COPY ${WASM_LIBS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+        # rename .bc to .a
+        file(GLOB WASM_LIBS_RELEASE "${CURRENT_PACKAGES_DIR}/lib/*.bc")
+        file(GLOB WASM_LIBS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/*.bc")
+        foreach(LIB IN LISTS WASM_LIBS_RELEASE)
+            get_filename_component(OLD_FILENAME ${LIB} NAME)
+            get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+            string(REPLACE ".bc" ".a" NEW_FILENAME ${OLD_FILENAME})
+            file(RENAME ${LIB} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        endforeach()
+        foreach(LIB IN LISTS WASM_LIBS_DEBUG)
+            get_filename_component(OLD_FILENAME ${LIB} NAME)
+            get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+            string(REPLACE ".bc" ".a" NEW_FILENAME ${OLD_FILENAME})
+            file(RENAME ${LIB} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        endforeach()
+    endif()
 
     file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     foreach(LIB IN LISTS INSTALLED_LIBS)

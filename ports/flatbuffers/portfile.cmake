@@ -3,18 +3,20 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v2.0.6
-    SHA512 be631f34064c28d81876bf137c796e9736623cf2cc4f2a05dd45372e7195729c99fad1fa795f8ce71a408756a842edbdc0c3bc714a7cf63203a1de8681d86fb6
+    REF "v${VERSION}"
+    SHA512 fa62188f773ad044644a58caf1e25bef417dfdea47c9da8a2ea7f997154b4f3976019e32e73cc533696a3d4e45ec4a8402b6df140878dfa2ff078740d61b4b0f
     HEAD_REF master
     PATCHES
-        ignore_use_of_cmake_toolchain_file.patch
-        no-werror.patch
         fix-uwp-build.patch
 )
 
 set(options "")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND options -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        # The option may cause "#error Unsupported architecture"
+        list(APPEND options -DFLATBUFFERS_OSX_BUILD_UNIVERSAL=OFF)
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -31,21 +33,15 @@ vcpkg_fixup_pkgconfig()
 
 file(GLOB flatc_path ${CURRENT_PACKAGES_DIR}/bin/flatc*)
 if(flatc_path)
-    make_directory("${CURRENT_PACKAGES_DIR}/tools/flatbuffers")
-    get_filename_component(flatc_executable ${flatc_path} NAME)
-    file(
-        RENAME
-        ${flatc_path}
-        ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
-    )
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/flatbuffers")
+    vcpkg_copy_tools(TOOL_NAMES flatc AUTO_CLEAN)
 else()
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/FlatbuffersConfig.cmake"
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/Flatbuffers-config.cmake"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

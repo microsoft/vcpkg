@@ -39,14 +39,16 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Zopfli")
 # vcpkg_cmake_config_fixup can not handles this on UNIX currently.
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
    VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
-        "\"\${_IMPORT_PREFIX}/debug/bin/zopfli\""
-        "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
-    )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
-        "\"\${_IMPORT_PREFIX}/debug/bin/zopflipng\""
-        "\"\${_IMPORT_PREFIX}/tools/zopfli/zopflipng\""
-    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
+            "\"\${_IMPORT_PREFIX}/debug/bin/zopfli\""
+            "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
+        )
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
+            "\"\${_IMPORT_PREFIX}/debug/bin/zopflipng\""
+            "\"\${_IMPORT_PREFIX}/tools/zopfli/zopflipng\""
+        )
+    endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-release.cmake"
         "\"\${_IMPORT_PREFIX}/bin/zopfli\""
         "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""

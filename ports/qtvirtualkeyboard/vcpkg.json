@@ -1,6 +1,6 @@
 {
   "name": "qtvirtualkeyboard",
-  "version": "6.3.2",
+  "version": "6.4.2",
   "description": "SCXML (state machine notation) compiler and related tools",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -40,9 +40,6 @@
       "dependencies": [
         "t9write"
       ]
-    },
-    "xcb": {
-      "description": "XCB integration"
     }
   }
 }

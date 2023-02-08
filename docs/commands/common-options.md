@@ -60,7 +60,7 @@ In [Manifest Mode](../users/manifests.md), defaults to `vcpkg_installed/` under 
 
 <a name="manifest-root"></a>
 
-### `--x-manifest-root=<path>`
+## `--x-manifest-root=<path>`
 
 **Experimental: will change or be removed at any time**
 

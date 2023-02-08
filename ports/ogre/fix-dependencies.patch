@@ -205,3 +205,16 @@ index 663a1c3..e1452cb 100644
          
          // Register codecs
          String exts = "jpeg,jpg,png,bmp,psd,tga,gif,pic,ppm,pgm,hdr";
+diff --git a/Components/Bites/src/OgreImGuiInputListener.cpp b/Components/Bites/src/OgreImGuiInputListener.cpp
+index 2fce0dd0b..631735fb2 100644
+--- a/Components/Bites/src/OgreImGuiInputListener.cpp
++++ b/Components/Bites/src/OgreImGuiInputListener.cpp
+@@ -112,7 +112,7 @@ static bool keyEvent(const KeyboardEvent& arg)
+     if (key == ImGuiKey_None)
+         return io.WantCaptureKeyboard;
+ 
+-    io.AddKeyEvent(key, arg.type == OgreBites::KEYDOWN);
++    io.AddKeyEvent(static_cast<ImGuiKey>(key), arg.type == OgreBites::KEYDOWN);
+     return io.WantCaptureKeyboard;
+ }
+ 

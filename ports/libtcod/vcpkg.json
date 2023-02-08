@@ -1,6 +1,6 @@
 {
   "name": "libtcod",
-  "version": "1.23.0",
+  "version": "1.23.1",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
@@ -31,9 +31,8 @@
       ]
     },
     "sdl": {
-      "description": "Support for SDL2 windows and events including OpenGL support and the libtcod context.",
+      "description": "Support for SDL2 windows and events with the libtcod context.",
       "dependencies": [
-        "glad",
         "sdl2"
       ]
     },
