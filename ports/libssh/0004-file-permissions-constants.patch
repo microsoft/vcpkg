@@ -10,12 +10,3 @@ diff --git a/src/misc.c b/src/misc.c
          return 1;
      }
  
-@@ -296,7 +296,7 @@
-         return 0;
-     }
- 
--    if (S_ISDIR(buffer.st_mode) && (buffer.st_mode & S_IWRITE)) {
-+    if (S_ISDIR(buffer.st_mode) && (buffer.st_mode & S_IWUSR)) {
-         return 1;
-     }
- 
