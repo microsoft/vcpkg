@@ -72,10 +72,11 @@ index 1f44de1..ac4bea9 100644
 +install(FILES QtImGui.h DESTINATION include)
 diff --git a/unofficial-qtimgui-config.cmake b/unofficial-qtimgui-config.cmake
 new file mode 100644
-index 0000000..a177826
+index 0000000..81ec378
 --- /dev/null
 +++ b/unofficial-qtimgui-config.cmake
-@@ -0,0 +1,3 @@
+@@ -0,0 +1,4 @@
 +include(CMakeFindDependencyMacro)
++find_dependency(Qt5 COMPONENTS Core Gui Widgets)
 +find_dependency(imgui)
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-qtimgui-targets.cmake")
