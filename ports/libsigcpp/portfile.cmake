@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable_tests_enable_static_build.patch
         fix-shared-windows-build.patch
-		fix_include_path.patch
+        fix_include_path.patch
 )
 
 vcpkg_cmake_configure(
