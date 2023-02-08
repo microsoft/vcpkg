@@ -40,6 +40,10 @@
       "baseline": "0.1.1f",
       "port-version": 2
     },
+    "adios2": {
+      "baseline": "2.8.3",
+      "port-version": 0
+    },
     "advobfuscator": {
       "baseline": "2020-06-26",
       "port-version": 0
@@ -890,7 +894,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.81.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-move": {
       "baseline": "1.81.0",
@@ -1218,7 +1222,7 @@
     },
     "brotli": {
       "baseline": "1.0.9",
-      "port-version": 4
+      "port-version": 5
     },
     "brpc": {
       "baseline": "1.2.0",
@@ -2181,7 +2185,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "2023-01-06",
+      "baseline": "1.3.1",
       "port-version": 0
     },
     "egl": {
@@ -2239,6 +2243,10 @@
     "esaxx": {
       "baseline": "ca7cb332011ec37",
       "port-version": 1
+    },
+    "etcd-cpp-apiv3": {
+      "baseline": "0.2.12",
+      "port-version": 0
     },
     "etl": {
       "baseline": "20.35.4",
@@ -2370,7 +2378,7 @@
     },
     "ffmpeg": {
       "baseline": "5.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -3046,7 +3054,7 @@
     },
     "icu": {
       "baseline": "72.1",
-      "port-version": 1
+      "port-version": 2
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -5233,7 +5241,7 @@
       "port-version": 1
     },
     "nanobench": {
-      "baseline": "4.3.9",
+      "baseline": "4.3.10",
       "port-version": 0
     },
     "nanodbc": {
@@ -5692,6 +5700,10 @@
       "baseline": "1.3.1",
       "port-version": 4
     },
+    "openslide": {
+      "baseline": "3.4.1",
+      "port-version": 0
+    },
     "openssl": {
       "baseline": "3.0.7",
       "port-version": 2
@@ -5713,8 +5725,8 @@
       "port-version": 0
     },
     "opentelemetry-cpp": {
-      "baseline": "1.8.1",
-      "port-version": 1
+      "baseline": "1.8.2",
+      "port-version": 0
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6142,7 +6154,7 @@
     },
     "ptc-print": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ptex": {
       "baseline": "2.3.2",
@@ -6605,7 +6617,7 @@
       "port-version": 8
     },
     "quill": {
-      "baseline": "2.6.0",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "quirc": {
@@ -6993,7 +7005,7 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.26.2",
+      "baseline": "2.26.3",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -7145,7 +7157,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.0.1",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "simdutf": {
@@ -7170,7 +7182,7 @@
     },
     "skia": {
       "baseline": "0.36.0",
-      "port-version": 6
+      "port-version": 7
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -7378,11 +7390,11 @@
     },
     "sqlite3": {
       "baseline": "3.40.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlpp11": {
       "baseline": "0.61",
@@ -7493,8 +7505,8 @@
       "port-version": 0
     },
     "superlu": {
-      "baseline": "2020-01-07",
-      "port-version": 6
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "symengine": {
       "baseline": "0.9.0",
@@ -8382,6 +8394,10 @@
     },
     "xorstr": {
       "baseline": "2021-11-20",
+      "port-version": 0
+    },
+    "xpack": {
+      "baseline": "2023-02-06",
       "port-version": 0
     },
     "xproperty": {
