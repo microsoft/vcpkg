@@ -17,7 +17,8 @@ vcpkg_cmake_configure(
     OPTIONS
     -DXSDK_ENABLE_Fortran=OFF
     -Denable_tests=OFF
-    -Denable_blaslib=OFF
+    -Denable_internal_blaslib=OFF
+    -Denable_doc=OFF
 )
 
 vcpkg_cmake_install()
@@ -26,4 +27,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")
