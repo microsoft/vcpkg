@@ -37,10 +37,12 @@ set(includedir "\${prefix}/include")
 set(PACKAGE_VERSION "${VERSION}")
 set(lrintf_lib "")
 configure_file("${SOURCE_PATH}/opusfile.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusfile.pc" @ONLY)
+configure_file("${SOURCE_PATH}/opusfile.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opusfile.pc" @ONLY)
 
 if(opusurl IN_LIST FEATURES)
     set(openssl "openssl")
     configure_file("${SOURCE_PATH}/opusurl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusurl.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/opusurl.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opusurl.pc" @ONLY)
 endif()
 
 vcpkg_fixup_pkgconfig()
