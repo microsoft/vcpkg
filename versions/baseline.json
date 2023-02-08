@@ -1909,7 +1909,7 @@
       "port-version": 1
     },
     "dataframe": {
-      "baseline": "1.19.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "date": {
