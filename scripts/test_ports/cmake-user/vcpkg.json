@@ -58,9 +58,24 @@
           "platform": "!mingw & !uwp"
         },
         {
+          "$comment": "CMake 3.13 for debug postfix support",
+          "$package": "GLUT",
+          "$since": "3.13",
+          "name": "freeglut",
+          "platform": "!uwp & !osx"
+        },
+        {
           "$package": "Freetype",
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "$comment": "CMake 3.9 for find_dependency forwarding extra arguments",
+          "$package": "GDAL",
+          "$since": "3.9",
+          "name": "gdal",
+          "default-features": false,
+          "platform": "!uwp"
         },
         {
           "$package": "Intl",
@@ -71,16 +86,14 @@
           "name": "giflib"
         },
         {
-          "$comment": "CMake 3.13 for debug postfix support",
-          "$package": "GLUT",
-          "$since": "3.13",
-          "name": "freeglut",
-          "platform": "!uwp & !osx"
-        },
-        {
           "$package": "ICU",
           "name": "icu",
           "platform": "!uwp"
+        },
+        {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
         },
         {
           "$package": "Iconv",
@@ -90,11 +103,6 @@
         {
           "$package": "JPEG",
           "name": "libjpeg-turbo"
-        },
-        {
-          "$package": "LAPACK",
-          "name": "lapack",
-          "platform": "!(uwp & arm)"
         },
         {
           "$package": "LibLZMA",
