@@ -14,14 +14,20 @@ Display a list of dependencies for a package.
 Or generate a depency tree diagram for a package in the specified format (DGML/DOT).
 
 ## Examples
+
+#### List
 ```no-highlight
 $ vcpkg depend-info ableton
+
 vcpkg-cmake:
 vcpkg-cmake-config:
 asio: vcpkg-cmake, vcpkg-cmake-config
 ableton-link: asio, vcpkg-cmake, vcpkg-cmake-config
 ableton: ableton-link
+```
 
+#### DGML
+```no-highlight
 $ vcpkg depend-info ableton --dgml
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -42,7 +48,10 @@ $ vcpkg depend-info ableton --dgml
         <Link Source="asio" Target="vcpkg-cmake-config"/>
     </Links>
 </DirectedGraph>
+```
 
+#### DOT
+```no-highlight
 $ vcpkg depend-info ableton --dot
 
 digraph G{
@@ -62,7 +71,7 @@ digraph G{
 }
 ```
 
-Rendered diagram
+#### Rendered diagram
 ```mermaid
 graph TD;
     ableton-->ableton_link;
