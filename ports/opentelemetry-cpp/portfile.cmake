@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
-    REF v1.7.0
-    SHA512 8f32105f217c7f127fa73d6cc787d3a5872e945c3aa694b35393c3bfb85a7cf0d61e0005e8b80a8f9eec259e4cc65463bfa8e9b2da71aca4c15f84955ee05b91
+    REF "v${VERSION}"
+    SHA512 5d3efb7c31626acd9655b795da497ef3829a88f1e33532f26d011fda01ec41e08e88539900151224f5c19161d9bc1f76e502f14a358c4e01440d832432cd0c0b
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -20,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         elasticsearch WITH_ELASTICSEARCH
         jaeger WITH_JAEGER
         otlp WITH_OTLP
+        otlp-http WITH_OTLP_HTTP
         zpages WITH_ZPAGES
 )
 
@@ -44,7 +45,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
-        -DWITH_METRICS_PREVIEW=ON
         -DWITH_LOGS_PREVIEW=ON
         ${FEATURE_OPTIONS}
 )

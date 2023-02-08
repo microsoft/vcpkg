@@ -90,13 +90,14 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )

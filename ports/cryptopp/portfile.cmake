@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
   REPO abdes/cryptopp-cmake
-  REF 51d00a28d761b7ae1585ee554a55fd8e6b943c9a #CRYPTOPP_8_7_0
-  SHA512 cd4d6ea6b33495dd63f4204c45c6cc2a850f26d36465b7edfcca359eb7b6a3623b6116d2ab44da311cbf1dbbcb9731ab78a94fce21eb162c9773e4bf191f669a
+  REF 206aab4cb1e6e78b8460b8c0fe08449c280e321e #CRYPTOPP_8_7_0_1
+  SHA512 594cf9c277d703462375bdd466acd0145e849f55a7519ab266c3f2a6bd810341e86b088b9b4419a2ba2e63146c26de5ac295be071ec008dffdee8dc1edf32157
   HEAD_REF master
 )
 
@@ -55,6 +55,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCRYPTOPP_SOURCES=${SOURCE_PATH}
         -DCRYPTOPP_BUILD_SHARED=OFF
         -DBUILD_STATIC=ON
         -DCRYPTOPP_BUILD_TESTING=OFF
@@ -71,11 +72,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cryptopp)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

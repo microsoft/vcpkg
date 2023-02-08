@@ -27,6 +27,10 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+if("utils" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES admin AUTO_CLEAN)
+endif()
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
