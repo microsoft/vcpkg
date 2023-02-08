@@ -6205,8 +6205,8 @@
       "port-version": 3
     },
     "qcustomplot": {
-      "baseline": "2.0.1",
-      "port-version": 5
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "qhttpengine": {
       "baseline": "1.0.2",
