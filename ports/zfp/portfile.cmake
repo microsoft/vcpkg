@@ -4,13 +4,10 @@ vcpkg_from_github(
     REF f39af72648a2aeb88e9b2cca8c64f51b493ad5f4 #1.0.0
     SHA512 943c147a5170defe8e40c6b5ffc736dcc5a4fd33ab5b3e71aab9194821d68e4b6d093f11c76532ae011cbee44c861b04feb01e36789a9858b10ebfa808416e92
     HEAD_REF master
-    PATCHES
-       fix-install-tools.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        all     BUILD_ALL
         cfp     BUILD_CFP
         utility BUILD_UTILITIES
 )
@@ -22,6 +19,7 @@ vcpkg_cmake_configure(
       -DBUILD_ZFORP=OFF
       -DBUILD_TESTING=OFF
       -DBUILD_EXAMPLES=OFF
+      -DBUILD_ALL=OFF
 )
 
 vcpkg_cmake_install()
