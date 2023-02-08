@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(libmupdf VERSION 1.19.0 LANGUAGES C) #1.19.0-rc2#1
+project(libmupdf VERSION 1.21.1 LANGUAGES C) #1.21.1
 
 set(CMAKE_DEBUG_POSTFIX d)
 
@@ -25,11 +25,12 @@ find_package(OpenJPEG CONFIG REQUIRED)
 find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
 file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
+file(GLOB_RECURSE HEADER "source/*.h" "include/*.h")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/fitz/output-docx.c")
 
-add_library(libmupdf ${SOURCES})
+add_library(libmupdf ${SOURCES} ${HEADER})
 
 if(WIN32)
   target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0 -DMEMENTO_MUPDF_HACKS -DFZ_ENABLE_DOCX_OUTPUT=0 -DFZ_ENABLE_ODT_OUTPUT=0)
