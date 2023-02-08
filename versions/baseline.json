@@ -626,7 +626,7 @@
     },
     "boost-atomic": {
       "baseline": "1.81.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-beast": {
       "baseline": "1.81.0",
@@ -894,7 +894,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.81.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.81.0",
@@ -1022,7 +1022,7 @@
     },
     "boost-random": {
       "baseline": "1.81.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-range": {
       "baseline": "1.81.0",
@@ -1142,7 +1142,7 @@
     },
     "boost-uninstall": {
       "baseline": "1.81.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-units": {
       "baseline": "1.81.0",
@@ -8013,7 +8013,7 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2022-12-16",
+      "baseline": "2023-01-17",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
