@@ -98,5 +98,5 @@ Show recursion depth in output.
 ### `--max-recurse=<depth>`
 Set maximum recursion depth, a value of -1 indicates no limit.
 
-### `--sort=<type>
+### `--sort=<type>`
 Set sort order for the list of dependencies, accepted values are: lexicographical, topological (default), x-tree, reverse.
