@@ -1,0 +1,41 @@
+From 094d8d9d0a3cd19a7258a13d21ccb6acca60b858 Mon Sep 17 00:00:00 2001
+From: AMS21 <AMS21.github@gmail.com>
+Date: Tue, 14 Jun 2022 21:03:03 +0200
+Subject: [PATCH] Fix border charset array being to large (#421)
+
+This for some reason caused the clang compiler to crash, while also
+being incorrect as the tables are actually only 5x6.
+
+See the LLVM issue here:
+https://github.com/llvm/llvm-project/issues/56016
+---
+ src/ftxui/dom/border.cpp | 2 +-
+ src/ftxui/dom/table.cpp  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/ftxui/dom/border.cpp b/src/ftxui/dom/border.cpp
+index 0466dd9e..f39eb523 100644
+--- a/src/ftxui/dom/border.cpp
++++ b/src/ftxui/dom/border.cpp
+@@ -14,7 +14,7 @@
+ namespace ftxui {
+ 
+ using Charset = std::array<std::string, 6>;  // NOLINT
+-using Charsets = std::array<Charset, 6>;     // NOLINT
++using Charsets = std::array<Charset, 5>;     // NOLINT
+ // NOLINTNEXTLINE
+ static Charsets simple_border_charset = {
+     Charset{"┌", "┐", "└", "┘", "─", "│"},
+diff --git a/src/ftxui/dom/table.cpp b/src/ftxui/dom/table.cpp
+index 50da0918..081011f9 100644
+--- a/src/ftxui/dom/table.cpp
++++ b/src/ftxui/dom/table.cpp
+@@ -14,7 +14,7 @@ bool IsCell(int x, int y) {
+ }
+ 
+ // NOLINTNEXTLINE
+-static std::string charset[6][6] = {
++static std::string charset[5][6] = {
+     {"┌", "┐", "└", "┘", "─", "│"},  //
+     {"┏", "┓", "┗", "┛", "━", "┃"},  //
+     {"╔", "╗", "╚", "╝", "═", "║"},  //
