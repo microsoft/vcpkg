@@ -1,12 +1,20 @@
 {
   "name": "physx",
-  "version": "4.1.2",
-  "port-version": 6,
+  "version": "5.1.3",
   "description": "The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs",
-  "homepage": "https://github.com/NVIDIAGameWorks/PhysX",
+  "homepage": "https://github.com/NVIDIA-Omniverse/PhysX",
   "license": null,
   "supports": "!mingw & !(windows & arm)",
   "dependencies": [
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "clang",
+        "enable-rtti",
+        "tools"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
