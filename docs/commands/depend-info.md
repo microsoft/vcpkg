@@ -10,10 +10,18 @@ vcpkg depend-info [query] [options]
 
 ## Description
 
-Generate a depency tree for a package in the specified format (DGML/DOT).
+Display a list of dependencies for a package.
+Or generate a depency tree diagram for a package in the specified format (DGML/DOT).
 
-## Example
+## Examples
 ```no-highlight
+$ vcpkg depend-info ableton
+vcpkg-cmake:
+vcpkg-cmake-config:
+asio: vcpkg-cmake, vcpkg-cmake-config
+ableton-link: asio, vcpkg-cmake, vcpkg-cmake-config
+ableton: ableton-link
+
 $ vcpkg depend-info ableton --dgml
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -75,4 +83,11 @@ Generate the depency tree in the [DOT](https://en.wikipedia.org/wiki/DOT_(graph_
 ### `--dgml`
 Generate the depency tree in the [DGML (Directed Graph Markup Language)](https://en.wikipedia.org/wiki/DGML) XML format.
 
+### `--show-depth`
+Show recursion depth in output.
 
+### `--max-recurse=<depth>`
+Set maximum recursion depth, a value of -1 indicates no limit.
+
+### `--sort=<type>
+Set sort order for the list of dependencies, accepted values are: lexicographical, topological (default), x-tree, reverse.
