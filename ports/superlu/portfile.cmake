@@ -5,7 +5,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiaoyeli/superlu
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 1461b52bc18a8b0345beb70fdd46e07df497a13be840bcc061158ea1d0e61c8745806d1ad21cb2723db80f5ed762c3741f9c0ded2b2013df46da0e8bb6b77b83
     HEAD_REF master
     PATCHES
