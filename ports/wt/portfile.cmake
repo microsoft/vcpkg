@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF b3d2d7408132ca33201279c233633bfc0d3435d0 # 4.9.1
-    SHA512 c5cbf4c0995c85cd7400de45f724dc05319bd7633854bc4ae0fa868aee451e2a15fad4e2f80d2fbbd3726f377f1b687bfb52659915f54bcc77fa76dabd016015
+    REF ${VERSION}
+    SHA512 70ab7bc79463fb0cf60b5ff07598f58b422cfff8d46fec2e9bb1d8598f5e2785e9f5dad2c6dbc24f7ff0ccf8cdcd8c52a09e647b6e1a9000444a1866f710175d
     HEAD_REF master
     PATCHES
         0002-link-glew.patch
