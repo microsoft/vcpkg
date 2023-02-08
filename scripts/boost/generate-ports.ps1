@@ -28,8 +28,8 @@ $portVersions = @{
     "boost" = 1;
     "boost-atomic" = 2;
     "boost-modular-build-helper" = 3;
-    "boost-random" = 1;
-    "boost-uninstall" = 1;
+    "boost-random" = 2;
+    "boost-uninstall" = 2;
     "boost-locale" = 2;
     "boost-vcpkg-helpers" = 2;
 }
