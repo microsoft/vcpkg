@@ -14,7 +14,7 @@ index 2a9724e..95d4d7e 100644
  find_package(LZ4 REQUIRED)
  
 -find_package(Metis REQUIRED)
-+find_package(Metis CONFIG REQUIRED)
++find_package(metis CONFIG REQUIRED)
 +set(METIS_LIBRARIES metis)
  
  find_package(Glog REQUIRED)
