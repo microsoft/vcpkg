@@ -118,7 +118,7 @@
     },
     "angle": {
       "baseline": "chromium_4472",
-      "port-version": 7
+      "port-version": 8
     },
     "antlr4": {
       "baseline": "4.11.1",
@@ -590,7 +590,7 @@
     },
     "boost": {
       "baseline": "1.81.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-accumulators": {
       "baseline": "1.81.0",
@@ -1590,7 +1590,7 @@
     },
     "colmap": {
       "baseline": "2022-03-14",
-      "port-version": 1
+      "port-version": 2
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -1954,7 +1954,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.7",
-      "port-version": 3
+      "port-version": 4
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2310,7 +2310,7 @@
     },
     "farmhash": {
       "baseline": "1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "fast-cpp-csv-parser": {
       "baseline": "2021-01-03",
@@ -2802,7 +2802,7 @@
     },
     "googleapis": {
       "baseline": "alias",
-      "port-version": 1
+      "port-version": 2
     },
     "gperf": {
       "baseline": "3.1",
@@ -2882,7 +2882,7 @@
     },
     "gtest": {
       "baseline": "1.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk": {
       "baseline": "4.6.8",
@@ -3178,7 +3178,7 @@
     },
     "imgui-sfml": {
       "baseline": "2.5",
-      "port-version": 2
+      "port-version": 3
     },
     "imguizmo": {
       "baseline": "1.83",
@@ -3894,7 +3894,7 @@
     },
     "libgeotiff": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libgit2": {
       "baseline": "1.4.2",
@@ -5378,7 +5378,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 7
+      "port-version": 8
     },
     "nmslib": {
       "baseline": "2.1.1",
@@ -5654,7 +5654,7 @@
     },
     "opengl": {
       "baseline": "2022-12-04",
-      "port-version": 0
+      "port-version": 1
     },
     "opengl-registry": {
       "baseline": "2022-09-29",
@@ -6078,7 +6078,7 @@
     },
     "poppler": {
       "baseline": "23.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "popsift": {
       "baseline": "0.9",
@@ -7902,7 +7902,7 @@
     },
     "unixodbc": {
       "baseline": "2.3.11",
-      "port-version": 1
+      "port-version": 2
     },
     "unqlite": {
       "baseline": "1.1.9",
@@ -8142,7 +8142,7 @@
     },
     "vulkan": {
       "baseline": "1.1.82.1",
-      "port-version": 2
+      "port-version": 3
     },
     "vulkan-headers": {
       "baseline": "1.3.239",
@@ -8374,7 +8374,7 @@
     },
     "xerces-c": {
       "baseline": "3.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "xeus": {
       "baseline": "0.24.3",
