@@ -24,7 +24,7 @@ find_package(ZLIB REQUIRED)
 find_package(OpenJPEG CONFIG REQUIRED)
 find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
-file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
+file(GLOB_RECURSE SOURCES "source/*.c")
 file(GLOB_RECURSE HEADER "source/*.h" "include/*.h")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
@@ -53,6 +53,7 @@ target_link_libraries(libmupdf PRIVATE
   ${HARFBUZZ_LIBRARIES}
   ${JBIG2DEC_LIB}
   ZLIB::ZLIB
+  
 )
 
 # Add CMake find_package() integration
