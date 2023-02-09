@@ -2005,11 +2005,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2022-12-15",
+      "baseline": "2023-02-06",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2022-12-15",
+      "baseline": "2023-02-06",
       "port-version": 0
     },
     "dirent": {
@@ -7973,7 +7973,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2022-12-15",
+      "baseline": "2023-02-06",
       "port-version": 0
     },
     "uvw": {
