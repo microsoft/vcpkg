@@ -10,7 +10,7 @@
   "dependencies": [
     {
       "name": "directx-headers",
-      "platform": "windows & !xbox"
+      "platform": "(windows & !xbox) | linux"
     },
     "directxmath",
     {
