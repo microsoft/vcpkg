@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO as-shura/libresources
     REF 1a1189f6d4b7c2c0c8037d3c0e2456f1db3b80b7
-    SHA512 0
+    SHA512 80ac46a7c1bda29abada2f995afb5c68fa0bda55e57d46f3fff247ee6bc8442761afd88306f22bd5b75a45fb0ed5958fbfc9774ecf0fd9dac59ad0b1aef4e39c
     HEAD_REF master
 )
 
