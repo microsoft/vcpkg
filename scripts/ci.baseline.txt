@@ -142,7 +142,8 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-
+# coinutils requires autoconf2.71 not yet available in CI
+coinutils:x64-linux=fail
 # there is an ICE in VS2022 with colmap in release mode
 colmap:x86-windows=fail
 colmap:x64-windows=fail
