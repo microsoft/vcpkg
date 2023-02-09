@@ -1,12 +1,3 @@
-From e2716c39e58c467de5eb34dde636dfb62fb112a0 Mon Sep 17 00:00:00 2001
-From: Leonid Pospelov <leonidpospelov.dev@gmail.com>
-Date: Fri, 10 Feb 2023 01:51:24 +0600
-Subject: [PATCH] fix em
-
----
- dom/src/dae/daeUtils.cpp | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
 diff --git a/dom/src/dae/daeUtils.cpp b/dom/src/dae/daeUtils.cpp
 index 7e3dc9a..dc94b5b 100644
 --- a/dom/src/dae/daeUtils.cpp
