@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-pkgconfig.patch 
         fix-windows-static-findfluidsynth.patch
         fix-missing-find-opusfile.patch
+        fix-deps-link.patch
 )
 
 vcpkg_check_features(
