@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 2a5d051592182264deceec861001fc4c2913ca4255589d6eac30b9e8619bf93b3143797d9f9eb7658150d30b2ae3bcc5297602e1b386a6267778ed342c1edb67
     HEAD_REF dev
+    PATCHES
+        fix-dependencies.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
