@@ -15,6 +15,18 @@
     }
   ],
   "features": {
+    "all": {
+      "description": "Obsolete. This feature is left for compatibility",
+      "dependencies": [
+        {
+          "name": "zfp",
+          "features": [
+            "cfp",
+            "utility"
+          ]
+        }
+      ]
+    },
     "cfp": {
       "description": "cfp support for cfp"
     },

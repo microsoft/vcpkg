@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        all     BUILD_ALL
         cfp     BUILD_CFP
         utility BUILD_UTILITIES
 )
@@ -15,9 +16,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-      -DBUILD_ZFPY=OFF
-      -DBUILD_ZFORP=OFF
-      -DBUILD_TESTING=OFF
       -DBUILD_EXAMPLES=OFF
       -DBUILD_ALL=OFF
 )
