@@ -3,13 +3,12 @@
 include(CMakeFindDependencyMacro)
 
 # Same syntax as find_package
-find_package(freetype NO_MODULE REQUIRED)
-find_package(JPEG REQUIRED)
-find_path(HARFBUZZ_INCLUDE hb.h PATH_SUFFIXES harfbuzz)
-find_library(HARFBUZZ_LIBRARIES harfbuzz)
-find_package(ZLIB REQUIRED)
-find_package(OpenJPEG CONFIG REQUIRED)
-find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
+find_dependency(freetype)
+find_dependency(JPEG)
+find_dependency(harfbuzz)
+find_dependency(ZLIB)
+find_dependency(OpenJPEG)
+find_dependency(jbig2decd jbig2dec)
 
 # Any extra setup
 
