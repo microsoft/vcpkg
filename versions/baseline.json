@@ -5089,7 +5089,7 @@
       "port-version": 0
     },
     "mongoose": {
-      "baseline": "7.8",
+      "baseline": "7.9",
       "port-version": 0
     },
     "monkeys-audio": {
