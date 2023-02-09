@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME libmupdf CONFIG_PATH lib/cmake/libmupdf)
+vcpkg_cmake_config_fixup(PACKAGE_NAME libresources CONFIG_PATH lib/cmake/libresources)
 
 vcpkg_copy_pdbs()
 
