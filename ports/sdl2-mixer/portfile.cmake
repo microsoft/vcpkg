@@ -3,7 +3,11 @@ vcpkg_from_github(
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
     SHA512 74c2b449e8a9928679d42e25bd7a5967e41fe9d51732f26197c6bbe1db9170be784125b7f268476050017f3dc970497e09a0409d50731026a18355375d0369ce
-    PATCHES fix-pkg-prefix.patch fix-pkgconfig.patch fix-windows-static-findfluidsynth.patch
+    PATCHES 
+        fix-pkg-prefix.patch 
+        fix-pkgconfig.patch 
+        fix-windows-static-findfluidsynth.patch
+        fix-missing-find-opusfile.patch
 )
 
 vcpkg_check_features(
