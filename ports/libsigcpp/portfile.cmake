@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsigcplusplus/libsigcplusplus
-    REF 3.4.0
+    REF "${VERSION}"
     SHA512 8b80f0988daea4eb2c827be57de21167f54a9bf3e9704d64d17d12aef064d8ad87d00f95ce4b5add7666452561c5ca42aa45cf677e54068974a4ea813af3b235
     HEAD_REF master
     PATCHES
