@@ -36,14 +36,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "Source/Projects/VS2019/MACDll/MACDll.vcxproj"
         PLATFORM ${PLATFORM}
-        SKIP_CLEAN
     )
 else()
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "Source/Projects/VS2019/MACLib/MACLib.vcxproj"
         PLATFORM ${PLATFORM}
-        SKIP_CLEAN
     )
 endif()
 
