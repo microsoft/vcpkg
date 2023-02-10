@@ -1580,9 +1580,29 @@
       "baseline": "4.0.0",
       "port-version": 5
     },
+    "coin-or-buildtools": {
+      "baseline": "2023-02-02",
+      "port-version": 0
+    },
+    "coin-or-cgl": {
+      "baseline": "2023-02-01",
+      "port-version": 0
+    },
+    "coin-or-clp": {
+      "baseline": "2023-02-01",
+      "port-version": 0
+    },
+    "coin-or-ipopt": {
+      "baseline": "2023-02-01",
+      "port-version": 0
+    },
+    "coin-or-osi": {
+      "baseline": "2023-02-01",
+      "port-version": 0
+    },
     "coinutils": {
-      "baseline": "2.11.4",
-      "port-version": 1
+      "baseline": "2023-02-02",
+      "port-version": 0
     },
     "collada-dom": {
       "baseline": "2.5.0",
@@ -2378,7 +2398,7 @@
     },
     "ffmpeg": {
       "baseline": "5.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2562,7 +2582,7 @@
     },
     "ftxui": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "function2": {
       "baseline": "4.2.2",
@@ -2758,7 +2778,7 @@
     },
     "glpk": {
       "baseline": "5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glslang": {
       "baseline": "11.13.0",
@@ -3054,7 +3074,7 @@
     },
     "icu": {
       "baseline": "72.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -4325,7 +4345,7 @@
       "port-version": 0
     },
     "libsigcpp": {
-      "baseline": "3.2.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "libsigcpp-3": {
@@ -4390,7 +4410,7 @@
     },
     "libssh": {
       "baseline": "0.10.4+20221123",
-      "port-version": 1
+      "port-version": 2
     },
     "libssh2": {
       "baseline": "1.10.0",
@@ -5694,7 +5714,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openmvs": {
       "baseline": "2.1.0",
@@ -6270,7 +6290,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.8",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-canvas3d": {
       "baseline": "0",
