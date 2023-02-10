@@ -6,7 +6,7 @@ vcpkg_from_github(
   REPO
   lamarrr/STX
   REF
-  v0.0.2
+  "v${VERSION}"
   SHA512
   d29a31aec3366d00b1dd87f0ba7a89e061bdee81a2c0981bffded2166a8125f8d7a6fdbd48f696ff969777cbd470e11cc00a1f65e6eae053955bfae2e3271d7b
   HEAD_REF
