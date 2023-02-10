@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF f39eee48564274635e231e2ab652221cce2ec1bd # 1.21.1
     SHA512 aa16d0939739f96c66ee802032c321adcebc86c9fa5bfe7ec64f20614377a4f61c358270216b57a1e4b1929337c4cc856d9ec4666ed8f0edaeaa7f2336a84ac3
     HEAD_REF master
+    PATCHES
+        dont-generate-extract-3rd-party-things.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
