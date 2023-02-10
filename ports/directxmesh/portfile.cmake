@@ -2,15 +2,11 @@ set(DIRECTXMESH_TAG dec2022)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF dec2022b
-    SHA512 bfc357f909e80feba1336c925d0b8407617d867100c24a98669fb9febcec3eebc0d6000db1493722feefee08335e1567272bd74166fac800b044522208213d05
+    SHA512 2dbf09345a6206291a3dadbc7a907f7a587d36dc9edc8b737c4cbb22a33d09fb049201fee703ab574a4fd0f9bf1e41568374712d8d5fd5de6d423356cab2da3d
     HEAD_REF main
 )
 
@@ -20,6 +16,10 @@ vcpkg_check_features(
         dx12 BUILD_DX12
         spectre ENABLE_SPECTRE_MITIGATION
 )
+
+if(VCPKG_TARGET_IS_XBOX)
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
+endif()
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")

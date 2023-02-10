@@ -102,8 +102,6 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    set(VCPKG_TARGET_IS_XBOX ON CACHE BOOL "" FORCE)
-
     if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX2")
     elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")

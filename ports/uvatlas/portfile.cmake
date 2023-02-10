@@ -2,18 +2,18 @@ set(UVATLAS_TAG feb2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF ${UVATLAS_TAG}
-    SHA512 cc44334fe2a372afd8bfa9c508fe59e6b68a3513ab92c0e3fe5657b539641faaa50625a3aafd65d3cb2023a167bfb7158f6b9ac7262d120fe97d48eb3a3742f5
+    REF feb2023b
+    SHA512 feab613740eafe4ea57e23b322dba76ad0ff84d6505b3d855fa088247036c488206c93ffca36fcfd5c39e0e3ede18f57d12a908176f0b5390a30b83448536247
     HEAD_REF main
     PATCHES openexr.patch
 )
+
+if(VCPKG_TARGET_IS_XBOX)
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
+endif()
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")

@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF ${DIRECTXTK_TAG}
-    SHA512 e536e5c258266e46b31a5c7af46a70cc8428e71dc495015527a710ccbfc87fc349caeb7ffcf8cfc1ec2a3311eac55ad30ab906cc4abeacb55b63427e2d514e83
+    REF feb2023b
+    SHA512 3f40b744302b3ee7251679e544984101c1697a124a1eb25bc630c816c71ace4e485bd30714655fbadab00224b7107eacf0d72a82b1e448bba468969c46057c37
     HEAD_REF main
 )
 
@@ -18,15 +18,13 @@ vcpkg_check_features(
         xaudio2redist BUILD_XAUDIO_REDIST
 )
 
+if(VCPKG_TARGET_IS_XBOX)
+    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
+endif()
+
 set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
 
-if(VCPKG_TARGET_IS_XBOX AND (VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES ".*=scarlett.*"))
-  message(NOTICE "Use of ${PORT} for Xbox Series X|S requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-  list(APPEND EXTRA_OPTIONS -DBUILD_SCARLETT_SHADERS=ON)
-elseif(VCPKG_TARGET_IS_XBOX AND (VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES ".*=xboxone.*"))
-  message(NOTICE "Use of ${PORT} for Xbox One requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-  list(APPEND EXTRA_OPTIONS -DBUILD_XBOXONE_SHADERS=ON -DBUILD_DXIL_SHADERS=ON)
-else()
+if(NOT VCPKG_TARGET_IS_XBOX)
   set(DXCPATH ${CURRENT_HOST_INSTALLED_DIR}/tools/directx-dxc)
   list(APPEND EXTRA_OPTIONS -DBUILD_DXIL_SHADERS=ON -DDIRECTX_DXC_PATH=${DXCPATH})
 endif()
