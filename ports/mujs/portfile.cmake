@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON -DDISABLE_INSTALL_TOOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME mujs CONFIG_PATH lib/cmake/mujs)
 vcpkg_copy_pdbs()
