@@ -7,32 +7,51 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opusfile
-    REF a55c164e9891a9326188b7d4d216ec9a88373739 # v0.12
-    SHA512 cfe90b63b8ec027caf6d472167aba863e62f02650245cf0e4d9a543bb565c9088d38b45f7dc2d42cdfcdac5397c3757f4377c24afee73cac52437c125830c411
+    REF "v${VERSION}"
+    SHA512 c134b86a444acc3383b785bf89d02734d955b0547fd2ae55afa821b347d6a312130922893f5a27f48e822a6fddc35301048079e365b64c62cd3c7cadb33233b5
     HEAD_REF master)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if("opusurl" IN_LIST FEATURES)
-    set(BUILD_OPUSURL ON)
-else()
-    set(BUILD_OPUSURL OFF)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        opusurl BUILD_OPUSURL
+)
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_OPUSURL=${BUILD_OPUSURL}
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DOPUSFILE_SKIP_HEADERS=ON)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# make includes work with MSBuild integration
-file(READ ${CURRENT_PACKAGES_DIR}/include/opus/opusfile.h OPUSFILE_H)
-    string(REPLACE "# include <opus_multistream.h>" "# include \"opus_multistream.h\"" OPUSFILE_H "${OPUSFILE_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/opus/opusfile.h "${OPUSFILE_H}")
+# Create the pkg-config files
+set(prefix "")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+set(PACKAGE_VERSION "${VERSION}")
+set(lrintf_lib "")
+configure_file("${SOURCE_PATH}/opusfile.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusfile.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+    configure_file("${SOURCE_PATH}/opusfile.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opusfile.pc" @ONLY)
+endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/opusfile)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/opusfile/COPYING ${CURRENT_PACKAGES_DIR}/share/opusfile/copyright)
+if(opusurl IN_LIST FEATURES)
+    set(openssl "openssl")
+    configure_file("${SOURCE_PATH}/opusurl.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opusurl.pc" @ONLY)
+    if(NOT VCPKG_BUILD_TYPE)
+        configure_file("${SOURCE_PATH}/opusurl.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opusurl.pc" @ONLY)
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()
+
+# make includes work with MSBuild integration
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/opus/opusfile.h" "# include <opus_multistream.h>" "# include \"opus_multistream.h\"")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
