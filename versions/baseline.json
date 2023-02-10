@@ -520,6 +520,10 @@
       "baseline": "2010.04.30",
       "port-version": 7
     },
+    "binlog": {
+      "baseline": "2021-04-16",
+      "port-version": 0
+    },
     "binn": {
       "baseline": "3.0",
       "port-version": 1
