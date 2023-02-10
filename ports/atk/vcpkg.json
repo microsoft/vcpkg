@@ -1,7 +1,7 @@
 {
   "name": "atk",
   "version": "2.38.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "license": "GPL-2.0-only",
@@ -24,5 +24,20 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        }
+      ]
+    }
+  }
 }
