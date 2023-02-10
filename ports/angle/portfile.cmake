@@ -96,3 +96,5 @@ foreach(_file ${_double_files})
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
     endif()
 endforeach()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

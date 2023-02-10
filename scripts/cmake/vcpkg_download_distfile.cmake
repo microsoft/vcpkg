@@ -32,7 +32,7 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
     message(FATAL_ERROR
         "    \n"
         "    Failed to download file with error: ${error_code}\n"  
-        "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
+        "    If you are using a proxy, please check your proxy setting. Possible causes are:\n"
         "    \n"
         "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
         "       to `https://address:port`. This is not correct, because `https://` prefix\n"
@@ -40,19 +40,16 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
         "       , etc..) is an HTTP proxy. Try setting `http://address:port` to both\n"
         "       HTTP_PROXY and HTTPS_PROXY instead.\n"
         "    \n"
-        "    2. You are using Fiddler. Currently a bug (https://github.com/microsoft/vcpkg/issues/17752)\n"
-        "       will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
-        "       Workaround is open Windows 10 Settings App, and search for Proxy Configuration page,\n"
-        "       Change `http=address:port;https=address:port` to `address`, and fill the port number.\n"
+        "    2. If you are using Windows, vcpkg will automatically use your Windows IE Proxy Settings\n"
+        "       set by your proxy software. See https://github.com/microsoft/vcpkg-tool/pull/77\n"
+        "       The value set by your proxy might be wrong, or have same `https://` prefix issue.\n"
         "    \n"
         "    3. Your proxy's remote server is out of service.\n"
         "    \n"
-        "    In future vcpkg releases, if you are using Windows, you no longer need to set\n"
-        "    HTTP(S)_PROXY environment variables. Vcpkg will simply apply Windows IE Proxy\n"
-        "    Settings set by your proxy software. See (https://github.com/microsoft/vcpkg-tool/pull/49)\n"
-        "    and (https://github.com/microsoft/vcpkg-tool/pull/77)\n"
-        "    \n"
-        "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+        "    If you've tried directly download the link, and believe this is not a temporary\n"
+        "    download server failure, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
+        "    to report this upstream download server failure.\n"
+        "    \n")
 endfunction()
 
 function(z_vcpkg_download_distfile_via_aria)
