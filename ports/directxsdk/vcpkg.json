@@ -4,6 +4,7 @@
   "port-version": 6,
   "description": "Legacy DirectX SDK",
   "homepage": "https://docs.microsoft.com/en-us/windows/win32/directx-sdk--august-2009-",
+  "license": null,
   "supports": "windows & !uwp & !xbox & !arm",
   "features": {
     "xaudio2-7": {
