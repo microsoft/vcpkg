@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS})
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/stx)
 vcpkg_copy_pdbs()
 
