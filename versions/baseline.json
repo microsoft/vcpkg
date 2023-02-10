@@ -5173,7 +5173,7 @@
       "port-version": 0
     },
     "ms-quic": {
-      "baseline": "1.2.0",
+      "baseline": "2.1.7",
       "port-version": 0
     },
     "msdfgen": {
