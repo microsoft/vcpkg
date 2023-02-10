@@ -37,11 +37,9 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
         include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
         cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
-        set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
 
         link_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Lib/amd64")
         cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Lib/amd64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
-        set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
         string(APPEND _vcpkg_core_libs " xgameruntime.lib")
 
@@ -57,11 +55,9 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
-            set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
 
             link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
-            set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
             set(_vcpkg_default_lib xgameplatform.lib)
@@ -70,17 +66,20 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
-            set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
 
             link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
-            set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
             set(_vcpkg_default_lib xgameplatform.lib)
         endif()
 
         unset(_vcpkg_gxdk)
+    endif()
+
+    if(DEFINED _vcpkg_inc)
+        set(ENV{INCLUDE} "${_vcpkg_inc};$ENV{INCLUDE}")
+        set(ENV{LIB} "${_vcpkg_lib};$ENV{LIB}")
     endif()
 
     unset(_vcpkg_inc)
