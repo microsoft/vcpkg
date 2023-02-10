@@ -1,0 +1,14 @@
+diff --git a/SDL2_mixerConfig.cmake.in b/SDL2_mixerConfig.cmake.in
+index d65a43ce..15a461d4 100644
+--- a/SDL2_mixerConfig.cmake.in
++++ b/SDL2_mixerConfig.cmake.in
+@@ -85,6 +85,9 @@ include(CMakeFindDependencyMacro)
+         find_dependency(vorbisfile)
+     endif()
+ 
++    if(SDL2MIXER_OPUS AND NOT SDL2MIXER_VENDORED AND NOT TARGET opusfile::opusfile)
++        find_dependency(opusfile)
++    endif()
+     if((NOT SDL2MIXER_VENDORED AND SDL2MIXER_MOD_MODPLUG) OR (HAIKU AND SDL2MIXER_MIDI_NATIVE))
+         include(CheckLanguage)
+         check_language(CXX)
