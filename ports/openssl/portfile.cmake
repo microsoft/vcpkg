@@ -22,6 +22,7 @@ vcpkg_from_github(
     SHA512 5a821aaaaa89027ce08a347e5fc216757c2971e29f7d24792609378c54f657839b3775bf639e7330b28b4f96ef0d32869f0a96afcb25c8a2e1c2fe51a6eb4aa3
     PATCHES
         disable-install-docs.patch
+        script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/umul128-arm64.patch # Fixed upstream in https://github.com/openssl/openssl/pull/20244, but not released as of 3.0.8
