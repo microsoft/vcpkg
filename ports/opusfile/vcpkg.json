@@ -20,6 +20,7 @@
   "features": {
     "opusurl": {
       "description": "Support decoding of http(s) streams",
+      "supports": "!windows",
       "dependencies": [
         "openssl"
       ]
