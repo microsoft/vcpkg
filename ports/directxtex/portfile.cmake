@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF ${DIRECTXTEX_TAG}
-    SHA512 5bc6ee9aeff314ef700a2e0b4b87807121eba6298de9c83af9eb9a3ce1956396570d10888b05e0c42eda800c3183023eb9e0e4b5464989a141e30c0097ecd8fc
+    REF jan2023b
+    SHA512 5e107b1bbf2af8c9989e7760f9f8454b1fc956fb948003f92a7cec2954917cecb7d0fb5d076c3f920c57af7c45ca1b7b440acf1cbfd6de8bb57e8d50118df4de
     HEAD_REF main
     )
 
