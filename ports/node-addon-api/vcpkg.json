@@ -1,6 +1,7 @@
 {
   "name": "node-addon-api",
   "version": "5.0.0",
+  "port-version": 1,
   "description": "Module for using Node-API from C++",
   "homepage": "https://github.com/nodejs/node-addon-api",
   "license": "MIT",
