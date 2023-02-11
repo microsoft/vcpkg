@@ -65,7 +65,8 @@ vcpkg_build_nmake(
         "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}"
     PRERUN_SHELL_DEBUG "${PERL}" Configure
         ${CONFIGURE_OPTIONS}
-        debug-${OPENSSL_ARCH}
+        ${OPENSSL_ARCH}
+        --debug
         "--prefix=${install_dir_native}\\debug"
         "--openssldir=${install_dir_native}\\debug"
         "AS=${as}"
