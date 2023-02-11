@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kubernetes-client/c
-    REF 39a4dab2504c9c26d3577d11a335027f8d782457
-    SHA512  3bdbf12e26d0808818bcb3c28b398650656cabaf3bb364095b277d07f6e35afc6d3aaea9357e6a888dd92edfc0f88d655b59d186150f5b779e7511a924d713bd
+    REF 488460fe9b75ffa61369d45b039fed085d3c817a
+    SHA512  a70a524a90db4976aae05dfca4f2c6fbb255384b0b6f72a3d38434f0f92fdf73da15857d360ad3fdc0dc37164d667279f8a50cba774f064b0841abd2b33a87ea
     HEAD_REF master
     PATCHES
         001-fix-destination.patch
