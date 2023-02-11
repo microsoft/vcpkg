@@ -1,3 +1,5 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
