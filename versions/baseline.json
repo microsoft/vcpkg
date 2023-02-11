@@ -2026,7 +2026,7 @@
     },
     "directxtex": {
       "baseline": "2023-01-31",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtk": {
       "baseline": "2023-02-06",
