@@ -1,7 +1,9 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-addon-api
-  REF v5.0.0
+  REF "v${VERSION}"
   SHA512 5ee14bc325ce66c6f645c3b638efaf69a7dfc90f0d6514f8568dedf34d5b5460b80c4438c4c12264d80c827edf46a82f0ecceb53b2a370ed5ec2ee640fa1ef7f
   HEAD_REF main
 )
