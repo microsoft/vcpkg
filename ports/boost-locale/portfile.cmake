@@ -3,12 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.80.0
-    SHA512 b05bdef8bc0f1f1c1183ce97394e008d69ff316e934570dfb50fef49503d7c4dba8e3d742a701b70d8df21559a577b5f114714214ef8974ada36796c221a2d32
+    REF boost-1.81.0
+    SHA512 553fe135656dfd4e1dd797396964508a3a9807c9a04233a86e340402eaf1913f8d89eff6e1c3fe9415258d541af877839d2d7b5616f40df892cbbdb2dfcbdb97
     HEAD_REF master
     PATCHES fix-dependencies.patch
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import config : requires ;"
+    "import ../config/checks/config : requires ;"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"

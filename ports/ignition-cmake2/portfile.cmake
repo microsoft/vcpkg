@@ -1,10 +1,9 @@
-set(PACKAGE_VERSION "2.5.0")
+set(PACKAGE_VERSION "2.16.0")
 
 ignition_modular_library(NAME cmake
                          VERSION ${PACKAGE_VERSION}
-                         SHA512 e39ed44ae6f7ccc338412f466f1257f88989e0818bee801ddbe09350e906cd9ce709be24356310fdbfde22d1b5b5846fed0aa794c06dcf7caf82748a07b428d6
+                         SHA512 6ee64ff6c82c657678188be459c50a4255fd3881d758906d93361425702d04854a13a46124b20e058069f314077ba7e6c15a058153b615b3245084f066d1cbae
                          PATCHES
-                            FindGTS.patch
                             add-pkgconfig-and-remove-privatefor-limit.patch)
 
 # Install custom usage
