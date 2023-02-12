@@ -10,6 +10,8 @@ vcpkg_from_github(
         dont-generate-extract-3rd-party-things.patch
 )
 
+set(PACKAGE_VERSION "1.21.1")
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmupdfConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
@@ -19,6 +21,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        -DPACKAGE_VERSION=
 )
 
 vcpkg_cmake_install()

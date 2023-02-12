@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(libmupdf VERSION 1.21.1 LANGUAGES C) #1.21.1
+project(libmupdf LANGUAGES C) #1.21.1
 
 set(CMAKE_DEBUG_POSTFIX d)
 
