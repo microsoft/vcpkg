@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DPACKAGE_VERSION=
+        -DPACKAGE_VERSION=${PACKAGE_VERSION}
 )
 
 vcpkg_cmake_install()
