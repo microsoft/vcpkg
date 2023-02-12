@@ -50,7 +50,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
@@ -205,7 +204,6 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
-            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
@@ -217,12 +215,22 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
-            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+# This if/else corresponds to icu setup in src/corelib/configure.json.
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CORE_OPTIONS
+        "ICU_LIBS_RELEASE=${ICU_RELEASE}"
+        "ICU_LIBS_DEBUG=${ICU_DEBUG}"
+    )
+else()
+    list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
