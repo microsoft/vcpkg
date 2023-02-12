@@ -38,6 +38,12 @@ endif()
 if("zlib" IN_LIST FEATURES)
     string(APPEND POPPLER_PC_REQUIRES " zlib")
 endif()
+if("qt" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_QT6=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DENABLE_QT6=OFF")
+endif()
+
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
@@ -56,7 +62,6 @@ vcpkg_cmake_configure(
         -DENABLE_UTILS=OFF
         -DENABLE_GOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
-        -DENABLE_QT6=OFF
         -DENABLE_CMS=none
         -DRUN_GPERF_IF_PRESENT=OFF
         -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
