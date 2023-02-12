@@ -18,11 +18,9 @@ endif()
 
 find_package(freetype NO_MODULE REQUIRED)
 find_package(JPEG REQUIRED)
-find_path(HARFBUZZ_INCLUDE hb.h PATH_SUFFIXES harfbuzz)
-find_library(HARFBUZZ_LIBRARIES harfbuzz)
+find_package(harfbuzz CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(OpenJPEG CONFIG REQUIRED)
-find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
 file(GLOB_RECURSE SOURCES "source/*.c")
 file(GLOB_RECURSE HEADER "source/*.h" "include/*.h")
@@ -37,10 +35,11 @@ if(WIN32)
 else()
   target_compile_definitions(libmupdf PRIVATE -DHAVE_PTHREAD=1 -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0 -DMEMENTO_MUPDF_HACKS -DFZ_ENABLE_DOCX_OUTPUT=0 -DFZ_ENABLE_ODT_OUTPUT=0)
 endif()
-include_directories(include)
+#include_directories(include)
 target_include_directories(libmupdf
-  #PUBLIC
-  #  include
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
   PRIVATE
     generated
     ${JPEG_INCLUDE_DIR}
@@ -50,21 +49,20 @@ target_link_libraries(libmupdf PRIVATE
   openjp2
   freetype
   ${JPEG_LIBRARIES}
-  ${HARFBUZZ_LIBRARIES}
-  ${JBIG2DEC_LIB}
+  harfbuzz::harfbuzz
   ZLIB::ZLIB
-  
 )
 
 # Add CMake find_package() integration
 set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
+set(UNOFFICIAL_PROJECT_NAME "unofficial-${PROJECT_NAME}")
+set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${UNOFFICIAL_PROJECT_NAME}Config.cmake")
 set(TARGETS_EXPORT_NAME "unofficial-${PROJECT_NAME}Targets")
 set(NAMESPACE "unofficial::libmupdf::")
 
-export(TARGETS libmupdf NAMESPACE ${NAMESPACE} FILE libmupdfTargets.cmake)
+export(TARGETS ${PROJECT_NAME} NAMESPACE ${NAMESPACE} FILE ${TARGETS_EXPORT_NAME}.cmake)
 
-install(TARGETS libmupdf
+install(TARGETS ${PROJECT_NAME}
   EXPORT ${TARGETS_EXPORT_NAME}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
@@ -74,7 +72,7 @@ install(TARGETS libmupdf
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    libmupdfConfigVersion.cmake
+    ${UNOFFICIAL_PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY AnyNewerVersion
 )

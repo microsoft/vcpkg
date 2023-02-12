@@ -3,12 +3,11 @@
 include(CMakeFindDependencyMacro)
 
 # Same syntax as find_package
-find_dependency(freetype)
+find_dependency(freetype NO_MODULE)
 find_dependency(JPEG)
 find_dependency(harfbuzz)
 find_dependency(ZLIB)
 find_dependency(OpenJPEG)
-find_dependency(jbig2decd jbig2dec)
 
 # Any extra setup
 
