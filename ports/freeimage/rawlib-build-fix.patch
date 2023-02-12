@@ -2,18 +2,30 @@ diff --git a/Source/FreeImage/PluginRAW.cpp b/Source/FreeImage/PluginRAW.cpp
 index c7f8758a..a57fd5f1 100644
 --- a/Source/FreeImage/PluginRAW.cpp
 +++ b/Source/FreeImage/PluginRAW.cpp
-@@ -46,6 +46,10 @@ private:
+@@ -46,6 +46,11 @@ private:
  	long _eof;
  	INT64 _fsize;
  
 +#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 21)
++protected:
 +	LibRaw_abstract_datastream *substream = nullptr; // polyfill
 +#endif
 +
  public:
  	LibRaw_freeimage_datastream(FreeImageIO *io, fi_handle handle) : _io(io), _handle(handle) {
  		long start_pos = io->tell_proc(handle);
-@@ -694,7 +698,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
+@@ -56,6 +61,10 @@ public:
+ 	}
+ 
+ 	~LibRaw_freeimage_datastream() {
++#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 21)
++		if (substream)
++			delete substream;
++#endif
+ 	}
+ 
+     int valid() { 
+@@ -694,7 +703,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
  		// --------------------------------------------
  
  		// (-s [0..N-1]) Select one raw image from input file
