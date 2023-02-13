@@ -1,0 +1,12 @@
+diff --git a/IO/IOSS/vtkIOSSUtilities.cxx b/IO/IOSS/vtkIOSSUtilities.cxx
+index 26470b965..bee76107a 100644
+--- a/IO/IOSS/vtkIOSSUtilities.cxx
++++ b/IO/IOSS/vtkIOSSUtilities.cxx	
+@@ -38,6 +38,7 @@
+ #include <Ioss_NodeBlock.h>
+ #include <Ioss_SideBlock.h>
+ #include <Ioss_SideSet.h>
++#include <Iotr_Factory.h>
+ 
+ #include <memory>
+ 

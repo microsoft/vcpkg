@@ -62,7 +62,7 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_find_acquire_program(CLANG)
         set(ccas "${CLANG}")
     endif()
-elseif(VCPKG_CROSSCOMPILING)
+else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
 

@@ -200,6 +200,39 @@ function(vcpkg_configure_make)
     endif()
 
     set(configure_env "V=1")
+
+    # macOS - cross-compiling support
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
+            z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
+            z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
+            # --build: the machine you are building on
+            # --host: the machine you are building for
+            # --target: the machine that CC will produce binaries for
+            # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
+            # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
+                set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
+        endif()
+    endif()
+
+    # Linux - cross-compiling support
+    if(VCPKG_TARGET_IS_LINUX)
+        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
+            # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc 
+            # set in the common toolchains/linux.cmake
+            # This is used via --host as a prefix for all other bin tools as well. 
+            # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to: 
+            # https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
+            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+                set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
+        endif()
+    endif()
+    
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         if(CMAKE_HOST_WIN32)
@@ -296,7 +329,7 @@ function(vcpkg_configure_make)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
 
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            if(NOT VCPKG_CROSSCOMPILING)
+            if(NOT arg_BUILD_TRIPLET MATCHES "--host")
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -317,7 +350,7 @@ function(vcpkg_configure_make)
         else()
             z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            if(NOT VCPKG_CROSSCOMPILING)
+            if(NOT arg_BUILD_TRIPLET MATCHES "--host")
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -400,7 +433,7 @@ function(vcpkg_configure_make)
             endif()
         endfunction()
         z_vcpkg_make_set_env(CC C_COMPILER)
-        if(NOT VCPKG_CROSSCOMPILING)
+        if(NOT arg_BUILD_TRIPLET MATCHES "--host")
             z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER)
             z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E")
             z_vcpkg_make_set_env(CXX_FOR_BUILD C_COMPILER)
@@ -434,38 +467,6 @@ function(vcpkg_configure_make)
         set(z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
-            z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
-            z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
-            # --build: the machine you are building on
-            # --host: the machine you are building for
-            # --target: the machine that CC will produce binaries for
-            # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
-            # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
-                set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-            endif()
-            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
-        endif()
-    endif()
-
-    # Linux - cross-compiling support
-    if(VCPKG_TARGET_IS_LINUX)
-        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
-            # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc 
-            # set in the common toolchains/linux.cmake
-            # This is used via --host as a prefix for all other bin tools as well. 
-            # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to: 
-            # https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
-            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
-                set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-            endif()
-            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
-        endif()
-    endif()
-    
     # Cleanup previous build dirs
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
