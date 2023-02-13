@@ -11,6 +11,8 @@ include_directories(.)
 
 add_library(mujs ${mujs_sources})
 
+target_include_directories(mujs PUBLIC "$<INSTALL_INTERFACE:include>")
+
 # Add CMake find_package() integration
 set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
