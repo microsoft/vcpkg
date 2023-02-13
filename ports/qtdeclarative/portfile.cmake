@@ -3,6 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtrees_path_length)
 if(buildtrees_path_length GREATER 44 AND CMAKE_HOST_WIN32)
+    vcpkg_buildpath_length_warning(44)
     message(WARNING "The ${PORT} source was will be extracted to ${CURRENT_BUILDTREES_DIR} , which has more then 44 characters in length.")
     message(FATAL_ERROR "terminating due to ${CURRENT_BUILDTREES_DIR} being too long. Pass --x-buildtrees-root=<shortpath> to vcpkg")
 endif()
