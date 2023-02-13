@@ -5801,8 +5801,8 @@
       "port-version": 9
     },
     "opusfile": {
-      "baseline": "0.12",
-      "port-version": 2
+      "baseline": "0.12+20221121",
+      "port-version": 0
     },
     "orc": {
       "baseline": "1.7.6",
