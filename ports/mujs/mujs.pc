@@ -8,4 +8,4 @@ Description: MuJS embeddable Javascript interpreter
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmujs
-Libs.private: -lm
+Libs.private: @PC_LIBS_PRIVATE@

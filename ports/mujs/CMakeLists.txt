@@ -1,8 +1,17 @@
 cmake_minimum_required(VERSION 3.25)
 project(mujs C)
 
+set(LINK_LIBRARIES "")
+set(PC_LIBS_PRIVATE "")
+
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
+else()
+  find_library(HAVE_LIBM NAMES m)
+  if(HAVE_LIBM)
+    list(APPEND LINK_LIBRARIES m)
+    string(APPEND PC_LIBS_PRIVATE " -lm")
+  endif()
 endif()
 
 file(GLOB mujs_sources js*.c utf*.c regexp.c)
@@ -14,6 +23,8 @@ target_include_directories(mujs
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:include>"
 )
+
+target_link_libraries(mujs PRIVATE ${LINK_LIBRARIES})
 
 install(
   TARGETS mujs
