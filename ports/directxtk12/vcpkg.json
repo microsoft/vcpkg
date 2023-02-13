@@ -10,7 +10,8 @@
   "dependencies": [
     {
       "name": "directx-dxc",
-      "host": true
+      "host": true,
+      "platform": "windows & !xbox"
     },
     {
       "name": "directx-headers",
