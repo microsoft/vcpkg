@@ -60,6 +60,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE)
 endif()
 vcpkg_fixup_pkgconfig()
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libqhull/libqhull.h" "#elif defined(qh_dllimport)" "#elif 1")
+endif()
+
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES
         qconvex
