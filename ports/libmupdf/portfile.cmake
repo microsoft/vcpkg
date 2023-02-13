@@ -10,7 +10,6 @@ vcpkg_from_github(
         dont-generate-extract-3rd-party-things.patch
 )
 
-set(PACKAGE_VERSION "1.21.1")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
