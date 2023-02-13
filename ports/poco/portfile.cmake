@@ -33,19 +33,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-if("netssl" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL_WIN=ON
-            -DENABLE_NETSSL=OFF
-            -DENABLE_CRYPTO=OFF
-        )
-    else()
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL=ON
-            -DENABLE_CRYPTO=ON
-        )
-    endif()
+if("netsslwin" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        -DENABLE_NETSSL_WIN=ON
+        -DENABLE_NETSSL=OFF
+    )
+else()
+    list(APPEND FEATURE_OPTIONS
+        -DENABLE_NETSSL_WIN=OFF
+        -DENABLE_NETSSL=ON
+    )
 endif()
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
@@ -81,6 +78,7 @@ vcpkg_cmake_configure(
         -DENABLE_POCODOC=ON
         -DENABLE_PAGECOMPILER=ON
         -DENABLE_PAGECOMPILER_FILE2PAGE=ON
+        -DENABLE_CRYPTO=ON
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}

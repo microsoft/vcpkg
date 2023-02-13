@@ -32,14 +32,9 @@
         "libmysql"
       ]
     },
-    "netssl": {
-      "description": "NetSSL support for POCO",
-      "dependencies": [
-        {
-          "name": "openssl",
-          "platform": "!windows"
-        }
-      ]
+    "netsslwin": {
+      "description": "NetSSL Windows support for POCO (replaces NetSSL)",
+      "supports": "windows"
     },
     "pdf": {
       "description": "Haru support for POCO",
