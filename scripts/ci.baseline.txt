@@ -142,7 +142,8 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-
+# coinutils requires autoconf2.71 not yet available in CI
+coinutils:x64-linux=fail
 # there is an ICE in VS2022 with colmap in release mode
 colmap:x86-windows=fail
 colmap:x64-windows=fail
@@ -374,7 +375,6 @@ leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
-libcopp:arm64-windows=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
@@ -557,8 +557,6 @@ mfl:x64-linux=skip
 mfl:x64-osx=skip
 mfl:arm64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
-minifb:arm-uwp=fail
-minifb:x64-uwp=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
@@ -593,13 +591,7 @@ mmx:arm64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-mongoose:arm-uwp=fail
-mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
-monkeys-audio:arm-uwp=fail
-monkeys-audio:x64-linux=fail
-monkeys-audio:x64-osx=fail
-monkeys-audio:x64-uwp=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:arm-uwp=fail
 moos-core:x64-uwp=fail
@@ -730,6 +722,8 @@ openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
 openscap:x64-windows-static=fail
 openscap:x64-osx=fail
+# osx needs bison 3.4 installed
+openturns:x64-osx=fail
 # https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
 # openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
 openvdb:x64-windows-static=fail
