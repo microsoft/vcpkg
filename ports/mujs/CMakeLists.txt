@@ -39,6 +39,12 @@ install(
   DESTINATION "share/unofficial-mujs"
 )
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/mujs.pc" "${CMAKE_CURRENT_BINARY_DIR}/mujs.pc" @ONLY)
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/mujs.pc"
+  DESTINATION "lib/pkgconfig"
+)
+
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES mujs.h DESTINATION include)
 endif()
