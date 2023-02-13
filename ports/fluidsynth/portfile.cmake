@@ -45,8 +45,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -Denable-framework=OFF # Needs system permission to install framework
-    OPTIONS_DEBUG
-        -Denable-debug:BOOL=ON
     MAYBE_UNUSED_VARIABLES
         enable-coreaudio
         enable-coremidi
@@ -56,7 +54,6 @@ vcpkg_cmake_configure(
         COREMIDI_FOUND
         VCPKG_BUILD_MAKE_TABLES
         enable-framework
-        enable-debug
 )
 
 vcpkg_cmake_install()
@@ -71,13 +68,11 @@ if("buildtools" IN_LIST FEATURES)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-# Remove unnecessary files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
