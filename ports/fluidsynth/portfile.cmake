@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gentables.patch
+        add-usage-requirements.patch
 )
 
 vcpkg_check_features(
