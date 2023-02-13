@@ -4133,7 +4133,7 @@
       "port-version": 10
     },
     "libmorton": {
-      "baseline": "0.2.8",
+      "baseline": "0.2.11",
       "port-version": 0
     },
     "libmount": {
