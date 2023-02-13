@@ -5,7 +5,7 @@
   "description": "Compiled fonts library necessary for libmupdf",
   "homepage": "https://github.com/as-shura/libresources",
   "license": "GPL-3.0",
-  "supports": "!osx & !linux",
+  "supports": "!osx & !linux ",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
