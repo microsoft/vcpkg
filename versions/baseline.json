@@ -5230,7 +5230,7 @@
     },
     "mujs": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "munit": {
       "baseline": "2019-04-06",
