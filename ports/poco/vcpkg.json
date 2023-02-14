@@ -8,8 +8,8 @@
   "supports": "!uwp",
   "dependencies": [
     "expat",
-    "pcre2",
     "openssl",
+    "pcre2",
     {
       "name": "vcpkg-cmake",
       "host": true
