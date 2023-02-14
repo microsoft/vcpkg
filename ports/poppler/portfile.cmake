@@ -20,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         private-api ENABLE_UNSTABLE_API_ABI_HEADERS
         zlib        ENABLE_ZLIB
         glib        ENABLE_GLIB 
+        qt          ENABLE_QT6
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
@@ -38,12 +39,6 @@ endif()
 if("zlib" IN_LIST FEATURES)
     string(APPEND POPPLER_PC_REQUIRES " zlib")
 endif()
-if("qt" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS "-DENABLE_QT6=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DENABLE_QT6=OFF")
-endif()
-
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
