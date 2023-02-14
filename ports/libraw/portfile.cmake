@@ -1,21 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibRaw/LibRaw
-    REF d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
-    SHA512 5794521f535163afd7815ad005295301c5e0e2f8b2f34ef0a911d9dd1572c1f456b292777548203f9767957a55782b5bc9041c033190d25d1e9b4240d7df32b9
+    REF 0.21.1
+    SHA512 6cea6d859961d713382a9017107c730c7a8777be85d454bd05f1417a69fda902aa9591151eac5f4bd231ce2a86fc39da56e3a024104101f24d6069197fcabbc7
     HEAD_REF master
-    PATCHES
-        remove_register_cpp.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH LIBRAW_CMAKE_SOURCE_PATH
     REPO LibRaw/LibRaw-cmake
-    REF a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a
-    SHA512 607e6f76bcb57534da4f0c864b7a421f1ed49244468b1b52abe77f65aa599cae80715520b3a951294321b812deffd4f163757c9949f337571aa54f414ccc58a5
+    REF 6986a194eeb2c4baac023e7347c6df030573b5c9
+    SHA512 d9f87f71c3948d9b7acbdfadab56f6ec138631ac2d0f8303a4afe0cae1abde026346c086f9307e82be604f54353e23503c613c9013109efe182afbe2bd146585
     HEAD_REF master
     PATCHES
-        findlibraw_debug_fix.patch
         lcms2_debug_fix.patch
         # Move the non-thread-safe library to manual-link. This is unfortunately needed
         # because otherwise libraries that build on top of libraw have to choose.
@@ -37,13 +34,11 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DINSTALL_CMAKE_MODULE_PATH=share/${PORT}
         -DENABLE_EXAMPLES=OFF
-        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

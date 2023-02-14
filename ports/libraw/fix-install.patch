@@ -1,27 +1,46 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 47f3869..136549b 100644
+index 72768b4..7065e2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -544,7 +544,7 @@ SET_TARGET_PROPERTIES(raw_r PROPERTIES OUTPUT_NAME "raw_r")
+@@ -585,7 +585,7 @@ set_target_properties(raw_r PROPERTIES COMPILE_PDB_NAME "raw_r")
  # -- Files to install -------------------------------------------------------------------------------------
+ if (LIBRAW_INSTALL)
+     # Configure and install data file for packaging.
+-    if(NOT WIN32)
++    if(1)
+         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/data/libraw.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc @ONLY)
+         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
  
- # Configure and install data file for packaging.
--IF(NOT WIN32)
-+IF(1)
-     CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake/data/libraw.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc @ONLY)
-     INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+@@ -609,21 +609,22 @@ if (LIBRAW_INSTALL)
+            )
  
-@@ -570,8 +570,8 @@ INSTALL(FILES       ${CMAKE_CURRENT_SOURCE_DIR}/libraw/libraw.h
- # Install Shared binary files.
- INSTALL(TARGETS raw
-         RUNTIME DESTINATION bin
--        LIBRARY DESTINATION lib${LIB_SUFFIX}
--        ARCHIVE DESTINATION lib${LIB_SUFFIX}
-+        LIBRARY DESTINATION lib${LIB_SUFFIX}/manual-link
-+        ARCHIVE DESTINATION lib${LIB_SUFFIX}/manual-link
-        )
+     # Install Shared binary files.
+-    install(TARGETS raw raw_r
++    install(TARGETS raw
++            EXPORT ${PROJECT_NAME}Targets
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib${LIB_SUFFIX}/manual-link
++            ARCHIVE DESTINATION lib${LIB_SUFFIX}/manual-link
++           )
++
++    install(TARGETS raw_r
+             EXPORT ${PROJECT_NAME}Targets
+             RUNTIME DESTINATION bin
+             LIBRARY DESTINATION lib${LIB_SUFFIX}
+             ARCHIVE DESTINATION lib${LIB_SUFFIX}
+            )
  
- INSTALL(TARGETS raw_r
+-
+     if(NOT BUILD_SHARED_LIBS AND "${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
+         message("ClangCl does not support pdb generation with static libraries")
+-    elseif(MSVC)
+-        install(FILES ${PROJECT_BINARY_DIR}/raw.pdb ${PROJECT_BINARY_DIR}/raw_r.pdb
+-                DESTINATION lib
+-                CONFIGURATIONS Debug RelWithDebInfo
+-               )
+     endif()
+ 
+     # Install find cmake script to the system for client applications.
 diff --git a/cmake/data/libraw.pc.cmake b/cmake/data/libraw.pc.cmake
 index aede5f2..ffeefc2 100644
 --- a/cmake/data/libraw.pc.cmake
