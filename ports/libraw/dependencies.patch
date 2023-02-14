@@ -46,6 +46,19 @@ index e7d5a66..484e76b 100644
  endif()
  
  # For registration to libraw_config.h
+@@ -176,10 +188,11 @@ MACRO_BOOL_TO_01(ZLIB_FOUND LIBRAW_USE_DNGDEFLATECODEC)
+ # JPEG library check
+ find_package(JPEG)
+ if(JPEG_FOUND)
+-    if (${JPEG_VERSION} LESS 80)
++    if (${JPEG_VERSION} LESS 80 OR NOT CMAKE_REQUIRE_FIND_PACKAGE_JPEG)
+         set(JPEG8_FOUND FALSE)
+     else()
+         set(JPEG8_FOUND TRUE)
++        string(APPEND PC_REQUIRES_PRIVATE " libjpeg")
+     endif()
+ endif()
+ 
 @@ -216,6 +229,7 @@ if(ENABLE_JASPER)
          add_definitions(-DUSE_JASPER)
          include_directories(${JASPER_INCLUDE_DIR})

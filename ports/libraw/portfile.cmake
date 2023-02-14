@@ -25,8 +25,9 @@ file(COPY "${LIBRAW_CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp ENABLE_OPENMP
-        openmp CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
+        openmp      ENABLE_OPENMP
+        openmp      CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
+        dng-lossy   CMAKE_REQUIRE_FIND_PACKAGE_JPEG
 )
 
 vcpkg_cmake_configure(

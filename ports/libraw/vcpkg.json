@@ -18,6 +18,17 @@
     "zlib"
   ],
   "features": {
+    "dng-lossy": {
+      "description": "DNG lossy codec support",
+      "dependencies": [
+        {
+          "name": "libjpeg-turbo",
+          "features": [
+            "jpeg8"
+          ]
+        }
+      ]
+    },
     "openmp": {
       "description": "Build library with OpenMP support"
     }
