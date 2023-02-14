@@ -1,12 +1,13 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.5.0",
+  "version": "2.7.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
+    "grpc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -526,6 +527,18 @@
     },
     "gkehub": {
       "description": "GKE Hub C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkemulticloud": {
+      "description": "Anthos Multi-Cloud C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

@@ -1,0 +1,31 @@
+diff --git a/src/training/CMakeLists.txt b/src/training/CMakeLists.txt
+index a05b216c..faab9bc2 100644
+--- a/src/training/CMakeLists.txt
++++ b/src/training/CMakeLists.txt
+@@ -259,13 +259,8 @@ if(ICU_FOUND)
+     target_link_libraries(unicharset_training
+                           PUBLIC common_training org.sw.demo.unicode.icu.i18n)
+   else()
+-    if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+       target_link_libraries(unicharset_training PUBLIC common_training
+                                                        PkgConfig::ICU)
+-    else()
+-      target_link_libraries(unicharset_training PUBLIC common_training
+-                                                       ${ICU_LIBRARIES})
+-    endif()
+   endif()
+   target_include_directories(unicharset_training
+                              PUBLIC unicharset ${CMAKE_CURRENT_BINARY_DIR})
+@@ -388,11 +383,7 @@ if(ICU_FOUND)
+         target_include_directories(pango_training BEFORE
+                                    PUBLIC ${PANGO_INCLUDE_DIRS})
+         target_compile_definitions(pango_training PUBLIC -DPANGO_ENABLE_ENGINE)
+-        if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+-          target_link_libraries(pango_training PUBLIC PkgConfig::PANGO)
+-        else()
+-          target_link_libraries(pango_training PUBLIC ${PANGO_LINK_LIBRARIES})
+-        endif()
++        target_link_libraries(pango_training PUBLIC PkgConfig::PANGO)
+       endif()
+     endif()
+     target_include_directories(pango_training
