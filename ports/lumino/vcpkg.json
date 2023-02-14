@@ -10,7 +10,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "gtest"
   ],
   "default-features": [
     "engine"
@@ -40,7 +41,6 @@
           "name": "imgui",
           "features": ["docking-experimental"]
         },
-        "gtest",
         "glslang",
         "spirv-cross",
         "glfw3",
