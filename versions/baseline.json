@@ -1497,8 +1497,8 @@
       "port-version": 2
     },
     "clamav": {
-      "baseline": "0.103.0",
-      "port-version": 4
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "clapack": {
       "baseline": "3.2.1",
