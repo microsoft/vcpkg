@@ -465,11 +465,11 @@ one should "just read the `copyright` file" (e.g., Qt).
 Additionally, you can find the list of [recognized license IDs]
 and [recognized license exception IDs] in Annex A of the SPDX specification.
 
-[recognized license IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a1-licenses-with-short-identifiers
-[recognized license exception IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a2-exceptions-list
+[recognized license IDs]: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-list/#a1-licenses-with-short-identifiers
+[recognized license exception IDs]: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-list/#a2-exceptions-list
 
 The following is an EBNF conversion of the ABNF located at
-<https://spdx.github.io/spdx-spec/SPDX-license-expressions/>,
+<https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/>,
 and this is what we actually parse in vcpkg.
 Note that vcpkg does not support DocumentRefs.
 

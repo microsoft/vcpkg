@@ -1,0 +1,32 @@
+diff --git "a/prj/cmake/arm.cmake" "b/prj/cmake/arm.cmake"
+index 7589930..b92b9d0 100644
+--- "a/prj/cmake/arm.cmake"
++++ "b/prj/cmake/arm.cmake"
+@@ -27,6 +27,11 @@ file(GLOB_RECURSE SIMD_LIB_SRC ${SIMD_ROOT}/src/Simd/SimdLib.cpp)
+ set_source_files_properties(${SIMD_LIB_SRC} PROPERTIES COMPILE_FLAGS "${COMMON_CXX_FLAGS} ${CXX_NEON_FLAG}")
+ add_library(Simd ${SIMD_LIB_TYPE} ${SIMD_LIB_SRC} ${SIMD_BASE_SRC} ${SIMD_NEON_SRC})
+ 
++file(GLOB SIMD_HEADERS "${SIMD_ROOT}/src/Simd/*.hpp" "${SIMD_ROOT}/src/Simd/*.h")
++set_target_properties(Simd PROPERTIES PUBLIC_HEADER "${SIMD_HEADERS}")
++install(TARGETS Simd EXPORT simdtargets LIBRARY DESTINATION "lib" PUBLIC_HEADER DESTINATION "include/Simd")
++install(EXPORT simdtargets DESTINATION share/simd)
++
+ if(SIMD_TEST)
+ 	file(GLOB_RECURSE TEST_SRC_C ${SIMD_ROOT}/src/Test/*.c)
+ 	file(GLOB_RECURSE TEST_SRC_CPP ${SIMD_ROOT}/src/Test/*.cpp)
+diff --git "a/prj/cmake/x86.cmake" "b/prj/cmake/x86.cmake"
+index 944bd5c..9b5180f 100644
+--- "a/prj/cmake/x86.cmake"
++++ "b/prj/cmake/x86.cmake"
+@@ -83,6 +83,11 @@ file(GLOB_RECURSE SIMD_LIB_SRC ${SIMD_ROOT}/src/Simd/SimdLib.cpp)
+ set_source_files_properties(${SIMD_LIB_SRC} PROPERTIES COMPILE_FLAGS "${SIMD_LIB_FLAGS}")
+ add_library(Simd ${SIMD_LIB_TYPE} ${SIMD_LIB_SRC} ${SIMD_ALG_SRC})
+ 
++file(GLOB SIMD_HEADERS "${SIMD_ROOT}/src/Simd/*.hpp" "${SIMD_ROOT}/src/Simd/*.h")
++set_target_properties(Simd PROPERTIES PUBLIC_HEADER "${SIMD_HEADERS}")
++install(TARGETS Simd EXPORT simdtargets LIBRARY DESTINATION "lib" PUBLIC_HEADER DESTINATION "include/Simd")
++install(EXPORT simdtargets DESTINATION share/simd)
++
+ if(SIMD_TEST)
+ 	file(GLOB_RECURSE TEST_SRC_C ${SIMD_ROOT}/src/Test/*.c)
+ 	if((CMAKE_CXX_COMPILER MATCHES "clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang")) 
