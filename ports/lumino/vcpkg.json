@@ -3,35 +3,51 @@
   "version-string": "0.10.0",
   "description": "Lumino.",
   "dependencies": [
-    "nanovg",
-    "yaml-cpp",
-    "toml11",
-    "zlib",
-    "libpng",
-    "libogg",
-    "libvorbis",
     {
-      "name": "freetype",
-      "features": ["png", "zlib"]
+      "name": "vcpkg-cmake",
+      "host": true
     },
-    "pcre2",
-    "box2d",
-    "bullet3",
-    "stb",
-    "tinyobjloader",
-    "tinygltf",
     {
-      "name": "imgui",
-      "features": ["docking-experimental"]
-    },
-
-
-    "gtest",
-    "glslang",
-    "spirv-cross",
-    "glfw3",
-    "vulkan-headers",
-    "glad",
-    "openal-soft"
-  ]
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "engine"
+  ],
+  "features": {
+    "engine": {
+      "description": "Make engine module.",
+      "dependencies": [
+        "nanovg",
+        "yaml-cpp",
+        "toml11",
+        "zlib",
+        "libpng",
+        "libogg",
+        "libvorbis",
+        {
+          "name": "freetype",
+          "features": ["png", "zlib"]
+        },
+        "pcre2",
+        "box2d",
+        "bullet3",
+        "stb",
+        "tinyobjloader",
+        "tinygltf",
+        {
+          "name": "imgui",
+          "features": ["docking-experimental"]
+        },
+        "gtest",
+        "glslang",
+        "spirv-cross",
+        "glfw3",
+        "vulkan-headers",
+        "glad",
+        "openal-soft"
+      ]
+    }
+  }
 }
