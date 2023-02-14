@@ -1,17 +1,22 @@
 diff --git a/FluidSynthConfig.cmake.in b/FluidSynthConfig.cmake.in
-index 1ffdf598..44b1768e 100644
+index 1ffdf598..0be65e0e 100644
 --- a/FluidSynthConfig.cmake.in
 +++ b/FluidSynthConfig.cmake.in
-@@ -7,4 +7,12 @@
+@@ -6,5 +6,17 @@
+ # define variables for configuration options:
  # set(network-enabled @enable-network@)
  
- # finally, include the targets file
 +include(CMakeFindDependencyMacro)
-+find_dependency(OpenMP COMPONENTS C REQUIRED)
-+find_dependency(PkgConfig REQUIRED)
-+pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0 gthread-2.0)
-+set(enable-libsndfile @enable-libsndfile@)
-+if(enable-libsndfile)
-+  pkg_check_modules(LIBSNDFILE REQUIRED IMPORTED_TARGET sndfile)
++find_dependency(OpenMP COMPONENTS C)
++find_dependency(PkgConfig)
++pkg_check_modules(GLIB IMPORTED_TARGET glib-2.0>=2.6.5 gthread-2.0>=2.6.5)
++set(ALSA_SUPPORT @ALSA_SUPPORT@)
++if(ALSA_SUPPORT)
++  pkg_check_modules(ALSA IMPORTED_TARGET alsa>=0.9.1)
 +endif()
++set(LIBSNDFILE_SUPPORT @LIBSNDFILE_SUPPORT@)
++if(LIBSNDFILE_SUPPORT)
++  pkg_check_modules(LIBSNDFILE IMPORTED_TARGET sndfile>=1.0.0)
++endif()
+ # finally, include the targets file
  include("${CMAKE_CURRENT_LIST_DIR}/FluidSynthTargets.cmake")
