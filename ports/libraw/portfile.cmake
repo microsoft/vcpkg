@@ -9,11 +9,11 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH LIBRAW_CMAKE_SOURCE_PATH
     REPO LibRaw/LibRaw-cmake
-    REF 6986a194eeb2c4baac023e7347c6df030573b5c9
-    SHA512 d9f87f71c3948d9b7acbdfadab56f6ec138631ac2d0f8303a4afe0cae1abde026346c086f9307e82be604f54353e23503c613c9013109efe182afbe2bd146585
+    REF 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
+    SHA512 8ce13d37c2ace2fbc57f571052a5a5a847b707b3de1b3b9e0c1a46afaca86cabd42ee275600eeadc3127bc2a0d0a4f224caed0b07feffdafea32ad0f42e50379
     HEAD_REF master
     PATCHES
-        lcms2_debug_fix.patch
+        dependencies.patch
         # Move the non-thread-safe library to manual-link. This is unfortunately needed
         # because otherwise libraries that build on top of libraw have to choose.
         fix-install.patch
@@ -26,14 +26,18 @@ file(COPY "${LIBRAW_CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openmp ENABLE_OPENMP
+        openmp CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DINSTALL_CMAKE_MODULE_PATH=share/${PORT}
         -DENABLE_EXAMPLES=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Jasper=1
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=1
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
 )
 
 vcpkg_cmake_install()
@@ -51,9 +55,18 @@ else()
     )
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/cmake/libraw/FindLibRaw.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/cmake"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYRIGHT"
+    "${SOURCE_PATH}/LICENSE.LGPL"
+    "${SOURCE_PATH}/LICENSE.CDDL"
+)
