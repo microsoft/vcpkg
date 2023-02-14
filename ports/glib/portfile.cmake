@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
@@ -132,8 +130,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/gdb"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/gio"
+    "${CURRENT_PACKAGES_DIR}/lib/gio"
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio" "${CURRENT_PACKAGES_DIR}/lib/gio")
-
-file(INSTALL "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")
