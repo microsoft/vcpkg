@@ -5557,8 +5557,8 @@
       "port-version": 0
     },
     "ogre": {
-      "baseline": "13.4.4",
-      "port-version": 4
+      "baseline": "13.6.2",
+      "port-version": 0
     },
     "ogre-next": {
       "baseline": "2.3.1",
