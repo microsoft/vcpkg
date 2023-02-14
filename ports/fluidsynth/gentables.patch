@@ -1,19 +1,18 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e86a6429..55e702b3 100644
+index e86a6429..9240e091 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -538,6 +538,10 @@ install(EXPORT FluidSynthTargets
+@@ -538,6 +538,9 @@ install(EXPORT FluidSynthTargets
  
  # ******* Auto Generated Lookup Tables ******
  
-+option(VCPKG_BUILD_MAKE_TABLES "Build `make_tables`" OFF)
 +if(VCPKG_BUILD_MAKE_TABLES)
 +    add_subdirectory(gentables)
 +elseif(0)
  include(ExternalProject)
  
  set (GENTAB_SDIR ${CMAKE_CURRENT_SOURCE_DIR}/gentables)
-@@ -557,4 +561,11 @@ ExternalProject_Add(gentables
+@@ -557,4 +560,11 @@ ExternalProject_Add(gentables
          "${CMAKE_COMMAND}" --build "${GENTAB_BDIR}"
      INSTALL_COMMAND ${GENTAB_BDIR}/make_tables.exe "${FluidSynth_BINARY_DIR}/"
  )
