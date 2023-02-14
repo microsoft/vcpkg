@@ -38,9 +38,8 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibWebP)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibRawLite)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/OpenEXR)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG
       -DINSTALL_HEADERS=OFF
 )

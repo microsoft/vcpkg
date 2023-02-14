@@ -18,6 +18,10 @@
     "openexr",
     "openjpeg",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }
