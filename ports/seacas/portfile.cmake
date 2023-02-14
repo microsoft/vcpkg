@@ -8,6 +8,7 @@ vcpkg_from_github(
             fix-ioss-includes.patch
             deps-and-shared.patch
             fix-mpi.patch
+            fix-headers.patch
 )
 
 if(NOT VCPKG_TARGET_IS_OSX)
@@ -86,8 +87,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Seacas")
     # Case sensitive filesystems will have two Seacas folders
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Seacas" PACKAGE_NAME cmake/Seacas DO_NOT_DELETE_PARENT_CONFIG_PATH NO_PREFIX_CORRECTION)
 endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Iotm_TextMeshFuncs.h" "#include <ctype.h>" "#include <cctype> // for toupper, isspace, isdigit")
 
 set(tool_names  cgns_decomp cth_pressure_map
                 io_info io_modify io_shell
