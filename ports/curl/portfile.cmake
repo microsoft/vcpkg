@@ -13,6 +13,7 @@ vcpkg_from_github(
         mbedtls-ws2_32.patch
         export-components.patch
         0023-fix-find-cares.patch
+        0024-fix-for-incomplete-read-writes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
