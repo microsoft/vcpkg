@@ -11,7 +11,7 @@ index c7f8758a..a57fd5f1 100644
 +	// Once the port of FreeImage has been updated to a version greater
 +	// than 3.18.0, this patch should be removed as it will not be needed.
 +#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 20)
-+	LibRaw_abstract_datastream *substream = nullptr;
++	LibRaw_abstract_datastream * const substream = nullptr;
 +#endif
 +
  public:
