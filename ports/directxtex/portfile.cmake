@@ -2,31 +2,32 @@ set(DIRECTXTEX_TAG jan2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_MINGW)
-    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF ${DIRECTXTEX_TAG}
-    SHA512 5bc6ee9aeff314ef700a2e0b4b87807121eba6298de9c83af9eb9a3ce1956396570d10888b05e0c42eda800c3183023eb9e0e4b5464989a141e30c0097ecd8fc
+    REF jan2023b
+    SHA512 5e107b1bbf2af8c9989e7760f9f8454b1fc956fb948003f92a7cec2954917cecb7d0fb5d076c3f920c57af7c45ca1b7b440acf1cbfd6de8bb57e8d50118df4de
     HEAD_REF main
     )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        dx11 BUILD_DX11
         dx12 BUILD_DX12
         openexr ENABLE_OPENEXR_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
 )
 
+if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
+    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
-set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON -DBUILD_DX11=ON)
+set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON)
 
 if(VCPKG_TARGET_IS_UWP)
   list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
@@ -76,7 +77,7 @@ if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
-elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP))
+elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP) AND ("dx11" IN_LIST FEATURES))
 
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag

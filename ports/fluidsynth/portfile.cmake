@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF v2.2.8
-    SHA512 8173f2d368a214cf1eb7faae2f6326db43fb094ec9c83e652f953290c3f29c34ebd0b92cbb439bea8d814d3a7e4f9dc0c18c648df1d414989d5d8b4700c79535
+    REF "v${VERSION}"
+    SHA512 1633294bf6c714361c381151b62d9dd2c8f388490153e7964bfa14fd647a681db9ebfe1de0a06279972d6c5b30377f67361feb4db186b1faa235600f0ae02b22
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
         gentables.patch
 )
 
@@ -45,8 +44,6 @@ vcpkg_cmake_configure(
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-        -DLIB_INSTALL_DIR=lib
-        -Denable-pkgconfig=ON
         -Denable-framework=OFF # Needs system permission to install framework
     OPTIONS_DEBUG
         -Denable-debug:BOOL=ON
@@ -54,9 +51,18 @@ vcpkg_cmake_configure(
         enable-coreaudio
         enable-coremidi
         enable-dart
+        ALSA_FOUND
+        COREAUDIO_FOUND
+        COREMIDI_FOUND
+        VCPKG_BUILD_MAKE_TABLES
+        enable-framework
+        enable-debug
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
+
 vcpkg_fixup_pkgconfig()
 
 set(tools fluidsynth)
@@ -74,4 +80,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

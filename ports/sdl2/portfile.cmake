@@ -19,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11      SDL_X11
         wayland  SDL_WAYLAND
         samplerate SDL_LIBSAMPLERATE
+        ibus     SDL_IBUS
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -26,6 +27,9 @@ if ("x11" IN_LIST FEATURES)
 endif()
 if ("wayland" IN_LIST FEATURES)
     message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev\n")
+endif()
+if ("ibus" IN_LIST FEATURES)
+    message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
@@ -41,7 +45,6 @@ vcpkg_cmake_configure(
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
         -DSDL_TEST=OFF
-        -DSDL_IBUS=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DSDL_LIBSAMPLERATE_SHARED=OFF
