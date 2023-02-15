@@ -17,7 +17,6 @@
     }
   ],
   "default-features": [
-    "engine"
   ],
   "features": {
     "engine": {
