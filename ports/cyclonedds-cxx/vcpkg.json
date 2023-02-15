@@ -9,6 +9,7 @@
       "name": "cyclonedds",
       "default-features": false
     },
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
