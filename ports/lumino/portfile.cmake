@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLUMINO_BUILD_EXAMPLES=OFF
+        -DLN_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
