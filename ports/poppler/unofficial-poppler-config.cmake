@@ -20,3 +20,4 @@ endif()
 find_dependency(Iconv) # CMake 3.11
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-targets.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-cpp-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-qt6-targets.cmake")
