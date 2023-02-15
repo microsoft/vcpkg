@@ -4,7 +4,7 @@
   "description": "C++17 games and visualization toolkit.",
   "homepage": "https://github.com/LuminoEngine/Lumino",
   "license": "MIT",
-  "supports": "x64 & windows",
+  "supports": "x64 & windows & !uwp",
   "dependencies": [
     "gtest",
     {
