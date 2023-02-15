@@ -16,8 +16,6 @@
       "host": true
     }
   ],
-  "default-features": [
-  ],
   "features": {
     "engine": {
       "description": "Make engine module.",
