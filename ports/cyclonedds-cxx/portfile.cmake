@@ -11,9 +11,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "idllib"                    BUILD_IDLLIB
-        "shm"                       ENABLE_SHM
-        "topic-discovery"           ENABLE_TOPIC_DISCOVERY
-        "type-discovery"            ENABLE_TYPE_DISCOVERY
 )
 
 vcpkg_cmake_configure(

@@ -18,10 +18,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "topic-discovery",
-    "type-discovery"
-  ],
   "features": {
     "idllib": {
       "description": "Build IDL preprocessor lib",
@@ -31,50 +27,6 @@
           "default-features": false,
           "features": [
             "idlc"
-          ]
-        }
-      ]
-    },
-    "shm": {
-      "description": "Enable shared memory support",
-      "supports": "!windows",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "shm"
-          ]
-        }
-      ]
-    },
-    "topic-discovery": {
-      "description": "Enable Topic Discovery support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "topic-discovery"
-          ]
-        },
-        {
-          "name": "cyclonedds-cxx",
-          "default-features": false,
-          "features": [
-            "type-discovery"
-          ]
-        }
-      ]
-    },
-    "type-discovery": {
-      "description": "Enable Type Discovery support",
-      "dependencies": [
-        {
-          "name": "cyclonedds",
-          "default-features": false,
-          "features": [
-            "type-discovery"
           ]
         }
       ]
