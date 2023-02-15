@@ -271,6 +271,7 @@ set(TOOL_NAMES
         macdeployqt6
         androiddeployqt6
         syncqt
+        tracepointgen
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
