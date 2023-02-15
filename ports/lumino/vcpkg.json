@@ -1,7 +1,9 @@
 {
   "name": "lumino",
   "version-string": "0.10.1",
-  "description": "Lumino.",
+  "description": "C++17 games and visualization toolkit.",
+  "homepage": "https://github.com/LuminoEngine/Lumino",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
