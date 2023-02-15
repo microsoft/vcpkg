@@ -22,7 +22,10 @@
       "description": "Templates for float and double will be instantiated and compiled into a library"
     },
     "boost": {
-      "description": "Boost is used as a fall-back for features missing in C++98 and performance tweaks"
+      "description": "Boost is used as a fall-back for features missing in C++98 and performance tweaks",
+      "dependencies": [
+        "boost-container"
+      ]
     }
   }
 }

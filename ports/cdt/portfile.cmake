@@ -26,6 +26,15 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
+if(CDT_USE_BOOST)
+    set(CDT_USE_BOOST_STR "#if 1")
+else()
+    set(CDT_USE_BOOST_STR "#if 0")
+endif()
+foreach(FILE CDTUtils.h Triangulation.hpp)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${FILE}" "#ifdef CDT_USE_BOOST" "${CDT_USE_BOOST_STR}")
+endforeach()
+
 if (CDT_USE_AS_COMPILED_LIBRARY)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
