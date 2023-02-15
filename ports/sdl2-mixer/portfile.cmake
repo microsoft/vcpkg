@@ -14,6 +14,7 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        fluidsynth SDL2MIXER_MIDI
         fluidsynth SDL2MIXER_MIDI_FLUIDSYNTH
         libflac SDL2MIXER_FLAC
         libflac SDL2MIXER_FLAC_LIBFLAC
@@ -21,7 +22,6 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
-        nativemidi SDL2MIXER_MIDI_NATIVE
         opusfile SDL2MIXER_OPUS
 )
 
@@ -36,6 +36,8 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF
         -DSDL2MIXER_VORBIS="VORBISFILE"
         -DSDL2MIXER_FLAC_DRFLAC=OFF
+        -DSDL2MIXER_MIDI_NATIVE=OFF
+        -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
 )
 

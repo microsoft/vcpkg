@@ -17,9 +17,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "nativemidi"
-  ],
   "features": {
     "fluidsynth": {
       "description": "Use FluidSynth to play MIDI audio format.",
@@ -44,9 +41,6 @@
       "dependencies": [
         "mpg123"
       ]
-    },
-    "nativemidi": {
-      "description": "Support for MIDI audio format on Windows and macOS."
     },
     "opusfile": {
       "description": "Use opusfile to play Opus audio format.",
