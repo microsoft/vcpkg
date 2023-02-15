@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-project-config.patch
         remove-certificate-step.patch
+        fix-C2471.patch
 )
 
 file(REMOVE_RECURSE
