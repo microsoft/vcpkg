@@ -1,11 +1,11 @@
 {
   "name": "lumino",
-  "version-string": "0.10.1",
-  "port-version": 0,
+  "version": "0.10.1",
   "description": "C++17 games and visualization toolkit.",
   "homepage": "https://github.com/LuminoEngine/Lumino",
   "license": "MIT",
   "dependencies": [
+    "gtest",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,8 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "gtest"
+    }
   ],
   "default-features": [
     "engine"
@@ -23,33 +22,38 @@
     "engine": {
       "description": "Make engine module.",
       "dependencies": [
-        "nanovg",
-        "yaml-cpp",
-        "toml11",
-        "zlib",
-        "libpng",
-        "libogg",
-        "libvorbis",
-        {
-          "name": "freetype",
-          "features": ["png", "zlib"]
-        },
-        "pcre2",
         "box2d",
         "bullet3",
-        "stb",
-        "tinyobjloader",
-        "tinygltf",
+        {
+          "name": "freetype",
+          "features": [
+            "png",
+            "zlib"
+          ]
+        },
+        "glad",
+        "glfw3",
+        "glslang",
         {
           "name": "imgui",
-          "features": ["docking-experimental"]
+          "features": [
+            "docking-experimental"
+          ]
         },
-        "glslang",
+        "libogg",
+        "libpng",
+        "libvorbis",
+        "nanovg",
+        "openal-soft",
+        "pcre2",
         "spirv-cross",
-        "glfw3",
+        "stb",
+        "tinygltf",
+        "tinyobjloader",
+        "toml11",
         "vulkan-headers",
-        "glad",
-        "openal-soft"
+        "yaml-cpp",
+        "zlib"
       ]
     }
   }
