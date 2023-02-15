@@ -9,6 +9,8 @@ qt5-base for qt5-x11extras requires several libraries from the system package ma
   for a complete list of them.
 ]]
     )
+elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
+    find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
