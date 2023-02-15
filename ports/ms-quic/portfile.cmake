@@ -20,14 +20,23 @@ vcpkg_from_github(
     HEAD_REF OpenSSL_1_1_1k+quic
 )
 
-file(REMOVE_RECURSE ${QUIC_SOURCE_PATH}/submodules)
-file(MAKE_DIRECTORY ${QUIC_SOURCE_PATH}/submodules)
-file(RENAME ${OPENSSL_SOURCE_PATH} ${QUIC_SOURCE_PATH}/submodules/openssl)
+file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules")
+file(MAKE_DIRECTORY "${QUIC_SOURCE_PATH}/submodules")
+file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     LIST(APPEND QUIC_TLS "schannel")
 else()
     LIST(APPEND QUIC_TLS "openssl")
+    
+    vcpkg_find_acquire_program(PERL)
+    get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+    vcpkg_add_to_path(${PERL_EXE_PATH})
+    
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(PREPEND ${NASM_EXE_PATH})
+
 endif()
 
 
@@ -35,7 +44,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools QUIC_BUILD_TOOLS
 )
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${QUIC_SOURCE_PATH}"
@@ -45,14 +53,9 @@ vcpkg_cmake_configure(
         -DQUIC_SOURCE_LINK=OFF
         -DQUIC_TLS=${QUIC_TLS}
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
-        -DQUIC_BUILD_TEST=OFF
         -DQUIC_BUILD_SHARED=ON
         -DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}
 )
-
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_EXE_PATH})
 
 if(NOT VCPKG_HOST_IS_WINDOWS)
     find_program(MAKE make)
@@ -60,11 +63,7 @@ if(NOT VCPKG_HOST_IS_WINDOWS)
     vcpkg_add_to_path(PREPEND ${MAKE_EXE_PATH})
 endif()
 
- if(VCPKG_TARGET_IS_WINDOWS)
-     vcpkg_find_acquire_program(NASM)
-     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-     vcpkg_add_to_path(PREPEND ${NASM_EXE_PATH})
- endif()
+
 
 #vcpkg_cmake_build(TARGET OpenSSL_Build) # separate build log for quictls/openssl
 vcpkg_cmake_install()

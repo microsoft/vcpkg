@@ -575,7 +575,6 @@ microsoft-signalr:x86-windows=skip
 mlpack:x64-uwp=fail
 ms-quic:arm-uwp=fail
 ms-quic:arm64-windows=fail
-ms-quic:x64-uwp=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
 mmx:x64-windows=skip
 mmx:x64-windows-static=skip
