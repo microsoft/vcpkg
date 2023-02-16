@@ -13,11 +13,12 @@ find_package(ZLIB REQUIRED)
 find_package(mpg123 CONFIG REQUIRED)
 find_package(Vorbis REQUIRED)
 
-file(GLOB HEADERS libopenmpt/*.h libopenmpt/*.hpp)
+file(GLOB HEADERS libopenmpt/*.h libopenmpt/*.hpp src/openmpt/all/*.hpp)
 list(FILTER HEADERS EXCLUDE REGEX "_impl\\.hpp$|_internal\\.h$")
 
 include_directories(
   .
+  src
   build/svn_version
   libopenmpt
   common
@@ -43,6 +44,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(libopenmpt ${SOURCES})
+set_target_properties(libopenmpt PROPERTIES OUTPUT_NAME openmpt)
 
 target_compile_definitions(libopenmpt PRIVATE
   -DMPT_WITH_MPG123 -DMPT_WITH_OGG
