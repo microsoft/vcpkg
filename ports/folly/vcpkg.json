@@ -50,6 +50,12 @@
         "libsodium"
       ]
     },
+    "liburing": {
+      "description": "Support liburing for compression",
+      "dependencies": [
+        "liburing"
+      ]
+    },
     "lz4": {
       "description": "Support lz4 for compression",
       "dependencies": [
