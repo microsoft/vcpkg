@@ -3,7 +3,7 @@
   "version": "0.21.1",
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
-  "license": "LGPL-2.1 OR CDDL-1.0",
+  "license": "LGPL-2.1-only OR CDDL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "jasper",
