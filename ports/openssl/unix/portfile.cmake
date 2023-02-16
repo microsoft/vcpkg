@@ -1,8 +1,9 @@
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING [[
-openssl currently requires the following library from the system package manager:
-    linux-headers
-It can be installed on alpine systems via apk add linux-headers.
+
+    message(STATUS [[
+openssl requires Linux kernel headers from the system package manager.
+   They can be installed on Alpine systems via `apk add linux-headers`.
+   They can be installed on Ubuntu systems via `apt install linux-libc-dev`.
 ]])
 endif()
 
