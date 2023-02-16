@@ -1,5 +1,5 @@
 diff --git a/cmake/LibeventConfig.cmake.in b/cmake/LibeventConfig.cmake.in
-index 7b808c3..9376a5a 100644
+index a12fc23c..fe108b8d 100644
 --- a/cmake/LibeventConfig.cmake.in
 +++ b/cmake/LibeventConfig.cmake.in
 @@ -58,7 +58,7 @@ endif()
@@ -11,12 +11,18 @@ index 7b808c3..9376a5a 100644
  
  macro(message_if_needed _flag _msg)
      if (NOT ${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY)
-@@ -131,7 +131,7 @@ if(CONFIG_FOR_INSTALL_TREE)
-         find_library(_event_lib
-                     NAMES "event_${_comp}"
-                     PATHS "${_INSTALL_PREFIX}/lib"
+@@ -131,12 +131,10 @@ if(CONFIG_FOR_INSTALL_TREE)
+         unset(_event_lib_rel CACHE)
+         find_library(_event_lib_dbg
+                     NAMES "event_${_comp}d"
+-                    PATHS "${_INSTALL_PREFIX}/lib"
 -                    NO_DEFAULT_PATH)
-+                    )
-         if(_event_lib)
++                    PATHS "${_INSTALL_PREFIX}/lib")
+         find_library(_event_lib_rel
+                     NAMES "event_${_comp}"
+-                    PATHS "${_INSTALL_PREFIX}/lib"
+-                    NO_DEFAULT_PATH)
++                    PATHS "${_INSTALL_PREFIX}/lib")
+         if(_event_lib_rel OR _event_lib_dbg)
              list(APPEND LIBEVENT_LIBRARIES "libevent::${_comp}")
              set_case_insensitive_found(${_comp})
