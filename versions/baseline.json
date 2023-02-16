@@ -4301,7 +4301,7 @@
       "port-version": 10
     },
     "librdkafka": {
-      "baseline": "1.9.2",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "libressl": {
