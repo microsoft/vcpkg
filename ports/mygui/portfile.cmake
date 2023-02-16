@@ -15,7 +15,9 @@ vcpkg_from_github(
         fix-osx-build.patch # from https://github.com/MyGUI/mygui/pull/244
 )
 
-if("opengl" IN_LIST FEATURES)
+if("opengles" IN_LIST FEATURES)
+    set(MYGUI_RENDERSYSTEM 8)
+elseif("opengl" IN_LIST FEATURES)
     set(MYGUI_RENDERSYSTEM 4)
 else()
     set(MYGUI_RENDERSYSTEM 1)
@@ -45,6 +47,9 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+# MYGUI/cmake/FindDirectX.cmake and MYGUI/cmake/FindDirectX11 are not needed:
+    "${CURRENT_PACKAGES_DIR}/debug/lib/MYGUI"
+    "${CURRENT_PACKAGES_DIR}/lib/MYGUI"
 )
 
 vcpkg_fixup_pkgconfig()
