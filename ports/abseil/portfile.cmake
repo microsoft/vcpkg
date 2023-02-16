@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 20230125.0
     SHA512 b3d334215c78b31a2eb10bd9d4a978cd48367866d6daa2065c6c727282bafe19ef7ff5bd7cd4ed5c319d3b04e0711222e08ddbe7621ef1e079fed93a7307112f
     HEAD_REF master
+    PATCHES
+        fix-dll-support.patch
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
