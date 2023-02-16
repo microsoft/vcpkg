@@ -11,6 +11,8 @@ vcpkg_cmake_configure(
     PREFER_NINJA
     OPTIONS
         -DBUILD_ETCD_TESTS=OFF
+        # Abseil and gRPC require C++ >= 14
+        -DETCD_CMAKE_CXX_STANDARD=14
 )
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
@@ -28,4 +30,3 @@ file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/s
 
 # Adding usage text
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
