@@ -7,35 +7,35 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-      "freetype",
-      "sdl2-image",
-      {
-          "name": "vcpkg-cmake",
-          "host": true
-      },
-      {
-          "name": "vcpkg-cmake-config",
-          "host": true
-      }
+    "freetype",
+    "sdl2-image",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
-      "opengl": {
-          "description": "Use OpenGL render system.",
-          "dependencies": [
-              "opengl"
-          ]
-      },
-      "opengles": {
-          "description": "Use OpenGL ES render system (recommended for Emscripten).",
-          "dependencies": [
-              {
-                  "name": "opengl",
-                  "platform": "!emscripten"
-              }
-          ]
-      },
-      "tools": {
-          "description": "Install MyGUI tools."
-      }
+    "opengl": {
+      "description": "Use OpenGL render system.",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "opengles": {
+      "description": "Use OpenGL ES render system (recommended for Emscripten).",
+      "dependencies": [
+        {
+          "name": "opengl",
+          "platform": "!emscripten"
+        }
+      ]
+    },
+    "tools": {
+      "description": "Install MyGUI tools."
+    }
   }
 }
