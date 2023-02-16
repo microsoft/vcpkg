@@ -2538,7 +2538,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 24
+      "port-version": 25
     },
     "freeopcua": {
       "baseline": "20190125",
@@ -4297,8 +4297,8 @@
       "port-version": 0
     },
     "libraw": {
-      "baseline": "201903",
-      "port-version": 10
+      "baseline": "0.21.1",
+      "port-version": 0
     },
     "librdkafka": {
       "baseline": "2.0.2",
