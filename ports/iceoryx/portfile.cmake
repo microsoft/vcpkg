@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-iceoryx/iceoryx
     REF "v${VERSION}"
-    SHA512 b860452373dc41d6b0dd0042d1fc4c97621f143d20e9354a1572126ab815ee0cec6548ddfab9fa276943ed33d9ffd8810243e67eb5fae1d11f18ef0b2b074650    
+    SHA512 b860452373dc41d6b0dd0042d1fc4c97621f143d20e9354a1572126ab815ee0cec6548ddfab9fa276943ed33d9ffd8810243e67eb5fae1d11f18ef0b2b074650
     HEAD_REF master
     PATCHES
         acl.patch
