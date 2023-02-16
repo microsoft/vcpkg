@@ -1,9 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zenomt/rtmfp-cpp
-    REF de55724f2894a4548a0dc3da29fcdf45d911f26a
-    SHA512 b928f39fe7fa38948acf267127c292aaa053c66e61b5a6ba239f8594a682344f760425d1b1c6adfe0af7de905d82836d35cc1c4ddb1396386408d72badac359b
-    HEAD_REF master
+    REF master
+    SHA512 97c54c4c6e3b5102e91a7d2f7cc831bf1148b5b9bac136e351d1c2a3ce4b4f06fe670ed5057cc2e3e36873272ef567d6dd83f5c5b425a300d840652ba4286f27
 )
 
 vcpkg_configure_cmake(
