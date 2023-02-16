@@ -2,21 +2,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/fruit
-    REF 29c9fd265cfa72ee72fb64257fe4b72198d87264 # v3.6.0
-    SHA512 1a8f5b126492dd81fe40bbedd0ead839fd25dac6ea569dd51879e288a4c5850c6618754547ac201d82875781ee0490261372df7a0d1cf50e90c3a9b9da9aaed4
+    REF v3.7.0
+    SHA512 6a18f2740fc52672de49f082b5a21d0a236520da83e77806935baca5d5a0b41f75f1d1b6729cad13fc77b0f033d7d8d2158fd58b1e565a7662bd80dc7eb63ba1
     HEAD_REF master
 )
 
 # TODO: Make boost an optional dependency?
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFRUIT_USES_BOOST=False
         -DFRUIT_TESTS_USE_PRECOMPILED_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright

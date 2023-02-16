@@ -1,12 +1,15 @@
 {
   "name": "bgfx",
-  "version": "1.118.8384-362",
+  "version": "1.118.8417-415",
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
   "documentation": "https://bkaradzic.github.io/bgfx",
   "license": "BSD-2-Clause",
   "dependencies": [
+    "libsquish",
+    "miniz",
+    "tinyexr",
     {
       "name": "vcpkg-cmake",
       "host": true

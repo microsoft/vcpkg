@@ -3,10 +3,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
     REF "v${VERSION}"
-    SHA512 e107508a41fca50845cc2494e64adaba93efb95a2fa486fc962510a8ba4b2180d93067cae9870f119e88e5e8b28a046bc2240b0b23cdd8933d1fb1a6a9668c1e
+    SHA512 b6f64850ceb6cfed831fff3c43508d2a72338862a96dd9430b1d3ebbfcee40201c8b6dcf8b6b603e252bb96f3f283c9cb07da7f24414187f5f1fea3b51e01863
     HEAD_REF dev
     PATCHES
-        install_pkgpc.patch
         no-static-suffix.patch
 )
 
@@ -45,18 +44,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${HEADER}" "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" )
     endforeach()
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(missing_target zstd::libzstd_static)
-    set(existing_target zstd::libzstd_shared)
-else()
-    set(existing_target zstd::libzstd_static)
-    set(missing_target zstd::libzstd_shared)
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/zstd/zstdTargets-interface.cmake" "
-add_library(${missing_target} IMPORTED INTERFACE)
-set_target_properties(${missing_target} PROPERTIES INTERFACE_LINK_LIBRARIES ${existing_target})
-")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(

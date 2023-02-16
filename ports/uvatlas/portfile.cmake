@@ -1,4 +1,4 @@
-set(UVATLAS_TAG oct2022)
+set(UVATLAS_TAG feb2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,10 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 d6c6428ee7d19888cf5b50bff328fa55dec13a8e660f65eab4e4a4538cbf57282d75fbfd079880fa322522d5fd5db10dcb42d62c1b57f76cf04f0843d4b52705
+    SHA512 cc44334fe2a372afd8bfa9c508fe59e6b68a3513ab92c0e3fe5657b539641faaa50625a3aafd65d3cb2023a167bfb7158f6b9ac7262d120fe97d48eb3a3742f5
     HEAD_REF main
-    PATCHES
-        openexr.patch
+    PATCHES openexr.patch
 )
 
 if (VCPKG_HOST_IS_LINUX)
@@ -20,12 +19,15 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         eigen ENABLE_USE_EIGEN
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 if(VCPKG_TARGET_IS_UWP)
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -36,12 +38,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas)
 
-if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
+if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
     URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
     FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
-    SHA512 7ee673db394a83762d6227faa9e643fafeb2ef3e1be1fdfff363f04f3e5d826ff2d314530f6372357fac8a01d284e6861cc3a88ce81f3bd7baa71303d68e3c86
+    SHA512 f34aa4ec7e10bbe24eefe31ddb98841fa097385921d8c3d813e30836749c4b9f4b6e792c371f59c55e446e91845dbd9d333332f6c06cd8cd966cd2bfee89e29e
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -52,7 +54,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
 
   file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-${UVATLAS_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
-elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP))
 
   vcpkg_copy_tools(
         TOOL_NAMES uvatlastool

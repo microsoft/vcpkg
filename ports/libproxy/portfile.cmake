@@ -30,12 +30,14 @@ vcpkg_cmake_configure(
         -DWITH_WEBKIT3=OFF
         -DWITH_KDE=${VCPKG_TARGET_IS_LINUX}
         -DMSVC_STATIC=${STATICCRT}
+        -DWITH_GNOME3=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_DOTNET
         WITH_PERL
         WITH_PYTHON2
         WITH_PYTHON3
         WITH_VALA
+        MSVC_STATIC
 )
 
 vcpkg_cmake_install()
