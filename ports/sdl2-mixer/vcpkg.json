@@ -36,6 +36,9 @@
         "libmodplug"
       ]
     },
+    "libvorbis": {
+      "description": "The libvorbis backend is always enabled. This feature is kept for compatibility."
+    },
     "mpg123": {
       "description": "Use mpg123 to play MP3 audio format.",
       "dependencies": [
