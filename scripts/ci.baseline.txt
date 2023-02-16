@@ -683,8 +683,6 @@ ogre-next:x86-windows        = skip
 ompl:x64-osx=fail
 ompl:arm64-osx=fail
 ompl:x64-linux=fail
-openal-soft:arm-uwp=fail
-openal-soft:x64-uwp=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 opencc:arm64-windows=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
