@@ -19,6 +19,14 @@ else()
 endif()
 set(INTERPRETER "${PERL}")
 
+execute_process(
+    COMMAND "${PERL}" -e "use IPC::Cmd;"
+    RESULT_VARIABLE perl_ipc_cmd_result
+)
+if(NOT perl_ipc_cmd_result STREQUAL "0")
+    message(FATAL_ERROR "\nPerl cannot find IPC::Cmd. Please install it through your system package manager.\n")
+endif()
+
 if(VCPKG_TARGET_IS_ANDROID)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(OPENSSL_ARCH android-arm64)
