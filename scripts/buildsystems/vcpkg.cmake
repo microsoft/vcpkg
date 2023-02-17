@@ -164,8 +164,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
     set(z_vcpkg_function_arguments_ARGC "${${z_vcpkg_function_arguments_ARGC_NAME}}")
 
     math(EXPR z_vcpkg_function_arguments_LAST_ARG "${z_vcpkg_function_arguments_ARGC} - 1")
-    # GREATER_EQUAL added in CMake 3.7
-    if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
+    if(z_vcpkg_function_arguments_LAST_ARG GREATER_EQUAL z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
             # adds an extra `;` on the first time through
@@ -497,7 +496,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
         endif()
 
-        if(NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in CMake 3.7
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE)
         else()
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
