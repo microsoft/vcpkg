@@ -51,7 +51,7 @@
       ]
     },
     "liburing": {
-      "description": "Support liburing for compression",
+      "description": "Support compile with liburing",
       "dependencies": [
         "liburing"
       ]
