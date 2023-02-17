@@ -1,5 +1,5 @@
 diff --git a/cmake/DetectOptions.cmake b/cmake/DetectOptions.cmake
-index d4e2e5dbf..c96536c57 100644
+index d4e2e5dbf..80f231c16 100644
 --- a/cmake/DetectOptions.cmake
 +++ b/cmake/DetectOptions.cmake
 @@ -89,9 +89,9 @@ endif()
@@ -7,10 +7,10 @@ index d4e2e5dbf..c96536c57 100644
  # ZFP
  if(ADIOS2_USE_ZFP STREQUAL AUTO)
 -  find_package(ZFP 0.5.1 CONFIG)
-+  find_package(ZFP 1.0.0 CONFIG)
++  find_package(ZFP CONFIG)
  elseif(ADIOS2_USE_ZFP)
 -  find_package(ZFP 0.5.1 REQUIRED CONFIG)
-+  find_package(ZFP 1.0.0 REQUIRED CONFIG)
++  find_package(ZFP REQUIRED CONFIG)
  endif()
  if(ZFP_FOUND)
    set(ADIOS2_HAVE_ZFP TRUE)
