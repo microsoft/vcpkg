@@ -2,7 +2,7 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES)
-set(TOOL_NAMES qtprotobufgen)
+set(TOOL_NAMES qtprotobufgen qtgrpcgen)
 # native_grpc ->grpc WrapgRPC
 # grp -> qt[network]
 # qtprotobufgen -> protobuf WrapProtobuf
