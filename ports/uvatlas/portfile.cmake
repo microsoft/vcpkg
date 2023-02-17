@@ -11,10 +11,6 @@ vcpkg_from_github(
     PATCHES openexr.patch
 )
 
-if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-endif()
-
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()

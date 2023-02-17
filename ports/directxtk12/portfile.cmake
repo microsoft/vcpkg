@@ -18,10 +18,6 @@ vcpkg_check_features(
         xaudio2redist BUILD_XAUDIO_REDIST
 )
 
-if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-endif()
-
 set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
 
 if(NOT VCPKG_TARGET_IS_XBOX)

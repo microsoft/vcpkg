@@ -19,9 +19,7 @@ vcpkg_check_features(
         spectre ENABLE_SPECTRE_MITIGATION
 )
 
-if(VCPKG_TARGET_IS_XBOX)
-    message(NOTICE "Use of ${PORT} for Xbox requires the Microsoft GDK with Xbox Extensions. See https://aka.ms/gdkx")
-elseif(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
+if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
     message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
 endif()
 
