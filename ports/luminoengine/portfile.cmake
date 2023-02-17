@@ -28,5 +28,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
