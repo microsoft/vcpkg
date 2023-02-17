@@ -13,10 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "header-only": {
-      "description": "Enable header-only (and constexpr in C++20 or higher) library"
-    }
-  }
+  ]
 }

@@ -8,16 +8,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        header-only UNI_ALGO_HEADER_ONLY
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${FEATURE_OPTIONS}
-        -DUNI_ALGO_INSTALL=ON
 )
 
 vcpkg_cmake_install()
@@ -32,10 +24,7 @@ vcpkg_copy_pdbs()
 
 # Remove useless duplicated include in debug directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Remove empty directories
-if(UNI_ALGO_HEADER_ONLY)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
+# Remove empty directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/uni_algo/impl/doc")
 
 # Install copyright and usage
