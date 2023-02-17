@@ -5228,6 +5228,10 @@
       "baseline": "alias",
       "port-version": 1
     },
+    "ms-gdkx": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "ms-gltf": {
       "baseline": "2022-06-28",
       "port-version": 1
