@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF dec2022b
-    SHA512 876d5d3b9e3b568c25b1e4b71dbafdde8cda659393a389942a81abedda444c8487758faedb674936bd836d50557bb94530be93b337c3720dd5b2b20c87e2ba9b
+    SHA512 8e7b757b311223b6ea10fcd6ca9729a4fed51526966239da7d9c3c22f09bc50bbae80b2f8f899badbcc0bfcabc62dcd8d7a662c5881118cce97d3198c014c51e
     HEAD_REF main
 )
 

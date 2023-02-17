@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF jan2023c
-    SHA512 79977c4b617bac7d9ce4bbc046aa2d1f79cfb65bdefc47e1c0400ff5d570d0d1bc3bff07ef8cf2a200681a108ed7cabeb36dbcc40fc3cf0d5ac21057c283ae2a
+    SHA512 df550651b0fc4927aa9f837e0347b98722b8112ca7d7eddecded03a4a8a3dd7afed42c882c04f0b64e403a26c84d4e1c88ee9c104395be446ce220b28c6af9da
     HEAD_REF main
     )
 
