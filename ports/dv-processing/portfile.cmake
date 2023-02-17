@@ -2,27 +2,27 @@ vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.com/inivation
         OUT_SOURCE_PATH SOURCE_PATH
         REPO dv/dv-processing
-        REF 6029bb4ecc06566b5f68375c68f00dfe78587baa
-        SHA512 9d0928e6ded1dab147814f380c57fb5b2c467c213c1fd12dddad9982e7d6a94a7bef526fcd248dd672b4b84753a44599b10d7794640ec63027152cd33b675787
-        HEAD_REF rel_1.5
+        REF 15302dfdd6ad2e1d18c15a6589a830e4e3e45f97
+        SHA512 0
+        HEAD_REF rel_1.7
 )
 
 vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.com/inivation
         OUT_SOURCE_PATH CMAKEMOD_SOURCE_PATH
         REPO dv/cmakemod
-        REF a4d7eccfdc5f83e399786a77df79b178b762858b
-        SHA512 4fe9cc5099ab8b41c982df45cbf9a000b2cb1f1c6ed536685943a60520cff49e262ec43af8187177c50a0df2dfca57e7861bf2e7d07834fc16e85c30eb9a9edb
-        HEAD_REF a4d7eccfdc5f83e399786a77df79b178b762858b
+        REF ec53dae89f6b037e9e640af5340d7bf67d84d278
+        SHA512 0
+        HEAD_REF ec53dae89f6b037e9e640af5340d7bf67d84d278
 )
 
 file(GLOB CMAKEMOD_FILES ${CMAKEMOD_SOURCE_PATH}/*)
-file(COPY ${CMAKEMOD_FILES} DESTINATION ${SOURCE_PATH}/cmakemod)
+file(COPY ${CMAKEMOD_FILES} DESTINATION ${SOURCE_PATH}/cmake/modules)
 
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-	        -DENABLE_TESTS=OFF
+		-DENABLE_TESTS=OFF
 		-DENABLE_SAMPLES=OFF
 		-DENABLE_PYTHON=OFF
 		-DENABLE_UTILITIES=OFF
