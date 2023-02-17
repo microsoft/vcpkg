@@ -14,15 +14,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# The library uses share/uni-algo/cmake for CMake targets,
-# but prefix correction seems to expect only share/uni-algo
-# and breaks paths if not disabled, it's not needed anyway.
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 
-# Copy .pdb to .dll files on Windows
 vcpkg_copy_pdbs()
 
-# Remove useless duplicated include in debug directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Remove empty directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/uni_algo/impl/doc")
