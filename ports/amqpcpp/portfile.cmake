@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CopernicaMarketingSoftware/AMQP-CPP
-    REF "v${VERSION}" #v4.3.15
+    REF "v${VERSION}"
     SHA512 6220d6cdd3114cf02f08f1d8599d1f6de94df204384f9da7db1c18f74732a5c23063cd50066b7d32906af0a968d600daf0d59f1649d9674fa67446197c6e4988
     HEAD_REF master
     PATCHES
