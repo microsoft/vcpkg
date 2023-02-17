@@ -5,15 +5,9 @@
   "homepage": "https://github.com/lamarrr/STX",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "abseil"
-    },
-    {
-      "name": "vcpkg-cmake"
-    },
-    {
-      "name": "vcpkg-cmake-config"
-    }
+    "abseil",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
   ],
   "features": {
     "backtrace": {
