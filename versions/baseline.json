@@ -8058,7 +8058,7 @@
     },
     "vcpkg-gfortran": {
       "baseline": "3",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-gn": {
       "baseline": "2021-11-16",
