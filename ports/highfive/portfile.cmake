@@ -1,7 +1,7 @@
 vcpkg_download_distfile(CATCH2_PATCH
     URLS https://patch-diff.githubusercontent.com/raw/BlueBrain/HighFive/pull/669.diff
     FILENAME ${PORT}-669-145454fc.diff
-    SHA512 b88895daa6305a3ef164f80f996bedb64e281bde9bbab893ee9190d3012ac00ad9407e3b20613fc3464f417eb0c063f7961e383213553b639491d69e145454fc
+    SHA512 fdfadf5a362233ee36f6beee038c87a5dbcb0f66db6c940ab9efa07ce518c9bc5dbfe67ae43d75db9c343912f24fc047a585bf9ed4ce275c161ce6d984abe3c7
 )
 
 vcpkg_from_github(
@@ -10,7 +10,7 @@ vcpkg_from_github(
     REF v2.6.2
     SHA512 80deb3d7f0b2e8e8c660ee37b189d1a4993e23b5ada30c72f3ef4fef80020f8564c8a5a507a34f891cec6c5db0d75d7c7de89040defaf91a3b1cec2018d1bf9e
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-error-C1128.patch
         ${CATCH2_PATCH}
 )
@@ -41,7 +41,7 @@ vcpkg_cmake_install(${add_bin})
 
 if("tests" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES 
+        TOOL_NAMES
             tests_high_five_base
             tests_high_five_easy
             tests_high_five_multi_dims
