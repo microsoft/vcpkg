@@ -1,9 +1,3 @@
-vcpkg_download_distfile(CATCH2_PATCH
-    URLS https://patch-diff.githubusercontent.com/raw/BlueBrain/HighFive/pull/669.diff
-    FILENAME ${PORT}-669-145454fc.diff
-    SHA512 fdfadf5a362233ee36f6beee038c87a5dbcb0f66db6c940ab9efa07ce518c9bc5dbfe67ae43d75db9c343912f24fc047a585bf9ed4ce275c161ce6d984abe3c7
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
@@ -12,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-error-C1128.patch
-        ${CATCH2_PATCH}
+        fix-catch2-669.patch
 )
 
 vcpkg_check_features(
