@@ -5122,7 +5122,7 @@
     },
     "monkeys-audio": {
       "baseline": "9.04",
-      "port-version": 1
+      "port-version": 2
     },
     "moos-core": {
       "baseline": "10.4.0",
@@ -7201,7 +7201,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "simdutf": {
