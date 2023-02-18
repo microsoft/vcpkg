@@ -4078,7 +4078,7 @@
     },
     "liblsl": {
       "baseline": "1.16.1",
-      "port-version": 0
+      "port-version": 1
     },
     "liblsquic": {
       "baseline": "3.1.1",
