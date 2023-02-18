@@ -31,6 +31,31 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+# Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
+foreach(VCXPROJ IN ITEMS
+    "${SOURCE_PATH}/Source/Projects/VS2019/Console/Console.vcxproj"
+    "${SOURCE_PATH}/Source/Projects/VS2019/DirectShow Filter/APE Decoder.vcxproj"
+    "${SOURCE_PATH}/Source/Projects/VS2019/MAC/MAC.vcxproj"
+    "${SOURCE_PATH}/Source/Projects/VS2019/MACDll/MACDll.vcxproj"
+    "${SOURCE_PATH}/Source/Projects/VS2019/MACLib/MACLib.vcxproj"
+    "${SOURCE_PATH}/Source/Projects/VS2019/Uninstaller/Uninstaller.vcxproj")
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        ""
+    )
+endforeach()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
