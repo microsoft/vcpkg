@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-vs2019-encoding-conversion.patch
         qt6.patch
         more_qt6.patch
+        1aa2cf6edf9f2bd57a21998fceeb095cbe1f2b84.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
