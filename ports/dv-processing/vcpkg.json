@@ -20,6 +20,7 @@
     "libcaer",
     "lz4",
     "opencv4",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
