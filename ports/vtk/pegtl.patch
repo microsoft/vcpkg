@@ -29,7 +29,7 @@ index 338aa736e..374e54b94 100644
      return true;
    }
 -  catch (const tao::pegtl::input_error& e)
-+  catch (const tao::pegtl::parse_error&& e)
++  catch (const tao::pegtl::parse_error& e)
    {
      vtkGenericWarningMacro(
        "UniversalTransformMotion::read_universaltransform_file failed: " << e.what());
