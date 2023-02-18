@@ -115,8 +115,8 @@ endif()
 if("qt" IN_LIST FEATURES)
     file(READ "${CURRENT_INSTALLED_DIR}/share/qtbase/vcpkg_abi_info.txt" qtbase_abi_info)
     if(qtbase_abi_info MATCHES "(^|;)gles2(;|$)")
-        message(FATAL_ERROR "VTK assumes qt to be build with desktop opengl. As such trying to build vtk with qt using GLES will fail.") 
-        # This should really be a configure error but using this approach doesn't require patching. 
+        message(FATAL_ERROR "VTK assumes qt to be build with desktop opengl. As such trying to build vtk with qt using GLES will fail.")
+        # This should really be a configure error but using this approach doesn't require patching.
     endif()
 endif()
 

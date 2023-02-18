@@ -1,6 +1,6 @@
 diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
-index 73eee02f7..22d8bc159 100644
---- a/CMake/FindPEGTL.cmake	
+index 73eee02f..274176dc 100644
+--- a/CMake/FindPEGTL.cmake
 +++ b/CMake/FindPEGTL.cmake
 @@ -19,31 +19,42 @@
  # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
@@ -71,3 +71,16 @@ index 73eee02f7..22d8bc159 100644
 +    endif ()
 +endif ()
 \ No newline at end of file
+diff --git a/ThirdParty/pegtl/vtk_pegtl.h.in b/ThirdParty/pegtl/vtk_pegtl.h.in
+index 12e26962..e7c058a4 100644
+--- a/ThirdParty/pegtl/vtk_pegtl.h.in
++++ b/ThirdParty/pegtl/vtk_pegtl.h.in
+@@ -19,7 +19,7 @@
+ #cmakedefine01 VTK_MODULE_USE_EXTERNAL_vtkpegtl
+ 
+ #if VTK_MODULE_USE_EXTERNAL_vtkpegtl
+-# define VTK_PEGTL(x) <tao/x>
++# define VTK_PEGTL(x) <pegtl-2/tao/x>
+ #else
+ # include <vtkpegtl/include/tao/pegtl.hpp>
+ # define VTK_PEGTL(x) <vtkpegtl/include/tao/x>
