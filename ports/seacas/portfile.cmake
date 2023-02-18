@@ -11,6 +11,14 @@ vcpkg_from_github(
             fix-headers.patch
 )
 
+if(NOT "mpi" IN_LIST FEATURES)
+    file(STRINGS "${CURRENT_INSTALLED_DIR}/share/hdf5/vcpkg_abi_info.txt" hdf5_abi_info REGEX "features")
+    if(hdf5_abi_info MATCHES "( |;)parallel")
+        # Fail early and visibly.
+        message(FATAL_ERROR "Cannot build ${PORT} without feature 'mpi':\nDependency hdf5 is installed with feature 'parallel'.")
+    endif()
+endif()
+
 if(NOT VCPKG_TARGET_IS_OSX)
     set(MPI_FEATURES mpi TPL_ENABLE_ParMETIS)
 endif()
