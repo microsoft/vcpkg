@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF v0.2.12
     PATCHES
         0001-do-not-hardcode-cxx-standard.patch
+        0002-use-target-link-libraries.patch
 )
 
 vcpkg_cmake_configure(
