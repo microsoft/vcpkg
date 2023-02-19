@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO litehtml/litehtml
     REF v0.6
     SHA512 b774ed96e53780865e789875f571f96ebce1cd2ff0c05a06ae68a67aec44375cc282c07f77fc87131d422aceddba32bbf3e8e498c870883d8e042adb30834c39
+    PATCHES remove-gumbo-find-package.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -13,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DLITEHTML_UTF8=ON
 )
 
 vcpkg_cmake_install()
