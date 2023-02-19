@@ -150,4 +150,3 @@ if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")
-message(FATAL_ERROR STOP)
