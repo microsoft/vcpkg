@@ -1,6 +1,6 @@
 {
   "name": "node-api",
-  "version-semver": "8",
+  "version": "8",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
   "license": null,

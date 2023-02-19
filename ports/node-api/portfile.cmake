@@ -2,11 +2,11 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-api-headers
   REF ecefbdd00f2cd04eaf1c06b6481abe9b031b5f0b
-  SHA512 0
+  SHA512 66e8464e74bcaa5e7d9987f5e1101b8df7b6cf4752d0df52a6f26b6897c6022fd39268dac7edc489887d2e9fd0fc6161077dcd55ba51995cbef59e9bbe94c54c
   HEAD_REF main
 )
 
-file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
 
 # get_filename_component(DIST_FILENAME "${DIST_URL}" NAME)
 
