@@ -6,7 +6,7 @@ if(NOT TARGET unofficial::node-api::node-api)
   endif()
 
   find_path(node-api_INCLUDE_DIR
-    NAMES node.h
+    NAMES node_api.h
     PATHS "${CMAKE_CURRENT_LIST_DIR}/../../include/node"
     NO_DEFAULT_PATH
     REQUIRED

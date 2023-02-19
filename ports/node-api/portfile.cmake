@@ -8,33 +8,6 @@ vcpkg_from_github(
 
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
 
-# get_filename_component(DIST_FILENAME "${DIST_URL}" NAME)
-
-# if(out_win_lib)
-#   # nodejs requires the same node.lib to be used for both debug and release builds
-#   file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-#   file(COPY "${out_win_lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-# endif()
-
-# # download dist
-# vcpkg_download_distfile(
-#   out_dist
-#   URLS "${DIST_URL}"
-#   FILENAME "${DIST_FILENAME}"
-#   SHA512 "${SHA512}"
-# )
-
-# # extract dist
-# vcpkg_extract_source_archive(
-#   OUT_SOURCE_PATH
-#   ARCHIVE "${out_dist}"
-# )
-
-# # copy headers
-# set(suffix "include/node")
-# set(source_path "${OUT_SOURCE_PATH}/${suffix}")
-# file(COPY "${source_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
-
 # we do not take the license from the dist file because it is not included as we download the headers only
 set(license_url "https://raw.githubusercontent.com/nodejs/node/v18.12.1/LICENSE")
 vcpkg_download_distfile(
