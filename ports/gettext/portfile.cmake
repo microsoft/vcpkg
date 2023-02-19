@@ -46,10 +46,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
         # The following are required for a full gettext built (libintl and tools).
         gl_cv_func_printf_directive_n=no  # segfaults otherwise with popup window
         ac_cv_func_memset=yes             # not detected in release builds
-        ac_cv_header_pthread_h=no
-        ac_cv_header_dirent_h=no
-        ac_cv_header_getopt_h=no
     )
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        list(APPEND OPTIONS
+            # Don't take from port dirent
+            ac_cv_header_dirent_h=no
+            # Don't take from port getopt-win32
+            ac_cv_header_getopt_h=no
+            # Don't take from port pthreads
+            ac_cv_header_pthread_h=no
+            ac_cv_header_sched_h=no
+            ac_cv_header_semaphore_h=no
+        )
+    endif()
 endif()
 
 # These functions scope any changes to VCPKG_BUILD_TYPE
