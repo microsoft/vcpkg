@@ -12,6 +12,9 @@ vcpkg_from_github(
         fix-openexr-dll.patch
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
+        fix-vs2019-encoding-conversion.patch
+        qt6.patch
+        more_qt6.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -24,6 +27,8 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/Findfmt.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,11 +41,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
+        libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
         tools       USE_OPENGL
         tools       USE_QT
-        tools       USE_QT5
 )
 
 vcpkg_cmake_configure(
@@ -63,7 +68,8 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
         -DENABLE_INSTALL_testtex=OFF
-        "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
+        "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
+        "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
 )

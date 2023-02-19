@@ -1,5 +1,5 @@
 diff --git a/Source/Projects/VS2019/MACDll/MACDll.vcxproj b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
-index 4dfa820..7ac4bce 100644
+index 0fcfc94..c0caf12 100644
 --- a/Source/Projects/VS2019/MACDll/MACDll.vcxproj
 +++ b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
 @@ -108,7 +108,7 @@

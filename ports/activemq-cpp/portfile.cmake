@@ -11,7 +11,7 @@ if (NOT VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.apache.org/dist/activemq/activemq-cpp/${VERSION}/activemq-cpp-library-${VERSION}-src.tar.bz2"
+    URLS "https://archive.apache.org/dist/activemq/activemq-cpp/${VERSION}/activemq-cpp-library-${VERSION}-src.tar.bz2"
     FILENAME "activemq-cpp-library-${VERSION}-src.tar.bz2"
     SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2
 )

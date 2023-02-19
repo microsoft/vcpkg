@@ -142,7 +142,8 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-
+# coinutils requires autoconf2.71 not yet available in CI
+coinutils:x64-linux=fail
 # there is an ICE in VS2022 with colmap in release mode
 colmap:x86-windows=fail
 colmap:x64-windows=fail
@@ -157,8 +158,6 @@ coolprop:x64-uwp=fail
 coroutine:arm-uwp=fail
 coroutine:x64-linux=fail
 coroutine:x64-uwp=fail
-cppfs:arm-uwp=fail
-cppfs:x64-uwp=fail
 cppmicroservices:arm64-windows=fail
 cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
@@ -170,9 +169,7 @@ cppcoro:x64-uwp=fail
 # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
-crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
-crashpad:x86-windows=fail
 cuda:x64-osx=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
@@ -243,7 +240,6 @@ fontconfig:arm-uwp=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
-forge:x86-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
@@ -336,7 +332,6 @@ ignition-msgs5:arm64-windows=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:x64-uwp=fail
 ignition-msgs5:x64-osx=skip
-igraph:x64-uwp=fail
 # Conflicts with libjpeg-turbo, mozjpeg
 ijg-libjpeg:arm64-windows      = skip
 ijg-libjpeg:arm-uwp            = skip
@@ -367,6 +362,7 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
 kfr:arm64-windows=fail
+kfr:x64-uwp=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
 lastools:arm-uwp=fail
@@ -379,16 +375,12 @@ leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
-libcopp:arm64-windows=fail
-libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
 libepoxy:arm-uwp=fail
 libepoxy:x64-uwp=fail
 libepoxy:x64-windows-static=fail
-libevent:arm-uwp=fail
-libevent:x64-uwp=fail
 libevhtp:x86-windows=fail
 libevhtp:x64-windows=fail
 libevhtp:x64-windows-static=fail
@@ -563,8 +555,6 @@ mfl:x64-linux=skip
 mfl:x64-osx=skip
 mfl:arm64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
-minifb:arm-uwp=fail
-minifb:x64-uwp=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
@@ -599,13 +589,7 @@ mmx:arm64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-mongoose:arm-uwp=fail
-mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
-monkeys-audio:arm-uwp=fail
-monkeys-audio:x64-linux=fail
-monkeys-audio:x64-osx=fail
-monkeys-audio:x64-uwp=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:arm-uwp=fail
 moos-core:x64-uwp=fail
@@ -699,8 +683,6 @@ ogre-next:x86-windows        = skip
 ompl:x64-osx=fail
 ompl:arm64-osx=fail
 ompl:x64-linux=fail
-openal-soft:arm-uwp=fail
-openal-soft:x64-uwp=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 opencc:arm64-windows=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -736,6 +718,8 @@ openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
 openscap:x64-windows-static=fail
 openscap:x64-osx=fail
+# osx needs bison 3.4 installed
+openturns:x64-osx=fail
 # https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
 # openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
 openvdb:x64-windows-static=fail
@@ -1126,7 +1110,6 @@ linenoise-ng:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
-quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
@@ -1150,6 +1133,7 @@ dimcli:x64-windows-static=fail
 
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
+zeroc-ice:x64-windows-static-md=fail
 # ZeroC doesn't provide ARM tagets in project files.
 zeroc-ice:arm64-windows=fail
 zeroc-ice:arm-uwp=fail

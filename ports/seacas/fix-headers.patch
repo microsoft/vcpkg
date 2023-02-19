@@ -1,0 +1,13 @@
+diff --git a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMeshFuncs.h b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMeshFuncs.h
+index 67512ba..589cac2 100644
+--- a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMeshFuncs.h
++++ b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMeshFuncs.h
+@@ -6,7 +6,7 @@
+ 
+ // #######################  Start Clang Header Tool Managed Headers ########################
+ // clang-format off
+-#include <ctype.h>                                   // for toupper
++#include <cctype>                                    // for toupper, isspace, isdigit
+ #include <stddef.h>                                  // for size_t
+ #include <algorithm>                                 // for remove, etc
+ #include <iterator>                                  // for insert_iterator
