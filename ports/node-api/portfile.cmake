@@ -6,6 +6,25 @@ vcpkg_from_github(
   HEAD_REF main
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
+  find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS)
+  if(NOT NODEJS)
+    message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'")
+  endif()
+
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/generateNodeLibDef.js" DESTINATION "${SOURCE_PATH}")
+
+  vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+      -DNODEJS_EXECUTABLE="${NODEJS}"
+  )
+
+  vcpkg_cmake_install()
+endif()
+
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

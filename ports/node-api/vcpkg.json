@@ -13,6 +13,11 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
+      "host": true,
+      "platform": "windows"
     }
   ]
 }
