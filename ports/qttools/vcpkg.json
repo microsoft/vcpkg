@@ -6,6 +6,7 @@
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "litehtml",
     {
       "name": "qtbase",
       "default-features": false
@@ -18,8 +19,7 @@
         "assistant",
         "linguist"
       ]
-    },
-    "litehtml"
+    }
   ],
   "features": {
     "assistant": {
