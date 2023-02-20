@@ -13,11 +13,11 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCTPG_ENABLE_INSTALL=ON
         -DCTPG_ENABLE_TESTS=OFF
-        -DCTPG_INSTALL_CMAKEDIR="${CURRENT_PACKAGES_DIR}/share/${PORT}"
         -DCTPG_WARNING_FLAGS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
