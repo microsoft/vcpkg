@@ -58,14 +58,11 @@ vcpkg_cmake_configure(
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components
-        # POCO_ENABLE_SQL_ODBC, POCO_ENABLE_SQL_MYSQL and POCO_ENABLE_SQL_POSTGRESQL are
-        # defined on the fly if the required librairies are present
         -DENABLE_ENCODINGS=ON
         -DENABLE_ENCODINGS_COMPILER=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
         -DENABLE_MONGODB=ON
-        # -DPOCO_ENABLE_SQL_SQLITE=ON # SQLITE are not supported.
         -DENABLE_REDIS=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON
