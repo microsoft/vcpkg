@@ -2,7 +2,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uchardet/uchardet
-    REF "${VERSION}"
+    REF "v${VERSION}"
     SHA512 8d7a0abe1fcf7e92f9e264252eefa5810176603e3d3d825a23c3f5d23cd4f7cce9a0a9539e84bd70af5b66688394e48af00a00ce759a5a3d69b650f92351b6f2
     HEAD_REF master
     PATCHES
