@@ -1,6 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -45,6 +42,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
+        -DWITH_API_ONLY=ON
         -DWITH_LOGS_PREVIEW=ON
         ${FEATURE_OPTIONS}
 )
