@@ -7909,7 +7909,7 @@
       "port-version": 1
     },
     "uchardet": {
-      "baseline": "v0.0.8",
+      "baseline": "0.0.8",
       "port-version": 0
     },
     "umock-c": {
