@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_86_0
-    SHA512 74fa76d58b09ae15c953f77918172e23657efd8ed9d16e3a741525a4f350e6bd9691e0b0935aac11e3060cebff043dc4a17c3dde625a19ca7399c173ea4160c9
+    REF curl-7_87_0
+    SHA512 3769726f681bc680a0c95819b353025d2ad3fc5688611453f3e2673685c4f2abc54e02327d947c30e50b5b76043b1841f66115102b98b8ffafc9c225308e1575
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -12,6 +12,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
+        0023-fix-find-cares.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -123,4 +124,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,6 +1,7 @@
 {
   "name": "qt",
-  "version": "6.4.1",
+  "version": "6.4.2",
+  "port-version": 1,
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -62,6 +63,7 @@
       ]
     },
     "qtinterfaceframework",
+    "qtlanguageserver",
     {
       "name": "qtlottie",
       "default-features": false,
@@ -138,6 +140,11 @@
     "qtserialbus",
     "qtserialport",
     "qtshadertools",
+    {
+      "name": "qtspeech",
+      "default-features": false,
+      "platform": "!(windows & x86)"
+    },
     "qtsvg",
     {
       "name": "qttools",
@@ -203,13 +210,6 @@
             "qml"
           ],
           "platform": "windows"
-        },
-        {
-          "name": "qtbase",
-          "features": [
-            "gles2"
-          ],
-          "platform": "linux"
         },
         {
           "name": "qtwayland",

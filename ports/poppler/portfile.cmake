@@ -1,9 +1,10 @@
+string(REGEX REPLACE "^([0-9]+)[.]([0-9][.])" "\\1.0\\2" POPPLER_VERSION "${VERSION}")
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler
-    REF 12853d22e9d0527c10ada02666aef629db3e5e7c #poppler-22.08.0
-    SHA512 d181bc8a521e216f163096e8baad7e73c898c24b18a5a4ab3b687bff4c29333c8c19961adaef54e684c1bdf26dab90183c3553fadb963b7a664e063bd3abcfcf
+    REF "poppler-${POPPLER_VERSION}"
+    SHA512 18649364dc407080941b7c4010c0f26c1ce825d9ec49ff8e9ef298c62afb8d5bb77cea6a5cd1a74615190f433c265613dba42a6b7fdd80c2b5f00d372a31d21d
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
@@ -68,7 +69,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-config.cmake" "${CU
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-poppler)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/poppler.pc" "Libs:" "Requires.private: ${POPPLER_PC_REQUIRES}\nLibs:")
-if(NOT DEFINED VCPKG_BUILD_TYPE)
+if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/poppler.pc" "Libs:" "Requires.private: ${POPPLER_PC_REQUIRES}\nLibs:")
 endif()
 vcpkg_fixup_pkgconfig()
@@ -76,3 +77,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

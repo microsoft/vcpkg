@@ -3,13 +3,14 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF a921d615c5cb4eb55a8dfc608dae6efde13e9126
-    SHA512 7787d5f927f53554cec3044221011cbc78b654c504d96af29947266e25058194923c5463aefde73b93dcfb3930eedf731f6af4d0c311d8f2f0d7be2114393e05
+    # rtabmap stops releasing, check their CMakeLists.txt for version.
+    # currently is 0.20.23
+    REF 95e6a9f03936697a60be2c26e119c519e47c11f5
+    SHA512 082af7e15316bdeb89ff833a87a91916ddbf85de56bf4f38a0b5a40f4f330ecc057ae72a2f5ec901824e51d6f73c4a05a328116eaa5529551ffe4ca770fe0474
     HEAD_REF master
     PATCHES
-        0001-add-bigobj-for-msvc.patch
-        0002-fix-opencv46.patch
         0003-fix-qt.patch
+        cpp17.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -87,6 +88,8 @@ if("tools" IN_LIST FEATURES)
         rtabmap-reprocess
         rtabmap-rgbd_dataset
         rtabmap-euroc_dataset
+        rtabmap-cleanupLocalGrids
+        rtabmap-globalBundleAdjustment
     AUTO_CLEAN
   )
 endif()

@@ -1,3 +1,5 @@
+# header-only library
+
 # Github config
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -25,4 +27,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install license
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ptc-print" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
