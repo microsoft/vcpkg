@@ -1,0 +1,5 @@
+osmanip provides CMake targets:
+
+    find_package(osmanip)
+    target_link_libraries(main PRIVATE osmanip::osmanip)
+    
