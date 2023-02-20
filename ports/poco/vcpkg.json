@@ -1,7 +1,7 @@
 {
   "name": "poco",
   "version": "1.12.4",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
   "license": "BSL-1.0",
@@ -20,6 +20,12 @@
     "zlib"
   ],
   "features": {
+    "crypto": {
+      "description": "Crypto support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "mariadb": {
       "description": "MariaDB support for POCO",
       "dependencies": [
@@ -36,8 +42,11 @@
       "description": "NetSSL support for POCO",
       "dependencies": [
         {
-          "name": "openssl",
-          "platform": "!windows"
+          "name": "poco",
+          "default-features": false,
+          "features": [
+            "crypto"
+          ]
         }
       ]
     },

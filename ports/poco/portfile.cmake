@@ -28,6 +28,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        crypto      ENABLE_CRYPTO
         pdf         ENABLE_PDF
         sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
@@ -38,12 +39,10 @@ if("netssl" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS
             -DENABLE_NETSSL_WIN=ON
             -DENABLE_NETSSL=OFF
-            -DENABLE_CRYPTO=OFF
         )
     else()
         list(APPEND FEATURE_OPTIONS
             -DENABLE_NETSSL=ON
-            -DENABLE_CRYPTO=ON
         )
     endif()
 endif()
