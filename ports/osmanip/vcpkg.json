@@ -1,6 +1,7 @@
 {
     "name": "osmanip",
     "version": "4.5.0",
+    "port-version": 1,
     "description": "A library for output stream manipulation using ANSI escape sequences.",
     "homepage": "https://github.com/JustWhit3/osmanip",
     "license": "MIT",
@@ -14,5 +15,4 @@
         "host": true
       }
     ]
-  }
-  
+}
