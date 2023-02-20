@@ -4,7 +4,6 @@ set(MA_VERSION 904)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_${MA_VERSION}_SDK.zip"
-         "https://web.archive.org/web/20210129190227if_/https://monkeysaudio.com/files/MAC_SDK_607.zip"
     FILENAME "MAC_${MA_VERSION}_SDK.zip"
     SHA512 c42c9bae6690a28a69137445c84d53ad7acbd242c2cfe20f329fda46b56812c60de68874301d99cf72ade3bced90fc5aaedacb6fdbca241d4bf4806f6e238219
 )
@@ -16,6 +15,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-project-config.patch
         remove-certificate-step.patch
+        fix-C2471.patch
 )
 
 file(REMOVE_RECURSE
@@ -64,6 +64,5 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 file(COPY           "${SOURCE_PATH}/Shared/"
      DESTINATION    "${CURRENT_PACKAGES_DIR}/include/monkeys-audio"
      FILES_MATCHING PATTERN "*.h")
-file(REMOVE         "${CURRENT_PACKAGES_DIR}/include/monkeys-audio/MACDll.h")
 
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/license")
