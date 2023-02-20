@@ -29,22 +29,17 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         crypto      ENABLE_CRYPTO
+        netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
         sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-if("netssl" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL_WIN=ON
-            -DENABLE_NETSSL=OFF
-        )
-    else()
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL=ON
-        )
-    endif()
+# Triplet variable for alternative API
+option(POCO_ENABLE_NETSSL_WIN OFF "Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL")
+if(POCO_ENABLE_NETSSL_WIN)
+    string(REPLACE "ENABLE_NETSSL" "ENABLE_NETSSL_WIN" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+    list(APPEND FEATURE_OPTIONS "-DENABLE_NETSSL:BOOL=OFF")
 endif()
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
