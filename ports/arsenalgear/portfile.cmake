@@ -1,9 +1,9 @@
 # Github config
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO JustWhit3/osmanip
-    REF v4.5.0
-    SHA512 7cd03974e3f78e2531e561833830d66bc2e0dc115aed48f69c6cdf1c4b8a2bd18b05444003f816f670f41aeb08dc899f064de9f4c5b369118f1892e9dedf1204
+    REPO JustWhit3/arsenalgear-cpp
+    REF v2.1.0
+    SHA512 27f2979da2d75851d5f8a63868d49b2f5b82064477a1c816667aaf0283e87f854712ab4aa473a3ef36c6ff895bb781c3b095ff617bf134051531aee9b8f03fd3
     HEAD_REF main
 )
 
@@ -11,12 +11,12 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DOSMANIP_TESTS=OFF
+        -DARSENALGEAR_TESTS=OFF
 )
 vcpkg_cmake_install()
 
 # Move cmake configs
-vcpkg_cmake_config_fixup(PACKAGE_NAME osmanip CONFIG_PATH lib/cmake/osmanip)
+vcpkg_cmake_config_fixup(PACKAGE_NAME arsenalgear CONFIG_PATH lib/cmake/arsenalgear)
 
 # Remove duplicate files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

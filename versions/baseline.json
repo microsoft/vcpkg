@@ -212,6 +212,10 @@
       "baseline": "10.0.1",
       "port-version": 4
     },
+    "arsenalgear": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "ashes": {
       "baseline": "2022-06-08",
       "port-version": 0
@@ -5835,10 +5839,6 @@
     "osi": {
       "baseline": "0.108.6",
       "port-version": 1
-    },
-    "osmanip": {
-      "baseline": "4.5.0",
-      "port-version": 0
     },
     "otl": {
       "baseline": "4.0.476",
