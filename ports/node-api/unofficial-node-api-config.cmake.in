@@ -5,12 +5,8 @@ if(NOT TARGET unofficial::node-api::node-api)
     add_library(unofficial::node-api::node-api INTERFACE IMPORTED)
   endif()
 
-  find_path(node-api_INCLUDE_DIR
-    NAMES node_api.h
-    PATHS "${CMAKE_CURRENT_LIST_DIR}/../../include/node"
-    NO_DEFAULT_PATH
-    REQUIRED
-  )
+  set(node-api_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include/node)
+
   set_target_properties(unofficial::node-api::node-api PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${node-api_INCLUDE_DIR}"
   )

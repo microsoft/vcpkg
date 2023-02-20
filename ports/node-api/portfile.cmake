@@ -8,10 +8,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
-  find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS)
-  if(NOT NODEJS)
-    message(FATAL_ERROR "node not found in '${CURRENT_HOST_INSTALLED_DIR}/tools/node'")
-  endif()
+  find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS REQUIRED)
 
   file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
   file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/generateNodeLibDef.js" DESTINATION "${SOURCE_PATH}")
