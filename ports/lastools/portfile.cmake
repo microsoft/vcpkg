@@ -7,11 +7,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
-    REF 7c444a4bbae16fe43c676824a26419bb740a6ab8
-    SHA512 4503b033a5319caee5570f25a05009c0d05a8c61a43ed78317899faaeba82fbc1f9a8c8433772bb36547c74e850a2e68d20a16f6f22b12b3004da7e1aa2f334b
+    REF v2.0.2
+    SHA512 39d387b572b582471b788e94b51c46130ae44bc64835606e0a35dfc4ea7765be96a88c05f7e176b0f08474041737d02530cdc5f3379dda4e24aba08d43c98d37
     HEAD_REF master
     PATCHES 
         "fix_install_paths_lastools.patch"
+        "fix_include_directories_lastools.patch"
 )
 
 vcpkg_configure_cmake(
@@ -20,6 +21,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME LASlib CONFIG_PATH "share/lastools/LASlib")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
