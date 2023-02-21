@@ -1,14 +1,3 @@
-commit 32efedfc5858ea6a39adfc2b98ab27979ca935d3
-Author: partow@gmail.com
-Date:   Sat Feb 22 00:00:00 2023 +0000
-
-    Make FindExprTk more robust
-
-    The previous version of this module failed due to trivial changes
-    in the way the "version" variable was declared in exprtk.hpp.
-    Add a fallback so that, if exprtk is found, the reported version
-    is never less than 2.7.
-
 diff --git a/CMake/FindExprTk.cmake b/CMake/FindExprTk.cmake
 index b9a6f13a64..2886e7ed71 100644
 --- a/CMake/FindExprTk.cmake
