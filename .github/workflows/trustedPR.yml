@@ -1,4 +1,4 @@
-# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+# Modeled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
 
 name: Post PR Suggestions
 
@@ -17,8 +17,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-22.04
     if: >
-      ${{ github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success' }}
+      ${{ github.event.workflow_run.event == 'pull_request' }}
 
     steps:
       - name: 'Download artifact'
@@ -51,13 +50,41 @@ jobs:
             const body = (await fs.readFile('body', 'utf8')).trim()
             const issue_number = Number(await fs.readFile('./NR'));
 
-            var req = {
-              owner: context.repo.owner,
-              pull_number: issue_number,
-              repo: context.repo.repo,
-              event: event
-            };
-            if (body !== "") {
-              req.body = body;
+            if (event === "APPROVE") {
+              console.log("Approved, trying to delete all GitHub Actions comments");
+              // delete all comments from GitHub Actions
+              var comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue_number
+              });
+
+              console.log("Comments listed");
+              for (const comment of comments) {
+                console.log(JSON.stringify(comment));
+                if (comment.user.login == "github-actions") {
+                  await github.rest.issues.deleteComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: comment.id
+                  });
+                }
+              }
+
+              return;
             }
-            await github.rest.pulls.createReview(req);
+
+            if (output === "") {
+              console.log("Failed without a comment; this is a bug in this bot.");
+            } else {
+              console.log("Failed, posting comment");
+              // post the comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue_number,
+                body: output
+              });
+            }
+
+            core.setFailed("There are outstanding PR suggestions, please review the comment for more details.");
