@@ -7913,8 +7913,8 @@
       "port-version": 1
     },
     "uchardet": {
-      "baseline": "2021-09-03",
-      "port-version": 2
+      "baseline": "0.0.8",
+      "port-version": 0
     },
     "umock-c": {
       "baseline": "2022-01-21",
