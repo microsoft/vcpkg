@@ -30,7 +30,7 @@
     "libxml2",
     "lz4",
     "netcdf-c",
-    "pegtl-2",
+    "pegtl",
     "proj",
     "pugixml",
     {
