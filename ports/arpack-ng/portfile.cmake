@@ -3,9 +3,9 @@ vcpkg_find_fortran(FORTRAN_CMAKE)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "opencollab/arpack-ng"
-    REF "6be238e7039c98723edf523455a627b39788acba"
-    SHA512 4680373ebccfbba082eae8130020822095b0839553ae2541a4ac4aa679091dc255ce5140b9807e2d50cf4ceb6d90e0bf4547448931e1a564e3d8c67523c13002
+    REPO opencollab/arpack-ng
+    REF ${VERSION}
+    SHA512 fbcaa2179dd1aa5a39fc3e7d80f377ec90ddf16ef93184a88e6ecfc464ed97e5659f2cf578294ac3e0b0c0da6408c86acf5bbdce533e1e9d2a3121848340d282
     HEAD_REF master
 )
 
