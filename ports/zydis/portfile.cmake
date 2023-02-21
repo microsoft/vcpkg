@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zyantific/zydis
-    REF 4022f22f9280650082a9480519c86a6e2afde2f3 #v3.2.1
-    SHA512 da3ff582d3c4cbb5e4053cd468f181550f02d0a1713a39944266e6d1b0e3249e24461f87171ef99e249e6d5b2fc39fcca402518c569399ae5d4a64e0d3dc4b3b
+    REF 5488b7caba739a89febe3b1a83cc86d6ec136cbb #v4.0.0
+    SHA512 8219c394f440580fa721aa1ebdb69eb38950d5bd7edf8839457c240076d28a94ac0d7132275b2913229c9529dd5451b9a7987c4b5799de0c34a23ee2dbf164e6
     HEAD_REF master
     PATCHES
         zycore.patch
-        fix-arm64-build.patch # from https://github.com/zyantific/zydis/pull/259
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB)
@@ -22,7 +21,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zydis)
+vcpkg_cmake_config_fixup(PACKAGE_NAME Zycore CONFIG_PATH lib/cmake/zydis)
 
 vcpkg_copy_tools(TOOL_NAMES ZydisDisasm ZydisInfo AUTO_CLEAN)
 
