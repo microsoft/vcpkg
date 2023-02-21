@@ -21,11 +21,6 @@ jobs:
       - name: Bootstrap
         run: ./bootstrap-vcpkg.sh
 
-      - name: Save PR number
-        run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-
       - name: Formatting
         run: |
           git config user.email github-actions
@@ -68,37 +63,38 @@ jobs:
             let approve = true;
             var output = ''
             if (format !== "") {
-              output += "<details><summary><b>All manifest files must be formatted</b></summary>\n\n"
+              output += "All vcpkg.json files must be formatted. To fix this problem, run:"
               output += "`./vcpkg format-manifest ports/*/vcpkg.json`\n"
-              output += "<details><summary><b>Diff</b></summary>\n\n"
-              output += "```diff\n" + format + "\n```\n"
-              output += "</details></details>\n\n"
+              output += "\n"
+              output += "It should make the following changes:"
+              output += "```diff\n" + format + "\n```\n\n"
               approve = false;
             }
             if (add_version_out !== "") {
-              output += "<details><summary><b>PRs must add only one version, and must not modify any published versions</b></summary>\n\n"
-              output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
-              output += "```\n" + add_version_out + "\n```\n</details>\n\n"
+              output += "PRs must add only one version, and must not modify any published versions.\n"
+              output += "When making any changes to a library, the version or port-version in `vcpkg.json` must be modified, and the version database updated.\n"
+              output += "Making the following changes will fix this problem:"
+              output += "```diff\n" + add_version_out + "\n```\n\n"
               approve = false;
             }
             if (version_string_out !== "") {
               output += version_string_out + "\n\n"
             }
             if (add_version !== "") {
-              output += "<details><summary><b>After committing all other changes, the version database must be updated</b></summary>\n\n"
-              output += "```sh\n"
+              output += "After committing all other changes, the version database must be updated.\n"
+              output += "This can be done by running the following commands after committing your changes:\n"
+              output += "\n"
               output += "git add -u && git commit\n"
               output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
               output += "./vcpkg x-add-version --all\n"
-              output += "```\n"
-              output += "<details><summary><b>Diff</b></summary>\n\n"
+              output += "\n"
+              output += "which should make the following changes:\n"
               output += "```diff\n" + add_version + "\n```\n"
-              output += "</details></details>\n\n"
+              output += "\n\n"
               approve = false;
             }
             if (cmake !== "") {
               output += "You have modified or added at least one portfile where deprecated functions are used.\n"
-              output += "<details>\n\n"
               output += "If you feel able to do so, please consider migrating them to the new functions:\n"
               output += "    `vcpkg_install_cmake` -> `vcpkg_cmake_install` (from port `vcpkg-cmake`)\n"
               output += "    `vcpkg_build_cmake` -> `vcpkg_cmake_build` (from port `vcpkg-cmake`)\n"
@@ -114,12 +110,10 @@ jobs:
               output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
               output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
               output += "```\n"
-              output += `The following files are affected:\n${cmake}\n`
-              output += "</details>\n\n"
+              output += `The following files are affected:\n${cmake}\n\n`
             }
             if (missing_license !== "" || deprecated_license !== "") {
               output += 'You have modified or added at least one vcpkg.json where you should check the `license` field.\n'
-              output += "<details>\n\n"
               if (missing_license !== "") {
                 output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
                 output += missing_license
@@ -130,22 +124,14 @@ jobs:
                 output += deprecated_license
                 output += "\n\nDeprecated and non deprecated license identifiers can be found [here](https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses)\n"
               }
-              output += "</details>\n\n"
+
+              output += "\n\n"
             }
 
             if (approve) {
-              await fs.writeFile("pr/event", "APPROVE")
+              if (output !== '') {
+                core.warning(output);
+              }
             } else {
-              await fs.writeFile("pr/event", "REQUEST_CHANGES")
+              core.setFailed(output);
             }
-
-            await fs.writeFile("pr/body", output)
-            console.log(output);
-
-            core.setFailed("There are outstanding PR suggestions, please review the comment for more details.");
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: pr
-          path: pr/
