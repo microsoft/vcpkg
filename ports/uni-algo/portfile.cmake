@@ -8,6 +8,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUNI_ALGO_INSTALL=ON
 )
 
 vcpkg_cmake_install()
