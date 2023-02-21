@@ -61,77 +61,81 @@ jobs:
             const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).trim()
 
             let approve = true;
-            var output = ''
             if (format !== "") {
-              output += "All vcpkg.json files must be formatted. To fix this problem, run:"
-              output += "`./vcpkg format-manifest ports/*/vcpkg.json`\n"
-              output += "\n"
-              output += "It should make the following changes:"
-              output += "```diff\n" + format + "\n```\n\n"
+              var format_output = '';
+              format_output += "All vcpkg.json files must be formatted. To fix this problem, run:";
+              format_output += "`./vcpkg format-manifest ports/*/vcpkg.json`\n";
+              format_output += "\n";
+              format_output += "It should make the following changes:";
+              format_output += "```diff\n" + format + "\n```";
+              core.error(format_output);
               approve = false;
             }
             if (add_version_out !== "") {
-              output += "PRs must add only one version, and must not modify any published versions.\n"
-              output += "When making any changes to a library, the version or port-version in `vcpkg.json` must be modified, and the version database updated.\n"
-              output += "Making the following changes will fix this problem:"
-              output += "```diff\n" + add_version_out + "\n```\n\n"
+              var add_version_output = '';
+              add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
+              add_version_output += "When making any changes to a library, the version or port-version in `vcpkg.json` must be modified, and the version database updated.\n";
+              add_version_output += "Making the following changes will fix this problem:";
+              add_version_output += "```diff\n" + add_version_out + "\n```";
+              core.error(add_version_output);
               approve = false;
             }
             if (version_string_out !== "") {
-              output += version_string_out + "\n\n"
+              core.warning(version_string_out);
             }
             if (add_version !== "") {
-              output += "After committing all other changes, the version database must be updated.\n"
-              output += "This can be done by running the following commands after committing your changes:\n"
-              output += "\n"
-              output += "git add -u && git commit\n"
-              output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
-              output += "./vcpkg x-add-version --all\n"
-              output += "\n"
-              output += "which should make the following changes:\n"
-              output += "```diff\n" + add_version + "\n```\n"
-              output += "\n\n"
+              var update_version_db_output = '';
+              update_version_db_output += "After committing all other changes, the version database must be updated.\n";
+              update_version_db_output += "This can be done by running the following commands after committing your changes:\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "git add -u && git commit\n"
+              update_version_db_output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "which should make the following changes:\n"
+              update_version_db_output += "```diff\n" + add_version + "\n```"
+              core.error(update_version_db_output);
               approve = false;
             }
             if (cmake !== "") {
-              output += "You have modified or added at least one portfile where deprecated functions are used.\n"
-              output += "If you feel able to do so, please consider migrating them to the new functions:\n"
-              output += "    `vcpkg_install_cmake` -> `vcpkg_cmake_install` (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_build_cmake` -> `vcpkg_cmake_build` (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_configure_cmake` -> `vcpkg_cmake_configure` (Please remove the option `PREFER_NINJA`) (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_fixup_cmake_targets` -> `vcpkg_cmake_config_fixup` (from port `vcpkg-cmake-config`)\n"
-              output += "    `vcpkg_extract_source_archive_ex` -> [`vcpkg_extract_source_archive`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive.md)\n"
-              output += "    `vcpkg_build_msbuild` -> [`vcpkg_install_msbuild`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_msbuild.md)\n"
-              output += "    `vcpkg_copy_tool_dependencies` -> [`vcpkg_copy_tools`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_tools.md)\n"
-              output += "    `vcpkg_apply_patches` should be replaced by the `PATCHES` arguments to the \"extract\" helpers (e.g. [`vcpkg_from_github()`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_github.md))\n"
-              output += "\n"
-              output += "In the ports that use the new function, you have to add the corresponding dependencies:\n"
-              output += "```json\n"
-              output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
-              output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
-              output += "```\n"
-              output += `The following files are affected:\n${cmake}\n\n`
+              var deprecated_output = '';
+              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "If you feel able to do so, please consider migrating them to the new functions:\n";
+              deprecated_output += "    `vcpkg_install_cmake` -> `vcpkg_cmake_install` (from port `vcpkg-cmake`)\n";
+              deprecated_output += "    `vcpkg_build_cmake` -> `vcpkg_cmake_build` (from port `vcpkg-cmake`)\n";
+              deprecated_output += "    `vcpkg_configure_cmake` -> `vcpkg_cmake_configure` (Please remove the option `PREFER_NINJA`) (from port `vcpkg-cmake`)\n";
+              deprecated_output += "    `vcpkg_fixup_cmake_targets` -> `vcpkg_cmake_config_fixup` (from port `vcpkg-cmake-config`)\n";
+              deprecated_output += "    `vcpkg_extract_source_archive_ex` -> [`vcpkg_extract_source_archive`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive.md)\n";
+              deprecated_output += "    `vcpkg_build_msbuild` -> [`vcpkg_install_msbuild`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_msbuild.md)\n";
+              deprecated_output += "    `vcpkg_copy_tool_dependencies` -> [`vcpkg_copy_tools`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_tools.md)\n";
+              deprecated_output += "    `vcpkg_apply_patches` should be replaced by the `PATCHES` arguments to the \"extract\" helpers (e.g. [`vcpkg_from_github()`](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_github.md))\n";
+              deprecated_output += "\n";
+              deprecated_output += "In the ports that use the new function, you have to add the corresponding dependencies:\n";
+              deprecated_output += "```json\n";
+              deprecated_output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
+              deprecated_output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n';
+              deprecated_output += "```\n";
+              deprecated_output += `The following files are affected:\n${cmake}`;
+              core.warning(deprecated_output);
             }
+
             if (missing_license !== "" || deprecated_license !== "") {
-              output += 'You have modified or added at least one vcpkg.json where you should check the `license` field.\n'
+              var license_output = '';
+              license_output += 'You have modified or added at least one vcpkg.json where you should check the `license` field.\n'
               if (missing_license !== "") {
-                output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
-                output += missing_license
-                output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n\n"
+                license_output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+                license_output += missing_license
+                license_output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n\n"
               }
               if (deprecated_license !== "") {
-                output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
-                output += deprecated_license
-                output += "\n\nDeprecated and non deprecated license identifiers can be found [here](https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses)\n"
+                license_output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
+                license_output += deprecated_license
+                license_output += "\n\nDeprecated and non deprecated license identifiers can be found [here](https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses)\n"
               }
 
-              output += "\n\n"
+              core.warning(license_output);
             }
 
-            if (approve) {
-              if (output !== '') {
-                core.warning(output);
-              }
-            } else {
-              core.setFailed(output);
+            if (!approve) {
+              process.exitCode = ExitCode.Failure;
             }
