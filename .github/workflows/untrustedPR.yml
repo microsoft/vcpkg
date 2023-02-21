@@ -137,5 +137,5 @@ jobs:
             }
 
             if (!approve) {
-              process.exitCode = ExitCode.Failure;
+              process.exitCode = 1;
             }
