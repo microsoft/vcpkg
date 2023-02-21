@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-api-headers
-  REF ecefbdd00f2cd04eaf1c06b6481abe9b031b5f0b
-  SHA512 66e8464e74bcaa5e7d9987f5e1101b8df7b6cf4752d0df52a6f26b6897c6022fd39268dac7edc489887d2e9fd0fc6161077dcd55ba51995cbef59e9bbe94c54c
+  REF 4fdbdd171011cba57ab2888ef0995451e8aded95
+  SHA512 84289b291d542865c2fb649dc3a43dd6840ac879a913fbcce0a0c848d4a3fb76e7bf02ad46f36e62cde47dc9e0dac9baad2f78615c91cd40fccb702234c965a3
   HEAD_REF main
 )
 

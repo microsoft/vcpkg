@@ -1,10 +1,10 @@
 {
   "name": "node-api",
-  "version": "8",
+  "version": "8-19.6.0",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
-  "license": null,
-  "supports": "((windows & !arm) | linux | osx) & !uwp",
+  "license": "MIT",
+  "supports": "(windows & !arm & !uwp) | linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
