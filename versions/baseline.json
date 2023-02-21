@@ -3633,7 +3633,7 @@
       "port-version": 0
     },
     "lastools": {
-      "baseline": "2020-05-09",
+      "baseline": "2.0.2",
       "port-version": 1
     },
     "laszip": {
