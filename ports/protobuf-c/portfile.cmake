@@ -26,7 +26,7 @@ vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES protoc-gen-c protoc-c
+        TOOL_NAMES protoc-gen-c
         AUTO_CLEAN
     )
 endif()
