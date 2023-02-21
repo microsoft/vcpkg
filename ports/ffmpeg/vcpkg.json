@@ -340,7 +340,7 @@
     },
     "cuda-llvm": {
       "description": "Use LLVM clang ptx backend to compile CUDA files"
-    }, 
+    },
     "dav1d": {
       "description": "AV1 decoding via libdav1d",
       "supports": "!osx",
