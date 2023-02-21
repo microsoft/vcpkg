@@ -16,4 +16,4 @@ for (const ver of Object.values(headers.symbols)) {
 
 // Write a 'def' file for NODE.EXE
 const allSymbolsArr = Array.from(allSymbols)
-await fs.writeFile("./node.def", 'NAME NODE.EXE\nEXPORTS\n' + allSymbolsArr.join('\n'))
+require('fs').writeFileSync("./node.def", 'NAME NODE.EXE\nEXPORTS\n' + allSymbolsArr.join('\n'))
