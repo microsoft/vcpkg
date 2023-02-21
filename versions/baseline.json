@@ -3077,8 +3077,8 @@
       "port-version": 0
     },
     "iceoryx": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "2.0.3",
+      "port-version": 0
     },
     "icu": {
       "baseline": "72.1",
