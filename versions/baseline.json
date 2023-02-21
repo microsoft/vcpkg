@@ -5433,7 +5433,7 @@
       "port-version": 0
     },
     "node-api": {
-      "baseline": "8",
+      "baseline": "8-19.6.0",
       "port-version": 0
     },
     "nonius": {
