@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
 
-      - name: bootstrap
+      - name: Bootstrap
         run: ./bootstrap-vcpkg.sh
 
       - name: Save PR number
@@ -51,7 +52,8 @@ jobs:
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
 
-      - uses: actions/github-script@v6
+      - name: Generate Reply
+        uses: actions/github-script@v6
         with:
           script: |
             const { promises: fs } = require('fs')
@@ -74,7 +76,7 @@ jobs:
               approve = false;
             }
             if (add_version_out !== "") {
-              output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
+              output += "<details><summary><b>PRs must add only one version, and must not modify any published versions</b></summary>\n\n"
               output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
               output += "```\n" + add_version_out + "\n```\n</details>\n\n"
               approve = false;
@@ -134,12 +136,13 @@ jobs:
             if (approve) {
               await fs.writeFile("pr/event", "APPROVE")
             } else {
-              output = "_This is a new experimental fast check for PR issues. Please let us know if this bot is helpful!_\n\n" + output
               await fs.writeFile("pr/event", "REQUEST_CHANGES")
             }
-            await fs.writeFile("pr/body", output)
 
+            await fs.writeFile("pr/body", output)
             console.log(output);
+
+            core.setFailed("There are outstanding PR suggestions, please review the comment for more details.");
 
       - uses: actions/upload-artifact@v3
         with:
