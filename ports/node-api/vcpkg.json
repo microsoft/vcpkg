@@ -1,6 +1,6 @@
 {
   "name": "node-api",
-  "version": "8-19.6.0",
+  "version-text": "8+19.6.0",
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
   "license": "MIT",
