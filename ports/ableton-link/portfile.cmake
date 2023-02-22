@@ -70,7 +70,7 @@ if ("hutsilent" IN_LIST FEATURES)
 endif()
 
 # We must not correct the CMake include path before build
-vcpkg_apply_patches(
+vcpkg_apply_patches( 
     SOURCE_PATH "${SOURCE_PATH}"
     PATCHES 
         correct_cmake_include_directory.patch
