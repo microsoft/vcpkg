@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF af9ceabeef1a10c1004e2741f8c0c090ca59e5af #v23.1.4
-    SHA512 63220e37743b868b4c7c7894a8f64cbb80545feda5d7afb1223d316d9aa6c0c25670563a988971e853db68d98efb692c7d8dd402df7bff7d95db844baba57820
+    REF "v${VERSION}"
+    SHA512 fa62188f773ad044644a58caf1e25bef417dfdea47c9da8a2ea7f997154b4f3976019e32e73cc533696a3d4e45ec4a8402b6df140878dfa2ff078740d61b4b0f
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
@@ -44,4 +44,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

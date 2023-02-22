@@ -1,0 +1,31 @@
+diff --git a/configure.ac b/configure.ac
+index a3f2fb9c4..e6f53f26c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -16,6 +16,8 @@ All Rights Reserved.
+ This file is part of the open source package Clp which is distributed
+ under the Eclipse Public License.])
+ 
++AC_CONFIG_MACRO_DIR([m4])
++
+ # List one file in the package so that the configure script can test
+ # whether the package is actually there.
+ AC_CONFIG_SRCDIR(src/ClpSimplex.cpp)
+@@ -63,7 +63,7 @@ AC_COIN_CHK_PKG(Osi,[OsiClpLib OsiClpUnitTest])
+ AC_COIN_CHK_PKG(OsiTests,[OsiClpUnitTest],[osi-unittests])
+ AC_COIN_CHK_PKG(Sample,,[coindatasample],[],dataonly)
+ AC_COIN_CHK_PKG(Netlib,,[coindatanetlib],[],dataonly)
+-AC_COIN_CHK_PKG(Glpk,[ClpLib],[coinglpk])
++AC_COIN_CHK_PKG(Glpk,[ClpLib],[glpk])
+ 
+ #############################################################################
+ #                                    Aboca                                  #
+@@ -96,7 +96,7 @@ AC_COIN_CHK_LIBHDR(CHOLMOD,[ClpLib],[-lcholmod],[-I/usr/include/suitesparse],[],
+ # bothered to build it, we should use it. If it's not present, try for a
+ # system installation. If we find it, define CLP_HAS_MUMPS for export to code
+ # using clp.
+-AC_COIN_CHK_PKG(MUMPS,[ClpLib],[coinmumps])
++AC_COIN_CHK_PKG(MUMPS,[ClpLib],[mumps])
+ if test $coin_has_mumps = no ; then
+   AC_COIN_CHK_LIBHDR(MUMPS,[ClpLib],[-ldmumps],[-I/usr/include/MUMPS],[],
+     [dmumps_c((DMUMPS_STRUC_C*)0)],
