@@ -21,7 +21,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME arsenalgear CONFIG_PATH lib/cmake/arsenalg
 # Remove duplicate files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/lib" 
-                    "${CURRENT_PACKAGES_DIR}/lib"
                     "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install license
