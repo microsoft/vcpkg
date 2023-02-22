@@ -123,7 +123,8 @@ jobs:
               if (deprecated_license !== "") {
                 license_output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
                 license_output += deprecated_license
-                license_output += "\n\nDeprecated and non deprecated license identifiers can be found at https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses\n"
+                license_output += "\n\nDeprecated and non deprecated license identifiers can be found at https://spdx.org/licenses/#deprecated\n"
+The old link is now 404
               }
 
               core.warning(license_output);
