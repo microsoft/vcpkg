@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c384aae..de38f12 100644
+index c384aae..c9a15a0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -194,6 +194,12 @@ option(ENABLE_SHARED "Build shared libraries" TRUE)
@@ -43,7 +43,7 @@ index c384aae..de38f12 100644
      if(UNIX)
        target_link_libraries(tjbench-static m)
      endif()
-+	endif()
++    endif()
    endif()
  endif()
  
