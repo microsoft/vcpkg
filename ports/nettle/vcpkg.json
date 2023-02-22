@@ -11,12 +11,8 @@
       "host": true
     },
     {
-      "name": "yasm",
-      "host": true,
-      "features": [
-        "tools"
-      ],
-      "platform": "windows"
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ]
 }
