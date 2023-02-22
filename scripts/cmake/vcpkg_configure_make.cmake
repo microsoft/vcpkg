@@ -212,7 +212,7 @@ function(vcpkg_configure_make)
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
             if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}" OR NOT VCPKG_TARGET_IS_OSX) # we don't need to specify the additional flags if we build natively.
-                set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin --host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
