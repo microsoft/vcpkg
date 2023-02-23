@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 54317572..4fcd92d5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -323,6 +323,9 @@ if(SDL2MIXER_OGG)
+         if(SDL2MIXER_OGG_install)
+             list(APPEND INSTALL_EXTRA_TARGETS ogg)
+         endif()
++    else()
++        find_package(Ogg CONFIG REQUIRED)
++        target_link_libraries(SDL2_mixer PRIVATE Ogg::ogg)
+     endif()
+ endif()
+ 
+@@ -384,7 +387,8 @@ if(SDL2MIXER_OPUS)
+             add_dependencies(SDL2_mixer opusfile::opusfile)
+         endif()
+     else()
+-        target_link_libraries(SDL2_mixer PRIVATE opusfile::opusfile)
++        find_package(Opus CONFIG REQUIRED)
++        target_link_libraries(SDL2_mixer PRIVATE opusfile::opusfile Opus::opus)
+     endif()
+ endif()
+ 
+@@ -528,7 +532,7 @@ if(SDL2MIXER_FLAC_LIBFLAC)
+             add_dependencies(SDL2_mixer FLAC)
+         endif()
+     else()
+-        target_link_libraries(SDL2_mixer PRIVATE FLAC)
++        target_link_libraries(SDL2_mixer PRIVATE FLAC::FLAC)
+     endif()
+ endif()
+ 
