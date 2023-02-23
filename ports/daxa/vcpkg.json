@@ -3,6 +3,7 @@
   "version-semver": "1.0.0",
   "description": "Daxa C++ Vulkan Abstraction",
   "homepage": "https://github.com/Ipotrick/Daxa",
+  "license": "MIT",
   "dependencies": [
     "vulkan",
     "vulkan-memory-allocator"
