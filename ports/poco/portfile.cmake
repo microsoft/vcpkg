@@ -35,8 +35,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-# Triplet variable for alternative API
-option(POCO_ENABLE_NETSSL_WIN OFF "Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL")
+# POCO_ENABLE_NETSSL_WIN: 
+# Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL.
+# This is a variable which can be set in the triplet file.
 if(POCO_ENABLE_NETSSL_WIN)
     string(REPLACE "ENABLE_NETSSL" "ENABLE_NETSSL_WIN" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
     list(APPEND FEATURE_OPTIONS "-DENABLE_NETSSL:BOOL=OFF")
