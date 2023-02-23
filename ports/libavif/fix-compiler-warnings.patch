@@ -1,8 +1,17 @@
 diff --git a/src/read.c b/src/read.c
-index 6289fa4..9c69d34 100644
+index e45db4e..0ddb05a 100644
 --- a/src/read.c
 +++ b/src/read.c
-@@ -3102,7 +3102,7 @@ static avifResult avifDecoderPrepareSample(avifDecoder * decoder, avifDecodeSamp
+@@ -945,7 +945,7 @@ static avifResult avifDecoderItemMaxExtent(const avifDecoderItem * item, const a
+                     return AVIF_RESULT_BMFF_PARSE_FAILED;
+                 }
+                 startOffset += remainingOffset;
+-                extentSize -= remainingOffset;
++                extentSize -= (size_t)remainingOffset;
+                 remainingOffset = 0;
+             }
+         }
+@@ -3147,7 +3147,7 @@ static avifResult avifDecoderPrepareSample(avifDecoder * decoder, avifDecodeSamp
              if ((decoder->io->sizeHint > 0) && (sample->offset > decoder->io->sizeHint)) {
                  return AVIF_RESULT_BMFF_PARSE_FAILED;
              }
