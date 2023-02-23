@@ -5092,6 +5092,10 @@
       "baseline": "0.1.1",
       "port-version": 1
     },
+    "miniply": {
+      "baseline": "2022-09-15",
+      "port-version": 0
+    },
     "minisat-master-keying": {
       "baseline": "2.3.6",
       "port-version": 0
