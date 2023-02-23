@@ -1,0 +1,54 @@
+diff --git a/CMake/FindExprTk.cmake b/CMake/FindExprTk.cmake
+index b9a6f13a64..2886e7ed71 100644
+--- a/CMake/FindExprTk.cmake
++++ b/CMake/FindExprTk.cmake
+@@ -1,14 +1,14 @@
+ # - Try to find ExprTk lib
+ #
+ # This module supports requiring a minimum version, e.g. you can do
+-#   find_package(ExprTk 2.71828)
+-# to require version 2.71828 or newer of ExprTk.
++#   find_package(ExprTk 2.7)
++# to require version 2.7 or newer of ExprTk.
+ #
+ # Once done this will define
+ #
+-#  ExprTk_FOUND - system has eigen lib with correct version
+-#  ExprTk_INCLUDE_DIRS - the eigen include directory
+-#  ExprTk_VERSION - eigen version
++#  ExprTk_FOUND - system has exprtk with correct version
++#  ExprTk_INCLUDE_DIRS - the exprtk include directory
++#  ExprTk_VERSION - exprtk version
+ #
+ # And the following imported target:
+ #
+@@ -20,11 +20,26 @@ find_path(ExprTk_INCLUDE_DIR
+ mark_as_advanced(ExprTk_INCLUDE_DIR)
+
+ if (ExprTk_INCLUDE_DIR)
+-  file(STRINGS "${ExprTk_INCLUDE_DIR}/exprtk.hpp" _exprtk_version_header
+-    REGEX "static const char\\* version")
+-  string(REGEX MATCH "static const char\\* version = \"([0-9.]+)\"" _exprtk_version_match "${_exprtk_version_header}")
+-  set(ExprTk_VERSION "${CMAKE_MATCH_1}")
++  file(STRINGS "${ExprTk_INCLUDE_DIR}/exprtk.hpp" _exprtk_version_header REGEX "\"[0-9.]+\"")
++  set(ExprTk_VERSION)
++  foreach (_exprtk_version_line IN LISTS _exprtk_version_header)
++    if ("${ExprTk_VERSION}" STREQUAL "")
++      string(REGEX MATCH "version = \"(2\.7[0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
++      set(ExprTk_VERSION "${CMAKE_MATCH_1}")
++    else ()
++      string(REGEX MATCH "\"([0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
++      set(ExprTk_VERSION "${ExprTk_VERSION}${CMAKE_MATCH_1}")
++    endif ()
++    if (_exprtk_version_match MATCHES "\;")
++      break()
++    endif ()
++  endforeach ()
++  if (NOT ExprTk_VERSION)
++    # fallback: version in exprtk.hpp has always started with 2.7
++    set(ExprTk_VERSION "2.7")
++  endif ()
+   unset(_exprtk_version_header)
++  unset(_exprtk_version_line)
+   unset(_exprtk_version_match)
+ endif ()
