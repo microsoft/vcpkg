@@ -12,4 +12,6 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
              "${CMAKE_CURRENT_LIST_DIR}/11259.diff"
              DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${VERSION}") # For vcpkg_find_acquire_program
+
 file(INSTALL "${VCPKG_ROOT_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -62,4 +62,3 @@ if(NOT SCRIPT_MESON)
 endif()
 
 message(STATUS "Using meson: ${SCRIPT_MESON}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${program_version}") # For vcpkg_find_acquire_program
