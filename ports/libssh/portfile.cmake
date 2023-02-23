@@ -7,6 +7,7 @@ vcpkg_from_git(
         0001-export-pkgconfig-file.patch
         0002-mingw_for_Android.patch
         0003-create_symlink_unix_only.patch
+        0004-file-permissions-constants.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
