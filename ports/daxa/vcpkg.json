@@ -1,12 +1,11 @@
 {
   "name": "daxa",
   "version-semver": "1.0.0",
-  "port-version": 0,
   "description": "Daxa C++ Vulkan Abstraction",
   "homepage": "https://github.com/Ipotrick/Daxa",
   "dependencies": [
-    "vulkan-memory-allocator",
-    "vulkan"
+    "vulkan",
+    "vulkan-memory-allocator"
   ],
   "default-features": [
     "utils-imgui",
