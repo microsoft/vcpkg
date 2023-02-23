@@ -1857,7 +1857,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.7.1",
+      "baseline": "3.7.2",
       "port-version": 0
     },
     "cub": {
@@ -2997,8 +2997,8 @@
       "port-version": 0
     },
     "hdf5": {
-      "baseline": "1.12.2",
-      "port-version": 6
+      "baseline": "1.14.0",
+      "port-version": 0
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -3570,11 +3570,11 @@
     },
     "kinectsdk1": {
       "baseline": "1.8",
-      "port-version": 5
+      "port-version": 6
     },
     "kinectsdk2": {
       "baseline": "2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "kissfft": {
       "baseline": "2021-11-14",
@@ -5052,6 +5052,10 @@
       "baseline": "1.3.3",
       "port-version": 3
     },
+    "miniaudio": {
+      "baseline": "0.11.11",
+      "port-version": 0
+    },
     "minifb": {
       "baseline": "2023-02-03",
       "port-version": 0
@@ -6310,7 +6314,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.8",
-      "port-version": 3
+      "port-version": 4
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -8106,7 +8110,7 @@
     },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-meson": {
       "baseline": "0.63",
@@ -8126,7 +8130,7 @@
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
-      "port-version": 0
+      "port-version": 1
     },
     "vectorclass": {
       "baseline": "2.02.00",
@@ -8174,7 +8178,7 @@
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
