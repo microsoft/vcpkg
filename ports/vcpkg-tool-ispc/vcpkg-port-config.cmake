@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 set(output_path "${DOWNLOADS}/tools")
 find_program(ISPC_EXECUTABLE NAMES ispc PATHS "${output_path}/ispc-${version}")
-if(NOT ISPC)
+if(NOT ISPC_EXECUTABLE)
   set(ispc_ver "@VERSION@")
   set(file_suffix ".tar.gz")
   if(VCPKG_TARGET_IS_WINDOWS)
