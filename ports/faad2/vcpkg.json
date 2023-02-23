@@ -1,9 +1,9 @@
 {
   "name": "faad2",
-  "version": "2.9.1",
-  "port-version": 5,
+  "version": "2.10.1",
   "description": "Freeware Advanced Audio (AAC) Decoder",
   "homepage": "https://sourceforge.net/projects/faac/",
+  "license": "GPL-2.0-or-later",
   "supports": "windows",
   "dependencies": [
     {
