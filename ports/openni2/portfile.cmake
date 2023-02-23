@@ -20,7 +20,7 @@ vcpkg_from_github(
 file(TO_NATIVE_PATH ${CURRENT_INSTALLED_DIR} NATIVE_INSTALLED_DIR)
 configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" @ONLY)
 
-# Build OpenNI2 
+# Build OpenNI2
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/OpenNI.sln"
     OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
