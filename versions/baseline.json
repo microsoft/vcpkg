@@ -6945,8 +6945,8 @@
       "port-version": 2
     },
     "rttr": {
-      "baseline": "0.9.6",
-      "port-version": 5
+      "baseline": "0.9.6+20210811",
+      "port-version": 0
     },
     "rubberband": {
       "baseline": "3.1.1",
