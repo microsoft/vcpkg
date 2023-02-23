@@ -1,7 +1,7 @@
-diff --git a/tools/meson/mesonbuild/backend/ninjabackend.py b/tools/meson/mesonbuild/backend/ninjabackend.py
+diff --git a/mesonbuild/backend/ninjabackend.py b/mesonbuild/backend/ninjabackend.py
 index c583024d27f..093e2efb1cf 100644
---- a/tools/meson/mesonbuild/backend/ninjabackend.py
-+++ b/tools/meson/mesonbuild/backend/ninjabackend.py
+--- a/mesonbuild/backend/ninjabackend.py
++++ b/mesonbuild/backend/ninjabackend.py
 @@ -512,8 +512,8 @@ def detect_vs_dep_prefix(self, tempfilename):
          for compiler in self.environment.coredata.compilers.host.values():
              # Have to detect the dependency format
