@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch
+        fix-compiler-warnings.patch
 )
 
 vcpkg_cmake_configure(

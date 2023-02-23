@@ -1,0 +1,13 @@
+diff --git a/src/read.c b/src/read.c
+index 6289fa4..9c69d34 100644
+--- a/src/read.c
++++ b/src/read.c
+@@ -3102,7 +3102,7 @@ static avifResult avifDecoderPrepareSample(avifDecoder * decoder, avifDecodeSamp
+             if ((decoder->io->sizeHint > 0) && (sample->offset > decoder->io->sizeHint)) {
+                 return AVIF_RESULT_BMFF_PARSE_FAILED;
+             }
+-            avifResult readResult = decoder->io->read(decoder->io, 0, sample->offset, bytesToRead, &sampleContents);
++            avifResult readResult = decoder->io->read(decoder->io, 0, (size_t)sample->offset, bytesToRead, &sampleContents);
+             if (readResult != AVIF_RESULT_OK) {
+                 return readResult;
+             }
