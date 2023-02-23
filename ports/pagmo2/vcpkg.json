@@ -1,12 +1,13 @@
 {
   "name": "pagmo2",
-  "version": "2.18.0",
+  "version": "2.19.0",
   "description": "A C++ platform to perform parallel computations of optimization tasks (global and local) via the asynchronous generalized island model.",
   "homepage": "https://esa.github.io/pagmo2/",
   "license": "GPL-3.0-or-later OR LGPL-3.0-or-later",
   "dependencies": [
     "boost-any",
     "boost-graph",
+    "boost-safe-numerics",
     "boost-serialization",
     "eigen3",
     "tbb",
