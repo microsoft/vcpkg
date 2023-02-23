@@ -1960,6 +1960,10 @@
       "baseline": "2.2.2",
       "port-version": 0
     },
+    "daxa": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "dbg-macro": {
       "baseline": "2021-11-02",
       "port-version": 0
