@@ -142,6 +142,12 @@
         "libjpeg-turbo"
       ]
     },
+    "jpegxl": {
+      "description": "The JPEG-XL format is supported for reading, and batch writing (CreateCopy()), but not update in place.",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
     "lerc": {
       "description": "Enable LERC support",
       "dependencies": [
