@@ -1,7 +1,7 @@
-diff --git a/tools/meson/mesonbuild/modules/python.py b/tools/meson/mesonbuild/modules/python.py
+diff --git a/mesonbuild/modules/python.py b/mesonbuild/modules/python.py
 index 84ec524..2789134 100644
---- a/tools/meson/mesonbuild/modules/python.py
-+++ b/tools/meson/mesonbuild/modules/python.py
+--- a/mesonbuild/modules/python.py
++++ b/mesonbuild/modules/python.py
 @@ -305,10 +305,7 @@ def python_factory(env: 'Environment', for_machine: 'MachineChoice',
                  set_env('PKG_CONFIG_PATH', old_pkg_path)
  
