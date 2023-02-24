@@ -4,6 +4,7 @@
   "description": "Daxa C++ Vulkan Abstraction",
   "homepage": "https://github.com/Ipotrick/Daxa",
   "license": "MIT",
+  "supports": "(windows | linux) & !x86",
   "dependencies": [
     "vulkan",
     "vulkan-memory-allocator"
