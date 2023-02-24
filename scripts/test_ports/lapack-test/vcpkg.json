@@ -1,0 +1,19 @@
+{
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
+  "name": "lapack-test",
+  "version-date": "2022-02-22",
+  "description": "Metapackage for packages which provide LAPACK",
+  "license": null,
+  "dependencies": [
+    "lapack",
+    {
+      "name": "pkgconf",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

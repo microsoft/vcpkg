@@ -1,0 +1,129 @@
+diff --git a/runtime/libpgmath/lib/common/CMakeLists.txt b/runtime/libpgmath/lib/common/CMakeLists.txt
+index 59454c9de..caea12be3 100644
+--- a/runtime/libpgmath/lib/common/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/CMakeLists.txt
+@@ -309,10 +309,11 @@ set(DEFINITIONS_CMPLX ${DEFINITIONS} MTH_CMPLX_C99_ABI)
+ libmath_add_object_library("${MTH_CMPLX_SRCS}" "${FLAGS}" "${DEFINITIONS_CMPLX}" "common_mth_cmplx")
+ 
+ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENERIC})
++  find_program(AWK_COMMAND NAMES awk)
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2")
+@@ -325,7 +326,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2")
+@@ -338,7 +339,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_256mask.c
+   set(TARGET_NAME "mth_256mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge")
+@@ -351,7 +352,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_256generic.c
+   set(TARGET_NAME "mth_256generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge")
+@@ -364,7 +365,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_512mask.c
+   set(TARGET_NAME "mth_512mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+@@ -378,7 +379,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_512generic.c
+   set(TARGET_NAME "mth_512generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl")
+@@ -391,7 +392,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_z2yy.c
+   set(TARGET_NAME "mth_z2yy")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl")
+@@ -404,7 +405,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -412,7 +413,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -421,10 +422,10 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "aarch64")
+   set(TARGET_NAME "mth_128mask")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Windows")
+     add_custom_command(OUTPUT ${TARGET_NAME}.cpp DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-      COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -v TARGET_OS=WIN -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
++      COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -v TARGET_OS=WIN -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
+   else()
+     add_custom_command(OUTPUT ${TARGET_NAME}.cpp DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-      COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
++      COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
+   endif()
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.cpp")
+   libmath_add_object_library("${TARGET_NAME}.cpp" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+@@ -433,7 +434,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "aarch64")
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -441,7 +442,7 @@ else()
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -449,7 +450,7 @@ else()
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})

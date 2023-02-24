@@ -1,0 +1,28 @@
+diff --git a/tools/flang2/flang2exe/CMakeLists.txt b/tools/flang2/flang2exe/CMakeLists.txt
+index a9649e996..5aeeb0480 100644
+--- a/tools/flang2/flang2exe/CMakeLists.txt
++++ b/tools/flang2/flang2exe/CMakeLists.txt
+@@ -160,7 +160,7 @@ target_include_directories(flang2
+ 
+ # Install flang2 executable
+ install(TARGETS flang2
+-        RUNTIME DESTINATION ${LLVM_TOOLS_BINARY_DIR})
++        RUNTIME DESTINATION bin)
+ 
+ # Local Variables:
+ # mode: cmake
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6513a04c..000055e73 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -390,8 +390,10 @@ add_definitions( -DPGFLANG )
+ 
+ add_subdirectory(lib)
+ add_subdirectory(runtime)
++if( FLANG_BUILD_TOOLS )
+ add_subdirectory(utils)
+ add_subdirectory(tools)
++endif()
+ #add_subdirectory(test)
+ 
+ #option(FLANG_BUILD_EXAMPLES "Build FLANG example programs by default." OFF)

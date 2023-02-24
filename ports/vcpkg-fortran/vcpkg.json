@@ -1,0 +1,21 @@
+{
+  "name": "vcpkg-fortran",
+  "version-date": "2022-02-22",
+  "description": "Metaport for fortran compiler helpers. Only used for Windows",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-fortran-flang-classic",
+      "platform": "(windows & !mingw) & arm64"
+    },
+    {
+      "name": "vcpkg-fortran-ifort",
+      "platform": "(windows & !mingw) & (x86 | x64)"
+    },
+    {
+      "name": "vcpkg-ifort-libs",
+      "platform": "(windows & !mingw) & (x86 | x64)"
+    }
+  ]
+}

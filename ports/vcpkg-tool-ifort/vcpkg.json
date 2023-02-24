@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-tool-ifort",
+  "version-date": "2022-05-08",
+  "description": "Get the Intel HPC OneAPI Toolkit",
+  "license": null,
+  "supports": "windows & x64 & native",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-7zip",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

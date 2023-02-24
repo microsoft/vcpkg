@@ -1,0 +1,153 @@
+diff --git a/runtime/flang/async.c b/runtime/flang/async.c
+index 982ed0cef..b96568b78 100644
+--- a/runtime/flang/async.c
++++ b/runtime/flang/async.c
+@@ -250,7 +250,7 @@ Fio_asy_open(FILE *fp, struct asy **pasy)
+   asy->fp = fp;
+   asy->fd = __io_getfd(fp);
+ #if defined(TARGET_WIN)
+-  temp_handle = _get_osfhandle(asy->fd);
++  temp_handle = (void*)_get_osfhandle(asy->fd);
+   asy->handle =
+       ReOpenFile(temp_handle, GENERIC_READ | GENERIC_WRITE,
+                  FILE_SHARE_READ | FILE_SHARE_WRITE, FILE_FLAG_OVERLAPPED);
+diff --git a/runtime/flang/curdir.c b/runtime/flang/curdir.c
+index 60f698f9f..0bb2dcb2d 100644
+--- a/runtime/flang/curdir.c
++++ b/runtime/flang/curdir.c
+@@ -71,7 +71,7 @@ void __fort_getdir(char *curdir)
+   char path[MAXPATHLEN];
+   char *p;
+ 
+-  p = getcwd(path, MAXPATHLEN);
++  p = (char*)getcwd(path, MAXPATHLEN);
+   if (p == NULL) {
+     p = getenv("PWD");
+     if (p == NULL) {
+diff --git a/runtime/flang/getcwd3f.c b/runtime/flang/getcwd3f.c
+index 2c4e6d9f6..bc5fdbc94 100644
+--- a/runtime/flang/getcwd3f.c
++++ b/runtime/flang/getcwd3f.c
+@@ -15,7 +15,8 @@
+ #include "utils3f.h"
+ #include "mpalloc.h"
+ 
+-#if defined(_WIN64)
++#if defined(_WIN32)
++#include <direct.h>
+ #define GETCWDM _getcwd /* getcwd deprecated in Windows in VC 2005 */
+ #else
+ #define GETCWDM getcwd
+diff --git a/runtime/flang/getdrivedirqq3f.c b/runtime/flang/getdrivedirqq3f.c
+index c9c823534..56513bc53 100644
+--- a/runtime/flang/getdrivedirqq3f.c
++++ b/runtime/flang/getdrivedirqq3f.c
+@@ -16,7 +16,8 @@
+ #include "utils3f.h"
+ #include "mpalloc.h"
+ 
+-#if defined(_WIN64)
++#if defined(_WIN32)
++#include <direct.h>
+ #define GETCWDM _getcwd /* getcwd deprecated in Windows in VC 2005 */
+ #else
+ #define GETCWDM getcwd
+diff --git a/runtime/flang/getfileinfoqqi83f.c b/runtime/flang/getfileinfoqqi83f.c
+index 0d1e28e41..5907ce82a 100644
+--- a/runtime/flang/getfileinfoqqi83f.c
++++ b/runtime/flang/getfileinfoqqi83f.c
+@@ -22,7 +22,7 @@
+ #define FILE$LAST -2
+ #define FILE$ERROR -3
+ 
+-#if defined(_WIN64)
++#if defined(_WIN32)
+ extern void __GetTimeToSecondsSince1970(ULARGE_INTEGER *fileTime,
+                                         unsigned int *out);
+ int ENT3F(GETFILEINFOQQI8, getfileinfoqqi8)(DCHAR(ffiles), char *buffer,
+@@ -50,7 +50,7 @@ int ENT3F(GETFILEINFOQQI8, getfileinfoqqi8)(DCHAR(ffiles), char *buffer,
+   }
+   if (*handle <= 0) {
+     hFind = FindFirstFile(files, &FindFileData);
+-    *handle = hFind;
++    *handle = (int)hFind;
+   } else {
+     hFind = (HANDLE)*handle;
+     if (FindNextFile(hFind, &FindFileData) == 0) {
+diff --git a/runtime/flang/global.h b/runtime/flang/global.h
+index eebaca3b9..8a7499e8c 100644
+--- a/runtime/flang/global.h
++++ b/runtime/flang/global.h
+@@ -42,7 +42,10 @@ typedef unsigned short WCHAR;
+ 
+ #define VOID void
+ 
+-#if defined(_WIN64)
++#if defined(_WIN32)
++#if !defined(WIN_MSVCRT_IMP) && defined (_ACRTIMP) 
++#define WIN_MSVCRT_IMP _ACRTIMP
++#endif
+ WIN_MSVCRT_IMP char *WIN_CDECL getenv(const char *);
+ WIN_MSVCRT_IMP long WIN_CDECL strtol(const char *, char **, int);
+ WIN_MSVCRT_IMP char *WIN_CDECL strerror(int);
+diff --git a/runtime/flang/setfiletimeqq3f.c b/runtime/flang/setfiletimeqq3f.c
+index 5328f0bb2..f256a0caa 100644
+--- a/runtime/flang/setfiletimeqq3f.c
++++ b/runtime/flang/setfiletimeqq3f.c
+@@ -8,7 +8,8 @@
+ /* clang-format off */
+ 
+ /*	setfiletimeqq3f.c - Implements DFLIB setfiletimeqq subprogram.  */
+-#if defined(_WIN64)
++#if defined(_WIN32)
++#define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -17,13 +18,14 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ #include "utils3f.h"
++#include "mpalloc.h"
+ 
+ #define FILE$FIRST -1
+ #define FILE$LAST -2
+ #define FILE$ERROR -3
+ #define FILE$CURTIME -1
+ 
+-#if defined(_WIN64)
++#if defined(_WIN32)
+ extern void __UnpackTime(unsigned int secsSince1970, ULARGE_INTEGER *fileTime);
+ extern int __GETFILEINFOQQ(DCHAR(ffiles), char *buffer,
+                            int *handle DCLEN(ffiles));
+@@ -60,7 +62,7 @@ int ENT3F(SETFILETIMEQQ, setfiletimeqq)(DCHAR(ffile),
+     lastWrite->dwHighDateTime = fileTime->u.HighPart;
+   }
+ 
+-  handle = FILE$FIRST;
++  handle = (void*)FILE$FIRST;
+   __GETFILEINFOQQ(CADR(ffile), (char *)&fileInfo, (int *)&handle, CLEN(ffile));
+   while ((int)handle >= 0) {
+     __GETFILEINFOQQ(CADR(ffile), (char *)&fileInfo2, (int *)&handle,
+diff --git a/runtime/flangrti/tempnam.c b/runtime/flangrti/tempnam.c
+index d4a8609e4..a746abdef 100644
+--- a/runtime/flangrti/tempnam.c
++++ b/runtime/flangrti/tempnam.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#if !defined(_WIN64) && !defined(USETEMPNAM) /* { */
++#if !defined(_WIN32) || !defined(USETEMPNAM) /* { */
+ #include <errno.h>
+ #include <stdio.h>
+ 
+@@ -146,7 +146,7 @@ extern char *tempnam(char *, char *);
+ char *
+ __io_tempnam(char *dir, char *pfx)
+ {
+-#if defined(_WIN64)
++#if defined(_WIN32)
+   return (_tempnam(dir, pfx));
+ #else
+   return (tempnam(dir, pfx));

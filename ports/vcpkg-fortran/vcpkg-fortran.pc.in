@@ -1,0 +1,9 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+
+Name: vcpkg-fortran
+Description: Fortran helper pc file
+Version: 
+Requires: @requires@
+Libs: @libs@
+Cflags: @cflags@

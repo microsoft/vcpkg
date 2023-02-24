@@ -1,0 +1,40 @@
+{
+  "name": "vcpkg-tool-flang-classic",
+  "version-date": "2022-04-23",
+  "description": "The LLVM Compiler Infrastructure.",
+  "homepage": "https://llvm.org",
+  "license": "Apache-2.0",
+  "supports": "native",
+  "dependencies": [
+    "libxml2",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-flang-classic-llvm",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-llvm",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-ninja",
+      "host": true
+    },
+    "zlib"
+  ]
+}

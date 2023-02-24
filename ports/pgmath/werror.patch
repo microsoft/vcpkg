@@ -1,0 +1,13 @@
+diff --git a/runtime/libpgmath/lib/x86_64/CMakeLists.txt b/runtime/libpgmath/lib/x86_64/CMakeLists.txt
+index c96c8357f..9b1bf08e5 100644
+--- a/runtime/libpgmath/lib/x86_64/CMakeLists.txt	
++++ b/runtime/libpgmath/lib/x86_64/CMakeLists.txt
+@@ -87,7 +87,7 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ set(FLAGS "${FLAGS}-Wall -W -Wstrict-prototypes -Wwrite-strings ")
+ if(NOT ${LIBPGMATH_SYSTEM_NAME} MATCHES "Windows")
+-  set(FLAGS "${FLAGS}-Werror ")
++#  set(FLAGS "${FLAGS}-Werror ")
+ endif()
+ libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "isoc99")
+ 

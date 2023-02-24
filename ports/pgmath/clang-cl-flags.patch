@@ -1,0 +1,661 @@
+diff --git a/runtime/libpgmath/lib/common/CMakeLists.txt b/runtime/libpgmath/lib/common/CMakeLists.txt
+index 59454c9de..15939ffef 100644
+--- a/runtime/libpgmath/lib/common/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/CMakeLists.txt	
+@@ -82,7 +82,10 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+     add_subdirectory("tanf")
+ 
+     # Specific definition, will probably need to remove when we create a single file for each def
+-    set_property(SOURCE dispatch.c APPEND_STRING PROPERTY COMPILE_FLAGS "-fno-builtin-c{sqrt,pow,log,exp,acos,asin,atan,cos,sin,tan,cosh,sinh,tanh}{,f} -fno-builtin-{ceil,floor}{,f}")
++    set(builtin_list "csqrt;cpow;clog;cexp;cacos;casin;catan;ccos;csin;ctan;ccosh;csinh;ctanh;ceil;floor")
++    foreach(builtin IN LISTS builtin_list)
++      set_property(SOURCE dispatch.c APPEND_STRING PROPERTY COMPILE_FLAGS "-fno-builtin-${builtin} -fno-builtin-${builtin}f ")
++    endforeach()
+     set_property(SOURCE dispatch.c APPEND PROPERTY COMPILE_DEFINITIONS PGFLANG)
+     set_property(SOURCE mth_xintrinsics.c APPEND_STRING PROPERTY COMPILE_FLAGS "-msse2 ")
+     set_property(SOURCE mth_yintrinsics.c APPEND_STRING PROPERTY COMPILE_FLAGS "-mavx ")
+diff --git a/runtime/libpgmath/lib/common/acos/fma3/CMakeLists.txt b/runtime/libpgmath/lib/common/acos/fma3/CMakeLists.txt
+index e76eb92f5..e8e304baa 100644
+--- a/runtime/libpgmath/lib/common/acos/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/acos/fma3/CMakeLists.txt	
+@@ -24,9 +24,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRCS
+       vdacos8.cpp
+       vsacos16.cpp)
+-    set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "acos-avx512")
+-    set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "acos-knl")
+   endif()
+ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+diff --git a/runtime/libpgmath/lib/common/asin/fma3/CMakeLists.txt b/runtime/libpgmath/lib/common/asin/fma3/CMakeLists.txt
+index e48e94314..854517352 100644
+--- a/runtime/libpgmath/lib/common/asin/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/asin/fma3/CMakeLists.txt	
+@@ -24,9 +24,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRCS
+       vdasin8.cpp
+       vsasin16.cpp)
+-    set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "asin-avx512")
+-    set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "asin-knl")
+   endif()
+ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+diff --git a/runtime/libpgmath/lib/common/atan/CMakeLists.txt b/runtime/libpgmath/lib/common/atan/CMakeLists.txt
+index 91a37a86a..988c52c8a 100644
+--- a/runtime/libpgmath/lib/common/atan/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/atan/CMakeLists.txt	
+@@ -25,25 +25,25 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan-avx2_1")
+ 
+ 
+ # Vector, Two elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan-avx2_2")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan-avx2_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan-avx512_8")
+ 
+diff --git a/runtime/libpgmath/lib/common/atan2/CMakeLists.txt b/runtime/libpgmath/lib/common/atan2/CMakeLists.txt
+index 394245725..c7f7a7613 100644
+--- a/runtime/libpgmath/lib/common/atan2/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/atan2/CMakeLists.txt	
+@@ -25,25 +25,25 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2-avx2_1")
+ 
+ 
+ # Vector, Two elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2-avx2_2")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2-avx2_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2-avx512_8")
+ 
+diff --git a/runtime/libpgmath/lib/common/atan2f/CMakeLists.txt b/runtime/libpgmath/lib/common/atan2f/CMakeLists.txt
+index a63e8ac2f..ef79def97 100644
+--- a/runtime/libpgmath/lib/common/atan2f/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/atan2f/CMakeLists.txt	
+@@ -25,25 +25,25 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2f-avx2_1")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2f-avx2_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2f-avx2_8")
+ 
+ 
+ # Vector, Sixteen elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=16")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=16")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atan2f-avx512_16")
+ 
+diff --git a/runtime/libpgmath/lib/common/atanf/CMakeLists.txt b/runtime/libpgmath/lib/common/atanf/CMakeLists.txt
+index 321f87796..b30421138 100644
+--- a/runtime/libpgmath/lib/common/atanf/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/atanf/CMakeLists.txt	
+@@ -25,25 +25,25 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atanf-avx2_1")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atanf-avx2_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atanf-avx2_8")
+ 
+ 
+ # Vector, Sixteen elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=16")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=16")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}"
+ "atanf-avx512_16")
+ 
+diff --git a/runtime/libpgmath/lib/common/cexp/CMakeLists.txt b/runtime/libpgmath/lib/common/cexp/CMakeLists.txt
+index 196bf9225..aba9fbab4 100644
+--- a/runtime/libpgmath/lib/common/cexp/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/cexp/CMakeLists.txt	
+@@ -20,42 +20,42 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=1 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=1 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx2_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=1 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=1 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx512_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=1 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=1 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-knl_1")
+ 
+ 
+ # Scalar with vector calling ABI
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=1 -D_CPU=avx2 -D_SCALAR_WITH_VECTOR_ABI_")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=1 -D_CPU=avx2 -D_SCALAR_WITH_VECTOR_ABI_")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx2_1v")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=1 -D_CPU=avx512 -D_SCALAR_WITH_VECTOR_ABI_")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=1 -D_CPU=avx512 -D_SCALAR_WITH_VECTOR_ABI_")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx512_1v")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=1 -D_CPU=knl -D_SCALAR_WITH_VECTOR_ABI_")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=1 -D_CPU=knl -D_SCALAR_WITH_VECTOR_ABI_")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-knl_1v")
+ 
+ 
+ # Vector, Two elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx2_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=2 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=2 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx512_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=2 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=2 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-knl_2")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=4 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=4 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-avx512_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=4 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=4 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexp-knl_4")
+ 
+diff --git a/runtime/libpgmath/lib/common/cexpf/CMakeLists.txt b/runtime/libpgmath/lib/common/cexpf/CMakeLists.txt
+index d77d68774..2f927524d 100644
+--- a/runtime/libpgmath/lib/common/cexpf/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/cexpf/CMakeLists.txt	
+@@ -20,42 +20,42 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=1 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=1 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx2_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=1 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=1 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx512_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=1 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=1 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-knl_1")
+ 
+ 
+ # Vector, Two elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx2_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=2 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=2 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx512_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=2 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=2 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-knl_2")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=4 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=4 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx2_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=4 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=4 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx512_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=4 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=4 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-knl_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=8 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=8 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-avx512_8")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_VL=8 -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_VL=8 -D_CPU=knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_TMP}" "${DEFINITIONS}" "cexpf-knl_8")
+ 
+diff --git a/runtime/libpgmath/lib/common/exp/fma3/CMakeLists.txt b/runtime/libpgmath/lib/common/exp/fma3/CMakeLists.txt
+index 1cdba219e..6073ea41f 100644
+--- a/runtime/libpgmath/lib/common/exp/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/exp/fma3/CMakeLists.txt	
+@@ -24,9 +24,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRCS
+       vdexp8.cpp
+       vsexp16.cpp)
+-    set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "exp-avx512")
+-    set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "exp-knl")
+   endif()
+ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+diff --git a/runtime/libpgmath/lib/common/log/CMakeLists.txt b/runtime/libpgmath/lib/common/log/CMakeLists.txt
+index b612d089e..31bb8b8c2 100644
+--- a/runtime/libpgmath/lib/common/log/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/log/CMakeLists.txt	
+@@ -30,34 +30,34 @@ set(SRCS_VECTOR
+ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx2_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx512_1")
+ 
+ 
+ # Vector, 2 elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx2_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=2")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx512_2")
+ 
+ 
+ # Vector, 4 elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx2_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx512_4")
+ 
+ 
+ # Vector, 8 elements
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_CPU=knl -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_CPU=knl -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-knl_8")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log-avx512_8")
+ 
+ endif()
+diff --git a/runtime/libpgmath/lib/common/log/fma3/CMakeLists.txt b/runtime/libpgmath/lib/common/log/fma3/CMakeLists.txt
+index ac973b591..b94542e55 100644
+--- a/runtime/libpgmath/lib/common/log/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/log/fma3/CMakeLists.txt	
+@@ -34,9 +34,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+       fdlog8.cpp
+       fslog16.cpp
+       rslog16.cpp)
+-    set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "log-avx512")
+-    set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "log-knl")
+   endif()
+ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+diff --git a/runtime/libpgmath/lib/common/log10/CMakeLists.txt b/runtime/libpgmath/lib/common/log10/CMakeLists.txt
+index b4c7d621f..a04eeb87b 100644
+--- a/runtime/libpgmath/lib/common/log10/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/log10/CMakeLists.txt	
+@@ -24,31 +24,31 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx2_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx512_1")
+ 
+ 
+ # Vector, Two elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx2_2")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=2 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=2 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx512_2")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_VL=4 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_VL=4 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx2_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=4 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=4 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx512_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_VL=8 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_VL=8 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10-avx512_8")
+ 
+ 
+diff --git a/runtime/libpgmath/lib/common/log10f/CMakeLists.txt b/runtime/libpgmath/lib/common/log10f/CMakeLists.txt
+index 1f24eb3d8..f6d757345 100644
+--- a/runtime/libpgmath/lib/common/log10f/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/log10f/CMakeLists.txt	
+@@ -41,36 +41,36 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR_LEGACY}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx2_1")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx512_1")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR_LEGACY}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx2_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D__AVX512VL__")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D__AVX512VL__")
+ libmath_add_object_library("${SRCS_VECTOR4}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx512_4")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_CPU=knl")
+ libmath_add_object_library("${SRCS_VECTOR4}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-knl_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR_LEGACY}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx2_8")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D__AVX512VL__")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D__AVX512VL__")
+ libmath_add_object_library("${SRCS_VECTOR8}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx512_8")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_CPU=knl")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_CPU=knl")
+ libmath_add_object_library("${SRCS_VECTOR8}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-knl_8")
+ 
+ 
+ # Vector, Sixteen elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D__AVX512F__")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D__AVX512F__")
+ libmath_add_object_library("${SRCS_VECTOR16}" "${FLAGS_TMP}" "${DEFINITIONS}" "log10f-avx512_16")
+ 
+diff --git a/runtime/libpgmath/lib/common/logf/CMakeLists.txt b/runtime/libpgmath/lib/common/logf/CMakeLists.txt
+index dc01db066..66aceaf4a 100644
+--- a/runtime/libpgmath/lib/common/logf/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/logf/CMakeLists.txt	
+@@ -25,24 +25,24 @@ if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+ endif()
+ 
+ # Scalar 
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2")
+ libmath_add_object_library("${SRCS_SCALAR}" "${FLAGS_TMP}" "${DEFINITIONS}" "logf-avx2_1")
+ 
+ 
+ # Vector, Four elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=4")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=4")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "logf-avx2_4")
+ 
+ 
+ # Vector, Eight elements
+-set(FLAGS_TMP "${FLAGS} -mtune=core-avx2 -march=core-avx2 -D_CPU=avx2 -D_VL=8")
++set(FLAGS_TMP "${FLAGS} /tune:core-avx2 /arch:AVX2 -D_CPU=avx2 -D_VL=8")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "logf-avx2_8")
+ 
+ 
+ # Vector, Sixteen elements
+-set(FLAGS_TMP "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512 -D_CPU=avx512 -D_VL=16")
++set(FLAGS_TMP "${FLAGS} /tune:skylake-avx512 /arch:AVX512 -D_CPU=avx512 -D_VL=16")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "logf-avx512_16")
+ 
+-set(FLAGS_TMP "${FLAGS} -mtune=knl -march=knl -D_CPU=knl -D_VL=16")
++set(FLAGS_TMP "${FLAGS} /tune:knl /D__knl /arch:AVX512 -D_CPU=knl -D_VL=16")
+ libmath_add_object_library("${SRCS_VECTOR}" "${FLAGS_TMP}" "${DEFINITIONS}" "logf-knl_16")
+ 
+diff --git a/runtime/libpgmath/lib/common/pow/fma3/CMakeLists.txt b/runtime/libpgmath/lib/common/pow/fma3/CMakeLists.txt
+index b66f0f6d8..075e3cacc 100644
+--- a/runtime/libpgmath/lib/common/pow/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/pow/fma3/CMakeLists.txt	
+@@ -24,9 +24,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRCS
+       vdpow8.cpp
+       vspow16.cpp)
+-    set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "pow-avx512")
+-    set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++    set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+     libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "pow-knl")
+   endif()
+ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+diff --git a/runtime/libpgmath/lib/common/powi/CMakeLists.txt b/runtime/libpgmath/lib/common/powi/CMakeLists.txt
+index fa4ebe042..d952cfdcd 100644
+--- a/runtime/libpgmath/lib/common/powi/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/powi/CMakeLists.txt	
+@@ -13,11 +13,11 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     # Set source files
+     set(CORE2_SRCS fxpowi.c pxpowi.c)
+-    set_property(SOURCE ${CORE2_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2 ")
++    set_property(SOURCE ${CORE2_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "")
+     set(SANDYBRIDGE_SRCS fypowi.c pypowi.c)
+-    set_property(SOURCE ${SANDYBRIDGE_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge ")
++    set_property(SOURCE ${SANDYBRIDGE_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "/arch:AVX ")
+     set(KNL_SRCS pzpowi.c)
+-    set_property(SOURCE ${KNL_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl ")
++    set_property(SOURCE ${KNL_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "/tune:knl /D__knl /arch:AVX512 ")
+     set(SRCS
+       ${CORE2_SRCS}
+       ${SANDYBRIDGE_SRCS}
+diff --git a/runtime/libpgmath/lib/common/sincos/CMakeLists.txt b/runtime/libpgmath/lib/common/sincos/CMakeLists.txt
+index 037bb0ce6..e6cd8412a 100644
+--- a/runtime/libpgmath/lib/common/sincos/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/sincos/CMakeLists.txt	
+@@ -22,19 +22,19 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set_property(TARGET gssincos4 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_sincos PRECSIZE=4 VLEN=4)
+     libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "gdsincos2")
+     set_property(TARGET gdsincos2 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_dsincos PRECSIZE=8 VLEN=2)
+-    set_property(TARGET gssincos4 gdsincos2 APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2 ")
++    set_property(TARGET gssincos4 gdsincos2 APPEND_STRING PROPERTY COMPILE_FLAGS "")
+ 
+     libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "gssincos8")
+     set_property(TARGET gssincos8 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_sincos PRECSIZE=4 VLEN=8)
+     libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "gdsincos4")
+     set_property(TARGET gdsincos4 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_dsincos PRECSIZE=8 VLEN=4)
+-    set_property(TARGET gssincos8 gdsincos4 APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge ")
++    set_property(TARGET gssincos8 gdsincos4 APPEND_STRING PROPERTY COMPILE_FLAGS "/arch:AVX ")
+ 
+     libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "gssincos16")
+     set_property(TARGET gssincos16 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_sincos PRECSIZE=4 VLEN=16)
+     libmath_add_object_library("${SRCS}" "${FLAGS}" "${DEFINITIONS}" "gdsincos8")
+     set_property(TARGET gdsincos8 APPEND PROPERTY COMPILE_DEFINITIONS SINCOS=__mth_dsincos PRECSIZE=8 VLEN=8)
+-    set_property(TARGET gssincos16 gdsincos8 APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl ")
++    set_property(TARGET gssincos16 gdsincos8 APPEND_STRING PROPERTY COMPILE_FLAGS "/tune:knl /D__knl /arch:AVX512 ")
+ 
+     # Set source files and compilation flags
+     set(FLAGS "${FLAGS} -Wno-attributes")
+@@ -42,9 +42,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRC_VECTOR fd_sincos_vector.cpp)
+     set(SRC_SCALAR fd_sincos_scalar.cpp)
+     
+-    set(AVX2_FLAGS "${FLAGS} -mtune=core-avx2 -march=core-avx2")
+-    set(AVX512_FLAGS "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512")
+-    set(KNL_FLAGS "${FLAGS} -mtune=knl -march=knl")
++    set(AVX2_FLAGS "${FLAGS} /tune:core-avx2 /arch:AVX2")
++    set(AVX512_FLAGS "${FLAGS} /tune:skylake-avx512 /arch:AVX512")
++    set(KNL_FLAGS "${FLAGS} /tune:knl /D__knl /arch:AVX512")
+     
+     # SINCOS
+     libmath_add_object_library("${SRC_SCALAR}" "${AVX2_FLAGS}" "${DEFINITIONS} -DSINCOS" "fd_sincos_1_avx2")
+@@ -90,9 +90,9 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64")
+     set(SRC_VECTOR fd_sincos_vector.cpp)
+     set(SRC_SCALAR fd_sincos_scalar.cpp)
+     
+-    set(AVX2_FLAGS "${FLAGS} -mtune=core-avx2 -march=core-avx2")
+-    set(AVX512_FLAGS "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512")
+-    set(KNL_FLAGS "${FLAGS} -mtune=knl -march=knl")
++    set(AVX2_FLAGS "${FLAGS} /tune:core-avx2 /arch:AVX2")
++    set(AVX512_FLAGS "${FLAGS} /tune:skylake-avx512 /arch:AVX512")
++    set(KNL_FLAGS "${FLAGS} /tune:knl /D__knl /arch:AVX512")
+     
+     # SINCOS
+     libmath_add_object_library("${SRC_SCALAR}" "${AVX2_FLAGS}" "${DEFINITIONS} -DSINCOS" "fd_sincos_1_avx2")
+diff --git a/runtime/libpgmath/lib/common/sincosf/CMakeLists.txt b/runtime/libpgmath/lib/common/sincosf/CMakeLists.txt
+index 583c82320..2d2c6edf9 100644
+--- a/runtime/libpgmath/lib/common/sincosf/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/sincosf/CMakeLists.txt	
+@@ -13,9 +13,9 @@ set(DEFINITIONS "${DEFINITIONS} -DPGI")
+ set(SRC_VECTOR fs_sincos_vector.cpp)
+ set(SRC_SCALAR fs_sincos_scalar.cpp)
+ 
+-set(AVX2_FLAGS "${FLAGS} -mtune=core-avx2 -march=core-avx2")
+-set(AVX512_FLAGS "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512")
+-set(KNL_FLAGS "${FLAGS} -mtune=knl -march=knl")
++set(AVX2_FLAGS "${FLAGS} /tune:core-avx2 /arch:AVX2")
++set(AVX512_FLAGS "${FLAGS} /tune:skylake-avx512 /arch:AVX512")
++set(KNL_FLAGS "${FLAGS} /tune:knl /D__knl /arch:AVX512")
+ 
+ # SINCOS
+ libmath_add_object_library("${SRC_SCALAR}" "${AVX2_FLAGS}" "${DEFINITIONS} -DSINCOS" "fs_sincos_1_avx2")
+diff --git a/runtime/libpgmath/lib/common/tanf/CMakeLists.txt b/runtime/libpgmath/lib/common/tanf/CMakeLists.txt
+index 2ead60f2a..9b94dec81 100644
+--- a/runtime/libpgmath/lib/common/tanf/CMakeLists.txt
++++ b/runtime/libpgmath/lib/common/tanf/CMakeLists.txt	
+@@ -10,9 +10,9 @@ get_property(FLAGS GLOBAL PROPERTY "FLAGS_L1")
+ 
+ # Set source files and compilation flags
+ set(COREAVX2_SRCS fs_tan_1_avx2.cpp fs_tan_4_avx2.cpp fs_tan_8_avx2.cpp)
+-set_property(SOURCE ${COREAVX2_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=core-avx2 -march=core-avx2 ")
++set_property(SOURCE ${COREAVX2_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "/tune:core-avx2 /arch:AVX2 ")
+ set(SKYLAKE_SRCS fs_tan_16_avx512.cpp)
+-set_property(SOURCE ${SKYLAKE_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=skylake-avx512 -march=skylake-avx512 ")
++set_property(SOURCE ${SKYLAKE_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS "/tune:skylake-avx512 /arch:AVX512 ")
+ 
+ # Set source files
+ set(SRCS
+diff --git a/runtime/libpgmath/lib/x86_64/atan/fma3/CMakeLists.txt b/runtime/libpgmath/lib/x86_64/atan/fma3/CMakeLists.txt
+index f70feb16e..8a00261e5 100644
+--- a/runtime/libpgmath/lib/x86_64/atan/fma3/CMakeLists.txt
++++ b/runtime/libpgmath/lib/x86_64/atan/fma3/CMakeLists.txt	
+@@ -17,7 +17,7 @@ set(SRCS
+ libmath_add_object_library("${SRCS}" "${FLAGS} -mfma -mavx2" "${DEFINITIONS}" "")
+ set(SRCS
+   vsatan16.cpp)
+-set(FLAGS_AVX512 "${FLAGS} -march=skylake-avx512 -mtune=skylake-avx512")
++set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:skylake-avx512")
+ libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "atan-avx512")
+-set(FLAGS_AVX512 "${FLAGS} -march=knl -mtune=knl")
++set(FLAGS_AVX512 "${FLAGS} /arch:AVX512 /tune:knl /D__knl")
+ libmath_add_object_library("${SRCS}" "${FLAGS_AVX512}" "${DEFINITIONS}" "atan-knl")
+diff --git a/runtime/libpgmath/lib/x86_64/fast/CMakeLists.txt b/runtime/libpgmath/lib/x86_64/fast/CMakeLists.txt
+index 1a5b39b9a..e1e39fa84 100644
+--- a/runtime/libpgmath/lib/x86_64/fast/CMakeLists.txt
++++ b/runtime/libpgmath/lib/x86_64/fast/CMakeLists.txt	
+@@ -12,7 +12,7 @@ get_property(FLAGS GLOBAL PROPERTY "FLAGS_X8664_L2")
+ set(SRCS
+   fastcdiv.S
+   fastmod.S)
+-libmath_add_object_library("${SRCS}" "${FLAGS} -mtune=skylake-avx512 -march=skylake-avx512" "${DEFINITIONS}" "")
++libmath_add_object_library("${SRCS}" "${FLAGS} /tune:skylake-avx512 /arch:AVX512" "${DEFINITIONS}" "")
+ 
+ set(TARGET_NAME "mthdecls")
+ list(APPEND PREPROCESSOR "${CMAKE_C_COMPILER} -E -DMTH_CMPLX_C99_ABI -DMTH_NO_STD_MATH_HDRS -dM ${CMAKE_CURRENT_SOURCE_DIR}/../${TARGET_NAME}.h")
+@@ -40,5 +40,5 @@ endif()
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ set(SRCS
+   fastmath.S)
+-libmath_add_object_library("${SRCS}" "-m64 -O3 -mtune=skylake-avx512 -march=skylake-avx512" "${DEFINITIONS}" "fastmath")
++libmath_add_object_library("${SRCS}" "-m64 -O3 /tune:skylake-avx512 /arch:AVX512" "${DEFINITIONS}" "fastmath")
+ add_dependencies(fastmath mthdecls)

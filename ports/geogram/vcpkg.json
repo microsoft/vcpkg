@@ -1,7 +1,7 @@
 {
   "name": "geogram",
   "version": "1.7.6",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Geogram is a programming library of geometric algorithms.",
   "homepage": "https://gforge.inria.fr/projects/geogram/",
   "license": "BSD-3-Clause",

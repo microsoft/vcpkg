@@ -1,0 +1,8 @@
+prefix=${pcfiledir}/../..
+libdir=@LIBDIR@
+
+Name: vcpkg-fortran-ifort
+Description: Helper for adding required flags for ifort. 
+Version: 
+Libs: -L"${libdir}" @libs@
+Cflags: @cflags@

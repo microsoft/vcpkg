@@ -1,6 +1,7 @@
 {
   "name": "lapack-reference",
   "version": "3.11.0",
+  "port-version": 1,
   "description": "LAPACK - Linear Algebra PACKage",
   "homepage": "http://www.netlib.org/lapack/",
   "license": "BSD-3-Clause-Open-MPI",
@@ -13,10 +14,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "vcpkg-gfortran",
-      "platform": "windows"
-    }
+    "vcpkg-fortran"
   ],
   "default-features": [
     "blas-select"
@@ -31,7 +29,7 @@
           "features": [
             "noblas"
           ],
-          "platform": "!windows | !static"
+          "platform": "!(windows & arm)"
         }
       ]
     },
@@ -40,9 +38,13 @@
     },
     "noblas": {
       "description": "Use external optimized BLAS",
+      "supports": "!(windows & arm64)",
       "dependencies": [
         "blas"
       ]
+    },
+    "tests": {
+      "description": "Enable the build of tests"
     }
   }
 }

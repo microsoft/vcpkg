@@ -1,9 +1,22 @@
 {
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "blas",
-  "version-string": "1",
-  "port-version": 1,
+  "version-string": "default",
   "description": "Metapackage for packages which provide BLAS",
+  "license": null,
   "dependencies": [
-    "openblas"
+    {
+      "$comment": "Will use internal generic BLAS of lapack-reference",
+      "name": "lapack-reference",
+      "platform": "arm64 & windows"
+    },
+    {
+      "name": "openblas",
+      "platform": "!(osx | (windows & arm64))"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

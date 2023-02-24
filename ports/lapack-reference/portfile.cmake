@@ -8,10 +8,15 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
-include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+x_vcpkg_find_fortran(OUT_OPTIONS Fortran_opts 
+                     OUT_OPTIONS_RELEASE Fortran_opts_rel
+                     OUT_OPTIONS_DEBUG Fortran_opts_dbg)
+
+if(Z_VCPKG_IS_INTERNAL_Fortran_INTEL OR VCPKG_DETECTED_CMAKE_Fortran_COMPILER MATCHES "ifort${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(PATCHES intel.patch)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,13 +24,13 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 fc3258b9d91a833149a68a89c5589b5113e90a8f9f41c3a73fbfccb1ecddd92d9462802c0f870f1c3dab392623452de4ef512727f5874ffdcba6a4845f78fc9a
     HEAD_REF master
-    PATCHES
-        cmake-config.patch
-        lapacke.patch
+    PATCHES ${PATCHES}
+            cmake-config.patch
+            lapacke.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC")
+    set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC") # Should probably be in the toolchain
 endif()
 
 set(CBLAS OFF)
@@ -39,27 +44,20 @@ endif()
 set(USE_OPTIMIZED_BLAS OFF) 
 if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)
-    set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openblas.pc")
-    if(EXISTS "${pcfile}")
-        file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
-    endif()
-    set(pcfile "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/openblas.pc")
-    if(EXISTS "${pcfile}")
-        file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
-    endif()
 endif()
 
-set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-vcpkg_find_fortran(FORTRAN_CMAKE)
-if(VCPKG_USE_INTERNAL_Fortran)
-    if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL "static") 
-    # If openblas has been built with static crt linkage we cannot use it with gfortran!
-        set(USE_OPTIMIZED_BLAS OFF) 
-        #Cannot use openblas from vcpkg if we are building with gfortran here. 
-        if("noblas" IN_LIST FEATURES)
-            message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
-        endif()
-    endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "tests"  BUILD_TESTING
+    )
+
+# Python3 for testing summary. 
+if(BUILD_TESTING)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+    # export NO_STOP_MESSAGE=yes to avoid the signaling warning in the tests
 endif()
 
 vcpkg_cmake_configure(
@@ -68,7 +66,14 @@ vcpkg_cmake_configure(
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
-        ${FORTRAN_CMAKE}
+        "-DCMAKE_POLICY_DEFAULT_CMP0065=NEW"
+        "-DCMAKE_POLICY_DEFAULT_CMP0067=NEW"
+        "-DCMAKE_POLICY_DEFAULT_CMP0083=NEW"
+        "-DTEST_FORTRAN_COMPILER=OFF"
+        ${Fortran_opts}
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG ${Fortran_opts_dbg}
+    OPTIONS_RELEASE ${Fortran_opts_rel}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
@@ -80,45 +85,56 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${VERSION} CONFIG_PATH lib/cmake/la
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
     file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
+    file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
 endif()
 set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
     file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
+    file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
 endif()
-if(NOT USE_OPTIMIZED_BLAS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+
+if(NOT USE_OPTIMIZED_BLAS)
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
     endif()
     set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
     endif()
 endif()
 if("cblas" IN_LIST FEATURES)
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
     endif()
     set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
 
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc")
+endif()
+
+if(NOT "noblas" IN_LIST FEATURES)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas-reference.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
+    endif()
+endif()
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# remove debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -138,8 +154,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lapack")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lapack")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(BLA_STATIC ON)
+else()
+    set(BLA_STATIC OFF)
+endif()
+set(BLA_VENDOR Generic)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
