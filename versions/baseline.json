@@ -2481,8 +2481,8 @@
       "port-version": 0
     },
     "fmilib": {
-      "baseline": "2.0.3",
-      "port-version": 5
+      "baseline": "2.4.1",
+      "port-version": 0
     },
     "fmt": {
       "baseline": "9.1.0",
