@@ -58,7 +58,7 @@ if(NOT SCRIPT_MESON)
             "${CMAKE_CURRENT_LIST_DIR}/python-lib-dep.patch"
             "${CMAKE_CURRENT_LIST_DIR}/11259.diff"
     )
-    set(SCRIPT_MESON "${DOWNLOADS}/meson-${program_version}/meson.py")
+    set(SCRIPT_MESON "${DOWNLOADS}/tools/meson-${program_version}/meson.py")
 endif()
 
 message(STATUS "Using meson: ${SCRIPT_MESON}")
