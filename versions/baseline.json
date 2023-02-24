@@ -7210,7 +7210,7 @@
     },
     "simde": {
       "baseline": "0.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "simdjson": {
       "baseline": "3.1.2",
@@ -8206,6 +8206,10 @@
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.0.1",
+      "port-version": 0
+    },
+    "vvenc": {
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "vxl": {
