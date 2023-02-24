@@ -55,6 +55,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_ZLIB
         zstd             GDAL_USE_ZSTD
         tools            BUILD_APPS
+        jpegxl           GDAL_USE_JXL
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
