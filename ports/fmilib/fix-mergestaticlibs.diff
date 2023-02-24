@@ -1,56 +1,20 @@
 diff --git a/Config.cmake/mergestaticlibs.cmake b/Config.cmake/mergestaticlibs.cmake
-index 858a026..c58ed6f 100644
+index 858a026..67eccb7 100644
 --- a/Config.cmake/mergestaticlibs.cmake
 +++ b/Config.cmake/mergestaticlibs.cmake
-@@ -28,6 +28,19 @@ function(merge_static_libs outlib )
- 		set(multiconfig TRUE)
- 	endif()
+@@ -21,6 +21,15 @@ function(merge_static_libs outlib )
+ 	file(WRITE ${dummyfile} "const char * dummy = \"${dummyfile}\";")
  	
-+	set(link_libs "")
+ 	add_library(${outlib} STATIC ${dummyfile})
 +	foreach(lib IN LISTS libs)
-+		get_target_property(lib_link_libs "${lib}" INTERFACE_LINK_LIBRARIES)
-+		if(lib_link_libs)
-+			list(APPEND link_libs ${lib_link_libs})
++		target_sources(${outlib} PRIVATE "$<TARGET_OBJECTS:${lib}>")
++		get_target_property(link_libs ${lib} INTERFACE_LINK_LIBRARIES)
++		if(link_libs)
++			list(REMOVE_ITEM link_libs ${libs})
++			target_link_libraries(${outlib} ${link_libs})
 +		endif()
 +	endforeach()
-+	list(REMOVE_ITEM link_libs ${libs})
-+	foreach(lib IN LISTS libs)
-+		list(REMOVE_ITEM link_libs "$<LINK_ONLY:${lib}>")
-+	endforeach()
-+	target_link_libraries(${outlib} PRIVATE ${link_libs})
-+
- # First get the file names of the libraries to be merged	
- 	foreach(lib ${libs})
- 		get_target_property(libtype ${lib} TYPE)
-@@ -36,11 +49,11 @@ function(merge_static_libs outlib )
- 		endif()
- 		if(multiconfig)
- 			foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
--				get_target_property("libfile_${CONFIG_TYPE}" ${lib} "LOCATION_${CONFIG_TYPE}")
-+				set(outfile "$<TARGET_FILE:${lib}>")
- 				list(APPEND libfiles_${CONFIG_TYPE} ${libfile_${CONFIG_TYPE}})
- 			endforeach()
- 		else()
--			get_target_property(libfile ${lib} LOCATION)
-+			set(outfile "$<TARGET_FILE:${lib}>")
- 			list(APPEND libfiles "${libfile}")
- 		endif(multiconfig)
- 	endforeach()
-@@ -71,7 +84,7 @@ function(merge_static_libs outlib )
- 	if(multiconfig)
- 		message(FATAL_ERROR "Multiple configurations are not supported")
- 	endif()
--	get_target_property(outfile ${outlib} LOCATION)  
-+	set(outfile "$<TARGET_FILE:${outlib}>")
- 	add_custom_command(TARGET ${outlib} POST_BUILD
- 		COMMAND rm ${outfile}
- 		COMMAND /usr/bin/libtool -static -o ${outfile} 
-@@ -82,7 +95,7 @@ function(merge_static_libs outlib )
- 	if(multiconfig)
- 		message(FATAL_ERROR "Multiple configurations are not supported")
- 	endif()
--	get_target_property(outfile ${outlib} LOCATION)
-+	set(outfile "$<TARGET_FILE:${outlib}>")
- 	message(STATUS "outfile location is ${outfile}")
- 	foreach(lib ${libfiles})
- # objlistfile will contain the list of object files for the library
++	return()
+ 
+ 	if("${CMAKE_CFG_INTDIR}" STREQUAL ".")
+ 		set(multiconfig FALSE)
