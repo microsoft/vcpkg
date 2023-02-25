@@ -47,14 +47,14 @@ function(vcpkg_msbuild_install)
     vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
 
     if(NOT arg_NO_TOOLCHAIN_PROPS)
-        file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by vcpkg_msbuild_create_props
-        vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
-                                   OUTPUT_TARGETS target_file
-                                   RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
-                                   DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
-                                   DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
-                                   ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
-                                   ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
+        file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by z_vcpkg_msbuild_create_props
+        z_vcpkg_msbuild_create_props(OUTPUT_PROPS props_file
+                                     OUTPUT_TARGETS target_file
+                                     RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
+                                     DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
+                                     DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
+                                     ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
+                                     ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
         list(APPEND arg_OPTIONS         
             "/p:ForceImportAfterCppProps=${props_file}"
             "/p:ForceImportAfterCppTargets=${target_file}"
