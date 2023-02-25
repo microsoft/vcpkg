@@ -1,6 +1,6 @@
 # Must be removed on next release
 vcpkg_download_distfile(CATCH2_PATCH
-    URLS https://github.com/BlueBrain/HighFive/commit/be9285ee4661ff4154830989899a2a050d6fbc64.patch
+    URLS https://github.com/BlueBrain/HighFive/commit/be9285ee4661ff4154830989899a2a050d6fbc64.patch?full_index=1
     FILENAME ${PORT}-669-cd784f8d.diff
     SHA512 cd784f8d4543cf1eaaba027a01d6042fe156e15d2ce59630ddf7dd2709c17d8ac8518954f6262de4d2ebfdf626467cdf6d16d072c17adb98b799d82ccda8792a
 )
