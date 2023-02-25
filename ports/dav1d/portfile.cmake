@@ -2,7 +2,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
-    REF 1.1.0
+    REF "${VERSION}"
     SHA512 53b3fc0363504d4b9dd29bc88d3c8510ae65ac69b04e97d650e78c9fb5e2b95816d5c29dbc454aa5c2e539401c4be88ae88d7a7a8224007a05183fd249677f31
 )
 
