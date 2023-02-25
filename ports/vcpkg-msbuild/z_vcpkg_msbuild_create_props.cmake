@@ -1,4 +1,4 @@
-function(vcpkg_msbuild_create_props)
+function(z_vcpkg_msbuild_create_props)
     cmake_parse_arguments(
         PARSE_ARGV 0
         "arg"
@@ -31,6 +31,9 @@ function(vcpkg_msbuild_create_props)
     vcpkg_get_windows_sdk(TARGET_PLATFORM_VERSION)
 
     if(arg_DEPENDENT_PKGCONFIG)
+        if(NOT COMMAND x_vcpkg_pkgconfig_get_modules)
+          message(FATAL_ERROR "Port vcpkg-msbuild needs to have feature 'pkg-config' enabled for 'DEPENDENT_PKGCONFIG'")
+        endif()
         x_vcpkg_pkgconfig_get_modules(PREFIX MSBUILD INCLUDE_DIRS LIBRARIES LIBRARIES_DIR CFLAGS USE_MSVC_SYNTAX_ON_WINDOWS MODULES ${arg_DEPENDENT_PKGCONFIG})
 
         separate_arguments(MSBUILD_INCLUDE_DIRS_RELEASE WINDOWS_COMMAND "${MSBUILD_INCLUDE_DIRS_RELEASE}")
