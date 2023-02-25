@@ -18,7 +18,7 @@
     "pkg-config": {
       "description": "Enable pkg-config lookup for msbuild",
       "dependencies": [
-          "pkgconf"
+        "pkgconf"
       ]
     }
   }
