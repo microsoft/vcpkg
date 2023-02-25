@@ -4,6 +4,7 @@
   "description": "Intel® Math Kernel Library (Intel® MKL) accelerates math processing routines, increases application performance, and reduces development time on Intel® processors.",
   "homepage": "https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html",
   "supports": "(windows | linux) & x64",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-tool-lessmsi",

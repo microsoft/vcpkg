@@ -279,3 +279,4 @@ if(sha)
                       "${CURRENT_PACKAGES_DIR}/manual-tools"
                       )
 endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
