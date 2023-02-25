@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(x_vcpkg_pkgconfig_get_modules)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS;NO_MSVC_SYNTAX" "PREFIX" "MODULES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS;USE_MSVC_SYNTAX_ON_WINDOWS" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
@@ -12,7 +12,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         message(FATAL_ERROR "extra arguments passed to x_vcpkg_pkgconfig_get_modules: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     set(msvc "")
-    if(NOT arg_NO_MSVC_SYNTAX AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT arg_USE_MSVC_SYNTAX_ON_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(msvc "--msvc-syntax")
     endif()
 
