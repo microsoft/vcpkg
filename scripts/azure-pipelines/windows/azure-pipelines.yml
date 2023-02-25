@@ -15,9 +15,14 @@ parameters:
     default: 'x86_windows'
   - name: poolName
     type: string
+  - name: tripletPattern
+    displayName: 'Enable the triplets which contain this substring'
+    type: string
+    default: ''
 
 jobs:
 - job: ${{ parameters.jobName }}
+  condition: contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}')
   pool:
     name: ${{ parameters.poolName }}
   workspace:
