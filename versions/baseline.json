@@ -8088,9 +8088,13 @@
       "baseline": "2021-11-16",
       "port-version": 3
     },
+    "vcpkg-msbuild": {
+      "baseline": "2023-02-25",
+      "port-version": 0
+    },
     "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2022-02-10",
-      "port-version": 1
+      "baseline": "2023-02-25",
+      "port-version": 0
     },
     "vcpkg-qmake": {
       "baseline": "2022-11-16",
