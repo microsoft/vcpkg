@@ -691,7 +691,7 @@ index 23b1937cc..234a6ccf8 100644
 +install(TARGETS ${TARGET}-lite EXPORT filamentTargets ARCHIVE DESTINATION lib)
  install(DIRECTORY ${PUBLIC_HDR_DIR}/ibl DESTINATION include)
 diff --git a/libs/iblprefilter/CMakeLists.txt b/libs/iblprefilter/CMakeLists.txt
-index e39212e43..3c98e0f12 100644
+index e39212e43..994471b98 100644
 --- a/libs/iblprefilter/CMakeLists.txt
 +++ b/libs/iblprefilter/CMakeLists.txt
 @@ -42,10 +42,6 @@ add_definitions(-DSYSTRACE_TAG=2 )
@@ -705,12 +705,24 @@ index e39212e43..3c98e0f12 100644
  set(MATERIAL_BINS)
  file(MAKE_DIRECTORY ${MATERIAL_DIR})
  
-@@ -133,5 +129,5 @@ target_link_libraries(${TARGET} PRIVATE
+@@ -87,7 +83,10 @@ include_directories(src)
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
+ 
+ # specify where the public headers of this library are
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+@@ -133,5 +132,5 @@ target_link_libraries(${TARGET} PRIVATE
  # Installation
  # ==================================================================================================
  set(INSTALL_TYPE ARCHIVE)
 -install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${DIST_DIR})
-+install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib)
++install(TARGETS ${TARGET} EXPORT filamentTargets ${INSTALL_TYPE} DESTINATION lib)
  install(DIRECTORY ${PUBLIC_HDR_DIR}/filament-iblprefilter DESTINATION include)
 diff --git a/libs/image/CMakeLists.txt b/libs/image/CMakeLists.txt
 index 2d76ca148..655b46647 100644
