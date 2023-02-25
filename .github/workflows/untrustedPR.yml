@@ -43,8 +43,6 @@ jobs:
           ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
-          env:
-            ACTIONS_STEP_DEBUG: true
 
       - name: Generate Reply
         uses: actions/github-script@v6
