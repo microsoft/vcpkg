@@ -217,6 +217,8 @@ fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
+flashlight-cpu:x64-linux=fail
+flashlight-cuda:x64-linux=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
