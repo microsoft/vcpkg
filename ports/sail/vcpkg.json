@@ -127,6 +127,9 @@
         "libpng"
       ]
     },
+    "psd": {
+      "description": "Enable PSD codec"
+    },
     "qoi": {
       "description": "Enable QOI codec"
     },
