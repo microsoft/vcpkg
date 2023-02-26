@@ -1,0 +1,8 @@
+The package arg-router is a header-only library and so is typically used like this:
+
+    find_package(arg_router REQUIRED)
+    include_directories(SYSTEM "${arg_router_INCLUDE_DIRS}")
+    
+For more information, see the docs here:
+
+    https://github.com/cmannett85/arg_router

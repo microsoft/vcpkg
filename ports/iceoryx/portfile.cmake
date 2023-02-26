@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-iceoryx/iceoryx
     REF "v${VERSION}"
-    SHA512 a354ed59eab8730238c828a6477bc6d9f8a5c27009e72406dd2f081cd1d490888d6c1ef31609b35599d30da6e32c1d9ddfaad2f5f50360dcd95015febba3d1ff
+    SHA512 b860452373dc41d6b0dd0042d1fc4c97621f143d20e9354a1572126ab815ee0cec6548ddfab9fa276943ed33d9ffd8810243e67eb5fae1d11f18ef0b2b074650
     HEAD_REF master
     PATCHES
         acl.patch
@@ -30,8 +30,11 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME iceoryx_binding_c CONFIG_PATH lib/cmake/ic
 vcpkg_cmake_config_fixup(PACKAGE_NAME iceoryx_hoofs CONFIG_PATH lib/cmake/iceoryx_hoofs DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME iceoryx_posh CONFIG_PATH lib/cmake/iceoryx_posh)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 if(TOML_CONFIG)
     vcpkg_copy_tools(TOOL_NAMES iox-roudi AUTO_CLEAN)
