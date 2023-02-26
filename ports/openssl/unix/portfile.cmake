@@ -1,6 +1,5 @@
 if (VCPKG_TARGET_IS_LINUX)
-
-    message(STATUS [[
+    message(NOTICE [[
 openssl requires Linux kernel headers from the system package manager.
    They can be installed on Alpine systems via `apk add linux-headers`.
    They can be installed on Ubuntu systems via `apt install linux-libc-dev`.
@@ -114,10 +113,8 @@ vcpkg_install_make(BUILD_TARGET build_sw)
 vcpkg_fixup_pkgconfig()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-foreach(script IN ITEMS "bin/c_rehash")
-    file(COPY "${CURRENT_PACKAGES_DIR}/${script}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
-endforeach()
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash")
 vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
 
 file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
@@ -129,16 +126,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_MINGW)
-    # For consistency with nmake build
-    file(GLOB engines "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/*.dll")
-    if(engines)
-        file(COPY ${engines} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
-    endif()
-    file(GLOB engines "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/*.dll")
-    if(engines)
-        file(COPY ${engines} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
-    endif()
+# For consistency of mingw build with nmake build
+file(GLOB engines "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/*.dll")
+if(NOT engines STREQUAL "")
+    file(COPY ${engines} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
+endif()
+file(GLOB engines "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/*.dll")
+if(NOT engines STREQUAL "")
+    file(COPY ${engines} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
 endif()
