@@ -26,7 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/share/microsoft-signalr)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/share/microsoft-signalr)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/share" "${CURRENT_PACKAGES_DIR}/lib/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -32,7 +32,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(INSTALL "${SOURCE_PATH}/uuid.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/unofficial-libuuid PACKAGE_NAME unofficial-libuuid)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/unofficial-libuuid PACKAGE_NAME unofficial-libuuid)
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL

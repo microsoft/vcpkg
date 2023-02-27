@@ -24,7 +24,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-libcroco)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libcroco)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright

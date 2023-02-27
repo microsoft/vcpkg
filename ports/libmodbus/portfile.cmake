@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/modbus.h" "elif defined(LIBBUILD)" "elif 1")

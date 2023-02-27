@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
-vcpkg_config_cmake_fixup()
+vcpkg_cmake_config_fixup()
 file(
     INSTALL "${SOURCE_PATH}/COPYING"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"

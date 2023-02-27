@@ -39,4 +39,4 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 vcpkg_copy_pdbs()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/XDiff PACKAGE_NAME XDiff)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/XDiff PACKAGE_NAME XDiff)

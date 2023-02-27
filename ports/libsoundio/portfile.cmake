@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")

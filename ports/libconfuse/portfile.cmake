@@ -29,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

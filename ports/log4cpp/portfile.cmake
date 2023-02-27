@@ -20,7 +20,7 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_config_cmake_fixup(CONFIG_PATH share/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()

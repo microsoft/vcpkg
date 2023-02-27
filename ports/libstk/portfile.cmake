@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-libstk)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libstk)
 
 vcpkg_copy_pdbs()
 

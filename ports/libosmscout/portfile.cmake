@@ -40,7 +40,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
-vcpkg_config_cmake_fixup(CONFIG_PATH share/cmake/libosmscout)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libosmscout)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

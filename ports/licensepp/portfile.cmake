@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH share/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
