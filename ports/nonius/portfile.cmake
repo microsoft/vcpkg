@@ -22,4 +22,4 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-configure_file("{SOURCE_PATH}/COPYING.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
