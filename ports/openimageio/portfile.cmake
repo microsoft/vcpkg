@@ -1,9 +1,7 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 c7a4283b78197c262d8da31460ce8b07b44546f822142e32e6c1ea22376e1c4b9cfe9c39cc0994987c6c4f653c1f2764057944da97a3a090bf1bcb74a2a0b2c2
     HEAD_REF master
     PATCHES
@@ -15,6 +13,8 @@ vcpkg_from_github(
         fix-vs2019-encoding-conversion.patch
         qt6.patch
         more_qt6.patch
+        fix-openexr-target-missing.patch
+        1aa2cf6edf9f2bd57a21998fceeb095cbe1f2b84.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -93,7 +93,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 file(READ "${SOURCE_PATH}/THIRD-PARTY.md" third_party)
 string(REGEX REPLACE
     "^.*The remainder of this file"

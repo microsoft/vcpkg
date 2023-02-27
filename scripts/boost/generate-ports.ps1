@@ -22,16 +22,17 @@ else {
 }
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 2
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost" = 1;
-    "boost-atomic" = 2;
-    "boost-modular-build-helper" = 4;
-    "boost-random" = 2;
-    "boost-uninstall" = 2;
-    "boost-locale" = 2;
-    "boost-vcpkg-helpers" = 2;
+    "boost" = 3;
+    "boost-atomic" = 3;
+    "boost-build" = 3;
+    "boost-locale" = 3;
+    "boost-modular-build-helper" = 5;
+    "boost-random" = 3;
+    "boost-vcpkg-helpers" = 3;
+    "boost-uninstall" = 3;
 }
 
 function Get-PortVersion {
@@ -97,11 +98,8 @@ $portData = @{
         };
     };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
-    "boost-stacktrace"       = @{ "supports" = "!uwp" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
-    "boost-test"             = @{ "supports" = "!uwp" };
-    "boost-wave"             = @{ "supports" = "!uwp" };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -153,6 +151,7 @@ $portData = @{
             }
         }
     };
+    "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
         "features" = @{
             "icu" = @{
@@ -161,6 +160,9 @@ $portData = @{
             }
         }
     }
+    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-test"             = @{ "supports" = "!uwp" };
+    "boost-wave"             = @{ "supports" = "!uwp" };
 }
 
 function GeneratePortName() {

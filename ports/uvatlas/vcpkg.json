@@ -1,6 +1,7 @@
 {
   "name": "uvatlas",
   "version-date": "2023-02-06",
+  "port-version": 1,
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
@@ -15,6 +16,7 @@
     },
     {
       "name": "directxtex",
+      "default-features": false,
       "platform": "!(uwp | linux)"
     },
     {
