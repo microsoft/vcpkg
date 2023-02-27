@@ -3845,7 +3845,7 @@
       "port-version": 3
     },
     "libe57format": {
-      "baseline": "2.3.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "libebur128": {
