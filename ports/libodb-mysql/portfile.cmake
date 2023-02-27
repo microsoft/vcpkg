@@ -22,10 +22,9 @@ set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
 find_library(MYSQL_LIB NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}" NO_DEFAULT_PATH REQUIRED)
 find_library(MYSQL_LIB_DEBUG NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS
         -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
     OPTIONS_RELEASE
@@ -35,9 +34,9 @@ vcpkg_configure_cmake(
         -DMYSQL_LIB=${MYSQL_LIB_DEBUG}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/odb TARGET_PATH share/odb)
+vcpkg_config_cmake_fixup(CONFIG_PATH share/odb TARGET_PATH share/odb)
 
 vcpkg_copy_pdbs()
 

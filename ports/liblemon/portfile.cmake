@@ -10,16 +10,15 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
     PATCHES
         cmake.patch
         fixup-targets.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLEMON_ENABLE_GLPK=OFF
         -DLEMON_ENABLE_ILOG=OFF
@@ -27,19 +26,19 @@ vcpkg_configure_cmake(
         -DLEMON_ENABLE_SOPLEX=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/lemon/cmake TARGET_PATH share/lemon)
+vcpkg_config_cmake_fixup(CONFIG_PATH share/lemon/cmake PACKAGE_NAME lemon)
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblemon/)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblemon)
+file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(COPY ${EXE} DESTINATION "{CURRENT_PACKAGES_DIR}/tools/liblemon/")
+vcpkg_copy_tool_dependencies("{CURRENT_PACKAGES_DIR}/tools/liblemon")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 vcpkg_fixup_pkgconfig()

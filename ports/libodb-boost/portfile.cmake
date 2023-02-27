@@ -15,14 +15,13 @@ file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
   DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_BUILD_TYPE)

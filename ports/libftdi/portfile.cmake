@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF 0.20
     PATCHES
         libusb-win32.patch
@@ -16,9 +16,8 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/exports.def" DESTINATION "${SOURCE_PATH}/src")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DDOCUMENTATION=OFF
         -DEXAMPLES=OFF
@@ -33,9 +32,9 @@ vcpkg_configure_cmake(
         -DLIB_INSTALL_DIR=lib
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_config_cmake_fixup()
 
 vcpkg_fixup_pkgconfig()
 

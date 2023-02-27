@@ -15,14 +15,13 @@ file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
   DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_sqliteConfig-debug.cmake" LIBODB_DEBUG_TARGETS)
