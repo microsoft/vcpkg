@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/COPYING.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

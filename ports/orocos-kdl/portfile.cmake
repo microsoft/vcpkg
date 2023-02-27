@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH share/orocos_kdl/cmake PACKAGE_NAME orocos_kdl)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/orocos_kdl/cmake PACKAGE_NAME orocos_kdl)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake" _contents)
 string(REPLACE "\${CMAKE_CURRENT_LIST_DIR}/../../.." "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")

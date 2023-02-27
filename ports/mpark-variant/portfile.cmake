@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/mpark_variant PACKAGE_NAME mpark_variant)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mpark_variant PACKAGE_NAME mpark_variant)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 

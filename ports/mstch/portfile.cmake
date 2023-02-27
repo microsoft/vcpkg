@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/mstch)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mstch)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

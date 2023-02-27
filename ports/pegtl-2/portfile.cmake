@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(CONFIG_PATH share/pegtl-2/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/pegtl-2/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

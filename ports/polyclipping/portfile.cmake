@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup()
+vcpkg_cmake_config_fixup()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
