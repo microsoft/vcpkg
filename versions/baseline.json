@@ -5114,7 +5114,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "modp-base64": {
       "baseline": "2020-09-26",
@@ -5142,15 +5142,15 @@
     },
     "moos-essential": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "moos-ui": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "morton-nd": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mosquitto": {
       "baseline": "2.0.14",
@@ -5170,7 +5170,7 @@
     },
     "mpark-variant": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mpc": {
       "baseline": "1.2.0",
@@ -5222,11 +5222,11 @@
     },
     "msgpack": {
       "baseline": "3.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "msgpack11": {
       "baseline": "0.0.10",
-      "port-version": 3
+      "port-version": 4
     },
     "msinttypes": {
       "baseline": "2018-02-25",
@@ -5234,7 +5234,7 @@
     },
     "msix": {
       "baseline": "1.7",
-      "port-version": 4
+      "port-version": 5
     },
     "msmpi": {
       "baseline": "10.1.12498",
@@ -5242,7 +5242,7 @@
     },
     "mstch": {
       "baseline": "1.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "mujoco": {
       "baseline": "2.3.2",
@@ -5262,7 +5262,7 @@
     },
     "murmurhash": {
       "baseline": "2016-01-09",
-      "port-version": 5
+      "port-version": 6
     },
     "mvfst": {
       "baseline": "2022-11-03",
@@ -5282,7 +5282,7 @@
     },
     "nana": {
       "baseline": "1.7.4",
-      "port-version": 2
+      "port-version": 3
     },
     "nano-signal-slot": {
       "baseline": "2.0.1",
@@ -5330,7 +5330,7 @@
     },
     "nanovg": {
       "baseline": "2019-08-30",
-      "port-version": 5
+      "port-version": 6
     },
     "nativefiledialog": {
       "baseline": "2022-01-20",
@@ -5370,7 +5370,7 @@
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "nethost": {
       "baseline": "7.0.0",
@@ -5410,7 +5410,7 @@
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
-      "port-version": 2
+      "port-version": 3
     },
     "nlohmann-json": {
       "baseline": "3.11.2",
@@ -5434,7 +5434,7 @@
     },
     "nngpp": {
       "baseline": "1.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "nnpack": {
       "baseline": "2021-02-21",
@@ -5450,7 +5450,7 @@
     },
     "nonius": {
       "baseline": "2019-04-20",
-      "port-version": 2
+      "port-version": 3
     },
     "nowide": {
       "baseline": "11.2.0",
@@ -5474,7 +5474,7 @@
     },
     "nt-wrapper": {
       "baseline": "2019-08-10",
-      "port-version": 1
+      "port-version": 2
     },
     "nu-book-zxing-cpp": {
       "baseline": "2.0.0",
@@ -5554,7 +5554,7 @@
     },
     "observer-ptr-lite": {
       "baseline": "0.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ocilib": {
       "baseline": "4.7.5",
@@ -5662,7 +5662,7 @@
     },
     "opencsg": {
       "baseline": "1.4.2",
-      "port-version": 2
+      "port-version": 3
     },
     "openctm": {
       "baseline": "1.0.3",
@@ -5710,7 +5710,7 @@
     },
     "openigtlink": {
       "baseline": "3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openimageio": {
       "baseline": "2.4.5.0",
@@ -5726,7 +5726,7 @@
     },
     "openmama": {
       "baseline": "6.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openmesh": {
       "baseline": "9.0",
@@ -5810,7 +5810,7 @@
     },
     "optional-bare": {
       "baseline": "1.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "optional-lite": {
       "baseline": "3.5.0",
@@ -5830,7 +5830,7 @@
     },
     "orocos-kdl": {
       "baseline": "1.4",
-      "port-version": 5
+      "port-version": 6
     },
     "osg": {
       "baseline": "3.6.5",
@@ -5858,11 +5858,11 @@
     },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
-      "port-version": 1
+      "port-version": 2
     },
     "p-ranav-csv2": {
       "baseline": "2020-12-14",
-      "port-version": 2
+      "port-version": 3
     },
     "pagmo2": {
       "baseline": "2.19.0",
@@ -5898,7 +5898,7 @@
     },
     "parallelstl": {
       "baseline": "20200330",
-      "port-version": 1
+      "port-version": 2
     },
     "paraview": {
       "baseline": "5.11.0",
@@ -5966,7 +5966,7 @@
     },
     "pegtl-2": {
       "baseline": "2.8.3",
-      "port-version": 1
+      "port-version": 2
     },
     "pffft": {
       "baseline": "2021-10-09",
@@ -5978,7 +5978,7 @@
     },
     "pfultz2-linq": {
       "baseline": "2019-05-14",
-      "port-version": 1
+      "port-version": 2
     },
     "phnt": {
       "baseline": "2020-12-21",
@@ -6062,7 +6062,7 @@
     },
     "plibsys": {
       "baseline": "0.0.4",
-      "port-version": 6
+      "port-version": 7
     },
     "plog": {
       "baseline": "1.1.9",
@@ -6074,7 +6074,7 @@
     },
     "plustache": {
       "baseline": "0.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "pmdk": {
       "baseline": "1.12.0",
@@ -6086,7 +6086,7 @@
     },
     "pngwriter": {
       "baseline": "0.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "poco": {
       "baseline": "1.12.4",
@@ -6106,7 +6106,7 @@
     },
     "polyclipping": {
       "baseline": "6.4.2",
-      "port-version": 10
+      "port-version": 11
     },
     "polyhook2": {
       "baseline": "2022-03-01",
@@ -6126,15 +6126,15 @@
     },
     "popsift": {
       "baseline": "0.9",
-      "port-version": 3
+      "port-version": 4
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
-      "port-version": 2
+      "port-version": 3
     },
     "portaudio": {
       "baseline": "19.7",
-      "port-version": 3
+      "port-version": 4
     },
     "portmidi": {
       "baseline": "2.0.4",
@@ -6146,7 +6146,7 @@
     },
     "ppconsul": {
       "baseline": "0.5",
-      "port-version": 3
+      "port-version": 4
     },
     "ppmagic": {
       "baseline": "2020-07-03",
@@ -6154,15 +6154,15 @@
     },
     "pprint": {
       "baseline": "2019-07-19",
-      "port-version": 1
+      "port-version": 2
     },
     "pqp": {
       "baseline": "1.3",
-      "port-version": 5
+      "port-version": 6
     },
     "presentmon": {
       "baseline": "1.7.0",
-      "port-version": 1
+      "port-version": 2
     },
     "proj": {
       "baseline": "9.1.1",
@@ -6206,7 +6206,7 @@
     },
     "psimd": {
       "baseline": "2021-02-21",
-      "port-version": 0
+      "port-version": 1
     },
     "ptc-print": {
       "baseline": "1.4.0",
@@ -6226,7 +6226,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 2
+      "port-version": 3
     },
     "pthreads": {
       "baseline": "3.0.0",
@@ -6666,7 +6666,7 @@
     },
     "quickfast": {
       "baseline": "1.5",
-      "port-version": 1
+      "port-version": 2
     },
     "quickfix": {
       "baseline": "1.15.1",
@@ -6686,15 +6686,15 @@
     },
     "qwtw": {
       "baseline": "3.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "rabit": {
       "baseline": "0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "ragel": {
       "baseline": "6.10",
-      "port-version": 4
+      "port-version": 5
     },
     "random123": {
       "baseline": "1.14.0",
@@ -6862,11 +6862,11 @@
     },
     "riffcpp": {
       "baseline": "2.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "ring-span-lite": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rioki-glow": {
       "baseline": "0.2.1",
@@ -6898,11 +6898,11 @@
     },
     "rpclib": {
       "baseline": "2.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "rply": {
       "baseline": "1.1.4",
-      "port-version": 1
+      "port-version": 2
     },
     "rsasynccpp": {
       "baseline": "0.0.7",
@@ -6938,7 +6938,7 @@
     },
     "rtlsdr": {
       "baseline": "2020-04-16",
-      "port-version": 3
+      "port-version": 4
     },
     "rtmidi": {
       "baseline": "5.0.0",
