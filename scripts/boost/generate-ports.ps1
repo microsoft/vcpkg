@@ -29,8 +29,7 @@ $portVersions = @{
     "boost-atomic" = 3;
     "boost-build" = 3;
     "boost-locale" = 3;
-    "boost-modular-build-helper" = 5;
-    "boost-random" = 3;
+    "boost-modular-build-helper" = 6;
     "boost-vcpkg-helpers" = 3;
     "boost-uninstall" = 3;
 }
