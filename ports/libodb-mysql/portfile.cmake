@@ -36,7 +36,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/odb TARGET_PATH share/odb)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/odb PACKAGE_NAME odb)
 
 vcpkg_copy_pdbs()
 
