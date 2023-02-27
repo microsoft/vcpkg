@@ -6562,7 +6562,7 @@
     },
     "qtopcua": {
       "baseline": "6.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtpositioning": {
       "baseline": "6.4.2",
