@@ -24,9 +24,9 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_config_cmake_fixup(CONFIG_PATH cmake PACKAGE_NAME cppnetlib)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME cppnetlib)
 else()
-    vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/cppnetlib PACKAGE_NAME cppnetlib)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cppnetlib PACKAGE_NAME cppnetlib)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

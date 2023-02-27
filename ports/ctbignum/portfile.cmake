@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Move CMake files to the right place
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 # Remove empty files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

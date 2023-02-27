@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=False
 )
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL        "${SOURCE_PATH}/LICENSE"
      DESTINATION    "${CURRENT_PACKAGES_DIR}/share/${PORT}"

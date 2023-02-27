@@ -47,7 +47,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-cfitsio)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-cfitsio)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake" ASSIMP_CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake" "

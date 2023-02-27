@@ -55,7 +55,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 #TODO: fix the official exported targets, since they are broken (luckily it seems that no-one uses them for now)
-vcpkg_config_cmake_fixup(CONFIG_PATH share/clapack)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/clapack)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
