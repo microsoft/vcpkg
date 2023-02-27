@@ -17,21 +17,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 
-file(GLOB_RECURSE JINJA2CPPLIGHT_EXES ${CURRENT_PACKAGES_DIR}/bin/jinja2cpplight_unittests*)
-file(COPY ${JINJA2CPPLIGHT_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+file(GLOB_RECURSE JINJA2CPPLIGHT_EXES "${CURRENT_PACKAGES_DIR}/bin/jinja2cpplight_unittests*")
+file(COPY ${JINJA2CPPLIGHT_EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE ${JINJA2CPPLIGHT_EXES})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

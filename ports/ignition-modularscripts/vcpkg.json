@@ -1,7 +1,17 @@
 {
   "name": "ignition-modularscripts",
   "version-date": "2022-05-11",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Vcpkg helpers to package ignition libraries",
-  "license": null
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
