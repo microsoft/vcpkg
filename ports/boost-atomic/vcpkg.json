@@ -27,7 +27,7 @@
     {
       "name": "boost-modular-build-helper",
       "host": true,
-      "version>=": "1.81.0#5"
+      "version>=": "1.81.0#6"
     },
     {
       "name": "boost-predef",
