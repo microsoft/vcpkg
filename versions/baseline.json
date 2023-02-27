@@ -4029,7 +4029,7 @@
       "port-version": 6
     },
     "libjpeg-turbo": {
-      "baseline": "2.1.5",
+      "baseline": "2.1.5.1",
       "port-version": 0
     },
     "libjuice": {
