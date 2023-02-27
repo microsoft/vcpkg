@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kubernetes-client/c
-    REF release-0.6
+    REF "v${VERSION}"
     SHA512  9a485b8788da2b69695c7c312209602ed4777c29e2fe9bdd6b0c5f62169cb152373ec95fae60553ea70810c852cb41467524ad9b91c5e11fe02efe2678b79250
     HEAD_REF master
     PATCHES
