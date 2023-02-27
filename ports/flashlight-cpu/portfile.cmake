@@ -47,7 +47,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME flashlight)
+vcpkg_cmake_config_fixup(PACKAGE_NAME flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

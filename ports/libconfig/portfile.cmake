@@ -32,7 +32,7 @@ vcpkg_copy_pdbs()
 
 if (VCPKG_USE_HEAD_VERSION)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-  vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/libconfig)
+  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libconfig)
 endif()
 
 foreach(FILE "${CURRENT_PACKAGES_DIR}/include/libconfig.h++" "${CURRENT_PACKAGES_DIR}/include/libconfig.h")

@@ -24,7 +24,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/gflags)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gflags)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")

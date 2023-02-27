@@ -26,7 +26,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/LibCDS)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibCDS)
 
 file(INSTALL
     "${SOURCE_PATH}/LICENSE"

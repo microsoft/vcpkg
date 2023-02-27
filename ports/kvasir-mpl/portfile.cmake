@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Move CMake config files to the right place
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/kvasir_mpl)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/kvasir_mpl)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

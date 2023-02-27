@@ -27,7 +27,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/io2d)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/io2d)
 
 if (NOT VCPKG_TARGET_IS_OSX)
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake")

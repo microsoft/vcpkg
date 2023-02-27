@@ -19,4 +19,4 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_config_cmake_fixup(CONFIG_PATH "share/ecos")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/ecos")

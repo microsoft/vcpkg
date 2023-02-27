@@ -19,14 +19,14 @@ function(ignition_modular_build_library)
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
         # Some ignition libraries install library subcomponents, that are effectively additional cmake packages
-        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_config_cmake_fixup for them as well
+        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_cmake_config_fixup for them as well
         file(GLOB COMPONENTS_CMAKE_PACKAGE_NAMES
              LIST_DIRECTORIES TRUE
              RELATIVE "${CURRENT_PACKAGES_DIR}/lib/cmake/"
              "${CURRENT_PACKAGES_DIR}/lib/cmake/*")
 
         foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
-            vcpkg_config_cmake_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
+            vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
                                       TARGET_PATH "share/${COMPONENT_CMAKE_PACKAGE_NAME}"
                                       DO_NOT_DELETE_PARENT_CONFIG_PATH)
         endforeach()

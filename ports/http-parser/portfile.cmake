@@ -18,7 +18,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-http-parser)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-http-parser)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE-MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/${PORT}" RENAME copyright)

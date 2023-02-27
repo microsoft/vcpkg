@@ -35,9 +35,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_config_cmake_fixup(CONFIG_PATH cmake PACKAGE_NAME foonathan_memory)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME foonathan_memory)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/foonathan_memory/cmake")
-    vcpkg_config_cmake_fixup(CONFIG_PATH share/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 endif()
 
 vcpkg_copy_pdbs()

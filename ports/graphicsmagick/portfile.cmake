@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-graphicsmagick)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-graphicsmagick)
 
 # copy license
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

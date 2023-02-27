@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_config_cmake_fixup(CONFIG_PATH lib/cmake/KDSoap PACKAGE_NAME KDSoap)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KDSoap PACKAGE_NAME KDSoap)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/kdwsdl2cpp${VCPKG_TARGET_EXECUTABLE_SUFFIX}"

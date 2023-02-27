@@ -24,9 +24,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
-    vcpkg_config_cmake_fixup(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/CMake/${PORT}")
-    vcpkg_config_cmake_fixup(CONFIG_PATH lib/CMake/${PORT})
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/CMake/${PORT})
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
