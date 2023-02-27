@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-fix-dependencies.patch
         0002-export-cmake-targets.patch
@@ -36,9 +36,8 @@ if ("pthreads" IN_LIST FEATURES)
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
@@ -46,12 +45,12 @@ vcpkg_configure_cmake(
         -DPKG_CONFIG_LIBS=-lcfitsio
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
+vcpkg_config_cmake_fixup(PACKAGE_NAME unofficial-cfitsio)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake ASSIMP_CONFIG)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake "
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake" ASSIMP_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake" "
 include(CMakeFindDependencyMacro)
 ${FIND_CURL_DEPENDENCY}
 ${FIND_PTHREADS_DEPENDENCY}
@@ -59,15 +58,15 @@ find_dependency(ZLIB)
 ${ASSIMP_CONFIG}
 ")
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake"
     "cmake_policy(VERSION 2.6)"
     "cmake_policy(VERSION 2.6)\r\n\
 # Required for the evaluation of \"if(@BUILD_SHARED_LIBS@)\" below to function\r\n\
 cmake_policy(SET CMP0012 NEW)\r\n"
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/unistd.h" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/FindPthreads.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio)
+file(INSTALL "${SOURCE_PATH}/FindPthreads.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio")
 
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
