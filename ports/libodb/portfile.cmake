@@ -31,7 +31,7 @@ if(NOT VCPKG_BUILD_TYPE)
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/odb/odb_libodbConfig-debug.cmake" "${LIBODB_DEBUG_TARGETS}")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/odbConfig.cmak"e DESTINATION "${CURRENT_PACKAGES_DIR}/share/odb")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/odbConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/odb")
 write_basic_package_version_file("${CURRENT_PACKAGES_DIR}/share/odb/odbConfigVersion.cmake"
     VERSION 2.4.0
     COMPATIBILITY SameMajorVersion
