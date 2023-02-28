@@ -29,7 +29,7 @@ function(ignition_modular_build_library)
 
         foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
             vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
-                                      TARGET_PATH "share/${COMPONENT_CMAKE_PACKAGE_NAME}"
+                                      PACKAGE_NAME ${COMPONENT_CMAKE_PACKAGE_NAME}
                                       DO_NOT_DELETE_PARENT_CONFIG_PATH)
         endforeach()
 
