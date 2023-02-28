@@ -14,7 +14,7 @@ with open(f"tensorflow{lib_suffix}.dll-2.params", "r") as f_in:
             line = line.replace(".dll", "-part1.lib")
             f_out.write(line)
         elif line.startswith("/WHOLEARCHIVE:"):
-            line = line[len("/WHOLEARCHIVE:"):]
+            line = line[len("/WHOLEARCHIVE:") :]
             size = os.stat(f"../../{line.strip()}").st_size
             if acc_size + size > 0xFFFFFFFF:
                 # we need to split the library if it is >4GB, because it's not supported even on x64 Windows

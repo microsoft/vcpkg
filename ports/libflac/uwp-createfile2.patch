@@ -1,0 +1,40 @@
+diff --git a/src/share/win_utf8_io/win_utf8_io.c b/src/share/win_utf8_io/win_utf8_io.c
+index 8b20bbb7..058295fa 100644
+--- a/src/share/win_utf8_io/win_utf8_io.c
++++ b/src/share/win_utf8_io/win_utf8_io.c
+@@ -156,6 +156,27 @@ int get_utf8_argv(int *argc, char ***argv)
+ /* similar to CreateFileW but accepts UTF-8 encoded lpFileName */
+ HANDLE WINAPI CreateFile_utf8(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+ {
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++	HANDLE handle = INVALID_HANDLE_VALUE;
++
++	if (!flac_internal_get_utf8_filenames())
++		return handle;
++
++	wchar_t *wname;
++
++	if ((wname = wchar_from_utf8(lpFileName)) != NULL)
++	{
++		CREATEFILE2_EXTENDED_PARAMETERS cfParams = {0};
++		cfParams.dwSize = sizeof(CREATEFILE2_EXTENDED_PARAMETERS);
++		cfParams.dwFileAttributes = dwFlagsAndAttributes & FILE_ATTRIBUTE_NORMAL;
++		cfParams.lpSecurityAttributes = lpSecurityAttributes;
++		cfParams.hTemplateFile = hTemplateFile;
++		handle = CreateFile2(wname, dwDesiredAccess, dwShareMode, dwCreationDisposition, &cfParams);
++		free(wname);
++	}
++
++	return handle;
++#else
+ 	if (!flac_internal_get_utf8_filenames()) {
+ 		return CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+ 	} else {
+@@ -169,6 +190,7 @@ HANDLE WINAPI CreateFile_utf8(const char *lpFileName, DWORD dwDesiredAccess, DWO
+ 
+ 		return handle;
+ 	}
++#endif
+ }
+ 
+ /* return number of characters in the UTF-8 string */

@@ -1,5 +1,0 @@
-The package fluidsynth provides CMake targets:
-
-    find_package(FluidSynth CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FluidSynth::libfluidsynth)
-    add_custom_command(OUTPUT result COMMAND FluidSynth::fluidsynth ARGS ...)

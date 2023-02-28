@@ -39,7 +39,6 @@ vcpkg_from_github(
         jsoncpp.patch
         iotr.patch
         ${STRING_PATCH}
-        9690.diff
 )
 
 # =============================================================================
