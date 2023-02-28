@@ -46,6 +46,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
+file(READ "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEConfig.cmake" contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEConfig.cmake" "${contents}\nif(OpenCASCADE_WITH_FREETYPE)\nfind_dependency(freetype CONFIG)\nendif()\n")
 
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
