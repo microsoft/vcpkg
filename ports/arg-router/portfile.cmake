@@ -27,10 +27,10 @@ if (WIN32)
 elseif (APPLE)
     set(CMAKE_FILE_DIR "arg_router.framework/Resources/CMake")
 endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/${CMAKE_FILE_DIR}" "${CURRENT_PACKAGES_DIR}/share/arg_router")
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME arg_router
+    CONFIG_PATH "${CMAKE_FILE_DIR}"
 )
 
 string(FIND "${CMAKE_FILE_DIR}" "/" CMAKE_FILE_DIR_SLASH_IDX)
