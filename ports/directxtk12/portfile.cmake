@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
     REF feb2023b
-    SHA512 48a2eb9afede47991858f71f3ce1f524cdbefef9bb179323eb6e0acc58b343d3c319680405edddfb71d3d303766a9451655201ab361b623cd69db9f3d042b854
+    SHA512 e17b726e8f73bd499ab0c7e9c1d8fb7f1af3bad3220a8b3accbf5993b735bcd7caa349b767d09af74a800e0cf1852749280fc0e7a0cf8fe186dbf13dd07ba11d
     HEAD_REF main
 )
 
