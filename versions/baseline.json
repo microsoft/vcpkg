@@ -362,7 +362,7 @@
     },
     "aws-lambda-cpp": {
       "baseline": "0.2.8",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.4",
