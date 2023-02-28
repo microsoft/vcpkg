@@ -10,14 +10,14 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
     PATCHES
         fix_gobal_vars_uninit_local_ptr.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/wordnet-config.cmake.in DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/wordnet-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 if("dbfiles" IN_LIST FEATURES)
     vcpkg_download_distfile(WORDNET_DICT_DBFILES
@@ -28,25 +28,24 @@ if("dbfiles" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${SOURCE_PATH}/dict/")
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH WORDNET_DICT_DBFILES_EX
-        ARCHIVE ${WORDNET_DICT_DBFILES}
+        ARCHIVE "${WORDNET_DICT_DBFILES}"
         REF 3.1
-        WORKING_DIRECTORY ${SOURCE_PATH}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
     )
-    file(RENAME ${WORDNET_DICT_DBFILES_EX} "${SOURCE_PATH}/dict")
+    file(RENAME "${WORDNET_DICT_DBFILES_EX}" "${SOURCE_PATH}/dict")
 endif()
 
 set (WORDNET_DICT_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}/dict")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DWORDNET_DICT_PATH=${WORDNET_DICT_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "-DWORDNET_DICT_PATH=${WORDNET_DICT_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wordnet RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
