@@ -1,3 +1,6 @@
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_cmake_configure.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_cmake_build.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_cmake_install.cmake")
 
 function(ignition_modular_build_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
