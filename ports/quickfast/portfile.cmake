@@ -35,7 +35,6 @@ vcpkg_cmake_configure(
     WINDOWS_USE_MSBUILD
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    PREFER_NINJA
 )
 
 vcpkg_cmake_install()
