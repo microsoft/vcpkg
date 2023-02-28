@@ -1253,7 +1253,7 @@
       "port-version": 0
     },
     "buck-yeh-bux": {
-      "baseline": "1.6.7",
+      "baseline": "1.6.8",
       "port-version": 0
     },
     "buck-yeh-bux-mariadb-client": {
