@@ -1,4 +1,5 @@
 include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake/vcpkg-port-config.cmake")
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-config/vcpkg-port-config.cmake")
 
 function(ignition_modular_build_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
