@@ -5762,7 +5762,7 @@
     },
     "openssl": {
       "baseline": "3.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "deprecated",
