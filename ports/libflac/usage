@@ -1,8 +1,0 @@
-The package libflac provides CMake targets:
-
-    find_package(FLAC CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FLAC::FLAC)
-    
-    # Or use the C++ API
-    find_package(FLAC CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FLAC::FLAC++)

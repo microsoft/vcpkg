@@ -8,7 +8,6 @@ vcpkg_from_github(
             fix-ioss-includes.patch
             deps-and-shared.patch
             fix-mpi.patch
-            fix-headers.patch
 )
 
 if(NOT VCPKG_TARGET_IS_OSX)

@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2023-02-14'
-  linux-pool: 'PrLin-2023-02-14'
+  windows-pool: 'PrWin-2023-01-12'
+  linux-pool: 'PrLin-2023-01-12'
   osx-pool: 'PrOsx-2022-02-04'
 
 parameters:
@@ -11,10 +11,6 @@ parameters:
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
     default: 'use default'
-  - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
-    type: string
-    default: ''
 
 jobs:
 - template: windows/azure-pipelines.yml
@@ -23,7 +19,6 @@ jobs:
     jobName: x86_windows
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -31,7 +26,6 @@ jobs:
     jobName: x64_windows
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -39,7 +33,6 @@ jobs:
     jobName: x64_windows_static
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -47,7 +40,6 @@ jobs:
     jobName: x64_windows_static_md
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -55,7 +47,6 @@ jobs:
     jobName: x64_uwp
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -63,7 +54,6 @@ jobs:
     jobName: arm64_windows
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
@@ -71,16 +61,13 @@ jobs:
     jobName: arm_uwp
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: osx/azure-pipelines.yml
   parameters:
     poolName: $(osx-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: linux/azure-pipelines.yml
   parameters:
     poolName: $(linux-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}

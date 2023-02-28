@@ -119,10 +119,6 @@ if(VCPKG_TARGET_IS_OSX)
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES crashpad_handler
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
-
 # remove empty directories
 file(REMOVE_RECURSE
     "${PACKAGES_INCLUDE_DIR}/util/net/testdata"
@@ -135,4 +131,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/build/config")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/util/mach/__pycache__")
 
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    RENAME copyright)

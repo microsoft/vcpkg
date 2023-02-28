@@ -1,8 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES
-    devendor-litehtml.patch)
+set(${PORT}_PATCHES)
 
 #TODO check features and setup: (means force features!)
 
