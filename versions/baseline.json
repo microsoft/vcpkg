@@ -5390,7 +5390,7 @@
     },
     "nghttp2": {
       "baseline": "1.51.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nghttp3": {
       "baseline": "0.8.0",
