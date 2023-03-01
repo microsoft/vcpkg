@@ -8582,7 +8582,7 @@
     },
     "zfp": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "zint": {
       "baseline": "2.12.0",
