@@ -4,7 +4,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 992256854b717a45ae9e11ed16aa27b8b054de97718f027664634597d756aa26fe10dcad765cde7695802c90def46461abbcbfde81923fdd40ea2b659e1a8240
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL

@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${LIBPOPT_HASH}
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
