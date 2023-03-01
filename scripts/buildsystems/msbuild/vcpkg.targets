@@ -28,6 +28,7 @@
   <PropertyGroup Condition="'$(Platform)'=='Gaming.Desktop.x64'">
     <VcpkgOSTarget>windows</VcpkgOSTarget>
     <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>true</VcpkgUseMD>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='Gaming.Xbox.Scarlett.x64'">
     <VcpkgOSTarget>xbox-scarlett</VcpkgOSTarget>
