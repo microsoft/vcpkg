@@ -38,6 +38,7 @@ vcpkg_from_github(
         vtkioss.patch
         jsoncpp.patch
         iotr.patch
+        FindExprTk.patch
         ${STRING_PATCH}
         9690.diff
 )
