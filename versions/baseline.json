@@ -118,7 +118,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 0
+      "port-version": 1
     },
     "antlr4": {
       "baseline": "4.11.1",
@@ -202,6 +202,10 @@
     },
     "armadillo": {
       "baseline": "11.4.4",
+      "port-version": 0
+    },
+    "arpack-ng": {
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "arrayfire": {
@@ -358,7 +362,7 @@
     },
     "aws-lambda-cpp": {
       "baseline": "0.2.8",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.4",
@@ -898,7 +902,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.81.0",
-      "port-version": 4
+      "port-version": 5
     },
     "boost-move": {
       "baseline": "1.81.0",
@@ -1249,7 +1253,7 @@
       "port-version": 0
     },
     "buck-yeh-bux": {
-      "baseline": "1.6.7",
+      "baseline": "1.6.8",
       "port-version": 0
     },
     "buck-yeh-bux-mariadb-client": {
@@ -1309,8 +1313,8 @@
       "port-version": 8
     },
     "cairo": {
-      "baseline": "1.17.6",
-      "port-version": 5
+      "baseline": "1.17.8",
+      "port-version": 0
     },
     "cairomm": {
       "baseline": "1.16.2",
@@ -1945,8 +1949,8 @@
       "port-version": 2
     },
     "dav1d": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "daw-header-libraries": {
       "baseline": "2.76.2",
@@ -3026,7 +3030,7 @@
     },
     "highfive": {
       "baseline": "2.6.2",
-      "port-version": 0
+      "port-version": 2
     },
     "highway": {
       "baseline": "1.0.3",
@@ -3605,7 +3609,7 @@
       "port-version": 0
     },
     "kubernetes": {
-      "baseline": "2022-11-09",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "kuku": {
@@ -3845,7 +3849,7 @@
       "port-version": 3
     },
     "libe57format": {
-      "baseline": "2.3.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "libebur128": {
@@ -3878,7 +3882,7 @@
     },
     "libffi": {
       "baseline": "3.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libfido2": {
       "baseline": "1.10.0",
@@ -4029,7 +4033,7 @@
       "port-version": 6
     },
     "libjpeg-turbo": {
-      "baseline": "2.1.5",
+      "baseline": "2.1.5.1",
       "port-version": 0
     },
     "libjuice": {
@@ -4037,8 +4041,8 @@
       "port-version": 0
     },
     "libjxl": {
-      "baseline": "0.8.0",
-      "port-version": 1
+      "baseline": "0.8.1",
+      "port-version": 0
     },
     "libkeyfinder": {
       "baseline": "2.2.6",
@@ -4734,7 +4738,7 @@
     },
     "litehtml": {
       "baseline": "0.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "live555": {
       "baseline": "2023-01-19",
@@ -4826,7 +4830,7 @@
     },
     "luminoengine": {
       "baseline": "0.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "lunasvg": {
       "baseline": "2.3.1",
@@ -5350,7 +5354,7 @@
     },
     "ncurses": {
       "baseline": "6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "neargye-semver": {
       "baseline": "0.3.0",
@@ -5386,7 +5390,7 @@
     },
     "nghttp2": {
       "baseline": "1.51.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nghttp3": {
       "baseline": "0.8.0",
@@ -5758,7 +5762,7 @@
     },
     "openssl": {
       "baseline": "3.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6241,8 +6245,8 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.10.0",
-      "port-version": 1
+      "baseline": "2.10.1",
+      "port-version": 0
     },
     "pystring": {
       "baseline": "1.1.4",
@@ -6442,7 +6446,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.8",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-webglplugin": {
       "baseline": "5.15.8",
@@ -6798,7 +6802,7 @@
     },
     "recast": {
       "baseline": "1.5.1",
-      "port-version": 5
+      "port-version": 6
     },
     "recycle": {
       "baseline": "6.0.0",
@@ -6985,7 +6989,7 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.0-rc2",
+      "baseline": "0.9.0-rc3",
       "port-version": 0
     },
     "sais": {
@@ -7030,6 +7034,10 @@
     },
     "scnlib": {
       "baseline": "1.0",
+      "port-version": 0
+    },
+    "scope-guard": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "scottt-debugbreak": {
@@ -7846,7 +7854,7 @@
     },
     "tracy": {
       "baseline": "0.9.0",
-      "port-version": 2
+      "port-version": 3
     },
     "transwarp": {
       "baseline": "2.2.2",
