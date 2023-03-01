@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JustWhit3/arsenalgear-cpp
-    REF v2.1.0
+    REF "v${VERSION}"
     SHA512 27f2979da2d75851d5f8a63868d49b2f5b82064477a1c816667aaf0283e87f854712ab4aa473a3ef36c6ff895bb781c3b095ff617bf134051531aee9b8f03fd3
     HEAD_REF main
 )
