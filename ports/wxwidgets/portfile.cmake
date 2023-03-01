@@ -76,6 +76,7 @@ vcpkg_cmake_configure(
         -DwxUSE_UIACTIONSIMULATOR=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_GSPELL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_MSPACK=ON
+        -DwxUSE_UIACTIONSIMULATOR=ON
         ${OPTIONS}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         # The minimum cmake version requirement for Cotire is 2.8.12.

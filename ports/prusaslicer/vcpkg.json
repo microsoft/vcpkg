@@ -1,0 +1,70 @@
+{
+  "name": "prusaslicer",
+  "version": "2.6.0-alpha4",
+  "description": "PrusaSlicer takes 3D models (STL, OBJ, AMF) and converts them into G-code instructions for FFF printers or PNG layers for mSLA 3D printers. It's compatible with any modern printer based on the RepRap toolchain, including all those based on the Marlin, Prusa, Sprinter and Repetier firmware. It also works with Mach3, LinuxCNC and Machinekit controllers.",
+  "homepage": "www.prusa3d.com/prusaslicer/",
+  "license": "AGPL-3.0",
+  "dependencies": [
+    {
+     "name": "openvdb",
+     "features": ["tools"]
+    },
+    {
+     "name": "wxwidgets",
+     "features": ["fonts"]
+    },
+    {
+     "name": "dbus",
+     "platform": "linux"
+    },
+    "boost-system",
+    "boost-filesystem",
+    "boost-thread",
+    "boost-log",
+    "boost-locale",
+    "boost-regex",
+    "boost-chrono",
+    "boost-atomic",
+    "boost-date-time",
+    "boost-iostreams",
+    "boost-assign",
+    "boost-beast",
+    "boost-nowide",
+    "cereal",
+    "curl",
+    "tbb",
+    "zlib",
+    "eigen3",
+    "expat",
+    "libpng",
+    "opengl",
+    "glew",
+    "qhull",
+    "libjpeg-turbo",
+    "tiff",
+    "nanosvg",
+    "imgui",
+    "cgal",
+    "opencascade",
+    "fltk",
+    {
+     "name": "libigl",
+     "features": ["cgal"]
+    },
+    "boost-dll",
+    {
+     "name": "gettext",
+     "features": ["tools"],
+     "host": true
+    },
+    "nlopt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
