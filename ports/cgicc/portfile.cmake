@@ -9,8 +9,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-define.patch
         fix-static-build.patch

@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
-  OUT_SOURCE_PATH SOURCE_PATH
+  SOURCE_PATH
   ARCHIVE "${ARCHIVE}"
   PATCHES
       remove_internal_blas.patch
