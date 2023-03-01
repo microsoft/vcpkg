@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF 0.20
+    SOURCE_BASE "0.20"
     PATCHES
         libusb-win32.patch
         shared-static.patch
