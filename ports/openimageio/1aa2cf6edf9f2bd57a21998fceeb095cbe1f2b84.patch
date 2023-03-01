@@ -1,0 +1,84 @@
+From 1aa2cf6edf9f2bd57a21998fceeb095cbe1f2b84 Mon Sep 17 00:00:00 2001
+From: Gerdya <37900163+Gerdya@users.noreply.github.com>
+Date: Sat, 26 Nov 2022 01:31:12 +0100
+Subject: [PATCH] Some fixes for compilation with MSVC for Windows ARM64
+ (#3690)
+
+---
+ src/include/OpenImageIO/platform.h | 10 +++++++++-
+ src/include/OpenImageIO/simd.h     | 19 +++++++++++++++----
+ 2 files changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/src/include/OpenImageIO/platform.h b/src/include/OpenImageIO/platform.h
+index 233da35a8a..be7e3d1f9d 100644
+--- a/src/include/OpenImageIO/platform.h
++++ b/src/include/OpenImageIO/platform.h
+@@ -42,6 +42,11 @@
+ #    include <intrin.h>
+ #endif
+ 
++//Avoid min and max being defined
++#if defined(_WIN32)
++#define NOMINMAX
++#endif
++
+ #include <OpenImageIO/oiioversion.h>
+ #include <OpenImageIO/export.h>
+ 
+@@ -568,7 +573,7 @@ inline void cpuid (int info[4], int infoType, int extra)
+ {
+     // Implementation cribbed from Halide (http://halide-lang.org), which
+     // cribbed it from ISPC (https://github.com/ispc/ispc).
+-#if (defined(_WIN32) || defined(__i386__) || defined(__x86_64__))
++#if (defined(_M_X64) || defined(_M_IX86) || defined(_M_AMD64) || defined(__i386__) || defined(__x86_64__))
+ # ifdef _MSC_VER
+     __cpuidex(info, infoType, extra);
+ # elif defined(__x86_64__)
+@@ -584,6 +589,9 @@ inline void cpuid (int info[4], int infoType, int extra)
+         : "=a" (info[0]), "=r" (info[1]), "=c" (info[2]), "=d" (info[3])
+         : "0" (infoType), "2" (extra));
+ # endif
++#elif (defined(_M_ARM64) || defined (__aarch64__) || defined(__aarch64))
++    info[0] = 0; info[1] = 0; info[2] = 0; info[3] = 0;
++    #define __ARM_NEON__
+ #else
+     info[0] = 0; info[1] = 0; info[2] = 0; info[3] = 0;
+ #endif
+diff --git a/src/include/OpenImageIO/simd.h b/src/include/OpenImageIO/simd.h
+index f82f8786b5..2a75f38f10 100644
+--- a/src/include/OpenImageIO/simd.h
++++ b/src/include/OpenImageIO/simd.h
+@@ -92,6 +92,11 @@
+ #define OIIO_NO_SSE 1
+ #endif
+ 
++//Disable SSE for ARM64 targets
++#if defined(_M_ARM64) || defined(__aarch64) || defined(__aarch64__)
++#define OIIO_NO_SSE 1
++#endif
++
+ // Make sure to disable SSE intrinsics when compiling for Cuda.
+ #if defined(__CUDA_ARCH__) && !defined(OIIO_NO_SSE)
+ #define OIIO_NO_SSE 1
+@@ -6750,11 +6755,17 @@ OIIO_FORCEINLINE void vfloat4::load (const float *values, int n) {
+         break;
+     }
+ #elif OIIO_SIMD_NEON
++    //switch (n) {
++    //case 1: m_simd = vdupq_n_f32(0); m_simd[0] = values[0]; break;
++    //case 2: load (values[0], values[1], 0.0f, 0.0f);      break;
++    //case 3: load (values[0], values[1], values[2], 0.0f); break;
++    //case 4: m_simd = vld1q_f32 (values);                   break;
++    //default: break;
++    m_simd = vld1q_f32(values);
+     switch (n) {
+-    case 1: m_simd = vdupq_n_f32(0); m_simd[0] = values[0]; break;
+-    case 2: load (values[0], values[1], 0.0f, 0.0f);      break;
+-    case 3: load (values[0], values[1], values[2], 0.0f); break;
+-    case 4: m_simd = vld1q_f32 (values);                   break;
++    case 1: m_simd = vsetq_lane_f32(0.0f, m_simd, 1);
++    case 2: m_simd = vsetq_lane_f32(0.0f, m_simd, 2);
++    case 3: m_simd = vsetq_lane_f32(0.0f, m_simd, 3);
+     default: break;
+     }
+ #else

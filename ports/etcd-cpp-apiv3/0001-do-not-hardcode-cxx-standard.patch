@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2caacf8..ecdbce3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,10 +78,7 @@ macro(use_cxx target)
+             target_compile_options(${target} PRIVATE "-std=c++${ETCD_CMAKE_CXX_STANDARD}")
+         endif()
+     else()
+-        set_target_properties(${target} PROPERTIES
+-            CXX_STANDARD ${ETCD_CMAKE_CXX_STANDARD}
+-            CXX_STANDARD_REQUIRED ON
+-        )
++        target_compile_features(${target} PUBLIC cxx_std_${ETCD_CMAKE_CXX_STANDARD})
+     endif()
+ endmacro(use_cxx)
+ 
