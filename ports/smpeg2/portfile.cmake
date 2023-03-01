@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
+    SOURCE_BASE "${VERSION}"
     PATCHES 
         "001-correct-sdl-headers-dir.patch"
         "002-use-SDL2-headers.patch"

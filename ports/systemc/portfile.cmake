@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${SYSTEMC_VERSION}
+    SOURCE_BASE "${SYSTEMC_VERSION}"
     PATCHES
         install.patch
 )

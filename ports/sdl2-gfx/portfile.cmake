@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH 
     ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    SOURCE_BASE "${VERSION}"
     PATCHES
         001-lrint-arm64.patch
         002-use-the-lrintf-intrinsic.patch

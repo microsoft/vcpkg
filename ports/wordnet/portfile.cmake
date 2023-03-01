@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
+    SOURCE_BASE "${VERSION}"
     PATCHES
         fix_gobal_vars_uninit_local_ptr.patch
 )
@@ -29,7 +29,7 @@ if("dbfiles" IN_LIST FEATURES)
     vcpkg_extract_source_archive(
         WORDNET_DICT_DBFILES_EX
         ARCHIVE "${WORDNET_DICT_DBFILES}"
-        REF 3.1
+        SOURCE_BASE "3.1"
         WORKING_DIRECTORY "${SOURCE_PATH}"
     )
     file(RENAME "${WORDNET_DICT_DBFILES_EX}" "${SOURCE_PATH}/dict")

@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF tinker-${VERSION}
+    SOURCE_BASE "tinker-${VERSION}"
     NO_REMOVE_ONE_LEVEL
 )
 
