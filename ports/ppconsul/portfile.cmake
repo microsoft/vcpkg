@@ -8,20 +8,19 @@ vcpkg_from_github(
 )
 
 # Force the use of the vcpkg installed versions
-file(REMOVE_RECURSE ${SOURCE_PATH}/ext/json11)
-file(REMOVE_RECURSE ${SOURCE_PATH}/ext/catch)
+file(REMOVE_RECURSE "${SOURCE_PATH}/ext/json11")
+file(REMOVE_RECURSE "${SOURCE_PATH}/ext/catch")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 
 vcpkg_copy_pdbs()
