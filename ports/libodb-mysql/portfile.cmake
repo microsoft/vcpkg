@@ -5,8 +5,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         adapter_mysql_8.0.patch
         fix-redefinttion.patch
