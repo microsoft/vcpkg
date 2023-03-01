@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
-    REF a2d35a1cb9f3f7e2f1469d6a189751331dc99f96 #v1.9.3
-    SHA512 5df799fa53d51ba020a860ff928123921ed0ba59152de2b7e9d88b54ace820f5881fc72d056fca5679a7710357aa25854fa6dd6f9d230338b5378aebfe2bd957
+    REF "${VERSION}"
+    SHA512 90fa19dbb0a8a53e1b6c92a1c6eec7cb1e41f4b56c2c392e4f71edcc5574a6cd5fd906959c1da39d20cb012ab5d430955814bb88ef7f7a74dac7a1f226abbe85
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
@@ -31,4 +31,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
