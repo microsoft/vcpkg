@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${JBIGKIT_HASH}
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
 )
