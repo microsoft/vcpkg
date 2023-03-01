@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512  c02b789bd466803d60aeb39a544b0aa17af811377b065a0b273bcfc15c5844f8cfe981d8143743e32bd05470c2c6af297df50924da0d2895a4cdf4bc9e9bd0b8
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF tinker-${VERSION}

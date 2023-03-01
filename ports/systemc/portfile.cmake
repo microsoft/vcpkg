@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "systemc-${SYSTEMC_VERSION}.zip"
     SHA512 f4df172addf816a1928d411dcab42c1679dc4c9d772f406c10d798a2c174d89cdac7a83947fa8beea1e3aff93da522d2d2daf61a4841ec456af7b7446c5c4a14
 )
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${SYSTEMC_VERSION}

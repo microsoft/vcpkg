@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 9539bc016d710f31d65072bbf5068edffcd735978d8cc6f1b361b19428b97546ef6c7e246e1b6f2ff4557a0885a8305341e35173a6723f0740dda18d097ca248
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
@@ -26,7 +26,7 @@ if("dbfiles" IN_LIST FEATURES)
         SHA512 16dca17a87026d8a0b7b4758219cd21a869c3ef3da23ce7875924546f2eacac4c2f376cb271b798b2c458fe8c078fb43d681356e3d9beef40f4bd88d3579394f
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/dict/")
-    vcpkg_extract_source_archive_ex(
+    vcpkg_extract_source_archive(
         OUT_SOURCE_PATH WORDNET_DICT_DBFILES_EX
         ARCHIVE "${WORDNET_DICT_DBFILES}"
         REF 3.1
