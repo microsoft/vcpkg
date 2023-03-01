@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 bb64380e51991f97a2489c04801ab4372f795b5e23870ad12d71087f1a2afba9b32f74dcdbdcb5228ebf0dd74a37185285bac7653dd3c62d6118d63c298689af
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES fix-osx-usage.patch

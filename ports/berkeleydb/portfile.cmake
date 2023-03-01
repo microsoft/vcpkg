@@ -4,7 +4,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 59c1d2d5a3551f988ab1dc063900572b67ad087537e0d71760de34601f9ebd4d5c070a49b809bec4a599a62417e9a162683ce0f6442deb1a0dadb80764bf6eab
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES fix-conflict-macro.patch
