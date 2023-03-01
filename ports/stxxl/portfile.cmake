@@ -38,7 +38,7 @@ vcpkg_cmake_install()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 endif()
-if(EXISTS "{CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
