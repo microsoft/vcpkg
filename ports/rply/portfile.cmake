@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 be389780b8ca74658433f271682d91e89709ced588c4012c152ccf4014557692a1afd37b1bd5e567cedf9c412d42721eb0412ff3331f38717e527bd5d29c27a7
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
