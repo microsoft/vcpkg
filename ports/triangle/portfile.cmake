@@ -5,7 +5,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 
 vcpkg_extract_source_archive(
-    OUT_SOURCE_PATH SOURCE_PATH
+    SOURCE_PATH
     NO_REMOVE_ONE_LEVEL
     ARCHIVE "${ARCHIVE_FILE}"
     PATCHES

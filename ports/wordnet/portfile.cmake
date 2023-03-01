@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
-    OUT_SOURCE_PATH SOURCE_PATH
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${VERSION}
     PATCHES
@@ -27,7 +27,7 @@ if("dbfiles" IN_LIST FEATURES)
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/dict/")
     vcpkg_extract_source_archive(
-        OUT_SOURCE_PATH WORDNET_DICT_DBFILES_EX
+        WORDNET_DICT_DBFILES_EX
         ARCHIVE "${WORDNET_DICT_DBFILES}"
         REF 3.1
         WORKING_DIRECTORY "${SOURCE_PATH}"
