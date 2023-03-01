@@ -14,7 +14,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SFGUI_BUILD_SHARED_LIBS)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "{SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSFGUI_BUILD_DOC=OFF
         -DSFGUI_BUILD_EXAMPLES=OFF
