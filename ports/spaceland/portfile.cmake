@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    SOURCE_BASE "${ARCHIVE}"
+    ARCHIVE "${ARCHIVE}"
 )
 
 vcpkg_cmake_configure(
