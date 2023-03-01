@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Cisco-Talos/clamav
@@ -11,13 +9,16 @@ vcpkg_from_github(
       "cmakefiles.patch"
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CLAMAV_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CLAMAV_BUILD_SHARED)
+
 vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
       -DENABLE_LIBCLAMAV_ONLY=ON
       -DENABLE_DOCS=OFF
-      -DENABLE_SHARED_LIB=ON
-      -DENABLE_STATIC_LIB=OFF
+      -DENABLE_SHARED_LIB=${CLAMAV_BUILD_SHARED}
+      -DENABLE_STATIC_LIB=${CLAMAV_BUILD_STATIC}
       -DENABLE_TESTS=OFF
 )
 

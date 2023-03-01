@@ -191,3 +191,12 @@ index 97a3aae1c..cbbd2459b 100644
  
      add_library( ClamAV::libfreshclam_static ALIAS freshclam_static )
      if(NOT ENABLE_SHARED_LIB)
+diff --git a/win32/compat/CMakeLists.txt b/win32/compat/CMakeLists.txt
+index c136e11f1..5bb02e708 100644
+--- a/win32/compat/CMakeLists.txt
++++ b/win32/compat/CMakeLists.txt
+@@ -52,3 +52,4 @@ target_link_libraries( win32_compat
+ set_target_properties( win32_compat PROPERTIES COMPILE_FLAGS "${WARNCFLAGS}" )
+ 
+ add_library( ClamAV::win32_compat ALIAS win32_compat )
++install( TARGETS win32_compat COMPONENT libraries )
