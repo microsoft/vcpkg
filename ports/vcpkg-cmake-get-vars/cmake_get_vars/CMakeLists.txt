@@ -25,6 +25,14 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SIZEOF_VOID_P
                                         MSVC
                                         MSVC_VERSION)
+if(ANDROID)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_ANDROID_API_MIN
+                                            CMAKE_ANDROID_ARCH
+                                            CMAKE_ANDROID_ARCH_ABI
+                                            CMAKE_ANDROID_NDK
+                                            CMAKE_ANDROID_NDK_VERSION
+                                            CMAKE_ANDROID_STL_TYPE)
+endif()
 if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
