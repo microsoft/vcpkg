@@ -27,6 +27,20 @@ if(NOT perl_ipc_cmd_result STREQUAL "0")
     message(FATAL_ERROR "\nPerl cannot find IPC::Cmd. Please install it through your system package manager.\n")
 endif()
 
+# Ideally, OpenSSL should use `CC` from vcpkg as is (absolute path).
+# But in reality, OpenSSL expects to locate the compiler via `PATH`,
+# and it makes its own choices e.g. for Android.
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH compiler_path)
+cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME compiler_name)
+find_program(compiler_in_path NAMES "${compiler_name}" PATHS ENV PATH NO_DEFAULT_PATH)
+if(NOT compiler_in_path)
+    vcpkg_host_path_list(APPEND ENV{PATH} "${compiler_path}")
+elseif(NOT compiler_in_path STREQUAL VCPKG_DETECTED_CMAKE_C_COMPILER)
+    vcpkg_host_path_list(PREPEND ENV{PATH} "${compiler_path}")
+endif()
+
 if(VCPKG_TARGET_IS_ANDROID)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(OPENSSL_ARCH android-arm64)
