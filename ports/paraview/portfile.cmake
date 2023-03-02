@@ -87,7 +87,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-     OPTIONS ${FEATURE_OPTIONS}
+     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPARAVIEW_PLUGIN_DISABLE_XML_DOCUMENTATION:BOOL=ON
         -DPARAVIEW_BUILD_WITH_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
@@ -104,6 +105,8 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
+    MAYBE_UNUSED_VARIABLES
+        PARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
@@ -166,8 +169,7 @@ endforeach()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 # # Handle copyright
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME Copyright.txt) # Which one is the correct one?
-file(INSTALL "${SOURCE_PATH}/License_v1.2.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License_v1.2.txt")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     macro(move_bin_to_lib name)
