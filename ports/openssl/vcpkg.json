@@ -18,5 +18,11 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Install openssl executable and scripts",
+      "supports": "!uwp"
+    }
+  }
 }
