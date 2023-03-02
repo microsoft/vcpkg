@@ -1,0 +1,22 @@
+diff --git a/tools/c_rehash.in b/tools/c_rehash.in
+index 343cdc1..e48038e 100644
+--- a/tools/c_rehash.in
++++ b/tools/c_rehash.in
+@@ -12,7 +12,7 @@
+ # and add symbolic links to their hash values.
+ 
+ my $dir = {- quotify1($config{openssldir}) -};
+-my $prefix = {- quotify1($config{prefix}) -};
++use FindBin;
+ 
+ my $errorcount = 0;
+ my $openssl = $ENV{OPENSSL} || "openssl";
+@@ -61,7 +61,7 @@ if (defined(&Cwd::getcwd)) {
+ 
+ # DOS/Win32 or Unix delimiter?  Prefix our installdir, then search.
+ my $path_delim = ($pwd =~ /^[a-z]\:/i) ? ';' : ':';
+-$ENV{PATH} = "$prefix/bin" . ($ENV{PATH} ? $path_delim . $ENV{PATH} : "");
++$ENV{PATH} = "$FindBin::Bin" . ($ENV{PATH} ? $path_delim . $ENV{PATH} : "");
+ 
+ if (! -x $openssl) {
+     my $found = 0;
