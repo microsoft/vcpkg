@@ -1304,6 +1304,10 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
+    "cachelib": {
+      "baseline": "2023-02-27",
+      "port-version": 0
+    },
     "caf": {
       "baseline": "0.18.6",
       "port-version": 1
