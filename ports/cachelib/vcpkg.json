@@ -1,0 +1,26 @@
+{
+  "name": "cachelib",
+  "version-date": "2023-02-27",
+  "description": "unofficial facebook cachelib",
+  "homepage": "https://github.com/facebook/CacheLib",
+  "license": "Apache-2.0",
+  "supports": "!windows & !arm",
+  "dependencies": [
+    "gflags",
+    "glog",
+    "gtest",
+    "wangle",
+    "fbthrift",
+    "tsl-sparse-map",
+    "fmt",
+    "fizz",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

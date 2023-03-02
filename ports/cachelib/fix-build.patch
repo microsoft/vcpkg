@@ -1,0 +1,97 @@
+ diff --git a/cachelib/CMakeLists.txt b/cachelib/CMakeLists.txt
+index 36df0dc1..64d67701 100644
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -333,6 +333,7 @@ configure_package_config_file(
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/cachelib-config.cmake
+   DESTINATION ${CMAKE_INSTALL_DIR}
++  RENAME unofficial-cachelib-config.cmake
+ )
+ 
+ install(
+@@ -361,8 +362,8 @@ install(TARGETS
+   )
+ 
+ install(EXPORT cachelib-exports
+-        FILE cachelib-targets.cmake
+-        #NAMESPACE cachelib::
++        FILE unofficial-cachelib-targets.cmake
++        NAMESPACE unofficial::cachelib::
+         DESTINATION ${CMAKE_INSTALL_DIR})
+ 
+ if (BUILD_SHARED_LIBS)
+diff --git a/cachelib/cachebench/util/JSONConfig.h b/cachelib/cachebench/util/JSONConfig.h
+index 7da93fc4..81820c76 100644
+--- a/cachelib/cachebench/util/JSONConfig.h
++++ b/cachelib/cachebench/util/JSONConfig.h
+@@ -146,10 +146,10 @@ struct Options {};
+ 
+ template <typename Type, size_t size>
+ constexpr void checkCorrectSize() {
+-#ifndef SKIP_OPTION_SIZE_VERIFY
+-  Options<sizeof(Type)> var = Options<size>{};
+-  (void)var;
+-#endif
++  // #ifndef SKIP_OPTION_SIZE_VERIFY
++  //   Options<sizeof(Type)> var = Options<size>{};
++  //   (void)var;
++  // #endif
+ }
+ } // namespace cachebench
+ } // namespace cachelib
+diff --git a/cachelib/cmake/cachelib-config.cmake.in b/cachelib/cmake/cachelib-config.cmake.in
+index 6e850f55..15b12790 100644
+--- a/cachelib/cmake/cachelib-config.cmake.in
++++ b/cachelib/cmake/cachelib-config.cmake.in
+@@ -36,7 +36,7 @@ find_dependency(wangle)
+ find_dependency(FBThrift)
+ 
+ if (NOT TARGET cachelib)
+-	include("${CACHELIB_CMAKE_DIR}/cachelib-targets.cmake")
++	include("${CACHELIB_CMAKE_DIR}/unofficial-cachelib-targets.cmake")
+ endif()
+ 
+ set(CACHELIB_LIBRARIES cachelib)
+diff --git a/cachelib/common/CMakeLists.txt b/cachelib/common/CMakeLists.txt
+index 1e6d1a88..fad14a18 100644
+--- a/cachelib/common/CMakeLists.txt
++++ b/cachelib/common/CMakeLists.txt
+@@ -36,9 +36,6 @@ target_link_libraries(cachelib_common PUBLIC
+   FBThrift::thriftprotocol
+   Folly::folly
+   Folly::follybenchmark
+-  Folly::folly_exception_tracer
+-  Folly::folly_exception_tracer_base
+-  Folly::folly_exception_counter
+ )
+ 
+ install(TARGETS cachelib_common
+diff --git a/cachelib/common/Utils.cpp b/cachelib/common/Utils.cpp
+index 3e149469..f5bcab8d 100644
+--- a/cachelib/common/Utils.cpp
++++ b/cachelib/common/Utils.cpp
+@@ -15,7 +15,6 @@
+  */
+ 
+ #include <dirent.h>
+-#include <folly/experimental/exception_tracer/ExceptionTracer.h>
+ #include <sys/mman.h>
+ #include <sys/resource.h>
+ #include <sys/shm.h>
+@@ -420,10 +419,10 @@ size_t getMemAvailable() {
+ }
+ 
+ void printExceptionStackTraces() {
+-  auto exceptions = folly::exception_tracer::getCurrentExceptions();
+-  for (auto& exc : exceptions) {
+-    std::cerr << exc << std::endl;
+-  }
++  // auto exceptions = folly::exception_tracer::getCurrentExceptions();
++  // for (auto& exc : exceptions) {
++  //   std::cerr << exc << std::endl;
++  // }
+ }
+ 
+ } // namespace util
+
