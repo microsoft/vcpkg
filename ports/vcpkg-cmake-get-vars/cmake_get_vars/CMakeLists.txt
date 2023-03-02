@@ -1,6 +1,19 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(NOT VCPKG_OUTPUT_FILE)
+    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
+else()
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
+endif()
+
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
+
+project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+
 
 set(OUTPUT_STRING)
 # Build default checklists
@@ -66,19 +79,6 @@ set(VCPKG_VAR_PREFIX "VCPKG_DETECTED" CACHE STRING "Variable prefix to use for d
 set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
-
-if(NOT VCPKG_OUTPUT_FILE)
-    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
-else()
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
-endif()
-
-
-project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
