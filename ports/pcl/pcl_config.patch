@@ -1,5 +1,5 @@
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index 1d957ce..31ca9f2 100644
+index 1d957ce..7daebe9 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -386,6 +386,7 @@ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
@@ -10,7 +10,7 @@ index 1d957ce..31ca9f2 100644
    if(EXISTS "${PCL_ROOT}/3rdParty")
      set(PCL_ALL_IN_ONE_INSTALLER ON)
    endif()
-@@ -395,21 +396,14 @@ else()
+@@ -395,21 +396,20 @@ else()
  endif()
  
  # check whether PCLConfig.cmake is found into a PCL installation or in a build tree
@@ -25,13 +25,19 @@ index 1d957ce..31ca9f2 100644
 +if(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
    set(PCL_CONF_INCLUDE_DIR "${PCL_ROOT}/include")
 -  set(PCL_LIBRARY_DIRS "${PCL_ROOT}/lib")
-+  set(PCL_LIBRARY_DIRS "${PCL_ROOT}/@LIB_INSTALL_DIR@" "${PCL_ROOT}/debug/@LIB_INSTALL_DIR@")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@" "${PCL_DIR}/debug/@LIB_INSTALL_DIR@")
++  else()
++    set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
  elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
    # Found PCLConfig.cmake in a build tree of PCL
    # pcl_message("PCL found into a build tree.")
    set(PCL_CONF_INCLUDE_DIR "${PCL_DIR}/include") # for pcl_config.h
 -  set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
-+  set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@""${PCL_DIR}/debug/@LIB_INSTALL_DIR@")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@" "${PCL_DIR}/debug/@LIB_INSTALL_DIR@")
++  else()
++    set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
  else()
    pcl_report_not_found("PCL can not be found on this machine")
  endif()
