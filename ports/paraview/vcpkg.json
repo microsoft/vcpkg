@@ -76,14 +76,14 @@
     "python": {
       "description": "enables the build of python wrappers",
       "dependencies": [
+        "qtsvg",
         {
           "name": "vtk",
           "default-features": false,
           "features": [
             "python"
           ]
-        },
-        "qtsvg"
+        }
       ]
     },
     "tools": {
