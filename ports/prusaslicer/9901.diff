@@ -1,0 +1,17 @@
+diff --git a/src/slic3r/GUI/GUI_App.cpp b/src/slic3r/GUI/GUI_App.cpp
+index 520f67aed1..1fc56206ff 100644
+--- a/src/slic3r/GUI/GUI_App.cpp
++++ b/src/slic3r/GUI/GUI_App.cpp
+@@ -2364,10 +2364,10 @@ void GUI_App::update_mode()
+ {
+     sidebar().update_mode();
+ 
+-#ifdef _WIN32 //_MSW_DARK_MODE
++#ifdef _MSW_DARK_MODE
+     if (!wxGetApp().tabs_as_menu())
+         dynamic_cast<Notebook*>(mainframe->m_tabpanel)->UpdateMode();
+-#endif
++#endif  //_MSW_DARK_MODE
+ 
+     for (auto tab : tabs_list)
+         tab->update_mode();

@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c7ffa6991..b8f488d6a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -618,7 +618,7 @@ endif()
+ 
+ # Resources install target, configure fhs.hpp on UNIX
+ if (WIN32)
+-    install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/resources")
++    install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_BINDIR}/resources")
+ elseif (SLIC3R_FHS)
+     # CMAKE_INSTALL_FULL_DATAROOTDIR: read-only architecture-independent data root (share)
+     set(SLIC3R_FHS_RESOURCES "${CMAKE_INSTALL_FULL_DATAROOTDIR}/PrusaSlicer")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1e5e50470..6681d454c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -10,7 +10,7 @@ add_subdirectory(clipper)
+ add_subdirectory(miniz)
+ add_subdirectory(glu-libtess)
+ add_subdirectory(semver)
+-add_subdirectory(libigl)
++#add_subdirectory(libigl)
+ add_subdirectory(hints)
+ add_subdirectory(qoi)
+ add_subdirectory(libnest2d)
+@@ -33,8 +33,8 @@ endif ()
+ 
+ if (SLIC3R_GUI)
+     add_subdirectory(imgui)
+-    add_subdirectory(hidapi)
+-    include_directories(hidapi/include)
++    #add_subdirectory(hidapi)
++    #include_directories(hidapi/include)
+ 
+     if(WIN32)
+         message(STATUS "WXWIN environment set to: $ENV{WXWIN}")
+@@ -281,10 +281,11 @@ endif ()
+ 
+ # Slic3r binary install target
+ if (WIN32)
+-    install(TARGETS PrusaSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
++    install(TARGETS PrusaSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++                                ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+     if (MSVC)
+-        install(TARGETS PrusaSlicer_app_gui RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
+-        install(TARGETS PrusaSlicer_app_console RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
++        install(TARGETS PrusaSlicer_app_gui RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
++        install(TARGETS PrusaSlicer_app_console RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+     endif ()
+ else ()
+     install(TARGETS PrusaSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+diff --git a/src/libslic3r/CMakeLists.txt b/src/libslic3r/CMakeLists.txt
+index a0a1e5bc3..cfed90ae1 100644
+--- a/src/libslic3r/CMakeLists.txt
++++ b/src/libslic3r/CMakeLists.txt
+@@ -452,7 +452,8 @@ if (_opts)
+     target_compile_options(libslic3r_cgal PRIVATE "${_opts_bad}")
+ endif()
+ 
+-target_link_libraries(libslic3r_cgal PRIVATE ${_cgal_tgt} libigl)
++find_package(libigl CONFIG REQUIRED)
++target_link_libraries(libslic3r_cgal PUBLIC ${_cgal_tgt} igl::igl_core )
+ 
+ if (MSVC AND "${CMAKE_SIZEOF_VOID_P}" STREQUAL "4") # 32 bit MSVC workaround
+     target_compile_definitions(libslic3r_cgal PRIVATE CGAL_DO_NOT_USE_MPZF)
+@@ -470,7 +471,7 @@ target_link_libraries(libslic3r
+     libnest2d
+     admesh
+     libcereal
+-    libigl
++    igl::igl_core
+     miniz
+     boost_libs
+     clipper
+diff --git a/src/slic3r/CMakeLists.txt b/src/slic3r/CMakeLists.txt
+index 453d7eeb5..581e0a28f 100644
+--- a/src/slic3r/CMakeLists.txt
++++ b/src/slic3r/CMakeLists.txt
+@@ -312,7 +312,9 @@ endforeach()
+ 
+ encoding_check(libslic3r_gui)
+ 
+-target_link_libraries(libslic3r_gui libslic3r avrdude libcereal imgui GLEW::GLEW OpenGL::GL hidapi libcurl ${wxWidgets_LIBRARIES} NanoSVG::nanosvg NanoSVG::nanosvgrast)
++find_package(hidapi CONFIG REQUIRED)
++
++target_link_libraries(libslic3r_gui libslic3r avrdude libcereal imgui GLEW::GLEW OpenGL::GL hidapi::hidapi libcurl ${wxWidgets_LIBRARIES} NanoSVG::nanosvg NanoSVG::nanosvgrast)
+ 
+ if (MSVC)
+     target_link_libraries(libslic3r_gui Setupapi.lib)

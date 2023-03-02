@@ -43,10 +43,10 @@
     "libjpeg-turbo",
     "tiff",
     "nanosvg",
-    "imgui",
     "cgal",
     "opencascade",
     "fltk",
+    "hidapi",
     {
      "name": "libigl",
      "features": ["cgal"]

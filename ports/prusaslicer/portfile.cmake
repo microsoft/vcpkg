@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       9728.diff
+      9901.diff
+      fixing-build.patch
+      devendor_p1.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SLIC3R_STATIC)
@@ -13,6 +16,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SLIC3R_STATIC)
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindOpenVDB.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/boost")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/eigen")
+#file(REMOVE_RECURSE "${SOURCE_PATH}/src/imgui") # too many api changes
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/hidapi")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/libigl")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -25,8 +32,6 @@ vcpkg_cmake_configure(
       -DSLIC3R_GTK=3
       -DSLIC3R_BUILD_TESTS=OFF
       -DSLIC3R_DESKTOP_INTEGRATION=ON
-      
-
 )
 
 
@@ -43,8 +48,8 @@ vcpkg_cmake_configure(
 # option(SLIC3R_ENABLE_FORMAT_STEP "Enable compilation of STEP file support" 1)
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
-vcpkg_fixup_pkgconfig()
+#vcpkg_cmake_config_fixup()
+#vcpkg_fixup_pkgconfig()
 
 #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 #file(INSTALL "${SOURCE_PATH}/COPYING.README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

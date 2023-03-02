@@ -42,7 +42,12 @@ vcpkg_cmake_configure(
         )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl PACKAGE_NAME libigl)
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/libigl/libigl-config.cmake" "\nfind_package(Eigen3 CONFIG REQUIRED)\n")
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/libigl/libigl-config.cmake" [[include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets.cmake")]])
+
+
+
 vcpkg_copy_pdbs()
 
 # libigl is a header-only library.
