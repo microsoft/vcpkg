@@ -28,9 +28,6 @@
       ]
     }
   ],
-  "default-features": [
-    "python"
-  ],
   "features": {
     "all-modules": {
       "description": "enables the build of all paraview modules",
