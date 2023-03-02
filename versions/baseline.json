@@ -6951,6 +6951,10 @@
       "baseline": "2020-04-16",
       "port-version": 4
     },
+    "rtmfp-cpp": {
+      "baseline": "1.4.0-20230213.18168ec",
+      "port-version": 0
+    },
     "rtmidi": {
       "baseline": "5.0.0",
       "port-version": 2
