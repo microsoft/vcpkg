@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF bb368e271e24f63078129283148ce83db6b9670a #V7.6.2
-    SHA512 500c7ff804eb6b202bef48e1be904fe43a3c0137e9a402affe128b3b75a1adbb20bfe383cee82503b13efc083a95eb97425f1afb1f66bae38543d29f871a91f9
+    REF b079fb9877ef64d4a8158a60fa157f59b096debb #V7.6.3
+    SHA512 f4c067936d41088f14394a873858b1e90e2868c28e2a6266e40e38d8b19784d5885c775cfe72cd56ec7d84f93fd1b9155ac8b0d7ea717f5a1efc893d95003f75
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
@@ -46,6 +46,15 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
+
+# OCCT Config will reference transitive dependencies in the form of target interface link libraries
+# Fix up the config by finding ensuring we find the dependencies 
+file(READ "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEConfig.cmake" CONFIG_CONTENTS)
+string(APPEND CONFIG_CONTENTS "\nif(OpenCASCADE_WITH_FREETYPE)\nfind_dependency(freetype CONFIG)\nendif()\n")
+string(APPEND CONFIG_CONTENTS "\nif(OpenCASCADE_WITH_TBB)\nfind_dependency(tbb CONFIG)\nendif()\n")
+string(APPEND CONFIG_CONTENTS "\nif(OpenCASCADE_WITH_FREEIMAGE)\nfind_dependency(freeimage CONFIG)\nendif()\n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEConfig.cmake" "${CONFIG_CONTENTS}")
+
 
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
