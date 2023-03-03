@@ -3833,7 +3833,8 @@
       "port-version": 6
     },
     "libdeflate": {
-      "baseline": "1.17"
+      "baseline": "1.17",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -5340,7 +5341,7 @@
       "port-version": 2
     },
     "nanosvg": {
-      "baseline": "2022-04-29",
+      "baseline": "2022-12-04",
       "port-version": 0
     },
     "nanovg": {
@@ -8377,7 +8378,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "wyhash": {
       "baseline": "2023-01-25",
