@@ -86,6 +86,18 @@
       "dependencies": [
         "tinyxml2"
       ]
+    },
+    "tetgen": {
+      "description": "Build with tetgen",
+      "dependencies": []
+    },
+    "comiso": {
+      "description": "Build with comiso",
+      "dependencies": []
+    },
+    "triangle": {
+      "description": "Build with triangle",
+      "dependencies": []
     }
   }
 }
