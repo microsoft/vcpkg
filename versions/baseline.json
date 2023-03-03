@@ -3833,7 +3833,8 @@
       "port-version": 6
     },
     "libdeflate": {
-      "baseline": "1.17"
+      "baseline": "1.17",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -5689,7 +5690,7 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 16
+      "port-version": 17
     },
     "opencv3": {
       "baseline": "3.4.18",
