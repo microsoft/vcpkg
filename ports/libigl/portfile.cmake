@@ -26,6 +26,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 file(REMOVE "${SOURCE_PATH}/cmake/find/FindGMP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/find/FindMPFR.cmake")
 
+# static or dynamic build
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBIGL_BUILD_STATIC)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -34,7 +37,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
-        -DLIBIGL_USE_STATIC_LIBRARY=OFF
+        -DLIBIGL_USE_STATIC_LIBRARY=${LIBIGL_BUILD_STATIC}
         -DHUNTER_ENABLED=OFF
         -DLIBIGL_COPYLEFT_COMISO=OFF #there is no comiso port available anywhere. solved internally via FetchContent in cmake\recipes\external\comiso.cmake. maybe replace in patch with vcpkg_from_github 
         -DLIBIGL_COPYLEFT_TETGEN=OFF #there is no tetgen port available anywhere. solved internally via FetchContent in cmake\recipes\external\tetgen.cmake

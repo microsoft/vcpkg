@@ -1,8 +1,8 @@
 diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
-index 4580c037..26f2a8ca 100644
+index 4580c037..b09d762f 100644
 --- a/cmake/igl/modules/opengl.cmake
 +++ b/cmake/igl/modules/opengl.cmake
-@@ -14,7 +14,6 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/*.cpp")
+@@ -14,11 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/*.cpp")
  igl_target_sources(igl_opengl ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
@@ -10,9 +10,13 @@ index 4580c037..26f2a8ca 100644
  find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
  target_link_libraries(igl_opengl ${IGL_SCOPE}
      igl::core
-
+-    glad::glad
++    glad
+     # Link against OpenGL::OpenGL if available, or fallback to OpenGL::GL
+     $<IF:$<TARGET_EXISTS:OpenGL::OpenGL>,OpenGL::OpenGL,OpenGL::GL>
+ )
 diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
-index 2aefcd64..c8de8f90 100644
+index 2aefcd64..137d30bc 100644
 --- a/cmake/igl/modules/core.cmake
 +++ b/cmake/igl/modules/core.cmake
 @@ -20,7 +20,7 @@ igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
@@ -24,12 +28,11 @@ index 2aefcd64..c8de8f90 100644
  find_package(Threads REQUIRED)
  target_link_libraries(igl_core ${IGL_SCOPE}
      Eigen3::Eigen
-
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
-index 6f223192..f50ea544 100644
+index 6f223192..21ce00e3 100644
 --- a/cmake/igl/modules/embree.cmake
 +++ b/cmake/igl/modules/embree.cmake
-@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/embree/*.cpp")
+@@ -14,10 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/embree/*.cpp")
  igl_target_sources(igl_embree ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
@@ -37,13 +40,16 @@ index 6f223192..f50ea544 100644
 +find_package(embree 3 CONFIG REQUIRED)
  target_link_libraries(igl_embree ${IGL_SCOPE}
      igl::core
-     embree::embree
-
+-    embree::embree
++    embree
+ )
+ 
+ # 5. Unit tests
 diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
-index 151338e4..07068c62 100644
+index 151338e4..77c48e58 100644
 --- a/cmake/igl/modules/glfw.cmake
 +++ b/cmake/igl/modules/glfw.cmake
-@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
+@@ -14,10 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
  igl_target_sources(igl_glfw ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
@@ -52,9 +58,12 @@ index 151338e4..07068c62 100644
  igl_include(opengl)
  target_link_libraries(igl_glfw ${IGL_SCOPE}
      igl::core
-
+     igl::opengl
+-    glfw::glfw
++    glfw
+ )
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
-index 3763b771..bdc89d77 100644
+index 3763b771..31ab979b 100644
 --- a/cmake/igl/modules/xml.cmake
 +++ b/cmake/igl/modules/xml.cmake
 @@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/xml/*.cpp")
@@ -68,7 +77,7 @@ index 3763b771..bdc89d77 100644
      tinyxml2::tinyxml2
 
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
-index d7ffb9d4..5c4c9d30 100644
+index d7ffb9d4..aac353aa 100644
 --- a/cmake/igl/modules/imgui.cmake
 +++ b/cmake/igl/modules/imgui.cmake
 @@ -14,8 +14,8 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/imgui/*.cpp")
@@ -82,12 +91,11 @@ index d7ffb9d4..5c4c9d30 100644
  include(libigl_imgui_fonts)
  igl_include(glfw)
  target_link_libraries(igl_imgui ${IGL_SCOPE}
-
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
-index f6abe8c3..5485a0de 100644
+index f6abe8c3..125dd701 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
 +++ b/cmake/igl/modules/copyleft/cgal.cmake
-@@ -14,7 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+@@ -14,13 +14,18 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
  igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
@@ -101,4 +109,12 @@ index f6abe8c3..5485a0de 100644
  igl_include(copyleft core)
  target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
      igl::core
+     igl_copyleft::core
+-    CGAL::CGAL
+-    CGAL::CGAL_Core
++    CGAL
++    CGAL_Core
+ )
+ 
+ # 5. Unit tests
 
