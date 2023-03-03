@@ -30,6 +30,9 @@
         }
       ]
     },
+    "comiso": {
+      "description": "Build with comiso"
+    },
     "embree": {
       "description": "Build with embree",
       "dependencies": [
@@ -81,23 +84,17 @@
         "opengl"
       ]
     },
+    "tetgen": {
+      "description": "Build with tetgen"
+    },
+    "triangle": {
+      "description": "Build with triangle"
+    },
     "xml": {
       "description": "Build with libxml",
       "dependencies": [
         "tinyxml2"
       ]
-    },
-    "tetgen": {
-      "description": "Build with tetgen",
-      "dependencies": []
-    },
-    "comiso": {
-      "description": "Build with comiso",
-      "dependencies": []
-    },
-    "triangle": {
-      "description": "Build with triangle",
-      "dependencies": []
     }
   }
 }
