@@ -3,6 +3,9 @@ vcpkg_from_github(
     REPO litehtml/litehtml
     REF v0.6
     SHA512 b774ed96e53780865e789875f571f96ebce1cd2ff0c05a06ae68a67aec44375cc282c07f77fc87131d422aceddba32bbf3e8e498c870883d8e042adb30834c39
+    PATCHES 
+      use-vcpkg-gumbo.patch
+      fix-relative-includes.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -17,7 +20,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME gumbo CONFIG_PATH lib/cmake/gumbo DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME litehtml CONFIG_PATH lib/cmake/litehtml)
 
 
