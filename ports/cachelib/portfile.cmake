@@ -1,11 +1,14 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
-    REF dd0af61a5fcb621ac253f67715b5fad8994627c7 # v2023.02.27.00
-    SHA512 24b40f16c281df2784fea260b66040a716a80603d61fe5cb666fca72c305a3568f63353a18bf4913a379e7e0b78eb35d5b22889315ec48d400de8f1f6a2fc018
+    REF "v${VERSION}"
+    SHA512 53f2eb4de0d1c5d4184d7e1d8ceb958625d9426eebaf434227179c9b2a6ed3a3bf063758f86c2e517ca910556230a764bfd54890dc718c2f45aec1d5a806788c
     HEAD_REF master
     PATCHES
         fix-build.patch
+        unofficial.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,7 +19,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-# vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-cachelib PACKAGE_NAME unofficial-cachelib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -24,7 +26,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()
-
