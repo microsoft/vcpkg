@@ -84,10 +84,14 @@ vcpkg_cmake_configure(
         -DLIBIGL_COPYLEFT_TETGEN=${LIBIGL_TETGEN}
         -DLIBIGL_RESTRICTED_TRIANGLE=${LIBIGL_TRIANGLE}
         ${ADDITIONAL_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        LIBIGL_COMISO
+        LIBIGL_TETGEN
+        LIBIGL_TRIANGLE
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl PACKAGE_NAME libigl)
 vcpkg_copy_pdbs()
 
 # libigl is a header-only library.
