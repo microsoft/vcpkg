@@ -4,6 +4,7 @@
   "description": "C++20 ~~Template~~ Meta-Programming",
   "homepage": "https://boost-ext.github.io/mp/",
   "license": "BSL-1.0",
+  "supports": "!(win | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
