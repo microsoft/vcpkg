@@ -34,37 +34,25 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(DXC_ARCH arm64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(DXC_ARCH x86)
-else()
-    set(DXC_ARCH x64)
-endif()
-
-file(INSTALL
-  "${PACKAGE_PATH}/inc/dxcapi.h"
-  "${PACKAGE_PATH}/inc/dxcerrors.h"
-  "${PACKAGE_PATH}/inc/dxcisense.h"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-
 if (VCPKG_TARGET_IS_LINUX)
-
-  # Work around for https://github.com/microsoft/DirectXShaderCompiler/issues/4918
-  file(COPY "${PACKAGE_PATH}/inc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/dxc/Support")
-  file(COPY "${PACKAGE_PATH}/inc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/Support")
+  file(INSTALL
+    "${PACKAGE_PATH}/include/dxc/dxcapi.h"
+    "${PACKAGE_PATH}/include/dxc/dxcerrors.h"
+    "${PACKAGE_PATH}/include/dxc/dxcisense.h"
+    "${PACKAGE_PATH}/include/dxc/WinAdapter.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(INSTALL
-    "${PACKAGE_PATH}/lib/${DXC_ARCH}/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/${DXC_ARCH}/libdxil.so"
+    "${PACKAGE_PATH}/lib/libdxcompiler.so"
+    "${PACKAGE_PATH}/lib/libdxil.so"
     DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   file(INSTALL
-    "${PACKAGE_PATH}/lib/${DXC_ARCH}/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/${DXC_ARCH}/libdxil.so"
+    "${PACKAGE_PATH}/lib/libdxcompiler.so"
+    "${PACKAGE_PATH}/lib/libdxil.so"
     DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
   file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxc"
+    "${PACKAGE_PATH}/bin/dxc"
     DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
   set(dll_name "libdxcompiler.so")
@@ -73,8 +61,20 @@ if (VCPKG_TARGET_IS_LINUX)
   set(tool_path "bin/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+      set(DXC_ARCH arm64)
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      set(DXC_ARCH x86)
+  else()
+      set(DXC_ARCH x64)
+  endif()
 
-  file(INSTALL "${PACKAGE_PATH}/inc/d3d12shader.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+  file(INSTALL
+    "${PACKAGE_PATH}/inc/dxcapi.h"
+    "${PACKAGE_PATH}/inc/dxcerrors.h"
+    "${PACKAGE_PATH}/inc/dxcisense.h"
+    "${PACKAGE_PATH}/inc/d3d12shader.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
