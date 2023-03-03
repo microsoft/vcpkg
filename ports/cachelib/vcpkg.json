@@ -8,6 +8,7 @@
   "dependencies": [
     "fbthrift",
     "folly",
+    "gtest",
     {
       "name": "vcpkg-cmake",
       "host": true
