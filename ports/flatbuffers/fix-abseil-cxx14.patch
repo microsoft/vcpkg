@@ -1,16 +1,3 @@
-From a56f9ec50e908362e20254fcef28e62a2f148d91 Mon Sep 17 00:00:00 2001
-From: Even Rouault <even.rouault@spatialys.com>
-Date: Wed, 15 Feb 2023 19:56:16 +0100
-Subject: [PATCH] Only use absl headers if C++14 is available. (#7824)
-
-If flatbuffers is built in C++11 mode, but there is a recent version of
-absl which requires C++14, the build will fail.
-Cf https://github.com/MapServer/MapServer/issues/6822 for the use case
-that triggered this.
----
- include/flatbuffers/base.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/include/flatbuffers/base.h b/include/flatbuffers/base.h
 index 86688cc6e40..219b6d308ac 100644
 --- a/include/flatbuffers/base.h
