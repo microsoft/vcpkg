@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         no-static-suffix.patch
+        fix-clang-cl.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
