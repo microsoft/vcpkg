@@ -1,10 +1,7 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
-string(JSON OPENCV_VERSION GET "${_contents}" version)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${OPENCV_VERSION}
+    REF "${VERSION}"
     SHA512 de7d24ac7ed78ac14673011cbecc477cae688b74222a972e553c95a557b5cb8e5913f97db525421d6a72af30998ca300112fa0b285daed65f65832eb2cf7241a
     HEAD_REF master
     PATCHES
@@ -35,7 +32,6 @@ FEATURES
  "png"      WITH_PNG
  "qt"       WITH_QT
  "tiff"     WITH_TIFF
- "world"    BUILD_opencv_world
  "dc1394"   WITH_1394
 )
 
@@ -101,7 +97,6 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DWITH_1394=OFF
         -DWITH_IPP=OFF
         -DWITH_LAPACK=OFF
         -DWITH_MSMF=${WITH_MSMF}
@@ -163,4 +158,4 @@ vcpkg_fixup_pkgconfig()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
