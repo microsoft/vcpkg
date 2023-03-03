@@ -4,6 +4,7 @@
   "description": "A library containing general purpose C++ utils.",
   "homepage": "https://github.com/JustWhit3/arsenalgear-cpp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
