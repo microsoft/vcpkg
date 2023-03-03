@@ -1961,7 +1961,7 @@
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.10.0",
+      "baseline": "3.15.0",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -3833,7 +3833,8 @@
       "port-version": 6
     },
     "libdeflate": {
-      "baseline": "1.17"
+      "baseline": "1.17",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
