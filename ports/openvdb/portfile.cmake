@@ -17,11 +17,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
 
 set(OPENVDB_BUILD_TOOLS OFF)
 if ("tools" IN_LIST FEATURES)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENVDB_BUILD_TOOLS ON)
-  else()
-    message(FATAL_ERROR "Unable to build tools if static libraries are required")
-  endif()
 endif()
 
 if ("ax" IN_LIST FEATURES)
