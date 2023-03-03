@@ -26,6 +26,7 @@ vcpkg_from_github(
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/umul128-arm64.patch # Fixed upstream in https://github.com/openssl/openssl/pull/20244, but not released as of 3.0.8
+        unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
