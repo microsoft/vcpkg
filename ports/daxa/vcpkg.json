@@ -14,13 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-     {
-    "name": "wayland",
-    "default-features": false,
-    "platform": "linux"
-  }
     "vulkan",
-    "vulkan-memory-allocator"
+    "vulkan-memory-allocator",
+    {
+      "name": "wayland",
+      "default-features": false,
+      "platform": "linux"
+    }
   ],
   "default-features": [
     "utils-imgui",
