@@ -5,10 +5,7 @@
   "homepage": "https://github.com/JustWhit3/osmanip",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "arsenalgear",
-      "host": true
-    },
+    "arsenalgear",
     {
       "name": "vcpkg-cmake",
       "host": true
