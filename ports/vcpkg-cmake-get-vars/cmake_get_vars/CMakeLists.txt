@@ -19,6 +19,7 @@ set(OUTPUT_STRING)
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
+                                        CMAKE_SYSTEM_VERSION
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR
@@ -26,12 +27,22 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         MSVC
                                         MSVC_VERSION)
 if(ANDROID)
-    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_ANDROID_API_MIN
-                                            CMAKE_ANDROID_ARCH
-                                            CMAKE_ANDROID_ARCH_ABI
-                                            CMAKE_ANDROID_NDK
-                                            CMAKE_ANDROID_NDK_VERSION
-                                            CMAKE_ANDROID_STL_TYPE)
+    # Modern, provided by CMake and NDK toolchains
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK
+        CMAKE_ANDROID_ARCH                      # aka ANDROID_ARCH_NAME
+        CMAKE_ANDROID_ARCH_ABI                  # aka ANDROID_ABI
+        CMAKE_ANDROID_NDK                       # aka ANDROID_NDK
+        CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION     # aka ANDROID_TOOLCHAIN
+        CMAKE_ANDROID_STL_TYPE                  # aka ANDROID_STL
+    )
+    # Provided by NDK toolchains and also chainloaded by CMake toolchain
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK
+        ANDROID_ARM_NEON
+        ANDROID_HOST_TAG                        # Future: ${CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG}
+        ANDROID_NDK_RELEASE                     # r${ANDROID_NDK_REVISION}
+        ANDROID_PLATFORM                        # Future: android-${CMAKE_SYSTEM_VERSION}
+        ANDROID_PLATFORM_LEVEL                  # Future: ${CMAKE_SYSTEM_VERSION}
+    )
 endif()
 if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
