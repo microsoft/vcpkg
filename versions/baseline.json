@@ -3841,7 +3841,8 @@
       "port-version": 6
     },
     "libdeflate": {
-      "baseline": "1.17"
+      "baseline": "1.17",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -8402,6 +8403,10 @@
     "x265": {
       "baseline": "3.4",
       "port-version": 8
+    },
+    "x86-simd-sort": {
+      "baseline": "2023-03-04",
+      "port-version": 0
     },
     "xapian": {
       "baseline": "1.4.21",
