@@ -6857,7 +6857,7 @@
     },
     "restbed": {
       "baseline": "4.8",
-      "port-version": 1
+      "port-version": 2
     },
     "restc-cpp": {
       "baseline": "0.10.0",
