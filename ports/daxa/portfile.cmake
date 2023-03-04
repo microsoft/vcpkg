@@ -28,7 +28,10 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${DAXA_DEFINES}
+    OPTIONS
+        ${DAXA_DEFINES}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_X11=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_WAYLAND=ON
 )
 
 vcpkg_cmake_install()
