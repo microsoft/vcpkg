@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.6.0",
+  "version": "2.8.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -50,6 +50,30 @@
         }
       ]
     },
+    "advisorynotifications": {
+      "description": "Advisory Notifications API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "alloydb": {
+      "description": "Alloy DB API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "apigateway": {
       "description": "API Gateway API C++ Client Library",
       "dependencies": [
@@ -64,6 +88,18 @@
     },
     "apigeeconnect": {
       "description": "Apigee Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "apikeys": {
+      "description": "API Keys API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -527,6 +563,18 @@
     },
     "gkehub": {
       "description": "GKE Hub C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkemulticloud": {
+      "description": "Anthos Multi-Cloud C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

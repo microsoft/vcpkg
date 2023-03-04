@@ -1,11 +1,12 @@
 {
   "name": "blend2d",
   "version-date": "2022-12-31",
+  "port-version": 2,
   "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
   "license": "Zlib",
-  "supports": "!arm & !uwp & !wasm32",
+  "supports": "!(arm & windows) & !uwp & !wasm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

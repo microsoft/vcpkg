@@ -19,38 +19,37 @@ vcpkg_from_github(
 # Copy suitesparse sources.
 message(STATUS "Overwriting SuiteSparseWin source files with SuiteSparse source files...")
 # Should probably remove everything but CMakeLists.txt files?
-file(GLOB SUITESPARSE_SOURCE_FILES ${SOURCE_PATH}/*)
+file(GLOB SUITESPARSE_SOURCE_FILES "${SOURCE_PATH}/*")
 foreach(SOURCE_FILE ${SUITESPARSE_SOURCE_FILES})
-    file(COPY ${SOURCE_FILE} DESTINATION "${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse")
+    file(COPY "${SOURCE_FILE}" DESTINATION "${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse")
 endforeach()
 message(STATUS "Overwriting SuiteSparseWin source files with SuiteSparse source files... done")
 message(STATUS "Removing integrated lapack and metis lib...")
-file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/lapack_windows)
-file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse/metis-5.1.0)
+file(REMOVE_RECURSE "${SUITESPARSEWIN_SOURCE_PATH}/lapack_windows")
+file(REMOVE_RECURSE "${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse/metis-5.1.0")
 message(STATUS "Removing integrated lapack and metis lib... done")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SUITESPARSEWIN_SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SUITESPARSEWIN_SOURCE_PATH}"
     OPTIONS
         -DBUILD_METIS=OFF
         -DUSE_VCPKG_METIS=ON
         "-DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}"
      OPTIONS_DEBUG
-        -DSUITESPARSE_INSTALL_PREFIX="${CURRENT_PACKAGES_DIR}/debug"
+        "-DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
      OPTIONS_RELEASE
-        -DSUITESPARSE_INSTALL_PREFIX="${CURRENT_PACKAGES_DIR}"
+        "-DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/suitesparse)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/suitesparse)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SUITESPARSEWIN_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright_suitesparse-metis-for-windows)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SUITESPARSEWIN_SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright_suitesparse-metis-for-windows)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cxsparse)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper_cxsparse.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cxsparse RENAME vcpkg-cmake-wrapper.cmake)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCXSparse.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cxsparse)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/cxsparse")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper_cxsparse.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cxsparse" RENAME vcpkg-cmake-wrapper.cmake)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindCXSparse.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cxsparse")

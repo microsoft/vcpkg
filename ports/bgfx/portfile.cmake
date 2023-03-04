@@ -1,31 +1,33 @@
-vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8398-400.tar.gz"
-  FILENAME "bgfx.cmake.tar.gz"
-  SHA512 bfd3a00c1e39fddd549a594bcd0292aebbc8f3c4bae6938b9cb7c2b9ddc880e720cac4d7a42460567679b61901cc127c58e045a4bb7d03f4bb529c99f5375df9
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO "bkaradzic/bgfx.cmake"
+  HEAD_REF master
+  REF v${VERSION}
+  SHA512 b1f3c46d0f4985df3a09c74f627f1d0c426f204a8c680a91a65099c146cd41215e9af1c5cdf4a0a559d020f93455b71a6bc1412628cfd818467fd59996542377
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BX
   REPO "bkaradzic/bx"
   HEAD_REF master
-  REF aed1086c48884b1b4f1c2f9af34c5198624263f6
-  SHA512 63bc5c6358f6a760bd5d8d056ef6fc6de175dcf8b940d5490225f13dfdd791c6b1d6bd2087d5d48a34955649bc12cbcc92f5221188ba0df5eb5c5d00eb389e94
+  REF fa1411e4aa111c8b004c97660ab31ba1a5287835
+  SHA512 0c6bd7e41c6dd3263c01d761aefdd55d2ed527ca694b52f563c6ded3ba5569df1492c8d04e5f76de3b1bdf7c5ca2978b8ec394d48ea29593535979f204d3ad0c
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BIMG
   REPO "bkaradzic/bimg"
   HEAD_REF master
-  REF 1af90543ca262c1cfa10aa477aef9dc1b11419f4
-  SHA512 309b1e1aeb5fc1bdd189e848b642a209d27602ea5f5cdc405cc0ab8f17bc426f5a331fb396424b0ebad49407638c85d0d97fee51faf10750e512a30b49cabd23
+  REF 7afa2419254fd466c013a51bdeb0bee3022619c4
+  SHA512 514deed00f8bc4106f67b777dca72d0ed0accb1ae057ad37d22a21c83ad3a85ad23d220ac0cf40b6a8006d43c308b1acfad464b51e64075aa01598731a1557df
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BGFX
   REPO "bkaradzic/bgfx"
   HEAD_REF master
-  REF 5f435ea56b29c3dd3ebdf9fab1a8f408681ff919
-  SHA512 5d072fad3c1bfdf0c805f9cf18f34e10cbeb602e9bb7440c962fed58c400b89e9e6487e9986cfcd16d3ab65916a37ef62ebc6b43560ce132364a4e2466138f63
+  REF 6f36b4fb3a0d76090eb2727ecf11abac46eef8aa
+  SHA512 cb88fcba51184611ecf969e5ec391eabd43227d3e17071c70c75eed79e86da7fe9b3c07c01e88d2230a8245ec0c3d192b1694c289019bb4f9c1c4973b0b11314
 )
 
 vcpkg_check_features(
@@ -41,10 +43,6 @@ elseif (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 else ()
   set(BGFX_LIBRARY_TYPE "STATIC")
 endif ()
-
-vcpkg_extract_source_archive(SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-inject-packages.cmake" DESTINATION "${SOURCE_PATH}")
 

@@ -1,11 +1,9 @@
-set(MPG123_VERSION 1.29.3)
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpg123/mpg123
-    REF ${MPG123_VERSION}
-    FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
-    SHA512 0d8db63f9bae1507887bc5241a56abccfeb767b7ba8362eb0fce9de2f63369e57fdd6f25a953f8ef5f9ead4f400237db51914816e278566fdf8e6f205ebca5d6
+    REF "${VERSION}"
+    FILENAME "mpg123-${VERSION}.tar.bz2"
+    SHA512 eca285382ee3e780353834addf1336c4a2f8f11256af22f95e11efa243de669761c083c86ddfc6ac8c02a920a3c4ab4ad767efa2739fb052e9719f35ef407bc3
     PATCHES
         fix-modulejack.patch
         fix-m1-build.patch
@@ -21,6 +19,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUSE_MODULES=OFF
         -DBUILD_PROGRAMS=OFF
+    MAYBE_UNUSED_VARIABLES
+        BUILD_PROGRAMS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
@@ -34,4 +34,4 @@ if(VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
