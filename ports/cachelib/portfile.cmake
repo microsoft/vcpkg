@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
@@ -8,18 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
-        unofficial.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cachelib"
     OPTIONS
         -DBUILD_TESTS=OFF
-        -DCMAKE_INSTALL_DIR=share/unofficial-cachelib
+        -DCMAKE_INSTALL_DIR=share/cachelib
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-cachelib PACKAGE_NAME unofficial-cachelib)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cachelib PACKAGE_NAME cachelib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
