@@ -21,6 +21,7 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 5a821aaaaa89027ce08a347e5fc216757c2971e29f7d24792609378c54f657839b3775bf639e7330b28b4f96ef0d32869f0a96afcb25c8a2e1c2fe51a6eb4aa3
     PATCHES
+        disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
         windows/install-layout.patch
@@ -44,6 +45,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS no-shared no-module)
+endif()
+
+if(NOT "tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-apps)
 endif()
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)
