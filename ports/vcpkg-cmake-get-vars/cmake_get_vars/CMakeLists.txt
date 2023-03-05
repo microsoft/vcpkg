@@ -15,7 +15,7 @@ set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project"
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 
-set(OUTPUT_STRING)
+set(OUTPUT_STRING "# Generator: ${CMAKE_CURRENT_LIST_FILE}\n")
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
