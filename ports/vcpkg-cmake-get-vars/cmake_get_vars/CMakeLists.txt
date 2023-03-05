@@ -16,6 +16,14 @@ project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 
 set(OUTPUT_STRING "# Generator: ${CMAKE_CURRENT_LIST_FILE}\n")
+
+function(escaped out_var value)
+    string(REPLACE "\\" "\\\\" value "${value}")
+    string(REPLACE "\"" "\\\"" value "${value}")
+    string(REPLACE "\$" "\\\$" value "${value}")
+    set(${out_var} "${value}" PARENT_SCOPE)
+endfunction()
+
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
@@ -105,16 +113,18 @@ set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variabl
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+    escaped(value "${${VAR}}")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${value}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
     if(CMAKE_HOST_WIN32)
-        string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
+        string(REPLACE "\\" "/" value "$ENV{${_env}}")
+        escaped(value "${value}")
     else()
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"$ENV{${_env}}\")\n")
+        escaped(value "$ENV{${_env}}")
     endif()
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${value}\")\n")
 endforeach()
 
 set(EXTRA_FLAGS "")
@@ -184,10 +194,8 @@ foreach(flag ${VCPKG_LANGUAGES} SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LI
             endif()
         endif()
     endif()
-    string(REPLACE "\\" "\\\\" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(REPLACE "\"" "\\\"" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(REPLACE "\$" "\\\$" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${${flag}_FLAGS}\")\n")
+    escaped(value "${${flag}_FLAGS}")
+    string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${value}\")\n")
 endforeach()
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
