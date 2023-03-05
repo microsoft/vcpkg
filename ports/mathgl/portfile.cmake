@@ -50,7 +50,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        --trace-expand # to see where gsl linkage goes wrong
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DMathGL_INSTALL_CMAKE_DIR:STRING=share/mathgl2
         -DCMAKE_CXX_STANDARD=11 # minimum for armadillo on osx
