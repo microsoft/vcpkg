@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO richgel999/miniz
-    REF 2.2.0
-    SHA512 0bb2b0ac627715b90ff9fd69ca8958a0bea387bd7ddf5c200daba953b98ef788092e3009842f4f123234e85570159250c8897a30c1c1f2d4dea9bca9837f6111
+    REF 3.0.2
+    SHA512 426054403121f84a2ac365f7545b35fb217b41061aebaffce483568d3d374d453ab87987c599a85f1f745e0ec7144a3181ed9b100f354e2823f165ba286b0611
     HEAD_REF master
-    PATCHES
-        fix-pkgconfig-location.patch
 )
 
 vcpkg_cmake_configure(

@@ -4,16 +4,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://gitlab.freedesktop.org
     REPO cairo/cairo
-    REF b43e7c6f3cf7855e16170a06d3a9c7234c60ca94 #v1.17.6
-    SHA512 2d8f0cbb11638610eda104a370bb8450e28d835852b0f861928738a60949e0aaba7a554a9f9efabbefda10a37616d4cd0d3021b3fbb4ced1d52db1edb49bc358
-    HEAD_REF master
+    REF ${VERSION}
+    SHA512 e12f4b05326c1ac7d930e18d95398dc9c65f3af9745d7fd301ef1663dd378feeb43acc47de17fd082d0acf96e9fc60310557c24e3fe8af06d17931590c7759c6
     PATCHES
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
         mingw-dllexport.patch
+        fix-static-missing-lib-msimg32.patch
         ${PATCHES}
 )
 
@@ -86,4 +86,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

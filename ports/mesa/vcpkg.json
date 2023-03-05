@@ -1,10 +1,11 @@
 {
   "name": "mesa",
   "version": "22.1.7",
+  "port-version": 1,
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
-  "supports": "!(windows & arm)",
+  "supports": "!(windows & arm) & !staticcrt",
   "dependencies": [
     {
       "name": "vcpkg-get-python-packages",
@@ -28,20 +29,8 @@
           "name": "mesa",
           "default-features": false,
           "features": [
-            "gles1"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "gles2"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
+            "gles1",
+            "gles2",
             "opengl"
           ]
         },
@@ -58,10 +47,7 @@
     "egl": {
       "description": "Build support for EGL platform",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "egl-registry"
       ]
     },
     "gles1": {
@@ -69,7 +55,10 @@
       "dependencies": [
         {
           "name": "mesa",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     },
@@ -78,7 +67,10 @@
       "dependencies": [
         {
           "name": "mesa",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     },
@@ -125,10 +117,7 @@
     "opengl": {
       "description": "Build support for OpenGL (all versions)",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "opengl"
       ]
     }
   }

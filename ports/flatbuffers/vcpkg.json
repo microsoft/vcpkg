@@ -1,6 +1,6 @@
 {
   "name": "flatbuffers",
-  "version": "22.10.26",
+  "version": "23.1.21",
   "port-version": 1,
   "description": [
     "Memory Efficient Serialization Library",

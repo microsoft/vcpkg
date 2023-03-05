@@ -9,9 +9,14 @@ parameters:
     default: 'use default'
   - name: poolName
     type: string
+  - name: tripletPattern
+    displayName: 'Enable the triplets which contain this substring'
+    type: string
+    default: ''
 
 jobs:
 - job: x64_osx
+  condition: contains('^x64-osx$', '${{ parameters.tripletPattern }}')
   pool:
     name: ${{ parameters.poolName }}
   workspace:

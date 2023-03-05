@@ -1,29 +1,30 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.5.3/sentry-native.zip"
-    FILENAME "sentry-native-0.5.3.zip"
-    SHA512 5d8720a86d683b049d3e393a16b52fd2aea641714740222b473c18b986553c5657f939524670110438b79fb49440e44159a3c7f4470ae29140585df3d26fc34c
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.6.0/sentry-native.zip"
+    FILENAME "sentry-native-0.6.0.zip"
+    SHA512 e41d3661679ba7ba1cc58059ce86f6fb1a93fb580d2f8e77d6f2a09988fe62f18f3636e13e324a643f736aa891aa2312100740ace043c2e542d4e6b546b61014
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        use-zlib-target.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
-if (NOT DEFINED SENTRY_BACKEND)
-    if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
-        set(SENTRY_BACKEND "breakpad")
-    elseif(APPLE OR WIN32)
-        set(SENTRY_BACKEND "crashpad")
-    elseif(LINUX)
-        set(SENTRY_BACKEND "breakpad")
-    else()
-        set(SENTRY_BACKEND "inproc")
-    endif()
+vcpkg_list(SET options)
+
+if(NOT "backend" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_BACKEND=none")
+elseif(DEFINED SENTRY_BACKEND)
+    # Legacy, possible override from triplet, but cannot handle dependencies
+    vcpkg_list(APPEND options "-DSENTRY_BACKEND=${SENTRY_BACKEND}")
+endif()
+
+if(NOT "transport" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_TRANSPORT=none")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -34,9 +35,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
-        -DSENTRY_BACKEND=${SENTRY_BACKEND}
         -DCRASHPAD_ZLIB_SYSTEM=ON
     MAYBE_UNUSED_VARIABLES
         CRASHPAD_ZLIB_SYSTEM
@@ -50,19 +51,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
-if (SENTRY_BACKEND STREQUAL "crashpad")
-    vcpkg_copy_tools(
-        TOOL_NAMES crashpad_handler
-        AUTO_CLEAN
-    )
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/crashpad_handler${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(TOOL_NAMES crashpad_handler AUTO_CLEAN)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
