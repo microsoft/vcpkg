@@ -27,8 +27,10 @@ index 4c9744e6..a6d5e4eb 100644
  # Simplify README.md to README
  add_custom_target(README
    COMMAND ${CMAKE_COMMAND}
-@@ -393,3 +408,4 @@ if(NOT _is_multi_config_generator)
+@@ -393,5 +408,6 @@ if(NOT _is_multi_config_generator)
    )
    message(STATUS "PROJ: Configured 'dist' target")
  endif()
 +endif()
+ 
+ configure_file(cmake/uninstall.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/proj_uninstall.cmake @ONLY)
