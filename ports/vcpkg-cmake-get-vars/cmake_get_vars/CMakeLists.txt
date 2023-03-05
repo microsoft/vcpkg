@@ -27,22 +27,27 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         MSVC
                                         MSVC_VERSION)
 if(ANDROID)
-    # Modern, provided by CMake and NDK toolchains
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK
-        CMAKE_ANDROID_ARCH                      # aka ANDROID_ARCH_NAME
-        CMAKE_ANDROID_ARCH_ABI                  # aka ANDROID_ABI
-        CMAKE_ANDROID_NDK                       # aka ANDROID_NDK
-        CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION     # aka ANDROID_TOOLCHAIN
-        CMAKE_ANDROID_STL_TYPE                  # aka ANDROID_STL
+        CMAKE_ANDROID_ARCH
+        CMAKE_ANDROID_ARCH_ABI
+        CMAKE_ANDROID_ARM_MODE
+        CMAKE_ANDROID_ARM_NEON
+        CMAKE_ANDROID_NDK
+        CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG
+        CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION
+        CMAKE_ANDROID_NDK_VERSION
+        CMAKE_ANDROID_STL_TYPE
     )
-    # Provided by NDK toolchains and also chainloaded by CMake toolchain
-    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK
-        ANDROID_ARM_NEON
-        ANDROID_HOST_TAG                        # Future: ${CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG}
-        ANDROID_NDK_RELEASE                     # r${ANDROID_NDK_REVISION}
-        ANDROID_PLATFORM                        # Future: android-${CMAKE_SYSTEM_VERSION}
-        ANDROID_PLATFORM_LEVEL                  # Future: ${CMAKE_SYSTEM_VERSION}
-    )
+    # Forward legacy variables from older NDKs
+    if("${CMAKE_ANDROID_ARCH}" STREQUAL "")
+        set(CMAKE_ANDROID_ARCH "${ANDROID_ARCH_NAME}")
+    endif()
+    if("${CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG}" STREQUAL "")
+        set(CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG "${ANDROID_HOST_TAG}")
+    endif()
+    if(CMAKE_SYSTEM_VERSION STREQUAL "1" AND ANDROID_PLATFORM_LEVEL GREATER "1")
+        set(CMAKE_SYSTEM_VERSION "${ANDROID_PLATFORM_LEVEL}")
+    endif()
 endif()
 if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
