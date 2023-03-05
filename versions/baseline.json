@@ -6188,7 +6188,7 @@
       "port-version": 2
     },
     "proj": {
-      "baseline": "9.1.1",
+      "baseline": "9.2.0",
       "port-version": 0
     },
     "proj4": {
