@@ -61,7 +61,9 @@ if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_L
     find_package(PNG QUIET)
     find_package(TIFF QUIET)
     find_package(ZLIB QUIET)
+    find_package(NanoSVG CONFIG QUIET)
     list(APPEND wxWidgets_LIBRARIES
+        NanoSVG::nanosvg NanoSVG::nanosvgrast
         ${EXPAT_LIBRARIES}
         ${JPEG_LIBRARIES}
         ${PNG_LIBRARIES}
