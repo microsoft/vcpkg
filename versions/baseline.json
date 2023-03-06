@@ -220,6 +220,10 @@
       "baseline": "10.0.1",
       "port-version": 4
     },
+    "arsenalgear": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "ashes": {
       "baseline": "2022-06-08",
       "port-version": 0
@@ -3047,6 +3051,10 @@
     "hiredis": {
       "baseline": "1.0.2",
       "port-version": 4
+    },
+    "hnswlib": {
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "hps": {
       "baseline": "2022-01-18",
@@ -6105,7 +6113,7 @@
     },
     "poco": {
       "baseline": "1.12.4",
-      "port-version": 3
+      "port-version": 4
     },
     "podofo": {
       "baseline": "0.9.8",
