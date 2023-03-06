@@ -41,6 +41,7 @@ elseif(NOT compiler_in_path STREQUAL VCPKG_DETECTED_CMAKE_C_COMPILER)
     vcpkg_host_path_list(PREPEND ENV{PATH} "${compiler_path}")
 endif()
 
+vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
     set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
@@ -87,8 +88,12 @@ elseif(VCPKG_TARGET_IS_MINGW)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(INTERPRETER "$ENV{EMSDK}/upstream/emscripten/emconfigure")
-    set(MAKE "$ENV{EMSDK}/upstream/emscripten/emmake")
-    set(ENV{MAKE} "${MAKE}")
+    # We must wrap the build in emmake which does not pass jobserver fds.
+    vcpkg_list(SET MAKEFILE_OPTIONS
+        MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile.emscripten"
+        DISABLE_PARALLEL
+    )
+    set(ENV{VCPKG_JOBS} "-j${VCPKG_CONCURRENCY}")
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine
@@ -117,7 +122,10 @@ vcpkg_configure_make(
     OPTIONS_DEBUG
         --debug
 )
-vcpkg_install_make(BUILD_TARGET build_sw)
+vcpkg_install_make(
+    ${MAKEFILE_OPTIONS}
+    BUILD_TARGET build_sw
+)
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
