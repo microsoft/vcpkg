@@ -32,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iconv            GDAL_USE_ICONV
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
+        jpegxl           GDAL_USE_JXL
         lerc             GDAL_USE_LERC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
@@ -55,7 +56,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_ZLIB
         zstd             GDAL_USE_ZSTD
         tools            BUILD_APPS
-        jpegxl           GDAL_USE_JXL
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
