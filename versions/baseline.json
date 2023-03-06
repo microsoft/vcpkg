@@ -165,7 +165,7 @@
       "port-version": 2
     },
     "arg-router": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "argagg": {
