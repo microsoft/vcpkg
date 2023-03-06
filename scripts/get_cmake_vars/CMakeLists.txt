@@ -12,6 +12,9 @@ endif()
 
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
+project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+
+
 set(OUTPUT_STRING "# Generator: ${CMAKE_CURRENT_LIST_FILE}\n")
 
 function(escaped out_var value)
