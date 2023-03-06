@@ -8,6 +8,7 @@
   "supports": "!(arm | uwp)",
   "dependencies": [
     "darts-clone",
+    "marisa-trie",
     "rapidjson",
     "tclap",
     {
@@ -20,12 +21,6 @@
     }
   ],
   "features": {
-    "marisa": {
-      "description": "Use system version of Marisa",
-      "dependencies": [
-        "marisa-trie"
-      ]
-    },
     "tools": {
       "description": "Build OpenCC command-line tools"
     }
