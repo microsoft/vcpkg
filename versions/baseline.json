@@ -120,6 +120,10 @@
       "baseline": "chromium_5414",
       "port-version": 1
     },
+    "annoy": {
+      "baseline": "2023-02-25",
+      "port-version": 0
+    },
     "antlr4": {
       "baseline": "4.11.1",
       "port-version": 1
@@ -161,7 +165,7 @@
       "port-version": 2
     },
     "arg-router": {
-      "baseline": "1.1.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "argagg": {
@@ -215,6 +219,10 @@
     "arrow": {
       "baseline": "10.0.1",
       "port-version": 4
+    },
+    "arsenalgear": {
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "ashes": {
       "baseline": "2022-06-08",
@@ -1293,8 +1301,8 @@
       "port-version": 0
     },
     "c4core": {
-      "baseline": "0.1.9",
-      "port-version": 1
+      "baseline": "0.1.11",
+      "port-version": 0
     },
     "c89stringutils": {
       "baseline": "0.0.1",
@@ -1914,7 +1922,7 @@
     },
     "cyclonedds-cxx": {
       "baseline": "0.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "czmq": {
       "baseline": "4.2.1",
@@ -1957,7 +1965,7 @@
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.10.0",
+      "baseline": "3.15.0",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -2101,7 +2109,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.21",
+      "baseline": "10.0.23",
       "port-version": 0
     },
     "draco": {
@@ -2454,7 +2462,7 @@
     },
     "flatbuffers": {
       "baseline": "23.1.21",
-      "port-version": 0
+      "port-version": 2
     },
     "flecs": {
       "baseline": "3.1.4",
@@ -3043,6 +3051,10 @@
     "hiredis": {
       "baseline": "1.0.2",
       "port-version": 4
+    },
+    "hnswlib": {
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "hps": {
       "baseline": "2022-01-18",
@@ -3696,6 +3708,10 @@
       "baseline": "2.36",
       "port-version": 0
     },
+    "libadlmidi": {
+      "baseline": "1.5.1",
+      "port-version": 0
+    },
     "libadwaita": {
       "baseline": "1.2.0",
       "port-version": 0
@@ -3823,6 +3839,10 @@
     "libde265": {
       "baseline": "1.0.8",
       "port-version": 6
+    },
+    "libdeflate": {
+      "baseline": "1.17",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -5382,7 +5402,7 @@
     },
     "nettle": {
       "baseline": "3.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "networkdirect-sdk": {
       "baseline": "2.0.1",
@@ -5393,7 +5413,7 @@
       "port-version": 1
     },
     "nghttp3": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "ngspice": {
@@ -5401,8 +5421,8 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "0.11.0",
-      "port-version": 0
+      "baseline": "0.13.1",
+      "port-version": 1
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -6094,7 +6114,7 @@
     },
     "poco": {
       "baseline": "1.12.4",
-      "port-version": 3
+      "port-version": 4
     },
     "podofo": {
       "baseline": "0.9.8",
@@ -6169,7 +6189,7 @@
       "port-version": 2
     },
     "proj": {
-      "baseline": "9.1.1",
+      "baseline": "9.2.0",
       "port-version": 0
     },
     "proj4": {
@@ -6245,7 +6265,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.10.2",
+      "baseline": "2.10.3",
       "port-version": 0
     },
     "pystring": {
@@ -6838,7 +6858,7 @@
     },
     "restbed": {
       "baseline": "4.8",
-      "port-version": 0
+      "port-version": 2
     },
     "restc-cpp": {
       "baseline": "0.10.0",
@@ -6944,6 +6964,10 @@
       "baseline": "2020-04-16",
       "port-version": 4
     },
+    "rtmfp-cpp": {
+      "baseline": "1.4.0-20230213.18168ec",
+      "port-version": 0
+    },
     "rtmidi": {
       "baseline": "5.0.0",
       "port-version": 2
@@ -6969,7 +6993,7 @@
       "port-version": 2
     },
     "ryml": {
-      "baseline": "0.4.1",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "ryu": {
