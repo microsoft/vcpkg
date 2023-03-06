@@ -2,9 +2,28 @@ vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
-vcpkg_add_to_path("${PERL_EXE_PATH}")
+vcpkg_list(SET CONFIGURE_OPTIONS
+    enable-static-engine
+    enable-capieng
+    no-ssl2
+    no-ssl3
+    no-weak-ssl-ciphers
+    no-tests
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
+else()
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-shared no-module)
+endif()
+
+if(DEFINED OPENSSL_USE_NOPINSHARED)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-pinshared)
+endif()
+
+if(OPENSSL_NO_AUTOLOAD_CONFIG)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-autoload-config)
+endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -65,8 +84,7 @@ vcpkg_build_nmake(
         "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}"
     PRERUN_SHELL_DEBUG "${PERL}" Configure
         ${CONFIGURE_OPTIONS}
-        ${OPENSSL_ARCH}
-        --debug
+        debug-${OPENSSL_ARCH}
         "--prefix=${install_dir_native}\\debug"
         "--openssldir=${install_dir_native}\\debug"
         "AS=${as}"
@@ -117,3 +135,5 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
 )
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
