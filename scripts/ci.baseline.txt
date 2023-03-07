@@ -247,8 +247,6 @@ freeglut:x64-osx=fail
 freeopcua:arm64-windows=fail
 ftgl:x64-uwp=fail
 ftgl:arm-uwp=fail
-# https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
-functions-framework-cpp:x64-uwp=fail
 
 # VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
 gazebo:x64-windows=fail
@@ -796,11 +794,6 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 qt5-x11extras:arm64-osx=fail
-# Missing libraries
-qt5-x11extras:x86-windows=fail
-qt5-x11extras:x64-windows=fail
-qt5-x11extras:x64-windows-static=fail
-qt5-x11extras:x64-windows-static-md=fail
 qwt:x64-osx=fail
 qwt:arm64-osx=fail
 qwt-qt6:x64-osx=fail
