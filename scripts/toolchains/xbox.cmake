@@ -14,12 +14,10 @@ if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
     set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}" CACHE STRING "" FORCE)
 endif()
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
+set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
 
-    if(NOT DEFINED CMAKE_SYSTEM_VERSION)
-        set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
-    endif()
+if(NOT DEFINED CMAKE_SYSTEM_VERSION)
+    set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
 endif()
 
 # Add the Microsoft GDK if present
@@ -67,7 +65,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     set(_vcpkg_default_lib onecore_apiset.lib)
 
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_GAMES /D_WIN32_WINNT=0x0A00 /D_ATL_NO_DEFAULT_LIBS /D__WRL_NO_DEFAULT_LIB__ /D__WRL_CLASSIC_COM_STRICT__ /D_UITHREADCTXT_SUPPORT=0 /D_CRT_USE_WINAPI_PARTITION_APP")
-    set(_vcpkg_common_flags "/nologo /utf-8 /MP /GS /Gd /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
+    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc /utf-8")
 
     # Add the Microsoft GDK if present
     if (DEFINED _vcpkg_grdk)
