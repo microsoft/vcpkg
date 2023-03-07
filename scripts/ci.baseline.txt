@@ -165,6 +165,9 @@ cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
+# Requires full C++20 support, currently absent from CI for these triplets.
+cppslippi:x64-linux=fail
+cppslippi:x64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
