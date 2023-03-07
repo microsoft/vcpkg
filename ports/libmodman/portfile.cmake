@@ -1,23 +1,17 @@
-# Enable static build in UNIX
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
-set(LIBMODMAN_VER 2.0.1)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/libmodman/libmodman-${LIBMODMAN_VER}.zip"
-    FILENAME "libmodman-${LIBMODMAN_VER}.zip"
+    URLS "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/libmodman/libmodman-${VERSION}.zip"
+    FILENAME "libmodman-${VERSION}.zip"
     SHA512 1fecc0fa3637c4aa86d114f5bc991605172d39183fa0f39d8c7858ef5d0d894152025bd426de4dd017a41372d800bf73f53b2328c57b77352a508e12792729fa
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
-    tests BUILD_TESTING
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tests BUILD_TESTING
 )
 
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-install-path.patch
         fix-undefined-typeid.patch
@@ -25,7 +19,8 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -39,4 +34,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

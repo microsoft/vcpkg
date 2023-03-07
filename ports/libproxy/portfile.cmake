@@ -9,8 +9,10 @@ vcpkg_from_github(
         support-windows.patch
         fix-install-py.patch
         fix-module-lib-name.patch
+        fix-depend-modman.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/libmodman")
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,7 +28,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
         -DWITH_KDE=${VCPKG_TARGET_IS_LINUX}
         -DMSVC_STATIC=${STATICCRT}
@@ -38,6 +41,7 @@ vcpkg_cmake_configure(
         WITH_PYTHON3
         WITH_VALA
         MSVC_STATIC
+        WITH_GNOME3
 )
 
 vcpkg_cmake_install()
@@ -50,4 +54,4 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
           DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

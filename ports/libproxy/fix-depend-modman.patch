@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 08f9170..06c22de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,7 +42,7 @@ endif()
+ 
+ ### Subdirectories
+ 
+-add_subdirectory(libmodman)
++find_package(libmodman REQUIRED)
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+ 
+ # Conditionally build bindings
+diff --git a/libproxy/cmake/libproxy.cmk b/libproxy/cmake/libproxy.cmk
+index 3372865..3c3f2de 100644
+--- a/libproxy/cmake/libproxy.cmk
++++ b/libproxy/cmake/libproxy.cmk
+@@ -7,10 +7,11 @@ else ()
+ endif()
+ 
+ if(WIN32)
+-  target_link_libraries(libproxy modman;ws2_32;${LIBPROXY_LIBRARIES})
++  target_link_libraries(libproxy ${LIBMODMAN_LIBRARIES};ws2_32;${LIBPROXY_LIBRARIES})
+ else()
+-  target_link_libraries(libproxy modman;m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
++  target_link_libraries(libproxy ${LIBMODMAN_LIBRARIES};m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
+ endif()
++target_include_directories(libproxy PRIVATE ${LIBMODMAN_INCLUDE_DIR})
+ file(TO_NATIVE_PATH ${MODULE_INSTALL_DIR} MODULE_INSTALL_DIR)
+ if(WIN32)
+   string(REGEX REPLACE "\\\\" "\\\\\\\\" MODULE_INSTALL_DIR ${MODULE_INSTALL_DIR})
