@@ -14,7 +14,7 @@ message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "If ${PORT} directly fails ${PORT} might require additional prerequisites on Linux and OSX. Please check the configure logs.\n")
 endif()
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)

@@ -16,16 +16,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         apps       PopSift_BUILD_EXAMPLES
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DCUDA_TOOLKIT_ROOT_DIR=${CUDA_TOOLKIT_ROOT}
+        "-DCUDA_TOOLKIT_ROOT_DIR=${CUDA_TOOLKIT_ROOT}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/PopSift)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PopSift)
 
 vcpkg_copy_pdbs()
 
