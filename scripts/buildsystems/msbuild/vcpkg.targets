@@ -25,17 +25,17 @@
   </PropertyGroup>
 
   <!-- Special-case custom MSBuild platforms defined in the Microsoft GDK. See https://aka.ms/gdk and https://aka.ms/gdkx -->
-  <PropertyGroup Condition="'$(Platform)'=='Gaming.Desktop.x64'">
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Desktop.x64'">
     <VcpkgOSTarget>windows</VcpkgOSTarget>
     <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
     <VcpkgUseMD>true</VcpkgUseMD>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='Gaming.Xbox.Scarlett.x64'">
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.Scarlett.x64'">
     <VcpkgOSTarget>xbox-scarlett</VcpkgOSTarget>
     <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
     <VcpkgUseMD>false</VcpkgUseMD>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
     <VcpkgOSTarget>xbox-xboxone</VcpkgOSTarget>
     <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
     <VcpkgUseMD>false</VcpkgUseMD>
