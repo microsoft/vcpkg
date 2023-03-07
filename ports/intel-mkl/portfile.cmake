@@ -69,8 +69,9 @@ if(sha)
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 
   # Note: intel_thread and lp64 are the defaults.
-  set(interface "lp64") # or ilp64; ilp == 64 bit int api
-  if(VCPKG_CRT_LINKAGE STREQUAL "dynamic") #TODO: Case for alternatives.
+  set(interface "ilp64") # or ilp64; ilp == 64 bit int api
+  #https://www.intel.com/content/www/us/en/develop/documentation/onemkl-linux-developer-guide/top/linking-your-application-with-onemkl/linking-in-detail/linking-with-interface-libraries/using-the-ilp64-interface-vs-lp64-interface.html
+  if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
       set(threading "intel_thread") #sequential or intel_thread or tbb_thread or pgi_thread
   else()
       set(threading "sequential")
@@ -200,10 +201,6 @@ if(sha)
       "intel.oneapi.lin.openmp,v=2023.0.0-25370" #OpenMP
       )
 
-    file(GLOB_RECURSE _x_files_and_dirs LIST_DIRECTORIES true "${output_path}/**/*")
-    string(REPLACE "${output_path}" "" _x_files_and_dirs "${_x_files_and_dirs}")
-    message(STATUS "_x_files_and_dirs_\n${_x_files_and_dirs}")
-
     foreach(pack IN LISTS packages)
         set(archive_path "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages/${pack}")
             vcpkg_execute_in_download_mode(
@@ -213,10 +210,6 @@ if(sha)
                             ERROR_FILE "${CURRENT_BUILDTREES_DIR}/mkl-extract-${TARGET_TRIPLET}-err.log"
             )
     endforeach()
-
-    file(GLOB_RECURSE _x_files_and_dirs LIST_DIRECTORIES true "${output_path}/**/*")
-    string(REPLACE "${output_path}" "" _x_files_and_dirs "${_x_files_and_dirs}")
-    message(STATUS "_x_files_and_dirs_\n${_x_files_and_dirs}")
 
     set(basepath "${output_path}/_installdir/mkl/2023.0.0/")
     set(basepath2 "${output_path}/_installdir/compiler/2023.0.0/")
@@ -281,3 +274,6 @@ if(sha)
                       )
 endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "bin\${MKL_DLL_GLOB" "bin/\${MKL_DLL_GLOB")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" [["../bincompiler" "../compiler/lib"]] [["bin" "../bincompiler" "../compiler/lib"]])
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
