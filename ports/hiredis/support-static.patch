@@ -1,17 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9e78894..87aba5b 100644
+index 3d52d0c..94248ba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,4 +22,4 @@ PROJECT(hiredis VERSION "${VERSION}")
+@@ -44,7 +44,7 @@ IF(WIN32)
+     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
  ENDIF()
  
 -ADD_LIBRARY(hiredis SHARED ${hiredis_sources})
 +ADD_LIBRARY(hiredis ${hiredis_sources})
- 
-@@ -60,5 +60,5 @@ IF(ENABLE_SSL)
-     SET(hiredis_ssl_sources 
+ ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
+ ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
+ ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
+@@ -161,7 +161,7 @@ IF(ENABLE_SSL)
+     FIND_PACKAGE(OpenSSL REQUIRED)
+     SET(hiredis_ssl_sources
          ssl.c)
 -    ADD_LIBRARY(hiredis_ssl SHARED
 +    ADD_LIBRARY(hiredis_ssl
              ${hiredis_ssl_sources})
- 
+     ADD_LIBRARY(hiredis_ssl_static STATIC
+             ${hiredis_ssl_sources})

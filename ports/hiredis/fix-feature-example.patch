@@ -1,8 +1,8 @@
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index dd3a313..8c69d3a 100644
+index 23b6a92..e6e0090 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -19,16 +19,25 @@ if (LIBEV)
+@@ -19,10 +19,12 @@ if (LIBEV)
      TARGET_LINK_LIBRARIES(example-libev hiredis ev)
  ENDIF()
  
@@ -11,14 +11,20 @@ index dd3a313..8c69d3a 100644
 +FIND_PACKAGE(Libevent CONFIG REQUIRED)
 +FIND_PATH(LIBEVENT_INCLUDES evutil.h)
 +if (UNIX)
-     ADD_EXECUTABLE(example-libevent example-libevent)
+     ADD_EXECUTABLE(example-libevent example-libevent.c)
 -    TARGET_LINK_LIBRARIES(example-libevent hiredis event)
 +    TARGET_LINK_LIBRARIES(example-libevent hiredis ${LIBEVENT_LIBRARIES})
 +    TARGET_INCLUDE_DIRECTORIES(example-libevent PRIVATE ${LIBEVENT_INCLUDES})
  ENDIF()
  
-+FIND_LIBRARY(UV_LIBRARY libuv)
- FIND_PATH(LIBUV uv.h)
+ FIND_PATH(LIBHV hv/hv.h)
+@@ -31,10 +33,17 @@ IF (LIBHV)
+     TARGET_LINK_LIBRARIES(example-libhv hiredis hv)
+ ENDIF()
+ 
+-FIND_PATH(LIBUV uv.h)
++FIND_PACKAGE(libuv CONFIG REQUIRED)
++FIND_PATH(LIBUV_INCLUDES hv/hv.h)
  IF (LIBUV)
      ADD_EXECUTABLE(example-libuv example-libuv.c)
 -    TARGET_LINK_LIBRARIES(example-libuv hiredis uv)
@@ -27,12 +33,12 @@ index dd3a313..8c69d3a 100644
 +    else()
 +        set(LIB_LISTS)
 +    endif()
-+    TARGET_LINK_LIBRARIES(example-libuv hiredis ${UV_LIBRARY} ${LIB_LISTS})
-+    TARGET_INCLUDE_DIRECTORIES(example-libuv PRIVATE ${LIBUV})
++    TARGET_LINK_LIBRARIES(example-libuv hiredis ${LIBUV_LIBRARY} ${LIB_LISTS})
++    TARGET_INCLUDE_DIRECTORIES(example-libuv PRIVATE ${LIBUV_INCLUDES})
  ENDIF()
  
  IF (APPLE)
-@@ -38,12 +52,24 @@ IF (APPLE)
+@@ -44,12 +53,24 @@ IF (APPLE)
  ENDIF()
  
  IF (ENABLE_SSL)
