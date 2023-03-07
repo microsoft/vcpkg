@@ -8,12 +8,11 @@ vcpkg_from_github(
         cmakelists.diff
 )
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" MINIUPNPC_BUILD_SHARED)
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" MINIUPNPC_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MINIUPNPC_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MINIUPNPC_BUILD_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/miniupnpc
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/miniupnpc"
     OPTIONS
     -DUPNPC_BUILD_STATIC=${MINIUPNPC_BUILD_STATIC}
     -DUPNPC_BUILD_SHARED=${MINIUPNPC_BUILD_SHARED}
@@ -21,7 +20,8 @@ vcpkg_configure_cmake(
     -DUPNPC_BUILD_SAMPLE=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/miniupnpc RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

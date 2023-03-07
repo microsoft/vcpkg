@@ -1,7 +1,17 @@
 {
   "name": "mecab",
   "version-string": "2019-09-25",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A morphological analysis engine based on CRF",
-  "supports": "!(uwp | arm | arm64)"
+  "supports": "!(uwp | arm | arm64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
