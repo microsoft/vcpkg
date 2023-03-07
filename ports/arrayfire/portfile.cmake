@@ -47,9 +47,15 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DAF_BUILD_FORGE=OFF
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-  list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DMKL_THREAD_LAYER=Sequential")
-endif()
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindMKL.cmake")
+#if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+#  list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DMKL_THREAD_LAYER=Sequential")
+#endif()
+#if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+#    set(OPTIONS "-DINT_SIZE=8") 
+#    # This seems scary but only selects the MKL interface. 4 = lp; 8 = ilp; Since x64 has ilp as the default use it!
+#endif()
+
 
 # bin/dll directory for Windows non-static builds for the unified backend dll
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
