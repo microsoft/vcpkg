@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
+        fix-abseil-cxx14.patch
 )
 
 set(options "")
