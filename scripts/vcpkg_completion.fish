@@ -19,9 +19,7 @@ complete -c vcpkg -f --arguments '(_vcpkg_completions)'
 set vcpkg_commands ($vcpkg_executable autocomplete)
 
 function _set_triplet_arguments
-  set triplets ($vcpkg_executable help triplet)
-  set -e triplets[(contains -i -- "Available architecture triplets" $triplets)]
-  set -e triplets[(contains -i -- "" $triplets)]
+  set triplets ($vcpkg_executable help triplet | grep "^\s" | cut -d' ' -f3)
   set triplet_from ""
   for triplet in $triplets
     echo (test -n "$triplet") >> temp.txt
