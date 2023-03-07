@@ -1,0 +1,18 @@
+{
+  "name": "h265nal",
+  "version-string": "0.38",
+  "description": ["H265 NAL unit parser, that accepts a file in h265 Annex B format (.265) and dumps the contents of the parsed NALs."],
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    { 
+     "name": "vcpkg-cmake-config", 
+     "host": true 
+    },
+    {
+      "name": "gtest"
+    }
+  ]
+}
