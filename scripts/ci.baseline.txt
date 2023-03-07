@@ -524,8 +524,6 @@ live555:arm64-osx=fail
 live555:x64-uwp=fail
 # fails due to an outdated gcc version
 llfio:x64-linux=fail
-llgl:arm-uwp=fail
-llgl:x64-uwp=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
