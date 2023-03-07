@@ -598,15 +598,16 @@ function(add_executable)
         if(VCPKG_APPLOCAL_DEPS)
             if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox")
                 z_vcpkg_set_powershell_path()
+                z_vcpkg_add_vcpkg_to_cmake_path(INSTALLED_DIRS "/bin")
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
                     set(EXTRA_OPTIONS USES_TERMINAL)
                 endif()
                 add_custom_command(TARGET "${target_name}" POST_BUILD
                     COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                        -targetBinary "$<TARGET_FILE:${target_name}>"
-                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                        -targetBinary "$<TARGET_FILE:${target_name}>"
+                        ${INSTALLED_DIRS}
                     VERBATIM
                     ${EXTRA_OPTIONS}
                 )
@@ -639,11 +640,12 @@ function(add_library)
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             z_vcpkg_set_powershell_path()
+            z_vcpkg_add_vcpkg_to_cmake_path(INSTALLED_DIRS "/bin")
             add_custom_command(TARGET "${target_name}" POST_BUILD
                 COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                    -targetBinary "$<TARGET_FILE:${target_name}>"
-                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    -targetBinary "$<TARGET_FILE:${target_name}>"
+                    ${INSTALLED_DIRS}
                     VERBATIM
             )
         endif()
@@ -695,11 +697,13 @@ function(x_vcpkg_install_local_dependencies)
         foreach(target IN LISTS arg_TARGETS)
             get_target_property(target_type "${target}" TYPE)
             if(NOT target_type STREQUAL "INTERFACE_LIBRARY")
+                z_vcpkg_add_vcpkg_to_cmake_path(INSTALLED_DIRS "/bin")
                 install(CODE "message(\"-- Installing app dependencies for ${target}...\")
+                    set(INSTALLED_DIRS \"${INSTALLED_DIRS}\")
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                        -OutVariable out
                         -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)"
+                        \${INSTALLED_DIRS})"
                     ${component_param}
                 )
             endif()
