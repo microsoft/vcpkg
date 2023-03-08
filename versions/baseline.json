@@ -1913,7 +1913,7 @@
       "port-version": 0
     },
     "cxxopts": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "cyclonedds": {
