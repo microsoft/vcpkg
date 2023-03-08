@@ -8,20 +8,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTINYCTHREAD_DISABLE_TESTS=OFF
         -DTINYCTHREAD_INSTALL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(STRINGS ${SOURCE_PATH}/README.txt SOURCE_LINES)
+file(STRINGS "${SOURCE_PATH}/README.txt" SOURCE_LINES)
 list(SUBLIST SOURCE_LINES 70 120 SOURCE_LINES)
 list(JOIN SOURCE_LINES "\n" _contents)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${_contents}")

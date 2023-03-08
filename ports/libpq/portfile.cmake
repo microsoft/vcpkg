@@ -1,11 +1,11 @@
-set(PORT_VERSION 14.4)
+set(PORT_VERSION ${VERSION})
 # NOTE: the python patches must be regenerated on version update
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 dd2f80248684e331d2ffb1e26cd2a285df1fb18710807a0c31aedabf917912ce9267f8ca26318e5371d916c6fe476f8a17886d82d3ff86a974e6f24c19a6aafb
+    SHA512 115a8a4234791bba4e6dcc4617e9dd77abedcf767894ce9472c59cce9d5d4ef2d4e1746f3a0c7a99de4fc4385fb716652b70dce9f48be45a9db5a682517db7e8
 )
 
 set(PATCHES
@@ -38,8 +38,8 @@ if(NOT "${FEATURES}" MATCHES "client")
 else()
     set(HAS_TOOLS TRUE)
 endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
@@ -166,6 +166,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         if("${FEATURES}" MATCHES "lz4")
            string(REPLACE "lz4       => undef" "lz4       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
+        if("${FEATURES}" MATCHES "zstd")
+           string(REPLACE "zstd      => undef" "zstd      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
@@ -253,6 +256,11 @@ else()
         list(APPEND BUILD_OPTS --with-zlib)
     else()
         list(APPEND BUILD_OPTS --without-zlib)
+    endif()
+    if("zstd" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-zstd)
+    else()
+        list(APPEND BUILD_OPTS --without-zstd)
     endif()
     if("icu" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-icu)
