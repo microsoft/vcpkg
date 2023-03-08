@@ -29,7 +29,6 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/include\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/lib\"" "")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
