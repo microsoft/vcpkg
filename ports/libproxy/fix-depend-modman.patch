@@ -25,7 +25,7 @@ index 3372865..3c3f2de 100644
 -  target_link_libraries(libproxy modman;m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
 +  target_link_libraries(libproxy ${LIBMODMAN_LIBRARIES};m;pthread;${CMAKE_DL_LIBS};${LIBPROXY_LIBRARIES})
  endif()
-+target_include_directories(libproxy PRIVATE ${LIBMODMAN_INCLUDE_DIR})
++target_include_directories(libproxy PUBLIC ${LIBMODMAN_INCLUDE_DIR})
  file(TO_NATIVE_PATH ${MODULE_INSTALL_DIR} MODULE_INSTALL_DIR)
  if(WIN32)
    string(REGEX REPLACE "\\\\" "\\\\\\\\" MODULE_INSTALL_DIR ${MODULE_INSTALL_DIR})
