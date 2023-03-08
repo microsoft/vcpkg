@@ -1,8 +1,8 @@
 diff --git a/libmodman/CMakeLists.txt b/libmodman/CMakeLists.txt
-index 0aff593..a1bbcd5 100644
+index 0aff593..cabc524 100644
 --- a/libmodman/CMakeLists.txt
 +++ b/libmodman/CMakeLists.txt
-@@ -30,28 +30,40 @@ if(NOT WIN32 AND NOT APPLE)
+@@ -30,19 +30,19 @@ if(NOT WIN32 AND NOT APPLE)
    configure_file(libmodman-2.0.pc.in
                   ${CMAKE_CURRENT_BINARY_DIR}/libmodman-2.0.pc @ONLY)
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmodman-2.0.pc
@@ -21,18 +21,12 @@ index 0aff593..a1bbcd5 100644
  endif()
  
  # Define the library itself
-+if(BUILD_SHARED_LIBS)
- add_library(modman SHARED
+-add_library(modman SHARED
++add_library(modman
              module.hpp
              module_manager.hpp
              module_manager.cpp)
-+else()
-+add_library(modman STATIC
-+            module.hpp
-+            module_manager.hpp
-+            module_manager.cpp)
-+endif()
- if(NOT WIN32)
+@@ -50,8 +50,13 @@ if(NOT WIN32)
    target_link_libraries(modman dl)
  endif()
  set_target_properties(modman PROPERTIES PREFIX "lib" VERSION 1.0.0 SOVERSION 1)
@@ -49,7 +43,7 @@ index 0aff593..a1bbcd5 100644
  ### Tests
  add_testdirectory(test)
 diff --git a/libmodman/Findlibmodman.cmake.in b/libmodman/Findlibmodman.cmake.in
-index 8459c7f..e9c97e5 100644
+index 8459c7f..efad9d7 100644
 --- a/libmodman/Findlibmodman.cmake.in
 +++ b/libmodman/Findlibmodman.cmake.in
 @@ -12,7 +12,7 @@
@@ -57,7 +51,7 @@ index 8459c7f..e9c97e5 100644
  # Find module_manager.hpp and the corresponding library (libmodman.so)
  FIND_PATH(LIBMODMAN_INCLUDE_DIR libmodman/module_manager.hpp)
 -FIND_LIBRARY(LIBMODMAN_LIBRARIES NAMES modman)
-+FIND_LIBRARY(LIBMODMAN_LIBRARIES NAMES modman libmodman)
++FIND_LIBRARY(LIBMODMAN_LIBRARIES NAMES modman libmodman NAMES_PER_DIR)
  
  # Set library version
  SET(LIBMODMAN_VERSION @PROJECT_VERSION@)
