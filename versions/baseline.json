@@ -412,6 +412,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "azure-security-keyvault-administration-cpp": {
+      "baseline": "4.0.0-beta.2",
+      "port-version": 0
+    },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.1.0",
       "port-version": 0
