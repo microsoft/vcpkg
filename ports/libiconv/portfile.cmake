@@ -20,6 +20,7 @@ vcpkg_extract_source_archive_ex(
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
         0004-ModuleFileName.patch
+        clang-fortify.patch # ported from https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=522aea1093a598246346b3e1c426505c344fe19a
 )
 
 if (NOT VCPKG_TARGET_IS_ANDROID)
