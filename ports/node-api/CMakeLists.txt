@@ -8,6 +8,8 @@ add_custom_command(
           /def:${CMAKE_CURRENT_BINARY_DIR}/node.def
           /out:${CMAKE_CURRENT_BINARY_DIR}/node.lib
           ${CMAKE_STATIC_LINKER_FLAGS}
+          $<$<CONFIG:Debug>:${CMAKE_STATIC_LINKER_FLAGS_DEBUG}>
+          $<$<CONFIG:Release>:${CMAKE_STATIC_LINKER_FLAGS_RELEASE}>
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generateNodeLibDef.js
   COMMENT "Building node.lib"
 )
