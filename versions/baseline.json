@@ -5730,7 +5730,7 @@
     },
     "opengl-registry": {
       "baseline": "2022-09-29",
-      "port-version": 0
+      "port-version": 1
     },
     "openh264": {
       "baseline": "2021-03-16",
@@ -8130,6 +8130,10 @@
     },
     "vcpkg-qmake": {
       "baseline": "2022-11-16",
+      "port-version": 0
+    },
+    "vcpkg-spdx": {
+      "baseline": "3.19",
       "port-version": 0
     },
     "vcpkg-tool-bazel": {

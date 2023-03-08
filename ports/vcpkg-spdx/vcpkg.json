@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-spdx",
+  "version": "3.19",
+  "description": "Port maintainer function for accessing SPDX License List data.",
+  "license": "MIT",
+  "supports": "native"
+}

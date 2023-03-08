@@ -19,13 +19,6 @@ file(COPY
   DESTINATION "${CURRENT_PACKAGES_DIR}/share/opengl"
 )
 
-# Using the Makefile because it is the smallest file with a complete copy of the license text
-file(
-  INSTALL "${SOURCE_PATH}/xml/Makefile"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright
-)
-
 # pc layout from cygwin (consumed in xserver!)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/khronos-opengl-registry.pc" [=[
 prefix=${pcfiledir}/../..
@@ -35,3 +28,16 @@ Name: khronos-opengl-registry
 Description: Khronos OpenGL registry
 Version: git4594c03239fb76580bc5d5a13acb2a8f563f0158
 ]=])
+
+# grep -R -B1 "SPDX-License-Identifier: " packages/opengl-registry_<TRIPLET>
+vcpkg_spdx_license_file(MIT)
+vcpkg_spdx_license_file(Apache-2.0)
+vcpkg_install_copyright(FILE_LIST "${MIT}" "${Apache-2.0}" COMMENT [[
+Most headers are
+Copyright 2013-2020 The Khronos Group Inc.
+SPDX-License-Identifier: MIT
+
+Some headers are
+Copyright 2008-2020 The Khronos Group Inc.
+SPDX-License-Identifier: Apache-2.0
+]])
