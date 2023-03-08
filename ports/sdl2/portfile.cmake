@@ -1,9 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF release-${VERSION}
-    SHA512 af50ae4dd86ee5827b27e4789c3bb071ea8e3e31e5e8d6cf7d66eef5ae9f3b9683f4adc92b5a30e15513ff6e2773f5978cdbd6484e1e259b1153303ae123539f
+    REF "release-${VERSION}"
+    SHA512 b795810fdf18affd3a03f79354e8ac5525f1023b27cdf7858d463781c5977eea8b34e39c089f71c3ca2d23722af55a3910af79f70c021f40c6281ab1476e1818
     HEAD_REF main
     PATCHES
         deps.patch

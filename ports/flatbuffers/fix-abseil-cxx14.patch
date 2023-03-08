@@ -1,0 +1,13 @@
+diff --git a/include/flatbuffers/base.h b/include/flatbuffers/base.h
+index 86688cc6e40..219b6d308ac 100644
+--- a/include/flatbuffers/base.h
++++ b/include/flatbuffers/base.h
+@@ -233,7 +233,7 @@ namespace flatbuffers {
+       }
+       #define FLATBUFFERS_HAS_STRING_VIEW 1
+     // Check for absl::string_view
+-    #elif __has_include("absl/strings/string_view.h")
++    #elif __has_include("absl/strings/string_view.h") && (__cplusplus >= 201411)
+       #include "absl/strings/string_view.h"
+       namespace flatbuffers {
+         typedef absl::string_view string_view;

@@ -139,6 +139,11 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        },
+        {
           "$package": "PhysFS",
           "name": "physfs"
         },
