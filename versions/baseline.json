@@ -1277,8 +1277,8 @@
       "port-version": 0
     },
     "bullet3": {
-      "baseline": "3.22",
-      "port-version": 2
+      "baseline": "3.25",
+      "port-version": 0
     },
     "bustache": {
       "baseline": "1.1.0",
