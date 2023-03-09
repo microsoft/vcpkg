@@ -9,9 +9,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_DEMOS=OFF
         -DBUILD_SHARED=${KEYSTONE_BUILD_SHARED}
@@ -19,21 +18,21 @@ vcpkg_configure_cmake(
         -DINSTALL_STATIC=${KEYSTONE_BUILD_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DLLS})
 endif()
 
 file(INSTALL
-    ${SOURCE_PATH}/include/chipmunk
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    "${SOURCE_PATH}/include/chipmunk"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
