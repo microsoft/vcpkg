@@ -9,6 +9,11 @@
   "dependencies": [
     "darts-clone",
     "marisa-trie",
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
     "rapidjson",
     "tclap",
     {
