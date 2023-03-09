@@ -5141,8 +5141,8 @@
       "port-version": 2
     },
     "mmx": {
-      "baseline": "2019-09-29",
-      "port-version": 1
+      "baseline": "2022-03-27",
+      "port-version": 0
     },
     "mnn": {
       "baseline": "1.1.0",
