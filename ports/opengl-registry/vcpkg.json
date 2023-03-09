@@ -1,10 +1,10 @@
 {
   "name": "opengl-registry",
   "version-date": "2022-09-29",
-  "port-version": 2,
+  "port-version": 1,
   "description": "the API and Extension registries for the OpenGL family APIs",
   "homepage": "https://github.com/KhronosGroup/OpenGL-Registry",
-  "supports": "!uwp & !xbox",
+  "supports": "!xbox",
   "dependencies": [
     "egl-registry"
   ]
