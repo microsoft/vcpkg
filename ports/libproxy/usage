@@ -1,4 +1,4 @@
-The package libproxy provides CMake targets:
+libproxy provides CMake variables:
 
     find_package(libproxy REQUIRED)
     target_include_directories(main PRIVATE ${LIBPROXY_INCLUDE_DIR})
