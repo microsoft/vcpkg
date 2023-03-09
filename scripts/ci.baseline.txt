@@ -547,9 +547,7 @@ mecab:x86-windows        = skip
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-mfl:x64-linux=skip
-mfl:x64-osx=skip
-mfl:arm64-osx=skip
+mfl:x64-linux=fail # requires a c++20 compiler
 milerius-sfml-imgui:x64-windows-static=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
