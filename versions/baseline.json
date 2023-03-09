@@ -3626,7 +3626,7 @@
     },
     "kubernetes": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kuku": {
       "baseline": "2.1",
