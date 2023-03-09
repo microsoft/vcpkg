@@ -1790,7 +1790,7 @@
     },
     "cppxaml": {
       "baseline": "0.0.16",
-      "port-version": 0
+      "port-version": 1
     },
     "cppzmq": {
       "baseline": "4.9.0",
@@ -8254,11 +8254,11 @@
     },
     "vulkan-memory-allocator": {
       "baseline": "3.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vvenc": {
       "baseline": "1.7.0",
