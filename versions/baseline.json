@@ -1762,7 +1762,7 @@
     },
     "cppkafka": {
       "baseline": "0.3.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cppmicroservices": {
       "baseline": "3.6.0",
