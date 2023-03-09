@@ -11,8 +11,7 @@
     "marisa-trie",
     {
       "name": "pkgconf",
-      "host": true,
-      "default-features": false
+      "host": true
     },
     "rapidjson",
     "tclap",
