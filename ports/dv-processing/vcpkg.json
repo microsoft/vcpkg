@@ -1,6 +1,7 @@
 {
   "name": "dv-processing",
   "version": "1.7.8",
+  "port-version": 1,
   "description": "Generic algorithms for event cameras.",
   "homepage": "https://gitlab.com/inivation/dv/dv-processing",
   "license": "Apache-2.0",
@@ -12,13 +13,15 @@
     "boost-nowide",
     "boost-property-tree",
     "boost-stacktrace",
-    "boost-tti",
     "cli11",
     "eigen3",
     "fmt",
     "libcaer",
     "lz4",
-    "opencv4",
+    {
+      "name": "opencv4",
+      "default-features": false
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -28,7 +31,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib",
     "zstd"
   ]
 }
