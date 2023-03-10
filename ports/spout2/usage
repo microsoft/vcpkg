@@ -1,0 +1,9 @@
+spout2 provides CMake targets:
+
+    # Dynamic Linkage
+    find_package(cmake CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spout2::Spout Spout2::SpoutLibrary)
+
+    # Static Linkage
+    find_package(cmake CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spout2::Spout_static Spout2::SpoutLibrary)

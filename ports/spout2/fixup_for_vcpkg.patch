@@ -1,0 +1,28 @@
+Subject: [PATCH] fixup for vcpkg
+---
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision a26f74a11d43ef74778d73b6741d6805462702c0)
++++ b/CMakeLists.txt	(revision d07894dfe4f206fef673bed3a5eafd2eb0fd0671)
+@@ -102,7 +102,7 @@
+ 			EXPORT
+ 				spout2-targets
+ 			DESTINATION
+-				${CMAKE_INSTALL_LIBDIR}/cmake/spout2
++				${CMAKE_INSTALL_PREFIX}/share/spout2/cmake
+ 			NAMESPACE
+ 				Spout2::
+ 		)
+@@ -111,7 +111,7 @@
+ 			FILES
+ 				${CMAKE_CURRENT_SOURCE_DIR}/spout2-config.cmake
+ 			DESTINATION
+-				${CMAKE_INSTALL_LIBDIR}/cmake/spout2
++				${CMAKE_INSTALL_PREFIX}/share/spout2/cmake
+ 		)
+ 		
+ 	endif()
