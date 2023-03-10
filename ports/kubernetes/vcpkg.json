@@ -1,6 +1,6 @@
 {
   "name": "kubernetes",
-  "version-date": "2022-11-09",
+  "version": "0.6.0",
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "license": "Apache-2.0",

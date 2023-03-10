@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 7131b0980edf4dbd16ffd29edde24b4f31c8a4813eda7dfe93fe11f9eb102ef682651a037a12bf671b4617a673e35d97106172828328e47de51d0baddae22ab6
     HEAD_REF master
-    PATCHES
-        static-idllib.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
