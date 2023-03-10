@@ -1,0 +1,22 @@
+{
+  "name": "nativefiledialog-extended",
+  "version-semver": "1.0.1",
+  "description": "Native file dialog library with C and C++ bindings, based on mlabbe/nativefiledialog.",
+  "homepage": "https://github.com/btzy/nativefiledialog-extended",
+  "license": "Zlib",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
