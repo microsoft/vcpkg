@@ -18,21 +18,31 @@ vcpkg_from_gitlab(
 file(GLOB CMAKEMOD_FILES "${CMAKEMOD_SOURCE_PATH}/*")
 file(COPY ${CMAKEMOD_FILES} DESTINATION "${SOURCE_PATH}/cmake/modules")
 
-set(VCPKG_BUILD_TYPE release) # header-only
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools   ENABLE_UTILITIES
+)
+
+set(VCPKG_BUILD_TYPE release) # no lib binaries
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # writes to include/cmake/version.hpp
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_lz4=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_zstd=ON
         -DENABLE_TESTS=OFF
         -DENABLE_SAMPLES=OFF
         -DENABLE_PYTHON=OFF
-        -DENABLE_UTILITIES=OFF
         -DBUILD_CONFIG_VCPKG=ON
+#[[ WIP ]] -DENABLE_UTILITIES=ON
+#[[ WIP ]] -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 vcpkg_cmake_install()
+
+# TODO: vcpkg_copy_tools
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 

@@ -32,5 +32,10 @@
       "host": true
     },
     "zstd"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build utilities"
+    }
+  }
 }
