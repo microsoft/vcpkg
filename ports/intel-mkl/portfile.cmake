@@ -1,6 +1,7 @@
-# Due to the complexity involved, this package doesn't install MKL. It instead verifies that MKL is installed.
-# Other packages can depend on this package to declare a dependency on MKL.
-# If this package is installed, we assume that MKL is properly installed.
+# This package installs Intel MKL on Linux and Windows for x64 and on other platforms tries to search for it.
+# The installation for the platforms are:
+#   - Windows: ilp64, intel_thread (!static_crt), sequential(static_crt)
+#   - Linux: ilp64, intel_thread
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
@@ -9,12 +10,12 @@ set(MKL_REQUIRED_VERSION "20200000")
 # https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19150/w_onemkl_p_2023.0.0.25930_offline.exe # windows
 # https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19116/m_onemkl_p_2023.0.0.25376_offline.dmg # macos
 # https://registrationcenter-download.intel.com/akdlm/irc_nas/19138/l_onemkl_p_2023.0.0.25398_offline.sh # linux
-
+set(sha "")
 if(VCPKG_TARGET_IS_WINDOWS)
   set(filename w_onemkl_p_2023.0.0.25930_offline.exe)
   set(magic_number 19150)
   set(sha a3eb6b75241a2eccb73ed73035ff111172c55d3fa51f545c7542277a155df84ff72fc826621711153e683f84058e64cb549c030968f9f964531db76ca8a3ed46)
-elseif(VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_OSX AND 0)
   set(filename m_onemkl_p_2023.0.0.25376_offline.dmg)
   set(magic_number 19116)
   set(sha 7b9b8c004054603e6830fb9b9c049d5a4cfc0990c224cb182ac5262ab9f1863775a67491413040e3349c590e2cca58edcfc704db9f3b9f9faa8b5b09022cd2af)
@@ -43,20 +44,13 @@ else()
                           "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
   endif()
 
-  # file(STRINGS ${MKL_ROOT}/include/mkl_version.h MKL_VERSION_DEFINITION REGEX "__INTEL_MKL((_MINOR)|(_UPDATE))?__")
-  # string(REGEX MATCHALL "([0-9]+)" MKL_VERSION ${MKL_VERSION_DEFINITION})
-  # list(GET MKL_VERSION 0 MKL_VERSION_MAJOR)
-  # list(GET MKL_VERSION 1 MKL_VERSION_MINOR)
-  # list(GET MKL_VERSION 2 MKL_VERSION_UPDATE)
-
-  file(STRINGS ${MKL_ROOT}/include/mkl_version.h MKL_VERSION_DEFINITION REGEX "INTEL_MKL_VERSION")
+  file(STRINGS "${MKL_ROOT}/include/mkl_version.h" MKL_VERSION_DEFINITION REGEX "INTEL_MKL_VERSION")
   string(REGEX MATCH "([0-9]+)" MKL_VERSION ${MKL_VERSION_DEFINITION})
 
   if (MKL_VERSION LESS MKL_REQUIRED_VERSION)
       message(FATAL_ERROR "MKL ${MKL_VERSION} is found but ${MKL_REQUIRED_VERSION} is required. Please download and install a more recent version of MKL from:"
                           "\n    https://registrationcenter.intel.com/en/products/download/3178/\n")
   endif()
-
 endif()
 
 if(sha)
@@ -273,8 +267,11 @@ if(sha)
                       "${CURRENT_PACKAGES_DIR}/manual-tools"
                       )
 endif()
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/mkl/vcpkg-cmake-wrapper.cmake" @ONLY)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "bin\${MKL_DLL_GLOB" "bin/\${MKL_DLL_GLOB")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" [["../bincompiler" "../compiler/lib"]] [["bin" "../bincompiler" "../compiler/lib"]])
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if(NOT sha)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/mkl/vcpkg-cmake-wrapper.cmake" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "bin\${MKL_DLL_GLOB" "bin/\${MKL_DLL_GLOB")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" [["../bincompiler" "../compiler/lib"]] [["bin" "../bincompiler" "../compiler/lib"]])
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
