@@ -1,11 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO theAeon/libleidenalg
-    REF "v${VERSION}"
-    SHA512 8ce68de2d16462dbeb8d6d0bf7740e20d7977da6da4dff953e60f9dfc5964149be0fb85026a49d0b41589af4ef3454c64253c6a6f6fdaa84e460b0756896fb42
-    HEAD_REF master
+    REF 748dfca386b997fe5a140e21b9ef0f78a6e95ee6
+    SHA512 c88f0d9912981b8179d58c7084761e9123e2d7fdd4d971c348f1c0ec066b77914cf5592e0cdff21e371262fd28bbb50f2a09b06404adf2a1468f2f20c228a42f
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")

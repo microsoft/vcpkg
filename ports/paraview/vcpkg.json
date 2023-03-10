@@ -1,7 +1,7 @@
 {
   "name": "paraview",
-  "version": "5.9.1",
-  "port-version": 2,
+  "version": "5.11.0",
+  "port-version": 1,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
   "license": "BSD-3-Clause",
@@ -11,6 +11,7 @@
     "boost-format",
     "cgns",
     "protobuf",
+    "qt5compat",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -82,7 +83,10 @@
       ]
     },
     "tools": {
-      "description": "Build paraview tools"
+      "description": "Build paraview tools",
+      "dependencies": [
+        "qtsvg"
+      ]
     },
     "vtkm": {
       "description": "enables vtkm for the build of paraview",

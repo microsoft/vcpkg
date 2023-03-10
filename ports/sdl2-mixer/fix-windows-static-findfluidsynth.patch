@@ -1,0 +1,13 @@
+diff --git a/cmake/FindFluidSynth.cmake b/cmake/FindFluidSynth.cmake
+index 435840b6..6fd9db7b 100644
+--- a/cmake/FindFluidSynth.cmake
++++ b/cmake/FindFluidSynth.cmake
+@@ -1,7 +1,7 @@
+ include(FindPackageHandleStandardArgs)
+ 
+ find_library(FluidSynth_LIBRARY
+-    NAMES fluidsynth
++    NAMES fluidsynth libfluidsynth
+ )
+ 
+ find_path(FluidSynth_INCLUDE_PATH

@@ -17,6 +17,7 @@ set(PATCHES
     0009-bz2d.patch
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
+    0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
