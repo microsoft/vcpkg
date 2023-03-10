@@ -2,10 +2,16 @@
   "name": "dv-processing",
   "version": "1.7.8",
   "port-version": 1,
-  "description": "Generic algorithms for event cameras.",
+  "description": "Generic algorithms for event cameras. (C++20 required.)",
   "homepage": "https://gitlab.com/inivation/dv/dv-processing",
   "license": "Apache-2.0",
   "dependencies": [
+    {
+      "name": "boost-asio",
+      "features": [
+        "ssl"
+      ]
+    },
     "boost-callable-traits",
     "boost-circular-buffer",
     "boost-geometry",

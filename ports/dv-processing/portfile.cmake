@@ -42,7 +42,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-# TODO: vcpkg_copy_tools
+vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 
