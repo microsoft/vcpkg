@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE # writes to include/cmake/version.hpp
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_lz4=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_zstd=ON
@@ -46,4 +47,5 @@ vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices d
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

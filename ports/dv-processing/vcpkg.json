@@ -6,6 +6,7 @@
   "homepage": "https://gitlab.com/inivation/dv/dv-processing",
   "license": "Apache-2.0",
   "dependencies": [
+    "boost-algorithm",
     {
       "name": "boost-asio",
       "features": [
@@ -14,6 +15,8 @@
     },
     "boost-callable-traits",
     "boost-circular-buffer",
+    "boost-core",
+    "boost-endian",
     "boost-geometry",
     "boost-lockfree",
     "boost-nowide",
