@@ -38,12 +38,12 @@ vcpkg_cmake_configure(
         -DENABLE_SAMPLES=OFF
         -DENABLE_PYTHON=OFF
         -DBUILD_CONFIG_VCPKG=ON
-#[[ WIP ]] -DENABLE_UTILITIES=ON
-#[[ WIP ]] -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
+if(ENABLE_UTILITIES)
+    vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 
