@@ -6714,7 +6714,7 @@
     },
     "quickfast": {
       "baseline": "1.5",
-      "port-version": 2
+      "port-version": 3
     },
     "quickfix": {
       "baseline": "1.15.1",
