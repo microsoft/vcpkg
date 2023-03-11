@@ -16,7 +16,7 @@
   ],
   "features": {
     "dx": {
-      "description": "Build SpoutDX DirectX11 support library"
+      "description": "Build SpoutDX DirectX11 support library. A sub-set of the Spout SDK for applications using DirectX rather than OpenGL."
     }
   }
 }

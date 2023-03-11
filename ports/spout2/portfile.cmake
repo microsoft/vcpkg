@@ -17,6 +17,7 @@ else()
 endif()
 
 if("dx" IN_LIST FEATURES)
+    message(STATUS "Enabled building SpoutDX")
     list(APPEND OPTIONS -DSPOUT_BUILD_SPOUTDX=ON)
 endif()
 
@@ -24,7 +25,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_INSTALL_ALL=OFF
-        "${OPTIONS}"
+        ${OPTIONS}
 )
 
 vcpkg_cmake_install()
