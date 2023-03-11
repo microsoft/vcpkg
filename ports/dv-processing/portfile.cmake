@@ -27,7 +27,7 @@ vcpkg_check_features(
 set(VCPKG_BUILD_TYPE release) # no lib binaries
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE # writes to include/cmake/version.hpp
+    DISABLE_PARALLEL_CONFIGURE # writes to include/dv-processing/version.hpp
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
