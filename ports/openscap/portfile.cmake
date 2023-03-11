@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
-    REF 3a4c635691380fa990a226acc8558db35d7ebabc #1.3.1
-    SHA512 12681d43b2ce067c5a5c4eb47e14d91d6e9362b1f98f1d35b05d79ad84c7ee8c29f438eaae8e8465033155e500bb0f936eb79af46fab15e4a07e03c6be8b655d
+    REF 55efbfda0f617e05862ab6ed4862e10dbee52b03 #1.3.7
+    SHA512 aa38e45970c4591579fa808359d0246f19e18ecf04b69f6fdfa91047d6cea4e7369e1bdadee6c5e3e3a1a44faf5bf0ab30e2ac141a0bb745b823b8012018b3a9
     HEAD_REF dev
-    PATCHES
-        fix-build.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
