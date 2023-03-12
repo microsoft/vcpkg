@@ -16,22 +16,19 @@ else()
     list(APPEND OPTIONS -DSPOUT_BUILD_CMT=OFF)
 endif()
 
-if("dx" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DSPOUT_BUILD_SPOUTDX=ON)
-else()
-    list(APPEND OPTIONS -DSPOUT_BUILD_SPOUTDX=OFF)
-endif()
-
-if("c" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DSPOUT_BUILD_LIBRARY=ON)
-else()
-    list(APPEND OPTIONS -DSPOUT_BUILD_LIBRARY=OFF)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dx              SPOUT_BUILD_SPOUTDX
+        c               SPOUT_BUILD_LIBRARY
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_INSTALL_ALL=OFF
+        -DSPOUT_BUILD_SPOUTDX=${SPOUT_BUILD_SPOUTDX}
+        -DSPOUT_BUILD_LIBRARY=${SPOUT_BUILD_LIBRARY}
         ${OPTIONS}
 )
 
