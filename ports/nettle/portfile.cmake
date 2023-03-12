@@ -21,6 +21,17 @@ vcpkg_from_gitlab(
         ${extra_patches}
 )
 
+# Temporarily set to 1 to re-generate the lists of exported symbols.
+# This is needed when the version is bumped.
+set(GENERATE_SYMBOLS 1)
+if(GENERATE_SYMBOLS)
+    if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
+        set(GENERATE_SYMBOLS 0)
+    else()
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    endif()
+endif()
+
 vcpkg_list(SET OPTIONS)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND OPTIONS --disable-static)
@@ -101,3 +112,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYINGv3")
+
+if(GENERATE_SYMBOLS)
+    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
+    lib_to_def(BASENAME nettle REGEX "_*nettle_")
+    lib_to_def(BASENAME hogweed REGEX "_*nettle_")
+endif()
