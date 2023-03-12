@@ -2,11 +2,14 @@ spout2 provides CMake targets:
 
     # Dynamic Linkage
     find_package(Spout2 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Spout2::Spout Spout2::SpoutLibrary)
+    target_link_libraries(main PRIVATE Spout2::Spout)
 
     # Static Linkage
     find_package(Spout2 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Spout2::Spout_static Spout2::SpoutLibrary)
+    target_link_libraries(main PRIVATE Spout2::Spout_static)
+
+    # SpoutLibrary
+    target_link_libraries(main PRIVATE Spout2::SpoutLibrary)
 
     # SpoutDX
     target_link_libraries(main PRIVATE Spout2::SpoutDX)

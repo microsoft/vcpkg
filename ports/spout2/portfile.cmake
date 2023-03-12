@@ -17,8 +17,15 @@ else()
 endif()
 
 if("dx" IN_LIST FEATURES)
-    message(STATUS "Enabled building SpoutDX")
     list(APPEND OPTIONS -DSPOUT_BUILD_SPOUTDX=ON)
+else()
+    list(APPEND OPTIONS -DSPOUT_BUILD_SPOUTDX=OFF)
+endif()
+
+if("c" IN_LIST FEATURES)
+    list(APPEND OPTIONS -DSPOUT_BUILD_LIBRARY=ON)
+else()
+    list(APPEND OPTIONS -DSPOUT_BUILD_LIBRARY=OFF)
 endif()
 
 vcpkg_cmake_configure(
