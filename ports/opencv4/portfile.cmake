@@ -50,6 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"      WITH_CUBLAS
  "cuda"      WITH_CUDA
  "cudnn"     WITH_CUDNN
+ "dnn-cuda"  OPENCV_DNN_CUDA
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "freetype"  WITH_FREETYPE
