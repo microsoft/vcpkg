@@ -2997,8 +2997,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "6.0.0",
-      "port-version": 1
+      "baseline": "7.0.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
