@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${COLMAP_REF}"
-    SHA512 2a5d051592182264deceec861001fc4c2913ca4255589d6eac30b9e8619bf93b3143797d9f9eb7658150d30b2ae3bcc5297602e1b386a6267778ed342c1edb67
+    SHA512 2aad3c39efee025bebdbec41215f32968c3a63e160f9e7de0a6a2bf2d2c96bb1c20af0e10173d1d81ed4712e58fd97e7c8aabef8f9c47cc542d89b14c6ae420d
     HEAD_REF dev
     PATCHES
         fix-dependencies.patch
