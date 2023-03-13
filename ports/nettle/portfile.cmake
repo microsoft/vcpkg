@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
     SHA512 ed1fa1b77afd61fafa15b63f4324809fa69569691d16b93f403c83794672859a1760d102902349f93b1632de568c36e06a0e2b5b61877082b1982dfcf2c52172
     HEAD_REF master
     PATCHES 
+        subdirs.patch
         fix-libdir.patch
         compile.patch
         host-tools.patch
