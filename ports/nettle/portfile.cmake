@@ -24,7 +24,7 @@ vcpkg_from_gitlab(
 
 # Temporarily set to 1 to re-generate the lists of exported symbols.
 # This is needed when the version is bumped.
-set(GENERATE_SYMBOLS 1)
+set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
     if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
         set(GENERATE_SYMBOLS 0)
