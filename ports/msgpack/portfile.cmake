@@ -23,8 +23,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME msgpackc-cxx CONFIG_PATH lib/cmake/msgpackc-cxx)
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/msgpack)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
