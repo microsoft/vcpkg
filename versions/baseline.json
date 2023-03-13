@@ -1574,7 +1574,7 @@
     },
     "cminpack": {
       "baseline": "1.3.8",
-      "port-version": 1
+      "port-version": 2
     },
     "cmocka": {
       "baseline": "2020-08-01",
@@ -2997,8 +2997,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "6.0.0",
-      "port-version": 1
+      "baseline": "7.0.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
@@ -3846,7 +3846,7 @@
     },
     "libde265": {
       "baseline": "1.0.8",
-      "port-version": 6
+      "port-version": 7
     },
     "libdeflate": {
       "baseline": "1.17",
@@ -4030,7 +4030,7 @@
     },
     "libiconv": {
       "baseline": "1.17",
-      "port-version": 0
+      "port-version": 1
     },
     "libics": {
       "baseline": "1.6.5",
@@ -4326,7 +4326,7 @@
     },
     "libqrencode": {
       "baseline": "4.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "librabbitmq": {
       "baseline": "0.11.0",
@@ -4781,8 +4781,8 @@
       "port-version": 0
     },
     "llgl": {
-      "baseline": "2019-08-15",
-      "port-version": 3
+      "baseline": "2023-03-05",
+      "port-version": 0
     },
     "llhttp": {
       "baseline": "8.1.0",
@@ -6118,7 +6118,7 @@
     },
     "plplot": {
       "baseline": "5.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "plustache": {
       "baseline": "0.4.0",
@@ -6714,7 +6714,7 @@
     },
     "quickfast": {
       "baseline": "1.5",
-      "port-version": 2
+      "port-version": 3
     },
     "quickfix": {
       "baseline": "1.15.1",
@@ -7558,6 +7558,10 @@
     },
     "stb": {
       "baseline": "2022-09-09",
+      "port-version": 0
+    },
+    "stdexec": {
+      "baseline": "2023-03-05",
       "port-version": 0
     },
     "stduuid": {
