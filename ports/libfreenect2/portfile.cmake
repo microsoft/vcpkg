@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenKinect/libfreenect2
-    REF fd64c5d9b214df6f6a55b4419357e51083f15d93 #v0.2.1
-    SHA512 34f3f407dbc47a73b4fec92965943ba403916898dcb38ccbc02205f027531fe07b60a13842ef4225d27f6a2e11ba7d5925064faeaea29b34062b6daaadc52839
+    REF "v${VERSION}"
+    SHA512 0fcee5471deb013d2b57581ef8d8838f652dfed2f457c4240d5b754674e949c59337a167ac74ad04b25ace69af470a7e014e0474a688d930a3323946feadee67
     HEAD_REF master
     PATCHES
         fix-dependency-libusb.patch
         fix-macbuild.patch
 )
-
-vcpkg_replace_string("${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "(WIN32)" "(WIN32_DISABLE)")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
