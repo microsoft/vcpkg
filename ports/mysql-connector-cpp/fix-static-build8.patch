@@ -1,5 +1,5 @@
 diff --git a/cdk/cmake/dependency.cmake b/cdk/cmake/dependency.cmake
-index a1775da..f9c3edf 100644
+index e928e71..8df8a76 100644
 --- a/cdk/cmake/dependency.cmake
 +++ b/cdk/cmake/dependency.cmake
 @@ -57,6 +57,7 @@ set(EXT_FWD
@@ -10,20 +10,20 @@ index a1775da..f9c3edf 100644
  )
  
  set(EXT_DIR ${CMAKE_CURRENT_LIST_DIR}/ext CACHE INTERNAL "external project utils location")
-@@ -117,7 +118,7 @@ function(add_ext NAME)
-   endif()
- 
-   foreach(var ${EXT_FWD})
--    if(${var})
-+    if(DEFINED ${var})
-        message("-- option ${var}: ${${var}}")
-        list(APPEND cmake_opts -D${var}=${${var}})
+@@ -204,7 +205,7 @@ function(add_ext NAME HEADER)
      endif()
+ 
+     foreach(var ${EXT_FWD})
+-      if(${var})
++      if(DEFINED ${var})
+         message("-- option ${var}: ${${var}}")
+         list(APPEND cmake_opts -D${var}=${${var}})
+       endif()
 diff --git a/cdk/extra/lz4/CMakeLists.txt b/cdk/extra/lz4/CMakeLists.txt
-index 4c3aab0..a1596af 100644
+index 4c3aab0..3225bb9 100644
 --- a/cdk/extra/lz4/CMakeLists.txt
 +++ b/cdk/extra/lz4/CMakeLists.txt
-@@ -34,6 +34,10 @@ include(platform)
+@@ -34,6 +34,11 @@ include(platform)
  
  enable_pic()
  
@@ -31,13 +31,14 @@ index 4c3aab0..a1596af 100644
 +  message("lz4 using static runtime library")
 +  set_msvcrt(STATIC)
 +endif (MSVC AND STATIC_MSVCRT)
++
  add_library(lz4 STATIC
      lz4.c
      lz4frame.c
-diff --git a/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt b/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
-index efe6b97..377a817 100644
---- a/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
-+++ b/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
+diff --git a/cdk/extra/protobuf/protobuf-3.19.6/cmake/CMakeLists.txt b/cdk/extra/protobuf/protobuf-3.19.6/cmake/CMakeLists.txt
+index 2bc8309..e813bf8 100644
+--- a/cdk/extra/protobuf/protobuf-3.19.6/cmake/CMakeLists.txt
++++ b/cdk/extra/protobuf/protobuf-3.19.6/cmake/CMakeLists.txt
 @@ -186,9 +186,9 @@ else (protobuf_BUILD_SHARED_LIBS)
    # Prior to CMake 3.15, the MSVC runtime library was pushed into the same flags
    # making programmatic control difficult.  Prefer the functionality in newer
@@ -61,10 +62,10 @@ index efe6b97..377a817 100644
  
  if (MSVC)
 diff --git a/cdk/extra/zlib/CMakeLists.txt b/cdk/extra/zlib/CMakeLists.txt
-index 237c2c3..7746bd0 100644
+index 237c2c3..2c1880b 100644
 --- a/cdk/extra/zlib/CMakeLists.txt
 +++ b/cdk/extra/zlib/CMakeLists.txt
-@@ -162,6 +162,10 @@ endif()
+@@ -162,6 +162,11 @@ endif()
  
  # -------------------------------------------------------------------------
  
@@ -72,14 +73,15 @@ index 237c2c3..7746bd0 100644
 +  message("zlib using static runtime library")
 +  set_msvcrt(STATIC)
 +endif (MSVC AND STATIC_MSVCRT)
++
  ADD_LIBRARY(zlib STATIC
    ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
  
 diff --git a/cdk/extra/zstd/CMakeLists.txt b/cdk/extra/zstd/CMakeLists.txt
-index 2109f3e..a60034e 100644
+index 2109f3e..499df05 100644
 --- a/cdk/extra/zstd/CMakeLists.txt
 +++ b/cdk/extra/zstd/CMakeLists.txt
-@@ -57,6 +57,10 @@ SET(ZSTD_SRCS
+@@ -57,6 +57,11 @@ SET(ZSTD_SRCS
    lib/dictBuilder/zdict.c
  )
  
@@ -87,6 +89,7 @@ index 2109f3e..a60034e 100644
 +  message("zstd using static runtime library")
 +  set_msvcrt(STATIC)
 +endif (MSVC AND STATIC_MSVCRT)
++
  ADD_LIBRARY(zstd STATIC ${ZSTD_SRCS})
  set_target_properties(zstd PROPERTIES FOLDER "Misc")
  

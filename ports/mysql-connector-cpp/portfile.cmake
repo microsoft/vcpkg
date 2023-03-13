@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-connector-cpp
-    REF 8.0.30
-    SHA512 fd6d8a03ba66ca028b3748218c60a721c9e2c79867c6cf2ea95d2649d3a252e9bd307986b149897dcc1d24a11785666c5480225a20c4baba7c87b376b7289a13
+    REF 8.0.32
+    SHA512 b65c44ef05e3f6ec8613f7d09f6662fc1b4cce5fdf515dec43a20398605acc2555572b788a89b61d6ce835dab3f68183be6610750ae42a6be7d9c24c99ecaacf
     HEAD_REF master
     PATCHES
         fix-static-build8.patch
@@ -21,6 +21,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jdbc    WITH_JDBC
 )
+if("jdbc" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+    list(APPEND FEATURE_OPTIONS -DBOOST_ROOT=ON)
+    list(APPEND FEATURE_OPTIONS -DBoost_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
