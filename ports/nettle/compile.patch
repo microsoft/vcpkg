@@ -32,8 +32,8 @@ index b65ff4960..3887d0c8f 100644
  
  # For building the various *data.c programs. -lm needed for shadata.
  %$(EXEEXT_FOR_BUILD): %.c
--	$(CC_FOR_BUILD) $< $(CFLAGS) -lm -o $@
-+	$(CC_FOR_BUILD) $< $(CFLAGS) -o $@
+-	$(CC_FOR_BUILD) $< -lm -o $@
++	$(COMPILE) $(PRE_LDFLAGS) $(LDFLAGS) $(LIBS) $< -o $@
  
  # Explicit dependency.
  eccdata$(EXEEXT_FOR_BUILD): mini-gmp.c mini-gmp.h

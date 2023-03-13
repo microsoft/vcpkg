@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
-    REF e61df320747449322767e67534bd7bb6a9a6d2c8 # v5.1.119
-    SHA512 9dfce424af8600aaa2c0eac8bbb8f20b12cbd086d495c7e9e1ce2a45ae60242ee893608fc41c88ff6caa960821188e4cffd586b416ab891ee86d6e28aad54726
+    REF "v${VERSION}"
+    SHA512 d9351a6b67b8c1f38f70d252bcbaf3271f4242c1bbe453ffa1cd5281de4b78fb697f6741bccc0ddbe73bf5d9b79fd1d1ecf64a0ddfb288c67cc1077194603b2e
     HEAD_REF master
-    PATCHES
-        fix-CMakeLists-install.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
@@ -80,4 +78,4 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

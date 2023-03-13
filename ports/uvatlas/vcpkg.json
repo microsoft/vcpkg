@@ -1,13 +1,17 @@
 {
   "name": "uvatlas",
-  "version-date": "2022-12-15",
+  "version-date": "2023-02-06",
+  "port-version": 2,
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
   "license": "MIT",
   "supports": "windows | linux",
   "dependencies": [
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "(windows & !xbox) | linux"
+    },
     "directxmath",
     {
       "name": "directxmesh",
@@ -15,7 +19,12 @@
     },
     {
       "name": "directxtex",
+      "default-features": false,
       "platform": "!(uwp | linux)"
+    },
+    {
+      "name": "ms-gdkx",
+      "platform": "xbox"
     },
     {
       "name": "vcpkg-cmake",

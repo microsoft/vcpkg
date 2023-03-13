@@ -1,6 +1,6 @@
 vcpkg_download_distfile(
     ARCHIVE_PATH
-    URLS "https://www.apache.org/dyn/closer.lua?action=download&filename=arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
+    URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
     SHA512 c6198e5c9b8fe5ccd89e445c9252da44d8d7c9e0c8eb5a802fa0cabf89482fddf775ed383bac1acc9331bc3195d21df7ea02c4a73aa6ee163c2959f34175d650
 )

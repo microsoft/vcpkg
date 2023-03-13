@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF "${VERSION}"
-    SHA512 cc9fe9e504d01c74c488a8720317edf5909008d71eb332cf9c69991cff474657d2c3643eb3a735c047e28d54568ab886e5fea1038e6573d932ac215c3a6746a5
+    REF ${VERSION}
+    SHA512 d7382cda95ac215fafe52d6fc0361affe3d9569a0faa178a553547a5baa168a42550a5918a0bbe30630559200c155839078ae26e7fca8bf32fa45c90ed79248f
     HEAD_REF master
     PATCHES
+        fix-linux-error.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -35,22 +36,43 @@ list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
     #list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
 #endif()
 
+if("introspection" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
+    endif()
+    list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+else()
+    list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -Dcairo=disabled # Use Cairo graphics library
-        -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
+        ${OPTIONS}
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
@@ -76,7 +98,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -86,4 +108,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

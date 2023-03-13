@@ -11,7 +11,7 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSGPACK_BUILD_EXAMPLES=OFF
         -DMSGPACK_BUILD_TESTS=OFF
@@ -23,9 +23,9 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME msgpackc-cxx CONFIG_PATH lib/cmake/msgpackc-cxx)
 vcpkg_fixup_pkgconfig()
 
-#Clean
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/msgpack)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

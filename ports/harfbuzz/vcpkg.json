@@ -1,9 +1,10 @@
 {
   "name": "harfbuzz",
-  "version": "5.3.1",
+  "version": "7.0.0",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "freetype",
@@ -43,6 +44,20 @@
       "description": "icu support for harfbuzz",
       "dependencies": [
         "icu"
+      ]
+    },
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        "glib",
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        }
       ]
     }
   }
