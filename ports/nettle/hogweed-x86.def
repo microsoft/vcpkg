@@ -92,6 +92,8 @@ EXPORTS
      _nettle_curve25519
      _nettle_ecc_pm1_redc
      _nettle_ecc_pp1_redc
+     _nettle_ecc_mod_zero_p
+     _nettle_ecc_mod_equal_p
      _nettle_ecc_mod_add
      _nettle_ecc_mod_sub
      _nettle_ecc_mod_mul_1
@@ -106,8 +108,7 @@ EXPORTS
      _nettle_ecc_mod_inv
      _nettle_ecc_mod
      _nettle_cnd_copy
-     _nettle_mpz_limbs_cmp
-     _nettle_mpz_limbs_read_n
+     _nettle_sec_zero_p
      _nettle_mpz_limbs_copy
      _nettle_mpz_set_n
      _nettle_mpn_set_base256

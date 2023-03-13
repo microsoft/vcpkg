@@ -75,6 +75,10 @@ EXPORTS
      nettle_serpent128_set_key
      nettle_serpent192_set_key
      nettle_serpent256_set_key
+     nettle_sm3
+     nettle_sm3_init
+     nettle_sm3_update
+     nettle_sm3_digest
      nettle_sha3_256_shake
      nettle_sha3_512
      nettle_sha3_512_init
@@ -186,6 +190,7 @@ EXPORTS
      nettle_knuth_lfib_get
      nettle_knuth_lfib_get_array
      nettle_knuth_lfib_random
+     nettle_hmac_sm3
      nettle_hmac_streebog256
      nettle_hmac_streebog512
      nettle_hmac_sha512
@@ -195,6 +200,9 @@ EXPORTS
      nettle_hmac_sha1
      nettle_hmac_ripemd160
      nettle_hmac_md5
+     nettle_hmac_sm3_set_key
+     nettle_hmac_sm3_update
+     nettle_hmac_sm3_digest
      nettle_hmac_streebog512_set_key
      nettle_hmac_streebog512_update
      nettle_hmac_streebog512_digest
@@ -305,6 +313,8 @@ EXPORTS
      nettle_gcm_encrypt
      nettle_gcm_decrypt
      nettle_gcm_digest
+     _nettle_ghash_update
+     _nettle_ghash_set_key
      nettle_eax_aes128
      nettle_eax_aes128_set_key
      nettle_eax_aes128_set_nonce
@@ -388,6 +398,9 @@ EXPORTS
      nettle_ccm_digest
      nettle_ccm_encrypt_message
      nettle_ccm_decrypt_message
+     nettle_cbc_aes256_encrypt
+     nettle_cbc_aes192_encrypt
+     nettle_cbc_aes128_encrypt
      nettle_cbc_encrypt
      nettle_cbc_decrypt
      nettle_cast128
@@ -466,6 +479,14 @@ EXPORTS
      nettle_arcfour_crypt
      nettle_arcfour_set_key
      nettle_arcfour128_set_key
+     nettle_nist_keywrap16
+     nettle_nist_keyunwrap16
+     nettle_aes128_keywrap
+     nettle_aes192_keywrap
+     nettle_aes256_keywrap
+     nettle_aes128_keyunwrap
+     nettle_aes192_keyunwrap
+     nettle_aes256_keyunwrap
      nettle_aes256
      nettle_aes256_set_decrypt_key
      nettle_aes256_invert_key
@@ -483,14 +504,15 @@ EXPORTS
      nettle_aes_set_encrypt_key
      _nettle_aes_set_key
      _nettle_aes_invert
-     _nettle_aes_encrypt_table
-     nettle_aes128_encrypt
-     nettle_aes192_encrypt
      nettle_aes256_encrypt
+     nettle_aes192_encrypt
+     nettle_aes128_encrypt
+     _nettle_aes_encrypt_table
      nettle_aes_encrypt
      _nettle_aes_encrypt
-     nettle_aes128_decrypt
-     nettle_aes192_decrypt
      nettle_aes256_decrypt
+     nettle_aes192_decrypt
+     nettle_aes128_decrypt
+     _nettle_aes_decrypt_table
      nettle_aes_decrypt
      _nettle_aes_decrypt
