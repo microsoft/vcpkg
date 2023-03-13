@@ -26,15 +26,6 @@
         "bzip2"
       ]
     },
-    "force-avx": {
-      "description": "force building with AVX"
-    },
-    "force-avx2": {
-      "description": "force building with AVX2"
-    },
-    "force-sse42": {
-      "description": "force building with SSE 4.2"
-    },
     "jemalloc": {
       "description": "build with JeMalloc",
       "dependencies": [

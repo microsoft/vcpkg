@@ -27,9 +27,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "bzip2" WITH_BZ2
     "numa" WITH_NUMA
     "tbb" WITH_TBB
-    "force-sse42" FORCE_SSE42
-    "force-avx" FORCE_AVX
-    "force-avx2" FORCE_AVX2
 )
 
 vcpkg_cmake_configure(
