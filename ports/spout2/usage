@@ -17,3 +17,4 @@ spout2 provides CMake targets:
     Note: SpoutDX (`dx` feature) is not essential to use DirectX in Spout... It is a sub-set of the
           Spout SDK for applications using DirectX rather than OpenGL. It doesn't mean enabling
           DirectX ability for Spout. See https://github.com/leadedge/Spout2/tree/master/SPOUTSDK
+          It is more likely: 'Use only DirectX to implement Spout, and remove all codes that need OpenGL'.

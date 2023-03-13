@@ -16,7 +16,7 @@
   ],
   "features": {
     "c": {
-      "description": "The Spout SDK as a C-compatible dll that can be used with compilers other than Visual Studio."
+      "description": "The Spout SDK as a C-compatible library."
     },
     "dx": {
       "description": "A sub-set of the Spout SDK for applications using DirectX rather than OpenGL."
