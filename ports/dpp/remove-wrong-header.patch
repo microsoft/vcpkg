@@ -1,0 +1,13 @@
+diff --git a/src/dpp/user.cpp b/src/dpp/user.cpp
+index 0f5bce1..cdd7903 100644
+--- a/src/dpp/user.cpp
++++ b/src/dpp/user.cpp
+@@ -22,7 +22,7 @@
+ #include <dpp/discordevents.h>
+ #include <dpp/json.h>
+ #include <dpp/stringops.h>
+-#include "user.h"
++// #include "user.h"
+ 
+ using json = nlohmann::json;
+ 

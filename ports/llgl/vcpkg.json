@@ -1,10 +1,16 @@
 {
   "name": "llgl",
   "version-string": "2019-08-15",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Low Level Graphics Library (LLGL) is a thin abstraction layer for the modern graphics APIs OpenGL, Direct3D, Vulkan, and Metal.",
   "homepage": "https://github.com/LukasBanana/LLGL",
   "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "direct3d11": {
       "description": "Support for direct3d11"
