@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF 9db0efadba16e1d884164d348f556922cfc80c50 #v2.007.009
     SHA512 d45613590fb53155c90839cf6eb7fe646ef4ec463b6cd1624aff54870818f0bc4faccded78a6b2c089fa4e8756cf15c7e17def2ef32ac6c34144e562b58c5d8b
     HEAD_REF master
-    PATCHES
-        fixup_for_vcpkg.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -33,17 +31,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Handle copyright & usage
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # remove unneeded files
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share)
+    ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
