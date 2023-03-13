@@ -28,24 +28,19 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        crypto      ENABLE_CRYPTO
+        netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
         sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-if("netssl" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL_WIN=ON
-            -DENABLE_NETSSL=OFF
-            -DENABLE_CRYPTO=OFF
-        )
-    else()
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL=ON
-            -DENABLE_CRYPTO=ON
-        )
-    endif()
+# POCO_ENABLE_NETSSL_WIN: 
+# Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL.
+# This is a variable which can be set in the triplet file.
+if(POCO_ENABLE_NETSSL_WIN)
+    string(REPLACE "ENABLE_NETSSL" "ENABLE_NETSSL_WIN" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+    list(APPEND FEATURE_OPTIONS "-DENABLE_NETSSL:BOOL=OFF")
 endif()
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
@@ -64,14 +59,11 @@ vcpkg_cmake_configure(
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components
-        # POCO_ENABLE_SQL_ODBC, POCO_ENABLE_SQL_MYSQL and POCO_ENABLE_SQL_POSTGRESQL are
-        # defined on the fly if the required librairies are present
         -DENABLE_ENCODINGS=ON
         -DENABLE_ENCODINGS_COMPILER=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
         -DENABLE_MONGODB=ON
-        # -DPOCO_ENABLE_SQL_SQLITE=ON # SQLITE are not supported.
         -DENABLE_REDIS=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON

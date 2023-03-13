@@ -4,7 +4,7 @@ index 846797d..d7c4ae6 100644
 +++ b/external/crashpad/crashpad-config.cmake.in
 @@ -1,6 +1,9 @@
  include("${CMAKE_CURRENT_LIST_DIR}/crashpad-targets.cmake")
- 
+
  if(@CRASHPAD_ZLIB_SYSTEM@)
 +    include(CMakeFindDependencyMacro)
 +    find_dependency(ZLIB)
@@ -16,20 +16,15 @@ diff --git a/external/crashpad/third_party/zlib/CMakeLists.txt b/external/crashp
 index eeb449f..59a6ff1 100644
 --- a/external/crashpad/third_party/zlib/CMakeLists.txt
 +++ b/external/crashpad/third_party/zlib/CMakeLists.txt
-@@ -1,15 +1,10 @@
+@@ -1,11 +1,10 @@
  if(CRASHPAD_ZLIB_SYSTEM)
      add_library(crashpad_zlib INTERFACE)
--    string(REPLACE ";" "$<SEMICOLON>" GENEX_ZLIB_LIBRARIES "${ZLIB_LIBRARIES}")
--    target_include_directories(crashpad_zlib INTERFACE
--        $<BUILD_INTERFACE:${ZLIB_INCLUDE_DIRS}>
--    )
      target_compile_definitions(crashpad_zlib INTERFACE
          ZLIB_CONST
          CRASHPAD_ZLIB_SOURCE_SYSTEM
 -        $<BUILD_INTERFACE:${ZLIB_COMPILE_DEFINITIONS}>
      )
--    target_link_libraries(crashpad_zlib INTERFACE $<BUILD_INTERFACE:${GENEX_ZLIB_LIBRARIES}>)
-+    target_link_libraries(crashpad_zlib INTERFACE ZLIB::ZLIB)
+     target_link_libraries(crashpad_zlib INTERFACE ZLIB::ZLIB)
  else()
      add_library(crashpad_zlib STATIC
          zlib/adler32.c
@@ -40,7 +35,7 @@ index 89ea345..acbd5e2 100644
 @@ -3,9 +3,14 @@
  set(SENTRY_BACKEND @SENTRY_BACKEND@)
  set(SENTRY_TRANSPORT @SENTRY_TRANSPORT@)
- 
+
 +include(CMakeFindDependencyMacro)
 +if("@SENTRY_LINK_PTHREAD@")
 +	find_dependency(Threads)
@@ -55,7 +50,7 @@ index 89ea345..acbd5e2 100644
  	endif()
 @@ -14,7 +19,5 @@ endif()
  include("${CMAKE_CURRENT_LIST_DIR}/sentry-targets.cmake")
- 
+
  if(SENTRY_TRANSPORT STREQUAL "curl" AND NOT @BUILD_SHARED_LIBS@)
 -	find_package(CURL REQUIRED)
 -	set_property(TARGET sentry::sentry APPEND

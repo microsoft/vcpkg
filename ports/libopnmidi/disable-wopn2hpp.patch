@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ee71863..66d4848 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,6 +144,7 @@ option(USE_VGM_FILE_DUMPER  "Use VGM File Dumper (required to build the MIDI2VGM
+ 
+ option(WITH_MIDIPLAY        "Build also demo MIDI player" OFF)
+ option(WITH_MIDI2VGM        "Build also MIDI to VGM converter tool" OFF)
++option(WITH_WOPN2HPP        "Build also the WOPN to C++ header source converter tool" OFF)
+ option(WITH_VLC_PLUGIN      "Build also a plugin for VLC Media Player" OFF)
+ option(VLC_PLUGIN_NOINSTALL "Don't install VLC plugin into VLC directory" OFF)
+ option(WITH_DAC_UTIL        "Build also OPN2 DAC testing utility" OFF)
+@@ -388,13 +389,7 @@ if(WITH_MIDI2VGM)
+     add_subdirectory(utils/midi2vgm)
+ endif()
+ 
+-if(NOT ANDROID
+-   AND NOT EMSCRIPTEN
+-   AND NOT VITA
+-   AND NOT NINTENDO_3DS
+-   AND NOT NINTENDO_WII
+-   AND NOT NINTENDO_WIIU
+-   AND NOT NINTENDO_SWITCH)
++if(WITH_WOPN2HPP)
+     add_subdirectory(utils/wopn2hpp)
+ endif()
+ 
+@@ -493,6 +488,7 @@ message("USE_VGM_FILE_DUMPER      = ${USE_VGM_FILE_DUMPER}")
+ 
+ message("===== Utils and extras =====")
+ message("WITH_MIDIPLAY            = ${WITH_MIDIPLAY}")
++message("WITH_WOPN2HPP            = ${WITH_WOPN2HPP}")
+ message("WITH_VLC_PLUGIN          = ${WITH_VLC_PLUGIN}")
+ message("WITH_DAC_UTIL            = ${WITH_DAC_UTIL}")
+ if(WIN32)

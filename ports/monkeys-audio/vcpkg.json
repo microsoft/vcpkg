@@ -1,7 +1,7 @@
 {
   "name": "monkeys-audio",
-  "version": "5.70",
-  "port-version": 3,
+  "version-string": "9.04",
+  "port-version": 4,
   "description": [
     "Monkey's Audio is an excellent audio compression tool which has multiple advantages over traditional methods.",
     "Audio files compressed with it end with .ape extension."

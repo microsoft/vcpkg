@@ -18,22 +18,20 @@ else()
     set(MSGPACK_ENABLE_STATIC OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSGPACK_ENABLE_SHARED=${MSGPACK_ENABLE_SHARED}
         -DMSGPACK_ENABLE_STATIC=${MSGPACK_ENABLE_STATIC}
         -DMSGPACK_BUILD_EXAMPLES=OFF
         -DMSGPACK_BUILD_TESTS=OFF)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msgpack)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/msgpack)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/msgpack)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/msgpack/COPYING ${CURRENT_PACKAGES_DIR}/share/msgpack/copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()

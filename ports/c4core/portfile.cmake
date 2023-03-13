@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
-    REF 8d1af00e2318e9d583c10fd3d89b8b1b1f923ea7
-    SHA512 a9b4e418d31f00682f4a5224c685ebc3c1ef96a5334f1a42bfeea773dbdc7f4d67191ca0e91dca45130e4c385708c9530696b9b038bbdb03d7a331c87793185d
+    REF "v${VERSION}"
+    SHA512 e96d91daeba30a5caf1772a1fbcdd4011e42e112cd560652d23d61089ef751f88c305abc41b17f45652b44090a3b4e8d853acc1bc32ce8f6f46b3ad410028e9f
     HEAD_REF master
 )
 
@@ -85,6 +85,4 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_content
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
