@@ -37,7 +37,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Remove duplicate PDB files (vcpkg_copy_pdbs already copied them to "bin")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/protobuf-c.pdb")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/protobuf-c.pdb")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
