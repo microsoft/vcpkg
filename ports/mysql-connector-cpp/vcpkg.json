@@ -18,7 +18,10 @@
   ],
   "features": {
     "jdbc": {
-      "description": "Build legacy JDBC library"
+      "description": "Build legacy JDBC library",
+      "dependencies": [
+        "libmysql"
+      ]
     }
   }
 }
