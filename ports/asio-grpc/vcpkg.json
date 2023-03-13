@@ -17,7 +17,7 @@
   ],
   "features": {
     "boost-container": {
-      "description": "(deprecated)",
+      "description": "Use Boost.Container instead of <memory_resource> (deprecated)",
       "dependencies": [
         "boost-container"
       ]
