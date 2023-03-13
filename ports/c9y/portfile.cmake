@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rioki/c9y
-    REF v0.5.1
-    SHA512 d8ccd9a61521e3cbe1881129bcdb4817cad6b80c8bebb67024c799be790bd4abecf9427f0ba62f991c156a979742aa7a8fdfb477a7619524615e2a2aed6e774f
+    REF v0.7.0
+    SHA512 1c68351a42cea3a5cc52e00d3828acb16d6a96dfc4b9bf53fa4f8090b691a6f5734e2bb219af5cc54bc997517434417a4567d133c5a589f247abe9de73ba1cac
     )
 
 vcpkg_cmake_configure(
@@ -10,6 +10,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/c9y)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

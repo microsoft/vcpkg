@@ -1,6 +1,6 @@
 {
   "name": "seal",
-  "version": "4.0.0",
+  "version": "4.1.1",
   "description": "Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.",
   "homepage": "https://github.com/microsoft/SEAL",
   "license": "MIT",

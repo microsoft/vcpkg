@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jlblancoc/nanoflann
-    REF v1.4.2
-    SHA512 2a400725940868473d376635f67aac4402046d771ecceec547442dd653f0a00e38e340e4ac0a98620ddf3927845df18b6cfd644982f073d26c7864bed2de96ca
+    REF v1.4.3
+    SHA512 93a03357a57c8c122d01e35e7ce50751ec4490f938e2031d96521bbbbb5302de437c5933eb9e5cfb2583a8c4f28a118332bcf1be7b4f56259a2ce0af202de889
     HEAD_REF master
 )
 
@@ -20,4 +20,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+

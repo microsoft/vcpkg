@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF 1.20.4
-    SHA512 bd2e3812f719c530027513f1ac6715e093c4fb3c56553e4ad82506dfc5fd81616777ee08489723809faee693e68f010abf716cc23c82a7d17490b6942ce5cac4
+    REF 1.20.5
+    SHA512 2a996d8ac0f70c34dbbc02c875026df6e89346f0844fbaa25475075bcb6e57c81ceb7d71e729c3259eace851e3d7222cb3fe395e375d93eb45b1262a6ede1fdb
     HEAD_REF master
 )
 

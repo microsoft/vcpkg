@@ -1,0 +1,12 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 86f2212..46913fd 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -44,6 +44,7 @@ function (print_error DESCRIPTION FILE)
+     "Can't find ${DESCRIPTION}: can't locate ${FILE}. Please read the README.")
+ endfunction ()
+ 
++set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES};lib")
+ # Find a library. If it has not been found, stop CMake with a fatal error
+ # message.
+ function (find_required_library NAME HEADER LIBRARY DESCRIPTION)

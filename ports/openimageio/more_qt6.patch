@@ -1,0 +1,36 @@
+diff --git a/src/iv/imageviewer.cpp b/src/iv/imageviewer.cpp
+index 79839dd5a..f49da67c0 100644
+--- a/src/iv/imageviewer.cpp
++++ b/src/iv/imageviewer.cpp
+@@ -14,7 +14,6 @@
+ 
+ #include <QApplication>
+ #include <QComboBox>
+-#include <QDesktopWidget>
+ #include <QFileDialog>
+ #include <QKeyEvent>
+ #include <QLabel>
+@@ -1951,8 +1951,8 @@ ImageViewer::fitWindowToImage(bool zoomok, bool minsize)
+     }
+ 
+     if (!m_fullscreen) {
+-        QDesktopWidget* desktop = QApplication::desktop();
+-        QRect availgeom         = desktop->availableGeometry(this);
++        auto desktop = this->screen();
++        QRect availgeom         = desktop->availableGeometry();
+         int availwidth          = availgeom.width() - extraw - 20;
+         int availheight = availgeom.height() - extrah - menuBar()->height()
+                           - 20;
+diff --git a/src/iv/ivgl.cpp b/src/iv/ivgl.cpp
+index 2551d02ae..890bb4d92 100644
+--- a/src/iv/ivgl.cpp
++++ b/src/iv/ivgl.cpp
+@@ -11,6 +11,8 @@
+ #include <QLabel>
+ #include <QMouseEvent>
+ #include <QProgressBar>
++#include <QPainter>
++#include <QPen>
+ 
+ #include "ivutils.h"
+ #include <OpenImageIO/strutil.h>

@@ -1,6 +1,7 @@
 {
   "name": "gdal",
-  "version-semver": "3.6.0",
+  "version-semver": "3.6.2",
+  "port-version": 2,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -62,6 +63,7 @@
           "features": [
             "gif",
             "iconv",
+            "libkml",
             "libxml2",
             "lzma",
             "openjpeg",
@@ -144,6 +146,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libkml": {
+      "description": "Enable the LibKML driver",
+      "dependencies": [
+        "libkml"
       ]
     },
     "libspatialite": {

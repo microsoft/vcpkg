@@ -1,16 +1,11 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://jmodelica.org/fmil/FMILibrary-${VERSION}-src.zip"
-    FILENAME "FMILibrary-${VERSION}-src.zip"
-    SHA512 86e4b5019d8f2a76b01141411845d977fb3949617604de0b34351f23647e3e8b378477de184e1c4f2f59297bc4c7de3155e0edba9099b8924594a36b37b04cc8
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO modelon-community/fmi-library
+    REF "${VERSION}"
+    SHA512 65c2dc11116737e4e2ee91a4ec58d2cf24003774fd6d9b8b1d6521f046be9e8f8a963ebedb50a161ad264927062f41ce757c84563cfe628d47614910e8730349
+    HEAD_REF master
     PATCHES
         0001-remove-install-prefix.patch
         0002-include-sys-stat.h-for-mkdir.patch
