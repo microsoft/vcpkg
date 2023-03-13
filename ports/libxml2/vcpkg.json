@@ -16,11 +16,21 @@
     }
   ],
   "default-features": [
+    "ftp",
+    "http",
     "iconv",
     "lzma",
     "zlib"
   ],
   "features": {
+    "ftp": {
+      "description": "Add the FTP support",
+      "supports": "!uwp"
+    },
+    "http": {
+      "description": "Add the HTTP support",
+      "supports": "!uwp"
+    },
     "iconv": {
       "description": "Add ICONV support",
       "dependencies": [

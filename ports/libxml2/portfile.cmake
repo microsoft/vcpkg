@@ -10,15 +10,10 @@ vcpkg_from_gitlab(
     fix_cmakelist.patch
 )
 
-if(VCPKG_TARGET_IS_UWP)
-  message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automatically.")
-  set(ENABLE_NETWORK 0)
-else()
-  set(ENABLE_NETWORK 1)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
+    "ftp" LIBXML2_WITH_FTP
+    "http" LIBXML2_WITH_HTTP
     "iconv" LIBXML2_WITH_ICONV
     "legacy" LIBXML2_WITH_LEGACY
     "lzma" LIBXML2_WITH_LZMA
@@ -30,8 +25,6 @@ vcpkg_cmake_configure(
   OPTIONS
     ${FEATURE_OPTIONS}
     -DLIBXML2_WITH_TESTS=OFF
-    -DLIBXML2_WITH_HTTP=${ENABLE_NETWORK}
-    -DLIBXML2_WITH_FTP=${ENABLE_NETWORK}
     -DLIBXML2_WITH_HTML=ON
     -DLIBXML2_WITH_C14N=ON
     -DLIBXML2_WITH_CATALOG=ON
