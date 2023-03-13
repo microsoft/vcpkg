@@ -16,7 +16,6 @@
     }
   ],
   "default-features": [
-    "ftp",
     "http",
     "iconv",
     "lzma",
