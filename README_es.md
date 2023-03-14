@@ -402,4 +402,4 @@ puede ser dado de baja de la telemetría realizando lo siguiente:
 - agregar el parametro `--disable-metrics` a vcpkg en la línea de comandos
 - agregar la variable de entorno `VCPKG_DISABLE_METRICS`
 
-Se puede leer más sobre la telemetría de vcpkg en docs/about/privacy.md
+Se puede leer más sobre la telemetría de vcpkg en [https://learn.microsoft.com/vcpkg/about/privacy](https://learn.microsoft.com/vcpkg/about/privacy).

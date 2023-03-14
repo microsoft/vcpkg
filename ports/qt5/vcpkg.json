@@ -1,6 +1,7 @@
 {
   "name": "qt5",
   "version": "5.15.8",
+  "port-version": 1,
   "description": "Qt5 Application Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -91,6 +92,7 @@
           "name": "qt5-base",
           "default-features": false,
           "features": [
+            "icu",
             "mysqlplugin",
             "postgresqlplugin"
           ]
