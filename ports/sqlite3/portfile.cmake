@@ -2,9 +2,9 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3
 string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2023/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 863afdabbdbe27baaccc13477e08437ce3b4d7e6f0c51a294d1d71252476af474b6c275729ebe1bc801f004da7ca6775591a30fed1930c3a1920d8118864f1d2
+    SHA512 7de291709e88fffc693cf24ac675950cfc35c1bf7631cfea95167105720a05cf37fb943c57c5c985db2eeaa57b31894b3c0df98a7bd2939b5746fc5a24b5ae87
 )
 
 vcpkg_extract_source_archive(
@@ -40,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
         json1               SQLITE_ENABLE_JSON1
+        dqs                 SQLITE_ENABLE_DQS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -49,6 +50,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 else()
     set(SQLITE_OS_UNIX "1")
+endif()
+
+if(SQLITE_ENABLE_DQS)
+	set(SQLITE_DQS "3")
+else()
+	set(SQLITE_DQS "0")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
