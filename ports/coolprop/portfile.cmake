@@ -1,10 +1,10 @@
-set(PORT_VERSION 6.1.0)
+set(PORT_VERSION 6.4.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF f5ebb4e655add4c23bb327ab5209f3dbf919bc6d # v6.4.1
-    SHA512 916d00777fe56035171ed0a6cbe09b8d4487317772802e4fe9b43f5965f3212dcb3754e18fe1db9c748a4d17facbbe6cb2244451cf5cf66334465760fc1701b7
+    REF 84897ce7a110a70ba2229e7a1f5d17ea03efd068 # v6.4.1
+    SHA512 d231c1ad59479218dcfd165b3752b2fd3d8048342bbe1913af7253adcf3a72e869c916ca6005ebabe7d0010ebbed48c6d2cace618b8654a22e7db11a44d9eee9
     HEAD_REF master
     PATCHES
         fmt-fix.patch
@@ -45,7 +45,6 @@ file(COPY
 )
 
 file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/msgpack.h
     ${CURRENT_INSTALLED_DIR}/include/msgpack.hpp
     ${CURRENT_INSTALLED_DIR}/include/msgpack
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c/include
