@@ -12,15 +12,33 @@ set(INSTALL_LIB_DIR      "lib"                       CACHE PATH "Path where lib 
 set(INSTALL_INCLUDE_DIR  "include"                   CACHE PATH "Path where headers will be installed")
 set(INSTALL_CMAKE_DIR    "share/lz4"                 CACHE PATH "Path where cmake configs will be installed")
 
+option(LZ4_BUILD_TOOLS "Build tools" OFF)
+
 file(GLOB LZ4_HEADERS lib/*.h)
 list(REMOVE_ITEM LZ4_HEADERS "${CMAKE_CURRENT_LIST_DIR}/lib/xxhash.h")
 
-add_library(lz4
-    ${LZ4_HEADERS}
+set(LZ4_SOURCES
     lib/lz4.c
     lib/lz4frame.c
     lib/lz4hc.c
     lib/xxhash.c
+)
+
+set(LZ4CLI_SOURCES
+    programs/bench.c
+    programs/lz4cli.c
+    programs/lz4io.c
+    programs/datagen.c
+)
+
+# lz4cli uses internal APIs, not exposed in shared lib
+if(NOT BUILD_STATIC_LIBS)
+    list(APPEND LZ4CLI_SOURCES ${LZ4_SOURCES})
+endif()
+
+add_library(lz4
+    ${LZ4_HEADERS}
+    ${LZ4_SOURCES}
 )
 
 target_include_directories(lz4 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib> $<INSTALL_INTERFACE:include>)
@@ -45,6 +63,24 @@ install(EXPORT lz4Config
   NAMESPACE lz4::
   DESTINATION "${INSTALL_CMAKE_DIR}"
 )
+
+if (LZ4_BUILD_TOOLS)
+    add_executable(lz4cli
+        ${LZ4_HEADERS}
+        ${LZ4_SOURCES}
+        ${LZ4CLI_SOURCES}
+    )
+    set_target_properties(lz4cli PROPERTIES OUTPUT_NAME lz4)
+    target_include_directories(lz4cli PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib> $<INSTALL_INTERFACE:include>)
+    if(BUILD_STATIC_LIBS)
+        target_link_libraries(lz4cli lz4)
+    endif()
+
+    install(TARGETS lz4cli
+        RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
+        COMPONENT runtime
+    )
+endif()
 
 # Export the package for use from the build-tree (this registers the build-tree with a global CMake-registry)
 export(PACKAGE lz4)

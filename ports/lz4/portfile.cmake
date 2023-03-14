@@ -8,8 +8,15 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "tools" LZ4_BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DLZ4_BUILD_TOOLS=${LZ4_BUILD_TOOLS}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -33,6 +40,10 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblz4.pc" " -llz4" " -llz4d")
+endif()
+
+if (${LZ4_BUILD_TOOLS})
+   vcpkg_copy_tools(TOOL_NAMES lz4 AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
