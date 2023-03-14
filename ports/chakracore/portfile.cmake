@@ -101,8 +101,8 @@ else()
         set(out_file lib/libChakraCoreStatic.a)
     endif()
 
-    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
-    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
+    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/lib")
+    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/lib")
     set(out_dir_debug "${BUILDTREE_PATH}/out/Debug")
     set(out_dir_release "${BUILDTREE_PATH}/out/Release")
     foreach(config ${configs})
@@ -124,6 +124,11 @@ else()
 endif()
 
 vcpkg_copy_pdbs()
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-chakracore-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
+)
 
 file(INSTALL
     "${SOURCE_PATH}/LICENSE.txt"

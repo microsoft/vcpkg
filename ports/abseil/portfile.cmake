@@ -5,16 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 8c0b94e793a66495e0b1f34a5eb26bd7dc672db0 # LTS 20220623.1
-    SHA512 a076c198103dc5cf22ac978fe7754dd34cb2e782d7db1c2c98393c94639e461bfe31b10c0663f750f743bc1c0c245fd4b6115356f136fe14bd036d267caf2a8b
+    REF 20230125.0
+    SHA512 b3d334215c78b31a2eb10bd9d4a978cd48367866d6daa2065c6c727282bafe19ef7ff5bd7cd4ed5c319d3b04e0711222e08ddbe7621ef1e079fed93a7307112f
     HEAD_REF master
     PATCHES
-        # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
-        # instead of the library replacement types
-        # in C++11 mode, force use of library replacement types, otherwise the automatic
-        # detection can cause ABI issues depending on which compiler options
-        # are enabled for consuming user code
-	    fix-cxx-standard.patch
+        fix-dll-support.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,10 +17,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx17 ABSL_USE_CXX17
 )
 
+# With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
+# compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
+# header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
+# uses the compiler default behavior to update `absl/base/options.h` as needed.
+if (ABSL_USE_CXX17)
+    set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
+endif ()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS -DABSL_PROPAGATE_CXX_STD=ON ${ABSL_USE_CXX17_OPTION}
 )
 
 vcpkg_cmake_install()

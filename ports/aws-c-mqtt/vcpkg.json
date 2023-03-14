@@ -1,9 +1,9 @@
 {
   "name": "aws-c-mqtt",
-  "version": "0.7.6",
-  "port-version": 3,
+  "version": "0.8.5",
   "description": "C99 implementation of the MQTT 3.1.1 specification.",
   "homepage": "https://github.com/awslabs/aws-c-mqtt",
+  "license": "Apache-2.0",
   "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-common",

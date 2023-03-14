@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e911c28..bbeb99b 100644
+index 37b43c4..106fe38 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -206,6 +206,11 @@ if(WITH_ZLIB)
+@@ -213,6 +213,11 @@ if(WITH_ZLIB)
    target_link_libraries(rdkafka PUBLIC ZLIB::ZLIB)
  endif()
  
@@ -14,3 +14,12 @@ index e911c28..bbeb99b 100644
  if(WITH_ZSTD)
    target_link_libraries(rdkafka PRIVATE ${ZSTD_LIBRARY})
    target_include_directories(rdkafka PRIVATE ${ZSTD_INCLUDE_DIR})
+@@ -296,7 +301,7 @@ if(NOT RDKAFKA_BUILD_STATIC)
+   set(PKG_CONFIG_DESCRIPTION "The Apache Kafka C/C++ library")
+ 
+   if(WITH_CURL)
+-    string(APPEND PKG_CONFIG_REQUIRES "curl ")
++    string(APPEND PKG_CONFIG_REQUIRES "libcurl ")
+   endif()
+ 
+   if(WITH_ZLIB)

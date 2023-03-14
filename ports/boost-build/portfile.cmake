@@ -14,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-fix-get-version.patch
+        0003-fix-emscripten.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
