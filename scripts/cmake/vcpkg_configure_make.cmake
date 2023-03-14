@@ -136,6 +136,23 @@ function(vcpkg_configure_make)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
+    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
+                         VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
+    )
+        separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
+        list(JOIN cmake_list " " "${var}")
+    endforeach()
+
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
