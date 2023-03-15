@@ -16,7 +16,6 @@
     }
   ],
   "default-features": [
-    "http",
     "iconv",
     "lzma",
     "zlib"
