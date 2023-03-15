@@ -3913,8 +3913,8 @@
       "port-version": 1
     },
     "libfido2": {
-      "baseline": "1.10.0",
-      "port-version": 1
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "libflac": {
       "baseline": "1.4.2",
