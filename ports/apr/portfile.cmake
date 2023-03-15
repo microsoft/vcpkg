@@ -78,6 +78,8 @@ else()
     
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/apr_rules.mk" "${CURRENT_INSTALLED_DIR}" "$(LIBPATH)/..")
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}/debug\"" "$(realpath \"`dirname $0`/../../../..\")")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
@@ -85,6 +87,8 @@ else()
 
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/apr_rules.mk" "${CURRENT_INSTALLED_DIR}/debug" "$(LIBPATH)/..")
     endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
