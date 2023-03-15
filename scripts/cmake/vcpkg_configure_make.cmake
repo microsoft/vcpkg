@@ -213,32 +213,36 @@ function(vcpkg_configure_make)
         endif()
         cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
         cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+        cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
         file(REAL_PATH "${system_root}" system_root)
 
         message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
 
-        set(find_system_dirs 
-                "${system_root}/system32"
-                "${system_root}/System32"
-                "${system_root}/system32/"
-                "${system_root}/System32/")
+        vcpkg_list(SET find_system_dirs 
+            "${system_root}/system32"
+            "${system_root}/System32"
+            "${system_root}/system32/"
+            "${system_root}/System32/"
+            "${local_app_data}/Windows/Apps"
+            "${local_app_data}/Windows/Apps/"
+        )
 
         string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
 
-        set(index "-1")
-        foreach(system_dir IN LISTS find_system_dirs find_system_dirs_upper)
-            list(FIND path_list "${system_dir}" index)
-            if(NOT index EQUAL "-1")
+        set(index 0)
+        set(appending TRUE)
+        foreach(item IN LISTS path_list)
+            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+                set(appending FALSE)
                 break()
             endif()
+            math(EXPR index "${index} + 1")
         endforeach()
 
-        if(index GREATER_EQUAL "0")
-            vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
-        else()
-            message(WARNING "Unable to find system32 dir in the PATH variable! Appending required msys paths!")
-            vcpkg_list(APPEND path_list ${add_to_env} "${MSYS_ROOT}/usr/bin")
+        if(appending)
+            message(WARNING "Unable to find system dir in the PATH variable! Appending required msys paths!")
         endif()
+        vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
 
         cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
         set(ENV{PATH} "${native_path_list}")
