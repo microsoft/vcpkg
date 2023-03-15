@@ -8,14 +8,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF 1.20.5
-    SHA512 2a996d8ac0f70c34dbbc02c875026df6e89346f0844fbaa25475075bcb6e57c81ceb7d71e729c3259eace851e3d7222cb3fe395e375d93eb45b1262a6ede1fdb
+    REF "${VERSION}"
+    SHA512 738eaedc653ea52a4d134bdd7f74518afd3c3f267a5558e7533fb196904169b9ebe0baebc7c652af99f021a3d7315c680faf5b1d0e3c190d88534b60788d188d
     HEAD_REF master
     PATCHES
         fix-clang-cl.patch
         fix-clang-cl-gstreamer.patch
         fix-clang-cl-base.patch
-        fix-clang-cl-good.patch
         fix-clang-cl-bad.patch
         fix-clang-cl-ugly.patch
         gstreamer-disable-no-unused.patch
@@ -613,12 +612,6 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-
-if(NOT VCPKG_TARGET_IS_LINUX AND "plugins-base" IN_LIST FEATURES)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
-                "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
-    )
-endif()
 
 list(APPEND GST_BIN_TOOLS
     gst-inspect-1.0
