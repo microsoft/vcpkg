@@ -37,6 +37,17 @@ RUN \
   add-apt-repository universe && \
   apt-get -y install powershell
 
+RUN \
+  apt-get -y --no-install-recommends install autoconf nasm bison python2 flex build-essential libtool libtool-bin gettext automake
+
+# freeglut
+RUN \
+  apt-get -y --no-install-recommends install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev
+
+# glfw3
+RUN \
+  apt-get -y --no-install-recommends install libxinerama-dev libxcursor-dev
+
 ENV ANDROID_NDK_HOME /android-ndk-r25b
 
 WORKDIR /vcpkg
