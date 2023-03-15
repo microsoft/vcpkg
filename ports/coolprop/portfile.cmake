@@ -1,10 +1,9 @@
-set(PORT_VERSION 6.4.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF 84897ce7a110a70ba2229e7a1f5d17ea03efd068 # v6.4.1
-    SHA512 d231c1ad59479218dcfd165b3752b2fd3d8048342bbe1913af7253adcf3a72e869c916ca6005ebabe7d0010ebbed48c6d2cace618b8654a22e7db11a44d9eee9
+    REF "v${VERSION}"
+    SHA512 ccd868cb297d86f054318acec4c3bf9f8ec07b54c320d5e887853c4190adefbd3b2d188e7453896656b5ad0e81b32d133fd0ce67bf58e647d58c96918bc993eb
     HEAD_REF master
     PATCHES
         fmt-fix.patch
