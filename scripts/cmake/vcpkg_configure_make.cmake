@@ -136,6 +136,23 @@ function(vcpkg_configure_make)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
+    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
+                         VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
+    )
+        separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
+        list(JOIN cmake_list " " "${var}")
+    endforeach()
+
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -787,6 +804,8 @@ function(vcpkg_configure_make)
         if(LINK_ENV_${current_buildtype})
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
+        else()
+            unset(link_config_backup)
         endif()
 
         vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
@@ -826,9 +845,8 @@ function(vcpkg_configure_make)
         endif()
         z_vcpkg_restore_pkgconfig_path()
         
-        if(link_config_backup)
+        if(DEFINED link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
-            unset(link_config_backup)
         endif()
         
         if(arg_ADD_BIN_TO_PATH)
