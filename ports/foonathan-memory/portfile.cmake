@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
-    REF 885a9d97bebe9a2f131d21d3c0928c42ab377c8b
-    SHA512 7ce78a6e67d590a41b7f8a3d4ae0f6c1fa157c561b718a63973dffc000df74a9f0a0d7955a099e84fbeb3cf4085092eb866a6b8cec8bafd50bdcee94d069f65d
+    REF 0f0775770fd1c506fa9c5ad566bd6ba59659db66
+    SHA512 cea17694971de46ae2f680a300fdf1921a6999f7c6c991c0905940880f751ac5ae296fd7b349d0080f31e5eb5b4c3ca0b0616a29525db7b22e4f3b41a47d4796
     HEAD_REF master
 )
 
@@ -21,7 +21,7 @@ vcpkg_from_github(
 file(COPY ${COMP_SOURCE_PATH}/comp_base.cmake DESTINATION ${SOURCE_PATH}/cmake/comp)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tool FOONATHAN_MEMORY_BUILD_TOOLS
+    FEATURES tool FOONATHAN_MEMORY_BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(
@@ -57,18 +57,20 @@ file(COPY
     ${COMP_INCLUDE_FILES}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/foonathan
 )
-file(COPY
-    ${CURRENT_PACKAGES_DIR}/include/foonathan_memory/config_impl.hpp
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/foonathan/memory
-)
+# Commenting below since this file does not exist in the new version.
+#file(COPY
+#    ${CURRENT_PACKAGES_DIR}/include/foonathan_memory/config_impl.hpp
+#    DESTINATION ${CURRENT_PACKAGES_DIR}/include/foonathan/memory
+#)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/foonathan_memory
 )
-vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/foonathan_memory/foonathan_memory-config.cmake
-    "\${_IMPORT_PREFIX}/include/foonathan_memory/comp;\${_IMPORT_PREFIX}/include/foonathan_memory"
-    "\${_IMPORT_PREFIX}/include"
-)
+# Commenting below since this file does not exist in the new version.
+#vcpkg_replace_string(
+#    ${CURRENT_PACKAGES_DIR}/share/foonathan_memory/foonathan_memory-config.cmake
+#    "\${_IMPORT_PREFIX}/include/foonathan_memory/comp;\${_IMPORT_PREFIX}/include/foonathan_memory"
+#    "\${_IMPORT_PREFIX}/include"
+#)
 # Place header files into the right folders - Done!
 
 # The Debug version of this lib is built with:

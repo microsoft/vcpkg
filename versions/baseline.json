@@ -2529,7 +2529,7 @@
       "port-version": 0
     },
     "foonathan-memory": {
-      "baseline": "2019-07-21",
+      "baseline": "0.7-3",
       "port-version": 2
     },
     "forest": {
