@@ -37,10 +37,6 @@ RUN \
   add-apt-repository universe && \
   apt-get -y install powershell
 
-# Install Azure CLI
-RUN \
-  curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
 ENV ANDROID_NDK_HOME /android-ndk-r25b
 
 WORKDIR /vcpkg
