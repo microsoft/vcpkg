@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
-    REF 16e9114f41343eed0a5f3f9881b171ce4ea6774a
-    SHA512 a9244c9791d672f57e06cafc0de753c307976f35f975b6f17ac0e5f8f773f4236674232afada015cd47c4ee2e4d0f550680251772693d4abf2b525dd9b3617f5
+    REF 258731cd116be6fa42d6ff6d2e59d06b9b790dc0
+    SHA512 b8a370c5c20e74ce7ccdb19ea3aa9c6d5287c9cc82d0b613804ab8b6c1d7770aafd15ad900d4933b636662435026c36f6a4b6ec0c66d597bdb52b20a4c0b6c25
     HEAD_REF master
     PATCHES cmake_remove_bin_targets.patch
 )
