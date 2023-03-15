@@ -7480,6 +7480,10 @@
       "baseline": "0.4",
       "port-version": 0
     },
+    "spout2": {
+      "baseline": "2.007.009",
+      "port-version": 0
+    },
     "sprout": {
       "baseline": "2019-06-20",
       "port-version": 1
