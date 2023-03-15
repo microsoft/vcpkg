@@ -8674,7 +8674,7 @@
     },
     "zstd": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "zstr": {
       "baseline": "1.0.7",
