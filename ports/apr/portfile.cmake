@@ -1,10 +1,10 @@
 
-set(VERSION 1.7.0)
+set(VERSION 1.7.2)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 3dc42d5caf17aab16f5c154080f020d5aed761e22db4c5f6506917f6bfd2bf8becfb40af919042bd4ce1077d5de74aa666f5edfba7f275efba78e8893c115148
+    SHA512 0a3a27ccc97bbe4865c1bc0b803012e3da6d5b1f17d4fb0da6f5f58eec01f6d2ae1f25e52896ea5f9c5ac04c5fddcfd1ac606b301c322cf40d5c4d4ce0a1b76e
 )
 
 vcpkg_extract_source_archive_ex(
