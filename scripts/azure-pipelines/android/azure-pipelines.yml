@@ -44,16 +44,13 @@ jobs:
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - task: Docker@2
-    displayName: Login to ACR
-    inputs:
-      command: login
-      containerRegistry: AndContainerRegistry
-  - bash: docker run --rm andcontainerregistry.azurecr.io/vcpkg-android:2023-02-08
+  - bash: |
+      az login --identity
+      az acr login --name AndContainerRegistry
+    displayName: 'Set up managed identity'
+  - bash: docker run --rm andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15
     displayName: 'test run'
-  - bash: docker build ./scripts/azure-pipelines/android -t "vcpkg-android"
-    displayName: 'docker build'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-02-08" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
     displayName: 'docker run'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for x64-android'
