@@ -40,12 +40,6 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    if("dynamic-arch" IN_LIST FEATURES)
-        message(FATAL_ERROR "Openbals can not build with an opeion DYNAMIC_ARCH=ON in a Visual Studio")
-    endif()
-endif()
-
 set(OPENBLAS_EXTRA_OPTIONS)
 # for UWP version, must build non uwp first for helper
 # binaries.
