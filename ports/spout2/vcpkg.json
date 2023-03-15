@@ -5,6 +5,7 @@
   "homepage": "https://github.com/leadedge/Spout2",
   "supports": "windows & !uwp & !arm64",
   "dependencies": [
+    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,9 +16,6 @@
     }
   ],
   "features": {
-    "c": {
-      "description": "The Spout SDK as a C-compatible library."
-    },
     "dx": {
       "description": "A sub-set of the Spout SDK for applications using DirectX rather than OpenGL."
     }

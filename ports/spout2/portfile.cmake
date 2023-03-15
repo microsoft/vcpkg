@@ -18,7 +18,6 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dx              SPOUT_BUILD_SPOUTDX
-        c               SPOUT_BUILD_LIBRARY
 )
 
 vcpkg_cmake_configure(
