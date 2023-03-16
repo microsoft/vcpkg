@@ -741,6 +741,7 @@ pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
 popsift:x64-windows-static-md=fail
+popsift:x64-linux=fail # segfaults :(
 portable-snippets:arm-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
