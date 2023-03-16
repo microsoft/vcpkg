@@ -15,7 +15,7 @@ parameters:
     default: ''
 
 jobs:
-- job: arm-neon-android
+- job: arm_neon_android
   condition: contains('^arm-neon-android$', '${{ parameters.tripletPattern }}')
   pool:
     name: ${{ parameters.poolName }}
