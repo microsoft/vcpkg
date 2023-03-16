@@ -20,11 +20,11 @@ index 98a24e0..d20addd 100644
 -#include <litehtml/html_tag.h>
 -#include <litehtml/stylesheet.h>
 -#include <litehtml/element.h>
-+#include <html.h>
-+#include <document.h>
-+#include <html_tag.h>
-+#include <stylesheet.h>
-+#include <element.h>
++#include "html.h"
++#include "document.h"
++#include "html_tag.h"
++#include "stylesheet.h"
++#include "element.h"
  
  #endif  // LITEHTML_H
 -- 

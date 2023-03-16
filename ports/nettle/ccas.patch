@@ -1,0 +1,40 @@
+diff --git a/Makefile.in b/Makefile.in
+index d00b565..c465d0b 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -294,7 +294,7 @@ libhogweed.a: $(hogweed_OBJS)
+ 
+ %.$(OBJEXT): %.asm $(srcdir)/m4-utils.m4 $(srcdir)/asm.m4 config.m4 machine.m4
+ 	$(M4) $(srcdir)/m4-utils.m4 $(srcdir)/asm.m4 config.m4 machine.m4 $< >$*.s
+-	$(COMPILE) -c $*.s
++	$(COMPILE_AS) -c $*.s
+ 
+ %.$(OBJEXT): %.c
+ 	$(COMPILE) -c $< \
+diff --git a/config.make.in b/config.make.in
+index f8e1f74..4668884 100644
+--- a/config.make.in
++++ b/config.make.in
+@@ -73,6 +73,8 @@ TEST_SHLIB_DIR = ${abs_top_builddir}/.lib
+ # flags before CPPFLAGS and LDFLAGS. While EXTRA_CFLAGS are added at the end.
+ 
+ COMPILE = $(CC) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(CFLAGS) $(EXTRA_CFLAGS) $(DEP_FLAGS)
++CCAS = @CCAS@
++COMPILE_AS = $(CCAS) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(ASMFLAGS) $(DEP_FLAGS)
+ COMPILE_CXX = $(CXX) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(CXXFLAGS) $(DEP_FLAGS)
+ LINK = $(CC) $(CFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
+ LINK_CXX = $(CXX) $(CXXFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
+diff --git a/configure.ac b/configure.ac
+index 1012718..8db139d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -118,6 +118,9 @@ LSH_RPATH_INIT([`echo $with_lib_path | sed 's/:/ /g'` \
+ 
+ # Checks for programs.
+ AC_PROG_CC
++# Copied from gmp
++test -n "$CCAS" || CCAS='$(CC)'
++AC_SUBST(CCAS)
+ 
+ NETTLE_CHECK_IFUNC
+ 

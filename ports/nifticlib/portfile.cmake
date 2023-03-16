@@ -41,7 +41,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/NIFTI PACKAGE_NAME nifti)
 
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
