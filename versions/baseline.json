@@ -233,7 +233,7 @@
       "port-version": 1
     },
     "asio-grpc": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "asiosdk": {
@@ -1406,7 +1406,7 @@
     },
     "ceres": {
       "baseline": "2.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1629,8 +1629,8 @@
       "port-version": 8
     },
     "colmap": {
-      "baseline": "2022-03-14",
-      "port-version": 2
+      "baseline": "2023-03-12",
+      "port-version": 0
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -1661,7 +1661,7 @@
       "port-version": 1
     },
     "configcat": {
-      "baseline": "1.0.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "console-bridge": {
@@ -2154,7 +2154,7 @@
     },
     "dv-processing": {
       "baseline": "1.7.8",
-      "port-version": 0
+      "port-version": 1
     },
     "dx": {
       "baseline": "1.0.1",
@@ -2502,7 +2502,7 @@
     },
     "fmilib": {
       "baseline": "2.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "fmt": {
       "baseline": "9.1.0",
@@ -2926,7 +2926,7 @@
     },
     "gstreamer": {
       "baseline": "1.20.5",
-      "port-version": 1
+      "port-version": 2
     },
     "gtest": {
       "baseline": "1.13.0",
@@ -3774,14 +3774,14 @@
     },
     "libcaer": {
       "baseline": "2022-07-25",
-      "port-version": 2
+      "port-version": 3
     },
     "libcanberra": {
       "baseline": "0.30",
       "port-version": 4
     },
     "libcbor": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.2",
       "port-version": 0
     },
     "libcds": {
@@ -3913,8 +3913,8 @@
       "port-version": 1
     },
     "libfido2": {
-      "baseline": "1.10.0",
-      "port-version": 1
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "libflac": {
       "baseline": "1.4.2",
@@ -4281,8 +4281,8 @@
       "port-version": 0
     },
     "libphonenumber": {
-      "baseline": "8.13.1",
-      "port-version": 1
+      "baseline": "8.13.7",
+      "port-version": 0
     },
     "libplist": {
       "baseline": "1.3.6",
@@ -4302,7 +4302,7 @@
     },
     "libpq": {
       "baseline": "15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.7.4",
@@ -4434,7 +4434,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 9
+      "port-version": 10
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -4777,8 +4777,8 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2023-01-27",
-      "port-version": 0
+      "baseline": "2023-03-13",
+      "port-version": 1
     },
     "llgl": {
       "baseline": "2023-03-05",
@@ -4902,7 +4902,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 11
+      "port-version": 12
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -4914,7 +4914,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 9
+      "port-version": 10
     },
     "mailio": {
       "baseline": "0.21.0",
@@ -5397,7 +5397,7 @@
       "port-version": 1
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2023-01-27",
+      "baseline": "2023-03-13",
       "port-version": 0
     },
     "neon2sse": {
@@ -5450,7 +5450,7 @@
     },
     "nifticlib": {
       "baseline": "2020-04-30",
-      "port-version": 3
+      "port-version": 4
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
@@ -5686,7 +5686,7 @@
     },
     "opencc": {
       "baseline": "1.1.6",
-      "port-version": 0
+      "port-version": 1
     },
     "opencensus-cpp": {
       "baseline": "2021-08-26",
@@ -5734,7 +5734,7 @@
     },
     "openexr": {
       "baseline": "3.1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "openfbx": {
       "baseline": "2022-07-18",
@@ -5802,7 +5802,7 @@
     },
     "openssl": {
       "baseline": "3.0.8",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -5821,7 +5821,7 @@
       "port-version": 0
     },
     "opentelemetry-cpp": {
-      "baseline": "1.8.2",
+      "baseline": "1.8.3",
       "port-version": 0
     },
     "opentracing": {
@@ -5834,7 +5834,7 @@
     },
     "openvdb": {
       "baseline": "10.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6234,7 +6234,7 @@
     },
     "protobuf-c": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "protopuf": {
       "baseline": "2.2.1",
@@ -6554,7 +6554,7 @@
     },
     "qtdeclarative": {
       "baseline": "6.4.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qtdeviceutilities": {
       "baseline": "6.4.2",
@@ -7142,7 +7142,7 @@
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 6
+      "port-version": 7
     },
     "seacas": {
       "baseline": "2022-11-22",
@@ -7269,7 +7269,7 @@
       "port-version": 1
     },
     "simdjson": {
-      "baseline": "3.1.2",
+      "baseline": "3.1.5",
       "port-version": 0
     },
     "simdutf": {
@@ -7480,6 +7480,10 @@
       "baseline": "0.4",
       "port-version": 0
     },
+    "spout2": {
+      "baseline": "2.007.009",
+      "port-version": 0
+    },
     "sprout": {
       "baseline": "2019-06-20",
       "port-version": 1
@@ -7634,7 +7638,7 @@
     },
     "szip": {
       "baseline": "2.1.1",
-      "port-version": 9
+      "port-version": 10
     },
     "tabulate": {
       "baseline": "1.4",
@@ -8045,8 +8049,8 @@
       "port-version": 3
     },
     "usd": {
-      "baseline": "20.08",
-      "port-version": 4
+      "baseline": "23.2",
+      "port-version": 0
     },
     "usockets": {
       "baseline": "0.8.5",
@@ -8133,7 +8137,7 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2022-12-16",
+      "baseline": "2023-03-02",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
@@ -8238,7 +8242,7 @@
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
-      "port-version": 4
+      "port-version": 5
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
@@ -8674,7 +8678,7 @@
     },
     "zstd": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "zstr": {
       "baseline": "1.0.7",
