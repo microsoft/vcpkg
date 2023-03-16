@@ -6229,7 +6229,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.21.12",
+      "baseline": "3.22.2",
       "port-version": 0
     },
     "protobuf-c": {
