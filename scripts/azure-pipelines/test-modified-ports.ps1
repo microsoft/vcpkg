@@ -104,7 +104,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($Triplet -eq 'x64-linux' -or $Triplet -eq 'arm-neon-android') {
+if ($Triplet -eq 'x64-linux' -or $Triplet -eq 'arm-neon-android' $Triplet -eq 'x64-android' $Triplet -eq 'arm64-android') {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
 }

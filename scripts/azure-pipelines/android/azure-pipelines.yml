@@ -49,6 +49,7 @@ jobs:
       sudo mkdir /home/agent -m=777
       sudo chown `id -u` /home/agent
       sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
+      sudo rm -rf ${{ variables.WORKING_ROOT }}/failure-logs
       sudo mkdir ${{ variables.WORKING_ROOT }}/failure-logs -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
@@ -64,12 +65,15 @@ jobs:
       az login --identity
       az acr login --name AndContainerRegistry
     displayName: 'Set up managed identity'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+  - task: Docker@2
     displayName: '*** Test Modified Ports'
+    inputs:
+      command: run
+      arguments: --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
     inputs:
-      PathtoPublish: './failure-logs'
+      PathtoPublish: '$(WORKING_ROOT)/failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
   - bash: |
