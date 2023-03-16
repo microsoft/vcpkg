@@ -13,5 +13,5 @@ $acrName = "AndContainerRegistry"
 
 $resourceID = (Get-AzContainerRegistry -ResourceGroupName $acrGroup -Name $acrName).Id
 
-# needs admin privledges
+# needs admin privileges
 New-AzRoleAssignment -ObjectId $spID -Scope $resourceID -RoleDefinitionName AcrPull
