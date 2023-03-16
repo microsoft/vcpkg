@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix_missing_thrust_include.patch
+        144.patch
         cuda_12_1.patch
 )
 
