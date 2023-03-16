@@ -7,6 +7,12 @@ parameters:
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
     default: 'use default'
+  - name: triplet
+    type: string
+    default: 'x64-android'
+  - name: jobName
+    type: string
+    default: 'x64_android'
   - name: poolName
     type: string
   - name: tripletPattern
