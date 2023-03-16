@@ -133,9 +133,6 @@
     "qoi": {
       "description": "Enable QOI codec"
     },
-    "svg": {
-      "description": "Enable SVG codec"
-    },
     "tga": {
       "description": "Enable TGA codec"
     },
