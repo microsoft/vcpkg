@@ -104,7 +104,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($Triplet -eq 'x64-linux' -or $Triplet -eq 'x64-android') {
+if ($Triplet -eq 'x64-linux' -or $Triplet -eq 'arm-android') {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
 }
@@ -154,9 +154,6 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
     Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
     & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
-
-    $a1 = Get-Content $parentHashesFile
-    Write-Host $a1
 
     Write-Host "Running CI using parent hashes"
     & git reset --hard HEAD
