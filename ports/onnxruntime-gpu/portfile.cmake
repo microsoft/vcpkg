@@ -85,4 +85,4 @@ file(COPY ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/lib/onnxruntime_prov
 file(COPY ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/lib/onnxruntime_providers_cuda.dll
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/LICENSE")
