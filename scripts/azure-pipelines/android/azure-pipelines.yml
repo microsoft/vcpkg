@@ -9,9 +9,14 @@ parameters:
     default: 'use default'
   - name: poolName
     type: string
+  - name: tripletPattern
+    displayName: 'Enable the triplets which contain this substring'
+    type: string
+    default: ''
 
 jobs:
-- job: x64_android
+- job: arm_android
+  condition: contains('^arm-android$', '${{ parameters.tripletPattern }}')
   pool:
     name: ${{ parameters.poolName }}
   workspace:
@@ -51,11 +56,11 @@ jobs:
     displayName: 'Set up managed identity'
   - bash: docker run --rm andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15
     displayName: 'test run'
-  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+  - bash: docker run --rm --mount type=bind,source=$(pwd),target=/vcpkg --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-15" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet arm-android -BuildReason Schedule -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
     displayName: 'docker run'
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: failure logs for x64-android'
+    displayName: 'Publish Artifact: failure logs for arm-android'
     inputs:
       PathtoPublish: './failure-logs'
-      ArtifactName: 'failure logs for x64-android'
+      ArtifactName: 'failure logs for arm-android'
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')

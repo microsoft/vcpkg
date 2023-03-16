@@ -90,3 +90,4 @@ jobs:
   parameters:
     poolName: $(android-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
