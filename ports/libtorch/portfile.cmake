@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
-    REF v1.12.1
+    REF "v${VERSION}"
     SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
     HEAD_REF master
     PATCHES
@@ -178,6 +178,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/include/caffe2/opt/nql/tests"
                     "${CURRENT_PACKAGES_DIR}/include/caffe2/contrib"
                     "${CURRENT_PACKAGES_DIR}/include/caffe2/core/nomnigraph/Representations"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc"
 )
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
