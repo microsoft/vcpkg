@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
-    REF 0f0775770fd1c506fa9c5ad566bd6ba59659db66
+    REF v0.7-3
     SHA512 cea17694971de46ae2f680a300fdf1921a6999f7c6c991c0905940880f751ac5ae296fd7b349d0080f31e5eb5b4c3ca0b0616a29525db7b22e4f3b41a47d4796
     HEAD_REF master
 )
