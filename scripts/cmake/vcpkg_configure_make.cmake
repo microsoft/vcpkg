@@ -223,8 +223,8 @@ function(vcpkg_configure_make)
             "${system_root}/System32"
             "${system_root}/system32/"
             "${system_root}/System32/"
-            "${local_app_data}/Windows/Apps"
-            "${local_app_data}/Windows/Apps/"
+            "${local_app_data}/Microsoft/WindowsApps"
+            "${local_app_data}/Microsoft/WindowsApps/"
         )
 
         string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
