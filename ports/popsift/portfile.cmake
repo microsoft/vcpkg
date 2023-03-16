@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix_missing_thrust_include.patch
+        cuda_12_1.patch
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
