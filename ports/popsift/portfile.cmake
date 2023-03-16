@@ -8,7 +8,6 @@ vcpkg_from_github(
         fix_missing_thrust_include.patch
 )
 
-include("${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake")
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
