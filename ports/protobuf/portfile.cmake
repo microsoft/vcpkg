@@ -3,13 +3,13 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.12
-    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
+    REF "v${VERSION}"
+    SHA512 fdfa56165fccf98cc3b7b7e46ef867c80bc87fb97aaf15fde99ec3736966d5e7d4de8284c7f08221f3fa54f7db30f300193749d2706de7ff107afe5c7ee8e2be
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        compile_options.patch
+        fix-cmake-config.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -43,6 +43,7 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
         ${FEATURE_OPTIONS}
+        -Dutf8_range_ENABLE_INSTALL=OFF
 )
 
 vcpkg_cmake_install()
@@ -125,4 +126,4 @@ if(NOT protobuf_BUILD_PROTOC_BINARIES)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

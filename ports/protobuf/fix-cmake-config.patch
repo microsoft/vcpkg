@@ -1,0 +1,38 @@
+diff --git a/cmake/libprotoc.cmake b/cmake/libprotoc.cmake
+index 02667c5..d6e7e1d 100644
+--- a/cmake/libprotoc.cmake
++++ b/cmake/libprotoc.cmake
+@@ -2,6 +2,7 @@
+ 
+ include(${protobuf_SOURCE_DIR}/src/file_lists.cmake)
+ 
++find_package(absl REQUIRED CONFIG)
+ add_library(libprotoc ${protobuf_SHARED_OR_STATIC}
+   ${libprotoc_srcs}
+   ${libprotoc_hdrs}
+diff --git a/third_party/utf8_range/CMakeLists.txt b/third_party/utf8_range/CMakeLists.txt
+index 69a4d89..095e27d 100644
+--- a/third_party/utf8_range/CMakeLists.txt
++++ b/third_party/utf8_range/CMakeLists.txt
+@@ -28,7 +28,7 @@ if (NOT TARGET absl::strings)
+   else ()
+     set(ABSL_ENABLE_INSTALL ${utf8_range_ENABLE_INSTALL})
+     set(ABSL_PROPAGATE_CXX_STD ON)
+-    add_subdirectory(${ABSL_ROOT_DIR} third_party/abseil-cpp)
++    find_package(absl REQUIRED CONFIG)
+   endif ()
+ endif ()
+ target_link_libraries(utf8_validity PUBLIC absl::strings)
+diff --git a/cmake/abseil-cpp.cmake b/cmake/abseil-cpp.cmake
+index e7bfb2b..61fcd67 100644
+--- a/cmake/abseil-cpp.cmake
++++ b/cmake/abseil-cpp.cmake
+@@ -39,7 +39,7 @@ set(_protobuf_FIND_ABSL "if(NOT TARGET absl::strings)\n  find_package(absl CONFI
+ 
+ if (BUILD_SHARED_LIBS AND MSVC)
+   # On MSVC Abseil is bundled into a single DLL.
+-  set(protobuf_ABSL_USED_TARGETS abseil_dll)
++  set(protobuf_ABSL_USED_TARGETS absl::abseil_dll)
+ 
+   set(protobuf_ABSL_USED_TEST_TARGETS abseil_test_dll)
+ else()
