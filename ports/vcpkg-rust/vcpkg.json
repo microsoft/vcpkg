@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-rust",
+  "version": "1.68.0",
+  "documentation": "https://vcpkg.io/en/docs/maintainers/ports/vcpkg-rust.html",
+  "license": "MIT"
+}
