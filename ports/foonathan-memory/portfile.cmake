@@ -57,20 +57,9 @@ file(COPY
     ${COMP_INCLUDE_FILES}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/foonathan
 )
-# Commenting below since this file does not seem to exist anymore.
-#file(COPY
-#    ${CURRENT_PACKAGES_DIR}/include/foonathan_memory/config_impl.hpp
-#    DESTINATION ${CURRENT_PACKAGES_DIR}/include/foonathan/memory
-#)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/foonathan_memory
 )
-# Commenting below since this file does not seem to exist anymore.
-#vcpkg_replace_string(
-#    ${CURRENT_PACKAGES_DIR}/share/foonathan_memory/foonathan_memory-config.cmake
-#    "\${_IMPORT_PREFIX}/include/foonathan_memory/comp;\${_IMPORT_PREFIX}/include/foonathan_memory"
-#    "\${_IMPORT_PREFIX}/include"
-#)
 # Place header files into the right folders - Done!
 
 # The Debug version of this lib is built with:
