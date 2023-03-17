@@ -18,7 +18,7 @@
   "features": {
     "fat": {
       "description": "Enable runtime selection of optimized low level routines",
-      "supports": "!windows | mingw | (arm64 & windows)"
+      "supports": "!windows | mingw"
     }
   }
 }
