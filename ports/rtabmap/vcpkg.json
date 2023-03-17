@@ -28,8 +28,8 @@
     },
     "zlib",
     "sqlite3",
-	"octomap",
-	"g2o"
+    "octomap",
+    "g2o"
   ],
   "default-features": [
     "opencv-contrib",
