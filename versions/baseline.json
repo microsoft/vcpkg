@@ -3234,7 +3234,7 @@
     },
     "imguizmo": {
       "baseline": "1.83",
-      "port-version": 0
+      "port-version": 1
     },
     "immer": {
       "baseline": "0.8.0",
