@@ -1,10 +1,3 @@
-vcpkg_list(SET extra_patches)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND extra_patches
-        libname-windows.patch # libtool rules for lib naming, exports
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://git.lysator.liu.se/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,7 +11,7 @@ vcpkg_from_gitlab(
         compile.patch
         host-tools.patch
         ccas.patch
-        ${extra_patches}
+        msvc-support.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -78,6 +71,14 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(GLOB def_files "${CMAKE_CURRENT_LIST_DIR}/*.def")
+    file(COPY ${def_files} DESTINATION "${SOURCE_PATH}")
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=${VCPKG_TARGET_ARCHITECTURE}")
+else()
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=no")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
@@ -87,36 +88,6 @@ vcpkg_configure_make(
         --disable-openssl
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # def files are created by running 'llvm-nm <libname> | findstr /R /C:"[RT] _*nettle_"' on the static build and replacing '00[0-9abcdef]+ [RT]' with spaces
-        # please update the defs if the version is bumped
-        set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
-        configure_file(
-            "${CURRENT_PORT_DIR}/nettle-${VCPKG_TARGET_ARCHITECTURE}.def"
-            "${build_dir}/nettle.def"
-            COPYONLY
-        )
-        configure_file(
-            "${CURRENT_PORT_DIR}/hogweed-${VCPKG_TARGET_ARCHITECTURE}.def"
-            "${build_dir}/hogweed.def"
-            COPYONLY
-        )
-        if(NOT VCPKG_BUILD_TYPE)
-            set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
-            configure_file(
-                "${CURRENT_PORT_DIR}/nettle-${VCPKG_TARGET_ARCHITECTURE}.def" 
-                "${build_dir}/nettle.def"
-                COPYONLY
-            )
-            configure_file("${CURRENT_PORT_DIR}/hogweed-${VCPKG_TARGET_ARCHITECTURE}.def" 
-                "${build_dir}/hogweed.def"
-                COPYONLY
-            )
-        endif()
-    endif()
-endif()
 vcpkg_install_make()
 
 if(NOT VCPKG_CROSSCOMPILING)
