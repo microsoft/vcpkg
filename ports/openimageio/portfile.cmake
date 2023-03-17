@@ -1,14 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF v2.3.17.0
-    SHA512 25cb1a671e7cd5154e363eef178ab091fd7d55868746a4394340567a794f6c6f0295e58721a5b4ee8bf66b4cc0e6a01c3e82f9cc9de9953ae349d45738a04700
+    REF "v${VERSION}"
+    SHA512 c7a4283b78197c262d8da31460ce8b07b44546f822142e32e6c1ea22376e1c4b9cfe9c39cc0994987c6c4f653c1f2764057944da97a3a090bf1bcb74a2a0b2c2
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
         fix-openexr-dll.patch
         imath-version-guard.patch
+        fix-openimageio_include_dir.patch
+        fix-vs2019-encoding-conversion.patch
+        qt6.patch
+        more_qt6.patch
+        fix-openexr-target-missing.patch
+        1aa2cf6edf9f2bd57a21998fceeb095cbe1f2b84.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -21,6 +27,8 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/Findfmt.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,11 +41,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
+        libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
         tools       USE_OPENGL
         tools       USE_QT
-        tools       USE_QT5
 )
 
 vcpkg_cmake_configure(
@@ -59,12 +67,14 @@ vcpkg_cmake_configure(
         -DVERBOSE=ON
         -DBUILD_DOCS=OFF
         -DINSTALL_DOCS=OFF
-        "-DREQUIRED_DEPS=fmt;JPEG;Libheif;Libsquish;PNG;Robinmap"
+        -DENABLE_INSTALL_testtex=OFF
+        "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
+        "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_INSTALL_testtex
 )
 
 vcpkg_cmake_install()
-
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
@@ -83,7 +93,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 file(READ "${SOURCE_PATH}/THIRD-PARTY.md" third_party)
 string(REGEX REPLACE
     "^.*The remainder of this file"

@@ -1,13 +1,13 @@
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
-set(USE_QT_VERSION "5")
+set(USE_QT_VERSION "6")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 93d7807794682990b6a1d1de1851986ae3c5d1afe6605f3f8cace03ba5e3390bee2568bc0f335af34d3fc974df64cbce0ce685261ec2abd693d259b97b15bc46
+    SHA512 f799e1eb4ef1eb81212319cf908d0a64d2d5179c8da86b919b06e96a6870a9f3ed33251223a841b71711349018ea6782c174179fa59958a1573e22d11cc9347d
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES
@@ -23,7 +23,6 @@ vcpkg_from_github(
       0011-remove-python2.patch
       0012-fix-zlib.patch
       0015-fix-freetype.patch
-      0017-mingw-strsafe-no-deprecate.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -51,6 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"      WITH_CUBLAS
  "cuda"      WITH_CUDA
  "cudnn"     WITH_CUDNN
+ "dnn-cuda"  OPENCV_DNN_CUDA
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "freetype"  WITH_FREETYPE
@@ -151,7 +151,7 @@ endif()
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
-  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
+  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS OR (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_TARGET_IS_WINDOWS))
     set(BUILD_opencv_quality OFF)
     message(WARNING "The image quality module (quality) does not build for UWP or iOS, the module has been disabled.")
     # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
@@ -164,12 +164,10 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 2e9cc9632774babf59cd186cd7b7edbd35a816bdda2acb51339c514a33fc6d8c3f1687eb3b0f6827304e3fcb0f9f3e81d47e8ab08239175750ac1240cc99dc5d
+    SHA512 f0d878180655de4255cb72cf358a5949dfcf53a386e74f9a743902ac1bae12b2e812a1fc4ecc56a6afdc6adbffec867883a3245ce0b527614cc76e3710e23230
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
-      0013-fix-ceres.patch
-      0014-fix-ogre.patch
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
   )
@@ -461,7 +459,6 @@ if (NOT VCPKG_BUILD_TYPE)
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
 if(${BUILD_opencv_dnn})
@@ -487,7 +484,7 @@ find_dependency(Threads)")
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
-  if(BUILD_opencv_quality)
+  if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
@@ -529,7 +526,7 @@ find_dependency(Tesseract)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent Core5Compat)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
@@ -559,7 +556,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
 
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 

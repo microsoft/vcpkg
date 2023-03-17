@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO owent/libcopp
-    REF 1.4.1
-    SHA512 eba06bd2de7c9ee557cdd0bf79e0c53e37722b671347436322c14c99e94d955477bfc0980a4f59a5c31051e108f952ec96791024c45fa8eeaa5f7a49099dd8ae
+    REF "v${VERSION}"
+    SHA512 0e18641a8d94527417b9c85b3e2ddd60c6c3dc10a9ccf75186cec4344239114245c50ac154a411f3e42a1f9e021a9bcf3c6b71b0cd2f9be82a76b0cd10791589
     HEAD_REF v2
     PATCHES fix-x86-windows.patch
 )
@@ -24,9 +24,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/BOOST_LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/BOOST_LICENSE_1_0.txt" "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()
 

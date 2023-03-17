@@ -1,0 +1,13 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index cdd7a08..627f897 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -192,7 +192,7 @@ set (ICU_INCLUDE_DIR ${ICU_UC_INCLUDE_DIR})
+ set (ICU_LIB ${ICU_UC_LIB})
+ # If ICU regexp engine is used or if the geocoder is built, use icui18n as well.
+ if (USE_ICU_REGEXP OR BUILD_GEOCODER)
+-  find_required_library (ICU_I18N unicode/regex.h icui18n "ICU")
++  find_required_library (ICU_I18N unicode/regex.h icuin "ICU")
+   check_library_version (PC_ICU_I18N icu-i18n>=4.4)
+   list (APPEND ICU_INCLUDE_DIR ${ICU_I18N_INCLUDE_DIR})
+   list (APPEND ICU_LIB ${ICU_I18N_LIB})

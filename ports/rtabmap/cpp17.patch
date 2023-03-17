@@ -1,0 +1,152 @@
+diff --git a/corelib/src/SimpleIni.h b/corelib/src/SimpleIni.h
+index 3fccf9dc1..e787be813 100644
+--- a/corelib/src/SimpleIni.h
++++ b/corelib/src/SimpleIni.h
+@@ -324,7 +324,10 @@ public:
+ #endif
+ 
+         /** Strict less ordering by name of key only */
+-        struct KeyOrder : std::binary_function<Entry, Entry, bool> {
++        struct KeyOrder {
++            using result_type = bool;
++            using first_argument_type = Entry;
++            using second_argument_type = Entry;
+             bool operator()(const Entry & lhs, const Entry & rhs) const {
+                 const static SI_STRLESS isLess = SI_STRLESS();
+                 return isLess(lhs.pItem, rhs.pItem);
+@@ -332,7 +335,10 @@ public:
+         };
+ 
+         /** Strict less ordering by order, and then name of key */
+-        struct LoadOrder : std::binary_function<Entry, Entry, bool> {
++        struct LoadOrder {
++            using result_type = bool;
++            using first_argument_type = Entry;
++            using second_argument_type = Entry;
+             bool operator()(const Entry & lhs, const Entry & rhs) const {
+                 if (lhs.nOrder != rhs.nOrder) {
+                     return lhs.nOrder < rhs.nOrder;
+diff --git a/corelib/src/rtflann/algorithms/dist.h b/corelib/src/rtflann/algorithms/dist.h
+index a286f1eea..6456eb25b 100644
+--- a/corelib/src/rtflann/algorithms/dist.h
++++ b/corelib/src/rtflann/algorithms/dist.h
+@@ -517,6 +517,7 @@ struct HammingPopcnt
+             result += __builtin_popcountll(a_final ^ b_final);
+         }
+ #else
++        typedef unsigned long long pop_t;
+         HammingLUT lut;
+         result = lut(reinterpret_cast<const unsigned char*> (a),
+                      reinterpret_cast<const unsigned char*> (b), size * sizeof(pop_t));
+diff --git a/corelib/src/rtflann/algorithms/kdtree_index.h b/corelib/src/rtflann/algorithms/kdtree_index.h
+index c2ab18864..407233770 100644
+--- a/corelib/src/rtflann/algorithms/kdtree_index.h
++++ b/corelib/src/rtflann/algorithms/kdtree_index.h
+@@ -37,6 +37,7 @@
+ #include <cstring>
+ #include <stdarg.h>
+ #include <cmath>
++#include <random>
+ 
+ #include "rtflann/general.h"
+ #include "rtflann/algorithms/nn_index.h"
+@@ -675,9 +676,11 @@ protected:
+ 
+         tree_roots_.resize(trees_);
+         /* Construct the randomized trees. */
++        std::random_device rd;
++        std::mt19937 g(rd());
+         for (int i = 0; i < trees_; i++) {
+             /* Randomize the order of vectors to allow for unbiased sampling. */
+-            std::random_shuffle(ind.begin(), ind.end());
++            std::shuffle(ind.begin(), ind.end(),g);
+             tree_roots_[i] = divideTree(&ind[0], int(size_) );
+         }
+         delete[] mean_;
+diff --git a/corelib/src/rtflann/util/heap.h b/corelib/src/rtflann/util/heap.h
+index b104ee3ae..a9b50550c 100644
+--- a/corelib/src/rtflann/util/heap.h
++++ b/corelib/src/rtflann/util/heap.h
+@@ -115,8 +115,11 @@ public:
+         count = 0;
+     }
+ 
+-    struct CompareT : public std::binary_function<T,T,bool>
++    struct CompareT
+     {
++        using result_type = bool;
++        using first_argument_type = T;
++        using second_argument_type = T;
+         bool operator()(const T& t_1, const T& t_2) const
+         {
+             return t_2 < t_1;
+diff --git a/corelib/src/rtflann/util/lsh_table.h b/corelib/src/rtflann/util/lsh_table.h
+index 974bb9e44..5389dc743 100644
+--- a/corelib/src/rtflann/util/lsh_table.h
++++ b/corelib/src/rtflann/util/lsh_table.h
+@@ -39,6 +39,7 @@
+ #include <iostream>
+ #include <iomanip>
+ #include <limits.h>
++#include <random>
+ // TODO as soon as we use C++0x, use the code in USE_UNORDERED_MAP
+ #if RTFLANN_USE_UNORDERED_MAP
+ #include <unordered_map>
+@@ -362,9 +363,11 @@ inline LshTable<unsigned char>::LshTable(unsigned int feature_size, unsigned int
+     mask_ = std::vector<size_t>((size_t)ceil((float)(feature_size * sizeof(char)) / (float)sizeof(size_t)), 0);
+ 
+     // A bit brutal but fast to code
++    std::random_device rd;
++    std::mt19937 g(rd());
+     std::vector<size_t> indices(feature_size * CHAR_BIT);
+     for (size_t i = 0; i < feature_size * CHAR_BIT; ++i) indices[i] = i;
+-    std::random_shuffle(indices.begin(), indices.end());
++    std::shuffle(indices.begin(), indices.end(),g);
+ 
+     // Generate a random set of order of subsignature_size_ bits
+     for (unsigned int i = 0; i < key_size_; ++i) {
+diff --git a/corelib/src/rtflann/util/random.h b/corelib/src/rtflann/util/random.h
+index 871c9d15f..5d96ac273 100644
+--- a/corelib/src/rtflann/util/random.h
++++ b/corelib/src/rtflann/util/random.h
+@@ -35,6 +35,7 @@
+ #include <cstdlib>
+ #include <cstddef>
+ #include <vector>
++#include <random>
+ 
+ #include "rtflann/general.h"
+ 
+@@ -75,14 +76,6 @@ inline int rand_int(int high = RAND_MAX, int low = 0)
+     return low + (int) ( double(high-low) * (std::rand() / (RAND_MAX + 1.0)));
+ }
+ 
+-
+-class RandomGenerator
+-{
+-public:
+-    ptrdiff_t operator() (ptrdiff_t i) { return rand_int(i); }
+-};
+-
+-
+ /**
+  * Random number generator that returns a distinct number from
+  * the [0,n) interval each time.
+@@ -110,14 +103,15 @@ public:
+      */
+     void init(int n)
+     {
+-        static RandomGenerator generator;
+         // create and initialize an array of size n
+         vals_.resize(n);
+         size_ = n;
+         for (int i = 0; i < size_; ++i) vals_[i] = i;
+ 
+         // shuffle the elements in the array
+-        std::random_shuffle(vals_.begin(), vals_.end(), generator);
++        std::random_device rd;
++        std::mt19937 g(rd());
++        std::shuffle(vals_.begin(), vals_.end(), g);
+ 
+         counter_ = 0;
+     }
