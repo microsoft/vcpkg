@@ -3322,7 +3322,7 @@
     },
     "jaeger-client-cpp": {
       "baseline": "0.7.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jansson": {
       "baseline": "2.14",
@@ -5826,7 +5826,7 @@
     },
     "opentracing": {
       "baseline": "1.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "openturns": {
       "baseline": "1.20",
