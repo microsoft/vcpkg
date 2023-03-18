@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 6744693..73b7549 100644
+index 6e1585b..88c8b05 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -29,8 +29,9 @@ include config.make
@@ -29,11 +29,33 @@ index 6744693..73b7549 100644
  	-rm -f $@
  	$(AR) $(ARFLAGS) $@ $(hogweed_OBJS)
  	$(RANLIB) $@
+@@ -491,8 +492,8 @@ install-static: $(LIBTARGETS)
+ 	done
+ 
+ install-dll-nettle:
+-	$(MKDIR_P) $(DESTDIR)$(bindir)
+-	$(INSTALL_DATA) $(LIBNETTLE_FORLINK) $(DESTDIR)$(bindir)/$(LIBNETTLE_FORLINK)
++	$(MKDIR_P) $(DESTDIR)$(libdir)/../bin
++	$(INSTALL_DATA) $(LIBNETTLE_FORLINK) $(DESTDIR)$(libdir)/../bin/$(LIBNETTLE_FORLINK)
+ 
+ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+ 	$(MKDIR_P) $(DESTDIR)$(libdir)
+@@ -504,8 +505,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+ 		&& $(LN_S) $(LIBNETTLE_FILE) $(LIBNETTLE_FORLINK))
+ 
+ install-dll-hogweed:
+-	$(MKDIR_P) $(DESTDIR)$(bindir)
+-	$(INSTALL_DATA) $(LIBHOGWEED_FORLINK) $(DESTDIR)$(bindir)/$(LIBHOGWEED_FORLINK)
++	$(MKDIR_P) $(DESTDIR)$(libdir)/../bin
++	$(INSTALL_DATA) $(LIBHOGWEED_FORLINK) $(DESTDIR)$(libdir)/../bin/$(LIBHOGWEED_FORLINK)
+ 
+ install-shared-hogweed: $(LIBHOGWEED_FORLINK) @IF_DLL@ install-dll-hogweed
+ 	$(MKDIR_P) $(DESTDIR)$(libdir)
 diff --git a/configure.ac b/configure.ac
-index c74b266..255ecff 100644
+index d50d1f5..2464514 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -869,6 +869,27 @@ case "$host_os" in
+@@ -877,6 +877,27 @@ case "$host_os" in
      LIBHOGWEED_LIBS='libnettle.so $(LIBS)'
      ;;
  esac

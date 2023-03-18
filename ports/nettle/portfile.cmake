@@ -104,6 +104,10 @@ if(NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+endif()
+
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
