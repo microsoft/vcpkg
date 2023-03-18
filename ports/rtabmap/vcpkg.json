@@ -7,6 +7,9 @@
   "license": "BSD-3-Clause",
   "supports": "windows & !static",
   "dependencies": [
+    "ceres",
+    "g2o",
+    "octomap",
     {
       "name": "opencv",
       "default-features": false
@@ -18,6 +21,7 @@
         "vtk"
       ]
     },
+    "sqlite3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -26,19 +30,27 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib",
-    "sqlite3",
-	"octomap",
-	"g2o",
-	"ceres"
+    "zlib"
   ],
   "default-features": [
+    "gui",
     "opencv-contrib",
     "opencv-nonfree",
-    "tools",
-    "gui"
+    "tools"
   ],
   "features": {
+    "gui": {
+      "description": "Build RTAB-Map with GUI support (Qt)",
+      "dependencies": [
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "qt"
+          ]
+        }
+      ]
+    },
     "opencv-contrib": {
       "description": "Use OpenCV with contrib modules (e.g., xfeatures2d, aruco)",
       "dependencies": [
@@ -47,18 +59,6 @@
           "default-features": false,
           "features": [
             "contrib"
-          ]
-        }
-      ]
-    },
-    "opencv-nonfree": {
-      "description": "Use OpenCV with nonfree module (surf feature)",
-      "dependencies": [
-        {
-          "name": "opencv",
-          "default-features": false,
-          "features": [
-            "nonfree"
           ]
         }
       ]
@@ -75,17 +75,17 @@
         }
       ]
     },
-    "gui": {
-      "description": "Build RTAB-Map with GUI support (Qt)",
+    "opencv-nonfree": {
+      "description": "Use OpenCV with nonfree module (surf feature)",
       "dependencies": [
         {
-           "name": "pcl",
-           "default-features": false,
-           "features": [
-             "qt"
-           ]
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "nonfree"
+          ]
         }
-	  ]
+      ]
     },
     "tools": {
       "description": "Build RTAB-Map's tools",
