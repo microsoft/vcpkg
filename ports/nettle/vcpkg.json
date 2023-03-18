@@ -18,5 +18,10 @@
       ],
       "platform": "windows"
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }

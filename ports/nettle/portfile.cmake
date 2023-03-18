@@ -41,6 +41,10 @@ else()
     vcpkg_list(APPEND OPTIONS --disable-shared)
 endif()
 
+if("tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --enable-tools)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -68,6 +72,8 @@ vcpkg_configure_make(
         --disable-documentation
         --disable-openssl
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    OPTIONS_DEBUG
+        --disable-tools
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
