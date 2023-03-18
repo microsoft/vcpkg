@@ -5,8 +5,8 @@ vcpkg_from_github(
     REPO introlab/rtabmap
     # rtabmap stops releasing, check their CMakeLists.txt for version.
     # currently is 0.21.0
-    REF e66ea7b42b8a18d89411aa125a0cefbf33302f0a
-    SHA512 ec6dc68789630988a0f78851af03c3259a11bc8d515a97e1fb4956c878109be648adfdd916c8f9a40b7c6f6cac60f5257e8f80a254d01354c9e1c84e5df63247
+    REF ab99719a78de5ffe6dd9f22576eed3f56a3aa731
+    SHA512 bdc09f6b9d0b869fe55797a7e85b660b1ad44eae44f747f384448f6416dfb0263149203285f32e7918bd22282a369416790544a64173ce5fb79aeda79d928eaa
     HEAD_REF master
     PATCHES
         qtdeploy.patch
@@ -14,15 +14,24 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools BUILD_TOOLS
-        tools BUILD_APP
         gui WITH_QT
         octomap WITH_OCTOMAP
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS REL_FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
+        tools BUILD_APP
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
+        -DBUILD_APP=OFF
+    OPTIONS_RELEASE
+        ${REL_FEATURE_OPTIONS}
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
@@ -70,14 +79,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(GLOB CONFIG_FILES "${CURRENT_PACKAGES_DIR}/CMake/*.cmake")
-file(COPY ${CONFIG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_cmake_config_fixup(PACKAGE_NAME RTABMap)
+vcpkg_cmake_config_fixup(PACKAGE_NAME RTABMap CONFIG_PATH CMake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/CMake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/CMake")
 
 vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 
@@ -115,14 +120,22 @@ if("tools" IN_LIST FEATURES)
     # Remove duplicate files that were added by qtdeploy 
     # that would be already deployed by vcpkg_copy_tools
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tmp)
-    file(GLOB RTABMAP_LIBS ${CURRENT_PACKAGES_DIR}/tmp/rtabmap*)
-    file(COPY ${RTABMAP_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/bin)
+    file(GLOB RTABMAP_REL_LIBS ${CURRENT_PACKAGES_DIR}/tmp/rtabmap*)
+    file(COPY ${RTABMAP_REL_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
     file(RENAME ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
     #qt.conf
     file(WRITE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "[Paths]
     Prefix = .")
+
+    # Debug
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/tmp)
+    file(GLOB RTABMAP_DBG_LIBS ${CURRENT_PACKAGES_DIR}/debug/tmp/rtabmap*)
+    file(COPY ${RTABMAP_DBG_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tmp")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
     
   endif()
 endif()
