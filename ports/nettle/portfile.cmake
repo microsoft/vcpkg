@@ -19,6 +19,7 @@ vcpkg_from_gitlab(
         compile.patch
         host-tools.patch
         ccas.patch
+        install-dll.patch
         ${extra_patches}
 )
 
@@ -99,6 +100,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 endif()
 vcpkg_install_make()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
 if(NOT VCPKG_CROSSCOMPILING)
     set(tool_names desdata eccdata) # aes gcm sha twofish?
