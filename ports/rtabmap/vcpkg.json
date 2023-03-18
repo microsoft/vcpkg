@@ -9,7 +9,6 @@
   "dependencies": [
     "ceres",
     "g2o",
-    "octomap",
     {
       "name": "opencv",
       "default-features": false
@@ -49,6 +48,12 @@
             "qt"
           ]
         }
+      ]
+    },
+    "octomap": {
+      "description": "Build RTAB-Map with OctoMap support",
+      "dependencies": [
+        "octomap"
       ]
     },
     "opencv-contrib": {

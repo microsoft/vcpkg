@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools BUILD_TOOLS
         tools BUILD_APP
         gui WITH_QT
+        octomap WITH_OCTOMAP
 )
 
 vcpkg_cmake_configure(
@@ -53,7 +54,6 @@ vcpkg_cmake_configure(
         -DWITH_REALSENSE2=OFF
         -DWITH_MYNTEYE=OFF
         -DWITH_DEPTHAI=OFF
-        -DWITH_OCTOMAP=ON
         -DWITH_CPUTSDF=OFF
         -DWITH_OPENCHISEL=OFF
         -DWITH_ALICE_VISION=OFF
