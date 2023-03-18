@@ -5,9 +5,11 @@ vcpkg_from_github(
     REPO introlab/rtabmap
     # rtabmap stops releasing, check their CMakeLists.txt for version.
     # currently is 0.21.0
-    REF 46edd15121b5efc607f3141e61e54171c48b791b
-    SHA512 cfc83a9982fee261dbcf65a694b72a0f7ed2afdce1a0c16636822b047ab8a983464d40c5624a343fd361da95d5635a53ec8edc86eca3af5d44db2afba9599b61
+    REF e66ea7b42b8a18d89411aa125a0cefbf33302f0a
+    SHA512 ec6dc68789630988a0f78851af03c3259a11bc8d515a97e1fb4956c878109be648adfdd916c8f9a40b7c6f6cac60f5257e8f80a254d01354c9e1c84e5df63247
     HEAD_REF master
+    PATCHES
+        qtdeploy.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -77,10 +79,52 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/CMake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/CMake")
 
-file(GLOB EXEFILES_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-file(GLOB EXEFILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-file(COPY ${EXEFILES_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
+
+if("tools" IN_LIST FEATURES)
+  vcpkg_copy_tools(
+    TOOL_NAMES
+        rtabmap-camera
+        rtabmap-console
+        rtabmap-detectMoreLoopClosures
+        rtabmap-export
+        rtabmap-extractObject
+        rtabmap-info
+        rtabmap-kitti_dataset
+        rtabmap-recovery
+        rtabmap-report
+        rtabmap-reprocess
+        rtabmap-rgbd_dataset
+        rtabmap-euroc_dataset
+        rtabmap-cleanupLocalGrids
+        rtabmap-globalBundleAdjustment
+    AUTO_CLEAN
+  )
+  if("gui" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            rtabmap
+            rtabmap-calibration
+            rtabmap-databaseViewer
+            rtabmap-dataRecorder
+            rtabmap-odometryViewer
+            rtabmap-rgbd_camera
+        AUTO_CLEAN
+    )
+    
+    # Remove duplicate files that were added by qtdeploy 
+    # that would be already deployed by vcpkg_copy_tools
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tmp)
+    file(GLOB RTABMAP_LIBS ${CURRENT_PACKAGES_DIR}/tmp/rtabmap*)
+    file(COPY ${RTABMAP_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
+    #qt.conf
+    file(WRITE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "[Paths]
+    Prefix = .")
+    
+  endif()
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
