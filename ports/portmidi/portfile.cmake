@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v2.0.4
     SHA512 d9f22d161e1dd9a4bde1971bb2b6e5352da51545f4fe5ecad11c55e7a535f0d88efce18d1c8fd91e93b70a7926150f86a0f53972ad92370e86556a8dd72dc194
     HEAD_REF master
+    PATCHES
+        "search-for-threads-in-config.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
