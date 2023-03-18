@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }

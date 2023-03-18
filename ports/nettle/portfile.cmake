@@ -35,6 +35,10 @@ else()
     vcpkg_list(APPEND OPTIONS --disable-shared)
 endif()
 
+if("tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --enable-tools)
+endif()
+
 # As in gmp
 set(disable_assembly OFF)
 set(ccas "")
@@ -87,6 +91,8 @@ vcpkg_configure_make(
         --disable-documentation
         --disable-openssl
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    OPTIONS_DEBUG
+        --disable-tools
 )
 vcpkg_install_make()
 
