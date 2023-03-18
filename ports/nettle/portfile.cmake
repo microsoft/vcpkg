@@ -58,6 +58,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         nettle_cv_asm_type_percent_function=no
         nettle_cv_asm_align_log=no
     )
+else()
+    vcpkg_list(APPEND OPTIONS "CCAS=") # configure will use CC
 endif()
 
 if(VCPKG_CROSSCOMPILING)
