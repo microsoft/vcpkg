@@ -1,9 +1,9 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/Jsonifier
-	REF e93b88b
-	SHA512 fa5c0eff80214ad9df13152df4a102a9f86bf80fe93d3a393fffd7cbb60744f730830915775e59664d6605620e347b25d474f3c11c6c4cdb32f3fc5db080221c
-	HEAD_REF main
+	REF a62e165
+	SHA512 4523b68049b9a3908b343dd6ff57be5b316547f5f716bd3f97a3b61c4069637989377b3b9f57b772e679ec571be1c966ec7b8cb0a90826de73d02b92bf14def3
+	HEAD_REF Dev
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +13,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(
 	INSTALL "${SOURCE_PATH}/License.md"
