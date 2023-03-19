@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF 3258b5c3e2488464de0827343c8c27bc6499765e # v7.10.2
-  SHA512 527f5f69305dc5bc766fa1f492ae4b4a7e487b5edee9249dc1b99ec738f955a25eccaeaaf21d86bd10a6d79cfdf6ef026add6d45b1d4647e0c31a18f189aa1e6
+  REF fdf403f5918a2b4355cf75ebe5e21d0fc22db880 # v8.0.0
+  SHA512 bcc0d49f0ec7208bb7b114460fb501c056091c98e0175b50ab1f9ac802ce3b1039d7ab23966c38da4efaa871a833dfd15c69ae75c866a052ec4124234c0818f8
   HEAD_REF main
   PATCHES
     0002-only-build-one-flavor.patch
