@@ -18,7 +18,6 @@
   "default-features": [
     "iconv",
     "lzma",
-    "network",
     "zlib"
   ],
   "features": {
@@ -43,20 +42,6 @@
       "description": "Use LZMA",
       "dependencies": [
         "liblzma"
-      ]
-    },
-    "network": {
-      "description": "Default set of the network protocols, dependent on platform",
-      "dependencies": [
-        {
-          "name": "libxml2",
-          "default-features": false,
-          "features": [
-            "ftp",
-            "http"
-          ],
-          "platform": "!uwp"
-        }
       ]
     },
     "tools": {
