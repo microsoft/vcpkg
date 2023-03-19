@@ -14,6 +14,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 file(
 	INSTALL "${SOURCE_PATH}/License.md"
 	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
