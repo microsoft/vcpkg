@@ -1,15 +1,22 @@
 {
   "name": "directxtex",
   "version-date": "2023-01-31",
-  "port-version": 1,
+  "port-version": 2,
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
   "license": "MIT",
   "supports": "windows | linux",
   "dependencies": [
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "(windows & !xbox) | linux"
+    },
     "directxmath",
+    {
+      "name": "ms-gdkx",
+      "platform": "xbox"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

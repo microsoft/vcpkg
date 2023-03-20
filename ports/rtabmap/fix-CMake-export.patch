@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef02aa0..32a1e38 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1656,3 +1656,22 @@ MESSAGE(SEND_ERROR "No graph optimizer found! You should have at least one of th
+ ENDIF(NOT GTSAM_FOUND AND NOT G2O_FOUND AND NOT WITH_TORO AND NOT WITH_CERES AND NOT CERES_FOUND)
+ 
+ # vim: set et ft=cmake fenc=utf-8 ff=unix sts=0 sw=2 ts=2 :
++
++SET(install_targets rtabmap_utilite rtabmap_core)
++TARGET_INCLUDE_DIRECTORIES(rtabmap_utilite INTERFACE $<INSTALL_INTERFACE:include/rtabmap-0.20>)
++TARGET_INCLUDE_DIRECTORIES(rtabmap_core INTERFACE $<INSTALL_INTERFACE:include/rtabmap-0.20>)
++INSTALL(TARGETS ${install_targets} EXPORT unofficial-rtabmap-config)
++
++INSTALL(EXPORT unofficial-rtabmap-config
++    NAMESPACE unofficial::rtabmap::
++    DESTINATION share/unofficial-rtabmap
++    FILE unofficial-rtabmap-config.cmake
++)
++
++INCLUDE(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-rtabmapConfigVersion.cmake"
++  VERSION ${PROJECT_VERSION}
++  COMPATIBILITY SameMajorVersion)
++
++INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-rtabmapConfigVersion.cmake" DESTINATION "share/unofficial-rtabmap")
