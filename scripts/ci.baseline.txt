@@ -1078,6 +1078,11 @@ sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
 
+# these ports require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+ms-gdkx:x64-windows=fail
+ms-gdkx:x64-windows-static=fail
+ms-gdkx:x64-windows-static-md=fail
+
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x86-windows=fail
 v8:x64-windows=fail
