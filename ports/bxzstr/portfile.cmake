@@ -16,8 +16,8 @@ file(INSTALL
      "${SOURCE_PATH}/include/strict_fstream.hpp"
      "${SOURCE_PATH}/include/z_stream_wrapper.hpp"
      "${SOURCE_PATH}/include/zstd_stream_wrapper.hpp"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include/bxzstr/")
+     DESTINATION "${CURRENT_PACKAGES_DIR}/include/bxzstr")
 
-vcpkg_add_to_path("${CURRENT_PACKAGES_DIR}/include/bxzstr/")
+vcpkg_add_to_path("${CURRENT_PACKAGES_DIR}/include/bxzstr")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
