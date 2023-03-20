@@ -4,7 +4,7 @@
   "description": "A few classes for parsing and serializing json - very rapidly.",
   "homepage": "https://https://github.com/RealTimeChris/Jsonifier",
   "license": "LGPL-2.1-or-later",
-  "supports": "(windows & x64) | (linux & x64) | (osx & x64)",
+  "supports": "(windows & x64 & !uwp) | (linux & x64) | (osx & x64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
