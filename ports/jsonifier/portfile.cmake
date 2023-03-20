@@ -1,11 +1,12 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/Jsonifier
-	REF ea9969c
-	SHA512 de36795a34d99c9fa8834f3d1cf7b058c6a73d9dd21be45325f52e373632f74e7376644e364dc8fdd5f05a6a85fa3e0883bb8fba2e72dffcc554ce05ce3700de
+	REF 8bceaa6
+	SHA512 7190a0b1a11d22c9918eef95dd7d9a9ba5bcb6fd0e3ca953676bcbfa6be427a076930e0640597fed5f34c39c5106389de27272cf35c6d17e89336a24bd071ded
 	HEAD_REF main
 )
-
+if ("${VCPKG_TARGET_TRIPLET}" == "x64_uwp")
+else()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
@@ -19,3 +20,4 @@ file(
 	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 	RENAME copyright
 )
+endif()
