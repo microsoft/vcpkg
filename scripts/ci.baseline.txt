@@ -217,6 +217,8 @@ fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
+flashlight-cpu:x64-linux=fail
+flashlight-cuda:x64-linux=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -336,16 +338,6 @@ ijg-libjpeg:x64-uwp            = skip
 ijg-libjpeg:x64-windows        = skip
 ijg-libjpeg:x64-windows-static = skip
 ijg-libjpeg:x86-windows        = skip
-intel-mkl:arm64-windows=fail
-intel-mkl:arm-uwp=fail
-intel-mkl:x64-linux=fail
-intel-mkl:x64-osx=fail
-intel-mkl:arm64-osx=fail
-intel-mkl:x64-uwp=fail
-intel-mkl:x64-windows=fail
-intel-mkl:x64-windows-static=fail
-intel-mkl:x64-windows-static-md=fail
-intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail

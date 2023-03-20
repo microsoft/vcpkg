@@ -214,7 +214,7 @@
     },
     "arrayfire": {
       "baseline": "3.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "arrow": {
       "baseline": "10.0.1",
@@ -3281,8 +3281,8 @@
       "port-version": 0
     },
     "intel-mkl": {
-      "baseline": "2020.0.0",
-      "port-version": 2
+      "baseline": "2023.0.0",
+      "port-version": 0
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
