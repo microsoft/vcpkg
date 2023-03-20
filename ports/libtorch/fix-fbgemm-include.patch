@@ -1,11 +1,11 @@
 diff --git a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
-index 224a66f..eb42317 100644
+index 0ef462e..905d442 100644
 --- a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
 +++ b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
-@@ -8,7 +8,10 @@
- #include <torch/library.h>
- 
+@@ -22,7 +22,10 @@
  #include <c10/util/irange.h>
+ 
+ #include <utility>
 -
 +#ifdef USE_FBGEMM
 +#include <fbgemm/Fbgemm.h>
@@ -15,13 +15,13 @@ index 224a66f..eb42317 100644
  
  /*
 diff --git a/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp b/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
-index f94d27b..299b88b 100644
+index d0c62d6..cf8df58 100644
 --- a/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
 +++ b/aten/src/ATen/native/quantized/cpu/qembeddingbag_unpack.cpp
-@@ -4,7 +4,10 @@
- #include <ATen/native/quantized/cpu/fbgemm_utils.h>
- #include <c10/util/irange.h>
- #include <torch/library.h>
+@@ -15,7 +15,10 @@
+ #include <ATen/ops/from_blob.h>
+ #include <ATen/ops/resize_native.h>
+ #endif
 -
 +#ifdef USE_FBGEMM
 +#include <fbgemm/Fbgemm.h>

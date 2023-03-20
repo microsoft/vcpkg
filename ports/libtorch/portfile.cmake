@@ -3,11 +3,10 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
-    REF v1.12.1
-    SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
+    REF "v${VERSION}"
+    SHA512 4dd76160711c0d87f3026c8b7fa3ed149dd86b8ac0ee9ecea0eaf80d2e6ce8c29368392e77b9466d90b60634087b462b782495997a5d33367cc8ca9fe14c8a14
     HEAD_REF master
     PATCHES
-        pytorch-pr-85958.patch # https://github.com/pytorch/pytorch/pull/85958
         fix-cmake.patch
         fix-fbgemm-include.patch
         fix-c10-glog.patch
