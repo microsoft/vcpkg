@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-09-15) # for ${VERSION}
-
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
 set(LIBPNG_APNG_OPTION "")
@@ -56,8 +54,14 @@ vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        # for armeabi-v7a, check whether NEON is available
-        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
+            vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+        else()
+            # for armeabi-v7a, check whether NEON is available
+            vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+        endif()
     endif()
 endif()
 

@@ -1,7 +1,6 @@
 {
   "name": "openimageio",
-  "version": "2.4.5.0",
-  "port-version": 1,
+  "version": "2.4.9.0",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
@@ -20,10 +19,8 @@
     "boost-thread",
     "boost-type-traits",
     "fmt",
-    "libheif",
     "libjpeg-turbo",
     "libpng",
-    "libsquish",
     "openexr",
     "robin-map",
     "tiff",
@@ -60,6 +57,12 @@
       "description": "Enable giflib support for openimageio",
       "dependencies": [
         "giflib"
+      ]
+    },
+    "libheif": {
+      "description": "Enable heif support for openimageio",
+      "dependencies": [
+        "libheif"
       ]
     },
     "libraw": {
@@ -103,7 +106,7 @@
       "dependencies": [
         "opengl",
         {
-          "name": "qt5-base",
+          "name": "qtbase",
           "default-features": false
         }
       ]

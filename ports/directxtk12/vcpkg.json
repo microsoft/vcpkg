@@ -1,6 +1,7 @@
 {
   "name": "directxtk12",
-  "version-date": "2022-12-15",
+  "version-date": "2023-02-06",
+  "port-version": 1,
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
@@ -9,10 +10,18 @@
   "dependencies": [
     {
       "name": "directx-dxc",
-      "host": true
+      "host": true,
+      "platform": "windows & !xbox"
     },
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "windows & !xbox"
+    },
     "directxmath",
+    {
+      "name": "ms-gdkx",
+      "platform": "xbox"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

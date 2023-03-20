@@ -1,6 +1,6 @@
 {
   "name": "llvm",
-  "version": "14.0.4",
+  "version": "14.0.6",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -53,7 +53,16 @@
       ]
     },
     "clang-tools-extra": {
-      "description": "Include Clang tools."
+      "description": "Include Clang tools.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
+          ]
+        }
+      ]
     },
     "compiler-rt": {
       "description": "Include compiler's runtime libraries."

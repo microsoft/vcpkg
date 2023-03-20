@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF v2.2.8
-    SHA512 8173f2d368a214cf1eb7faae2f6326db43fb094ec9c83e652f953290c3f29c34ebd0b92cbb439bea8d814d3a7e4f9dc0c18c648df1d414989d5d8b4700c79535
+    REF "v${VERSION}"
+    SHA512 1633294bf6c714361c381151b62d9dd2c8f388490153e7964bfa14fd647a681db9ebfe1de0a06279972d6c5b30377f67361feb4db186b1faa235600f0ae02b22
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
         gentables.patch
+        add-usage-requirements.patch
 )
 
 vcpkg_check_features(
@@ -16,7 +16,7 @@ vcpkg_check_features(
         sndfile     enable-libsndfile
 )
 
-set(feature_list dbus jack libinstpatch midishare opensles oboe oss sdl2 pulseaudio readline lash systemd dart)
+set(feature_list dbus jack libinstpatch midishare opensles oboe openmp oss sdl2 pulseaudio readline lash systemd dart)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()
@@ -45,18 +45,22 @@ vcpkg_cmake_configure(
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-        -DLIB_INSTALL_DIR=lib
-        -Denable-pkgconfig=ON
         -Denable-framework=OFF # Needs system permission to install framework
-    OPTIONS_DEBUG
-        -Denable-debug:BOOL=ON
     MAYBE_UNUSED_VARIABLES
         enable-coreaudio
         enable-coremidi
         enable-dart
+        ALSA_FOUND
+        COREAUDIO_FOUND
+        COREMIDI_FOUND
+        VCPKG_BUILD_MAKE_TABLES
+        enable-framework
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
+
 vcpkg_fixup_pkgconfig()
 
 set(tools fluidsynth)
@@ -65,13 +69,13 @@ if("buildtools" IN_LIST FEATURES)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-# Remove unnecessary files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

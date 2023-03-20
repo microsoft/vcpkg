@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
-  "version": "5.0.2",
-  "port-version": 1,
+  "version": "5.1.2",
+  "port-version": 5,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -34,6 +34,7 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "aom",
             "avcodec",
             "avdevice",
             "avfilter",
@@ -44,6 +45,7 @@
             "lzma",
             "mp3lame",
             "openjpeg",
+            "openmpt",
             "opus",
             "snappy",
             "soxr",
@@ -150,17 +152,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "aom"
+            "amf"
           ],
-          "platform": "!(windows & arm & !uwp)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "dav1d"
-          ],
-          "platform": "!(uwp | arm | x86 | osx)"
+          "platform": "!osx & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -182,17 +176,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tesseract"
+            "dav1d"
           ],
-          "platform": "!(windows & arm) & !static & !uwp"
+          "platform": "!(uwp | (windows & x86 & !static))"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "amf"
+            "tesseract"
           ],
-          "platform": "linux | (!osx & !uwp & !(arm & windows))"
+          "platform": "!(windows & arm) & !static & !uwp"
         },
         {
           "name": "ffmpeg",

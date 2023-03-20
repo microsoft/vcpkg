@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lzmautils
     FILENAME "xz-${VERSION}.tar.xz"
-    SHA512 0ef70c8803d86b731fa55bc017401609a4c2ee34244c1e561075941571c4954905b9fd65f40daf00043fc9aca7712fa8407a66d5e0097eaa834718c41dc518d5
+    SHA512 f890ee5207799fbc7bb9ae031f444d39d82275b0e1b8cc7f01fdb9270050e38849bd1269db2a2f12fe87b5e23e03f9e809a5c3456d066c0a56e6f98d728553ea
     PATCHES
         fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
@@ -15,10 +15,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools BUILD_TOOLS
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(WASM_OPTIONS -DCMAKE_C_BYTE_ORDER=LITTLE_ENDIAN -DCMAKE_CXX_BYTE_ORDER=LITTLE_ENDIAN)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${WASM_OPTIONS}
         -DBUILD_TESTING=OFF
         -DCREATE_XZ_SYMLINKS=OFF
         -DCREATE_LZMA_SYMLINKS=OFF

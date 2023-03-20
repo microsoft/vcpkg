@@ -1,12 +1,10 @@
-set(LLVM_VERSION "14.0.4")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-${LLVM_VERSION}
-    SHA512 e14e6c3a1915a96e9ddc609f16ca3a398ca6f7fd0a691dadaa24490078a661340e845cb2d18f3679de4f47300bb822c33ae69548af6a0370d55737831a28b959
+    REF llvmorg-${VERSION}
+    SHA512 d64f97754c24f32deb5f284ebbd486b3a467978b7463d622f50d5237fff91108616137b4394f1d1ce836efa59bf7bec675b6dee257a79b241c15be52d4697460
     HEAD_REF main
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
@@ -111,7 +109,7 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
     # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
     # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${LLVM_VERSION})
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${VERSION})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -245,7 +243,7 @@ vcpkg_cmake_configure(
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
-        -DPACKAGE_VERSION=${LLVM_VERSION}
+        -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
@@ -254,7 +252,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 function(llvm_cmake_package_config_fixup package_name)
-    cmake_parse_arguments("arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "FEATURE_NAME" "" ${ARGN})
+    cmake_parse_arguments("arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "FEATURE_NAME;CONFIG_PATH" "" ${ARGN})
     if(NOT DEFINED arg_FEATURE_NAME)
         set(arg_FEATURE_NAME ${package_name})
     endif()
@@ -264,8 +262,11 @@ function(llvm_cmake_package_config_fixup package_name)
         if(arg_DO_NOT_DELETE_PARENT_CONFIG_PATH)
             list(APPEND args "DO_NOT_DELETE_PARENT_CONFIG_PATH")
         endif()
+        if(arg_CONFIG_PATH)
+            list(APPEND args "CONFIG_PATH" "${arg_CONFIG_PATH}")
+        endif()
         vcpkg_cmake_config_fixup(${args})
-        file(INSTALL "${SOURCE_PATH}/${package_name}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${package_name}" RENAME copyright)
+        file(INSTALL "${SOURCE_PATH}/${arg_FEATURE_NAME}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${package_name}" RENAME copyright)
         if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${package_name}_usage")
             file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/${package_name}_usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${package_name}" RENAME usage)
         endif()
@@ -277,13 +278,18 @@ llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
 set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
+endif()
+
+if("pstl" IN_LIST FEATURES)
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 endif()
 
 if("flang" IN_LIST FEATURES)
