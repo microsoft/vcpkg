@@ -1,6 +1,7 @@
 {
   "name": "openblas",
   "version": "0.3.21",
+  "port-version": 1,
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "license": "BSD-3-Clause",
@@ -25,7 +26,8 @@
   ],
   "features": {
     "dynamic-arch": {
-      "description": "Support for multiple targets in a single library"
+      "description": "Support for multiple targets in a single library",
+      "supports": "mingw"
     },
     "simplethread": {
       "description": "Use simple thread",
