@@ -4,7 +4,7 @@
 Param(
   # Create a new resource group/container registry
   [parameter(Mandatory=$false)]
-  [switch]$createNew
+  [switch]$newRegistry
 )
 
 $Location = 'eastasia'
@@ -13,7 +13,7 @@ $ResourceGroupName = "And-Registry"
 $ContainerRegistryName = "AndContainerRegistry"
 $ErrorActionPreference = 'Stop'
 
-if ($createNew) {
+if ($newRegistry) {
     New-AzResourceGroup -Name $ResourceGroupName -Location $Location
     New-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ContainerRegistryName -EnableAdminUser -Sku Basic
 }

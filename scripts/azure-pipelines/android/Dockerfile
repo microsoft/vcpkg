@@ -4,39 +4,31 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN \
   apt-get update && \
-  apt-get -y upgrade && \
-  apt-get -y install git
+  apt-get -y upgrade
+
+RUN \
+  apt-get -y --no-install-recommends install git g++ wget curl zip vim pkg-config tar cmake unzip ca-certificates
 
 # Download Android NDK
 RUN \
-  apt-get -y install wget unzip && \
-  wget https://dl.google.com/android/repository/android-ndk-r25b-linux.zip && \
-  unzip android-ndk-r25b-linux.zip
+  wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip && \
+  unzip android-ndk-r25c-linux.zip
 
+# Download Powershell
 RUN \
-  apt-get -y --no-install-recommends install curl zip unzip vim pkg-config tar cmake
-
-# For host-only dependencies
-RUN \
-  apt-get -y install g++
-
-RUN \
-  wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-
-RUN \
+  wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb && \
   dpkg -i packages-microsoft-prod.deb && \
-  rm -f packages-microsoft-prod.deb
-
-RUN \
-  apt-get -y install software-properties-common
-
-RUN \
-  apt-get update
-
-RUN \
+  rm -f packages-microsoft-prod.deb && \
+  apt-get -y install software-properties-common && \
+  apt-get update && \
   add-apt-repository universe && \
   apt-get -y install powershell
 
+# Azure CLI
+RUN \
+  curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Other dependencies
 RUN \
   apt-get -y --no-install-recommends install autoconf nasm bison python2 flex build-essential libtool libtool-bin gettext automake
 
@@ -48,6 +40,6 @@ RUN \
 RUN \
   apt-get -y --no-install-recommends install libxinerama-dev libxcursor-dev
 
-ENV ANDROID_NDK_HOME /android-ndk-r25b
+ENV ANDROID_NDK_HOME /android-ndk-r25c
 
 WORKDIR /vcpkg
