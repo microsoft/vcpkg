@@ -2,33 +2,34 @@ set(DIRECTXTEX_TAG jan2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_MINGW)
-    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF ${DIRECTXTEX_TAG}
-    SHA512 5bc6ee9aeff314ef700a2e0b4b87807121eba6298de9c83af9eb9a3ce1956396570d10888b05e0c42eda800c3183023eb9e0e4b5464989a141e30c0097ecd8fc
+    REF jan2023c
+    SHA512 df550651b0fc4927aa9f837e0347b98722b8112ca7d7eddecded03a4a8a3dd7afed42c882c04f0b64e403a26c84d4e1c88ee9c104395be446ce220b28c6af9da
     HEAD_REF main
     )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        dx11 BUILD_DX11
         dx12 BUILD_DX12
         openexr ENABLE_OPENEXR_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
 )
 
+if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
+    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
-set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON -DBUILD_DX11=ON)
+set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON)
 
-if(VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_XBOX)
   list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
   list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
@@ -76,7 +77,7 @@ if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
-elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP))
+elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP) AND (NOT VCPKG_TARGET_IS_XBOX) AND ("dx11" IN_LIST FEATURES))
 
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag

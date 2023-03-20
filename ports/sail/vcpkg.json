@@ -1,6 +1,7 @@
 {
   "name": "sail",
-  "version-semver": "0.9.0-rc2",
+  "version-semver": "0.9.0-rc3",
+  "port-version": 1,
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
@@ -86,6 +87,7 @@
           "features": [
             "ico",
             "pcx",
+            "psd",
             "qoi",
             "tga"
           ]
@@ -126,11 +128,11 @@
         "libpng"
       ]
     },
+    "psd": {
+      "description": "Enable PSD codec"
+    },
     "qoi": {
       "description": "Enable QOI codec"
-    },
-    "svg": {
-      "description": "Enable SVG codec"
     },
     "tga": {
       "description": "Enable TGA codec"
