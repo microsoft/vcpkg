@@ -24,13 +24,13 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL Android)
     file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
     if(WIN32)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     elseif(APPLE)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     else()
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     endif()
 
     find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
