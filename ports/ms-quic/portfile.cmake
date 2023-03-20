@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
-    REF v2.1.8
+    REF "v${VERSION}"
     SHA512 23ef4cc3794180b06d0ed138d6e96e37ef5f15ea0ccbf405f95f13c9fbd5aedc8a9c5c403b38b2381801796c50907ee36ebed1161da687bacd82cdea6880475a
     HEAD_REF master
     PATCHES
