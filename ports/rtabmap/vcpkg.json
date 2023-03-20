@@ -47,7 +47,14 @@
           "features": [
             "qt"
           ]
-        }
+        },
+        "qtbase"
+      ]
+    },
+    "k4w2": {
+      "description": "Build RTAB-Map with Kinect For Windows SDK 2.0 camera driver",
+      "dependencies": [
+        "kinectsdk2"
       ]
     },
     "octomap": {
@@ -88,6 +95,25 @@
           "default-features": false,
           "features": [
             "nonfree"
+          ]
+        }
+      ]
+    },
+    "openni2": {
+      "description": "Build RTAB-Map with OpenNI2 camera driver",
+      "dependencies": [
+        "kinectsdk1",
+        "openni2"
+      ]
+    },
+    "realsense2": {
+      "description": "Build RTAB-Map with RealSense2 camera driver",
+      "dependencies": [
+        {
+          "name": "realsense2",
+          "default-features": false,
+          "features": [
+            "tm2"
           ]
         }
       ]

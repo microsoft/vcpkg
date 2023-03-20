@@ -3,10 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    # rtabmap stops releasing, check their CMakeLists.txt for version.
-    # currently is 0.21.0
-    REF ab99719a78de5ffe6dd9f22576eed3f56a3aa731
-    SHA512 bdc09f6b9d0b869fe55797a7e85b660b1ad44eae44f747f384448f6416dfb0263149203285f32e7918bd22282a369416790544a64173ce5fb79aeda79d928eaa
+    REF 0.21.0
+    SHA512 47fa00e760cd9089d42dc27cc0120f2dc2ad4b32b6a05e87fb5320fd6fe3971e68958984714895640989543be9252fd0fb96ccebf0d00d70afbad224022a7a53
     HEAD_REF master
     PATCHES
         qtdeploy.patch
@@ -16,6 +14,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gui WITH_QT
         octomap WITH_OCTOMAP
+        realsense2 WITH_REALSENSE2
+        k4w2 WITH_K4W2
+        openni2 WITH_OPENNI2
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS REL_FEATURE_OPTIONS
@@ -43,9 +44,7 @@ vcpkg_cmake_configure(
         -DWITH_PDAL=OFF
         -DWITH_FREENECT=OFF
         -DWITH_FREENECT2=OFF
-        -DWITH_K4W2=OFF
         -DWITH_K4A=OFF
-        -DWITH_OPENNI2=OFF
         -DWITH_DC1394=OFF
         -DWITH_G2O=ON
         -DWITH_GTSAM=OFF
@@ -60,7 +59,6 @@ vcpkg_cmake_configure(
         -DWITH_ZEDOC=OFF
         -DWITH_REALSENSE=OFF
         -DWITH_REALSENSE_SLAM=OFF
-        -DWITH_REALSENSE2=OFF
         -DWITH_MYNTEYE=OFF
         -DWITH_DEPTHAI=OFF
         -DWITH_CPUTSDF=OFF
