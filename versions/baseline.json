@@ -1922,7 +1922,7 @@
     },
     "cyclonedds": {
       "baseline": "0.10.2",
-      "port-version": 1
+      "port-version": 2
     },
     "cyclonedds-cxx": {
       "baseline": "0.10.2",
