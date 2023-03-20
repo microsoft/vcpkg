@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO etcd-cpp-apiv3/etcd-cpp-apiv3
-    REF 9e1e60af2ee99eafb4ea9b8d275870776b7d8507
-    SHA512 07e7922c96b0b9cb6502820d9dac96c60390e5d3c4d94e9eed7e847a3d1197e79dbfd4259cd1510ca02d669713a976bb027ba5decc2a44ca8e851109f2ef9c15
-    HEAD_REF v0.2.12
-    PATCHES
-        0001-do-not-hardcode-cxx-standard.patch
-        0002-use-target-link-libraries.patch
+    REF "v${VERSION}"
+    SHA512 6c0659e25be84ba85d557d16594a52517b735b593039556bfb3e8b354e13f2f2cce07d82cef4cf793ee24ba39b27d763664de78734feb62059e86db021ca1729
+    HEAD_REF master
 )
 
 vcpkg_cmake_configure(

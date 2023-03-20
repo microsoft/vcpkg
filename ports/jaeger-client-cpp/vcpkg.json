@@ -1,7 +1,7 @@
 {
   "name": "jaeger-client-cpp",
   "version-semver": "0.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ OpenTracing binding for Jaeger https://jaegertracing.io/",
   "homepage": "https://github.com/jaegertracing/jaeger-client-cpp",
   "supports": "!arm64",
