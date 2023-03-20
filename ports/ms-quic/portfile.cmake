@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
-    REF v2.1.7
+    REF v2.1.8
     SHA512 23ef4cc3794180b06d0ed138d6e96e37ef5f15ea0ccbf405f95f13c9fbd5aedc8a9c5c403b38b2381801796c50907ee36ebed1161da687bacd82cdea6880475a
     HEAD_REF master
     PATCHES
@@ -16,12 +16,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
     REPO quictls/openssl
     REF a6e9d76db343605dae9b59d71d2811b195ae7434
-    SHA512 23510a11203b96476c194a1987c7d4e758375adef0f6dfe319cd8ec4b8dd9b12ea64c4099cf3ba35722b992dad75afb1cfc5126489a5fa59f5ee4d46bdfbeaf6
+    SHA512 bbe73fcb69f067accd0f8f2a6ac73d030971d70de1f3b3d1ab1bbc43a885639d414b20cbd202d89de145e3bba40a91466ac6709b53bc6d7d0788e52d8865b50c
     HEAD_REF OpenSSL_1_1_1k+quic
 )
 
-file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules")
-file(MAKE_DIRECTORY "${QUIC_SOURCE_PATH}/submodules")
+file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl")
 file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl")
 
 if(VCPKG_TARGET_IS_WINDOWS)
