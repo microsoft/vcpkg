@@ -770,6 +770,8 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_package_name "${z_vcpkg_find_package_package_name}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
+    
+    list(REMOVE_ITEM z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "REQUIRED")
 
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
@@ -845,6 +847,47 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     else()
         _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
     endif()
+
+    if (NOT ${z_vcpkg_find_package_package_name}_FOUND)
+        set(maybe_installed_out "")
+        execute_process(
+            COMMAND "${Z_VCPKG_EXECUTABLE}" list
+                "${z_vcpkg_find_package_package_name}:" # Add ":" here to filter items containing features
+                --triplet "${VCPKG_TARGET_TRIPLET}"
+                --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
+                ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
+                ${VCPKG_INSTALL_OPTIONS}
+            OUTPUT_VARIABLE maybe_installed_out
+            RESULT_VARIABLE maybe_installed_res
+        )
+        
+        set(print_vcpkg_help OFF)
+        string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_package_name_lower)
+        if (NOT maybe_installed_res EQUAL 0)
+            string(REGEX MATCHALL "^([^ ]+)" maybe_installed_port "${maybe_installed_out}")
+            string(TOLOWER "${maybe_installed_port}" maybe_installed_port_name_lower)
+            if ("${maybe_installed_port_name_lower}" MATCHES "^${z_vcpkg_find_package_package_name_lower}\:.+$")
+                message(FATAL_ERROR "Could not find a package named \"${z_vcpkg_find_package_package_name}\" provided by vcpkg.\n"
+                    "But found:\n${maybe_installed_port}\n"
+                    "Finding : ${z_vcpkg_find_package_package_name_lower}:${VCPKG_TARGET_TRIPLET}\n"
+                    "Please check your project configuration to match the installed ports, or install the related port:triplet then try again.\n")
+                set(print_vcpkg_help ON)
+            endif()
+        endif()
+
+        if (NOT print_vcpkg_help)
+            message(FATAL_ERROR "Could not find a package configuration file provided by \"${z_vcpkg_find_package_package_name}\" "
+                "with any of the follwing names:\n"
+                "${z_vcpkg_find_package_package_name}Config.cmake\n"
+                "${z_vcpkg_find_package_package_name_lower}-config.cmake\n"
+                "This package is not provided by vcpkg.\n"
+                "Add the installation prefix of \"${z_vcpkg_find_package_package_name}\" to CMAKE_PREFIX_PATH or set "
+                "\"${z_vcpkg_find_package_package_name}\" to a directory containing one of the above files.  If "
+                "\"${z_vcpkg_find_package_package_name}\" provides a separate development package or SDK, be sure it has"
+                "been installed.\n")
+        endif()
+    endif()
+
     # Do not use z_vcpkg_find_package_package_name beyond this point since it might have changed!
     # Only variables using z_vcpkg_find_package_backup_id can used correctly below!
     foreach(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_var IN LISTS z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars)
