@@ -190,5 +190,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/codegen/cuda/tools"
                     "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/docs"
                     "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/tensorexpr/scripts"
+                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/deploy/example"
 )
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
