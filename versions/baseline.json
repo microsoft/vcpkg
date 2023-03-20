@@ -8233,7 +8233,7 @@
       "port-version": 1
     },
     "vowpal-wabbit": {
-      "baseline": "9.6.0",
+      "baseline": "9.8.0",
       "port-version": 0
     },
     "vs-yasm": {
