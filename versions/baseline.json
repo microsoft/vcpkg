@@ -3393,7 +3393,7 @@
       "port-version": 0
     },
     "jsonifier": {
-      "baseline": "2022-03-20",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "jsonnet": {
