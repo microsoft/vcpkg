@@ -1,6 +1,6 @@
 {
   "name": "jsonifier",
-  "version-date": "2022-02-25",
+  "version-date": "2022-03-20",
   "description": "A few classes for parsing and serializing json - very rapidly.",
   "homepage": "https://https://github.com/RealTimeChris/Jsonifier",
   "license": "LGPL-2.1-or-later",
