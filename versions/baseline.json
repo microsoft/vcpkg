@@ -1665,7 +1665,7 @@
       "port-version": 1
     },
     "configcat": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "console-bridge": {
