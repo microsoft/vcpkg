@@ -47,7 +47,15 @@
             "qt"
           ]
         },
-        "qtbase"
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "opengl",
+            "widgets"
+          ]
+        }
       ]
     },
     "k4w2": {
