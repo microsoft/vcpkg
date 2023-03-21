@@ -19,14 +19,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 5a821aaaaa89027ce08a347e5fc216757c2971e29f7d24792609378c54f657839b3775bf639e7330b28b4f96ef0d32869f0a96afcb25c8a2e1c2fe51a6eb4aa3
+    SHA512 877b4bc4b59126bdaf626b01322c8ac5325945234acd14907e4a23019f1fd38ec17b5fae9ff60aa9b6b0089c29b0e4255a19cd2a1743c3db82a616286c60d3b9
     PATCHES
         disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
-        windows/umul128-arm64.patch # Fixed upstream in https://github.com/openssl/openssl/pull/20244, but not released as of 3.0.8
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
