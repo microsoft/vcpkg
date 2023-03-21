@@ -1,8 +1,7 @@
-set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://repo.or.cz/libtar.git
-    HEAD_REF v1.2.20
+    REF 6d0ab4c78e7a8305c36a0c3d63fd25cd1493de65 # latest on master
 )
 
 vcpkg_configure_make(
@@ -13,4 +12,4 @@ vcpkg_install_make()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"  "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
