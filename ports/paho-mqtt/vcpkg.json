@@ -5,11 +5,11 @@
   "homepage": "https://github.com/eclipse/paho.mqtt.c",
   "license": "EPL-2.0",
   "dependencies": [
-    "openssl",
     {
       "name": "libuuid",
       "platform": "linux"
     },
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
