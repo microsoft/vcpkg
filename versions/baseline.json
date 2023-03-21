@@ -4562,7 +4562,7 @@
     },
     "libuuid": {
       "baseline": "1.0.3",
-      "port-version": 12
+      "port-version": 13
     },
     "libuv": {
       "baseline": "1.44.2",
