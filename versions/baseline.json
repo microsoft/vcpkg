@@ -6313,8 +6313,8 @@
       "port-version": 5
     },
     "qca": {
-      "baseline": "2.3.4",
-      "port-version": 3
+      "baseline": "2.3.5",
+      "port-version": 0
     },
     "qcustomplot": {
       "baseline": "2.0.1",
