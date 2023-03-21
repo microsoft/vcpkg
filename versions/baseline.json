@@ -4278,7 +4278,7 @@
     },
     "libpcap": {
       "baseline": "1.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libpff": {
       "baseline": "2021-11-14",
