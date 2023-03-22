@@ -9,6 +9,12 @@ file(GLOB UDT_SOURCES "src/*.cpp")
 
 add_library(udt ${UDT_HEADERS} ${UDT_SOURCES})
 add_library(udt::udt ALIAS udt)
+if(WIN32)
+    if(MSVC)
+        target_compile_definitions(udt PRIVATE -DUDT_EXPORTS)
+    endif()
+    target_link_libraries(udt PRIVATE ws2_32)
+endif()
 target_include_directories(udt PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/udt>")
