@@ -93,7 +93,7 @@ vcpkgCheckRepoTool tar
 UNAME="$(uname)"
 ARCH="$(uname -m)"
 
-if [ -e /etc/alpine-release ]; then
+if [ -e /etc/alpine-release -a "$ARCH" = "x86_64" ]; then
     vcpkgUseSystem="ON"
     vcpkgUseMuslC="ON"
 fi
