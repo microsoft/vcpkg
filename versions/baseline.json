@@ -3722,7 +3722,7 @@
     },
     "libadlmidi": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libadwaita": {
       "baseline": "1.2.0",
