@@ -18,6 +18,4 @@ file(INSTALL
      "${SOURCE_PATH}/include/zstd_stream_wrapper.hpp"
      DESTINATION "${CURRENT_PACKAGES_DIR}/include/bxzstr")
 
-vcpkg_add_to_path("${CURRENT_PACKAGES_DIR}/include/bxzstr")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
