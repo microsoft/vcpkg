@@ -2813,7 +2813,7 @@
       "port-version": 1
     },
     "glslang": {
-      "baseline": "11.13.0",
+      "baseline": "12.1.0",
       "port-version": 0
     },
     "glui": {
