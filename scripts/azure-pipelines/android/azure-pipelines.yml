@@ -59,6 +59,7 @@ jobs:
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   - bash: |
+      curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
       az login --identity
       az acr login --name AndContainerRegistry
     displayName: 'Set up managed identity'
