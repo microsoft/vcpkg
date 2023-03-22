@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 47fa00e760cd9089d42dc27cc0120f2dc2ad4b32b6a05e87fb5320fd6fe3971e68958984714895640989543be9252fd0fb96ccebf0d00d70afbad224022a7a53
     HEAD_REF master
     PATCHES
-        qtdeploy.patch
+        fix_qt_deploy_plugins.patch
+        fix_autouic.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
