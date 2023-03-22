@@ -36,6 +36,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glslang DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/glslang-config.cmake"
+    "${PACKAGE_PREFIX_DIR}/lib/cmake/glslang/glslang-targets.cmake"
+    "${PACKAGE_PREFIX_DIR}/share/${PORT}/glslang-targets.cmake"
+)
 
 vcpkg_copy_pdbs()
 
