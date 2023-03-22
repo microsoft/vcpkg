@@ -1,12 +1,3 @@
-diff --git a/src/Makefile b/src/Makefile
-index bc1e049..cb6925f 100644
---- a/src/Makefile
-+++ b/src/Makefile
-@@ -3,3 +3,3 @@ C++ = g++
- ifndef os
--   os = LINUX
-+   os = __linux__
- endif
 diff --git a/src/api.cpp b/src/api.cpp
 index e444218..eefdbad 100644
 --- a/src/api.cpp
