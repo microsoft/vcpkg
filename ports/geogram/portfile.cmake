@@ -1,12 +1,38 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO alicevision/geogram
-    REF 8b2ae6148c7ab1564fa2700673b4275296ce80d3 #1.7.6
-    SHA512 0ec0deded92c8d5d100b6e77f8cfbbbaf7b744c230e10abd0b86861960cda9713ff65209575fdc09034afcb0e9137428a20c00d399c09fd58ce541fed2105a2d
+    REPO BrunoLevy/geogram
+    REF 527a987649b278ee02d5e688710bf38c0d62c5e8
+    SHA512 b61f2f8a56b4f5958ad5ab2040bd2a91ad95c043c4907d06f3086d2d001b67144f2d1f7d5b1eb41aeda46b7da2239dab30261ee3af63a744e5c3645b000e92a1
     PATCHES
         fix-vcpkg-install.patch
-        use-arm64-intrinsics.patch
 )
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH AMGCL_SOURCE_PATH
+    REPO ddemidov/amgcl
+    REF 8083b23fbe69c43cee0d4bc17e4334572e292c93
+    SHA512 1b29871ace68c53b46711012921261929f8bd612f93b47d2c59523cd3d68366956fe1c9ec81a94b3aaab63357001799c9e34af79376b940fa6b7a53cdf136897
+)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH LIBMESHB_SOURCE_PATH
+    REPO LoicMarechal/libMeshb
+    REF b4a91513317119ff71a1186906a052da0e535913
+    SHA512 bff30a233c2746a454d552be66f5654bf4af995d6f1eb00a4d21ed10c86234a5be4d6f31282645858e0a829b10fd98cad7188c69be65cdabbd18478fc26bad1f
+)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH RPLY_SOURCE_PATH
+    REPO diegonehab/rply
+    REF 4296cc91b5c8c26d4e7d7aac0cee2b194ffc5800
+    SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
+)
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(RENAME "${AMGCL_SOURCE_PATH}/amgcl" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl/amgcl")
+file(RENAME "${LIBMESHB_SOURCE_PATH}/sources" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb/sources")
+file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(REMOVE_RECURSE "${LIBMESHB_SOURCE_PATH}" "${AMGCL_SOURCE_PATH}")
 
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
@@ -69,6 +95,10 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/amgcl" 
+    "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/rply/etc" 
+    "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/rply/manual" 
+    )
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
@@ -77,6 +107,6 @@ vcpkg_replace_string(
     )
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/doc/devkit/license.dox" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/devkit/license.dox")
 
 vcpkg_fixup_pkgconfig()
