@@ -26,7 +26,7 @@ list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/forge/examples
+    ${CURRENT_PACKAGES_DIR}/debug/examples
     ${CURRENT_PACKAGES_DIR}/examples
     ${DLLS}
 )
