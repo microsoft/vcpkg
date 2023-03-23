@@ -137,7 +137,7 @@ elif [ "$vcpkgUseMuslC" = "ON" ]; then
     vcpkgToolName="vcpkg-muslc"
 elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha="da2b61bc7e43dfa6ac4372a171a26a1d7906aafe796e7b4b6da0f225a4389e8c944c5f5fe8c41b69323946d90d8f5c85bbe4cc86a7fa172f56b288d7151b135c"
+    vcpkgToolReleaseSha="3176d90da81ee5c3246f10f6dc4a25288ab63e8b310103996048203b29e877946fc00fded126c0d915d19d472199ccc6538b994c6038c4f69f57315f1e9bf9e0"
     vcpkgToolName="vcpkg-glibc"
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
