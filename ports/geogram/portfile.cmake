@@ -31,11 +31,12 @@ vcpkg_from_github(
     SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
-file(RENAME "${AMGCL_SOURCE_PATH}/amgcl" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl/amgcl")
-file(RENAME "${LIBMESHB_SOURCE_PATH}/sources" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb/sources")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
+    "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
+	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
+file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
-file(REMOVE_RECURSE "${LIBMESHB_SOURCE_PATH}" "${AMGCL_SOURCE_PATH}")
 
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
@@ -98,10 +99,24 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/amgcl" 
-    "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/rply/etc" 
-    "${CURRENT_PACKAGES_DIR}/include/geogram/third_party/rply/manual" 
-    )
+
+# Remove all empty directories. 
+function(auto_clean dir) 
+     file(GLOB entries "${dir}/*") 
+     file(GLOB files LIST_DIRECTORIES false "${dir}/*") 
+     foreach(entry IN LISTS entries) 
+         if(entry IN_LIST files) 
+             continue() 
+         endif() 
+         file(GLOB_RECURSE children "${entry}/*") 
+         if(children) 
+             auto_clean("${entry}") 
+         else() 
+             file(REMOVE_RECURSE "${entry}") 
+         endif() 
+     endforeach() 
+endfunction()
+auto_clean("${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
