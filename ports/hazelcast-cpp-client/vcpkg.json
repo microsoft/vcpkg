@@ -1,9 +1,10 @@
 {
   "name": "hazelcast-cpp-client",
-  "version-semver": "5.1.0",
+  "version": "5.2.0",
   "description": "C++ client library for Hazelcast in-memory database.",
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-any",

@@ -1,7 +1,7 @@
 {
   "name": "curl",
-  "version": "7.86.0",
-  "port-version": 2,
+  "version": "7.88.1",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -184,6 +184,7 @@
     },
     "winssl": {
       "description": "Legacy name for schannel",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "curl",

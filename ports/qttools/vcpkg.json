@@ -1,10 +1,11 @@
 {
   "name": "qttools",
-  "version": "6.4.2",
+  "version": "6.4.3",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "litehtml",
     {
       "name": "qtbase",
       "default-features": false
@@ -55,6 +56,19 @@
           "default-features": false,
           "features": [
             "designer"
+          ]
+        }
+      ]
+    },
+    "qdbus": {
+      "description": "Build qdbusviewer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus",
+            "widgets"
           ]
         }
       ]

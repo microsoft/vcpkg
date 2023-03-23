@@ -1,0 +1,15 @@
+diff --git a/cmake/LuminoConfig.cmake.in b/cmake/LuminoConfig.cmake.in
+index 283ad47..aa9bfd8 100644
+--- a/cmake/LuminoConfig.cmake.in
++++ b/cmake/LuminoConfig.cmake.in
+@@ -13,5 +13,9 @@ include("${CMAKE_CURRENT_LIST_DIR}/LuminoTargets.cmake")
+ # Combination target
+ #-------------------------------------------------------------------------------
+ add_library(lumino::Lumino INTERFACE IMPORTED)
+-target_link_libraries(lumino::Lumino INTERFACE lumino::LuminoEngine lumino::LuminoCore)
++if(LUMINO_BUILD_ENGINE)
++    target_link_libraries(lumino::Lumino INTERFACE lumino::LuminoEngine lumino::LuminoCore)
++else()
++    target_link_libraries(lumino::Lumino INTERFACE lumino::LuminoCore)
++endif()
+ 
