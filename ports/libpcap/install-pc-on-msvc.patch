@@ -13,7 +13,7 @@ index b83fbbd..2f675d1 100644
 +if(BUILD_SHARED_LIBS)
 +    set(PACKAGE_NAME ${LIBRARY_NAME})
 +else()
-+    set(PACKAGE_NAME pcap)
++    set(PACKAGE_NAME ${LIBRARY_NAME}_static)
 +endif()
      set(prefix ${CMAKE_INSTALL_PREFIX})
      set(exec_prefix "\${prefix}")
