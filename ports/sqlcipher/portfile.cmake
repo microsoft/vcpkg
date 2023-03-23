@@ -3,7 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
-    REF v4.5.3
+    REF "v${VERSION}"
+
     SHA512 27dcc83c8088ea32a2bbc3d5493d070e29976dc54ccf91d849df67be19cb553761a32b3613e293a07f50128aeb808d54f363ad12a58a47f06a61a1cc4e1eb0cd
     HEAD_REF master
 )
