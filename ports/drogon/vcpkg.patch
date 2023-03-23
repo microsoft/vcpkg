@@ -36,7 +36,7 @@ index 9f2f1e7..76bd2ec 100755
  if (WIN32 AND BUILD_SHARED_LIBS)
    set(DROGON_FILE $<TARGET_FILE:drogon>)
 -  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
-+  if (USE_SUBMODULES)
++  if (USE_SUBMODULE)
 +    set(TRANTOR_FILE $<TARGET_FILE:trantor>)
 +  else()
 +    set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
