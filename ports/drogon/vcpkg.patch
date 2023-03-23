@@ -27,3 +27,20 @@ index 4406362..0595ab8 100755
  endif (BUILD_POSTGRESQL)
  
  if (BUILD_MYSQL)
+
+index 9f2f1e7..76bd2ec 100755
+--- a/drogon_ctl/CMakeLists.txt
++++ b/drogon_ctl/CMakeLists.txt
+@@ -19,7 +19,11 @@ add_executable(_drogon_ctl
+ target_link_libraries(_drogon_ctl ${PROJECT_NAME})
+ if (WIN32 AND BUILD_SHARED_LIBS)
+   set(DROGON_FILE $<TARGET_FILE:drogon>)
+-  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
++  if (USE_SUBMODULES)
++    set(TRANTOR_FILE $<TARGET_FILE:trantor>)
++  else()
++    set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
++  endif()
+   add_custom_command(TARGET _drogon_ctl POST_BUILD
+           COMMAND ${CMAKE_COMMAND}
+           -DCTL_FILE=${DROGON_FILE}
