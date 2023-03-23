@@ -4,6 +4,7 @@
   "description": "UDT is a reliable UDP based application level data transport protocol for distributed data intensive applications over wide area high-speed networks.",
   "homepage": "https://udt.sourceforge.io/",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
