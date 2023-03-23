@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BrunoLevy/geogram
-    REF 527a987649b278ee02d5e688710bf38c0d62c5e8
-    SHA512 b61f2f8a56b4f5958ad5ab2040bd2a91ad95c043c4907d06f3086d2d001b67144f2d1f7d5b1eb41aeda46b7da2239dab30261ee3af63a744e5c3645b000e92a1
+    REF "v${VERSION}"
+    SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
     PATCHES
         fix-vcpkg-install.patch
 )
 
+#third_party: amgcl
 vcpkg_from_github(
     OUT_SOURCE_PATH AMGCL_SOURCE_PATH
     REPO ddemidov/amgcl
@@ -14,6 +15,7 @@ vcpkg_from_github(
     SHA512 1b29871ace68c53b46711012921261929f8bd612f93b47d2c59523cd3d68366956fe1c9ec81a94b3aaab63357001799c9e34af79376b940fa6b7a53cdf136897
 )
 
+#third_party: libMeshb
 vcpkg_from_github(
     OUT_SOURCE_PATH LIBMESHB_SOURCE_PATH
     REPO LoicMarechal/libMeshb
@@ -21,6 +23,7 @@ vcpkg_from_github(
     SHA512 bff30a233c2746a454d552be66f5654bf4af995d6f1eb00a4d21ed10c86234a5be4d6f31282645858e0a829b10fd98cad7188c69be65cdabbd18478fc26bad1f
 )
 
+#third_party: rply
 vcpkg_from_github(
     OUT_SOURCE_PATH RPLY_SOURCE_PATH
     REPO diegonehab/rply

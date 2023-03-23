@@ -66,24 +66,10 @@ index 1fd796c..05bd735 100644
  # Configure CPack
  
 diff --git a/src/lib/geogram/CMakeLists.txt b/src/lib/geogram/CMakeLists.txt
-index ed2dca0..2ea7d22 100644
+index ed2dca0..30f87b7 100644
 --- a/src/lib/geogram/CMakeLists.txt
 +++ b/src/lib/geogram/CMakeLists.txt
-@@ -35,6 +35,13 @@ set_source_files_properties(version.h PROPERTIES GENERATED true)
- 
- include_directories(${PROJECT_BINARY_DIR}/src/lib)
- 
-+message(STATUS "---------------------PROJECT_BINARY_DIR = ${PROJECT_BINARY_DIR}")
-+message(STATUS "---------------------SOURCES = ${SOURCES}")
-+message(STATUS "---------------------PROJECT_SOURCE_DIR = ${PROJECT_SOURCE_DIR}")
-+message(STATUS "---------------------ANDROID_NDK = ${ANDROID_NDK}")
-+message(STATUS "---------------------VORPALINE_VERSION = ${VORPALINE_VERSION}")
-+message(STATUS "---------------------VORPALINE_VERSION_MAJOR = ${VORPALINE_VERSION_MAJOR}")
-+
- add_library(geogram ${SOURCES} $<TARGET_OBJECTS:geogram_third_party>)
- 
- target_include_directories(geogram PRIVATE
-@@ -45,7 +52,7 @@ target_include_directories(geogram PRIVATE
+@@ -45,7 +45,7 @@ target_include_directories(geogram PRIVATE
  # path for targets that depend on geogram.
  # See: https://cmake.org/cmake/help/v3.3/command/target_include_directories.html
  # https://stackoverflow.com/questions/26243169/cmake-target-include-directories-meaning-of-scope
@@ -92,7 +78,7 @@ index ed2dca0..2ea7d22 100644
  
  if(ANDROID)
    target_include_directories(geogram PRIVATE
-@@ -72,8 +79,19 @@ if(WIN32)
+@@ -72,8 +72,19 @@ if(WIN32)
      target_link_libraries(geogram psapi)
  endif()
  
