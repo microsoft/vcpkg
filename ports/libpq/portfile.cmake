@@ -1,17 +1,17 @@
-set(PORT_VERSION 14.4)
+set(PORT_VERSION ${VERSION})
 # NOTE: the python patches must be regenerated on version update
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 dd2f80248684e331d2ffb1e26cd2a285df1fb18710807a0c31aedabf917912ce9267f8ca26318e5371d916c6fe476f8a17886d82d3ff86a974e6f24c19a6aafb
+    SHA512 115a8a4234791bba4e6dcc4617e9dd77abedcf767894ce9472c59cce9d5d4ef2d4e1746f3a0c7a99de4fc4385fb716652b70dce9f48be45a9db5a682517db7e8
 )
 
 set(PATCHES
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
-        patches/windows/openssl_exe_path.patch
+        patches/windows/openssl-version.patch
         patches/windows/Solution.patch
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
@@ -31,15 +31,14 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND PATCHES patches/windows/arm.patch)
-    list(APPEND PATCHES patches/windows/host_skip_openssl.patch) # Skip openssl.exe version check since it cannot be executed by the host
 endif()
 if(NOT "${FEATURES}" MATCHES "client")
     list(APPEND PATCHES patches/windows/minimize_install.patch)
 else()
     set(HAS_TOOLS TRUE)
 endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
@@ -87,6 +86,11 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_get_vars(vars_file)
     include("${vars_file}")
+
+    file(STRINGS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openssl.pc" OPENSSL_VERSION REGEX "Version:")
+    if(OPENSSL_VERSION)
+        set(ENV{VCPKG_OPENSSL_VERSION} "${OPENSSL_VERSION}")
+    endif()
 
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
@@ -140,8 +144,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         endif()
         if("${FEATURES}" MATCHES "openssl")
-            set(buildenv_contents "${buildenv_contents}\n\$ENV{'PATH'}=\$ENV{'PATH'} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
-            #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
             string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
         if("${FEATURES}" MATCHES "python")
@@ -165,6 +167,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endif()
         if("${FEATURES}" MATCHES "lz4")
            string(REPLACE "lz4       => undef" "lz4       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "zstd")
+           string(REPLACE "zstd      => undef" "zstd      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
@@ -253,6 +258,11 @@ else()
         list(APPEND BUILD_OPTS --with-zlib)
     else()
         list(APPEND BUILD_OPTS --without-zlib)
+    endif()
+    if("zstd" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-zstd)
+    else()
+        list(APPEND BUILD_OPTS --without-zstd)
     endif()
     if("icu" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-icu)

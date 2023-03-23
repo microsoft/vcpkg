@@ -24,6 +24,23 @@
     <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' != '' and !$(_ZVcpkgInstalledDir.EndsWith('\'))">$(_ZVcpkgInstalledDir)\</_ZVcpkgInstalledDir>
   </PropertyGroup>
 
+  <!-- Special-case custom MSBuild platforms defined in the Microsoft GDK. See https://aka.ms/gdk and https://aka.ms/gdkx -->
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Desktop.x64'">
+    <VcpkgOSTarget>windows</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.Scarlett.x64'">
+    <VcpkgOSTarget>xbox-scarlett</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>false</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
+    <VcpkgOSTarget>xbox-xboxone</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>false</VcpkgUseMD>
+  </PropertyGroup>
+
   <!-- Determine the triplet to use. Note that $(PlatformTarget) is not available at the top of the .vcxproj file. -->
   <PropertyGroup Condition="'$(VcpkgOSTarget)' == ''">
     <VcpkgOSTarget>windows</VcpkgOSTarget>

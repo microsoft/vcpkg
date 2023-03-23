@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-rc2
-    SHA512 9cbf48b716ff13ff5d494166b6777c70f225c67842c00004706e00a8b411e5c59315c524865694c4698d661f7b675961df14ef0405b4a90d627107499587b544
+    REF v0.9.0-rc3
+    SHA512 5de94277d57b862d4ab99266c2608cd37d7ca9eb89ef753ddddf47e4cebffab54b2cfb9c28d0c3bb7721f0d24c1310377c4b42adab477568e6965bd7ebc55b17
     HEAD_REF master
 )
 
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png qoi svg tga tiff wal webp xbm)
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png psd qoi tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
         list(APPEND ONLY_CODECS ${CODEC})
     endif()
@@ -19,7 +19,6 @@ list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-
     OPTIONS
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
@@ -57,4 +56,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h"
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
