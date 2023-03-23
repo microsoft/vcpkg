@@ -24,13 +24,13 @@ RUN \
   add-apt-repository universe && \
   apt-get -y install powershell
 
-# Azure CLI
-RUN \
-  curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
 # Other dependencies
 RUN \
-  apt-get -y --no-install-recommends install autoconf nasm bison python2 flex build-essential libtool libtool-bin gettext automake
+  apt-get -y --no-install-recommends install autoconf nasm bison python2 flex build-essential libtool libtool-bin gettext automake autoconf-archive
+
+# python related
+RUN \
+  apt-get -y --no-install-recommends install python3-setuptools python3-pip python3-venv
 
 # freeglut
 RUN \
