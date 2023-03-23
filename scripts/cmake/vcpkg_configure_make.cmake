@@ -583,24 +583,20 @@ function(vcpkg_configure_make)
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
         # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
-    set(l_prefix)
     if(x_vcpkg_transform_libs)
-        set(l_prefix "-l")
         list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM all_libs_list "uuid")
         endif()
-        list(TRANSFORM all_libs_list REPLACE "^(${l_prefix})" "")
+        list(TRANSFORM all_libs_list REPLACE "^([^-])" "-l\\1")
+        if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            # libtool must be told explicitly that there is no dynamic linkage for uuid.
+            # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
+            list(TRANSFORM all_libs_list REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
+        endif()
     endif()
-    list(JOIN all_libs_list " ${l_prefix}" all_libs_string)
-    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # libtool must be told explicitly that there is no dynamic linkage for uuid.
-        # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
-        string(REPLACE " -luuid" " -Wl,-Bstatic,-luuid,-Bdynamic" all_libs_string "${all_libs_string}")
-    endif()
-
-    if(all_libs_string)
-        set(all_libs_string "${l_prefix}${all_libs_string}")
+    if(all_libs_list)
+        list(JOIN all_libs_list " " all_libs_string)
         if(DEFINED ENV{LIBS})
             set(ENV{LIBS} "$ENV{LIBS} ${all_libs_string}")
         else()
