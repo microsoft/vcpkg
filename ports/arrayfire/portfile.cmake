@@ -31,7 +31,6 @@ vcpkg_from_github(
   REF 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389 # v1.0.5
   SHA512 8f8607421880a0f0013380eb5efb3a4f05331cd415d68c9cd84dd57eb727da1df6223fc6d65b106675d6aa09c3388359fab64443c31fadadf7641161be6b3b89
   HEAD_REF master
-  PATCHES fix-examples.patch
 )
 
 ################################### Build ###################################
@@ -97,11 +96,12 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/examples")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
+    "${CURRENT_PACKAGES_DIR}/debug/examples" 
+    "${CURRENT_PACKAGES_DIR}/examples" 
+    "${CURRENT_PACKAGES_DIR}/debug/share" 
+    "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
 
 # Copyright and license
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
