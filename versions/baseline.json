@@ -6598,7 +6598,7 @@
     },
     "qtkeychain": {
       "baseline": "0.13.2",
-      "port-version": 3
+      "port-version": 4
     },
     "qtkeychain-qt6": {
       "baseline": "0.13.2",
