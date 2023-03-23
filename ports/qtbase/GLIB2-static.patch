@@ -73,3 +73,16 @@ index 24a194c..91c8e41 100644
  
  include(FeatureSummary)
  set_package_properties(GLIB2 PROPERTIES
+diff --git a/src/corelib/configure.cmake b/src/corelib/configure.cmake
+index 1ce6851..150e45d 100644
+--- a/src/corelib/configure.cmake
++++ b/src/corelib/configure.cmake
+@@ -22,7 +22,7 @@ endif()
+ qt_find_package(WrapSystemDoubleConversion
+                 PROVIDED_TARGETS WrapSystemDoubleConversion::WrapSystemDoubleConversion
+                 MODULE_NAME core QMAKE_LIB doubleconversion)
+-qt_find_package(GLIB2 PROVIDED_TARGETS GLIB2::GLIB2 MODULE_NAME core QMAKE_LIB glib)
++qt_find_package(GLIB2 PROVIDED_TARGETS GLIB2::GLIB2 MODULE MODULE_NAME core QMAKE_LIB glib)
+ qt_find_package(ICU COMPONENTS i18n uc data PROVIDED_TARGETS ICU::i18n ICU::uc ICU::data MODULE_NAME core QMAKE_LIB icu)
+ if(QT_FEATURE_dlopen)
+     qt_add_qmake_lib_dependency(icu libdl)
