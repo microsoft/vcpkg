@@ -6,8 +6,8 @@ vcpkg_from_github(
     SHA512 08e5eb89d80f7fa3310f0eb37481492b5c1dfff00b33c308169862d8b25cf93ad1d9c0db78667c0207a7f6f8ca4046c196bd3a987af839ea1864b49c738ee8e3
     HEAD_REF master
     PATCHES 
-	    cmake_config.patch
-		fix-examples.patch
+        cmake_config.patch
+        fix-examples.patch
 )
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindOpenGL.cmake")
 
