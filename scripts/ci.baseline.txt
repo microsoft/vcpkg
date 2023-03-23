@@ -34,6 +34,8 @@
 
 # Add new items alphabetically
 
+# Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
+arrayfire:x64-linux=fail
 # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
@@ -733,6 +735,7 @@ pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
 popsift:x64-windows-static-md=fail
+popsift:x64-linux=fail # segfaults :(
 portable-snippets:arm-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
@@ -876,8 +879,6 @@ sdformat6:x64-windows-static-md=fail
 sdformat9:arm-uwp=fail
 sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
-sdl2-mixer:arm-uwp=fail
-sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
 sdl2-net:x64-uwp=fail
 septag-sx:arm64-windows=fail
@@ -1077,6 +1078,11 @@ openscap:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
+
+# these ports require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+ms-gdkx:x64-windows=fail
+ms-gdkx:x64-windows-static=fail
+ms-gdkx:x64-windows-static-md=fail
 
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x86-windows=fail
