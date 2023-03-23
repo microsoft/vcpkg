@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
-    REF 12.1.0
+    REF "${VERSION}"
     SHA512 1d40518d09579eb925b1e4375c9a581736cdb79aaf60d1ca6117e394386a8d2dc1dafd9a4a30d9381f063c1ea1f65fc0d5d9fcbbefa87a85423f87fd925747b0
     HEAD_REF master
 )
