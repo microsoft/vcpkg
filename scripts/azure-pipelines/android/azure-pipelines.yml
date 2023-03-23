@@ -40,8 +40,6 @@ jobs:
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
-  - name: USER_ID
-    value: "$(id --user)"
 
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
@@ -64,13 +62,14 @@ jobs:
       curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
       az login --identity
       az acr login --name AndContainerRegistry
-      echo $(USER_ID)
+      USER=$(id --user)
+      echo "##vso[task.setvariable variable=USER]$USER"
     displayName: 'Set up managed identity'
   - task: Docker@2
     displayName: '*** Test Modified Ports'
     inputs:
       command: run
-      arguments: --init -i -a stderr --user=$(USER_ID) --rm --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-23" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
+      arguments: --init -i -a stderr --user $(USER) --rm --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-23" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
     inputs:
