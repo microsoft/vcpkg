@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8cbec8..65cf5c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -261,9 +261,9 @@ install(FILES ${ArrayFire_BINARY_DIR}/include/af/version.h
+ # source files does not depend on AF_BUILD_EXAMPLES
+ # when AF_BUILD_EXAMPLES is OFF, the examples source is installed without
+ # building the example executables
+-install(DIRECTORY examples/ #NOTE The slash at the end is important
+-    DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
+-    COMPONENT examples)
++# install(DIRECTORY examples/ #NOTE The slash at the end is important
++    # DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
++    # COMPONENT examples)
+ 
+ install(DIRECTORY "${ArrayFire_SOURCE_DIR}/LICENSES/"
+     DESTINATION LICENSES
