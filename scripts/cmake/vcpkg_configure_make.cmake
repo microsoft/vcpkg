@@ -823,6 +823,8 @@ function(vcpkg_configure_make)
             set(path_backup $ENV{PATH})
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/bin")
         endif()
+        vcpkg_host_path_list(REMOVE_DUPLICATES ENV{PATH})
+
         debug_message("Configure command:'${command}'")
         if (NOT arg_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${short_name_${current_buildtype}}")
