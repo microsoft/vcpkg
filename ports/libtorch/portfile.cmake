@@ -158,38 +158,42 @@ vcpkg_cmake_build(TARGET torch_cpu  LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/share"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/test/core/impl"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/hip"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/benchmark"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/test"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/cuda"
-                    "${CURRENT_PACKAGES_DIR}/include/c10d/quantization"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/ideep/operators/quantization"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/python"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/depthwise"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/nnpack"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/mobile"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/experiments/python"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/test"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/utils/hip"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/opt/nql/tests"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/contrib"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/core/nomnigraph/Representations"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/cuda/shared"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/deploy/example/fx"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/deploy/interpreter/third_party"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/backends/nnapi"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/codegen/cuda/docs/images"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/codegen/cuda/python_frontend/examples"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/codegen/cuda/runtime"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/codegen/cuda/tools"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/docs"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/tensorexpr/scripts"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc/deploy/example"
+# Traverse the folder and remove "some" empty folders
+function(cleanup_once folder)
+    if(NOT IS_DIRECTORY "${folder}")
+        return()
+    endif()
+    file(GLOB paths LIST_DIRECTORIES true "${folder}/*")
+    list(LENGTH paths count)
+    # 1. remove if the given folder is empty
+    if(count EQUAL 0)
+        file(REMOVE_RECURSE "${folder}")
+        message(STATUS "Removed ${folder}")
+        return()
+    endif()
+    # 2. repeat the operation for hop 1 sub-directories 
+    foreach(path ${paths})
+        cleanup_once(${path})
+    endforeach()
+endfunction()
+
+# Some folders may contain empty folders. They will become empty after `cleanup_once`.
+# Repeat given times to delete new empty folders.
+function(cleanup_repeat folder repeat)
+    if(NOT IS_DIRECTORY "${folder}")
+        return()
+    endif()
+    while(repeat GREATER_EQUAL 1)
+        math(EXPR repeat "${repeat} - 1" OUTPUT_FORMAT DECIMAL)   
+        cleanup_once("${folder}")
+    endwhile()
+endfunction()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/cmake/ATen"
 )
+cleanup_repeat("${CURRENT_PACKAGES_DIR}/include" 5)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
