@@ -11,7 +11,7 @@ index c3a05ec..0d44ef2 100644
    ""
    ${ARGN}
    )
-@@ -115,7 +115,20 @@ FUNCTION(MYSQL_INSTALL_TARGETS)
+@@ -115,7 +115,21 @@ FUNCTION(MYSQL_INSTALL_TARGETS)
    IF(ARG_COMPONENT)
      SET(COMP COMPONENT ${ARG_COMPONENT})
    ENDIF()
@@ -21,6 +21,7 @@ index c3a05ec..0d44ef2 100644
 +"include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)
 +find_dependency(OpenSSL)
++find_dependency(Threads)
 +include(\"\${CMAKE_CURRENT_LIST_DIR}/${ARG_EXPORT}-targets.cmake\")
 +")
 +    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${ARG_EXPORT}-config.cmake DESTINATION share/${ARG_EXPORT})
