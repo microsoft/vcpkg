@@ -8533,7 +8533,7 @@
       "port-version": 1
     },
     "xmlsec": {
-      "baseline": "1.2.36",
+      "baseline": "1.2.37",
       "port-version": 0
     },
     "xnnpack": {
