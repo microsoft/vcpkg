@@ -35,7 +35,6 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         ${REL_FEATURE_OPTIONS}
     OPTIONS
-        --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
