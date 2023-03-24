@@ -2,12 +2,11 @@ diff --git a/FluidSynthConfig.cmake.in b/FluidSynthConfig.cmake.in
 index 1ffdf598..0be65e0e 100644
 --- a/FluidSynthConfig.cmake.in
 +++ b/FluidSynthConfig.cmake.in
-@@ -6,5 +6,17 @@
+@@ -6,5 +6,16 @@
  # define variables for configuration options:
  # set(network-enabled @enable-network@)
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(OpenMP COMPONENTS C)
 +find_dependency(PkgConfig)
 +pkg_check_modules(GLIB IMPORTED_TARGET glib-2.0>=2.6.5 gthread-2.0>=2.6.5)
 +set(ALSA_SUPPORT @ALSA_SUPPORT@)

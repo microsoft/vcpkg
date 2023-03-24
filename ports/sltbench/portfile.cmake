@@ -7,13 +7,13 @@ vcpkg_from_github(
   SHA512 0c66b51f5a950a09df47019775941554538bc3642788f61aaf8c5ec3644d5fef721391f73c3fddfd9529159f9b81c7d7ed76c7995a79f37adaf8d0ff55a99d4b
   HEAD_REF master)
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
-vcpkg_install_cmake()
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" WINDOWS_USE_MSBUILD)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH share/sltbench)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(
-  INSTALL ${SOURCE_PATH}/LICENSE
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+  INSTALL "${SOURCE_PATH}/LICENSE"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   RENAME copyright)

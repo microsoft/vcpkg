@@ -1,9 +1,13 @@
 {
   "name": "sdl1-net",
   "version-string": "1.2.8",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Networking library for SDL",
   "dependencies": [
-    "sdl1"
+    "sdl1",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
