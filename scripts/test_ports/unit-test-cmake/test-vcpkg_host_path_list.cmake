@@ -283,3 +283,47 @@ unit_test_check_variable_equal(
 )
 
 endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
+
+# REMOVE_DUPLICATES
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+
+set(var "a;b;c;c:c")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;c;c:c"
+)
+
+set(var "a;b;c;b")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;c"
+)
+
+set(var "a;b;a;d")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;d"
+)
+
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
+
+set(var "a:b:c:c;c")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:c:c;c"
+)
+
+set(var "a:b:c:b")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:c"
+)
+
+set(var "a:b:a:d")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:d"
+)
+
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
