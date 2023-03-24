@@ -5,9 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
-    REF cpp-4.1.3
-    SHA512 1252a2d61b119e9a8db6cc3667d2ae3234784d6607e2d08b836ab2f561455aa8c14ac134de0e8bb47f85a9fa86a9b325babd0a5a437daa0f270143d07738adcf
-    HEAD_REF master
+    REF cpp-6.0.0
+    SHA512 6f2ec74562f30d12ba81659737c412317848eb27fbc607a2f4f8da4b75534fbfba7d280a5af6fdae3581a6a2582e6cf06d7fbfacc3bdee1174456817dd9f7e30
+    HEAD_REF cpp_master
 )
 
 vcpkg_cmake_configure(
