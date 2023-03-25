@@ -2134,7 +2134,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.1.0",
@@ -7530,7 +7530,7 @@
     },
     "sqlite3": {
       "baseline": "3.40.1",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
