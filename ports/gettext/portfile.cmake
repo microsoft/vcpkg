@@ -27,6 +27,18 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
 
+if(VCPKG_HOST_IS_WINDOWS)
+    message(STATUS "Modifying 'configure' to use fast bash variable expansion")
+    set(ENV{CONFIG_SHELL} "/usr/bin/bash")
+    vcpkg_execute_required_process(
+        COMMAND "${CMAKE_COMMAND}"
+            "-DSOURCE_DIRS=gettext-runtime;gettext-runtime/libasprintf;libtextstyle;gettext-tools"
+            -P "${CMAKE_CURRENT_LIST_DIR}/bashify.cmake"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "bashify-${TARGET_TRIPLET}"
+    )
+endif()
+
 set(OPTIONS
     --enable-relocatable #symbol duplication with glib-init.c?
     --enable-c++
