@@ -8,7 +8,9 @@
     {
       "$comment": "Will use internal generic BLAS of lapack-reference",
       "name": "lapack-reference",
-      "features": ["cblas"],
+      "features": [
+        "cblas"
+      ],
       "platform": "static & windows"
     },
     {
