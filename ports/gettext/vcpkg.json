@@ -5,6 +5,13 @@
   "homepage": "https://www.gnu.org/software/gettext/",
   "license": null,
   "dependencies": [
+    {
+      "name": "gettext",
+      "features": [
+        "tools"
+      ],
+      "platform": "!uwp"
+    },
     "libiconv"
   ],
   "features": {

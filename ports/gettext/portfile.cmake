@@ -182,4 +182,6 @@ if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")
+if(NOT TARGET_TRIPLET STREQUAL "x64-windows")
 message(FATAL_ERROR "STOP, check generated config")
+endif()
