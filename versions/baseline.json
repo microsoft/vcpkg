@@ -214,7 +214,7 @@
     },
     "arrayfire": {
       "baseline": "3.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "arrow": {
       "baseline": "10.0.1",
@@ -2542,7 +2542,7 @@
     },
     "forge": {
       "baseline": "1.0.8",
-      "port-version": 1
+      "port-version": 2
     },
     "foxi": {
       "baseline": "2021-12-01",
