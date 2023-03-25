@@ -2134,7 +2134,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.1.0",
@@ -2637,7 +2637,7 @@
       "port-version": 2
     },
     "g3log": {
-      "baseline": "2.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "gainput": {
