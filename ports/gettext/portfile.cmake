@@ -27,6 +27,12 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
 
+if(NOT DEFINED VCPKG_AUTOTOOLS_CONFIG_CACHE)
+    set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
+endif()
+include("${CMAKE_CURRENT_LIST_DIR}/config-cache-support.cmake")
+vcpkg_config_cache_setup(config_cache_release config_cache_debug)
+
 if(VCPKG_HOST_IS_WINDOWS)
     message(STATUS "Modifying 'configure' to use fast bash variable expansion")
     set(ENV{CONFIG_SHELL} "/usr/bin/bash")
@@ -86,6 +92,10 @@ function(build_libintl_and_tools)
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
             ${OPTIONS}
+        OPTIONS_RELEASE
+            ${config_cache_release}
+        OPTIONS_DEBUG
+            ${config_cache_debug}
     )
     vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
@@ -102,6 +112,10 @@ function(build_libintl_only)
         ADD_BIN_TO_PATH # So configure can check for working iconv
         OPTIONS
             ${OPTIONS}
+        OPTIONS_RELEASE
+            ${config_cache_release}
+        OPTIONS_DEBUG
+            ${config_cache_debug}
     )
     vcpkg_install_make(
         MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile"
@@ -115,8 +129,6 @@ if("tools" IN_LIST FEATURES)
     # - building tools only for release configuration
     # - custom top-level Makefile
     # - configuration cache
-    list(APPEND OPTIONS "--cache-file=../config.cache-${TARGET_TRIPLET}")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}")
     build_libintl_and_tools(BUILD_TYPE "release")
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(GLOB tool_libs
@@ -139,9 +151,7 @@ if("tools" IN_LIST FEATURES)
     elseif(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}.release")
         file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}.release")
-        file(READ "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}" config_cache)
-        string(REGEX REPLACE "\nac_cv_env[^\n]*" "" config_cache "${config_cache}") # Eliminate build type flags
-        file(WRITE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}" "${config_cache}")
+        vcpkg_config_cache_reuse()
         build_libintl_only(BUILD_TYPE "debug")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}.release/debug")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
@@ -151,13 +161,14 @@ else()
     if(VCPKG_TARGET_IS_LINUX)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     else()
-        list(APPEND OPTIONS "--config-cache")
         build_libintl_only()
     endif()
     # A fast installation of the autopoint tool and data, needed for autotools
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
     install_autopoint()
 endif()
+
+vcpkg_config_cache_teardown()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
