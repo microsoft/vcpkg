@@ -390,9 +390,6 @@ libgxps:x64-windows-static-md=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhdfs3:arm64-osx=fail
-libigl:arm64-windows=fail
-libigl:arm-uwp=fail
-libigl:x64-uwp=fail
 libirecovery:x64-windows-static-md=fail
 # 120 min build time for libjxl arm-uwp-rel, reason unknown
 libjxl:arm-uwp=skip
