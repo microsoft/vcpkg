@@ -8,25 +8,24 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
-file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty)
+file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_STATIC_CRT=${STATIC_CRT}
         -DBUILD_EXAMPLES=OFF
         -DRAPIDJSONTEST=TRUE
-        -DRAPIDJSON=${CURRENT_INSTALLED_DIR}
+        "-DRAPIDJSON=${CURRENT_INSTALLED_DIR}"
 )
 
 if(EXISTS ${SOURCE_PATH}/thirdparty)
     message(FATAL_ERROR "The source directory should not be modified during the build.")
 endif()
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Copy copright information
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/discord-rpc" RENAME "copyright")
