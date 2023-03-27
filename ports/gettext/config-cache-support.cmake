@@ -1,9 +1,40 @@
+# Filter out non-portable entries from full cache file
+function(z_vcpkg_config_cache_filter_file in_file out_file)
+    file(STRINGS "${in_file}" cache)
+    list(REMOVE_ITEM cache "")
+    string(JOIN "|" filter_exclude
+        "^ *#"
+        "/installed/"
+        "/buildtrees/"
+        "/usr/"
+        "[/\\\\]Windows Kit[/\\\\]"
+        "^[a-z_]*_inline"  # depends on build type
+        "^ac_cv_build"
+        "^ac_cv_env_"
+        "^ac_cv_host"
+        "^ac_cv_path"
+        "^ac_cv_prog"
+        "^gl_cv_absolute_"
+        "^gl_cv_func_snprintf_truncation_c99"
+        "^gl_cv_host_cpu_c_abi_32bit"
+        "^gl_cv_malloc_ptrdiff"
+        "^gl_cv_next_.*_h="  # depends on absolute paths
+        "^gl_cv_prog_"
+        "^gt_cv_locale_"
+        "^lt_cv_"  # libtool config depends on target
+    )
+    list(FILTER cache EXCLUDE REGEX "${filter_exclude}")
+    list(JOIN cache "\n" cache)
+    file(WRITE "${out_file}" "${cache}\n")
+endfunction()
+
+# Initalize config cache options
 function(vcpkg_config_cache_setup out_option_release out_option_debug)
     set(z_vcpkg_config_cache_release "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log" CACHE INTERNAL "")
     set(${out_option_release} "--cache-file=${z_vcpkg_config_cache_release}" PARENT_SCOPE)
     if(VCPKG_AUTOTOOLS_CONFIG_CACHE AND EXISTS "${VCPKG_AUTOTOOLS_CONFIG_CACHE}")
         message(STATUS "Using config at ${VCPKG_AUTOTOOLS_CONFIG_CACHE}")
-        file(COPY_FILE "${VCPKG_AUTOTOOLS_CONFIG_CACHE}" "${z_vcpkg_config_cache_release}")
+        z_vcpkg_config_cache_filter_file("${VCPKG_AUTOTOOLS_CONFIG_CACHE}" "${z_vcpkg_config_cache_release}")
     else()
         file(WRITE "${z_vcpkg_config_cache_release}" "")
     endif()
@@ -14,6 +45,7 @@ function(vcpkg_config_cache_setup out_option_release out_option_debug)
     set(z_vcpkg_config_cache_input_sha512 "${sha512}" CACHE INTERNAL "")
 endfunction()
 
+# Process one build type's cache for immediate reuse for the other build type
 function(vcpkg_config_cache_reuse)
     if(VCPKG_AUTOTOOLS_CONFIG_CACHE)
         set(input "${z_vcpkg_config_cache_release}")
@@ -24,46 +56,17 @@ function(vcpkg_config_cache_reuse)
         endif()
         file(READ "${input}" config_cache)
         # Same system, different build type: Eliminate specific flags etc.
-        string(REGEX REPLACE "\n(ac_cv_env|[a-z_]*_c_inline)[^\n]*" "" config_cache "${config_cache}")
+        string(REGEX REPLACE "\n(ac_cv_env|[a-z_]*_inline)[^\n]*" "" config_cache "${config_cache}")
         file(WRITE "${output}" "${config_cache}")
-        file(WRITE "${output}.log" "${config_cache}")
     endif()
 endfunction()
 
+# Save config cache template
 function(vcpkg_config_cache_teardown)
-    file(STRINGS "${z_vcpkg_config_cache_release}" cache)
-    set(cache_multiline "")
-    set(multiline "")
-    foreach(line IN LISTS cache ITEMS "")
-        string(APPEND multiline "${line}")
-        if(line MATCHES "[\\]\$")
-            string(APPEND multiline "\n")
-        else()
-            list(APPEND cache_multiline "${multiline}")
-            set(multiline "")
-        endif()
-    endforeach()
-    string(JOIN "|" filter
-        "^ac_cv_c_"
-        "^ac_cv_cxx_"
-        "^ac_cv_exeext"
-        "^ac_cv_func_"
-        "^ac_cv_have_decl_"
-        "^ac_cv_header_"
-        "^ac_cv_member_struct_"
-        "^ac_cv_search_"
-        "^ac_cv_type_"
-    )
-    list(FILTER cache_multiline INCLUDE REGEX "${filter}")
-    list(FILTER cache_multiline EXCLUDE REGEX "_c_inline")
-    set(cache "")
-    foreach(line IN LISTS cache_multiline)
-        string(APPEND cache "${line}\n")
-    endforeach()
     set(config_cache_output "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-new.log")
-    file(WRITE "${config_cache_output}" "${cache}\n")
+    z_vcpkg_config_cache_filter_file("${z_vcpkg_config_cache_release}" "${config_cache_output}")
     file(SHA512 "${config_cache_output}" sha512)
-    if(NOT sha512 STREQUAL z_vcpkg_config_cache_input_sha512)
+    if(EXISTS "${VCPKG_AUTOTOOLS_CONFIG_CACHE}" AND NOT sha512 STREQUAL z_vcpkg_config_cache_input_sha512)
         message(STATUS "Modified config written to ${config_cache_output}")
     endif()
 endfunction()

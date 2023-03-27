@@ -29,6 +29,9 @@ vcpkg_add_to_path("${BISON_PATH}")
 
 if(NOT DEFINED VCPKG_AUTOTOOLS_CONFIG_CACHE)
     set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
+    endif()
 endif()
 include("${CMAKE_CURRENT_LIST_DIR}/config-cache-support.cmake")
 vcpkg_config_cache_setup(config_cache_release config_cache_debug)
@@ -55,6 +58,8 @@ set(OPTIONS
     --disable-openmp
 )
 if(VCPKG_TARGET_IS_WINDOWS)
+    # The following options intentionally overwrite cached settings
+    # in order to facilitate regenerating a the checked-in config cache.
     list(APPEND OPTIONS
         # Avoid unnecessary test.
         --with-included-glib
@@ -75,6 +80,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
             ac_cv_header_pthread_h=no
             ac_cv_header_sched_h=no
             ac_cv_header_semaphore_h=no
+            # Detected 'no' everywhere except x64-windows-static
+            ac_cv_func_snprintf=no
+            # Detected x64 values for gnulib, overriding guesses for cross builds
+            gl_cv_func_fopen_mode_x=yes
+            gl_cv_func_frexpl_works=yes
+            gl_cv_func_getcwd_null=yes
+            gl_cv_func_mbrtowc_empty_input=no
+            gl_cv_func_mbsrtowcs_works=yes
+            gl_cv_func_printf_flag_zero=yes
+            gl_cv_func_printf_infinite_long_double=yes
+            gl_cv_func_printf_precision=yes
+            gl_cv_func_snprintf_truncation_c99=yes
+            # Detected x64 values for gettext, overriding guesses for x86 & x64-uwp
+            gt_cv_int_divbyzero_sigfpe=no
         )
     endif()
 endif()
@@ -182,6 +201,3 @@ if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")
-if(NOT TARGET_TRIPLET STREQUAL "x64-windows")
-message(FATAL_ERROR "STOP, check generated config")
-endif()
