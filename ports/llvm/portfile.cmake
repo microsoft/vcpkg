@@ -1,5 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+#Resolve the libiomp5md.dll name conflict with port intel-mkl
+if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" OR "${CURRENT_PACKAGES_DIR}/debug/lib/libiomp5md.dll")
+    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" "${CURRENT_PACKAGES_DIR}/debug/lib/libiomp5md.dll")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
