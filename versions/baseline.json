@@ -5458,7 +5458,7 @@
     },
     "nghttp2-asio": {
       "baseline": "2022-08-11",
-      "port-version": 0
+      "port-version": 1
     },
     "nghttp3": {
       "baseline": "0.9.0",
