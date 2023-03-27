@@ -1,6 +1,6 @@
 {
   "name": "eve",
-  "version": "2022.9.1",
+  "version-string": "2023.02.15",
   "description": [
     "EVE - the Expressive Vector Engine",
     "A header-only C++20 and onward implementation of a type based wrapper around SIMD extensions sets for most current architectures."
