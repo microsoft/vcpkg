@@ -2134,7 +2134,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.1.0",
@@ -8662,7 +8662,7 @@
     },
     "zeromq": {
       "baseline": "2023-01-31",
-      "port-version": 0
+      "port-version": 1
     },
     "zfp": {
       "baseline": "1.0.0",
