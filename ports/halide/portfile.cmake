@@ -17,6 +17,7 @@ vcpkg_check_features(
         target-amdgpu TARGET_AMDGPU
         target-arm TARGET_ARM
         target-d3d12compute TARGET_D3D12COMPUTE
+        target-opengl-compute TARGET_OPENGLCOMPUTE
         target-hexagon TARGET_HEXAGON
         target-metal TARGET_METAL
         target-mips TARGET_MIPS
