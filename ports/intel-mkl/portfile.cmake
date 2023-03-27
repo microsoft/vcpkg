@@ -5,11 +5,6 @@
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-#Resolve the libiomp5md.dll name conflict with port llvm
-if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
-    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
-endif()
-
 set(MKL_REQUIRED_VERSION "20200000")
 
 # https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19150/w_onemkl_p_2023.0.0.25930_offline.exe # windows
@@ -150,6 +145,11 @@ if(sha)
     endif()
 
     if(threading STREQUAL "intel_thread")
+      #Resolve the libiomp5md.dll name conflict with port llvm
+      if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+          file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+      endif()
+
       file(COPY "${basepath2}windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
       file(COPY "${basepath2}windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
       configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
@@ -241,6 +241,11 @@ if(sha)
     endif()
 
     if(threading STREQUAL "intel_thread")
+      #Resolve the libiomp5md.dll name conflict with port llvm
+      if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+          file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+      endif()
+
       file(COPY "${basepath2}linux/compiler/lib/intel64_lin/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
       configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64/" "/lib/intel64/")
@@ -280,3 +285,4 @@ if(NOT sha)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" [["../bincompiler" "../compiler/lib"]] [["bin" "../bincompiler" "../compiler/lib"]])
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
+
