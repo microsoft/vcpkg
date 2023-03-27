@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jfalcou/eve
     REF "${git_ref}"
-    SHA512 5623587de77c3e321555ca99326829928f69c5ac499d2abedfb18860e8c2a4c7dd5b408afef3ae2f8681cb363ffbfbc869dbf28c90e62e2b0abca62e03d08d12
+    SHA512 20b55996465fa5016d43cee95541510b6470b2358635b0e269965d3fb43731e83b92bc2df0502fcdfadd31de47f877f22b1c6ae84638f1f3db92c70315cc1b29
     HEAD_REF main
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/eve-${VERSION}")
 if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/eve/eve-config.cmake")
-    message(FATAL_ERROR "CMake config is missing")
+    message(FATAL_ERROR "CMake config is missing for ${CURRENT_PACKAGES_DIR}/share/eve/eve-config.cmake")
 endif()
 
 file(REMOVE_RECURSE
