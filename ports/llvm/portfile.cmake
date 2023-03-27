@@ -249,11 +249,6 @@ vcpkg_cmake_configure(
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
 )
 
-#Resolve the libiomp5md.dll name conflict with port intel-mkl
-if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
-    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
-endif()
-
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 function(llvm_cmake_package_config_fixup package_name)
@@ -333,6 +328,11 @@ endif()
 if("mlir" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
+endif()
+
+#Resolve the libiomp5md.dll name conflict with port intel-mkl
+if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
 endif()
 
 # LLVM still generates a few DLLs in the static build:
