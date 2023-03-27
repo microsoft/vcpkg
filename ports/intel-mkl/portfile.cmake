@@ -6,8 +6,8 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 #Resolve the libiomp5md.dll name conflict with port llvm
-if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" OR "${CURRENT_PACKAGES_DIR}/debug/lib/libiomp5md.dll")
-    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" "${CURRENT_PACKAGES_DIR}/debug/lib/libiomp5md.dll")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
 endif()
 
 set(MKL_REQUIRED_VERSION "20200000")
