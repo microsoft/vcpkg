@@ -277,6 +277,6 @@ if(NOT sha)
 endif()
 
 #Resolve the libiomp5md.dll name conflict with port llvm
-if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
-  file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/lib/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/lib/libiomp5md.dll")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/bin/libiomp5md.dll")
+  file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/bin/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/bin/libiomp5md.dll")
 endif()
