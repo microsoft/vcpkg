@@ -5709,7 +5709,7 @@
       "port-version": 2
     },
     "opencl": {
-      "baseline": "v2022.09.30",
+      "baseline": "v2023.02.06",
       "port-version": 0
     },
     "opencolorio": {
