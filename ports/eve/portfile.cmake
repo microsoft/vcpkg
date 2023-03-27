@@ -17,7 +17,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/eve-${VERSION}")
 if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/eve/eve-config.cmake")
-    message(FATAL_ERROR "CMake config is missing for ${CURRENT_PACKAGES_DIR}/share/eve/eve-config.cmake")
+    message(FATAL_ERROR "CMake config is missing")
 endif()
 
 file(REMOVE_RECURSE

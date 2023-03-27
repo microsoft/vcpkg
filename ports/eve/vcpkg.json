@@ -1,6 +1,6 @@
 {
   "name": "eve",
-  "version-string": "2023.02.15",
+  "version": "2023.2.15",
   "description": "EVE - the Expressive Vector Engine : C++20 SIMD Programming Library",
   "homepage": "https://github.com/jfalcou/eve",
   "documentation": "https://jfalcou.github.io/eve/",
