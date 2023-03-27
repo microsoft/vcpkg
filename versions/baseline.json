@@ -4912,6 +4912,10 @@
       "baseline": "2020-07-30",
       "port-version": 1
     },
+    "maddy": {
+      "baseline": "1.1.2+20210419",
+      "port-version": 0
+    },
     "magic-enum": {
       "baseline": "0.8.2",
       "port-version": 0
