@@ -2298,7 +2298,7 @@
     },
     "etcd-cpp-apiv3": {
       "baseline": "0.14.2",
-      "port-version": 0
+      "port-version": 1
     },
     "etl": {
       "baseline": "20.35.4",
