@@ -2134,7 +2134,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.1.0",
@@ -5374,7 +5374,7 @@
     },
     "nanopb": {
       "baseline": "0.4.7",
-      "port-version": 0
+      "port-version": 1
     },
     "nanoprintf": {
       "baseline": "2020-05-27",
