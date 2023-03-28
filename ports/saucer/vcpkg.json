@@ -1,7 +1,7 @@
 {
   "name": "saucer",
   "version": "1.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
@@ -12,11 +12,11 @@
     "lockpp",
     "nlohmann-json",
     {
-      "name": "qt5-webchannel",
+      "name": "qtwebchannel",
       "platform": "!windows"
     },
     {
-      "name": "qt5-webengine",
+      "name": "qtwebengine",
       "platform": "!windows"
     },
     "tl-expected",
