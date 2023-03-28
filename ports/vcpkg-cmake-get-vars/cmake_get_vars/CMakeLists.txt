@@ -180,6 +180,12 @@ foreach(incdir IN LISTS CMAKE_C_STANDARD_INCLUDE_DIRECTORIES)
     string(APPEND C_FLAGS " \"${CMAKE_INCLUDE_FLAG_C}${incdir}\"")
 endforeach()
 
+foreach(lang ${VCPKG_LANGUAGES})
+    if (CMAKE_POSITION_INDEPENDENT_CODE AND CMAKE_${lang}_COMPILE_OPTIONS_PIC)
+        string(APPEND ${lang}_FLAGS " ${CMAKE_${lang}_COMPILE_OPTIONS_PIC}")
+    endif()
+endforeach()
+
 foreach(flag ${VCPKG_LANGUAGES} SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LINKER RC)
     # When using MSVC, maybe transform /flags to -flags.
     #   When cross compiling, "/flags" may be an absolute path starting with /, so don't transform.
