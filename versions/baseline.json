@@ -8613,7 +8613,7 @@
       "port-version": 1
     },
     "yara": {
-      "baseline": "4.2.3",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "yas": {
