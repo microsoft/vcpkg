@@ -23,7 +23,7 @@ file(INSTALL "${SOURCE_PATH}/include/CL" DESTINATION ${CURRENT_PACKAGES_DIR}/inc
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-ICD-Loader
-    REF v2023.02.06
+    REF "${VERSION}"
     SHA512 e418b8f3cccb4716ed44acd0677afb96705f8b40a7714d483f1efe1a9b835f4a823c5a80f8457e72c8004f76d8a07c45d9cca55b699dd2fdaa6fe9f8cc863cbd
     HEAD_REF main
 )
