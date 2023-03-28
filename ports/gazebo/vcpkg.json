@@ -1,10 +1,10 @@
 {
   "name": "gazebo",
-  "version-date": "2022-01-20",
-  "port-version": 4,
+  "version": "11.12.0",
   "description": "Open source robotics simulator.",
   "homepage": "http://gazebosim.org",
   "license": "Apache-2.0",
+  "builtin-baseline": "19af97cba8ca48474e4ad15a24ed50271a9ecdac",
   "dependencies": [
     "boost-asio",
     "boost-date-time",
@@ -19,6 +19,7 @@
     "boost-thread",
     "boost-uuid",
     "ccd",
+    "freeimage",
     {
       "name": "hdf5",
       "features": [
@@ -30,12 +31,18 @@
     "ignition-math6",
     "ignition-msgs5",
     "ignition-transport8",
+    {
+      "name": "libtar",
+      "platform": "!windows"
+    },
     "ogre",
+    "opengl",
     {
       "name": "pkgconf",
       "host": true
     },
     "protobuf",
+    "qt5-base",
     "qwt",
     "sdformat9",
     "tbb",
@@ -116,11 +123,35 @@
         "openal-soft"
       ]
     },
+    "plugins": {
+      "description": "Build gazebo plugins",
+      "supports": "!linux"
+    },
     "simbody": {
       "description": "Use the simbody physics engine",
       "dependencies": [
         "simbody"
       ]
+    },
+    "tools": {
+      "description": "Build gazebo tools",
+      "supports": "!(linux & static)"
     }
-  }
+  },
+  "overrides": [
+    {
+      "name": "ogre",
+      "version": "1.12.9",
+      "port-version": 10
+    },
+    {
+      "name": "qwt",
+      "version": "6.1.5"
+    },
+    {
+      "name": "graphviz",
+      "version": "2.49.1",
+      "port-version": 4
+    }
+  ]
 }

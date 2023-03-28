@@ -1,0 +1,13 @@
+diff --git a/gazebo/msgs/msgs.cc b/gazebo/msgs/msgs.cc
+--- a/gazebo/msgs/msgs.cc
++++ b/gazebo/msgs/msgs.cc
+@@ -16,8 +16,9 @@
+ */
+ 
+ #include <google/protobuf/descriptor.h>
+ #include <algorithm>
++#include <array>
+ #include <ignition/math/MassMatrix3.hh>
+ #include <ignition/math/Rand.hh>
+ 
+ #include "gazebo/common/CommonIface.hh"

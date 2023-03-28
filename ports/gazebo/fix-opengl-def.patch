@@ -1,0 +1,13 @@
+diff --git a/gazebo/rendering/RenderEngine.cc b/gazebo/rendering/RenderEngine.cc
+index 87d78ea95d..bd90493266 100644
+--- a/gazebo/rendering/RenderEngine.cc
++++ b/gazebo/rendering/RenderEngine.cc
+@@ -22,6 +22,8 @@
+ 
+ // Not Apple or Windows
+ #if not defined(__APPLE__) && not defined(_WIN32)
++#define GL_GLEXT_LEGACY
++#define GLX_GLXEXT_LEGACY
+ # include <X11/Xlib.h>
+ # include <X11/Xutil.h>
+ # include <GL/glx.h>

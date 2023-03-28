@@ -1,0 +1,18 @@
+diff --git a/cmake/GazeboUtils.cmake b/cmake/GazeboUtils.cmake
+index f1710e9..ace50f9 100644
+--- a/cmake/GazeboUtils.cmake
++++ b/cmake/GazeboUtils.cmake
+@@ -146,13 +146,11 @@ endmacro ()
+ #################################################
+ macro (gz_setup_unix)
+     # Using dynamic linking in UNIX by default
+-    set(BUILD_SHARED_LIBS TRUE)
+ endmacro()
+ 
+ #################################################
+ macro (gz_setup_windows)
+     # Using dynamic linking in Windows by default
+-    set(BUILD_SHARED_LIBS TRUE)
+     add_definitions(-DWIN32_LEAN_AND_MEAN)
+ 
+     # Need for M_PI constant
