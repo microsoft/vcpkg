@@ -1396,6 +1396,10 @@
       "baseline": "2.3",
       "port-version": 4
     },
+    "cdt": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "celero": {
       "baseline": "2.8.5",
       "port-version": 0
