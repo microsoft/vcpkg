@@ -1,7 +1,11 @@
 {
   "versions": [
     {
+<<<<<<< HEAD
       "git-tree": "561c8d52065479397356fde6ea68e01ef4115c28",
+=======
+      "git-tree": "3777014ad8e4997a8c0afbbc7f37ff949497059c",
+>>>>>>> microsoft/master
       "version-semver": "1.8.3",
       "port-version": 1
     },

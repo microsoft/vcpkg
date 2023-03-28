@@ -3,11 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
-    REF v1.8.1
-    SHA512 ada0571a5fb5f8eaec24b5046b9b7eb4de4656ebf5b9e413be8e7348d2169b34111a423c8af3128baaed48dbc945bbce0b1794527f737818b1c9153a13bbcb9a
+    REF v1.8.2
+    SHA512 65479c02246d96bfa0a6a5ed749e15650e71114c1145d17bd48f1a57560c9f494148253064f720dd43773ac9971a85635c9d4927f3b336590188339b3d656b33
     HEAD_REF master
     PATCHES 
-        fix-features-build-error.patch
         fix-dependency.patch
 )
 
