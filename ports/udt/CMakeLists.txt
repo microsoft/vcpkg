@@ -8,7 +8,6 @@ file(GLOB UDT_HEADERS "src/*.h")
 file(GLOB UDT_SOURCES "src/*.cpp")
 
 add_library(udt ${UDT_HEADERS} ${UDT_SOURCES})
-add_library(udt::udt ALIAS udt)
 if(WIN32)
     target_compile_definitions(udt PRIVATE -DWIN32)
     if(MSVC)
@@ -29,7 +28,7 @@ install(TARGETS udt EXPORT unofficial-udt)
 install(
     EXPORT unofficial-udt
     FILE unofficial-udt-config.cmake
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/udt"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-udt"
     NAMESPACE unofficial::udt::
 )
 
