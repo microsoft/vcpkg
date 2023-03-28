@@ -5469,7 +5469,7 @@
       "port-version": 1
     },
     "nghttp3": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "ngspice": {
@@ -5477,8 +5477,8 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "0.13.1",
-      "port-version": 1
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "nifly": {
       "baseline": "1.0.0",
