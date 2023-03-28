@@ -8024,6 +8024,10 @@
       "baseline": "0.0.8",
       "port-version": 0
     },
+    "udt": {
+      "baseline": "4.11",
+      "port-version": 0
+    },
     "umock-c": {
       "baseline": "2022-01-21",
       "port-version": 1
