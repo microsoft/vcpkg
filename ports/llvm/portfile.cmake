@@ -1,5 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
@@ -14,6 +15,7 @@ vcpkg_from_github(
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-install-bolt.patch
+        0012-fix-file-conficts.patch
 )
 
 vcpkg_check_features(
@@ -328,11 +330,6 @@ endif()
 if("mlir" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
-endif()
-
-#Resolve the libiomp5md.dll name conflict with port intel-mkl
-if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/libiomp5md.dll" OR "${CURRENT_INSTALLED_DIR}/debug/bin/libiomp5md.dll")
-    file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/bin/libiomp5md.dll" "${CURRENT_INSTALLED_DIR}/debug/bin/libiomp5md.dll")
 endif()
 
 # LLVM still generates a few DLLs in the static build:
