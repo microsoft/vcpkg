@@ -967,13 +967,6 @@ tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows-static-md=fail
 
-theia:arm64-windows      = skip
-theia:arm-uwp            = skip
-theia:x64-uwp            = skip
-theia:x64-windows        = skip
-theia:x64-windows-static = skip
-theia:x64-windows-static-md=skip
-theia:x86-windows        = skip
 tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
