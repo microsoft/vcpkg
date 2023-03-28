@@ -2645,7 +2645,7 @@
       "port-version": 2
     },
     "g3log": {
-      "baseline": "2.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "gainput": {
