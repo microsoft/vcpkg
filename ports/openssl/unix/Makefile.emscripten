@@ -1,4 +1,0 @@
-build_sw:
-	$(EMSDK)/upstream/emscripten/emmake $(MAKE) -f Makefile build_sw ${VCPKG_JOBS} $(MAKEFLAGS)
-install:
-	$(EMSDK)/upstream/emscripten/emmake $(MAKE) -f Makefile install ${VCPKG_JOBS} $(MAKEFLAGS)
