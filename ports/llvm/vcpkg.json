@@ -79,7 +79,8 @@
             "enable-bindings",
             "enable-terminfo",
             "enable-threads",
-            "enable-zlib"
+            "enable-zlib",
+            "enable-zstd"
           ]
         }
       ]
@@ -186,6 +187,12 @@
       "description": "Build with ZLib.",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "enable-zstd": {
+      "description": "Build with zstd.",
+      "dependencies": [
+        "zstd"
       ]
     },
     "flang": {

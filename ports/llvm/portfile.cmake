@@ -48,6 +48,7 @@ list(APPEND FEATURE_OPTIONS
 set(llvm_external_libraries
     zlib
     libxml2
+    zstd
 )
 foreach(external_library IN LISTS llvm_external_libraries)
     string(TOLOWER "enable-${external_library}" feature_name)
@@ -117,6 +118,8 @@ if("clang-tools-extra" IN_LIST FEATURES)
 endif()
 if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
+else()
+    list(APPEND unused COMPILER_RT_ENABLE_IOS)
 endif()
 if("flang" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -248,6 +251,7 @@ vcpkg_cmake_configure(
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+    MAYBE_UNUSED_VARIABLES ${unused}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
