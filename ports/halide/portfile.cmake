@@ -42,6 +42,8 @@ vcpkg_cmake_configure(
         "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
         -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
         -DHalide_INSTALL_PLUGINDIR=bin
+        -DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=JPEG
 )
 
 # ADD_BIN_TO_PATH needed to compile autoschedulers, 
