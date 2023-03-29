@@ -40,9 +40,11 @@ include("${cmake_vars_file}")
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
 # and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
-list(APPEND FEATURE_OPTIONS
-    -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
-)
+if(VCPKG_DETECTED_MSVC_VERSION LESS "1925" AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
+    )
+endif()
 
 # Force enable or disable external libraries
 set(llvm_external_libraries
@@ -225,12 +227,13 @@ endforeach()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 set(LLVM_LINK_JOBS 1)
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
+set(VCPKG_BUILD_TYPE release) # just to get results faster
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -251,6 +254,7 @@ vcpkg_cmake_configure(
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        --trace-expand
     MAYBE_UNUSED_VARIABLES COMPILER_RT_ENABLE_IOS
 )
 
@@ -283,6 +287,7 @@ llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("bolt" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
