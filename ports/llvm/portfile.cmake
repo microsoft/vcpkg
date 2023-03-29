@@ -233,6 +233,7 @@ set(LLVM_LINK_JOBS 1)
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
+set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -350,3 +351,4 @@ endif()
 # * LTO.dll
 # * Remarks.dll
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-release.cmake.log")
