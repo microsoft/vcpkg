@@ -256,9 +256,11 @@ vcpkg_cmake_configure(
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
         -DCLANG_TOOLS_INSTALL_DIR=tools/llvm
         -DLLD_TOOLS_INSTALL_DIR=tools/llvm
-        -DBOLT_TOOLS_INSTALL_DIR=tools/llvm
+        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
         -DOPENMP_TOOLS_INSTALL_DIR=tools/llvm
-    MAYBE_UNUSED_VARIABLES COMPILER_RT_ENABLE_IOS
+    MAYBE_UNUSED_VARIABLES 
+        COMPILER_RT_ENABLE_IOS
+        OPENMP_TOOLS_INSTALL_DIR
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -348,6 +350,3 @@ endif()
 # * LTO.dll
 # * Remarks.dll
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-
-file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-release.cmake.log")
-file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-debug.cmake.log")
