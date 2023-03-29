@@ -233,7 +233,6 @@ set(LLVM_LINK_JOBS 1)
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
-set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -258,7 +257,7 @@ vcpkg_cmake_configure(
         -DCLANG_TOOLS_INSTALL_DIR=tools/llvm
         -DLLD_TOOLS_INSTALL_DIR=tools/llvm
         -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
-        -DOPENMP_TOOLS_INSTALL_DIR=tools/llvm
+        -DOPENMP_TOOLS_INSTALL_DIR:PATH=tools/llvm
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
         OPENMP_TOOLS_INSTALL_DIR
@@ -351,4 +350,3 @@ endif()
 # * LTO.dll
 # * Remarks.dll
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-release.cmake.log")
