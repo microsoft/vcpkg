@@ -4770,7 +4770,7 @@
     },
     "libzip": {
       "baseline": "1.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libzippp": {
       "baseline": "6.0-1.9.2",
