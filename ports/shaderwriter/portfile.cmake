@@ -19,27 +19,12 @@ file(COPY "${CMAKE_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/CMake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-set(BUILD_SPIRV OFF)
-set(BUILD_GLSL OFF)
-set(BUILD_HLSL OFF)
-
-if ("spirv" IN_LIST FEATURES)
-    set(BUILD_SPIRV ON)
-elseif ("$ENV{BUILD_SDW_SPIRV}" STREQUAL "1")
-    set(BUILD_SPIRV ON)
-endif()
-
-if ("glsl" IN_LIST FEATURES)
-    set(BUILD_GLSL ON)
-elseif ("$ENV{BUILD_SDW_GLSL}" STREQUAL "1")
-    set(BUILD_GLSL ON)
-endif()
-
-if ("hlsl" IN_LIST FEATURES)
-    set(BUILD_HLSL ON)
-elseif ("$ENV{BUILD_SDW_HLSL}" STREQUAL "1")
-    set(BUILD_HLSL ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        spirv SDW_BUILD_EXPORTER_SPIRV
+        glsl  SDW_BUILD_EXPORTER_HLSL
+        hlsl  SDW_BUILD_EXPORTER_GLSL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -48,12 +33,10 @@ vcpkg_cmake_configure(
         -DSDW_GENERATE_SOURCE=OFF
         -DSDW_BUILD_VULKAN_LAYER=OFF
         -DSDW_BUILD_TESTS=OFF
-        -DSDW_BUILD_EXPORTER_SPIRV=${BUILD_SPIRV}
-        -DSDW_BUILD_EXPORTER_HLSL=${BUILD_HLSL}
-        -DSDW_BUILD_EXPORTER_GLSL=${BUILD_GLSL}
         -DSDW_BUILD_STATIC_SDW=${BUILD_STATIC}
         -DSDW_BUILD_STATIC_SDAST=${BUILD_STATIC}
         -DSDW_UNITY_BUILD=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_copy_pdbs()
