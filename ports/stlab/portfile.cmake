@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stlab/libraries
-    REF 0a7232a4120c2daf8ddb6621ec13f313a029e495 # V1.6.2
-    SHA512 6e03a5370d02accd798fc14fd256ab593b9a33b4a9b9cda8f2233eeafacf70c389c2999d1834b7ffef6968008921d28d88bcf728a322ba7943106ddc9d8e6f16
+    REF 9819ce0d5cf13d5a561dc1ca02a0a6e81f1002b3 # V1.7.1
+    SHA512 f55d04c6ba93386db847cad8aa6d2d4c1ec74be96800ad54e29fc47592d7aff7ef534b1370541f0fece629741743ff0d0d5013e872f85683266d99507b875e87
     HEAD_REF develop
 )
 
@@ -19,7 +19,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/cmake")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake"
-    "find_dependency(Boost 1.60.0)"
+    "find_dependency(Boost 1.74.0)"
     "if(APPLE)\nfind_dependency(Boost)\nendif()"
 )
 
