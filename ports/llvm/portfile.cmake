@@ -233,7 +233,6 @@ set(LLVM_LINK_JOBS 1)
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
-set(VCPKG_BUILD_TYPE release) # just to get results faster
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -250,11 +249,15 @@ vcpkg_cmake_configure(
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
+
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
-        --trace-expand
+        -DCLANG_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLD_TOOLS_INSTALL_DIR=tools/llvm
+        -DBOLT_TOOLS_INSTALL_DIR=tools/llvm
+        -DOPENMP_TOOLS_INSTALL_DIR=tools/llvm
     MAYBE_UNUSED_VARIABLES COMPILER_RT_ENABLE_IOS
 )
 
@@ -287,7 +290,6 @@ llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-llvm_cmake_package_config_fixup("bolt" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
