@@ -1,23 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d00a4f9f..586123b9 100644
+index d00a4f9f..cf85fc4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -197,12 +197,12 @@ if(ENABLE_LZMA)
+@@ -197,7 +197,7 @@ if(ENABLE_LZMA)
  endif(ENABLE_LZMA)
  
  if(ENABLE_ZSTD)
 -  find_package(Zstd 1.3.6)
--  if(Zstd_FOUND)
-+  find_package(zstd 1.3.6)
-+  if(zstd_FOUND)
++  find_package(Zstd NAMES zstd 1.3.6)
+   if(Zstd_FOUND)
      set(HAVE_LIBZSTD 1)
    else()
-     message(WARNING "-- zstd library not found; zstandard support disabled")
--  endif(Zstd_FOUND)
-+  endif(zstd_FOUND)
- endif(ENABLE_ZSTD)
- 
- if (COMMONCRYPTO_FOUND)
 @@ -301,7 +301,7 @@ foreach(LIB ${LIBS_PRIVATE})
  endforeach()
  string(REGEX REPLACE "-lBZip2::BZip2" "-lbz2" LIBS ${LIBS})
