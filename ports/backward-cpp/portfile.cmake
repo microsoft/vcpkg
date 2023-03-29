@@ -6,13 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Backward CONFIG_PATH lib/backward)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
