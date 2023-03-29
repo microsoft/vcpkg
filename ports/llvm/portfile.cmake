@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${VERSION}
-    SHA512 d518de4860bd953c4728f00cb52aba37e1e8c2a0825b0a6cc046494f2ad4d1e1d07d36524c2aca87c7f27a5c07c21cdcf18ac73a03c2eed813ca46d24f31f445
+    SHA512 0
     HEAD_REF main
     PATCHES
         0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
