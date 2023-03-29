@@ -3,6 +3,7 @@
   "version": "1.6",
   "description": "A beautiful stack trace pretty printer for C++",
   "homepage": "https://github.com/bombela/backward-cpp",
+  "supports": "!uwp & !arm",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
