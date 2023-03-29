@@ -48,15 +48,6 @@ vcpkg_cmake_configure(
 # which use Halide.dll (and deps) during the build.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_copy_tools(
-    TOOL_NAMES
-        featurization_to_sample
-        get_host_target
-        retrain_cost_model
-        weightsdir_to_weightsfile
-    AUTO_CLEAN
-)
-
 # Release mode MODULE targets in CMake don't get PDBs.
 # Exclude those to avoid warning with default globs.
 vcpkg_copy_pdbs(
