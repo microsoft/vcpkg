@@ -2,10 +2,10 @@
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/tools/llvm-config/llvm-config.cpp b/llvm/tools/llvm-config/llvm-config.cpp
-index 8ed88f33ead4..3f2d1b98adcc 100644
+index 2c6c55f89d38..f2b581559991 100644
 --- a/llvm/tools/llvm-config/llvm-config.cpp
 +++ b/llvm/tools/llvm-config/llvm-config.cpp
-@@ -305,7 +305,7 @@ int main(int argc, char **argv) {
+@@ -307,7 +307,7 @@ int main(int argc, char **argv) {
    // bin dir).
    sys::fs::make_absolute(CurrentPath);
    CurrentExecPrefix =

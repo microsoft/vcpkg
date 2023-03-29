@@ -1,6 +1,6 @@
 {
   "name": "llvm",
-  "version": "14.0.6",
+  "version": "15.0.1",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -159,6 +159,12 @@
       "description": "Build LLVM with FFI.",
       "dependencies": [
         "libffi"
+      ]
+    },
+    "enable-ios": {
+      "description": "Build compiler-rt for iOS SDK.",
+      "dependencies": [
+        "target-arm"
       ]
     },
     "enable-libxml2": {
