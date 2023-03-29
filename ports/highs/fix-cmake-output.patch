@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c0642877..5697364af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -307,6 +307,7 @@ endif()
+ if (ZLIB)
+   find_package(ZLIB 1.2.3)
+ endif()
++find_package(Threads REQUIRED)
+ 
+ include(CPack)
+ set(CPACK_RESOURCE_FILE_LICENSE "${HIGHS_SOURCE_DIR}/COPYING")
+@@ -548,9 +549,9 @@ if (PYTHON)
+ endif()
+ 
+ # Add tests in examples/tests
+-add_subdirectory(examples)
++#add_subdirectory(examples)
+ 
+-add_subdirectory(app)
++#add_subdirectory(app)
+ 
+ if (EXP)
+     add_executable(doctest)
+@@ -572,4 +573,4 @@ endif()
+ #     RUNTIME
+ #     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/highs)
+ 
+-endif()
++endif()
+\ No newline at end of file
