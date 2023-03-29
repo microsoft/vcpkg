@@ -1,19 +1,12 @@
-vcpkg_download_distfile(
-    ARCHIVE_PATH
-    URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
-    FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 c6198e5c9b8fe5ccd89e445c9252da44d8d7c9e0c8eb5a802fa0cabf89482fddf775ed383bac1acc9331bc3195d21df7ea02c4a73aa6ee163c2959f34175d650
-)
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE_PATH}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO apache/arrow
+    REF d422137d8a4d7578bdf9d5b0fb51b286a8bc92c2
+    SHA512 5377f92e0a023d8286a6f404b6e6c9fdfcbdd243dd5a36e98fd6b73a57bdf80765cec4593e13ee1b4c3e11943280138bf20ba4d12de4bca6812128bf1e389e95
+    HEAD_REF master
     PATCHES
-        brotli.patch
         msvc-static-name.patch
-        thrift.patch
         utf8proc.patch
-        fix-pkgconfig-windows.patch # needed for fix-dataset.patch (https://github.com/apache/arrow/pull/14900)
-        fix-dataset.patch # https://github.com/apache/arrow/pull/33665
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
