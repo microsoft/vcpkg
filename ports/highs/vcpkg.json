@@ -1,8 +1,8 @@
 {
   "name": "highs",
   "version": "1.5.1",
-  "homepage": "https://highs.dev",
   "description": "High performance library to solve linear, mixed-integer, and convex quadratic optimization problems.",
+  "homepage": "https://highs.dev",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
