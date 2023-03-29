@@ -2,12 +2,7 @@
 # Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
 
 # Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES
-    # Fix symbols exporting for MinGW GCC x86
-    # def-fixes.patch
-    # Clover build on Windows
-    # clover.patch
-)
+set(PATCHES )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 if(VCPKG_TARGET_IS_WINDOWS)
