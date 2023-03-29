@@ -205,3 +205,16 @@ index 3291a7c808e1..9fe9b9a7940d 100644
      if(ARG_INSTALL_PREFIX)
        set(install_dest ${ARG_INSTALL_PREFIX})
      endif()
+diff --git a/lld/tools/lld/CMakeLists.txt b/lld/tools/lld/CMakeLists.txt
+index df48cc0d6..1363144fd 100644
+--- a/lld/tools/lld/CMakeLists.txt	
++++ b/lld/tools/lld/CMakeLists.txt
+@@ -20,7 +20,7 @@ target_link_libraries(lld
+   )
+ 
+ install(TARGETS lld
+-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
++  RUNTIME DESTINATION "${LLVM_TOOLS_INSTALL_DIR}")
+ 
+ if(NOT LLD_SYMLINKS_TO_CREATE)
+   set(LLD_SYMLINKS_TO_CREATE

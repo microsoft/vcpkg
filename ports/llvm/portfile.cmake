@@ -348,3 +348,6 @@ endif()
 # * LTO.dll
 # * Remarks.dll
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
+file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-release.cmake.log")
+file(INSTALL "${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "LLVMExports-debug.cmake.log")
