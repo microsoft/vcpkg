@@ -34,6 +34,8 @@
 
 # Add new items alphabetically
 
+# Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
+arrayfire:x64-linux=fail
 # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
@@ -163,6 +165,9 @@ cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
+# Requires full C++20 support, currently absent from CI for these triplets.
+cppslippi:x64-linux=fail
+cppslippi:x64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
@@ -217,6 +222,8 @@ fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
+flashlight-cpu:x64-linux=fail
+flashlight-cuda:x64-linux=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -231,10 +238,6 @@ fluidlite:x64-windows=skip
 fluidlite:x86-windows=skip
 fmi4cpp:arm-uwp=fail
 fmi4cpp:x64-uwp=fail
-fmilib:arm64-windows=fail
-fmilib:arm-uwp=fail
-fmilib:x64-linux=fail
-fmilib:x64-uwp=fail
 fontconfig:x64-uwp=fail
 fontconfig:arm-uwp=fail
 foonathan-memory:arm64-windows=fail
@@ -340,16 +343,6 @@ ijg-libjpeg:x64-uwp            = skip
 ijg-libjpeg:x64-windows        = skip
 ijg-libjpeg:x64-windows-static = skip
 ijg-libjpeg:x86-windows        = skip
-intel-mkl:arm64-windows=fail
-intel-mkl:arm-uwp=fail
-intel-mkl:x64-linux=fail
-intel-mkl:x64-osx=fail
-intel-mkl:arm64-osx=fail
-intel-mkl:x64-uwp=fail
-intel-mkl:x64-windows=fail
-intel-mkl:x64-windows-static=fail
-intel-mkl:x64-windows-static-md=fail
-intel-mkl:x86-windows=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
@@ -397,9 +390,6 @@ libgxps:x64-windows-static-md=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhdfs3:arm64-osx=fail
-libigl:arm64-windows=fail
-libigl:arm-uwp=fail
-libigl:x64-uwp=fail
 libirecovery:x64-windows-static-md=fail
 # 120 min build time for libjxl arm-uwp-rel, reason unknown
 libjxl:arm-uwp=skip
@@ -524,8 +514,6 @@ live555:arm64-osx=fail
 live555:x64-uwp=fail
 # fails due to an outdated gcc version
 llfio:x64-linux=fail
-llgl:arm-uwp=fail
-llgl:x64-uwp=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
@@ -547,9 +535,7 @@ mecab:x86-windows        = skip
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-mfl:x64-linux=skip
-mfl:x64-osx=skip
-mfl:arm64-osx=skip
+mfl:x64-linux=fail # requires a c++20 compiler
 milerius-sfml-imgui:x64-windows-static=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
@@ -574,17 +560,6 @@ ms-quic:x64-uwp=fail
 ms-quic:x64-windows-static-md=fail
 ms-quic:x64-windows=fail
 ms-quic:x86-windows=fail
-# mmx installs many problematic headers, such as `json.h` and `sched.h`
-mmx:x64-windows=skip
-mmx:x64-windows-static=skip
-mmx:x64-windows-static-md=skip
-mmx:x86-windows=skip
-mmx:x64-linux=skip
-mmx:x64-osx=skip
-mmx:arm64-osx=skip
-mmx:arm-uwp=skip
-mmx:x64-uwp=skip
-mmx:arm64-windows=skip
 monkeys-audio:arm64-windows=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:arm-uwp=fail
@@ -760,6 +735,7 @@ pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
 popsift:x64-windows-static-md=fail
+popsift:x64-linux=fail # segfaults :(
 portable-snippets:arm-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
@@ -903,8 +879,6 @@ sdformat6:x64-windows-static-md=fail
 sdformat9:arm-uwp=fail
 sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
-sdl2-mixer:arm-uwp=fail
-sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
 sdl2-net:x64-uwp=fail
 septag-sx:arm64-windows=fail
@@ -990,13 +964,6 @@ tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows-static-md=fail
 
-theia:arm64-windows      = skip
-theia:arm-uwp            = skip
-theia:x64-uwp            = skip
-theia:x64-windows        = skip
-theia:x64-windows-static = skip
-theia:x64-windows-static-md=skip
-theia:x86-windows        = skip
 tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
@@ -1104,6 +1071,11 @@ openscap:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
+
+# these ports require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+ms-gdkx:x64-windows=fail
+ms-gdkx:x64-windows-static=fail
+ms-gdkx:x64-windows-static-md=fail
 
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x86-windows=fail

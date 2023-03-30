@@ -10,12 +10,14 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DCMINPACK_LIB_INSTALL_DIR=lib
+        -DUSE_BLAS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
-file(INSTALL "${SOURCE_PATH}/CopyrightMINPACK.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/CopyrightMINPACK.txt")

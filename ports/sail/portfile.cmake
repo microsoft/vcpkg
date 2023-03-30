@@ -9,7 +9,7 @@ vcpkg_from_github(
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png psd qoi svg tga tiff wal webp xbm)
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png psd qoi tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
         list(APPEND ONLY_CODECS ${CODEC})
     endif()
@@ -19,7 +19,6 @@ list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-
     OPTIONS
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
@@ -57,4 +56,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h"
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

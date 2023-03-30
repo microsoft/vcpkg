@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-tests.patch
+        fix-clang-detection.patch
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
