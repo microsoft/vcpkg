@@ -519,7 +519,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 "--x-wait-for-lock"
                 "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-                "${Z_VCPKG_FEATURE_FLAGS}"
+                ${Z_VCPKG_FEATURE_FLAGS}
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT

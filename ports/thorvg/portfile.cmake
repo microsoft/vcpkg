@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Samsung/thorvg
-    REF v0.8.3
-    SHA512 df2662b89e72608bd635ff18e7a56562e046421eb7152f11e9796df8cd0d964e34d1ffdba742a838e46f9a27f3d69ba81fb3e08a3ff3f21eac951476bdc72848
+    REPO thorvg/thorvg
+    REF v0.8.4
+    SHA512 8e885a8c56efb129fb3ab90b9a7b765b84f5f520a9c7a5c92af4ffe61bac1b928165801b64ebc7db77046e1aaf2918ed0ffdf98cb9572dc6d46ed6de3f96b9b7
     HEAD_REF master
     PATCHES
         install-tools.patch
