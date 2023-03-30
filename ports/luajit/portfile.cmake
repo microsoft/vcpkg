@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         003-do-not-set-macosx-deployment-target.patch
         004-fix-build-path-and-crt-linkage.patch
+        006-fix-special-path-MSVC.patch
         ${LJIT_PATCHES}
 )
 
