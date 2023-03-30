@@ -4877,7 +4877,7 @@
       "port-version": 0
     },
     "luabridge3": {
-      "baseline": "3.0-beta4",
+      "baseline": "3.0-rc3",
       "port-version": 0
     },
     "luafilesystem": {
