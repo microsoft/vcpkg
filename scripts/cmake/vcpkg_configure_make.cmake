@@ -112,10 +112,6 @@ macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     endif()
 endmacro()
 
-macro(z_convert_to_list input output)
-    string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
-endmacro()
-
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
@@ -569,11 +565,10 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    z_convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES c_libs_list)
-    z_convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES cxx_libs_list)
-    set(all_libs_list ${c_libs_list} ${cxx_libs_list})
-    list(REMOVE_DUPLICATES all_libs_list)
-    list(TRANSFORM all_libs_list STRIP)
+    separate_arguments(c_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+    separate_arguments(cxx_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+    list(REMOVE_ITEM cxx_libs_list ${c_libs_list})
+    set(all_libs_list ${cxx_libs_list} ${c_libs_list})
     #Do lib list transformation from name.lib to -lname if necessary
     set(x_vcpkg_transform_libs ON)
     if(VCPKG_TARGET_IS_UWP)
