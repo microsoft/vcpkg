@@ -257,6 +257,7 @@ vcpkg_cmake_configure(
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
         -DCLANG_TOOLS_INSTALL_DIR=tools/llvm
         -DLLD_TOOLS_INSTALL_DIR=tools/llvm
+        -DMLIR_TOOLS_INSTALL_DIR=tools/llvm
         -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
         -DOPENMP_TOOLS_INSTALL_DIR:PATH=tools/llvm
     MAYBE_UNUSED_VARIABLES 
