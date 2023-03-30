@@ -28,8 +28,8 @@ index 4c06409..8e0e4de 100644
      	SET_PROPERTY(TARGET common_ssl_obj_static PROPERTY COMPILE_DEFINITIONS "OPENSSL=1;PAHO_MQTT_STATIC=1")
 +        IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 +            find_package(unofficial-libuuid CONFIG REQUIRED)
-+            target_link_libraries(common_obj_static PRIVATE unofficial::UUID::uuid)
-+            target_compile_definitions(common_obj_static PUBLIC LIBUUID)
++            target_link_libraries(common_ssl_obj_static PRIVATE unofficial::UUID::uuid)
++            target_compile_definitions(common_ssl_obj_static PUBLIC LIBUUID)
 +        ENDIF()
      
          ADD_LIBRARY(paho-mqtt3cs-static STATIC $<TARGET_OBJECTS:common_ssl_obj_static> MQTTClient.c SSLSocket.c)
