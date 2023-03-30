@@ -5702,7 +5702,7 @@
     },
     "onnxruntime-gpu": {
       "baseline": "1.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "oof": {
       "baseline": "2021-11-23",
