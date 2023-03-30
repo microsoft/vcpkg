@@ -583,7 +583,7 @@ function(vcpkg_configure_make)
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM all_libs_list "uuid")
         endif()
-        list(TRANSFORM all_libs_list REPLACE "^([^-])" "-l\\1")
+        list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
         if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             # libtool must be told explicitly that there is no dynamic linkage for uuid.
             # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
