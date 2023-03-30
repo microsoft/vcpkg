@@ -50,8 +50,6 @@ set(
   libyara/mem.c
   libyara/modules.c
   libyara/modules/console/console.c
-  libyara/modules/cuckoo/cuckoo.c
-  libyara/modules/dotnet/dotnet.c
   libyara/modules/hash/hash.c
   libyara/modules/math/math.c
   libyara/modules/macho/macho.c
@@ -83,7 +81,7 @@ set(
   libyara/strutils.c
   libyara/threading.c
   
-  # Module request library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
+  # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
   # libyara/modules/elf/elf.c
   # libyara/tlshc/tlsh.c
   # libyara/tlshc/tlsh_impl.c
@@ -128,12 +126,14 @@ set(
 
 if(CUCKOO_MODULE)
   list(APPEND libyara_definitions -DCUCKOO_MODULE)
+  list(APPEND libyara_sources libyara/modules/cuckoo/cuckoo.c)
   find_package(jansson CONFIG REQUIRED)
   list(APPEND libyara_dependencies jansson::jansson)
 endif()
 
 if(DOTNET_MODULE)
   list(APPEND libyara_definitions -DDOTNET_MODULE)
+  list(APPEND libyara_sources libyara/modules/dotnet/dotnet.c)
 endif()
 
 add_library(libyara ${libyara_sources})
