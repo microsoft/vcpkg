@@ -1,12 +1,13 @@
 {
   "name": "grantlee",
   "version": "5.3.1",
+  "port-version": 1,
   "description": "Libraries for text templating with Qt",
   "homepage": "https://github.com/steveire/grantlee",
   "license": "LGPL-2.1-or-later",
   "supports": "!staticcrt",
   "dependencies": [
-    "qt5-declarative",
+    "qtdeclarative",
     {
       "name": "vcpkg-cmake",
       "host": true
