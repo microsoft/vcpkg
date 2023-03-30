@@ -48,8 +48,9 @@ if("codemodels" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${BUILDTREE_PATH}")
     file(COPY "${SOURCE_PATH}/" DESTINATION "${BUILDTREE_PATH}")
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${BUILDTREE_PATH}/visualc/vngspice.sln"
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${BUILDTREE_PATH}"
+        PROJECT_SUBPATH visualc/vngspice.sln
         # build_msbuild swaps x86 for win32(bad) if we dont force our own setting
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         TARGET Build
