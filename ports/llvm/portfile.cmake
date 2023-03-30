@@ -263,6 +263,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
         OPENMP_TOOLS_INSTALL_DIR
+        MLIR_TOOLS_INSTALL_DIR
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
