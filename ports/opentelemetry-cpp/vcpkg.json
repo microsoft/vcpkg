@@ -39,6 +39,10 @@
       "description": "Whether to include the OpenTelemetry Protocol in the SDK",
       "dependencies": [
         "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
         "protobuf"
       ]
     },

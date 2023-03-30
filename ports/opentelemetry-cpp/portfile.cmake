@@ -24,10 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zpages WITH_ZPAGES
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
-endif()
-
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP)
     set(OTEL_PROTO_VERSION "0.19.0")
@@ -43,6 +39,7 @@ if(WITH_OTLP)
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
     list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
+    list(APPEND FEATURE_OPTIONS -DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX})
 endif()
 
 vcpkg_cmake_configure(
