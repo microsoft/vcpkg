@@ -85,8 +85,11 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
     message(STATUS "setting rpath prefix for macOS dynamic libraries")
 
+    if("tools" IN_LIST FEATURES)
+        set(LIBICUTU_RPATH "libicutu")
+    endif()
     # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
-    foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio libicutu libicuuc)
+    foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio ${LIBICUTU_RPATH} libicuuc)
         vcpkg_execute_build_process(
             COMMAND "${INSTALL_NAME_TOOL}" -id "${ID_PREFIX}/${LIB_NAME}.${ICU_VERSION_MAJOR}.dylib"
             "${LIB_NAME}.${VERSION}.dylib"
