@@ -2968,6 +2968,10 @@
       "baseline": "0.7.6",
       "port-version": 7
     },
+    "gtsam": {
+      "baseline": "4.2a9",
+      "port-version": 0
+    },
     "guetzli": {
       "baseline": "2020-09-14",
       "port-version": 2

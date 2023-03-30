@@ -1,0 +1,27 @@
+{
+  "name": "gtsam",
+  "version-string": "4.2a9",
+  "description": "GTSAM is a library of C++ classes that implement smoothing and mapping (SAM) in robotics and vision, using factor graphs and Bayes networks as the underlying computing paradigm rather than sparse matrices.",
+  "homepage": "https://github.com/borglab/gtsam",
+  "dependencies": [
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-regex",
+    "boost-serialization",
+    "boost-system",
+    "boost-thread",
+    "boost-timer",
+    "eigen3",
+    "metis",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
