@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 124cbb7..16f0c81 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1382,6 +1382,9 @@ else()
+   if(NOT MINGW)
+     add_library(objects OBJECT ${sources})
+     set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE ON)
++    if(GNUTLS_FOUND)
++      target_include_directories(objects PRIVATE "${GNUTLS_INCLUDE_DIR}")
++    endif()
+   endif()
+ 
+   if(BUILD_SHARED)
+@@ -1469,6 +1472,7 @@ if(BUILD_SHARED)
+   target_link_libraries(libzmq ${CMAKE_THREAD_LIBS_INIT})
+   if(GNUTLS_FOUND)
+     target_link_libraries(libzmq ${GNUTLS_LIBRARIES})
++    target_include_directories(libzmq PRIVATE "${GNUTLS_INCLUDE_DIR}")
+   endif()
+ 
+   if(NSS3_FOUND)
+@@ -1518,6 +1522,7 @@ if(BUILD_STATIC)
+   target_link_libraries(libzmq-static ${CMAKE_THREAD_LIBS_INIT})
+   if(GNUTLS_FOUND)
+     target_link_libraries(libzmq-static ${GNUTLS_LIBRARIES})
++    target_include_directories(libzmq-static PRIVATE "${GNUTLS_INCLUDE_DIR}")
+   endif()
+ 
+   if(LIBBSD_FOUND)
+@@ -1590,6 +1595,7 @@ if(BUILD_SHARED)
+ 
+       if(GNUTLS_FOUND)
+         target_link_libraries(${perf-tool} ${GNUTLS_LIBRARIES})
++        target_include_directories(${perf-tool} PRIVATE "${GNUTLS_INCLUDE_DIR}")
+       endif()
+ 
+       if(LIBBSD_FOUND)
