@@ -1,0 +1,18 @@
+diff --git a/mlir/include/mlir/IR/PatternMatch.h b/mlir/include/mlir/IR/PatternMatch.h
+index 12bf196bb58e5..200eae8c3b71c 100644
+--- a/mlir/include/mlir/IR/PatternMatch.h
++++ b/mlir/include/mlir/IR/PatternMatch.h
+@@ -1102,10 +1097,9 @@ void assertArgs(PatternRewriter &rewriter, ArrayRef<PDLValue> values,
+   auto errorFn = [&](const Twine &msg) -> LogicalResult {
+     llvm::report_fatal_error(msg);
+   };
+-  (void)std::initializer_list<int>{
+-      (assert(succeeded(ProcessPDLValue<typename FnTraitsT::template arg_t<
+-                            I + 1>>::verifyAsArg(errorFn, values[I], I))),
+-       0)...};
++  assert((succeeded(ProcessPDLValue<typename FnTraitsT::template arg_t<I + 1>>::
++                        verifyAsArg(errorFn, values[I], I)) &&
++          ...));
+ #endif
+ }
+ 
