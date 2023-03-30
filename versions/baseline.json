@@ -2798,7 +2798,7 @@
     },
     "glib": {
       "baseline": "2.76.0",
-      "port-version": 1
+      "port-version": 2
     },
     "glibmm": {
       "baseline": "2.74.0",
@@ -2850,7 +2850,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 1
+      "port-version": 2
     },
     "google-cloud-cpp": {
       "baseline": "2.8.0",
@@ -7786,7 +7786,7 @@
     },
     "thorvg": {
       "baseline": "0.8.4",
-      "port-version": 0
+      "port-version": 1
     },
     "threadpool": {
       "baseline": "0.2.5",
@@ -8221,7 +8221,7 @@
       "port-version": 1
     },
     "vcpkg-tool-meson": {
-      "baseline": "0.63",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "vcpkg-tool-mozbuild": {
