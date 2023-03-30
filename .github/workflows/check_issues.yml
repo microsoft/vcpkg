@@ -1,0 +1,32 @@
+name: Check For Common Issues
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  missing-windows-sdk-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            let issue_query = {
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            };
+            let issue = await github.rest.issues.get(issue_query)
+            let reg = /RC Pass 1: command "rc .*" failed \(exit code 0\) with the following output:/;
+            if (reg.test(issue.data.body)){
+              await github.rest.issues.removeAllLabels(issue_query);
+              await github.rest.issues.setLabels({...issue_query, labels: ["category:question"]});
+              let body = "Thanks for posting this issue. Please make sure you have the following installed.\n" +
+                         "- Visual Studio Desktop development with C++.\n" +
+                         "- Windows 10 SDK or Windows 11 SDK.";
+              await github.rest.issues.createComment({...issue_query, body}); 
+              // Close the issue? 
+            }
