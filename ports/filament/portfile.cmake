@@ -8,6 +8,7 @@ vcpkg_from_github(
         image-sampler.patch
         gltfio.patch
         cmake-build.patch
+        spirv-std-move.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party/draco")

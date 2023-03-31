@@ -1,0 +1,436 @@
+diff --git a/third_party/spirv-cross/main.cpp b/third_party/spirv-cross/main.cpp
+index 0da964496..bdd1b35fc 100644
+--- a/third_party/spirv-cross/main.cpp
++++ b/third_party/spirv-cross/main.cpp
+@@ -77,7 +77,7 @@ struct CLICallbacks
+ struct CLIParser
+ {
+ 	CLIParser(CLICallbacks cbs_, int argc_, char *argv_[])
+-	    : cbs(move(cbs_))
++	    : cbs(std::move(cbs_))
+ 	    , argc(argc_)
+ 	    , argv(argv_)
+ 	{
+@@ -1081,7 +1081,7 @@ static HLSLBindingFlags hlsl_resource_type_to_flag(const std::string &arg)
+ 
+ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t> spirv_file)
+ {
+-	Parser spirv_parser(move(spirv_file));
++	Parser spirv_parser(std::move(spirv_file));
+ 	spirv_parser.parse();
+ 
+ 	unique_ptr<CompilerGLSL> compiler;
+@@ -1090,13 +1090,13 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t>
+ 
+ 	if (args.cpp)
+ 	{
+-		compiler.reset(new CompilerCPP(move(spirv_parser.get_parsed_ir())));
++		compiler.reset(new CompilerCPP(std::move(spirv_parser.get_parsed_ir())));
+ 		if (args.cpp_interface_name)
+ 			static_cast<CompilerCPP *>(compiler.get())->set_interface_name(args.cpp_interface_name);
+ 	}
+ 	else if (args.msl)
+ 	{
+-		compiler.reset(new CompilerMSL(move(spirv_parser.get_parsed_ir())));
++		compiler.reset(new CompilerMSL(std::move(spirv_parser.get_parsed_ir())));
+ 
+ 		auto *msl_comp = static_cast<CompilerMSL *>(compiler.get());
+ 		auto msl_opts = msl_comp->get_msl_options();
+@@ -1153,13 +1153,13 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t>
+ 			msl_comp->set_combined_sampler_suffix(args.msl_combined_sampler_suffix);
+ 	}
+ 	else if (args.hlsl)
+-		compiler.reset(new CompilerHLSL(move(spirv_parser.get_parsed_ir())));
++		compiler.reset(new CompilerHLSL(std::move(spirv_parser.get_parsed_ir())));
+ 	else
+ 	{
+ 		combined_image_samplers = !args.vulkan_semantics;
+ 		if (!args.vulkan_semantics || args.vulkan_glsl_disable_ext_samplerless_texture_functions)
+ 			build_dummy_sampler = true;
+-		compiler.reset(new CompilerGLSL(move(spirv_parser.get_parsed_ir())));
++		compiler.reset(new CompilerGLSL(std::move(spirv_parser.get_parsed_ir())));
+ 	}
+ 
+ 	if (!args.variable_type_remaps.empty())
+@@ -1170,7 +1170,7 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t>
+ 					out = remap.new_variable_type;
+ 		};
+ 
+-		compiler->set_variable_type_remap_callback(move(remap_cb));
++		compiler->set_variable_type_remap_callback(std::move(remap_cb));
+ 	}
+ 
+ 	for (auto &masked : args.masked_stage_outputs)
+@@ -1341,7 +1341,7 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t>
+ 	{
+ 		auto active = compiler->get_active_interface_variables();
+ 		res = compiler->get_shader_resources(active);
+-		compiler->set_enabled_interface_variables(move(active));
++		compiler->set_enabled_interface_variables(std::move(active));
+ 	}
+ 	else
+ 		res = compiler->get_shader_resources();
+@@ -1356,7 +1356,7 @@ static string compile_iteration(const CLIArguments &args, std::vector<uint32_t>
+ 
+ 	auto pls_inputs = remap_pls(args.pls_in, res.stage_inputs, &res.subpass_inputs);
+ 	auto pls_outputs = remap_pls(args.pls_out, res.stage_outputs, nullptr);
+-	compiler->remap_pixel_local_storage(move(pls_inputs), move(pls_outputs));
++	compiler->remap_pixel_local_storage(std::move(pls_inputs), std::move(pls_outputs));
+ 
+ 	for (auto &ext : args.extensions)
+ 		compiler->require_extension(ext);
+@@ -1589,7 +1589,7 @@ static int main_inner(int argc, char *argv[])
+ 		auto old_name = parser.next_string();
+ 		auto new_name = parser.next_string();
+ 		auto model = stage_to_execution_model(parser.next_string());
+-		args.entry_point_rename.push_back({ old_name, new_name, move(model) });
++		args.entry_point_rename.push_back({ old_name, new_name, std::move(model) });
+ 	});
+ 	cbs.add("--entry", [&args](CLIParser &parser) { args.entry = parser.next_string(); });
+ 	cbs.add("--stage", [&args](CLIParser &parser) { args.entry_stage = parser.next_string(); });
+@@ -1598,20 +1598,20 @@ static int main_inner(int argc, char *argv[])
+ 		HLSLVertexAttributeRemap remap;
+ 		remap.location = parser.next_uint();
+ 		remap.semantic = parser.next_string();
+-		args.hlsl_attr_remap.push_back(move(remap));
++		args.hlsl_attr_remap.push_back(std::move(remap));
+ 	});
+ 
+ 	cbs.add("--remap", [&args](CLIParser &parser) {
+ 		string src = parser.next_string();
+ 		string dst = parser.next_string();
+ 		uint32_t components = parser.next_uint();
+-		args.remaps.push_back({ move(src), move(dst), components });
++		args.remaps.push_back({ move(src), std::move(dst), components });
+ 	});
+ 
+ 	cbs.add("--remap-variable-type", [&args](CLIParser &parser) {
+ 		string var_name = parser.next_string();
+ 		string new_type = parser.next_string();
+-		args.variable_type_remaps.push_back({ move(var_name), move(new_type) });
++		args.variable_type_remaps.push_back({ move(var_name), std::move(new_type) });
+ 	});
+ 
+ 	cbs.add("--rename-interface-variable", [&args](CLIParser &parser) {
+@@ -1624,18 +1624,18 @@ static int main_inner(int argc, char *argv[])
+ 
+ 		uint32_t loc = parser.next_uint();
+ 		string var_name = parser.next_string();
+-		args.interface_variable_renames.push_back({ cls, loc, move(var_name) });
++		args.interface_variable_renames.push_back({ cls, loc, std::move(var_name) });
+ 	});
+ 
+ 	cbs.add("--pls-in", [&args](CLIParser &parser) {
+ 		auto fmt = pls_format(parser.next_string());
+ 		auto name = parser.next_string();
+-		args.pls_in.push_back({ move(fmt), move(name) });
++		args.pls_in.push_back({ move(fmt), std::move(name) });
+ 	});
+ 	cbs.add("--pls-out", [&args](CLIParser &parser) {
+ 		auto fmt = pls_format(parser.next_string());
+ 		auto name = parser.next_string();
+-		args.pls_out.push_back({ move(fmt), move(name) });
++		args.pls_out.push_back({ move(fmt), std::move(name) });
+ 	});
+ 	cbs.add("--shader-model", [&args](CLIParser &parser) {
+ 		args.shader_model = parser.next_uint();
+@@ -1702,10 +1702,10 @@ static int main_inner(int argc, char *argv[])
+ 	// Special case reflection because it has little to do with the path followed by code-outputting compilers
+ 	if (!args.reflect.empty())
+ 	{
+-		Parser spirv_parser(move(spirv_file));
++		Parser spirv_parser(std::move(spirv_file));
+ 		spirv_parser.parse();
+ 
+-		CompilerReflection compiler(move(spirv_parser.get_parsed_ir()));
++		CompilerReflection compiler(std::move(spirv_parser.get_parsed_ir()));
+ 		compiler.set_format(args.reflect);
+ 		auto json = compiler.compile();
+ 		if (args.output)
+@@ -1718,7 +1718,7 @@ static int main_inner(int argc, char *argv[])
+ 	string compiled_output;
+ 
+ 	if (args.iterations == 1)
+-		compiled_output = compile_iteration(args, move(spirv_file));
++		compiled_output = compile_iteration(args, std::move(spirv_file));
+ 	else
+ 	{
+ 		for (unsigned i = 0; i < args.iterations; i++)
+diff --git a/third_party/spirv-cross/spirv_common.hpp b/third_party/spirv-cross/spirv_common.hpp
+index f0024d7ed..02b9538c2 100644
+--- a/third_party/spirv-cross/spirv_common.hpp
++++ b/third_party/spirv-cross/spirv_common.hpp
+@@ -662,7 +662,7 @@ struct SPIRExpression : IVariant
+ 
+ 	// Only created by the backend target to avoid creating tons of temporaries.
+ 	SPIRExpression(std::string expr, TypeID expression_type_, bool immutable_)
+-	    : expression(move(expr))
++	    : expression(std::move(expr))
+ 	    , expression_type(expression_type_)
+ 	    , immutable(immutable_)
+ 	{
+diff --git a/third_party/spirv-cross/spirv_cross.cpp b/third_party/spirv-cross/spirv_cross.cpp
+index e948820d2..a2b2efe2a 100644
+--- a/third_party/spirv-cross/spirv_cross.cpp
++++ b/third_party/spirv-cross/spirv_cross.cpp
+@@ -36,16 +36,16 @@ using namespace SPIRV_CROSS_NAMESPACE;
+ 
+ Compiler::Compiler(vector<uint32_t> ir_)
+ {
+-	Parser parser(move(ir_));
++	Parser parser(std::move(ir_));
+ 	parser.parse();
+-	set_ir(move(parser.get_parsed_ir()));
++	set_ir(std::move(parser.get_parsed_ir()));
+ }
+ 
+ Compiler::Compiler(const uint32_t *ir_, size_t word_count)
+ {
+ 	Parser parser(ir_, word_count);
+ 	parser.parse();
+-	set_ir(move(parser.get_parsed_ir()));
++	set_ir(std::move(parser.get_parsed_ir()));
+ }
+ 
+ Compiler::Compiler(const ParsedIR &ir_)
+@@ -55,12 +55,12 @@ Compiler::Compiler(const ParsedIR &ir_)
+ 
+ Compiler::Compiler(ParsedIR &&ir_)
+ {
+-	set_ir(move(ir_));
++	set_ir(std::move(ir_));
+ }
+ 
+ void Compiler::set_ir(ParsedIR &&ir_)
+ {
+-	ir = move(ir_);
++	ir = std::move(ir_);
+ 	parse_fixup();
+ }
+ 
+@@ -813,7 +813,7 @@ unordered_set<VariableID> Compiler::get_active_interface_variables() const
+ 
+ void Compiler::set_enabled_interface_variables(std::unordered_set<VariableID> active_variables)
+ {
+-	active_interface_variables = move(active_variables);
++	active_interface_variables = std::move(active_variables);
+ 	check_active_interface_variables = true;
+ }
+ 
+@@ -2362,7 +2362,7 @@ void Compiler::CombinedImageSamplerHandler::push_remap_parameters(const SPIRFunc
+ 	unordered_map<uint32_t, uint32_t> remapping;
+ 	for (uint32_t i = 0; i < length; i++)
+ 		remapping[func.arguments[i].id] = remap_parameter(args[i]);
+-	parameter_remapping.push(move(remapping));
++	parameter_remapping.push(std::move(remapping));
+ }
+ 
+ void Compiler::CombinedImageSamplerHandler::pop_remap_parameters()
+@@ -4161,7 +4161,7 @@ void Compiler::analyze_image_and_sampler_usage()
+ 	handler.dependency_hierarchy.clear();
+ 	traverse_all_reachable_opcodes(get<SPIRFunction>(ir.default_entry_point), handler);
+ 
+-	comparison_ids = move(handler.comparison_ids);
++	comparison_ids = std::move(handler.comparison_ids);
+ 	need_subpass_input = handler.need_subpass_input;
+ 
+ 	// Forward information from separate images and samplers into combined image samplers.
+@@ -4214,7 +4214,7 @@ void Compiler::build_function_control_flow_graphs_and_analyze()
+ 	CFGBuilder handler(*this);
+ 	handler.function_cfgs[ir.default_entry_point].reset(new CFG(*this, get<SPIRFunction>(ir.default_entry_point)));
+ 	traverse_all_reachable_opcodes(get<SPIRFunction>(ir.default_entry_point), handler);
+-	function_cfgs = move(handler.function_cfgs);
++	function_cfgs = std::move(handler.function_cfgs);
+ 	bool single_function = function_cfgs.size() <= 1;
+ 
+ 	for (auto &f : function_cfgs)
+diff --git a/third_party/spirv-cross/spirv_cross_c.cpp b/third_party/spirv-cross/spirv_cross_c.cpp
+index 866c25d10..3e9670cb9 100644
+--- a/third_party/spirv-cross/spirv_cross_c.cpp
++++ b/third_party/spirv-cross/spirv_cross_c.cpp
+@@ -251,7 +251,7 @@ spvc_result spvc_context_parse_spirv(spvc_context context, const SpvId *spirv, s
+ 		pir->context = context;
+ 		Parser parser(spirv, word_count);
+ 		parser.parse();
+-		pir->parsed = move(parser.get_parsed_ir());
++		pir->parsed = std::move(parser.get_parsed_ir());
+ 		*parsed_ir = pir.get();
+ 		context->allocations.push_back(std::move(pir));
+ 	}
+diff --git a/third_party/spirv-cross/spirv_cross_parsed_ir.cpp b/third_party/spirv-cross/spirv_cross_parsed_ir.cpp
+index e1a13c5e0..556bd1813 100644
+--- a/third_party/spirv-cross/spirv_cross_parsed_ir.cpp
++++ b/third_party/spirv-cross/spirv_cross_parsed_ir.cpp
+@@ -54,26 +54,26 @@ ParsedIR::ParsedIR()
+ // Should have been default-implemented, but need this on MSVC 2013.
+ ParsedIR::ParsedIR(ParsedIR &&other) SPIRV_CROSS_NOEXCEPT
+ {
+-	*this = move(other);
++	*this = std::move(other);
+ }
+ 
+ ParsedIR &ParsedIR::operator=(ParsedIR &&other) SPIRV_CROSS_NOEXCEPT
+ {
+ 	if (this != &other)
+ 	{
+-		pool_group = move(other.pool_group);
+-		spirv = move(other.spirv);
+-		meta = move(other.meta);
++		pool_group = std::move(other.pool_group);
++		spirv = std::move(other.spirv);
++		meta = std::move(other.meta);
+ 		for (int i = 0; i < TypeCount; i++)
+-			ids_for_type[i] = move(other.ids_for_type[i]);
+-		ids_for_constant_or_type = move(other.ids_for_constant_or_type);
+-		ids_for_constant_or_variable = move(other.ids_for_constant_or_variable);
+-		declared_capabilities = move(other.declared_capabilities);
+-		declared_extensions = move(other.declared_extensions);
+-		block_meta = move(other.block_meta);
+-		continue_block_to_loop_header = move(other.continue_block_to_loop_header);
+-		entry_points = move(other.entry_points);
+-		ids = move(other.ids);
++			ids_for_type[i] = std::move(other.ids_for_type[i]);
++		ids_for_constant_or_type = std::move(other.ids_for_constant_or_type);
++		ids_for_constant_or_variable = std::move(other.ids_for_constant_or_variable);
++		declared_capabilities = std::move(other.declared_capabilities);
++		declared_extensions = std::move(other.declared_extensions);
++		block_meta = std::move(other.block_meta);
++		continue_block_to_loop_header = std::move(other.continue_block_to_loop_header);
++		entry_points = std::move(other.entry_points);
++		ids = std::move(other.ids);
+ 		addressing_model = other.addressing_model;
+ 		memory_model = other.memory_model;
+ 
+@@ -996,7 +996,7 @@ ParsedIR::LoopLock::LoopLock(uint32_t *lock_)
+ 
+ ParsedIR::LoopLock::LoopLock(LoopLock &&other) SPIRV_CROSS_NOEXCEPT
+ {
+-	*this = move(other);
++	*this = std::move(other);
+ }
+ 
+ ParsedIR::LoopLock &ParsedIR::LoopLock::operator=(LoopLock &&other) SPIRV_CROSS_NOEXCEPT
+diff --git a/third_party/spirv-cross/spirv_glsl.cpp b/third_party/spirv-cross/spirv_glsl.cpp
+index 38d7f5ef5..808d89044 100644
+--- a/third_party/spirv-cross/spirv_glsl.cpp
++++ b/third_party/spirv-cross/spirv_glsl.cpp
+@@ -10041,7 +10041,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
+ 		bool ptr_chain = opcode == OpPtrAccessChain;
+ 		auto e = access_chain(ops[2], &ops[3], length - 3, get<SPIRType>(ops[0]), &meta, ptr_chain);
+ 
+-		auto &expr = set<SPIRExpression>(ops[1], move(e), ops[0], should_forward(ops[2]));
++		auto &expr = set<SPIRExpression>(ops[1], std::move(e), ops[0], should_forward(ops[2]));
+ 
+ 		auto *backing_variable = maybe_get_backing_variable(ops[2]);
+ 		expr.loaded_from = backing_variable ? backing_variable->self : ID(ops[2]);
+@@ -15213,7 +15213,7 @@ void CompilerGLSL::unroll_array_from_complex_load(uint32_t target_id, uint32_t s
+ 			statement(new_expr, "[i] = ", expr, "[i];");
+ 		end_scope();
+ 
+-		expr = move(new_expr);
++		expr = std::move(new_expr);
+ 	}
+ }
+ 
+@@ -15524,7 +15524,7 @@ void CompilerGLSL::emit_copy_logical_type(uint32_t lhs_id, uint32_t lhs_type_id,
+ 		rhs_id = id + 1;
+ 
+ 		{
+-			auto &lhs_expr = set<SPIRExpression>(lhs_id, move(lhs), lhs_type_id, true);
++			auto &lhs_expr = set<SPIRExpression>(lhs_id, std::move(lhs), lhs_type_id, true);
+ 			lhs_expr.need_transpose = lhs_meta.need_transpose;
+ 
+ 			if (lhs_meta.storage_is_packed)
+@@ -15537,7 +15537,7 @@ void CompilerGLSL::emit_copy_logical_type(uint32_t lhs_id, uint32_t lhs_type_id,
+ 		}
+ 
+ 		{
+-			auto &rhs_expr = set<SPIRExpression>(rhs_id, move(rhs), rhs_type_id, true);
++			auto &rhs_expr = set<SPIRExpression>(rhs_id, std::move(rhs), rhs_type_id, true);
+ 			rhs_expr.need_transpose = rhs_meta.need_transpose;
+ 
+ 			if (rhs_meta.storage_is_packed)
+diff --git a/third_party/spirv-cross/spirv_hlsl.cpp b/third_party/spirv-cross/spirv_hlsl.cpp
+index 9435c4e06..2629944dd 100644
+--- a/third_party/spirv-cross/spirv_hlsl.cpp
++++ b/third_party/spirv-cross/spirv_hlsl.cpp
+@@ -2331,7 +2331,7 @@ void CompilerHLSL::emit_function_prototype(SPIRFunction &func, const Bitset &ret
+ 		out_argument += " ";
+ 		out_argument += "spvReturnValue";
+ 		out_argument += type_to_array_glsl(type);
+-		arglist.push_back(move(out_argument));
++		arglist.push_back(std::move(out_argument));
+ 	}
+ 
+ 	for (auto &arg : func.arguments)
+@@ -3957,7 +3957,7 @@ void CompilerHLSL::read_access_chain(string *expr, const string &lhs, const SPIR
+ 	if (lhs.empty())
+ 	{
+ 		assert(expr);
+-		*expr = move(load_expr);
++		*expr = std::move(load_expr);
+ 	}
+ 	else
+ 		statement(lhs, " = ", load_expr, ";");
+@@ -5610,7 +5610,7 @@ void CompilerHLSL::require_texture_query_variant(uint32_t var_id)
+ 
+ void CompilerHLSL::set_root_constant_layouts(std::vector<RootConstants> layout)
+ {
+-	root_constants_layout = move(layout);
++	root_constants_layout = std::move(layout);
+ }
+ 
+ void CompilerHLSL::add_vertex_attribute_remap(const HLSLVertexAttributeRemap &vertex_attributes)
+diff --git a/third_party/spirv-cross/spirv_msl.cpp b/third_party/spirv-cross/spirv_msl.cpp
+index aee52f7dc..84a74e486 100644
+--- a/third_party/spirv-cross/spirv_msl.cpp
++++ b/third_party/spirv-cross/spirv_msl.cpp
+@@ -37,7 +37,7 @@ static const uint32_t k_unknown_component = ~0u;
+ static const char *force_inline = "static inline __attribute__((always_inline))";
+ 
+ CompilerMSL::CompilerMSL(std::vector<uint32_t> spirv_)
+-    : CompilerGLSL(move(spirv_))
++    : CompilerGLSL(std::move(spirv_))
+ {
+ }
+ 
+@@ -7305,7 +7305,7 @@ bool CompilerMSL::emit_tessellation_access_chain(const uint32_t *ops, uint32_t l
+ 		    expr_type->vecsize > result_ptr_type.vecsize)
+ 			e += vector_swizzle(result_ptr_type.vecsize, 0);
+ 
+-		auto &expr = set<SPIRExpression>(ops[1], move(e), ops[0], should_forward(ops[2]));
++		auto &expr = set<SPIRExpression>(ops[1], std::move(e), ops[0], should_forward(ops[2]));
+ 		expr.loaded_from = var->self;
+ 		expr.need_transpose = meta.need_transpose;
+ 		expr.access_chain = true;
+@@ -10377,7 +10377,7 @@ string CompilerMSL::convert_row_major_matrix(string exp_str, const SPIRType &exp
+ {
+ 	if (!is_matrix(exp_type))
+ 	{
+-		return CompilerGLSL::convert_row_major_matrix(move(exp_str), exp_type, physical_type_id, is_packed);
++		return CompilerGLSL::convert_row_major_matrix(std::move(exp_str), exp_type, physical_type_id, is_packed);
+ 	}
+ 	else
+ 	{
+diff --git a/third_party/spirv-cross/spirv_parser.cpp b/third_party/spirv-cross/spirv_parser.cpp
+index 86f7fd350..0e8e91628 100644
+--- a/third_party/spirv-cross/spirv_parser.cpp
++++ b/third_party/spirv-cross/spirv_parser.cpp
+@@ -31,7 +31,7 @@ namespace SPIRV_CROSS_NAMESPACE
+ {
+ Parser::Parser(vector<uint32_t> spirv)
+ {
+-	ir.spirv = move(spirv);
++	ir.spirv = std::move(spirv);
+ }
+ 
+ Parser::Parser(const uint32_t *spirv_data, size_t word_count)
+@@ -258,7 +258,7 @@ void Parser::parse(const Instruction &instruction)
+ 	case OpExtension:
+ 	{
+ 		auto ext = extract_string(ir.spirv, instruction.offset);
+-		ir.declared_extensions.push_back(move(ext));
++		ir.declared_extensions.push_back(std::move(ext));
+ 		break;
+ 	}
+ 
