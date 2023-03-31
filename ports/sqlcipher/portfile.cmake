@@ -53,6 +53,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     json1 WITH_JSON1
     INVERTED_FEATURES
     tool SQLITE3_SKIP_TOOLS
+    fts5 WITH_FTS5
 )
 
 vcpkg_cmake_configure(
