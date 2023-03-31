@@ -24,6 +24,28 @@
     <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' != '' and !$(_ZVcpkgInstalledDir.EndsWith('\'))">$(_ZVcpkgInstalledDir)\</_ZVcpkgInstalledDir>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <_ZVcpkgClassicOrManifest Condition="'$(VcpkgEnabled)' == 'true' And ('$(VcpkgEnableClassic)' == 'true' Or '$(VcpkgEnableManifest)' == 'true')">true</_ZVcpkgClassicOrManifest>
+    <_ZVcpkgClassicOrManifest Condition="'$(_ZVcpkgClassicOrManifest)' == ''">false</_ZVcpkgClassicOrManifest>
+  </PropertyGroup>
+
+  <!-- Special-case custom MSBuild platforms defined in the Microsoft GDK. See https://aka.ms/gdk and https://aka.ms/gdkx -->
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Desktop.x64'">
+    <VcpkgOSTarget>windows</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.Scarlett.x64'">
+    <VcpkgOSTarget>xbox-scarlett</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>false</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == '' AND '$(VcpkgPlatformTarget)' == '' AND '$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
+    <VcpkgOSTarget>xbox-xboxone</VcpkgOSTarget>
+    <VcpkgPlatformTarget>x64</VcpkgPlatformTarget>
+    <VcpkgUseMD>false</VcpkgUseMD>
+  </PropertyGroup>
+
   <!-- Determine the triplet to use. Note that $(PlatformTarget) is not available at the top of the .vcxproj file. -->
   <PropertyGroup Condition="'$(VcpkgOSTarget)' == ''">
     <VcpkgOSTarget>windows</VcpkgOSTarget>
@@ -71,7 +93,7 @@
 
     <_ZVcpkgConfigSubdir Condition="'$(_ZVcpkgNormalizedConfiguration)' == 'Debug'">debug\</_ZVcpkgConfigSubdir>
     <_ZVcpkgExecutable>$(_ZVcpkgRoot)vcpkg.exe</_ZVcpkgExecutable>
-    <ExternalIncludePath Condition="'$(VcpkgEnabled)' == 'true'">$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
+    <ExternalIncludePath Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'">$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -86,7 +108,7 @@
   </ItemGroup>
 
   <!-- Install settings to get headers and import libs for the currently selected _ZVcpkgCurrentInstalledDir -->
-  <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
+  <ItemDefinitionGroup Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'">
     <Lib>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
     </Lib>
@@ -109,7 +131,7 @@
              Importance="High" Condition="'$(VcpkgEnableManifest)' != 'true' and '$(_ZVcpkgManifestRoot)' != ''" />
   </Target>
 
-  <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
+  <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile" Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'">
     <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(_ZVcpkgCurrentInstalledDir)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Using normalized configuration &quot;$(_ZVcpkgNormalizedConfiguration)&quot;"
@@ -141,7 +163,7 @@
     <_ZVcpkgMSBuildStampFile>$(_ZVcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)stamp</_ZVcpkgMSBuildStampFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
+  <ItemGroup Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgManifestFileLocation)"/>
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
   </ItemGroup>
@@ -174,7 +196,7 @@
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true'">
+          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true'">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
       <_ZVcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_ZVcpkgAppLocalPowerShellCommonArguments>

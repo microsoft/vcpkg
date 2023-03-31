@@ -38,17 +38,11 @@ diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
 index 7d5579ae..0cf96252 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -12,6 +12,13 @@ if(@PROJECT_VARIANT_NAME@ STREQUAL "PROJ4")
- endif()
- 
- include(CMakeFindDependencyMacro)
-+cmake_policy(PUSH)
-+cmake_policy(SET CMP0012 NEW)
+@@ -15,6 +15,7 @@ if(@PROJECT_VARIANT_NAME@ STREQUAL "PROJ4")
+
+ cmake_policy(PUSH)
+ cmake_policy(SET CMP0012 NEW)
 +find_dependency(unofficial-sqlite3 CONFIG)
-+if("@ENABLE_TIFF@")
-+    find_dependency(TIFF)
-+endif()
-+cmake_policy(POP)
- if("@CURL_ENABLED@" STREQUAL "TRUE")
-   # Chainload CURL usage requirements
-   find_dependency(CURL)
+ if("@ENABLE_TIFF@")
+     find_dependency(TIFF)
+ endif()

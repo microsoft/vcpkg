@@ -1,13 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(HALIDE_VERSION_TAG v14.0.0)
+set(HALIDE_VERSION_TAG v${VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
     REF ${HALIDE_VERSION_TAG}
-    SHA512 c7b1186cca545f30d038f1e9bb28ca7231023869d191c50722213da4c7e9adfd4a53129fe395cd7938cb7cb3fb1bf80f9cd3b4b8473a0246f15b9ad8d3e40fe2
-    HEAD_REF release/14.x
+    SHA512 918cd0a7e69e4414b98f17c5ec5cdb543ce3ae68ed07c9a80b7c0378c247a4a4fde62ade79b402e9ffcfce30c066a3fa662ea46c3a2a5b93eb5ec4e05b3fd808
+    HEAD_REF release/15.x
 )
 
 vcpkg_check_features(
@@ -42,20 +42,13 @@ vcpkg_cmake_configure(
         "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
         -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
         -DHalide_INSTALL_PLUGINDIR=bin
+        -DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=JPEG
 )
 
 # ADD_BIN_TO_PATH needed to compile autoschedulers, 
 # which use Halide.dll (and deps) during the build.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
-vcpkg_copy_tools(
-    TOOL_NAMES
-        featurization_to_sample
-        get_host_target
-        retrain_cost_model
-        weightsdir_to_weightsfile
-    AUTO_CLEAN
-)
 
 # Release mode MODULE targets in CMake don't get PDBs.
 # Exclude those to avoid warning with default globs.
