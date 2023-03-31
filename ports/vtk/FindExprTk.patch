@@ -1,5 +1,5 @@
 diff --git a/CMake/FindExprTk.cmake b/CMake/FindExprTk.cmake
-index b9a6f13a64..2886e7ed71 100644
+index b9a6f13..2886e7e 100644
 --- a/CMake/FindExprTk.cmake
 +++ b/CMake/FindExprTk.cmake
 @@ -1,14 +1,14 @@
@@ -7,8 +7,9 @@ index b9a6f13a64..2886e7ed71 100644
  #
  # This module supports requiring a minimum version, e.g. you can do
 -#   find_package(ExprTk 2.71828)
-+#   find_package(ExprTk)
-# to require version 2.71828 or newer of ExprTk.
+-# to require version 2.71828 or newer of ExprTk.
++#   find_package(ExprTk 2.7)
++# to require version 2.7 or newer of ExprTk.
  #
  # Once done this will define
  #
@@ -33,13 +34,13 @@ index b9a6f13a64..2886e7ed71 100644
 +  set(ExprTk_VERSION)
 +  foreach (_exprtk_version_line IN LISTS _exprtk_version_header)
 +    if ("${ExprTk_VERSION}" STREQUAL "")
-+      string(REGEX MATCH "version = \"(2\\.7[0-9.]+)\"" _exprtk_version_match "${_exprtk_version_line}")
++      string(REGEX MATCH "version = \"(2\.7[0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
 +      set(ExprTk_VERSION "${CMAKE_MATCH_1}")
 +    else ()
-+      string(REGEX MATCH "\"([0-9.]+)\"" _exprtk_version_match "${_exprtk_version_line}")
++      string(REGEX MATCH "\"([0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
 +      set(ExprTk_VERSION "${ExprTk_VERSION}${CMAKE_MATCH_1}")
 +    endif ()
-+    if (_exprtk_version_match MATCHES ";")
++    if (_exprtk_version_match MATCHES "\;")
 +      break()
 +    endif ()
 +  endforeach ()
