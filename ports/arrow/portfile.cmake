@@ -1,11 +1,15 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/arrow
-    REF d422137d8a4d7578bdf9d5b0fb51b286a8bc92c2
-    SHA512 5377f92e0a023d8286a6f404b6e6c9fdfcbdd243dd5a36e98fd6b73a57bdf80765cec4593e13ee1b4c3e11943280138bf20ba4d12de4bca6812128bf1e389e95
-    HEAD_REF master
+vcpkg_download_distfile(
+    ARCHIVE_PATH
+    URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
+    FILENAME apache-arrow-${VERSION}.tar.gz
+    SHA512 46df4fb5a703d38d0a74fde9838e9f9702b24b442cb225517516c335a5ab18955699000bf0b2fc7d1698ada6d2e890ba3860933b6280f5160b0fce8a07484d0e
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE ${ARCHIVE_PATH}
     PATCHES
         msvc-static-name.patch
+        thrift.patch
         utf8proc.patch
 )
 
