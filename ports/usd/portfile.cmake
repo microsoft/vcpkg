@@ -10,11 +10,13 @@ If you must use this port in your project, pin a version of tbb of 2020_U3 or ol
 See https://vcpkg.io/en/docs/examples/versioning.getting-started.html for instructions.
 ]=])
 
+string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF 71b4baace2044ea4400ba802e91667f9ebe342f0 # v20.08
-    SHA512 0f23b84d314d88d3524f22ebc344e2b506cb7e8ac064726df432a968a4bae0fd2249e968bd10845de9067290eaaa3f8c9e2a483551ffc06b826f3eba816061a9
+    REF "v${USD_VERSION}"
+    SHA512 2529aec788cab3ff4c47041f5bc0043fde81dcef8ca313f6390f2e5fb7a10b1b0b1dd47fd6c86e3b4cfc0a1b27bff4d9b94b96bfba6bec3d5ff8f6e2fccb9e11
     HEAD_REF master
     PATCHES
         fix_build-location.patch
@@ -35,7 +37,6 @@ vcpkg_cmake_configure(
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
         -DPXR_BUILD_IMAGING:BOOL=OFF
-        -DPXR_BUILD_MAYA_PLUGIN:BOOL=OFF
         -DPXR_BUILD_MONOLITHIC:BOOL=OFF
         -DPXR_BUILD_TESTS:BOOL=OFF
         -DPXR_BUILD_USD_IMAGING:BOOL=OFF
@@ -57,6 +58,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME pxr)
 vcpkg_copy_pdbs()
 
 # Remove duplicates in debug folder
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/pxrConfig.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright

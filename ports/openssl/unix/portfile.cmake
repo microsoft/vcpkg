@@ -27,17 +27,26 @@ if(NOT perl_ipc_cmd_result STREQUAL "0")
     message(FATAL_ERROR "\nPerl cannot find IPC::Cmd. Please install it through your system package manager.\n")
 endif()
 
+# Ideally, OpenSSL should use `CC` from vcpkg as is (absolute path).
+# But in reality, OpenSSL expects to locate the compiler via `PATH`,
+# and it makes its own choices e.g. for Android.
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH compiler_path)
+cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME compiler_name)
+find_program(compiler_in_path NAMES "${compiler_name}" PATHS ENV PATH NO_DEFAULT_PATH)
+if(NOT compiler_in_path)
+    vcpkg_host_path_list(APPEND ENV{PATH} "${compiler_path}")
+elseif(NOT compiler_in_path STREQUAL VCPKG_DETECTED_CMAKE_C_COMPILER)
+    vcpkg_host_path_list(PREPEND ENV{PATH} "${compiler_path}")
+endif()
+
+vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-        set(OPENSSL_ARCH android-arm64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        set(OPENSSL_ARCH android-arm)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(OPENSSL_ARCH android-x86_64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-        set(OPENSSL_ARCH android-x86)
-    else()
-        message(FATAL_ERROR "Unknown iOS target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
+    set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
+    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
+        vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
@@ -78,9 +87,6 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(INTERPRETER "$ENV{EMSDK}/upstream/emscripten/emconfigure")
-    set(MAKE "$ENV{EMSDK}/upstream/emscripten/emmake")
-    set(ENV{MAKE} "${MAKE}")
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine
@@ -109,13 +115,21 @@ vcpkg_configure_make(
     OPTIONS_DEBUG
         --debug
 )
-vcpkg_install_make(BUILD_TARGET build_sw)
+vcpkg_install_make(
+    ${MAKEFILE_OPTIONS}
+    BUILD_TARGET build_sw
+)
 vcpkg_fixup_pkgconfig()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash")
-vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash")
+    vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/ssl/misc")
+endif()
 
 file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")

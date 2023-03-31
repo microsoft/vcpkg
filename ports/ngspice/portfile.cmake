@@ -6,9 +6,9 @@ set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
-    REF 37
-    FILENAME "ngspice-37.tar.gz"
-    SHA512 d49f7e78d3dd17ac8ea03d79dfbe8a9cf57c012395285cc0c0cf379e0c0c81f11cad68d5366dc2d2478959ed197e4d43380fbc15baf44f987f20ad00f1ee04ca
+    REF ${VERSION}
+    FILENAME "ngspice-${VERSION}.tar.gz"
+    SHA512 724415cea3249d049d796360f5f59ec5e68edb1899e82b0fbd68455791863c274abe1a505b7148ef96adbb485bc677d38432fa4effe4069bbdfe284ff3e59921
     PATCHES
         use-winbison-sharedspice.patch
         use-winbison-vngspice.patch
@@ -48,8 +48,9 @@ if("codemodels" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${BUILDTREE_PATH}")
     file(COPY "${SOURCE_PATH}/" DESTINATION "${BUILDTREE_PATH}")
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${BUILDTREE_PATH}/visualc/vngspice.sln"
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${BUILDTREE_PATH}"
+        PROJECT_SUBPATH visualc/vngspice.sln
         # build_msbuild swaps x86 for win32(bad) if we dont force our own setting
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         TARGET Build
