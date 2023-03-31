@@ -9,16 +9,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF 7d10c82196c8e45554f27c00681474a9fb86d137 # 8.0.20
-    SHA512 9f5e8cc254ea2a4cf76313287c7bb6fc693400810464dd2901e67d51ecb27f8916009464fd8aed8365c3038314b845b3d517db6e82ae5c7908612f0b3b72335f
+    REF 1bfe02bdad6604d54913c62614bde57a055c8332 # 8.0.32
+    SHA512 9a556b783ee978c919ccc0c1c99ab4a84ecc9fe0b75e2e100ad616f3b7c7bd280c8da63eb9e9c98291256ebbd130aef8c6e5c404e93b7cc8b8fe754b055b650f
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
         system-libs.patch
-        rename-version.patch
         export-cmake-targets.patch
-        004-added-limits-include.patch
-        openssl.patch
         Add-target-include-directories.patch
 )
 
@@ -53,11 +50,6 @@ vcpkg_cmake_configure(
         -DMYSQL_MAINTAINER_MODE=OFF
         -DBUNDLE_RUNTIME_LIBRARIES=OFF
         -DDOWNLOAD_BOOST=OFF
-        -DENABLE_DOWNLOADS=OFF
-        -DWITH_NDB_TEST=OFF
-        -DWITH_NDB_NODEJS_DEFAULT=OFF
-        -DWITH_NDBAPI_EXAMPLES=OFF
-        -DMYSQLX_ADDITIONAL_TESTS_ENABLE=OFF
         -DWITH_SSL=system
         -DWITH_ICU=system
         -DWITH_LIBEVENT=system
@@ -79,6 +71,7 @@ list(APPEND MYSQL_TOOLS
     my_print_defaults
     mysql
     mysql_config_editor
+    mysql_migrate_keyring
     mysql_secure_installation
     mysql_ssl_rsa_setup
     mysqladmin
@@ -134,6 +127,22 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/plugin/debug"
 )
 
+# delete dynamic dll on static build
+if (BUILD_STATIC_LIBS)
+    # libmysql.dll
+    file(REMOVE_RECURSE 
+        "${CURRENT_PACKAGES_DIR}/bin" 
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/libmysql.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.lib"
+        "${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
+    )
+endif()
+
 ## remove misc files
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/LICENSE"
@@ -145,6 +154,8 @@ file(REMOVE
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"")
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_INSTALLED_DIR}" "`dirname 
+$0`/../../../../installed/${TARGET_TRIPLET}")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
