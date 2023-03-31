@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DCMINPACK_LIB_INSTALL_DIR=lib
+        -DUSE_BLAS=OFF
 )
 
 vcpkg_cmake_install()
