@@ -9,7 +9,6 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
         msvc-static-name.patch
-        thrift.patch
         utf8proc.patch
 )
 
