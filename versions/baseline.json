@@ -1690,7 +1690,7 @@
     },
     "coolprop": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "coroutine": {
       "baseline": "1.5.0",
