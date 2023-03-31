@@ -1,0 +1,17 @@
+{
+  "name": "tinyfsm",
+  "version": "0.3.3",
+  "description": "A simple C++ finite state machine library",
+  "homepage": "https://digint.ch/tinyfsm/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
