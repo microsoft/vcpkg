@@ -1,14 +1,3 @@
-# Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
-# Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
-
-# Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES
-    # Fix symbols exporting for MinGW GCC x86
-    def-fixes.patch
-    # Clover build on Windows
-    clover.patch
-)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
@@ -18,13 +7,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.1.7
-    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
+    REF b590fd1951a1949e5fe2bbfd61f0814c402af263 # mesa-23.0.1
+    SHA512 7a66a587ef01fb58b51f3ebea584b40f70114844484df528d38ad1caa071fac7d6e23f1ed80309847f7e28468071571294bb8812a9882c0b86c89cf5a4144fe9
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
-    PATCHES ${PATCHES}
-) 
-
+)
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
 
