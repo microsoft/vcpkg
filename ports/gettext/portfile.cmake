@@ -35,11 +35,13 @@ set(OPTIONS
     --disable-curses
     --disable-java
     --disable-openmp
+    # Avoid hidden ABI deps
+    --with-included-glib
+    --with-included-libunistring
+    --with-included-libxml
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
-        # Avoid unnecessary test.
-        --with-included-glib
         # This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
