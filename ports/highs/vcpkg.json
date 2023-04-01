@@ -4,7 +4,6 @@
   "description": "High performance library to solve linear, mixed-integer, and convex quadratic optimization problems.",
   "homepage": "https://highs.dev",
   "license": "MIT",
-  "supports": "!arm64",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
