@@ -1,20 +1,14 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index b92cb4c09..18ed39a02 100644
+index b92cb4c09..28d484ab9 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -790,9 +790,9 @@ else()
-     message(STATUS "No CSharp support")
- endif()
+@@ -792,7 +792,7 @@ endif()
  
--find_package(Threads REQUIRED)
--if (FAST_BUILD)
+ find_package(Threads REQUIRED)
+ if (FAST_BUILD)
 -target_link_libraries(highs Threads::Threads)
--else()
++target_link_libraries(highs ${CMAKE_THREAD_LIBS_INIT})
+ else()
 -target_link_libraries(libhighs Threads::Threads)
--endif()
-+#find_package(Threads REQUIRED)
-+#if (FAST_BUILD)
-+#target_link_libraries(highs Threads::Threads)
-+#else()
-+#target_link_libraries(libhighs Threads::Threads)
-+#endif()
++target_link_libraries(libhighs ${CMAKE_THREAD_LIBS_INIT})
+ endif()

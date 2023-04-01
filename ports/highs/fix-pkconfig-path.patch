@@ -1,0 +1,10 @@
+diff --git a/highs.pc.in b/highs.pc.in
+index d962ddffa..da7df76f0 100644
+--- a/highs.pc.in
++++ b/highs.pc.in
+@@ -1,4 +1,4 @@
+-prefix=@CMAKE_INSTALL_PREFIX@
++prefix=${pcfiledir}/../..
+ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/highs
+ 
