@@ -1,14 +1,12 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index b92cb4c09..28d484ab9 100644
+index b92cb4c09..58bc1101e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -792,7 +792,7 @@ endif()
+@@ -791,6 +791,7 @@ else()
+ endif()
  
  find_package(Threads REQUIRED)
++set(CONF_DEPENDENCIES "include(CMakeFindDependencyMacro)\nfind_dependency(Threads)")
  if (FAST_BUILD)
--target_link_libraries(highs Threads::Threads)
-+target_link_libraries(highs ${CMAKE_THREAD_LIBS_INIT})
+ target_link_libraries(highs Threads::Threads)
  else()
--target_link_libraries(libhighs Threads::Threads)
-+target_link_libraries(libhighs ${CMAKE_THREAD_LIBS_INIT})
- endif()
