@@ -1,3 +1,9 @@
+if(NOT "force-build" IN_LIST FEATURES)
+    message(WARNING "fontconfig should be provided by your system! Install the required packages or force vcpkg libraries by building with \"force-build\" feature. ")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    return()
+endif()
+
 set(FONTCONFIG_VERSION 2.14.1)
 
 vcpkg_from_gitlab(
