@@ -1,0 +1,20 @@
+{
+  "name": "libcoro",
+  "version": "0.7",
+  "description": "C++20 coroutine library",
+  "homepage": "https://github.com/jbaldwin/libcoro",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "c-ares",
+    "openssl",
+    "tl-expected",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
