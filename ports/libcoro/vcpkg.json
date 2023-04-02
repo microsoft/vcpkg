@@ -4,6 +4,7 @@
   "description": "C++20 coroutine library",
   "homepage": "https://github.com/jbaldwin/libcoro",
   "license": "Apache-2.0",
+  "supports": "!windows",
   "dependencies": [
     "c-ares",
     "openssl",
