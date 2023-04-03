@@ -83,6 +83,13 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.4.0)
              qtquick3dphysics
              qtspeech)
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.5.0)
+    list(APPEND QT_PORTS
+             ## New in 6.5.0
+             qtgrpc
+             qtquickeffectmaker
+             )
+endif()
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
 set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
