@@ -1702,7 +1702,7 @@
     },
     "coolprop": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "coroutine": {
       "baseline": "1.5.0",
@@ -5305,7 +5305,7 @@
       "port-version": 0
     },
     "msgpack": {
-      "baseline": "4.1.3",
+      "baseline": "6.0.0",
       "port-version": 0
     },
     "msgpack-c": {
