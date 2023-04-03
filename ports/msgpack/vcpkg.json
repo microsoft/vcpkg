@@ -5,8 +5,8 @@
   "homepage": "https://github.com/msgpack/msgpack-c",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-numeric-conversion",
     "boost-fusion",
+    "boost-numeric-conversion",
     "boost-optional",
     "boost-variant",
     {
