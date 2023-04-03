@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
-    REF c033ca61ae8fb264542d0326d1309e0a3bde945a # 3.0.0
-    SHA512 ca1468f30f90c3a886fbb6dea113699623d601da10b39a6a33d89780cd825bec8deb431872a2515fce05c7a5d581d4b56860b19654df8cf90e389dfa964f013c
+    REF "v${VERSION}"
+    SHA512 989afc109e31fa083f5d953d199dc7f4515daaee7014ec1616b48bc66ff49643bc32e5cdd273016a1d44f6921f6031d1e7e41fc2375cfee44fc719223baaaa7b
     HEAD_REF master
-    PATCHES
-        fix_clang_crash-094d8d9d.patch # Included in next release. Upstream PR https://github.com/ArthurSonzogni/FTXUI/pull/421
 )
 
 vcpkg_cmake_configure(

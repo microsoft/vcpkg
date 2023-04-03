@@ -6,22 +6,22 @@ vcpkg_from_github(
     HEAD_REF develop
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/stlab)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/stlab)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/cmake")
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake STLAB_CONFIG)
-string(REPLACE "find_dependency(Boost 1.60.0)" "if(APPLE)\nfind_dependency(Boost)\nendif()" STLAB_CONFIG ${STLAB_CONFIG})
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake"
+    "find_dependency(Boost 1.60.0)"
+    "if(APPLE)\nfind_dependency(Boost)\nendif()"
+)
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake "${STLAB_CONFIG}")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

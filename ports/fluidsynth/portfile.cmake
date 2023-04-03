@@ -16,7 +16,7 @@ vcpkg_check_features(
         sndfile     enable-libsndfile
 )
 
-set(feature_list dbus jack libinstpatch midishare opensles oboe oss sdl2 pulseaudio readline lash systemd dart)
+set(feature_list dbus jack libinstpatch midishare opensles oboe openmp oss sdl2 pulseaudio readline lash systemd dart)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()

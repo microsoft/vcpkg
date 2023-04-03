@@ -13,6 +13,7 @@ endif()
 
 if(MSVC)
     add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive /bigobj)
+    add_link_options(/guard:cf)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

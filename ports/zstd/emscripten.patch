@@ -1,0 +1,14 @@
+diff --git a/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake b/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
+index 0265349..1807d6e 100644
+--- a/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
++++ b/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
+@@ -54,7 +54,9 @@ macro(ADD_ZSTD_COMPILATION_FLAGS)
+         endif ()
+         # Add noexecstack flags
+         # LDFLAGS
++        if(NOT EMSCRIPTEN)
+         EnableCompilerFlag("-z noexecstack" false false true)
++        endif()
+         # CFLAGS & CXXFLAGS
+         EnableCompilerFlag("-Qunused-arguments" true true false)
+         EnableCompilerFlag("-Wa,--noexecstack" true true false)

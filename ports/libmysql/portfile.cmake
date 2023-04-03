@@ -2,6 +2,10 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "'autoconf-archive' must be installed via your system package manager (brew, apt, etc.).")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
@@ -62,6 +66,10 @@ vcpkg_cmake_configure(
         -DFORCE_UNSUPPORTED_COMPILER=${FORCE_UNSUPPORTED_COMPILER}
         -DINSTALL_STATIC_LIBRARIES=${BUILD_STATIC_LIBS}
         -DLINK_STATIC_RUNTIME_LIBRARIES=${STATIC_CRT_LINKAGE}
+    MAYBE_UNUSED_VARIABLES
+        BUNDLE_RUNTIME_LIBRARIES # only on windows
+        LINK_STATIC_RUNTIME_LIBRARIES # only on windows
+        WIX_DIR # only on windows
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)

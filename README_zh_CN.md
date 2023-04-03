@@ -319,4 +319,4 @@ Microsoft 收集的数据是匿名的。
 - 向 vcpkg 命令传递选项 `--disable-metrics`
 - 设置环境变量 `VCPKG_DISABLE_METRICS`
 
-请在 [privacy.md](docs/about/privacy.md) 中了解有关 vcpkg 数据收集的更多信息。
+请在 [https://learn.microsoft.com/vcpkg/about/privacy](https://learn.microsoft.com/vcpkg/about/privacy) 中了解有关 vcpkg 数据收集的更多信息。
