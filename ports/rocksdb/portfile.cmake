@@ -62,5 +62,13 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(COMMENT [[
+RocksDB is dual-licensed under both the GPLv2 (found in COPYING)
+and Apache 2.0 License (found in LICENSE.Apache). You may select,
+at your option, one of the above-listed licenses.
+]]
+  FILE_LIST
+    "${SOURCE_PATH}/LICENSE.leveldb"
+    "${SOURCE_PATH}/LICENSE.Apache"
+    "${SOURCE_PATH}/COPYING"
+)

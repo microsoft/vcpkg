@@ -35,6 +35,9 @@
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
 
+    <!-- Classic Mode: The following line is edited by the mint standalone bundle script to be false for standlone copies -->
+    <VcpkgEnableClassic Condition="'$(VcpkgEnableClassic)' == ''">true</VcpkgEnableClassic>
+
     <!-- Manifest files -->
     <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
     <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
