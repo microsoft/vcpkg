@@ -5133,7 +5133,7 @@
       "port-version": 3
     },
     "miniaudio": {
-      "baseline": "0.11.11",
+      "baseline": "0.11.14",
       "port-version": 0
     },
     "minifb": {
