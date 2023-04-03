@@ -2,7 +2,7 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        bump-cmake-version.patch
+        #bump-cmake-version.patch
         wrapper-fixes.patch
         stack-walker-arm64.patch
     )
