@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
         msvc-static-name.patch
         utf8proc.patch
+        thrift.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
