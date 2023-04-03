@@ -1,0 +1,54 @@
+#!/bin/sh
+
+set -e
+
+LJARCH=
+LUAJIT_BUILDMODE=
+LUAJIT_PREFIX=
+for OPTION; do
+    case "${OPTION}" in
+	--prefix=*)
+		LUAJIT_PREFIX="${OPTION#--prefix=}"
+		;;
+	BUILDMODE=*)
+		LUAJIT_BUILDMODE="${OPTION#BUILDMODE=}"
+		;;
+	LJARCH=*)
+		LJARCH="${OPTION#LJARCH=}"
+		;;
+	esac
+done
+
+cat > Makefile.vcpkg <<END_MAKEFILE ;
+
+COMMON_OPTIONS += 'E=@:' 'Q='
+COMMON_OPTIONS += 'BUILDMODE=${LUAJIT_BUILDMODE}'
+COMMON_OPTIONS += 'PREFIX=${LUAJIT_PREFIX}'
+COMMON_OPTIONS += 'INSTALL_TNAME=luajit'
+
+BUILD_OPTIONS += 'CC=${CC}'
+BUILD_OPTIONS += 'CCDEBUG='
+BUILD_OPTIONS += 'CFLAGS=${CFLAGS}'
+BUILD_OPTIONS += 'LDFLAGS=${LDFLAGS}'
+BUILD_OPTIONS += 'LIBS=${LIBS}'
+
+ifeq (${LJARCH},)
+INSTALL_BUILDVM = yes
+else
+BUILD_OPTIONS += 'HOST_CC=:'
+BUILD_OPTIONS += 'BUILDVM_T='
+BUILD_OPTIONS += 'BUILDVM_X=buildvm'
+endif
+
+all:
+	\$(MAKE) clean \$(COMMON_OPTIONS)
+	\$(MAKE) all \$(COMMON_OPTIONS) \$(BUILD_OPTIONS)
+
+install:
+	\$(MAKE) --trace install \$(COMMON_OPTIONS)
+ifeq (${LJARCH},)
+	mkdir -p "\$\${DESTDIR}${LUAJIT_PREFIX}/manual-tools/luajit"
+	install -m 0755 "src/host/buildvm\$(EXECUTABLE_SUFFIX)" "\$\${DESTDIR}${LUAJIT_PREFIX}/manual-tools/luajit/buildvm\$(EXECUTABLE_SUFFIX)"
+endif
+
+END_MAKEFILE

@@ -13,5 +13,5 @@ install: src/luajit.exe
 !IF "$(LJARCH)" == ""
 	-mkdir "$(INSTALLDIR)\manual-tools"
 	-mkdir "$(INSTALLDIR)\manual-tools\luajit"
-	copy buildvm.exe "$(INSTALLDIR)\manual-tools\luajit\"
+	copy buildvm.exe "$(INSTALLDIR)\manual-tools\luajit\$(SIZE_TAG)\"
 !ENDIF

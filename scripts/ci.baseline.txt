@@ -518,7 +518,6 @@ log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
 log4cxx:x64-uwp=fail
-luajit:arm64-windows=fail
 luafilesystem:arm-uwp=fail
 luafilesystem:x64-uwp=fail
 luasec:x64-windows-static=fail

@@ -15,18 +15,18 @@ vcpkg_from_github(
         ${extra_patches}
 )
 
+vcpkg_list(SET options)
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND options "LJARCH=${VCPKG_TARGET_ARCHITECTURE}")
+    vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(PKGCONFIG_CFLAGS "")
-    vcpkg_list(SET options)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND options "MSVCBUILD_OPTIONS=static")
     else()
         set(PKGCONFIG_CFLAGS "/DLUA_BUILD_AS_DLL=1")
-    endif()
-
-    if(VCPKG_CROSSCOMPILING)
-        list(APPEND options "LJARCH=${VCPKG_TARGET_ARCHITECTURE}")
-        vcpkg_host_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
     endif()
 
     vcpkg_install_nmake(SOURCE_PATH "${SOURCE_PATH}"
@@ -42,7 +42,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 
     vcpkg_copy_pdbs()
-    vcpkg_copy_tools(TOOL_NAMES luajit)
 
     file(INSTALL "${SOURCE_PATH}/src/lua.h"      DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
     file(INSTALL "${SOURCE_PATH}/src/luajit.h"   DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
@@ -51,23 +50,36 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(INSTALL "${SOURCE_PATH}/src/lauxlib.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
     file(INSTALL "${SOURCE_PATH}/src/lua.hpp"    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 else()
+    vcpkg_list(SET make_options "EXECUTABLE_SUFFIX=${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(VCPKG_TARGET_IS_OSX)
-        set(MACOSX_DEPLOYMENT_TARGET "MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        vcpkg_list(APPEND make_options "TARGET_SYS=Darwin")
+        vcpkg_list(APPEND make_options "MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
         set(TARGET_ARCHITECTURE "${VCPKG_TARGET_ARCHITECTURE}")
         if(TARGET_ARCHITECTURE STREQUAL "x64")
             set(TARGET_ARCHITECTURE x86_64)
         endif()
-        list(APPEND MACOSX_ARCHITECTURES "TARGET_CFLAGS=--target=${TARGET_ARCHITECTURE}-apple-darwin")
-        list(APPEND MACOSX_ARCHITECTURES "TARGET_LDFLAGS=--target=${TARGET_ARCHITECTURE}-apple-darwin")
+        vcpkg_list(APPEND make_options "TARGET_CFLAGS=--target=${TARGET_ARCHITECTURE}-apple-darwin")
+        vcpkg_list(APPEND make_options "TARGET_LDFLAGS=--target=${TARGET_ARCHITECTURE}-apple-darwin")
+    elseif(VCPKG_TARGET_IS_IOS)
+        vcpkg_list(APPEND make_options "TARGET_SYS=iOS")
+    elseif(VCPKG_TARGET_IS_LINUX)
+        vcpkg_list(APPEND make_options "TARGET_SYS=Linux")
+    elseif(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_list(APPEND make_options "TARGET_SYS=Windows")
     endif()
 
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}") # SKIP_CONFIGURE doesn't work
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/Makefile.in" "${CURRENT_BUILDTREES_DIR}/Makefile-${TARGET_TRIPLET}" @ONLY)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
-        PRERUN_SHELL "make clean || gmake clean"
+        OPTIONS
+            "BUILDMODE=${VCPKG_LIBRARY_LINKAGE}"
+            ${options}
     )
-    vcpkg_install_make(MAKEFILE "${CURRENT_BUILDTREES_DIR}/Makefile-${TARGET_TRIPLET}")
+    vcpkg_install_make(
+        MAKEFILE "Makefile.vcpkg"
+        OPTIONS
+            ${make_options}
+    )
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/lib/lua"
@@ -77,6 +89,8 @@ else()
         "${CURRENT_PACKAGES_DIR}/share/man"
     )
 endif()
+
+vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
 

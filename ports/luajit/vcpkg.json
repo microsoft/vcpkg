@@ -5,12 +5,11 @@
   "description": "LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.",
   "homepage": "https://github.com/LuaJIT/LuaJIT",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !(arm64 & windows)",
   "dependencies": [
     {
       "name": "luajit",
-      "host": true,
-      "platform": "windows & !mingw"
+      "host": true
     },
     {
       "name": "vcpkg-cmake",
