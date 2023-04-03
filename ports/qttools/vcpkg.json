@@ -1,10 +1,11 @@
 {
   "name": "qttools",
-  "version": "6.5.0-beta2",
+  "version": "6.5.0",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "litehtml",
     {
       "name": "qtbase",
       "default-features": false
