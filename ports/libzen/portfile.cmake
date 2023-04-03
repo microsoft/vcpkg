@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/ZenLib
-    REF 13b9d3dbd2088390fbdccab32ae4560526389fbc # v0.4.39
-    SHA512 ec63af7ea60be2548d45702518a9b638b4f424044ecaebfbca97d9872b3ecafddc9c59aed4a5bae7bd5bbdffbd543c4ed9e106e5c406ec576a9c0970f0aadcac
+    REF ecb548043a6dbee15a07a43d4d3388509d849570 # v0.4.40
+    SHA512 9be9dfa20f4bf7e1f450b2ab19391ea091a091d242e98797652aa74ae595365e25f44ccca915b8889bc46245abf523949d22a012805a2f4f55742ae3c0e8932d
     HEAD_REF master
 )
 
