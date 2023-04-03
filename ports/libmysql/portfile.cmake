@@ -17,6 +17,7 @@ vcpkg_from_github(
         system-libs.patch
         export-cmake-targets.patch
         Add-target-include-directories.patch
+        homebrew.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
