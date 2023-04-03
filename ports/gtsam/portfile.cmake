@@ -9,9 +9,8 @@ vcpkg_from_github(
         path-fixes.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGTSAM_BUILD_TESTS=OFF
         -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF
