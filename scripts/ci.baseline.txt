@@ -773,7 +773,6 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 qt5-x11extras:arm64-osx=fail
-qwt:x64-osx=fail
 qwt:arm64-osx=fail
 qwt-qt6:x64-osx=fail
 rabit:arm64-osx=fail
