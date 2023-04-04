@@ -4366,7 +4366,7 @@
     },
     "libraqm": {
       "baseline": "0.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libraw": {
       "baseline": "0.21.1",
