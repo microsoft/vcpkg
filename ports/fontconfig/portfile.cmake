@@ -28,7 +28,7 @@ vcpkg_configure_meson(
 # Since adding OPTIONS does not work use a replacement in the generated config.h instead
 set(replacement "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(replacement "%APPDATA%")
+    set(replacement "**invalid-fontconfig-dir-do-not-use**")
 endif()
 set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h")
 vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
