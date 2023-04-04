@@ -6,7 +6,7 @@
   "license": "MIT",
   "supports": "((windows & !arm) | linux | osx) & !uwp",
   "dependencies": [
-    "node-api",
+    "node-api-headers",
     {
       "name": "vcpkg-cmake",
       "host": true
