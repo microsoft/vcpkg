@@ -85,6 +85,10 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
+if (HDF5_WITH_PARALLEL)
+    list(APPEND FEATURE_OPTIONS "-DPARAVIEW_USE_MPI=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS ${FEATURE_OPTIONS}
