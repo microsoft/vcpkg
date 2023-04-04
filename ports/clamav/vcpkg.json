@@ -17,6 +17,10 @@
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-rust",
+      "host": true
+    },
     "zlib"
   ]
 }

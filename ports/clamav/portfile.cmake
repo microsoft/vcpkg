@@ -9,6 +9,8 @@ vcpkg_from_github(
       "cmakefiles.patch"
 )
 
+vcpkg_rust_install()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CLAMAV_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CLAMAV_BUILD_SHARED)
 
