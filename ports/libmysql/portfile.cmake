@@ -155,8 +155,7 @@ file(REMOVE
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"")
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_INSTALLED_DIR}" "`dirname 
-$0`/../../../../installed/${TARGET_TRIPLET}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../installed/${TARGET_TRIPLET}")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
