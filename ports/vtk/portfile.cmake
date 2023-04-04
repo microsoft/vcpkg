@@ -47,9 +47,9 @@ vcpkg_from_github(
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
 
-if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
+if(HDF5_WITH_PARALLEL)
     message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in vtk.")
-    list(APPEND FEATURES "mpi")
+    list(APPEND FEATURES "-DVTK_GROUP_ENABLE_MPI=ON" "-DVTK_USE_MPI=ON")
 endif()
 
 # =============================================================================
@@ -100,7 +100,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "paraview"    VTK_MODULE_ENABLE_VTK_cli11
-        "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
@@ -159,13 +158,13 @@ if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     )
 endif()
 
-if("paraview" IN_LIST FEATURES AND "mpi" IN_LIST FEATURES)
+if("paraview" IN_LIST FEATURES AND HDF5_WITH_PARALLEL)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
     )
 endif()
 
-if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+if(HDF5_WITH_PARALLEL AND "python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
     )
@@ -195,7 +194,6 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
-    "mpi"          VTK_USE_MPI
     "all"          VTK_BUILD_ALL_MODULES
 )
 
