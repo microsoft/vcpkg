@@ -49,3 +49,6 @@ if(NOT VCPKG_CROSSCOMPILING)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
+
+file(INSTALL "${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/6.5.0/QtInterfaceFramework/private/qifqueryparser_flex_p.h" 
+     DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME qifqueryparser_flex_p.h.log)
