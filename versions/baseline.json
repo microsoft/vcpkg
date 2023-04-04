@@ -1429,7 +1429,7 @@
       "port-version": 3
     },
     "cgal": {
-      "baseline": "5.5.1",
+      "baseline": "5.5.2",
       "port-version": 0
     },
     "cgicc": {
@@ -1646,7 +1646,7 @@
     },
     "colmap": {
       "baseline": "2023-03-12",
-      "port-version": 0
+      "port-version": 1
     },
     "color-console": {
       "baseline": "2022-03-20",
