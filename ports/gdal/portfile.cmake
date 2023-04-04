@@ -1,14 +1,13 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 799baabe3e992a9e9c5f80261a84e7b70ce0790bfe77a1634d5ae26dc32d43e77cc64aab2c7d2a2205525869d389d3dbaa29c8945450cce4b29757c0f9bdec9a
+    SHA512 1bbaf3a6731a105241cc666afe9c9a0b82e9d46245435d597a7372f928e6966c0e746e94fdd86a8f24c3277912a8c19e76906ee88e5d946ac1c25dd7dd38fdf2
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -31,7 +30,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
@@ -89,6 +88,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
+        -DCMAKE_PROJECT_INCLUDE="${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
     MAYBE_UNUSED_VARIABLES

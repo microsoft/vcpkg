@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
-    REF 0d2455029d845e801809dd54b01ae47173d7d8e8 # v3.0.1
+    REF "v${VERSION}"
     HEAD_REF master
-    SHA512 37c4812b28fb39140f430b2f2c1610764fafa38ca4a44935d091a8c17f30c4334bf1c3db451d76476bde9a7499a01360d3320f8bb9d7e2234a47fd8e79ebfc13
+    SHA512 72f27b010e659025f9c8842daf79364d0d0f40cddd66858956ab4fa4f3f3a631fe342f440201d58ed9af42a4356aafafaac8d3caf3317dd1a6314dad3a71081a
 )
 
 vcpkg_check_features(
@@ -13,6 +13,7 @@ vcpkg_check_features(
         threads    SIMDJSON_ENABLE_THREADS
     INVERTED_FEATURES
         deprecated SIMDJSON_DISABLE_DEPRECATED_API
+        utf8-validation SIMDJSON_SKIPUTF8VALIDATION
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)

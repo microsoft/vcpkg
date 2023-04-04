@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF v2.0.1
-    SHA512 f1c1708d6e5c9424b95fb71c88ca510c70a4b11711079f12f173ecf190b009a977f7aa11f49a0b2e634a307f2732e4c33d9cd37d727ba60da99051876adb7d1e
+    REF v2.1.0
+    SHA512 95d83c6694b63b6fd27657c4c5e22ddbc078d26b7324b8f17952a6c7e4547028698aa155077c0cfb916d3497ca31c365e0cbcd81f3cbe959ef40a7ee2e5cd300
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
         -DOpenMVS_USE_SSE=ON
         -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_BREAKPAD=OFF
+        -DOpenMVS_ENABLE_TESTS=OFF
     OPTIONS_RELEASE
         -DOpenMVS_BUILD_TOOLS=ON
     OPTIONS_DEBUG
@@ -46,11 +47,12 @@ vcpkg_cmake_config_fixup()
 file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenMVSTargets-release.cmake TARGETS_CMAKE)
 string(REPLACE "bin/InterfaceCOLMAP" "tools/${PORT}/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/InterfaceMetashape" "tools/${PORT}/InterfaceMetashape" TARGETS_CMAKE "${TARGETS_CMAKE}")
-string(REPLACE "bin/InterfaceVisualSFM" "tools/${PORT}/InterfaceVisualSFM" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/InterfaceMVSNet" "tools/${PORT}/InterfaceMVSNet" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/DensifyPointCloud" "tools/${PORT}/DensifyPointCloud" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/ReconstructMesh" "tools/${PORT}/ReconstructMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/RefineMesh" "tools/${PORT}/RefineMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/TextureMesh" "tools/${PORT}/TextureMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/TransformScene" "tools/${PORT}/TransformScene" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/Viewer" "tools/${PORT}/Viewer" TARGETS_CMAKE "${TARGETS_CMAKE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenMVSTargets-release.cmake "${TARGETS_CMAKE}")
 
@@ -58,10 +60,11 @@ vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
     DensifyPointCloud
     InterfaceCOLMAP
     InterfaceMetashape
-    InterfaceVisualSFM
+    InterfaceMVSNet
     ReconstructMesh
     RefineMesh
     TextureMesh
+    TransformScene
     Viewer
 )
 

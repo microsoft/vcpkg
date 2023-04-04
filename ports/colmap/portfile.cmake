@@ -1,10 +1,10 @@
-set(COLMAP_REF "29a1e3642a3b00734a52b21e597ea4d576485fe6") # 3.7 fix
+set(COLMAP_REF "30da037ce19bdceb6d239c45342fadb221bdabb2") # 3.8 with bugfixes
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
-    REF ${COLMAP_REF}
-    SHA512 c22511592dadd1fce51baeaa5ab3ca48b0df5f1c02f9e2a97593ea1b01c5aea0e1054063a5665e2653f2c7b1b7525ce4c62ae35fb4197df614112861045b76fd
+    REF "${COLMAP_REF}"
+    SHA512 2aad3c39efee025bebdbec41215f32968c3a63e160f9e7de0a6a2bf2d2c96bb1c20af0e10173d1d81ed4712e58fd97e7c8aabef8f9c47cc542d89b14c6ae420d
     HEAD_REF dev
     PATCHES
         fix-dependencies.patch
@@ -28,11 +28,12 @@ set(TESTS_ENABLED OFF)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
+    set(CUDA_ARCHITECTURES "native")
 endif()
 
 if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
-    set(CUDA_ARCHS "Common")
+    set(CUDA_ARCHITECTURES "all-major")
 endif()
 
 if("tests" IN_LIST FEATURES)
@@ -49,7 +50,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
-        -DCUDA_ARCHS=${CUDA_ARCHS}
+        -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
         -DTESTS_ENABLED=${TESTS_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
@@ -87,3 +88,5 @@ file(REMOVE_RECURSE
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

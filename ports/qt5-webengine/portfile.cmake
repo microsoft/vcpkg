@@ -14,7 +14,7 @@ message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "If ${PORT} directly fails ${PORT} might require additional prerequisites on Linux and OSX. Please check the configure logs.\n")
 endif()
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
@@ -49,6 +49,7 @@ set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
             build_2.patch
+            build_3.patch
             workaround-msvc2022-ice.patch)
 
 set(OPTIONS)
@@ -56,7 +57,11 @@ if("proprietary-codecs" IN_LIST FEATURES)
     list(APPEND OPTIONS "-webengine-proprietary-codecs")
 endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
+    list(APPEND OPTIONS "-system-webengine-webp" "-system-webengine-icu")
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+    vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
 endif()
 
 qt_submodule_installation(PATCHES ${PATCHES} BUILD_OPTIONS ${OPTIONS})

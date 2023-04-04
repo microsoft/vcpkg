@@ -1,44 +1,42 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LLNL/zfp
-    REF 0.5.5
-    SHA512 c043cee73f6e972e047452552ab2ceb9247a6747fdb7e5f863aeab3a05208737c0bcabbe29f3c10e5c1aba961ec47aa6a0abdb395486fa0d5fb16a4ad45733c4
+    REF f39af72648a2aeb88e9b2cca8c64f51b493ad5f4 #1.0.0
+    SHA512 943c147a5170defe8e40c6b5ffc736dcc5a4fd33ab5b3e71aab9194821d68e4b6d093f11c76532ae011cbee44c861b04feb01e36789a9858b10ebfa808416e92
     HEAD_REF master
-    PATCHES
-       fix-build-error.patch
-       fix-install-tools.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    all     BUILD_ALL
-    cfp     BUILD_CFP
-    test    BUILD_TESTING
-    example BUILD_EXAMPLES
-    utility BUILD_UTILITIES
+    FEATURES
+        all     BUILD_ALL
+        cfp     BUILD_CFP
+        utility BUILD_UTILITIES
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-      -DBUILD_ZFPY=OFF
-      -DBUILD_ZFORP=OFF
+      -DBUILD_TESTING=OFF
+      -DBUILD_ALL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Rename problematic root include "bitstream.h"; conflicts with x265's private headers
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/bitstream.h ${CURRENT_PACKAGES_DIR}/include/zfp/bitstream.h)
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zfp.h "\"bitstream.h\"" "\"zfp/bitstream.h\"")
+
+if("utility" IN_LIST FEATURES)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zfp")
+        vcpkg_copy_tools(TOOL_NAMES zfp AUTO_CLEAN)
+    else()
+        vcpkg_copy_tools(TOOL_NAMES zfpcmd AUTO_CLEAN)
+    endif()
+endif()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

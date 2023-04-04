@@ -1,7 +1,7 @@
 {
   "name": "libpq",
-  "version": "14.4",
-  "port-version": 3,
+  "version": "15.2",
+  "port-version": 1,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -123,6 +123,12 @@
       "description": "Use zlib (else --without-zlib)",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Use zstd (else --without-zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

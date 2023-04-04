@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
-    REF v1.8.1
-    SHA512 4ad89ef5e154674c591d7ab49d262f23093db8b4d7cf1c69a844e24adab96cff523de0769e5dfe7b2721f5a5e18790b11020021380f587775dd660b09e65a44a
+    REF "v${VERSION}"
+    SHA512 eb7dde38134fd9f51f22a2288a3a1db9eeec3dce3889c02fea82e20738a697449be73d632c3d1889ff159f0274d57bfd066db506149b221fe6ced8f18fdc1237
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -20,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         elasticsearch WITH_ELASTICSEARCH
         jaeger WITH_JAEGER
         otlp WITH_OTLP
+        otlp-http WITH_OTLP_HTTP
         zpages WITH_ZPAGES
 )
 
@@ -37,6 +38,7 @@ if(WITH_OTLP)
     file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
+    list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 endif()
 
 vcpkg_cmake_configure(
@@ -45,6 +47,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_LOGS_PREVIEW=ON
+        -DOPENTELEMETRY_INSTALL=ON
         ${FEATURE_OPTIONS}
 )
 
