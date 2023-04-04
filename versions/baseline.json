@@ -7614,7 +7614,7 @@
     },
     "stdexec": {
       "baseline": "2023-03-05",
-      "port-version": 0
+      "port-version": 1
     },
     "stduuid": {
       "baseline": "1.2.2",
