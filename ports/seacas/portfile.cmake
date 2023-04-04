@@ -11,19 +11,10 @@ vcpkg_from_github(
             fix-headers.patch
 )
 
-if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
+if(HDF5_WITH_PARALLEL)
     message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in seacas.")
-    list(APPEND FEATURES "mpi")
-elseif(NOT VCPKG_TARGET_IS_OSX)
-    set(PARMETIS_FEATURES mpi TPL_ENABLE_ParMETIS)
+    list(APPEND FEATURE_OPTIONS "-DTPL_ENABLE_MPI=ON")
 endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        mpi     TPL_ENABLE_MPI
-        # mpi     TPL_ENABLE_Pnetcdf # missing Pnetcdf port
-        ${PARMETIS_FEATURES}
-)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS "-DTPL_ENABLE_DLlib:BOOL=OFF")

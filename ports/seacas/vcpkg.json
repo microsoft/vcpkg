@@ -22,6 +22,11 @@
     },
     "metis",
     {
+      "name": "parmetis",
+      "default-features": false,
+      "platform": "!osx"
+    },
+    {
       "name": "netcdf-c",
       "default-features": false,
       "features": [
@@ -37,31 +42,5 @@
       "host": true
     },
     "zlib"
-  ],
-  "features": {
-    "mpi": {
-      "description": "Enable MPI support",
-      "dependencies": [
-        {
-          "name": "cgns",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ]
-        },
-        {
-          "name": "hdf5",
-          "default-features": false,
-          "features": [
-            "parallel"
-          ]
-        },
-        {
-          "name": "parmetis",
-          "default-features": false,
-          "platform": "!osx"
-        }
-      ]
-    }
-  }
+  ]
 }
