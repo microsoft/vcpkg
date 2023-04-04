@@ -154,8 +154,14 @@ file(REMOVE
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"")
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../installed/${TARGET_TRIPLET}")
+    set(MYSQL_CONFIG_FILE "${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config")
+    vcpkg_replace_string(${MYSQL_CONFIG_FILE} "/bin/mysql_.*config" "/tools/libmysql/mysql_.*config")  # try to get correct $basedir
+    vcpkg_replace_string(${MYSQL_CONFIG_FILE} "${CURRENT_PACKAGES_DIR}" "$basedir")  # use $basedir to format paths
+    vcpkg_replace_string(${MYSQL_CONFIG_FILE} "-l\$\<\$\<CONFIG:DEBUG\>:${CURRENT_INSTALLED_DIR}/debug/lib/libz.a> " "")  # remove debug version of libz
+    vcpkg_replace_string(${MYSQL_CONFIG_FILE} 
+        "\$\<\$\<NOT:\$\<CONFIG:DEBUG\>\>:${CURRENT_INSTALLED_DIR}" 
+        "`dirname $0`/../../../../installed/${TARGET_TRIPLET}")  # correct path for release version of libz
+    vcpkg_replace_string(${MYSQL_CONFIG_FILE} "\> -l" " -l") # trailing > tag for previous item
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
