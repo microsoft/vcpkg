@@ -1,12 +1,14 @@
+include_guard(GLOBAL)
+
 # Looks like Rust doesn't have any mirrors
 set(Z_VCPKG_ACQUIRE_RUST_MIRRORS
     "https://static.rust-lang.org/"
 )
 
-function(z_vcpkg_acquire_rust_download_package out_archive)
+function(z_vcpkg_rust_acquire_download_package out_archive)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "URL;SHA512;FILENAME" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "internal error: z_vcpkg_acquire_rust_download_package passed extra args: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "internal error: z_vcpkg_rust_acquire_download_package passed extra args: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     set(all_urls "${arg_URL}")
@@ -31,20 +33,20 @@ endfunction()
 #   - Z_VCPKG_RUST_PACKAGES
 #   - Z_VCPKG_RUST_${arg_NAME}_ARCHIVE
 #   - Z_VCPKG_RUST_${arg_NAME}_PATCHES
-function(z_vcpkg_acquire_rust_declare_package)
+function(z_vcpkg_rust_acquire_declare_package)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "NAME;ARCH;PLATFORM;URL;SHA512;DIRECTORY" "DEPS")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "internal error: z_vcpkg_acquire_rust_declare_package passed extra args: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "internal error: z_vcpkg_rust_acquire_declare_package passed extra args: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     foreach(required_arg IN ITEMS URL SHA512)
         if(NOT DEFINED arg_${required_arg})
-            message(FATAL_ERROR "internal error: z_vcpkg_acquire_rust_declare_package requires argument: ${required_arg}")
+            message(FATAL_ERROR "internal error: z_vcpkg_rust_acquire_declare_package requires argument: ${required_arg}")
         endif()
     endforeach()
 
     if(NOT arg_URL MATCHES [[^https://static.rust-lang.org/dist/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/(([a-z_-]+)-([0-9]+\.[0-9]+\.[0-9])-(aarch64|arm|armv7|i686|mips|mips64|mips64el|mipsel|powerpc|powerpc64|powerpc64le|riscv64gc|s390x|x86_64)-([a-z0-9_-]+)\.tar\.xz)$]])
-        message(FATAL_ERROR "internal error: regex does not match supplied URL to vcpkg_acquire_rust: ${arg_URL}")
+        message(FATAL_ERROR "internal error: regex does not match supplied URL to vcpkg_rust_acquire: ${arg_URL}")
     endif()
 
     set(filename "${CMAKE_MATCH_1}")
@@ -80,7 +82,7 @@ function(z_vcpkg_acquire_rust_declare_package)
         list(APPEND Z_VCPKG_RUST_PACKAGES ${arg_DEPS})
         set(Z_VCPKG_RUST_PACKAGES "${Z_VCPKG_RUST_PACKAGES}" PARENT_SCOPE)
 
-        z_vcpkg_acquire_rust_download_package(archive
+        z_vcpkg_rust_acquire_download_package(archive
             URL "${arg_URL}"
             SHA512 "${arg_SHA512}"
             FILENAME "${filename}"
@@ -103,7 +105,7 @@ function(z_vcpkg_rust_install_packages out_rust_root)
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "vcpkg_acquire_rust was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(WARNING "vcpkg_rust_acquire was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     set(Z_VCPKG_RUST_TOTAL_HASH "")
@@ -115,25 +117,33 @@ function(z_vcpkg_rust_install_packages out_rust_root)
         list(APPEND Z_VCPKG_RUST_PACKAGES rustc rust-std cargo)
     endif()
 
-    z_vcpkg_acquire_rust_declare_package(
+    z_vcpkg_rust_acquire_declare_package(
         URL "https://static.rust-lang.org/dist/2023-03-09/rustc-1.68.0-x86_64-pc-windows-msvc.tar.xz"
         SHA512 a8774dcd06b942251c112394d5fac9e4149b0c4933f9f7c922595863b19f4435b3334487927e68bfe9dedb55e4257a2b4c7c9992e6effb935cc053885b90ca5a
     )
-    z_vcpkg_acquire_rust_declare_package(
+    z_vcpkg_rust_acquire_declare_package(
         URL "https://static.rust-lang.org/dist/2023-03-09/rustc-1.68.0-i686-pc-windows-msvc.tar.xz"
         SHA512 cbd5d0874385b6aa79421911ee6b1f5db0c41dd8bcc8ca2aa0501dc1aee8a51b1f79dd0ed012f563de5d6c908172d850ab822410de8c7ca7c82ba6e55da93da9
     )
-    z_vcpkg_acquire_rust_declare_package(
+    z_vcpkg_rust_acquire_declare_package(
         URL "https://static.rust-lang.org/dist/2023-03-09/cargo-1.68.0-x86_64-pc-windows-msvc.tar.xz"
         SHA512 8f9164541cdfb05a71d61cf46b4034d80ab236b4f644eafe69706571f299f8f13709abbe58b5d8b6827f95a9d72ac16a52fbe23041c4003b839c492306fc9ce4
     )
-    z_vcpkg_acquire_rust_declare_package(
+    z_vcpkg_rust_acquire_declare_package(
+        URL "https://static.rust-lang.org/dist/2023-03-09/cargo-1.68.0-i686-pc-windows-gnu.tar.xz"
+        SHA512 5c90d69211cd752b0d5377f5f56b9308a355da7ee7149f97d87422c1c8e1ce0f66b07281951d302bb347aa540e416778568cbe54326e3f1927bee07f0eaa0829
+    )
+    z_vcpkg_rust_acquire_declare_package(
         URL "https://static.rust-lang.org/dist/2023-03-09/rust-std-1.68.0-x86_64-pc-windows-msvc.tar.xz"
         SHA512 a39c1de3b81198cd511e901eae9b835a73740d757d6eb6a36a8d8039f66f74b81b065268fc0eafe9dca5c1c10947728ec00f19e509941774f889b4cdd008859f
     )
+    z_vcpkg_rust_acquire_declare_package(
+        URL "https://static.rust-lang.org/dist/2023-03-09/rust-std-1.68.0-i686-pc-windows-gnu.tar.xz"
+        SHA512 6d27f04f76aea0dbaab2ad9fcb23cd32782178da0dffcca9c3786637b917d28948fea055da9fd2973280e4eb0297445115c62db8b9dd71c31a2400ac452233bb
+    )
 
     if(NOT Z_VCPKG_RUST_PACKAGES STREQUAL "")
-        message(FATAL_ERROR "Unknown packages were required for vcpkg_acquire_rust(${arg_PACKAGES}): ${packages}
+        message(FATAL_ERROR "Unknown packages were required for vcpkg_rust_acquire(${arg_PACKAGES}): ${packages}
 This can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
     endif()
 
