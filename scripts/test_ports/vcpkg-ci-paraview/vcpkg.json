@@ -17,8 +17,7 @@
       "name": "paraview",
       "default-features": false,
       "features": [
-        "python",
-        "mpi"
+        "python"
       ],
       "platform": "!(windows & static) & !x86"
     },
