@@ -30,6 +30,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
     vcpkg_replace_string("${SOURCE_PATH}/prj/${SOLUTION_TYPE}/Simd.vcxproj"
 	     "<ConfigurationType>DynamicLibrary</ConfigurationType>"
 		 "<ConfigurationType>StaticLibrary</ConfigurationType>")
+    file(GLOB_RECURSE PROJ_FILES "${SOURCE_PATH}/prj/${SOLUTION_TYPE}/*.vcxproj")
+    foreach(PROJ_FILE ${PROJ_FILES})
+        vcpkg_replace_string(${PROJ_FILE}
+          "    </ClCompile>"
+          "      <DebugInformationFormat>OldStyle</DebugInformationFormat>\n    </ClCompile>")
+    endforeach()
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
 	  file(GLOB_RECURSE PROJ_FILES "${SOURCE_PATH}/prj/${SOLUTION_TYPE}/*.vcxproj")
 	  foreach(PROJ_FILE ${PROJ_FILES})
@@ -48,7 +54,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
   	RELEASE_CONFIGURATION "Release"
   	DEBUG_CONFIGURATION "Debug"
   )
-  
+  vcpkg_copy_pdbs()
   file(GLOB SIMD_HEADERS "${SOURCE_PATH}/src/Simd/*.hpp" "${SOURCE_PATH}/src/Simd/*.h")
   file(COPY ${SIMD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Simd")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")

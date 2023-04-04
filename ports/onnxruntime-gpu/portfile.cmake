@@ -12,6 +12,20 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
+# Download repo for experimental features
+vcpkg_from_github(
+    OUT_SOURCE_PATH REPO_PATH
+    REPO microsoft/onnxruntime
+    REF v${VERSION}
+    SHA512 d8f7ea161e850a738b9a22187662218871f88ad711282c58631196a74f4a4567184047bab0001b973f841a3b63c7dc7e350f92306cc5fa9a7adc4db2ce09766f
+)
+
+file(COPY
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_api.h 
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_inline.h
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
+
 file(MAKE_DIRECTORY
         ${CURRENT_PACKAGES_DIR}/include
         ${CURRENT_PACKAGES_DIR}/lib
