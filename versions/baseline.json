@@ -5213,8 +5213,8 @@
       "port-version": 0
     },
     "monkeys-audio": {
-      "baseline": "9.04",
-      "port-version": 4
+      "baseline": "10.08",
+      "port-version": 0
     },
     "moos-core": {
       "baseline": "10.4.0",
