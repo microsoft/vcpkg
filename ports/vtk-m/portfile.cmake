@@ -14,10 +14,14 @@ vcpkg_check_features (OUT_FEATURE_OPTIONS OPTIONS
       cuda   VTKm_ENABLE_CUDA
       omp    VTKm_ENABLE_OPENMP
       tbb    VTKm_ENABLE_TBB
-      mpi    VTKm_ENABLE_MPI
       double VTKm_USE_DOUBLE_PRECISION
     )
-    
+
+if(HDF5_WITH_PARALLEL)
+  message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in vtk-m.")
+  list(APPEND FEATURE_OPTIONS "-VTKm_ENABLE_MPI=ON")
+endif()
+
 if("cuda" IN_LIST FEATURES AND NOT ENV{CUDACXX})
   set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc")
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

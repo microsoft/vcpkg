@@ -26,12 +26,6 @@
     "double": {
       "description": "Use double precision in floating point calculations"
     },
-    "mpi": {
-      "description": "Use the MPI controller.",
-      "dependencies": [
-        "mpi"
-      ]
-    },
     "omp": {
       "description": "Use the OpenMP device adapter."
     },
