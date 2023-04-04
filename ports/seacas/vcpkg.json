@@ -22,16 +22,16 @@
     },
     "metis",
     {
-      "name": "parmetis",
-      "default-features": false,
-      "platform": "!osx"
-    },
-    {
       "name": "netcdf-c",
       "default-features": false,
       "features": [
         "hdf5"
       ]
+    },
+    {
+      "name": "parmetis",
+      "default-features": false,
+      "platform": "!osx"
     },
     {
       "name": "vcpkg-cmake",
