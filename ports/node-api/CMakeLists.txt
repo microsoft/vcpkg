@@ -3,15 +3,13 @@ project(nodelib C)
 add_custom_target(nodelib ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/node.lib)
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/node.lib
-  COMMAND ${NODEJS_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/generateNodeLibDef.js
   COMMAND ${CMAKE_AR}
-          /def:${CMAKE_CURRENT_BINARY_DIR}/node.def
+          /def:${CMAKE_CURRENT_SOURCE_DIR}/def/node_api.def
           /out:${CMAKE_CURRENT_BINARY_DIR}/node.lib
           ${CMAKE_STATIC_LINKER_FLAGS}
           $<$<CONFIG:Debug>:${CMAKE_STATIC_LINKER_FLAGS_DEBUG}>
           $<$<CONFIG:Release>:${CMAKE_STATIC_LINKER_FLAGS_RELEASE}>
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generateNodeLibDef.js
-  COMMENT "Building node.lib"
+  COMMENT "Building import library for NodeJS"
 )
 
 install(FILES ${CMAKE_BINARY_DIR}/node.lib DESTINATION lib)

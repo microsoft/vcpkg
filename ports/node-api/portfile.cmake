@@ -1,24 +1,14 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-api-headers
-  REF 4fdbdd171011cba57ab2888ef0995451e8aded95
-  SHA512 84289b291d542865c2fb649dc3a43dd6840ac879a913fbcce0a0c848d4a3fb76e7bf02ad46f36e62cde47dc9e0dac9baad2f78615c91cd40fccb702234c965a3
+  REF 15477c5898e6b124634d728e5a4c973b429c7b5f
+  SHA512 55a8d55c22f8d06b75a9edcd300e11a42602cd7044770ad1f70c8312f397779be39108efeb85e79354b51368281b7f94b01474690154c26fd53f801ff7dde232
   HEAD_REF main
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  set(base_path "${CURRENT_HOST_INSTALLED_DIR}/tools/node")
-  find_program(NODEJS NAMES node PATHS "${base_path}" "${base_path}/bin" NO_DEFAULT_PATHS REQUIRED)
-
   file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/generateNodeLibDef.js" DESTINATION "${SOURCE_PATH}")
-
-  vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-      -DNODEJS_EXECUTABLE="${NODEJS}"
-  )
-
+  vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
   vcpkg_cmake_install()
 endif()
 
