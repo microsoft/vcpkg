@@ -5430,7 +5430,7 @@
     },
     "node-addon-api": {
       "baseline": "6.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "node-api": {
       "baseline": "8+19.6.0",
