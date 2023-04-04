@@ -6237,8 +6237,8 @@
       "port-version": 1
     },
     "portsmf": {
-      "baseline": "0.238",
-      "port-version": 1
+      "baseline": "239",
+      "port-version": 0
     },
     "ppconsul": {
       "baseline": "0.5",
