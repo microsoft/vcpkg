@@ -15,6 +15,7 @@ vcpkg_from_github(
         0006-Fix-libffi.patch
         0007-Fix-install-bolt.patch
         0008-llvm_assert.patch
+        0009-disable-libomp-aliases.patch
 )
 
 vcpkg_check_features(
@@ -244,6 +245,7 @@ vcpkg_cmake_configure(
         -DLLVM_BUILD_TESTS=OFF
         -DLLVM_INCLUDE_BENCHMARKS=OFF
         -DLLVM_BUILD_BENCHMARKS=OFF
+        -DLIBOMP_INSTALL_ALIASES=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
