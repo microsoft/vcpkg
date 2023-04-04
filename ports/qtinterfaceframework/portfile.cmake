@@ -50,5 +50,4 @@ if(NOT VCPKG_CROSSCOMPILING)
     endif()
 endif()
 
-file(INSTALL "${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/6.5.0/QtInterfaceFramework/private/qifqueryparser_flex_p.h" 
-     DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME qifqueryparser_flex_p.h.log)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/6.5.0/QtInterfaceFramework/private/qifqueryparser_flex_p.h" "${CURRENT_BUILDTREES_DIR}" "")
