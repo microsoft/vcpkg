@@ -1,0 +1,15 @@
+diff --git a/guilib/src/CMakeLists.txt b/guilib/src/CMakeLists.txt
+index 349f6f9e..ac54b0f2 100644
+--- a/guilib/src/CMakeLists.txt
++++ b/guilib/src/CMakeLists.txt
+@@ -60,6 +60,10 @@ SET(qrc
+     ./GuiLib.qrc
+ )
+ 
++set(CMAKE_AUTOMOC OFF)
++set(CMAKE_AUTORCC OFF)
++set(CMAKE_AUTOUIC OFF)
++
+ IF(QT4_FOUND)
+     # generate rules for building source files from the resources
+     QT4_ADD_RESOURCES(srcs_qrc ${qrc})

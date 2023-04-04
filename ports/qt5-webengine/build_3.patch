@@ -1,0 +1,14 @@
+diff --git a/src/3rdparty/chromium/third_party/libxml/src/encoding.c b/src/3rdparty/chromium/third_party/libxml/src/encoding.c
+index c34aca44663..707aea5bc1a 100644
+--- a/src/3rdparty/chromium/third_party/libxml/src/encoding.c
++++ b/src/3rdparty/chromium/third_party/libxml/src/encoding.c
+@@ -2004,7 +2004,7 @@ xmlEncOutputChunk(xmlCharEncodingHandler *handler, unsigned char *out,
+ #ifdef LIBXML_ICU_ENABLED
+     else if (handler->uconv_out != NULL) {
+         ret = xmlUconvWrapper(handler->uconv_out, 0, out, outlen, in, inlen,
+-                              TRUE);
++                              true);
+     }
+ #endif /* LIBXML_ICU_ENABLED */
+     else {
+

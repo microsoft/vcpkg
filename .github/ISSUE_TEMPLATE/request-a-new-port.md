@@ -2,7 +2,7 @@
 name: Request a new port
 about: Request a new port/library that vcpkg should support
 title: "[New Port Request] <library name here>"
-labels: new port request - consider making a PR!
+labels: "category:new-port,info:good-first-issue"
 assignees: ''
 
 ---
