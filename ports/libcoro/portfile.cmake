@@ -5,8 +5,9 @@ vcpkg_from_github(
     SHA512 746607793ba2e0c809e731b39423fa84e451a67129ba311dc3ccc257d5d31be0f94826ca1bffc8a88f9f4675ba4224d3290bab6e46116bcdee50acb2f96fbf81
     HEAD_REF master
     PATCHES
-        0001-disable-git-config.patch
-        0002-fix-dependencies.patch
+        0001-allow-shared-lib.patch
+        0002-disable-git-config.patch
+        0003-fix-dependencies.patch
 )
 
 vcpkg_cmake_configure(
