@@ -79,7 +79,15 @@
         },
         {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
+        },
+        {
+          "$package": "Gettext",
+          "name": "gettext",
+          "features": [
+            "tools"
+          ],
+          "platform": "native"
         },
         {
           "$package": "GIF",

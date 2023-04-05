@@ -44,5 +44,5 @@ function(install_autopoint)
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE
     )
-    file(INSTALL "${WORKING_DIR}/archive.dir.tar.gz" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext/gettext")
+    file(INSTALL "${WORKING_DIR}/archive.dir.tar.gz" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 endfunction()

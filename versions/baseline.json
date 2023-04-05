@@ -2726,6 +2726,10 @@
     },
     "gettext": {
       "baseline": "0.21.1",
+      "port-version": 1
+    },
+    "gettext-libintl": {
+      "baseline": "0.21.1",
       "port-version": 0
     },
     "gettimeofday": {

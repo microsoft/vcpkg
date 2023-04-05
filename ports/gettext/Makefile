@@ -1,70 +1,32 @@
-all: build-gettext-runtime-intl build-gettext-runtime-po build-gettext-runtime-src
-all: build-gettext-tools build-gettext-tools-gnulib build-gettext-tools-its build-gettext-tools-m4 build-gettext-tools-misc build-gettext-tools-po build-gettext-tools-projects build-gettext-tools-styles
-all: build-libtextstyle
+# The steps represent SUBDIRS from Makefile.am/.in, recursively, but
+# omit "gettext-runtime/intl" (provided by gettext-libintl or system),
+# doc, tests, examples, maintainer stuff, java, csharp, libasprintf.
+# "gettext-tools/src libtextstyle.h" is needed to fix parallel build.
+STEPS := \
+    "gettext-runtime/gnulib-lib all" \
+	"gettext-runtime/src all" \
+	"gettext-runtime/po all" \
+	"gettext-runtime all-am" \
+	"libtextstyle/lib all" \
+	"gettext-tools/intl all" \
+	"gettext-tools/gnulib-lib all" \
+	"gettext-tools/libgrep all" \
+	"gettext-tools/src textstyle.h" \
+	"gettext-tools/src all" \
+	"gettext-tools/po all" \
+	"gettext-tools/its all" \
+	"gettext-tools/projects all" \
+	"gettext-tools/styles all" \
+	"gettext-tools/misc all" \
+	"gettext-tools all-am"
 
-install: install-gettext-runtime-intl install-gettext-runtime-po install-gettext-runtime-src
-install: install-gettext-tools install-gettext-tools-gnulib install-gettext-tools-its install-gettext-tools-m4 install-gettext-tools-misc install-gettext-tools-po install-gettext-tools-projects install-gettext-tools-styles
-install: install-libtextstyle
+INSTALL_STEPS := $(patsubst all%,install%,$(STEPS))
 
-build-intl:
-	$(MAKE) -C intl all
-install-intl:
-	$(MAKE) -C intl install
+.PHONY: all install
 
-build-gettext-runtime-gnulib: build-gettext-runtime-intl
-	$(MAKE) -C gettext-runtime/gnulib-lib all
-build-gettext-runtime-intl:
-	$(MAKE) -C gettext-runtime/intl all
-build-gettext-runtime-po:
-	$(MAKE) -C gettext-runtime/po all
-build-gettext-runtime-src: build-gettext-runtime-intl build-gettext-runtime-gnulib
-	$(MAKE) -C gettext-runtime/src all
-build-gettext-tools: build-gettext-runtime-intl build-libtextstyle build-gettext-tools-gnulib build-gettext-tools-intl build-gettext-tools-libgrep build-gnulib-local
-	$(MAKE) -C gettext-tools/src all
-build-gettext-tools-gnulib: build-gettext-tools-intl
-	$(MAKE) -C gettext-tools/gnulib-lib all
-build-gettext-tools-libgrep: build-gettext-tools-gnulib
-	$(MAKE) -C gettext-tools/libgrep all
-build-gettext-tools-intl:
-	$(MAKE) -C gettext-tools/intl all
-build-gettext-tools-its:
-	$(MAKE) -C gettext-tools/its all
-build-gettext-tools-m4:
-	$(MAKE) -C gettext-tools/m4 all
-build-gettext-tools-misc:
-	$(MAKE) -C gettext-tools/misc all
-build-gettext-tools-po:
-	$(MAKE) -C gettext-tools/po all
-build-gettext-tools-projects:
-	$(MAKE) -C gettext-tools/projects all
-build-gettext-tools-styles:
-	$(MAKE) -C gettext-tools/styles all
-build-gnulib-local:
-	$(MAKE) -C gnulib-local all
-build-libtextstyle:
-	$(MAKE) -C libtextstyle/lib all
+all:
+	rm -f failed; for I in $(STEPS); do $(MAKE) -C $$I || { touch failed ; break ; } ; done | ts ; test ! -f failed
 
-install-gettext-runtime-intl:
-	$(MAKE) -C gettext-runtime/intl install
-install-gettext-runtime-po:
-	$(MAKE) -C gettext-runtime/po install
-install-gettext-runtime-src:
-	$(MAKE) -C gettext-runtime/src install
-install-gettext-tools:
-	$(MAKE) -C gettext-tools/src install
-install-gettext-tools-gnulib:
-	$(MAKE) -C gettext-tools/gnulib-lib install
-install-gettext-tools-its:
-	$(MAKE) -C gettext-tools/its install
-install-gettext-tools-m4:
-	$(MAKE) -C gettext-tools/m4 install
-install-gettext-tools-misc:
-	$(MAKE) -C gettext-tools/misc install
-install-gettext-tools-po:
-	$(MAKE) -C gettext-tools/po install
-install-gettext-tools-projects:
-	$(MAKE) -C gettext-tools/projects install
-install-gettext-tools-styles:
-	$(MAKE) -C gettext-tools/styles install
-install-libtextstyle:
-	$(MAKE) -C libtextstyle/lib install
+install:
+	rm -f failed; for I in $(INSTALL_STEPS); do $(MAKE) -C $$I || { touch failed ; break ; } ; done | ts ; test ! -f failed
+

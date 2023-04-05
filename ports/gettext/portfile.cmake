@@ -1,10 +1,14 @@
-if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/include/libintl.h")
-    message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-                        "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
-    )
-endif()
-
-set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+# This port is just to provide gettext tools and build data, not libs.
+# The "core" feature depends on port gettext-libintl which provides libintl.
+# The "core" feature also installs enough for running autoreconf.
+# The actual tools are only enabled by the "tools" feature. It is typically used as a host dependency.
+# For fast builds in particular on Windows, the following choices are made:
+# - only release build type
+# - namespacing disabled
+# - configuration cache
+set(VCPKG_BUILD_TYPE release)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+set(X_PORT_PROFILE 1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
@@ -16,188 +20,165 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        # shared with port gettext-libintl
         android.patch
         uwp.patch
-        win-gethostname.patch
         0003-Fix-win-unicode-paths.patch
+        # unique to port gettext
+        win-gethostname.patch
         rel_path.patch
+        subdirs.patch
+        parallel-gettext-tools.patch
 )
 
-vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
-vcpkg_add_to_path("${BISON_PATH}")
+if("tools" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(BISON)
+    get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
+    vcpkg_add_to_path("${BISON_PATH}")
 
-if(NOT DEFINED VCPKG_AUTOTOOLS_CONFIG_CACHE)
-    set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
-    endif()
-endif()
-include("${CMAKE_CURRENT_LIST_DIR}/config-cache-support.cmake")
-vcpkg_config_cache_setup(config_cache_release config_cache_debug)
-
-if(VCPKG_HOST_IS_WINDOWS)
-    message(STATUS "Modifying 'configure' to use fast bash variable expansion")
-    set(ENV{CONFIG_SHELL} "/usr/bin/bash")
-    vcpkg_execute_required_process(
-        COMMAND "${CMAKE_COMMAND}"
-            "-DSOURCE_DIRS=gettext-runtime;gettext-runtime/libasprintf;libtextstyle;gettext-tools"
-            -P "${CMAKE_CURRENT_LIST_DIR}/bashify.cmake"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "bashify-${TARGET_TRIPLET}"
-    )
-endif()
-
-set(OPTIONS
-    --enable-relocatable #symbol duplication with glib-init.c?
-    --enable-c++
-    --disable-acl
-    --disable-csharp
-    --disable-curses
-    --disable-java
-    --disable-openmp
-)
-if(VCPKG_TARGET_IS_WINDOWS)
-    # The following options intentionally overwrite cached settings
-    # in order to facilitate regenerating a the checked-in config cache.
-    list(APPEND OPTIONS
-        # Avoid unnecessary test.
-        --with-included-glib
-        # This is required. For some reason these do not get correctly identified for release builds.
-        ac_cv_func_wcslen=yes
-        ac_cv_func_memmove=yes
-        # The following are required for a full gettext built (libintl and tools).
-        gl_cv_func_printf_directive_n=no  # segfaults otherwise with popup window
-        ac_cv_func_memset=yes             # not detected in release builds
-    )
-    if(NOT VCPKG_TARGET_IS_MINGW)
-        list(APPEND OPTIONS
-            # Don't take from port dirent
-            ac_cv_header_dirent_h=no
-            # Don't take from port getopt-win32
-            ac_cv_header_getopt_h=no
-            # Don't take from port pthreads
-            ac_cv_header_pthread_h=no
-            ac_cv_header_sched_h=no
-            ac_cv_header_semaphore_h=no
-            # Detected 'no' everywhere except x64-windows-static
-            ac_cv_func_snprintf=no
-            # Detected x64 values for gnulib, overriding guesses for cross builds
-            gl_cv_func_fopen_mode_x=yes
-            gl_cv_func_frexpl_works=yes
-            gl_cv_func_getcwd_null=yes
-            gl_cv_func_mbrtowc_empty_input=no
-            gl_cv_func_mbsrtowcs_works=yes
-            gl_cv_func_printf_flag_zero=yes
-            gl_cv_func_printf_infinite_long_double=yes
-            gl_cv_func_printf_precision=yes
-            gl_cv_func_snprintf_truncation_c99=yes
-            # Detected x64 values for gettext, overriding guesses for x86 & x64-uwp
-            gt_cv_int_divbyzero_sigfpe=no
+    if(VCPKG_HOST_IS_WINDOWS)
+        message(STATUS "Modifying build system for less forks")
+        set(ENV{CONFIG_SHELL} "/usr/bin/bash")
+        vcpkg_execute_required_process(
+            COMMAND "${CMAKE_COMMAND}"
+                "-DSOURCE_DIRS=.;gettext-runtime;libtextstyle;gettext-tools"
+                -P "${CMAKE_CURRENT_LIST_DIR}/bashify.cmake"
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+            LOGNAME "bashify-${TARGET_TRIPLET}"
         )
     endif()
-endif()
 
-# These functions scope any changes to VCPKG_BUILD_TYPE
-function(build_libintl_and_tools)
-    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
-    if(DEFINED arg_BUILD_TYPE)
-        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
+    set(OPTIONS
+        --enable-relocatable #symbol duplication with glib-init.c?
+        --enable-c++
+        --disable-acl
+        --disable-csharp
+        --disable-curses
+        --disable-java
+        --disable-openmp
+        --disable-dependency-tracking
+        # Avoiding system dependencies and unnecessary tests
+        --with-included-glib
+        --with-included-libxml # libtextstyle won't use external libxml
+        --with-included-libunistring
+        --with-installed-libtextstyle=no
+        --without-emacs
+        --without-libcurses-prefix
+        --without-libncurses-prefix
+        --without-libtermcap-prefix
+        --without-libxcurses-prefix
+    )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        # The following options intentionally overwrite cached settings
+        # in order to facilitate regenerating a the checked-in config cache.
+        list(APPEND OPTIONS
+            # Faster, but not for export
+            --disable-namespacing
+            # Avoid unnecessary tests.
+            "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
+            "--with-libintl-prefix=${CURRENT_INSTALLED_DIR}"
+            # This is required. For some reason these do not get correctly identified for release builds.
+            ac_cv_func_wcslen=yes
+            ac_cv_func_memmove=yes
+            # The following are required for a full gettext built (libintl and tools).
+            gl_cv_func_printf_directive_n=no  # segfaults otherwise with popup window
+            ac_cv_func_memset=yes             # not detected in release builds
+        )
+        if(NOT VCPKG_TARGET_IS_MINGW)
+            list(APPEND OPTIONS
+                # Don't take from port dirent
+                ac_cv_header_dirent_h=no
+                # Don't take from port getopt-win32
+                ac_cv_header_getopt_h=no
+                # Don't take from port pthreads
+                ac_cv_header_pthread_h=no
+                ac_cv_header_sched_h=no
+                ac_cv_header_semaphore_h=no
+                # Detected 'no' everywhere except x64-windows-static
+                ac_cv_func_snprintf=no
+                # Detected x64 values for gnulib, overriding guesses for cross builds
+                gl_cv_func_fopen_mode_x=yes
+                gl_cv_func_frexpl_works=yes
+                gl_cv_func_getcwd_null=yes
+                gl_cv_func_mbrtowc_empty_input=no
+                gl_cv_func_mbsrtowcs_works=yes
+                gl_cv_func_printf_flag_zero=yes
+                gl_cv_func_printf_infinite_long_double=yes
+                gl_cv_func_printf_precision=yes
+                gl_cv_func_snprintf_truncation_c99=yes
+                # Detected x64 values for gettext, overriding guesses for x86 & x64-uwp
+                gt_cv_int_divbyzero_sigfpe=no
+            )
+        endif()
     endif()
+
+    if(NOT DEFINED VCPKG_AUTOTOOLS_CONFIG_CACHE)
+        set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
+        if(VCPKG_TARGET_IS_MINGW)
+            #set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/mingw.sh")
+        elseif(VCPKG_TARGET_IS_WINDOWS)
+            #set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
+        endif()
+    endif()
+    include("${CMAKE_CURRENT_LIST_DIR}/config-cache-support.cmake")
+    config_cache_setup(config_cache_release config_cache_debug_unused)
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
-        ADD_BIN_TO_PATH # So configure can check for working iconv
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
             ${OPTIONS}
         OPTIONS_RELEASE
             ${config_cache_release}
-        OPTIONS_DEBUG
-            ${config_cache_debug}
+            [[--datarootdir=\\${prefix}/share]]
     )
-    vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
-endfunction()
+    config_cache_teardown()
 
-function(build_libintl_only)
-    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
-    if(DEFINED arg_BUILD_TYPE)
-        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
-    endif()
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
-        DETERMINE_BUILD_TRIPLET
-        USE_WRAPPERS
-        ADD_BIN_TO_PATH # So configure can check for working iconv
-        OPTIONS
-            ${OPTIONS}
-        OPTIONS_RELEASE
-            ${config_cache_release}
-        OPTIONS_DEBUG
-            ${config_cache_debug}
-    )
-    vcpkg_install_make(
-        MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile"
-        BUILD_TARGET   build-intl
-        INSTALL_TARGET install-intl
-    )
-endfunction()
+    # This helps with Windows build times, but should work everywhere in vcpkg.
+    # - Avoid an extra command to move a temporary file, we are building out of source.
+    # - Avoid a subshell just to add comments, the build dir is temporary.
+    # - Avoid cygpath -w when other tools handle this for us.
+    file(GLOB_RECURSE makefiles "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}*/*Makefile")
+    foreach(file IN LISTS makefiles)
+        file(READ "${file}" rules)
+        string(REGEX REPLACE "(\n\ttest -d [^ ]* [|][|] [\$][(]MKDIR_P[)][^\n;]*)(\n\t)" "\\1 || exit 1 ; \\\\\\2" rules "${rules}")
+        string(REGEX REPLACE "(\n\t){ echo '/[*] [^*]* [*]/'; \\\\\n\t  cat ([^;\n]*); \\\\\n\t[}] > [\$]@-t\n\tmv -f [\$]@-t ([\$]@\n)" "\\1cp \\2 \\3" rules "${rules}")
+        string(REGEX REPLACE " > [\$]@-t\n\t[\$][(]AM_V_at[)]mv [\$]@-t ([\$]@\n)" "> \\1" rules "${rules}")
+        string(REGEX REPLACE "([\$}[(]COMPILE[)] -c -o [\$]@) `[\$][(]CYGPATH_W[)] '[\$]<'`" "\\1 \$<" rules "${rules}")
+        file(WRITE "${file}" "${rules}")
+    endforeach()
 
-if("tools" IN_LIST FEATURES)
-    # Minimization of gettext tools build time by:
-    # - building tools only for release configuration
-    # - custom top-level Makefile
-    # - configuration cache
-    build_libintl_and_tools(BUILD_TYPE "release")
+    vcpkg_install_make()
+    vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-    file(GLOB tool_libs
-        LIST_DIRECTORIES false
-        "${CURRENT_PACKAGES_DIR}/bin/*"
-        "${CURRENT_PACKAGES_DIR}/lib/*"
-    )
-    list(FILTER tool_libs EXCLUDE REGEX "intl[^/\\\\]*$")
-    file(REMOVE ${tool_libs})
-    file(GLOB tool_includes
-        LIST_DIRECTORIES true
-        "${CURRENT_PACKAGES_DIR}/include/*"
-    )
-    list(FILTER tool_includes EXCLUDE REGEX "intl[^/\\\\]*$")
-    file(REMOVE_RECURSE ${tool_includes})
-    if(VCPKG_TARGET_IS_LINUX)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-    elseif(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}.release")
-        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}.release")
-        vcpkg_config_cache_reuse()
-        build_libintl_only(BUILD_TYPE "debug")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}.release/debug")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}.release" "${CURRENT_PACKAGES_DIR}")
+    file(GLOB link_libs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/*" "${CURRENT_PACKAGES_DIR}/bin/*.dll")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include" ${link_libs})
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
+    if(NOT VCPKG_CROSSCOMPILING)
+        file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     endif()
 else()
-    if(VCPKG_TARGET_IS_LINUX)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    else()
-        build_libintl_only()
-    endif()
-    # A fast installation of the autopoint tool and data, needed for autotools
+    # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
     install_autopoint()
 endif()
 
-vcpkg_config_cache_teardown()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_copy_pdbs()
-
-if(NOT VCPKG_TARGET_IS_LINUX)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
-endif()
-if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-endif()
+# These files can be needed to run `autoreconf`. So we want to install these
+# files also for fast "core" builds without "tools".
+# Cf. PACKAGING for the file list.
+file(INSTALL
+    "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/aclocal"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")
+message(FATAL_ERROR STOP)
