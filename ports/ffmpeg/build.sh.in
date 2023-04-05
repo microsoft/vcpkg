@@ -130,7 +130,7 @@ build_ffmpeg() {
 
 cd "$PATH_TO_BUILD_DIR"
 
-if [ $OSX_ARCH_COUNT -gt 1 ]; then
+if [ $OSX_ARCH_COUNT -gt 0 ]; then
     for ARCH in $OSX_ARCHS; do
         echo "=== CLEANING FOR $ARCH ==="
 
