@@ -4229,8 +4229,12 @@
       "port-version": 10
     },
     "libnice": {
-      "baseline": "0.1.18",
-      "port-version": 1
+      "baseline": "0.1.21",
+      "port-version": 0
+    },
+    "libnice-gst": {
+      "baseline": "0.1.21",
+      "port-version": 0
     },
     "libnoise": {
       "baseline": "1.0.0",
