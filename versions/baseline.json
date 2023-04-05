@@ -60,6 +60,10 @@
       "baseline": "1.43",
       "port-version": 1
     },
+    "aklomp-base64": {
+      "baseline": "2023-01-06",
+      "port-version": 0
+    },
     "alac": {
       "baseline": "2017-11-03-c38887c5",
       "port-version": 3
