@@ -6050,7 +6050,7 @@
     },
     "pe-parse": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pegtl": {
       "baseline": "3.2.6",
