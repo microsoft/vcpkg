@@ -40,7 +40,7 @@ if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
-  if((VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("openexr" IN_LIST FEATURES)))
+  if((VCPKG_TARGET_ARCHITECTURE STREQUAL x64) AND (NOT ("openexr" IN_LIST FEATURES)))
 
     vcpkg_download_distfile(
       TEXASSEMBLE_EXE
@@ -64,16 +64,16 @@ if("tools" IN_LIST FEATURES)
     )
 
     file(INSTALL
-      ${TEXASSEMBLE_EXE}
-      ${TEXCONV_EXE}
-      ${TEXDIAG_EXE}
+      "${TEXASSEMBLE_EXE}"
+      "${TEXCONV_EXE}"
+      "${TEXDIAG_EXE}"
       DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
-  elseif((VCPKG_TARGET_ARCHITECTURE MATCHES arm64) AND (NOT ("openexr" IN_LIST FEATURES)))
+  elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL arm64) AND (NOT ("openexr" IN_LIST FEATURES)))
 
     vcpkg_download_distfile(
       TEXASSEMBLE_EXE
@@ -97,9 +97,9 @@ if("tools" IN_LIST FEATURES)
     )
 
     file(INSTALL
-      ${TEXASSEMBLE_EXE}
-      ${TEXCONV_EXE}
-      ${TEXDIAG_EXE}
+      "${TEXASSEMBLE_EXE}"
+      "${TEXCONV_EXE}"
+      "${TEXDIAG_EXE}"
       DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-${DIRECTXTEX_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")

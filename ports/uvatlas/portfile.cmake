@@ -35,7 +35,7 @@ if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
-  if((VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
+  if((VCPKG_TARGET_ARCHITECTURE STREQUAL x64) AND (NOT ("eigen" IN_LIST FEATURES)))
 
     vcpkg_download_distfile(
       UVATLASTOOL_EXE
@@ -45,16 +45,16 @@ if("tools" IN_LIST FEATURES)
     )
 
     file(INSTALL
-      ${UVATLASTOOL_EXE}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+      "${UVATLASTOOL_EXE}"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-${UVATLAS_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-${UVATLAS_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe")
 
   else()
 
     vcpkg_copy_tools(
           TOOL_NAMES uvatlastool
-          SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
       )
 
   endif()
@@ -62,4 +62,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

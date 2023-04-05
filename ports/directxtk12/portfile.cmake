@@ -44,11 +44,11 @@ if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
-  file(INSTALL ${MAKESPRITEFONT_EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+  file(INSTALL "${MAKESPRITEFONT_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont.exe")
 
-  if(VCPKG_TARGET_ARCHITECTURE MATCHES x64)
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
 
     vcpkg_download_distfile(
       XWBTOOL_EXE
@@ -57,11 +57,11 @@ if("tools" IN_LIST FEATURES)
       SHA512 9bc9279767d6379501ec9d851cda52556eb1e96f583a162b4fad93f96985b18b2fe9d9c6eeb3f5f16b42ce2655ae3045bfe0ea0cb4aca425fe09bc079ad6a70d
     )
 
-    file(INSTALL ${XWBTOOL_EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe")
 
-  elseif(VCPKG_TARGET_ARCHITECTURE MATCHES arm64)
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
 
     vcpkg_download_distfile(
       XWBTOOL_EXE
@@ -70,7 +70,7 @@ if("tools" IN_LIST FEATURES)
       SHA512 b49cbe9823182b600496a449a2ff5acd08491615584c523ede4506880cb9b293cedf0b350f186ed4ef53e4795a89d1b0331559fee59ee533751086d7bb4c9e54
     )
 
-    file(INSTALL ${XWBTOOL_EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-${DIRECTXTK_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe")
 

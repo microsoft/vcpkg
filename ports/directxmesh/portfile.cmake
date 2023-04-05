@@ -34,7 +34,7 @@ if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
-  if(VCPKG_TARGET_ARCHITECTURE MATCHES x64)
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
 
     vcpkg_download_distfile(
       MESHCONVERT_EXE
@@ -44,12 +44,12 @@ if("tools" IN_LIST FEATURES)
     )
 
     file(INSTALL
-      ${MESHCONVERT_EXE}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+      "${MESHCONVERT_EXE}"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
 
-  elseif(VCPKG_TARGET_ARCHITECTURE MATCHES arm64)
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
 
     vcpkg_download_distfile(
       MESHCONVERT_EXE
@@ -59,16 +59,16 @@ if("tools" IN_LIST FEATURES)
     )
 
     file(INSTALL
-      ${MESHCONVERT_EXE}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+      "${MESHCONVERT_EXE}"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}-arm64.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
 
   else()
 
     vcpkg_copy_tools(
           TOOL_NAMES meshconvert
-          SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
       )
 
   endif()
@@ -76,4 +76,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
