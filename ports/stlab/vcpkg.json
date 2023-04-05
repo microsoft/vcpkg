@@ -7,16 +7,6 @@
   ],
   "homepage": "https://github.com/stlab/libraries",
   "license": "BSL-1.0",
-  "default-features": [ "cpp17shims" ],
-  "features": {
-    "cpp17shims": {
-      "description": "Support C++11/14 by polyfilling stlab's use of `optional` and `variant` with boost. On by default.",
-      "dependencies": [
-        "boost-variant",
-        "boost-optional"
-      ]
-    }
-  },
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -26,5 +16,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "cpp17shims"
+  ],
+  "features": {
+    "cpp17shims": {
+      "description": "Support C++11/14 by polyfilling stlab's use of `optional` and `variant` with boost. On by default.",
+      "dependencies": [
+        "boost-optional",
+        "boost-variant"
+      ]
+    }
+  }
 }
