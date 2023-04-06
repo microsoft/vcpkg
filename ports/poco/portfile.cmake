@@ -18,8 +18,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
 file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
-# vcpkg's PCRE2 does not provide a FindPCRE2, and the bundled one seems to work fine
-# file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE2.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE2.cmake")
 file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
