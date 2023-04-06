@@ -142,6 +142,12 @@ endif()
 
 # Good optional plugins
 
+if("bzip2-good" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_BZ2 enabled)
+else()
+    set(PLUGIN_GOOD_BZ2 disabled)
+endif()
+
 if("cairo" IN_LIST FEATURES)
     set(PLUGIN_GOOD_CAIRO enabled)
 else()
@@ -224,6 +230,12 @@ if("assrender" IN_LIST FEATURES)
     set(PLUGIN_BAD_ASSRENDER enabled)
 else()
     set(PLUGIN_BAD_ASSRENDER disabled)
+endif()
+
+if("bzip2-bad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_BZ2 enabled)
+else()
+    set(PLUGIN_BAD_BZ2 disabled)
 endif()
 
 if("chromaprint" IN_LIST FEATURES)
@@ -459,7 +471,7 @@ vcpkg_configure_meson(
         # gst-plugins-good
         -Dgood=${PLUGIN_GOOD_SUPPORT}
         -Dgst-plugins-good:aalib=disabled
-        -Dgst-plugins-good:bz2=disabled
+        -Dgst-plugins-good:bz2=${PLUGIN_GOOD_BZ2}
         -Dgst-plugins-good:directsound=auto
         -Dgst-plugins-good:dv=disabled
         -Dgst-plugins-good:dv1394=disabled
@@ -508,7 +520,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:assrender=${PLUGIN_BAD_ASSRENDER}
         -Dgst-plugins-bad:bluez=disabled
         -Dgst-plugins-bad:bs2b=disabled
-        -Dgst-plugins-bad:bz2=disabled # Error during plugin configuration
+        -Dgst-plugins-bad:bz2=${PLUGIN_BAD_BZ2}
         -Dgst-plugins-bad:chromaprint=${PLUGIN_BAD_CHROMAPRINT}
         -Dgst-plugins-bad:closedcaption=${PLUGIN_BAD_CLOSEDCAPTION}
         -Dgst-plugins-bad:colormanagement=${PLUGIN_BAD_COLORMANAGEMENT}
@@ -550,7 +562,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=disabled
+        -Dgst-plugins-bad:nvcodec=enabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openal=${PLUGIN_BAD_OPENAL}
         -Dgst-plugins-bad:openaptx=disabled
