@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 44aa53d0dae69e50c8d5d9adb7c90034c4c2ab5db3c74106c91bfdbdca41bc5523b32b16c33bc65b3c6bf0037bdecb344b80e9708930bde54ac7c618c34ea5a8
+    SHA512 812834ca6d840dd9c15c0689685d8bd96f4acd69a89213f807a75732d1aa5efadbed0e0073f05a56a09beb2d4f0be1b83a4642259682aac84302632da2d62370
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -28,8 +28,17 @@ else()
     list(APPEND OPTIONS -Dlibmount=disabled)
 endif()
 
+vcpkg_list(SET ADDITIONAL_BINARIES)
+if(VCPKG_HOST_IS_WINDOWS)
+    # Presence of bash and sh enables installation of auxiliary components.
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "bash = ['${CMAKE_COMMAND}', '-E', 'false']")
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "sh = ['${CMAKE_COMMAND}', '-E', 'false']")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    ADDITIONAL_BINARIES
+        ${ADDITIONAL_BINARIES}
     OPTIONS
         ${OPTIONS}
         -Dgtk_doc=false
@@ -50,9 +59,6 @@ set(GLIB_SCRIPTS
     glib-mkenums
     gtester-report
 )
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    list(REMOVE_ITEM GLIB_SCRIPTS glib-gettextize)
-endif()
 foreach(script IN LISTS GLIB_SCRIPTS)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")

@@ -27,7 +27,7 @@ file(COPY "${RAPIDS_cmake}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIP
 vcpkg_download_distfile(execution_bs
     URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/main/execution.bs"
     FILENAME "execution.bs"
-    SHA512 8b976ab932019794d356cf36744af09e027a78488b44d70772675e2c23de0a6fac4e5aaa2ed339d2975b04c75ad27c06c4c3ed95bc2bd9d13370682a019656f2
+    SHA512 22493329bcc26d4c30950df632349daf632adee87bdc904167afcdbb1f9398da2ca3ce9aad1d1c9dab961a2946b0fb9e5b66619b8a529f7cf04fe6aec01c5bb8
 )
 file(COPY "${execution_bs}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
