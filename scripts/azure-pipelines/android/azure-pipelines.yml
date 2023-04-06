@@ -66,7 +66,7 @@ jobs:
       echo "##vso[task.setvariable variable=USER]$USER"
     displayName: 'Set up managed identity'
   - bash: |
-      docker stop $(docker ps -q)
+      docker stop $(docker ps -a -q)
     displayName: 'Stop any running docker containers'
   - task: Docker@2
     displayName: '*** Test Modified Ports'
@@ -74,7 +74,7 @@ jobs:
       command: run
       arguments: --init -i -a stderr --user $(USER) --rm --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-23" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
   - bash: |
-      docker stop $(docker ps -q)
+      docker stop $(docker ps -a -q)
     displayName: 'Stop any running docker containers'
     condition: always()
   - task: PublishBuildArtifacts@1
