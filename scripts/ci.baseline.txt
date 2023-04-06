@@ -1094,10 +1094,6 @@ dimcli:x64-windows-static=fail
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
 zeroc-ice:x64-windows-static-md=fail
-# ZeroC doesn't provide ARM tagets in project files.
-zeroc-ice:arm64-windows=fail
-zeroc-ice:arm-uwp=fail
-zeroc-ice:x64-uwp=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
