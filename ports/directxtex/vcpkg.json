@@ -1,7 +1,6 @@
 {
   "name": "directxtex",
-  "version-date": "2023-01-31",
-  "port-version": 2,
+  "version-date": "2023-03-30",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -44,6 +43,10 @@
     },
     "spectre": {
       "description": "Build Spectre-mitigated library"
+    },
+    "tools": {
+      "description": "texture command-line tools",
+      "supports": "windows & !uwp & !xbox"
     }
   }
 }
