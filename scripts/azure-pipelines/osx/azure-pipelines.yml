@@ -16,7 +16,7 @@ parameters:
 
 jobs:
 - job: x64_osx
-  condition: contains('^x64-osx$', '${{ parameters.tripletPattern }}')
+  condition: and(succeeded(), contains('^x64-osx$', '${{ parameters.tripletPattern }}'))
   pool:
     name: ${{ parameters.poolName }}
   workspace:

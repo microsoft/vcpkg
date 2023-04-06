@@ -22,7 +22,7 @@ parameters:
 
 jobs:
 - job: ${{ parameters.jobName }}
-  condition: contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}')
+  condition: and(succeeded(), contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: ${{ parameters.poolName }}
   workspace:
