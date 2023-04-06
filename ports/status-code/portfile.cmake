@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 61685b7ba40fd2e8a985a8135065b335655aac7aee7778ca3317004c9730078361cfa4bd1b9ac2f9002efc707bfb6168c0275f11e0c5a6b079d42c8240528a90
     HEAD_REF master
     PATCHES
+        add-missing-include.patch
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
