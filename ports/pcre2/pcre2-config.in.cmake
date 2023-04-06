@@ -1,9 +1,3 @@
-
-if(NOT WIN32)
-    include(CMakeFindDependencyMacro)
-    find_dependency(Threads)
-endif()
-
 include(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre2-targets.cmake)
 
 if ("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND TARGET unofficial::pcre2::pcre2-8-static)
