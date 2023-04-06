@@ -1,0 +1,36 @@
+name: Request a new port
+description: Request a new port/library that vcpkg should support
+title: "[New Port Request] <library name here>"
+labels: ["category:new-port", "info:good-first-issue"]
+
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Library name
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: Library description
+    validations:
+      required: false
+  - type: input
+    id: url
+    attributes:
+      label: Source repository URL
+    validations:
+      required: true
+  - type: input
+    id: homepage
+    attributes:
+      label: Project homepage (if different from the source repository)
+    validations:
+      required: false
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Anything else that is useful to know when adding (such as optional features the library may have that should be included)
+    validations:
+      required: false
