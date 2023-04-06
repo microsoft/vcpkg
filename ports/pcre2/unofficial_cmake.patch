@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3bf5317..e02ec5f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1024,10 +1024,13 @@ ENDIF(PCRE2_BUILD_TESTS)
+ 
+ SET(CMAKE_INSTALL_ALWAYS 1)
+ 
++
+ INSTALL(TARGETS ${targets}
++        EXPORT unofficial-pcre2-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(EXPORT unofficial-pcre2-targets NAMESPACE unofficial::pcre2:: FILE unofficial-pcre2-targets.cmake DESTINATION share/unofficial-pcre2)
+ INSTALL(FILES ${pkg_config_files} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/pcre2-config"
+   DESTINATION bin

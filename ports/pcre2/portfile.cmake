@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        unofficial_cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -49,6 +50,7 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
 
 # The cmake file provided by pcre2 has some problems, so don't use it for now.
 #vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
@@ -68,5 +70,11 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
     endif()
 endif()
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/${PORT}-config.in.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
+    @ONLY
+)
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
