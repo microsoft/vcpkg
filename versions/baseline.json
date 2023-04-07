@@ -7057,7 +7057,7 @@
       "port-version": 0
     },
     "rubberband": {
-      "baseline": "3.1.1",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "rxcpp": {
