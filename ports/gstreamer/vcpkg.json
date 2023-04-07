@@ -279,6 +279,15 @@
         "libjpeg-turbo"
       ]
     },
+    "libav": {
+      "description": "libav plugins",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false
+        }
+      ]
+    },
     "libde265": {
       "description": "Enable support for the HEVC/H.265 video decoder",
       "dependencies": [
