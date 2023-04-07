@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
         fix-clang-cl.patch
         fix-clang-cl-gstreamer.patch
         fix-clang-cl-base.patch
+        fix-clang-cl-good.patch
         fix-clang-cl-bad.patch
         fix-clang-cl-ugly.patch
         gstreamer-disable-no-unused.patch
@@ -607,17 +608,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-
-# Remove duplicated GL headers (we already have `opengl-registry`)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
-                    "${CURRENT_PACKAGES_DIR}/include/GL"
-)
-
-if(NOT VCPKG_TARGET_IS_LINUX AND "plugins-base" IN_LIST FEATURES)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
-                "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
-    )
-endif()
 
 list(APPEND GST_BIN_TOOLS
     gst-inspect-1.0

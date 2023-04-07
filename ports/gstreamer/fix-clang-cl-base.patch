@@ -1,5 +1,5 @@
 diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
-index b434315..a0d933f 100644
+index c040bc9..ce9071c 100644
 --- a/subprojects/gst-plugins-base/meson.build
 +++ b/subprojects/gst-plugins-base/meson.build
 @@ -51,7 +51,7 @@ gst_libraries = []

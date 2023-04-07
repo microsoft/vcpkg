@@ -37,6 +37,19 @@ index 84eeb17..1743f41 100644
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-plugins-bad/sys/asio/meson.build b/subprojects/gst-plugins-bad/sys/asio/meson.build
+index c61ad4e..b30793c 100644
+--- a/subprojects/gst-plugins-bad/sys/asio/meson.build
++++ b/subprojects/gst-plugins-bad/sys/asio/meson.build
+@@ -15,7 +15,7 @@ endif
+ 
+ # FIXME: non-msvc is not tested, and unlikely supported yet because of
+ # tool-chain issue
+-if cxx.get_id() != 'msvc'
++if cxx.get_argument_syntax() != 'msvc'
+   if asio_option.enabled()
+     error('asio plugin can only be built with MSVC')
+   else
 diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
 index 1368b79..8dd3b30 100644
 --- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
@@ -50,6 +63,19 @@ index 1368b79..8dd3b30 100644
    extra_mingw_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
    ])
+diff --git a/subprojects/gst-plugins-bad/sys/decklink/meson.build b/subprojects/gst-plugins-bad/sys/decklink/meson.build
+index 94a77db..918a209 100644
+--- a/subprojects/gst-plugins-bad/sys/decklink/meson.build
++++ b/subprojects/gst-plugins-bad/sys/decklink/meson.build
+@@ -18,7 +18,7 @@ decklink_libs = []
+ 
+ if host_system == 'windows'
+   decklink_sources += ['win/DeckLinkAPIDispatch.cpp', 'win/DeckLinkAPI_i.c']
+-  if cxx.get_id() == 'msvc'
++  if cxx.get_argument_syntax() == 'msvc'
+     # FIXME: Use commsuppwd.lib for debug builds?
+     comutil_dep = cxx.find_library('comsuppw', required : get_option('decklink'))
+     if comutil_dep.found()
 diff --git a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
 index 6b9a059..40713ce 100644
 --- a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
