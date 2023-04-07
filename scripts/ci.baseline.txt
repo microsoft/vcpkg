@@ -479,7 +479,6 @@ libtomcrypt:arm64-windows=fail
 libtomcrypt:arm-uwp=fail
 libusb:arm-uwp=fail
 libusb:x64-uwp=fail
-libusb:arm64-windows=fail
 libusb-win32:arm-uwp=fail
 libusb-win32:x64-linux=fail
 libusb-win32:x64-osx=fail
