@@ -7876,6 +7876,10 @@
       "baseline": "3.8.8",
       "port-version": 4
     },
+    "tinyfsm": {
+      "baseline": "0.3.3",
+      "port-version": 0
+    },
     "tinygltf": {
       "baseline": "2.8.4",
       "port-version": 0
