@@ -13,6 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         asio  RTAUDIO_API_ASIO
         alsa  RTAUDIO_API_ALSA
+        pulse RTAUDIO_API_PULSE
 )
 
 vcpkg_cmake_configure(
@@ -20,7 +21,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
         -DRTAUDIO_API_JACK=OFF
-        -DRTAUDIO_API_PULSE=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -31,4 +31,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

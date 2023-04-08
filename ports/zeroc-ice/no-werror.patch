@@ -1,0 +1,13 @@
+diff --git a/config/Make.rules.Darwin b/config/Make.rules.Darwin
+index e978836..2276b5d 100644
+--- a/config/Make.rules.Darwin
++++ b/config/Make.rules.Darwin
+@@ -35,7 +35,7 @@ endif
+ shared_cppflags = $(if $(filter-out program,$($1_target)),-fPIC) -fvisibility=hidden
+ 
+ cppflags        = -Wall -Wextra -Wshadow -Wshadow-all -Wredundant-decls -Wno-shadow-field \
+-                  -Wdeprecated -Wstrict-prototypes -Werror -Wconversion -Wdocumentation -pthread \
++                  -Wdeprecated -Wstrict-prototypes -Wconversion -Wdocumentation -pthread \
+                   $(if $(filter yes,$(OPTIMIZE)),-O2 -DNDEBUG,-g)
+ 
+ ifeq ($(MAXWARN),yes)
