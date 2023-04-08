@@ -1,6 +1,7 @@
 {
   "name": "qca",
   "version": "2.3.5",
+  "port-version": 1,
   "description": "Qt Cryptographic Architecture (QCA).",
   "homepage": "https://userbase.kde.org/QCA",
   "dependencies": [
@@ -28,7 +29,11 @@
     "botan": {
       "description": "Build with botan",
       "dependencies": [
-        "botan"
+        "botan",
+        {
+          "name": "pkgconf",
+          "host": true
+        }
       ]
     }
   }

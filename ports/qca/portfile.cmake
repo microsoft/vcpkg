@@ -45,10 +45,9 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
+set(PLUGINS gnupg logger softstore wincrypto)
 if("botan" IN_LIST FEATURES)
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=yes)
-else()
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=no)
+    list(APPEND PLUGINS botan)
 endif()
 
 # Configure and build
@@ -56,13 +55,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_RELATIVE_PATHS=ON
+        "-DBUILD_PLUGINS=${PLUGINS}"
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
         -DBUILD_WITH_QT6=ON
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
-        ${QCA_OPTIONS}
     OPTIONS_DEBUG
         -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
