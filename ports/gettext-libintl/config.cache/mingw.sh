@@ -62,7 +62,6 @@ ac_cv_func_strtoul=${ac_cv_func_strtoul=yes}
 ac_cv_func_symlink=${ac_cv_func_symlink=no}
 ac_cv_func_tsearch=${ac_cv_func_tsearch=yes}
 ac_cv_func_uselocale=${ac_cv_func_uselocale=no}
-ac_cv_func_vasprintf=${ac_cv_func_vasprintf=yes}
 ac_cv_func_wcrtomb=${ac_cv_func_wcrtomb=yes}
 ac_cv_func_wcslen=${ac_cv_func_wcslen=yes}
 ac_cv_func_wcsnlen=${ac_cv_func_wcsnlen=yes}
@@ -175,8 +174,8 @@ acl_cv_rpath=${acl_cv_rpath=done}
 acl_cv_shlibext=${acl_cv_shlibext=dll}
 acl_cv_shlibpath_var=${acl_cv_shlibpath_var=PATH}
 acl_cv_wl=${acl_cv_wl=-Wl,}
-am_cv_CC_dependencies_compiler_type=${am_cv_CC_dependencies_compiler_type=gcc3}
-am_cv_CXX_dependencies_compiler_type=${am_cv_CXX_dependencies_compiler_type=gcc3}
+am_cv_CC_dependencies_compiler_type=${am_cv_CC_dependencies_compiler_type=none}
+am_cv_CXX_dependencies_compiler_type=${am_cv_CXX_dependencies_compiler_type=none}
 am_cv_func_iconv=${am_cv_func_iconv=yes}
 am_cv_func_iconv_works=${am_cv_func_iconv_works=yes}
 am_cv_langinfo_codeset=${am_cv_langinfo_codeset=no}
@@ -195,9 +194,6 @@ gl_cv_double_slash_root=${gl_cv_double_slash_root=yes}
 gl_cv_elf=${gl_cv_elf=no}
 gl_cv_func_dup2_works=${gl_cv_func_dup2_works=no}
 gl_cv_func_free_preserves_errno=${gl_cv_func_free_preserves_errno=no}
-gl_cv_func_getopt_gnu=${gl_cv_func_getopt_gnu=yes}
-gl_cv_func_getopt_long_gnu=${gl_cv_func_getopt_long_gnu=yes}
-gl_cv_func_getopt_posix=${gl_cv_func_getopt_posix=yes}
 gl_cv_func_iswcntrl_works=${gl_cv_func_iswcntrl_works=yes}
 gl_cv_func_lstat_dereferences_slashed_symlink=${gl_cv_func_lstat_dereferences_slashed_symlink=no}
 gl_cv_func_malloc_0_nonnull=${gl_cv_func_malloc_0_nonnull=1}
@@ -220,9 +216,7 @@ gl_cv_func_strerror_0_works=${gl_cv_func_strerror_0_works=yes}
 gl_cv_func_strtoul_works=${gl_cv_func_strtoul_works=no}
 gl_cv_func_wcwidth_macro=${gl_cv_func_wcwidth_macro=no}
 gl_cv_have_include_next=${gl_cv_have_include_next=yes}
-gl_cv_have_weak=${gl_cv_have_weak=yes}
 gl_cv_header_errno_h_EMULTIHOP=${gl_cv_header_errno_h_EMULTIHOP=no}
-gl_cv_header_errno_h_ENOLINK=${gl_cv_header_errno_h_ENOLINK=yes}
 gl_cv_header_errno_h_EOVERFLOW=${gl_cv_header_errno_h_EOVERFLOW=yes}
 gl_cv_header_errno_h_complete=${gl_cv_header_errno_h_complete=no}
 gl_cv_header_inttypes_h=${gl_cv_header_inttypes_h=yes}
