@@ -11,11 +11,16 @@ vcpkg_from_gitlab(
 
 find_program(PKGCONFIG NAMES pkgconf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH REQUIRED)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        opencv     ENABLE_OPENCV
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # writes to include/libcaer/libcaer.h
     OPTIONS
-        -DENABLE_OPENCV=ON
+        ${FEATURE_OPTIONS}
         -DEXAMPLES_INSTALL=OFF
         -DBUILD_CONFIG_VCPKG=ON
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"

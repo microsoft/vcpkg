@@ -7,10 +7,6 @@
   "dependencies": [
     "libusb",
     {
-      "name": "opencv4",
-      "default-features": false
-    },
-    {
       "name": "pkgconf",
       "host": true
     },
@@ -22,5 +18,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "opencv": {
+      "description": "Enable support for frame enhancements using OpenCV",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }
