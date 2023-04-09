@@ -73,6 +73,7 @@ jobs:
     displayName: 'Pull Android Docker Container'
   - task: Bash@3
     inputs:
+      targetType: inline
       script: |
         docker run --init -i -a stderr -a stdout --user $(USER) --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" "andcontainerregistry.azurecr.io/vcpkg-android:2023-03-23" pwsh -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }}
       failOnStderr: true
