@@ -2450,7 +2450,7 @@
     },
     "ffmpeg": {
       "baseline": "5.1.2",
-      "port-version": 5
+      "port-version": 6
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2546,7 +2546,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.1",
-      "port-version": 1
+      "port-version": 2
     },
     "foonathan-lexy": {
       "baseline": "2022.12.1",
@@ -2975,6 +2975,10 @@
     "gts": {
       "baseline": "0.7.6",
       "port-version": 7
+    },
+    "gtsam": {
+      "baseline": "4.2a9",
+      "port-version": 0
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -6381,8 +6385,8 @@
       "port-version": 3
     },
     "qpid-proton": {
-      "baseline": "0.37.0",
-      "port-version": 3
+      "baseline": "0.38.0",
+      "port-version": 0
     },
     "qscintilla": {
       "baseline": "2.13.4",
@@ -6546,7 +6550,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.8",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-webglplugin": {
       "baseline": "5.15.8",
@@ -7057,7 +7061,7 @@
       "port-version": 0
     },
     "rubberband": {
-      "baseline": "3.1.1",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "rxcpp": {
@@ -7094,7 +7098,7 @@
     },
     "sail": {
       "baseline": "0.9.0-rc3",
-      "port-version": 1
+      "port-version": 2
     },
     "sais": {
       "baseline": "2.4.1",
@@ -7633,8 +7637,8 @@
       "port-version": 0
     },
     "stlab": {
-      "baseline": "1.6.2",
-      "port-version": 2
+      "baseline": "1.7.1",
+      "port-version": 0
     },
     "stormlib": {
       "baseline": "2019-05-10",
@@ -7871,6 +7875,10 @@
     "tinyfiledialogs": {
       "baseline": "3.8.8",
       "port-version": 4
+    },
+    "tinyfsm": {
+      "baseline": "0.3.3",
+      "port-version": 0
     },
     "tinygltf": {
       "baseline": "2.8.4",
@@ -8694,7 +8702,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.7",
-      "port-version": 3
+      "port-version": 4
     },
     "zeromq": {
       "baseline": "2023-01-31",
