@@ -1,3 +1,4 @@
+# This file is a shell script that caches the results of configure
 ac_cv_c_bigendian=${ac_cv_c_bigendian=no}
 ac_cv_c_compiler_gnu=${ac_cv_c_compiler_gnu=no}
 ac_cv_c_flexmember=${ac_cv_c_flexmember=yes}
@@ -248,7 +249,7 @@ ac_cv_header_getopt_h=${ac_cv_header_getopt_h=no}
 ac_cv_header_iconv_h=${ac_cv_header_iconv_h=yes}
 ac_cv_header_inttypes_h=${ac_cv_header_inttypes_h=yes}
 ac_cv_header_langinfo_h=${ac_cv_header_langinfo_h=no}
-ac_cv_header_libintl_h=${ac_cv_header_libintl_h=no}
+ac_cv_header_libintl_h=${ac_cv_header_libintl_h=yes}
 ac_cv_header_libxml2_libxml_xmlexports_h=${ac_cv_header_libxml2_libxml_xmlexports_h=no}
 ac_cv_header_libxml2_libxml_xmlversion_h=${ac_cv_header_libxml2_libxml_xmlversion_h=no}
 ac_cv_header_limits_h=${ac_cv_header_limits_h=yes}
@@ -303,7 +304,6 @@ ac_cv_header_xlocale_h=${ac_cv_header_xlocale_h=no}
 ac_cv_lib_error_at_line=${ac_cv_lib_error_at_line=no}
 ac_cv_lib_posix4_sched_yield=${ac_cv_lib_posix4_sched_yield=no}
 ac_cv_lib_rt_sched_yield=${ac_cv_lib_rt_sched_yield=no}
-ac_cv_libunistring=${ac_cv_libunistring='no, consider installing GNU libunistring'}
 ac_cv_member_struct_sockaddr_storage_ss_family=${ac_cv_member_struct_sockaddr_storage_ss_family=yes}
 ac_cv_member_struct_stat_st_atim_st__tim_tv_nsec=${ac_cv_member_struct_stat_st_atim_st__tim_tv_nsec=no}
 ac_cv_member_struct_stat_st_atim_tv_nsec=${ac_cv_member_struct_stat_st_atim_tv_nsec=no}
@@ -312,7 +312,6 @@ ac_cv_member_struct_stat_st_atimespec_tv_nsec=${ac_cv_member_struct_stat_st_atim
 ac_cv_member_struct_stat_st_birthtim_tv_nsec=${ac_cv_member_struct_stat_st_birthtim_tv_nsec=no}
 ac_cv_member_struct_stat_st_birthtimensec=${ac_cv_member_struct_stat_st_birthtimensec=no}
 ac_cv_member_struct_stat_st_birthtimespec_tv_nsec=${ac_cv_member_struct_stat_st_birthtimespec_tv_nsec=no}
-ac_cv_objext=${ac_cv_objext=obj}
 ac_cv_safe_to_define___extensions__=${ac_cv_safe_to_define___extensions__=yes}
 ac_cv_search_clock_gettime=${ac_cv_search_clock_gettime=no}
 ac_cv_search_nanosleep=${ac_cv_search_nanosleep=no}
@@ -360,20 +359,16 @@ acl_cv_rpath=${acl_cv_rpath=done}
 acl_cv_shlibext=${acl_cv_shlibext=dll}
 acl_cv_shlibpath_var=${acl_cv_shlibpath_var=PATH}
 acl_cv_wl=${acl_cv_wl=}
-am_cv_CC_dependencies_compiler_type=${am_cv_CC_dependencies_compiler_type=msvc7}
-am_cv_CXX_dependencies_compiler_type=${am_cv_CXX_dependencies_compiler_type=msvc7}
+am_cv_CC_dependencies_compiler_type=${am_cv_CC_dependencies_compiler_type=none}
+am_cv_CXX_dependencies_compiler_type=${am_cv_CXX_dependencies_compiler_type=none}
 am_cv_func_iconv=${am_cv_func_iconv=yes}
 am_cv_func_iconv_works=${am_cv_func_iconv_works=yes}
 am_cv_func_working_getline=${am_cv_func_working_getline=no}
 am_cv_langinfo_codeset=${am_cv_langinfo_codeset=no}
 am_cv_lib_iconv=${am_cv_lib_iconv=yes}
-test ${am_cv_lispdir+y} || am_cv_lispdir='${datadir}/emacs/site-lisp'
 am_cv_make_support_nested_variables=${am_cv_make_support_nested_variables=yes}
 am_cv_prog_cc_c_o=${am_cv_prog_cc_c_o=yes}
 am_cv_prog_tar_ustar=${am_cv_prog_tar_ustar=gnutar}
-gl_cv_INCXML=${gl_cv_INCXML=}
-gl_cv_LIBXML=${gl_cv_LIBXML=}
-gl_cv_LTLIBXML=${gl_cv_LTLIBXML=}
 gl_cv___builtin_expect=${gl_cv___builtin_expect=no}
 gl_cv_c_amsterdam_compiler=${gl_cv_c_amsterdam_compiler=no}
 gl_cv_c_cplusplus=${gl_cv_c_cplusplus=no}
@@ -526,24 +521,13 @@ gl_cv_libcroco_force_included=${gl_cv_libcroco_force_included=yes}
 gl_cv_libcroco_use_included=${gl_cv_libcroco_use_included=yes}
 gl_cv_libglib_force_included=${gl_cv_libglib_force_included=yes}
 gl_cv_libglib_use_included=${gl_cv_libglib_use_included=yes}
-gl_cv_libxml=${gl_cv_libxml=no}
-gl_cv_libxml_force_included=${gl_cv_libxml_force_included=no}
+gl_cv_libxml_force_included=${gl_cv_libxml_force_included=yes}
 gl_cv_libxml_use_included=${gl_cv_libxml_use_included=yes}
 gl_cv_long_double_equals_double=${gl_cv_long_double_equals_double=yes}
 gl_cv_macro_O_CLOEXEC=${gl_cv_macro_O_CLOEXEC=no}
 gl_cv_member_st_size_64=${gl_cv_member_st_size_64=no}
 gl_cv_minmax_in_limits_h=${gl_cv_minmax_in_limits_h=no}
 gl_cv_minmax_in_sys_param_h=${gl_cv_minmax_in_sys_param_h=no}
-gl_cv_promoted_mode_t=${gl_cv_promoted_mode_t=mode_t}
-gl_cv_semaphore_lib=${gl_cv_semaphore_lib=none}
-gl_cv_size_max=${gl_cv_size_max=yes}
-gl_cv_socket_ipv4=${gl_cv_socket_ipv4=yes}
-gl_cv_socket_ipv6=${gl_cv_socket_ipv6=yes}
-gl_cv_source_line_length_unlimited=${gl_cv_source_line_length_unlimited=yes}
-gl_cv_struct_dirent_d_ino=${gl_cv_struct_dirent_d_ino=no}
-gl_cv_sys_dir_fd_member_name=${gl_cv_sys_dir_fd_member_name=no_such_member}
-gl_cv_sys_struct_lconv_ok=${gl_cv_sys_struct_lconv_ok=no}
-gl_cv_sys_struct_timespec_in_time_h=${gl_cv_sys_struct_timespec_in_time_h=yes}
 gl_cv_sys_struct_timeval=${gl_cv_sys_struct_timeval=yes}
 gl_cv_sys_struct_timeval_tv_sec=${gl_cv_sys_struct_timeval_tv_sec=no}
 gl_cv_termcap=${gl_cv_termcap='not found, consider installing GNU ncurses'}
@@ -569,7 +553,7 @@ gt_cv_c_wint_t=${gt_cv_c_wint_t=yes}
 gt_cv_func_CFLocaleCopyPreferredLanguages=${gt_cv_func_CFLocaleCopyPreferredLanguages=no}
 gt_cv_func_CFPreferencesCopyAppValue=${gt_cv_func_CFPreferencesCopyAppValue=no}
 gt_cv_func_gnugettext2_libc=${gt_cv_func_gnugettext2_libc=no}
-gt_cv_func_gnugettext2_libintl=${gt_cv_func_gnugettext2_libintl=no}
+gt_cv_func_gnugettext2_libintl=${gt_cv_func_gnugettext2_libintl=yes}
 gt_cv_func_printf_posix=${gt_cv_func_printf_posix=no}
 gt_cv_func_uselocale_works=${gt_cv_func_uselocale_works=no}
 gt_cv_int_divbyzero_sigfpe=${gt_cv_int_divbyzero_sigfpe=no}
@@ -579,4 +563,4 @@ gt_cv_ssize_t=${gt_cv_ssize_t=no}
 gt_cv_val_LC_MESSAGES=${gt_cv_val_LC_MESSAGES=no}
 gt_cv_var_environ_declaration=${gt_cv_var_environ_declaration=yes}
 nls_cv_force_use_gnu_gettext=${nls_cv_force_use_gnu_gettext=no}
-nls_cv_use_gnu_gettext=${nls_cv_use_gnu_gettext=yes}
+nls_cv_use_gnu_gettext=${nls_cv_use_gnu_gettext=no}

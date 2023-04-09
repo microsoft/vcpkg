@@ -206,7 +206,6 @@ ac_cv_have_decl_getdelim=${ac_cv_have_decl_getdelim=no}
 ac_cv_have_decl_getdtablesize=${ac_cv_have_decl_getdtablesize=no}
 ac_cv_have_decl_getline=${ac_cv_have_decl_getline=no}
 ac_cv_have_decl_getpagesize=${ac_cv_have_decl_getpagesize=no}
-ac_cv_have_decl_inet_pton=${ac_cv_have_decl_inet_pton=yes}
 ac_cv_have_decl_isblank=${ac_cv_have_decl_isblank=yes}
 ac_cv_have_decl_isinf=${ac_cv_have_decl_isinf=yes}
 ac_cv_have_decl_iswblank=${ac_cv_have_decl_iswblank=yes}
@@ -393,8 +392,6 @@ gl_cv_func_btowc_eof=${gl_cv_func_btowc_eof=yes}
 gl_cv_func_btowc_nul=${gl_cv_func_btowc_nul=yes}
 gl_cv_func_copy_file_range=${gl_cv_func_copy_file_range=no}
 gl_cv_func_dirfd_macro=${gl_cv_func_dirfd_macro=no}
-gl_cv_func_dup2_works=${gl_cv_func_dup2_works=no}
-gl_cv_func_dup_works=${gl_cv_func_dup_works=no}
 gl_cv_func_fabs_no_libm=${gl_cv_func_fabs_no_libm=yes}
 gl_cv_func_fflush_stdin=${gl_cv_func_fflush_stdin=no}
 gl_cv_func_fopen_mode_e=${gl_cv_func_fopen_mode_e=no}
@@ -402,18 +399,12 @@ gl_cv_func_fopen_mode_x=${gl_cv_func_fopen_mode_x=no}
 gl_cv_func_fopen_slash=${gl_cv_func_fopen_slash='guessing no'}
 gl_cv_func_free_preserves_errno=${gl_cv_func_free_preserves_errno=no}
 gl_cv_func_frexp_no_libm=${gl_cv_func_frexp_no_libm=yes}
-gl_cv_func_frexp_works=${gl_cv_func_frexp_works=yes}
 gl_cv_func_frexpl_no_libm=${gl_cv_func_frexpl_no_libm=yes}
-gl_cv_func_frexpl_works=${gl_cv_func_frexpl_works=yes}
 gl_cv_func_fseeko=${gl_cv_func_fseeko=yes}
 gl_cv_func_ftello=${gl_cv_func_ftello=yes}
 gl_cv_func_ftello_works=${gl_cv_func_ftello_works=yes}
-gl_cv_func_getcwd_null=${gl_cv_func_getcwd_null=yes}
 gl_cv_func_getcwd_path_max=${gl_cv_func_getcwd_path_max=yes}
 gl_cv_func_getcwd_posix_signature=${gl_cv_func_getcwd_posix_signature=no}
-gl_cv_func_getopt_gnu=${gl_cv_func_getopt_gnu=yes}
-gl_cv_func_getopt_long_gnu=${gl_cv_func_getopt_long_gnu=yes}
-gl_cv_func_getopt_posix=${gl_cv_func_getopt_posix=yes}
 gl_cv_func_getpagesize=${gl_cv_func_getpagesize=yes}
 gl_cv_func_gettimeofday_posix_signature=${gl_cv_func_gettimeofday_posix_signature=yes}
 gl_cv_func_isinfl_works=${gl_cv_func_isinfl_works=yes}
@@ -440,12 +431,8 @@ gl_cv_func_mbrtowc_null_arg1=${gl_cv_func_mbrtowc_null_arg1='guessing yes'}
 gl_cv_func_mbrtowc_null_arg2=${gl_cv_func_mbrtowc_null_arg2='guessing yes'}
 gl_cv_func_mbrtowc_retval=${gl_cv_func_mbrtowc_retval=no}
 gl_cv_func_mbrtowc_sanitycheck=${gl_cv_func_mbrtowc_sanitycheck='guessing yes'}
-gl_cv_func_mbrtowc_stores_incomplete=${gl_cv_func_mbrtowc_stores_incomplete=no}
-gl_cv_func_mbsrtowcs_works=${gl_cv_func_mbsrtowcs_works=yes}
 gl_cv_func_memchr_works=${gl_cv_func_memchr_works=yes}
 gl_cv_func_mkdir_trailing_dot_works=${gl_cv_func_mkdir_trailing_dot_works=no}
-gl_cv_func_mkdir_trailing_slash_works=${gl_cv_func_mkdir_trailing_slash_works=yes}
-gl_cv_func_nanosleep=${gl_cv_func_nanosleep=yes}
 gl_cv_func_open_directory_works=${gl_cv_func_open_directory_works=no}
 gl_cv_func_perror_works=${gl_cv_func_perror_works=yes}
 gl_cv_func_posix_spawn_file_actions_addclose_works=${gl_cv_func_posix_spawn_file_actions_addclose_works=no}
@@ -453,20 +440,9 @@ gl_cv_func_posix_spawn_file_actions_adddup2_works=${gl_cv_func_posix_spawn_file_
 gl_cv_func_posix_spawn_file_actions_addopen_works=${gl_cv_func_posix_spawn_file_actions_addopen_works=no}
 gl_cv_func_pow_no_libm=${gl_cv_func_pow_no_libm=yes}
 gl_cv_func_printf_attribute_flavor=${gl_cv_func_printf_attribute_flavor=gnu}
-gl_cv_func_printf_directive_a=${gl_cv_func_printf_directive_a=yes}
-gl_cv_func_printf_directive_f=${gl_cv_func_printf_directive_f=yes}
-gl_cv_func_printf_directive_ls=${gl_cv_func_printf_directive_ls=yes}
 gl_cv_func_printf_directive_n=${gl_cv_func_printf_directive_n=no}
 gl_cv_func_printf_enomem=${gl_cv_func_printf_enomem='guessing no'}
-gl_cv_func_printf_flag_grouping=${gl_cv_func_printf_flag_grouping=yes}
 gl_cv_func_printf_flag_leftadjust=${gl_cv_func_printf_flag_leftadjust=yes}
-gl_cv_func_printf_flag_zero=${gl_cv_func_printf_flag_zero=yes}
-gl_cv_func_printf_infinite=${gl_cv_func_printf_infinite=yes}
-gl_cv_func_printf_infinite_long_double=${gl_cv_func_printf_infinite_long_double=yes}
-gl_cv_func_printf_long_double=${gl_cv_func_printf_long_double=yes}
-gl_cv_func_printf_positions=${gl_cv_func_printf_positions=no}
-gl_cv_func_printf_precision=${gl_cv_func_printf_precision=yes}
-gl_cv_func_printf_sizes_c99=${gl_cv_func_printf_sizes_c99=yes}
 gl_cv_func_pthread_sigmask_macro=${gl_cv_func_pthread_sigmask_macro=yes}
 gl_cv_func_re_compile_pattern_working=${gl_cv_func_re_compile_pattern_working=no}
 gl_cv_func_realpath_works=${gl_cv_func_realpath_works=no}
@@ -476,9 +452,7 @@ gl_cv_func_setlocale_null_one_mtsafe=${gl_cv_func_setlocale_null_one_mtsafe=yes}
 gl_cv_func_signbit=${gl_cv_func_signbit=yes}
 gl_cv_func_signbit_builtins=${gl_cv_func_signbit_builtins=yes}
 gl_cv_func_sleep_works=${gl_cv_func_sleep_works=no}
-gl_cv_func_snprintf_directive_n=${gl_cv_func_snprintf_directive_n=yes}
 gl_cv_func_snprintf_posix=${gl_cv_func_snprintf_posix=no}
-gl_cv_func_snprintf_retval_c99=${gl_cv_func_snprintf_retval_c99=yes}
 gl_cv_func_snprintf_size1=${gl_cv_func_snprintf_size1=yes}
 gl_cv_func_snprintf_usable=${gl_cv_func_snprintf_usable=no}
 gl_cv_func_strerror_0_works=${gl_cv_func_strerror_0_works=yes}
@@ -491,7 +465,6 @@ gl_cv_func_timespec_get=${gl_cv_func_timespec_get=no}
 gl_cv_func_ungetc_works=${gl_cv_func_ungetc_works=yes}
 gl_cv_func_unlink_honors_slashes=${gl_cv_func_unlink_honors_slashes=no}
 gl_cv_func_unlink_parent_fails=${gl_cv_func_unlink_parent_fails='guessing yes'}
-gl_cv_func_usleep_works=${gl_cv_func_usleep_works=yes}
 gl_cv_func_va_copy=${gl_cv_func_va_copy=yes}
 gl_cv_func_vasprintf_posix=${gl_cv_func_vasprintf_posix=no}
 gl_cv_func_vsnprintf_usable=${gl_cv_func_vsnprintf_usable=no}
@@ -505,9 +478,7 @@ gl_cv_func_working_utimes=${gl_cv_func_working_utimes=no}
 gl_cv_func_wsastartup=${gl_cv_func_wsastartup=yes}
 gl_cv_have_include_next=${gl_cv_have_include_next=yes}
 gl_cv_have_unlimited_file_name_length=${gl_cv_have_unlimited_file_name_length=no}
-gl_cv_have_weak=${gl_cv_have_weak=yes}
 gl_cv_header_errno_h_EMULTIHOP=${gl_cv_header_errno_h_EMULTIHOP=no}
-gl_cv_header_errno_h_ENOLINK=${gl_cv_header_errno_h_ENOLINK=yes}
 gl_cv_header_errno_h_EOVERFLOW=${gl_cv_header_errno_h_EOVERFLOW=yes}
 gl_cv_header_errno_h_complete=${gl_cv_header_errno_h_complete=no}
 gl_cv_header_inttypes_h=${gl_cv_header_inttypes_h=yes}
@@ -529,7 +500,6 @@ gl_cv_header_working_stdalign_h=${gl_cv_header_working_stdalign_h=yes}
 gl_cv_header_working_stdint_h=${gl_cv_header_working_stdint_h=yes}
 gl_cv_iconv_nonconst=${gl_cv_iconv_nonconst=yes}
 gl_cv_ld_autoimport=${gl_cv_ld_autoimport=no}
-gl_cv_lib_assume_bcrypt=${gl_cv_lib_assume_bcrypt=yes}
 gl_cv_libcroco_force_included=${gl_cv_libcroco_force_included=yes}
 gl_cv_libcroco_use_included=${gl_cv_libcroco_use_included=yes}
 gl_cv_libglib_force_included=${gl_cv_libglib_force_included=yes}
