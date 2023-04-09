@@ -78,7 +78,17 @@
       ]
     },
     "png": {
-      "description": "Install PNG support"
+      "description": "Install PNG support",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        },
+        "stb"
+      ]
     },
     "xml": {
       "description": "Build with libxml",
