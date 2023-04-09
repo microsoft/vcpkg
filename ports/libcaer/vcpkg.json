@@ -4,6 +4,7 @@
   "description": "Minimal C library to access, configure and get data from neuromorphic sensors and processors.",
   "homepage": "https://gitlab.com/inivation/dv/libcaer",
   "license": "BSD-2-Clause AND Apache-2.0",
+  "supports": "!(arm & windows & !mingw)",
   "dependencies": [
     "libusb",
     {
