@@ -1388,6 +1388,8 @@ signalrclient:arm-neon-android=fail
 sleepy-discord:arm-neon-android=fail
 vowpal-wabbit:arm-neon-android=fail
 wasmedge:arm-neon-android=fail
+backward-cpp:arm-neon-android=fail
+highs:arm-neon-android=fail
 
 # triplet: x64-android
 ace:x64-android=fail
@@ -1602,6 +1604,22 @@ libhdfs3:x64-android=fail
 liblsl:x64-android=fail
 libmysql:x64-android=fail
 libphonenumber:x64-android=fail
+backward-cpp:x64-android=fail
+highs:x64-android=fail
+libtins:x64-android=fail
+skia:x64-android=fail
+ompl:x64-android=fail
+omplapp:x64-android=fail
+open62541:x64-android=fail
+openimageio:x64-android=fail
+pcl:x64-android=fail
+rbdl:x64-android=fail
+rest-rpc:x64-android=fail
+ryu:x64-android=fail
+signalrclient:x64-android=fail
+v8:x64-android=fail
+vowpal-wabbit:x64-android=fail
+wasmedge:x64-android=fail
 
 # triplet: arm64-android
 7zip:arm64-android=fail
@@ -1802,3 +1820,5 @@ signalrclient:arm64-android=fail
 sleepy-discord:arm64-android=fail
 vowpal-wabbit:arm64-android=fail
 wasmedge:arm64-android=fail
+backward-cpp:arm64-android=fail
+highs:arm64-android=fail
