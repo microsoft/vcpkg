@@ -9,6 +9,8 @@ vcpkg_from_gitlab(
         fix-libusb.diff
 )
 
+find_program(PKGCONFIG NAMES pkgconf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH REQUIRED)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # writes to include/libcaer/libcaer.h
@@ -16,6 +18,7 @@ vcpkg_cmake_configure(
         -DENABLE_OPENCV=ON
         -DEXAMPLES_INSTALL=OFF
         -DBUILD_CONFIG_VCPKG=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 vcpkg_cmake_install()
 
