@@ -1,3 +1,16 @@
+diff --git a/configure b/configure
+index 904bdf5..e751ffc 100755
+--- a/configure
++++ b/configure
+@@ -2797,7 +2797,7 @@ am__tar='${AMTAR} chf - --format=ustar --owner=root --group=root "$$tardir"'
+ 
+ 
+ 
+-subdirs="$subdirs gettext-runtime libtextstyle gettext-tools"
++subdirs="$subdirs $VCPKG_GETTEXT_SUBDIRS"
+ 
+ 
+ 
 diff --git a/Makefile.in b/Makefile.in
 index a287d38..075ddc5 100644
 --- a/Makefile.in
@@ -7,7 +20,7 @@ index a287d38..075ddc5 100644
  AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
  ACLOCAL_AMFLAGS = -I m4
 -SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
-+SUBDIRS =              gettext-runtime libtextstyle gettext-tools
++SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
  changelog_etc = \
    gettext-runtime/ChangeLog.0 \
    gettext-runtime/doc/ChangeLog.0 \

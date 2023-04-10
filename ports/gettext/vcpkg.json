@@ -9,6 +9,9 @@
     "gettext-libintl"
   ],
   "features": {
+    "runtime-tools": {
+      "description": "Build runtime tools for internationalization of scripts"
+    },
     "tools": {
       "description": "Build gettext tools",
       "supports": "!uwp",

@@ -1,14 +1,16 @@
 # This port is just to provide gettext tools and build data, not libs.
 # The "core" feature depends on port gettext-libintl which provides libintl.
 # The "core" feature also installs enough for running autoreconf.
-# The actual tools are only enabled by the "tools" feature. It is typically used as a host dependency.
+# The actual tools are only enabled by opt-in features.
+# These features are typically used as a host dependency.
 # For fast builds in particular on Windows, the following choices are made:
 # - only release build type
-# - namespacing disabled
-# - configuration cache
+# - namespacing disabled (windows only)
+# - configuration cache (preconfigured for windows and mingw)
+# - using preinstalled gettext-libintl
+# - skipping some subdirs
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-set(X_PORT_PROFILE 1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
@@ -29,9 +31,19 @@ vcpkg_extract_source_archive(SOURCE_PATH
         rel_path.patch
         subdirs.patch
         parallel-gettext-tools.patch
+        macosx-libs.patch
 )
 
+set(subdirs "")
+if("runtime-tools" IN_LIST FEATURES)
+    string(APPEND subdirs " gettext-runtime")
+endif()
 if("tools" IN_LIST FEATURES)
+    string(APPEND subdirs " libtextstyle gettext-tools")
+endif()
+if(subdirs)
+    set(ENV{VCPKG_GETTEXT_SUBDIRS} "${subdirs}")
+
     vcpkg_find_acquire_program(BISON)
     get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
     vcpkg_add_to_path("${BISON_PATH}")
@@ -62,7 +74,9 @@ if("tools" IN_LIST FEATURES)
         --with-included-libxml # libtextstyle won't use external libxml
         --with-included-libunistring
         --with-installed-libtextstyle=no
+        --without-cvs
         --without-emacs
+        --without-git
         --without-libcurses-prefix
         --without-libncurses-prefix
         --without-libtermcap-prefix
@@ -130,7 +144,6 @@ if("tools" IN_LIST FEATURES)
             ${OPTIONS}
         OPTIONS_RELEASE
             ${config_cache_release}
-            [[--datarootdir=\\${prefix}/share]]
     )
     config_cache_teardown()
 
@@ -153,18 +166,18 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(GLOB link_libs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/*" "${CURRENT_PACKAGES_DIR}/bin/*.dll")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include" ${link_libs})
+endif()
+
+if("tools" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
-    if(NOT VCPKG_CROSSCOMPILING)
-        file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-    endif()
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
     install_autopoint()
 endif()
 
-# These files can be needed to run `autoreconf`. So we want to install these
-# files also for fast "core" builds without "tools".
+# These files can be needed to run `autoreconf`.
+# We want to install these files also for fast "core" builds without "tools".
 # Cf. PACKAGING for the file list.
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
@@ -177,7 +190,11 @@ file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/aclocal"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext/aclocal"
 )
+
+if(NOT VCPKG_CROSSCOMPILING)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/gettext-runtime/COPYING" "${SOURCE_PATH}/COPYING")
