@@ -1,4 +1,0 @@
-dumb provides CMake targets:
-
-    find_package(unofficial-dumb CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::dumb::dumb)
