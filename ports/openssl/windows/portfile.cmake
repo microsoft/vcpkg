@@ -2,28 +2,9 @@ vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
-vcpkg_list(SET CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
-    no-ssl2
-    no-ssl3
-    no-weak-ssl-ciphers
-    no-tests
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
-else()
-    vcpkg_list(APPEND CONFIGURE_OPTIONS no-shared no-module)
-endif()
-
-if(DEFINED OPENSSL_USE_NOPINSHARED)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS no-pinshared)
-endif()
-
-if(OPENSSL_NO_AUTOLOAD_CONFIG)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS no-autoload-config)
-endif()
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -84,7 +65,8 @@ vcpkg_build_nmake(
         "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}"
     PRERUN_SHELL_DEBUG "${PERL}" Configure
         ${CONFIGURE_OPTIONS}
-        debug-${OPENSSL_ARCH}
+        ${OPENSSL_ARCH}
+        --debug
         "--prefix=${install_dir_native}\\debug"
         "--openssldir=${install_dir_native}\\debug"
         "AS=${as}"
@@ -103,14 +85,23 @@ vcpkg_build_nmake(
         install_runtime install_ssldirs # extra targets
 )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.cnf")
-if(NOT VCPKG_TARGET_IS_UWP)
-    foreach(script IN ITEMS "bin/c_rehash.pl" "misc/CA.pl" "misc/tsget.pl")
+set(scripts "bin/c_rehash.pl" "misc/CA.pl" "misc/tsget.pl")
+if("tools" IN_LIST FEATURES)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.cnf")
+    foreach(script IN LISTS scripts)
         file(COPY "${CURRENT_PACKAGES_DIR}/${script}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
     endforeach()
     vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
+else()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/openssl.cnf")
+    foreach(script IN LISTS scripts)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
+    endforeach()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 endif()
 
 vcpkg_copy_pdbs()
@@ -135,5 +126,3 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
 )
-
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

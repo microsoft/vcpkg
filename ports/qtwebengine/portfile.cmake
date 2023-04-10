@@ -2,8 +2,7 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-        vector.patch
-    )
+   )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 

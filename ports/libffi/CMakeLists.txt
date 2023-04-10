@@ -11,7 +11,7 @@ endif()
 # config variables for ffi.h.in
 set(VERSION 3.4.4)
 
-set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el)
+set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el riscv32 riscv64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
 
@@ -33,6 +33,8 @@ elseif(lower_system_processor MATCHES "mips64")
     set(TARGET MIPS64)
 elseif(lower_system_processor MATCHES "arm")
     set(TARGET ARM)
+elseif(lower_system_processor MATCHES "riscv")
+    set(TARGET RISCV)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin"  AND CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -62,6 +64,8 @@ elseif ("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 elseif ("${TARGET}" MATCHES "MIPS")
     file(COPY src/mips/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+elseif ("${TARGET}" STREQUAL "RISCV")
+    file(COPY src/riscv/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 else()
     file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 endif()
@@ -93,6 +97,10 @@ elseif("${TARGET}" MATCHES "MIPS")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/mips/ffi.c)
+elseif("${TARGET}" STREQUAL "RISCV")
+   set(FFI_SOURCES
+	${FFI_SOURCES}
+	src/riscv/ffi.c)
 else()
     set(FFI_SOURCES
         ${FFI_SOURCES}
@@ -199,6 +207,8 @@ elseif("${TARGET}" STREQUAL "ARM64")
     add_assembly(src/aarch64/sysv.S)
 elseif("${TARGET}" MATCHES "MIPS")
     add_assembly(src/mips/n32.S)
+elseif("${TARGET}" MATCHES "RISCV")
+    add_assembly(src/riscv/sysv.S)
 else()
     message(FATAL_ERROR "Target not implemented")
 endif()

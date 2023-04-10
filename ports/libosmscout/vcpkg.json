@@ -1,6 +1,7 @@
 {
   "name": "libosmscout",
   "version-string": "1.1.1",
+  "port-version": 1,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "http://libosmscout.sourceforge.net/",
   "documentation": "http://libosmscout.sourceforge.net/documentation/",
@@ -10,6 +11,14 @@
     "liblzma",
     "libxml2",
     "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
