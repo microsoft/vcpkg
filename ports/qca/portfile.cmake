@@ -19,6 +19,8 @@ vcpkg_from_github(
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
   set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
@@ -62,6 +64,7 @@ vcpkg_cmake_configure(
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     OPTIONS_DEBUG
         -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE

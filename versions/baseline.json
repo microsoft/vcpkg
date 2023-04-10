@@ -6366,7 +6366,7 @@
     },
     "qca": {
       "baseline": "2.3.5",
-      "port-version": 1
+      "port-version": 2
     },
     "qcustomplot": {
       "baseline": "2.1.1",
