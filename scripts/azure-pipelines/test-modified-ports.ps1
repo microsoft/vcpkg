@@ -133,11 +133,11 @@ if ($LASTEXITCODE -ne 0)
     throw "vcpkg clean failed"
 }
 
-$baseline = Get-Content "$PSScriptRoot/../ci.baseline.txt"
-
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
+    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt"
+
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
         & "./vcpkg$executableExtension" fetch $tool
@@ -150,7 +150,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt"
-    if ($parentBaseline -eq $baseline)
+    if ($parentBaseline -eq $headBaseline)
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
