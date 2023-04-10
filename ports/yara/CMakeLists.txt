@@ -133,7 +133,7 @@ endif()
 
 if(DOTNET_MODULE)
   list(APPEND libyara_definitions -DDOTNET_MODULE)
-  list(APPEND libyara_sources libyara/modules/dotnet/dotnet.c)
+  list(APPEND libyara_sources libyara/modules/dotnet/dotnet.c libyara/simple_str.c)
 endif()
 
 add_library(libyara ${libyara_sources})
