@@ -72,6 +72,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
+ INVERTED_FEATURES
+ "mkl"       OPENCV_LAPACK_DISABLE_MKL
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
