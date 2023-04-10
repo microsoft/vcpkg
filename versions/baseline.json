@@ -2134,7 +2134,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.1.0",
@@ -5022,7 +5022,7 @@
     },
     "mchehab-zbar": {
       "baseline": "0.23.90",
-      "port-version": 3
+      "port-version": 4
     },
     "mcpp": {
       "baseline": "2.7.2.14",
