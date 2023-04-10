@@ -136,7 +136,7 @@ if ($LASTEXITCODE -ne 0)
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
-    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt"
+    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
 
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
@@ -149,7 +149,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt"
+    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
     if ($parentBaseline -eq $headBaseline)
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
