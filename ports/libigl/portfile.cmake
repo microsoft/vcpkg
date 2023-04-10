@@ -68,9 +68,6 @@ endif()
 file(REMOVE "${SOURCE_PATH}/cmake/find/FindGMP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/find/FindMPFR.cmake")
 
-# static or dynamic build
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBIGL_BUILD_STATIC)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -79,7 +76,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
-        -DLIBIGL_USE_STATIC_LIBRARY=${LIBIGL_BUILD_STATIC}
+        -DLIBIGL_USE_STATIC_LIBRARY=OFF
         -DHUNTER_ENABLED=OFF
         -DLIBIGL_COPYLEFT_COMISO=${LIBIGL_COMISO}
         -DLIBIGL_COPYLEFT_TETGEN=${LIBIGL_TETGEN}
