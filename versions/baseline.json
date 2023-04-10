@@ -248,6 +248,10 @@
       "baseline": "2021-10-26",
       "port-version": 1
     },
+    "asmtk": {
+      "baseline": "2022-11-06",
+      "port-version": 0
+    },
     "assimp": {
       "baseline": "5.2.5",
       "port-version": 0
@@ -6217,7 +6221,7 @@
       "port-version": 11
     },
     "polyhook2": {
-      "baseline": "2022-03-01",
+      "baseline": "2023-02-24",
       "port-version": 0
     },
     "polymorphic-value": {
