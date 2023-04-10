@@ -1,8 +1,8 @@
 diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
-index 9b00253..495671e 100644
+index c040bc9..b434315 100644
 --- a/subprojects/gst-plugins-base/meson.build
 +++ b/subprojects/gst-plugins-base/meson.build
-@@ -388,10 +388,11 @@ int32x4_t testfunc(int16_t *a, int16_t *b) {
+@@ -403,10 +403,11 @@ int32x4_t testfunc(int16_t *a, int16_t *b) {
    endif
  endif
  
@@ -15,7 +15,7 @@ index 9b00253..495671e 100644
          message('GStreamer debug system is disabled')
          add_project_arguments('-Wno-unused', language: 'c')
      else
-@@ -404,7 +405,7 @@ else
+@@ -419,7 +420,7 @@ else
  #include <gst/gstconfig.h>
  #ifdef GST_DISABLE_GST_DEBUG
  #error "debugging disabled, make compiler fail"

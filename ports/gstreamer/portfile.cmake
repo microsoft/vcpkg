@@ -5,22 +5,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF 1.20.5
-    SHA512 2a996d8ac0f70c34dbbc02c875026df6e89346f0844fbaa25475075bcb6e57c81ceb7d71e729c3259eace851e3d7222cb3fe395e375d93eb45b1262a6ede1fdb
-    HEAD_REF master
+    REF 1.22.1
+    SHA512 738eaedc653ea52a4d134bdd7f74518afd3c3f267a5558e7533fb196904169b9ebe0baebc7c652af99f021a3d7315c680faf5b1d0e3c190d88534b60788d188d
+    HEAD_REF main
     PATCHES
         fix-clang-cl.patch
         fix-clang-cl-gstreamer.patch
         fix-clang-cl-base.patch
         fix-clang-cl-good.patch
         fix-clang-cl-bad.patch
-        fix-clang-cl-ugly.patch
-        gstreamer-disable-no-unused.patch
+        fix-clang-cl-ugly.patch 
         srtp_fix.patch
-        fix-bz2-windows-debug-dependency.patch
         ${PATCHES}
 )
 
@@ -50,12 +48,6 @@ if("gpl" IN_LIST FEATURES)
     set(LICENSE_GPL enabled)
 else()
     set(LICENSE_GPL disabled)
-endif()
-
-if ("libav" IN_LIST FEATURES)
-    set(LIBAV enabled)
-else()
-    set(LIBAV disabled)
 endif()
 
 if("nls" IN_LIST FEATURES)
@@ -142,12 +134,6 @@ endif()
 
 # Good optional plugins
 
-if("bzip2-good" IN_LIST FEATURES)
-    set(PLUGIN_GOOD_BZ2 enabled)
-else()
-    set(PLUGIN_GOOD_BZ2 disabled)
-endif()
-
 if("cairo" IN_LIST FEATURES)
     set(PLUGIN_GOOD_CAIRO enabled)
 else()
@@ -230,12 +216,6 @@ if("assrender" IN_LIST FEATURES)
     set(PLUGIN_BAD_ASSRENDER enabled)
 else()
     set(PLUGIN_BAD_ASSRENDER disabled)
-endif()
-
-if("bzip2-bad" IN_LIST FEATURES)
-    set(PLUGIN_BAD_BZ2 enabled)
-else()
-    set(PLUGIN_BAD_BZ2 disabled)
 endif()
 
 if("chromaprint" IN_LIST FEATURES)
@@ -421,7 +401,7 @@ vcpkg_configure_meson(
     OPTIONS
         # General options
         -Dpython=disabled
-        -Dlibav=${LIBAV}
+        -Dlibav=disabled
         -Dlibnice=disabled
         -Ddevtools=disabled
         -Dges=disabled
@@ -471,7 +451,7 @@ vcpkg_configure_meson(
         # gst-plugins-good
         -Dgood=${PLUGIN_GOOD_SUPPORT}
         -Dgst-plugins-good:aalib=disabled
-        -Dgst-plugins-good:bz2=${PLUGIN_GOOD_BZ2}
+        -Dgst-plugins-good:bz2=disabled
         -Dgst-plugins-good:directsound=auto
         -Dgst-plugins-good:dv=disabled
         -Dgst-plugins-good:dv1394=disabled
@@ -520,7 +500,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:assrender=${PLUGIN_BAD_ASSRENDER}
         -Dgst-plugins-bad:bluez=disabled
         -Dgst-plugins-bad:bs2b=disabled
-        -Dgst-plugins-bad:bz2=${PLUGIN_BAD_BZ2}
+        -Dgst-plugins-bad:bz2=disabled # Error during plugin configuration
         -Dgst-plugins-bad:chromaprint=${PLUGIN_BAD_CHROMAPRINT}
         -Dgst-plugins-bad:closedcaption=${PLUGIN_BAD_CLOSEDCAPTION}
         -Dgst-plugins-bad:colormanagement=${PLUGIN_BAD_COLORMANAGEMENT}
@@ -562,7 +542,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=enabled
+        -Dgst-plugins-bad:nvcodec=disabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openal=${PLUGIN_BAD_OPENAL}
         -Dgst-plugins-bad:openaptx=disabled

@@ -1,8 +1,8 @@
 diff --git a/subprojects/gst-plugins-ugly/meson.build b/subprojects/gst-plugins-ugly/meson.build
-index 14be48c4c..83d019874 100644
+index 937d8c3..b1f3e37 100644
 --- a/subprojects/gst-plugins-ugly/meson.build
 +++ b/subprojects/gst-plugins-ugly/meson.build
-@@ -31,7 +31,7 @@ if have_cxx
+@@ -38,7 +38,7 @@ if have_cxx
    cxx = meson.get_compiler('cpp')
  endif
  
