@@ -1,0 +1,13 @@
+diff --git a/src/build-data/makefile.in b/src/build-data/makefile.in
+index 4839112..5102933 100644
+--- a/src/build-data/makefile.in
++++ b/src/build-data/makefile.in
+@@ -58,7 +58,7 @@ distclean:
+ 	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/cleanup.py" --build-dir="%{build_dir}" --distclean
+ 
+ install: %{install_targets}
+-	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --prefix="%{prefix}" --build-dir="%{build_dir}" --bindir="%{bindir}" --libdir="%{libdir}" --docdir="%{docdir}" --includedir="%{includedir}"
++	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/install.py" --prefix="%{prefix}" --build-dir="%{build_dir}" --bindir="%{bindir}" --libdir="%{libdir}" --docdir="%{docdir}" --includedir="%{includedir}" --verbose
+ 
+ check: tests
+ 	"$(PYTHON_EXE)" "$(SCRIPTS_DIR)/check.py" --build-dir="%{build_dir}"

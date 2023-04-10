@@ -1,30 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF f36a69a5e89953708990c4669317f989d532cf08 # pcl-1.12.0
-    SHA512 dbbd0adbb08949ddef2789e0021b6ca9727be33c7193d0bb135c61def09a42ed6a71333f06b6fad407010ecb4b73c19f087f7520386b92a008e90c254eafe422
+    REF 371a8e1373f7b2f66bbb92291be2f3e50dc19856 # pcl-1.13.0
+    SHA512 5c023e46386882d51a5d9a3c8ac594c17585e3d14c011964109ad0ae432c660ebb7fc1fe56f1130b6eafa75d1d9ca48f05e22e1d7cbb4a0794e32982da168563
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
         fix-check-sse.patch
-        fix-find-qhull.patch
         fix-numeric-literals-flag.patch
         pcl_config.patch
         pcl_utils.patch
-        remove-broken-targets.patch
-        fix-cmake_find_library_suffixes.patch
-        fix-pkgconfig.patch # Remove this patch in the next update
-        fix-namespace-cub.patch # Remove this patch in the next update
-        fix-error-C3052.patch # Remove this patch in the next update
-        fix-find-libusb.patch
         install-examples.patch
         no-absolute.patch
-        Workaround-ICE-in-release.patch
+        add_bigobj_option.patch
+        outofcore_viewer_remove_include.patch
+        fix_opennurbs_win32.patch
+        disable_kinfu_for_cuda12.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
-            "${SOURCE_PATH}/cmake/Modules/Findlibusb.cmake"
-)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -66,6 +59,7 @@ vcpkg_cmake_configure(
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
+        -DPCL_ALLOW_BOTH_SHARED_AND_STATIC_DEPENDENCIES=ON
         # WITH
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
@@ -80,6 +74,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
+        PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
 )
 
 vcpkg_cmake_install()

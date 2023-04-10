@@ -1,6 +1,6 @@
 {
   "name": "zstd",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "port-version": 1,
   "description": "Zstandard - Fast real-time compression algorithm",
   "homepage": "https://facebook.github.io/zstd/",

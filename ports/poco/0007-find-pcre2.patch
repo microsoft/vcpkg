@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f05f50c..bb7a94c 100644
+index 8842c76..b887168 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -494,6 +494,11 @@ install(
+@@ -491,6 +491,11 @@ install(
  		Devel
  )
  
@@ -15,7 +15,7 @@ index f05f50c..bb7a94c 100644
  message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
  if(BUILD_SHARED_LIBS)
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 226dadb..25ff2c1 100644
+index 226dadb..a3765a7 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
 @@ -35,8 +35,11 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
@@ -91,16 +91,4 @@ index e730f32..6e10df2 100644
 -  set(PCRE2_LIBRARIES ${PCRE2_LIBRARY})
    set(PCRE2_INCLUDE_DIRS ${PCRE2_INCLUDE_DIR})
    set(PCRE2_DEFINITIONS ${PC_PCRE2_CFLAGS_OTHER})
- endif()
-diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
-index 4864b32..90f68fc 100644
---- a/cmake/PocoConfig.cmake.in
-+++ b/cmake/PocoConfig.cmake.in
-@@ -10,7 +10,6 @@ endif()
- 
- include(CMakeFindDependencyMacro)
- find_dependency(ZLIB REQUIRED)
--#find_dependency(unofficial-pcre REQUIRED)
- if(Poco_FIND_REQUIRED_XML)
-     find_dependency(expat CONFIG REQUIRED)
  endif()

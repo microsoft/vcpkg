@@ -1,3 +1,4 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    automake\n    libtool\n\nThey can be installed with brew install automake libtool")
 else()

@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 723e0c2..c348730 100644
+--- a/meson.build
++++ b/meson.build
+@@ -312,7 +312,7 @@ endif
+ 
+ # The first version of freetype with a pkg-config file is 2.1.5,
+ # CMake uses 'freetype' rather than 'freetype2' for the package name
+-freetype_package_name = cc.get_argument_syntax() == 'msvc' ? \
++freetype_package_name = false ? \
+                         'freetype' : 'freetype2'
+ 
+ freetype_dep = dependency(freetype_package_name,

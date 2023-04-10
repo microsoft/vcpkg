@@ -1,15 +1,14 @@
-set(NSPR_VERSION "4.33")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://releases.mozilla.org/pub/nspr/releases/v${NSPR_VERSION}/src/nspr-${NSPR_VERSION}.tar.gz"
-    FILENAME "nspr-${NSPR_VERSION}.tar.gz"
-    SHA512 8064f826c977f1302a341ca7a7aaf7977b5d10102062c030b1d42b856638e3408ab262447e8c7cfd5a98879b9b1043d17ceae66fbb1e5ed86d6bc3531f26667e
+    URLS "https://releases.mozilla.org/pub/nspr/releases/v${VERSION}/src/nspr-${VERSION}.tar.gz"
+    FILENAME "nspr-${VERSION}.tar.gz"
+    SHA512 502815833116e25f79ddf71d1526484908aa92fbc55f8a892729cb404a4daafcc0470a89854cd080d2d20299fdb7d9662507c5362c7ae661cbacf308ac56ef7f
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF "${NSPR_VERSION}"
+    REF "${VERSION}"
 )
 
 set(MOZBUILD_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/mozbuild")

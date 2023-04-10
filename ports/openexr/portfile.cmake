@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v3.1.5
     SHA512 01ef16eacd2dde83c67b81522bae87f47ba272a41ce7d4e35d865dbdcaa03093e7ac504b95d2c1b3a19535f2364a4f937b0e0570c74243bb1c6e021fce7b620c
     HEAD_REF master
+    PATCHES avx.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS

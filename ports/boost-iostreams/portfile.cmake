@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iostreams
-    REF boost-1.80.0
-    SHA512 861e6810cc5cb180aadea7980a3c8bd7ea5a0dfe1e45145debdbe1c5083d94e17f5c92cf9f4892ab391e7b531df1c00bebd07c814950b9ac9ffbff41bbc78a16
+    REF boost-1.81.0
+    SHA512 102adfd8c31e0b00d74914fc0c2a812ec0d5af53184f9caf4260b40028ccd4bd084b0916ad937a11c3af14580c004bc143479d09e55362f27b37033eaeb2ee1c
     HEAD_REF master
     PATCHES Removeseekpos.patch
 )

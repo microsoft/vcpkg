@@ -1,0 +1,20 @@
+spout2 provides CMake targets:
+
+    # Dynamic Linkage
+    find_package(Spout2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spout2::Spout)
+
+    # Static Linkage
+    find_package(Spout2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spout2::Spout_static)
+
+    # SpoutLibrary
+    target_link_libraries(main PRIVATE Spout2::SpoutLibrary)
+
+    # SpoutDX
+    target_link_libraries(main PRIVATE Spout2::SpoutDX)
+
+    Note: SpoutDX (`dx` feature) is not essential to use DirectX in Spout... It is a sub-set of the
+          Spout SDK for applications using DirectX rather than OpenGL. It doesn't mean enabling
+          DirectX ability for Spout. See https://github.com/leadedge/Spout2/tree/master/SPOUTSDK
+          It is more likely: 'Use only DirectX to implement Spout, and remove all codes that need OpenGL'.

@@ -15,8 +15,10 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
+        fix_egl_2.patch
         clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
+        GLIB2-static.patch # alternative is to force pkg-config
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -138,7 +140,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
-    #"opengl"              INPUT_opengl=something
+    "opengl"              FEATURE_opengl
     "xlib"                FEATURE_xlib
     "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
@@ -148,7 +150,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             FEATURE_xcb_native_painting # experimental
     "gles2"               FEATURE_opengles2
     #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
-    #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
+    "egl"                 FEATURE_egl
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
     #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
@@ -161,9 +163,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
-    "gles2"               FEATURE_opengl_desktop
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -177,6 +179,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             CMAKE_DISABLE_FIND_PACKAGE_XRender
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
+
+if( "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='es2')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+endif()
+
+if(NOT "opengl" IN_LIST FEATURES AND NOT "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='no')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_dynamic=OFF)
+endif()
 
 if("xcb" IN_LIST FEATURES)
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=yes)
@@ -207,19 +220,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
     "sql-sqlite"          FEATURE_system_sqlite
     "sql-odbc"            FEATURE_sql_odbc
+    "sql-mysql"           FEATURE_sql_mysql
+    "sql-oci"             FEATURE_sql_oci
     #"sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
     #"sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
     "sql-odbc"            CMAKE_DISABLE_FIND_PACKAGE_ODBC
-    # "sql-db2"             FEATURE_sql-db2
-    # "sql-ibase"           FEATURE_sql-ibase
-    # "sql-mysql"           FEATURE_sql-mysql
-    # "sql-oci"             FEATURE_sql-oci
+    "sql-mysql"           CMAKE_DISABLE_FIND_PACKAGE_MySQL
+    "sql-oci"             CMAKE_DISABLE_FIND_PACKAGE_Oracle
     )
 
-set(DB_LIST DB2 MySQL Oracle)
+set(DB_LIST DB2 Interbase)
 foreach(_db IN LISTS DB_LIST)
     list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
 endforeach()
@@ -433,3 +446,6 @@ if(EXISTS "${configfile}")
     file(WRITE "${configfile}" "${_contents}")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+endif()

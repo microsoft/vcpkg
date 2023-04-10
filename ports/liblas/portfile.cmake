@@ -43,6 +43,10 @@ else()
     vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libLAS)
 endif()
 
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "_DIR}/.." "_DIR}/../..")
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib")
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "/bin" "/tools/${PORT}")
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"

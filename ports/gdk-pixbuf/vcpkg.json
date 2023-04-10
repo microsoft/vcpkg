@@ -1,7 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.9",
-  "port-version": 2,
+  "port-version": 5,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -22,5 +22,20 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        }
+      ]
+    }
+  }
 }

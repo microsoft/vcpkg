@@ -5,8 +5,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/system
-    REF boost-1.80.0
-    SHA512 9f3365e993d27c6ca46015ee3111ea2a8962d6de0bb2b45652a6bf26e5be025d70f427ec92ebecb3ce1980220e4540d2dca4180a3dcdd1ca4006161cc1bf5402
+    REF boost-1.81.0
+    SHA512 0b6b86a6ca9743814c4bebe7d1013205f0216e42c691c1bb8be01faf1e7767487d13f87f86269ddc11ea0015516b997dc3680d79ef35f6353cff4639932dd642
     HEAD_REF master
 )
 

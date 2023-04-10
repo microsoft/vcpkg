@@ -1,6 +1,6 @@
 {
   "name": "nss",
-  "version": "3.78",
+  "version": "3.87",
   "description": "Network Security Services from Mozilla",
   "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
   "license": "MPL-2.0",
@@ -9,7 +9,7 @@
     "nspr",
     "sqlite3",
     {
-      "name": "vcpkg-tool-gyp-nss",
+      "name": "vcpkg-tool-gyp-next",
       "host": true
     },
     {

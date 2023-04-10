@@ -1,6 +1,7 @@
 {
   "name": "fluidsynth",
-  "version": "2.2.8",
+  "version": "2.3.1",
+  "port-version": 2,
   "description": "FluidSynth reads and handles MIDI events from the MIDI input device. It is the software analogue of a MIDI synthesizer. FluidSynth can also play midifiles using a Soundfont.",
   "homepage": "https://github.com/FluidSynth/fluidsynth",
   "license": "LGPL-2.1-or-later",
@@ -20,6 +21,10 @@
     "glib",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

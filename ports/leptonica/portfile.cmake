@@ -1,17 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
-    REF f4138265b390f1921b9891d6669674d3157887d8 # 1.82.0
-    SHA512 cd8c55454fc2cb4d23c2b3f01870e154766fa5a35c07b79d25c2d85dc2675dcb224d9be8a1cdcb7e9a0bd3c17e90141aa4084f67a311a1c327d7ac2439ba196a
+    REF b667978e86c4bf74f7fdd75f833127d2de327550 # 1.83.1
+    SHA512 fe4ea74aea024a4e522a5f985e51c5b110b5b4a3b3086e6fa7204129caf09b842f85041c386ee9bf2e878034ac2ebd2506396063771b677e931296ec6d76490b
     HEAD_REF master
     PATCHES
-        fix-CMakeDependency.patch
+        fix-build-and-pkgconfig.patch # See https://github.com/DanBloomberg/leptonica/pull/664 and https://github.com/DanBloomberg/leptonica/pull/662
+        private.patch # See https://github.com/DanBloomberg/leptonica/pull/666
+        webp.patch # See https://github.com/DanBloomberg/leptonica/pull/667
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSW_BUILD=OFF
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DCMAKE_REQUIRE_FIND_PACKAGE_GIF=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=TRUE

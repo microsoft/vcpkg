@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
             configure.patch 
             use_xwindows_includes.patch # use the X11 include wrappers for windows headers
             getpid_include.patch # add include for getpid on windows
+            win-fixes.patch # avoid: 'close' undefined; assuming extern returning int
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

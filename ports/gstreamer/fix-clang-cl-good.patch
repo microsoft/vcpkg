@@ -1,7 +1,7 @@
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gst-plugins-good/meson.build b/subprojects/gst-plugins-good/meson.build
 index 64705379f..0c55b9732 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gst-plugins-good/meson.build
++++ b/subprojects/gst-plugins-good/meson.build
 @@ -30,7 +30,7 @@ plugins = []
  cc = meson.get_compiler('c')
  host_system = host_machine.system()

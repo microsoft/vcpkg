@@ -1,8 +1,9 @@
 {
   "name": "libxlsxwriter",
-  "version-semver": "1.1.4",
+  "version": "1.1.5",
   "description": "Libxlsxwriter is a C library that can be used to write text, numbers, formulas and hyperlinks to multiple worksheets in an Excel 2007+ XLSX file.",
   "homepage": "https://github.com/jmcnamara/libxlsxwriter",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",

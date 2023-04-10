@@ -10,17 +10,19 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_PDB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_STATIC_CRT)
 
+set(JIT ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(JIT OFF)
-else()
-    set(JIT ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -DPCRE2_STATIC_RUNTIME=${BUILD_STATIC_CRT}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
@@ -28,7 +30,12 @@ vcpkg_cmake_configure(
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF
-)
+        -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
+        -DINSTALL_MSVC_PDB=${INSTALL_PDB}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+    )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
