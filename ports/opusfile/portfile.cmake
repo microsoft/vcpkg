@@ -9,6 +9,8 @@ vcpkg_from_github(
 
 file(WRITE "${SOURCE_PATH}/package_version" "PACKAGE_VERSION=${VERSION}")
 
+vcpkg_replace_string("${SOURCE_PATH}/cmake/OpusFileConfig.cmake.in" "opusfileTargets.cmake" "OpusFileTargets.cmake")
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES

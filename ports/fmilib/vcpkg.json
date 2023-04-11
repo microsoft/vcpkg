@@ -1,11 +1,14 @@
 {
   "name": "fmilib",
-  "version": "2.0.3",
-  "port-version": 5,
+  "version": "2.4.1",
+  "port-version": 1,
   "description": "FMI library is intended as a foundation for applications interfacing FMUs (Functional Mockup Units) that follow FMI Standard. This version of the library supports FMI 1.0 and FMI2.0.",
   "homepage": "https://www.fmi-standard.org/",
-  "license": null,
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
+    "expat",
+    "minizip",
     {
       "name": "vcpkg-cmake",
       "host": true

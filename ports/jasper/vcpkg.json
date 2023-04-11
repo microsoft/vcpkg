@@ -1,6 +1,7 @@
 {
   "name": "jasper",
   "version": "4.0.0",
+  "port-version": 1,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
   "homepage": "https://github.com/jasper-software/jasper",
   "license": null,

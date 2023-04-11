@@ -30,7 +30,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zfp.h "\"bitstream.h\"" "\"zfp/bitstream.h\"")
 
 if("utility" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES zfpcmd AUTO_CLEAN)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zfp")
+        vcpkg_copy_tools(TOOL_NAMES zfp AUTO_CLEAN)
+    else()
+        vcpkg_copy_tools(TOOL_NAMES zfpcmd AUTO_CLEAN)
+    endif()
 endif()
 
 vcpkg_copy_pdbs()

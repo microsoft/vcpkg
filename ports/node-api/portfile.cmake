@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 set(SHA512 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -66,7 +64,7 @@ set(source_path "${OUT_SOURCE_PATH}/${suffix}")
 file(COPY "${source_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
 
 # we do not take the license from the dist file because for windows it is not included as we download the headers only
-set(license_url "https://raw.githubusercontent.com/nodejs/node/v18.12.1/LICENSE")
+set(license_url "https://raw.githubusercontent.com/nodejs/node/v${VERSION}/LICENSE")
 vcpkg_download_distfile(
   out_license
   URLS "${license_url}"
@@ -75,5 +73,4 @@ vcpkg_download_distfile(
 )
 file(INSTALL "${out_license}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# copy ./unofficial-node-api-config.cmake to ${CURRENT_PACKAGES_DIR}/share/node-api
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-api-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-node-api-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-node-api-config.cmake" @ONLY)
