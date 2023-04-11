@@ -1,5 +1,5 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index 64bf93b..39af257 100644
+index 64bf93b..843b035 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
 @@ -50,10 +50,9 @@ find_package(folly CONFIG REQUIRED)
@@ -78,9 +78,9 @@ index 64bf93b..39af257 100644
    PUBLIC
 -    ${FOLLY_LIBRARIES}
 -    ${OPENSSL_LIBRARIES}
-+		Folly::folly
-+		OpenSSL::SSL
-+		OpenSSL::Crypto
++    Folly::folly
++    OpenSSL::SSL
++    OpenSSL::Crypto
      unofficial-sodium::sodium
      Threads::Threads
      ZLIB::ZLIB
@@ -92,7 +92,7 @@ index 64bf93b..39af257 100644
 +    gflags::gflags
      ${FIZZ_LINK_LIBRARIES}
 -    ${DOUBLE_CONVERSION_LIBRARY}
-+		libevent::core
++    libevent::core
 +    double-conversion::double-conversion
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
@@ -113,7 +113,7 @@ index 64bf93b..39af257 100644
      fizz
 -    ${LIBGMOCK_LIBRARIES}
 -    ${GLOG_LIBRARY}
-+		glog::glog
++    glog::glog
  )
  
 -target_compile_definitions(fizz_test_support
@@ -148,24 +148,6 @@ index 64bf93b..39af257 100644
  
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
-@@ -462,7 +422,7 @@ option(BUILD_EXAMPLES "BUILD_EXAMPLES" ON)
- 
- if(BUILD_EXAMPLES)
-   add_executable(BogoShim test/BogoShim.cpp)
--  target_link_libraries(BogoShim fizz sodium)
-+  target_link_libraries(BogoShim fizz)
-   set_target_properties(BogoShim PROPERTIES OUTPUT_NAME fizz-bogoshim)
-   install(
-     TARGETS BogoShim
-@@ -476,7 +436,7 @@ if(BUILD_EXAMPLES)
-       tool/FizzGenerateDelegatedCredentialCommand.cpp
-       tool/FizzServerBenchmarkCommand.cpp
-       tool/FizzServerCommand.cpp)
--  target_link_libraries(FizzTool fizz sodium)
-+  target_link_libraries(FizzTool fizz)
-   set_target_properties(FizzTool PROPERTIES OUTPUT_NAME fizz)
-   install(
-     TARGETS FizzTool
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
 index 3fb48b2..baa43a6 100644
 --- a/fizz/cmake/fizz-config.cmake.in
