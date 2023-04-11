@@ -32,6 +32,7 @@ include("${SCRIPTS}/cmake/vcpkg_execute_required_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_execute_required_process_repeat.cmake")
 include("${SCRIPTS}/cmake/vcpkg_extract_source_archive.cmake")
 include("${SCRIPTS}/cmake/vcpkg_extract_source_archive_ex.cmake")
+include("${SCRIPTS}/cmake/vcpkg_fail_with_user_interaction_required.cmake")
 include("${SCRIPTS}/cmake/vcpkg_fail_port_install.cmake")
 include("${SCRIPTS}/cmake/vcpkg_find_acquire_program.cmake")
 include("${SCRIPTS}/cmake/vcpkg_fixup_cmake_targets.cmake")
@@ -56,6 +57,7 @@ include("${SCRIPTS}/cmake/vcpkg_list.cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
+include("${SCRIPTS}/cmake/vcpkg_user_hint_on_failure.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
@@ -143,6 +145,12 @@ if(CMD STREQUAL "BUILD")
 
     set(Z_VCPKG_ERROR_LOG_COLLECTION_FILE "${CURRENT_BUILDTREES_DIR}/error-logs-${TARGET_TRIPLET}.txt")
     file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
+
+    set(Z_VCPKG_USER_HINTS_ON_BUILD_FAILURE_FILE "${CURRENT_BUILDTREES_DIR}/user-hints-${TARGET_TRIPLET}.txt")
+    file(REMOVE "${Z_VCPKG_USER_HINTS_ON_BUILD_FAILURE_FILE}")
+
+    set(Z_VCPKG_REQUIRED_USER_INTERACTION_ON_BUILD_FAILURE_FILE "${CURRENT_BUILDTREES_DIR}/required-user-interaction-${TARGET_TRIPLET}.txt")
+    file(REMOVE "${Z_VCPKG_REQUIRED_USER_INTERACTION_ON_BUILD_FAILURE_FILE}")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
