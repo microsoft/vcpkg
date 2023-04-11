@@ -245,8 +245,12 @@
       "port-version": 5
     },
     "asmjit": {
-      "baseline": "2021-10-26",
-      "port-version": 1
+      "baseline": "2022-11-06",
+      "port-version": 0
+    },
+    "asmtk": {
+      "baseline": "2022-11-06",
+      "port-version": 0
     },
     "assimp": {
       "baseline": "5.2.5",
@@ -2429,8 +2433,8 @@
       "port-version": 0
     },
     "fbgemm": {
-      "baseline": "2021-03-18",
-      "port-version": 4
+      "baseline": "0.4.1",
+      "port-version": 0
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
@@ -6217,7 +6221,7 @@
       "port-version": 11
     },
     "polyhook2": {
-      "baseline": "2022-03-01",
+      "baseline": "2023-02-24",
       "port-version": 0
     },
     "polymorphic-value": {

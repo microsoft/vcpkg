@@ -1,10 +1,11 @@
 {
-  "name": "asmjit",
+  "name": "asmtk",
   "version-date": "2022-11-06",
-  "description": "Complete x86/x64 JIT and Remote Assembler for C++",
-  "homepage": "https://github.com/asmjit/asmjit",
+  "description": "Assembler toolkit based on AsmJit ",
+  "homepage": "https://github.com/asmjit/asmtk",
   "supports": "!arm",
   "dependencies": [
+    "asmjit",
     {
       "name": "vcpkg-cmake",
       "host": true
