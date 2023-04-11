@@ -41,13 +41,6 @@
         "protobuf"
       ]
     },
-    "otlp-http": {
-      "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
-      "dependencies": [
-        "curl",
-        "protobuf"
-      ]
-    },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
       "dependencies": [
@@ -63,6 +56,13 @@
             "otlp"
           ]
         }
+      ]
+    },
+    "otlp-http": {
+      "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
+      "dependencies": [
+        "curl",
+        "protobuf"
       ]
     },
     "prometheus": {
