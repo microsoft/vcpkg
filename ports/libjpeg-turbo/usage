@@ -1,5 +1,0 @@
-The package libjpeg-turbo is compatible with built-in CMake targets:
-
-    find_package(JPEG REQUIRED)
-    target_link_libraries(main PRIVATE ${JPEG_LIBRARIES})
-    target_include_directories(main PRIVATE ${JPEG_INCLUDE_DIR})
