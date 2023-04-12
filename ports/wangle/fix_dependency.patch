@@ -81,7 +81,7 @@ index e0fd0dc..0aef27b 100644
 +find_dependency(gflags CONFIG)
 +find_dependency(Threads)
 +find_dependency(Libevent CONFIG)
-+find_dependency(OpenSSL CONFIG)
++find_dependency(OpenSSL)
 +find_dependency(double-conversion CONFIG)
  
  if (NOT TARGET wangle::wangle)
