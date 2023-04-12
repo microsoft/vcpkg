@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix-unresolvedsymbol-arm.patch
-    #fix-ODR-libuuid-linux.patch
+    fix-ODR-libuuid-linux.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
