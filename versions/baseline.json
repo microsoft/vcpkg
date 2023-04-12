@@ -56,10 +56,6 @@
       "baseline": "1.5.0",
       "port-version": 1
     },
-    "akali": {
-      "baseline": "1.43",
-      "port-version": 1
-    },
     "aklomp-base64": {
       "baseline": "2023-01-06",
       "port-version": 1
