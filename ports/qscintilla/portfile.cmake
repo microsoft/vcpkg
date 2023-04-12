@@ -17,21 +17,24 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 
-vcpkg_configure_qmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
-    OPTIONS
-        CONFIG+=build_all
-        CONFIG-=hide_symbols
-        DEFINES+=SCI_NAMESPACE
+vcpkg_qmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src"
+    QMAKE_OPTIONS
+        "CONFIG-=hide_symbols"
+        "DEFINES+=SCI_NAMESPACE"
 )
+vcpkg_qmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_install_qmake(
-        RELEASE_TARGETS release
-        DEBUG_TARGETS debug
-    )
-else()
-    vcpkg_install_qmake()
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
+if(DLLS)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE ${DLLS})
+endif()
+
+file(GLOB DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+if(DEBUG_DLLS)
+    file(COPY ${DEBUG_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE ${DEBUG_DLLS})
 endif()
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/src/Qsci/*)

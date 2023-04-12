@@ -1,9 +1,8 @@
 {
   "name": "geogram",
-  "version": "1.7.6",
-  "port-version": 4,
+  "version": "1.8.3",
   "description": "Geogram is a programming library of geometric algorithms.",
-  "homepage": "https://gforge.inria.fr/projects/geogram/",
+  "homepage": "https://github.com/BrunoLevy/geogram",
   "license": "BSD-3-Clause",
   "supports": "!uwp & !(osx & arm64)",
   "dependencies": [
