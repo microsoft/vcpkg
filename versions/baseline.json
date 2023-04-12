@@ -4801,8 +4801,8 @@
       "port-version": 0
     },
     "licensepp": {
-      "baseline": "2020-05-19",
-      "port-version": 4
+      "baseline": "2020-11-24",
+      "port-version": 0
     },
     "lilv": {
       "baseline": "0.24.10",
