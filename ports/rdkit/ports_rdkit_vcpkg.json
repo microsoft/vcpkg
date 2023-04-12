@@ -3,4 +3,7 @@
   "version-string": "2022.09.5",
   "description": "RDKit is a collection of cheminformatics and machine-learning software written in C++ and Python.",
   "homepage": "https://www.rdkit.org/docs/index.html"
+  "dependencies": [
+    "boost"
+  ]
 }
