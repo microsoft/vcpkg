@@ -6,7 +6,7 @@ index 4c06409..8e0e4de 100644
  SET_TARGET_PROPERTIES(common_obj_static PROPERTIES
      POSITION_INDEPENDENT_CODE ON
      COMPILE_DEFINITIONS "PAHO_MQTT_STATIC=1")
-+    IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
++    IF(NOT WIN32 OR NOT APPLE)
 +        find_package(unofficial-libuuid CONFIG REQUIRED)
 +        target_link_libraries(common_obj_static PRIVATE unofficial::UUID::uuid)
 +        target_compile_definitions(common_obj_static PUBLIC LIBUUID)
@@ -26,7 +26,7 @@ index 4c06409..8e0e4de 100644
      	TARGET_INCLUDE_DIRECTORIES(common_ssl_obj_static PUBLIC ${OPENSSL_INCLUDE_DIR})
      	SET_PROPERTY(TARGET common_ssl_obj_static PROPERTY POSITION_INDEPENDENT_CODE ON)
      	SET_PROPERTY(TARGET common_ssl_obj_static PROPERTY COMPILE_DEFINITIONS "OPENSSL=1;PAHO_MQTT_STATIC=1")
-+        IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
++        IF(NOT WIN32 OR NOT APPLE)
 +            find_package(unofficial-libuuid CONFIG REQUIRED)
 +            target_link_libraries(common_ssl_obj_static PRIVATE unofficial::UUID::uuid)
 +            target_compile_definitions(common_ssl_obj_static PUBLIC LIBUUID)

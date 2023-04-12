@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "libuuid",
-      "platform": "linux"
+      "platform": "!osx & !windows"
     },
     "openssl",
     {
