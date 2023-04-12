@@ -18,7 +18,6 @@ vcpkg_from_github(
         export-cmake-targets.patch
         Add-target-include-directories.patch
         homebrew.patch
-        Use-readelf-first.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
@@ -40,6 +39,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DWITH_BUILD_ID=OFF
         -DWITHOUT_SERVER=ON
         -DWITH_UNIT_TESTS=OFF
         -DENABLED_PROFILING=OFF
