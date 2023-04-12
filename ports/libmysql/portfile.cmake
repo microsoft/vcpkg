@@ -18,6 +18,7 @@ vcpkg_from_github(
         export-cmake-targets.patch
         Add-target-include-directories.patch
         homebrew.patch
+        Use-readelf-first.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
@@ -168,4 +169,4 @@ file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURR
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # copy license
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

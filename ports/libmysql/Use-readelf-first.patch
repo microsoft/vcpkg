@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6033494..81617b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -781,7 +781,7 @@ IF(LINUX)
+   IF(WITH_BUILD_ID)
+     SET(HAVE_BUILD_ID_SUPPORT 1)
+     FIND_PROGRAM(READELF_EXECUTABLE
+-      NAMES eu-readelf readelf
++      NAMES readelf eu-readelf
+       )
+     IF(NOT READELF_EXECUTABLE)
+       MESSAGE(WARNING "Cannot find eu-readelf or readelf")
