@@ -5,7 +5,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-get-vars/vcpkg-port-config.cma
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
 
-set(BOOST_VERSION 1.81.0)
+set(BOOST_VERSION "${VERSION}")
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
 if("${CMAKE_MATCH_3}" GREATER 0)
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
@@ -15,6 +15,9 @@ endif()
 
 function(boost_modular_build)
     cmake_parse_arguments(_bm "" "SOURCE_PATH;BOOST_CMAKE_FRAGMENT" "" ${ARGN})
+
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
 
     if(NOT DEFINED _bm_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
@@ -39,18 +42,38 @@ function(boost_modular_build)
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(BOOST_LIB_PREFIX)
-        if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+    if(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "IA64")
+        string(APPEND BOOST_ARCHITECTURE_TAG "i")
+    elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^[xX]86"
+    OR VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^(([xX]86_)?[xX]64|AMD64)")
+        string(APPEND BOOST_ARCHITECTURE_TAG "x")
+    elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^ARM")
+        string(APPEND BOOST_ARCHITECTURE_TAG "a")
+    elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "MIPS")
+        string(APPEND BOOST_ARCHITECTURE_TAG "m")
+    endif()
+    if(VCPKG_DETECTED_CMAKE_SIZEOF_VOID_P EQUAL "8")
+        string(APPEND BOOST_ARCHITECTURE_TAG "64")
+    else()
+        string(APPEND BOOST_ARCHITECTURE_TAG "32")
+    endif()
+
+    set(BOOST_LIB_PREFIX "")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        if(VCPKG_PLATFORM_TOOLSET MATCHES "v(14.)")
+            set(BOOST_LIB_RELEASE_SUFFIX -vc${CMAKE_MATCH_1}-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc${CMAKE_MATCH_1}-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
         elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
+            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
         else()
-            set(BOOST_LIB_RELEASE_SUFFIX .lib)
-            set(BOOST_LIB_DEBUG_SUFFIX d.lib)
+            set(BOOST_LIB_RELEASE_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+            set(BOOST_LIB_DEBUG_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib) # Note: FindBoost.cmake will not look for d suffixed libraries
         endif()
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        string(REGEX MATCH "[^\\\.]+" clang_major_ver "${VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION}")
+        set(BOOST_LIB_RELEASE_SUFFIX -clangw${clang_major_ver}-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
+        set(BOOST_LIB_DEBUG_SUFFIX -clangw${clang_major_ver}-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
     else()
         set(BOOST_LIB_PREFIX lib)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -102,7 +125,7 @@ function(boost_modular_build)
         string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file("${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in" "${_bm_SOURCE_PATH}/Jamroot.jam" @ONLY)
 
     set(configure_options)
     if(_bm_BOOST_CMAKE_FRAGMENT)
@@ -153,17 +176,7 @@ function(boost_modular_build)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
-        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
-        string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
-        string(REPLACE "-vc143-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2022 and VS2015 binaries
-        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-gyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs with python debugging
-        string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-${BOOST_VERSION_ABI_TAG}" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REGEX REPLACE "-s?gy?d-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
@@ -199,5 +212,5 @@ function(boost_modular_build)
         message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+    configure_file("${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 endfunction()
