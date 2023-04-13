@@ -7642,7 +7642,7 @@
     },
     "stlab": {
       "baseline": "1.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "stormlib": {
       "baseline": "2019-05-10",
