@@ -169,6 +169,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY "${SOURCE_PATH}/Lib/distutils" DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/distutils")
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
