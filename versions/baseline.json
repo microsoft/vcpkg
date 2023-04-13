@@ -6398,7 +6398,7 @@
     },
     "qt": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.8.2",
@@ -6758,7 +6758,7 @@
     },
     "qtwebview": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "quadtree": {
       "baseline": "2022-04-24",
