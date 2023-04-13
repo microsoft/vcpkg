@@ -6598,7 +6598,7 @@
     },
     "qt5compat": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt6betablock": {
       "baseline": "6.2.0-beta",
@@ -6614,7 +6614,7 @@
     },
     "qtbase": {
       "baseline": "6.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "qtcharts": {
       "baseline": "6.4.3",
