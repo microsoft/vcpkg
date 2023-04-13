@@ -1,7 +1,7 @@
 {
   "name": "x264",
   "version": "0.164.3095",
-  "port-version": 2,
+  "port-version": 3,
   "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
   "homepage": "https://www.videolan.org/developers/x264.html",
   "license": "GPL-2.0-or-later",
@@ -19,6 +19,9 @@
       "description": "Enable platform-specific assembly optimizations",
       "supports": "x86 | x64 | (arm & !windows) | arm64"
     },
+    "chroma-format-all": {
+      "description": "Output all chroma formats"
+    },
     "default-features": {
       "description": "Default set of features",
       "dependencies": [
@@ -30,6 +33,9 @@
           "platform": "x86 | x64 | (arm & !windows) | arm64"
         }
       ]
+    },
+    "disable-gpl": {
+      "description": "Disable GPL-only features"
     },
     "tool": {
       "description": "Build the command line tool",

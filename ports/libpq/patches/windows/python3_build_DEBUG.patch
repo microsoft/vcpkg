@@ -26,8 +26,11 @@ index 99f39caa5..21b5559d6 100644
  		# Sometimes (always?) if python is not present, the execution
  		# appears to work, but gives no data...
  		die "Failed to query python for version information\n"
-@@ -510,8 +511,9 @@ sub mkvcbuild
- 		my $pymajorver = substr($pyver, 0, 1);
+@@ -510,11 +511,12 @@ sub mkvcbuild
+ 		die
+ 		  "Python version $pyver is too old (version 3 or later is required)"
+ 		  if int($pymajorver) < 3;
+ 
  		my $plpython = $solution->AddProject('plpython' . $pymajorver,
  			'dll', 'PLs', 'src/pl/plpython');
 -		$plpython->AddIncludeDir($pyprefix . '/include');
@@ -38,3 +41,4 @@ index 99f39caa5..21b5559d6 100644
  		$plpython->AddReference($postgres);
  
  		# Add transform modules dependent on plpython
+ 

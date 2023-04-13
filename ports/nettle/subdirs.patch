@@ -1,0 +1,32 @@
+diff --git a/Makefile.in b/Makefile.in
+index c7dd33f..6d4387e 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -22,7 +22,7 @@ OPT_NETTLE_SOURCES = @OPT_NETTLE_SOURCES@
+ 
+ FAT_TEST_LIST = @FAT_TEST_LIST@
+ 
+-SUBDIRS = tools testsuite examples
++SUBDIRS = @IF_TOOLS@ tools
+ 
+ include config.make
+ 
+diff --git a/configure.ac b/configure.ac
+index b629e39..2464514 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -24,6 +24,14 @@ AC_SUBST([MINOR_VERSION])
+ 
+ AC_CANONICAL_HOST
+ 
++AC_ARG_ENABLE(tools,[])
++if test "x$enable_tools" = xyes ; then
++  IF_TOOLS=''
++else
++  IF_TOOLS='#'
++fi
++AC_SUBST([IF_TOOLS])
++
+ # Command line options
+ AC_ARG_WITH(include-path,
+   AC_HELP_STRING([--with-include-path], [A colon-separated list of directories to search for include files]),,
