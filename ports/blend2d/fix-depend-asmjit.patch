@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 47e4926..64c1875 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -391,7 +391,7 @@ if (NOT WIN32)
+ endif()
+ 
+ # Find asmjit dependency if building with JIT support.
+-if (NOT BLEND2D_NO_JIT)
++if (0)
+   if (NOT DEFINED ASMJIT_DIR)
+     foreach(dir "${BLEND2D_DIR}/3rdparty/asmjit"
+                 "${CMAKE_CURRENT_LIST_DIR}/../asmjit")
+@@ -779,6 +779,11 @@ if (NOT BLEND2D_EMBED)
+                      CFLAGS_DBG ${BLEND2D_PRIVATE_CFLAGS_DBG}
+                      CFLAGS_REL ${BLEND2D_PRIVATE_CFLAGS_REL})
+ 
++  if (NOT BLEND2D_NO_JIT)
++    find_package(asmjit CONFIG REQUIRED)
++    target_link_libraries(blend2d PRIVATE asmjit::asmjit)
++  endif()
++  
+   target_compile_options(blend2d PRIVATE ${BLEND2D_NO_STDCXX_CFLAGS})
+   target_compile_options(blend2d INTERFACE ${BLEND2D_CFLAGS})
+ 
