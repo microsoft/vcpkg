@@ -658,7 +658,7 @@
     },
     "boost-atomic": {
       "baseline": "1.81.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-beast": {
       "baseline": "1.81.0",
@@ -926,7 +926,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.81.0",
-      "port-version": 5
+      "port-version": 6
     },
     "boost-move": {
       "baseline": "1.81.0",
@@ -8209,7 +8209,7 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2023-03-02",
+      "baseline": "2023-04-13",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
