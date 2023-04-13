@@ -1,6 +1,7 @@
 {
   "name": "libadlmidi",
   "version": "1.5.1",
+  "port-version": 1,
   "description": "libADLMIDI is a free Software MIDI synthesizer library with OPL3 emulation",
   "homepage": "https://github.com/Wohlstand/libADLMIDI",
   "dependencies": [

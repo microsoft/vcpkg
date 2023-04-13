@@ -6,20 +6,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    test BUILD_TESTS
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        test TYPE_LITE_OPT_BUILD_TESTS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DTYPE_LITE_OPT_BUILD_TESTS=${BUILD_TESTS}
-        -DTYPE_LITE_OPT_BUILD_EXAMPLES=OFF           
+        ${FEATURE_OPTIONS}
+        -DTYPE_LITE_OPT_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

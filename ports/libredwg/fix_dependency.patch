@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8263f23..8906fed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -201,7 +201,8 @@ target_include_directories(${redwg} PRIVATE
+          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ target_include_directories(${redwg} PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+-
++find_path(JSMN_INCLUDE_DIRS "jsmn.h")
++target_include_directories(${redwg} PRIVATE ${JSMN_INCLUDE_DIRS})
+ link_libraries(${redwg} ${LIBS} ${CMAKE_THREAD_LIBS_INIT})
+ 
+ if(NOT LIBREDWG_LIBONLY)
+diff --git a/src/in_json.c b/src/in_json.c
+index d66f1ab..724505b 100644
+--- a/src/in_json.c
++++ b/src/in_json.c
+@@ -51,7 +51,7 @@ static unsigned int loglevel;
+ // In strict mode an object or array can't become a key
+ // In strict mode primitives are: numbers and booleans
+ #undef JSMN_STRICT
+-#include "../jsmn/jsmn.h"
++#include "jsmn.h"
+ 
+ typedef struct jsmntokens
+ {

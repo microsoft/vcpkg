@@ -23,17 +23,16 @@ if(NOT GENERATE_BLOCKTAGS)
     message(STATUS "Copied blocktags")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DDISCOUNT_ONLY_LIBRARY=ON
         -DGENERATE_BLOCKTAGS=${GENERATE_BLOCKTAGS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/discount)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/discount)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -12,18 +12,13 @@ diff --git a/cmake/modules/QcaMacro.cmake b/cmake/modules/QcaMacro.cmake
 index 80af6e84..ba86310d 100644
 --- a/cmake/modules/QcaMacro.cmake
 +++ b/cmake/modules/QcaMacro.cmake
-@@ -69,15 +69,6 @@ macro(add_qca_test TARGET DESCRIPTION)
+@@ -65,10 +65,6 @@ macro(add_qca_test TARGET DESCRIPTION)
  endmacro(add_qca_test)
  
  macro(install_pdb TARGET INSTALL_PATH)
 -  if(MSVC)
--    get_target_property(LOCATION ${TARGET} LOCATION_DEBUG)
--    string(REGEX REPLACE "\\.[^.]*$" ".pdb" LOCATION "${LOCATION}")
--    install(FILES ${LOCATION} DESTINATION ${INSTALL_PATH} CONFIGURATIONS Debug)
--
--    get_target_property(LOCATION ${TARGET} LOCATION_RELWITHDEBINFO)
--    string(REGEX REPLACE "\\.[^.]*$" ".pdb" LOCATION "${LOCATION}")
--    install(FILES ${LOCATION} DESTINATION ${INSTALL_PATH} CONFIGURATIONS RelWithDebInfo)
+-    install(FILES $<TARGET_PDB_FILE:${TARGET}> DESTINATION ${INSTALL_PATH} CONFIGURATIONS Debug)
+-    install(FILES $<TARGET_PDB_FILE:${TARGET}> DESTINATION ${INSTALL_PATH} CONFIGURATIONS RelWithDebInfo)
 -  endif()
  endmacro(install_pdb)
  
@@ -49,23 +44,14 @@ index b2c5d3d3..4250ec26 100644
          else if (type == QLatin1String("tripledes-ecb"))
              return new opensslCipherContext(EVP_des_ede3(), 0, this, type);
          else if (type == QLatin1String("tripledes-cbc"))
-@@ -6872,6 +6875,8 @@ public:
+@@ -6872,6 +6875,7 @@ public:
              return new opensslCipherContext(EVP_des_cfb(), 0, this, type);
          else if (type == QLatin1String("des-ofb"))
              return new opensslCipherContext(EVP_des_ofb(), 0, this, type);
 +#endif
-+#ifndef OPENSSL_NO_CAST
+ #ifndef OPENSSL_NO_CAST
          else if (type == QLatin1String("cast5-ecb"))
              return new opensslCipherContext(EVP_cast5_ecb(), 0, this, type);
-         else if (type == QLatin1String("cast5-cbc"))
-@@ -6882,6 +6887,7 @@ public:
-             return new opensslCipherContext(EVP_cast5_cfb(), 0, this, type);
-         else if (type == QLatin1String("cast5-ofb"))
-             return new opensslCipherContext(EVP_cast5_ofb(), 0, this, type);
-+#endif
-         else if (type == QLatin1String("pkey"))
-             return new MyPKeyContext(this);
-         else if (type == QLatin1String("dlgroup"))
 -- 
 2.31.1
 

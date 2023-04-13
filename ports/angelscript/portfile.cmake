@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 afd2b9096d0b62bc3d182d684fe34ddc8e9520af7734eea1f1a5c7d3439a28a1be7502faf692080cb0c4591799b7fea09fc8c4ccf25b8ec63a3d306e678682ff
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         mark-threads-private.patch

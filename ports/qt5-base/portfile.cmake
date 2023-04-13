@@ -102,7 +102,6 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
-    -icu
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
@@ -207,8 +206,7 @@ set(RELEASE_OPTIONS
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
@@ -218,20 +216,28 @@ set(DEBUG_OPTIONS
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
 
-# This if/else corresponds to icu setup in src/corelib/configure.json.
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND CORE_OPTIONS
-        "ICU_LIBS_RELEASE=${ICU_RELEASE}"
-        "ICU_LIBS_DEBUG=${ICU_DEBUG}"
-    )
+if("icu" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -icu)
+
+    # This if/else corresponds to icu setup in src/corelib/configure.json.
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND CORE_OPTIONS
+            "ICU_LIBS_RELEASE=${ICU_RELEASE}"
+            "ICU_LIBS_DEBUG=${ICU_DEBUG}"
+        )
+    else()
+        list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
+        list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    endif()
+
+    list(APPEND RELEASE_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}")
 else()
-    list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
-    list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    list(APPEND CORE_OPTIONS -no-icu)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO faaxm/spix
-    REF v0.4
-    SHA512 4686199f851b4f06abf963ea79d3d2094d7bd956f009b3fe244dfbcfa7e0756d9971cb882c9963d479b44194806f3d0eaef68ac90b3468bf4ba9139948a9cd7b
+    REF v0.5
+    SHA512 fdc35ff4920a83d4b2d0abe84eae7c8f46cb259e525d4445b091eb01990bcdeade7e60a00795f4acccc09f0702fa61d17ba6c7b8bbf19ff218e8bd42e1eb7f7c
 
     HEAD_REF master
 )
@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DSPIX_BUILD_EXAMPLES=OFF
         -DSPIX_BUILD_TESTS=OFF
-        -DSPIX_QT_MAJOR=5
+        -DSPIX_QT_MAJOR=6
 )
 
 vcpkg_cmake_install()
