@@ -2,7 +2,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jll63/yomm2
-    REF v1.3.1
+    REF "v${VERSION}"
     SHA512  456422f829293339d1d29eda8a00ad1bf5a2b7adcf0eb3727729b25208e1e67bff8187e21d49b64817ebb3a2274cef5504e22d612b1c68de20c8fe458daa81ba
     HEAD_REF master
     PATCHES "fix_find_boost.patch"
