@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index beae7d7..f962a1f 100644
+index beae7d7..0d03162 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,7 +100,8 @@ endif ()
@@ -17,7 +17,7 @@ index beae7d7..f962a1f 100644
    find_package(wangle CONFIG REQUIRED)
    find_package(ZLIB REQUIRED)
 -  find_package(Zstd REQUIRED)
-+  find_package(zstd REQUIRED)
++  find_package(zstd CONFIG REQUIRED)
 +  if(TARGET zstd::libzstd_shared)
 +    set(ZSTD_LIBRARIES zstd::libzstd_shared)
 +  elseif(TARGET zstd::libzstd_static)
