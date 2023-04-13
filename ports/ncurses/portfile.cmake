@@ -17,9 +17,9 @@ vcpkg_list(SET OPTIONS)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS
-        --with-shared
         --with-cxx-shared
-        --without-normal
+        --with-shared    # "lib model"
+        --without-normal # "lib model"
     )
 endif()
 
@@ -46,17 +46,12 @@ vcpkg_configure_make(
         --disable-db-install
         --enable-pc-files
         --without-ada
+        --without-debug # "lib model"
         --without-manpages
         --without-progs
         --without-tack
         --without-tests
         --with-pkg-config-libdir=libdir
-    OPTIONS_DEBUG
-        --with-debug
-        --without-normal
-    OPTIONS_RELEASE
-        --without-debug
-        --with-normal
 )
 vcpkg_install_make()
 

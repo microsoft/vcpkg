@@ -1,6 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.4.2",
+  "version": "6.4.3",
+  "port-version": 1,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -166,8 +167,8 @@
       ]
     },
     "framework": {
-      "$platform": "osx",
-      "description": "MAC framework build"
+      "description": "MAC framework build",
+      "supports": "osx & !static"
     },
     "freetype": {
       "description": "Supports the FreeType 2 font engine (and its supported font formats).",
@@ -180,7 +181,7 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows",
+      "supports": "!windows & !osx",
       "dependencies": [
         {
           "name": "qtbase",

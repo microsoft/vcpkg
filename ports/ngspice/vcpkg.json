@@ -1,6 +1,6 @@
 {
   "name": "ngspice",
-  "version": "37",
+  "version": "39",
   "description": "Ngspice is a mixed-level/mixed-signal electronic circuit simulator. It is a successor of the latest stable release of Berkeley SPICE",
   "homepage": "http://ngspice.sourceforge.net/",
   "license": "CC-BY-SA-4.0",

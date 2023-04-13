@@ -343,4 +343,4 @@ Microsoft는 이 정보를 익명으로 수집합니다.
 - 명령줄에서 vcpkg에 --disable-metrics 전달
 - VCPKG_DISABLE_METRICS 환경 변수 설정
 
-docs/about/privacy.md에서 vcpkg 데이터 수집에 대해 자세히 알아보세요.
+[https://learn.microsoft.com/vcpkg/about/privacy](https://learn.microsoft.com/vcpkg/about/privacy)에서 vcpkg 데이터 수집에 대해 자세히 알아보세요.

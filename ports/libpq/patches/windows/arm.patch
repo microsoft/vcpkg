@@ -17,7 +17,7 @@ diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
 index 823357c02..625f32bf8 100644
 --- a/src/tools/msvc/MSBuildProject.pm	
 +++ b/src/tools/msvc/MSBuildProject.pm
-@@ -307,9 +307,8 @@ sub WriteItemDefinitionGroup
+@@ -307,7 +307,6 @@ sub WriteItemDefinitionGroup
  	  : ($self->{type} eq "dll" ? 'DynamicLibrary' : 'StaticLibrary');
  	my $libs = $self->GetAdditionalLinkerDependencies($cfgname, ';');
  
@@ -26,9 +26,7 @@ index 823357c02..625f32bf8 100644
 -
 +	my $targetmachine = $self->{platform} eq 'ARM64' ? 'MachineARM64' : 'MachineARM';
 +    
- 	my $includes = $self->{includes};
- 	unless ($includes eq '' or $includes =~ /;$/)
- 	{
+ 	my $includes = join ';', @{ $self->{includes} }, "";
 @@ -347,7 +349,6 @@ sub WriteItemDefinitionGroup
        <ProgramDatabaseFile>.\\$cfgname\\$self->{name}\\$self->{name}.pdb</ProgramDatabaseFile>
        <GenerateMapFile>false</GenerateMapFile>
