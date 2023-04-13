@@ -20,6 +20,7 @@
   "default-features": [
     "futex",
     "jit",
+    "logging",
     "tls"
   ],
   "features": {
@@ -40,7 +41,16 @@
       ]
     },
     "logging": {
-      "description": "Default feature. Enables logging."
+      "description": "Default feature. Enables logging.",
+      "dependencies": [
+        {
+          "name": "blend2d",
+          "default-features": false,
+          "features": [
+            "jit"
+          ]
+        }
+      ]
     },
     "tls": {
       "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported.",
