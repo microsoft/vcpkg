@@ -241,7 +241,7 @@
       "port-version": 5
     },
     "asmjit": {
-      "baseline": "2022-11-06",
+      "baseline": "2023-03-25",
       "port-version": 0
     },
     "asmtk": {
@@ -594,7 +594,7 @@
     },
     "blend2d": {
       "baseline": "2022-12-31",
-      "port-version": 2
+      "port-version": 3
     },
     "blitz": {
       "baseline": "2020-03-25",
