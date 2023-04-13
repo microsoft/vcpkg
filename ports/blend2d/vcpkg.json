@@ -33,10 +33,10 @@
         {
           "name": "blend2d",
           "default-features": false,
-          "platform": "windows",
           "features": [
             "futex"
-          ]
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -46,10 +46,10 @@
         {
           "name": "blend2d",
           "default-features": false,
-          "platform": "windows",
           "features": [
             "futex"
-          ]
+          ],
+          "platform": "windows"
         }
       ]
     }
