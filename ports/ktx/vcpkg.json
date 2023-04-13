@@ -7,7 +7,7 @@
   ],
   "homepage": "https://github.com/KhronosGroup/KTX-Software",
   "license": null,
-  "supports": "!(x86 & windows)",
+  "supports": "arm64 | x64 | !windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
         0003-mkversion.patch
+        0004-quirks.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
 
@@ -44,7 +45,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         # Do not regenerate headers (needs more dependencies)
         -DCMAKE_DISABLE_FIND_PACKAGE_Vulkan=1
-        -DVCPKG_TRACE_FIND_PACKAGE=1
     DISABLE_PARALLEL_CONFIGURE
 )
 
