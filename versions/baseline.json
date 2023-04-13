@@ -7626,7 +7626,7 @@
     },
     "stb": {
       "baseline": "2023-04-11",
-      "port-version": 0
+      "port-version": 1
     },
     "stdexec": {
       "baseline": "2023-03-05",
