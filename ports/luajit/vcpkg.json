@@ -9,7 +9,19 @@
   "dependencies": [
     {
       "name": "luajit",
-      "host": true
+      "host": true,
+      "features": [
+        "buildvm-x64"
+      ],
+      "platform": "x64 & (!windows | mingw) & !native"
+    },
+    {
+      "name": "luajit",
+      "host": true,
+      "features": [
+        "buildvm-arm64"
+      ],
+      "platform": "arm64 & (!windows | mingw) & !native"
     },
     {
       "name": "vcpkg-cmake",
@@ -18,6 +30,20 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "buildvm-arm64": {
+      "description": "Install host tools for arm64 targets",
+      "supports": "native & (!windows | mingw)"
+    },
+    "buildvm-x64": {
+      "description": "Install host tools for x64 targets",
+      "supports": "native & (!windows | mingw)"
+    }
+  }
 }

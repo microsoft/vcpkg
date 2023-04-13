@@ -15,10 +15,16 @@ vcpkg_from_github(
         ${extra_patches}
 )
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 vcpkg_list(SET options)
 if(VCPKG_CROSSCOMPILING)
-    list(APPEND options "LJARCH=${VCPKG_TARGET_ARCHITECTURE}")
-    vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+    set(host_path "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+    list(APPEND options
+        "LJARCH=${VCPKG_TARGET_ARCHITECTURE}"
+        "BUILDVM_X=${host_path}/buildvm-${VCPKG_TARGET_ARCHITECTURE}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -68,17 +74,29 @@ else()
         vcpkg_list(APPEND make_options "TARGET_SYS=Windows")
     endif()
 
+    set(dasm_archs "")
+    if("buildvm-arm64" IN_LIST FEATURES)
+        string(APPEND dasm_archs " arm64")
+    endif()
+    if("buildvm-x64" IN_LIST FEATURES)
+        string(APPEND dasm_archs " x64")
+    endif()
+
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
         OPTIONS
             "BUILDMODE=${VCPKG_LIBRARY_LINKAGE}"
             ${options}
+        OPTIONS_RELEASE
+            "DASM_ARCHS=${dasm_archs}"
     )
     vcpkg_install_make(
         MAKEFILE "Makefile.vcpkg"
         OPTIONS
             ${make_options}
+            "TARGET_AR=${VCPKG_DETECTED_CMAKE_AR} rcus"
+            "TARGET_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}"
     )
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/include"
