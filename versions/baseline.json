@@ -4392,6 +4392,10 @@
       "baseline": "2.0.2",
       "port-version": 0
     },
+    "libre": {
+      "baseline": "3.0.0",
+      "port-version": 0
+    },
     "libredwg": {
       "baseline": "0.12.5.5178",
       "port-version": 0
