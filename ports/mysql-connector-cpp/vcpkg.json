@@ -7,10 +7,8 @@
   "license": null,
   "supports": "!uwp & !(windows & (arm | arm64))",
   "dependencies": [
-    "openssl",
     "lz4",
-    "zlib",
-    "zstd",
+    "openssl",
     "protobuf",
     {
       "name": "vcpkg-cmake",
@@ -19,12 +17,14 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib",
+    "zstd"
   ],
   "features": {
     "jdbc": {
-      "supports": "static",
       "description": "Legacy JDBC support.",
+      "supports": "static",
       "dependencies": [
         "libmysql"
       ]
