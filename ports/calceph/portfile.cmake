@@ -1,7 +1,7 @@
 set(CALCEPH_HASH 4e0b702494c9fc05f6a192671bccdc0f8002b5706cba4bd7ff50d9e8754203b4a78e3759ccc3003809123584c9bca1434411e111357852dbc58e4d1903c1879e)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${CALCEPH_VERSION}.tar.gz"
+    URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
     FILENAME "calceph-${VERSION}.tar.gz"
     SHA512 ${CALCEPH_HASH}
 )
