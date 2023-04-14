@@ -5,7 +5,7 @@ cmake_policy(SET CMP0012 NEW)
 include(CMakeFindDependencyMacro)
 
 if (@IMGUI_BUILD_GLFW_BINDING@)
-    if (NOT EMSCRIPTEN)
+    if (NOT "@EMSCRIPTEN@")
         find_dependency(glfw3 CONFIG)
     endif()
 endif()
