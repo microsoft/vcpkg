@@ -1,7 +1,7 @@
 {
   "name": "visit-struct",
-  "version-string": "1.0",
-  "port-version": 3,
+  "version": "1.0",
+  "port-version": 4,
   "description": "A header-only library providing structure visitors for C++11 and C++14",
   "dependencies": [
     {

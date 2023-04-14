@@ -30,6 +30,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         otlp WITH_OTLP
         otlp-http WITH_OTLP_HTTP
         zpages WITH_ZPAGES
+        otlp-grpc WITH_OTLP_GRPC
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
@@ -59,6 +60,8 @@ vcpkg_cmake_configure(
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        WITH_OTLP_GRPC
 )
 
 vcpkg_cmake_install()
@@ -67,4 +70,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
