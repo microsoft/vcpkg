@@ -8,10 +8,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
         SHA512 d75d4ceb3f67ee62c7ca41e2a91ee914fbffaeb70256675aed6734d586950ea8e64e2f16dc069d71481eddb703624df8d46497005fb58e75cf098dd7e7961333
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF ${PBC_VERSION}
+        SOURCE_BASE ${PBC_VERSION}
         PATCHES linux.patch
     )
 

@@ -1,6 +1,6 @@
 {
   "name": "mio",
-  "version-date": "2023-01-25",
+  "version-date": "2023-03-03",
   "description": "Cross-platform header-only C++11 library for memory mapped file IO.",
   "homepage": "https://github.com/mandreyel/mio",
   "license": "MIT",

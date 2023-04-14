@@ -1,6 +1,7 @@
 {
   "name": "cyclonedds-cxx",
   "version": "0.10.2",
+  "port-version": 1,
   "description": "C++ binding for Eclipse Cyclone DDS",
   "homepage": "https://cyclonedds.io",
   "license": "EPL-2.0",

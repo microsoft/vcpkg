@@ -6,35 +6,76 @@ vcpkg_from_github(
         HEAD_REF master
 )
 
-vcpkg_find_acquire_program(BAZEL)
-get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
+find_program(BAZEL bazel PATHS ${CURRENT_HOST_INSTALLED_DIR}/tools REQUIRED)
+get_filename_component(BAZEL_DIR ${BAZEL} DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
-set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
+set(ENV{BAZEL_BIN_PATH} ${BAZEL})
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include(${cmake_vars_file})
 
 if (CMAKE_HOST_WIN32)
     set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
 endif ()
 
+if (VCPKG_DETECTED_CMAKE_HOST_SYSTEM_NAME STREQUAL Darwin)
+    set(ENV{SDKROOT} ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT})
+endif ()
+
+function(prepare_bazel_opts flags opts switch)
+    string(STRIP ${${flags}} ${flags})
+    if (${flags})
+        string(REGEX REPLACE "[ ]+-" ";-" ${flags} ${${flags}})
+        foreach (OPT IN LISTS ${flags})
+            if (${opts})
+                string(REGEX REPLACE "^([^ ]+)[ ]+\"?([^\"]+)\"?$" \\1\\2 OPT ${OPT})
+                set(${opts} ${${opts}};${switch}=${OPT})
+            else ()
+                set(${opts} ${switch}=${OPT})
+            endif ()
+        endforeach ()
+        set(${opts} ${${opts}} PARENT_SCOPE)
+    endif ()
+endfunction()
+
+prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_RELEASE CONLY_OPTS_RELEASE --conlyopt)
+prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_DEBUG CONLY_OPTS_DEBUG --conlyopt)
+prepare_bazel_opts(VCPKG_COMBINED_CXX_FLAGS_RELEASE CXX_OPTS_RELEASE --cxxopt)
+prepare_bazel_opts(VCPKG_COMBINED_CXX_FLAGS_DEBUG CXX_OPTS_DEBUG --cxxopt)
+prepare_bazel_opts(VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE LINK_OPTS_RELEASE --linkopt)
+prepare_bazel_opts(VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG LINK_OPTS_DEBUG --linkopt)
+
 vcpkg_execute_build_process(
-            COMMAND ${BAZEL} build --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
-    )
+        COMMAND ${BAZEL} --batch build ${CONLY_OPTS_RELEASE} ${CXX_OPTS_RELEASE} ${LINK_OPTS_RELEASE} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-rel
+)
 
 if (CMAKE_HOST_WIN32)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-else()
+else ()
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+endif ()
+
+vcpkg_execute_build_process(
+        COMMAND ${BAZEL} --batch build ${CONLY_OPTS_DEBUG} ${CXX_OPTS_DEBUG} ${LINK_OPTS_DEBUG} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+)
+
+if (CMAKE_HOST_WIN32)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+else ()
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-endif()
+endif ()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE-Boost DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ryu/)
 file(INSTALL ${SOURCE_PATH}/ryu/ryu2.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ryu/)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/ryuConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

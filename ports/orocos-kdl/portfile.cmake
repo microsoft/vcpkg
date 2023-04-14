@@ -7,25 +7,25 @@ vcpkg_from_github(
     PATCHES export-include-dir.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/orocos_kdl
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/orocos_kdl"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/orocos_kdl/cmake TARGET_PATH share/orocos_kdl)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/orocos_kdl/cmake PACKAGE_NAME orocos_kdl)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake _contents)
+file(READ "${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake" _contents)
 string(REPLACE "\${CMAKE_CURRENT_LIST_DIR}/../../.." "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
 string(REPLACE "\${_IMPORT_PREFIX}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake" "${_contents}")
 
 file(REMOVE_RECURSE
-  ${CURRENT_PACKAGES_DIR}/debug/include
-  ${CURRENT_PACKAGES_DIR}/debug/share
-  ${CURRENT_PACKAGES_DIR}/share/doc
-  ${CURRENT_PACKAGES_DIR}/doc/liborocos-kdl)
+  "${CURRENT_PACKAGES_DIR}/debug/include"
+  "${CURRENT_PACKAGES_DIR}/debug/share"
+  "${CURRENT_PACKAGES_DIR}/share/doc"
+  "${CURRENT_PACKAGES_DIR}/doc/liborocos-kdl")
 
-file(INSTALL ${SOURCE_PATH}/orocos_kdl/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/orocos_kdl/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 vcpkg_fixup_pkgconfig()
