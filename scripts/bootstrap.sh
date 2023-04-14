@@ -93,9 +93,11 @@ vcpkgCheckRepoTool tar
 UNAME="$(uname)"
 ARCH="$(uname -m)"
 
-if [ -e /etc/alpine-release -a "$ARCH" = "x86_64" ]; then
+if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
-    vcpkgUseMuslC="ON"
+    if [ "$ARCH" = "x86_64" ]; then
+        vcpkgUseMuslC="ON"
+    fi
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
