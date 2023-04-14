@@ -123,7 +123,7 @@ index 257662c..90bcdaa 100644
  	if (NOT NO_WEBSOCKET)
  		# Needed for SHA1, it should be present as GnuTLS cryptography backend
  		find_package(Nettle REQUIRED)
-+        if(BUILD_SHARED_LIBS)
++ 		if(BUILD_SHARED_LIBS)
  		target_link_libraries(datachannel PRIVATE Nettle::Nettle)
 +		elseif(BUILD_STATIC_LIBS)
  		target_link_libraries(datachannel-static PRIVATE Nettle::Nettle)
@@ -180,7 +180,7 @@ index 257662c..90bcdaa 100644
 +        elseif(BUILD_STATIC_LIBS)
 +		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_JUICE=0)
  		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuiceStatic)
-+		endif()
++       endif()
  	endif()
  endif()
  
