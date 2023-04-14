@@ -1,0 +1,19 @@
+diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
+index c926c499..e2872ff6 100644
+--- a/adm/templates/OpenCASCADEConfig.cmake.in
++++ b/adm/templates/OpenCASCADEConfig.cmake.in
+@@ -5,6 +5,14 @@
+ # This file is configured by OpenCASCADE.
+ #
+ 
++include(CMakeFindDependencyMacro)
++if(OpenCASCADE_WITH_FREETYPE)
++  find_dependency(freetype CONFIG)
++endif()
++
++find_dependency(OpenGL)
++find_dependency(Eigen3 REQUIRED)
++
+ if(OpenCASCADE_ALREADY_INCLUDED)
+   return()
+ endif()
